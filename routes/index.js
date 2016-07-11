@@ -1,10 +1,16 @@
-var express = require('express');
-var router  = express.Router();
-var request = require('request');
+var fs = require('fs');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', {title: 'Agile Team Tool'});
-});
+render = function(req, res, file, json) {
+  //can add stuff to json here if needed
+  return res.render(file, json);
+};
 
-module.exports = router;
+module.exports = function(app, passport) {
+  var includes = {
+    passport: passport,
+    render: render
+  };
+  fs.readdirSync("./routes/server").forEach(function(file) {
+    require("./server/" + file)(app, includes);
+  });
+};
