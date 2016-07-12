@@ -13,4 +13,7 @@ module.exports = function(app, passport) {
   fs.readdirSync("./routes/server").forEach(function(file) {
     require("./server/" + file)(app, includes);
   });
+  fs.readdirSync("./routes/api").forEach(function(file) {
+    require("./api/" + file)(app, includes);
+  });
 };

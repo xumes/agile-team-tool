@@ -1,10 +1,13 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
+var express      = require('express');
+var session      = require('express-session');
+var path         = require('path');
+var favicon      = require('serve-favicon');
+var logger       = require('morgan');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var passport = require('passport');
+var bodyParser   = require('body-parser');
+var passport     = require('passport');
+var settings     = require('./settings');
+var RedisStore   = require('connect-redis')(session);
 
 var app = express();
 
@@ -23,10 +26,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //Authentication
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(session({
+  store: new RedisStore(settings.redisDb),
+  secret: settings.secret,
+  resave: false,
+  saveUninitialized: true
+}));
+require('./middleware/login')(passport);
 
 //Routes/Controllers for the views
 require('./routes')(app, passport);
+require('./routes');
 
 
 /**
