@@ -2,7 +2,7 @@ var request = require('supertest');
 var app     = require('../app');
 
 describe('GET /', function() {
-  it('should respond with HTML', function(done) {
+  it('should be redirected', function(done) {
     request(app)
       .get('/')
       .expect(302, done);
