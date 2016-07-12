@@ -8,6 +8,5 @@ module.exports = function(app, includes) {
     res.render('login', {title: 'Agile Team Tool', action: ""});
  
   };
-  //git please work
   app.get("/login", showLogin);
 };
