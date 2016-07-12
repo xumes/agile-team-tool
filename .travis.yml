@@ -12,4 +12,4 @@ script:
 - gulp test
 notifications:
   slack:
-    secure: QARIdK8z/GhI/9Sij+pNZqNHQYe2XLdN2VMHNMtDn9f9Nhdrm64fr1IA4eObO1B3xcI+fs9Xllr8DntzK1xWchjFo+o0WQlfQH2BP/hhHMaZsKEB1kix4eZApnDIbEA8S7ZQuB8bruOUixWjWOG3OAr4UommTBjB8rQs+vBNOD4=
+    secure: MoD2zHatGzxNadji7tgbKl13Q8Oq/0rjEW+gadHSxnOFsw8QkkpT6D2g4Q45UfQe6u116Rl4mSWhhtnSmb0UQ38mmorU6Yj2IjKtLak7Zj49G+6XnDHKnyqvtaF0EGkjUxtx5U8IKLsWZkW5kEIFwaTCd2AHvbC5BTLvYYKD9tI=
