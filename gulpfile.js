@@ -21,5 +21,8 @@ gulp.task('test', ['jshint', 'pre-test'], function () {
   return gulp.src(['test/*.js'])
     .pipe(mocha())
     // Creating the reports after tests ran
-    .pipe(istanbul.writeReports());
+    .pipe(istanbul.writeReports())
+    .once('end', function() {
+      process.exit();
+    })
 });
