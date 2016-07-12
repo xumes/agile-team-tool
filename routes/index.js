@@ -1,5 +1,9 @@
 var fs = require('fs');
 
+var middleware = {
+  auth : require('../middleware/auth')
+}
+
 render = function(req, res, file, json) {
   //can add stuff to json here if needed
   return res.render(file, json);
@@ -8,7 +12,8 @@ render = function(req, res, file, json) {
 module.exports = function(app, passport) {
   var includes = {
     passport: passport,
-    render: render
+    render: render,
+    middleware: middleware
   };
   fs.readdirSync("./routes/server").forEach(function(file) {
     require("./server/" + file)(app, includes);

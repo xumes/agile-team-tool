@@ -1,5 +1,6 @@
 
 module.exports = function(app, includes) {
+  var middleware  = includes.middleware;
 
   render = includes.render;
 
@@ -9,5 +10,5 @@ module.exports = function(app, includes) {
  
   };
   
-  app.get("/", showHome);
+  app.get("/", [includes.middleware.auth.requireLogin], showHome);
 };

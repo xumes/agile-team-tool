@@ -25,13 +25,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Authentication
-app.use(passport.initialize());
 app.use(session({
   store: new RedisStore(settings.redisDb),
   secret: settings.secret,
   resave: false,
   saveUninitialized: true
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 require('./middleware/login')(passport);
 
 //Routes/Controllers for the views

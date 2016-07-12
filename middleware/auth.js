@@ -1,13 +1,7 @@
+_ = require("underscore")
 module.exports.requireLogin = function(req, res, next) {
-
-  if (!req.session.userid) {
-    
-    req.session.afterLogin = req.url;
-    req.session.path = req.url;
+  if(_.isEmpty(req.user))
     return res.redirect("/login");
-
-  } else {
-    if (req.user) 
-      return next();
-  }
+  else
+    return next();
 };
