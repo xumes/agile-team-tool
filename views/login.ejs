@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en-US"><!-- IBMid UX Template Version 2.5 --><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>IBM id - Sign in or create an IBM id</title>
+
+    <!-- Add meta tag to consistently detect the width on an iPad at 768px -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="canonical" href="http://www.ibm.com/">
+    <meta name="robots" content="index,follow">
+    <meta name="description" content="IBM id Sign-in Template refresh">
+    <meta name="keywords" content="Sign-in Page IBM id">
+    <meta name="geo.country" content="US">
+    <meta name="dcterms.date" content="2014-07-23">
+    <meta name="dcterms.rights" content="© Copyright IBM Corp. 2014">
+
+    <!--<![endif]-->
+    <link href="./login_files/forms.css" rel="stylesheet"><link href="./login_files/www.css" rel="stylesheet">
+
+    <script src="./login_files/jquery-2.1.4.min.js"></script><style type="text/css"></style>
+    <script src="./login_files/ibmIDC.js"></script>
+    <script src="./login_files/ibmIDCutil.js"></script>
+    <script src="./login_files/ibmIDCFormUtil.js"></script>
+    <link href="./login_files/style_old.css" rel="stylesheet">
+    <script src="./login_files/login.js"></script>
+
+    <script type="text/javascript">
+    function startpage() {
+        document.getElementById('username').focus();
+    }
+
+    function disableEnterKey(e) {
+        var key;
+
+        if (window.event)
+            key = window.event.keyCode; //IE
+        else
+            key = e.which; //firefox
+
+        if (key == 13) {
+            document.getElementById('ngform-signin').submit();
+            return false;
+        } else
+            return true;
+    }
+    </script>
+    <script type="text/javascript">
+    var formInUse = false;
+
+    function setFocus() {
+        if (!formInUse) {
+            document.ssoform.username.focus;
+        }
+    }
+    </script>
+    <script type="text/javascript">
+    function onLoadPage() {
+	    showTheme();
+        showLoginPage();
+        showError();
+        setFocus();
+    }
+
+	function showTheme(){
+
+  }  function showLoginPage() {
+        document.getElementById("ibm-top").style.display = "block";
+    }
+
+    function showError() {
+        var elem = document.getElementById("errId");
+        if ("" == "") {
+
+        } else {
+            var splitErrCode = "".split(" ", 1)[0];
+            var errMsg = "".substring(splitErrCode.length);
+            document.getElementById('errtxt').innerHTML = errMsg;
+            document.getElementById("errormsg").style.display = "block";
+
+
+        }
+    }
+
+    function setFocus() {
+        document.getElementById("username").focus();
+    }
+    </script>
+    <script>
+    jQuery(document).ready(function() {
+        document.domain = window.location.host;
+        //document.domain = 'localhost';
+
+        ibmIDC.draw( 0 , 1 ,false , "@OIDC_CLIENT_ID@");
+
+        // keep the session after all DOM updates are complete
+        window.setTimeout(function() {
+            // set query string into link buttons
+            // ibmIDC.setURLValues('signupbutton');
+        }, 2000);
+    });
+    </script> 
+ 
+
+
+ <script type="text/javascript" async="" charset="utf-8" src="./login_files/oct.js"></script><script type="text/javascript" async="" charset="utf-8" src="./login_files/oct.js"></script><script type="text/javascript" async="" charset="utf-8" src="./login_files/conversion_async.js"></script><script type="text/javascript" async="" charset="utf-8" src="./login_files/conversion_async.js"></script><link rel="SHORTCUT ICON" href="https://www.ibm.com/favicon.ico"></head>
+
+<body id="ibm-com" class="ibm-type" onload="onLoadPage()">
+    <div id="ibm-top" style="display: block;" class="ibm-landing-page ibm-signin login-state-page sign-in cf">
+        <!-- MAIN PAGE WRAPPER AROUND LEADSPACE, MAIN CONTENT SIDENAV AND RELATED CONTENT -->
+        <div id="ibm-content-wrapper">
+            <!-- LEADSPACE_BEGIN -->
+            <div role="main" aria-labelledby="ibm-pagetitle-h1">
+                <div id="ibm-pcon">
+                    <div id="ibm-content">
+                        <div id="ibm-content-body" class="ibm-id">
+                            <div id="ibm-content-main">
+                                <div class="ibm-columns">
+                                    <div class="ibm-col-6-2">
+                                        &nbsp;
+                                    </div>
+                                    <div class="ibm-signin-card ibm-col-6-2">
+                                        <div class="" id="signin">
+                                            <form method="post" id="ibmid-signin-form" class="login-fields" action="<%= action %>">
+                                                <input type="hidden" name="operation" value="verify">
+                                                <input type="hidden" name="login-form-type" value="pwd" role="form">
+                                                <h3 id="ng-signin-title-2" style="text-align: center;">Sign into the Agile Academy Team Tool </h3>
+                                                <div id="errormsg" style="color:red;font-weight: 100; display: none">
+                                                    <div>
+                                                        <p style="padding-top:5px;width:18px;float:left;padding-right:5px"><img src="./login_files/icon_error.png" alt="Error!" class="emailErrorImg"></p>
+                                                        <p id="errtxt" style="color: red;"> </p>
+                                                    </div>
+                                                </div>
+                                                <label for="username">Enter your ID
+                                                </label>
+                                                <p>
+                                                    <input tabindex="1" type="text" autofocus="" autocomplete="off" maxlength="80" id="username" name="username" class="">
+                                                    <br>
+                                                    <!-- <a target="_blank" href="https://www.ibm.com/account/profile/us?page=reghelpdesk">Forgot your IBM id?</a>
+																		-->
+                                                </p>
+                                                <label for="password">Password
+                                                </label>
+                                                <p>
+                                                    <span style="position: relative; display: block; height: 50px; margin-bottom: 8px;">
+																			<input tabindex="1" autocomplete="off" type="password" maxlength="31" id="password" name="password">
+																			<!--a href="#" id="showpass" class="">Show</a -->
+																		</span>
+                                                </p>
+                                                <div class="">
+                                                    <br><a tabindex="1" href="https://idaas.iam.ibm.com/idaas/mtfim/sps/authsvc?PolicyId=urn:ibm:security:authentication:asf:basicldapuser&amp;Target=http://www.ibm.com/standards/web/tools#" id="signinbutton" class="ng-signin-cta-2 button buttonRegister login-true" style="display:block;width: 100%;padding:18px 0;">Sign in</a>
+                                                    <!--  <a class="ng-signin-cta-2 button buttonRegister" id="singinbutton" href="#">Sign in</a> -->
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="ibm-related-content">
+            <!-- <div id="ibm-merchandising-module"> -->
+            <!-- MTE will generate this -->
+            <!-- <aside role="complementary" aria-label="Related content"> MTE dynamic modules populate in here. <aside> -->
+            <!-- /MTE -->
+            <!-- </div> -->
+        </div>
+    </div>
+
+    <noscript>
+        &amp;lt;div style="display: block;" id=""&amp;gt;
+            &amp;lt;!-- Overlay for loading submissions --&amp;gt;
+            &amp;lt;div class=""&amp;gt;
+                &amp;lt;div class=""&amp;gt;
+                    &amp;lt;div id="ibm-top" class="ibm-landing-page ibm-signin login-state-page sign-in cf"&amp;gt;
+                        &amp;lt;!-- MAIN PAGE WRAPPER AROUND LEADSPACE, MAIN CONTENT SIDENAV AND RELATED CONTENT --&amp;gt;
+                        &amp;lt;div id="ibm-content-wrapper"&amp;gt;
+                            &amp;lt;!-- LEADSPACE_BEGIN --&amp;gt;
+                            &amp;lt;div role="main" aria-labelledby="ibm-pagetitle-h1"&amp;gt;
+                                &amp;lt;div id="ibm-pcon"&amp;gt;
+                                    &amp;lt;div id="ibm-content"&amp;gt;
+                                        &amp;lt;div id="ibm-content-body" class="ibm-id"&amp;gt;
+                                            &amp;lt;div id="ibm-content-main"&amp;gt;
+                                                &amp;lt;div class="ibm-columns"&amp;gt;
+                                                    &amp;lt;div class="ibm-col-6-2"&amp;gt;
+                                                    &amp;lt;/div&amp;gt;
+                                                    &amp;lt;div class="ibm-signin-card ibm-col-6-2"&amp;gt;
+                                                        &amp;lt;div class="" id="signin"&amp;gt;
+                                                            &amp;lt;h4 style="color:red"&amp;gt;&amp;lt;/h4&amp;gt;
+                                                            &amp;lt;div class="section"&amp;gt;
+                                                                &amp;lt;form method="post" id="ibmid-signin-form" class="login-fields" action="/idaas/mtfim/sps/authsvc?StateId=066413ec-1267-4f2e-a34a-d375dba97dab"&amp;gt;
+                                                                    &amp;lt;input type="hidden" name="operation" value="verify" /&amp;gt;
+                                                                    &amp;lt;h3 id="ng-signin-title-2" style="text-align: center;"&amp;gt;Sign in to IBM &amp;lt;/h3&amp;gt;
+                                                                    &amp;lt;label for="username"&amp;gt;Enter your IBM id
+                                                                        &amp;lt;span class="forgotlink"&amp;gt;
+																			&amp;lt;a onclick="ibmIDC.signInEventTag('Forgot IBM id', 'Forgot IBM id'); return true;" target="_blank" href="https://www.ibm.com/account/profile/us?page=reghelpdesk"&amp;gt;
+																			Forgot your IBM id?&amp;lt;/a&amp;gt;
+																		&amp;lt;/span&amp;gt;
+                                                                    &amp;lt;/label&amp;gt;
+                                                                    &amp;lt;input type="text" autofocus="" maxlength="80" id="username" name="username" class=""&amp;gt;
+                                                                    &amp;lt;label for="password"&amp;gt;Password &amp;lt;span class="forgotlink"&amp;gt;&amp;lt;a onclick="ibmIDC.signInEventTag('Forgot IBM id PW', 'Forgot IBM id PW'); return true;" href="https://www.ibm.com/account/us-en/forgot/forgot-password-start.html?a=@OIDC_CLIENT_ID@"&amp;gt;
+																			Forgot your password? &amp;lt;/a&amp;gt;
+																	&amp;lt;/span&amp;gt;
+                                                                    &amp;lt;/label&amp;gt;
+                                                                    &amp;lt;input type="password" maxlength="31" id="password" name="password"&amp;gt;
+                                                                    &amp;lt;label&amp;gt;&amp;lt;/label&amp;gt;
+                                                                    &amp;lt;input type="submit" class="ng-signin-cta-2 button buttonRegister login-true" style="display:block;width: 100%;padding:18px 0;" value="Sign in" /&amp;gt;
+                                                                    &amp;lt;p style="text-align: center;"&amp;gt;
+                                                                        &amp;lt;br&amp;gt;New? &amp;lt;a id="ng-mobile-signIn"&amp;gt;Create an IBM id.&amp;lt;/a&amp;gt;
+                                                                    &amp;lt;/p&amp;gt;
+                                                                &amp;lt;/form&amp;gt;
+                                                            &amp;lt;/div&amp;gt;
+                                                        &amp;lt;/div&amp;gt;
+                                                    &amp;lt;/div&amp;gt;
+                                                &amp;lt;/div&amp;gt;
+                                            &amp;lt;/div&amp;gt;
+                                        &amp;lt;/div&amp;gt;
+                                    &amp;lt;/div&amp;gt;
+                                &amp;lt;/div&amp;gt;
+                            &amp;lt;/div&amp;gt;
+                        &amp;lt;/div&amp;gt;
+                        &amp;lt;div id="ibm-related-content"&amp;gt;
+                            &amp;lt;!-- &amp;lt;div id="ibm-merchandising-module"&amp;gt; --&amp;gt;
+                            &amp;lt;!-- MTE will generate this --&amp;gt;
+                            &amp;lt;!-- &amp;lt;aside role="complementary" aria-label="Related content"&amp;gt; MTE dynamic modules populate in here. &amp;lt;aside&amp;gt; --&amp;gt;
+                            &amp;lt;!-- /MTE --&amp;gt;
+                            &amp;lt;!-- &amp;lt;/div&amp;gt; --&amp;gt;
+                        &amp;lt;/div&amp;gt;
+                    &amp;lt;/div&amp;gt;
+                &amp;lt;/div&amp;gt;
+            &amp;lt;/div&amp;gt;
+        &amp;lt;/div&amp;gt;
+    </noscript>
+
+
+<div id="ttdUniversalPixelTagaf477d928c164ae0b8f3e1717b910617" style="display:none"></div><script src="./login_files/adsct"></script>
+<iframe src="./login_files/ect.html" id="db_ect" height="0" width="0" style="display: none;"></iframe><img style="display:none" alt="Demandbase pixel" id="db_pixel_ad" src="./login_files/pixel"></body></html>
