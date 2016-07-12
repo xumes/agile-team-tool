@@ -5,7 +5,7 @@ describe('GET /', function() {
   it('should respond with HTML', function(done) {
     request(app)
       .get('/')
-      .expect(200, done);
+      .expect(302, done);
   });
 });
 
