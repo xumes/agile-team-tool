@@ -3,7 +3,7 @@
 <head>
 
 <c:set var="pageTitle" value="Home" scope="session" />
-<% include ./header/header_meta.ejs %>
+<%- include ./header/header_meta.ejs %>
 
 <script src="./j/jquery-2.1.4.min.js"></script>
 <link href="//1.www.s81c.com/common/v18/css/forms.css" rel="stylesheet">
@@ -30,9 +30,9 @@
 
 <body id="ibm-com" class="ibm-type" onload="siteEnv();">
   <div id="ibm-top" class="ibm-landing-page">
-    <% include ./header/header_masthead.ejs %>
+    <%- include ./header/header_masthead.ejs %>
     <div id="ibm-content-wrapper">
-      <% include ./header/header_leadspace.ejs %>
+      <%- include ./header/header_leadspace.ejs %>
       <main role="main" aria-labelledby="Agile teams">
         <div id="ibm-pcon">
           <div id="ibm-content">

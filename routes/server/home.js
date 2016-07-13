@@ -1,13 +1,11 @@
 
 module.exports = function(app, includes) {
   var middleware  = includes.middleware;
-
-  render = includes.render;
+  var render = includes.render;
 
   showHome = function(req, res) {
-    
-    res.render('index', {title: 'Agile Team Tool'});
- 
+    json= {"pageTitle":"Home"}
+    render(req, res, 'index', json);
   };
   
   app.get("/", [includes.middleware.auth.requireLogin], showHome);

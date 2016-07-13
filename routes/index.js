@@ -1,11 +1,11 @@
 var fs = require('fs');
-
 var middleware = {
   auth : require('../middleware/auth')
 }
 
 render = function(req, res, file, json) {
   //can add stuff to json here if needed
+  json["siteTitle"] = "Agile Team Tool";
   return res.render(file, json);
 };
 

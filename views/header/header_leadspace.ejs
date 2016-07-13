@@ -1,53 +1,10 @@
 <% include ../feedback.ejs %>
-<c:set var="ACTIVE" value="class=ibm-active" />
-<c:set var="SELECTED" value="aria-selected=true" />
-<c:set var="navHomeActive" value="" />
-<c:set var="navHomeSelected" value="" />
-<c:set var="navTeamActive" value="" />
-<c:set var="navTeamSelected" value="" />
-<c:set var="navIterActive" value="" />
-<c:set var="navIterSelected" value="" />
-<c:set var="navAssessmentActive" value="" />
-<c:set var="navAssessmentSelected" value="" />
-<c:set var="navHelpActive" value="" />
-<c:set var="navHelpSelected" value="" />
-<c:choose>
-  <c:when test="${fn:toLowerCase(pageTitle) == 'home'}">
-    <c:set var="navHomeActive" value="${ACTIVE}" />
-    <c:set var="navHomeSelected" value="${SELECTED}" />
-  </c:when>
-  <c:when test="${fn:toLowerCase(pageTitle) == 'team management'}">
-    <c:set var="navTeamActive" value="${ACTIVE}" />
-    <c:set var="navTeamSelected" value="${SELECTED}" />
-  </c:when>
-  <c:when test="${fn:toLowerCase(pageTitle) == 'iteration management'}">
-    <c:set var="navIterActive" value="${ACTIVE}" />
-    <c:set var="navIterSelected" value="${SELECTED}" />
-  </c:when>
-  <c:when test="${fn:toLowerCase(pageTitle) == 'maturity assessment' || fn:toLowerCase(pageTitle) == 'assessment summary'}">
-    <c:set var="navAssessmentActive" value="${ACTIVE}" />
-    <c:set var="navAssessmentSelected" value="${SELECTED}" />
-  </c:when>
-  <c:when test="${fn:toLowerCase(pageTitle) == 'help'}">
-    <c:set var="navHelpActive" value="${ACTIVE}" />
-    <c:set var="navHelpSelected" value="${SELECTED}" />
-  </c:when>
-</c:choose>
-
 <header role="banner" aria-labelledby="ibm-pagetitle-h1">
   <div id="ibm-leadspace-head" class="ibm-alternate">
     <div id="ibm-leadspace-body">
-      <!-- Nav trail -->
-      <!-- 
-      <nav role="navigation" aria-label="Breadcrumb">
-        <ul id="ibm-navigation-trail">
-        <li itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a href="#" itemprop="url"><span itemprop="title">Link 1</span></a></li><li itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a href="#" itemprop="url"><span itemprop="title">Link 2</span></a></li></ul>
-      </nav>
-       -->
       <div class="ibm-columns">
         <div class="ibm-col-6-5">
-          <h1 id="ibm-pagetitle-h1" class="ibm-h1 ibm-bold" style="padding-bottom:2px;width:1085px;"> Agile Team Tool <span id="systMsg"></span></h1>
-          <!-- <p>Subtitle</p> -->
+          <h1 id="ibm-pagetitle-h1" class="ibm-h1 ibm-bold" style="padding-bottom:2px;width:1085px;"> <%= siteTitle %><span id="systMsg"></span></h1>
         </div>
         <div>
           <span class="customSpan ibm-textcolor-red-50" id="environment"></span>
@@ -62,24 +19,41 @@
     <div id="ibm-content-nav">
       <div id="ibm-primary-tabs">
         <ul class="ibm-tabs" role="tablist" aria-label="Tool navigation">
-          <li role="presentation" <c:out value="${navHomeActive}"/>><a role="tab" href="index.ejs" <c:out value="${navHomeSelected}"/>>Home</a></li>
-          <li role="presentation" <c:out value="${navTeamActive}"/>><a role="tab" href="squads.ejs" <c:out value="${navTeamSelected}"/>>Team Management</a></li>
-          <li role="presentation" <c:out value="${navIterActive}"/>><a role="tab" href="iteration.ejs" <c:out value="${navIterSelected}"/>>Iteration Management</a></li>
-          <li role="presentation" <c:out value="${navAssessmentActive}"/>><a role="tab" href="assessment.ejs" <c:out value="${navAssessmentSelected}"/>>Maturity Assessment</a></li>
-          <li role="presentation" <c:out value="${navHelpActive}"/>><a role="tab" href="help.ejs" <c:out value="${navHelpSelected}"/>>Help</a></li>
+
+          <%if(pageTitle=="Home"){ %>
+            <li role="presentation" class="ibm-active"><a role="tab" href="/" aria-selected="true"/> Home</a></li>
+          <% }else{ %>
+            <li role="presentation"><a role="tab" href="/"/> Home</a></li>
+           <% } %>
+           
+          <%if(pageTitle=="Team"){ %>
+            <li role="presentation" class="ibm-active"><a role="tab" href="/" aria-selected="true"/> Team Management</a></li>
+          <% }else{ %>
+            <li role="presentation"><a role="tab" href="/teams"/>Team Management</a></li>
+          <% } %>
+            
+          <%if(pageTitle=="Iteration"){ %>
+            <li role="presentation" class="ibm-active"><a role="tab" href="/" aria-selected="true"/> Iteration Management</a></li>
+          <% }else{ %>
+            <li role="presentation"><a role="tab" href="/iteration"/> Iteration Management</a></li>
+          <% } %>
+          
+          <%if(pageTitle=="Assessment"){ %>
+            <li role="presentation" class="ibm-active"><a role="tab" href="/" aria-selected="true"/> Maturity Assessment</a></li>
+          <% }else{ %>
+            <li role="presentation"><a role="tab" href="/assessment"/> Maturity Assessment</a></li>
+          <% } %>
+          
+          <%if(pageTitle=="Help"){ %>
+            <li role="presentation" class="ibm-active"><a role="tab" href="/" aria-selected="true"/> Help</a></li>
+          <% }else{ %>
+            <li role="presentation"><a role="tab" href="/help"/>Help</a></li>
+          <% } %>
+
           <li role="presentation" class= "feedback" style="float: right;"> <a class= "feedback" href="javascript: launchFeeback();">Feedback</a> </li>
         </ul>
       </div>
-      <!-- 
-      <div id="ibm-secondary-tabs">
-        <ul class="ibm-tabs">
-          <li><a href="assessment.jsp">Team</a></li>
-          <li><a href="collaboration.jsp" id="assessmentLink">Team Assessment</a></li>
-          <li><a href="progress.jsp" id="summaryLink">Assessment Summary</a></li>
-          <li><a href="devops.jsp">DevOps</a></li> 
-        </ul>
-      </div>
-       -->
+
     </div>
   </nav>
   <!-- CONTENT_NAV_END -->
