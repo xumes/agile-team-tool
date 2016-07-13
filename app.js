@@ -26,6 +26,15 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Force SSL
+if (process.env.forceSSL == "true") {
+  app.use (function(req, res, next) {
+    if (req.headers['x-forwarded-proto'] != 'https')
+      return res.redirect(['https://', req.get('Host'), req.url].join(''));
+    return next()      
+  });
+}
+
 //Authentication
 app.use(session({
   store: new RedisStore(settings.redisDb),
