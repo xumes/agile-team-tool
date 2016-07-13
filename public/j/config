@@ -1,0 +1,88 @@
+//---THIS IS CURRENT SIT current current
+//server="https://";
+//----change your Unit test cloudant, id and password in the following lines...
+//----serverPath="descalhc:cloudant@descalhc.cloudant.com";
+//serverPath="descalhc.cloudant.com";
+//db="ciodashboard";
+//user="descalhc";
+//pass="cloudant";
+//batchURL="http://descalhc.cloudant.com";
+
+
+//---- OLD UAT Cloudant with 9450 link-- http://eslpdev15.somerslab.ibm.com/agildash_uat/_all_docs
+//server="https://apim2.pok.ibm.com:9450"
+//serverPath="/cio/dashboard/proxy/http/eslpdev15.somerslab.ibm.com";
+//db="agildash_uat";
+//user="cloudant";
+//pass="cloudant";
+//batchURL="http://eslpdev15.somerslab.ibm.com"; 
+
+
+//Jackie's UAT -- CURRENT
+//server="https://";
+//serverPath="mondigjd.cloudant.com";
+//db="agildash_prod_may13";
+//user="mondigjd";
+//pass="cloudant1";
+//batchURL="http://mondigjd.cloudant.com";
+
+//Public cloudant
+server="https://";
+serverPath="83c46df0-001c-4018-af51-6ed0d480dc7f-bluemix.cloudant.com";
+db="agildash_prod_imgjun28";
+user="83c46df0-001c-4018-af51-6ed0d480dc7f-bluemix";
+pass="489d9f422db480601010eae537e23f914f972b750bafa2abb1dd3aca101e9047";
+batchURL="http://83c46df0-001c-4018-af51-6ed0d480dc7f-bluemix.cloudant.com";
+
+
+//-----OLD Production environment  9446 old
+//server="https://apim.pok.ibm.com:9446";
+//serverPath="/cio/dashboard/proxy/http/eslpdev15.somerslab.ibm.com";
+//db="agildash_prod";
+//user="cloudant";
+//pass="cloudant";
+//batchURL="http://eslpdev15.somerslab.ibm.com";
+
+
+
+//-----NEW PRODUCTION environment  9446 -- on HOmer's DB - agildash_prod
+//server="https://";
+//serverPath="descalhc.cloudant.com";
+//db="agildash_prod";
+//user="descalhc";
+//pass="cloudant";
+//batchURL="http://descalhc.cloudant.com";
+
+
+//-----batch environment  
+//server="https://apim2.pok.ibm.com:9450";
+//serverPath="/cio/dashboard/proxy/http/eslpdev15.somerslab.ibm.com";
+//db="agildash_bsln4_wfm_apr20";
+//user="cloudant";
+//pass="cloudant";
+//batchURL="http://eslpdev15.somerslab.ibm.com";
+
+
+baseUrl = server+serverPath;
+baseUrlDb = baseUrl + "/" + db;
+
+prefixDomain="ag_domain_";
+prefixClan="ag_clan_";
+prefixTribe="ag_tribe_";
+prefixSquad="ag_squad_";
+prefixTeam="ag_team_";
+prefixIteration="ag_iterationinfo_";
+prefixAssessment="ag_mar_"
+
+environment="SIT";
+
+//feedback config
+feedbackTo = "apim@us.ibm.com";
+feedbackAddTos = "jeanlam@us.ibm.com,liamf@br.ibm.com,bfouts@us.ibm.com,amy_travis@us.ibm.com";
+mailerHost = "na.relay.ibm.com";
+mailerMaxRetries = "3";
+feebackSubject = "Agile Team Tool Feedback";
+sentSuccess = "Feedback email has been sent.";
+sentFail = "Problem on sending feedback email. Please contact system administrator at agileteamtool@ibm.com";
+messageAdd= "Do not respond to this note, it was server generated. If you have any technical questions with this tool, please contact Bruce Fouts/Atlanta/IBM.";
+emailIDError = "Your feedback could not be submitted because at least one of the cc email addresses is not in internet address or NotesID format.";

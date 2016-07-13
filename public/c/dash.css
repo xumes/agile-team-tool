@@ -1,0 +1,582 @@
+#ibm-leadspace-head {
+	background: url(../img/snowboarding2.jpg) no-repeat;
+	background-size: cover;
+}
+
+#ibm-leadspace-body {
+	padding-top: 10px;
+}
+
+.ibm-landing-page #ibm-content-body {
+	padding-top: 10px;
+}
+
+.ibm-column-form span.select2 {
+	width: 335px;
+}
+
+.ibm-alternate {
+	height: 70px;
+}
+
+.ibm-tabs {
+	font-size: 85%;
+}
+
+.ibm-h1 .ibm-h2,.ibm-h3,.ibm-h4,.ibm-h5 {
+	font-size: 90%;
+	padding-bottom: 0px;
+}
+
+.squad-sections .ibm-show-hide h2 a, .ibm-show-hide h2.agile-section-title a {
+	padding: 4px 4px 0px 30px;
+}
+
+div.ibm-rule {
+	margin: 7px 0 5px;
+}
+
+p , input, textarea, span, select, table,.ibm-data-table caption {
+	font-size: 10.5pt;
+	padding: 0 0 5px;
+}
+
+.agile-section-title {
+	font-size: 90% !important;
+	font-weight: bold !important;		
+	padding-bottom: 0px;
+	margin-top: 6px;
+}
+
+.agile-section-title a {
+	border-top-width: 0px !important;
+	padding-top: 0px !important;
+	padding-bottom: 0px !important;
+	font-weight: bold !important;	
+	color: #323232 !important;
+	width: 195px !important;
+	padding-left: 20px !important;
+}
+
+.agile-section-title a::before, .squad-sections .ibm-show-hide h2 a::before, 
+.agile-maturity .agile-summary a::before {
+	font-size: 1rem !important;
+}
+
+.agile-section-title a[class*='show-active'] {
+	color: #323232 !important;
+}
+
+.agile-section-nav {
+	margin-left: 120px;
+	margin-top: -28px;
+	display: inline-block; 
+	float: right;"	
+}
+
+.agile-section-nav p {
+	margin-left: 20px;
+	margin-right: 10px;
+	margin-top: 3px;
+	float: left;
+	padding-bottom: 0px;
+}
+
+.agile-section-nav label {
+	font-size: 14px;
+	margin-left: 20px;
+	margin-right: 10px;
+	margin-top: 6px;
+	float: left;
+	padding-bottom: 0px;
+}
+
+.agile-section-nav select {
+	min-width: 200px;
+	max-width: 230px;
+}
+
+.agile-section-nav .ibm-btn-sec {
+	padding: 3px; 
+	border: 1px solid #323232;
+}
+
+.agile-section-nav .select2-container .select2-selection--single {
+    height: 25px;
+    margin-top: 3px;
+}
+
+.agile-section-filter p {
+	margin: 0px;
+	padding-bottom: 2px !important;
+}
+
+.agile-section-filter p > a, .agile-section-filter p > a::before, .agile-section-filter p > a::after  {
+	text-decoration: underline;
+	color: #323232;
+}
+
+.agile-section-filter span {
+	display: inline-block;
+}
+
+.agile-section-filter-input {
+	margin-left: 0px;
+	display: inline-block; 
+	top: -15px;
+	margin-top: 15px;
+	margin-left: 15px;
+	position: relative;
+}
+
+#teamTree ul.ibm-twisty > li.ibm-active > a.ibm-twisty-trigger,
+#teamTree ul.ibm-twisty > li a.ibm-twisty-trigger,
+#teamTree ul.ibm-twisty > li a.agile-team-link {
+	color: #323232;
+}
+
+#teamTreeMain {
+	margin-right: 5px;
+	width: 98%;
+}
+
+#teamTreeMain a.ibm-twisty-trigger {
+	border-bottom: 0 none !important;
+	margin: 0px 2px 0px 2px;
+}
+
+#teamTree a::before {
+	font-size: 0.85rem
+}
+
+#teamTree .agile-team-standalone a::before {
+	font-size: 0rem
+}
+
+#teamTree a.agile-team-link {
+	display: inherit;
+	margin-left: 15px;
+	padding-left: 5px;
+	border-bottom: 1px dotted !important;
+}
+
+.agile-team-parent-selected {
+	background-color: #c0e6ff;
+}
+
+.agile-team-selected {
+	font-weight: bold;
+	background-color: #5aaafa;
+}
+
+
+.agile-team-squad, #teamTree li.agile-team-squad a::after, #teamTree a.agile-team-squad::after,  #teamTable a.agile-team-squad::after{
+	content: " * ";
+	color: red;
+}
+
+#teamTree .ibm-twisty-body > p {
+	margin-left: 0px;
+	padding-bottom: 1px;
+	padding-top: 1px;
+}
+
+#teamTree li {
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+#teamTree li > a {
+	margin-top: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 15px;
+	font-size: 	10.5pt;
+}
+
+#teamTree div > p > a {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	font-size: 	10.5pt;
+	color: #323232;
+	display: block;
+}
+
+.agile-section-nav #gotoIterationList .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 25px;
+}
+.agile-section-nav .select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: -3px;
+    padding-bottom: 3px;
+}
+.agile-section-nav .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 25px;
+ }
+
+.agile-index-btn {
+	margin: 0 10px; 
+	min-width: 40px; 
+	padding-bottom: 1px; 
+	padding-top: 1px; 
+	padding-left: 1px; 
+	padding-right: 1px; 
+	border: 1px solid #323232;
+}
+
+#assessmentForm [class='ibm-btn-row'] input[type='button'] {
+	padding-bottom: 5px; 
+	padding-top: 5px; 
+	margin-bottom: 0px;
+}
+
+.agile-maturity .ibm-twisty-body .ibm-data-table {
+	margin-left: 0px;
+}
+
+ul[class='ibm-twisty agile-principle'], ul[class='ibm-twisty agile-practice'] {
+	margin-left: -12px;
+}
+
+.agile-maturity ul.ibm-twisty > li.ibm-active > a.ibm-twisty-trigger, .agile-maturity a:hover,
+.agile-maturity > h2 > a, .agile-maturity > h2 > a.ibm-show-active, .agile-summary a:hover {
+	color: black; !important;
+}
+
+.agile-maturity .agile-practice a span {
+	float: right;
+	color: #d74108;
+	padding-right: 10px;
+	font-size: 9.5pt;
+}
+
+.agile-assessment > li > a, .agile-assessment > a {
+	background-color: #5aaafa;
+}
+
+.agile-principle > li > a, .agile-assessment > li > div > p {
+	background-color: #c0e6ff;
+}
+
+.agile-assessment > li > div > p, .agile-principle > li > div > p {
+	font-size: 9.5pt;
+	margin-left: -12px; 
+	padding-left: 22px;
+	padding-bottom: 0px;
+}
+
+[class*='agile-practice'] .ibm-twisty-body table {
+	margin-bottom: 15px;
+}
+
+
+[class*='agile-practice'], ul.ibm-twisty > li a.ibm-twisty-trigger, li a.ibm-twisty-trigger span.ibm-important {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	font-size: 9.5pt;
+}
+
+.agile-maturity .ibm-twisty-body table caption, .agile-maturity .ibm-twisty-body table ul li, .agile-principle textarea {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	line-height: 18px;
+	font-size: 9.5pt;
+}
+
+.agile-question-opt {
+	text-align: center;
+	vertical-align: middle;
+}
+
+[class*='agile-practice-opt']  {
+	vertical-align: middle; text-align: center
+}
+
+#assessmentStatus {
+	float: left; 
+	margin-left: 30px;
+}
+
+#assessmentStatus span {
+	color: blue;
+	line-height: 20px;
+	margin-right: 30px;
+}
+
+p,table {
+	margin-left: 30px;
+}
+
+.ibm-column-form input[type="number"] {
+	height: 2.25em;
+	line-height: 2.25em;
+	text-indent: 5px;
+}
+
+input.ibm-btn-small[class*="ibm-btn-"],button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
+	font-size: 10.5pt;
+}
+
+table.dataTable thead th, table.dataTable tbody th, table.dataTable tbody td, 
+.ibm-data-table thead th, .ibm-data-table tbody th, .ibm-data-table tbody td {
+	padding: 7px 7px;
+}
+
+table.dataTable tbody td p, .ibm-data-table tbody td p {
+	margin: 0px;
+}
+
+ibm-btn-pri ibm-btn-small {
+	font-size: 5pt;
+}
+.ui-dialog{
+	background: #F8F8F8;
+	border: 2px solid #090909;
+	color: #333333;
+	font-weight:bold;
+}
+
+#ibm-footer-locale-selector, .ibm-feedbacklink {
+	display:none !important;
+}
+
+.ibm-card {
+	margin-bottom: 5px;
+}
+
+.ibm-card__heading, .ibm-card__heading, .ibm-card__content, .ibm-card__content p  {
+	font-size: 9.5pt;
+	padding: 2px;
+	margin-left: 0px;
+	text-align: center;
+}
+
+#agile-dialog {
+	padding-bottom: 20px;
+}
+
+#agile-dialog .ibm-overlay-heading-con, #agile-dialog p {
+	margin-left: 0px;
+	margin-bottom: 0px; 
+	padding-bottom: 0px;
+}
+
+#agile-dialog .content, #agile-dialog p {
+	margin-left: 0px;
+	margin-bottom: 0px;
+	padding-bottom: 20px; 
+	text-align: center;
+	font-size: 10.5pt;
+}
+
+.scoreTitle {
+	font-size: 10.5pt;
+	margin-left: 0px;
+	font-weight: normal;
+}
+
+.scorelegend span {
+	border: 1px solid #c7c7c7;
+	display: in line-block;
+	height: 10px;
+	width: 10px;
+	margin-left: 15px;
+	margin-right: 5px;
+	padding-left: 15px;
+	padding-right: 5px;
+}
+
+.toolTip {
+	font-size: 11px;
+	margin-left: 10px;
+}
+
+.customLink{
+	float: left;
+	font-size: 14px;
+	color: inherit;
+}
+
+a.customLink:hover, a.customLink:visited {
+    text-decoration: none;
+}
+
+[class*="customLink"]:before{
+	  position: relative;
+}
+
+span.customSpan{
+	float: right;
+	padding-top: 15px;
+	padding-right: 15px;
+	display: inline-block;
+}
+
+.cssanimations .ibm-masthead-item-menu button span{
+	margin-top:2px;
+}
+
+.readOnlyText{
+	vertical-align: top;
+	min-width: 300px;
+	max-width: 550px;
+}
+
+.agile-read-only-status {
+	vertical-align: top;
+	min-width: 180px;
+	max-width: 550px;
+	margin-left: 625px;
+	margin-top: -55px;
+	margin-bottom: 35px;
+	max-height: 20px;
+	min-height: 20px;
+	font-size: 10.5pt;
+}
+
+.ibm-landing-page #ibm-pcon {
+    min-height: 600px;
+}
+
+#teamTable {
+	margin-left: 5px;
+	width: 98%;
+}
+
+#teamTable tr {
+	border: 0 none !important;
+}
+
+#teamTable td {
+	padding: 0px;
+}
+
+#teamTable tbody tr td a {
+	display: block;
+	max-width: 385px;
+	word-wrap: break-word;
+	text-decoration: none;
+	padding: 5px 3px 5px 3px;
+	border-bottom: 1px dotted !important;
+}
+
+
+.inputCustom {
+	width: 170px;
+	background: #fff none repeat scroll 0 0;
+	border: 1px solid #000;
+}
+
+.inputCustom:focus {
+	background: #fff none repeat scroll 0 0;
+  border: 1px solid #000;
+}    
+
+.inputCustom:hover {
+	border-color: #4178be;
+}
+
+.pCustom, .spanCustom{
+	width: 550px;
+}
+
+#createTeamForm p > label, #iterationForm p > label {
+	width: 200px;
+}
+
+#createTeamForm p > span, #createTeamForm p.ibm-btn-row > span {
+	min-width: 600px;
+}
+
+#assessmentForm p > label {
+	width: 280px;
+}
+
+#assessmentForm p > span {
+	min-width: 520px;
+}
+
+#createTeamForm input[type='button'] {
+	margin-bottom: 0px;
+}
+
+.sysMsg {
+    color: red;
+    display: inline-block;
+    font-size: 0.91rem;
+    height: 56px;
+    line-height: 72px;
+    margin-left: 40px;
+    padding-bottom: 0;
+    position: relative;
+    top: -10px;
+    width: 731px;
+}   
+
+
+.agile-maturity .ibm-container-body {
+	margin-bottom: 10px;
+}
+
+.agile-maturity .ibm-card__content .ibm-data-table {
+	margin-left: 15px;
+}
+
+.agile-maturity h2 a,.agile-maturity h2 a[class*='show-active'] {
+	background-color: #5aaafa; !important;
+	color: black; !important;
+	padding-top: 3px; !important;
+	padding-bottom: 3px; !important;
+}
+
+.agile-maturity .ibm-card {
+	 border: 0;
+}
+#scpagenav .select2-container .select2-selection--single,#mascpagenav .select2-container .select2-selection--single, #mascpagenav .select2-container--default .select2-selection--single .select2-selection__arrow,#scpagenav .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 24px;
+}
+#scpagenav #gotoIterationList .select2-container--default .select2-selection--single .select2-selection__rendered,#mascpagenav #magotoIterationList .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 21px;
+}
+#scpagenav .select2-container--default .select2-selection--single .select2-selection__arrow,#mascpagenav .select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: -3px;
+}
+#scpagenav .select2-container--default .select2-selection--single .select2-selection__rendered,#mascpagenav .select2-container--default .select2-selection--single .select2-selection__rendered{
+    line-height: 24px;
+ }
+ .fltLeft{
+ float:left;display:inline-block;
+ }
+
+table.action td {
+  padding: 4px;
+  font-size: 11px;
+}
+
+#deliveryContainer, #container {
+  display: table-cell;
+  position:absolute;
+  width:100%;
+}
+
+#ibm-primary-tabs > ul > li > a.feedback:LINK, #ibm-primary-tabs > ul > li > a.feedback:hover  {
+	background: none;
+}
+
+.clearable{
+  background: #fff url(data:image/gif;base64,R0lGODlhBwAHAIAAAP///5KSkiH5BAAAAAAALAAAAAAHAAcAAAIMTICmsGrIXnLxuDMLADs=) no-repeat right -10px center;
+  border: 1px solid #999;
+  padding: 3px 18px 3px 4px;     /* Use the same right padding (18) in jQ! */
+  border-radius: 3px;
+  transition: background 0.4s;
+}
+.clearable.x  { background-position: right 5px center; } 
+.clearable.onX{ cursor: pointer; }            
+.clearable::-ms-clear {display: none; width:0; height:0;}
+
+#helpcol2 p, #helpcol1 p {
+	margin-left: 0px;
+}
+
+#helpcol2 {
+	margin-left: 60px;
+}s

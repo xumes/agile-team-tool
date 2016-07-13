@@ -8,14 +8,16 @@ var bodyParser   = require('body-parser');
 var passport     = require('passport');
 var settings     = require('./settings');
 var RedisStore   = require('connect-redis')(session);
+var favicon      = require('serve-favicon');
 
 var app = express();
+app.use(favicon(__dirname + '/public/img/favicon.ico'));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -37,8 +39,6 @@ require('./middleware/login')(passport);
 
 //Routes/Controllers for the views
 require('./routes')(app, passport);
-require('./routes');
-
 
 /**
 * Error Handlers

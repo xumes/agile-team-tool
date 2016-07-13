@@ -1,0 +1,60 @@
+<div class="ibm-common-overlay ibm-overlay-alt-two"
+	data-widget="overlay" id="sendFeedback">
+	<h3 class="ibm-bold ibm-h2">Send Feedback</h3>
+	<div class="ibm-rule ibm-alternate-1">
+		<hr>
+	</div>
+	<form id="createTeamForm" class="ibm-column-form"
+		action="mailerFeedback" method="post">
+		<p style="font-weight: bold; color: gray; font-size: medium;">
+			Prior to submitting feedback, please refer to the <a target="_blank"
+				href="http://agileacademy.w3ibm.mybluemix.net/teamtool/howto/AgileTeamTool_FrequentlyAskedQuestions.pdf">Frequently
+				Asked Questions</a> document.
+		</p>
+		<p>
+			<label style="line-height: 20px; font-weight: bold;" for="feedback_recipient">To:</label>
+			<span style="margin-left: 10px;"> <input type="text"
+				name="feedback_recipient" id="feedback_recipient" size="50" disabled></span>
+		</p>
+		<p>
+			<label style="line-height: 20px; font-weight: bold;"
+				for="feedback_sender">From:</label> <span
+				style="margin-left: 10px;"><input type="text"
+				name="feedback_sender" id="feedback_sender" size="50" disabled></span>
+		</p>
+
+		<p>
+			<label style="line-height: 20px; font-weight: bold;"
+				for="feedback_cc">cc:</label> <span style="margin-left: 10px;"><input
+				type="text" name="feedback_cc" id="feedback_cc" size="50"></span>
+		</p>
+
+		<p>
+			<label style="line-height: 20px; font-weight: bold;" for="feedback">Your
+				feedback:<span class="ibm-required">*</span>
+			</label> <span style="margin-left: 30px; padding-top: -100px;"> <textarea
+					name="feedback" id="feedback" rows="6" cols="46"
+					style="resize: none;" maxlength="2000"></textarea>
+			</span>
+		<label style="font-weight: normal; margin-top: -110px; line-height: 20px;">
+			If you're referring to a specific page, please provide the exact URL.
+		</label>
+		</p>
+
+		<div class="ibm-rule ibm-alternate-1" style="margin-top: 30px;">
+			<hr>
+		</div>
+
+		<p>
+			<span
+				style="text-align: right; float: right; display: table-row-group;"
+				class="ibm-btn-row"> <input type="button"
+				class="ibm-btn-pri ibm-btn-small" id="feeback_submit" value="Submit"
+				onclick="submitFeedback();" disabled /> <input type="button"
+				class="ibm-btn-sec ibm-btn-small" id="feedback_cancel"
+				value="Cancel" onclick="closeFeedback();" />
+			</span>
+
+		</p>
+	</form>
+</div>

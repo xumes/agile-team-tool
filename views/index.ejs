@@ -1,13 +1,232 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+<html lang="en-US">
+<head>
 
-    <%- include('footer') %>
-  </body>
+<c:set var="pageTitle" value="Home" scope="session" />
+<% include ./header/header_meta.ejs %>
+
+<script src="./j/jquery-2.1.4.min.js"></script>
+<link href="//1.www.s81c.com/common/v18/css/forms.css" rel="stylesheet">
+<script src="//1.www.s81c.com/common/v18/js/forms.js"></script>
+<link href="//1.www.s81c.com/common/v18/css/tables.css" rel="stylesheet">
+<script src="//1.www.s81c.com/common/v18/js/tables.js"></script>
+
+<script src="//code.highcharts.com/highcharts.js"></script>
+<script src="//code.highcharts.com/highcharts-more.js"></script>
+<script src="//code.highcharts.com/modules/no-data-to-display.js"></script>
+<script src="//malsup.github.io/jquery.blockUI.js"></script>
+
+<link href="c/dash.css?v=<%=Math.random()%>" rel="stylesheet" />
+<script type="text/javascript" src="j/dashUtils.js?v=<%=Math.random()%>"></script>
+<script type="text/javascript" src="j/common.js?v=<%=Math.random()%>"></script>
+<script type="text/javascript" src="j/index.js?v=<%=Math.random()%>"></script>
+<script type="text/javascript" src="j/indexIteration.js?v=<%=Math.random()%>"></script>
+<script type="text/javascript" src="j/indexAssessment.js?v=<%=Math.random()%>"></script>
+<style>
+  .select2-results__options {font-size: 10.5pt !important}
+</style>
+
+</head>
+
+<body id="ibm-com" class="ibm-type" onload="siteEnv();">
+  <div id="ibm-top" class="ibm-landing-page">
+    <% include ./header/header_masthead.ejs %>
+    <div id="ibm-content-wrapper">
+      <% include ./header/header_leadspace.ejs %>
+      <main role="main" aria-labelledby="Agile teams">
+        <div id="ibm-pcon">
+          <div id="ibm-content">
+            <div id="ibm-content-body">  
+              <div id="ibm-content-main">
+                <div class="ibm-columns">
+                  <div class="ibm-col-6-2">
+                    <h2 class="agile-section-title">Agile Teams</h2>
+                    <div class="agile-section-nav">
+                      <p class="ibm-item-note-alternate"><span class="agile-team-squad">*</span> indicates squad team</p>                 
+                    </div>
+                    <div class="ibm-rule ibm-alternate-1">
+                      <hr>
+                    </div>
+                    <div class="agile-section-filter">
+                      <p class="ibm-button-link" id="filterLinks">
+                        <a id="myTeams" role="button" class="ibm-btn-sec ibm-btn-gray-50 ibm-btn-small" style="min-width: 160px; width: 49.5%; padding: 2px;">My team(s)</a> 
+                        <a id="allTeams" role="button" class="ibm-btn-sec ibm-btn-gray-50 ibm-btn-small" style="min-width: 160px; width: 49.5%; padding: 2px;">All teams</a>
+                      </p>
+                      <p>
+                        <input class="clearable" type="text" name="teamFilter" id="teamFilter" value="" placeholder="Enter team name to filter..." aria-label="Name filter for teams" style="width: 94%" />
+                      </p>
+                      <p class="agile-section-expand-collapse">
+                      	<a href="#" id="teamExpand">Expand all</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#" id="teamCollapse">Collapse all</a>
+                      </p>
+                    </div>
+                    <div class="ibm-rule ibm-alternate ibm-gray-30">
+                      <hr>
+                    </div>
+                    <div class="agile-team-nav" data-widget="scrollable" data-height="600">
+                      <div id="teamTree"></div>
+                      <table class="ibm-data-table" id="teamTable" summary="__REPLACE_ME__">
+                        <thead class="ibm-access"></thead>
+                        <tbody></tbody>
+                      </table>
+                    </div>
+                  </div>
+    
+                  <div class="ibm-col-6-4">
+                    <div data-widget="showhide" data-type="panel" class="ibm-show-hide" id="iterationSection">
+                      <h2 class="agile-section-title" data-open="true">Iteration trends</h2>
+                      <div class="agile-section-nav">
+                        <label for="gotoIterationList">Go to iteration:</label>
+                        <select id="gotoIterationList"><option value="" selected="selected">Select one</option></select>
+                        <input style="padding: 3px; border: 1px solid #323232;" type="button" class="ibm-btn-sec ibm-btn-small" id="GoIterationBtn" value="Go" />
+                        <input style="padding: 3px; border: 1px solid #323232;width:130px" type="button" class="ibm-btn-sec ibm-btn-small" id="CreateIterationBtn" value="Create iteration" /> 
+                        
+                      </div>
+                      <div class="ibm-rule ibm-alternate-1">
+                        <hr>
+                      </div>
+                      <div class="ibm-container-body">
+                        <div id="nsquad_team_scard" style="display: none">
+                          <div class="ibm-columns">
+                            <div class="ibm-col-6-2">
+                              <div id="pvelocityChart" style="min-width: 210px; min-height: 280px;"></div>
+                            </div>
+        
+                            <div class="ibm-col-6-2">
+                              <div id="pthroughputChart" style="min-width: 210px; min-height: 280px;"></div>
+                            </div>
+                          </div>
+                          <div class="ibm-rule ibm-alternate ibm-gray-30"><hr></div>
+                          
+                          <div class="ibm-columns">
+                               
+                            <div class="ibm-col-6-2">
+                              <div id="pdefectsChart" style="min-width: 210px; min-height: 280px;"></div>
+                            </div>
+                            <div class="ibm-col-6-2">
+                              <div id="pstatisfactionChart" style="min-width: 210px; min-height: 280px;"></div>
+                            </div>
+                          </div>
+                          <div class="ibm-rule ibm-alternate ibm-gray-30"><hr></div>
+                          
+                          <div class="ibm-columns">
+                            <div class="ibm-col-6-2">
+                              <div id="pPizzaChart" style="min-width: 210px; min-height: 280px;"></div>
+                            </div>
+        
+                            <div class="ibm-col-6-2">
+                              <div id="piePizzaChart" style="min-width: 210px; min-height: 280px;"></div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div id="squad_team_scard" style="display: none">
+                          <div class="ibm-columns">
+                            <div class="ibm-col-6-2">
+                              <div id="velocityChart" style="min-width: 210px; min-height: 280px;"></div>
+                            </div>
+        
+                            <div class="ibm-col-6-2">
+                              <div id="throughputChart" style="min-width: 210px; min-height: 280px;"></div>
+                            </div>
+                          </div>
+                          <div id="chartgrp2">
+                          <div class="ibm-rule ibm-alternate ibm-gray-30"><hr></div>
+                          
+                          <div class="ibm-columns">
+                            <div class="ibm-col-6-2">
+                              <div id="defectsChart" style="min-width: 210px; min-height: 280px;"></div>
+                            </div>
+        
+                            <div class="ibm-col-6-2">
+                              <div id="statisfactionChart" style="min-width: 210px; min-height: 280px;"></div>
+                            </div>
+                          </div>
+                          </div>
+                          <div id="chartgrp3">
+                          <div class="ibm-rule ibm-alternate ibm-gray-30"><hr></div>
+                          
+                          <div class="ibm-columns">
+                            <div class="ibm-col-6-2">
+                              <div id="pizzaChart" style="min-width: 210px; min-height: 280px;"></div>
+                            </div>
+        
+                            <div class="ibm-col-6-2">
+                              <div id="unitCostChart" style="min-width: 210px; min-height: 280px;"></div>
+                            </div>
+                          </div>
+                          </div>
+                        </div>
+                        
+                        <div class="ibm-rule ibm-alternate ibm-gray-30"><hr></div>
+                        
+                      </div>
+                    </div>     
+                    
+                    <div data-widget="showhide" data-type="panel" class="ibm-show-hide" id="assessmentSection">
+                      <h2 class="agile-section-title">Maturity assessment trends</h2>
+                      <div class="agile-section-nav">
+                        <label for="gotoAssesmentList">Go to assessment:</label>
+                        <select id="gotoAssesmentList"><option value="" selected="selected">Select one</option></select>
+                        <input style="padding: 3px; border: 1px solid #323232;" type="button" class="ibm-btn-sec ibm-btn-small" id="GoAssesmentBtn" value="Go" /> 
+                        <input style="padding: 3px; border: 1px solid #323232;width:130px;" type="button" class="ibm-btn-sec ibm-btn-small" id="CreateAssesmentBtn" value="Create assessment" /> 
+                        
+                      </div>
+                      <div class="ibm-rule ibm-alternate-1">
+                        <hr>
+                      </div>
+                      <div class="ibm-container-body">
+                        <div id="assessmentCharts"></div>
+                      </div>
+                    </div>
+                   
+                    <h2 class="ibm-bold ibm-h4">Team Information</h2>
+                    <div class="ibm-rule ibm-alternate-1">
+                      <hr>
+                    </div>
+                    <table class="ibm-data-table" id="levelTable" summary="__REPLACE_ME__">
+                      <thead class="ibm-access">
+                        <tr>
+                          <th scope="col" colspan="2">Team Information</th>
+                        </tr>
+                      </thead>
+                      <tbody id="levelDetail">
+                      </tbody>
+                    </table>
+                    <br />
+                    <h2 class="ibm-bold ibm-h4">Team Members</h2>
+                    <div class="ibm-rule ibm-alternate-1">
+                      <hr>
+                    </div>
+                    <table class="ibm-data-table" id="memberTable" summary="__REPLACE_ME__">
+                      <thead>
+                        <tr>
+                          <th scope="col" width="30%">Name</th>
+                          <th scope="col" width="10%">Allocation</th>
+                          <th scope="col" width="30%">Location</th>
+                          <th scope="col" width="30%">Role</th>
+                        </tr>
+                      </thead>
+                      <tbody id="membersList">
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+  
+      <div id="ibm-related-content">
+        <div id="ibm-merchandising-module">
+          <!-- MTE will generate this -->
+          <!-- <aside role="complementary" aria-label="Related content"> MTE dynamic modules populate in here. <aside> -->
+          <!-- /MTE -->
+        </div>
+      </div>
+    </div>
+    <jsp:include page="footer.jsp" />
+      
+  </div>
+</body>
 </html>
