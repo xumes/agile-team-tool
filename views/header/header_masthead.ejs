@@ -1,62 +1,47 @@
 <!-- MASTHEAD_BEGIN -->
-<script src="j/header.js"></script>
+<script src="j/navbar.js"></script>
 <body>
-  <div id="ibm-masthead" role="banner" aria-label="IBM" class="ibm-mhtype-minimal">
-    <div id="ibm-mast-options">
-      <ul role="toolbar" aria-labelledby="ibm-masthead">
-        <li id="ibm-geo" role="presentation"><a href=
-        "http://www.ibm.com/planetwide/select/selector.html" role="button" aria-label=
-        "United States selected - Choose a country">United States</a></li>
-
-        <li id="ibm-language" role="presentation"><span class="ibm-active" role="button"
-        aria-disabled="true">English</span> <a href="http://www.ibm.com/us/en/" lang=
-        "en-US" role="button" xml:lang="en-US">English</a></li>
-      </ul>
-    </div>
-
-    <div id="ibm-universal-nav" class="">
-      <div id="ibm-home">
-        <a href="http://www.ibm.com/us/en/?lnk=m">IBM&reg;</a>
-      </div><span class="c1">user email here</span>
-
-
-      <ul style="display:none" id="ibm-menu-links" role="toolbar" aria-label="Site map" class="ibm-hide">
-        <li><a href="http://www.ibm.com/sitemap/us/en/">Site map</a></li>
-      </ul>
-
-    <div class="ibm-masthead-rightside">
-        <div aria-labelledby="ibm-masthead" id="ibm-search-module" role=
-        "search" style="display:none">
-            <div class="ibm-masthead-search-close">
-                <p class="ibm-ind-link ibm-icononly ibm-padding-bottom-0">
-                <a class="ibm-close-link ibm-nospacing" href=
-                "http://localhost:3000/#">Close</a></p>
-            </div>
-            <form action="http://www.ibm.com/Search/" id="ibm-search-form"
-            method="get" name="ibm-search-form" style="display:none">
-                <p><button aria-label="Submit" class="ibm-masthead-search-link"
-                id="ibm-search" role="button" type="submit" value=
-                "Submit"></button></p>
-            </form>
+    <div aria-label="IBM" class="ibm-mhtype-minimal" id="ibm-masthead" role=
+    "banner">
+        <div id="ibm-mast-options">
+            <ul aria-labelledby="ibm-masthead" role="toolbar">
+                <li id="ibm-geo" role="presentation">
+                    <a aria-label="United States selected - Choose a country" href=
+                    "http://www.ibm.com/planetwide/select/selector.html" role=
+                    "button">United States</a>
+                </li>
+                <li id="ibm-language" role="presentation">
+                    <span aria-disabled="true" class="ibm-active" role=
+                    "button">English</span> <a href="http://www.ibm.com/us/en/"
+                    lang="en-US" role="button">English</a>
+                </li>
+            </ul>
         </div>
-        <div class="ibm-search-typeahead-container" id="ibm-search-typeahead-container"></div>
-        <ul aria-label="Tools" class="ibm-masthead-iconsonly" role="menubar">
-            <li id="dropdown-display-li" class="ibm-masthead-item-signin" role="presentation">
-                <button id="ibm-dropdown-button" class="ibm-masthead-signin-link" role="menuitem">My IBM</button>
-                <ul aria-label="Profile" class="ibm-dropdown-menu" id="ibm-signin-minimenu-container" role="menu">
-                    <li role="presentation">
-                        <a href="" role="menuitem">Profile</a>
-                    </li>
-                    <li role="presentation">
-                        <a href="" role="menuitem">Sign Out</a>
+        <div class="" id="ibm-universal-nav">
+            <div id="ibm-home">
+                <a href="http://www.ibm.com/us/en/?lnk=m">IBM&reg;</a>
+            </div><span class="c1">user email here</span>
+            <div class="ibm-masthead-rightside">
+                <div class="ibm-search-typeahead-container" id=
+                "ibm-search-typeahead-container"></div>
+                <ul aria-label="Tools" class="ibm-masthead-iconsonly" role=
+                "menubar">
+                    <li class="ibm-masthead-item-signin" id="dropdown-display-li"
+                    role="presentation">
+                        <button class="ibm-masthead-signin-link" id=
+                        "ibm-dropdown-button" role="menuitem">My IBM</button>
+                        <ul aria-label="Profile" class="ibm-dropdown-menu" id=
+                        "ibm-signin-minimenu-container" role="menu">
+                            <li role="presentation">
+                                <a href="" role="menuitem">Profile</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="/logout" role="menuitem">Sign Out</a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
-            </li>
-        </ul>
-    </div>
-
-    </div>
-  </div>
- 
-<!-- MASTHEAD_END -->
-</body>
+            </div>
+        </div>
+    </div><!-- MASTHEAD_END -->
+ </body>
