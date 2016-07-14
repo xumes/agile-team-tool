@@ -11,6 +11,6 @@ module.exports = function(app, includes) {
   	delete req.session.userid;
 	delete req.session.userinfo;
 	req.logout();
-	return res.redirect("/login", 302);
+	return res.redirect("/login");
   });
 };

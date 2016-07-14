@@ -1,12 +1,14 @@
 
 module.exports = function(app, includes) {
-
-  render = includes.render;
+  var render = includes.render;
 
   showLogin = function(req, res) {
-    
-    res.render('login', {title: 'Agile Team Tool', action: "/auth"});
- 
+    json= {
+      "pageTitle": "Login",
+      "action": "/auth"
+    }
+    render(req, res, 'login', json);
   };
+
   app.get("/login", showLogin);
 };
