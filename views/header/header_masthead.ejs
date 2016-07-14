@@ -1,4 +1,5 @@
 <!-- MASTHEAD_BEGIN -->
+<script src="j/header.js"></script>
 <body>
   <div id="ibm-masthead" role="banner" aria-label="IBM" class="ibm-mhtype-minimal">
     <div id="ibm-mast-options">
@@ -18,102 +19,44 @@
         <a href="http://www.ibm.com/us/en/?lnk=m">IBM&reg;</a>
       </div><span class="c1">user email here</span>
 
-      <ul aria-label="Discover IBM" role="toolbar" class="ibm-masthead-categories">
-        <li role="presentation" class="ibm-mh-mainitem ibm-hasmenu"><a role="button"
-        href="http://localhost:9080/cio/dashboard/" id="mhitem-mms0" data-linkid="mms0"
-        class="ibm-chevron-down-link ibm-icon-after" data-menutype="megamenu" name=
-        "mhitem-mms0">Products</a></li>
-
-        <li role="presentation" class="ibm-mh-mainitem ibm-hasmenu"><a role="button"
-        href="http://localhost:9080/cio/dashboard/" id="mhitem-mms1" data-linkid="mms1"
-        class="ibm-chevron-down-link ibm-icon-after" data-menutype="megamenu" name=
-        "mhitem-mms1">Services</a></li>
-
-        <li role="presentation" class="ibm-mh-mainitem ibm-hasmenu"><a role="button"
-        href="http://localhost:9080/cio/dashboard/" id="mhitem-mms2" data-linkid="mms2"
-        class="ibm-chevron-down-link ibm-icon-after" data-menutype="dropdown" name=
-        "mhitem-mms2">Developers</a></li>
-
-        <li role="presentation" class="ibm-mh-mainitem"><a role="button" href=
-        "http://www.ibm.com/support/en-us/?lnk=msu" id="mhitem-mms3" data-linkid="mms3"
-        data-menutype="none" name="mhitem-mms3">Support</a></li>
-
-        <li role="presentation" class="ibm-mh-mainitem"><a role="button" href=
-        "http://www.ibm.com/employment/?lnk=mca" id="mhitem-mms4" data-linkid="mms4"
-        data-menutype="none" name="mhitem-mms4">Careers</a></li>
-      </ul>
 
       <ul style="display:none" id="ibm-menu-links" role="toolbar" aria-label="Site map" class="ibm-hide">
         <li><a href="http://www.ibm.com/sitemap/us/en/">Site map</a></li>
       </ul>
 
-      <div class="ibm-masthead-rightside">
-        
-        <div style="display:none" id="ibm-search-module" role="search" aria-labelledby="ibm-masthead">
-          <div class="ibm-masthead-search-close">
-            <p class="ibm-ind-link ibm-icononly ibm-padding-bottom-0"><a href=
-            "http://localhost:9080/cio/dashboard/#" class=
-            "ibm-close-link ibm-nospacing">Close</a></p>
-          </div>
-
-          <form style="display:none" id="ibm-search-form" action="http://www.ibm.com/Search/" method="get">
-            <p><label for="q">IBM</label> <input type="text" maxlength="100" value=""
-            placeholder="Search" name="q" id="q" aria-label="Search" autocomplete="off"
-            role="combobox" aria-autocomplete="list" aria-expanded="true" aria-owns=
-            "ibm-search-typeahead-container" /> <input type="hidden" value="18" name=
-            "v" /> <input type="hidden" value="utf" name="en" /> <input type="hidden"
-            value="en" name="lang" /> <input type="hidden" value="us" name="cc" />
-            <button role="button" aria-label="Submit" type="submit" id="ibm-search"
-            class="ibm-masthead-search-link" value="Submit"></button></p>
-          </form>
+    <div class="ibm-masthead-rightside">
+        <div aria-labelledby="ibm-masthead" id="ibm-search-module" role=
+        "search" style="display:none">
+            <div class="ibm-masthead-search-close">
+                <p class="ibm-ind-link ibm-icononly ibm-padding-bottom-0">
+                <a class="ibm-close-link ibm-nospacing" href=
+                "http://localhost:3000/#">Close</a></p>
+            </div>
+            <form action="http://www.ibm.com/Search/" id="ibm-search-form"
+            method="get" name="ibm-search-form" style="display:none">
+                <p><button aria-label="Submit" class="ibm-masthead-search-link"
+                id="ibm-search" role="button" type="submit" value=
+                "Submit"></button></p>
+            </form>
         </div>
- 
-
-        <ul aria-label="Tools" role="menubar" class="ibm-masthead-iconsonly">
-          <li role="presentation" class="ibm-masthead-item-signin">
-            <button role="menuitem" class="ibm-masthead-signin-link" tabindex="0">My
-            IBM</button>
-
-            <ul id="ibm-signin-minimenu-container" role="menu" aria-label="Profile"
-            class="ibm-dropdown-menu">
-              <li role="presentation"><a role="menuitem" href=
-              "https://myibm.ibm.com/dashboard/?lnk=mmi">My IBM</a></li>
-
-              <li role="presentation"><a role="menuitem" href=
-              "https://myibm.ibm.com/profile/?lnk=mmi">Profile</a></li>
-
-              <li role="presentation"><a role="menuitem" href=
-              "https://myibm.ibm.com/products-services/?lnk=mmi">Products and
-              services</a></li>
-
-              <li role="presentation"><a role="menuitem" href=
-              "https://myibm.ibm.com/notifications/?lnk=mmi">Notifications</a></li>
-
-              <li role="presentation"><a role="menuitem" href=
-              "http://www.ibm.com/support/en-us/?lnk=mmi">Support</a></li>
-
-              <li role="presentation"><a role="menuitem" href=
-              "https://idaas.iam.ibm.com/idaas/mtfim/sps/authsvc?PolicyId=urn:ibm:security:authentication:asf:basicldapuser&amp;Target=http://localhost:9080/cio/dashboard/">
-              Sign in</a></li>
-            </ul>
-          </li>
+        <div class="ibm-search-typeahead-container" id="ibm-search-typeahead-container"></div>
+        <ul aria-label="Tools" class="ibm-masthead-iconsonly" role="menubar">
+            <li id="dropdown-display-li" class="ibm-masthead-item-signin" role="presentation">
+                <button id="ibm-dropdown-button" class="ibm-masthead-signin-link" role="menuitem">My IBM</button>
+                <ul aria-label="Profile" class="ibm-dropdown-menu" id="ibm-signin-minimenu-container" role="menu">
+                    <li role="presentation">
+                        <a href="" role="menuitem">Profile</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="" role="menuitem">Sign Out</a>
+                    </li>
+                </ul>
+            </li>
         </ul>
-      </div>
+    </div>
+
     </div>
   </div>
  
 <!-- MASTHEAD_END -->
-  <script src="./j/common.js" type="text/javascript">
-</script><script type="text/javascript">
-//<![CDATA[
-  jQuery(function($) {
-    $(document).ready(function() {
-      var userTemp = "colby";
-      var userId = userTemp.substring(userTemp.lastIndexOf("/")+1, userTemp.length);
-      getAuthenticatedUser(userId);
-    });
-  });
-  //]]>
-  </script>
 </body>
-</html>
