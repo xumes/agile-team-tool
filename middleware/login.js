@@ -30,7 +30,10 @@ module.exports = function(passport) {
   };
 
   passport.serializeUser(function(user, done) {
-    done(null, JSON.parse(user).shortEmail);
+    if(typeof user === 'string')
+      done(null, JSON.parse(user).shortEmail);
+    else
+      done(null, user['shortEmail']);
   });
   
   passport.deserializeUser(function(user, done) {
@@ -44,7 +47,9 @@ module.exports = function(passport) {
   }, function(req, email, password, done) {
     ldapAuth(email, password)
       .then(function(ldapObject) {
-        if (_.isEmpty(ldapObject['ldap'])) {
+        ldapObject = typeof ldapObject === 'string' ? JSON.parse(ldapObject) : ldapObject;
+        if (!(_.isEmpty(ldapObject['ldap']))) {
+          console.log('login success using ldap');
           req.session['email'] = ldapObject['shortEmail'];
           return done(null, ldapObject);
         }
