@@ -91,7 +91,7 @@ exports.getByView = function(_design, _view, callback) {
       });
 };
 
-exports.getByViewKey = function(_design, _view, _key callback) {
+exports.getByViewKey = function(_design, _view, _key, callback) {
   agileTeam.view(_design, _view,
       {'include_docs': false, key: _key }, function(err, body) {
         if (err) {
