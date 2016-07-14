@@ -8,6 +8,7 @@ branches:
 install:
 - npm install
 - npm install -g gulp
+- chmod +x bin/deploy.sh
 script:
 - gulp test
 deploy:
