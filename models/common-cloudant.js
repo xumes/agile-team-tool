@@ -5,8 +5,8 @@
 var Cloudant = require('cloudant');
 var settings = require('../settings');
 
-var cloudantDb = Cloudant({account:settings.cloudant.cloudantUsername, password:settings.cloudant.cloudantPassword});
-var dbName = settings.cloudant.cloudantDbName;
+var cloudantDb = Cloudant({account:settings.cloudant.userName, password:settings.cloudant.password});
+var dbName = settings.cloudant.dbName;
 var agileTeam = cloudantDb.use(dbName);
 
 exports.addRecord = function(data, callback) {
