@@ -1,1 +1,0 @@
-/* Put cloudant calls for team here */
