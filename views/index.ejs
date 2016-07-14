@@ -2,10 +2,10 @@
 <html lang="en-US">
 <head>
 
-<c:set var="pageTitle" value="Home" scope="session" />
+<script src="j/www.js"></script>
 <%- include ./header/header_meta.ejs %>
 
-<script src="./j/jquery-2.1.4.min.js"></script>
+<script src="j/jquery-2.1.4.min.js"></script>
 <link href="//1.www.s81c.com/common/v18/css/forms.css" rel="stylesheet">
 <script src="//1.www.s81c.com/common/v18/js/forms.js"></script>
 <link href="//1.www.s81c.com/common/v18/css/tables.css" rel="stylesheet">
@@ -17,11 +17,11 @@
 <script src="//malsup.github.io/jquery.blockUI.js"></script>
 
 <link href="c/dash.css?v=<%=Math.random()%>" rel="stylesheet" />
-<script type="text/javascript" src="j/dashUtils.js?v=<%=Math.random()%>"></script>
-<script type="text/javascript" src="j/common.js?v=<%=Math.random()%>"></script>
-<script type="text/javascript" src="j/index.js?v=<%=Math.random()%>"></script>
-<script type="text/javascript" src="j/indexIteration.js?v=<%=Math.random()%>"></script>
-<script type="text/javascript" src="j/indexAssessment.js?v=<%=Math.random()%>"></script>
+<script type="text/javascript" src="/j/dashUtils.js?v=<%=Math.random()%>"></script>
+<script type="text/javascript" src="/j/common.js?v=<%=Math.random()%>"></script>
+<script type="text/javascript" src="/j/index.js?v=<%=Math.random()%>"></script>
+<script type="text/javascript" src="/j/indexIteration.js?v=<%=Math.random()%>"></script>
+<script type="text/javascript" src="/j/indexAssessment.js?v=<%=Math.random()%>"></script>
 <style>
   .select2-results__options {font-size: 10.5pt !important}
 </style>
@@ -226,7 +226,6 @@
       </div>
     </div>
     <%- include ./footer.ejs %>
-      
   </div>
 </body>
 </html>
