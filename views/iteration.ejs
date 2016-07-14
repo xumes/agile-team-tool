@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+
+<c:set var="pageTitle" value="Iteration Management" scope="session"/>
+<%- include ./header/header_meta.ejs %>
+
+<link href="//1.www.s81c.com/common/v18/css/forms.css" rel="stylesheet">
+<script src="//1.www.s81c.com/common/v18/js/forms.js"></script>
+
+<link href="//1.www.s81c.com/common/v18/css/tables.css" rel="stylesheet">
+<script type="text/javascript" src="//1.www.s81c.com/common/v18/js/tables.js"></script>
+
+<script src="//1.www.s81c.com/common/v18/js/dyntabs.js"></script>
+
+<!-- Referring to default jquery implementaion as v18 datepicker still seems to be a  work in progress -->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<style type="text/css">
+.ui-tooltip {
+    background: rgb(236, 236, 236);
+    color: rgb(50, 50, 50);
+    border: none;
+    padding: 0;
+    opacity: 1;
+}
+.ui-tooltip-content {
+    position: relative;
+    padding: 1em;
+    font-size: 8pt;
+    line-height: 20px;
+}
+.ui-tooltip-content::after {
+    content: '';
+    position: absolute;
+    border-style: solid;
+    display: block;
+    width: 0;
+    border-color: transparent rgb(236, 236, 236);
+}
+</style>
+
+<link rel="stylesheet" href="c/dash.css?v=<%=Math.random()%>" />
+<script type="text/javascript" src="j/common.js?v=<%=Math.random()%>"></script>
+<script type="text/javascript" src="j/dashUtils.js?v=<%=Math.random()%>"></script>
+<script type="text/javascript" src="j/iteration.js?v=<%=Math.random()%>"></script>
+
+</head>
+
+<body id="ibm-com" class="ibm-type" onload="siteEnv();">
+  <div id="ibm-top" class="ibm-landing-page">
+    <%- include ./header/header_masthead.ejs %>
+    
+    <div id="ibm-content-wrapper">
+      <%- include ./header/header_leadspace.ejs %>
+
+      <main role="main" aria-labelledby="Team iteration"> 
+    
+        <div id="ibm-pcon">
+          <div id="ibm-content">
+            <div id="ibm-content-body">
+    
+              <div id="ibm-content-main">
+    
+                <div class="ibm-columns">
+                  
+                  <form id="iterationForm" class="ibm-column-form">
+                    <div class="ibm-col-1-1">
+    
+                      <h2 class="ibm-bold ibm-h3">Iteration Information</h2>
+                      <div class="ibm-rule ibm-alternate-1">
+                        <hr>
+                      </div>
+    
+                      <p>
+                        <label style="line-height: 20px;" for="teamSelectList">Select an existing squad team:<span class="ibm-required">*</span></label>
+                        <span> 
+                          <select id="teamSelectList" name="teamSelectList" style="width: 360px;">
+                            <option value="new" selected="selected">Select one</option>
+                          </select>
+                        </span>
+                      </p>
+    
+                     <div class="agile-read-only-status ibm-item-note-alternate" id="userEditMsg"></div>
+    
+                      <p>
+                        <label for="iterationSelectList">Iteration number/identifier:<span class="ibm-required">*</span></label> 
+                        <span > 
+                          <select id="iterationSelectList" name="iterationSelectList" disabled style="width: 360px;">
+                            <option value="new" selected="selected">Create new...</option>
+                          </select>
+                        </span>
+                      </p>
+                      <p id="newIterationNameSection">
+                        <label for="iterationName">&nbsp;<span class="ibm-access">Iteration number/identifier</span></label>
+                        <span> <input type="text" name="iterationName" id="iterationName" size="44" value="" placeholder="Iteration number/identifier" style="width: 380px">
+                        </span>
+                      </p>
+    
+                      <p>
+                        <label for="iterationStartDate">Iteration start date:<span class="ibm-required">*</span></label> 
+                        <span> 
+                          <input type="text" class="ibm-date-picker"
+                          name="iterationStartDate" id="iterationStartDate" size="44" value="" readonly="readonly" placeholder="Iteration start date" style="width: 380px">
+                        </span>
+                      <p>
+                      
+                      <p>
+                        <label for="iterationEndDate">Iteration end date:<span class="ibm-required">*</span></label> 
+                        <span>
+                          <input type="text" class="ibm-date-picker" name="iterationEndDate"
+                          id="iterationEndDate" size="44" value="" placeholder="Iteration end date" readonly="readonly" style="width: 380px">
+                        </span>
+                      </p>
+    
+              
+                      <div class="ibm-rule ibm-gray-80">
+                        <hr>
+                      </div>
+                      <h2 class="ibm-bold ibm-h4">Iteration commitments</h2>
+    
+                      <p> 
+                        <label for="commStories" style="width: 410px">Committed stories:<span class="ibm-required"></span></label> <span> <input type="number" name="commStories"
+                          id="commStories" size="8" value="" placeholder="0" min="0" onkeypress="return isNumber(event)" class="inputCustom numnodecimal">
+                        </span>
+                      </p>
+    
+                      <p>
+                        <label for="commPoints" style="width: 410px">Committed story points:<span class="ibm-required"></span></label> <span> <input type="number" name="commPoints"
+                          id="commPoints" size="8" value="" placeholder="0" min="0.0" onkeypress="return isNumber(event)" class="inputCustom numnodecimal">
+                        </span>
+                      </p>
+    
+                      <p>
+                        <label for="memberCount" style="width: 410px">Team members this iteration:
+                          <a class="ibm-information-link" id="memberCountTT" style="position: relative; top: -5px; left:10px; display: inline;"></a>
+                        </label> 
+                        <span> 
+                          <input type="number" name="memberCount" id="memberCount" size="8" value="" placeholder="0" min="0" onkeypress="return isNumber(event)" class="inputCustom numnodecimal">
+                          <a id="refreshFTE" class="ibm-refresh-link" style="position: relative; top: -5px; left:10px; display: inline; cursor: pointer;" onclick="refreshFTE()" role="button"></a>
+                        </span> 
+                      </p>
+                      
+                      <p>
+                        <label for="fteThisiteration" style="width: 410px">FTE this iteration:
+                          <a class="ibm-information-link" id="fteThisiterationTT" style="position: relative; top: -5px; left:10px; display: inline;"></a>
+                        </label> 
+                        <span> 
+                          <input type="number" name="fteThisiteration" id="fteThisiteration" min="0" step="0.1" size="21" value="" placeholder="0.0" class="inputCustom"/>
+                        </span>
+                      </p>
+    
+                      <div class="ibm-rule ibm-gray-80">
+                        <hr>
+                      </div>
+                      <h2 class="ibm-bold ibm-h4">Iteration results</h2>
+    
+                      <p>
+                        <label for="commStoriesDel" style="width: 410px">Throughput - Stories/tickets/cards delivered:<span class="ibm-required"></span></label> <span> <input type="number"
+                          name="commStoriesDel" id="commStoriesDel" size="8" value="" placeholder="0" min="0" onkeypress="return isNumber(event)" class="inputCustom numnodecimal">
+                        </span>
+                      </p>
+    
+                      <p>
+                        <label for="commPointsDel" style="width: 410px">Velocity - Story points delivered:<span class="ibm-required"></span></label> <span> <input type="number"
+                          name="commPointsDel" id="commPointsDel" size="8" value="" placeholder="0" min="0" onkeypress="return isNumber(event)" class="inputCustom numnodecimal">
+                        </span>
+                      </p>
+    
+    
+                      <p>
+                        <label for="DeploythisIteration" style="width: 410px">Deployments this iteration:</label> 
+                        <span> 
+                          <input type="number" name="DeploythisIteration" id="DeploythisIteration" size="8" value="" placeholder="0" min="0" class="inputCustom numnodecimal">
+                        </span>
+                      </p>
+    
+                      <p>
+                        <label for="defectsIteration" style="width: 410px">Defects this iteration:<span class="ibm-required"></span></label> 
+                        <span> 
+                          <input type="number" name="defectsIteration" id="defectsIteration" size="8" value="" placeholder="0" min="0" onkeypress="return isNumber(event)" class="inputCustom numnodecimal">
+                        </span>
+                      </p>
+    
+                      <p>
+                        <label for="teamChangeList" style="width: 410px">Was there a team change?
+                          <a class="ibm-information-link" id="teamChangeListTT" style="position: relative; top: -5px; left:10px; display: inline;"></a>
+                        </label> 
+                        <span> 
+                          <select id="teamChangeList" name="teamChangeList" style="width: 152px;">
+                            <option value="Yes">Yes</option>
+                            <option value="No" selected="selected">No</option>
+                        </select>
+                        </span>
+                      </p>
+    
+                      <p>
+                        <label for="clientSatisfaction" style="width: 410px">Client satisfaction:
+                          <a class="ibm-information-link" id="clientSatisfactionTT" style="position: relative; top: -5px; left:10px; display: inline;"></a>
+                        </label> 
+                        <span> 
+                          <input type="number" name="clientSatisfaction" id="clientSatisfaction" min="0" max="4.0" step="0.1" size="21" value="" placeholder="0.0" class="inputCustom"/>
+                        </span>
+                      </p>
+    
+                      <p>
+                        <label for="teamSatisfaction" style="width: 410px">Team satisfaction:
+                          <a class="ibm-information-link" id="teamSatisfactionTT" style="position: relative; top: -5px; left:10px; display: inline;"></a>
+                        </label> 
+                        <span> 
+                          <input type="number" name="teamSatisfaction" id="teamSatisfaction" min="0" max="4.0" step="0.1" size="21" value="" placeholder="0.0" class="inputCustom"/>
+                        </span>
+                      </p>
+    
+                      <p style="width: 900px;">
+                        <label for="commentIter" style="width: 410px">Comment about this iteration:<span class="ibm-required"></span></label> <span> <textarea rows="4" cols="53" name="commentIter"
+                            id="commentIter"></textarea>
+    
+                        </span>
+                      </p>
+    
+                      <div class="ibm-rule ibm-gray-80">
+                        <hr>
+                      </div>
+                      <h2 class="ibm-bold ibm-h4">Iteration metrics (calculated values)</h2>
+    
+                      <p>
+                        <label for="unitcostStoriesFTE" style="width: 410px">Unit cost - Stories per FTE:<span class="ibm-required"></span></label> 
+                        <span> 
+                          <input type="number" name="unitcostpercStories" id="unitcostStoriesFTE" size="21" min="0" value="" placeholder="0.0" disabled class="inputCustom" step=0.1>
+                        </span>
+                      </p>
+    
+                      <p>
+                        <label for="unitcostStorypointsFTE" style="width: 410px">Unit cost - Story points per FTE:<span class="ibm-required"></span></label> 
+                        <span> 
+                          <input type="number" name="unitcostpercStorypoints" id="unitcostStorypointsFTE" size="21" min="0" value="" placeholder="0.0" disabled class="inputCustom" step=0.1>
+                        </span>
+                      </p>
+    
+                      <div class="ibm-rule ibm-alternate-1">
+                        <hr>
+                      </div>
+    
+                      <p class="pCustom">
+                        <label style="width: 410px"> &nbsp;<span class="ibm-access">Update buttons</span></label> 
+                        <span style="width: 730px;" class="ibm-btn-row "> 
+                          <input type="button" class="ibm-btn-pri ibm-btn-small" id="addIterationBtn" value="Add iteration" onclick="updateIterationInfo('add');" disabled /> 
+                          <input type="button" class="ibm-btn-sec ibm-btn-small" id="updateIterationBtn" value="Update iteration" onclick="updateIterationInfo('update');" disabled /> 
+                          <input type="button" class="ibm-btn-sec ibm-btn-small" id="cancelIterationBtn" value="Reset iteration" onclick="updateIterationInfo('clear');" />
+                        </span>
+    
+                      </p>
+    
+                      <h2 class="ibm-bold ibm-h4">Last update</h2>
+                      <div class="ibm-rule ibm-alternate-1">
+                        <hr>
+                      </div>
+    
+                      <div class="ibm-columns">
+                        <div class="ibm-col-2-1">
+                          <p>
+                            <label><span STYLE="font-size: 9pt">Last update user:</span></label> <span STYLE="font-size: 9pt" id="lastUpdateUser"></span>
+    
+                          </p>
+    
+                        </div>
+                        <div class="ibm-col-2-1">
+                          <p>
+                            <label><span STYLE="font-size: 9pt">Last update timestamp:</span></label> <span STYLE="font-size: 9pt" id="lastUpdateTimestamp"></span>
+                          </p>
+                        </div>
+                      </div>
+    
+    
+                      <div id="debugSection">
+                        <!-- style="display:none;" -->
+                        <p>
+                          <label><span STYLE="font-size: 9pt">Doc id for this page(for SIT only):</span></label> <span STYLE="font-size: 9pt" id="doc_id"></span>
+                        </p>
+                      </div>
+    
+            <div id="dialog" title="Confirmation Required"/>
+            
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <div id="ibm-related-content">
+        <div id="ibm-merchandising-module">
+          <!-- MTE will generate this -->
+          <!-- <aside role="complementary" aria-label="Related content"> MTE dynamic modules populate in here. <aside> -->
+          <!-- /MTE -->
+        </div>
+      </div>
+    </div>
+    <%- include ./footer.ejs %>
+    
+  </div>
+</body>
+</html>
