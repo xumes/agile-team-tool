@@ -1,6 +1,7 @@
 #ibm-leadspace-head {
-	background: url(../img/snowboarding2.jpg) no-repeat;
+	background: url(../img/banner.jpg) no-repeat;
 	background-size: cover;
+	height: 100px;
 }
 
 #ibm-leadspace-body {
