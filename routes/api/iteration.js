@@ -95,17 +95,5 @@ module.exports = function(app, includes) {
         });
       }
     });
-
-
-
-
   });
-
-  // app.get('/api/_design/teams/_view/iterinfo?keys=', function(req, res, next) {
-  //   return res.json({
-  //     'success': true,
-  //     'msg': 'Successfully fetched teams.',
-  //     'result': 'result'
-  //   });
-  // });
 };

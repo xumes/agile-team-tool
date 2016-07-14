@@ -2,60 +2,26 @@
 "use strict";
 var db = require('../lib/cloudant-db');
 
-var database_name = 'ciodashboard';
+var settings = require('./settings');
 
-//Database name - can be dynamically changed from env
-if (process.env.NODE_ENV === 'test') {
-  database_name = 'test_ciodashboard';
-}
+var common = require('./common-cloudant');
 
-var ciodashboardSchema = {
-  'name': {
-    presence: true
-  },
-  'desc': {
-    presence: true
-  }
+var Cloudant = require('cloudant');
+
+var cloudantDb = Cloudant({account:settings.cloudant.userName, password:settings.cloudant.password});
+var dbName = settings.cloudant.dbName;
+var agileTeam = cloudantDb.use(dbName);
+
+exports.getByTeam = function(callback) {
+  common.getByView('teams', 'teams', callback);
 };
 
-exports.findByTeams = function(callback) {
-  db.getCloudant().use(database_name).view('teams', 'teams', {},
-    function(err, body) {
-      /* istanbul ignore next */
-      if (err) {
-        callback(err);
-        return;
-      }
-      if (body.rows.length > 0) {
-        callback(null, body);
-        return;
-      } else {
-        callback(null, null);
-        return;
-      }
-  });
+exports.getByIterinfo = function(keys, callback) {
+  common.getByViewKey('teams', 'iterinfo', keys, callback);
 };
 
-exports.findByIterinfo = function(keys, callback) {
-  db.getCloudant().use(database_name).view('teams', 'iterinfo', {'keys': keys},
-    function(err, body) {
-      /* istanbul ignore next */
-      if (err) {
-        callback(err);
-        return;
-      }
-      if (body.rows.length > 0) {
-        callback(null, body);
-        return;
-      } else {
-        callback(null, null);
-        return;
-      }
-  });
-};
-
-exports.getCompletedIterations = function() {
-  db.getCloudant().use(database_name).view('teams', 'iterinfo', {'keys': keys},
+exports.getCompletedIterations = function(startkey, endkey) {
+  agileTeam.getCloudant().use(dbName).view('teams', 'getCompletedIterations', { 'startkey': startkey, 'endkey': endkey },
     function(err, body) {
       /* istanbul ignore next */
       if (err) {

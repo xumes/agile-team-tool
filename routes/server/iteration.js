@@ -3,7 +3,7 @@ module.exports = function(app, includes) {
   var render = includes.render;
 
   var showIteration = function(req, res) {
-    var json = {"pageTitle":"Homexx"}
+    var json = {"pageTitle":"Home"}
     render(req, res, 'iteration', json);
   };
 
