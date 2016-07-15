@@ -10,7 +10,7 @@ gulp.task('jshint', function() {
 });
 
 gulp.task('pre-test', function () {
-  return gulp.src(['*.js', 'routes/*.js'])
+  return gulp.src(['*.js', 'routes/*.js', 'routes/*/*.js'])
     // Covering files
     .pipe(istanbul())
     // Force `require` to return covered files
@@ -18,7 +18,7 @@ gulp.task('pre-test', function () {
 });
 
 gulp.task('test', ['jshint', 'pre-test'], function () {
-  return gulp.src(['test/*.js'])
+  return gulp.src(['test/*.js', 'test/*/*/*.js'])
     .pipe(mocha())
     // Creating the reports after tests ran
     .pipe(istanbul.writeReports())
