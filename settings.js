@@ -11,5 +11,12 @@ module.exports = {
 	    userName: process.env['cloudantUserName'],
 	    password: process.env['cloudantPassword'],
 	    dbName: process.env['cloudantDbName']
+  },
+  email:{
+    SMTP_HOST: "host",
+    PORT     : 3000,
+    DOMAIN   : "domain",
+    FROM     : "from@domain.com",
+    EMAIL_APPKEY : "key"
   }
 };

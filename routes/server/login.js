@@ -21,5 +21,5 @@ module.exports = function(app, includes) {
     render(req, res, 'login', json);
   };
 
-  app.get("/login", [includes.middleware.auth.requireLoggedOut], showLogin);
+  app.get("/login", [includes.middleware.auth.requireLoggedOutWithRedirect], showLogin);
 };

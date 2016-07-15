@@ -7,5 +7,5 @@ module.exports = function(app, includes) {
     render(req, res, 'index', json);
   };
   
-  app.get("/", [includes.middleware.auth.requireLogin], showHome);
+  app.get("/", [includes.middleware.auth.requireLoginWithRedirect], showHome);
 };

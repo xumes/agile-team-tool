@@ -27,9 +27,13 @@ function submitFeedback(){
 function processFeedback(){
 	$.ajax({
 		type : "POST",
-		url : "./mailerFeedback",
-		data: {"feedback_recipient":$("#feedback_recipient").val(), "feedback_sender":$("#feedback_sender").val(),
-			"feedback_cc":ccIds.toString(), "feedback":$("#feedback").val()},
+		url : "/email/feedback",
+		data: {
+			"feedback_recipient" : $("#feedback_recipient").val(), 
+			"feedback_sender"    : $("#feedback_sender").val(),
+			"feedback_cc"        : ccIds.toString(),
+			"feedback"           : $("#feedback").val()
+		},
 			async : true
 	}).done(function(message) {
 		showMessagePopup(message);

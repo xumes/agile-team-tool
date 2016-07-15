@@ -336,7 +336,7 @@ ibm-btn-pri ibm-btn-small {
 	font-weight:bold;
 }
 
-#ibm-footer-locale-selector, .ibm-feedbacklink, .ibm-mh-marketplace-link, #ibm-search-module, .ibm-masthead-item-menu {
+#ibm-footer-locale-selector, .ibm-feedbacklink, #ibm-menu-links, .ibm-mh-marketplace-link, #ibm-search-module, .ibm-masthead-item-menu {
 	display:none !important;
 }
 
