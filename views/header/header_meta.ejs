@@ -17,7 +17,7 @@
 <link href="//1.www.s81c.com/common/v18/css/tables.css" rel="stylesheet">
 <script src="//1.www.s81c.com/common/v18/js/tables.js"></script>
 
-<link href="c/dash.css?v=<%=Math.random()%>" rel="stylesheet" />
+<link href="css/dash.css?v=<%=Math.random()%>" rel="stylesheet" />
 <script type="text/javascript" src="js/dashUtils.js?v=<%=Math.random()%>"></script>
 <script type="text/javascript" src="js/common.js?v=<%=Math.random()%>"></script>
 
@@ -28,9 +28,10 @@
 
 <script type="text/javascript">    
   IBMCore.common.util.config.set({
+    //disable the ibm profile button
     "masthead" : {
-      "type" : "alternate"
-      "enabled": true
+      "type" : "alternate",
+      "enabled": false
     },
     "footer" : {
       "type" : "alternate",
