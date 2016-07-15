@@ -8,5 +8,5 @@ module.exports = function(app, includes) {
     render(req, res, 'progress', json);
   };
   
-  app.get("/progress", [includes.middleware.auth.requireLogin], showAssessmentProgress);
+  app.get("/progress", [includes.middleware.auth.requireLoginWithRedirect], showAssessmentProgress);
 };

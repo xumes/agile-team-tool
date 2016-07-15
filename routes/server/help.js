@@ -8,5 +8,5 @@ module.exports = function(app, includes) {
     render(req, res, 'help', json);
   };
   
-  app.get("/help", [includes.middleware.auth.requireLogin], showHelp);
+  app.get("/help", [includes.middleware.auth.requireLoginWithRedirect], showHelp);
 };

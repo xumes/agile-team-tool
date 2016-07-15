@@ -8,5 +8,5 @@ module.exports = function(app, includes) {
     render(req, res, 'assessment', json);
   };
   
-  app.get("/assessment", [includes.middleware.auth.requireLogin], showAssessment);
+  app.get("/assessment", [includes.middleware.auth.requireLoginWithRedirect], showAssessment);
 };
