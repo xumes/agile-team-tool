@@ -49,8 +49,8 @@ module.exports = function(passport) {
       .then(function(ldapObject) {
         ldapObject = typeof ldapObject === 'string' ? JSON.parse(ldapObject) : ldapObject;
         if (!(_.isEmpty(ldapObject['ldap']))) {
-          console.log('login success using ldap');
           req.session['email'] = ldapObject['shortEmail'];
+          req.session['user'] = ldapObject;
           return done(null, ldapObject);
         }
         else
