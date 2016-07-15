@@ -8,9 +8,8 @@ module.exports = function(app, includes) {
   }));
 
   app.get('/logout', function(req, res){
-  	delete req.session.userid;
-	delete req.session.userinfo;
-	req.logout();
-	return res.redirect("/login");
+    req.session.destroy(function (err) {
+      res.redirect('/login');
+    });
   });
 };
