@@ -10,9 +10,6 @@ var dbName = settings.cloudant.dbName;
 var agileTeam = cloudantDb.use(dbName);
 
 var iteration = {
-  getByTeam: function(callback) {
-    common.getByView('teams', 'teams', callback);
-  },
 
   getByIterinfo: function(keys, callback) {
     if (!(_.isEmpty(keys))) {
@@ -22,24 +19,22 @@ var iteration = {
     }
   },
 
-  getCompletedIterations: function(startkey, endkey) {
-    if (!(_.isEmpty(keys))) {
-      agileTeam.view('teams', 'getCompletedIterations', { 'startkey': startkey, 'endkey': endkey },
-        function(err, body) {
-          /* istanbul ignore next */
-          if (err) {
-            callback(err);
-            return;
-          }
-          if (body.rows.length > 0) {
-            callback(null, body);
-            return;
-          } else {
-            callback(null, null);
-            return;
-          }
-      });
-    }
+  getCompletedIterations: function(startkey, endkey, callback) {
+    agileTeam.view('teams', 'getCompletedIterations', { 'startkey': startkey, 'endkey': endkey },
+      function(err, body) {
+        /* istanbul ignore next */
+        if (err) {
+          callback(err);
+          return;
+        }
+        if (body.rows && body.rows.length > 0) {
+          callback(null, body);
+          return;
+        } else {
+          callback(null, null);
+          return;
+        }
+    });
   },
 
 };
