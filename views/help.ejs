@@ -3,7 +3,7 @@
 <head>
 
 <c:set var="pageTitle" value="Help" scope="session"/>
-<%- include ./header/header_meta.ejs %>
+<jsp:include page="header_meta.jsp" />
 <link href="//1.www.s81c.com/common/v18/css/forms.css" rel="stylesheet">
 
 <link href="c/dash.css" rel="stylesheet" />
@@ -13,10 +13,10 @@
 </head>
 <body id="ibm-com" class="ibm-type" onload="siteEnv()" role="application" aria-label="Main page">
   <div id="ibm-top" class="ibm-landing-page">
-    <%- include ./header/header_masthead.ejs %>
+    <jsp:include page="header_masthead.jsp" />
     
     <div id="ibm-content-wrapper">
-      <%- include ./header/header_leadspace.ejs %>
+      <jsp:include page="header_leadspace.jsp" />
 
       <main role="main" aria-labelledby="ibm-pagetitle-h1">
         <div id="ibm-pcon">
