@@ -4,8 +4,8 @@
 
 var Cloudant = require('cloudant');
 var settings = require('../settings');
+var cloudantDb = Cloudant('https://' + settings.cloudant.userName + ':' + settings.cloudant.password + '@' + settings.cloudant.userName + '.cloudant.com');
 
-var cloudantDb = Cloudant({account:settings.cloudant.userName, password:settings.cloudant.password});
 var dbName = settings.cloudant.dbName;
 var agileTeam = cloudantDb.use(dbName);
 
