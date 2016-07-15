@@ -8,7 +8,7 @@ var iterationModel = rewire(root_path + 'models/iteration');
 
 describe('Iteration Model', function() {
 
-  describe('Get iteration document', function() {
+  describe('[getByIterinfo]: Get iteration document', function() {
     it('Get a specific team iteration document', function(done) {
       var id = 'ag_iterationinfo_ag_team_alpha_1466884828673_01dummy_1466885720804';
       var key = 'ag_team_alpha_1466884828673';
@@ -85,7 +85,7 @@ describe('Iteration Model', function() {
     });
   });
 
-  describe('Get completed iteration', function() {
+  describe('[getCompletedIterations]: Get completed iteration', function() {
     it('Get completed iteration documents', function(done) {
       var startkey = undefined;
       var endkey = undefined;
