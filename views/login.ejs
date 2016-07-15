@@ -1,140 +1,66 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en-us">
 <head>
-    <%- include ./header/header_meta.ejs %>
+  <title>Login</title>
 
-    <!--<![endif]-->
-    <link href="./login_files/www.css" rel="stylesheet">
-    <link href="./login_files/style_old.css" rel="stylesheet">
-    <script src="./login_files/login.js"></script>
+  <link href="/login_files/www.css" rel="stylesheet" />
+  <link href="/login_files/style_old.css" rel="stylesheet" />
 
-    <script type="text/javascript">
-    function startpage() {
-        document.getElementById('username').focus();
-    }
-
-    function disableEnterKey(e) {
-        var key;
-
-        if (window.event)
-            key = window.event.keyCode; //IE
-        else
-            key = e.which; //firefox
-
-        if (key == 13) {
-            document.getElementById('ngform-signin').submit();
-            return false;
-        } else
-            return true;
-    }
-    </script>
-    <script type="text/javascript">
-    var formInUse = false;
-
-    function setFocus() {
-        if (!formInUse) {
-            document.ssoform.username.focus;
-        }
-    }
-    </script>
-    <script type="text/javascript">
-    function onLoadPage() {
-	    showTheme();
-        showLoginPage();
-        showError();
-        setFocus();
-    }
-
-	function showTheme(){
-
-  }  function showLoginPage() {
-        document.getElementById("ibm-top").style.display = "block";
-    }
-
-    function showError() {
-        var elem = document.getElementById("errId");
-        if ("" == "") {
-
-        } else {
-            var splitErrCode = "".split(" ", 1)[0];
-            var errMsg = "".substring(splitErrCode.length);
-            document.getElementById('errtxt').innerHTML = errMsg;
-            document.getElementById("errormsg").style.display = "block";
-
-
-        }
-    }
-
-    function setFocus() {
-        document.getElementById("username").focus();
-    }
-    </script>
-    <script>
-    jQuery(document).ready(function() {
-        document.domain = window.location.host;
-        //document.domain = 'localhost';
-
-        ibmIDC.draw( 0 , 1 ,false , "@OIDC_CLIENT_ID@");
-
-        // keep the session after all DOM updates are complete
-        window.setTimeout(function() {
-            // set query string into link buttons
-            // ibmIDC.setURLValues('signupbutton');
-        }, 2000);
-    });
-    </script> 
+</head>
 
 <body id="ibm-com" class="ibm-type" onload="onLoadPage()">
-    <div id="ibm-top" style="display: block;" class="ibm-landing-page ibm-signin login-state-page sign-in cf">
-        <!-- MAIN PAGE WRAPPER AROUND LEADSPACE, MAIN CONTENT SIDENAV AND RELATED CONTENT -->
-        <div id="ibm-content-wrapper">
-            <!-- LEADSPACE_BEGIN -->
-            <div role="main" aria-labelledby="ibm-pagetitle-h1">
-                <div id="ibm-pcon">
-                    <div id="ibm-content">
-                        <div id="ibm-content-body" class="ibm-id">
-                            <div id="ibm-content-main">
-                                <div class="ibm-columns">
-                                    <div class="ibm-col-6-2">
-                                        &nbsp;
-                                    </div>
-                                    <div class="ibm-signin-card ibm-col-6-2">
-                                        <div class="" id="signin">
-                                            <form method="post" id="ibmid-signin-form" class="login-fields" action="<%= action %>">
-                                                <input type="hidden" name="operation" value="verify">
-                                                <input type="hidden" name="login-form-type" value="pwd" role="form">
-                                                <h3 id="ng-signin-title-2" style="text-align: center;">Sign into the Agile Academy Team Tool </h3>
-                                                <div id="errormsg" style="color:red;font-weight: 100; display: none">
-                                                    <div>
-                                                        <p style="padding-top:5px;width:18px;float:left;padding-right:5px"><img src="./login_files/icon_error.png" alt="Error!" class="emailErrorImg"></p>
-                                                        <p id="errtxt" style="color: red;"> </p>
-                                                    </div>
-                                                </div>
-                                                <label for="username">Enter your ID
-                                                </label>
-                                                <p>
-                                                    <input tabindex="1" type="text" autofocus="" autocomplete="off" maxlength="80" id="username" name="username" class="">
-                                                    <br>
-                                                </p>
-                                                <label for="password">Password
-                                                </label>
-                                                <p>
-                                                    <span style="position: relative; display: block; height: 50px; margin-bottom: 8px;">
-																			<input tabindex="1" autocomplete="off" type="password" maxlength="31" id="password" name="password">
-																		</span>
-                                                </p>
-                                                <div class="">
-                                                    <br><a tabindex="1" href="https://idaas.iam.ibm.com/idaas/mtfim/sps/authsvc?PolicyId=urn:ibm:security:authentication:asf:basicldapuser&amp;Target=http://www.ibm.com/standards/web/tools#" id="signinbutton" class="ng-signin-cta-2 button buttonRegister login-true" style="display:block;width: 100%;padding:18px 0;">Sign in</a>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<div id="ibm-top" style="display: block;" class="ibm-landing-page ibm-signin login-state-page sign-in cf">
+  <!-- MAIN PAGE WRAPPER AROUND LEADSPACE, MAIN CONTENT SIDENAV AND RELATED CONTENT -->
+  <div id="ibm-content-wrapper">
+    <!-- LEADSPACE_BEGIN -->
+    <div role="main" aria-labelledby="ibm-pagetitle-h1">
+      <div id="ibm-pcon">
+        <div id="ibm-content">
+          <div id="ibm-content-body" class="ibm-id">
+            <div id="ibm-content-main">
+              <div class="ibm-columns">
+                <div class="ibm-col-6-2">
+                  &nbsp;
                 </div>
+                <div class="ibm-signin-card ibm-col-6-2">
+                  <div class="" id="signin">
+                    <form method="post" id="ibmid-signin-form" class="login-fields" action="<%= action %>">
+                      <input type="hidden" name="operation" value="verify">
+                      <input type="hidden" name="login-form-type" value="pwd" role="form">
+                      <h3 id="ng-signin-title-2" style="text-align: center;">Sign into the Agile Academy Team Tool </h3>
+                      <div id="errormsg" style="color:red;font-weight: 100; display: none">
+                        <div>
+                          <p style="padding-top:5px;width:18px;float:left;padding-right:5px"><img src="/login_files/icon_error.png" alt="Error!" class="emailErrorImg"></p>
+                          <p id="errtxt" style="color: red;"> </p>
+                        </div>
+                      </div>
+                      <label for="username">Enter your ID
+                      </label>
+                      <p>
+                        <input tabindex="1" type="text" autofocus="" autocomplete="off" maxlength="80" id="username" name="username" class="">
+                        <br>
+                      </p>
+                      <label for="password">Password
+                      </label>
+                      <p>
+                                                    <span style="position: relative; display: block; height: 50px; margin-bottom: 8px;">
+                                                                            <input tabindex="1" autocomplete="off" type="password" maxlength="31" id="password" name="password">
+                                                                        </span>
+                      </p>
+                      <div class="">
+                        <br><input class="ng-signin-cta-2 button buttonRegister login-true" style="width: 100%;" type="submit"/>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-</body></html>
+  </div>
+</div>
+</body>
+
+</html>

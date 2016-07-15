@@ -3,7 +3,7 @@ var settings      = require('../settings');
 var request       = require('request');
 var Promise       = require('bluebird');
 var _             = require('underscore');
-
+var loggers        = require('../middleware/logger');
 
 module.exports = function(passport) {
 
@@ -45,18 +45,24 @@ module.exports = function(passport) {
     passwordField: 'password',
     passReqToCallback: true
   }, function(req, email, password, done) {
+    loggers.get('auth').info('Attempting to do LDAP authentication email=%s', email);
     ldapAuth(email, password)
       .then(function(ldapObject) {
         ldapObject = typeof ldapObject === 'string' ? JSON.parse(ldapObject) : ldapObject;
         if (!(_.isEmpty(ldapObject['ldap']))) {
           req.session['email'] = ldapObject['shortEmail'];
           req.session['user'] = ldapObject;
+          loggers.get('auth').info('Successfully authenticated %s', email);
           return done(null, ldapObject);
         }
-        else
+        else {
+          loggers.get('auth').error('Unable to authenticate email=%s, ldapObject=%s', email, ldapObject);
           return done(null, false);
+        }
+          
       })
       .catch(function(err) {
+        loggers.get('auth').error('Unable to authenticate email=%s, err=%s', email, err);
         return done(null, false);
       })
   }));

@@ -1,4 +1,4 @@
-_ = require("underscore")
+_ = require("underscore");
 module.exports.requireLogin = function(req, res, next) {
   if(_.isEmpty(req.user))
     res.send(401, {status:401, message: 'Unauthorized'});
