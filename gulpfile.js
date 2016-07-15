@@ -10,7 +10,7 @@ gulp.task('jshint', function() {
 });
 
 gulp.task('pre-test', function () {
-  return gulp.src(['*.js', 'routes/*.js', 'routes/*/*.js'])
+  return gulp.src(['*.js', 'routes/*.js', 'routes/*/*.js', 'models/*.js'])
     // Covering files
     .pipe(istanbul())
     // Force `require` to return covered files
