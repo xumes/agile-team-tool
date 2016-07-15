@@ -1,10 +1,9 @@
 module.exports = function(app, includes) {
 
   var iteration = require('../../models/iteration');
-  console.log(iteration);
 
   app.get('/api/_design/teams/_view/teams', function(req, res, next) {
-    iteration.findByTeams(function(err, result) {
+    iteration.getByTeam(function(err, result) {
       if (err) {
         return res.status(500).json({
           'success': false,
@@ -18,7 +17,7 @@ module.exports = function(app, includes) {
           'msg': 'Record not found.'
         });
       }
-      // console.log('result:',result);
+
       if (result) {
         return res.json({
           'success': true,
@@ -30,14 +29,9 @@ module.exports = function(app, includes) {
   });
 
   app.get('/api/_design/teams/_view/iterinfo', function(req, res, next) {
-    var keys = req.query.keys;
-    if (!keys) {
-      return res.status(500).json({
-        'success': false,
-        'msg': 'Parameter keys is missing.'
-      });
-    }
-    iteration.findByIterinfo(keys, function(err, result) {
+    var keys = req.query.keys || undefined;
+    console.log('keys:', keys);
+    iteration.getByIterinfo(keys, function(err, result) {
       if (err) {
         return res.status(500).json({
           'success': false,
@@ -51,7 +45,6 @@ module.exports = function(app, includes) {
           'msg': 'Record not found.'
         });
       }
-      // console.log('result:',result);
       if (result) {
         return res.json({
           'success': true,
@@ -60,8 +53,10 @@ module.exports = function(app, includes) {
         });
       }
     });
+
   });
 
+  // NOTE: not working
   app.get('/api/_design/teams/_view/getCompletedIterations', function(req, res, next) {
     var startkey = req.query.startkey;
     var endkey = req.query.endkey;
