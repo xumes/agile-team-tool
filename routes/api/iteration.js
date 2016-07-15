@@ -1,37 +1,14 @@
+"use strict";
+
+var teamModel = require('../../models/teams');
+var iterationModel = require('../../models/iteration');
+
 module.exports = function(app, includes) {
+  var middleware  = includes.middleware;
 
-  var iteration = require('../../models/iteration');
-
-  app.get('/api/_design/teams/_view/teams', function(req, res, next) {
-    iteration.getByTeam(function(err, result) {
-      if (err) {
-        return res.status(500).json({
-          'success': false,
-          'msg': err
-        });
-      }
-      /* istanbul ignore next */
-      if (!result) {
-        return res.status(500).json({
-          'success': false,
-          'msg': 'Record not found.'
-        });
-      }
-
-      if (result) {
-        return res.json({
-          'success': true,
-          'msg': 'Successfully fetched teams.',
-          'result': result
-        });
-      }
-    });
-  });
-
-  app.get('/api/_design/teams/_view/iterinfo', function(req, res, next) {
+  var getIterinfo = function(req, res, next) {
     var keys = req.query.keys || undefined;
-    console.log('keys:', keys);
-    iteration.getByIterinfo(keys, function(err, result) {
+    iterationModel.getByIterinfo(keys, function(err, result) {
       if (err) {
         return res.status(500).json({
           'success': false,
@@ -48,16 +25,14 @@ module.exports = function(app, includes) {
       if (result) {
         return res.json({
           'success': true,
-          'msg': 'Successfully fetched teams.',
+          'msg': 'Successfully fetched team iteration details.',
           'result': result
         });
       }
     });
+  };
 
-  });
-
-  // NOTE: not working
-  app.get('/api/_design/teams/_view/getCompletedIterations', function(req, res, next) {
+  var getCompletedIterations = function(req, res, next) {
     var startkey = req.query.startkey;
     var endkey = req.query.endkey;
     if (!startkey || !endkey) {
@@ -67,7 +42,7 @@ module.exports = function(app, includes) {
       });
     }
 
-    iteration.getCompletedIterations(startkey, endkey, function(err, result) {
+    iterationModel.getCompletedIterations(startkey, endkey, function(err, result) {
       if (err) {
         return res.status(500).json({
           'success': false,
@@ -81,14 +56,17 @@ module.exports = function(app, includes) {
           'msg': 'Record not found.'
         });
       }
-      // console.log('result:',result);
       if (result) {
         return res.json({
           'success': true,
-          'msg': 'Successfully fetched teams.',
+          'msg': 'Successfully fetched completed iterations.',
           'result': result
         });
       }
     });
-  });
+  };
+
+  app.get('/api/_design/teams/_view/iterinfo', [includes.middleware.auth.requireLogin], getIterinfo);
+  app.get('/api/_design/teams/_view/getCompletedIterations', [includes.middleware.auth.requireLogin], getCompletedIterations);
+
 };

@@ -1,9 +1,9 @@
-/* Put cloudant calls for iteration here */
 "use strict";
 
 var Cloudant = require('cloudant');
 var settings = require('../settings');
 var common = require('./common-cloudant');
+var _ = require('underscore');
 
 var cloudantDb = Cloudant({account:settings.cloudant.userName, password:settings.cloudant.password});
 var dbName = settings.cloudant.dbName;
@@ -15,7 +15,7 @@ var iteration = {
   },
 
   getByIterinfo: function(keys, callback) {
-    if (keys != undefined) {
+    if (!(_.isEmpty(keys))) {
       common.getByViewKey('teams', 'iterinfo', keys, callback);
     } else {
       common.getByView('teams', 'iterinfo', callback);
@@ -23,21 +23,23 @@ var iteration = {
   },
 
   getCompletedIterations: function(startkey, endkey) {
-    agileTeam.view('teams', 'getCompletedIterations', { 'startkey': startkey, 'endkey': endkey },
-      function(err, body) {
-        /* istanbul ignore next */
-        if (err) {
-          callback(err);
-          return;
-        }
-        if (body.rows.length > 0) {
-          callback(null, body);
-          return;
-        } else {
-          callback(null, null);
-          return;
-        }
-    });
+    if (!(_.isEmpty(keys))) {
+      agileTeam.view('teams', 'getCompletedIterations', { 'startkey': startkey, 'endkey': endkey },
+        function(err, body) {
+          /* istanbul ignore next */
+          if (err) {
+            callback(err);
+            return;
+          }
+          if (body.rows.length > 0) {
+            callback(null, body);
+            return;
+          } else {
+            callback(null, null);
+            return;
+          }
+      });
+    }
   }
 };
 
