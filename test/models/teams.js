@@ -25,12 +25,35 @@ describe("Team models [getTeam]: get all teams or get team details if team id is
   });
 
   it("return team details", function(done){
-    validId = 'ag_team_Agile Talent Business Management';
     teamModel.getTeam(validId, function(err, body){
       expect(err).to.be.equal(null);
       expect(body).to.be.a('object');
       expect(body).to.have.property('type');
       done();
     })
+  });
+});
+
+describe('Team models [getRole]: get team role type', function(){
+  this.timeout(timeout);
+  it('retrieve all team role type', function(done){
+    teamModel.getRole(function(err, body){
+      expect(err).to.be.equal(null);
+      expect(body).to.be.a('object');
+      expect(body).to.have.property('rows');
+      done();
+    });
+  });
+});
+
+describe('Team models [getName]: get team names', function(){
+  this.timeout(timeout);
+  it('retrieve all team role type', function(done){
+    teamModel.getName(function(err, body){
+      expect(err).to.be.equal(null);
+      expect(body).to.be.a('object');
+      expect(body).to.have.property('rows');
+      done();
+    });
   });
 });
