@@ -3,6 +3,7 @@
  */
 
 var Cloudant = require('cloudant');
+var _ = require('underscore');
 var settings = require('../settings');
 var cloudantDb = Cloudant('https://' + settings.cloudant.userName + ':' + settings.cloudant.password + '@' + settings.cloudant.userName + '.cloudant.com');
 
@@ -28,15 +29,20 @@ exports.addRecord = function(data, callback) {
 exports.getRecord = function(data, callback) {
   agileTeam.get(data, function(err, body) {
     if (err) {
-      callback(err);
+      callback(err, null);
       return;
     }
-    if (body.rows.length > 0) {
+    if(_.isEmpty(body.rows)){
       callback(null, body);
       return;
-    } else {
-      callback(null, null);
-      return;
+    }else{
+      if (body.rows.length > 0) {
+        callback(null, body);
+        return;
+      } else {
+        callback(null, null);
+        return;
+      }  
     }
   });
 };
