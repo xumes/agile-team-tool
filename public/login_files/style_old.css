@@ -4,20 +4,20 @@ html, body {
 } 
 
 #ibm-content .ibm-signin-card p {
-	color: #444444;
-	-webkit-font-smoothing: antialiased;
+  color: #444444;
+  -webkit-font-smoothing: antialiased;
 }
 
 .bluemixHome .hero:not(.nowOpen) {
-	padding: 4em 0;
+  padding: 4em 0;
 }
 
 .bluemixHome .hero:not(.nowOpen) .wrapper div {
-	display: block;
+  display: block;
 }
 /*
 .ibm-col-6-2 {
-	padding: 0 15px 15px !important;
+  padding: 0 15px 15px !important;
 }
 */
 .remchkbox{
@@ -25,282 +25,303 @@ width:30px;
 float:left;
 }
 .bluemixHome div .ibm-columns {
-	margin: 0 auto;
+  margin: 0 auto;
 }
 .bluemixHome .hero:not(.nowOpen) p {
-	line-height: 1em !important;
-	margin-bottom: 20px !important;
+  line-height: 1em !important;
+  margin-bottom: 20px !important;
 }
 #resendbutton, #resendemailbutton {
   outline: none;
 }
 
 .bg{
-  	background-color:#2d3f49 !important;
+    background-color:#2d3f49 !important;
   } 
 
 .displaymobile {
-	display: none;
+  display: none;
 }
 #ibm-masthead {
-	border-bottom: none;
+  border-bottom: none;
 }
 .ibm-signin-card {
-	box-sizing: border-box;
-	margin: 80px 0;
+  box-sizing: border-box;
+  margin: 80px 0;
 }
 .ibm-signin-card.reset {
-	border-top: 5px solid #008abf;
-	padding-top: 20px;
+  border-top: 5px solid #008abf;
+  padding-top: 20px;
 }
 
 .email-error-content {
-	margin-top: 20px;
+  margin-top: 20px;
 }
 
 #ibmOrgMsgCont{
-	text-align: center;
+  text-align: center;
 }
 
 .errorMsg {
-	color: #ff5050;
+  color: #ff5050;
     padding: 12px 0 47px;
     text-align: center;
 } 
 
 .icon {
-	width: 114px;
-	height: 114px;
+  width: 114px;
+  height: 114px;
 }
 .ibm-signin-card .icon {
-	width: 66px;
-	height: 66px;
-	margin-bottom: 30px;
+  width: 66px;
+  height: 66px;
+  margin-bottom: 30px;
 }
 .ibm-signin-card a {
-	color: #008abf;
-	text-decoration: none;
+  color: #008abf;
+  text-decoration: none;
 }
 /*
 .passwordform {
-	padding: 50px;
+  padding: 50px;
 }
 */
 /*
 .passwordform .buttons {
-	float: left;	
+  float: left;  
 }
 */
 .ibm-signin-card a.button,
 .addtrial a.button,
 .button,
 .pwreset a.button {
-	font-family: "HelveticaNeue-Bold","HelvBoldIBM",Arial,sans-serif;
-	margin: 0;
-/* 	width: 100%; */
-	font-size: 18px;
-	color: white;
-	background: #008abf;
-	text-decoration: none;
-	text-align: center;
-	text-shadow: none;	
-	border: none;
-	padding: 18px 50px;
-	display: inline-block;
-	-webkit-font-smoothing: antialiased;
+  font-family: "HelveticaNeue-Bold","HelvBoldIBM",Arial,sans-serif;
+  margin: 0;
+/*  width: 100%; */
+  font-size: 18px;
+  color: white;
+  background: #008abf;
+  text-decoration: none;
+  text-align: center;
+  text-shadow: none;  
+  border: none;
+  padding: 18px 50px;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+}
+
+.signin{
+  font-family: "HelveticaNeue-Bold","HelvBoldIBM",Arial,sans-serif !important;
+  margin: 0;
+/*  width: 100%; */
+  font-size: 18px;
+  color: white;
+  background: #008abf;
+  text-decoration: none;
+  text-align: center;
+  text-shadow: none;  
+  border: none;
+  padding: 18px 50px;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+}
+
+.signin:hover{
+  background: #4378BD;
+  cursor: pointer!important;
 }
 .ibm-signin-card a.button:hover {
-	background: #4378BD;
-	cursor: pointer!important;
+  background: #4378BD;
+  cursor: pointer!important;
 }
 .addtrial a.button,
 .pwreset a.button,
 .ibm-signin-card.reset a.button {
-	background: #008abf;
-	font-size: 16px;
-	width: 180px;
-/* 	float: right; */
-	padding: 12px 0;
-	border: 1px solid #008abf;
+  background: #008abf;
+  font-size: 16px;
+  width: 180px;
+/*  float: right; */
+  padding: 12px 0;
+  border: 1px solid #008abf;
 }
 .addtrial a.button:hover,
 .pwreset a.button:hover,
 .ibm-signin-card.reset a.button:hover {
-	  background: #4378BD;
-	 cursor: pointer!important;
+    background: #4378BD;
+   cursor: pointer!important;
 }
 .ibm-signin-card.reset a.button.buttonRegister {
-	/* float: none; */
-	margin: 40px 20px 0 0 !important;	
-	
+  /* float: none; */
+  margin: 40px 20px 0 0 !important; 
+  
 }
 .forgotfield{display:none;}
 .field-email{display:none;}
 
 .ibm-signin-card.reset a.button.cancel {
-	font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
-	color: #008abf;
-	background: white;
-	border: 1px solid #008abf;
-	float: right;
+  font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
+  color: #008abf;
+  background: white;
+  border: 1px solid #008abf;
+  float: right;
 }
 .alertbox.ibm-signin-card.reset a.button.buttonRegister {
-	width: 49%;
-	margin: 0 1% 0 0 !important;
-	box-sizing: border-box;	
-	border-radius: 0;
+  width: 49%;
+  margin: 0 1% 0 0 !important;
+  box-sizing: border-box; 
+  border-radius: 0;
 }
 .alertbox.ibm-signin-card p {
-	font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
-	margin-bottom: 0;
+  font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
+  margin-bottom: 0;
 }
 .alertbox #ibm-id-header {
-	padding: 0;
-	text-align: left;
+  padding: 0;
+  text-align: left;
 }
 .alertbox #ibm-id-header h1 {
-	font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
-	font-weight: 300;
-	font-size: 20px;
-	line-height: 24px;
-	margin: 20px 0 10px;
-	padding-left: 25px;
-	background-size: 20px 20px;
+  font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 24px;
+  margin: 20px 0 10px;
+  padding-left: 25px;
+  background-size: 20px 20px;
 }
 
 a.button.cancel.cancellink {
-	width: auto; float:right; padding-right: 60px; background: none; color: black; border: none;
+  width: auto; float:right; padding-right: 60px; background: none; color: black; border: none;
 }
 
 #ibm-top.ibm-signin,
 #ibm-top.ibm-signin #ibm-content-body,
 #ibm-top.ibm-signin #ibm-pcon {
-	background: #ffffff;
-	text-shadow: none;
+  background: #ffffff;
+  text-shadow: none;
 }
 #ibm-top.ibm-signin #ibm-pcon.addtrial {
-	background: white;
+  background: white;
 }
 .ibm-landing-page #ibm-pcon {
-	padding-bottom: 100px;
-	margin-bottom: 0;
+  padding-bottom: 100px;
+  margin-bottom: 0;
 }
 .ibm-signin-card h3,
 .addtrial .ibm-id h3,
 .ibm-type .ibm-signin-card h3 b,
 .addtrial .ibm-id h3 b {
-	font-size: 31px;
-	line-height: 37px;
-	font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
-/* 	text-align: center; */
-	margin-bottom: 30px;
+  font-size: 31px;
+  line-height: 37px;
+  font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
+/*  text-align: center; */
+  margin-bottom: 30px;
 }
 .ibm-type .ibm-signin-card h3 b,
 .addtrial .ibm-id h3 b {
-	color: #008abf;	
+  color: #008abf; 
 }
 .addtrial .ibm-id h3 {
-	margin-top: 80px;
-/* 	font-size: 24px; */
-	text-align: left;
+  margin-top: 80px;
+/*  font-size: 24px; */
+  text-align: left;
 }
 .ibm-signin-card h4,
 .addtrial .ibm-id h4 {
-	font-size: 16px;
-	font-family: "HelveticaNeue-Bold","Helvetica Neue Bold","Helvetica Neue","HelvBoldIBM",Arial,sans-serif;
-	font-weight: bold;
-	margin: 10px 0 0;
-	padding: 0;
+  font-size: 16px;
+  font-family: "HelveticaNeue-Bold","Helvetica Neue Bold","Helvetica Neue","HelvBoldIBM",Arial,sans-serif;
+  font-weight: bold;
+  margin: 10px 0 0;
+  padding: 0;
 }
 .ibm-signin-card form {
-	margin: 10px 0 75px;	
+  margin: 10px 0 75px;  
 }
 .ibm-signin-card p {
-	margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 .icon-next {
-	position: relative;
-	top: 2px;
-	left: 2px;
+  position: relative;
+  top: 2px;
+  left: 2px;
 }
 .ibm-signin-card p.inboxmessage,
 .ibm-signin-card p.securityquestion {
-	font-size: 1.3em;
-/* 	font-weight: bold; */
-	line-height: 1.3em;
-	margin-bottom: 30px;
+  font-size: 1.3em;
+/*  font-weight: bold; */
+  line-height: 1.3em;
+  margin-bottom: 30px;
 }
 .ibm-signin-card p.securityquestion {
-/* 	color: #38AF57 !important; */
-	margin-bottom: 20px;	
+/*  color: #38AF57 !important; */
+  margin-bottom: 20px;  
 }
 /*
 #ibm-top.ibm-signin #ibm-pcon.addtrial p {
-	line-height: 30px;
-	margin-bottom: 20px;
+  line-height: 30px;
+  margin-bottom: 20px;
 }
 */
 #ibm-top.ibm-signin #ibm-pcon.addtrial hr {
-	height: 1px;
-	border: none;
-	height: 1px;
-	color: #bbbbbb;
-	background: #bbbbbb;
+  height: 1px;
+  border: none;
+  height: 1px;
+  color: #bbbbbb;
+  background: #bbbbbb;
 }
 .ibm-col-6-6 .ibm-card {
-	width: 100%;
-	margin-bottom: 20px !important;
+  width: 100%;
+  margin-bottom: 20px !important;
 }
 .ibm-card .ibm-container-body {
-	margin-top: 10px !important;
+  margin-top: 10px !important;
 }
 
 .ibm-liquid #ibm-content .ibm-columns .ibm-container.ibm-dyntabs,
 .ibm-landing-page #ibm-content .ibm-columns .ibm-container.ibm-dyntabs {
-	margin: 0;	
+  margin: 0;  
 }
 .ibm-signin-card .ibm-graphic-tabs .ibm-tab-section {
-	border-bottom: none;
-	margin-bottom: 0;
+  border-bottom: none;
+  margin-bottom: 0;
 }
 .ibm-signin-card .ibm-graphic-tabs ul.ibm-tabs {
-	position: relative;
-	vertical-align: bottom;
+  position: relative;
+  vertical-align: bottom;
 }
 .ibm-signin-card .ibm-graphic-tabs ul.ibm-tabs li {
-	width: 50%;
-	min-height: 19px !important;
-	border: none !important;
-	padding: 15px 0 !important;
-	font-size: 20px;
-	line-height: 28px !important;
-	text-shadow: none;
-	margin: 0 !important;
-	text-indent: 0 !important;
-/* 	text-align: center; */
-	font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
-	background: none;
-	border-bottom: 1px solid #aaaaaa !important;
-	position: relative;
-	bottom: 0;
+  width: 50%;
+  min-height: 19px !important;
+  border: none !important;
+  padding: 15px 0 !important;
+  font-size: 20px;
+  line-height: 28px !important;
+  text-shadow: none;
+  margin: 0 !important;
+  text-indent: 0 !important;
+/*  text-align: center; */
+  font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
+  background: none;
+  border-bottom: 1px solid #aaaaaa !important;
+  position: relative;
+  bottom: 0;
 }
 .ibm-signin-card .ibm-graphic-tabs ul.ibm-tabs a {
     color: #666666;
     text-decoration: none;
 }
 .ibm-signin-card .ibm-graphic-tabs ul.ibm-tabs li.ibm-active {
-	padding: 15px 0 11px !important;
-	border-bottom: 5px solid #008abf !important;
-	font-family: "HelveticaNeue-Bold","HelvBoldIBM",Arial,sans-serif;
+  padding: 15px 0 11px !important;
+  border-bottom: 5px solid #008abf !important;
+  font-family: "HelveticaNeue-Bold","HelvBoldIBM",Arial,sans-serif;
 }
 .ibm-signin-card .ibm-graphic-tabs ul.ibm-tabs li.ibm-active a {
-	color: #008abf;
+  color: #008abf;
 }
 
 input {
-	color: #666666;
-	box-sizing: border-box;
-	outline: none;
+  color: #666666;
+  box-sizing: border-box;
+  outline: none;
 }
 
 /* Disable show password for IE in favor of our own */
@@ -311,35 +332,35 @@ input[type=password]::-ms-clear
 }
 
 #ibm-id-header {
-	padding-top: 64px;
-	padding-bottom: 38px;
-	text-align: center;
+  padding-top: 64px;
+  padding-bottom: 38px;
+  text-align: center;
 }
 #ibm-id-header h1 {
-	font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
-	padding-left: 55px;
-	font-size: 50px;
-	line-height: 50px;
-	background: url(../img/logo_id.png) left center no-repeat;
-	background-size: 44px 44px;
-	display: inline-block;
-	margin-bottom: 5px;
+  font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
+  padding-left: 55px;
+  font-size: 50px;
+  line-height: 50px;
+  background: url(../img/logo_id.png) left center no-repeat;
+  background-size: 44px 44px;
+  display: inline-block;
+  margin-bottom: 5px;
 }
 #ibm-id-header h1.promoheader {
-	padding: 0;
-	background: none;
-	font-size: 36px;
-	line-height: 36px;
+  padding: 0;
+  background: none;
+  font-size: 36px;
+  line-height: 36px;
 }
 #ibm-id-header h2,
 .alertbox h2 {
-	font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
-	font-size: 19px;
+  font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
+  font-size: 19px;
 }
 .alertbox h2 {
-	font-weight: 300;
-	font-size: 32px;
-	line-height: 34px;
+  font-weight: 300;
+  font-size: 32px;
+  line-height: 34px;
 }
 
 #ibm-content .ibm-id input[type=text],
@@ -348,225 +369,225 @@ input[type=password]::-ms-clear
 #ibm-content .ibm-id input[type=text].success,
 #ibm-content .ibm-id input[type=password].success,
 #ibm-content .ibm-id select.success {
-	font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
-	font-size: 16px;
-	line-height: 16px;
-	width: 100%;
-	height: 50px;
-	border: none;
-	/* padding: 15px 0; */
-	margin-bottom: 0;
-	text-indent: 16px;
-	background: #eeeeee;
-	color: #666666;
+  font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
+  font-size: 16px;
+  line-height: 16px;
+  width: 100%;
+  height: 50px;
+  border: none;
+  /* padding: 15px 0; */
+  margin-bottom: 0;
+  text-indent: 16px;
+  background: #eeeeee;
+  color: #666666;
 }
 #ibm-content .ibm-id select,
 #ibm-content .ibm-id select.success {
-	text-indent: 5px;
+  text-indent: 5px;
 }
 #ibm-content .ibm-id input[type=text]:focus,
 #ibm-content .ibm-id input[type=password]:focus,
 #ibm-content .ibm-id select:focus {
-	border: 1px solid black;
-	background: none;
-	color: black;
-	text-indent: 12px;
+  border: 1px solid black;
+  background: none;
+  color: black;
+  text-indent: 12px;
 }
 #ibm-content .ibm-id .passwordcontainer {
-	position: relative;
-	display: inline-block;
-	width: 100%;
-	height: 50px;
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 50px;
 }
 #ibm-content .ibm-id .passwordcontainer.strengthtest {
-	height: 56px;	
+  height: 56px; 
 }
 #ibm-content .ibm-id .passwordcontainer.strengthtest input {
-	margin-top: 6px;
+  margin-top: 6px;
 }
 #ibm-content .ibm-id .strength,
 #ibm-content .ibm-id .strength .currentstrength {
-	display: none;
-	width: 100%;
-	height: 6px;
-	background: #666666;
-	margin: 0;
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 0;
+  display: none;
+  width: 100%;
+  height: 6px;
+  background: #666666;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
 }
 #ibm-content .ibm-id .strength .currentstrength {
-	display: inline-block;
-	width: 0;
-	background: #e61d32;
-	position: absolute;
-	z-index: 5;
+  display: inline-block;
+  width: 0;
+  background: #e61d32;
+  position: absolute;
+  z-index: 5;
 }
 #ibm-content .ibm-id .strength .currentstrength.error {
-	background: #e61d32;
+  background: #e61d32;
 }
 #ibm-content .ibm-id .coaching {
-	margin-right: 25px;
+  margin-right: 25px;
 }
 #ibm-content .ibm-id .encouragement.error,
 #ibm-content .ibm-id .instructions.error,
 #ibm-content .ibm-id p.errortext,
 #ibm-content .ibm-id .coaching.error {
-	color: #e61d32;
+  color: #e61d32;
 }
 #ibm-content .ibm-id p.errortext {
-	font-size: 20px;
-	line-height: 26px;
+  font-size: 20px;
+  line-height: 26px;
 }
 #ibm-content .ibm-id .strength .currentstrength.strong {
-	background: #78b400;
+  background: #78b400;
 }
 #ibm-content .ibm-id .encouragement.strong {
-	color: #78b400;
-	padding-left: 15px;
-	background: url(../img/check_strong.png) left center no-repeat;
+  color: #78b400;
+  padding-left: 15px;
+  background: url(../img/check_strong.png) left center no-repeat;
 }
 #ibm-content .ibm-id .strength .currentstrength.success {
-	background: #37b39e;
+  background: #37b39e;
 }
 #ibm-content .ibm-id .encouragement.success {
-	color: #37b39e;
-	padding-left: 15px;
-	background: url(../img/check_good.png) left center no-repeat;
+  color: #37b39e;
+  padding-left: 15px;
+  background: url(../img/check_good.png) left center no-repeat;
 }
 #ibm-content .ibm-id .strength .currentstrength.weak {
-	background: #5a95ed;
+  background: #5a95ed;
 }
 #ibm-content .ibm-id .encouragement.weak {
-	color: #5a95ed;
-	padding-left: 15px;
-	background: url(../img/check_acceptable.png) left center no-repeat;
+  color: #5a95ed;
+  padding-left: 15px;
+  background: url(../img/check_acceptable.png) left center no-repeat;
 }
 #ibm-content .ibm-id .instructions,
 #ibm-content .ibm-id .instructions .moreinstructions {
-	position: relative;
-	color: #999999;
-	margin-top: 5px;
-	display: none;
-	padding: 0;
+  position: relative;
+  color: #999999;
+  margin-top: 5px;
+  display: none;
+  padding: 0;
 }
 #ibm-content .ibm-id .instructions .icon-instruction {
-	float: left;
-	position: relative;
-	top: 3px;
-	margin: 0 8px 15px 0;
+  float: left;
+  position: relative;
+  top: 3px;
+  margin: 0 8px 15px 0;
 }
 #ibm-content .ibm-id .instructions .moreinstructions {
-	margin-top: 15px;
-	display: none;	
+  margin-top: 15px;
+  display: none;  
 }
 #ibm-content .ibm-id .instructions .expand {
-	position: absolute;
-	top: 5px;
-	right: 5px;
-	display: block;
-	height: 12px;
-	width: 12px;
-	background: url(../img/expand.png) center center no-repeat;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: block;
+  height: 12px;
+  width: 12px;
+  background: url(../img/expand.png) center center no-repeat;
 }
 #ibm-content .ibm-id .instructions .expand.open {
-	background: url(../img/expand_close.png) center center no-repeat;
+  background: url(../img/expand_close.png) center center no-repeat;
 }
 #ibm-content .ibm-id .forgotlink {
-	float: right;
+  float: right;
 }
 #ibm-content .ibm-id .remember {
-	margin: 30px 0 40px;
+  margin: 30px 0 40px;
 }
 
 #ibm-content .ibm-id label {
-	font-size: 16px;
-	line-height: 22px;
-	display: block;
-	margin: 30px 0 8px;
+  font-size: 16px;
+  line-height: 22px;
+  display: block;
+  margin: 30px 0 8px;
 }
 #ibm-content .ibm-id #privacyid label {
-	display: inline;
+  display: inline;
 }
 #ibm-content .ibm-id #privacyid p {
-	margin-top: 15px;
-	margin-bottom: 25px;
+  margin-top: 15px;
+  margin-bottom: 25px;
 }
 #ibm-content .ibm-id input[type=text].error,
 #ibm-content .ibm-id input[type=password].error,
 #ibm-content .ibm-id select.error {
-/* 	border: 1px solid #e61d32; */
-	background: #fcd3d0;
+/*  border: 1px solid #e61d32; */
+  background: #fcd3d0;
 }
 /*
 #ibm-content .ibm-id input[type=text].error:focus,
 #ibm-content .ibm-id input[type=password].error:focus,
 #ibm-content .ibm-id select.error:focus {
-	border-left: 5px solid #e61d32;
+  border-left: 5px solid #e61d32;
 }
 */
 
 /*
 #ibm-content .ibm-id input[type=text]#E_mail_address,
 #ibm-content .ibm-id input[type=text]#E_mail_address2 {
-	background: url(../img/icon_email.png) 15px center no-repeat;
-	background-size: 17px 12px;
-	text-indent: 45px;
+  background: url(../img/icon_email.png) 15px center no-repeat;
+  background-size: 17px 12px;
+  text-indent: 45px;
 }
 #ibm-content .ibm-id input[type=text]:focus#E_mail_address,
 #ibm-content .ibm-id input[type=text]:focus.error#E_mail_address {
-	background: url(../img/icon_email.png) 11px center no-repeat;
-	background-size: 17px 12px;
-	text-indent: 41px;
+  background: url(../img/icon_email.png) 11px center no-repeat;
+  background-size: 17px 12px;
+  text-indent: 41px;
 }
 #ibm-content .ibm-id input#password,
 #ibm-content .ibm-id input#password2 {
-	background: url(../img/icon_password.png) 15px center no-repeat;
-	background-size: 14px 18px;
-	text-indent: 45px;
+  background: url(../img/icon_password.png) 15px center no-repeat;
+  background-size: 14px 18px;
+  text-indent: 45px;
 }
 #ibm-content .ibm-id input#password:focus,
 #ibm-content .ibm-id input#password:focus.error,
 #ibm-content .ibm-id input#password2:focus,
 #ibm-content .ibm-id input#password2:focus.error {
-	background: url(../img/icon_password.png) 11px center no-repeat;
-	background-size: 14px 18px;
-	text-indent: 41px;
+  background: url(../img/icon_password.png) 11px center no-repeat;
+  background-size: 14px 18px;
+  text-indent: 41px;
 }
 
 input[type=checkbox] { 
-	display: inline-block;
-	height: 18px;
-	width: 20px;
+  display: inline-block;
+  height: 18px;
+  width: 20px;
 /*
-	border: 2px solid #444444;
-	background: none;
-	color: #444444;
+  border: 2px solid #444444;
+  background: none;
+  color: #444444;
 */
-/* 	vertical-align: bottom; */
+/*  vertical-align: bottom; */
 }
 
 .confirm p,
 .confirm span {
-	width: 100%;
+  width: 100%;
 }
 .confirm input[type=text],
 .confirm input[type=password] {
-	width: 95%;	
+  width: 95%; 
 }
 .step {
 /*
-	float: right;
-	margin-left: 30px;
+  float: right;
+  margin-left: 30px;
 */
-	margin: 0 auto 20px;
-	width: 100%;
-	text-align: center;
-	
+  margin: 0 auto 20px;
+  width: 100%;
+  text-align: center;
+  
 }
 .step img {
-	vertical-align: middle;
+  vertical-align: middle;
 }
 
 #showpass, #showpass2 {
@@ -589,168 +610,168 @@ input[type=checkbox] {
     background: url(../img/btn_showpass_error.png) center center no-repeat;
 }
 .encouragement {
-	color: #999999;
-	display: none;
-	float: right;
+  color: #999999;
+  display: none;
+  float: right;
 }
 
 
 .bluemix #useridform p .invalid {
-	border: 2px solid #ff5050;
+  border: 2px solid #ff5050;
 }
 
 
 #useridform p .invalid {
-	border: 2px solid #ff5050;
-	/* background: rgba(255, 0, 0, 0.2) none repeat scroll 0 0; */
+  border: 2px solid #ff5050;
+  /* background: rgba(255, 0, 0, 0.2) none repeat scroll 0 0; */
 }
 
 
 #profilebox {
-	position: absolute;
-	top: 50px;
-	right: 0;
-	height: 249px;
-	display: none;
-	box-shadow: 0 5px 3px #000000;
-	-moz-box-shadow: 0 5px 3px #000000;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  height: 249px;
+  display: none;
+  box-shadow: 0 5px 3px #000000;
+  -moz-box-shadow: 0 5px 3px #000000;
 }
 .inBorder:hover #profilebox a {
-	background: none;
-	border: none;
+  background: none;
+  border: none;
 }
 
 .ibm-signin-card .carousel-container {
-	position: relative;
+  position: relative;
 }
 .notch {
-	position: absolute;
-	top: 0;
-	height: 24px;
-	width: 100%;
-	background: url(../img/notch.png) center top no-repeat;
-	z-index: 5;
+  position: absolute;
+  top: 0;
+  height: 24px;
+  width: 100%;
+  background: url(../img/notch.png) center top no-repeat;
+  z-index: 5;
 }
 .notch.grey {
-	background: url(../img/notch_grey.png) center top no-repeat;
+  background: url(../img/notch_grey.png) center top no-repeat;
 }
 
 .carousel {
-	margin-bottom: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 .carousel div.slick-slide {
-	height: 470px;
-	margin-bottom: 0;
+  height: 470px;
+  margin-bottom: 0;
 }
 .carousel .slide {
-	padding-top: 120px;
+  padding-top: 120px;
 }
 
 .carousel div h3 {
-	font-family: "HelveticaNeue-Bold","HelvBoldIBM",Arial,sans-serif;
-	color: white;
-	font-size: 44px;
-	line-height: 42px;
-	text-align: left;
+  font-family: "HelveticaNeue-Bold","HelvBoldIBM",Arial,sans-serif;
+  color: white;
+  font-size: 44px;
+  line-height: 42px;
+  text-align: left;
 }
 .carousel div p {
-	font-size: 23px;	
-	line-height: 31px;
+  font-size: 23px;  
+  line-height: 31px;
 }
 .ibm-signin-card .carousel.small .slide {
-	height: 200px;
+  height: 200px;
 }
 .ibm-signin-card .carousel.small div p {
-	color: white !important;
-	text-align: center;
-	padding-top: 40px;
+  color: white !important;
+  text-align: center;
+  padding-top: 40px;
 }
 
 .carousel.slick-slider .slick-prev:before,
 .carousel.slick-slider .slick-next:before {
-	content: none;
+  content: none;
 }
 .carousel.slick-slider .slick-prev,
 .carousel.slick-slider .slick-next {
-	width: 31px;
-	height: 60px;
-	background: url(../img/btn_carousel_L.png) center center no-repeat;
-	left: 25px;
+  width: 31px;
+  height: 60px;
+  background: url(../img/btn_carousel_L.png) center center no-repeat;
+  left: 25px;
 }
 .carousel.slick-slider .slick-next {
-	background: url(../img/btn_carousel_R.png) center center no-repeat;
-	left: auto;
-	right: 25px;
+  background: url(../img/btn_carousel_R.png) center center no-repeat;
+  left: auto;
+  right: 25px;
 }
 .ibm-signin-card .carousel.small .carousel.slick-slider .slick-prev,
 .ibm-signin-card .carousel.small .carousel.slick-slider .slick-next {
-	display: none !important;
+  display: none !important;
 }
 .carousel .slick-dots {
-	bottom: 35px;
+  bottom: 35px;
 }
 
 .carousel .slick-dots li button {
-	background: url(../img/carousel_inactive.png) center center no-repeat;
-	width: 12px;
-	height: 12px;
+  background: url(../img/carousel_inactive.png) center center no-repeat;
+  width: 12px;
+  height: 12px;
 }
 .carousel .slick-dots li.slick-active button {
-	background: url(../img/carousel_active.png) center center no-repeat !important;
-	
+  background: url(../img/carousel_active.png) center center no-repeat !important;
+  
 }
 .carousel #slide-try {
-	background-color: #00B4A0;
+  background-color: #00B4A0;
 }
 .carousel #slide-cut {
-	background-color: #EFC100;
+  background-color: #EFC100;
 }
 .carousel #slide-purchase {
-	background-color: #5AAAFA;
+  background-color: #5AAAFA;
 }
 .alertbox {
-	width: 100%;
-	border-bottom: 1px solid white;
-	padding: 30px 0;
-	margin-top: 50px;
-	position: relative;
+  width: 100%;
+  border-bottom: 1px solid white;
+  padding: 30px 0;
+  margin-top: 50px;
+  position: relative;
 }
 .alertbox#successalert {
-	background: #6EB400; color: white;  text-align: center; font-size: 19px; 
+  background: #6EB400; color: white;  text-align: center; font-size: 19px; 
 }
 .alertbox#progressive {
-	background: white; padding-top: 0;
+  background: white; padding-top: 0;
 }
 .alertbox .close {
-	position: absolute;
-	right: 75px;
-	top:32px;
+  position: absolute;
+  right: 75px;
+  top:32px;
 }
 .alertbox#progressive .close {
-	top: 25px;
+  top: 25px;
 }
 header nav a,
 header nav a:visited {
-	color: inherit;
+  color: inherit;
 }
 
 .ProductName {
-	color: white;
+  color: white;
 }
 
 #ibm-content .ibm-id #remUserID .remMsg1, #ibm-content .ibm-id #remOrgId .remMsg1 {
-	display :inline-block;
-	margin: 0px;
+  display :inline-block;
+  margin: 0px;
 }
 
 nav ul, footer ul {
-	list-style: none;
-	list-style-type: none;
+  list-style: none;
+  list-style-type: none;
 }
 nav ul li:before, nav .ibm-bullet:before,
 footer ul li:before, footer .ibm-bullet:before {
-	content: none;
+  content: none;
 }
 /* #processing {
     position: fixed;
@@ -978,175 +999,175 @@ footer ul li:before, footer .ibm-bullet:before {
 
 /*
 @media screen and (max-width: 1239px) {
-	.ibm-signin-card .ibm-graphic-tabs ul.ibm-tabs li {
-		font-size: 14px;
-	}
+  .ibm-signin-card .ibm-graphic-tabs ul.ibm-tabs li {
+    font-size: 14px;
+  }
 }
 */
 
 /* Hack to fix signin form width on responsive sizes */
 @media screen and (min-width: 768px) and (max-width: 1239px) {
 /*
-	.ibm-signin-card .ibm-graphic-tabs ul.ibm-tabs li {
-		font-size: 14px;
-	}
+  .ibm-signin-card .ibm-graphic-tabs ul.ibm-tabs li {
+    font-size: 14px;
+  }
 */
 
-	.addtrial .ibm-col-6-1 {
-		display: none;
-	}
-	.addtrial .ibm-columns,
-	.addtrial .ibm-col-6-4,
-	.addtrial .passwordform {
-		margin: 0 auto !important;
-		float: none;
-		width: 768px;
-	}
-	.addtrial .passwordform .ibm-col-6-2 {
-		min-width: 374px;
-		margin-left: 0;
-	}
+  .addtrial .ibm-col-6-1 {
+    display: none;
+  }
+  .addtrial .ibm-columns,
+  .addtrial .ibm-col-6-4,
+  .addtrial .passwordform {
+    margin: 0 auto !important;
+    float: none;
+    width: 768px;
+  }
+  .addtrial .passwordform .ibm-col-6-2 {
+    min-width: 374px;
+    margin-left: 0;
+  }
 
 }
 @media screen and (min-width: 768px) and (max-width: 1479px) {
-	.ibm-signin .ibm-col-6-2 {
-		display: none;
-	}
-	.ibm-signin .addtrial .passwordform .ibm-col-6-2 {
-		display: block !important;
-	}
-	.ibm-signin-card.ibm-col-6-2 {
-		margin: 0 auto;
-		float: none;
-	}
-	.ibm-signin-card.ibm-col-6-2,
-	.ibm-signin-card .ibm-col-6-2 {
-		display: block;
-		min-width: 460px !important;
-	}
+  .ibm-signin .ibm-col-6-2 {
+    display: none;
+  }
+  .ibm-signin .addtrial .passwordform .ibm-col-6-2 {
+    display: block !important;
+  }
+  .ibm-signin-card.ibm-col-6-2 {
+    margin: 0 auto;
+    float: none;
+  }
+  .ibm-signin-card.ibm-col-6-2,
+  .ibm-signin-card .ibm-col-6-2 {
+    display: block;
+    min-width: 460px !important;
+  }
 }
 
 
 
 @media screen and (max-width: 800px) {
-	.carousel div.slick-slide {
-		height: auto;
-		min-height: 700px;
-	}
-	.carousel.small div.slick-slide {
-		height: auto;
-		min-height: auto;
-	}
-	.ibm-signin-card .carousel.small div p {
-		padding-top: 0;
-	}
-	br.mobilehide {
-		display: none;
-	}
+  .carousel div.slick-slide {
+    height: auto;
+    min-height: 700px;
+  }
+  .carousel.small div.slick-slide {
+    height: auto;
+    min-height: auto;
+  }
+  .ibm-signin-card .carousel.small div p {
+    padding-top: 0;
+  }
+  br.mobilehide {
+    display: none;
+  }
 }
 
 @media screen and (max-width: 767px) {
-	#ibm-id-header {
-		padding: 0;
-	}
-	#ibm-id-header h1,
-	#ibm-id-header h1.promoheader {
-		font-size: 20px;
-		line-height: 24px;
-		margin-top: 20px;
-		margin-bottom: 0;
-		padding-left: 25px;
-		background-size: 20px 20px;
-	}
-	#ibm-id-header h1.promoheader {
-		padding-left: 0;
-	}
-	#ibm-id-header h2 {
-		font-size: 12px;
-		line-height: 12px;
-	}
-	.ibm-signin-card h3, .addtrial .ibm-id h3, .ibm-type .ibm-signin-card h3 b, .addtrial .ibm-id h3 b {
-		font-size: 24px;
-		line-height: 29px;
-	}
-	.addtrial .ibm-id h3 {
-		margin-top: 0;
-	}
-	.ibm-signin-card p, .addtrial p {
-		font-size: 16px;
-		line-height: 20px;	
-	}
-	.ibm-signin-card p.inboxmessage, .ibm-signin-card p.securityquestion {
-		font-size: 20px;
-		line-height: 24px;	
-	}
-	#ibm-top.ibm-landing-page .ibm-container .ibm-columns, .ibm-columns, .ibm-col-1-1, .ibm-col-2-1, .ibm-col-4-1, .ibm-col-4-2, .ibm-col-4-3, .ibm-col-5-1, .ibm-col-5-2, .ibm-col-5-3, .ibm-col-5-4, .ibm-col-6-1, .ibm-col-6-2, .ibm-col-6-3, .ibm-col-6-4, .ibm-col-6-5, .ibm-landing-page .ibm-w-gutter .ibm-col-4-2, .ibm-landing-page .ibm-w-gutter .ibm-col-6-3, .ibm-landing-page .ibm-ribbon .ibm-w-gutter .ibm-col-4-2, .ibm-landing-page .ibm-ribbon .ibm-w-gutter .ibm-col-6-3, .ibm-landing-page .ibm-thumbnail-small > div[class^="ibm-col-"], .ibm-default #ibm-content .ibm-col-1-1, .ibm-default #ibm-content .ibm-col-2-1, .ibm-content-expand #ibm-content .ibm-col-1-1, .ibm-content-expand #ibm-content .ibm-col-2-1, .ibm-content-expand #ibm-content .ibm-col-5-1, .ibm-content-expand #ibm-content .ibm-col-5-2, .ibm-content-expand #ibm-content .ibm-col-5-3, #ibm-top .ibm-columns .ibm-columns {
-		width: 100%;
-		box-sizing: border-box;
-		margin: 0;
-	}
-	#ibm-top .ibm-columns {
-		padding: 0 20px;
-	}
-	#ibm-top.ibm-signin #ibm-pcon {
-		background: white;
-	}
-	.ibm-tabs, .mobilehide {
-		display: none;
-	}
-	.ibm-signin-card form {
-		margin: 0 0 50px;
-	}
-	.icon {
-		width: 44px;
-		height: 44px;
-	}
-	.addtrial a.button,
-	.pwreset a.button,
-	.ibm-signin-card a.button {
-		width: 100%;
-		float: none;
-		/* margin: 0 0 20px !important; */
-		box-sizing: border-box;
-	}
-	.step {
-		float: none;
-		margin-bottom: 20px;
-		margin-left: 0;
-	}
-	.displaymobile {
-		display: block;
-	}
-	.ibm-signin-card.reset a.button.buttonRegister {
-		float: left;
-		width: 100%;
-	}
-	a.button.cancel,
-	a.button.cancel.cancellink {
-		padding-right: 0; width: 100%; float: none;
-	}
-	button.slick-prev,
-	button.slick-next {
-		display: none !important;
-	}
-	.carousel div.slick-slide {
-		min-height: 745px;	
-	}
-	.carousel.small div.slick-slide {
-		min-height: 250px;	
-	}
-	.carousel .slide {
-		padding: 20px;
-	}
-	.passwordform {
-		padding: 30px 0 0;
-	}
-	.passwordform .buttons {
-		float: none;
-		width: 100%;
-	}
-	.encouragement {
-		float: none;
-	}
+  #ibm-id-header {
+    padding: 0;
+  }
+  #ibm-id-header h1,
+  #ibm-id-header h1.promoheader {
+    font-size: 20px;
+    line-height: 24px;
+    margin-top: 20px;
+    margin-bottom: 0;
+    padding-left: 25px;
+    background-size: 20px 20px;
+  }
+  #ibm-id-header h1.promoheader {
+    padding-left: 0;
+  }
+  #ibm-id-header h2 {
+    font-size: 12px;
+    line-height: 12px;
+  }
+  .ibm-signin-card h3, .addtrial .ibm-id h3, .ibm-type .ibm-signin-card h3 b, .addtrial .ibm-id h3 b {
+    font-size: 24px;
+    line-height: 29px;
+  }
+  .addtrial .ibm-id h3 {
+    margin-top: 0;
+  }
+  .ibm-signin-card p, .addtrial p {
+    font-size: 16px;
+    line-height: 20px;  
+  }
+  .ibm-signin-card p.inboxmessage, .ibm-signin-card p.securityquestion {
+    font-size: 20px;
+    line-height: 24px;  
+  }
+  #ibm-top.ibm-landing-page .ibm-container .ibm-columns, .ibm-columns, .ibm-col-1-1, .ibm-col-2-1, .ibm-col-4-1, .ibm-col-4-2, .ibm-col-4-3, .ibm-col-5-1, .ibm-col-5-2, .ibm-col-5-3, .ibm-col-5-4, .ibm-col-6-1, .ibm-col-6-2, .ibm-col-6-3, .ibm-col-6-4, .ibm-col-6-5, .ibm-landing-page .ibm-w-gutter .ibm-col-4-2, .ibm-landing-page .ibm-w-gutter .ibm-col-6-3, .ibm-landing-page .ibm-ribbon .ibm-w-gutter .ibm-col-4-2, .ibm-landing-page .ibm-ribbon .ibm-w-gutter .ibm-col-6-3, .ibm-landing-page .ibm-thumbnail-small > div[class^="ibm-col-"], .ibm-default #ibm-content .ibm-col-1-1, .ibm-default #ibm-content .ibm-col-2-1, .ibm-content-expand #ibm-content .ibm-col-1-1, .ibm-content-expand #ibm-content .ibm-col-2-1, .ibm-content-expand #ibm-content .ibm-col-5-1, .ibm-content-expand #ibm-content .ibm-col-5-2, .ibm-content-expand #ibm-content .ibm-col-5-3, #ibm-top .ibm-columns .ibm-columns {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+  }
+  #ibm-top .ibm-columns {
+    padding: 0 20px;
+  }
+  #ibm-top.ibm-signin #ibm-pcon {
+    background: white;
+  }
+  .ibm-tabs, .mobilehide {
+    display: none;
+  }
+  .ibm-signin-card form {
+    margin: 0 0 50px;
+  }
+  .icon {
+    width: 44px;
+    height: 44px;
+  }
+  .addtrial a.button,
+  .pwreset a.button,
+  .ibm-signin-card a.button {
+    width: 100%;
+    float: none;
+    /* margin: 0 0 20px !important; */
+    box-sizing: border-box;
+  }
+  .step {
+    float: none;
+    margin-bottom: 20px;
+    margin-left: 0;
+  }
+  .displaymobile {
+    display: block;
+  }
+  .ibm-signin-card.reset a.button.buttonRegister {
+    float: left;
+    width: 100%;
+  }
+  a.button.cancel,
+  a.button.cancel.cancellink {
+    padding-right: 0; width: 100%; float: none;
+  }
+  button.slick-prev,
+  button.slick-next {
+    display: none !important;
+  }
+  .carousel div.slick-slide {
+    min-height: 745px;  
+  }
+  .carousel.small div.slick-slide {
+    min-height: 250px;  
+  }
+  .carousel .slide {
+    padding: 20px;
+  }
+  .passwordform {
+    padding: 30px 0 0;
+  }
+  .passwordform .buttons {
+    float: none;
+    width: 100%;
+  }
+  .encouragement {
+    float: none;
+  }
 
 }

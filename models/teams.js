@@ -13,9 +13,6 @@ var team = {
         callback(err, body);
       });
     }
-  },
-  getTeamName : function(id, callback){
-    callback(1);
   }
 };
 
