@@ -230,7 +230,10 @@ function filter(id) {
 	selectedTeam = "";
 	
 	if (id == "myTeams") {
-		getAllAgileTeamsForUser(JSON.parse(localStorage.getItem("userInfo")).email, userAgileTeamListHandler, [true, JSON.parse(localStorage.getItem("userInfo")).email]);
+		//TODO when backend works
+		//getAllAgileTeamsForUser(JSON.parse(localStorage.getItem("userInfo")).email, userAgileTeamListHandler, [true, JSON.parse(localStorage.getItem("userInfo")).email]);
+		//temporary 
+		getAllAgileTeamsForUser("cjscotta@us.ibm.com", userAgileTeamListHandler, [true, "cjscotta@us.ibm.com"]);
 
 	} else {
 		getAllAgileTeams(agileTeamListHandler, [true]);
