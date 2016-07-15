@@ -40,7 +40,8 @@ var iteration = {
           }
       });
     }
-  }
+  },
+
 };
 
 module.exports = iteration;
