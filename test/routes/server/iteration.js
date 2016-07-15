@@ -1,10 +1,10 @@
 var request = require('supertest');
 var app     = require('../../../app');
 
-describe('GET /progress', function() {
+describe('GET /iteration', function() {
   it('should respond with HTML', function(done) {
     request(app)
-      .get('/progress')
+      .get('/iteration')
       .expect(200, done);
   });
 });
