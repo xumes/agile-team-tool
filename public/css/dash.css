@@ -1,12 +1,7 @@
 #ibm-leadspace-head {
 	background: url(../img/banner.jpg) no-repeat;
 	background-size: cover;
-	height: 100px;
 	color: #FFFFFF;
-}
-
-#ibm-footer-locale-selector, #ibm-menu-links, .ibm-feedbacklink, .ibm-mh-marketplace-link, #ibm-search-module, .ibm-masthead-item-menu {
-    display:none !important;
 }
 
 #ibm-leadspace-body {
@@ -308,8 +303,8 @@ ul[class='ibm-twisty agile-principle'], ul[class='ibm-twisty agile-practice'] {
 	margin-right: 30px;
 }
 
-p,table {
-	margin-left: 30px;
+#sendFeedback p, #sendFeedback label {
+	padding-bottom: 0px;
 }
 
 .ibm-column-form input[type="number"] {
@@ -341,7 +336,7 @@ ibm-btn-pri ibm-btn-small {
 	font-weight:bold;
 }
 
-#ibm-footer-locale-selector, .ibm-feedbacklink {
+#ibm-footer-locale-selector, .ibm-feedbacklink, .ibm-mh-marketplace-link, #ibm-search-module, .ibm-masthead-item-menu {
 	display:none !important;
 }
 
@@ -585,4 +580,17 @@ table.action td {
 
 #helpcol2 {
 	margin-left: 60px;
-}s
+}
+
+.reporting-read-only-status {
+	vertical-align: top;
+	min-width: 400px;
+	max-width: 600px;
+	margin-left: 625px;
+	margin-top: -53px;
+	margin-bottom: 35px;
+	max-height: 20px;
+	min-height: 20px;
+	font-size: 10.5pt;
+	color: black; 
+}
