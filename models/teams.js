@@ -13,6 +13,16 @@ var team = {
         callback(err, body);
       });
     }
+  },
+  getRole : function(callback){
+    common.getByView('agile', 'roles', function(err, body){
+      callback(err, body);
+    });
+  },
+  getName : function(callback){
+    common.getByView('teams', 'getTeamNames', function(err, body){
+      callback(err, body);
+    });
   }
 };
 
