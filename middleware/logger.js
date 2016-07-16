@@ -22,4 +22,12 @@ winston.loggers.add('auth', {
   }
 });
 
+winston.loggers.add('models', {
+  console: {
+    level: logLevel,
+    colorize: logColors,
+    label: 'models'
+  }
+});
+
 module.exports = winston.loggers;
