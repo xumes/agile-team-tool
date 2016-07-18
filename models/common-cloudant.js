@@ -9,89 +9,76 @@ var cloudantDb = Cloudant('https://' + settings.cloudant.userName + ':' + settin
 var dbName = settings.cloudant.dbName;
 var agileTeam = Promise.promisifyAll((cloudantDb.use(dbName)));
 
-exports.addRecord = function(data, callback) {
-  agileTeam.insert(data, function(err, body) {
-    if (err) {
-      callback(err);
-      return;
-    }
-    if (body.rows.length > 0) {
-      callback(null, body);
-      return;
-    } else {
-      callback(null, null);
-      return;
-    }
+exports.addRecord = function(data) {
+  return new Promise(function(resolve, reject){
+    agileTeam.insertAsync(data)
+    .then(function(body){
+      resolve(body);
+    })
+    .catch(function(err){
+      reject(err);
+    })
   });
 };
 
-exports.getRecord = function(data, done) {
-  agileTeam.getAsync(data)
-    .then(function(body){
-      done(null, body);
-    })
-    .catch(function(err){
-      done(err, null);
-    });
-};
-
-exports.updateRecord = function(data, callback) {
-  agileTeam.insert(data, function(err, body) {
-    if (err) {
-      callback(err);
-      return;
-    }
-    if (body.rows.length > 0) {
-      callback(null, body);
-      return;
-    } else {
-      callback(null, null);
-      return;
-    }
-  });	
-};
-
-
-exports.deleteRecord = function(_id, _rev, callback) {
-  agileTeam.destroy(_id, _rev, function(err, body) {
-    if (err) {
-      callback(err);
-      return;
-    }
-    if (body.rows.length > 0) {
-      callback(null, body);
-      return;
-    } else {
-      callback(null, null);
-      return;
-    }
-  });
-};
-
-exports.getByView = function(_design, _view, done) {
-  agileTeam.viewAsync(_design, _view)
-    .then(function(body){
-      body = _.isEmpty(body.rows) ? {} : body;
-      done(null, body);
-    })
-    .catch(function(err){
-      done(err, null);
-    });
-  };
-
-exports.getByViewKey = function(_design, _view, _key, callback) {
-  agileTeam.view(_design, _view,
-      {'include_docs': false, key: _key }, function(err, body) {
-        if (err) {
-          callback(err);
-          return;
-        }
-        if (body.rows.length > 0) {
-          callback(null, body);
-          return;
-        } else {
-          callback(null, null);
-          return;
-        }
+exports.getRecord = function(data) {
+  return new Promise(function(resolve, reject){
+    agileTeam.getAsync(data)
+      .then(function(body){
+        resolve(body);
+      })
+      .catch(function(err){
+        reject(err);
       });
+  });
+};
+
+exports.updateRecord = function(data) {
+  // revision _id is required on data
+  return new Promise(function(resolve, reject){
+    agileTeam.insertAsync(data)
+    .then(function(body){
+      resolve(body);
+    })
+    .catch(function(err){
+      reject(err);
+    })
+  });
+};
+
+exports.deleteRecord = function(_id, _rev) {
+  return new Promise(function(resolve, reject){
+    agileTeam.destroyAsync(_id, _rev)
+      .then(function(body){
+        resolve(body);
+      })
+      .catch(function(err){
+        reject(err);
+      })  
+  });
+};
+
+exports.getByView = function(_design, _view) {
+  return new Promise(function(resolve, reject) {
+    agileTeam.viewAsync(_design, _view)
+      .then(function(body){
+        body = _.isEmpty(body.rows) ? {} : body;
+        resolve(body);
+      })
+      .catch(function(err){
+        reject(err);
+      });
+  });
+};
+
+exports.getByViewKey = function(_design, _view, _key) {
+  return new Promise(function(resolce, reject){
+    agileTeam.viewAsync(_design, _view, {'include_docs': false, key: _key })
+      .then(function(body){
+        resolve(body);
+      })
+      .catch(function(err){
+        reject(err);
+      });
+  });
 };

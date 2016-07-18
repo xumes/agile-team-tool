@@ -1,14 +1,13 @@
 var chai = require('chai');
 var expect = chai.expect;
-var Promise = require('bluebird');
-var teamModel = Promise.promisifyAll(require('../../models/teams'));
+var teamModel = require('../../models/teams');
 var timeout = 30000;
 var validId = null;
 
 describe("Team models [getTeam]: get all teams or get team details if team id is set ", function(){ 
   this.timeout(timeout);
   it("retrieve all team", function(done){
-    teamModel.getTeamAsync(null)
+    teamModel.getTeam(null)
       .then(function(body){
         expect(body).to.be.a('object');
         expect(body).to.have.property('rows');
@@ -23,7 +22,7 @@ describe("Team models [getTeam]: get all teams or get team details if team id is
   });
 
   it("return empty none existent team details", function(done){    
-    teamModel.getTeamAsync('none-existing-team')
+    teamModel.getTeam('none-existing-team')
       .then(function(body){
         expect(body).to.be.equal(null);
       })
@@ -38,7 +37,7 @@ describe("Team models [getTeam]: get all teams or get team details if team id is
   });
 
   it("return team details", function(done){
-    teamModel.getTeamAsync(validId)
+    teamModel.getTeam(validId)
       .then(function(body){
         expect(body).to.be.a('object');
         expect(body).to.have.property('type');
@@ -52,15 +51,20 @@ describe("Team models [getTeam]: get all teams or get team details if team id is
   });
 });
 
-xdescribe('Team models [getRole]: get team role type', function(){
+describe('Team models [getRole]: get team role type', function(){
   this.timeout(timeout);
   it('retrieve all team role type', function(done){
-    teamModel.getRole(function(err, body){
-      expect(err).to.be.equal(null);
-      expect(body).to.be.a('object');
-      expect(body).to.have.property('rows');
-      done();
-    });
+    teamModel.getRole()
+      .then(function(body){
+        expect(body).to.be.a('object');
+        expect(body).to.have.property('rows');
+      })
+      .catch(function(err){
+        expect(err.error).to.be.an('undefined');
+      })
+      .finally(function(){
+        done();  
+      });
   });
 });
 

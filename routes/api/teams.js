@@ -1,37 +1,37 @@
-var Promise = require('bluebird');
-var teamModel = Promise.promisifyAll(require('../../models/teams'));
+var teamModel = require('../../models/teams');
 
 module.exports = function(app, includes) {
   var middleware  = includes.middleware;
 
   getTeam = function(req, res) {
     var teamId = req.params.teamId;
-    teamModel.getTeamAsync(teamId)
+    teamModel.getTeam(teamId)
       .then(function(result){
         res.send(result);
       })
       .catch(function(err){
-        res.send(400, { error: err });
+        res.send(400, err);
       });
   };
 
   getTeamRole = function(req, res){
-    teamModel.getRoleAsync(teamId)
+    teamModel.getRole()
       .then(function(result){
-        return res.send(result);
+        res.send(result);
       })
       .catch(function(err){
-        return res.send(400, { error: err });
+        res.send(400, err);
       });
   };
 
 getTeamName = function(req, res){
-    teamModel.getName(function(err, result){
-      if(err)
-        return res.status(500).send({ error: err });
-      else
-        return res.send(result);
-    });
+    teamModel.getName()
+      .then(function(result){
+        res.send(result);
+      })
+      .catch(function(err){
+        res.send(400, err);
+      });
   };
 
   app.get('/api/teams/roles', [includes.middleware.auth.requireLogin], getTeamRole);
