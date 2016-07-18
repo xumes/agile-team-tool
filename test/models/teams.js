@@ -4,7 +4,7 @@ var teamModel = require('../../models/teams');
 var timeout = 30000;
 var validId = null;
 
-describe("Team models [getTeam]: get all teams or get team details if team id is set ", function(){ 
+describe("Team models [getTeam]: get all teams or get team details if team id is set ", function(done){ 
   this.timeout(timeout);
   it("retrieve all team", function(done){
     teamModel.getTeam(null)
@@ -51,7 +51,7 @@ describe("Team models [getTeam]: get all teams or get team details if team id is
   });
 });
 
-describe('Team models [getRole]: get team role type', function(){
+describe('Team models [getRole]: get team role type', function(done){
   this.timeout(timeout);
   it('retrieve all team role type', function(done){
     teamModel.getRole()
@@ -68,14 +68,19 @@ describe('Team models [getRole]: get team role type', function(){
   });
 });
 
-xdescribe('Team models [getName]: get team names', function(){
+describe('Team models [getName]: get team names', function(done){
   this.timeout(timeout);
   it('retrieve all team role type', function(done){
-    teamModel.getName(function(err, body){
-      expect(err).to.be.equal(null);
-      expect(body).to.be.a('object');
-      expect(body).to.have.property('rows');
-      done();
-    });
+    teamModel.getName()
+      .then(function(body){
+        expect(body).to.be.a('object');
+        expect(body).to.have.property('rows');
+      })
+      .catch(function(err){
+        expect(err).to.be.equal(null);
+      })
+      .finally(function(){
+        done();
+      });
   });
 });
