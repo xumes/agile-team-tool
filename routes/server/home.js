@@ -3,7 +3,7 @@ module.exports = function(app, includes) {
   var render = includes.render;
 
   showHome = function(req, res) {
-    json= {"pageTitle":"Home"}
+    json= {"pageTitle": "Home"}
     render(req, res, 'index', json);
   };
   
