@@ -1,12 +1,13 @@
 // team modules
-var common = require('./common-cloudant');
+var Promise = require('bluebird');
+var common = Promise.promisifyAll(require('./common-cloudant'));
 var _ = require('underscore');
 var loggers = require('../middleware/logger');
 var msg;
 
 var formatErrMsg = function(msg){
   loggers.get('models').info('Error: ' + msg);
-  return { msg : msg };
+  return { error : msg };
 };
 
 var successLogs = function(msg){
@@ -20,29 +21,29 @@ var infoLogs = function(msg){
 };
 
 var team = {
-  getTeam : function(teamId, callback){
+  getTeam : function(teamId, done){
     if(_.isEmpty(teamId)){
       infoLogs('Getting all team records from Cloudant');
-      common.getByView('teams', 'teams', function(err, body){
-        if(err){
-          msg = err.error;
-          callback(formatErrMsg(msg), null);
-        }else{
+      common.getByViewAsync('teams', 'teams')
+        .then(function(body){
           successLogs('Team records obtained');
-          callback(null, body);
-        }
-      });
+          return done(null, body);
+        })
+        .catch(function(err){
+          msg = err.error;
+          return done(formatErrMsg(msg), null);
+        });
     }else{
       infoLogs('Getting team records for ' + teamId + ' from Cloudant');
-      common.getRecord(teamId, function(err, body){
-        if(err){
-          msg = teamId + ' ' + err.error;
-          callback(formatErrMsg(msg), null);
-        }else{
-          successLogs('Team record for ' + teamId + ' obtained');
-          callback(null, body);
-        }
-      });
+      common.getRecordAsync(teamId)
+        .then(function(body){
+          successLogs('Team records obtained');
+          return done(null, body);
+        })
+        .catch(function(err){
+          msg = err.error;
+          return done(formatErrMsg(msg), null);
+        });
     }
   },
   getRole : function(callback){
