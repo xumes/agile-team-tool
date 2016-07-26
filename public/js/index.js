@@ -17,8 +17,6 @@ jQuery.expr[':'].Contains = function(a, i, m) {
 
 jQuery(function($) {
 	$(document).ready(function() {
-
-		$(document).ajaxStop($.unblockUI); 
 		
 		var urlParameters = getJsonParametersFromUrl();
 		if (urlParameters != undefined && urlParameters.testUser != undefined) {
@@ -28,6 +26,7 @@ jQuery(function($) {
 
 		initializeTable();
 		getAllAgileTeams(agileTeamListHandler, [false]);
+
 	});
 
 	$("#teamFilter").keyup(function() {
@@ -51,24 +50,24 @@ jQuery(function($) {
 		if ($(this).hasClass("ibm-btn-pri ibm-btn-blue-50"))
 				return;
 		
-		filter($(this).attr("id"));
 		$($(this)).removeClass("ibm-btn-sec ibm-btn-gray-50");
 		$($(this)).addClass("ibm-btn-pri ibm-btn-blue-50");
 
 		$("#allTeams").removeClass("ibm-btn-pri ibm-btn-blue-50");
 		$("#allTeams").addClass("ibm-btn-sec ibm-btn-gray-50");
+		filter($(this).attr("id"));
 	});
 	
 	$("#allTeams").click(function() {
 		if ($(this).hasClass("ibm-btn-pri ibm-btn-blue-50"))
 			return;
 
-		filter($(this).attr("id"));
 		$($(this)).removeClass("ibm-btn-sec ibm-btn-gray-50");
 		$($(this)).addClass("ibm-btn-pri ibm-btn-blue-50");
 		
 		$("#myTeams").removeClass("ibm-btn-pri ibm-btn-blue-50");
 		$("#myTeams").addClass("ibm-btn-sec ibm-btn-gray-50");
+		filter($(this).attr("id"));
 	});
 
 	$("#teamExpand").click(function() {
@@ -123,6 +122,7 @@ $(document).on('input', '.clearable', function() {
 	$("#teamTree").show();
 	$("#teamTable").hide();
 	$(".agile-section-expand-collapse").show();
+
 	openSelectedTeamTree(true);
 	
 });
@@ -196,14 +196,15 @@ function redrawCharts(section) {
  * @param userEmail - member user email to search.
  * @param teamList - array of teams
  */
-function agileTeamListHandler(show, teamList) {
-	setGlobalTeamList(teamList);	
-	allTeams = teamList;
-	allTeamsLookup = getLookupListById(allTeams);
+function agileTeamListHandler(show, allTeamList) {
+	setGlobalTeamList(allTeamList);	
+	allTeamsLookup = _.indexBy(allTeamList, function(team) {return team._id});
+	allTeams = organizeTeamList(allTeamList);
 	if (show)
-		organizeTeamHierarchy(allTeams);
+		organizeTeamHierarchy(false);
 	else
-		$("#myTeams").click();		
+		$("#myTeams").click();
+
 }
 
 /**
@@ -214,9 +215,33 @@ function agileTeamListHandler(show, teamList) {
  * @param userTeamList - array of teams where user email exists as a member.
  */
 function userAgileTeamListHandler(show, userEmail, userTeamList) {
-	myTeams = sortAgileTeamsByName(userTeamList);
+	myTeams = organizeTeamList(userTeamList);
 	if (show) 
-		organizeTeamHierarchy(myTeams);
+		organizeTeamHierarchy(true);
+
+}
+
+function organizeTeamList(teamList) {
+	if (_.has(teamList, "_root") || _.has(teamList, "_branch") || _.has(teamList, "_standalone"))
+		return teamList;
+
+	teamList = _.groupBy(teamList, function(team) {
+		var level =  "_root";
+		if (_.isEmpty(team.parent_team_id) && _.isEmpty(team.child_team_id))
+			level = "_standalone";
+		else if (!_.isEmpty(team.parent_team_id))
+    	level = "_branch";
+		return level;
+	});
+
+	if (_.has(teamList, '_root'))
+		teamList._root = _.sortBy(teamList._root, function(team) {return team.name});
+	if (_.has(teamList, '_branch'))
+		teamList._branch = _.sortBy(teamList._branch, function(team) {return team.name});
+	if (_.has(teamList, '_standalone')) 
+		teamList._standalone = _.sortBy(teamList._standalone, function(team) {return team.name});
+
+	return teamList;
 }
 
 /**
@@ -230,147 +255,48 @@ function filter(id) {
 	selectedTeam = "";
 	
 	if (id == "myTeams") {
-		//TODO when backend works
-		//getAllAgileTeamsForUser(JSON.parse(localStorage.getItem("userInfo")).email, userAgileTeamListHandler, [true, JSON.parse(localStorage.getItem("userInfo")).email]);
-		//temporary 
-		getAllAgileTeamsForUser("cjscotta@us.ibm.com", userAgileTeamListHandler, [true, "cjscotta@us.ibm.com"]);
+		if (userTeams != null)
+			userAgileTeamListHandler(true, user.shortEmail, userTeams);
+		else
+			getAllAgileTeamsForUser(user.shortEmail, userAgileTeamListHandler, [true, user.shortEmail]);
 
 	} else {
-		getAllAgileTeams(agileTeamListHandler, [true]);
+		if (allTeams != null)
+			organizeTeamHierarchy(false);
+		else
+			getAllAgileTeams(agileTeamListHandler, [true]);
 
 	}
 }
 
-/**
- * Variable holder for teams already shown in the team hierarchy table.
- */
-var publishedTeam = [];
-/**
- * Variable holder for top most parents to show in team hierarchy table.
- */
-var firstParents = [];
-
-var standAloneTeams = [];
-/**
- * Recursive lookup for topmost parent team from the master team list, and if it already exist in a given team list.
- * 
- * @masterListLookup - master team list to traverse.
- * @teamListLookup - current team list to traverse.
- * @param id - current team id used to look for parent related information.
- * @returns - team object if topmost parent is found after cross checking the given lists.
- */
-function getTopmostParentInList(masterListLookup, teamListLookup, id) {
-	var topmostTeam = null;
-	var team = masterListLookup[id];
-	if (team != null) {
-		var found = false;
-		if (team.parent_team_id != undefined && team.parent_team_id != "") {
-			topmostTeam = teamListLookup[team._id];
-			var nextTopmostTeam = null;
-			if (topmostTeam != null && topmostTeam.parent_team_id != undefined && topmostTeam.parent_team_id != "") {
-				// need to validate the selected top team as we may need to go up further
-				nextTopmostTeam = getTopmostParentInList(masterListLookup, teamListLookup, topmostTeam.parent_team_id);
-				if (nextTopmostTeam != null)
-					topmostTeam = nextTopmostTeam;
-			}
-				
-			if (topmostTeam != null) { 
-				found = true;
-				showLog("nearest immediate top most team exist in the list [" +topmostTeam.name+ "/" +topmostTeam._id+ "]");
-			}
-		}
-		
-		if (!found && team.parent_team_id != undefined && team.parent_team_id != "") {
-			topmostTeam = getTopmostParentInList(masterListLookup, teamListLookup, team.parent_team_id);
-		
-		} else if (team.parent_team_id != undefined && team.parent_team_id == "") {
-			// working on the a top most team, check if it is already the current team list.
-			if (teamListLookup[team._id] != null)
-				topmostTeam = teamListLookup[team._id];
-		}
-	}
-
-	return topmostTeam;
-}
-
-/**
- * Recursive lookup for topmost parent teams in a given team list.
- * 
- * @teamListLookup - current team list to traverse.
- * @param id - current team id used to look for parent related information.
- */
-function getFirstParentInList(teamListLookup, id) {
-	var parentTeam = null;
-	var found = false;
-	var team = teamListLookup[id];
-	if (team != null) {
-		if (team.parent_team_id != undefined && team.parent_team_id != "") {
-			found = getFirstParentInList(teamListLookup, team.parent_team_id);
-			if (!found) {
-				parentTeam = team;
-				// essentially not a top parent team but no parent info was found while traversing the current team list
-				showLog("there is a top parent that is not found in the current team list for [" + team.name + "/" + team._id + "]");
-				var topParent = getTopmostParentInList(allTeamsLookup, teamListLookup, team.parent_team_id);
-				if (topParent != null)
-					parentTeam = topParent;
-			}
-		} else {
-			// there is no parent info related to the team
-			parentTeam = team;
-			found = true;
-		}
-	}
-	
-	// list it down if it is one of the top most parent of a team.
-	if (parentTeam != undefined && firstParents.indexOf(parentTeam.name.toUpperCase()+parentTeam._rev) == -1) {
-		// uppercase for sorting purposes
-		firstParents.push(parentTeam.name.toUpperCase()+parentTeam._rev);
-	}
- 
-	return found;
-}
-
-/**
- * Organizes the team hierarchy structure to display.
- * 
- * @param teamList - array of user teams that should be organized.
- */
-function organizeTeamHierarchy(teamList) {
+function organizeTeamHierarchy(myTeamsOnly) {
 	var start = new Date().getTime();
-	publishedTeam = [];
-	firstParents = [];
-	standAloneTeams = [];
+
 	$("#teamTree").empty();
 	$("#teamTable tbody").empty();
 	$("#teamTable").hide();
-	// start with highest parents (non squad teams with no parents).
-	// we do this so hierarchy will be sorted by top most parents first.
-	var teamListLookup =  getLookupListById(teamList);
-	if (teamList != undefined && teamList.length > 0) {
-		for ( var i = 0; i < teamList.length; i++) {
-			var team = teamList[i];
-			getFirstParentInList(teamListLookup, team._id);
-		}
-		// sort names alphabetically
-		firstParents.sort();
-		
+
+	var teamList = myTeamsOnly ? myTeams : allTeams;
+	if (!_.isEmpty(teamList)) {
 		$("#teamTree").append(createMainTwistySection("teamTreeMain", ""));
-		
-		for ( var i = 0; i < firstParents.length; i++) {
-			for ( var j = 0; j < allTeams.length; j++) {
-				var team = allTeams[j];
-				if ((team.name.toUpperCase()+team._rev) == firstParents[i]) {
+		if (myTeamsOnly) {
+			_.each(_.sortBy(
+				_.union(teamList._root, teamList._branch), function(team) {return team.name})
+				, function(team) {
 					addTeamTwisty(team, "teamTreeMain");
-					break;
-				}
-			}
+			});
+
+		} else {
+			if (_.has(teamList, "_root"))
+				_.each(teamList._root, function(team) {
+					addTeamTwisty(team, "teamTreeMain");
+				});
 		}
-		
-		if (standAloneTeams.length > 0) {
+
+		if (_.has(teamList, "_standalone")) {
 			var twistyId = "sub_" + $("#teamTree li").length;
 			$("#teamTreeMain").append(createSubTwistySection(twistyId, "Standalone teams", ""));
-			for (var i in standAloneTeams) {
-				var team = allTeamsLookup[standAloneTeams[i]];
+			_.each(teamList._standalone, function(team) {
 				var isSquad = false;
 				if (team.squadteam != undefined && team.squadteam.toUpperCase() == "YES")
 					isSquad = true;
@@ -378,9 +304,9 @@ function organizeTeamHierarchy(teamList) {
 				var label = team.name;
 				var subTwistyId = "sub_" + $("#teamTree li").length;
 				$("#body"+twistyId).append(createSubTwistySection(subTwistyId, label, "agile-team-standalone" + (isSquad ? " agile-team-squad" : ""), team._id));
-			}
+			});
 		}
-		
+
 		$("#teamTreeMain").twisty();
 		
 		// assign ids to manipulate elements easily
@@ -419,11 +345,6 @@ function organizeTeamHierarchy(teamList) {
 			loadDetails($(this).attr("id"));
 		});
 	}
-	if (defSelIndex != "")
-		loadDetails(defSelIndex);
-	else if ($("#teamTree a.agile-team-link").length > 0)
-		loadDetails($("#teamTree a.agile-team-link")[0].id);
-	
 	var filter = $("#teamFilter").val();
 	if (filter.trim() != "") {
 		$("#teamTable").show();
@@ -431,6 +352,13 @@ function organizeTeamHierarchy(teamList) {
 			$($(obj).parent()).hide();
 		});
 	}
+
+	if (defSelIndex != "")
+		loadDetails(defSelIndex);
+	else if ($("#teamTree a.agile-team-link").length > 0)
+		loadDetails($("#teamTree a.agile-team-link")[0].id);
+	else		
+		$.unblockUI();
 	
 	var end = new Date().getTime();
 	
@@ -438,20 +366,16 @@ function organizeTeamHierarchy(teamList) {
 	// force and show scroll bar
 	$(".nano").nanoScroller();
 	
-	$.unblockUI();
 }
 
 function addTeamTwisty(team, twistyId) {
-	if (team != null && publishedTeam.indexOf(team._id) == -1 && standAloneTeams.indexOf(team._id)) {
+	if (team != null) {
 		var isSquad = false;
 		if (team.squadteam != undefined && team.squadteam.toUpperCase() == "YES")
 			isSquad = true;
 
-		// publishedTeam is a global variable to indicate that the team has been processed already.
-		publishedTeam.push(team._id);
-
 		// if there are any child teams indicated, process child teams.
-		if (team.child_team_id != undefined && team.child_team_id.length > 0) {
+		if (!_.isEmpty(team.child_team_id)) {
 			team.child_team_id = sortChildTeams(team.child_team_id);
 			
 			var label = team.name;
@@ -462,6 +386,9 @@ function addTeamTwisty(team, twistyId) {
 				var childTeam = allTeamsLookup[team.child_team_id[j]];
 				var mainTwistyId = "main_" + $("#teamTree ul").length;
 				
+				if (_.isEmpty(childTeam))
+					continue;
+
 				if (childTeam.child_team_id != undefined && childTeam.child_team_id.length > 0) {
 					$("#body"+subTwistyId).append(createMainTwistySection(mainTwistyId, ""));
 				} else {
@@ -471,31 +398,11 @@ function addTeamTwisty(team, twistyId) {
 				addTeamTwisty(childTeam, mainTwistyId);
 			}
 		} else {
-			if (twistyId == "teamTreeMain" && (team.parent_team_id == null || team.parent_team_id == "")) {
-				publishedTeam.splice(publishedTeam.indexOf(team._id), 1);
-				standAloneTeams.push(team._id);
-//			} else if (twistyId == "teamTreeMain") {
-//				var label = team.name;
-//				var subTwistyId = "sub_" + $("#teamTree li").length;
-//				$("#"+twistyId).append(createSubTwistySection(subTwistyId, label, "agile-team-standalone" + (isSquad ? " agile-team-squad" : ""), team._id));
-			} else {
-				//addTeamDetail(twistyId, team._id, team.name, isSquad);
-				var label = team.name;
-				var subTwistyId = "sub_" + $("#teamTree li").length;
-				$("#"+twistyId).append(createSubTwistySection(subTwistyId, label, "agile-team-standalone" + (isSquad ? " agile-team-squad" : ""), team._id));
-			}
+			var label = team.name;
+			var subTwistyId = "sub_" + $("#teamTree li").length;
+			$("#"+twistyId).append(createSubTwistySection(subTwistyId, label, "agile-team-standalone" + (isSquad ? " agile-team-squad" : ""), team._id));
 		}
 	}
-}
-
-function addTeamDetail(twistyId, teamId, name, isSquad) {
-	var row = "<p><a href='#'";
-	row = row + (isSquad ? " title='Squad team' class='agile-team-link agile-team-squad'>" : ">") + name + "</a>";//agile-team-squad
-	// we're putting this span to hold the relevant team id
-	row = row + "<span class='ibm-access'>"+teamId+"</span>";
-	row = row + "</p>";
-	$("#"+twistyId).append(row);
-	
 }
 
 function createMainTwistySection(twistyId, extraClass) {
@@ -542,38 +449,6 @@ function createSubTwistySection(twistyId, twistyLabel, extraClass, teamId) {
 }
 
 /**
- * Add the child team(s) of the current team in the hierarchy.  This should list down
- * all downstream teams.  This is a recursive call to drill down through the team list.
- * 
- * @param level - indicates the level of drill down it has processed.
- * @param id - team id to drill down.
- */
-function addTeamChildren(level, id) {
-	// allTeams is a global variable holding all available teams.
-	var team = allTeamsLookup[id]; 
-	if (team != null && team._id == id && publishedTeam.indexOf(id) == -1) {
-		var isSquad = false;
-		if (team.squadteam != undefined && team.squadteam.toUpperCase() == "YES")
-			isSquad = true;
-		// publishedTeam is a global variable to indicate that the team has been processed already.
-		publishedTeam.push(team._id);
-		if (defSelTeamId != "" && defSelTeamId == team._id){
-			defSelIndex = $("#teamTable tbody tr").length + 1;
-		}
-		addTeamInRow(level, id, team.name, isSquad);
-
-		// if there are any child teams indicated, process to child teams.
-		if (team.child_team_id != undefined && team.child_team_id.length > 0) {
-			level = level + 1;
-			team.child_team_id = sortChildTeams(team.child_team_id);
-			for ( var j = 0; j < team.child_team_id.length; j++) {
-				addTeamChildren(level, team.child_team_id[j]);
-			}
-		}
-	}
-}
-
-/**
  * Sorts the indicated child teams by name and returns the sorted child team ids.
  * 
  * @param childTeamIds - array of child team ids.
@@ -586,23 +461,12 @@ function sortChildTeams(childTeamIds) {
 		if (team != null)
 			childTeams.push(team);
 	}
-	childTeams = childTeams.sort(function(a, b) {
-		if (a.name.toUpperCase() == b.name.toUpperCase()) {
-			return 0;
-		} else {
-			return (a.name.toUpperCase() > b.name.toUpperCase()) ? 1 : -1;
-		}
-	});
-	childTeamIds = [];
-	for ( var i = 0; i < childTeams.length; i++) {
-		childTeamIds.push(childTeams[i]._id);
+	if (!_.isEmpty(childTeams)) {
+		childTeams = _.sortBy(childTeams, function(team) {return team.name})
+		childTeamIds = _.pluck(childTeams, "_id");
 	}
-	return childTeamIds;
-}
 
-function addTeamLevel(level, id, data) {
-	var levelData = "<p><a onclick=\"loadDetails('" + id + "');\">" + data + "</a></p>";
-	$("#teamTree").append(levelData);
+	return childTeamIds;
 }
 
 function addTeamFilteredData(linkId, name, isSquad) {
@@ -641,25 +505,6 @@ function initializeTable() {
 	var row = "<tr><th>Agile Teams</th>";
 	row = row + "</tr>";
 	$("#teamTable thead").append(row);
-}
-
-/**
- * Appends the team name information in the table container listing the team hierarchy.
- *  
- * @param level - indicates the drill down level of the team. 1 being parent, 2 being child, 3 being grandchild and so on.
- * @param id - team id.
- * @param name - team name.
- * @param isSquad - if team is a squad.
- */
-function addTeamInRow(level, id, name, isSquad) {
-	var rowId = $("#teamTable tbody tr").length + 1;
-	var row = "<tr id='" + rowId + "'><td>";
-	var spacing = ((level - 1) * 14) + "px";
-	row = row + "<a style='padding-left: "+spacing+";' href='#' onclick=\"loadDetails('" + rowId + "' ,'" + id + "');\"";
-	row = row + (isSquad ? "title='Squad team'>" : ">") + name + "</a>";
-	row = row + (isSquad ? "&nbsp;<span class='ibm-important'>*</span>" : "");
-	row = row + "</td></tr>";
-	$("#teamTable tbody").append(row);
 }
 
 /**
@@ -767,10 +612,10 @@ function loadDetails(elementId, setScrollPosition) {
 	$("#search_"+elementId).addClass("agile-team-selected");
 	$("#"+elementId).addClass("agile-team-selected");
 
-	var teamId = $("#"+elementId).siblings("span")[0].innerHTML;
+	var teamId = $("#"+elementId).siblings("span")[0].innerHTML;	
 	var team = allTeamsLookup[teamId];
 	var isSquadTeam = false;
-	if (team != null) {
+	if (!_.isEmpty(team) && defSelTeamId != teamId) {
 		if (team._id == teamId) {
 			removeHighlightParents();
 			$.blockUI({message: ""});
@@ -778,12 +623,19 @@ function loadDetails(elementId, setScrollPosition) {
 			// make sure team data is always the latest data to show
 			$.ajax({
 				type : "GET",
-				url : baseUrlDb + "/" + encodeURIComponent(team["_id"]),
-				dataType : "jsonp",
-				scriptCharset: 'UTF-8'
+				url : "/api/teams/" + encodeURIComponent(team["_id"]),
+				async : false
 			}).done(function(currentTeam) {
 				team = currentTeam;
-				allTeamsLookup[currentTeam._id] = currentTeam;
+				var lookupData = allTeamsLookup[currentTeam._id];
+				// were using the compacted team view
+				if (!_.has(lookupData, "._rev")) {
+					lookupData.doc = currentTeam;
+					allTeamsLookup[currentTeam._id] = lookupData;
+
+				} else 				
+					allTeamsLookup[currentTeam._id] = team;
+
 				if (team != undefined) {
 					$("#levelDetail").empty();
 					var keyLabel = "";
@@ -798,13 +650,13 @@ function loadDetails(elementId, setScrollPosition) {
 						var tn = team["name"];
 						if (tn.trim() == "")
 							tn = "&nbsp;";
-						keyValue = "<a href='squads.jsp?id=" + encodeURIComponent(team["_id"]) + "' title='Manage team information'>" + tn + "</a>";
+						$("#teamHeader").html("Data for: " + tn);
+						keyValue = "<a href='team?id=" + encodeURIComponent(team["_id"]) + "' title='Manage team information'>" + tn + "</a>";
 						appendRowDetail(keyLabel, keyValue);
 					}
 					if (team["squadteam"] != undefined) {
 						keyLabel = "Squad Team?";
 						keyValue = team["squadteam"];
-						//appendRowDetail(keyLabel, keyValue);
 						if (keyValue.toLowerCase() == "yes")
 							isSquadTeam = true;
 
@@ -814,53 +666,27 @@ function loadDetails(elementId, setScrollPosition) {
 						keyValue = team["desc"];
 						appendRowDetail(keyLabel, keyValue);
 					}
-
-					/*if (team["child_team_id"] != undefined) {
-						keyLabel = "Child team(s)";
-						keyValue = "";
-						if (team["child_team_id"].length > 0) {
-							keyValue = keyValue + "<ul>";
-							for ( var j = 0; j < team["child_team_id"].length; j++) {
-								//keyValue = keyValue + "<li><a href=\"javascript:loadDetails('"+team["child_team_id"][j]+"');\">" + getTeamInfo(team["child_team_id"][j], "name") + "</a></li>";
-								teamName = getTeamInfo(team["child_team_id"][j], "name");
-								var x = 0;
-								var rowId = 0;
-								var found = false;
-								$("#teamTable tbody tr a").each(function() {
-									x++;
-									var text = $(this).text();
-									//console.log("text " + text);
-									if (text.contains("*"))
-										text = text.substring(0, text.length - 2);
-									if (!found && text == teamName) {
-										rowId = x;
-										found = true;
-									}
-								});
-								keyValue = keyValue + "<li><a href=\"javascript:loadDetails('" + rowId + "');\">" + teamName + "</a></li>";
-							}
-							keyValue = keyValue + "</ul>";
-						} else {
-							keyValue = "(No children team information)";
-						}
-						//appendRowDetail(keyLabel, keyValue);
-					}*/
 					
 					if (team["members"] != undefined) {
 						keyLabel = "Team Member Count";
-						keyValue = team["members"].length;
 						keyValue = teamMemCount(team["members"]);
 						appendRowDetail(keyLabel, keyValue);
+
+						if (!_.has(lookupData, "._rev"))
+							lookupData["total_members"] = keyValue;
 					}
 					if (team["members"] != undefined) {
 						keyLabel = "FTE";
 						keyValue = teamMemFTE(team["members"]);
 						appendRowDetail(keyLabel, keyValue);
+
+						if (!_.has(lookupData, "._rev"))
+							lookupData["total_allocation"] = keyValue;
+
 					}
 					if (team["parent_team_id"] != undefined) {
 						keyLabel = "Parent Team Name";
-						keyValue = "(No parent team information)";
-						
+						keyValue = "(No parent team information)";						
 						
 						
 						if (team["parent_team_id"] != undefined && team["parent_team_id"] != "") {
@@ -1019,13 +845,22 @@ function loadDetails(elementId, setScrollPosition) {
 					} else {
 						$("#membersList").append('<tr class="odd"><td valign="top" colspan="4" class="dataTables_empty">No data available</td></tr>');
 					}
+
+					if ($("#iterationSection h2 a").hasClass("ibm-show-active"))
+						redrawCharts("iterationSection");
+					if ($("#assessmentSection h2 a").hasClass("ibm-show-active"))
+						redrawCharts("assessmentSection");
+					if (!_.has(lookupData, "._rev")) 
+						allTeamsLookup[currentTeam._id] = lookupData;
 				}
-				$.unblockUI();
-			});
+			}).done(function() {$.unblockUI();} );
 			
 			openSelectedTeamTree(setScrollPosition);
 
-		}
+		} 
+	} else {
+		$.unblockUI();
+		openSelectedTeamTree(setScrollPosition);
 	}
 }
 

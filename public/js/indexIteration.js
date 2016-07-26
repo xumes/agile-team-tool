@@ -51,9 +51,7 @@ function teamIterationListHander(teamId, teamIterations) {
 	storyPointFTESeries.data = [];
 
 	var series = [];
-	var iterationURL = 'iteration.jsp?id=' + encodeURIComponent(teamId) + '&iter=';
-
-	teamIterations = sortIterations(teamIterations);
+	var iterationURL = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=';
 
 	// Get last 6 iterations
 	var crntIter = "";
@@ -62,25 +60,28 @@ function teamIterationListHander(teamId, teamIterations) {
 	var listOption = [];
 	
 	var iterIndx = 0;
-	$.each(teamIterations, function(index, value) {
-		if (value.iterationinfo_status == 'Completed') {
-			if (iterIndx < 6) {
+	if (teamIterations != null) {
+		teamIterations = sortIterations(teamIterations);
+
+		$.each(teamIterations, function(index, value) {
+			if (value.iterationinfo_status == 'Completed') {
+				if (iterIndx < 6) {
+					var option = [ value._id, value.iteration_name ];
+					listOption.push(option);
+					p6Iterations.push(value);
+				} 
+				if (crntIter == "") {
+					crntIter = value;
+				} else if (priorIter == "") {
+					priorIter = value;
+				}
+				iterIndx++;
+			}else{
 				var option = [ value._id, value.iteration_name ];
 				listOption.push(option);
-				p6Iterations.push(value);
-			} 
-			if (crntIter == "") {
-				crntIter = value;
-			} else if (priorIter == "") {
-				priorIter = value;
 			}
-			iterIndx++;
-		}else{
-			var option = [ value._id, value.iteration_name ];
-			listOption.push(option);
-		}
-	});
-	
+		});
+	}	
 
 	setSelectOptions("gotoIterationList", listOption, null, null, null);	
 	IBMCore.common.widget.selectlist.init("#gotoIterationList");
@@ -218,7 +219,7 @@ function teamIterationListHander(teamId, teamIterations) {
 	$('#GoIterationBtn').click(function() {
 		var iterID = encodeURIComponent($('#gotoIterationList option:selected').val());
 		var teamID = encodeURIComponent(teamId);
-		window.location = 'iteration.jsp?id=' + teamID + '&iter=' + iterID;
+		window.location = 'iteration?id=' + teamID + '&iter=' + iterID;
 	});
 	$("#gotoIterationList").removeAttr("disabled");
 	
@@ -226,7 +227,7 @@ function teamIterationListHander(teamId, teamIterations) {
 	if (hasAccess(teamId, true)) {
 		$("#CreateIterationBtn").removeAttr("disabled");
 		$("#CreateIterationBtn").click(function(e) {
-			window.location = 'iteration.jsp?id=' + encodeURIComponent(teamId) + '&iter=new';
+			window.location = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=new';
 		});
 	} 
 }
@@ -1311,8 +1312,8 @@ function currentTeamStats(){
 	console.log("squadTeams : "+squadTeams.length);
 	
 	for (var x=0; x < squadTeams.length; x++){
-		var teamCnt = teamMemCount(squadTeams[x]["members"]);
-		var teamFTE = teamMemFTE(squadTeams[x]["members"]);
+		var teamCnt = squadTeams[x]["total_members"] != null ? squadTeams[x]["total_members"] : teamMemCount(squadTeams[x]["members"]);
+		var teamFTE = squadTeams[x]["total_allocation"] != null ? squadTeams[x]["total_allocation"] : teamMemFTE(squadTeams[x]["members"]);
 		if(teamCnt != undefined && teamCnt !=""){
 			teamCnt = parseInt(teamCnt);
 			if(teamCnt < 5){

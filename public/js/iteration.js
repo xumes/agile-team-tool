@@ -332,8 +332,9 @@ function loadAgileTeams(selected, iteration) {
 	$("#select2-iterationSelectList-container").css('color', 'grey');
 	$.ajax({
 		type : "GET",
-		url : baseUrlDb + "/_design/teams/_view/teams",
-		dataType : "jsonp"
+		url : "/api/teams"
+		// url : baseUrlDb + "/_design/teams/_view/teams",
+		// dataType : "jsonp"
 	}).done(function(data) {
 		var list = [];
 		if (data != undefined) {
@@ -375,8 +376,9 @@ function loadAgileTeamIterationInfo(teamId, iterationId) {
 	// retrieve and load latest iteration information for the team
 	$.ajax({
 		type : "GET",
-		url : baseUrlDb + "/_design/teams/_view/iterinfo?keys=[\"" + encodeURIComponent(teamId) + "\"]",
-		dataType : "jsonp"
+		url : "/api/iteration/" + encodeURIComponent(teamId)
+		// url : baseUrlDb + "/_design/teams/_view/iterinfo?keys=[\"" + encodeURIComponent(teamId) + "\"]",
+		// dataType : "jsonp"
 	}).done(function(data) {
 		var list = [];
 		if (data != undefined) {
@@ -521,16 +523,6 @@ function loadSelectedAgileTeamIterationInfo() {
 	}
 }
 
-function updateAgileTeamCache(team) {
-	console.log("updateAgileTeamCache");
-	console.log(team);
-	for ( var i = 0; i < teams.length; i++) {
-		if (team._id == teams[i]._id) {
-			teams[i] = team;
-		}
-	}
-}
-
 function updateIterationCache(iteration) {
 	var found = false;
 	for (var i = 0; i < teamIterInfo.length; i++) {
@@ -602,8 +594,9 @@ function addOptions(selectId, listOption, firstOption, lastOption, selectedOptio
 function addIteration(action) {
 	$.ajax({
 		type : "GET",
-		url : baseUrlDb + "/" + encodeURIComponent($("#teamSelectList").val()),
-		dataType : "jsonp"
+		url : "/api/teams/"  + encodeURIComponent($("#teamSelectList").val())
+		// url : baseUrlDb + "/" + encodeURIComponent($("#teamSelectList").val()),
+		// dataType : "jsonp"
 	}).done(function(data) {
 		if (data != undefined) {
 			var jsonData = data;
@@ -639,8 +632,9 @@ function addIteration(action) {
 
 				$.ajax({
 					type : "GET",
-					url : baseUrlDb + "/" + encodeURIComponent(currentIteration._id),
-					dataType : "jsonp"
+					url : "/api/iteration/current/" + encodeURIComponent(currentIteration._id)
+					// url : baseUrlDb + "/" + encodeURIComponent(currentIteration._id),
+					// dataType : "jsonp"
 				}).done(function(data) {
 					var jsonData = data;
 					var rev = jsonData._rev;
@@ -673,22 +667,17 @@ function addIteration(action) {
 					jsonData.team_sat = $("#teamSatisfaction").val();
 					jsonData.last_updt_dt = getServerDateTime();
 					jsonData = $.extend(true, {}, initIterationTemplate(), jsonData);
-					console.log(JSON.stringify(jsonData));
-					$.ajax({
-						type : "PUT",
-						url : baseUrlDb + "/" + encodeURIComponent(currentIteration._id),
-						contentType : "application/json",
-						headers : {
-							"Authorization" : "Basic " + btoa(user + ":" + pass)
-						},
-						data : JSON.stringify(jsonData),
-						error : errorHandler
-					}).done(function(data) {
-						var putResp = (typeof data == 'string' ? JSON.parse(data) : data);
-						var rev2 = putResp.rev;
-						console.log('Done updating ' + currentIteration._id + '. The new revision is ' + rev2 + '.');
-					});
-
+          $.ajax({
+            type : "PUT",
+            url : "/api/iteration/" + encodeURIComponent(currentIteration._id),
+            contentType : "application/json",
+            data : JSON.stringify(jsonData),
+            error : errorHandler
+          }).done(function(data) {
+            var putResp = (typeof data == 'string' ? JSON.parse(data) : data);
+            var rev2 = putResp.rev;
+            console.log('Done updating ' + currentIteration._id + '. The new revision is ' + rev2 + '.');
+          });
 					// update cache
 					updateIterationCache(jsonData);
 					loadSelectedAgileTeamIterationInfo();
@@ -747,12 +736,13 @@ function addIteration(action) {
 				console.log(JSON.stringify(jsonData));
 				$.ajax({
 					type : "POST",
-					url : baseUrlDb,
+          url : "/api/iteration",
+          // url : baseUrlDb,
 					contentType : "application/json",
 					data : JSON.stringify(jsonData),
-					headers : {
-						"Authorization" : "Basic " + btoa(user + ":" + pass)
-					},
+					// headers : {
+					// 	"Authorization" : "Basic " + btoa(user + ":" + pass)
+					// },
 					error : errorHandler
 				}).done(function(data) {
 					var json = (typeof data == 'string' ? JSON.parse(data) : data);

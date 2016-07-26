@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+
+<%- include ./header/header_meta.ejs %>
+
+<!-- Referring to default jquery implementaion as v18 datepicker still seems to be a  work in progress -->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<style type="text/css">
+.ui-tooltip {
+    background: rgb(236, 236, 236);
+    color: rgb(50, 50, 50);
+    border: none;
+    padding: 0;
+    opacity: 1;
+}
+.ui-tooltip-content {
+    position: relative;
+    padding: 1em;
+    font-size: 8pt;
+    line-height: 20px;
+}
+.ui-tooltip-content::after {
+    content: '';
+    position: absolute;
+    border-style: solid;
+    display: block;
+    width: 0;
+    border-color: transparent rgb(236, 236, 236);
+}
+</style>
+<script type="text/javascript" src="js/report.js?v=<%=Math.random()%>"></script>
+
+</head>
+<body id="ibm-com" class="ibm-type" onload="siteEnv()" role="application" aria-label="Main page">
+  <div id="ibm-top" class="ibm-landing-page">
+    <%- include ./header/header_masthead.ejs %>
+    
+    <div id="ibm-content-wrapper">
+      <%- include ./header/header_leadspace.ejs %>
+
+      <main role="main" aria-labelledby="ibm-pagetitle-h1">
+        <div id="ibm-pcon">
+          <div id="ibm-content">
+            <div id="ibm-content-body">
+    
+              <div id="ibm-content-main">
+    
+                <div class="ibm-columns">
+                  <form id="reportForm" class="ibm-column-form">
+                    <div class="ibm-col-1-1">
+    
+                      <h2 class="ibm-bold ibm-h3">Reporting</h2>
+                      <div class="ibm-rule ibm-alternate-1">
+                        <hr>
+                      </div>
+    
+                      <p>
+                        <label style="line-height: 20px;" for="reportTypeList">Report type:<span class="ibm-required">*</span></label>
+                        <span> 
+                          <select id="reportTypeList" name="reportTypeList" style="width: 360px;">
+                            <option value="new" selected="selected">Agile Team Tool Adoption</option>
+                          </select>
+                        </span>
+                      </p>
+    
+                  <div class="reporting-read-only-status ibm-item-note-alternate" id="reportingNote"></div>
+              
+                      <p  class="ibm-form-elem-grp">
+                        <label class="ibm-form-grp-lbl"  for="reportShow">Show:<span class="ibm-required">*</span></label> 
+                        <span class="ibm-input-group ibm-radio-group">
+                    <input id="reportShow1" name="reportShow" type="radio" /> <label for="reportShow1">Squad teams created</label>
+                    <br /><input id="reportShow2" name="reportShow" type="radio" checked="checked" /> <label for="reportShow2">Iterations completed</label>
+                    <br /><input id="reportShow3" name="reportShow" type="radio" /> <label for="reportShow3">Maturity assessments submitted</label>
+                </span>
+                      </p>
+                      
+                      <p  class="ibm-form-elem-grp ibm-btn-row ibm-padding-bottom-r1">
+                        <label class="ibm-form-grp-lbl"  for="reportTeamScope">Team scope:<span class="ibm-required">*</span></label> 
+                        <span class="ibm-input-group ibm-radio-group">
+                    <input id="reportTeamScope" name="reportTeamScope" type="radio" checked="checked"/> <label for="reportTeamScope1">All teams</label>
+                    <br /><input id="reportTeamScope" name="reportTeamScope" type="radio" /> <label for="reportTeamScope2">My teams</label>
+                    <br /><input id="reportTeamScope" name="reportTeamScope" type="radio" /> <label for="reportTeamScope3">Select team (report will include all sub-teams)</label>
+                </span>
+                <span style="padding-left: 30px;">
+                  <input type="text" name="teamName" id="teamName" size="57" placeholder="Type team name" style="width: 430px;">
+                  <input type="button" class="ibm-btn-sec ibm-btn-small"  id="repBrowseTeams" value="Browse teams..." onclick="" />
+                </span>
+                      </p>
+                      
+                      <p  class="ibm-form-elem-grp"> 
+                        <label class="ibm-form-grp-lbl"  for="reportTimePeriod">Time period:<span class="ibm-required">*</span></label> 
+                        <span class="ibm-input-group ibm-radio-group">
+                    <input id="reportTimePeriod1" name="reportTimePeriod" type="radio" checked="checked" /> <label for="reportTimePeriod1">Last 6 months</label>
+                    <br /><input id="reportTimePeriod2" name="reportTimePeriod" type="radio"/> <label for="reportTimePeriod2">Last 12 months</label>
+                    <br /><input id="reportTimePeriod3" name="reportTimePeriod" type="radio"/> <label>Data range</label>
+                    <input type="text" class="ibm-date-picker" name="reportStartDate" id="reportStartDate" size="44" value="" readonly="readonly" placeholder="Start date" style="width: 150px;"> &nbsp;&nbsp; to &nbsp;&nbsp; 
+                            <input type="text" class="ibm-date-picker" name="reportEndDate" id="reportEndDate" size="44" value="" readonly="readonly" placeholder="End date" style="width: 150px;">
+                </span>
+                      </p>
+                      <br />
+                      <p class="ibm-form-elem-grp ibm-ind-link" style="display: inline; margin-left: 220px;">
+                          <input type="button" class="ibm-btn-pri ibm-btn-small" name="submitAssessBtn" value="Generate Chart" onclick="" />&nbsp;&nbsp;&nbsp;&nbsp;
+                          <a class="ibm-download-link" href="#" >Download csv</a>
+                      </p>
+                      <br />
+    
+                      <div class="ibm-rule ibm-alternate-1">
+                        <hr>
+                      </div>
+    
+                      <div id="dialog" title="Confirmation Required"> </div>
+            
+                    </div>
+                  </form>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <div id="ibm-related-content">
+        <div id="ibm-merchandising-module">
+          <!-- MTE will generate this -->
+          <!-- <aside role="complementary" aria-label="Related content"> MTE dynamic modules populate in here. <aside> -->
+          <!-- /MTE -->
+        </div>
+      </div>
+    </div>
+    <%- include ./footer.ejs %>
+    
+  </div>
+</body>
+</html>

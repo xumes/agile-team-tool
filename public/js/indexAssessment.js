@@ -18,7 +18,7 @@ function teamAssessmentListHander(teamId, teamAssessments) {
 		if (!draftExist) {
 			$("#CreateAssesmentBtn").removeAttr("disabled");
 			$("#CreateAssesmentBtn").click(function(e) {
-				window.location = 'assessment.jsp?id=' + encodeURIComponent(teamId) + '&assessId=new';
+				window.location = 'assessment?id=' + encodeURIComponent(teamId) + '&assessId=new';
 			});
 		}
 	} 
@@ -28,9 +28,9 @@ function teamAssessmentListHander(teamId, teamAssessments) {
 		var assessId = encodeURIComponent($('#gotoAssesmentList option:selected').val());
 		var isDraft = ($('#gotoAssesmentList option:selected').text().toLowerCase().indexOf("draft") > -1);
 		if (assessId == "" || isDraft)
-			window.location = 'assessment.jsp?id=' + teamID + '&assessId=' + assessId;
+			window.location = 'assessment?id=' + teamID + '&assessId=' + assessId;
 		else
-			window.location = 'progress.jsp?id=' + teamID + '&assessId=' + assessId;
+			window.location = 'progress?id=' + teamID + '&assessId=' + assessId;
 	});
 	
 	if (listOption.length > 6) {

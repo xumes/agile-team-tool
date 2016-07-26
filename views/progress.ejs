@@ -1,13 +1,10 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@page contentType="text/html;charset=UTF-8"%>
-
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
- 
+
 <%- include ./header/header_meta.ejs %>
- 
-<script type="text/javascript" src="j/assessmentResult.js?v=<%=Math.random()%>"></script>
+
+<script type="text/javascript" src="js/assessmentResult.js?v=<%=Math.random()%>"></script>
 
 <script src="//code.highcharts.com/highcharts.js"></script>
 <script src="//code.highcharts.com/highcharts-more.js"></script>
@@ -16,21 +13,21 @@
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
 <script type="text/javascript">
-	var teamId = '';
-	var assessId = '';
-	jQuery(function($) {
-		$(document).ready(function() {
-			var urlParameters = getJsonParametersFromUrl();
-			if (urlParameters != undefined) {
-				teamId = urlParameters.id;
-				assessId = urlParameters.assessId;
-				if (teamId != undefined && assessId != undefined) {
-					retrieveAssessmentResult(teamId, assessId);
-					setAssessmentLink(teamId, assessId);
-				}
-			}
-		});
-	});
+  var teamId = '';
+  var assessId = '';
+  jQuery(function($) {
+    $(document).ready(function() {
+      var urlParameters = getJsonParametersFromUrl();
+      if (urlParameters != undefined) {
+        teamId = urlParameters.id;
+        assessId = urlParameters.assessId;
+        if (teamId != undefined && assessId != undefined) {
+          retrieveAssessmentResult(teamId, assessId);
+          setAssessmentLink(teamId, assessId);
+        }
+      }
+    });
+  });
 </script>
 </head>
 

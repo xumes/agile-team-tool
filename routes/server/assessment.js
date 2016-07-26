@@ -4,7 +4,7 @@ module.exports = function(app, includes) {
   var render = includes.render;
 
   showAssessment = function(req, res) {
-    json= {"pageTitle":"Maturity Assessment"}
+    json= {"pageTitle":"Maturity Assessment", "user": req.session["user"], "environment": req.session["environment"]};
     render(req, res, 'assessment', json);
   };
   

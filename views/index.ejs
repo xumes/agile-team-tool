@@ -3,6 +3,17 @@
 <head>
 
 <%- include ./header/header_meta.ejs %>
+
+<script src="//code.highcharts.com/highcharts.js"></script>
+<script src="//code.highcharts.com/highcharts-more.js"></script>
+<script src="//code.highcharts.com/modules/no-data-to-display.js"></script>
+
+<script src="//malsup.github.io/jquery.blockUI.js"></script>
+
+<script type="text/javascript" src="js/index.js?v=<%=Math.random()%>"></script>
+<script type="text/javascript" src="js/indexIteration.js?v=<%=Math.random()%>"></script>
+<script type="text/javascript" src="js/indexAssessment.js?v=<%=Math.random()%>"></script>
+
 <style>
   .select2-results__options {font-size: 10.5pt !important}
 </style>
@@ -12,8 +23,10 @@
 <body id="ibm-com" class="ibm-type" onload="siteEnv();">
   <div id="ibm-top" class="ibm-landing-page">
     <%- include ./header/header_masthead.ejs %>
+    
     <div id="ibm-content-wrapper">
       <%- include ./header/header_leadspace.ejs %>
+
       <main role="main" aria-labelledby="Agile teams">
         <div id="ibm-pcon">
           <div id="ibm-content">
@@ -37,7 +50,7 @@
                         <input class="clearable" type="text" name="teamFilter" id="teamFilter" value="" placeholder="Enter team name to filter..." aria-label="Name filter for teams" style="width: 94%" />
                       </p>
                       <p class="agile-section-expand-collapse">
-                      	<a href="#" id="teamExpand">Expand all</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#" id="teamCollapse">Collapse all</a>
+                        <a href="#" id="teamExpand">Expand all</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#" id="teamCollapse">Collapse all</a>
                       </p>
                     </div>
                     <div class="ibm-rule ibm-alternate ibm-gray-30">
@@ -45,7 +58,7 @@
                     </div>
                     <div class="agile-team-nav" data-widget="scrollable" data-height="600">
                       <div id="teamTree"></div>
-                      <table class="ibm-data-table" id="teamTable" summary="__REPLACE_ME!__">
+                      <table class="ibm-data-table" id="teamTable" summary="__REPLACE_ME__">
                         <thead class="ibm-access"></thead>
                         <tbody></tbody>
                       </table>
@@ -53,6 +66,11 @@
                   </div>
     
                   <div class="ibm-col-6-4">
+                    <h2 class="agile-section-title" id="teamHeader">&nbsp;</h2>
+                    <div class="ibm-rule ibm-alternate-1">
+                      <hr>
+                    </div>
+                    
                     <div data-widget="showhide" data-type="panel" class="ibm-show-hide" id="iterationSection">
                       <h2 class="agile-section-title" data-open="true">Iteration trends</h2>
                       <div class="agile-section-nav">
@@ -210,13 +228,3 @@
   </div>
 </body>
 </html>
-
-
-<script src="//code.highcharts.com/highcharts.js"></script>
-<script src="//code.highcharts.com/highcharts-more.js"></script>
-<script src="//code.highcharts.com/modules/no-data-to-display.js"></script>
-<script src="//malsup.github.io/jquery.blockUI.js"></script>
-
-<script type="text/javascript" src="js/index.js?v=<%=Math.random()%>"></script>
-<script type="text/javascript" src="js/indexIteration.js?v=<%=Math.random()%>"></script>
-<script type="text/javascript" src="js/indexAssessment.js?v=<%=Math.random()%>"></script>

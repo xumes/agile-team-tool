@@ -18,8 +18,10 @@ gulp.task('pre-test', function () {
 });
 
 gulp.task('test', ['jshint', 'pre-test'], function () {
-  return gulp.src(['test/*.js', 'test/*/*/*.js', 'test/*/*.js'])
-    .pipe(mocha())
+  return gulp.src(['test/*.js', 'test/*/*/*.js', 'test/*/*.js', '!test/dummy-data.js'])
+    .pipe(mocha({
+      timeout: 60000,
+    }))
     // Creating the reports after tests ran
     .pipe(istanbul.writeReports())
     .once('end', function() {

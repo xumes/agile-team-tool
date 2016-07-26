@@ -4,7 +4,32 @@
 <meta name="dcterms.rights" content="© Copyright IBM Corp. 2015" />
 <title> <%= siteTitle %> | <%= pageTitle%> </title>
 
-<script src="js/jquery-2.1.4.min.js"></script>
+<script>
+  digitalData = {
+    "page" : {
+      "category" : {
+        "primaryCategory" : "REPLACE"
+      },
+      "pageInfo" : {
+        "effectiveDate" : "2015-01-01",
+        "expiryDate" : "2025-01-01",
+        "language" : "en-US",
+        "publishDate" : "2015-01-01",
+        "publisher" : "IBM Corporation",
+        "version" : "v18",
+        "ibm" : {
+          "contentDelivery" : "REPLACE",
+          "contentProducer" : "REPLACE",
+          "country" : "US",
+          "industry" : "CIO",
+          "owner" : "Cheryl Rabenstein/Sterling Forest/IBM",
+          "subject" : "REPLACE",
+          "type" : "REPLACE"
+        }
+      }
+    }
+  };
+</script>
 
 <script src="//1.www.s81c.com/common/stats/ida_stats.js"></script>
 <link href="//1.www.s81c.com/common/v18/css/www.css" rel="stylesheet" />
@@ -16,6 +41,8 @@
 <script src="//1.www.s81c.com/common/v18/js/forms.js"></script>
 <link href="//1.www.s81c.com/common/v18/css/tables.css" rel="stylesheet">
 <script src="//1.www.s81c.com/common/v18/js/tables.js"></script>
+
+<script src="http://underscorejs.org/underscore-min.js"></script>
 
 <link href="css/dash.css?v=<%=Math.random()%>" rel="stylesheet" />
 <script type="text/javascript" src="js/dashUtils.js?v=<%=Math.random()%>"></script>
@@ -31,7 +58,34 @@
     //disable the ibm profile button
     "masthead" : {
       "type" : "alternate",
-      "enabled": false
+      "enabled": false,
+      logoanimation: {
+          enabled: false
+      },
+      marketplaceLink: {
+          enabled: false
+      },
+      megamenu: { 
+          enabled: false
+      },
+      mobilemenu: { 
+          enabled: false
+      },
+      notifications: {
+          enabled: false
+      },
+      profile: {
+          enabled: true
+      },
+      search: {
+          enabled: false,
+          typeahead: {
+              enabled: false
+          }
+      },
+      sticky: {
+          enabled: true
+      },
     },
     "footer" : {
       "type" : "alternate",
@@ -39,5 +93,6 @@
     }
   });
   var $ = jQuery.noConflict();
+
 </script>
 

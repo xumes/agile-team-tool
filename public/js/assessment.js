@@ -143,8 +143,10 @@ function getTeamAssessmentAnswers(assessmentId, _callback, args) {
 	} else {			
 		$.ajax({
 			type : "GET",
-			url : baseUrlDb + "/" + encodeURIComponent(assessmentId),
-			dataType : "jsonp"
+			url : "/api/assessment/view?assessId=" + encodeURIComponent(assessmentId),
+			async : false
+			// url : baseUrlDb + "/" + encodeURIComponent(assessmentId),
+			// dataType : "jsonp"
 		}).done(function(data) {
 			if (data != undefined) {
 				gTeamAssessment = data;
@@ -855,12 +857,10 @@ function updateAgileTeamAssessment(action) {
 		showLog(screenAnswers);
 		$.ajax({
 			type : "POST",
-			url : baseUrlDb,
+			url : "/api/assessment",
 			contentType : "application/json",
 			data : JSON.stringify(screenAnswers),
-			headers : {
-				"Authorization" : "Basic " + btoa(user + ":" + pass)
-			}
+			error : errorHandler
 		}).done(function(data) {
 				getTeamAssessments($("#teamSelectList option:selected").val(), teamAssessmentListHander, ["assessmentSelectList", $("#teamSelectList option:selected").val(), screenAnswers["_id"]]);
     		showMessagePopup(msg);
@@ -869,8 +869,10 @@ function updateAgileTeamAssessment(action) {
 	} else {
 		$.ajax({		
 			type : "GET",
-			url : baseUrlDb + "/" + encodeURIComponent($("#assessmentSelectList").val()),
-			dataType : "jsonp"
+			url : "/api/assessment/view?assessId=" + encodeURIComponent($("#assessmentSelectList").val()),
+			async : false
+			// url : baseUrlDb + "/" + encodeURIComponent($("#assessmentSelectList").val()),
+			// dataType : "jsonp"
 		}).done(function(data) {
 			
 			var jsonData = data;
@@ -943,11 +945,8 @@ function updateAgileTeamAssessment(action) {
 				
 				$.ajax({
 					type : "PUT",
-					url : baseUrlDb + "/" + encodeURIComponent(jsonData._id),
+					url : "/api/assessment/",
 					contentType : "application/json",
-					headers : {
-						"Authorization" : "Basic " + btoa(user + ":" + pass)
-					},
 					data : JSON.stringify(jsonData),
 					error : errorHandler
 				}).done(function(data) {
@@ -1114,7 +1113,7 @@ function setProgressLink(teamId, assessId) {
 	$("#progressLink").empty();
 	$("#progressLink").append(document.createTextNode("Team Assessment Summary"));
 
-	var progressPage = "progress.jsp";
+	var progressPage = "progress";
 	if ((teamId != null && teamId != "") 
 			&& (assessId != null && (assessId != "" || assessId != "new"))
 			&& getAssessmentStatus(gTeamAssessment).toLowerCase() != "draft" ) {
@@ -1429,7 +1428,7 @@ function setScreenControls() {
 					$(this).attr("disabled", "disabled");
 				});
 				
-				if (!allowAccess && !isReviewer(gTeamAssessment))
+				if (!allowAccess && !isReviewer(gTeamAssessment) && ($("#teamSelectList option:selected").val() != ""))
 					displayEditStatus(true);
 			}
 			

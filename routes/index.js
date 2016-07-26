@@ -6,6 +6,7 @@ var middleware = {
 render = function(req, res, file, json) {
   //can add stuff to json here if needed
   json["siteTitle"] = "Agile Team Tool";
+  json["userEmail"] = req.user;
   return res.render(file, json);
 };
 

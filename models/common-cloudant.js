@@ -72,7 +72,7 @@ exports.getByView = function(_design, _view) {
 };
 
 exports.getByViewKey = function(_design, _view, _key) {
-  return new Promise(function(resolce, reject){
+  return new Promise(function(resolve, reject){
     agileTeam.viewAsync(_design, _view, {'include_docs': false, key: _key })
       .then(function(body){
         resolve(body);
@@ -80,5 +80,31 @@ exports.getByViewKey = function(_design, _view, _key) {
       .catch(function(err){
         reject(err);
       });
+  });
+};
+
+exports.getByViewWithStartOrEndKey = function(_design, _view, _startkey, _endkey) {
+  return new Promise(function(resolve, reject) {
+    agileTeam.viewAsync(_design, _view, { 'startkey': _startkey, 'endkey': _endkey })
+      .then(function(body){
+        body = _.isEmpty(body.rows) ? {} : body;
+        resolve(body);
+      })
+      .catch(function(err){
+        reject(err);
+      });
+  });
+}
+
+exports.bulkUpdate = function(data) {
+  // document id and revision _id are required on data
+  return new Promise(function(resolve, reject){
+    agileTeam.bulkAsync(data)
+    .then(function(body){
+      resolve(body);
+    })
+    .catch(function(err){
+      reject(err);
+    })
   });
 };

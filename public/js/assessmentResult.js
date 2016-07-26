@@ -21,12 +21,12 @@ function loadAssessmentListTable(teamId, more){
 		 for (var x=0; x<assessmentData.length && x<numRec; x++) {
 			var item = assessmentData[x];
 			if (item.assessmt_status == 'Submitted'){
-				link = "<a style='text-decoration: underline;color:black;' href='progress.jsp?id=" + encodeURIComponent(teamId) + "&assessId=" + encodeURIComponent(item._id) + "'>" + 
+				link = "<a style='text-decoration: underline;color:black;' href='progress?id=" + encodeURIComponent(teamId) + "&assessId=" + encodeURIComponent(item._id) + "'>" + 
 				showDateDDMMMYYYY(item["self-assessmt_dt"].substring(0,item["self-assessmt_dt"].indexOf(" "))) + "</a>";
 			}
 			else{
 				hasDraft = true;
-				link = "<a style='text-decoration: underline;color:black;' href='assessment.jsp?id=" + encodeURIComponent(teamId) + "&assessId=" + encodeURIComponent(item._id) + "'>" + 
+				link = "<a style='text-decoration: underline;color:black;' href='assessment?id=" + encodeURIComponent(teamId) + "&assessId=" + encodeURIComponent(item._id) + "'>" + 
 				showDateDDMMMYYYY(item.created_dt.substring(0,item.created_dt.indexOf(" "))) + "</a>";
 			}
 			var row = "<tr id='asmntrow_"+x+"'>";
@@ -71,7 +71,7 @@ function showLess(){
 }
 
 function manageAssessment() {
-    window.location = "assessment.jsp?id=" + encodeURIComponent($("#teamSelectList option:selected").val()) + "&assessId=new";
+    window.location = "assessment?id=" + encodeURIComponent($("#teamSelectList option:selected").val()) + "&assessId=new";
  }
 
 function setIndAssessor(assessor){
@@ -425,7 +425,7 @@ function loadResult(id, result, assessed_index){
 	}
 	
 	function setAssessmentLink(teamId, assessId) {
-		var assessmentPage = "assessment.jsp";
+		var assessmentPage = "assessment";
 		if (teamId != "" && assessId != "") {
 			assessmentPage = assessmentPage + "?id=" + teamId;
 			assessmentPage = assessmentPage + "&assessId=" + assessId;

@@ -63,23 +63,15 @@
                   </li>
               </ul>
           </div>
-          
-          
-          
         </div>
-        
-        
-        
-         
-        
-        
-        
-        
-        
-        
-        
     </div>
  </body>
 <!-- MASTHEAD_END -->
 
- <script src="js/navbar.js"></script>
+<script src="js/navbar.js"></script>
+<script type="text/javascript">
+  var user = <%-JSON.stringify(user)%>
+  <% if (environment != null && environment != '') { %>
+  var environment = "<%-environment%>";
+  <% } %>
+</script>

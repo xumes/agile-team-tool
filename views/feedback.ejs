@@ -1,47 +1,50 @@
-<div class="ibm-common-overlay ibm-overlay-alt-two"
-	data-widget="overlay" id="sendFeedback">
-	<h3 class="ibm-bold ibm-h2">Send Feedback</h3>
-	<div class="ibm-rule ibm-alternate-1">
+<div class="ibm-common-overlay ibm-overlay-alt-two" data-widget="overlay" id="sendFeedback">
+	<h2 style="padding-bottom: 0px; font-size: 22px; " class="ibm-bold">Give us feedback about the Agile Team Tool</h2>
+  <p  style="padding-top: 5px;padding-bottom: 0px;">We'd like to hear from you!</p>
+	<div class="ibm-rule ibm-alternate-1" style="margin-top: 0px;">
 		<hr>
 	</div>
-	<form id="createTeamForm" class="ibm-column-form"
-		action="mailerFeedback" method="post">
-		<p style="font-weight: bold; color: gray; font-size: medium;">
-			Prior to submitting feedback, please refer to the <a target="_blank"
-				href="http://agileacademy.w3ibm.mybluemix.net/teamtool/howto/AgileTeamTool_FrequentlyAskedQuestions.pdf">Frequently
-				Asked Questions</a> document.
-		</p>
-		<p>
-			<label style="line-height: 20px; font-weight: bold;" for="feedback_recipient">To:</label>
-			<span style="margin-left: 10px;"> <input type="text"
-				name="feedback_recipient" id="feedback_recipient" size="50" disabled></span>
-		</p>
-		<p>
-			<label style="line-height: 20px; font-weight: bold;"
-				for="feedback_sender">From:</label> <span
-				style="margin-left: 10px;"><input type="text"
-				name="feedback_sender" id="feedback_sender" size="50" disabled></span>
-		</p>
-
-		<p>
-			<label style="line-height: 20px; font-weight: bold;"
-				for="feedback_cc">cc:</label> <span style="margin-left: 10px;"><input
-				type="text" name="feedback_cc" id="feedback_cc" size="50"></span>
-		</p>
-
-		<p>
-			<label style="line-height: 20px; font-weight: bold;" for="feedback">Your
-				feedback:<span class="ibm-required">*</span>
-			</label> <span style="margin-left: 30px; padding-top: -100px;"> <textarea
-					name="feedback" id="feedback" rows="6" cols="46"
-					style="resize: none;" maxlength="2000"></textarea>
-			</span>
-		<label style="font-weight: normal; margin-top: -110px; line-height: 20px;">
-			If you're referring to a specific page, please provide the exact URL.
-		</label>
-		</p>
-
-		<div class="ibm-rule ibm-alternate-1" style="margin-top: 30px;">
+  <p class="ibm-bold">Contact information:</p>
+  <p style="margin-top: -5px;">Your email: <span id="userEmail"></span></p>
+  <br>
+	<form id="createTeamForm" class="ibm-row-form" action="mailerFeedback" method="post">
+    <input type="hidden" name="feedback_sender" id="feedback_sender"/>
+    <input type="hidden" name="feedback_senderName" id="feedback_senderName"/>
+    <input type="hidden" name="feedback_recipient" id="feedback_recipient"/>
+    <input type="hidden" name="feedback_cc" id="feedback_cc"/>
+    <p class="ibm-bold">Feedback:</p>
+    <p class="ibm-form-elem-grp" style="margin-top: -5px; padding-bottom:10px;">
+      <label for="feedback_page">Specify the page, if applicable:</label>
+      <span>
+        <select id="feedback_page" style="min-width: 360px">
+          <option value="Home">Home</option>
+          <option value="Team management">Team management</option>
+          <option value="Iteration manangement">Iteration management</option>
+          <option value="Maturity assessment">Maturity assessment</option>
+          <option value="Help">Help</option>
+          <option value="Not specified" selected>Not specified</option>
+        </select>
+      </span>
+    </p>
+    <p style="padding-bottom:15px;">
+      <label for="feedback_teamName">Team name:</label>
+      <span>
+        <select id="feedback_teamName" name="feedback_teamName" style="min-width: 360px"> </select>
+      </span>
+    </p>
+    <p>
+      <label for="feedback"><span class="ibm-required">*</span>Write your feedback below:</label> 
+      <span> 
+        <textarea name="feedback" id="feedback" rows="4" cols="40" style="resize: none; min-width: 370px" maxlength="2000" placeholder="Please provide a detailed description of your idea, suggestion, or problem"></textarea>
+      </span>
+    </p>
+    <br>
+    <p style="padding-top: 10px;">
+      Have a question?  Be sure to checkout our 
+      <a target="_blank" href="http://agileacademy.w3ibm.mybluemix.net/teamtool/howto/AgileTeamTool_FrequentlyAskedQuestions.pdf">Frequently
+      Asked Questions</a> document.
+    </p>
+		<div class="ibm-rule ibm-alternate-1" style="margin-top: 0px;">
 			<hr>
 		</div>
 

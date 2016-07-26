@@ -122,14 +122,7 @@ function isNumber(evt) {
  * @returns
  */
 function sortAgileTeamsByName(teams) {
-	teams = teams.sort(function(a, b) {
-		if (a.name.toUpperCase() == b.name.toUpperCase()) {
-			return 0;
-		} else {
-			return (b.name.toUpperCase() > a.name.toUpperCase()) ? -1 : 1;
-		}
-	});
-	return teams;
+	return _.sortBy(teams, function(team) {return team.name});
 }
 
 /**
@@ -138,12 +131,8 @@ function sortAgileTeamsByName(teams) {
  * @param teamList - Array of team information.
  * @returns a lookup array for team related information.
  */
-function getLookupListById(teamList) {
-	var lookupListById = {};
-	for (var i=0; i<teamList.length; i++) {
-		lookupListById[teamList[i]._id] = teamList[i];
-	}
-	return lookupListById;
+function getLookupListById(teams) {
+	return _.indexBy(teams, function(team) {return team._id});
 }
 
 /**
@@ -153,14 +142,7 @@ function getLookupListById(teamList) {
  * @returns
  */
 function sortTeamMembersByName(members) {
-	members = members.sort(function(a, b) {
-		if (a.name.toUpperCase() == b.name.toUpperCase()) {
-			return 0;
-		} else {
-			return (b.name.toUpperCase() > a.name.toUpperCase()) ? -1 : 1;
-		}
-	});
-	return members;
+	return _.sortBy(members, function(member) {return member.name});
 }
 
 

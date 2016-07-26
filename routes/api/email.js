@@ -37,11 +37,12 @@ var sendRequest = function(emailObj, cb) {
 };
 
 var processFeedbackRequest = function(req, res) {
-
   emailObj = {
-    body: req.body.feedback,
-    from: FROM,
-    sendTo: "jeanlam@us.ibm.com, liamf@br.ibm.com, bfouts@us.ibm.com, amy_travis@us.ibm.com",
+    body: "Regarding page: "+ req.body.feedback_page + 
+          "\nTeam:"+req.body.feedback_teamName+
+          "\n\n" + req.body.feedback,
+    from: req.body.feedback_sender,
+    sendTo: req.body.feedback_recipient,
     subject: "Feedback for the Agile Team Tool",
     applicationKey: EMAIL_APPKEY
   };  

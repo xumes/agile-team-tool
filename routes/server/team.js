@@ -4,7 +4,7 @@ module.exports = function(app, includes) {
   var render = includes.render;
 
   showTeamManagement = function(req, res) {
-    json= {"pageTitle":"Team Management"}
+    var json = {"pageTitle":"Team Management", "user": req.session["user"], "environment": req.session["environment"]};
     render(req, res, 'team', json);
   };
   

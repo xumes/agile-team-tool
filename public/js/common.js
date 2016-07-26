@@ -1,15 +1,23 @@
 jQuery(function($) {
 	$(document).ready(function() {
+		//set current user
+		getAuthenticatedUser(user.shortEmail);
+
+		//get teams of user
+		getAllAgileTeamsForUser(user.shortEmail, setAgileTeamsForUser, []);
+
 		// get current system status
 		getSystemStatus();
+
 		// preload the administrator list
 		getAllAdministrator();
 
 		gDialogWindow.init();
 
+		// TODO: this bulk updates should be moved to Node
 		// jquery.couch.js setup
-		$.couch.urlPrefix = baseUrl;
-		_db = $.couch.db(db);
+		//$.couch.urlPrefix = baseUrl;
+		//_db = $.couch.db(db);
 		
 	});
 });
@@ -65,7 +73,7 @@ function showUserDetails() {
 }
 
 function setUserDetails(userName, userImage) {
-	$('<span style="padding:15px 0px 0px 20px ;display:inline-block;color: #0061ff;font-size: 16px;">' + userName + '</span>').insertAfter("#ibm-home");
+	$('#ibm-universal-nav').append('<span style="position: relative; left: 20px; padding-top: 15px; width:600px; float:left; color: #0061ff;font-size: 16px; important">' + userName + '</span>');
 	$('.ibm-masthead-signin-link').css({
 		'background-image' : 'url("//faces.tap.ibm.com/imagesrv/' + userImage + '?s=30")',
 		'background-repeat' : 'no-repeat',
@@ -130,7 +138,7 @@ function getPersonFromFaces(userEmail, _callback, args) {
 					var cached = false;
 					if (gFacesCache != null) {
 						gFacesCache.forEach(function(personCache) {
-							if (!cached && personCache != null && personCache.email.toUpperCase() == person.email.toUpperCase()) {
+							if (!cached && personCache != null && person != null && personCache.email.toUpperCase() == person.email.toUpperCase()) {
 								cached = true;
 							}
 						});
@@ -164,7 +172,7 @@ var getServerDateTime = function() {
 	var dateTime = "";
 	$.ajax({
 		type : "GET",
-		url : "./serverTime",
+		url : "/api/others/servertime",
 		async : false
 	}).done(function(data) {
 		dateTime = data;
@@ -235,26 +243,27 @@ function hasAccess(teamId, checkParent) {
  */
 function isUserMemberOfTeam(teamId, checkParent) {
 	var userExist = false;
-	var teamList = globalTeamList;//JSON.parse(localStorage.getItem("teamList"));
+	var teamList = globalTeamList;
 	
 	if (teamList == null)
 		return userExist;
-	
-	for ( var i = 0; i < teamList.length; i++) {
-		if (teamList[i]._id == teamId && teamList[i].members != undefined) {
-			for ( var j = 0; j < teamList[i].members.length; j++) {
-				var member = teamList[i].members[j];
-				if (member.id.toUpperCase() == JSON.parse(localStorage.getItem("userInfo")).email.toUpperCase()) {
-					userExist = true;
-				}
-			}
-			if (checkParent && !userExist && teamList[i].parent_team_id != "") {
-				return isUserMemberOfTeam(teamList[i].parent_team_id, checkParent);
-			} else {
-				return userExist;
+
+	if (userTeams != null) {
+		for (var i in userTeams) {
+			if (userTeams[i]._id == teamId) {					
+				userExist = true;
+				break;
 			}
 		}
+	} 
+
+	if (!userExist && checkParent) {
+		for ( var i = 0; i < teamList.length; i++) {
+			if (teamList[i]._id == teamId && teamList[i].parent_team_id != "") 
+				return isUserMemberOfTeam(teamList[i].parent_team_id, checkParent);
+		}
 	}
+
 	return userExist;
 }
 
@@ -262,8 +271,9 @@ function isUserMemberOfTeam(teamId, checkParent) {
  * Loads the list of identified users with administrator access.
  */
 function getAllAdministrator() {
-	var cUrl = baseUrlDb + "/ag_ref_access_control";
-	getRemoteJsonpData(cUrl, setGlobalAdministorList, []);
+	//var cUrl = baseUrlDb + "/ag_ref_access_control";
+	var cUrl = "/api/others/admins";
+	getRemoteData(cUrl, setGlobalAdministorList, []);
 }
 
 /**
@@ -273,10 +283,12 @@ function getAllAdministrator() {
  */
 function setGlobalAdministorList(administrator) {
 	var adminList = [];
-	for ( var i = 0; i < administrator.ACL_Full_Admin.length; i++) {
-		adminList.push(administrator.ACL_Full_Admin[i]);
+	if (!_.isEmpty(administrator)) {
+		for ( var i = 0; i < administrator.ACL_Full_Admin.length; i++) {
+			adminList.push(administrator.ACL_Full_Admin[i]);
+		}
+		localStorage.setItem("adminList", JSON.stringify(adminList));	
 	}
-	localStorage.setItem("adminList", JSON.stringify(adminList));	
 }
 
 /**
@@ -287,7 +299,7 @@ function setGlobalAdministorList(administrator) {
 function isAdmin() {
 	var isAdmin = false;
 	var admins = JSON.parse(localStorage.getItem("adminList"));
-	if (admins != undefined) {
+	if (!_.isEmpty(admins)) {
 		for ( var i = 0; i < admins.length; i++) {
 			var adminName = admins[i];
 			if (adminName == JSON.parse(localStorage.getItem("userInfo")).email) {
@@ -392,6 +404,59 @@ function getRemoteJsonpData(cUrl, _callback, args) {
 	return returnObj;
 }
 
+function getRemoteData(cUrl, _callback, args) {
+	var returnObj = null;
+	$.ajax({
+		type : "GET",
+		url : cUrl,
+		//TODO: Removing "async: false" tends to give the impression that the page has loaded all its data
+		// even though it is still processing the ajax call.  Need to work on a busy indicator if removed.
+		async: false
+	}).done(function(data) {
+		if (data != undefined) {
+			var list = [];
+			console.log("data has rows " + _.has(data.rows, 'rows'));
+			console.log("data has value " + _.has(data, 'value'));
+			if (_.has(data, "rows")) {
+				if (_.has(data.rows, "doc"))
+					list = _.pluck(data.rows, 'doc');
+				else 
+					list = _.pluck(data.rows, 'value');
+				args.push(list);
+				showLog("data loaded: " + list.length);
+				returnObj = list;
+
+			} else if (_.has(data, "value")  || _.has(data, "doc") || data.length > 0) {
+				if (_.has(data, "doc"))
+					list = _.pluck(data, 'doc')
+				else
+					list = _.pluck(data, 'value');
+				args.push(list);
+				showLog("data loaded: " + list.length);
+				returnObj = list;
+
+			} else {
+				// call just returned one object
+				showLog("data loaded: " + JSON.stringify(data));
+				args.push(data);
+				returnObj = data;
+			}
+		}
+		
+		if (typeof _callback === "function") {
+			showLog("callback function: " + getFnName(_callback));
+			_callback.apply(this, args);
+		}
+	}).fail(function() {
+		if (typeof _callback === "function") {
+			showLog("callback function: " + getFnName(_callback));
+			_callback.apply(this, args);
+		}
+	})
+	
+	return returnObj;
+}
+
 /**
  * Ajax call to update remote Cloudant jsonp data.
  * 
@@ -430,8 +495,9 @@ function setRemoteJsonpData(docId, jsonData, _callback, args) {
  * Get current system status.
  */
 function getSystemStatus() {
-	var cUrl = baseUrlDb + "/ag_ref_system_status_control";
-	getRemoteJsonpData(cUrl, setGlobalSystemStatus, []);
+	//var cUrl = baseUrlDb + "/ag_ref_system_status_control";
+	var cUrl = "/api/others/systemstatus"
+	getRemoteData(cUrl, setGlobalSystemStatus, []);
 }
 
 /**
@@ -472,9 +538,17 @@ function setGlobalSystemStatus(systemStatus) {
  * @returns - any returnable object.
  */
 function getAllAgileTeams(_callback, args) {
-	var teamUrl = baseUrlDb + "/_design/teams/_view/teams";
-	return getRemoteJsonpData(teamUrl, _callback, args);
+	//var teamUrl = baseUrlDb + "/_design/teams/_view/teams";
+	var teamUrl = "/api/teams";
+	return getRemoteData(teamUrl, _callback, args);
 }
+
+function getTeamNames(_callback, args) {
+	//var teamUrl = baseUrlDb + "/_design/teams/_view/getTeamNames";
+	var teamUrl = "/api/teams/names";
+	return getRemoteData(teamUrl, _callback, args);
+}
+
 
 /**
  * Get all available roles for team members.
@@ -484,8 +558,9 @@ function getAllAgileTeams(_callback, args) {
  * @returns - any returnable object.
  */
 function getAllAgileTeamRoles(_callback, args) {
-	var teamUrl = baseUrlDb + "/_design/agile/_view/roles";
-	return getRemoteJsonpData(teamUrl, _callback, args);
+	//var teamUrl = baseUrlDb + "/_design/agile/_view/roles";
+	var teamUrl = "/api/teams/roles";
+	return getRemoteData(teamUrl, _callback, args);
 }
 
 /**
@@ -502,8 +577,31 @@ function getAllAgileTeamsForUser(userEmail, _callback, args) {
 		return null;
 	}
 	
-	var teamUrl = baseUrlDb + "/_design/teams/_view/teamsWithMember?keys=[\"" + encodeURIComponent(userEmail) + "\"]";
-	return getRemoteJsonpData(teamUrl, _callback, args);
+	//var teamUrl = baseUrlDb + "/_design/teams/_view/teamsWithMember?keys=[\"" + encodeURIComponent(userEmail) + "\"]";
+	var teamUrl = '/api/teams/members/'+encodeURIComponent(userEmail);
+	return getRemoteData(teamUrl, _callback, args);
+}
+
+var userTeams;
+function setAgileTeamsForUser(teams, newTeam) {
+	userTeams = teams;
+
+	if (newTeam != null) {
+		var found = false;
+		for (var i in userTeams) {
+			if (userTeams[i]._id == newTeam._id) {
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			var obj = new Object();
+			obj._id = newTeam._id;
+			obj._rev = newTeam._rev;
+			obh._name = newTeam.name;
+			userTeams.push(obj);
+		}
+	}
 }
 
 /**
@@ -520,8 +618,10 @@ function getTeamAssessments(teamId, _callback, args) {
 		return null;
 	}
 
-	var teamUrl = baseUrlDb + "/_design/agile/_view/maturityAssessmentResult?key=\"" + encodeURIComponent(teamId) + "\"";
-	return getRemoteJsonpData(teamUrl, _callback, args);
+	// var teamUrl = baseUrlDb + "/_design/agile/_view/maturityAssessmentResult?key=\"" + encodeURIComponent(teamId) + "\"";
+	// return getRemoteJsonpData(teamUrl, _callback, args);
+	var teamUrl = "/api/assessment/view?teamId=" + encodeURIComponent(teamId);
+	return getRemoteData(teamUrl, _callback, args);
 }
 
 /**
@@ -532,8 +632,10 @@ function getTeamAssessments(teamId, _callback, args) {
  * @returns - any returnable object.
  */
 function getAssessmentQuestionnaire(_callback, args) {
-	var teamUrl = baseUrlDb + "/_design/agile/_view/maturityAssessment";
-	return getRemoteJsonpData(teamUrl, _callback, args);	
+	// var teamUrl = baseUrlDb + "/_design/agile/_view/maturityAssessment";
+	// return getRemoteJsonpData(teamUrl, _callback, args);	
+	var teamUrl = "/api/assessment/template";
+	return getRemoteData(teamUrl, _callback, args);	
 }
 
 /**
@@ -550,8 +652,10 @@ function getTeamIterations(teamId, _callback, args) {
 		return null;
 	}
 
-	var teamUrl = baseUrlDb + "/_design/teams/_view/iterinfo?keys=[\"" + encodeURIComponent(teamId) + "\"]";
-	return getRemoteJsonpData(teamUrl, _callback, args);
+	// var teamUrl = baseUrlDb + "/_design/teams/_view/iterinfo?keys=[\"" + encodeURIComponent(teamId) + "\"]";
+	// return getRemoteJsonpData(teamUrl, _callback, args);
+	var teamUrl = "/api/iteration/" + encodeURIComponent(teamId);
+	return getRemoteData(teamUrl, _callback, args);
 }
 
 
@@ -561,9 +665,11 @@ function getCompletedIterations(startDate, endDate, _callback, args) {
 		return null;
 	}
 	
-	var teamUrl = baseUrlDb + "/_design/teams/_view/getCompletedIterations?startkey=\"" + startDate + "\"&endkey=\"" + endDate + "\"";
-	return getRemoteJsonpData(teamUrl, _callback, args);
-}
+	//var teamUrl = baseUrlDb + "/_design/teams/_view/getCompletedIterations?startkey=\"" + startDate + "\"&endkey=\"" + endDate + "\"";
+	//return getRemoteJsonpData(teamUrl, _callback, args);
+	var teamUrl = "/api/iteration/completed?startkey=" + startDate + "&endkey=" + endDate ;
+	return getRemoteData(teamUrl, _callback, args);
+}	
 
 function getDocById(docId, _callback, args) {
 	if (docId == null || docId == "") {

@@ -52,6 +52,12 @@ require('./routes')(app, passport);
 /**
 * Error Handlers
 */
+process.on('uncaughtException', function (err) {
+  console.error((new Date).toUTCString() + ' uncaughtException:', err.message)
+  console.error(err.stack)
+  process.exit(1)
+})
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -81,5 +87,7 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
+
+console.log(settings)
 
 module.exports = app;

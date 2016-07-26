@@ -1,4 +1,4 @@
-var teams;
+var allTeams;
 var allTeamsLookup;
 var members;
 var roles;
@@ -21,6 +21,7 @@ jQuery(function ($) {
 		else
 			getAllAgileTeams(agileTeamListHandler, ["new"]);
 
+		console.log("im supposed to be shown after getting the all the team details");
 		if (urlParameters != undefined && urlParameters.testUser != undefined) {
 			alert("here TestUser is: " + urlParameters.testUser);
 			resetUser(urlParameters.testUser);
@@ -42,9 +43,10 @@ jQuery(function ($) {
 			// retrieve and load latest data about the team and update local cached data
 			$.ajax({
 				type : "GET",
-				url : baseUrlDb + "/" + encodeURIComponent($("#teamSelectList option:selected").val()),
-				dataType : "jsonp",
-				scriptCharset: 'UTF-8'
+				url : "/api/teams/" + encodeURIComponent($("#teamSelectList option:selected").val())
+				// url : baseUrlDb + "/" + encodeURIComponent($("#teamSelectList option:selected").val()),
+				// dataType : "jsonp",
+				// scriptCharset: 'UTF-8'
 			}).done(function (data) {
 				var jsonData = data;
 				updateAgileTeamCache(jsonData);
@@ -195,7 +197,7 @@ jQuery(function ($) {
 function agileTeamListHandler(teamId, teamList) {
 	$("#teamSelectList").attr("disabled", "disabled");	
 	setGlobalTeamList(teamList);
-	teams = teamList;
+	allTeams = teamList;
 	allTeamsLookup = getLookupListById(teamList);
 	var listOption = getAgileTeamDropdownList(teamList, false);
 	setSelectOptions("teamSelectList", listOption, ["new", "Create new..."], null, teamId);
@@ -206,7 +208,19 @@ function agileTeamListHandler(teamId, teamList) {
 }
 
 function updateAgileTeamCache(team) {
-	allTeamsLookup[team._id] = team;
+	var lookupData = allTeamsLookup[team._id];
+	// were using the compacted team view
+	if (lookupData._rev == null) {
+		lookupData.doc = team;
+		lookupData.name = team.name;
+		lookupData.squadteam = team.squadteam;
+		lookupData.parent_team_id = team.parent_team_id;
+		lookupData.child_team_id = team.child_team_id;
+		allTeamsLookup[team._id] = lookupData;
+
+	} else
+		allTeamsLookup[team._id] = team;
+
 	loadSelectableChildren(team._id);
 }
 
@@ -223,9 +237,10 @@ function loadSelectedAgileTeam() {
 	var teamName = $("#teamSelectList option:selected").text();
 	var teamId = $("#teamSelectList option:selected").val();
 	$("#teamName").val(teamName);
-	if (teams != undefined) {
+	if (allTeams != undefined) {
 		var currentTeam = allTeamsLookup[teamId];
 		if (currentTeam != null) {
+			currentTeam = currentTeam.doc == null ? currentTeam : currentTeam.doc;
 			$("#addTeamBtn,#updateTeamBtn,#deleteTeamBtn,#updateChildBtn,#addMemberBtn,#updateParentBtn,#cancelMemberBtn").removeAttr("disabled");
 			$("#teamName,#teamDesc,#teamMemberName,#memberAllocation").removeAttr("disabled");
 			$("#teamSquadYesNo,#memberRoleSelectList,#memberListAction,#parentSelectList,#childSelectList,#childrenListAction,#iterTeamBtn,#assessBtn").removeAttr("disabled");
@@ -256,9 +271,10 @@ function loadSelectedAgileTeam() {
 				// disable squad indicator if iteration data exist
 				$.ajax({
 					type : "GET",
-					url : baseUrlDb + "/_design/teams/_view/iterinfo?keys=[\"" + encodeURIComponent(currentTeam._id) + "\"]",
-					dataType : "jsonp",
-					async : false
+					url : "/api/iteration/" + encodeURIComponent(currentTeam._id)
+					// url : baseUrlDb + "/_design/teams/_view/iterinfo?keys=[\"" + encodeURIComponent(currentTeam._id) + "\"]",
+					// dataType : "jsonp",
+					// async : false
 				}).done(function (data) {
 					var iterationList = [];
 					if (data != undefined && data.rows.length > 0) {
@@ -339,7 +355,7 @@ function loadSelectedAgileTeam() {
 }
 
 function manageIteration() {
-	window.location = "iteration.jsp?id=" + encodeURIComponent($("#teamSelectList option:selected").val()) + "&iter=new";
+	window.location = "iteration?id=" + encodeURIComponent($("#teamSelectList option:selected").val()) + "&iter=new";
 }
 
 function loadIterationInformation(iterationList, more) {
@@ -367,7 +383,7 @@ function loadIterationInformation(iterationList, more) {
 		for (var j = 0; j < iterationList.length && j < noOfIter; j++) {
 			found = true;
 			var iter = iterationList[j];
-			var iterLink = "<a style='text-decoration: underline;color:black;' href='iteration.jsp?id=" + encodeURIComponent(iter.team_id) + "&iter=" + encodeURIComponent(iter._id) + "' title='Manage current iteration information'>" + iter.iteration_name + "</a>";
+			var iterLink = "<a style='text-decoration: underline;color:black;' href='iteration?id=" + encodeURIComponent(iter.team_id) + "&iter=" + encodeURIComponent(iter._id) + "' title='Manage current iteration information'>" + iter.iteration_name + "</a>";
 			var row = "<tr id='irow_" + j + "'>";
 			row = row + "<td></td>";
 			row = row + "<td>" + iterLink + "</td>";
@@ -430,8 +446,8 @@ function loadSelectableParents(currentTeamId) {
 	children = [];
 	getAllChildren(currentTeamId);
 	var parentList = [];
-	if (teams != undefined) {
-		$.each(teams, function () {
+	if (allTeams != undefined) {
+		$.each(allTeams, function () {
 			if (this._id != currentTeamId && this.squadteam.toLowerCase() == "no") {
 				if (children.indexOf(this._id) == -1)
 					parentList.push(this);
@@ -449,15 +465,15 @@ function loadSelectableChildren(currentTeamId) {
 	children = [];
 	getAllChildren(currentTeamId);
 	var currentTeam;
-	if (teams != undefined) {
+	if (allTeams != undefined) {
 		currentTeam = allTeamsLookup[currentTeamId];
 		if (currentTeam != null)
 			children.push(currentTeam.parent_team_id);
 	}
 
 	var childList = [];
-	if (teams != undefined) {
-		$.each(teams, function () {
+	if (allTeams != undefined) {
+		$.each(allTeams, function () {
 			if (this._id != currentTeamId) {
 				if (children.indexOf(this._id) == -1 && this.parent_team_id != undefined && this.parent_team_id == "")
 					childList.push(this);
@@ -517,6 +533,7 @@ function loadTeamMembers(teamId) {
 	if (teamId != undefined) {
 		var currentTeam = allTeamsLookup[teamId];
 		if (currentTeam != null) {
+			currentTeam = currentTeam.doc == null ? currentTeam : currentTeam.doc;
 			var members = sortTeamMembersByName(currentTeam.members);
 			for (var j = 0; j < members.length; j++) {
 				found = true;
@@ -607,6 +624,7 @@ function loadParentChildren(parentId, currentId) {
 	if (parentId != undefined) {
 		var currentTeam = allTeamsLookup[parentId];
 		if (currentTeam != null && currentTeam.child_team_id != undefined) {
+			currentTeam = currentTeam.doc == null ? currentTeam : currentTeam.doc;
 			for (var j = 0; j < currentTeam.child_team_id.length; j++) {
 				if (currentTeam.child_team_id[j] != currentId) {
 					var childTeamId = currentTeam.child_team_id[j];
@@ -614,10 +632,11 @@ function loadParentChildren(parentId, currentId) {
 					var childTeamDesc = "";
 					var childTeamChildren = 0;
 					var childTeam = allTeamsLookup[childTeamId];
+					childTeam = childTeam.doc == null ? childTeam : childTeam.doc;
 					if (childTeam = null) {
 						found = true;
-						childTeamName = teams[k].name;
-						childTeamDesc = teams[k].desc;
+						childTeamName = allTeams[k].name;
+						childTeamDesc = allTeams[k].desc;
 						if (childTeam.child_team_id != undefined)
 							childTeamChildren = childTeam.child_team_id.length;
 
@@ -644,28 +663,30 @@ function loadTeamChildren(currentId) {
 	if (currentId != undefined) {
 		var currentTeam = allTeamsLookup[currentId];
 			if (currentTeam != null && currentTeam.child_team_id != undefined) {
+				currentTeam = currentTeam.doc == null ? currentTeam : currentTeam.doc;
 				var childTeams = [];
 				for (var j = 0; j < currentTeam.child_team_id.length; j++) {
 					var childTeamId = currentTeam.child_team_id[j];
 					var childTeam = allTeamsLookup[childTeamId];
+					childTeam = childTeam.doc == null ? childTeam : childTeam.doc;
 					if (childTeam != null) {
 						childTeams.push(childTeam);
 					}
 				}
 				if (childTeams.length > 0){
 					found = true;
-					var teams = sortAgileTeamsByName(childTeams);
+					var allTeams = sortAgileTeamsByName(childTeams);
 					var childTeamId = "";
 					var childTeamName = "";
 					var childTeamDesc = "";
 					var index = 0;
 
-					for (var x = 0; x < teams.length; x++) {
-						childTeamId = teams[x]._id;
+					for (var x = 0; x < allTeams.length; x++) {
+						childTeamId = allTeams[x]._id;
 						index = index + 1;
-						childTeamName = teams[x].name;
-						childSquadIndicator = teams[x].squadteam;
-						childTeamDesc = teams[x].desc;
+						childTeamName = allTeams[x].name;
+						childSquadIndicator = allTeams[x].squadteam;
+						childTeamDesc = allTeams[x].desc;
 						var row = "<tr id='crow_" + index + "'>";
 						row = row + "<td scope='row' class='ibm-table-row'>";
 						if (hasAccess($("#teamSelectList option:selected").val(), true))
@@ -707,12 +728,12 @@ function addTeam(action) {
 	var exists = false;
 	var currentTeam = null;
 
-	if (teams != undefined) {
+	if (allTeams != undefined) {
 		var teamName = $("#teamName").val().trim();
 		var teamId = $("#teamSelectList option:selected").val();
 		// find if team data already exists
-		for (var i = 0; i < teams.length; i++) {
-			if (teams[i].name == teamName && teams[i]._id != teamId) {
+		for (var i = 0; i < allTeams.length; i++) {
+			if (allTeams[i].name == teamName && allTeams[i]._id != teamId) {
 				if (action == "add" || action == "update") {
 					if (action == "add")
 						$("#addTeamBtn").removeAttr("disabled");
@@ -733,11 +754,13 @@ function addTeam(action) {
 	}
 
 	if (exists) {
+		currentTeam = currentTeam.doc == null ? currentTeam : currentTeam.doc;
 		$.ajax({
 			type : "GET",
-			url : baseUrlDb + "/" + encodeURIComponent(currentTeam._id),
-			dataType : "jsonp",
-			scriptCharset: 'UTF-8'
+			url : "/api/teams/" + encodeURIComponent(currentTeam._id)
+			// url : baseUrlDb + "/" + encodeURIComponent(currentTeam._id),
+			// dataType : "jsonp",
+			// scriptCharset: 'UTF-8'
 		}).done(function (data) {
 			var jsonData = data;
 			// copy object to persist to follow hierarchy of columns in the template
@@ -750,9 +773,10 @@ function addTeam(action) {
 
 				$.ajax({
 					type : "GET",
-					url : baseUrlDb + "/_design/teams/_view/iterinfo?keys=[\"" + encodeURIComponent(jsonData._id) + "\"]",
-					dataType : "jsonp",
-					async : false
+					url : "/api/iteration/" + encodeURIComponent(jsonData._id)
+					// url : baseUrlDb + "/_design/teams/_view/iterinfo?keys=[\"" + encodeURIComponent(jsonData._id) + "\"]",
+					// dataType : "jsonp",
+					// async : false
 				}).done(function (data) {
 					var allowed = true;
 					if (data != undefined) {
@@ -778,14 +802,13 @@ function addTeam(action) {
 						showLog(JSON.stringify(jsonData));
 						$.ajax({
 							type : "PUT",
-							url : baseUrlDb + "/" + encodeURIComponent(currentTeam._id),
+							url: "/api/teams/",
+							async: false,
 							contentType : "application/json",
-							headers : {
-								"Authorization" : "Basic " + btoa(user + ":" + pass)
-							},
 							data : JSON.stringify(jsonData),
 							error : errorHandler
 						}).done(function (data) {
+							console.log(data);
 							var putResp = (typeof data == 'string' ? JSON.parse(data) : data);
 							var rev2 = putResp.rev;
 							showLog('Done updating ' + currentTeam._id + '. The new revision is ' + rev2 + '.');
@@ -850,10 +873,11 @@ function addTeam(action) {
 						// check to see if a parallel update for the child team parent info
 						$.ajax({
 							type : "GET",
-							url : baseUrlDb + "/" + encodeURIComponent(childId),
-							dataType : "jsonp",
-							scriptCharset: 'UTF-8',
-							async : false
+							url : "/api/teams/" + encodeURIComponent(childId)
+							// url : baseUrlDb + "/" + encodeURIComponent(childId),
+							// dataType : "jsonp",
+							// scriptCharset: 'UTF-8',
+							// async : false
 						}).done(function (jsonChildData) {
 							var rev = jsonChildData._rev;
 
@@ -887,14 +911,13 @@ function addTeam(action) {
 				showLog(JSON.stringify(jsonData));
 				$.ajax({
 					type : "PUT",
-					url : baseUrlDb + "/" + encodeURIComponent(currentTeam._id),
+					url: "/api/teams/",
+					async: false,
 					contentType : "application/json",
-					headers : {
-						"Authorization" : "Basic " + btoa(user + ":" + pass)
-					},
 					data : JSON.stringify(jsonData),
 					error : errorHandler
 				}).done(function (data) {
+					console.log(data);
 					var putResp = (typeof data == 'string' ? JSON.parse(data) : data);
 					var rev2 = putResp.rev;
 					showLog('Done updating ' + currentTeam._id + '. The new revision is ' + rev2 + '.');
@@ -941,12 +964,9 @@ function addTeam(action) {
 		showLog(jsonData);
 		$.ajax({
 			type : "POST",
-			url : baseUrlDb,
+			url : "/api/teams",
 			contentType : "application/json",
 			data : JSON.stringify(jsonData),
-			headers : {
-				"Authorization" : "Basic " + btoa(user + ":" + pass)
-			},
 			error : errorHandler
 		}).done(function (data) {
 			var json = (typeof data == 'string' ? JSON.parse(data) : data);
@@ -964,6 +984,7 @@ function deleteTeam() {
 	//find if team data already exists
 	var currentTeam = allTeamsLookup[teamId];
 	if (currentTeam != null) {
+		currentTeam = currentTeam.doc == null ? currentTeam : currentTeam.doc;
 		getDocById(currentTeam._id, deleteTeamHandler, []);
 	}
 }
@@ -1130,12 +1151,13 @@ function updateChildTeamWithParentHandler(parentId, team) {
 function addTeamMember(person, oldAlloc, newAlloc, oldRole, newRole) {
 	var teamId = $("#teamSelectList option:selected").val();
 	var currentTeam = null;
-	if (teams != undefined) {
+	if (allTeams != undefined) {
 		currentTeam = allTeamsLookup[teamId];
 	}
 
 	var existsMember = false;
 	if (currentTeam != undefined) {
+		currentTeam = currentTeam.doc == null ? currentTeam : currentTeam.doc;
 		for (var i = 0; i < currentTeam.members.length; i++) {
 			var tempAlloc = isNaN(parseInt(currentTeam.members[i].allocation)) ? 0 : currentTeam.members[i].allocation;
 			if (currentTeam.members[i].id == person.email
@@ -1146,9 +1168,10 @@ function addTeamMember(person, oldAlloc, newAlloc, oldRole, newRole) {
 		}
 		$.ajax({
 			type : "GET",
-			url : baseUrlDb + "/" + encodeURIComponent(currentTeam._id),
-			dataType : "jsonp",
-			scriptCharset: 'UTF-8'
+			url : "/api/teams/" + encodeURIComponent(currentTeam._id)
+			// url : baseUrlDb + "/" + encodeURIComponent(currentTeam._id),
+			// dataType : "jsonp",
+			// scriptCharset: 'UTF-8'
 		}).done(function (data) {
 			var jsonData = data;
 			var rev = jsonData._rev;
@@ -1191,18 +1214,12 @@ function addTeamMember(person, oldAlloc, newAlloc, oldRole, newRole) {
 			jsonData.last_updt_user = userInfo.email;
 			$.ajax({
 				type : "PUT",
-				url : baseUrlDb + "/" + encodeURIComponent(currentTeam._id),
+				url: "/api/teams/",
+				async: false,
 				contentType : "application/json",
-				headers : {
-					"Authorization" : "Basic " + btoa(user + ":" + pass)
-				},
 				data : JSON.stringify(jsonData),
 				error : errorHandler
 			}).done(function (data) {
-				var putResp = (typeof data == 'string' ? JSON.parse(data) : data);
-				var rev2 = putResp.rev;
-				showLog('Done adding/updating team member ' + person.name + ' to ' + currentTeam._id + '. The new revision is ' + rev2 + '.');
-
 				updateAgileTeamCache(jsonData);
 				loadSelectedAgileTeam();
 				loadTeamMembers(currentTeam._id);
@@ -1220,16 +1237,18 @@ function addTeamMember(person, oldAlloc, newAlloc, oldRole, newRole) {
 function deleteTeamMember() {
 	var teamId = $("#teamSelectList option:selected").val();
 	var currentTeam = null;
-	if (teams != undefined) {
+	if (allTeams != undefined) {
 		currentTeam = allTeamsLookup[teamId];
 	}
 
 	if (currentTeam != undefined) {
+		currentTeam = currentTeam.doc == null ? currentTeam : currentTeam.doc;
 		$.ajax({
 			type : "GET",
-			url : baseUrlDb + "/" + encodeURIComponent(currentTeam._id),
-			dataType : "jsonp",
-			scriptCharset: 'UTF-8'
+			url : "/api/teams/" + encodeURIComponent(currentTeam._id)
+			// url : baseUrlDb + "/" + encodeURIComponent(currentTeam._id),
+			// dataType : "jsonp",
+			// scriptCharset: 'UTF-8'
 		}).done(function (data) {
 			var jsonData = data;
 			var rev = jsonData._rev;
@@ -1261,18 +1280,12 @@ function deleteTeamMember() {
 			jsonData.last_updt_user = userInfo.email;
 			$.ajax({
 				type : "PUT",
-				url : baseUrlDb + "/" + encodeURIComponent(currentTeam._id),
+				url: "/api/teams/",
+				async: false,
 				contentType : "application/json",
-				headers : {
-					"Authorization" : "Basic " + btoa(user + ":" + pass)
-				},
 				data : JSON.stringify(jsonData),
 				error : errorHandler
 			}).done(function (data) {
-				var putResp = (typeof data == 'string' ? JSON.parse(data) : data);
-				var rev2 = putResp.rev;
-				showLog('Done deleting team member from ' + currentTeam._id + '. The new revision is ' + rev2 + '.');
-
 				updateAgileTeamCache(jsonData);
 				loadSelectedAgileTeam();
 				loadTeamMembers(currentTeam._id);
@@ -1287,16 +1300,18 @@ function deleteTeamMember() {
 function deleteChildTeam() {
 	var teamId = $("#teamSelectList option:selected").val();
 	var currentTeam = null;
-	if (teams != undefined) {
+	if (allTeams != undefined) {
 		currentTeam = allTeamsLookup[teamId];
 	}
 	
 	if (currentTeam != undefined) {
+		currentTeam = currentTeam.doc == null ? currentTeam : currentTeam.doc;
 		$.ajax({
 			type : "GET",
-			url : baseUrlDb + "/" + encodeURIComponent(currentTeam._id),
-			dataType : "jsonp",
-			scriptCharset: 'UTF-8'
+			url : "/api/teams/" + encodeURIComponent(currentTeam._id)
+			// url : baseUrlDb + "/" + encodeURIComponent(currentTeam._id),
+			// dataType : "jsonp",
+			// scriptCharset: 'UTF-8'
 		}).done(function (data) {
 			var jsonData = data;
 			var rev = jsonData._rev;
@@ -1330,18 +1345,12 @@ function deleteChildTeam() {
 			showLog(JSON.stringify(jsonData));
 			$.ajax({
 				type : "PUT",
-				url : baseUrlDb + "/" + encodeURIComponent(currentTeam._id),
+				url: "/api/teams/",
+				async: false,
 				contentType : "application/json",
-				headers : {
-					"Authorization" : "Basic " + btoa(user + ":" + pass)
-				},
 				data : JSON.stringify(jsonData),
 				error : errorHandler
 			}).done(function (data) {
-				var putResp = (typeof data == 'string' ? JSON.parse(data) : data);
-				var rev2 = putResp.rev;
-				showLog('Done deleting child team(s) ' + removeParents + ' from ' + currentTeam._id + '. The new revision is ' + rev2 + '.');
-
 				updateAgileTeamCache(jsonData);
 				loadTeamChildren(currentTeam._id);
 				//loadSelectableChildren(currentTeam._id);
@@ -1391,7 +1400,7 @@ function updateTeamInfo(action) {
 		displayEditStatus(false);
 
 		if (action == "clear") {
-			var listOption = getAgileTeamDropdownList(teams, false);
+			var listOption = getAgileTeamDropdownList(allTeams, false);
 			//setSelectOptions("teamSelectList", listOption, ["new", "Create new..."], null, null);
 		}
 
