@@ -22,6 +22,14 @@ winston.loggers.add('auth', {
   }
 });
 
+winston.loggers.add('api', {
+  console: {
+    level: logLevel,
+    colorize: logColors,
+    label: 'api'
+  }
+});
+
 winston.loggers.add('models', {
   console: {
     level: logLevel,
