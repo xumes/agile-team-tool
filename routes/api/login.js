@@ -28,10 +28,15 @@ module.exports = function(app, includes) {
             }
       };
       req.session.user = user;
+      console.log(req.session.user);
 
       //req.session['user'] = user;
       req.login(user, function(err) {
-        res.status(200).send('Successfully authenticated test user');
+        if (err) {
+          res.send(err);
+        } else {
+          res.status(200).send('Successfully authenticated test user');
+        }
       });
     //} else {
       //res.status(401).send('Invalid user');
