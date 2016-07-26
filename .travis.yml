@@ -11,6 +11,8 @@ install:
 - chmod +x bin/deploy.sh
 script:
 - gulp test
+services:
+  - redis-server
 deploy:
   provider: script
   script: bin/deploy.sh
