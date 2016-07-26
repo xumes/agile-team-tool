@@ -14,7 +14,7 @@ module.exports = function(app, includes) {
   });
 
   // test login function
-  app.post('/api/login/masquerade/:user', function(req, res) {
+  app.get('/api/login/masquerade/:user', function(req, res) {
     //if (req.headers['test-api-key'] == "test-secrect") {
       //console.log("pass test");
       //req.session['email'] = "winnuser@us.ibm.com";

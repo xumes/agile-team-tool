@@ -199,7 +199,7 @@ describe('Team API Tests', function(){
 
 // login requset used for testing
 function loginRequest (creds, done) {
-  var req = agent.post('/api/login/masquerade/' + creds);
+  var req = agent.get('/api/login/masquerade/' + creds);
   req.end(function (err, res) {
     if (err) {
       throw err;
