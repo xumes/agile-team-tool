@@ -153,6 +153,7 @@ describe('Team API Tests', function() {
     agent.attachCookies(req);
     req.expect(200);
     req.end(function(err,res){
+      console.log(res.body);
       expect(res.body[0]['key']).to.be.equal(teamDocUpdateValid['name']);
       done();
     });

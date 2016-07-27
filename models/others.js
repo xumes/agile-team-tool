@@ -64,3 +64,57 @@ module.exports.getSystemStatus = function (accessId) {
 module.exports.getServerTime = function () {
   return new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
 };
+
+/**
+ * Reformat document to delete document structure for BULK operation
+ * 
+ * @param docs - array of documents
+ * @param email - email address as last update user, ie logged in user
+ * @returns - reformatted object that will be passed directly to updateBulk
+ */
+module.exports.formatForBulkDelete = function(docs, email){
+  var reformatDocu = [];
+  _.each(docs, function(v, i, l){
+    var doc2 = v;
+    doc2['last_updt_user'] = email;
+    doc2['last_updt_dt'] = module.exports.getServerTime();
+    doc2['doc_status'] = 'delete';
+    reformatDocu.push(doc2);
+  });
+  return {
+    docs : reformatDocu
+  };
+}
+
+/**
+ * Check if user is member on set of documents to edit
+ * 
+ * @param teamId - team document id to check if user is member
+ * @param checkParent - set to true if we need to check the parent team documents for user membership.
+ * @param teamLists - array of all team document
+ * @param userTeams - array of all team document with email ie from api/teams/member/:email endpoint
+ * @returns {Boolean}
+ */
+module.exports.isUserMemberOfTeam = function(teamId, checkParent, teamLists, userTeams) {
+  var userExist = false;
+  if (teamLists == null)
+    return userExist;
+
+  if (userTeams != null) {
+    for (var i in userTeams) {
+      if (userTeams[i]['id'] == teamId) {         
+        userExist = true;
+        break;
+      }
+    }
+  } 
+
+  if (!userExist && checkParent) {
+    for ( var i = 0; i < teamLists.length; i++) {
+      if (teamLists[i]['id'] == teamId && teamLists[i].parent_team_id != "") 
+        return module.exports.isUserMemberOfTeam(teamLists[i].parent_team_id, checkParent, teamLists, userTeams);
+    }
+  }
+
+  return userExist;
+}

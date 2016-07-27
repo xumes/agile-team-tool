@@ -5,12 +5,15 @@ var _ = require('underscore');
 var loggers = require('../middleware/logger');
 var validate = require('validate.js');
 var settings = require('../settings');
-var globalUtil = require('./others');
+var otherModels = require('./others');
+var iterationModels = require('./iteration');
+var assessmentModels = require('./assessment');
+var isAllowedUser = false;
 var msg;
 
 var formatErrMsg = function(msg){
   tMsg = typeof msg === 'object' ? JSON.stringify(msg) : msg;
-  loggers.get('models').error('Error: ' + tMsg);
+  loggers.get('models').error(tMsg);
   return { error : msg };
 };
 
@@ -48,38 +51,13 @@ var teamDocRules = {
     inclusion : ['delete', '']
   }};
 
-isUserMemberOfTeam = function(teamId, checkParent, teamLists, userTeams) {
-  var userExist = false;
-  if (teamLists == null)
-    return userExist;
-
-  if (userTeams != null) {
-    for (var i in userTeams) {
-      if (userTeams[i]._id == teamId) {         
-        userExist = true;
-        break;
-      }
-    }
-  } 
-
-  if (!userExist && checkParent) {
-    for ( var i = 0; i < teamLists.length; i++) {
-      if (teamLists[i]._id == teamId && teamLists[i].parent_team_id != "") 
-        return isUserMemberOfTeam(teamLists[i].parent_team_id, checkParent, teamLists, userTeams);
-    }
-  }
-
-  return userExist;
-}
-
-
 var team = {
   // define team documents default value when creating a new document
   defaultTeamDoc : function(raw, user){
     var newDocu = raw;
     var fullName = user['ldap']['hrFirstName'] + ' ' + user['ldap']['hrLastName'];
     var email = user['shortEmail'];
-    var transTime = globalUtil.getServerTime();
+    var transTime = otherModels.getServerTime();
     var memberInfo = {
       "key": user['ldap']['serialNumber'],
       "id": email,
@@ -134,187 +112,185 @@ var team = {
         msg = 'Team documents id is required';
         reject(formatErrMsg(msg));
       }else{
-        team.getTeam(teamId)
-          .then(function(body){
-            var oldTeamDocu = body;
-            if(oldTeamDocu['doc_status'] === 'delete'){
-              msg = 'Cannot update deleted document';
-              reject(formatErrMsg(msg));
-            }
-            team.getTeamByEmail(user['shortEmail'])
-              .then(function(body){
-                if(_.isEmpty(body)){
-                  msg = 'User not allowed to edit team document';
-                  reject(formatErrMsg(msg));
-                }else{
-                  var userTeams = body;
-                  team.getTeam(null)
-                    .then(function(body){
-                      var teamLists = body.rows;
-
-                      /* TODO: create view with compacted results */
-                      var remappedTeamLists = [];
-                      _.reduce(teamLists, function(memo, item){ 
-                        remappedTeamLists.push(item['value']); 
-                      });
-                      teamLists = remappedTeamLists;
-                      
-                      /* TODO: create view with compacted results */
-                      var remappedUserTeams = [];
-                      _.reduce(userTeams, function(memo, item){ 
-                        remappedUserTeams.push(item['value']); 
-                      });
-                      userTeams = remappedUserTeams;
-
-                      var isAllowedUser = isUserMemberOfTeam(teamId, checkParent, teamLists, userTeams);
-                      if(!isAllowedUser){
-                        msg = 'User not allowed to edit team document';
-                        reject(formatErrMsg(msg));
-                      }else{
-                        if(action === 'delete'){
-                          infoLogs('Do delete team document: ' + oldTeamDocu['_id']);
-                          oldTeamDocu['doc_status'] = 'delete';
-                          oldTeamDocu['last_updt_user'] = user['shortEmail'];
-                          oldTeamDocu['last_updt_dt'] = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-                          common.updateRecord(oldTeamDocu)
-                            .then(function(body){
-                              //-> cascade "delete" on iteration and assessment related data
-                              //resolve(body);
-                              resolve(oldTeamDocu);
-                            })
-                            .catch(function(err){
-                              msg = 'Internal error';
-                              reject(formatErrMsg(msg));
-                            })
-                        }else{
-                          if(!(_.isEmpty(updatedTeamDoc['doc_status']))){
-                            msg = 'Cannot perform action';
-                            reject(formatErrMsg(msg));
-                          }else{
-                            infoLogs('Do update team document: ' + oldTeamDocu['_id']);
-                            var errorLists = [];
-                            /*
-                            name 
-                              can be the same to existing docu but cannot be existing to DB when updated
-                              TODO: create view "where name === new name and _id != _id" if not empty, update not allowed
-                            */
-                            infoLogs('Validating name');
-                            var nameExists = [];
-                            _.reduce(teamLists, function(memo, item){
-                              if(item['name'] === updatedTeamDoc['name'] && item['_id'] != updatedTeamDoc['_id'])
-                                nameExists.push(item);
-                            });
-                            
-                            if(!(_.isEmpty(nameExists)))
-                              errorLists.push( { name : ['Team document name is already existing'] });
-
-                            /*
-                            squadteam
-                                from Yes to No = only allowed if no iteration data exist
-                                from No to Yes = only allowed if no child teams are associated
-                            
-                            */
-                            infoLogs('Validating squadteam');
-                            if(updatedTeamDoc['squadteam'] === 'No'){
-                              // get iteration data
-                            }
-
-                            if(oldTeamDocu['squadteam'] ==='No' && updatedTeamDoc['squadteam'] === 'Yes' && !(_.isEmpty(oldTeamDocu['child_team_id'])))
-                              errorLists.push({ squadteam : ['Squad team type cannot be changed to Yes']});
-
-                            /*
-                            parent_id 
-                                not allowed to be a parent of self
-                                selected parent team should not be a squad team
-                                query team details
-                            */
-                            infoLogs('Validating parent_id');
-                            if(!(_.isEmpty(updatedTeamDoc['parent_team_id'])) && updatedTeamDoc['parent_team_id'] === oldTeamDocu['_id'])
-                              errorLists.push({ parent_id : ['Cannot set self as parent']});                              
-
-                            if( _.isEmpty(oldTeamDocu['parent_team_id']) && !(_.isEmpty(updatedTeamDoc['parent_team_id']))){
-                              var isSquadTeam = [];
-                              _.reduce(teamLists, function(memo, item){
-                                if(item['parent_team_id'] === updatedTeamDoc['parent_team_id'] && item['squadteam'] === 'Yes')
-                                  isSquadTeam.push(item);
-                              });
-                              
-                              if(!(_.isEmpty(isSquadTeam)))
-                                isSquadTeam.push( { parent_team_id : ['Parent team id must not be a squad team'] });
-                            }
-
-                            /*
-                            child_team_id
-                                not allowed to add self as a child
-                                squad teams cannot have child teams
-                                only allowed to add teams that has no parent
-                            */
-                            if(!(_.isEmpty(updatedTeamDoc['child_team_id']))){
-                              if((oldTeamDocu['child_team_id'].indexOf(updatedTeamDoc['_id']) > -1) || (updatedTeamDoc['child_team_id'].indexOf(updatedTeamDoc['_id']) > -1))
-                                errorLists.push({ child_team_id : ['Cannot set self as child']});
-                              else{
-                                var isValidChildTeam2 = [];
-                                var isValidChildTeamId = _.every(updatedTeamDoc['child_team_id'], function(cId){
-                                  _.reduce(teamLists, function(memo, item){
-                                    if(item['_id'] === cId && !(_.isEmpty(item['parent_team_id'])) )
-                                      isValidChildTeam2.push(item);
-                                  });
-                                  return _.isEmpty(isValidChildTeam2);
-                                });
-
-                                if(!isValidChildTeamId){
-                                  errorLists.push({ child_team_id : ['Child team cannot have parent']});
-                                }
-                               }
-                            }
-
-                            if(!(_.isEmpty(updatedTeamDoc['child_team_id'])) && (updatedTeamDoc['squadteam'] === 'Yes' || oldTeamDocu['squadteam'] === 'Yes')){
-                              errorLists.push({ child_team_id : ['Squad team cannot cannot have child']});
-                            }
-
-                            updatedTeamDoc['last_updt_user'] = user['shortEmail'];
-                            updatedTeamDoc['last_updt_dt'] = globalUtil.getServerTime();
-
-                            if(_.isEmpty(errorLists)){
-                              infoLogs('Updated document valid, begin save');
-                              updatedTeamDoc['_rev'] = oldTeamDocu['_rev'];
-                              var finalTeamDoc = {};
-                              _.each(oldTeamDocu,function(v,i,l){
-                                if(_.isEmpty(updatedTeamDoc[i]))
-                                  finalTeamDoc[i] = oldTeamDocu[i];
-                                else
-                                  finalTeamDoc[i] = updatedTeamDoc[i];
-                              });
-                              common.updateRecord(finalTeamDoc)
-                                .then(function(body){
-                                  //resolve(body);
-                                  resolve(finalTeamDoc);
-                                })
-                                .catch(function(err){
-                                  msg = 'Internal error';
-                                  reject(formatErrMsg(msg));
-                                });
-                            }else
-                              reject(formatErrMsg(errorLists));
-                          }
-                        }
-                      }
-                    })
-                    .catch(function(err){
-                      msg = 'Internal error';
-                      reject(formatErrMsg(msg));
-                    })
-                }
-              })
-              .catch(function(err){
-                msg = 'Internal error';
-                reject(formatErrMsg(msg));     
-              });
-          })
-          .catch(function(err){
-            msg = 'Invalid team document id';
+        var updateOrDeleteTeamValidation = [];
+        infoLogs('Getting team document latest records');
+        updateOrDeleteTeamValidation.push(team.getTeam(teamId));
+        infoLogs('Getting tool admins');
+        updateOrDeleteTeamValidation.push(otherModels.getAdmins('ag_ref_access_control'));
+        infoLogs('Getting all team document');
+        updateOrDeleteTeamValidation.push(team.getTeam(null)); // teamLists
+        infoLogs('Getting all team document associated to user ' + user['shortEmail']);
+        updateOrDeleteTeamValidation.push(team.getTeamByEmail(user['shortEmail'])); // userTeams
+        infoLogs('Getting iterations associated to ' + teamId);
+        updateOrDeleteTeamValidation.push(iterationModels.getByIterInfo(teamId));
+        infoLogs('Getting assessments associated to ' + teamId);
+        updateOrDeleteTeamValidation.push(assessmentModels.getTeamAssessments(teamId));
+        infoLogs('Start validation for team UPDATE or DELETE');
+        Promise.all(updateOrDeleteTeamValidation)
+        .then(function(res){
+          // res[0] team details
+          // res[1] admin lists
+          // res[2] teamLists
+          // res[3] team by email
+          // res[4] team iterations
+          // res[5] team assessments
+          var oldTeamDocu = res[0];
+          var adminLists = res[1];
+          var teamLists = res[2]['rows'];
+          var userTeams = res[3];
+          var teamIterations = res[4];
+          var teamAssesments = res[5];
+          var userEmail = user['shortEmail'];
+          
+          if(oldTeamDocu['doc_status'] === 'delete'){
+            msg = 'Invalid action';
             reject(formatErrMsg(msg));
-          })
+          }
+
+          if(_.isEmpty(oldTeamDocu)){
+            msg = 'Invalid team document ID';
+            reject(formatErrMsg(msg));
+          }
+          
+          isAllowedUser = otherModels.isUserMemberOfTeam(teamId, checkParent, teamLists, userTeams);
+          
+          if((isAllowedUser === false) && (adminLists['ACL_Full_Admin'].indexOf(userEmail) === -1)){
+              msg = 'User not authorized to do action';
+              reject(formatErrMsg(msg));
+          }
+
+          // START team document update
+          if(action === 'delete'){
+            var bulkDocu = [];
+            bulkDocu.push(oldTeamDocu);
+            bulkDocu.push(teamIterations.rows);
+            bulkDocu.push(teamAssesments.rows);
+            bulkDocu = _.flatten(bulkDocu);
+            // reformat into delete docu
+            bulkDocu = otherModels.formatForBulkDelete(bulkDocu, userEmail);
+            infoLogs('Start team, assessment and iteration documents bulk delete');
+            common.bulkUpdate(bulkDocu)
+            .then(function(body){
+              successLogs('Team, assessment and iteration documents bulk deleted');
+              resolve(body);
+            })
+            .catch(function(err){
+              infoLogs('Team, assessment and iteration documents bulk delete FAIL');
+              reject(formatErrMsg(err.error));
+            })
+          }else{
+            var errorLists = [];
+            // this is team update, need additional validation
+            /*
+            name 
+              can be the same to existing docu but cannot be existing to DB when updated
+              TODO: create view "where name === new name and _id != _id" if not empty, update not allowed
+            */
+            infoLogs('Validating name');
+            var nameExists = [];
+            _.reduce(teamLists, function(memo, item){
+              if(item['name'] === updatedTeamDoc['name'] && item['_id'] != updatedTeamDoc['_id'])
+                nameExists.push(item);
+            });
+
+            if(!(_.isEmpty(nameExists)))
+              errorLists.push( { name : ['Team document name is already existing'] });
+
+            /*
+            squadteam
+                from Yes to No = only allowed if no iteration data exist
+                from No to Yes = only allowed if no child teams are associated
+            
+            */
+            infoLogs('Validating squadteam');
+            if(updatedTeamDoc['squadteam'] === 'No' && !(_.isEmpty(teamIterations.rows))){
+              errorLists.push( { squadteam : ['Cannot changed squadteam status to NO if iteration data exists'] });              
+            }else if(updatedTeamDoc['squadteam'] === 'Yes'){
+              var newChild = updatedTeamDoc['child_team_id'];
+              if(!(_.isEmpty(newChild))){
+                errorLists.push( { squadteam : ['Cannot changed squadteam status to YES if child teams are not empty'] });              
+              }
+            }
+
+            /*
+            parent_id 
+                not allowed to be a parent of self
+                selected parent team should not be a squad team
+                query team details
+            */
+            infoLogs('Validating parent_id');
+            if(!(_.isEmpty(updatedTeamDoc['parent_team_id'])) && updatedTeamDoc['parent_team_id'] === oldTeamDocu['_id'])
+              errorLists.push({ parent_id : ['Cannot set self as parent']});                              
+
+            if(!(_.isEmpty(updatedTeamDoc['parent_team_id']))){
+              var isSquadTeam = [];
+              _.reduce(teamLists, function(memo, item){
+                if(item['parent_team_id'] === updatedTeamDoc['parent_team_id'] && item['squadteam'] === 'Yes')
+                  isSquadTeam.push(item);
+              });
+              
+              if(!(_.isEmpty(isSquadTeam)))
+                isSquadTeam.push( { parent_team_id : ['Parent team id must not be a squad team'] });
+            }
+            /*
+            child_team_id
+                not allowed to add self as a child
+                squad teams cannot have child teams
+                only allowed to add teams that has no parent
+            */
+            if(!(_.isEmpty(updatedTeamDoc['child_team_id']))){
+              if(updatedTeamDoc['child_team_id'].indexOf(oldTeamDocu['_id']) > -1)
+                errorLists.push({ child_team_id : ['Cannot set self as child']});
+              else{
+                var isValidChildTeam2 = [];
+                var isValidChildTeamId = _.every(updatedTeamDoc['child_team_id'], function(cId){
+                  _.reduce(teamLists, function(memo, item){
+                    if(item['_id'] === cId && !(_.isEmpty(item['parent_team_id'])) )
+                      isValidChildTeam2.push(item);
+                  });
+                  return _.isEmpty(isValidChildTeam2);
+                });
+
+                if(!isValidChildTeamId){
+                  errorLists.push({ child_team_id : ['Child team cannot have parent']});
+                }
+               }
+            }
+
+            if(!(_.isEmpty(updatedTeamDoc['child_team_id'])) && (updatedTeamDoc['squadteam'] === 'Yes')){
+              errorLists.push({ child_team_id : ['Squad team cannot cannot have child']});
+            }
+
+            // start saving
+            if(_.isEmpty(errorLists)){
+              infoLogs('Updated document valid, begin save');
+              updatedTeamDoc['last_updt_user'] = user['shortEmail'];
+              updatedTeamDoc['last_updt_dt'] = otherModels.getServerTime();
+              updatedTeamDoc['_rev'] = oldTeamDocu['_rev'];
+                var finalTeamDoc = {};
+                _.each(oldTeamDocu,function(v,i,l){
+                  if(_.isEmpty(updatedTeamDoc[i]))
+                    finalTeamDoc[i] = oldTeamDocu[i];
+                  else
+                    finalTeamDoc[i] = updatedTeamDoc[i];
+                });
+                common.updateRecord(finalTeamDoc)
+                .then(function(body){
+                  successLogs('Team document ' + finalTeamDoc['_id'] + ' successfully updated');
+                  resolve(finalTeamDoc);
+                })
+                .catch(function(err){
+                  reject(formatErrMsg(err.error));
+                });
+            }else{
+              infoLogs('Error updating ' + oldTeamDocu['_id']);
+              reject(formatErrMsg(errorLists));
+            }
+          }
+        })
+        .catch(function(err){
+          reject(err);
+        });
       }
     });
   },
