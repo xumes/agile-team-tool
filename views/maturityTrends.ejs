@@ -2,7 +2,90 @@
 <html lang="en-US">
 <head>
 
-<%- include ./header/header_meta.ejs %>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="geo.country" content="US" />
+<meta name="dcterms.rights" content="© Copyright IBM Corp. 2015" />
+<title> <%= siteTitle %> | <%= pageTitle%> </title>
+
+<script>
+  digitalData = {
+    "page" : {
+      "category" : {
+        "primaryCategory" : "REPLACE"
+      },
+      "pageInfo" : {
+        "effectiveDate" : "2015-01-01",
+        "expiryDate" : "2025-01-01",
+        "language" : "en-US",
+        "publishDate" : "2015-01-01",
+        "publisher" : "IBM Corporation",
+        "version" : "v18",
+        "ibm" : {
+          "contentDelivery" : "REPLACE",
+          "contentProducer" : "REPLACE",
+          "country" : "US",
+          "industry" : "CIO",
+          "owner" : "Cheryl Rabenstein/Sterling Forest/IBM",
+          "subject" : "REPLACE",
+          "type" : "REPLACE"
+        }
+      }
+    }
+  };
+</script>
+
+<script src="//1.www.s81c.com/common/stats/ida_stats.js"></script>
+<link href="//1.www.s81c.com/common/v18/css/www.css" rel="stylesheet" />
+<script src="//1.www.s81c.com/common/v18/js/www.js"></script>
+
+
+<link href="css/dash.css?v=<%=Math.random()%>" rel="stylesheet" />
+<script type="text/javascript" src="js/dashUtils.js?v=<%=Math.random()%>"></script>
+
+
+<script type="text/javascript">    
+  IBMCore.common.util.config.set({
+    //disable the ibm profile button
+    "masthead" : {
+      "type" : "alternate",
+      "enabled": false,
+      logoanimation: {
+          enabled: false
+      },
+      marketplaceLink: {
+          enabled: false
+      },
+      megamenu: { 
+          enabled: false
+      },
+      mobilemenu: { 
+          enabled: false
+      },
+      notifications: {
+          enabled: false
+      },
+      profile: {
+          enabled: true
+      },
+      search: {
+          enabled: false,
+          typeahead: {
+              enabled: false
+          }
+      },
+      sticky: {
+          enabled: true
+      },
+    },
+    "footer" : {
+      "type" : "alternate",
+      "enabled" : false
+    }
+  });
+  var $ = jQuery.noConflict();
+
+</script>
 
 <script src="//code.highcharts.com/highcharts.js"></script>
 <script src="//code.highcharts.com/highcharts-more.js"></script>
@@ -16,15 +99,17 @@
 jQuery(function($) {
   $(document).ready(function() {
     var urlParameters = getJsonParametersFromUrl();
-    if (urlParameters != undefined && urlParameters.id != undefined)
-      getTeamAssessments(urlParameters.id, teamAssessmentListHander, [urlParameters.id]);
+    if (urlParameters != undefined && urlParameters.id != undefined) {
+      $.ajax({
+        type : "GET",
+        url : "/api/assessment/view?teamId=" + encodeURIComponent(urlParameters.id),
+        async: false
+      }).done(function(teamAssessments) { 
+        plotAssessmentSeries(sortAssessments(teamAssessments));
+      });
+    }
   });
 });
-
-function teamAssessmentListHander(teamId, teamAssessments) {
-  plotAssessmentSeries(sortAssessments(teamAssessments));
-  
-}
 
 function plotAssessmentSeries(teamAssessments) {  
   //get the 5 latest submitted results
