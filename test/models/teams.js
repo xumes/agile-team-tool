@@ -61,7 +61,7 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
     .catch(function(err){
       expect(err).to.not.equal(null);
       expect(err).to.have.property('error');
-      expect(err.error).to.be.equal('Invalid team document id');
+      expect(err.error).to.be.equal('not_found');
     })
     .finally(function(){
       done();
