@@ -2,7 +2,6 @@ var chai = require('chai');
 var expect = chai.expect;
 var teamModel = require('../../models/teams');
 var dummyData = require('../dummy-data.js');
-var timeout = 30000;
 var validId = null;
 var validTeamName = null;
 var createdId = null;
