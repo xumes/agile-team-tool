@@ -48,6 +48,22 @@ describe('Team models [createTeam]: create a new team document', function(){
       done();
     })
   });
+
+  it('it will return error because Team name is already existing', function(done){
+    teamModel.createTeam(teamDocValid, userDetails)
+    .then(function(body){
+      expect(body).to.be.equal(null);
+    })
+    .catch(function(err){
+      expect(err).to.not.equal(null);
+      expect(err).to.have.property('error');
+      expect(err.error).to.be.a('object');
+      expect(err.error).to.have.property('name');
+    })
+    .finally(function(){
+      done();
+    })
+  });
 });
 
 describe('Team models [updateOrDeleteTeam] : update existing team document', function(){
@@ -69,6 +85,9 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
   
   it('it will return error because update data is invalid', function(done){
     teamDocUpdateInvalid['parent_team_id'] = createdId;
+    teamDocUpdateInvalid['squadteam'] = 'Yes';
+    teamDocUpdateInvalid['child_team_id'] = [];
+    teamDocUpdateInvalid['child_team_id'].push(createdId);
     teamModel.updateOrDeleteTeam(teamDocUpdateInvalid, userDetails, 'update')
     .then(function(body){
       expect(body).to.be.equal(null);
@@ -147,6 +166,40 @@ describe('Team models [deleteTeam] : delete existing team document', function(){
     })
     .catch(function(err){
       expect(err.error).to.be.an('undefined');
+    })
+    .finally(function(){
+      done();
+    })
+  });
+
+  it('it will return error because team id is not existing', function(done){
+    var docu = { '_id' : 'none-existing-docu' + new Date().getTime() };
+    docu['doc_status'] = 'delete';
+    teamModel.updateOrDeleteTeam(docu, userDetailsValid, 'delete')
+    .then(function(body){
+      expect(body).to.be.equal(null);
+    })
+    .catch(function(err){
+      expect(err).to.not.equal(null);
+      expect(err).to.have.property('error');
+      expect(err.error).to.be.equal('not_found');
+    })
+    .finally(function(){
+      done();
+    })
+  });
+
+  it('it will return error because action is not allowed', function(done){
+    teamDocUpdateValid['doc_status'] = 'delete';
+    teamDocUpdateValid['_id'] = createdId;
+    teamModel.updateOrDeleteTeam(teamDocUpdateValid, userDetailsValid, 'delete')
+    .then(function(body){
+      expect(body).to.be.equal(null);
+    })
+    .catch(function(err){
+      expect(err).to.not.equal(null);
+      expect(err).to.have.property('error');
+      expect(err.error).to.be.equal('Invalid action');
     })
     .finally(function(){
       done();

@@ -147,11 +147,6 @@ var team = {
             reject(formatErrMsg(msg));
           }
 
-          if(_.isEmpty(oldTeamDocu)){
-            msg = 'Invalid team document ID';
-            reject(formatErrMsg(msg));
-          }
-          
           isAllowedUser = otherModels.isUserMemberOfTeam(teamId, checkParent, teamLists, userTeams);
           
           if((isAllowedUser === false) && (adminLists['ACL_Full_Admin'].indexOf(userEmail) === -1)){
