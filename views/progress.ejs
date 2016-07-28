@@ -12,23 +12,6 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
-<script type="text/javascript">
-  var teamId = '';
-  var assessId = '';
-  jQuery(function($) {
-    $(document).ready(function() {
-      var urlParameters = getJsonParametersFromUrl();
-      if (urlParameters != undefined) {
-        teamId = urlParameters.id;
-        assessId = urlParameters.assessId;
-        if (teamId != undefined && assessId != undefined) {
-          retrieveAssessmentResult(teamId, assessId);
-          setAssessmentLink(teamId, assessId);
-        }
-      }
-    });
-  });
-</script>
 </head>
 
 <body id="ibm-com" class="ibm-type" onload="siteEnv()">
