@@ -92,7 +92,8 @@ var team = {
                   successLogs('New team record created');
                   resolve(teamDoc);
                 })
-                .catch(function(err){
+                .catch( /* istanbul ignore next */ function(err){
+                  // cannot simulate Cloudant error during testing
                   reject(err);
                 })
             }else{
@@ -170,7 +171,8 @@ var team = {
               successLogs('Team, assessment and iteration documents bulk deleted');
               resolve(body);
             })
-            .catch(function(err){
+            .catch( /* istanbul ignore next */ function(err){
+              // cannot simulate Cloudant error during testing
               infoLogs('Team, assessment and iteration documents bulk delete FAIL');
               reject(formatErrMsg(err.error));
             })
@@ -275,7 +277,8 @@ var team = {
                   successLogs('Team document ' + finalTeamDoc['_id'] + ' successfully updated');
                   resolve(finalTeamDoc);
                 })
-                .catch(function(err){
+                .catch( /* istanbul ignore next */ function(err){
+                  // cannot simulate Cloudant error during testing
                   reject(formatErrMsg(err.error));
                 });
             }else{
@@ -299,7 +302,8 @@ var team = {
           successLogs('Team records obtained');
           resolve(body);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err){
+          // cannot simulate Cloudant error during testing
           msg = err.error;
           reject(formatErrMsg(msg));
         });
@@ -310,7 +314,8 @@ var team = {
           successLogs('Team records obtained');
           resolve(body);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err){
+          // cannot simulate Cloudant error during testing
           msg = err.error;
           reject(formatErrMsg(msg));
         });
@@ -325,7 +330,8 @@ var team = {
           successLogs('Team roles obtained');
           resolve(body);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err){
+          // cannot simulate Cloudant error during testing
           msg = err.error;
           reject(formatErrMsg(msg));
         })
@@ -340,7 +346,8 @@ var team = {
             successLogs('Team names obtained');
             resolve(body);
           })
-          .catch(function(err){
+          .catch( /* istanbul ignore next */ function(err){
+            // cannot simulate Cloudant error during testing
             msg = err.error;
             reject(formatErrMsg(msg));
           })
@@ -356,7 +363,8 @@ var team = {
               successLogs('Team with name ' + teamName + ' obtained');
             resolve(body.rows);
           })
-          .catch(function(err){
+          .catch( /* istanbul ignore next */ function(err){
+            // cannot simulate Cloudant error during testing
             reject(formatErrMsg(err));
           })
       });  
@@ -376,7 +384,8 @@ var team = {
               successLogs('Team lists for email ' + email + ' obtained');
             resolve(body.rows);
           })
-          .catch(function(err){
+          .catch( /* istanbul ignore next */ function(err){
+            // cannot simulate Cloudant error during testing
             reject(formatErrMsg(err));
           })
         }
