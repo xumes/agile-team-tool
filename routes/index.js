@@ -1,6 +1,7 @@
 var fs = require('fs');
 var middleware = {
-  auth : require('../middleware/auth')
+  auth : require('../middleware/auth'),
+  cache: require('../middleware/cache')
 }
 
 render = function(req, res, file, json) {

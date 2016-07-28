@@ -38,4 +38,12 @@ winston.loggers.add('models', {
   }
 });
 
+winston.loggers.add('cache', {
+  console: {
+    level: logLevel,
+    colorize: logColors,
+    label: 'cache'
+  }
+});
+
 module.exports = winston.loggers;
