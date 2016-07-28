@@ -120,6 +120,8 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
   it('it will return success after updating document', function(done){
     teamDocUpdateValid['name'] = teamDocUpdateValid['name'] + 'new name';
     teamDocUpdateValid['_id'] = createdId;
+    delete teamDocUpdateValid['squadteam'];
+    delete teamDocUpdateValid['child_team_id'];
     delete teamDocUpdateValid['parent_team_id'];
     teamModel.updateOrDeleteTeam(teamDocUpdateValid, userDetailsValid, 'update')
     .then(function(body){
@@ -155,9 +157,10 @@ describe('Team models [deleteTeam] : delete existing team document', function(){
   });
 
   it('it will return success deleting document', function(done){
-    teamDocUpdateValid['doc_status'] = 'delete';
-    teamDocUpdateValid['_id'] = createdId;
-    teamModel.updateOrDeleteTeam(teamDocUpdateValid, userDetailsValid, 'delete')
+    var teamToDelete = {};
+    teamToDelete['doc_status'] = 'delete';
+    teamToDelete['_id'] = createdId;
+    teamModel.updateOrDeleteTeam(teamToDelete, userDetailsValid, 'delete')
     .then(function(body){
       expect(body).to.be.a('object');
       expect(body).to.have.property('id');

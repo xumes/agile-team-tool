@@ -141,7 +141,6 @@ var team = {
           var teamIterations = res[4];
           var teamAssesments = res[5];
           var userEmail = user['shortEmail'];
-          
           if(oldTeamDocu['doc_status'] === 'delete'){
             msg = 'Invalid action';
             reject(formatErrMsg(msg));
@@ -157,12 +156,14 @@ var team = {
           // START team document update
           if(action === 'delete'){
             var bulkDocu = [];
+            oldTeamDocu['doc_status'] = 'delete';
             bulkDocu.push(oldTeamDocu);
             bulkDocu.push(teamIterations.rows);
             bulkDocu.push(teamAssesments.rows);
             bulkDocu = _.flatten(bulkDocu);
             // reformat into delete docu
             bulkDocu = otherModels.formatForBulkDelete(bulkDocu, userEmail);
+
             infoLogs('Start team, assessment and iteration documents bulk delete');
             common.bulkUpdate(bulkDocu)
             .then(function(body){
@@ -253,7 +254,7 @@ var team = {
             }
 
             if(!(_.isEmpty(updatedTeamDoc['child_team_id'])) && (updatedTeamDoc['squadteam'] === 'Yes')){
-              errorLists.push({ child_team_id : ['Squad team cannot cannot have child']});
+              errorLists.push({ child_team_id : ['Squad team cannot have child']});
             }
 
             // start saving
