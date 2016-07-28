@@ -78,10 +78,8 @@ function initFeedback(userEmail){
 }
 
 function launchFeeback(userEmail) {
-	// this variable is set on main page
-	if (typeof globalTeamList != "undefined" && !_.isEmpty(globalTeamList)) {
-		teamNamesHandler(globalTeamList)
-	} else if (typeof allTeams != "undefined" && !_.isEmpty(allTeams)) {
+	// this variable is set on main page wherever feedback link is clicked.
+	if (typeof allTeams != "undefined" && !_.isEmpty(allTeams)) {
 		if (_.has(allTeams, '_root'))
 			teamNamesHandler(_.sortBy(
 				_.union(allTeams._root, allTeams._branch, allTeams._standalone ), function(team) {return team.name}));

@@ -1,12 +1,24 @@
- 		
+var settings = require('../../settings');
+
 module.exports = function(app, includes) {
   var middleware  = includes.middleware;
   var render = includes.render;
 
   showAssessment = function(req, res) {
-    json= {"pageTitle":"Maturity Assessment", "user": req.session["user"], "environment": req.session["environment"]};
+    var json = 
+      {
+        'pageTitle'       : 'Maturity Assessment',
+        'user'            : req.session['user'],
+        'allTeams'        : req.session['allTeams'],
+        'allTeamsLookup'  : req.session['allTeamsLookup'],
+        'myTeams'         : req.session['myTeams'],
+        'systemAdmin'     : req.session['systemAdmin'],
+        'systemStatus'    : req.session['systemStatus'],
+        'environment'     : settings.environment,
+        'prefix'          : settings.prefixes.assessment
+      };
     render(req, res, 'assessment', json);
   };
   
-  app.get("/assessment", [includes.middleware.auth.requireLoginWithRedirect], showAssessment);
+  app.get('/assessment', [includes.middleware.auth.requireLoginWithRedirect], showAssessment);
 };

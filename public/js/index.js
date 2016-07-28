@@ -20,12 +20,12 @@ jQuery(function($) {
 		
 		var urlParameters = getJsonParametersFromUrl();
 		if (urlParameters != undefined && urlParameters.testUser != undefined) {
-			alert("here TestUser is: " + urlParameters.testUser);
 			resetUser(urlParameters.testUser);
+			alert("here TestUser is: " + urlParameters.testUser);
 		}
 
-		initializeTable();
-		getAllAgileTeams(agileTeamListHandler, [false]);
+		// default to My team(s) view
+		$("#myTeams").click();
 
 	});
 
@@ -197,8 +197,6 @@ function redrawCharts(section) {
  * @param teamList - array of teams
  */
 function agileTeamListHandler(show, allTeamList) {
-	setGlobalTeamList(allTeamList);	
-	allTeamsLookup = _.indexBy(allTeamList, function(team) {return team._id});
 	allTeams = organizeTeamList(allTeamList);
 	if (show)
 		organizeTeamHierarchy(false);
@@ -221,6 +219,11 @@ function userAgileTeamListHandler(show, userEmail, userTeamList) {
 
 }
 
+/**
+ * Arrange team node hierarchy.
+ * 
+ * @param teamList - array of teams.
+ */
 function organizeTeamList(teamList) {
 	if (_.has(teamList, "_root") || _.has(teamList, "_branch") || _.has(teamList, "_standalone"))
 		return teamList;
@@ -255,14 +258,14 @@ function filter(id) {
 	selectedTeam = "";
 	
 	if (id == "myTeams") {
-		if (userTeams != null)
-			userAgileTeamListHandler(true, user.shortEmail, userTeams);
+		if (myTeams != null)
+			userAgileTeamListHandler(true, user.shortEmail, myTeams);
 		else
 			getAllAgileTeamsForUser(user.shortEmail, userAgileTeamListHandler, [true, user.shortEmail]);
 
 	} else {
 		if (allTeams != null)
-			organizeTeamHierarchy(false);
+			agileTeamListHandler(true, allTeams);
 		else
 			getAllAgileTeams(agileTeamListHandler, [true]);
 
@@ -270,6 +273,7 @@ function filter(id) {
 }
 
 function organizeTeamHierarchy(myTeamsOnly) {
+	$.blockUI({message: ""});
 	var start = new Date().getTime();
 
 	$("#teamTree").empty();
@@ -498,37 +502,6 @@ function sortFilteredDataTable() {
 	});
 }
 
-/**
- * Initializes the table container for listing the team hierarchy.
- */
-function initializeTable() {
-	var row = "<tr><th>Agile Teams</th>";
-	row = row + "</tr>";
-	$("#teamTable thead").append(row);
-}
-
-/**
- * Iterate the global team list variable to search for specific information/column details.
- * 
- * @param id - team id.
- * @param detail - team information/column detail to retrieve.
- * @returns {String} - retrieved information/column value.	
- */
-function getTeamInfo(id, detail) {
-	var info = "";
-	if (allTeamsLookup != undefined) {
-		var team = allTeamsLookup[id];
-		if (team != null) {
-			if (detail == "name") {
-				info = team.name;
-			} else if (detail == "desc") {
-				info = team.desc;
-			}
-		}
-	}
-	return info;
-}
-
 function displaySelected(teamId, reload){
 	defSelTeamId = teamId;
 	if (reload == null) {
@@ -690,7 +663,7 @@ function loadDetails(elementId, setScrollPosition) {
 						
 						
 						if (team["parent_team_id"] != undefined && team["parent_team_id"] != "") {
-							teamName = getTeamInfo(team["parent_team_id"], "name");
+							teamName = allTeamsLookup[team["parent_team_id"]]["name"];
 							var parentLinkId = "";
 							var found = false;
 							
@@ -916,6 +889,7 @@ function findChildren(id){
 }
 
 function collectIterations(teamId, teamName, startDate, endDate, squadlist, iterations){
+	$.blockUI({message: ""});
 	if (iterations != null){
 		for (var x= 0; x< iterations.length; x++){
 			iterationList.push(iterations[x]);
@@ -931,5 +905,6 @@ function collectIterations(teamId, teamName, startDate, endDate, squadlist, iter
 	}
 	else{
 		iterationParentScoreCard(teamId, teamName, squadlist, iterationList);
+		$.unblockUI();
 	}
 }

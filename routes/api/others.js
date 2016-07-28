@@ -12,26 +12,26 @@ module.exports = function(app, includes) {
   getAdmins = function(req, res) {
     otherModel.getAdmins(adminId)
       .then(function(result){
-        res.send(200, result);
+        res.status(200).send(result);
       })
       .catch(function(err){
-        res.send(400, err);
+        res.status(400).send(err);
       });
   };
 
   getSystemStatus = function(req, res) {
     otherModel.getSystemStatus(systemId)
       .then(function(result){
-        res.send(200, result);
+        res.status(200).send(result);
       })
       .catch(function(err){
-        res.send(400, err);
+        res.status(400).send(err);
       });
   };
 
   getServerTime = function(req, res) {
     var result = otherModel.getServerTime();
-    res.send(200, result);
+    res.status(200).send(result);
   };
 
   // Get admins and supports api call

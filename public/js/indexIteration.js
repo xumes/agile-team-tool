@@ -64,6 +64,7 @@ function teamIterationListHander(teamId, teamIterations) {
 		teamIterations = sortIterations(teamIterations);
 
 		$.each(teamIterations, function(index, value) {
+				console.log(value);
 			if (value.iterationinfo_status == 'Completed') {
 				if (iterIndx < 6) {
 					var option = [ value._id, value.iteration_name ];
@@ -1301,13 +1302,10 @@ function currentTeamStats(){
 	var fteGt12=0;
 	var entry = new Object();
 	
-	for ( var i = 0; i < squadlist.length; i++) {
-		for ( var j = 0; j < allTeams.length; j++) {
-			var team = allTeams[j];
-			if (team._id == squadlist[i]) {
-				squadTeams.push(team);
-			}
-		}
+	for (var i in squadlist) {
+		var team = allTeamsLookup[squadlist[i]];
+		if (!_.isEmpty(team))
+			squadTeams.push(team);
 	}
 	console.log("squadTeams : "+squadTeams.length);
 	

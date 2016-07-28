@@ -1,24 +1,13 @@
 jQuery(function($) {
 	$(document).ready(function() {
-		//set current user
+		// set current user
 		getAuthenticatedUser(user.shortEmail);
 
-		//get teams of user
-		getAllAgileTeamsForUser(user.shortEmail, setAgileTeamsForUser, []);
-
-		// get current system status
-		getSystemStatus();
-
-		// preload the administrator list
-		getAllAdministrator();
+		// set current system status
+		setGlobalSystemStatus(systemStatus);
 
 		gDialogWindow.init();
-
-		// TODO: this bulk updates should be moved to Node
-		// jquery.couch.js setup
-		//$.couch.urlPrefix = baseUrl;
-		//_db = $.couch.db(db);
-		
+	
 	});
 });
 
@@ -199,15 +188,12 @@ function getGlobalAgileTeamList() {
 }
 
 /**
- * Updates localStorage list of teams referenced when checking user access to team related documents.
+ * List of teams referenced when checking user access to team related documents.
  * 
  * @param teamList - array of agile team documents.
  */
-var globalTeamList;
 function setGlobalTeamList(teamList) {
-	//removed storing team data into local storage to prevent browser size limit error.
-	//localStorage.setItem("teamList", JSON.stringify(teamList));
-	globalTeamList = teamList;
+	allTeams = teamList;
 }
 
 /**
@@ -219,9 +205,11 @@ function setGlobalTeamList(teamList) {
  */
 function hasAccess(teamId, checkParent) {
 	var flag = false;
-	sysStatusFlag = localStorage.getItem("sysStatusFlag");
+
 	// valid admin status for Admin user related updates only.
-	if (sysStatusFlag != undefined && (sysStatusFlag.toUpperCase() == 'AdminOnlyChange'.toUpperCase() || sysStatusFlag == 'AdminOnlyReadChange'.toUpperCase())) {
+	if (!_.isEmpty(systemStatus.agildash_system_status_display) 
+		&& (systemStatus.agildash_system_status_display.toUpperCase() == 'AdminOnlyChange'.toUpperCase() || 
+				systemStatus.agildash_system_status_display == 'AdminOnlyReadChange'.toUpperCase())) {
 		if (isAdmin()) {
 			flag = true;
 		} else {
@@ -243,14 +231,13 @@ function hasAccess(teamId, checkParent) {
  */
 function isUserMemberOfTeam(teamId, checkParent) {
 	var userExist = false;
-	var teamList = globalTeamList;
 	
-	if (teamList == null)
+	if (allTeams == null)
 		return userExist;
 
-	if (userTeams != null) {
-		for (var i in userTeams) {
-			if (userTeams[i]._id == teamId) {					
+	if (myTeams != null) {
+		for (var i in myTeams) {
+			if (myTeams[i]._id == teamId) {					
 				userExist = true;
 				break;
 			}
@@ -271,24 +258,20 @@ function isUserMemberOfTeam(teamId, checkParent) {
  * Loads the list of identified users with administrator access.
  */
 function getAllAdministrator() {
-	//var cUrl = baseUrlDb + "/ag_ref_access_control";
 	var cUrl = "/api/others/admins";
 	getRemoteData(cUrl, setGlobalAdministorList, []);
 }
 
 /**
- * Updates localStorage of administrator referenced when checking user access to team related documents.
+ * Administrator list referenced when checking user access to team related documents.
  * 
  * @param administrator - administrator document.
  */
 function setGlobalAdministorList(administrator) {
-	var adminList = [];
-	if (!_.isEmpty(administrator)) {
-		for ( var i = 0; i < administrator.ACL_Full_Admin.length; i++) {
-			adminList.push(administrator.ACL_Full_Admin[i]);
-		}
-		localStorage.setItem("adminList", JSON.stringify(adminList));	
-	}
+	if (!_.isEmpty(administrator))
+		systemAdmin = administrator.ACL_Full_Admin;	
+	else
+		systemAdmin = []
 }
 
 /**
@@ -297,17 +280,10 @@ function setGlobalAdministorList(administrator) {
  * @returns {Boolean}
  */
 function isAdmin() {
-	var isAdmin = false;
-	var admins = JSON.parse(localStorage.getItem("adminList"));
-	if (!_.isEmpty(admins)) {
-		for ( var i = 0; i < admins.length; i++) {
-			var adminName = admins[i];
-			if (adminName == JSON.parse(localStorage.getItem("userInfo")).email) {
-				isAdmin = true;
-			}
-		}
+	if (!_.isEmpty(systemAdmin) && !_.isEmpty(user)) {
+		return systemAdmin.ACL_Full_Admin.indexOf(user.shortEmail) > -1;
 	}
-	return isAdmin;
+	return false;
 }
 
 /**
@@ -426,11 +402,12 @@ function getRemoteData(cUrl, _callback, args) {
 				showLog("data loaded: " + list.length);
 				returnObj = list;
 
-			} else if (_.has(data, "value")  || _.has(data, "doc") || data.length > 0) {
-				if (_.has(data, "doc"))
+			} else if (data.length > 0) {
+				if (!_.isEmpty(data[0].doc)) 
 					list = _.pluck(data, 'doc')
-				else
+				else 
 					list = _.pluck(data, 'value');
+
 				args.push(list);
 				showLog("data loaded: " + list.length);
 				returnObj = list;
@@ -466,15 +443,14 @@ function getRemoteData(cUrl, _callback, args) {
  * @param args - arguments to be used by the handler function.
  * @returns
  */
-function setRemoteJsonpData(docId, jsonData, _callback, args) {
+function setTeam(jsonData, _callback, args) {
 	var returnObj = null;
 	$.ajax({
-		type : "PUT",
-		url : baseUrlDb + "/" + encodeURIComponent(docId),
+		type 				: "PUT",
+		url 				: "/api/team/",
 		contentType : "application/json",
-		headers : {"Authorization" : "Basic " + btoa(user + ":" + pass)},
-		data : JSON.stringify(jsonData),
-		error : errorHandler
+		data 				: JSON.stringify(jsonData),
+		error 			: errorHandler
 	}).done(function(data) {
 		var putResp = (typeof data == 'string' ? JSON.parse(data) : data);
 		var rev = putResp.rev;
@@ -495,7 +471,6 @@ function setRemoteJsonpData(docId, jsonData, _callback, args) {
  * Get current system status.
  */
 function getSystemStatus() {
-	//var cUrl = baseUrlDb + "/ag_ref_system_status_control";
 	var cUrl = "/api/others/systemstatus"
 	getRemoteData(cUrl, setGlobalSystemStatus, []);
 }
@@ -505,22 +480,15 @@ function getSystemStatus() {
  * 
  * @param systemStatus
  */
-function setGlobalSystemStatus(systemStatus) {
-	if (systemStatus != null) {
-		if (systemStatus.agildash_system_status_display != undefined) {
-			localStorage.setItem("sysStatusFlag", systemStatus.agildash_system_status_display);
-		}
-		if (systemStatus.agildash_system_status_msgtext_display != undefined) {
-			localStorage.setItem("sysStatusMsg", systemStatus.agildash_system_status_msgtext_display);
-		}
-
-		if (localStorage.getItem("sysStatusFlag") != undefined && systemStatus.agildash_system_status_values_tbl != undefined) {
+function setGlobalSystemStatus() {
+	if (!_.isEmpty(systemStatus)) {
+		if (!_.isEmpty(systemStatus.agildash_system_status_msgtext_display) && !_.isEmpty(systemStatus.agildash_system_status_values_tbl)) {
 			var validStatus = systemStatus.agildash_system_status_values_tbl;
-			for (var i=0; i<validStatus.length; i++) {
+			for (var i in validStatus) {
 				if (systemStatus.agildash_system_status_display.toUpperCase() == validStatus[i].system_status_flag.toUpperCase()) {				
 					$('#systMsg').addClass("sysMsg");
 					$('#systMsg').show();
-					$('#systMsg').html(localStorage.getItem("sysStatusMsg"));
+					$('#systMsg').html(systemStatus.agildash_system_status_msgtext_display);
 			
 				}
 			}	
@@ -538,13 +506,11 @@ function setGlobalSystemStatus(systemStatus) {
  * @returns - any returnable object.
  */
 function getAllAgileTeams(_callback, args) {
-	//var teamUrl = baseUrlDb + "/_design/teams/_view/teams";
 	var teamUrl = "/api/teams";
 	return getRemoteData(teamUrl, _callback, args);
 }
 
 function getTeamNames(_callback, args) {
-	//var teamUrl = baseUrlDb + "/_design/teams/_view/getTeamNames";
 	var teamUrl = "/api/teams/names";
 	return getRemoteData(teamUrl, _callback, args);
 }
@@ -558,7 +524,6 @@ function getTeamNames(_callback, args) {
  * @returns - any returnable object.
  */
 function getAllAgileTeamRoles(_callback, args) {
-	//var teamUrl = baseUrlDb + "/_design/agile/_view/roles";
 	var teamUrl = "/api/teams/roles";
 	return getRemoteData(teamUrl, _callback, args);
 }
@@ -575,9 +540,7 @@ function getAllAgileTeamsForUser(userEmail, _callback, args) {
 	if (userEmail == null || userEmail == "") {
 		_callback.apply(this, args);
 		return null;
-	}
-	
-	//var teamUrl = baseUrlDb + "/_design/teams/_view/teamsWithMember?keys=[\"" + encodeURIComponent(userEmail) + "\"]";
+	}	
 	var teamUrl = '/api/teams/members/'+encodeURIComponent(userEmail);
 	return getRemoteData(teamUrl, _callback, args);
 }
@@ -617,9 +580,6 @@ function getTeamAssessments(teamId, _callback, args) {
 		_callback.apply(this, args);
 		return null;
 	}
-
-	// var teamUrl = baseUrlDb + "/_design/agile/_view/maturityAssessmentResult?key=\"" + encodeURIComponent(teamId) + "\"";
-	// return getRemoteJsonpData(teamUrl, _callback, args);
 	var teamUrl = "/api/assessment/view?teamId=" + encodeURIComponent(teamId);
 	return getRemoteData(teamUrl, _callback, args);
 }
@@ -632,8 +592,6 @@ function getTeamAssessments(teamId, _callback, args) {
  * @returns - any returnable object.
  */
 function getAssessmentQuestionnaire(_callback, args) {
-	// var teamUrl = baseUrlDb + "/_design/agile/_view/maturityAssessment";
-	// return getRemoteJsonpData(teamUrl, _callback, args);	
 	var teamUrl = "/api/assessment/template";
 	return getRemoteData(teamUrl, _callback, args);	
 }
@@ -651,9 +609,6 @@ function getTeamIterations(teamId, _callback, args) {
 		_callback.apply(this, args);
 		return null;
 	}
-
-	// var teamUrl = baseUrlDb + "/_design/teams/_view/iterinfo?keys=[\"" + encodeURIComponent(teamId) + "\"]";
-	// return getRemoteJsonpData(teamUrl, _callback, args);
 	var teamUrl = "/api/iteration/" + encodeURIComponent(teamId);
 	return getRemoteData(teamUrl, _callback, args);
 }
@@ -664,20 +619,16 @@ function getCompletedIterations(startDate, endDate, _callback, args) {
 		_callback.apply(this, args);
 		return null;
 	}
-	
-	//var teamUrl = baseUrlDb + "/_design/teams/_view/getCompletedIterations?startkey=\"" + startDate + "\"&endkey=\"" + endDate + "\"";
-	//return getRemoteJsonpData(teamUrl, _callback, args);
 	var teamUrl = "/api/iteration/completed?startkey=" + startDate + "&endkey=" + endDate ;
 	return getRemoteData(teamUrl, _callback, args);
 }	
 
-function getDocById(docId, _callback, args) {
+function getTeam(docId, _callback, args) {
 	if (docId == null || docId == "") {
 		_callback.apply(this, args);
 		return null;
 	}
-
-	var docUrl = baseUrlDb + "/" + encodeURIComponent(docId);
+	var docUrl = "/api/team/" + encodeURIComponent(docId);
 	return getRemoteJsonpData(docUrl, _callback, args);
 }
 

@@ -3,15 +3,13 @@ var teamIterInfo;
 var members;
 var currentTeam;
 var admins;
-var allTeams = [];
 
 jQuery(function($) {
 	$(document).ready(function() {
 		var urlParameters = getJsonParametersFromUrl();
-
 		if (urlParameters != undefined && urlParameters.testUser != undefined) {
-			alert("here TestUser is: " + urlParameters.testUser);
 			resetUser(urlParameters.testUser);
+			alert("here TestUser is: " + urlParameters.testUser);
 		}
 
 		if (urlParameters != undefined && urlParameters.id != undefined) {
@@ -20,7 +18,7 @@ jQuery(function($) {
 			else
 				loadAgileTeams(urlParameters.id, "new");
 		} else {
-			loadAgileTeams();
+			loadAgileTeams("new", "");
 			updateIterationInfo("clearIteration");
 		}
 
@@ -36,12 +34,12 @@ jQuery(function($) {
 		$("#iterationEndDate").datepicker( "option", "dateFormat", 'ddMyy' );
 		
 		$(".numnodecimal").on("keypress keyup blur",function (event) {    
-	           $(this).val($(this).val().replace(/[^\d].+/, ""));
-	           if ((event.which < 48 || event.which > 57) && 
-	           		(event.which != 8 && event.which != 127 )) {
-                event.preventDefault();
-            	}
-	        });
+       $(this).val($(this).val().replace(/[^\d].+/, ""));
+       if ((event.which < 48 || event.which > 57) && 
+       		(event.which != 8 && event.which != 127 )) {
+          event.preventDefault();
+      	}
+    });
 	});
 
 	$("#teamSelectList").change(function() {
@@ -243,10 +241,6 @@ function setToolTips() {
 	});
 }
 
-function loadAgileTeams() {
-	loadAgileTeams("new", "");
-}
-
 function teamMemCount() {
 	var teamCount = 0;
 	var tmArr = [];
@@ -299,70 +293,56 @@ function refFTECount(tmc, fte){
 function confirmAction(message, btn1,btn2, action, args){
 	
 	$("#dialog").dialog({
-  	     autoOpen: false,
-  	     modal: true,
-  	     height:'auto',
-  	     width: 520,
-  	     buttons : [
-					{
-					    id: "btn1",
-					    text: btn1,
-					    click:function() {
-					    	$(this).dialog("close");
-					    	action.apply(this,args);
-					    }
-					},
-					{
-					    id: "btn2",
-					    text: btn2,
-					    click:function() {
-					    	$(this).dialog("close");
-					    }
-					}
-  	                ]
-  	      });
+		autoOpen: false,
+		modal: true,
+		height:'auto',
+		width: 520,
+		buttons : 
+			[
+				{
+			    id: "btn1",
+			    text: btn1,
+			    click: function() {
+			    	$(this).dialog("close");
+			    	action.apply(this,args);
+		    	}
+				},
+				{
+			    id: "btn2",
+			    text: btn2,
+			    click:function() {
+			    	$(this).dialog("close");
+			    }
+				}
+      ]
+		});
 	
 	 $("#dialog").text(message);
-     $("#dialog").dialog("open");
+   $("#dialog").dialog("open");
 }
 
 function loadAgileTeams(selected, iteration) {
 	$("#teamSelectList").attr("disabled", "disabled");
 	$("#iterationSelectList").attr("disabled", "disabled");
 	$("#select2-iterationSelectList-container").css('color', 'grey');
-	$.ajax({
-		type : "GET",
-		url : "/api/teams"
-		// url : baseUrlDb + "/_design/teams/_view/teams",
-		// dataType : "jsonp"
-	}).done(function(data) {
-		var list = [];
-		if (data != undefined) {
-			for ( var i = 0; i < data.rows.length; i++) {
-				allTeams.push(data.rows[i].value);
-				if (data.rows[i].value.squadteam != undefined && data.rows[i].value.squadteam.toLowerCase() == "yes") {
-					var team = new Object();
-					team.id = data.rows[i].value._id;
-					team.name = data.rows[i].value.name;
-					list.push(data.rows[i].value);
-				}
-			}
-		}
-		setGlobalTeamList(allTeams);
-		teams = list;
-		addOptions("teamSelectList", teams, null, null, selected);
-		$("#teamSelectList").removeAttr("disabled");
 
-		if (iteration != undefined && iteration != "")
-			loadAgileTeamIterationInfo(selected, iteration);
+	teams = _.filter(allTeams, function(team) {
+  if (team.squadteam.toLowerCase() == 'yes') 
+    return team;
 	});
+	addOptions("teamSelectList", teams, null, null, selected);
+	$("#teamSelectList").removeAttr("disabled");
+
+	if (iteration != undefined && iteration != "")
+		loadAgileTeamIterationInfo(selected, iteration);
+	
 }
 
 function loadAgileTeamIterationInfo(teamId, iterationId) {
 	var hasAcc = hasAccess(teamId, true);
 	console.log("loadAgileTeamIterationInfo: " + teamId + " / " + iterationId);
 	if (teamId == null || teamId == "") {
-		loadAgileTeams();
+		loadAgileTeams("new", "");;
 		if (hasAcc)
 			addOptions("iterationSelectList", null, [ "new", "Create new..." ], null, "new");
 		else
@@ -377,14 +357,10 @@ function loadAgileTeamIterationInfo(teamId, iterationId) {
 	$.ajax({
 		type : "GET",
 		url : "/api/iteration/" + encodeURIComponent(teamId)
-		// url : baseUrlDb + "/_design/teams/_view/iterinfo?keys=[\"" + encodeURIComponent(teamId) + "\"]",
-		// dataType : "jsonp"
 	}).done(function(data) {
 		var list = [];
 		if (data != undefined) {
-			for ( var i = 0; i < data.rows.length; i++) {
-				list.push(data.rows[i].value);
-			}
+			list = _.pluck(data.rows, "value");
 		}
 		teamIterInfo = list;
 
@@ -593,16 +569,15 @@ function addOptions(selectId, listOption, firstOption, lastOption, selectedOptio
 
 function addIteration(action) {
 	$.ajax({
-		type : "GET",
-		url : "/api/teams/"  + encodeURIComponent($("#teamSelectList").val())
-		// url : baseUrlDb + "/" + encodeURIComponent($("#teamSelectList").val()),
-		// dataType : "jsonp"
+		type 	: "GET",
+		url 	: "/api/teams/"  + encodeURIComponent($("#teamSelectList").val()),
+		async : false
 	}).done(function(data) {
 		if (data != undefined) {
 			var jsonData = data;
 			if (jsonData.squadteam != undefined && jsonData.squadteam.toLowerCase() == "no") {
 				showMessagePopup("Team information has been changed to non squad.  Iteration information cannot be entered for non squad teams.");
-				loadAgileTeams();
+				loadAgileTeams("new", "");
 				updateIterationInfo("clearIteration");
 				return;
 			}
@@ -668,11 +643,11 @@ function addIteration(action) {
 					jsonData.last_updt_dt = getServerDateTime();
 					jsonData = $.extend(true, {}, initIterationTemplate(), jsonData);
           $.ajax({
-            type : "PUT",
-            url : "/api/iteration/" + encodeURIComponent(currentIteration._id),
+            type 				: "PUT",
+            url 				: "/api/iteration/" + encodeURIComponent(currentIteration._id),
             contentType : "application/json",
-            data : JSON.stringify(jsonData),
-            error : errorHandler
+            data 				: JSON.stringify(jsonData),
+            error 			: errorHandler
           }).done(function(data) {
             var putResp = (typeof data == 'string' ? JSON.parse(data) : data);
             var rev2 = putResp.rev;
@@ -735,15 +710,11 @@ function addIteration(action) {
 				console.log(jsonData);
 				console.log(JSON.stringify(jsonData));
 				$.ajax({
-					type : "POST",
-          url : "/api/iteration",
-          // url : baseUrlDb,
+					type 				: "POST",
+          url 				: "/api/iteration",
 					contentType : "application/json",
-					data : JSON.stringify(jsonData),
-					// headers : {
-					// 	"Authorization" : "Basic " + btoa(user + ":" + pass)
-					// },
-					error : errorHandler
+					data 				: JSON.stringify(jsonData),
+					error 			: errorHandler
 				}).done(function(data) {
 					var json = (typeof data == 'string' ? JSON.parse(data) : data);
 					var id = json.id;

@@ -69,6 +69,7 @@ module.exports = function(app, includes) {
       });
   };
   app.get('/api/assessment/view', [includes.middleware.auth.requireLogin], getAssessment);
+  app.get('/api/assessment/trend', getAssessment);
   app.get('/api/assessment/template', [includes.middleware.auth.requireLogin], getAssessmentTemplate);
   app.put('/api/assessment', [includes.middleware.auth.requireLogin], updateAssessment);
   app.delete('/api/assessment', [includes.middleware.auth.requireLogin], deleteAssessment);

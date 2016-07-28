@@ -3,17 +3,18 @@ jQuery(function($) {
   $(document).ready(function() {
    	getAssessmentQuestionnaire(assessmentQuestionnaireHandler, [null]);
   	var urlParameters = getJsonParametersFromUrl();
+  	if (urlParameters != undefined && urlParameters.testUser != undefined) {
+			resetUser(urlParameters.testUser);
+			alert("here TestUser is: " + urlParameters.testUser);
+		}
   	if (urlParameters != undefined && urlParameters.id != undefined && urlParameters.id != "") {
   		if (urlParameters.assessId != undefined && urlParameters.assessId != "") {
-  			getAllAgileTeams(agileTeamListHandler, ["teamSelectList", urlParameters.id, urlParameters.assessId, null, null]);
-				
+  			agileTeamListHandler("teamSelectList", urlParameters.id, urlParameters.assessId, null, null, allTeams);
   		} else {
-  			getAllAgileTeams(agileTeamListHandler, ["teamSelectList", urlParameters.id, "new", null, null]);
-  			
+  			agileTeamListHandler("teamSelectList", urlParameters.id, "new", null, null, allTeams); 
   		}
   	} else {
-  		getAllAgileTeams(agileTeamListHandler, ["teamSelectList", null, null, null, null]);
-  		
+  		agileTeamListHandler("teamSelectList", null, null, null, null, allTeams);
   	}
   	
   	setToolTips();
@@ -108,8 +109,6 @@ function setToolTips() {
 }
 
 function agileTeamListHandler(elementId, teamId, assessmentId, firstOption, lastOption, teamList) {
-	setGlobalTeamList(teamList);
-	
 	$("#" + elementId).attr("disabled", "disabled");
 	var listOption = getAgileTeamDropdownList(teamList, true);
 	setSelectOptions(elementId, listOption, firstOption, lastOption, teamId);

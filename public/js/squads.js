@@ -17,17 +17,16 @@ jQuery(function ($) {
 		
 		var urlParameters = getJsonParametersFromUrl();
 		if (urlParameters != undefined && urlParameters.id != undefined)
-			getAllAgileTeams(agileTeamListHandler, [urlParameters.id]);
+			agileTeamListHandler(urlParameters.id, allTeams);
 		else
-			getAllAgileTeams(agileTeamListHandler, ["new"]);
+			agileTeamListHandler("new", allTeams);
 
-		console.log("im supposed to be shown after getting the all the team details");
 		if (urlParameters != undefined && urlParameters.testUser != undefined) {
-			alert("here TestUser is: " + urlParameters.testUser);
 			resetUser(urlParameters.testUser);
+			alert("here TestUser is: " + urlParameters.testUser);
 		}
 
-		getAllAgileTeamRoles(agileTeamRolesHandler, []);;
+		agileTeamRolesHandler(memberRoles);
 		disableAddTeam();
 
 	});
@@ -42,11 +41,8 @@ jQuery(function ($) {
 			jQuery("#teamDetailsPageSection .ibm-show-hide a[class='ibm-show-active']").click();
 			// retrieve and load latest data about the team and update local cached data
 			$.ajax({
-				type : "GET",
-				url : "/api/teams/" + encodeURIComponent($("#teamSelectList option:selected").val())
-				// url : baseUrlDb + "/" + encodeURIComponent($("#teamSelectList option:selected").val()),
-				// dataType : "jsonp",
-				// scriptCharset: 'UTF-8'
+				type 	: "GET",
+				url 	: "/api/teams/" + encodeURIComponent($("#teamSelectList option:selected").val())
 			}).done(function (data) {
 				var jsonData = data;
 				updateAgileTeamCache(jsonData);
@@ -196,9 +192,6 @@ jQuery(function ($) {
 
 function agileTeamListHandler(teamId, teamList) {
 	$("#teamSelectList").attr("disabled", "disabled");	
-	setGlobalTeamList(teamList);
-	allTeams = teamList;
-	allTeamsLookup = getLookupListById(teamList);
 	var listOption = getAgileTeamDropdownList(teamList, false);
 	setSelectOptions("teamSelectList", listOption, ["new", "Create new..."], null, teamId);
 	if (teamId != undefined && teamId != "new") {
@@ -208,21 +201,67 @@ function agileTeamListHandler(teamId, teamList) {
 }
 
 function updateAgileTeamCache(team) {
-	var lookupData = allTeamsLookup[team._id];
-	// were using the compacted team view
-	if (lookupData._rev == null) {
-		lookupData.doc = team;
-		lookupData.name = team.name;
-		lookupData.squadteam = team.squadteam;
-		lookupData.parent_team_id = team.parent_team_id;
-		lookupData.child_team_id = team.child_team_id;
-		allTeamsLookup[team._id] = lookupData;
+	// var lookupData = allTeamsLookup[team._id];
+	// // were using the compacted team view
+	// if (lookupData._rev == null) {
+	// 	lookupData.doc = team;
+	// 	lookupData.name = team.name;
+	// 	lookupData.squadteam = team.squadteam;
+	// 	lookupData.parent_team_id = team.parent_team_id;
+	// 	lookupData.child_team_id = team.child_team_id;
+	// 	allTeamsLookup[team._id] = lookupData;
 
-	} else
-		allTeamsLookup[team._id] = team;
+	// } else
+	// 	allTeamsLookup[team._id] = team;
+
+	updateTeamCache(team);
 
 	loadSelectableChildren(team._id);
 }
+
+var getAgileTeamCache = function(id) {
+	 return _.isEmpty(allTeamsLookup[id].doc) ? allTeamsLookup[id] : allTeamsLookup[id].doc;
+}
+
+var compactTeam = function(team) {
+  var compactedTeam = new Object();
+  if (!_.isEmpty(team)) {
+    var teamMembers = [];
+    var teamCount = 0;
+    var teamAlloc = 0;
+    for (var i in team.members) {
+      if (teamMembers.indexOf(team.members[i].id) == -1) {
+        teamCount++;
+        teamMembers.push(team.members[i].id);
+      }
+      teamAlloc += parseInt(team.members[i].allocation);
+    }
+    teamAlloc = teamAlloc/100;
+    compactedTeam['_id'] = team._id, 
+    compactedTeam['name'] = team.name, 
+    compactedTeam['squadteam'] = team.squadteam,
+    compactedTeam['parent_team_id'] = team.parent_team_id,
+    compactedTeam['child_team_id'] = team.child_team_id,
+    compactedTeam['total_members'] = teamCount,
+    compactedTeam['total_allocation'] = teamAlloc
+    compactedTeam['doc'] = team;
+  }
+  return compactedTeam;
+};
+
+var updateAgileTeamCache = function(team) {
+  if (!_.isEmpty(allTeamsLookup) && !_.isEmpty(team)) {
+    var compactedTeam = compactTeam(team);
+    if (!_.isEmpty(allTeamsLookup[team._id]))
+      allTeams.push(compactedTeam);
+    else
+      _.extend(_.findWhere(allTeams, { _id: team._id}), compactedTeam)
+
+    allTeamsLookup[team._id] = compactedTeam;
+  }
+  allTeams = _.sortBy(allTeams, function(team) {return team.name});
+  loadSelectableChildren(team._id);
+};
 
 function agileTeamRolesHandler(roles) {
 	var listOption = [];
@@ -238,9 +277,8 @@ function loadSelectedAgileTeam() {
 	var teamId = $("#teamSelectList option:selected").val();
 	$("#teamName").val(teamName);
 	if (allTeams != undefined) {
-		var currentTeam = allTeamsLookup[teamId];
+		var currentTeam = getAgileTeamCache(teamId);
 		if (currentTeam != null) {
-			currentTeam = currentTeam.doc == null ? currentTeam : currentTeam.doc;
 			$("#addTeamBtn,#updateTeamBtn,#deleteTeamBtn,#updateChildBtn,#addMemberBtn,#updateParentBtn,#cancelMemberBtn").removeAttr("disabled");
 			$("#teamName,#teamDesc,#teamMemberName,#memberAllocation").removeAttr("disabled");
 			$("#teamSquadYesNo,#memberRoleSelectList,#memberListAction,#parentSelectList,#childSelectList,#childrenListAction,#iterTeamBtn,#assessBtn").removeAttr("disabled");
@@ -270,27 +308,28 @@ function loadSelectedAgileTeam() {
 				$("#nonSquadChildPageSection, #nonSquadIterationPageSection, #nonSquadAssessmentPageSection").hide();
 				// disable squad indicator if iteration data exist
 				$.ajax({
-					type : "GET",
-					url : "/api/iteration/" + encodeURIComponent(currentTeam._id)
-					// url : baseUrlDb + "/_design/teams/_view/iterinfo?keys=[\"" + encodeURIComponent(currentTeam._id) + "\"]",
-					// dataType : "jsonp",
-					// async : false
+					type 	: "GET",
+					url 	: "/api/iteration/" + encodeURIComponent(currentTeam._id),
+					async	: false
 				}).done(function (data) {
-					var iterationList = [];
-					if (data != undefined && data.rows.length > 0) {
+					if (!_.isEmpty(data)) {
 						$("#teamSquadYesNo").attr("disabled", "disabled");
 						$("#select2-teamSquadYesNo-container").css('color', 'grey');
-					}
-					if (data != undefined) {
-						for (var i = 0; i < data.rows.length; i++) {
-							iterationList.push(data.rows[i].value);
-						}
-						
-						loadIterationInformation(sortIterations(iterationList), false);
+						var list = _.pluck(data.rows, "value");
+						loadIterationInformation(sortIterations(list), false);
 					}
 				});
 
-				getTeamAssessments(currentTeam._id, teamAssessmentListHander, [currentTeam._id]);
+				$.ajax({
+					type 	: "GET",
+					url 	: "/api/assessment/view?teamId=" + encodeURIComponent(teamId),
+					async	: false
+				}).done(function (data) {
+					if (!_.isEmpty(data)) {
+						var list = _.pluck(data.rows, "value");
+						loadAssessmentInformation(sortAssessments(list), false);
+					}
+				});
 
 			} else {
 				$("#teamSquadYesNo").val("No");
@@ -359,7 +398,6 @@ function manageIteration() {
 }
 
 function loadIterationInformation(iterationList, more) {
-
 	$("#moreIterations").hide();
 	$("#lessIterations").hide();
 
@@ -415,6 +453,66 @@ function loadIterationInformation(iterationList, more) {
 	}
 }
 
+function loadAssessmentInformation(assessmentlist, more) {
+	$("#moreAssessments").hide();
+	$("#lessAssessments").hide();
+	
+	$("#assessmentList").empty();
+	var numRec = 5;
+	if (more){
+		numRec= assessmentlist.length;
+	}
+	var link='';
+	if (assessmentlist != null && assessmentlist.length > 0){
+		var hasDraft = false;
+		for (var x=0; x<assessmentlist.length && x<numRec; x++) {
+			var item = assessmentlist[x];
+			if (item.assessmt_status == 'Submitted'){
+				link = "<a style='text-decoration: underline;color:black;' href='progress?id=" + encodeURIComponent(item.team_id) + "&assessId=" + encodeURIComponent(item._id) + "'>" + 
+				showDateDDMMMYYYY(item["self-assessmt_dt"].substring(0,item["self-assessmt_dt"].indexOf(" "))) + "</a>";
+			}
+			else{
+				hasDraft = true;
+				link = "<a style='text-decoration: underline;color:black;' href='assessment?id=" + encodeURIComponent(item.team_id) + "&assessId=" + encodeURIComponent(item._id) + "'>" + 
+				showDateDDMMMYYYY(item.created_dt.substring(0,item.created_dt.indexOf(" "))) + "</a>";
+			}
+			var row = "<tr id='asmntrow_"+x+"'>";
+	        row = row + "<td></td>";
+	        row = row + "<td>"+link+"</td>";
+	        row = row + "<td>"+item.assessmt_status+"</td>";
+	        row = row + "<td>"+item.last_updt_user+"</td>";
+	        row = row + "</tr>";
+	        $("#assessmentList").append(row);
+		}
+		if (hasDraft){
+			$("#assessBtn").attr("disabled", "disabled");
+		}
+
+		if (assessmentlist.length > 5 && numRec == 5){
+			$("#assessmentTitle").html("Last 5 Assessments for " + $("#teamSelectList option:selected").text());			
+			$("#moreAssessments").show();
+		} else if(assessmentlist.length > 5 && numRec > 5){
+			$("#assessmentTitle").html("All Assessments for " + $("#teamSelectList option:selected").text());
+			$("#lessAssessments").show();
+		} else {
+			$("#assessmentTitle").html("Last 5 Assessments for " + $("#teamSelectList option:selected").text());
+			
+		}
+
+		$('#moreAssessments').click(function () {
+			loadAssessmentInformation(assessmentlist, true);
+		});
+
+		$('#lessAssessments').click(function () {
+			loadAssessmentInformation(assessmentlist, false);
+		});
+
+	} else {
+		$("#assessmentTitle").html("Last 5 Assessments for " + $("#teamSelectList option:selected").text());
+		$("#assessmentList").append('<tr class="odd"><td valign="top" colspan="4" class="dataTables_empty">No data available</td></tr>');
+	}
+}
+
 function disableAddTeam() {
 	if (localStorage.getItem("sysStatusFlag") != undefined 
 			&& localStorage.getItem("sysStatusFlag") == 'AdminOnlyChange' 
@@ -428,7 +526,7 @@ function disableAddTeam() {
 
 var children = [];
 function getAllChildren(parentId) {
-	var currentTeam = allTeamsLookup[parentId];
+	var currentTeam = getAgileTeamCache(parentId);
 	if (currentTeam != null) {
 		if (currentTeam.child_team_id != undefined) {
 			for (var j = 0; j < currentTeam.child_team_id.length; j++) {
@@ -466,7 +564,7 @@ function loadSelectableChildren(currentTeamId) {
 	getAllChildren(currentTeamId);
 	var currentTeam;
 	if (allTeams != undefined) {
-		currentTeam = allTeamsLookup[currentTeamId];
+		currentTeam = getAgileTeamCache(currentTeamId);
 		if (currentTeam != null)
 			children.push(currentTeam.parent_team_id);
 	}
@@ -531,9 +629,8 @@ function loadTeamMembers(teamId) {
 	$("#memberList").empty();
 	var found = false;
 	if (teamId != undefined) {
-		var currentTeam = allTeamsLookup[teamId];
+		var currentTeam = getAgileTeamCache(teamId);
 		if (currentTeam != null) {
-			currentTeam = currentTeam.doc == null ? currentTeam : currentTeam.doc;
 			var members = sortTeamMembersByName(currentTeam.members);
 			for (var j = 0; j < members.length; j++) {
 				found = true;
@@ -622,17 +719,15 @@ function loadParentChildren(parentId, currentId) {
 	$("#siblingList").empty();
 	var found = false;
 	if (parentId != undefined) {
-		var currentTeam = allTeamsLookup[parentId];
+		var currentTeam = getAgileTeamCache(parentId);
 		if (currentTeam != null && currentTeam.child_team_id != undefined) {
-			currentTeam = currentTeam.doc == null ? currentTeam : currentTeam.doc;
 			for (var j = 0; j < currentTeam.child_team_id.length; j++) {
 				if (currentTeam.child_team_id[j] != currentId) {
 					var childTeamId = currentTeam.child_team_id[j];
 					var childTeamName = "";
 					var childTeamDesc = "";
 					var childTeamChildren = 0;
-					var childTeam = allTeamsLookup[childTeamId];
-					childTeam = childTeam.doc == null ? childTeam : childTeam.doc;
+					var childTeam = getAgileTeamCache(childTeamId);
 					if (childTeam = null) {
 						found = true;
 						childTeamName = allTeams[k].name;
@@ -661,14 +756,12 @@ function loadTeamChildren(currentId) {
 	$("#childrenList").empty();
 	var found = false;
 	if (currentId != undefined) {
-		var currentTeam = allTeamsLookup[currentId];
+		var currentTeam = getAgileTeamCache(currentId);
 			if (currentTeam != null && currentTeam.child_team_id != undefined) {
-				currentTeam = currentTeam.doc == null ? currentTeam : currentTeam.doc;
 				var childTeams = [];
 				for (var j = 0; j < currentTeam.child_team_id.length; j++) {
 					var childTeamId = currentTeam.child_team_id[j];
-					var childTeam = allTeamsLookup[childTeamId];
-					childTeam = childTeam.doc == null ? childTeam : childTeam.doc;
+					var childTeam = getAgileTeamCache(childTeamId);
 					if (childTeam != null) {
 						childTeams.push(childTeam);
 					}
@@ -748,19 +841,15 @@ function addTeam(action) {
 		}
 
 		// find if team data already exists
-		currentTeam = allTeamsLookup[teamId];
+		currentTeam = getAgileTeamCache(teamId);
 		if (currentTeam != null)
 			exists = true; 
 	}
 
 	if (exists) {
-		currentTeam = currentTeam.doc == null ? currentTeam : currentTeam.doc;
 		$.ajax({
-			type : "GET",
-			url : "/api/teams/" + encodeURIComponent(currentTeam._id)
-			// url : baseUrlDb + "/" + encodeURIComponent(currentTeam._id),
-			// dataType : "jsonp",
-			// scriptCharset: 'UTF-8'
+			type 	: "GET",
+			url 	: "/api/teams/" + encodeURIComponent(currentTeam._id)
 		}).done(function (data) {
 			var jsonData = data;
 			// copy object to persist to follow hierarchy of columns in the template
@@ -772,15 +861,12 @@ function addTeam(action) {
 				 && jsonData.squadteam.toLowerCase() == "yes") {
 
 				$.ajax({
-					type : "GET",
-					url : "/api/iteration/" + encodeURIComponent(jsonData._id)
-					// url : baseUrlDb + "/_design/teams/_view/iterinfo?keys=[\"" + encodeURIComponent(jsonData._id) + "\"]",
-					// dataType : "jsonp",
-					// async : false
+					type 	: "GET",
+					url 	: "/api/iteration/" + encodeURIComponent(jsonData._id)
 				}).done(function (data) {
 					var allowed = true;
 					if (data != undefined) {
-						if (data.rows.length > 0) {
+						if (data.length > 0) {
 							showMessagePopup("Cannot change this team into a non squad team.  Iteration information has been entered for this team.");
 							$("#teamSquadYesNo").attr("disabled", "disabled");
 							$("#select2-teamSquadYesNo-container").css('color', 'grey');
@@ -801,12 +887,12 @@ function addTeam(action) {
 						jsonData.last_updt_user = userInfo.email;
 						showLog(JSON.stringify(jsonData));
 						$.ajax({
-							type : "PUT",
-							url: "/api/teams/",
-							async: false,
+							type 				: "PUT",
+							url 				: "/api/teams/",
+							async 			: false,
 							contentType : "application/json",
-							data : JSON.stringify(jsonData),
-							error : errorHandler
+							data 				: JSON.stringify(jsonData),
+							error 			: errorHandler
 						}).done(function (data) {
 							console.log(data);
 							var putResp = (typeof data == 'string' ? JSON.parse(data) : data);
@@ -872,12 +958,8 @@ function addTeam(action) {
 					if (childId != "") {
 						// check to see if a parallel update for the child team parent info
 						$.ajax({
-							type : "GET",
-							url : "/api/teams/" + encodeURIComponent(childId)
-							// url : baseUrlDb + "/" + encodeURIComponent(childId),
-							// dataType : "jsonp",
-							// scriptCharset: 'UTF-8',
-							// async : false
+							type 	: "GET",
+							url 	: "/api/teams/" + encodeURIComponent(childId)
 						}).done(function (jsonChildData) {
 							var rev = jsonChildData._rev;
 
@@ -910,12 +992,12 @@ function addTeam(action) {
 				jsonData.last_updt_user = userInfo.email;
 				showLog(JSON.stringify(jsonData));
 				$.ajax({
-					type : "PUT",
-					url: "/api/teams/",
-					async: false,
+					type 				: "PUT",
+					url 				: "/api/teams/",
+					async 			: false,
 					contentType : "application/json",
-					data : JSON.stringify(jsonData),
-					error : errorHandler
+					data 				: JSON.stringify(jsonData),
+					error 			: errorHandler
 				}).done(function (data) {
 					console.log(data);
 					var putResp = (typeof data == 'string' ? JSON.parse(data) : data);
@@ -963,11 +1045,11 @@ function addTeam(action) {
 		jsonData.child_team_id = [];
 		showLog(jsonData);
 		$.ajax({
-			type : "POST",
-			url : "/api/teams",
+			type 				: "POST",
+			url 				: "/api/teams",
 			contentType : "application/json",
-			data : JSON.stringify(jsonData),
-			error : errorHandler
+			data 				: JSON.stringify(jsonData),
+			error 			: errorHandler
 		}).done(function (data) {
 			var json = (typeof data == 'string' ? JSON.parse(data) : data);
 			var id = json.id;
@@ -982,10 +1064,10 @@ function addTeam(action) {
 function deleteTeam() {
 	var teamId = $("#teamSelectList option:selected").val();
 	//find if team data already exists
-	var currentTeam = allTeamsLookup[teamId];
+	var currentTeam = getAgileTeamCache(teamId);
 	if (currentTeam != null) {
 		currentTeam = currentTeam.doc == null ? currentTeam : currentTeam.doc;
-		getDocById(currentTeam._id, deleteTeamHandler, []);
+		getTeam(currentTeam._id, deleteTeamHandler, []);
 	}
 }
 
@@ -1089,7 +1171,7 @@ function deleteTeamHandler(team, iterations, assessments) {
 
 
 function removeChildOfParent(parentId, childId) {
-	getDocById(parentId, removeChildOfParentTeamHandler, [childId]);
+	getTeam(parentId, removeChildOfParentTeamHandler, [childId]);
 }
 
 function removeChildOfParentTeamHandler(childId, team) {
@@ -1105,11 +1187,11 @@ function removeChildOfParentTeamHandler(childId, team) {
 	team.last_updt_dt = getServerDateTime();
 	team.last_updt_user = userInfo.email;
 
-	setRemoteJsonpData(team._id, team, updateAgileTeamCache, []);
+	setTeam(team, updateAgileTeamCache, []);
 }
 
 function updateParentWithChild(parentId, childId) {
-	getDocById(parentId, updateParentWithChildTeamHandler, [childId]);
+	getTeam(parentId, updateParentWithChildTeamHandler, [childId]);
 }
 
 function updateParentWithChildTeamHandler(childId, team) {
@@ -1130,12 +1212,12 @@ function updateParentWithChildTeamHandler(childId, team) {
 		team.last_updt_dt = getServerDateTime();
 		team.last_updt_user = userInfo.email;
 
-		setRemoteJsonpData(team._id, team, updateAgileTeamCache, []);
+		setTeam(team, updateAgileTeamCache, []);
 	}
 }
 
 function updateChildTeamWithParent(childId, parentId) {
-	getDocById(childId, updateChildTeamWithParentHandler, [parentId]);
+	getTeam(childId, updateChildTeamWithParentHandler, [parentId]);
 }
 
 function updateChildTeamWithParentHandler(parentId, team) {
@@ -1144,7 +1226,7 @@ function updateChildTeamWithParentHandler(parentId, team) {
 	team.last_updt_dt = getServerDateTime();
 	team.last_updt_user = userInfo.email;
 
-	setRemoteJsonpData(team._id, team, updateAgileTeamCache, []);
+	setTeam(team, updateAgileTeamCache, []);
 	
 }
 
@@ -1152,7 +1234,7 @@ function addTeamMember(person, oldAlloc, newAlloc, oldRole, newRole) {
 	var teamId = $("#teamSelectList option:selected").val();
 	var currentTeam = null;
 	if (allTeams != undefined) {
-		currentTeam = allTeamsLookup[teamId];
+		currentTeam = getAgileTeamCache(teamId);
 	}
 
 	var existsMember = false;
@@ -1167,11 +1249,8 @@ function addTeamMember(person, oldAlloc, newAlloc, oldRole, newRole) {
 			}
 		}
 		$.ajax({
-			type : "GET",
-			url : "/api/teams/" + encodeURIComponent(currentTeam._id)
-			// url : baseUrlDb + "/" + encodeURIComponent(currentTeam._id),
-			// dataType : "jsonp",
-			// scriptCharset: 'UTF-8'
+			type 	: "GET",
+			url 	: "/api/teams/" + encodeURIComponent(currentTeam._id)
 		}).done(function (data) {
 			var jsonData = data;
 			var rev = jsonData._rev;
@@ -1213,12 +1292,12 @@ function addTeamMember(person, oldAlloc, newAlloc, oldRole, newRole) {
 			jsonData.last_updt_dt = getServerDateTime();
 			jsonData.last_updt_user = userInfo.email;
 			$.ajax({
-				type : "PUT",
-				url: "/api/teams/",
-				async: false,
+				type 				: "PUT",
+				url 				: "/api/teams/",
+				async 			: false,
 				contentType : "application/json",
-				data : JSON.stringify(jsonData),
-				error : errorHandler
+				data 				: JSON.stringify(jsonData),
+				error 			: errorHandler
 			}).done(function (data) {
 				updateAgileTeamCache(jsonData);
 				loadSelectedAgileTeam();
@@ -1238,17 +1317,14 @@ function deleteTeamMember() {
 	var teamId = $("#teamSelectList option:selected").val();
 	var currentTeam = null;
 	if (allTeams != undefined) {
-		currentTeam = allTeamsLookup[teamId];
+		currentTeam = getAgileTeamCache(teamId);
 	}
 
 	if (currentTeam != undefined) {
 		currentTeam = currentTeam.doc == null ? currentTeam : currentTeam.doc;
 		$.ajax({
-			type : "GET",
-			url : "/api/teams/" + encodeURIComponent(currentTeam._id)
-			// url : baseUrlDb + "/" + encodeURIComponent(currentTeam._id),
-			// dataType : "jsonp",
-			// scriptCharset: 'UTF-8'
+			type 	: "GET",
+			url 	: "/api/teams/" + encodeURIComponent(currentTeam._id)
 		}).done(function (data) {
 			var jsonData = data;
 			var rev = jsonData._rev;
@@ -1279,12 +1355,12 @@ function deleteTeamMember() {
 			jsonData.last_updt_dt = getServerDateTime();
 			jsonData.last_updt_user = userInfo.email;
 			$.ajax({
-				type : "PUT",
-				url: "/api/teams/",
-				async: false,
+				type 				: "PUT",
+				url 				: "/api/teams/",
+				async 			: false,
 				contentType : "application/json",
-				data : JSON.stringify(jsonData),
-				error : errorHandler
+				data 				: JSON.stringify(jsonData),
+				error 			: errorHandler
 			}).done(function (data) {
 				updateAgileTeamCache(jsonData);
 				loadSelectedAgileTeam();
@@ -1301,17 +1377,14 @@ function deleteChildTeam() {
 	var teamId = $("#teamSelectList option:selected").val();
 	var currentTeam = null;
 	if (allTeams != undefined) {
-		currentTeam = allTeamsLookup[teamId];
+		currentTeam = getAgileTeamCache(teamId);
 	}
 	
 	if (currentTeam != undefined) {
 		currentTeam = currentTeam.doc == null ? currentTeam : currentTeam.doc;
 		$.ajax({
-			type : "GET",
-			url : "/api/teams/" + encodeURIComponent(currentTeam._id)
-			// url : baseUrlDb + "/" + encodeURIComponent(currentTeam._id),
-			// dataType : "jsonp",
-			// scriptCharset: 'UTF-8'
+			type 	: "GET",
+			url 	: "/api/teams/" + encodeURIComponent(currentTeam._id)
 		}).done(function (data) {
 			var jsonData = data;
 			var rev = jsonData._rev;
@@ -1344,12 +1417,12 @@ function deleteChildTeam() {
 			jsonData.child_team_id = childTeams;
 			showLog(JSON.stringify(jsonData));
 			$.ajax({
-				type : "PUT",
-				url: "/api/teams/",
-				async: false,
+				type 				: "PUT",
+				url 				: "/api/teams/",
+				async 			: false,
 				contentType : "application/json",
-				data : JSON.stringify(jsonData),
-				error : errorHandler
+				data 				: JSON.stringify(jsonData),
+				error 			: errorHandler
 			}).done(function (data) {
 				updateAgileTeamCache(jsonData);
 				loadTeamChildren(currentTeam._id);
@@ -1362,7 +1435,7 @@ function deleteChildTeam() {
 }
 
 function removeParentOfChild(teamId) {
-	getDocById(teamId, removeParentOfChildTeamHandler, []);
+	getTeam(teamId, removeParentOfChildTeamHandler, []);
 }
 
 function removeParentOfChildTeamHandler(team) {
@@ -1370,7 +1443,7 @@ function removeParentOfChildTeamHandler(team) {
 	team.last_updt_dt = getServerDateTime();
 	team.last_updt_user = userInfo.email;
 
-	setRemoteJsonpData(team._id, team, updateAgileTeamCache, []);
+	setTeam(team, updateAgileTeamCache, []);
 }
 
 function updateTeamInfo(action) {
