@@ -20,11 +20,8 @@ module.exports = {
     cert: process.env['samlCert']
   },
   email: {
-    SMTP_HOST: "host",
-    PORT     : 3000,
-    DOMAIN   : "domain",
-    FROM     : "from@domain.com",
-    EMAIL_APPKEY : "key"
+    smtpHost: process.env.smtpHost || "https://localhost:8080/mail",
+    smtpApplicationKey : process.env.smtpApplicationKey ||"key123"
   },
   prefixes: {
     team : 'ag_team_',
