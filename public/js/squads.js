@@ -195,7 +195,7 @@ function agileTeamListHandler(teamId, teamList) {
 	var listOption = getAgileTeamDropdownList(teamList, false);
 	setSelectOptions("teamSelectList", listOption, ["new", "Create new..."], null, teamId);
 	if (teamId != undefined && teamId != "new") {
-		$("#teamSelectList").trigger("change");//loadSelectedAgileTeam();
+		$("#teamSelectList").trigger("change");
 	}
 	$("#teamSelectList").removeAttr("disabled");
 }
