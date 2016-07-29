@@ -142,7 +142,7 @@ function getLookupListById(teams) {
  * @returns
  */
 function sortTeamMembersByName(members) {
-	return _.sortBy(members, function(member) {return trim(member.name)});
+	return _.sortBy(members, function(member) {return member.name.trim()});
 }
 
 
