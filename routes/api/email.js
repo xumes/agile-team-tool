@@ -47,12 +47,12 @@ var processFeedbackRequest = function(req, res) {
   };  
   sendRequest(emailObj, function(error, result){
     if(_.isEmpty(error))
-      res.send("Thank you! \n Your feedback has been sent successfully.");
+      res.status(200).send("Thank you! \n Your feedback has been sent successfully.");
     else
-      res.send(":( There was a problem sending your feedback. Kindly contact the system administrator: agileteamtool@ibm.com");
+      res.status(500).send(":( There was a problem sending your feedback. Kindly contact the system administrator: agileteamtool@ibm.com");
   });
 };
 
 module.exports = function(app, includes) {
-  app.post("/email/feedback", processFeedbackRequest);
+  app.post("/email/feedback", [includes.middleware.auth.requireLogin], processFeedbackRequest);
 };

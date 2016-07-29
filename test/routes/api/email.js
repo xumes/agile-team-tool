@@ -1,14 +1,37 @@
 var chai = require('chai');
 var expect = chai.expect;
-var eamilApi = require('../../../routes/api/email');
 var app = require('../../../app');
 var request = require('supertest');
-var timeout = 30000;
-// 
-// describe('Email API: send a feedback',function(){
-//   it('it will return a successfully info for sending a feedback', function(done){
-//     request(app)
-//       .post('/email/feedback')
-//       .expect(200,":( There was a problem sending your feedback. Kindly contact the system administrator: agileteamtool@ibm.com",done);
-//   });
-// });
+var _ = require('underscore');
+
+var agent = request.agent(app);
+
+// do the login befre testing
+before(function(done) {
+  agent
+    .get('/api/login/masquerade/john.doe@ph.ibm.com')
+    .send()
+    .end(function(err, res) {
+      if (err) throw err;
+      agent.saveCookies(res);
+      done();
+    })
+});
+
+describe('Email API Test [POST /email/feedback]: send email to winnuser@us.ibm.com', function(){
+  it("send email to winnuser", function(done){
+    var req = request(app).post('/email/feedback');
+    agent.attachCookies(req);
+    req.send({ feedback_page: "test page", feedback_teamName: "test team", feedback: "test", feedback_sender: "cjscotta@us.ibm.com", feedback_recipient: "winnuser@us.ibm.com"});
+    req.expect(200)
+    .end(function(err, res){
+      if (err) {
+        console.log(err);
+      }else {
+        expect(res.text).to.equal("Thank you! \n Your feedback has been sent successfully.");
+      }
+      done();
+    });
+  });
+});
+
