@@ -83,6 +83,7 @@ module.exports = function(app, includes) {
       return res.status(400).send({ error: 'Iteration data is missing' });
     }
     loggers.get('api').info('[createIteration] POST data:', data);
+    console.log('[createIteration] POST data:', data);
     data['last_updt_user'] = req.session['user'].shortEmail;
     data['created_user'] = req.session['user'].shortEmail;
     data['type'] = 'iterationinfo';
@@ -91,8 +92,9 @@ module.exports = function(app, includes) {
       res.send(result);
     })
     .catch(function(err) {
+      console.log('[api] [createIteration]:', err);
       loggers.get('api').error('[createIteration]:', err);
-      res.status(400).send({ error: err });
+      res.status(400).send(err);
     });
   };
 
@@ -119,7 +121,7 @@ module.exports = function(app, includes) {
     })
     .catch(function(err) {
       loggers.get('api').error('[updateIteration]:', err);
-      res.status(400).send({ error: err });
+      res.status(400).send(err);
     });
   };
 

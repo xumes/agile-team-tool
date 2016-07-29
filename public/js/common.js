@@ -177,7 +177,64 @@ var getServerDateTime = function() {
  * @param errorThrown
  */
 function errorHandler(jqXHR, textStatus, errorThrown) {
-	showMessagePopup("Something went wrong: " + textStatus + " " + errorThrown + " " + JSON.stringify(jqXHR));
+  var errorlist = '';
+	//showMessagePopup("Something went wrong: " + textStatus + " " + errorThrown + " " + JSON.stringify(jqXHR));
+  var response = jqXHR.responseText;
+  console.log('Error response:', response);
+  if (response) {
+    var errors = JSON.parse(response);
+
+    // Return iteration errors as String
+    errorlist = getIterationErrorPopup(errors['error']);
+
+    if (errorlist != '') {
+      showMessagePopup(errorlist);
+      if (global_currentAction === 'add') {
+        $("#addIterationBtn").removeAttr("disabled");
+      } else if (global_currentAction === 'update') {
+        $("#updateIterationBtn").removeAttr("disabled");
+      }
+    }
+  }
+}
+
+function getIterationErrorPopup(errors) {
+  var errorLists = '';
+  // Model fields/Form element field
+  var fields = {
+    '_id': '',
+    'team_id': 'teamSelectList',
+    'iteration_name': 'iterationName',
+    'iteration_start_dt': 'iterationStartDate',
+    'iteration_end_dt': 'iterationEndDate',
+    'nbr_committed_stories': 'commStories',
+    'nbr_committed_story_pts': 'commPoints',
+    'team_mbr_cnt': 'memberCount',
+    'fte_cnt': 'fteThisiteration',
+    'nbr_stories_dlvrd': 'commStoriesDel',
+    'nbr_story_pts_dlvrd': 'commPointsDel',
+    'nbr_dplymnts': 'DeploythisIteration',
+    'nbr_defects': 'defectsIteration',
+    'team_mbr_change': 'teamChangeList',
+    'client_sat': 'clientSatisfaction',
+    'team_sat': 'teamSatisfaction'
+  };
+
+  Object.keys(fields).forEach(function(mdlField, index) {
+    var frmElement = fields[mdlField];
+    if (errors[mdlField]) {
+      if (frmElement) {
+        setFieldErrorHighlight(frmElement);
+      }
+      errorLists = errorLists + errors[mdlField][0] + "<br>";
+    } else {
+      if (frmElement) {
+        clearFieldErrorHighlight(frmElement);
+      }
+    }
+  });
+
+  return errorLists;
 }
 
 /**

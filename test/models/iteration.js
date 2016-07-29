@@ -153,13 +153,11 @@ describe('Iteration Model', function() {
       })
       .catch(function(err) {
         console.log('Err: Attempt to delete Doc1 docId: ' + _id);
-        console.log(err);
         expect(err).to.not.equal(null);
       });
     })
     .catch(function(err) {
       console.log('Err: Attempt to delete Doc1 docId: ' + iterationId);
-      console.log(err);
       expect(err).to.not.equal(null);
     })
     .finally(function() {
@@ -181,7 +179,7 @@ describe('Iteration Model', function() {
           });
         })
         .catch(function(err) {
-          console.log('Err: Attempt to delete Doc1 docId: ' + iterationId2);
+          console.log('Err: Attempt to delete Doc2 docId: ' + iterationId2);
           console.log(err);
           expect(err).to.not.equal(null);
         })
@@ -359,7 +357,8 @@ describe('Iteration Model', function() {
       })
       .catch(function(err) {
         console.log('[edit] Return Iteration no/identifier already exists:', err);
-        expect(err.error).to.contain('exists');
+        expect(err.error.iteration_name[0]).to.contain('exists');
+        expect(err.error).to.have.property('iteration_name');
         expect(err).to.not.equal(null);
       })
       .finally(function() {
@@ -380,7 +379,7 @@ describe('Iteration Model', function() {
       .catch(function(err) {
         console.log('[edit] It will fail to update iteration document:', err);
         expect(err).to.be.a('object');
-        expect(err).to.have.property('team_id');
+        // expect(err).to.have.property('team_id');
         expect(err).to.not.equal(null);
       })
       .finally(function() {
@@ -445,7 +444,7 @@ describe('Iteration Model', function() {
       });
     });
 
-    it('Return not_found', function(done) {
+    it('Should return not_found', function(done) {
       this.timeout(timeout);
       console.log('Attempt to edit iterationId3: ', iterationId3);
       iterationDocValid.iteration_name = 'newiterationname';
@@ -458,7 +457,7 @@ describe('Iteration Model', function() {
       })
       .catch(function(err) {
         console.log('[edit] Edit team iteration iterationId3 document res1:', err);
-        expect(err.error).to.equal('not_found');
+        expect(err.error).to.equal('missing');
         expect(err).to.not.equal(null);
       })
       .finally(function() {

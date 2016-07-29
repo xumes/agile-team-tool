@@ -6,18 +6,45 @@ var dateFormat = "MM/DD/YYYY";
 validate.validators.checkDate = function(value, options, key, attrib) {
   var dt = moment(value, dateFormat, true).isValid();
   if (!dt)
-    return '^Date must be in format MM/DD/YYYY';
+    return "^" + options['message'];
 };
 
 validate.validators.compareDate = function(value, options, key, attrib) {
   var startdate = attrib['iteration_start_dt'];
   var enddate = attrib['iteration_end_dt'];
-  var d1 = moment(startdate, dateFormat);
-  var d2 = moment(enddate, dateFormat);
-  var diff = d1.diff(d2, 'days');
-  if (diff >= 1)
-    return '^End date must be >= start date';
+  if (options['field'] == 'iteration_start_dt') {
+    var d1 = moment(startdate, dateFormat);
+    var d2 = moment(enddate, dateFormat);
+    var diff = d1.diff(d2, 'days');
+    if (diff >= 1) {
+      return '^Start date must be <= end date';
+    }
+  }
+
+  if (options['field'] == 'iteration_end_dt') {
+    var d1 = moment(startdate, dateFormat);
+    var d2 = moment(enddate, dateFormat);
+    var diff = d1.diff(d2, 'days');
+    if (diff >= 1) {
+      return '^End date must be >= start date';
+    }
+  }
 };
+
+validate.validators.checkSatisfaction = function(value, options, key, attrib) {
+  var invalid = false;
+  value = parseFloat(value);
+  if (value === 0) {
+    invalid = true;
+  } else {
+    if ((value != 0 && value < 1) || value > 4) {
+        invalid = true;
+    }
+  }
+  if (invalid) {
+    return "^" + options['message'];
+  }
+}
 
 var iterationDocRules = {
       "_id": {
@@ -29,47 +56,76 @@ var iterationDocRules = {
       "team_id": {
         presence: {
           presence: true,
-          message: "^TeamId is required"
+          message: "^Team is required"
         }
       },
       "iteration_name": {
         presence: {
           presence: true,
-          message: "^Iteration no. is required"
+          message: "^Iteration number/identifier is required"
         }
       },
       "iteration_start_dt": {
-        checkDate: true,
-        compareDate: true,
         presence: {
           presence: true,
           message: "^Please enter iteration start date"
+        },
+        checkDate: {
+          message: "Start date must be in format MM/DD/YYYY"
+        },
+        compareDate: {
+          field: "iteration_start_dt",
         }
       },
       "iteration_end_dt": {
-        checkDate: true,
         presence: {
           presence: true,
           message: "^Please enter iteration end date"
+        },
+        checkDate: {
+          message: "End date must be in format MM/DD/YYYY"
+        },
+        compareDate: {
+          field: "iteration_end_dt",
         }
       },
       "iterationinfo_status": {
         presence: false
       },
       "team_mbr_cnt": {
-        presence: false
+        presence: false,
+        format: {
+          pattern: /^\d+$/,
+          message: "^Number of Team members must be a number"
+        }
       },
       "nbr_committed_stories": {
-        presence: false
+        presence: false,
+        format: {
+          pattern: /^\d+$/,
+          message: "^Committed stories must be a number"
+        }
       },
       "nbr_stories_dlvrd": {
-        presence: false
+        presence: false,
+        format: {
+          pattern: /^\d+$/,
+          message: "^Throughput must be a number"
+        }
       },
       "nbr_committed_story_pts": {
-        presence: false
+        presence: false,
+        format: {
+          pattern: /^\d+$/,
+          message: "^Committed story points must be a number"
+        }
       },
       "nbr_story_pts_dlvrd": {
-        presence: false
+        presence: false,
+        format: {
+          pattern: /^\d+$/,
+          message: "^Velocity must be a number"
+        }
       },
       "iteration_comments": {
         presence: false
@@ -78,7 +134,7 @@ var iterationDocRules = {
         presence: true,
         inclusion : {
           within: {'Yes':'Yes', 'No':'No'},
-          message: "^Please choose either Yes or No"
+          message: "^In 'Was there a team change?' please choose either Yes or No"
         }
       },
       "last_updt_user": {
@@ -88,28 +144,44 @@ var iterationDocRules = {
         }
       },
       "fte_cnt": {
-        presence: false
+        presence: false,
+        format: {
+          pattern: /^\d{0,2}(\.\d{0,2}){0,1}$/,
+          message: "^FTE must be a number"
+        }
       },
       "nbr_dplymnts": {
-        presence: false
+        presence: false,
+        format: {
+          pattern: /^\d+$/,
+          message: "^Deployments must be a number"
+        }
       },
       "nbr_defects": {
-        presence: false
+        presence: false,
+        format: {
+          pattern: /^\d+$/,
+          message: "^Defects must be a number"
+        }
       },
       "client_sat": {
         presence: false,
-        numericality: {
-          lessThanOrEqualTo: 4,
-          greaterThan: 0,
-          message: "^Client satisfaction should be between <br> 1.0 - 4.0"
+        checkSatisfaction: {
+          message: "Client satisfaction should be between 1.0 - 4.0"
+        },
+        format: {
+          pattern: /^\d{0,2}(\.\d{0,2}){0,1}$/,
+          message: "^Client satisfaction must be a number"
         }
       },
       "team_sat": {
         presence: false,
-        numericality: {
-          lessThanOrEqualTo: 4,
-          greaterThan: 0,
-          message: "^Team satisfaction should be between <br> 1.0 - 4.0"
+        checkSatisfaction: {
+          message: "Team satisfaction should be between 1.0 - 4.0"
+        },
+        format: {
+          pattern: /^\d{0,2}(\.\d{0,2}){0,1}$/,
+          message: "^Team satisfaction must be a number"
         }
       },
       "last_updt_dt": {

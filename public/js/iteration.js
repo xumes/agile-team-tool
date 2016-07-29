@@ -3,6 +3,7 @@ var teamIterInfo;
 var members;
 var currentTeam;
 var admins;
+var global_currentAction = undefined;
 
 jQuery(function($) {
 	$(document).ready(function() {
@@ -118,9 +119,9 @@ jQuery(function($) {
 		selectedEndDate = formatMMDDYYYY($("#iterationEndDate").val());
 		selectedStartDate = formatMMDDYYYY($("#iterationStartDate").val());
 		if (selectedStartDate != "" && new Date(selectedEndDate) < new Date(selectedStartDate)) {
-			setFieldErrorHighlight("iterationEndDate");
-			showMessagePopup("End date must be >= start date");
-			$("#iterationEndDate").focus();
+			// setFieldErrorHighlight("iterationEndDate");
+			// showMessagePopup("End date must be >= start date");
+			// $("#iterationEndDate").focus();
 			return false;
 		}
 		clearFieldErrorHighlight("iterationStartDate");
@@ -131,9 +132,9 @@ jQuery(function($) {
 		selectedEndDate = formatMMDDYYYY($("#iterationEndDate").val());
 		selectedStartDate = formatMMDDYYYY($("#iterationStartDate").val());
 		if (selectedStartDate != "" && new Date(selectedEndDate) < new Date(selectedStartDate)) {
-			setFieldErrorHighlight("iterationStartDate");
-			showMessagePopup("Start date must be <= end date");
-			$("#iterationStartDate").focus();
+			// setFieldErrorHighlight("iterationStartDate");
+			// showMessagePopup("Start date must be <= end date");
+			// $("#iterationStartDate").focus();
 			return false;
 		} else {
 			today = new Date($.now());
@@ -596,14 +597,14 @@ function addIteration(action) {
 			}
 
 			if (exists) {
-				if (!validIterationEntry()) {
+				// if (!validIterationEntry()) {
 					// enable add button which was disabled on click
-					if (action == "add")
-						$("#addIterationBtn").removeAttr("disabled");
-					else if (action == "update")
-						$("#updateIterationBtn").removeAttr("disabled");
-					return false;
-				}
+				// 	if (action == "add")
+				// 		$("#addIterationBtn").removeAttr("disabled");
+				// 	else if (action == "update")
+				// 		$("#updateIterationBtn").removeAttr("disabled");
+				// 	return false;
+				// }
 
 				$.ajax({
 					type : "GET",
@@ -614,7 +615,8 @@ function addIteration(action) {
 					var jsonData = data;
 					var rev = jsonData._rev;
 					console.log('Updating ' + currentIteration._id + '. The current revision is ' + rev + '.');
-					jsonData.iteration_name = $("#iterationName").val().trim();
+					// jsonData.iteration_name = $("#iterationName").val().trim();
+          jsonData.iteration_name = $("#iterationName").val();
 					jsonData.iteration_start_dt = formatMMDDYYYY($("#iterationStartDate").val());
 					jsonData.iteration_end_dt = formatMMDDYYYY($("#iterationEndDate").val());
 					// jsonData.iterationinfo_status = $('#iterationinfoStatus').val();
@@ -652,27 +654,32 @@ function addIteration(action) {
             var putResp = (typeof data == 'string' ? JSON.parse(data) : data);
             var rev2 = putResp.rev;
             console.log('Done updating ' + currentIteration._id + '. The new revision is ' + rev2 + '.');
+
+            // update cache
+            updateIterationCache(jsonData);
+            loadSelectedAgileTeamIterationInfo();
+            clearHighlightedIterErrors();
+            showMessagePopup("You have successfully updated Iteration information.");
+
           });
 					// update cache
-					updateIterationCache(jsonData);
-					loadSelectedAgileTeamIterationInfo();
-
+					// updateIterationCache(jsonData);
+					// loadSelectedAgileTeamIterationInfo();
+          // showMessagePopup("You have successfully updated Iteration information.");
 				});
-				showMessagePopup("You have successfully updated Iteration information.");
-
 			} else {
 				// showMessagePopup ("insert new iteration");
 				var newIterationId = prefixIteration + $("#teamSelectList").val() + " " + $("#iterationName").val() + "_" + new Date().getTime();
 				newIterationId = newIterationId.replace(/^[^a-z]+|[^\w:.-]+/gi, "");
 
-				if (!validIterationEntry()) {
+				// if (!validIterationEntry()) {
 					// enable add button which was disabled on click
-					if (action == "add")
-						$("#addIterationBtn").removeAttr("disabled");
-					else if (action == "update")
-						$("#updateIterationBtn").removeAttr("disabled");
-					return false;
-				}
+					// if (action == "add")
+					// 	$("#addIterationBtn").removeAttr("disabled");
+					// else if (action == "update")
+					// 	$("#updateIterationBtn").removeAttr("disabled");
+					// return false;
+				// }
 
 				// showMessagePopup ("newIterationId: " + newIterationId);
 				var serverDateTime = getServerDateTime();
@@ -680,8 +687,9 @@ function addIteration(action) {
 				jsonData._id = newIterationId;
 				jsonData.type = "iterationinfo";
 				jsonData.team_id = $("#teamSelectList").val();
-				jsonData.iteration_name = $("#iterationName").val().trim();
-				jsonData.iteration_start_dt = formatMMDDYYYY($("#iterationStartDate").val());
+        // jsonData.iteration_name = $("#iterationName").val().trim();
+				jsonData.iteration_name = $("#iterationName").val();
+        jsonData.iteration_start_dt = formatMMDDYYYY($("#iterationStartDate").val());
 				jsonData.iteration_end_dt = formatMMDDYYYY($("#iterationEndDate").val());
 				// jsonData.iterationinfo_status = $('#iterationinfoStatus').val();
 				jsonData.iterationinfo_status = calculateStatus();
@@ -721,7 +729,7 @@ function addIteration(action) {
 					console.log('Added iteration ' + jsonData.team_id + ' / ' + jsonData.iteration_name + '. The new document ID is ' + id + '.');
 
 					loadAgileTeamIterationInfo(jsonData.team_id, id);
-
+          clearHighlightedIterErrors();
 					showMessagePopup("You have successfully added Iteration information.");
 				});
 			}
@@ -770,7 +778,7 @@ function validIterationEntry() {
 		return false;
 	}
 	if (new Date(formatMMDDYYYY($("#iterationStartDate").val())) > new Date(formatMMDDYYYY($("#iterationEndDate").val()))) {
-		showMessagePopup('End date must be >= start date');
+		// showMessagePopup('End date must be >= start date');
 		setFieldErrorHighlight("iterationEndDate");
 		$("#iterationEndDate").focus();
 		return false;
@@ -790,6 +798,7 @@ function validIterationEntry() {
 			return false;
 		}
 	}
+
 	if (!isNaN($("#teamSatisfaction").val())) {
 		var value = parseFloat($("#teamSatisfaction").val());
 		if ((value !=0 && value < 1) || value > 4) {
@@ -803,11 +812,11 @@ function validIterationEntry() {
 }
 
 function updateIterationInfo(action) {
+  global_currentAction = action;
 	if (action == "add") {
 		// stop gap to disable multiple add
 		$("#addIterationBtn").attr("disabled", "disabled");
 		addIteration(action);
-
 	} else if (action == "update") {
 		$("#updateIterationBtn").attr("disabled", "disabled");
 		addIteration(action);
@@ -915,4 +924,29 @@ function calculateStatus() {
 	} else {
 		return "Not complete";
 	}
+}
+
+function clearHighlightedIterErrors() {
+  var fields = [
+  'teamSelectList',
+  'iterationName',
+  'iterationStartDate',
+  'iterationEndDate',
+  'commStories',
+  'commPoints',
+  'memberCount',
+  'fteThisiteration',
+  'commStoriesDel',
+  'commPointsDel',
+  'DeploythisIteration',
+  'defectsIteration',
+  'teamChangeList',
+  'commentIter',
+  'clientSatisfaction',
+  'teamSatisfaction'
+  ];
+
+  for (j=0; j < fields.length; j++) {
+    clearFieldErrorHighlight(fields[j]);
+  }
 }
