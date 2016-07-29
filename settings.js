@@ -8,9 +8,8 @@ module.exports = {
   secret: process.env.secret || 'thisshouldberandom',
   authType: process.env.authType || 'ldap-login',
   cloudant: {
-    userName: process.env['cloudantUserName'],
-    password: process.env['cloudantPassword'],
-    dbName: process.env['cloudantDbName']
+    url: process.env.cloudantURL || 'https://user:pass@user.cloudant.com',
+    dbName: process.env.cloudantDb || 'localDb'
   },
   saml: {
     path: '/auth/sso/callback',

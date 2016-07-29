@@ -5,7 +5,7 @@ var Promise = require('bluebird');
 var Cloudant = require('cloudant');
 var _ = require('underscore');
 var settings = require('../settings');
-var cloudantDb = Cloudant('https://' + settings.cloudant.userName + ':' + settings.cloudant.password + '@' + settings.cloudant.userName + '.cloudant.com');
+var cloudantDb = Cloudant(settings.cloudant.url);
 var dbName = settings.cloudant.dbName;
 var agileTeam = Promise.promisifyAll((cloudantDb.use(dbName)));
 
