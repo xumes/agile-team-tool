@@ -3,9 +3,8 @@ var _ = require("underscore");
 var request = require("request");
 var logger = require("../../middleware/logger.js")
 
-SMTP_HOST    = "FIXME";
-FROM         = "FIXME";
-EMAIL_APPKEY = "FIXME";
+SMTP_HOST    = settings.email.smtpHost;
+EMAIL_APPKEY = settings.email.smtpApplicationKey;
 
 var sendRequest = function(emailObj, cb) {
   var params = emailObj;
