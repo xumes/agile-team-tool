@@ -245,10 +245,9 @@ function isUserMemberOfTeam(teamId, checkParent) {
 	} 
 
 	if (!userExist && checkParent) {
-		for ( var i = 0; i < teamList.length; i++) {
-			if (teamList[i]._id == teamId && teamList[i].parent_team_id != "") 
-				return isUserMemberOfTeam(teamList[i].parent_team_id, checkParent);
-		}
+		var team = allTeamsLookup[teamId];
+		if (!_.isEmpty(team) && !_.isEmpty(team.parent_team_id))
+			return isUserMemberOfTeam(team.parent_team_id, checkParent);
 	}
 
 	return userExist;
