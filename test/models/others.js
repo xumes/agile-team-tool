@@ -40,11 +40,11 @@ describe("Other models [getSystemStatus]: get system status", function(done){
   });
 });
 
-describe("Other models [getServerTime]: get server time", function(done){
-  this.timeout(timeout);
-  it("return server time", function(done){
-    var sTime = otherModel.getServerTime();
-    expect(sTime).to.be.a('string');
-    done();
-  });
-})
+// describe("Other models [getServerTime]: get server time", function(done){
+//   this.timeout(timeout);
+//   it("return server time", function(done){
+//     var sTime = otherModel.getServerTime();
+//     expect(sTime).to.be.a('string');
+//     done();
+//   });
+// })

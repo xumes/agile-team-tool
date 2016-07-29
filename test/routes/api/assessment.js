@@ -171,7 +171,7 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
       if (err) {
         console.log(err);
       } else {
-        expect(res.body).to.be.empty
+        expect(res.body).to.be.empty;
       }
       done();
     });
@@ -185,10 +185,7 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
       if (err) {
         console.log(err);
       } else {
-        expect(res.body).to.be.empty
-        // expect(res.body).to.be.a('object');
-        // expect(res.body).to.have.property('error');
-        // expect(res.body.error).to.be.equal('No team id provided.');
+        expect(res.body).to.be.empty;
       }
       done();
     });
@@ -234,10 +231,7 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
       if (err) {
         console.log(err);
       } else {
-        expect(res.body).to.be.empty
-        // expect(res.body).to.be.a('object');
-        // expect(res.body).to.have.property('error');
-        // expect(res.body.error).to.be.equal('No assessment id provided.');
+        expect(res.body).to.be.empty;
       }
       done();
     });

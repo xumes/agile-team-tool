@@ -32,9 +32,13 @@ describe('Team API Tests', function() {
     req.send(teamDocInvalid);
     req.expect(400);
     req.end(function(err, res){
-      expect(res.body).to.not.equal(null);
-      expect(res.body).to.have.property('error');
-      expect(res.body.error).to.be.a('object');
+      if (err) {
+        console.log(err);
+      } else {
+        expect(res.body).to.not.equal(null);
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.a('object');
+      }
       done();
     });
   });
@@ -45,7 +49,12 @@ describe('Team API Tests', function() {
     req.send(teamDocValid);
     req.expect(201);
     req.end(function(err,res){
-      createdId = res.body['_id'];
+      if (err) {
+        console.log(err);
+      } else {
+        expect(res.body).to.have.property('_id');
+        createdId = res.body['_id'];
+      }
       done();
     });
   });
@@ -56,7 +65,15 @@ describe('Team API Tests', function() {
     agent.attachCookies(req);
     req.send(docu);
     req.expect(400);
-    req.end(done);
+    req.end(function(err, res){
+      if (err) {
+        console.log(err);
+      } else {
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.equal('not_found');
+      }
+      done();
+    });
   });
 
   it('it will return 400 because update data is invalid', function(done){
@@ -65,7 +82,14 @@ describe('Team API Tests', function() {
     agent.attachCookies(req);
     req.send(teamDocUpdateInvalid);
     req.expect(400);
-    req.end(done);
+    req.end(function(err, res){
+      if (err) {
+        console.log(err);
+      } else {
+        expect(res.body).to.have.property('error');
+      }
+      done();
+    });
   });
 
   it('it will return 200 after updating document', function(done){
@@ -77,6 +101,12 @@ describe('Team API Tests', function() {
     req.send(teamDocUpdateValid);
     req.expect(200);
     req.end(function(err, res){
+      if (err) {
+        console.log(err);
+      } else {
+        expect(res.body).to.have.property('_id');
+        expect(res.body._id).to.be.equal(createdId);
+      }
       done();
     });
   });
@@ -87,8 +117,12 @@ describe('Team API Tests', function() {
     agent.attachCookies(req);
     req.expect(200);
     req.end(function(err,res){
-      expect(res.body).to.be.a('object');
-      expect(res.body).to.have.property('rows');
+      if (err) {
+        console.log(err);
+      } else {
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.have.property('rows');
+      }
       done();
     });
   });
@@ -98,7 +132,12 @@ describe('Team API Tests', function() {
     agent.attachCookies(req);
     req.expect(400);
     req.end(function(err,res){
-      expect(res.body.error).to.be.equal('not_found');
+      if (err) {
+        console.log(err);
+      } else {
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.equal('not_found');
+      }
       done();
     });
   });
@@ -108,8 +147,12 @@ describe('Team API Tests', function() {
     agent.attachCookies(req);
     req.expect(200);
     req.end(function(err,res){
-      expect(res.body).to.be.a('object');
-      expect(res.body).to.have.property('type');
+      if (err) {
+        console.log(err);
+      } else {
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.have.property('type');
+      }
       done();
     });
   });
@@ -120,8 +163,12 @@ describe('Team API Tests', function() {
     agent.attachCookies(req);
     req.expect(200);
     req.end(function(err,res){
-      expect(res.body).to.be.a('object');
-      expect(res.body).to.have.property('rows');
+      if (err) {
+        console.log(err);
+      } else {
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.have.property('rows');
+      }
       done();
     });
   });
@@ -132,8 +179,12 @@ describe('Team API Tests', function() {
     agent.attachCookies(req);
     req.expect(200);
     req.end(function(err,res){
-      expect(res.body).to.be.a('object');
-      expect(res.body).to.have.property('rows');
+      if (err) {
+        console.log(err);
+      } else {
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.have.property('rows');
+      }
       done();
     });
   });
@@ -143,7 +194,11 @@ describe('Team API Tests', function() {
     agent.attachCookies(req);
     req.expect(200);
     req.end(function(err, res){
-      expect(res.body).to.be.empty;
+      if (err) {
+        console.log(err);
+      } else {
+        expect(res.body).to.be.empty;
+      }
       done();
     });
   });
@@ -152,9 +207,13 @@ describe('Team API Tests', function() {
     var req = request(app).get('/api/teams/names/' + teamDocUpdateValid['name']);
     agent.attachCookies(req);
     req.expect(200);
-    req.end(function(err,res){
-      console.log(res.body);
-      expect(res.body[0]['key']).to.be.equal(teamDocUpdateValid['name']);
+    req.end(function(err, res){
+      if (err) {
+        console.log(err);
+      } else {
+        expect(res.body[0]).to.have.property('key');
+        expect(res.body[0]['key']).to.be.equal(teamDocUpdateValid['name']);
+      }
       done();
     });
   });
@@ -164,7 +223,15 @@ describe('Team API Tests', function() {
     var req = request(app).get('/api/teams/members/' + 'invalid-email-add');
     agent.attachCookies(req);
     req.expect(400);
-    req.end(done);
+    req.end(function(err, res){
+      if (err) {
+        console.log(err);
+      } else {
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.have.property('email');
+      }
+      done();
+    });
   });
 
   it('it will return 400 and empty team lists because email without team', function(done){
@@ -172,7 +239,11 @@ describe('Team API Tests', function() {
     agent.attachCookies(req);
     req.expect(400);
     req.end(function(err, res){
-      expect(res.body).to.be.empty;
+      if (err) {
+        console.log(err);
+      } else {
+        expect(res.body).to.be.empty;
+      }
       done();
     });
   });
@@ -182,7 +253,12 @@ describe('Team API Tests', function() {
     agent.attachCookies(req);
     req.expect(200);
     req.end(function(err, res){
-      expect(res.body[0]['key']).to.be.equal(userValidEmail);
+      if (err) {
+        console.log(err);
+      } else {
+        expect(res.body[0]).to.have.property('key');
+        expect(res.body[0]['key']).to.be.equal(userValidEmail);
+      }
       done();
     });
   });
@@ -195,8 +271,14 @@ describe('Team API Tests', function() {
     agent.attachCookies(req);
     req.send(teamDocUpdateValid);
     req.expect(204);
-    req.end(done);
+    req.end(function(err, res){
+      if (err) {
+        console.log(err);
+      } else {
+        expect(res.body).to.be.empty;
+      }
+      done();
+    });
   });
 
 });
-

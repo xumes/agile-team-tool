@@ -226,22 +226,6 @@ describe('Iteration API Test [POST /api/iteration]: add team iteration document'
     });
   });
 
-  // it('Return Iteration no/identifier already exists', function(done){
-  //   var req = request(app).post('/api/iteration');
-  //   agent.attachCookies(req);
-  //   req.send(iterationDoc_duplicateIterName);
-  //   req.expect(200);
-  //   req.end(function(err, res){
-  //     if (err) {
-  //       console.log(err);
-  //     } else {
-  //       expect(res.body).to.have.property('error');
-  //       expect(res.body.error).to.contain('exists');
-  //     }
-  //     done();
-  //   });
-  // });
-
   it('It will fail to add invalid iteration document', function(done){
     var req =request(app).post('/api/iteration');
     agent.attachCookies(req);
