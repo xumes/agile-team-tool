@@ -235,9 +235,13 @@ function isUserMemberOfTeam(teamId, checkParent) {
 	if (allTeams == null)
 		return userExist;
 
-	if (myTeams != null) {
-		for (var i in myTeams) {
-			if (myTeams[i]._id == teamId) {					
+	var userTeams = myTeams;
+	if (_.has(userTeams, "_root") || _.has(userTeams, "_branch") || _.has(userTeams, "_standalone"))
+		userTeams = _.union(_.union(userTeams._root, userTeams._branch), userTeams._standalone);
+
+	if (userTeams != null) {
+		for (var i in userTeams) {
+			if (userTeams[i]._id == teamId) {					
 				userExist = true;
 				break;
 			}
