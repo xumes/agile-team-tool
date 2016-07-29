@@ -22,7 +22,7 @@ describe('Email API Test [POST /email/feedback]: send email to winnuser@us.ibm.c
   it("send email to winnuser", function(done){
     var req = request(app).post('/email/feedback');
     agent.attachCookies(req);
-    req.send({ feedback_page: "test page", feedback_teamName: "test team", feedback: "test", feedback_sender: "cjscotta@us.ibm.com", feedback_recipient: "winnuser@us.ibm.com"});
+    req.send({ feedback_page: "test page", feedback_teamName: "test team", feedback: "test", feedback_sender: "agile.team.tool.tester@ibm.com", feedback_recipient: "winnuser@us.ibm.com"});
     req.expect(200)
     .end(function(err, res){
       if (err) {
