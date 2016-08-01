@@ -23,7 +23,7 @@ var agent = request.agent(app);
 // do the login befre testing
 before(function(done) {
   agent
-    .get('/api/login/masquerade/john.doe@ph.ibm.com')
+    .get('/api/login/masquerade/Yanliang.Gu1@ibm.com')
     .send()
     .end(function(err, res) {
       if (err) throw err;
@@ -99,7 +99,7 @@ describe('Assesment API Test [POST /api/assessment]: add team assessment', funct
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.have.property('_id');
-        expect(res.body.error._id[0]).to.be.equal(' id can\'t be blank');
+        expect(res.body.error._id[0]).to.be.equal('Record id is required.');
       }
       done();
     });
@@ -119,7 +119,7 @@ describe('Assesment API Test [POST /api/assessment]: add team assessment', funct
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.have.property('_id');
-        expect(res.body.error._id[0]).to.be.equal(' id can\'t be blank');
+        expect(res.body.error._id[0]).to.be.equal('Record id is required.');
       }
       done();
     });
@@ -268,7 +268,7 @@ describe('Assessment API Test [PUT /api/assessment/]: update team assessment', f
       } else {
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.have.property('_id');
-        expect(res.body.error._id[0]).to.be.equal(' id can\'t be blank');
+        expect(res.body.error._id[0]).to.be.equal('Record id is required.');
       }
       done();
     });
@@ -287,7 +287,7 @@ describe('Assessment API Test [PUT /api/assessment/]: update team assessment', f
       } else {
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.have.property('_id');
-        expect(res.body.error._id[0]).to.be.equal(' id can\'t be blank');
+        expect(res.body.error._id[0]).to.be.equal('Record id is required.');
       }
       done();
     });

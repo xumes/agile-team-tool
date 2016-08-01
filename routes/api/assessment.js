@@ -38,7 +38,7 @@ module.exports = function(app, includes) {
   };
   
   addAssessment = function(req, res) {
-    assessmentModel.addTeamAssessment(req.body)
+    assessmentModel.addTeamAssessment(req.session["user"].shortEmail, req.body)
       .then(function(result){
         res.send(result);
       })
@@ -48,7 +48,7 @@ module.exports = function(app, includes) {
   };
   
   updateAssessment = function(req, res) {
-    assessmentModel.updateTeamAssessment(req.body)
+    assessmentModel.updateTeamAssessment(req.session["user"].shortEmail, req.body)
       .then(function(result){
         res.send(result);
       })
@@ -60,7 +60,7 @@ module.exports = function(app, includes) {
   deleteAssessment = function(req, res) {
     var docId = req.query.docId;
     var revId = req.query.revId;
-    assessmentModel.deleteAssessment(docId, revId)
+    assessmentModel.deleteAssessment(req.session["user"].shortEmail, docId, revId)
       .then(function(result){
         res.send(result);
       })
