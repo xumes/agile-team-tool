@@ -31,7 +31,7 @@ gulp.task('test', ['jshint', 'pre-test'], function () {
           lines: 90
         }
       }
-    })
+    }))
     .once('end', function() {
       process.exit();
     })
