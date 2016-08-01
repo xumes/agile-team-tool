@@ -5,6 +5,7 @@ var Promise = require('bluebird');
 var settings = require('../settings');
 var helper = require('../utils/helper');
 var common = require('./common-cloudant');
+var otherModels = require('../models/others');
 var _ = require('underscore');
 var loggers = require('../middleware/logger');
 var validate = require('validate.js');
@@ -107,47 +108,67 @@ var iteration = {
     return duplicate;
   },
 
-  add: function(data) {
+  add: function(data, user) {
     var cleanData = {};
+    data['last_updt_dt'] = otherModels.getServerTime();
+    data['last_updt_user'] = user['shortEmail'];
+    data['created_user'] = user['shortEmail'];
+    data['created_dt'] = otherModels.getServerTime();
+    data['type'] = 'iterationinfo';
     cleanData = helper.trimData(data);
+    var user_id = user['shortEmail'];
+    var team_id = cleanData['team_id'];
+    var checkParent = true;
     console.log('ADD cleanData:', cleanData);
     return new Promise(function(resolve, reject) {
       var validationErrors = validate(cleanData, iterationDocRules);
       if (validationErrors) {
         reject(formatErrMsg(validationErrors));
       } else {
-        var iteration_name = cleanData['iteration_name'];
-        var team_id = cleanData['team_id'];
-        iteration.getByIterInfo(team_id)
-        .then(function(iterData) {
-          if (iterData != undefined && iterData.rows) {
-            var duplicate = iteration.isIterationNumExist(iteration_name, iterData);
-            if (duplicate) {
-              var msg = {
-                iteration_name: ["Iteration number/identifier already exists"]
+        otherModels.isValidUser(user_id, team_id, checkParent)
+        .then(function(validUser) {
+          console.log('[add] isValidUser:', validUser);
+          if (validUser) {
+            var iteration_name = cleanData['iteration_name'];
+            iteration.getByIterInfo(team_id)
+            .then(function(iterData) {
+              if (iterData != undefined && iterData.rows) {
+                var duplicate = iteration.isIterationNumExist(iteration_name, iterData);
+                if (duplicate) {
+                  var msg = {
+                    iteration_name: ["Iteration number/identifier already exists"]
+                  }
+                  reject(formatErrMsg(msg));
+                } else {
+                  common.addRecord(cleanData)
+                  .then(function(body) {
+                    resolve(body);
+                    // console.log('ADD body:', body);
+                    successLogs('[add] New iteration doc created');
+                  })
+                  .catch( /* istanbul ignore next */ function(err) {
+                    /* cannot simulate Cloudant error during testing */
+                    formatErrMsg('[add] Err1:', err);
+                    loggers.get('models').error('[add] Err1: %s', err);
+                    var msg = err.message;
+                    reject(formatErrMsg(msg));
+                  });
+                }
               }
+            })
+            .catch( /* istanbul ignore next */ function(err) {
+              /* cannot simulate Cloudant error during testing */
+              formatErrMsg('[add] Err2:', err);
+              loggers.get('models').error('[add] Err2: %s', err);
+              var msg = err.message;
               reject(formatErrMsg(msg));
-            } else {
-              common.addRecord(cleanData)
-              .then(function(body) {
-                resolve(body);
-                // console.log('ADD body:', body);
-                successLogs('[add] New iteration doc created');
-              })
-              .catch( /* istanbul ignore next */ function(err) {
-                /* cannot simulate Cloudant error during testing */
-                formatErrMsg('[add] Err1:', err);
-                loggers.get('models').error('[add] Err1: %s', err);
-                var msg = err.message;
-                reject(formatErrMsg(msg));
-              });
-            }
+            });
           }
         })
         .catch( /* istanbul ignore next */ function(err) {
           /* cannot simulate Cloudant error during testing */
-          formatErrMsg('[add] Err2:', err);
-          loggers.get('models').error('[add] Err2: %s', err);
+          formatErrMsg('[add] Err1:', err);
+          loggers.get('models').error('[add] Err1: %s', err);
           var msg = err.message;
           reject(formatErrMsg(msg));
         });
@@ -155,92 +176,110 @@ var iteration = {
     });
   },
 
-  edit: function(iterationId, data) {
+  edit: function(iterationId, data, user) {
     var cleanData = {};
+    data['last_updt_dt'] = otherModels.getServerTime();
+    data['last_updt_user'] = user['shortEmail'];
     cleanData = helper.trimData(data);
     console.log('EDIT iterationId:', iterationId);
     console.log('EDIT cleanData:', cleanData);
+    var user_id = user['shortEmail'];
+    var team_id = cleanData['team_id'];
+    var checkParent = true;
     return new Promise(function(resolve, reject){
       var validationErrors = validate(cleanData, iterationDocRules);
       if (validationErrors) {
         reject(formatErrMsg(validationErrors));
       } else {
-        common.getRecord(iterationId)
-        .then(function(body) {
-          if (!_.isEmpty(body)) {
-            // loggers.get('models').info('[edit] Team iteration info obtained: ', JSON.stringify(body, null, 4));
-            var _rev = body._rev;
-            var _id = body._id;
-            cleanData._rev = _rev;
-            cleanData._id = _id;
+        otherModels.isValidUser(user_id, team_id, checkParent)
+        .then(function(validUser) {
+          console.log('[edit] isValidUser:', validUser);
+          if (validUser) {
+            common.getRecord(iterationId)
+            .then(function(body) {
+              if (!_.isEmpty(body)) {
+                // loggers.get('models').info('[edit] Team iteration info obtained: ', JSON.stringify(body, null, 4));
+                var _rev = body._rev;
+                var _id = body._id;
+                cleanData._rev = _rev;
+                cleanData._id = _id;
 
-            var old_iteration_name = body['iteration_name'].trim();
-            var new_iteration_name = cleanData['iteration_name'].trim();
-            var team_id = body['team_id'];
-            var isNewIterationName = false;
-            if (old_iteration_name != new_iteration_name) {
-              isNewIterationName = true;
-            }
-            if (isNewIterationName == false) {
-              common.updateRecord(cleanData)
-              .then(function(result) {
-                resolve(result);
-                // console.log('EDIT result1:', result);
-                successLogs('Team iteration doc updated');
-              })
-              .catch( /* istanbul ignore next */ function(err) {
-                /* cannot simulate Cloudant error during testing */
-                // console.log('[edit] Err1:', err);
-                loggers.get('models').error('[edit] Err1: %s', err);
-                var msg = err.message;
-                reject(formatErrMsg(msg));
-              });
-            } else {
-              iteration.getByIterInfo(team_id)
-              .then(function(iterData) {
-                if (iterData != undefined && iterData.rows) {
-                  var duplicate = iteration.isIterationNumExist(new_iteration_name, iterData);
-                  if (duplicate) {
-                    var msg = {
-                      iteration_name: ["Iteration number/identifier already exists"]
-                    }
-                    reject(formatErrMsg(msg));
-                  } else {
-                    common.updateRecord(cleanData)
-                    .then(function(result) {
-                      resolve(result);
-                      // console.log('EDIT result2:', result);
-                      successLogs('Team iteration doc updated');
-                    })
-                    .catch( /* istanbul ignore next */ function(err) {
-                      /* cannot simulate Cloudant error during testing */
-                      // console.log('[edit] Err2:', err);
-                      loggers.get('models').error('[edit] Err2: %s', err);
-                      var msg = err.message;
-                      reject(formatErrMsg(msg));
-                    });
-                  }
+                var old_iteration_name = body['iteration_name'].trim();
+                var new_iteration_name = cleanData['iteration_name'].trim();
+                var team_id = body['team_id'];
+                var isNewIterationName = false;
+                if (old_iteration_name != new_iteration_name) {
+                  isNewIterationName = true;
                 }
-              })
-              .catch( /* istanbul ignore next */ function(err) {
-                /* cannot simulate Cloudant error during testing */
-                // console.log('[edit] Err3:', err);
-                loggers.get('models').error('[edit] Err3: %s', err);
-                var msg = err.message;
+                if (isNewIterationName == false) {
+                  common.updateRecord(cleanData)
+                  .then(function(result) {
+                    resolve(result);
+                    // console.log('EDIT result1:', result);
+                    successLogs('Team iteration doc updated');
+                  })
+                  .catch( /* istanbul ignore next */ function(err) {
+                    /* cannot simulate Cloudant error during testing */
+                    // console.log('[edit] Err1:', err);
+                    loggers.get('models').error('[edit] Err1: %s', err);
+                    var msg = err.message;
+                    reject(formatErrMsg(msg));
+                  });
+                } else {
+                  iteration.getByIterInfo(team_id)
+                  .then(function(iterData) {
+                    if (iterData != undefined && iterData.rows) {
+                      var duplicate = iteration.isIterationNumExist(new_iteration_name, iterData);
+                      if (duplicate) {
+                        var msg = {
+                          iteration_name: ["Iteration number/identifier already exists"]
+                        }
+                        reject(formatErrMsg(msg));
+                      } else {
+                        common.updateRecord(cleanData)
+                        .then(function(result) {
+                          resolve(result);
+                          // console.log('EDIT result2:', result);
+                          successLogs('Team iteration doc updated');
+                        })
+                        .catch( /* istanbul ignore next */ function(err) {
+                          /* cannot simulate Cloudant error during testing */
+                          // console.log('[edit] Err2:', err);
+                          loggers.get('models').error('[edit] Err2: %s', err);
+                          var msg = err.message;
+                          reject(formatErrMsg(msg));
+                        });
+                      }
+                    }
+                  })
+                  .catch( /* istanbul ignore next */ function(err) {
+                    /* cannot simulate Cloudant error during testing */
+                    // console.log('[edit] Err3:', err);
+                    loggers.get('models').error('[edit] Err3: %s', err);
+                    var msg = err.message;
+                    reject(formatErrMsg(msg));
+                  });
+                }
+              } else {
+                var msg = "not_found";
                 reject(formatErrMsg(msg));
-              });
-            }
-          } else {
-            var msg = "not_found";
-            reject(formatErrMsg(msg));
+              }
+            })
+            .catch( /* istanbul ignore next */ function(err) {
+              /* cannot simulate Cloudant error during testing */
+              // console.log('[edit] Err4:', err);
+              // var msg = err.error;
+              var msg = err.message;
+              loggers.get('models').error('[edit] Err4:', err);
+              reject(formatErrMsg(msg));
+            });
           }
         })
         .catch( /* istanbul ignore next */ function(err) {
           /* cannot simulate Cloudant error during testing */
-          // console.log('[edit] Err4:', err);
-          // var msg = err.error;
+          formatErrMsg('[add] Err1:', err);
+          loggers.get('models').error('[add] Err1: %s', err);
           var msg = err.message;
-          loggers.get('models').error('[edit] Err4:', err);
           reject(formatErrMsg(msg));
         });
       }

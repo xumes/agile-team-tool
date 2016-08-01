@@ -139,59 +139,11 @@ var iterationDocInvalid = {
   "created_dt": "2016-04-04 03:07:10 EDT"
 };
 
-describe('Iteration Model', function() {
-  after(function(done) {
-    this.timeout(timeout);
-    console.log('Attempt to delete Doc1 docId: '+ iterationId);
-    iterationModel.get(iterationId)
-    .then(function(result) {
-      var _id = result._id;
-      var _rev = result._rev;
-      iterationModel.delete(_id, _rev)
-      .then(function(result) {
-        console.log('Successfully deleted Doc1 docId: '+_id);
-      })
-      .catch(function(err) {
-        console.log('Err: Attempt to delete Doc1 docId: ' + _id);
-        expect(err).to.not.equal(null);
-      });
-    })
-    .catch(function(err) {
-      console.log('Err: Attempt to delete Doc1 docId: ' + iterationId);
-      expect(err).to.not.equal(null);
-    })
-    .finally(function() {
-      setTimeout(function() {
-        var iterationId2 = 'testmyid';
-        console.log('Attempt to delete Doc2 docId: ' + iterationId2);
-        iterationModel.get(iterationId2)
-        .then(function(result) {
-          var _id = result._id;
-          var _rev = result._rev;
-          iterationModel.delete(_id, _rev)
-          .then(function(result) {
-            console.log('Successfully deleted Doc2 docId: ' + _id);
-          })
-          .catch(function(err) {
-            console.log('Err: Attempt to delete Doc2 docId: ' + iterationId2);
-            console.log(err);
-            expect(err).to.not.equal(null);
-          });
-        })
-        .catch(function(err) {
-          console.log('Err: Attempt to delete Doc2 docId: ' + iterationId2);
-          console.log(err);
-          expect(err).to.not.equal(null);
-        })
-        .finally(function() {
-          setTimeout(function() {
-            done();
-          }, 3000);
-        });
-      }, 3000);
-    });
-  });
+var user = {
+  'shortEmail': 'ortegaaa@ph.ibm.com'
+};
 
+describe('Iteration Model', function() {
   describe('[getByIterInfo]: Get iteration document', function() {
     this.timeout(timeout);
     it('Get all team iteration documents', function(done) {
@@ -276,7 +228,7 @@ describe('Iteration Model', function() {
   describe('[add]: Add team iteration document', function() {
     this.timeout(timeout);
     it('It will successfully add new iteration document', function(done) {
-      iterationModel.add(iterationDocValid)
+      iterationModel.add(iterationDocValid, user)
       .then(function(result) {
         iterationId = result.id;
         console.log('result iterationId:', iterationId);
@@ -293,7 +245,7 @@ describe('Iteration Model', function() {
     });
 
     it('Return Iteration no/identifier already exists', function(done) {
-      iterationModel.add(iterationDoc_duplicateIterName)
+      iterationModel.add(iterationDoc_duplicateIterName, user)
       .then(function(result) {
         expect(result).to.be.a('object');
         expect(result).to.have.property('id');
@@ -310,7 +262,7 @@ describe('Iteration Model', function() {
     });
 
     it('It will fail to add iteration document', function(done) {
-      iterationModel.add(iterationDocInvalid)
+      iterationModel.add(iterationDocInvalid, user)
       .then(function(result) {
         console.log('iterationDocInvalid result:', result);
         expect(result).to.be.a('object');
@@ -330,7 +282,7 @@ describe('Iteration Model', function() {
   describe('[edit]: Edit team iteration document', function(){
     this.timeout(timeout);
     it('It will successfully update iteration document', function(done) {
-      iterationModel.edit(iterationId, iterationDocValid_sample2)
+      iterationModel.edit(iterationId, iterationDocValid_sample2, user)
       .then(function(result) {
         console.log('[edit] result:', result);
         expect(result).to.be.a('object');
@@ -347,7 +299,7 @@ describe('Iteration Model', function() {
     });
 
     it('Return Iteration no/identifier already exists', function(done) {
-      iterationModel.edit(iterationId, iterationDoc_duplicateIterName)
+      iterationModel.edit(iterationId, iterationDoc_duplicateIterName, user)
       .then(function(result) {
         console.log('iterationDoc_duplicateIterName:', iterationDoc_duplicateIterName);
         console.log('iterationDoc_duplicateIterName :', result);
@@ -369,7 +321,7 @@ describe('Iteration Model', function() {
 
 
     it('It will fail to update iteration document', function(done) {
-      iterationModel.edit(iterationId, iterationDocInvalid)
+      iterationModel.edit(iterationId, iterationDocInvalid, user)
       .then(function(result) {
         console.log('iterationDocInvalid result:', result);
         expect(result).to.be.a('object');
@@ -392,7 +344,7 @@ describe('Iteration Model', function() {
     it('Saved successfully iterationId3 document', function(done) {
       this.timeout(timeout);
       iterationId3 = iterationDocValid._id;
-      iterationModel.add(iterationDocValid)
+      iterationModel.add(iterationDocValid, user)
       .then(function(result) {
         expect(result).to.be.a('object1');
         expect(result).to.have.property('id');
@@ -410,7 +362,7 @@ describe('Iteration Model', function() {
     it('It will successfully update document(iterationId3)', function(done) {
       this.timeout(timeout);
       console.log('Attempt to edit iterationId3: ', iterationId3);
-      iterationModel.edit(iterationId3, iterationDocValid)
+      iterationModel.edit(iterationId3, iterationDocValid, user)
       .then(function(result) {
         console.log('[edit] iterationId3 result:', result);
         expect(result).to.be.a('object');
@@ -429,7 +381,7 @@ describe('Iteration Model', function() {
       this.timeout(timeout);
       console.log('Attempt to edit iterationId3: ', iterationId3);
       iterationDocValid.iteration_name = 'newiterationname';
-      iterationModel.edit(iterationId3, iterationDocValid)
+      iterationModel.edit(iterationId3, iterationDocValid, user)
       .then(function(result) {
         console.log('[edit] iterationId3 result:', result);
         expect(result).to.be.a('object');
@@ -448,7 +400,7 @@ describe('Iteration Model', function() {
       this.timeout(timeout);
       console.log('Attempt to edit iterationId3: ', iterationId3);
       iterationDocValid.iteration_name = 'newiterationname';
-      iterationModel.edit(111111, iterationDocValid)
+      iterationModel.edit(111111, iterationDocValid, user)
       .then(function(result) {
         console.log('[edit] iterationId3 result:', result);
         expect(result).to.be.a('object');

@@ -1,6 +1,7 @@
 "use strict";
 
 var iterationModel = require('../../models/iteration');
+var otherModels = require('../../models/iteration');
 var loggers = require('../../middleware/logger');
 var validate = require('validate.js');
 var _ = require('underscore');
@@ -84,10 +85,7 @@ module.exports = function(app, includes) {
     }
     // loggers.get('api').info('[createIteration] POST data:', data);
     console.log('[createIteration] POST data:', data);
-    data['last_updt_user'] = req.session['user'].shortEmail;
-    data['created_user'] = req.session['user'].shortEmail;
-    data['type'] = 'iterationinfo';
-    iterationModel.add(data)
+    iterationModel.add(data, req.session['user'])
     .then(function(result) {
       res.send(result);
     })
@@ -113,9 +111,7 @@ module.exports = function(app, includes) {
       return res.status(400).send({ error: 'Iteration data is missing' });
     }
     // loggers.get('api').info('[updateIteration] POST data:', JSON.stringify(data, null, 4));
-    data['last_updt_user'] = req.session['user'].shortEmail;
-    data['type'] = 'iterationinfo';
-    iterationModel.edit(curIterationId, data)
+    iterationModel.edit(curIterationId, data, req.session['user'])
     .then(function(result) {
       res.send(result);
     })
