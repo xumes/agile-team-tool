@@ -119,7 +119,7 @@ var iteration = {
     var user_id = user['shortEmail'];
     var team_id = cleanData['team_id'];
     var checkParent = true;
-    console.log('ADD cleanData:', cleanData);
+    // console.log('ADD cleanData:', cleanData);
     return new Promise(function(resolve, reject) {
       var validationErrors = validate(cleanData, iterationDocRules);
       if (validationErrors) {
@@ -182,7 +182,7 @@ var iteration = {
     data['last_updt_user'] = user['shortEmail'];
     cleanData = helper.trimData(data);
     console.log('EDIT iterationId:', iterationId);
-    console.log('EDIT cleanData:', cleanData);
+    // console.log('EDIT cleanData:', cleanData);
     var user_id = user['shortEmail'];
     var team_id = cleanData['team_id'];
     var checkParent = true;
@@ -289,19 +289,26 @@ var iteration = {
   delete: function(docId, revId) {
     console.log('iteration.delete docId: '+docId + ' revId:'+revId);
     return new Promise(function(resolve, reject){
-      common.deleteRecord(docId, revId)
-      .then(function(body) {
-        // console.log('iteration.delete RESULT:', body);
-        loggers.get('models').info('[delete] result: %s', body);
-        resolve(body);
-      })
-      .catch( /* istanbul ignore next */ function(err) {
-        /* cannot simulate Cloudant error during testing */
-        var msg = err.message;
-        // console.log('iteration.delete err:', err);
-        loggers.get('models').error('[delete]: %s', err);
+      if (!docId && !revId) {
+        var msg = {
+          _id: ["_id/_rev is missing"]
+        }
         reject(formatErrMsg(msg));
-      });
+      } else {
+        common.deleteRecord(docId, revId)
+        .then(function(body) {
+          // console.log('iteration.delete RESULT:', body);
+          loggers.get('models').info('[delete] result: %s', body);
+          resolve(body);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          /* cannot simulate Cloudant error during testing */
+          var msg = err.message;
+          // console.log('iteration.delete err:', err);
+          loggers.get('models').error('[delete]: %s', err);
+          reject(formatErrMsg(msg));
+        });
+      }
     });
   }
 };

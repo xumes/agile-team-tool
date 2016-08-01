@@ -32,7 +32,8 @@ module.exports = function(app, includes) {
     .then(function(result) {
       res.send(result);
     })
-    .catch(function(err) {
+    .catch( /* istanbul ignore next */ function(err) {
+      /* cannot simulate Cloudant error during testing */
       formatErrMsg('[getIterinfo]:' + err);
       return res.status(400).send({ error: err });
     });
@@ -49,7 +50,8 @@ module.exports = function(app, includes) {
     .then(function(result) {
       res.send(result);
     })
-    .catch(function(err) {
+    .catch( /* istanbul ignore next */ function(err) {
+      /* cannot simulate Cloudant error during testing */
       formatErrMsg('[getIterationDoc]:' + err);
       return res.status(400).send({ error: err });
     });
@@ -68,7 +70,8 @@ module.exports = function(app, includes) {
     .then(function(result) {
       res.send(result);
     })
-    .catch(function(err) {
+    .catch( /* istanbul ignore next */ function(err) {
+      /* cannot simulate Cloudant error during testing */
       formatErrMsg('[getCompletedIterations]:' + err);
       return res.status(400).send({ error: err });
     });
@@ -89,7 +92,8 @@ module.exports = function(app, includes) {
     .then(function(result) {
       res.send(result);
     })
-    .catch(function(err) {
+    .catch( /* istanbul ignore next */ function(err) {
+      /* cannot simulate Cloudant error during testing */
       console.log('[api] [createIteration]:', err);
       loggers.get('api').error('[createIteration]:', err);
       res.status(400).send(err);
@@ -115,7 +119,8 @@ module.exports = function(app, includes) {
     .then(function(result) {
       res.send(result);
     })
-    .catch(function(err) {
+    .catch( /* istanbul ignore next */ function(err) {
+      /* cannot simulate Cloudant error during testing */
       loggers.get('api').error('[updateIteration]:', err);
       res.status(400).send(err);
     });
