@@ -50,3 +50,20 @@ describe('Others API Test [GET /api/others/systemstatus]: get system status', fu
     });
   });
 });
+
+describe('Others API Test [GET /api/others/servertime]: get server time', function(){
+  it('It will return server time successfully', function(done){
+    var req = request(app).get('/api/others/servertime');
+    agent.attachCookies(req);
+    req.expect(200);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.body).to.be.a('object');
+        //console.log(res.body);
+      }
+      done();
+    });
+  });
+});

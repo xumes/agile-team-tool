@@ -8,7 +8,8 @@ module.exports = function(app, includes) {
     authType = settings.authType;
     if(authType === 'ldap-login') {
       action = '/auth';
-    } 
+    }
+    /* istanbul ignore next */
     else if (authType === 'saml') {
       return res.redirect('/auth/sso');
     }
@@ -21,6 +22,7 @@ module.exports = function(app, includes) {
   };
 
   //TODO
+  /* istanbul ignore next */
   authSaml = function(req, res, next) {
     // console.log('authSaml executed');
     passportAuth = includes.passport.authenticate('saml', function(err, user, info) {

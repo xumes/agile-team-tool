@@ -14,6 +14,7 @@ module.exports = function(app, includes) {
       .then(function(result){
         res.status(200).send(result);
       })
+      /* istanbul ignore next */
       .catch(function(err){
         res.status(400).send(err);
       });
@@ -24,6 +25,7 @@ module.exports = function(app, includes) {
       .then(function(result){
         res.status(200).send(result);
       })
+      /* istanbul ignore next */
       .catch(function(err){
         res.status(400).send(err);
       });
