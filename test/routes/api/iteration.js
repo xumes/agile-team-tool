@@ -10,6 +10,7 @@ var docId;
 var iterationId;
 var iterationId3;
 var timeout = 100000;
+var adminUser = 'Yanliang.Gu1@ibm.com';
 var iterationDocValid = {
   "_id": "testmyid-" + crypto.randomBytes(20).toString('hex'),
   "type": "iterationinfo",
@@ -25,14 +26,14 @@ var iterationDocValid = {
   "nbr_story_pts_dlvrd": "",
   "iteration_comments": "",
   "team_mbr_change": "No",
-  "last_updt_user": "ortegaaa@ph.ibm.com",
+  "last_updt_user": adminUser,
   "fte_cnt": "0.0",
   "nbr_dplymnts": "",
   "nbr_defects": "",
   "client_sat": "1.0",
   "team_sat": "4",
   "last_updt_dt": "2016-04-04 03:07:10 EDT",
-  "created_user": "ortegaaa@ph.ibm.com",
+  "created_user": adminUser,
   "created_dt": "2016-04-04 03:07:10 EDT"
 };
 
@@ -51,14 +52,14 @@ var iterationDoc_duplicateIterName = {
   "nbr_story_pts_dlvrd": "",
   "iteration_comments": "",
   "team_mbr_change": "No",
-  "last_updt_user": "ortegaaa@ph.ibm.com",
+  "last_updt_user": adminUser,
   "fte_cnt": "0.0",
   "nbr_dplymnts": "",
   "nbr_defects": "",
   "client_sat": "1.0",
   "team_sat": "4",
   "last_updt_dt": "2016-04-04 03:07:10 EDT",
-  "created_user": "ortegaaa@ph.ibm.com",
+  "created_user": adminUser,
   "created_dt": "2016-04-04 03:07:10 EDT"
 };
 
@@ -77,14 +78,14 @@ var iterationDocValid_sample1 = {
   "nbr_story_pts_dlvrd": "",
   "iteration_comments": "",
   "team_mbr_change": "No",
-  "last_updt_user": "ortegaaa@ph.ibm.com",
+  "last_updt_user": adminUser,
   "fte_cnt": "0.0",
   "nbr_dplymnts": "",
   "nbr_defects": "",
   "client_sat": "1.0",
   "team_sat": "4",
   "last_updt_dt": "2016-04-04 03:07:10 EDT",
-  "created_user": "ortegaaa@ph.ibm.com",
+  "created_user": adminUser,
   "created_dt": "2016-04-04 03:07:10 EDT"
 };
 
@@ -103,14 +104,14 @@ var iterationDocValid_sample2 = {
   "nbr_story_pts_dlvrd": "",
   "iteration_comments": "",
   "team_mbr_change": "No",
-  "last_updt_user": "ortegaaa@ph.ibm.com",
+  "last_updt_user": adminUser,
   "fte_cnt": "0.0",
   "nbr_dplymnts": "",
   "nbr_defects": "",
   "client_sat": "1.0",
   "team_sat": "4",
   "last_updt_dt": "2016-04-04 03:07:10 EDT",
-  "created_user": "ortegaaa@ph.ibm.com",
+  "created_user": adminUser,
   "created_dt": "2016-04-04 03:07:10 EDT"
 };
 
@@ -129,24 +130,23 @@ var iterationDocInvalid = {
   "nbr_story_pts_dlvrd": "",
   "iteration_comments": "",
   "team_mbr_change": "No",
-  "last_updt_user": "ortegaaa@ph.ibm.com",
+  "last_updt_user": adminUser,
   "fte_cnt": "0.0",
   "nbr_dplymnts": "",
   "nbr_defects": "",
   "client_sat": "alpha",
   "team_sat": "-1",
   "last_updt_dt": "2016-04-04 03:07:10 EDT",
-  "created_user": "ortegaaa@ph.ibm.com",
+  "created_user": adminUser,
   "created_dt": "2016-04-04 03:07:10 EDT"
 };
 
-var user = 'ortegaaa@ph.ibm.com';
 var agent = request.agent(app);
 
 // do the login befre testing
 before(function(done) {
   agent
-    .get('/api/login/masquerade/' + user)
+    .get('/api/login/masquerade/' + adminUser)
     .end(function(err, res) {
       if (err) throw err;
       agent.saveCookies(res);
@@ -332,6 +332,7 @@ describe('Iteration API Test [PUT /api/iteration/]: update iteration document', 
     req.send(iterationDocValid_sample2);
     req.expect(200);
     req.end(function(err, res){
+        console.log(res.body);
       if (err) {
         console.log(err);
       } else {

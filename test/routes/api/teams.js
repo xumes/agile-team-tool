@@ -9,14 +9,14 @@ var teamDocInvalid = dummyData.teams.invalidDoc;
 var teamDocUpdateInvalid = dummyData.teams.validDoc;
 var teamDocUpdateValid = dummyData.teams.validDoc;
 var userValidEmail = dummyData.user.details.shortEmail;
-
+var adminUser = 'Yanliang.Gu1@ibm.com';
 var createdId = null;
 var agent = request.agent(app);
 
 describe('Team API Tests', function() {
   before(function(done) {
     agent
-      .get('/api/login/masquerade/john.doe@ph.ibm.com')
+      .get('/api/login/masquerade/' + adminUser)
       .send()
       .end(function(err, res) {
         if (err) throw err;
@@ -234,10 +234,10 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 400 and empty team lists because email without team', function(done){
+  it('it will return 200 and empty team lists because email without team', function(done){
     var req = request(app).get('/api/teams/members/' + 'emailWithoutTeam@email.com');
     agent.attachCookies(req);
-    req.expect(400);
+    req.expect(200);
     req.end(function(err, res){
       if (err) {
         console.log(err);

@@ -23,7 +23,7 @@ var agent = request.agent(app);
 // do the login befre testing
 before(function(done) {
   agent
-    .get('/api/login/masquerade/john.doe@ph.ibm.com')
+    .get('/api/login/masquerade/Yanliang.Gu1@ibm.com')
     .send()
     .end(function(err, res) {
       if (err) throw err;
@@ -86,7 +86,7 @@ describe('Assesment API Test [GET /api/assessment/template]: get assessment temp
   });
 });
 
-xdescribe('Assesment API Test [POST /api/assessment]: add team assessment', function(){
+describe('Assesment API Test [POST /api/assessment]: add team assessment', function(){
   it('add assessment with no assessment id', function(done){
     var req = request(app).post('/api/assessment/');
     agent.attachCookies(req);
@@ -99,7 +99,7 @@ xdescribe('Assesment API Test [POST /api/assessment]: add team assessment', func
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.have.property('_id');
-        expect(res.body.error._id[0]).to.be.equal(' id can\'t be blank');
+        expect(res.body.error._id[0]).to.be.equal('Record id is required.');
       }
       done();
     });
@@ -119,7 +119,7 @@ xdescribe('Assesment API Test [POST /api/assessment]: add team assessment', func
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.have.property('_id');
-        expect(res.body.error._id[0]).to.be.equal(' id can\'t be blank');
+        expect(res.body.error._id[0]).to.be.equal('Record id is required.');
       }
       done();
     });
@@ -162,7 +162,7 @@ xdescribe('Assesment API Test [POST /api/assessment]: add team assessment', func
   });
 });
 
-xdescribe('Assessment API Test [GET /api/assessment/view]: get team assessments', function(){
+describe('Assessment API Test [GET /api/assessment/view]: get team assessments', function(){
   it('retrieve team assessments with non-existing team id', function(done){
     var req = request(app).get('/api/assessment/view/' + 'teamId=' + invalidTeamId);
     agent.attachCookies(req);
@@ -256,7 +256,7 @@ xdescribe('Assessment API Test [GET /api/assessment/view]: get team assessments'
   });
 });
 
-xdescribe('Assessment API Test [PUT /api/assessment/]: update team assessment', function(){
+describe('Assessment API Test [PUT /api/assessment/]: update team assessment', function(){
   it('update assessment with no id', function(done){
     var req = request(app).put('/api/assessment/');
     agent.attachCookies(req);
@@ -268,7 +268,7 @@ xdescribe('Assessment API Test [PUT /api/assessment/]: update team assessment', 
       } else {
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.have.property('_id');
-        expect(res.body.error._id[0]).to.be.equal(' id can\'t be blank');
+        expect(res.body.error._id[0]).to.be.equal('Record id is required.');
       }
       done();
     });
@@ -287,7 +287,7 @@ xdescribe('Assessment API Test [PUT /api/assessment/]: update team assessment', 
       } else {
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.have.property('_id');
-        expect(res.body.error._id[0]).to.be.equal(' id can\'t be blank');
+        expect(res.body.error._id[0]).to.be.equal('Record id is required.');
       }
       done();
     });
@@ -316,7 +316,7 @@ xdescribe('Assessment API Test [PUT /api/assessment/]: update team assessment', 
   });
 });
 
-xdescribe('Assessment API Test [DELETE /api/assessment]: delete assessment', function(){
+describe('Assessment API Test [DELETE /api/assessment]: delete assessment', function(){
   it('delete assessment with non-existing id', function(done){
     var query = querystring.stringify({'docId': invalidAssessId, 'revId': currRevisionId});
     var req = request(app).delete('/api/assessment?' + query);
