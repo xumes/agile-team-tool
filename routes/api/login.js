@@ -25,6 +25,7 @@ module.exports = function(app, includes) {
         }
     };
     req.login(user, function(err) {
+      /* istanbul ignore if  */
       if (err) {
         res.send(err);
       } else {

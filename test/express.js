@@ -17,6 +17,14 @@ describe('GET /login', function() {
   });
 });
 
+describe('GET /logout', function() {
+  it('should redirect to /login', function(done) {
+    request(app)
+      .get('/logout')
+      .expect(302, done);
+  });
+});
+
 describe('GET /undefined-none-existing-route', function() {
   it('should respond with 404', function(done) {
     request(app)
