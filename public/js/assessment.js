@@ -879,10 +879,12 @@ function updateAgileTeamAssessment(action) {
 				showLog(JSON.stringify(jsonData));
 				$.ajax({
 					type : "DELETE",
-					url : baseUrlDb + "/" + encodeURIComponent(jsonData["_id"]) + '?rev=' + jsonData["_rev"],
-					headers : {
+					//url : baseUrlDb + "/" + encodeURIComponent(jsonData["_id"]) + '?rev=' + jsonData["_rev"],
+					url : "/api/assessment" + "?docId=" + encodeURIComponent(jsonData["_id"]) + '&revId=' + jsonData["_rev"],
+					//data: {docId: encodeURIComponent(jsonData["_id"], rev:}
+					/*headers : {
 						"Authorization" : "Basic " + btoa(user + ":" + pass)
-					},
+					},*/
 					error : errorHandler
 				}).done(function(data) {
 					showMessagePopup("Draft assessment has been deleted.");

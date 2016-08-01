@@ -86,7 +86,7 @@ describe('Assesment API Test [GET /api/assessment/template]: get assessment temp
   });
 });
 
-describe('Assesment API Test [POST /api/assessment]: add team assessment', function(){
+xdescribe('Assesment API Test [POST /api/assessment]: add team assessment', function(){
   it('add assessment with no assessment id', function(done){
     var req = request(app).post('/api/assessment/');
     agent.attachCookies(req);
@@ -162,7 +162,7 @@ describe('Assesment API Test [POST /api/assessment]: add team assessment', funct
   });
 });
 
-describe('Assessment API Test [GET /api/assessment/view]: get team assessments', function(){
+xdescribe('Assessment API Test [GET /api/assessment/view]: get team assessments', function(){
   it('retrieve team assessments with non-existing team id', function(done){
     var req = request(app).get('/api/assessment/view/' + 'teamId=' + invalidTeamId);
     agent.attachCookies(req);
@@ -256,7 +256,7 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
   });
 });
 
-describe('Assessment API Test [PUT /api/assessment/]: update team assessment', function(){
+xdescribe('Assessment API Test [PUT /api/assessment/]: update team assessment', function(){
   it('update assessment with no id', function(done){
     var req = request(app).put('/api/assessment/');
     agent.attachCookies(req);
@@ -316,7 +316,7 @@ describe('Assessment API Test [PUT /api/assessment/]: update team assessment', f
   });
 });
 
-describe('Assessment API Test [DELETE /api/assessment]: delete assessment', function(){
+xdescribe('Assessment API Test [DELETE /api/assessment]: delete assessment', function(){
   it('delete assessment with non-existing id', function(done){
     var query = querystring.stringify({'docId': invalidAssessId, 'revId': currRevisionId});
     var req = request(app).delete('/api/assessment?' + query);

@@ -598,11 +598,12 @@ function submitActionPlan(jsonData, msg){
 	
 	$.ajax({
 		type : "PUT",
-		url : baseUrlDb + "/" + encodeURIComponent(jsonData._id),
+		//url : baseUrlDb + "/" + encodeURIComponent(jsonData._id),
+		url: "/api/assessment",
 		contentType : "application/json",
-		headers : {
+		/*headers : {
 			"Authorization" : "Basic " + btoa(user + ":" + pass)
-		},
+		},*/
 		data : JSON.stringify(jsonData),
 		error : errorHandler
 	}).done(function (data) {
