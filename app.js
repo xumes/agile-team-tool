@@ -17,8 +17,9 @@ app.use(favicon(__dirname + '/public/img/favicon.ico'));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+if (process.env.NODE_ENV !== 'test')
+  app.use(logger('dev'));
 
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: false
@@ -88,6 +89,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
-console.log(settings)
+if (process.env.NODE_ENV !== 'test')
+  console.log(settings)
 
 module.exports = app;

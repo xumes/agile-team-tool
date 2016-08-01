@@ -61,10 +61,10 @@ before(function(done){
     return assessmentModel.deleteAssessment(body._id, body._rev);
   })
   .catch(function(err){
-    console.log(err);
+    //console.log(err);
   })
   .finally(function(){
-    console.log('team data preparation done. '+curr_assessment._id+' for team '+curr_assessment.team_id);
+    //console.log('team data preparation done. '+curr_assessment._id+' for team '+curr_assessment.team_id);
     done();
   });
 });
@@ -76,7 +76,7 @@ describe('Assesment API Test [GET /api/assessment/template]: get assessment temp
     req.expect(200);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('rows');
@@ -94,7 +94,7 @@ describe('Assesment API Test [POST /api/assessment]: add team assessment', funct
     req.expect(400);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('error');
@@ -114,7 +114,7 @@ describe('Assesment API Test [POST /api/assessment]: add team assessment', funct
     req.expect(400);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('error');
@@ -132,13 +132,13 @@ describe('Assesment API Test [POST /api/assessment]: add team assessment', funct
     req.expect(200);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body.ok).to.be.true;
         expect(res.body.id).to.be.equal(curr_assessment._id);
         currRevisionId = res.body.rev;
-        console.log(currRevisionId);
+        //console.log(currRevisionId);
       }
       done();
     });
@@ -151,7 +151,7 @@ describe('Assesment API Test [POST /api/assessment]: add team assessment', funct
     req.expect(400);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('error');
@@ -169,7 +169,7 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
     req.expect(404);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.empty;
       }
@@ -183,7 +183,7 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
     req.expect(404);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.empty;
       }
@@ -198,7 +198,7 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
     req.expect(200);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('rows');
@@ -215,7 +215,7 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
     req.expect(404);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.empty
       }
@@ -229,7 +229,7 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
     req.expect(404);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.empty;
       }
@@ -244,7 +244,7 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
     req.expect(200);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('_id');
@@ -264,7 +264,7 @@ describe('Assessment API Test [PUT /api/assessment/]: update team assessment', f
     req.expect(400);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.have.property('_id');
@@ -283,7 +283,7 @@ describe('Assessment API Test [PUT /api/assessment/]: update team assessment', f
     req.expect(400);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.have.property('_id');
@@ -303,7 +303,7 @@ describe('Assessment API Test [PUT /api/assessment/]: update team assessment', f
     req.expect(200);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('id');
@@ -324,7 +324,7 @@ describe('Assessment API Test [DELETE /api/assessment]: delete assessment', func
     req.expect(400);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('error');
@@ -341,7 +341,7 @@ describe('Assessment API Test [DELETE /api/assessment]: delete assessment', func
     req.expect(400);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('error');
@@ -358,7 +358,7 @@ describe('Assessment API Test [DELETE /api/assessment]: delete assessment', func
     req.expect(400);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('error');
@@ -375,7 +375,7 @@ describe('Assessment API Test [DELETE /api/assessment]: delete assessment', func
     req.expect(400);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('error');
@@ -392,7 +392,7 @@ describe('Assessment API Test [DELETE /api/assessment]: delete assessment', func
     req.expect(200);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('ok');

@@ -1,6 +1,10 @@
 var winston = require('winston');
 
-var logLevel = process.env.logLevel || 'info';
+if (process.env.NODE_ENV == 'test')
+  var logLevel = 'NONE';
+else
+  var logLevel = process.env.logLevel || 'info';
+
 var logColors = process.env.logColors == 'true';
 
 // Add additional transports here if needed

@@ -144,7 +144,7 @@ module.exports.formatForBulkDelete = function(docs, email){
  */
 module.exports.isUserMemberOfTeam = function(teamId, checkParent, teamLists, userTeams) {
   var userExist = false;
-console.log('exported..');
+// console.log('exported..');
   if (teamLists == null)
     return userExist;
 

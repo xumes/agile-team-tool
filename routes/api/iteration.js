@@ -87,14 +87,14 @@ module.exports = function(app, includes) {
       return res.status(400).send({ error: 'Iteration data is missing' });
     }
     // loggers.get('api').info('[createIteration] POST data:', data);
-    console.log('[createIteration] POST data:', data);
+    // console.log('[createIteration] POST data:', data);
     iterationModel.add(data, req.session['user'])
     .then(function(result) {
       res.send(result);
     })
     .catch( /* istanbul ignore next */ function(err) {
       /* cannot simulate Cloudant error during testing */
-      console.log('[api] [createIteration]:', err);
+      // console.log('[api] [createIteration]:', err);
       loggers.get('api').error('[createIteration]:', err);
       res.status(400).send(err);
     });

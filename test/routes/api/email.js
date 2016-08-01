@@ -26,7 +26,7 @@ describe('Email API Test [POST /email/feedback]: send email to winnuser@us.ibm.c
     req.expect(200)
     .end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       }else {
         expect(res.text).to.equal("Thank you! \n Your feedback has been sent successfully.");
       }

@@ -121,7 +121,7 @@ describe("common cloudant model [deleteRecord]", function(){
   });
 
   //supply with test data with valid record id & revision id
-  xit("delete assessment [valid record id with valid revision id]", function(done){
+  it("delete assessment [valid record id with valid revision id]", function(done){
     commonModel.deleteRecord('01a4073afd76c2cde8dcf42a56f25741', '1-ec6a956f2d6f305f06a80c5f234fa8c4')
       .then(function(body){
         expect(body).to.be.a('object');

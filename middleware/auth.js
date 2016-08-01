@@ -6,7 +6,7 @@ module.exports.requireLogin = function(req, res, next) {
     return next();
 };
 module.exports.requireLoginWithRedirect = function(req, res, next) {
-  console.log("req.path=", req.path);
+  //console.log("req.path=", req.path);
   if (req.path == '/auth' || req.path == '/auth/sso/callback')
     return next();
   else if(_.isEmpty(req.user))

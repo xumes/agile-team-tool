@@ -22,9 +22,9 @@ module.exports = function(app, includes) {
 
   //TODO
   authSaml = function(req, res, next) {
-    console.log('authSaml executed');
+    // console.log('authSaml executed');
     passportAuth = includes.passport.authenticate('saml', function(err, user, info) {
-      console.log("err=", err);
+      // console.log("err=", err);
       req.session['email'] = user.nameID;
       req.session['user'] = user;
       loggers.get('auth').info('Successfully authenticated %s', user);

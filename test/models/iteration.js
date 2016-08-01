@@ -231,7 +231,7 @@ describe('Iteration Model', function() {
       iterationModel.add(iterationDocValid, user)
       .then(function(result) {
         iterationId = result.id;
-        console.log('result iterationId:', iterationId);
+        //console.log('result iterationId:', iterationId);
         expect(result).to.be.a('object');
         expect(result).to.have.property('id');
         expect(result.ok).to.be.equal(true);
@@ -252,7 +252,7 @@ describe('Iteration Model', function() {
         expect(result.ok).to.be.equal(true);
       })
       .catch(function(err) {
-        console.log('[add] Return Iteration no/identifier already exists err, ', err);
+        //console.log('[add] Return Iteration no/identifier already exists err, ', err);
         expect(err.error).to.contain('exists');
         expect(err).to.not.equal(null);
       })
@@ -264,13 +264,13 @@ describe('Iteration Model', function() {
     it('It will fail to add iteration document', function(done) {
       iterationModel.add(iterationDocInvalid, user)
       .then(function(result) {
-        console.log('iterationDocInvalid result:', result);
+        //console.log('iterationDocInvalid result:', result);
         expect(result).to.be.a('object');
         expect(result).to.have.property('id');
         expect(result.ok).to.be.equal(true);
       })
       .catch(function(err) {
-        console.log('[add] It will fail to add iteration document, ', err);
+        //console.log('[add] It will fail to add iteration document, ', err);
         expect(err).to.not.equal(null);
       })
       .finally(function() {
@@ -284,13 +284,13 @@ describe('Iteration Model', function() {
     it('It will successfully update iteration document', function(done) {
       iterationModel.edit(iterationId, iterationDocValid_sample2, user)
       .then(function(result) {
-        console.log('[edit] result:', result);
+        //console.log('[edit] result:', result);
         expect(result).to.be.a('object');
         expect(result).to.have.property('id');
         expect(result.ok).to.be.equal(true);
       })
       .catch(function(err) {
-        console.log('[edit] Edit team iteration document:', err);
+        //console.log('[edit] Edit team iteration document:', err);
         expect(err).to.not.equal(null);
       })
       .finally(function() {
@@ -301,14 +301,14 @@ describe('Iteration Model', function() {
     it('Return Iteration no/identifier already exists', function(done) {
       iterationModel.edit(iterationId, iterationDoc_duplicateIterName, user)
       .then(function(result) {
-        console.log('iterationDoc_duplicateIterName:', iterationDoc_duplicateIterName);
-        console.log('iterationDoc_duplicateIterName :', result);
+        //console.log('iterationDoc_duplicateIterName:', iterationDoc_duplicateIterName);
+        //console.log('iterationDoc_duplicateIterName :', result);
         expect(result).to.be.a('object');
         expect(result).to.have.property('id');
         expect(result.ok).to.be.equal(true);
       })
       .catch(function(err) {
-        console.log('[edit] Return Iteration no/identifier already exists:', err);
+        //console.log('[edit] Return Iteration no/identifier already exists:', err);
         expect(err.error.iteration_name[0]).to.contain('exists');
         expect(err.error).to.have.property('iteration_name');
         expect(err).to.not.equal(null);
@@ -323,13 +323,13 @@ describe('Iteration Model', function() {
     it('It will fail to update iteration document', function(done) {
       iterationModel.edit(iterationId, iterationDocInvalid, user)
       .then(function(result) {
-        console.log('iterationDocInvalid result:', result);
+        //console.log('iterationDocInvalid result:', result);
         expect(result).to.be.a('object');
         expect(result).to.have.property('id');
         expect(result.ok).to.be.equal(true);
       })
       .catch(function(err) {
-        console.log('[edit] It will fail to update iteration document:', err);
+        //console.log('[edit] It will fail to update iteration document:', err);
         expect(err).to.be.a('object');
         // expect(err).to.have.property('team_id');
         expect(err).to.not.equal(null);
@@ -351,7 +351,7 @@ describe('Iteration Model', function() {
         expect(result.ok).to.be.equal(true);
       })
       .catch(function(err) {
-        console.log('[edit] Edit team iteration iterationId3 document res2:', err);
+        //console.log('[edit] Edit team iteration iterationId3 document res2:', err);
         expect(err).to.not.equal(null);
       })
       .finally(function() {
@@ -361,17 +361,17 @@ describe('Iteration Model', function() {
 
     it('It will successfully update document(iterationId3)', function(done) {
       this.timeout(timeout);
-      console.log('Attempt to edit iterationId3: ', iterationId3);
+      //console.log('Attempt to edit iterationId3: ', iterationId3);
       iterationModel.edit(iterationId3, iterationDocValid, user)
       .then(function(result) {
-        console.log('[edit] iterationId3 result:', result);
+        //console.log('[edit] iterationId3 result:', result);
         expect(result).to.be.a('object');
         expect(result).to.have.property('id');
         expect(result.ok).to.be.equal(true);
         done();
       })
       .catch(function(err) {
-        console.log('[edit] Edit team iteration iterationId3 document res1:', err);
+        //console.log('[edit] Edit team iteration iterationId3 document res1:', err);
         expect(err).to.not.equal(null);
         done();
       });
@@ -379,18 +379,18 @@ describe('Iteration Model', function() {
 
     it('It will successfully updated document(iterationId3) with New iteration name', function(done) {
       this.timeout(timeout);
-      console.log('Attempt to edit iterationId3: ', iterationId3);
+      //console.log('Attempt to edit iterationId3: ', iterationId3);
       iterationDocValid.iteration_name = 'newiterationname';
       iterationModel.edit(iterationId3, iterationDocValid, user)
       .then(function(result) {
-        console.log('[edit] iterationId3 result:', result);
+        //console.log('[edit] iterationId3 result:', result);
         expect(result).to.be.a('object');
         expect(result).to.have.property('id');
         expect(result.ok).to.be.equal(true);
         done();
       })
       .catch(function(err) {
-        console.log('[edit] Edit team iteration iterationId3 document res1:', err);
+        //console.log('[edit] Edit team iteration iterationId3 document res1:', err);
         expect(err).to.not.equal(null);
         done();
       });
@@ -398,17 +398,17 @@ describe('Iteration Model', function() {
 
     it('Should return not_found', function(done) {
       this.timeout(timeout);
-      console.log('Attempt to edit iterationId3: ', iterationId3);
+      //console.log('Attempt to edit iterationId3: ', iterationId3);
       iterationDocValid.iteration_name = 'newiterationname';
       iterationModel.edit(111111, iterationDocValid, user)
       .then(function(result) {
-        console.log('[edit] iterationId3 result:', result);
+        //console.log('[edit] iterationId3 result:', result);
         expect(result).to.be.a('object');
         expect(result).to.have.property('id');
         expect(result.ok).to.be.equal(true);
       })
       .catch(function(err) {
-        console.log('[edit] Edit team iteration iterationId3 document res1:', err);
+        //console.log('[edit] Edit team iteration iterationId3 document res1:', err);
         expect(err.error).to.equal('missing');
         expect(err).to.not.equal(null);
       })

@@ -161,40 +161,40 @@ after(function(done){
     var _rev = result._rev;
     iterationModel.delete(_id, _rev)
     .then(function(result){
-      console.log('Successfully deleted Doc1 docId: '+_id);
+      //console.log('Successfully deleted Doc1 docId: '+_id);
     })
     .catch(function(err){
-      console.log('Err: Attempt to delete Doc1 docId: ' + _id);
-      console.log(err);
+      //console.log('Err: Attempt to delete Doc1 docId: ' + _id);
+      //console.log(err);
       expect(err).to.not.equal(null);
     });
   })
   .catch(function(err) {
-    console.log('Err: Attempt to delete Doc1 docId: ' + iterationId);
-    console.log(err);
+    //console.log('Err: Attempt to delete Doc1 docId: ' + iterationId);
+    //console.log(err);
     expect(err).to.not.equal(null);
   })
   .finally(function(){
     setTimeout(function() {
       var iterationId2 = 'testmyid';
-      console.log('Attempt to delete Doc2 docId: ' + iterationId2);
+      //console.log('Attempt to delete Doc2 docId: ' + iterationId2);
       iterationModel.get(iterationId2)
       .then(function(result) {
         var _id = result._id;
         var _rev = result._rev;
         iterationModel.delete(_id, _rev)
         .then(function(result) {
-          console.log('Successfully deleted Doc2 docId: ' + _id);
+          //console.log('Successfully deleted Doc2 docId: ' + _id);
         })
         .catch(function(err) {
-          console.log('Err: Attempt to delete Doc2 docId: ' + iterationId2);
-          console.log(err);
+          //console.log('Err: Attempt to delete Doc2 docId: ' + iterationId2);
+          //console.log(err);
           expect(err).to.not.equal(null);
         });
       })
       .catch(function(err) {
-        console.log('Err: Attempt to delete Doc1 docId: ' + iterationId2);
-        console.log(err);
+        //console.log('Err: Attempt to delete Doc1 docId: ' + iterationId2);
+        //console.log(err);
         expect(err).to.not.equal(null);
       })
       .finally(function() {
@@ -214,7 +214,7 @@ describe('Iteration API Test [POST /api/iteration]: add team iteration document'
     req.expect(200);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('id');
@@ -233,7 +233,7 @@ describe('Iteration API Test [POST /api/iteration]: add team iteration document'
     req.expect(400);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.have.property('error');
       }
@@ -247,7 +247,7 @@ describe('Iteration API Test [POST /api/iteration]: add team iteration document'
     req.expect(400);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.have.property('error');
       }
@@ -263,7 +263,7 @@ describe('Iteration API Test [GET /api/iteration/]: get iteration doucments', fu
     req.expect(200);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('rows');
@@ -279,7 +279,7 @@ describe('Iteration API Test [GET /api/iteration/]: get iteration doucments', fu
     req.expect(200);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('rows');
@@ -297,7 +297,7 @@ describe('Iteration API Test [GET /api/iteration/]: get iteration doucments', fu
     req.expect(200);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.have.property('rows');
         expect(res.body.rows).to.be.empty;
@@ -315,7 +315,7 @@ describe('Iteration API Test [GET /api/iteration/completed]: get completed itera
     req.expect(200);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('rows');
@@ -333,7 +333,7 @@ describe('Iteration API Test [PUT /api/iteration/]: update iteration document', 
     req.expect(200);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.have.property('id');
         expect(res.body.id).to.be.equal(iterationId);
@@ -349,7 +349,7 @@ describe('Iteration API Test [PUT /api/iteration/]: update iteration document', 
     req.expect(400);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.be.equal('iterationId is missing');
@@ -366,7 +366,7 @@ describe('Iteration API Test [PUT /api/iteration/]: update iteration document', 
     req.expect(400);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.be.equal('Iteration data is missing');
@@ -382,7 +382,7 @@ describe('Iteration API Test [PUT /api/iteration/]: update iteration document', 
     req.expect(400);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.have.property('error');
       }
@@ -398,7 +398,7 @@ describe('Iteration API Test [GET /api/iteration/current]: get iteration doc by 
     req.expect(200);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.have.property('_id');
         expect(res.body._id).to.be.equal(iterationId);
@@ -413,7 +413,7 @@ describe('Iteration API Test [GET /api/iteration/current]: get iteration doc by 
     req.expect(400);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.have.property('error');
         expect(res.body.error.error).to.be.equal('not_found');

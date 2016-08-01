@@ -64,10 +64,10 @@ describe("assessment model [addTeamAssessment] ", function(){
       return assessmentModel.deleteAssessment(body._id, body._rev);
     })
     .catch(function(err){
-      console.log(err);
+      //console.log(err);
     })
     .finally(function(){
-      console.log('team data preparation done. '+curr_assessment._id+' for team '+curr_assessment.team_id);
+      //console.log('team data preparation done. '+curr_assessment._id+' for team '+curr_assessment.team_id);
       done();
     });
   });

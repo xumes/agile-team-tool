@@ -23,7 +23,7 @@ describe('Others API Test [GET /api/others/admins]: get admins', function(){
     req.expect(200);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('ACL_Full_Admin');
@@ -41,10 +41,10 @@ describe('Others API Test [GET /api/others/systemstatus]: get system status', fu
     req.expect(200);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
-        console.log(res.body);
+        //console.log(res.body);
       }
       done();
     });

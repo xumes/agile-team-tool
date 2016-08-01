@@ -1,10 +1,29 @@
 var request = require('supertest');
 var app     = require('../../../app');
+var chai = require('chai');
+var expect = chai.expect;
 
-xdescribe('GET /iteration', function() {
-  it('should respond with HTML', function(done) {
-    request(app)
-      .get('/iteration')
-      .expect(200, done);
+var agent = request.agent(app);
+
+before(function(done) {
+  agent
+    .get('/api/login/masquerade/john.doe@ph.ibm.com')
+    .send()
+    .end(function(err, res) {
+      if (err) throw err;
+      agent.saveCookies(res);
+      done();
+    })
+});
+
+
+describe('GET /iteration', function() {
+  it("should return 200", function(done){
+    var req = request(app).get('/iteration');
+    agent.attachCookies(req);
+    req.expect(200);
+    req.end(function(err, res){
+      done();
+    });
   });
 });

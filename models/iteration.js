@@ -104,7 +104,7 @@ var iteration = {
         break;
       }
     }
-    // console.log('teamIterInfo list:', tmplist);
+    // // console.log('teamIterInfo list:', tmplist);
     return duplicate;
   },
 
@@ -119,7 +119,7 @@ var iteration = {
     var user_id = user['shortEmail'];
     var team_id = cleanData['team_id'];
     var checkParent = true;
-    // console.log('ADD cleanData:', cleanData);
+    // // console.log('ADD cleanData:', cleanData);
     return new Promise(function(resolve, reject) {
       var validationErrors = validate(cleanData, iterationDocRules);
       if (validationErrors) {
@@ -127,7 +127,7 @@ var iteration = {
       } else {
         otherModels.isValidUser(user_id, team_id, checkParent)
         .then(function(validUser) {
-          console.log('[add] isValidUser:', validUser);
+          // console.log('[add] isValidUser:', validUser);
           if (validUser) {
             var iteration_name = cleanData['iteration_name'];
             iteration.getByIterInfo(team_id)
@@ -143,7 +143,7 @@ var iteration = {
                   common.addRecord(cleanData)
                   .then(function(body) {
                     resolve(body);
-                    // console.log('ADD body:', body);
+                    // // console.log('ADD body:', body);
                     successLogs('[add] New iteration doc created');
                   })
                   .catch( /* istanbul ignore next */ function(err) {
@@ -181,8 +181,8 @@ var iteration = {
     data['last_updt_dt'] = otherModels.getServerTime();
     data['last_updt_user'] = user['shortEmail'];
     cleanData = helper.trimData(data);
-    console.log('EDIT iterationId:', iterationId);
-    // console.log('EDIT cleanData:', cleanData);
+    // console.log('EDIT iterationId:', iterationId);
+    // // console.log('EDIT cleanData:', cleanData);
     var user_id = user['shortEmail'];
     var team_id = cleanData['team_id'];
     var checkParent = true;
@@ -193,7 +193,7 @@ var iteration = {
       } else {
         otherModels.isValidUser(user_id, team_id, checkParent)
         .then(function(validUser) {
-          console.log('[edit] isValidUser:', validUser);
+          // console.log('[edit] isValidUser:', validUser);
           if (validUser) {
             common.getRecord(iterationId)
             .then(function(body) {
@@ -215,12 +215,12 @@ var iteration = {
                   common.updateRecord(cleanData)
                   .then(function(result) {
                     resolve(result);
-                    // console.log('EDIT result1:', result);
+                    // // console.log('EDIT result1:', result);
                     successLogs('Team iteration doc updated');
                   })
                   .catch( /* istanbul ignore next */ function(err) {
                     /* cannot simulate Cloudant error during testing */
-                    // console.log('[edit] Err1:', err);
+                    // // console.log('[edit] Err1:', err);
                     loggers.get('models').error('[edit] Err1: %s', err);
                     var msg = err.message;
                     reject(formatErrMsg(msg));
@@ -239,12 +239,12 @@ var iteration = {
                         common.updateRecord(cleanData)
                         .then(function(result) {
                           resolve(result);
-                          // console.log('EDIT result2:', result);
+                          // // console.log('EDIT result2:', result);
                           successLogs('Team iteration doc updated');
                         })
                         .catch( /* istanbul ignore next */ function(err) {
                           /* cannot simulate Cloudant error during testing */
-                          // console.log('[edit] Err2:', err);
+                          // // console.log('[edit] Err2:', err);
                           loggers.get('models').error('[edit] Err2: %s', err);
                           var msg = err.message;
                           reject(formatErrMsg(msg));
@@ -254,7 +254,7 @@ var iteration = {
                   })
                   .catch( /* istanbul ignore next */ function(err) {
                     /* cannot simulate Cloudant error during testing */
-                    // console.log('[edit] Err3:', err);
+                    // // console.log('[edit] Err3:', err);
                     loggers.get('models').error('[edit] Err3: %s', err);
                     var msg = err.message;
                     reject(formatErrMsg(msg));
@@ -267,7 +267,7 @@ var iteration = {
             })
             .catch( /* istanbul ignore next */ function(err) {
               /* cannot simulate Cloudant error during testing */
-              // console.log('[edit] Err4:', err);
+              // // console.log('[edit] Err4:', err);
               // var msg = err.error;
               var msg = err.message;
               loggers.get('models').error('[edit] Err4:', err);
@@ -287,7 +287,7 @@ var iteration = {
   },
 
   delete: function(docId, revId) {
-    console.log('iteration.delete docId: '+docId + ' revId:'+revId);
+    // console.log('iteration.delete docId: '+docId + ' revId:'+revId);
     return new Promise(function(resolve, reject){
       if (!docId && !revId) {
         var msg = {
@@ -297,14 +297,14 @@ var iteration = {
       } else {
         common.deleteRecord(docId, revId)
         .then(function(body) {
-          // console.log('iteration.delete RESULT:', body);
+          // // console.log('iteration.delete RESULT:', body);
           loggers.get('models').info('[delete] result: %s', body);
           resolve(body);
         })
         .catch( /* istanbul ignore next */ function(err) {
           /* cannot simulate Cloudant error during testing */
           var msg = err.message;
-          // console.log('iteration.delete err:', err);
+          // // console.log('iteration.delete err:', err);
           loggers.get('models').error('[delete]: %s', err);
           reject(formatErrMsg(msg));
         });

@@ -33,7 +33,7 @@ describe('Team API Tests', function() {
     req.expect(400);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.not.equal(null);
         expect(res.body).to.have.property('error');
@@ -50,7 +50,7 @@ describe('Team API Tests', function() {
     req.expect(201);
     req.end(function(err,res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.have.property('_id');
         createdId = res.body['_id'];
@@ -67,7 +67,7 @@ describe('Team API Tests', function() {
     req.expect(400);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.be.equal('not_found');
@@ -84,7 +84,7 @@ describe('Team API Tests', function() {
     req.expect(400);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.have.property('error');
       }
@@ -102,7 +102,7 @@ describe('Team API Tests', function() {
     req.expect(200);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.have.property('_id');
         expect(res.body._id).to.be.equal(createdId);
@@ -118,7 +118,7 @@ describe('Team API Tests', function() {
     req.expect(200);
     req.end(function(err,res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('rows');
@@ -133,7 +133,7 @@ describe('Team API Tests', function() {
     req.expect(400);
     req.end(function(err,res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.be.equal('not_found');
@@ -148,7 +148,7 @@ describe('Team API Tests', function() {
     req.expect(200);
     req.end(function(err,res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('type');
@@ -164,7 +164,7 @@ describe('Team API Tests', function() {
     req.expect(200);
     req.end(function(err,res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('rows');
@@ -180,7 +180,7 @@ describe('Team API Tests', function() {
     req.expect(200);
     req.end(function(err,res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('rows');
@@ -195,7 +195,7 @@ describe('Team API Tests', function() {
     req.expect(200);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.empty;
       }
@@ -209,7 +209,7 @@ describe('Team API Tests', function() {
     req.expect(200);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body[0]).to.have.property('key');
         expect(res.body[0]['key']).to.be.equal(teamDocUpdateValid['name']);
@@ -225,7 +225,7 @@ describe('Team API Tests', function() {
     req.expect(400);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.have.property('email');
@@ -240,7 +240,7 @@ describe('Team API Tests', function() {
     req.expect(400);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.empty;
       }
@@ -254,7 +254,7 @@ describe('Team API Tests', function() {
     req.expect(200);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body[0]).to.have.property('key');
         expect(res.body[0]['key']).to.be.equal(userValidEmail);
@@ -273,7 +273,7 @@ describe('Team API Tests', function() {
     req.expect(204);
     req.end(function(err, res){
       if (err) {
-        console.log(err);
+        //console.log(err);
       } else {
         expect(res.body).to.be.empty;
       }
