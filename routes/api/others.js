@@ -29,15 +29,15 @@ module.exports = function(app, includes) {
       });
   };
 
-  // getServerTime = function(req, res) {
-  //   var result = otherModel.getServerTime();
-  //   res.status(200).send(result);
-  // };
+  getServerTime = function(req, res) {
+     var result = otherModel.getServerTime();
+     res.status(200).send(result);
+  };
 
   // Get admins and supports api call
   app.get('/api/others/admins', [includes.middleware.auth.requireLogin], getAdmins);
   // Get system status api call
   app.get('/api/others/systemstatus', [includes.middleware.auth.requireLogin], getSystemStatus);
   // Get server time api call
-  //app.get('/api/others/servertime', [includes.middleware.auth.requireLogin], getServerTime);
+  app.get('/api/others/servertime', [includes.middleware.auth.requireLogin], getServerTime);
 };
