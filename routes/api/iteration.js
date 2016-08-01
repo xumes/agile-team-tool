@@ -82,7 +82,7 @@ module.exports = function(app, includes) {
     if (_.isEmpty(data)) {
       return res.status(400).send({ error: 'Iteration data is missing' });
     }
-    loggers.get('api').info('[createIteration] POST data:', data);
+    // loggers.get('api').info('[createIteration] POST data:', data);
     console.log('[createIteration] POST data:', data);
     data['last_updt_user'] = req.session['user'].shortEmail;
     data['created_user'] = req.session['user'].shortEmail;
@@ -112,7 +112,7 @@ module.exports = function(app, includes) {
     if (_.isEmpty(data)) {
       return res.status(400).send({ error: 'Iteration data is missing' });
     }
-    loggers.get('api').info('[updateIteration] POST data:', JSON.stringify(data, null, 4));
+    // loggers.get('api').info('[updateIteration] POST data:', JSON.stringify(data, null, 4));
     data['last_updt_user'] = req.session['user'].shortEmail;
     data['type'] = 'iterationinfo';
     iterationModel.edit(curIterationId, data)
