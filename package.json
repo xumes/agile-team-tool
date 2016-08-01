@@ -23,6 +23,7 @@
     "gulp-mocha": "^2.2.0",
     "istanbul": "^0.4.4",
     "jshint": "^2.9.2",
+    "lodash": "^4.14.1",
     "mocha": "^2.5.3",
     "moment": "^2.14.1",
     "morgan": "~1.7.0",
