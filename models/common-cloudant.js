@@ -4,10 +4,27 @@
 var Promise = require('bluebird');
 var Cloudant = require('cloudant');
 var _ = require('underscore');
+var lodash = require('lodash');
 var settings = require('../settings');
+var loggers = require('../middleware/logger');
 var cloudantDb = Cloudant(settings.cloudant.url);
 var dbName = settings.cloudant.dbName;
 var agileTeam = Promise.promisifyAll((cloudantDb.use(dbName)));
+
+var formatErrMsg = function(msg){
+  loggers.get('models').info('Error: ' + msg);
+  return { error : msg };
+};
+
+var successLogs = function(msg){
+  loggers.get('models').info('Success: ' + msg);
+  return;
+};
+
+var infoLogs = function(msg){
+  loggers.get('models').info(msg);
+  return;
+};
 
 exports.addRecord = function(data) {
   return new Promise(function(resolve, reject){
@@ -47,15 +64,19 @@ exports.updateRecord = function(data) {
 };
 
 exports.deleteRecord = function(_id, _rev) {
-  return new Promise(function(resolve, reject) {
-    if (!(_.isUndefined(_id)) && !(_.isUndefined(_rev))) {
+  return new Promise(function(resolve, reject){
+    infoLogs('Deleting record '+_id+' rev: '+_rev);
+    if(!lodash.isEmpty(_id) && !lodash.isEmpty(_rev)){
       agileTeam.destroyAsync(_id, _rev)
-      .then(function(body){
-        resolve(body);
-      })
-      .catch(function(err){
-        reject(err);
-      });
+        .then(function(body){
+          successLogs('Record '+_id+' rev: '+_rev+' has been deleted successfully.');
+          resolve(body);
+        })
+        .catch(function(err){
+          reject(err);
+        });
+    }else{
+      reject(formatErrMsg('No document/revision id provided for deletion.'));
     }
   });
 };
