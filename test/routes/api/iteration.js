@@ -332,7 +332,7 @@ describe('Iteration API Test [PUT /api/iteration/]: update iteration document', 
     req.send(iterationDocValid_sample2);
     req.expect(200);
     req.end(function(err, res){
-        console.log(res.body);
+        //console.log(res.body);
       if (err) {
         //console.log(err);
       } else {
