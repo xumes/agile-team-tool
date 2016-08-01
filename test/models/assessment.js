@@ -111,7 +111,7 @@ describe("assessment models [validate user]", function(){
     assessmentModel.userValidation(dummyData.user.details.shortEmail,curr_assessment.team_id)
       .then(function(body){
         expect(body).to.equal(true);
-        console.log('User '+dummyData.user.details.shortEmail+' allowed.');
+        //console.log('User '+dummyData.user.details.shortEmail+' allowed.');
       })
       .catch(function(err){
         expect(err.error).to.equal('Unauthorized user.');
@@ -125,7 +125,7 @@ describe("assessment models [validate user]", function(){
     assessmentModel.userValidation(parentUser.shortEmail,curr_assessment.team_id)
       .then(function(body){
         expect(body).to.equal(true);
-        console.log('User '+parentUser.shortEmail+' is allowed.');
+        //console.log('User '+parentUser.shortEmail+' is allowed.');
       })
       .catch(function(err){
         expect(err.error).to.equal('Unauthorized user.');
@@ -139,7 +139,7 @@ describe("assessment models [validate user]", function(){
     assessmentModel.userValidation(adminList[0],curr_assessment.team_id)
       .then(function(body){
         expect(body).to.equal(true);
-        console.log(adminList[0] +' is allowed.');
+        //console.log(adminList[0] +' is allowed.');
       })
       .catch(function(err){
         expect(err.error).to.equal('Unauthorized user.');
