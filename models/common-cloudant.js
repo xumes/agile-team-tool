@@ -47,14 +47,16 @@ exports.updateRecord = function(data) {
 };
 
 exports.deleteRecord = function(_id, _rev) {
-  return new Promise(function(resolve, reject){
-    agileTeam.destroyAsync(_id, _rev)
+  return new Promise(function(resolve, reject) {
+    if (!(_.isUndefined(_id)) && !(_.isUndefined(_rev))) {
+      agileTeam.destroyAsync(_id, _rev)
       .then(function(body){
         resolve(body);
       })
       .catch(function(err){
         reject(err);
-      })  
+      });
+    }
   });
 };
 
