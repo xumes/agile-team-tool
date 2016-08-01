@@ -4,7 +4,9 @@ var settings = require('../settings');
 var loggers = require('../middleware/logger');
 var _ = require('underscore');
 var msg;
-
+var teamLists = [];
+var userTeams = [];
+var teamModel;
 var formatErrMsg = function(msg) {
   loggers.get('models').info('Error: ' + msg);
   return { error : msg };
@@ -19,6 +21,51 @@ var infoLogs = function(msg) {
   loggers.get('models').info(msg);
   return;
 };
+
+var getTeams = function(userId){
+  teamModel = require('./teams');
+  return new Promise(function(resolve, reject){
+    infoLogs('Getting user teams of '+userId);
+    teamModel.getTeam('')
+    .then(function(body){
+      teamLists = body.rows;
+      return teamModel.getTeamByEmail(userId);
+    })
+    .then(function(body){
+      userTeams = body;
+      resolve(body);
+    })
+    .catch(function(err){
+      reject(formatErrMsg(err));
+    });
+  });
+}
+
+var isUserMemberOfTeam = function(teamId, checkParent) {
+  var userExist = false;
+
+  if (teamLists == null)
+    return userExist;
+
+  if (userTeams != null) {
+    for (var i in userTeams) {
+      if (userTeams[i]['id'] == teamId) {         
+        userExist = true;
+        break;
+      }
+    }
+  } 
+
+  if (!userExist && checkParent) {
+    for ( var i = 0; i < teamLists.length; i++) {
+      if (teamLists[i]['id'] == teamId && teamLists[i].value.parent_team_id != "") {
+        return isUserMemberOfTeam(teamLists[i].value.parent_team_id, checkParent);
+      }
+    }
+  }
+
+  return userExist;
+}
 
 // Get users with administrative/support access
 module.exports.getAdmins = function (accessId) {
@@ -97,6 +144,7 @@ module.exports.formatForBulkDelete = function(docs, email){
  */
 module.exports.isUserMemberOfTeam = function(teamId, checkParent, teamLists, userTeams) {
   var userExist = false;
+console.log('exported..');
   if (teamLists == null)
     return userExist;
 
@@ -111,10 +159,48 @@ module.exports.isUserMemberOfTeam = function(teamId, checkParent, teamLists, use
 
   if (!userExist && checkParent) {
     for ( var i = 0; i < teamLists.length; i++) {
-      if (teamLists[i]['id'] == teamId && teamLists[i].parent_team_id != "") 
-        return module.exports.isUserMemberOfTeam(teamLists[i].parent_team_id, checkParent, teamLists, userTeams);
+      if (teamLists[i]['id'] == teamId && teamLists[i].value.parent_team_id != "") {
+        return module.exports.isUserMemberOfTeam(teamLists[i].value.parent_team_id, checkParent, teamLists, userTeams);
+      }
     }
   }
 
   return userExist;
+}
+
+module.exports.isValidUser = function(userId, teamId, checkParent){
+  return new Promise(function(resolve, reject){
+    infoLogs('validating user '+userId+' for team '+teamId);
+    module.exports.getAdmins('ag_ref_access_control')
+    .then(function(body){
+      return _.contains(body.ACL_Full_Admin, userId);
+    })
+    .then(function(isAdmin){
+      if (!isAdmin){
+        return getTeams(userId);
+      }
+      else{
+        return isAdmin;
+      }
+    })
+    .then(function(body){
+      if (!_.isBoolean(body)){
+        return isUserMemberOfTeam(teamId, checkParent);
+      }
+      else{
+        return body;
+      }
+    })
+    .then(function(allowedUser){
+      if (!allowedUser){
+        reject(formatErrMsg('Unauthorized user.'));
+      }
+      else{
+        resolve(allowedUser);
+      }
+    })
+    .catch(function(err){
+      reject(err.error);
+    });
+  });
 }
