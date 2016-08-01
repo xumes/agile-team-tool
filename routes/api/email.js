@@ -24,10 +24,11 @@ var sendRequest = function(emailObj, cb) {
 
   return request(options, function(error, response, body) {
     var obj;
+    /* istanbul ignore else  */
     if (_.isEmpty(error)){
       logger.get('api').info('%s, Email sent to: %s', response.statusCode, emailObj.sendTo);
       cb(null, "Email sent to: " + emailObj.sendTo);
-    } 
+    }
     else {
       logger.get('api').error('Email failure: %s', JSON.stringify(error));
       cb(JSON.stringify(error), null);
@@ -46,6 +47,7 @@ var processFeedbackRequest = function(req, res) {
     applicationKey: EMAIL_APPKEY
   };  
   sendRequest(emailObj, function(error, result){
+    /* istanbul ignore else  */
     if(_.isEmpty(error))
       res.status(200).send("Thank you! \n Your feedback has been sent successfully.");
     else
