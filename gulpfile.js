@@ -25,6 +25,13 @@ gulp.task('test', ['jshint', 'pre-test'], function () {
     }))
     // Creating the reports after tests ran
     .pipe(istanbul.writeReports())
+    .pipe(istanbul.enforceThresholds({
+      thresholds: {
+        global: {
+          lines: 90
+        }
+      }
+    })
     .once('end', function() {
       process.exit();
     })
