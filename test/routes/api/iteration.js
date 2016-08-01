@@ -140,13 +140,13 @@ var iterationDocInvalid = {
   "created_dt": "2016-04-04 03:07:10 EDT"
 };
 
+var user = 'ortegaaa@ph.ibm.com';
 var agent = request.agent(app);
 
 // do the login befre testing
 before(function(done) {
   agent
-    .get('/api/login/masquerade/john.doe@ph.ibm.com')
-    .send()
+    .get('/api/login/masquerade/' + user)
     .end(function(err, res) {
       if (err) throw err;
       agent.saveCookies(res);
