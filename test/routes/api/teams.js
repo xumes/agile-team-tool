@@ -203,7 +203,7 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will reutrn 200 and details for team name', function(done){
+  it('it will return 200 and details for team name', function(done){
     var req = request(app).get('/api/teams/names/' + teamDocUpdateValid['name']);
     agent.attachCookies(req);
     req.expect(200);

@@ -17,6 +17,7 @@ app.use(favicon(__dirname + '/public/img/favicon.ico'));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+/* istanbul ignore if */
 if (process.env.NODE_ENV !== 'test')
   app.use(logger('dev'));
 
@@ -28,6 +29,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Force SSL
+/* istanbul ignore if */
 if (process.env.forceSSL == "true") {
   app.use (function(req, res, next) {
     if (req.headers['x-forwarded-proto'] != 'https')
@@ -53,6 +55,7 @@ require('./routes')(app, passport);
 /**
 * Error Handlers
 */
+/* istanbul ignore next */
 process.on('uncaughtException', function (err) {
   console.error((new Date).toUTCString() + ' uncaughtException:', err.message)
   console.error(err.stack)
@@ -69,6 +72,7 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
+/* istanbul ignore if */
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
@@ -89,6 +93,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
+/* istanbul ignore if */
 if (process.env.NODE_ENV !== 'test')
   console.log(settings)
 

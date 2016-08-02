@@ -156,19 +156,13 @@ describe('Team models [deleteTeam] : delete existing team document', function(){
     })
   });
 
-  it('it will return success deleting document', function(done){
+  it('it will return error when deleting a document', function(done){
     var teamToDelete = {};
     teamToDelete['doc_status'] = 'delete';
     teamToDelete['_id'] = createdId;
     teamModel.updateOrDeleteTeam(teamToDelete, userDetailsValid, 'delete')
-    .then(function(body){
-      expect(body).to.be.a('object');
-      expect(body).to.have.property('id');
-      expect(body).to.have.property('ok');
-      expect(body.ok).to.be.equal(true);
-    })
     .catch(function(err){
-      expect(err.error).to.be.an('undefined');
+      expect(err.error).to.contain('action');
     })
     .finally(function(){
       done();
