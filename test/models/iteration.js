@@ -144,59 +144,6 @@ var user = {
 };
 
 describe('Iteration Model', function() {
-  after(function(done) {
-    this.timeout(timeout);
-    console.log('Attempt to delete Doc1 docId: '+ iterationId);
-    iterationModel.get(iterationId)
-    .then(function(result) {
-      var _id = result._id;
-      var _rev = result._rev;
-      iterationModel.delete(_id, _rev)
-      .then(function(result) {
-        console.log('Successfully deleted Doc1 docId: '+_id);
-        done();
-      })
-      .catch(function(err) {
-        console.log('Err: Attempt to delete Doc1 docId: ' + _id);
-        expect(err).to.not.equal(null);
-      });
-    })
-    .catch(function(err) {
-      console.log('Err: Attempt to delete Doc1 docId: ' + iterationId);
-      expect(err).to.not.equal(null);
-    })
-    .finally(function() {
-      setTimeout(function() {
-        var iterationId2 = 'testmyid';
-        console.log('Attempt to delete Doc2 docId: ' + iterationId2);
-        iterationModel.get(iterationId2)
-        .then(function(result) {
-          var _id = result._id;
-          var _rev = result._rev;
-          iterationModel.delete(_id, _rev)
-          .then(function(result) {
-            console.log('Successfully deleted Doc2 docId: ' + _id);
-          })
-          .catch(function(err) {
-            console.log('Err: Attempt to delete Doc2 docId: ' + iterationId2);
-            console.log(err);
-            expect(err).to.not.equal(null);
-          });
-        })
-        .catch(function(err) {
-          console.log('Err: Attempt to delete Doc2 docId: ' + iterationId2);
-          console.log(err);
-          expect(err).to.not.equal(null);
-        })
-        .finally(function() {
-          setTimeout(function() {
-            done();
-          }, 3000);
-        });
-      }, 3000);
-    });
-  });
-
   describe('[getByIterInfo]: Get iteration document', function() {
     this.timeout(timeout);
     it('Get all team iteration documents', function(done) {
