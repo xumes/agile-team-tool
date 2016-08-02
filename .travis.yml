@@ -12,11 +12,11 @@ install:
 script:
 - gulp test
 services:
-  - redis-server
+- redis-server
 deploy:
   provider: script
   script: bin/deploy.sh
   skip_cleanup: true
 notifications:
   slack:
-    secure: MoD2zHatGzxNadji7tgbKl13Q8Oq/0rjEW+gadHSxnOFsw8QkkpT6D2g4Q45UfQe6u116Rl4mSWhhtnSmb0UQ38mmorU6Yj2IjKtLak7Zj49G+6XnDHKnyqvtaF0EGkjUxtx5U8IKLsWZkW5kEIFwaTCd2AHvbC5BTLvYYKD9tI=
+    secure: oFbgEM85HquK1FJXn8jl3HvxSrHgpR3C8GL+b3mYExw5cPpADFT1QvIP5b/d6tA0LsKEW6YFCPXZkqlEkUfjB1TSbXm+VsNoqwNvxyEGJD/drtCyvrNoRUEA7XFI1VeotXZz9aTGh2GXUuMmDd1568M+c0yrhqZU1BqJimQnegE=
