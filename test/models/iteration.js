@@ -379,7 +379,7 @@ describe('Iteration Model', function() {
 
     it('It will successfully updated document(iterationId3) with New iteration name', function(done) {
       this.timeout(timeout);
-      console.log('Attempt to edit iterationId3: ', iterationId3);
+      // console.log('Attempt to edit iterationId3: ', iterationId3);
       iterationDocValid.iteration_name = 'newiterationname';
       iterationModel.edit(iterationId3, iterationDocValid, user)
       .then(function(result) {

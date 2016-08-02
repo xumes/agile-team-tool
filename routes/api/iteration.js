@@ -11,11 +11,6 @@ var formatErrMsg = function(msg){
   return { error : msg };
 };
 
-var successLogs = function(msg){
-  loggers.get('api').info('Success: ' + msg);
-  return;
-};
-
 module.exports = function(app, includes) {
   var middleware  = includes.middleware;
 

@@ -648,9 +648,14 @@ function addIteration(action) {
             type 				: "PUT",
             url 				: "/api/iteration/" + encodeURIComponent(currentIteration._id),
             contentType : "application/json",
-            data 				: JSON.stringify(jsonData),
-            error 			: errorHandler
-          }).done(function(data) {
+            data 				: JSON.stringify(jsonData)
+          })
+          .fail(function(xhr, textStatus, errorThrown) {
+            if (xhr.status === 400) {
+              handleIterationErrors(xhr, textStatus, errorThrown);
+            }
+          })
+          .done(function(data) {
             var putResp = (typeof data == 'string' ? JSON.parse(data) : data);
             var rev2 = putResp.rev;
             console.log('Done updating ' + currentIteration._id + '. The new revision is ' + rev2 + '.');
@@ -721,9 +726,14 @@ function addIteration(action) {
 					type 				: "POST",
           url 				: "/api/iteration",
 					contentType : "application/json",
-					data 				: JSON.stringify(jsonData),
-					error 			: handleIterationErrors
-				}).done(function(data) {
+					data 				: JSON.stringify(jsonData)
+				})
+        .fail(function(xhr, textStatus, errorThrown) {
+          if (xhr.status === 400) {
+            handleIterationErrors(xhr, textStatus, errorThrown);
+          }
+        })
+        .done(function(data) {
 					var json = (typeof data == 'string' ? JSON.parse(data) : data);
 					var id = json.id;
 					console.log('Added iteration ' + jsonData.team_id + ' / ' + jsonData.iteration_name + '. The new document ID is ' + id + '.');
@@ -733,7 +743,6 @@ function addIteration(action) {
 					showMessagePopup("You have successfully added Iteration information.");
 				});
 			}
-
 		}
 	});
 }
