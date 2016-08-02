@@ -75,12 +75,8 @@ describe('Assesment API Test [GET /api/assessment/template]: get assessment temp
     agent.attachCookies(req);
     req.expect(200);
     req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.body).to.be.a('object');
-        expect(res.body).to.have.property('rows');
-      }
+      expect(res.body).to.be.a('object');
+      expect(res.body).to.have.property('rows');
       done();
     });
   });
@@ -93,14 +89,10 @@ describe('Assesment API Test [POST /api/assessment]: add team assessment', funct
     req.send(noId);
     req.expect(400);
     req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.body).to.be.a('object');
-        expect(res.body).to.have.property('error');
-        expect(res.body.error).to.have.property('_id');
-        expect(res.body.error._id[0]).to.be.equal('Record id is required.');
-      }
+      expect(res.body).to.be.a('object');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.have.property('_id');
+      expect(res.body.error._id[0]).to.be.equal('Record id is required.');
       done();
     });
   });
@@ -113,14 +105,10 @@ describe('Assesment API Test [POST /api/assessment]: add team assessment', funct
     req.send(emptyId);
     req.expect(400);
     req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.body).to.be.a('object');
-        expect(res.body).to.have.property('error');
-        expect(res.body.error).to.have.property('_id');
-        expect(res.body.error._id[0]).to.be.equal('Record id is required.');
-      }
+      expect(res.body).to.be.a('object');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.have.property('_id');
+      expect(res.body.error._id[0]).to.be.equal('Record id is required.');
       done();
     });
   });
@@ -131,15 +119,10 @@ describe('Assesment API Test [POST /api/assessment]: add team assessment', funct
     req.send(curr_assessment);
     req.expect(200);
     req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.body).to.be.a('object');
-        expect(res.body.ok).to.be.true;
-        expect(res.body.id).to.be.equal(curr_assessment._id);
-        currRevisionId = res.body.rev;
-        //console.log(currRevisionId);
-      }
+      expect(res.body).to.be.a('object');
+      expect(res.body.ok).to.be.true;
+      expect(res.body.id).to.be.equal(curr_assessment._id);
+      currRevisionId = res.body.rev;
       done();
     });
   });
@@ -150,13 +133,9 @@ describe('Assesment API Test [POST /api/assessment]: add team assessment', funct
     req.send(curr_assessment);
     req.expect(400);
     req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.body).to.be.a('object');
-        expect(res.body).to.have.property('error');
-        expect(res.body.error).to.be.equal('conflict');
-      }
+      expect(res.body).to.be.a('object');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.be.equal('conflict');
       done();
     });
   });
@@ -168,11 +147,7 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
     agent.attachCookies(req);
     req.expect(404);
     req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.body).to.be.empty;
-      }
+      expect(res.body).to.be.empty;
       done();
     });
   });
@@ -182,11 +157,7 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
     agent.attachCookies(req);
     req.expect(404);
     req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.body).to.be.empty;
-      }
+      expect(res.body).to.be.empty;
       done();
     });
   });
@@ -197,14 +168,10 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
     agent.attachCookies(req);
     req.expect(200);
     req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.body).to.be.a('object');
-        expect(res.body).to.have.property('rows');
-        expect(res.body.rows[0]).to.have.property('key');
-        expect(res.body.rows[0].key).to.be.equal(curr_assessment.team_id);
-      }
+      expect(res.body).to.be.a('object');
+      expect(res.body).to.have.property('rows');
+      expect(res.body.rows[0]).to.have.property('key');
+      expect(res.body.rows[0].key).to.be.equal(curr_assessment.team_id);
       done();
     });
   });
@@ -214,11 +181,7 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
     agent.attachCookies(req);
     req.expect(404);
     req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.body).to.be.empty
-      }
+      expect(res.body).to.be.empty
       done();
     });
   });
@@ -228,11 +191,7 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
     agent.attachCookies(req);
     req.expect(404);
     req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.body).to.be.empty;
-      }
+      expect(res.body).to.be.empty;
       done();
     });
   });
@@ -243,14 +202,10 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
     agent.attachCookies(req);
     req.expect(200);
     req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.body).to.be.a('object');
-        expect(res.body).to.have.property('_id');
-        expect(res.body._id).equal(curr_assessment._id);
-        currRevisionId = res.body._rev;
-      }
+      expect(res.body).to.be.a('object');
+      expect(res.body).to.have.property('_id');
+      expect(res.body._id).equal(curr_assessment._id);
+      currRevisionId = res.body._rev;
       done();
     });
   });
@@ -263,13 +218,9 @@ describe('Assessment API Test [PUT /api/assessment/]: update team assessment', f
     req.send(noId);
     req.expect(400);
     req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.body).to.have.property('error');
-        expect(res.body.error).to.have.property('_id');
-        expect(res.body.error._id[0]).to.be.equal('Record id is required.');
-      }
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.have.property('_id');
+      expect(res.body.error._id[0]).to.be.equal('Record id is required.');
       done();
     });
   });
@@ -282,13 +233,9 @@ describe('Assessment API Test [PUT /api/assessment/]: update team assessment', f
     req.send(tempData);
     req.expect(400);
     req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.body).to.have.property('error');
-        expect(res.body.error).to.have.property('_id');
-        expect(res.body.error._id[0]).to.be.equal('Record id is required.');
-      }
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.have.property('_id');
+      expect(res.body.error._id[0]).to.be.equal('Record id is required.');
       done();
     });
   });
@@ -302,15 +249,11 @@ describe('Assessment API Test [PUT /api/assessment/]: update team assessment', f
     req.send(tempData);
     req.expect(200);
     req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.body).to.be.a('object');
-        expect(res.body).to.have.property('id');
-        expect(res.body.id).equal(tempData._id);
-        expect(res.body.ok).to.be.true;
-        currRevisionId = res.body.rev;
-      }
+      expect(res.body).to.be.a('object');
+      expect(res.body).to.have.property('id');
+      expect(res.body.id).equal(tempData._id);
+      expect(res.body.ok).to.be.true;
+      currRevisionId = res.body.rev;
       done();
     });
   });
@@ -323,13 +266,9 @@ describe('Assessment API Test [DELETE /api/assessment]: delete assessment', func
     agent.attachCookies(req);
     req.expect(400);
     req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.body).to.be.a('object');
-        expect(res.body).to.have.property('error');
-        expect(res.body.error).equal('not_found');
-      }
+      expect(res.body).to.be.a('object');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).equal('not_found');
       done();
     });
   });
@@ -340,13 +279,9 @@ describe('Assessment API Test [DELETE /api/assessment]: delete assessment', func
     agent.attachCookies(req);
     req.expect(400);
     req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.body).to.be.a('object');
-        expect(res.body).to.have.property('error');
-        expect(res.body.error).equal('No id/rev for record deletion.');
-      }
+      expect(res.body).to.be.a('object');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).equal('No id/rev for record deletion.');
       done();
     });
   });
@@ -357,13 +292,9 @@ describe('Assessment API Test [DELETE /api/assessment]: delete assessment', func
     agent.attachCookies(req);
     req.expect(400);
     req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.body).to.be.a('object');
-        expect(res.body).to.have.property('error');
-        expect(res.body.error).equal('conflict');
-      }
+      expect(res.body).to.be.a('object');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).equal('conflict');
       done();
     });
   });
@@ -374,13 +305,9 @@ describe('Assessment API Test [DELETE /api/assessment]: delete assessment', func
     agent.attachCookies(req);
     req.expect(400);
     req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.body).to.be.a('object');
-        expect(res.body).to.have.property('error');
-        expect(res.body.error).equal('No id/rev for record deletion.');
-      }
+      expect(res.body).to.be.a('object');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).equal('No id/rev for record deletion.');
       done();
     });
   });
@@ -391,13 +318,9 @@ describe('Assessment API Test [DELETE /api/assessment]: delete assessment', func
     agent.attachCookies(req);
     req.expect(200);
     req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.body).to.be.a('object');
-        expect(res.body).to.have.property('ok');
-        expect(res.body.ok).to.be.true;
-      }
+      expect(res.body).to.be.a('object');
+      expect(res.body).to.have.property('ok');
+      expect(res.body.ok).to.be.true;
       done();
     });
   });

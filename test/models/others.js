@@ -40,11 +40,25 @@ describe("Other models [getSystemStatus]: get system status", function(done){
   });
 });
 
-// describe("Other models [getServerTime]: get server time", function(done){
-//   this.timeout(timeout);
-//   it("return server time", function(done){
-//     var sTime = otherModel.getServerTime();
-//     expect(sTime).to.be.a('string');
-//     done();
+describe("Other models [getServerTime]: get server time", function(done){
+  this.timeout(timeout);
+  it("return server time", function(done){
+    var sTime = otherModel.getServerTime();
+    expect(sTime).to.be.a('string');
+    done();
+  });
+})
+
+// describe("Other models [BulkDelete]: delete a couple docs", function(done){
+//   var ids = ['01a4073afd76c2cde8dcf42a56f25gg1', '10a4073afd76c2gge8dcf42a56f25741'];
+//   it("should reject", function(done){
+//     otherModel.BulkDelete(ids)
+//       .catch(function(err){
+//         console.log("$$@@ " + typeof(err));
+//         expect(err.error).to.be.a('object');
+//       })
+//       .finally(function(){
+//         done();
+//       });
 //   });
-// })
+// });
