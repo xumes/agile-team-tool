@@ -35,7 +35,7 @@ var iteration = {
         infoLogs('[getByIterInfo] Getting team iteration for ' + teamId);
         common.getByViewKey('teams', 'iterinfo', teamId)
         .then(function(body) {
-          successLogs('[getByIterInfo] Team iteration docs obtained');
+          successLogs('[iterationModel.getByIterInfo] Team iteration docs obtained');
           resolve(body);
         })
         .catch( /* istanbul ignore next */ function(err) {
@@ -77,7 +77,7 @@ var iteration = {
     return new Promise(function(resolve, reject){
       common.getByViewWithStartOrEndKey('teams', 'getCompletedIterations', startkey, endkey)
       .then(function(body) {
-        successLogs('[getCompletedIterationsByKey] Completed iteration docs obtained');
+        successLogs('[iterationModel.getCompletedIterationsByKey] Completed iteration docs obtained');
         resolve(body);
       })
       .catch( /* istanbul ignore next */ function(err) {
@@ -144,12 +144,12 @@ var iteration = {
                   .then(function(body) {
                     resolve(body);
                     // // console.log('ADD body:', body);
-                    successLogs('[add] New iteration doc created');
+                    successLogs('[iterationModels.add] New iteration doc created');
                   })
                   .catch( /* istanbul ignore next */ function(err) {
                     /* cannot simulate Cloudant error during testing */
-                    formatErrMsg('[add] Err1:', err);
-                    loggers.get('models').error('[add] Err1: %s', err);
+                    formatErrMsg('[iterationModel.add] Err1:', err);
+                    loggers.get('models').error('[iterationModel.add] Err1:', err);
                     var msg = err.message;
                     reject(formatErrMsg(msg));
                   });
@@ -159,7 +159,7 @@ var iteration = {
             .catch( /* istanbul ignore next */ function(err) {
               /* cannot simulate Cloudant error during testing */
               formatErrMsg('[add] Err2:', err);
-              loggers.get('models').error('[add] Err2: %s', err);
+              loggers.get('models').error('[iterationModel.add] Err2:', err);
               var msg = err.message;
               reject(formatErrMsg(msg));
             });
@@ -167,8 +167,8 @@ var iteration = {
         })
         .catch( /* istanbul ignore next */ function(err) {
           /* cannot simulate Cloudant error during testing */
-          formatErrMsg('[add] Err1:', err);
-          loggers.get('models').error('[add] Err1: %s', err);
+          formatErrMsg('[iterationModel.add] Err1:', err);
+          loggers.get('models').error('[iterationModel.add] Err1:', err);
           var msg = err.message;
           reject(formatErrMsg(msg));
         });
@@ -221,7 +221,7 @@ var iteration = {
                   .catch( /* istanbul ignore next */ function(err) {
                     /* cannot simulate Cloudant error during testing */
                     // // console.log('[edit] Err1:', err);
-                    loggers.get('models').error('[edit] Err1: %s', err);
+                    loggers.get('models').error('[iterationModel.edit] Err1:', err);
                     var msg = err.message;
                     reject(formatErrMsg(msg));
                   });
@@ -245,7 +245,7 @@ var iteration = {
                         .catch( /* istanbul ignore next */ function(err) {
                           /* cannot simulate Cloudant error during testing */
                           // // console.log('[edit] Err2:', err);
-                          loggers.get('models').error('[edit] Err2: %s', err);
+                          loggers.get('models').error('[iterationModel.edit] Err2:', err);
                           var msg = err.message;
                           reject(formatErrMsg(msg));
                         });
@@ -255,7 +255,7 @@ var iteration = {
                   .catch( /* istanbul ignore next */ function(err) {
                     /* cannot simulate Cloudant error during testing */
                     // // console.log('[edit] Err3:', err);
-                    loggers.get('models').error('[edit] Err3: %s', err);
+                    loggers.get('models').error('[iterationModel.edit] Err3:', err);
                     var msg = err.message;
                     reject(formatErrMsg(msg));
                   });
@@ -270,15 +270,15 @@ var iteration = {
               // // console.log('[edit] Err4:', err);
               // var msg = err.error;
               var msg = err.message;
-              loggers.get('models').error('[edit] Err4:', err);
+              loggers.get('models').error('[iterationModel.edit] Err4:', err);
               reject(formatErrMsg(msg));
             });
           }
         })
         .catch( /* istanbul ignore next */ function(err) {
           /* cannot simulate Cloudant error during testing */
-          formatErrMsg('[add] Err1:', err);
-          loggers.get('models').error('[add] Err1: %s', err);
+          formatErrMsg('[iterationModel.add] Err1:', err);
+          loggers.get('models').error('[iterationModel.add] Err1: %s', err);
           var msg = err.message;
           reject(formatErrMsg(msg));
         });
@@ -298,14 +298,14 @@ var iteration = {
         common.deleteRecord(docId, revId)
         .then(function(body) {
           // // console.log('iteration.delete RESULT:', body);
-          loggers.get('models').info('[delete] result: %s', body);
+          loggers.get('models').info('[iterationModel.delete] result:', body);
           resolve(body);
         })
         .catch( /* istanbul ignore next */ function(err) {
           /* cannot simulate Cloudant error during testing */
           var msg = err.message;
           // // console.log('iteration.delete err:', err);
-          loggers.get('models').error('[delete]: %s', err);
+          loggers.get('models').error('[iterationModel.delete]:', err);
           reject(formatErrMsg(msg));
         });
       }

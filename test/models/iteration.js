@@ -144,6 +144,59 @@ var user = {
 };
 
 describe('Iteration Model', function() {
+  after(function(done) {
+    this.timeout(timeout);
+    console.log('Attempt to delete Doc1 docId: '+ iterationId);
+    iterationModel.get(iterationId)
+    .then(function(result) {
+      var _id = result._id;
+      var _rev = result._rev;
+      iterationModel.delete(_id, _rev)
+      .then(function(result) {
+        console.log('Successfully deleted Doc1 docId: '+_id);
+        done();
+      })
+      .catch(function(err) {
+        console.log('Err: Attempt to delete Doc1 docId: ' + _id);
+        expect(err).to.not.equal(null);
+      });
+    })
+    .catch(function(err) {
+      console.log('Err: Attempt to delete Doc1 docId: ' + iterationId);
+      expect(err).to.not.equal(null);
+    })
+    .finally(function() {
+      setTimeout(function() {
+        var iterationId2 = 'testmyid';
+        console.log('Attempt to delete Doc2 docId: ' + iterationId2);
+        iterationModel.get(iterationId2)
+        .then(function(result) {
+          var _id = result._id;
+          var _rev = result._rev;
+          iterationModel.delete(_id, _rev)
+          .then(function(result) {
+            console.log('Successfully deleted Doc2 docId: ' + _id);
+          })
+          .catch(function(err) {
+            console.log('Err: Attempt to delete Doc2 docId: ' + iterationId2);
+            console.log(err);
+            expect(err).to.not.equal(null);
+          });
+        })
+        .catch(function(err) {
+          console.log('Err: Attempt to delete Doc2 docId: ' + iterationId2);
+          console.log(err);
+          expect(err).to.not.equal(null);
+        })
+        .finally(function() {
+          setTimeout(function() {
+            done();
+          }, 3000);
+        });
+      }, 3000);
+    });
+  });
+
   describe('[getByIterInfo]: Get iteration document', function() {
     this.timeout(timeout);
     it('Get all team iteration documents', function(done) {
@@ -252,8 +305,8 @@ describe('Iteration Model', function() {
         expect(result.ok).to.be.equal(true);
       })
       .catch(function(err) {
-        //console.log('[add] Return Iteration no/identifier already exists err, ', err);
-        expect(err.error).to.contain('exists');
+        // console.log('[add] Return Iteration no/identifier already exists err, ', err.error['iteration_name'][0]);
+        expect(err.error['iteration_name'][0]).to.contain('exists');
         expect(err).to.not.equal(null);
       })
       .finally(function() {
@@ -379,7 +432,7 @@ describe('Iteration Model', function() {
 
     it('It will successfully updated document(iterationId3) with New iteration name', function(done) {
       this.timeout(timeout);
-      //console.log('Attempt to edit iterationId3: ', iterationId3);
+      console.log('Attempt to edit iterationId3: ', iterationId3);
       iterationDocValid.iteration_name = 'newiterationname';
       iterationModel.edit(iterationId3, iterationDocValid, user)
       .then(function(result) {
@@ -396,7 +449,7 @@ describe('Iteration Model', function() {
       });
     });
 
-    it('Should return not_found', function(done) {
+    it('Should return missing', function(done) {
       this.timeout(timeout);
       //console.log('Attempt to edit iterationId3: ', iterationId3);
       iterationDocValid.iteration_name = 'newiterationname';

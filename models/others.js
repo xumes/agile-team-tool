@@ -204,3 +204,46 @@ module.exports.isValidUser = function(userId, teamId, checkParent){
     });
   });
 }
+
+/**
+ * Bulkdelete documents
+ *
+ * @param docIds Array of document Ids e.g. ['01a4073afd76c2cde8dcf42a56f25741', '10a4073afd76c2cde8dcf42a56f25741', ...]
+ * @return JSONObject
+ */
+module.exports.BulkDelete = function(docIds) {
+  return new Promise(function(resolve, reject) {
+    var deletedIds = [];
+    var failedIds = [];
+    var _id;
+    var _rev;
+    _.each(docIds, function(docId) {
+      common.getRecord(docId)
+      .then(function(body) {
+        if (!_.isEmpty(body)) {
+          _id = body._id;
+          _rev = body._rev;
+          console.log('Attempt to delete Document _id: ' + _id + ' _rev: ' + _rev);
+          common.deleteRecord(_id, _rev)
+          .then(function(body) {
+            // loggers.get('models').info('[otherModel.BulkDelete] Successfully deleted docId id: '+ _id);
+            deletedIds.push(_id);
+            var result = {
+              'Failed to delete docIds': failedIds,
+              'Successfully deleted docIds': deletedIds
+            }
+            resolve(result);
+          })
+          .catch(function(err) {
+            // loggers.get('models').error('[otherModel.BulkDelete] Failed to delete docId: '+ _id);
+            failedIds.push(_id);
+          });
+        }
+      })
+      .catch(function(err) {
+        // loggers.get('models').error('[otherModel.BulkDelete] Failed to delete docId: '+ docId);
+        failedIds.push(docId);
+      });
+    });
+  });
+}

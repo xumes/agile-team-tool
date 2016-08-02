@@ -1,7 +1,7 @@
 "use strict";
 
 var iterationModel = require('../../models/iteration');
-var otherModels = require('../../models/iteration');
+var otherModels = require('../../models/others');
 var loggers = require('../../middleware/logger');
 var validate = require('validate.js');
 var _ = require('underscore');
@@ -27,14 +27,14 @@ module.exports = function(app, includes) {
    */
   var getIterinfo = function(req, res, next) {
     var teamId = req.params.teamId || undefined;
-    loggers.get('api').info('[getIterinfo] teamId:%s', teamId);
+    loggers.get('api').info('[iterationRoute.getIterinfo] teamId:', teamId);
     iterationModel.getByIterInfo(teamId)
     .then(function(result) {
       res.send(result);
     })
     .catch( /* istanbul ignore next */ function(err) {
       /* cannot simulate Cloudant error during testing */
-      formatErrMsg('[getIterinfo]:' + err);
+      formatErrMsg('[iterationRoute.getIterinfo]:' + err);
       return res.status(400).send({ error: err });
     });
   };
@@ -45,14 +45,14 @@ module.exports = function(app, includes) {
    */
   var getIterationDoc = function(req, res, next) {
     var docId = req.params.id || undefined;
-    loggers.get('api').info('[getIterationDoc] docId:%s', docId);
+    loggers.get('api').info('[iterationRoute.getIterationDoc] docId:', docId);
     iterationModel.get(docId)
     .then(function(result) {
       res.send(result);
     })
     .catch( /* istanbul ignore next */ function(err) {
       /* cannot simulate Cloudant error during testing */
-      formatErrMsg('[getIterationDoc]:' + err);
+      formatErrMsg('[iterationRoute.getIterationDoc]:' + err);
       return res.status(400).send({ error: err });
     });
   };
@@ -65,7 +65,7 @@ module.exports = function(app, includes) {
   var getCompletedIterations = function(req, res, next) {
     var startkey = req.query.startkey || undefined;
     var endkey = req.query.endkey || undefined;
-    loggers.get('api').info('[getCompletedIterations] startkey:%s endkey:%s', startkey, endkey);
+    loggers.get('api').info('[iterationRoute.getCompletedIterations] startkey:%s endkey:%s', startkey, endkey);
     iterationModel.getCompletedIterationsByKey(startkey, endkey)
     .then(function(result) {
       res.send(result);
@@ -95,7 +95,7 @@ module.exports = function(app, includes) {
     .catch( /* istanbul ignore next */ function(err) {
       /* cannot simulate Cloudant error during testing */
       // console.log('[api] [createIteration]:', err);
-      loggers.get('api').error('[createIteration]:', err);
+      loggers.get('api').error('[iterationRoute.createIteration]:', err);
       res.status(400).send(err);
     });
   };
@@ -121,7 +121,7 @@ module.exports = function(app, includes) {
     })
     .catch( /* istanbul ignore next */ function(err) {
       /* cannot simulate Cloudant error during testing */
-      loggers.get('api').error('[updateIteration]:', err);
+      loggers.get('api').error('[iterationRoute.updateIteration]:', err);
       res.status(400).send(err);
     });
   };
