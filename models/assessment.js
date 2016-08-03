@@ -1,16 +1,13 @@
-/* Put cloudant calls for team here */
-var Promise = require('bluebird');
-var common = require('./common-cloudant');
-var _ = require('underscore');
-var loggers = require('../middleware/logger');
-var validate = require("validate.js");
-var util = require('../helpers/util');
-var teams = require('./teams');
-var lodash = require('lodash');
-var validationError = [];
-var msg;
+var Promise      = require('bluebird');
+var common       = require('./common-cloudant');
+var _            = require('underscore');
+var loggers      = require('../middleware/logger');
+var validate     = require("validate.js");
+var util         = require('../helpers/util');
+var teams        = require('./teams');
+var lodash       = require('lodash');
+var rules        = require('./validate_rules/assessment');
 
-var rules = require('./validate_rules/assessment')
 var recordConstraints = rules.recordConstraints;
 var assessmentConstraints = rules.assessmentConstraints;
 var compTbl = rules.compTbl;

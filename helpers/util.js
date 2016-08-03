@@ -40,7 +40,8 @@ var getTeams = function(userId){
       reject(formatErrMsg(err));
     });
   });
-}
+};
+
 
 var isUserMemberOfTeam = function(teamId, checkParent) {
   var userExist = false;
@@ -67,6 +68,18 @@ var isUserMemberOfTeam = function(teamId, checkParent) {
 
   return userExist;
 }
+
+module.exports.trimData = function(postData) {
+  var cleanData = {};
+  _.each(postData, function(element, index, list) {
+    if (typeof element === 'string') {
+      element = element.trim();
+    }
+    cleanData[index] = element;
+  });
+  return cleanData;
+};
+
 
 // Get users with administrative/support access
 module.exports.getAdmins = function (accessId) {
@@ -248,3 +261,4 @@ module.exports.BulkDelete = function(docIds) {
     });
   });
 }
+

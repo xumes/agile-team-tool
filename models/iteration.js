@@ -1,15 +1,12 @@
-"use strict";
-
-var Cloudant = require('cloudant');
-var Promise = require('bluebird');
-var settings = require('../settings');
-var helper = require('../utils/helper');
-var common = require('./common-cloudant');
-var util = require('../helpers/util');
-var _ = require('underscore');
-var loggers = require('../middleware/logger');
-var validate = require('validate.js');
-var moment = require('moment');
+var Cloudant    = require('cloudant');
+var Promise     = require('bluebird');
+var settings    = require('../settings');
+var common      = require('./common-cloudant');
+var util        = require('../helpers/util');
+var _           = require('underscore');
+var loggers     = require('../middleware/logger');
+var validate    = require('validate.js');
+var moment      = require('moment');
 
 var formatErrMsg = function(msg){
   loggers.get('models').info('Error: ', msg);
@@ -115,7 +112,7 @@ var iteration = {
     data['created_user'] = user['shortEmail'];
     data['created_dt'] = util.getServerTime();
     data['type'] = 'iterationinfo';
-    cleanData = helper.trimData(data);
+    cleanData = util.trimData(data);
     var user_id = user['shortEmail'];
     var team_id = cleanData['team_id'];
     var checkParent = true;
@@ -180,7 +177,7 @@ var iteration = {
     var cleanData = {};
     data['last_updt_dt'] = util.getServerTime();
     data['last_updt_user'] = user['shortEmail'];
-    cleanData = helper.trimData(data);
+    cleanData = util.trimData(data);
     // console.log('EDIT iterationId:', iterationId);
     // console.log('EDIT cleanData:', cleanData);
     var user_id = user['shortEmail'];
