@@ -1,6 +1,6 @@
 // team modules
 var Promise = require('bluebird');
-var common = require('./common-cloudant');
+var common = require('./cloudant-driver');
 var _ = require('underscore');
 var loggers = require('../middleware/logger');
 var validate = require('validate.js');

@@ -1,29 +1,16 @@
-/**
- * This contains common cloudant calls
- */
-var Promise = require('bluebird');
-var Cloudant = require('cloudant');
-var _ = require('underscore');
-var lodash = require('lodash');
-var settings = require('../settings');
-var loggers = require('../middleware/logger');
-var cloudantDb = Cloudant(settings.cloudant.url);
-var dbName = settings.cloudant.dbName;
-var agileTeam = Promise.promisifyAll((cloudantDb.use(dbName)));
+var Promise       = require('bluebird');
+var Cloudant      = require('cloudant');
+var _             = require('underscore');
+var lodash        = require('lodash');
+var settings      = require('../settings');
+var loggers       = require('../middleware/logger');
+var cloudantDb    = Cloudant(settings.cloudant.url);
+var dbName        = settings.cloudant.dbName;
+var agileTeam     = Promise.promisifyAll((cloudantDb.use(dbName)));
 
 var formatErrMsg = function(msg){
   loggers.get('models').info('Error: ' + msg);
   return { error : msg };
-};
-
-var successLogs = function(msg){
-  loggers.get('models').info('Success: ' + msg);
-  return;
-};
-
-var infoLogs = function(msg){
-  loggers.get('models').info(msg);
-  return;
 };
 
 exports.addRecord = function(data) {
@@ -65,11 +52,11 @@ exports.updateRecord = function(data) {
 
 exports.deleteRecord = function(_id, _rev) {
   return new Promise(function(resolve, reject){
-    infoLogs('Deleting record '+_id+' rev: '+_rev);
+    loggers.get('models').info('Deleting record '+_id+' rev: '+_rev);
     if(!lodash.isEmpty(_id) && !lodash.isEmpty(_rev)){
       agileTeam.destroyAsync(_id, _rev)
         .then(function(body){
-          successLogs('Record '+_id+' rev: '+_rev+' has been deleted successfully.');
+          loggers.get('models').info('Success: Record '+_id+' rev: '+_rev+' has been deleted successfully.');
           resolve(body);
         })
         .catch(function(err){

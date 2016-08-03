@@ -1,4 +1,4 @@
-var common = require('../models/common-cloudant');
+var common = require('../models/cloudant-driver');
 var Promise = require('bluebird');
 var settings = require('../settings');
 var loggers = require('../middleware/logger');
