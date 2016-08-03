@@ -405,7 +405,7 @@ function displayActionPlan(data){
 		allowEdit = "";
 	}
 	for (var index=0; index<data.length;index++){
-		var row = "<tr id = 'action_"+index+"'>";
+		var row = "<tr id = 'td_action_"+index+"'>";
 		var userCreated = data[index].user_created;
 		if (data[index] != undefined && data[index] != ""){
 			if (userCreated != undefined && userCreated.toLowerCase() == "yes"){
@@ -604,11 +604,15 @@ function submitActionPlan(jsonData, msg){
 		/*headers : {
 			"Authorization" : "Basic " + btoa(user + ":" + pass)
 		},*/
-		data : JSON.stringify(jsonData),
-		error : errorHandler
+		data : JSON.stringify(jsonData)
 	}).done(function (data) {
 		if(msg != null && msg != "")
 			showMessagePopup(msg);
+	}).fail(function( jqXHR, textStatus, errorThrown){
+			if (jqXHR.status == 400){
+				if (jqXHR.responseJSON.error != null)
+					validationHandler(jqXHR.responseJSON.error);
+			}
 	});
 }
 
@@ -869,4 +873,19 @@ function confirmAction(message, btn1,btn2, action, args){
 	
 	$("#dialog").text(message);
 	$("#dialog").dialog("open");
+}
+
+function validationHandler(errors){
+	var popupMsg = '';
+	if (_.isObject(errors)){
+		_.each(errors, function(err, attr){
+				popupMsg += err + '<br>';
+		});
+	}
+	else{
+		popupMsg = errors;
+	}
+	if (!_.isEmpty(popupMsg)){
+		showMessagePopup(popupMsg);
+	}
 }

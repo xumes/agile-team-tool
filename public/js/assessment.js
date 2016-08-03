@@ -689,7 +689,7 @@ function assessmentAction(obj) {
 		gTeamAssessment["team_proj_ops"] = $("#teamTypeSelectList option:selected").val();
 		gTeamAssessment["team_dlvr_software"] = $("#softwareYesNo option:selected").val();
 
-		var leadershipID = "";
+		/*var leadershipID = "";
 		// look for projects section if presented and store prefix id of children elements
 		$("#assessmentContainer > ul > li > a").each(function() {
 			if (($(this).html().toLowerCase().indexOf("leadership") > -1 &&
@@ -806,7 +806,7 @@ function assessmentAction(obj) {
 			});
 			return false;
 		}
-		
+		*/
 		updateAgileTeamAssessment(action);
 		return true;
 		
@@ -858,12 +858,16 @@ function updateAgileTeamAssessment(action) {
 			type : "POST",
 			url : "/api/assessment",
 			contentType : "application/json",
-			data : JSON.stringify(screenAnswers),
-			error : errorHandler
+			data : JSON.stringify(screenAnswers)
 		}).done(function(data) {
 				getTeamAssessments($("#teamSelectList option:selected").val(), teamAssessmentListHander, ["assessmentSelectList", $("#teamSelectList option:selected").val(), screenAnswers["_id"]]);
     		showMessagePopup(msg);
-    	});
+    }).fail(function( jqXHR, textStatus, errorThrown){
+			if (jqXHR.status == 400){
+				if (jqXHR.responseJSON.error  != null)
+					validationHandler(jqXHR.responseJSON.error);
+			}
+		});
 		
 	} else {
 		$.ajax({		
@@ -879,22 +883,22 @@ function updateAgileTeamAssessment(action) {
 				showLog(JSON.stringify(jsonData));
 				$.ajax({
 					type : "DELETE",
-					//url : baseUrlDb + "/" + encodeURIComponent(jsonData["_id"]) + '?rev=' + jsonData["_rev"],
-					url : "/api/assessment" + "?docId=" + encodeURIComponent(jsonData["_id"]) + '&revId=' + jsonData["_rev"],
-					//data: {docId: encodeURIComponent(jsonData["_id"], rev:}
-					/*headers : {
-						"Authorization" : "Basic " + btoa(user + ":" + pass)
-					},*/
-					error : errorHandler
+					url : "/api/assessment" + "?docId=" + encodeURIComponent(jsonData["_id"]) + '&revId=' + jsonData["_rev"]
 				}).done(function(data) {
 					showMessagePopup("Draft assessment has been deleted.");
 					getTeamAssessments(jsonData["team_id"], teamAssessmentListHander, ["assessmentSelectList", jsonData["team_id"], "new"]);
-				});	
+				}).fail(function( jqXHR, textStatus, errorThrown){
+					console.log('error >> '+JSON.stringify(jqXHR));
+					if (jqXHR.status == 400){
+						if (jqXHR.responseJSON.error != null)
+							validationHandler(jqXHR.responseJSON.error);
+					}
+				});
 				
 			} else {			
 				var screenAnswers = getScreenAnswers();
 				var serverDateTime = getServerDateTime();
-
+				console.log('removing some fields..');
 				jsonData["team_proj_ops"] = screenAnswers["team_proj_ops"];
 				jsonData["team_dlvr_software"] = screenAnswers["team_dlvr_software"];
 				jsonData["assessmt_cmpnt_rslts"] = screenAnswers["assessmt_cmpnt_rslts"];
@@ -943,21 +947,23 @@ function updateAgileTeamAssessment(action) {
 				
 				// copy object to persist to follow hierarchy of columns in the template
 				jsonData = $.extend(true, {}, screenAnswers, jsonData);
-				
 				$.ajax({
 					type : "PUT",
 					url : "/api/assessment/",
 					contentType : "application/json",
-					data : JSON.stringify(jsonData),
-					error : errorHandler
+					data : JSON.stringify(jsonData)
 				}).done(function(data) {
-					//console.log(data);
 					gTeamAssessment = jsonData;
 					gTeamAssessment["_rev"] = data["rev"];
 					updateAgileTeamAssessmentsCache(gTeamAssessment);
 					assessmentQuestionnaireHandler(gTeamAssessment, gAssessmentTemplateList);
 					setScreenControls();
 					showMessagePopup(msg);
+				}).fail(function( jqXHR, textStatus, errorThrown){
+					if (jqXHR.status == 400){
+						if (jqXHR.responseJSON.error != null)
+							validationHandler(jqXHR.responseJSON.error);
+					}
 				});
 			}
 		});
@@ -1524,3 +1530,141 @@ function setScreenControls() {
 	resetChangeIndiactor();
 }
 
+function validationHandler(errors){
+	var unfilled = false;
+	var otherMsg = '';
+	var defaultMsg = '';
+	if (_.isObject(errors)){
+	_.each(errors, function(err, attr){
+		console.log('attr: '+attr+' -- err:'+err);
+		if (attr != null && attr.contains('mat_lvl_achieved')){
+			unfilled = true;
+			defaultMsg = err;
+		}else{
+			otherMsg += err + '<br>';
+		}
+	});
+}
+else{
+	defaultMsg = errors;
+}	
+	$("input[type='button']").each(function () {
+		$(this).removeAttr("disabled");
+	});
+
+	if (unfilled){
+		highlightFields();
+	}
+
+	if (!_.isEmpty(otherMsg)){
+		defaultMsg += '<br>'+ otherMsg;
+	}
+
+	if (!_.isEmpty(defaultMsg)){
+		showMessagePopup(defaultMsg);
+	}
+}
+
+function highlightFields(){
+	var leadershipID = "";
+		// look for projects section if presented and store prefix id of children elements
+		$("#assessmentContainer > ul > li > a").each(function() {
+			if (($(this).html().toLowerCase().indexOf("leadership") > -1 &&
+					$(this).html().toLowerCase().indexOf("ops") == -1) &&
+					($(this).html().toLowerCase().indexOf("leadership") > -1 &&
+					$(this).html().toLowerCase().indexOf("operations") == -1)) {
+				leadershipID = $(this).parent().attr("id");
+			}
+		});
+		
+		var deliveryID = "";
+		var includeDelivery = $("#softwareYesNo option:selected").val().toLowerCase() == "yes";
+		// look for delivery section if presented and store prefix id of children elements
+		$("#assessmentContainer > ul > li > a").each(function() {
+			if ($(this).html().toLowerCase().indexOf("delivery") > -1) {
+				deliveryID = $(this).parent().attr("id");
+			}
+		});
+		
+		var isOperations = false;
+		var operationsID = "";
+		var opsExist = false;
+		// look for operations section if presented in the template 
+		$("#assessmentContainer > ul > li > a").each(function() {
+			if (($(this).html().toLowerCase().indexOf("ops") > -1) || ($(this).html().toLowerCase().indexOf("operations") > -1)) {
+				opsExist = true;
+			}
+		});
+		if (opsExist) {
+			isOperations = $("#teamTypeSelectList option:selected").val().toLowerCase() == "operations";
+			// look for operations section if presented and store prefix id of children elements
+			$("#assessmentContainer > ul > li > a").each(function() {
+				if (($(this).html().toLowerCase().indexOf("leadership") > -1 &&
+						$(this).html().toLowerCase().indexOf("ops") > -1) ||
+						($(this).html().toLowerCase().indexOf("leadership") > -1 &&
+						$(this).html().toLowerCase().indexOf("operations") > -1)) {
+					operationsID = $(this).parent().attr("id");
+				}
+			});
+  	}
+		
+		var currStatus = getAssessmentStatus(gTeamAssessment).toLowerCase();
+		if (currStatus == "submitted" || currStatus == "draft") {			
+			$("#assessmentContainer li[id*='_prac']").each(function() {
+				var answers = this.id;
+				console.log('answers: '+answers);
+				// query for section unanswered practices
+				var thisSectionComplete = true;
+				if ($("[name*='"+answers+"_curr']:checked").length == 0 || $("[name*='"+answers+"_targ']:checked").length == 0) {
+					if (opsExist) {
+						if (answers.indexOf(leadershipID) > -1 && isOperations) {
+							thisSectionComplete = true;
+						} else if (answers.indexOf(operationsID) > -1 && !isOperations) {
+							thisSectionComplete = true;
+						} else if (answers.indexOf(deliveryID) > -1 && !includeDelivery) {
+							thisSectionComplete = true;
+						} else {
+							thisSectionComplete = false;
+						}
+					} else {
+						if (answers.indexOf(deliveryID) > -1 && !includeDelivery) {
+							thisSectionComplete = true;
+						} else {
+							thisSectionComplete = false;
+						}
+					}
+					if (!thisSectionComplete) {
+						$("#"+answers+" > a").attr("style", "background: yellow");
+					}
+				}
+			});
+		} else if (getAssessmentStatus(gTeamAssessment).toLowerCase() == "independent review") {
+			$("#assessmentContainer li[id*='_prac']").each(function() {
+				var answers = this.id;
+				// query for section unanswered practices
+				var thisSectionComplete = true;				
+				if ($("[name*='"+answers+"_ind']:checked").length == 0) {
+					if (opsExist) {
+						if (answers.indexOf(leadershipID) > -1 && isOperations) {
+							thisSectionComplete = true;
+						} else if (answers.indexOf(operationsID) > -1 && !isOperations) {
+							thisSectionComplete = true;
+						} else if (answers.indexOf(deliveryID) > -1 && !includeDelivery) {
+							thisSectionComplete = true;
+						} else {
+							thisSectionComplete = false;
+						}
+						if (!thisSectionComplete) {
+							$("#"+answers+" > a").attr("style", "background: yellow");
+						}
+					} else {
+						if (answers.indexOf(deliveryID) > -1 && !includeDelivery) {
+							thisSectionComplete = true;
+						} else {
+							thisSectionComplete = false;
+						}
+					}
+				}
+			});
+		}
+}

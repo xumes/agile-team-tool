@@ -201,12 +201,12 @@ var compTbl ={
   },
   cur_mat_lvl_achieved:{
     presence : {
-      message: '^Current maturity level achieved is required.'
+      message: '^All assessment maturity practices need to be answered.  See highlighted practices in yellow.'
     }
   },
   cur_mat_lvl_score :{
     presence : {
-      message: '^All assessment maturity practices need to be answered.  See highlighted practices in yellow.'
+      message: '^Current maturity level achieved is required.'
     },
     numericality: {
       message: '^Current maturity level score must be numeric.'
@@ -214,12 +214,12 @@ var compTbl ={
   },
   tar_mat_lvl_achieved:{
     presence : {
-      message: '^Target maturity level achieved is required.'
+      message: '^All assessment maturity practices need to be answered.  See highlighted practices in yellow.'
     }
   },
   tar_mat_lvl_score:{
     presence : {
-      message: '^All assessment maturity practices need to be answered.  See highlighted practices in yellow.'
+      message: '^Target maturity level achieved is required.'
     },
     numericality: {
       message: '^Target maturity level score must be numeric.'
