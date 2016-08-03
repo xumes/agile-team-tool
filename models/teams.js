@@ -1,4 +1,3 @@
-// team modules
 var Promise = require('bluebird');
 var common = require('./cloudant-driver');
 var _ = require('underscore');
@@ -8,6 +7,9 @@ var settings = require('../settings');
 var util = require('../helpers/util');
 var iterationModels = require('./iteration');
 var assessmentModels = require('./assessment');
+var rules = require("./validate_rules/teams");
+
+var teamDocRules = rules.teamDocRules;
 var isAllowedUser = false;
 var msg;
 
@@ -17,39 +19,12 @@ var formatErrMsg = function(msg){
   return { error : msg };
 };
 
-var successLogs = function(msg){
-  tMsg = typeof msg === 'object' ? JSON.stringify(msg) : msg;
-  loggers.get('models').info('Success: ' + tMsg);
-  return;
-};
-
 var infoLogs = function(msg){
   tMsg = typeof msg === 'object' ? JSON.stringify(msg) : msg;
   loggers.get('models').info(tMsg);
   return;
 };
 
-var teamDocRules = {
-  name : {
-    presence : true
-  },
-  desc : {
-    presence : true,
-    length : {
-      maximum : 200
-    }
-  },
-  squadteam : {
-    presence : true ,
-    inclusion : [ 'Yes', 'No']
-  },
-  created_user : {
-    presence : true,
-    email : true
-  },
-  doc_status : {
-    inclusion : ['delete', '']
-  }};
 
 var team = {
   // define team documents default value when creating a new document
@@ -89,7 +64,7 @@ var team = {
             if(_.isEmpty(body) && _.isEmpty(validateTeam)){
               common.addRecord(teamDoc)
                 .then(function(body){
-                  successLogs('New team record created');
+                  loggers.get('models').info('Success: New team record created');
                   resolve(teamDoc);
                 })
                 .catch( /* istanbul ignore next */ function(err){
@@ -168,7 +143,7 @@ var team = {
             infoLogs('Start team, assessment and iteration documents bulk delete');
             common.bulkUpdate(bulkDocu)
             .then(function(body){
-              successLogs('Team, assessment and iteration documents bulk deleted');
+              loggers.get('models').info('Success: Team, assessment and iteration documents bulk deleted');
               resolve(body);
             })
             .catch( /* istanbul ignore next */ function(err){
@@ -274,7 +249,7 @@ var team = {
                 });
                 common.updateRecord(finalTeamDoc)
                 .then(function(body){
-                  successLogs('Team document ' + finalTeamDoc['_id'] + ' successfully updated');
+                  loggers.get('models').info('Success: Team document ' + finalTeamDoc['_id'] + ' successfully updated');
                   resolve(finalTeamDoc);
                 })
                 .catch( /* istanbul ignore next */ function(err){
@@ -299,7 +274,7 @@ var team = {
       infoLogs('Getting all team records from Cloudant');
       common.getByView('teams', 'teams')
         .then(function(body){
-          successLogs('Team records obtained');
+          loggers.get('models').info('Success: Team records obtained');
           resolve(body);
         })
         .catch( /* istanbul ignore next */ function(err){
@@ -311,7 +286,7 @@ var team = {
       infoLogs('Getting team records for ' + teamId + ' from Cloudant');
       common.getRecord(teamId)
         .then(function(body){
-          successLogs('Team records obtained');
+          loggers.get('models').info('Success: Team records obtained');
           resolve(body);
         })
         .catch( /* istanbul ignore next */ function(err){
@@ -327,7 +302,7 @@ var team = {
     return new Promise(function(resolve, reject) {
       common.getByView('agile', 'roles')
         .then(function(body){
-          successLogs('Team roles obtained');
+          loggers.get('models').info('Success: Team roles obtained');
           resolve(body);
         })
         .catch( /* istanbul ignore next */ function(err){
@@ -343,7 +318,7 @@ var team = {
       return new Promise(function(resolve, reject) {
         common.getByView('teams', 'getTeamNames')
           .then(function(body){
-            successLogs('Team names obtained');
+            loggers.get('models').info('Success: Team names obtained');
             resolve(body);
           })
           .catch( /* istanbul ignore next */ function(err){
@@ -358,9 +333,9 @@ var team = {
         common.getByViewKey('teams', 'getTeamNames', teamName)
           .then(function(body){
             if(_.isEmpty(body.rows))
-              successLogs('No team document with name ' + teamName);
+              loggers.get('models').info('Success: No team document with name ' + teamName);
             else
-              successLogs('Team with name ' + teamName + ' obtained');
+              loggers.get('models').info('Success: Team with name ' + teamName + ' obtained');
             resolve(body.rows);
           })
           .catch( /* istanbul ignore next */ function(err){
@@ -379,9 +354,9 @@ var team = {
         common.getByViewKey('teams', 'teamsWithMember', email)
           .then(function(body){
             if(_.isEmpty(body.rows))
-              successLogs('No team for email ' + email);
+              loggers.get('models').info('No team for email ' + email);
             else
-              successLogs('Team lists for email ' + email + ' obtained');
+              loggers.get('models').info('Team lists for email ' + email + ' obtained');
             resolve(body.rows);
           })
           .catch( /* istanbul ignore next */ function(err){
