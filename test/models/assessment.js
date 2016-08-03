@@ -6,7 +6,7 @@ var assessmentModel = require('../../models/assessment');
 var teamModel = require('../../models/teams');
 var dummyData = require('../dummy-data.js');
 var _ = require('underscore');
-var others = require('../../models/others');
+var util = require('../../helpers/util');
 var common = require('../../models/common-cloudant');
 var timeout = 30000;
 var currRevisionId = '';
@@ -28,7 +28,7 @@ describe('Assessment Model', function() {
 before(function(done){
   this.timeout(timeout);
   var teamId;
-   others.getAdmins('ag_ref_access_control')
+   util.getAdmins('ag_ref_access_control')
     .then(function(body){
       adminList = body.ACL_Full_Admin;
       return teamModel.getName(parentTeamData.name);
@@ -186,7 +186,7 @@ describe("assessment models [document validation]", function(){
 
   
   it("valid draft assessment", function(done){
-    valAssessment.created_dt = others.getServerTime();
+    valAssessment.created_dt = util.getServerTime();
     assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
       .then(function(body){
         expect(body.ok).to.be.true;

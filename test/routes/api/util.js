@@ -16,9 +16,9 @@ before(function(done) {
     })
 });
 
-describe('Others API Test [GET /api/others/admins]: get admins', function(){
+describe('Util API Test [GET /api/util/admins]: get admins', function(){
   it('It will return admins successfully', function(done){
-    var req = request(app).get('/api/others/admins/');
+    var req = request(app).get('/api/util/admins/');
     agent.attachCookies(req);
     req.expect(200);
     req.end(function(err, res){
@@ -34,9 +34,9 @@ describe('Others API Test [GET /api/others/admins]: get admins', function(){
   });
 });
 
-describe('Others API Test [GET /api/others/systemstatus]: get system status', function(){
+describe('Util API Test [GET /api/util/systemstatus]: get system status', function(){
   it('It will return system status successfully', function(done){
-    var req = request(app).get('/api/others/systemstatus/');
+    var req = request(app).get('/api/util/systemstatus/');
     agent.attachCookies(req);
     req.expect(200);
     req.end(function(err, res){
@@ -51,9 +51,9 @@ describe('Others API Test [GET /api/others/systemstatus]: get system status', fu
   });
 });
 
-describe('Others API Test [GET /api/others/servertime]: get server time', function(){
+describe('Util API Test [GET /api/util/servertime]: get server time', function(){
   it('It will return server time successfully', function(done){
-    var req = request(app).get('/api/others/servertime');
+    var req = request(app).get('/api/util/servertime');
     agent.attachCookies(req);
     req.expect(200);
     req.end(function(err, res){

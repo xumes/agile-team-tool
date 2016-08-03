@@ -1,4 +1,4 @@
-var common = require('./common-cloudant');
+var common = require('../models/common-cloudant');
 var Promise = require('bluebird');
 var settings = require('../settings');
 var loggers = require('../middleware/logger');
@@ -7,6 +7,7 @@ var msg;
 var teamLists = [];
 var userTeams = [];
 var teamModel;
+
 var formatErrMsg = function(msg) {
   loggers.get('models').info('Error: ' + msg);
   return { error : msg };
@@ -23,7 +24,7 @@ var infoLogs = function(msg) {
 };
 
 var getTeams = function(userId){
-  teamModel = require('./teams');
+  teamModel = require('../models/teams');
   return new Promise(function(resolve, reject){
     infoLogs('Getting user teams of '+userId);
     teamModel.getTeam('')

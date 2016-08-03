@@ -5,7 +5,7 @@ var _ = require('underscore');
 var loggers = require('../middleware/logger');
 var validate = require('validate.js');
 var settings = require('../settings');
-var otherModels = require('./others');
+var util = require('../helpers/util');
 var iterationModels = require('./iteration');
 var assessmentModels = require('./assessment');
 var isAllowedUser = false;
@@ -57,7 +57,7 @@ var team = {
     var newDocu = raw;
     var fullName = user['ldap']['hrFirstName'] + ' ' + user['ldap']['hrLastName'];
     var email = user['shortEmail'];
-    var transTime = otherModels.getServerTime();
+    var transTime = util.getServerTime();
     var memberInfo = {
       "key": user['ldap']['serialNumber'],
       "id": email,
@@ -117,7 +117,7 @@ var team = {
         infoLogs('Getting team document latest records');
         updateOrDeleteTeamValidation.push(team.getTeam(teamId));
         infoLogs('Getting tool admins');
-        updateOrDeleteTeamValidation.push(otherModels.getAdmins('ag_ref_access_control'));
+        updateOrDeleteTeamValidation.push(util.getAdmins('ag_ref_access_control'));
         infoLogs('Getting all team document');
         updateOrDeleteTeamValidation.push(team.getTeam(null)); // teamLists
         infoLogs('Getting all team document associated to user ' + user['shortEmail']);
@@ -147,7 +147,7 @@ var team = {
             reject(formatErrMsg(msg));
           }
 
-          isAllowedUser = otherModels.isUserMemberOfTeam(teamId, checkParent, teamLists, userTeams);
+          isAllowedUser = util.isUserMemberOfTeam(teamId, checkParent, teamLists, userTeams);
           
           if((isAllowedUser === false) && (adminLists['ACL_Full_Admin'].indexOf(userEmail) === -1)){
               msg = 'User not authorized to do action';
@@ -163,7 +163,7 @@ var team = {
             bulkDocu.push(teamAssesments.rows);
             bulkDocu = _.flatten(bulkDocu);
             // reformat into delete docu
-            bulkDocu = otherModels.formatForBulkDelete(bulkDocu, userEmail);
+            bulkDocu = util.formatForBulkDelete(bulkDocu, userEmail);
 
             infoLogs('Start team, assessment and iteration documents bulk delete');
             common.bulkUpdate(bulkDocu)
@@ -263,7 +263,7 @@ var team = {
             if(_.isEmpty(errorLists)){
               infoLogs('Updated document valid, begin save');
               updatedTeamDoc['last_updt_user'] = user['shortEmail'];
-              updatedTeamDoc['last_updt_dt'] = otherModels.getServerTime();
+              updatedTeamDoc['last_updt_dt'] = util.getServerTime();
               updatedTeamDoc['_rev'] = oldTeamDocu['_rev'];
                 var finalTeamDoc = {};
                 _.each(oldTeamDocu,function(v,i,l){

@@ -161,7 +161,7 @@ var getServerDateTime = function() {
 	var dateTime = "";
 	$.ajax({
 		type : "GET",
-		url : "/api/others/servertime",
+		url : "/api/util/servertime",
 		async : false
 	}).done(function(data) {
 		dateTime = data;
@@ -261,7 +261,7 @@ function isUserMemberOfTeam(teamId, checkParent) {
  * Loads the list of identified users with administrator access.
  */
 function getAllAdministrator() {
-	var cUrl = "/api/others/admins";
+	var cUrl = "/api/util/admins";
 	getRemoteData(cUrl, setGlobalAdministorList, []);
 }
 
@@ -474,7 +474,7 @@ function setTeam(jsonData, _callback, args) {
  * Get current system status.
  */
 function getSystemStatus() {
-	var cUrl = "/api/others/systemstatus"
+	var cUrl = "/api/util/systemstatus"
 	getRemoteData(cUrl, setGlobalSystemStatus, []);
 }
 

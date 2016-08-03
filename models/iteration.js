@@ -5,7 +5,7 @@ var Promise = require('bluebird');
 var settings = require('../settings');
 var helper = require('../utils/helper');
 var common = require('./common-cloudant');
-var otherModels = require('../models/others');
+var util = require('../helpers/util');
 var _ = require('underscore');
 var loggers = require('../middleware/logger');
 var validate = require('validate.js');
@@ -110,10 +110,10 @@ var iteration = {
 
   add: function(data, user) {
     var cleanData = {};
-    data['last_updt_dt'] = otherModels.getServerTime();
+    data['last_updt_dt'] = util.getServerTime();
     data['last_updt_user'] = user['shortEmail'];
     data['created_user'] = user['shortEmail'];
-    data['created_dt'] = otherModels.getServerTime();
+    data['created_dt'] = util.getServerTime();
     data['type'] = 'iterationinfo';
     cleanData = helper.trimData(data);
     var user_id = user['shortEmail'];
@@ -125,7 +125,7 @@ var iteration = {
       if (validationErrors) {
         reject(formatErrMsg(validationErrors));
       } else {
-        otherModels.isValidUser(user_id, team_id, checkParent)
+        util.isValidUser(user_id, team_id, checkParent)
         .then(function(validUser) {
           // console.log('[add] isValidUser:', validUser);
           if (validUser) {
@@ -178,7 +178,7 @@ var iteration = {
 
   edit: function(iterationId, data, user) {
     var cleanData = {};
-    data['last_updt_dt'] = otherModels.getServerTime();
+    data['last_updt_dt'] = util.getServerTime();
     data['last_updt_user'] = user['shortEmail'];
     cleanData = helper.trimData(data);
     // console.log('EDIT iterationId:', iterationId);
@@ -191,7 +191,7 @@ var iteration = {
       if (validationErrors) {
         reject(formatErrMsg(validationErrors));
       } else {
-        otherModels.isValidUser(user_id, team_id, checkParent)
+        util.isValidUser(user_id, team_id, checkParent)
         .then(function(validUser) {
           // console.log('[edit] isValidUser:', validUser);
           if (validUser) {

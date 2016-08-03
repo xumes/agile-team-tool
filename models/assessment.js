@@ -4,7 +4,7 @@ var common = require('./common-cloudant');
 var _ = require('underscore');
 var loggers = require('../middleware/logger');
 var validate = require("validate.js");
-var others = require('./others');
+var util = require('../helpers/util');
 var teams = require('./teams');
 var lodash = require('lodash');
 var validationError = [];
@@ -586,7 +586,7 @@ var assessment = {
   userValidation : function(userId, teamId){
     return new Promise(function(resolve, reject){
       infoLogs('model validating user '+userId+' for team '+teamId);
-      others.isValidUser(userId, teamId, true)
+      util.isValidUser(userId, teamId, true)
       .then(function(allowedUser){
         resolve(allowedUser);
       })

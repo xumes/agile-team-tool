@@ -2,7 +2,7 @@ var Promise = require('bluebird');
 var _ = require('underscore');
 var loggers = require('../middleware/logger');
 var teamModel = require('../models/teams');
-var otherModel = require('../models/others');
+var util = require('../helpers/util');
 
 var infoLogs = function(msg){
   tMsg = typeof msg === 'object' ? JSON.stringify(msg) : msg;
@@ -92,7 +92,7 @@ var userCache = {
 
   setSystemAdmins: function(req, res) {
     return new Promise(function(resolve, reject) {
-      otherModel.getAdmins('ag_ref_access_control')
+      util.getAdmins('ag_ref_access_control')
         .then(function(result) {
           req.session['systemAdmin'] = returnObject(result);
           resolve();
@@ -106,7 +106,7 @@ var userCache = {
 
   setSystemStatus: function(req, res) {
     return new Promise(function(resolve, reject) {
-      otherModel.getSystemStatus('ag_ref_system_status_control')
+      util.getSystemStatus('ag_ref_system_status_control')
         .then(function(result) {
           req.session['systemStatus'] = returnObject(result);
           resolve();

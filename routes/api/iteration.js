@@ -1,7 +1,6 @@
 "use strict";
 
 var iterationModel = require('../../models/iteration');
-var otherModels = require('../../models/others');
 var loggers = require('../../middleware/logger');
 var validate = require('validate.js');
 var _ = require('underscore');
