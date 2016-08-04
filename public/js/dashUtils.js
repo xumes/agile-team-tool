@@ -274,18 +274,20 @@ function getAgileTeamDropdownList(teams, squadOnly) {
 
 	if (teams == undefined || teams == null) return listOption;
 
-	for ( var i = 0; i < teams.length; i++) {
+	for (var i in teams) {
 		var option = [];
-		if (squadOnly) {
-			if (teams[i].squadteam != undefined && teams[i].squadteam.toLowerCase() == "yes") {
+		if ((teams[i].doc_status === undefined || teams[i].doc_status.toLowerCase() != "deleted")) {
+			if (squadOnly) {
+				if (teams[i].squadteam != undefined && teams[i].squadteam.toLowerCase() == "yes") {
+					option.push(teams[i]._id);
+					option.push(teams[i].name);
+					listOption.push(option);
+				}
+			} else {
 				option.push(teams[i]._id);
 				option.push(teams[i].name);
 				listOption.push(option);
 			}
-		} else {
-			option.push(teams[i]._id);
-			option.push(teams[i].name);
-			listOption.push(option);
 		}
 	}
 

@@ -240,8 +240,6 @@ function updateAgileTeamCache(team) {
     allTeamsLookup[team._id] = compactedTeam;
   }
   allTeams = _.sortBy(allTeams, function(team) {return team.name});
-  loadSelectableParents(team._id);
-  loadSelectableChildren(team._id);
 };
 
 function agileTeamRolesHandler(roles) {
@@ -281,8 +279,8 @@ function loadSelectedAgileTeam() {
 		$("#teamNameTitle").html("Team members for " + currentTeam.name);
 		$("#childrenNameTitle").html("Child team association for " + currentTeam.name);
 
-		loadSelectableParents($("#teamSelectList option:selected").val());
-		loadSelectableChildren($("#teamSelectList option:selected").val());
+		loadSelectableParents(currentTeam);
+		loadSelectableChildren(currentTeam);
 
 		teamIterations = [];
 		teamAssessments = [];
@@ -339,18 +337,6 @@ function loadSelectedAgileTeam() {
 		}
 		$("#select2-teamSquadYesNo-container").text($("#teamSquadYesNo option:selected").text());
 		$("#select2-teamSquadYesNo-container").attr("title", $("#teamSquadYesNo option:selected").text());
-
-		if (currentTeam.parent_team_id != undefined && currentTeam.parent_team_id != "") {
-			$("#parentSelectList").val(currentTeam.parent_team_id);
-			$("#select2-parentSelectList-container").text($("#parentSelectList option:selected").text());
-			$("#select2-parentSelectList-container").attr("title", $("#parentSelectList option:selected").text());
-
-		} else {
-			$("#parentSelectList").val("");
-			$("#select2-parentSelectList-container").text($("#parentSelectList option:selected").text());
-			$("#select2-parentSelectList-container").attr("title", $("#parentSelectList option:selected").text());
-
-		}
 	}
 	
 	$("#addTeamBtn").attr("disabled", "disabled");
@@ -382,6 +368,10 @@ function loadSelectedAgileTeam() {
 
 function manageIteration() {
 	window.location = "iteration?id=" + encodeURIComponent($("#teamSelectList option:selected").val()) + "&iter=new";
+}
+
+function manageAssessment() {
+	window.location = "assessment?id=" + encodeURIComponent($("#teamSelectList option:selected").val()) + "&iter=new";
 }
 
 function loadIterationInformation(iterationList, more) {
@@ -516,7 +506,7 @@ function getAllChildren(parentId) {
 	var currentTeam = getAgileTeamCache(parentId);
 	if (currentTeam != null) {
 		if (currentTeam.child_team_id != undefined) {
-			for (var j = 0; j < currentTeam.child_team_id.length; j++) {
+			for (var j in currentTeam.child_team_id) {
 				if (children.indexOf(currentTeam.child_team_id[j]) == -1) {
 					children.push(currentTeam.child_team_id[j]);
 					getAllChildren(currentTeam.child_team_id[j]);
@@ -527,18 +517,18 @@ function getAllChildren(parentId) {
 	return children;
 }
 
-function loadSelectableParents(currentTeamId) {
+function loadSelectableParents(team) {
 	children = [];
-	getAllChildren(currentTeamId);
+	getAllChildren(team._id);
 	var parentList = [];
 	if (allTeams != undefined) {
 		$.each(allTeams, function () {
-			if (this._id != currentTeamId && this.squadteam.toLowerCase() == "no") {
+			if (this._id != team._id && this.squadteam.toLowerCase() == "no") {
 				if (children.indexOf(this._id) == -1)
 					parentList.push(this);
 			}
 		});
-		addOptions("parentSelectList", parentList, ["", "No parent team"], null, null);
+		setSelectOptions("parentSelectList", getAgileTeamDropdownList(parentList, false), ["", "No parent team"], null, team.parent_team_id);
 
 	} else {
 		showMessagePopup("No team data loaded on this page.");
@@ -546,69 +536,22 @@ function loadSelectableParents(currentTeamId) {
 
 }
 
-function loadSelectableChildren(currentTeamId) {
+function loadSelectableChildren(team) {
 	children = [];
-	getAllChildren(currentTeamId);
-	var currentTeam;
-	if (allTeams != undefined) {
-		currentTeam = getAgileTeamCache(currentTeamId);
-		if (currentTeam != null)
-			children.push(currentTeam.parent_team_id);
-	}
+	getAllChildren(team._id);
 
 	var childList = [];
 	if (allTeams != undefined) {
 		$.each(allTeams, function () {
-			if (this._id != currentTeamId) {
-				if (children.indexOf(this._id) == -1 && this.parent_team_id != undefined && this.parent_team_id == "")
+			if (this._id != team._id) {
+				if (children.indexOf(this._id) == -1 && _.isEmpty(this.parent_team_id))
 					childList.push(this);
 			}
 		});
-		addOptions("childSelectList", childList, null, null, null);
+		setSelectOptions("childSelectList", getAgileTeamDropdownList(childList, false), null, null, null);
 
 	} else {
 		showMessagePopup("No team data loaded on this page.");
-	}
-
-}
-
-function addOptions(id, list) {
-	addOptions(id, list, null, null, null);
-}
-
-function addOptions(selectId, listOption, firstOption, lastOption, selectedOption) {
-	$("#" + selectId).empty();
-
-	if (firstOption != undefined) {
-		$("#select2-" + selectId + "-container").text(firstOption[1]);
-		option = "<option value='" + firstOption[0] + "' selected='selected'>" + firstOption[1] + "</option>";
-		$("#" + selectId).append(option);
-
-	} else {
-		$("#select2-" + selectId + "-container").text("Select one");
-		var option = "<option value='' selected='selected'>Select one</option>";
-		$("#" + selectId).append(option);
-	}
-
-	if (listOption == undefined)
-		return;
-
-	for (var i = 0; i < listOption.length; i++) {
-		var option = "";
-		if (listOption[i]._id == selectedOption || listOption[i].name == selectedOption) {
-			option = "<option value='" + listOption[i]._id + "' selected='selected'>" + listOption[i].name + "</option>";
-			$("#select2-" + selectId + "-container").text(listOption[i].name);
-			$("#select2-" + selectId + "-container").attr("title", listOption[i].name);
-		} else
-			option = "<option value=\"" + listOption[i]._id + "\">" + listOption[i].name + "</option>";
-
-		$("#" + selectId).append(option);
-	}
-
-	if (lastOption != undefined) {
-		option = "<option value='" + lastOption[0] + "'>" + lastOption[1] + "</option>";
-		$("#" + selectId).append(option);
-
 	}
 }
 
@@ -885,7 +828,6 @@ function updateAction(action) {
 		  }
 
 		}).done(function (data) {
-			updateAgileTeamCache(data);
 			agileTeamListHandler(data._id, allTeams);
 			showMessagePopup(message);
 		});
@@ -925,7 +867,6 @@ function updateAction(action) {
 		  }
 
 		}).done(function (data) {
-			updateAgileTeamCache(data);
 			agileTeamListHandler(data._id, allTeams);
 			showMessagePopup("You have successfully added a team and you have been added as the first team member. You can now add additional team members.");
 		});
