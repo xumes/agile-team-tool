@@ -2,7 +2,7 @@ var chai = require('chai');
 var expect = chai.expect;
 var app = require('../../../app');
 var request = require('supertest');
-var dummyData = require('../../dummy-data.js');
+var dummyData = require('../../data/dummy-data.js');
 
 var teamDocValid = dummyData.teams.validDoc;
 var teamDocInvalid = dummyData.teams.invalidDoc;

@@ -4,7 +4,7 @@ var chai = require('chai');
 var crypto = require('crypto');
 var expect = chai.expect;
 var iterationModel = require(root_path + 'models/iteration');
-var dummyData = require('../dummy-data.js');
+var dummyData = require('../data/dummy-data.js');
 var validId;
 var docId;
 var timeout = 100000;

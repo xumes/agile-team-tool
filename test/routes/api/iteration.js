@@ -4,7 +4,7 @@ var crypto = require('crypto');
 var expect = chai.expect;
 var request = require('supertest');
 var iterationModel = require('../../../models/iteration');
-var iterationTestData = require('../../dummy-data.js');
+var iterationTestData = require('../../data/dummy-data.js');
 var app = require('../../../app');
 var validId;
 var docId;
