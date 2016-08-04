@@ -49,7 +49,7 @@ var processFeedbackRequest = function(req, res) {
     <br><b>Date submitted:</b> "+moment().format('MMMM Do YYYY, h:mm:ss a')+"\
     <br><b>Page:</b> "+req.body.feedback_page+"\
     <br><b>Team name:</b> "+req.body.feedback_teamName+"\
-    <br><b>Text of feedback:</b> \
+    <br><br><b>Text of feedback:</b> \
     <br>"+req.body.feedback,
     from: FEEDBACK_FROM,
     //test_recipient will override the sendTo for unit tests
@@ -64,7 +64,7 @@ var processFeedbackRequest = function(req, res) {
     <br><br>As a reminder, here is what you told us:\
     <br><b>Page:</b> "+req.body.feedback_page+"\
     <br><b>Team name:</b> "+req.body.feedback_teamName+"\
-    <br><b>Message:</b>\
+    <br><br><b>Message:</b>\
     <br>"+req.body.feedback+"\
     <br><br>From, <br> The Agile Academy<br> Have more to tell us? Please visit our <a href='https://w3-connections.ibm.com/forums/html/forum?id=d0e31d40-ff11-4691-bc65-c0d95bc0c426'>forum</a>.",
     from: FEEDBACK_FROM,
