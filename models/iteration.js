@@ -1,3 +1,5 @@
+"use strict";
+
 var Cloudant    = require('cloudant');
 var Promise     = require('bluebird');
 var settings    = require('../settings');
@@ -108,6 +110,7 @@ var iteration = {
   add: function(data, user) {
     var cleanData = {};
     data['last_updt_dt'] = util.getServerTime();
+    data['iterationinfo_status'] = iteration.calculateStatus(data);
     data['last_updt_user'] = user['shortEmail'];
     data['created_user'] = user['shortEmail'];
     data['created_dt'] = util.getServerTime();
@@ -177,6 +180,7 @@ var iteration = {
     var cleanData = {};
     data['last_updt_dt'] = util.getServerTime();
     data['last_updt_user'] = user['shortEmail'];
+    data['iterationinfo_status'] = iteration.calculateStatus(data);
     cleanData = util.trimData(data);
     // console.log('EDIT iterationId:', iterationId);
     // console.log('EDIT cleanData:', cleanData);
@@ -194,7 +198,7 @@ var iteration = {
           if (validUser) {
             common.getRecord(iterationId)
             .then(function(body) {
-              if (!_.isEmpty(body)) {
+              if (!_.isEmpty(body) && (body._id != undefined)) {
                 // loggers.get('models').info('[edit] Team iteration info obtained: ', JSON.stringify(body, null, 4));
                 var _rev = body._rev;
                 var _id = body._id;
@@ -267,7 +271,7 @@ var iteration = {
               // console.log('[edit] Err4:', err);
               // var msg = err.error;
               var msg = err.message;
-              loggers.get('models').error('[iterationModel.edit] Err4:', err);
+              // loggers.get('models').error('[iterationModel.edit] Err4:', err);
               reject(formatErrMsg(msg));
             });
           }
@@ -307,7 +311,47 @@ var iteration = {
         });
       }
     });
+  },
+
+  calculateStatus: function(data) {
+    var iteration_end_dt = data['iteration_end_dt'];
+    var nbr_stories_dlvrd = data['nbr_stories_dlvrd'];
+    var nbr_story_pts_dlvrd = data['nbr_story_pts_dlvrd'];
+    var nbr_dplymnts = data['nbr_dplymnts'];
+    var nbr_defects = data['nbr_defects'];
+    var team_sat = data['team_sat'];
+    var client_sat = data['client_sat'];
+    var dateFormat = "MM/DD/YYYY";
+    var status;
+    var endDate = new Date(iteration_end_dt);
+    var serDate = new Date(util.getServerTime());
+    var d1 = moment(endDate, dateFormat);
+    var d2 = moment(serDate, dateFormat);
+
+    if (d1 <= d2) {
+      // console.log('endDate is <= than serDate');
+      var diffDays = d2.diff(d1, 'days');
+      // updating status for only having more than 3 days from iteration end date
+      if(diffDays > 3) {
+        // console.log("diffDays > 3");
+        status = "Completed";
+      } else if (nbr_stories_dlvrd != 0 || 
+        nbr_story_pts_dlvrd != 0 || 
+        nbr_dplymnts != 0 || 
+        nbr_defects != 0 || 
+        team_sat != 0 || 
+        client_sat != 0) {
+        status = "Completed";
+      } else {
+        status = "Not complete";
+      }
+    } else {
+      status = "Not complete";
+    }
+
+    return status;
   }
+
 };
 
 module.exports = iteration;
