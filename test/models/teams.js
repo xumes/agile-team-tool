@@ -6,6 +6,9 @@ var validId = null;
 var validTeamName = null;
 var createdId = null;
 
+console.log('############');
+console.log(teamModel);
+console.log('############');
 var teamDocUpdateInvalid = dummyData.teams.validDoc;
 
 var teamDocUpdateValid = dummyData.teams.validDoc;
@@ -132,6 +135,226 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
     })
     .catch(function(err){
       expect(err.error).to.be.an('undefined');
+    })
+    .finally(function(){
+      done();
+    })
+  });
+});
+
+describe('Team models [associateTeams]: associate team relationship with other teams', function(){
+  it('will return error because action is not allowed', function(done){
+    teamModel.associateTeams({}, 'invalid-action', dummyData.associate.invalidUser())
+    .catch(function(err){
+      expect(err).to.not.equal(null);
+      expect(err).to.have.property('error');
+      expect(err.error).to.have.property('action');
+      expect(err.error.action).to.have.be.equal('Invalid action');
+    })
+    .finally(function(){
+      done();
+    })
+  });
+
+  it('will return error because team id is invalid', function(done){
+    teamModel.associateTeams({}, 'associateParent', dummyData.associate.invalidUser())
+    .catch(function(err){
+      expect(err).to.not.equal(null);
+      expect(err).to.have.property('error');
+      expect(err.error).to.have.property('teamId');
+      expect(err.error.teamId).to.have.be.equal('Invalid teamd document ID');
+    })
+    .finally(function(){
+      done();
+    })
+  });
+
+  it('will return error because user is not authorized to perform action', function(done){
+    associateValidObj = {
+      teamId : createdId,
+      targetParent : ''
+    };
+    teamModel.associateTeams( associateValidObj, 'associateParent', dummyData.associate.invalidUser())
+    .catch(function(err){
+      expect(err).to.not.equal(null);
+      expect(err).to.have.property('error');
+      expect(err.error).to.have.property('user');
+      expect(err.error.user).to.have.be.equal('User not authorized to do action');
+    })
+    .finally(function(){
+      done();
+    })
+  });
+  
+  it('will return error because associate data is invalid to associate parent', function(done){
+    associateDataParentInvalid = {
+      teamId : createdId,
+      targetParent : 'invalidTeam'
+    };
+    teamModel.associateTeams(associateDataParentInvalid, 'associateParent', dummyData.associate.validUser())
+    .catch(function(err){
+      expect(err).to.not.equal(null);
+      expect(err).to.have.property('error');
+      expect(err.error).to.have.property('targetParent');
+      expect(err.error.targetParent).to.have.be.equal('Invalid target parent');
+    })
+    .finally(function(){
+      done();
+    })
+  });
+  
+  it('will return error because associate data is invalid to associate child', function(done){
+    associateDataChildInvalid = {
+      teamId : createdId,
+      targetChild : createdId
+    };
+    teamModel.associateTeams(associateDataChildInvalid, 'associateChild', dummyData.associate.validUser())
+    .catch(function(err){
+      expect(err).to.not.equal(null);
+      expect(err).to.have.property('error');
+      expect(err.error).to.have.property('targetChild');
+      expect(err.error.targetChild).to.have.be.equal('Invalid target child');
+    })
+    .finally(function(){
+      done();
+    })
+  });
+
+  it('will return error because associate data is invalid to associate child', function(done){
+    associateDataChildInvalid = {
+      teamId : createdId,
+      targetChild : [createdId]
+    };
+    teamModel.associateTeams(associateDataChildInvalid, 'associateChild', dummyData.associate.validUser())
+    .catch(function(err){
+      expect(err).to.not.equal(null);
+      expect(err).to.have.property('error');
+      expect(err.error).to.have.property('targetChild');
+      expect(err.error.targetChild).to.have.be.equal('Cannot add self as target child');
+    })
+    .finally(function(){
+      done();
+    })
+  });
+
+  
+  it('will return error because associate data is invalid to removed parent', function(done){
+    associateDataRemoveParentInvalid = {
+      teamId : createdId,
+      targetParent : ''
+    };
+    teamModel.associateTeams(associateDataRemoveParentInvalid, 'removeParent', dummyData.associate.validUser())
+    .catch(function(err){
+      expect(err).to.not.equal(null);
+      expect(err).to.have.property('error');
+      expect(err.error).to.have.property('targetParent');
+      expect(err.error.targetParent).to.have.be.equal('Target parent cannot be blank');
+    })
+    .finally(function(){
+      done();
+    })
+  });
+  
+  it('will return error because associate data is invalid to removed parent', function(done){
+    associateDataRemoveParentInvalid = {
+      teamId : createdId,
+      targetParent : createdId
+    };
+    teamModel.associateTeams(associateDataRemoveParentInvalid, 'removeParent', dummyData.associate.validUser())
+    .catch(function(err){
+      expect(err).to.not.equal(null);
+      expect(err).to.have.property('error');
+      expect(err.error).to.have.property('targetParent');
+      expect(err.error.targetParent).to.have.be.equal('Target parent cannot be equal to self');
+    })
+    .finally(function(){
+      done();
+    })
+  });
+
+  it('will return error because associate data is invalid to removed child', function(done){
+    associateDataRemoveChildInvalid = {
+      teamId : createdId,
+      targetChild : ''
+    };
+    teamModel.associateTeams(associateDataRemoveChildInvalid, 'removeChild', dummyData.associate.validUser())
+    .catch(function(err){
+      expect(err).to.not.equal(null);
+      expect(err).to.have.property('error');
+      expect(err.error).to.have.property('targetChild');
+      expect(err.error.targetChild).to.have.be.equal('Invalid target child');
+    })
+    .finally(function(){
+      done();
+    })
+  });
+
+  it('will return error because associate data is invalid to removed child', function(done){
+    associateDataRemoveChildInvalid = {
+      teamId : createdId,
+      targetChild : [createdId]
+    };
+    teamModel.associateTeams(associateDataRemoveChildInvalid, 'removeChild', dummyData.associate.validUser())
+    .catch(function(err){
+      expect(err).to.not.equal(null);
+      expect(err).to.have.property('error');
+      expect(err.error).to.have.property('targetChild');
+      expect(err.error.targetChild).to.have.be.equal('Invalid target child');
+    })
+    .finally(function(){
+      done();
+    })
+  });
+  
+  it('will associate new parent team', function(done){
+    teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
+    .then(function(body){
+      var associateDataParentValid = {
+        teamId : createdId,
+        targetParent : body['_id']
+      };
+      teamModel.associateTeams(associateDataParentValid, 'associateParent', dummyData.associate.validUser())
+      .then(function(body){
+        expect(body).to.not.equal(null);
+        expect(body[0]['id']).to.have.equal(associateDataParentValid['teamId']);
+        expect(body[1]['id']).to.have.equal(associateDataParentValid['targetParent']);
+      })
+      .finally(function(){
+        done();
+      })
+    })
+  });
+  
+  xit('will associate new child team', function(done){
+    teamModel.associateTeams({}, 'associateChild', associateTeamsUserValid)
+    .then(function(body){
+      expect(body).to.not.equal(null);
+      expect(body).to.have.property('associateChild');
+      expect(body.associateChild).to.have.be.equal();
+    })
+    .finally(function(){
+      done();
+    })
+  });
+  
+  xit('will removed parent association', function(done){
+    teamModel.associateTeams({}, 'removeParent', associateTeamsUserValid)
+    .then(function(body){
+      expect(body).to.not.equal(null);
+      expect(body).to.have.property('targetParent');
+      expect(body.targetParent).to.have.be.equal();
+    })
+    .finally(function(){
+      done();
+    })
+  });
+  
+  xit('will removed child team', function(done){
+    teamModel.associateTeams({}, 'removeChild', associateTeamsUserValid)
+    .then(function(body){
+      expect(body).to.not.equal(null);
+      expect(body).to.have.property('targetChild');
+      expect(body.targetChild).to.have.be.equal();
     })
     .finally(function(){
       done();

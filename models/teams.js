@@ -25,7 +25,6 @@ var infoLogs = function(msg){
   return;
 };
 
-
 var team = {
   // define team documents default value when creating a new document
   defaultTeamDoc : function(raw, user){
@@ -365,7 +364,263 @@ var team = {
           })
         }
     });
+  },
+  associateActions: function(action){
+    var validActions = ['associateParent', 'associateChild', 'removeParent', 'removeChild'];
+    if(_.isEmpty(action))
+      return validActions;
+    else{
+      if(validActions.indexOf(action) > -1){
+        return true;
+      }else{
+        return false;
+      }
+    }
+  },
+  associateTeams: function(teamObj, action, userEmail){
+    var errorLists = {};
+    errorLists['error'] = {};
+    return new Promise(function(resolve, reject){
+      if(!(team.associateActions(action))){
+        errorLists['error']['action'] = 'Invalid action';
+        infoLogs(errorLists);
+        reject(errorLists);
+      }else if(_.isEmpty(teamObj['teamId'])){
+        errorLists['error']['teamId'] = 'Invalid teamd document ID';
+        infoLogs(errorLists);
+        reject(errorLists);
+      }else{
+        // check if user is authorized to do action
+        util.isValidUser(userEmail, teamObj['teamId'], true)
+        .then(function(body){
+          infoLogs('Validating for ' + action );
+          /*
+          
+        
+          */
+          /*
+          Tal, mag decide diay ta unsang format sa json imong i take sa pag update ug parent child relationship.. :smile:
+          sa parent update 2 or 3 team docs
+          
+          sa child team update
+          - 2 team docs kung mag add kag new child (current team and child team)
+          - pag multiple child selected for delete, sample 3 child teams to delete, total of 4 docs ang iupdate (3 child team to remove the current team as parent, ug ang current team to remove the child teams)
+
+
+          */
+          /*
+          FOR TEAM DELETE
+          kung naay parent tong team, iremove sya as child sa parent team..
+
+          kung naay children ang team, iremove sya sa parent sa child teams...
+          */
+          /*
+          for bulk updates
+          by the way, kato gani nay mga related na bulk operation na multiple team documents ang ginaupdate.... pwede nimo ireturn as array of team docs tong mga doc?
+          */
+          switch(action){
+            case 'associateParent':
+               // parent_id 
+              if(teamObj['teamId'] === teamObj['targetParent']){
+                // not allowed to be a parent of self
+                errorLists['error']['targetParent'] = 'Invalid target parent';
+                infoLogs(errorLists);
+                reject(errorLists);
+              }else{
+                team.getTeam(teamObj['targetParent'])
+                .then(function(body){
+                  if(body['squadteam'] === 'Yes'){
+                    // selected parent team should not be a squad team
+                    errorLists['error']['targetParent'] = 'Invalid target parent';
+                    infoLogs(errorLists);
+                    reject(errorLists);
+                  }else{
+                    // ** selected parent team should not be from a team under  it
+                    team.getTeam(null)
+                    .then(function(body){
+                      var teamChildren = util.getChildrenOfParent(teamObj['teamId'], body['rows']);
+                      if(teamChildren.indexOf(teamObj['targetParent']) > -1){
+                        errorLists['error']['targetParent'] = 'Selected parent team should not be under your current team';
+                        infoLogs(errorLists);
+                        reject(errorLists);
+                      }else{
+                        infoLogs('Data valid for savings in ' + action);
+                        // do saving
+                        var associateParent = [];
+                        associateParent.push(team.getTeam(teamObj['teamId']));
+                        associateParent.push(team.getTeam(teamObj['targetParent']));
+                        Promise.all(associateParent)
+                        .then(function(result){
+                          formattedDocuments(result, action, team)
+                          .then(function(res){
+                            var bulkDocu = util.formatForBulkUpdate(res, userEmail);
+                            common.bulkUpdate(bulkDocu)
+                            .then(function(body){
+                              loggers.get('models').info('Success: Team successfully associated to parent');
+                              resolve(body);
+                            })
+                            .catch( /* istanbul ignore next */ function(err){
+                              // cannot simulate Cloudant error during testing
+                              loggers.get('models').error('Error associating team to a parent');
+                              reject(formatErrMsg(err.error));
+                            })
+                          })
+                          .catch(function(err){
+                            reject(err);
+                          })
+                        })
+                      }
+                    })
+                  }
+                })
+                .catch(function(err){
+                  errorLists['error']['targetParent'] = 'Invalid target parent';
+                  infoLogs(errorLists);
+                  reject(errorLists);
+                })
+              }
+              break;
+            case 'associateChild':
+              if(typeof teamObj['targetChild'] != 'object'){
+                // target child must be array of team id
+                errorLists['error']['targetChild'] = 'Invalid target child';
+                infoLogs(errorLists);
+                reject(errorLists);
+              }else if(teamObj['targetChild'].indexOf(teamObj['teamId']) > -1){
+                // not allowed to add self as a child
+                errorLists['error']['targetChild'] = 'Cannot add self as target child';
+                infoLogs(errorLists);
+                reject(errorLists);
+              }else{
+                var childLists = [];
+                _.each(teamObj['targetChild'], function(v,i,l){
+                  childLists.push(team.getTeam(v))
+                })
+                Promise.all(childLists)
+                .then(function(result){
+                  //squad teams cannot have child teams
+                  //only allowed to add teams that has no parent
+                  _.each(result, function(v,i,l){
+                    if(!(_.isEmpty(v['child_team_id'])) || !(_.isEmpty(v['parent_team_id']))){
+                      errorLists['error']['targetChild'] = 'Child team cannot have child or parent';
+                      infoLogs(errorLists);
+                      reject(errorLists);
+                    }
+                  })
+                  // do saving
+                  infoLogs('do the saving: ', teamObj);
+                  resolve(true);
+                })
+                .catch(function(err){
+                  reject(err);
+                })
+              }
+              break;
+            case 'removeParent':
+              if(_.isEmpty(teamObj['targetParent'])){
+                // not allowed to be a parent of self
+                errorLists['error']['targetParent'] = 'Target parent cannot be blank';
+                infoLogs(errorLists);
+                reject(errorLists);
+              }else if(teamObj['teamId'] === teamObj['targetParent']){
+                // not allowed to be a parent of self
+                errorLists['error']['targetParent'] = 'Target parent cannot be equal to self';
+                infoLogs(errorLists);
+                reject(errorLists);
+              }else{
+                team.getTeam(teamObj['targetParent'])
+                .then(function(result){
+                  // do the saving
+                  //kung naay parent tong team, iremove sya as child sa parent team..
+                  //kung naay children ang team, iremove sya sa parent sa child teams...
+                  // do saving
+                  infoLogs('do the saving: ', teamObj);
+                  resolve(true);
+                })
+                .catch(function(err){
+                  // not allowed to be a parent of self
+                  errorLists['error']['targetParent'] = 'Invalid target parent';
+                  infoLogs(errorLists);
+                  reject(errorLists);
+                })
+              }
+              break;
+            case 'removeChild':
+              if(typeof teamObj['targetChild'] != 'object'){
+                // target child must be array of team id
+                errorLists['error']['targetChild'] = 'Invalid target child';
+                infoLogs(errorLists);
+                reject(errorLists);
+              }else if(teamObj['targetChild'].indexOf(teamObj['teamId']) > -1){
+                // not allowed to add self as a child
+                errorLists['error']['targetChild'] = 'Invalid target child';
+                infoLogs(errorLists);
+                reject(errorLists);
+              }else{
+                var childLists = [];
+                _.each(teamObj['targetChild'], function(v,i,l){
+                  childLists.push(team.getTeam(v))
+                })
+                Promise.all(childLists)
+                .then(function(result){
+                  // do saving
+                  // kung naay parent tong team, iremove sya as child sa parent team..
+                  // kung naay children ang team, iremove sya sa parent sa child teams...
+                  infoLogs('do the saving: ', teamObj);
+                  resolve(true);
+                })
+                .catch(function(err){
+                  reject(err);
+                })
+              }
+              break;
+          }
+        })
+        .catch(function(err){
+          errorLists['error']['user'] = 'User not authorized to do action';
+          infoLogs(errorLists);
+          reject(errorLists);
+        });
+      }
+    });
   }
 };
+
+var formattedDocuments = function(doc, action, team){
+  return new Promise(function(resolve, reject){
+    var tempDocHolder = [];
+    switch(action){
+      case 'associateParent':
+        var currentTeam = doc[0];
+        var teamToBeParent = doc[1];
+        tempDocHolder[0] = currentTeam;
+        tempDocHolder[1] = teamToBeParent;
+        tempDocHolder[1]['child_team_id'].push(currentTeam['_id']);
+        if(!(_.isEmpty(currentTeam['parent_team_id']))){
+          infoLogs('Current team has existing parent, clear the parent child association');
+          //- 3 team docs kung naa syay parent lain, unya giilisan nimo (so old parent, current parent, ug current team)..
+          team.getTeam(currentTeam['parent_team_id'])
+          .then(function(body){
+            tempDocHolder[2] = body;
+            var newChildTeamId = _.without(tempDocHolder[2]['child_team_id'], currentTeam['_id']);
+            tempDocHolder[0]['parent_team_id'] = teamToBeParent['_id'];
+            tempDocHolder[2]['child_team_id'] = newChildTeamId;
+            resolve(tempDocHolder);
+          })
+        }else{
+          infoLogs('Current team has no parent, reformat document and do save');
+          tempDocHolder[0]['parent_team_id'] = teamToBeParent['_id'];
+          //- 2 team docs kung walay parent daan si current team, or kung gi remove lang nimo iyang association sa parent..
+          resolve(tempDocHolder);
+        }
+        /*
+        tempDocHolder[0]  : currentTeam
+        tempDocHolder[1]  : teamToBeParent
+        tempDocHolder[2]  : previousParent
+        */
+        break;  
+    }
+  });
+}
 
 module.exports = team;

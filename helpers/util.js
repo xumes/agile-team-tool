@@ -134,6 +134,7 @@ module.exports.getServerTime = function () {
  * @returns - reformatted object that will be passed directly to updateBulk
  */
 module.exports.formatForBulkDelete = function(docs, email){
+  //can use lodash cloneDeep
   var reformatDocu = [];
   _.each(docs, function(v, i, l){
     var doc2 = v;
@@ -262,3 +263,49 @@ module.exports.BulkDelete = function(docIds) {
   });
 }
 
+/**
+ * Get children of team in flatten structure
+ * 
+ * @param parentId - team document id to get children to
+ * @param allTeams - array of all team document
+ * @returns {array}
+ */
+module.exports.getChildrenOfParent = function(parentId, allTeams){
+var children = _.isEmpty(children) ? [] : children;
+ var currentTeam = _.isEmpty(allTeams[parentId]) ? allTeams[parentId] : null;
+  if (currentTeam != null) {
+    if (currentTeam.child_team_id != undefined) {
+      for (var j = 0; j < currentTeam.child_team_id.length; j++) {
+        if (children.indexOf(currentTeam.child_team_id[j]) == -1) {
+          children.push(currentTeam.child_team_id[j]);
+          module.exports.getChildrenOfParent(currentTeam.child_team_id[j], allTeams);
+        }
+      }
+    }
+  }
+  return children; 
+}
+
+/**
+ * Reformat document to update document structure for BULK operation
+ * 
+ * @param docs - array of documents
+ * @param email - email address as last update user, ie logged in user
+ * @returns - reformatted object that will be passed directly to updateBulk
+ */
+
+ // TODO : can be merged with formatForBulkDelete
+module.exports.formatForBulkUpdate = function(docs, email){
+  //can use lodash cloneDeep
+  var reformatDocu = [];
+  _.each(docs, function(v, i, l){
+    var doc2 = v;
+    doc2['last_updt_user'] = email;
+    doc2['last_updt_dt'] = module.exports.getServerTime();
+    doc2['doc_status'] = '';
+    reformatDocu.push(doc2);
+  });
+  return {
+    docs : reformatDocu
+  };
+}
