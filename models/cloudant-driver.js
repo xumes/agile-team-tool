@@ -6,7 +6,7 @@ var settings      = require('../settings');
 var loggers       = require('../middleware/logger');
 var cloudantDb    = Cloudant(settings.cloudant.url);
 var dbName        = settings.cloudant.dbName;
-var agileTeam     = Promise.promisifyAll((cloudantDb.use(dbName)));
+var db            = Promise.promisifyAll((cloudantDb.use(dbName)));
 
 var formatErrMsg = function(msg){
   loggers.get('models').info('Error: ' + msg);
@@ -15,7 +15,7 @@ var formatErrMsg = function(msg){
 
 exports.addRecord = function(data) {
   return new Promise(function(resolve, reject){
-    agileTeam.insertAsync(data)
+    db.insertAsync(data)
     .then(function(body){
       resolve(body);
     })
@@ -27,7 +27,7 @@ exports.addRecord = function(data) {
 
 exports.getRecord = function(data) {
   return new Promise(function(resolve, reject){
-    agileTeam.getAsync(data)
+    db.getAsync(data)
       .then(function(body){
         resolve(body);
       })
@@ -40,7 +40,7 @@ exports.getRecord = function(data) {
 exports.updateRecord = function(data) {
   // revision _id is required on data
   return new Promise(function(resolve, reject){
-    agileTeam.insertAsync(data)
+    db.insertAsync(data)
     .then(function(body){
       resolve(body);
     })
@@ -54,7 +54,7 @@ exports.deleteRecord = function(_id, _rev) {
   return new Promise(function(resolve, reject){
     loggers.get('models').info('Deleting record '+_id+' rev: '+_rev);
     if(!lodash.isEmpty(_id) && !lodash.isEmpty(_rev)){
-      agileTeam.destroyAsync(_id, _rev)
+      db.destroyAsync(_id, _rev)
         .then(function(body){
           loggers.get('models').info('Success: Record '+_id+' rev: '+_rev+' has been deleted successfully.');
           resolve(body);
@@ -70,7 +70,7 @@ exports.deleteRecord = function(_id, _rev) {
 
 exports.getByView = function(_design, _view) {
   return new Promise(function(resolve, reject) {
-    agileTeam.viewAsync(_design, _view)
+    db.viewAsync(_design, _view)
       .then(function(body){
         body = _.isEmpty(body.rows) ? {} : body;
         resolve(body);
@@ -83,7 +83,7 @@ exports.getByView = function(_design, _view) {
 
 exports.getByViewKey = function(_design, _view, _key) {
   return new Promise(function(resolve, reject){
-    agileTeam.viewAsync(_design, _view, {'include_docs': false, key: _key })
+    db.viewAsync(_design, _view, {'include_docs': false, key: _key })
       .then(function(body){
         resolve(body);
       })
@@ -95,7 +95,7 @@ exports.getByViewKey = function(_design, _view, _key) {
 
 exports.getByViewWithStartOrEndKey = function(_design, _view, _startkey, _endkey) {
   return new Promise(function(resolve, reject) {
-    agileTeam.viewAsync(_design, _view, { 'startkey': _startkey, 'endkey': _endkey })
+    db.viewAsync(_design, _view, { 'startkey': _startkey, 'endkey': _endkey })
       .then(function(body){
         body = _.isEmpty(body.rows) ? {} : body;
         resolve(body);
@@ -109,7 +109,7 @@ exports.getByViewWithStartOrEndKey = function(_design, _view, _startkey, _endkey
 exports.bulkUpdate = function(data) {
   // document id and revision _id are required on data
   return new Promise(function(resolve, reject){
-    agileTeam.bulkAsync(data)
+    db.bulkAsync(data)
     .then(function(body){
       resolve(body);
     })
