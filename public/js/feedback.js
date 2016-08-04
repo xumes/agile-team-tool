@@ -42,10 +42,8 @@ function processFeedback() {
 		type : "POST",
 		url : "/email/feedback",
 		data: {
-			"feedback_recipient":$("#feedback_recipient").val(), 
 			"feedback_sender":$("#feedback_sender").val(),
 			"feedback_senderName":$("#feedback_senderName").val(),
-			"feedback_cc": "", 
 			"feedback_page":$("#feedback_page").val(), 
 			"feedback_teamName":$("#feedback_teamName").val(), 
 			"feedback":$("#feedback").val()
@@ -67,10 +65,8 @@ function initFeedback(userEmail){
 	hasError = false;
 	ccIds = [];
 	valCount = 0;
-	$("#feedback_recipient").val(feedbackTo);
 	$("#feedback_sender").val(userInfo.email);
 	$("#feedback_senderName").val(userInfo.name);
-	$("#feedback_cc").val("");//(userInfo.email);
 	$("#feedback_teamName").val("");
 	$("#feedback").val("");
 	$("#userEmail").html(userInfo.email);
@@ -121,6 +117,7 @@ function validateEmail(){
 }
 
 
+//TODO remove ?
 function getEmail(notesId){
 	var facesRoot = 'https://faces.tap.ibm.com/api/';
 	var facesFunc = 'find/?format=faces&q=notes/id:' + encodeURIComponent(notesId); 
@@ -135,7 +132,7 @@ function getEmail(notesId){
 		'scriptCharset': 'UTF-8',
 		'success' : function (data) {
 			if (data.persons.length === 0){
-				showMessagePopup(emailIDError);
+				showMessagePopup("Your feedback could not be submitted because at least one of the cc email addresses is not in internet address or NotesID format.");
 				return false;
 			}
 			var facesPerson = data.persons[0].person;
@@ -151,7 +148,7 @@ function getEmail(notesId){
 			}
 			else{
 				hasError = true;
-				showMessagePopup(emailIDError);
+				showMessagePopup("Your feedback could not be submitted because at least one of the cc email addresses is not in internet address or NotesID format.");
 				return false;
 			}
 		},
