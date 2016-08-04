@@ -23,7 +23,7 @@ module.exports = function(app, includes) {
         })
         .catch(function(err){
           res.status(400).send(err);
-        })  
+        })
     }else{
       res.status(400).send({ error : 'Invalid request' });
     }
@@ -44,7 +44,8 @@ module.exports = function(app, includes) {
       .then(function(result){
         res.send(result);
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
+        // cannot simulate this error during testing
         res.status(400).send(err);
       });
   };
@@ -55,11 +56,12 @@ getTeamName = function(req, res){
       .then(function(result){
         res.send(result);
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
+        // cannot simulate this error during testing
         res.status(400).send(err);
       });
   };
-  
+
   getTeamByEmail = function(req,res){
     var email = req.params.email;
     teamModel.getTeamByEmail(email)
@@ -83,23 +85,23 @@ getTeamName = function(req, res){
   };
 
   // delete team document
-  app.delete('/api/teams/', [includes.middleware.auth.requireLogin], deleteTeam); 
+  app.delete('/api/teams/', [includes.middleware.auth.requireLogin], deleteTeam);
 
   // create new team document
-  app.post('/api/teams/', [includes.middleware.auth.requireLogin], createTeam); 
-  
+  app.post('/api/teams/', [includes.middleware.auth.requireLogin], createTeam);
+
   // update existing team document
   app.put('/api/teams/', [includes.middleware.auth.requireLogin], updateTeam);
-  
+
   // get all applicable team roles
   app.get('/api/teams/roles', [includes.middleware.auth.requireLogin], getTeamRole);
-  
+
   // get team document by name
   app.get('/api/teams/names/:teamName?', [includes.middleware.auth.requireLogin], getTeamName);
-  
+
   // get all team by email
   app.get('/api/teams/members/:email', [includes.middleware.auth.requireLogin], getTeamByEmail);
-  
+
   // get all team or team details if teamId exists
   app.get('/api/teams/:teamId?', [includes.middleware.auth.requireLogin], getTeam);
 };

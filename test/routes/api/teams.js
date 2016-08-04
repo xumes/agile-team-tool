@@ -30,11 +30,11 @@ describe('Team API Tests', function() {
     var req = request(app).post('/api/teams');
     agent.attachCookies(req);
     req.send(teamDocInvalid);
-    req.expect(400);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.not.equal(null);
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.be.a('object');
@@ -47,11 +47,11 @@ describe('Team API Tests', function() {
     var req = request(app).post('/api/teams');
     agent.attachCookies(req);
     req.send(teamDocValid);
-    req.expect(201);
     req.end(function(err,res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(201);
         expect(res.body).to.have.property('_id');
         createdId = res.body['_id'];
       }
@@ -64,11 +64,11 @@ describe('Team API Tests', function() {
     var req = request(app).put('/api/teams');
     agent.attachCookies(req);
     req.send(docu);
-    req.expect(400);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.be.equal('not_found');
       }
@@ -81,11 +81,11 @@ describe('Team API Tests', function() {
     var req = request(app).put('/api/teams');
     agent.attachCookies(req);
     req.send(teamDocUpdateInvalid);
-    req.expect(400);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.have.property('error');
       }
       done();
@@ -99,11 +99,11 @@ describe('Team API Tests', function() {
     var req = request(app).put('/api/teams');
     agent.attachCookies(req);
     req.send(teamDocUpdateValid);
-    req.expect(200);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.have.property('_id');
         expect(res.body._id).to.be.equal(createdId);
       }
@@ -115,11 +115,11 @@ describe('Team API Tests', function() {
   it('it will return 200 for retrieving all teams successfully', function(done){
     var req = request(app).get('/api/teams');
     agent.attachCookies(req);
-    req.expect(200);
     req.end(function(err,res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('rows');
       }
@@ -130,11 +130,11 @@ describe('Team API Tests', function() {
   it('it will return 400 and return empty because none existent team details', function(done){
     var req = request(app).get('/api/teams/'+'none-existing-team');
     agent.attachCookies(req);
-    req.expect(400);
     req.end(function(err,res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.be.equal('not_found');
       }
@@ -145,11 +145,11 @@ describe('Team API Tests', function() {
   it('it will return 200 and team details', function(done){
     var req = request(app).get('/api/teams/' + createdId);
     agent.attachCookies(req);
-    req.expect(200);
     req.end(function(err,res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('type');
       }
@@ -161,11 +161,11 @@ describe('Team API Tests', function() {
   it('it will return 200 and retrieve all team role types', function(done){
     var req = request(app).get('/api/teams/roles');
     agent.attachCookies(req);
-    req.expect(200);
     req.end(function(err,res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('rows');
       }
@@ -177,11 +177,11 @@ describe('Team API Tests', function() {
   it('it will return 200 and retrieve all team names', function(done){
     var req = request(app).get('/api/teams/names');
     agent.attachCookies(req);
-    req.expect(200);
     req.end(function(err,res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('rows');
       }
@@ -192,11 +192,11 @@ describe('Team API Tests', function() {
   it('it will return 200 and return empty details for none existing team name', function(done){
     var req = request(app).get('/api/teams/names/' + 'none-existing-team-name');
     agent.attachCookies(req);
-    req.expect(200);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.be.empty;
       }
       done();
@@ -206,11 +206,11 @@ describe('Team API Tests', function() {
   it('it will return 200 and details for team name', function(done){
     var req = request(app).get('/api/teams/names/' + teamDocUpdateValid['name']);
     agent.attachCookies(req);
-    req.expect(200);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(200);
         expect(res.body[0]).to.have.property('key');
         expect(res.body[0]['key']).to.be.equal(teamDocUpdateValid['name']);
       }
@@ -222,11 +222,11 @@ describe('Team API Tests', function() {
   it('it will return 400 because invalid email address', function(done){
     var req = request(app).get('/api/teams/members/' + 'invalid-email-add');
     agent.attachCookies(req);
-    req.expect(400);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.have.property('email');
       }
@@ -237,11 +237,11 @@ describe('Team API Tests', function() {
   it('it will return 200 and empty team lists because email without team', function(done){
     var req = request(app).get('/api/teams/members/' + 'emailWithoutTeam@email.com');
     agent.attachCookies(req);
-    req.expect(200);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.be.empty;
       }
       done();
@@ -251,11 +251,11 @@ describe('Team API Tests', function() {
   it('it will return 200 and team lists for this email', function(done){
     var req = request(app).get('/api/teams/members/' + userValidEmail);
     agent.attachCookies(req);
-    req.expect(200);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(200);
         expect(res.body[0]).to.have.property('key');
         expect(res.body[0]['key']).to.be.equal(userValidEmail);
       }
@@ -264,17 +264,54 @@ describe('Team API Tests', function() {
   });
 
   // Delete api test
+  it('it will return 400 because delete status not equal to delete', function(done){
+    teamDocUpdateValid['doc_status'] = '';
+    teamDocUpdateValid['_id'] = createdId;
+    var req = request(app).delete('/api/teams');
+    agent.attachCookies(req);
+    req.send(teamDocUpdateValid);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(400);
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.equal('Invalid request');
+      }
+      done();
+    });
+  });
+
+  it('it will return 400 because id is empty', function(done){
+    teamDocUpdateValid['doc_status'] = 'delete';
+    teamDocUpdateValid['_id'] = '';
+    var req = request(app).delete('/api/teams');
+    agent.attachCookies(req);
+    req.send(teamDocUpdateValid);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        console.log(res.body);
+        expect(res.statusCode).to.be.equal(400);
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.equal('Team documents id is required');
+      }
+      done();
+    });
+  });
+
   it('it will return 204 after deleting document', function(done){
     teamDocUpdateValid['doc_status'] = 'delete';
     teamDocUpdateValid['_id'] = createdId;
     var req = request(app).delete('/api/teams');
     agent.attachCookies(req);
     req.send(teamDocUpdateValid);
-    req.expect(204);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(204);
         expect(res.body).to.be.empty;
       }
       done();
