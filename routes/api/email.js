@@ -8,7 +8,7 @@ var async    = require('async');
 SMTP_HOST    = settings.email.smtpHost;
 EMAIL_APPKEY = settings.email.smtpApplicationKey;
 FEEDBACK_FROM = "noreply@agile-team-tool.ibm.com";
-FEEDBACK_RECIPIENTS = "jeanlam@us.ibm.com, liamf@br.ibm.com,bfouts@us.ibm.com, amy_travis@us.ibm.com";
+FEEDBACK_RECIPIENTS = "cjscotta@us.ibm.com";
 
 var sendRequest = function(emailObj, cb) {
   var params = emailObj;
@@ -45,7 +45,7 @@ var processFeedbackRequest = function(req, res) {
   //admin email
   emails.push({
     html:
-    "<b>Sent by:</b> "+req.body.feedback_senderName + " <"+req.body.feedback_sender+">\
+    "<b>Sent by:</b> "+req.body.feedback_senderName + " &lt;"+req.body.feedback_sender+"&gt;\
     <br><b>Date submitted:</b> "+moment().format('MMMM Do YYYY, h:mm:ss a')+"\
     <br><b>Page:</b> "+req.body.feedback_page+"\
     <br><b>Team name:</b> "+req.body.feedback_teamName+"\
