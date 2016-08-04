@@ -9,8 +9,8 @@ var allTeams;
 var allTeamsLookup;
 var defSelTeamId="";
 var defSelIndex="";
-var squadlist = [];
-var iterationList = [];
+var squadList = [];
+var collectedIterations = [];
 jQuery.expr[':'].Contains = function(a, i, m) {
 	return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
 };
@@ -604,8 +604,7 @@ function loadDetails(elementId, setScrollPosition) {
 			// make sure team data is always the latest data to show
 			$.ajax({
 				type : "GET",
-				url : "/api/teams/" + encodeURIComponent(team["_id"]),
-				async : false
+				url : "/api/teams/" + encodeURIComponent(team["_id"])
 			}).fail(function() {
 				$.unblockUI(); 
 			
@@ -735,17 +734,17 @@ function loadDetails(elementId, setScrollPosition) {
 						}
 						var startDate = showDateMMDDYYYY(startYear+"/"+startMonth+"/"+"02");
 						var endDate = showDateMMDDYYYY(currDate);
-						//reset the squadlist for selected parent team to refresh for new selected parent
-						squadlist = [];
+						//reset the squadList for selected parent team to refresh for new selected parent
+						squadList = [];
 						var children = team.child_team_id;
 						
 						if (children.length > 0){
-							//this will get all squad teams of selected parent team and store in squadlist (global variable)
-							findChildren(team["_id"]);
+							//this will get all squad teams of selected parent team and store in squadList (global variable)
+							getSquadChildren(team["_id"]);
 						}
 						
-						if (squadlist.length > 0){
-							retrieveIterations(squadlist, startDate, endDate, iterationScoreCard, [team["_id"], team['name']);
+						if (squadList.length > 0){
+							retrieveIterations(squadList, startDate, endDate, iterationScoreCard, [team["_id"], team['name']);
 						}
 						else{
 							iterationEmptyScoreCard(team["_id"], team['name']);
@@ -783,33 +782,33 @@ function loadDetails(elementId, setScrollPosition) {
 							end = showDateMMDDYYYY(currDate);
 						}
 						
-						//reset the squadlist for selected parent team to refresh for new selected parent
-						squadlist = [];
-						iterationList = [];
-						var children = team.child_team_id;
-						
-						if (children.length > 0){
-							//this will get all squad teams of selected parent team and store in squadlist (global variable)
-							findChildren(team["_id"]);
+						//reset the squadList for selected parent team to refresh for new selected parent
+						squadList = [];
+						if (!_.isEmpty(team.child_team_id)){
+							//this will get all squad teams of selected parent team and store in squadList (global variable)
+							getSquadChildren(team["_id"]);
 						}
 						
-						if (squadlist.length > 0){
-							getCompletedIterations(start, end, collectIterations, [team["_id"], team['name'], startDate, endDate, squadlist]);
-						}
-						else{
-							//iterationEmptyScoreCard(team["_id"], team['name']);
+						if (squadList.length > 0) {
+							// this is a one time pull of all completed iterations with the current view design
+							// TODO: need to design a view that pulls completed iterations by teams only.
+							if (_.isEmpty(collectedIterations)) {
+								getCompletedIterations(start, end, completedIterationsHandler, [team["_id"], team['name'], squadList]);
+								
+							} else
+								parentIterationScoreCard(team["_id"], team['name'], squadList, collectedIterations);
+						
+						} else {
 							iterationScoreCard(team["_id"], team['name'],[]);
+
 						}
-						//$('#nsquad_team_scard p').html("Coming soon...");
+
 						$('#nsquad_team_scard').show();
 						$('#squad_team_scard').hide();
 						$('#iterationSection .agile-section-nav').hide();
 						$('#assessmentSection .agile-section-nav').hide();
 						isSquadTeam = false;
-						//this is done to hide the 2 other chart groups as 1st batch of rollup will only show velocity and throughput
-						//$("#chartgrp2").hide();
-						//$("#chartgrp3").hide();
-						
+					
 					}
 
 					$("#membersList").empty();
@@ -885,38 +884,17 @@ function teamMemFTE(teamMembers) {
 	return (teamCount / 100);
 }
 
-function findChildren(id){
+function getSquadChildren(id){
 	if (allTeamsLookup != undefined) {
 		var team = allTeamsLookup[id];
 		if (team != null) {
 			if (team.squadteam != undefined && team.squadteam.toUpperCase() == "YES") {
-				squadlist.push(team._id);
+				squadList.push(team._id);
 			} else {
-				for (var x = 0; x < team.child_team_id.length; x++) {
-					findChildren(team.child_team_id[x]);
+				for (var x in team.child_team_id) {
+					getSquadChildren(team.child_team_id[x]);
 				}
 			}
 		}
-	}
-}
-
-function collectIterations(teamId, teamName, startDate, endDate, squadlist, iterations){
-	$.blockUI({message: ""});
-	if (iterations != null){
-		for (var x= 0; x< iterations.length; x++){
-			iterationList.push(iterations[x]);
-		}
-	}
-	
-	if (startDate.length > 0){
-		var start = startDate[0];
-		var end = endDate[0];
-		startDate.shift();
-		endDate.shift();
-		getCompletedIterations(start, end, collectIterations,[teamId, teamName, startDate, endDate, squadlist]);
-	}
-	else{
-		iterationParentScoreCard(teamId, teamName, squadlist, iterationList);
-		$.unblockUI();
 	}
 }

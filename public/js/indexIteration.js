@@ -64,7 +64,7 @@ function teamIterationListHander(teamId, teamIterations) {
 		teamIterations = sortIterations(teamIterations);
 
 		$.each(teamIterations, function(index, value) {
-				console.log(value);
+
 			if (value.iterationinfo_status == 'Completed') {
 				if (iterIndx < 6) {
 					var option = [ value._id, value.iteration_name ];
@@ -762,7 +762,6 @@ function loadChartMulSeries(id, title, type, categories, yAxisLabel,xAxisLabel, 
 			formatter : function() {
 				var formatResult = '<b>'+this.points[0].key+'</b><br>';
 				for ( var i = 0; i < this.points.length; i++) {
-					console.log("points[i]:"+this.points[i].series);
 					formatResult = formatResult +'<span style="color:' + this.points[i].series.color + "\">\u25CF</span>" + this.points[i].series.name + ' :<b>' + this.points[i].y + '</b><br/>';
 				}
 				if(this.points[0].point.startDate != undefined){
@@ -1211,7 +1210,6 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
 			formatter : function() {
 				var formatResult = '<b>'+this.points[0].key+'</b><br>';
 				for ( var i = 0; i < this.points.length; i++) {
-					console.log("points[i]:"+this.points[i].series);
 					formatResult = formatResult +'<span style="color:' + this.points[i].series.color + "\">\u25CF</span>" + this.points[i].series.name + ' :<b>' + this.points[i].y + '</b><br/>';
 				}
 				formatResult = formatResult + '<br>'+this.points[0].point.startDate+' - '+ this.points[0].point.endDate;
@@ -1302,12 +1300,11 @@ function currentTeamStats(){
 	var fteGt12=0;
 	var entry = new Object();
 	
-	for (var i in squadlist) {
-		var team = allTeamsLookup[squadlist[i]];
+	for (var i in squadList) {
+		var team = allTeamsLookup[squadList[i]];
 		if (!_.isEmpty(team))
 			squadTeams.push(team);
 	}
-	console.log("squadTeams : "+squadTeams.length);
 	
 	for (var x=0; x < squadTeams.length; x++){
 		var teamCnt = squadTeams[x]["total_members"] != null ? squadTeams[x]["total_members"] : teamMemCount(squadTeams[x]["members"]);
@@ -1766,14 +1763,20 @@ function iterationEmptyScoreCard(teamId, teamName) {
 	loadScoreChart('throughputChart', 'Throughput', 'line', graphCategory, 'Stories/tickets/cards', throughputSeries, 'Points', 'Iteration results by month', null, false, false);
 }
 
-function iterationParentScoreCard(teamId, teamName, squadlist, iterationsList) {
+function completedIterationsHandler(teamId, teamName, squadList, iterationList) {
+	collectedIterations = iterationList;	
+	parentIterationScoreCard(teamId, teamName, squadList, collectedIterations);
+
+}
+
+function parentIterationScoreCard(teamId, teamName, squadList, iterationsList) {
+	$.blockUI({message: ""});
 	var teamIterations=[];
-	if (iterationsList != undefined && squadlist != undefined && squadlist.length > 0){
-		for (var i=0; i < iterationsList.length; i++){
-			if (squadlist.indexOf(iterationsList[i]["team_id"]) > -1){
-				teamIterations.push(iterationsList[i]);
-			}
-		}
+	if (!_.isEmpty(iterationsList) && !_.isEmpty(squadList)) {
+		_.each(squadList, function(id) {
+			teamIterations =_.union(teamIterations, _.where(collectedIterations, {team_id: id}));
+		});
 		iterationScoreCard(teamId, teamName, teamIterations);
 	}
+	$.unblockUI();
 }

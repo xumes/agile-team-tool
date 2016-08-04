@@ -597,11 +597,11 @@ function getTeamIterations(teamId, _callback, args) {
 
 
 function getCompletedIterations(startDate, endDate, _callback, args) {
-	if (startDate == null || startDate == "" || endDate == null || endDate == "") {
+	if ( _.isEmpty(startDate) || _.isEmpty(endDate)) {
 		_callback.apply(this, args);
 		return null;
 	}
-	var teamUrl = "/api/iteration/completed?startkey=" + startDate + "&endkey=" + endDate ;
+	var teamUrl = "/api/iteration/completed?startkey=" + startDate + "&endkey=" + endDate + "" ;
 	return getRemoteData(teamUrl, _callback, args);
 }	
 
