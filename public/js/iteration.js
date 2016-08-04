@@ -612,13 +612,11 @@ function addIteration(action) {
           jsonData.retro_action_items_complete = $("#retroItemsComplete").val();
           jsonData.iteration_comments = $("#commentIter").val();
           jsonData.team_mbr_change = $("#teamChangeList").val();
-          jsonData.last_updt_user = userInfo.email;
           jsonData.fte_cnt = $("#fteThisiteration").val();
           jsonData.nbr_dplymnts = $("#DeploythisIteration").val();
           jsonData.nbr_defects = $("#defectsIteration").val();
           jsonData.client_sat = $("#clientSatisfaction").val();
           jsonData.team_sat = $("#teamSatisfaction").val();
-          jsonData.last_updt_dt = getServerDateTime();
           jsonData = $.extend(true, {}, initIterationTemplate(), jsonData);
           $.ajax({
             type        : "PUT",

@@ -4,144 +4,17 @@ var chai = require('chai');
 var crypto = require('crypto');
 var expect = chai.expect;
 var iterationModel = require(root_path + 'models/iteration');
+var dummyData = require('../dummy-data.js');
 var validId;
 var docId;
 var timeout = 100000;
 var iterationId;
 var iterationId2;
-var iterationDocValid = {
-  "_id": "testmyid-" + crypto.randomBytes(20).toString('hex'),
-  "type": "iterationinfo",
-  "team_id": "testteamid_1",
-  "iteration_name": "testiterationname-" + crypto.randomBytes(4).toString('hex'),
-  "iteration_start_dt": "07/19/2016",
-  "iteration_end_dt": "07/20/2016",
-  "iterationinfo_status": "Not complete",
-  "team_mbr_cnt": "1",
-  "nbr_committed_stories": "3",
-  "nbr_stories_dlvrd": "",
-  "nbr_committed_story_pts": "4",
-  "nbr_story_pts_dlvrd": "",
-  "iteration_comments": "",
-  "team_mbr_change": "No",
-  "last_updt_user": "ortegaaa@ph.ibm.com",
-  "fte_cnt": "0.0",
-  "nbr_dplymnts": "",
-  "nbr_defects": "",
-  "client_sat": "1.0",
-  "team_sat": "4",
-  "last_updt_dt": "2016-04-04 03:07:10 EDT",
-  "created_user": "ortegaaa@ph.ibm.com",
-  "created_dt": "2016-04-04 03:07:10 EDT"
-};
-
-var iterationDoc_duplicateIterName = {
-  "_id": "testmyid",
-  "type": "iterationinfo",
-  "team_id": "testteamid_1",
-  "iteration_name": "testiterationname-1",
-  "iteration_start_dt": "07/19/2016",
-  "iteration_end_dt": "07/20/2016",
-  "iterationinfo_status": "Not complete",
-  "team_mbr_cnt": "1",
-  "nbr_committed_stories": "3",
-  "nbr_stories_dlvrd": "",
-  "nbr_committed_story_pts": "4",
-  "nbr_story_pts_dlvrd": "",
-  "iteration_comments": "",
-  "team_mbr_change": "No",
-  "last_updt_user": "ortegaaa@ph.ibm.com",
-  "fte_cnt": "0.0",
-  "nbr_dplymnts": "",
-  "nbr_defects": "",
-  "client_sat": "1.0",
-  "team_sat": "4",
-  "last_updt_dt": "2016-04-04 03:07:10 EDT",
-  "created_user": "ortegaaa@ph.ibm.com",
-  "created_dt": "2016-04-04 03:07:10 EDT"
-};
-
-var iterationDocValid_sample1 = {
-  "_id": "testmyid-" + crypto.randomBytes(20).toString('hex'),
-  "type": "iterationinfo",
-  "team_id": "testteamid_1",
-  "iteration_name": "testiterationname-1",
-  "iteration_start_dt": "07/19/2016",
-  "iteration_end_dt": "07/20/2016",
-  "iterationinfo_status": "Not complete",
-  "team_mbr_cnt": "1",
-  "nbr_committed_stories": "3",
-  "nbr_stories_dlvrd": "",
-  "nbr_committed_story_pts": "4",
-  "nbr_story_pts_dlvrd": "",
-  "iteration_comments": "",
-  "team_mbr_change": "No",
-  "last_updt_user": "ortegaaa@ph.ibm.com",
-  "fte_cnt": "0.0",
-  "nbr_dplymnts": "",
-  "nbr_defects": "",
-  "client_sat": "1.0",
-  "team_sat": "4",
-  "last_updt_dt": "2016-04-04 03:07:10 EDT",
-  "created_user": "ortegaaa@ph.ibm.com",
-  "created_dt": "2016-04-04 03:07:10 EDT"
-};
-
-var iterationDocValid_sample2 = {
-  "_id": "testmyid-" + crypto.randomBytes(20).toString('hex'),
-  "type": "iterationinfo",
-  "team_id": "testteamid_1",
-  "iteration_name": "testiterationname-1",
-  "iteration_start_dt": "07/19/2016",
-  "iteration_end_dt": "07/20/2016",
-  "iterationinfo_status": "Not complete",
-  "team_mbr_cnt": "1",
-  "nbr_committed_stories": "3",
-  "nbr_stories_dlvrd": "",
-  "nbr_committed_story_pts": "4",
-  "nbr_story_pts_dlvrd": "",
-  "iteration_comments": "",
-  "team_mbr_change": "No",
-  "last_updt_user": "ortegaaa@ph.ibm.com",
-  "fte_cnt": "0.0",
-  "nbr_dplymnts": "",
-  "nbr_defects": "",
-  "client_sat": "1.0",
-  "team_sat": "4",
-  "last_updt_dt": "2016-04-04 03:07:10 EDT",
-  "created_user": "ortegaaa@ph.ibm.com",
-  "created_dt": "2016-04-04 03:07:10 EDT"
-};
-
-var iterationDocInvalid = {
-  "_id": "testmyid-" + crypto.randomBytes(20).toString('hex'),
-  "type": "iterationinfo",
-  "team_id": "",
-  "iteration_name": "",
-  "iteration_start_dt": "07/19/2016",
-  "iteration_end_dt": "07/20/2016",
-  "iterationinfo_status": "Not complete",
-  "team_mbr_cnt": "1",
-  "nbr_committed_stories": "3",
-  "nbr_stories_dlvrd": "",
-  "nbr_committed_story_pts": "4",
-  "nbr_story_pts_dlvrd": "",
-  "iteration_comments": "",
-  "team_mbr_change": "No",
-  "last_updt_user": "ortegaaa@ph.ibm.com",
-  "fte_cnt": "0.0",
-  "nbr_dplymnts": "",
-  "nbr_defects": "",
-  "client_sat": "alpha",
-  "team_sat": "-1",
-  "last_updt_dt": "2016-04-04 03:07:10 EDT",
-  "created_user": "ortegaaa@ph.ibm.com",
-  "created_dt": "2016-04-04 03:07:10 EDT"
-};
-
-var user = {
-  'shortEmail': 'ortegaaa@ph.ibm.com'
-};
+var iterationDocValid = dummyData.iterations.iterationDocValid;
+var iterationDoc_duplicateIterName = dummyData.iterations.iterationDoc_duplicateIterName;
+var iterationDocValid_sample2 = dummyData.iterations.iterationDocValid_sample2;
+var iterationDocInvalid = dummyData.iterations.iterationDocInvalid;
+var user = dummyData.iterations.user;
 
 describe('Iteration Model', function() {
   after(function(done) {
@@ -153,15 +26,15 @@ describe('Iteration Model', function() {
       var _rev = result._rev;
       iterationModel.delete(_id, _rev)
       .then(function(result) {
-        console.log('Successfully deleted Doc1 docId: '+_id);
+        // console.log('Successfully deleted Doc1 docId: '+_id);
       })
       .catch(function(err) {
-        console.log('Err: Attempt to delete Doc1 docId: ' + _id);
+        // console.log('Err: Attempt to delete Doc1 docId: ' + _id);
         expect(err).to.not.equal(null);
       });
     })
     .catch(function(err) {
-      console.log('Err: Attempt to delete Doc1 docId: ' + iterationId);
+      // console.log('Err: Attempt to delete Doc1 docId: ' + iterationId);
       expect(err).to.not.equal(null);
     })
     .finally(function() {
