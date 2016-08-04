@@ -9,19 +9,21 @@ var _ = require('underscore');
 var util = require('../../helpers/util');
 var common = require('../../models/cloudant-driver');
 var timeout = 30000;
-var currRevisionId = '';
-var invalidTeamId ='team_12323';
-var invalidAssessId ='assess_test';
-var invalidRevisionId = '12-*219#';
 
 var testData = require('../data/assessment');
 var noId = testData.noId;
 var teamData = testData.teamData;
 var curr_assessment = testData.currentAssessment;
+var invalidTeamId = testData.invalidTeamId;
+var invalidAssessId = testData.invalidAssessId;
+var invalidRevisionId = testData.invalidRevisionId;
+var currRevisionId = '';
+
 var parentTeamId = 'ag_team_JMParentTestTeam_1469853919284';
 var childTeamId = 'ag_team_JMTestTeam_1469457533966';
 var parentTeamData = {name:'JM Parent Test Team',desc:'JM Parent Test Team',squadteam:'No'};
 var parentUser = {'shortEmail': 'jazz.ma@ph.ibm.com','ldap':{'serialNumber': '153456PH1','hrFirstName': 'Jazz','hrLastName': 'Ma'}};
+
 var adminList;
 
 describe('Assessment Model', function() {

@@ -47,7 +47,7 @@ describe("Util models [getServerTime]: get server time", function(done){
     expect(sTime).to.be.a('string');
     done();
   });
-})
+});
 
 // describe("Util models [BulkDelete]: delete a couple docs", function(done){
 //   var ids = ['01a4073afd76c2cde8dcf42a56f25gg1', '10a4073afd76c2gge8dcf42a56f25741'];
