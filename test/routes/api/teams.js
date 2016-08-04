@@ -292,7 +292,6 @@ describe('Team API Tests', function() {
       if (err) {
         //console.log(err);
       } else {
-        console.log(res.body);
         expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.be.equal('Team documents id is required');
