@@ -104,7 +104,7 @@ var dummy = {
       "_id": "testmyid-" + crypto.randomBytes(20).toString('hex'),
       "type": "iterationinfo",
       "team_id": "testteamid_1",
-      "iteration_name": "testiterationname-test",
+      "iteration_name": "testiterationname-" + crypto.randomBytes(5).toString('hex'),
       "iteration_start_dt": "07/19/2016",
       "iteration_end_dt": "07/20/2016",
       "iterationinfo_status": "Not complete",

@@ -73,8 +73,8 @@ describe('Assesment API Test [GET /api/assessment/template]: get assessment temp
   it("retrieve assessment template", function(done){
     var req = request(app).get('/api/assessment/template');
     agent.attachCookies(req);
-    req.expect(200);
     req.end(function(err, res){
+      expect(res.statusCode).to.be.equal(200);
       expect(res.body).to.be.a('object');
       expect(res.body).to.have.property('rows');
       done();
@@ -87,8 +87,8 @@ describe('Assesment API Test [POST /api/assessment]: add team assessment', funct
     var req = request(app).post('/api/assessment/');
     agent.attachCookies(req);
     req.send(noId);
-    req.expect(400);
     req.end(function(err, res){
+      expect(res.statusCode).to.be.equal(400);
       expect(res.body).to.be.a('object');
       expect(res.body).to.have.property('error');
       expect(res.body.error).to.have.property('_id');
@@ -103,8 +103,8 @@ describe('Assesment API Test [POST /api/assessment]: add team assessment', funct
     var req = request(app).post('/api/assessment/');
     agent.attachCookies(req);
     req.send(emptyId);
-    req.expect(400);
     req.end(function(err, res){
+      expect(res.statusCode).to.be.equal(400);
       expect(res.body).to.be.a('object');
       expect(res.body).to.have.property('error');
       expect(res.body.error).to.have.property('_id');
@@ -117,8 +117,8 @@ describe('Assesment API Test [POST /api/assessment]: add team assessment', funct
     var req = request(app).post('/api/assessment/');
     agent.attachCookies(req);
     req.send(curr_assessment);
-    req.expect(200);
     req.end(function(err, res){
+      expect(res.statusCode).to.be.equal(200);
       expect(res.body).to.be.a('object');
       expect(res.body.ok).to.be.true;
       expect(res.body.id).to.be.equal(curr_assessment._id);
@@ -131,8 +131,8 @@ describe('Assesment API Test [POST /api/assessment]: add team assessment', funct
     var req = request(app).post('/api/assessment/');
     agent.attachCookies(req);
     req.send(curr_assessment);
-    req.expect(400);
     req.end(function(err, res){
+      expect(res.statusCode).to.be.equal(400);
       expect(res.body).to.be.a('object');
       expect(res.body).to.have.property('error');
       expect(res.body.error).to.be.equal('conflict');
@@ -145,8 +145,8 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
   it('retrieve team assessments with non-existing team id', function(done){
     var req = request(app).get('/api/assessment/view/' + 'teamId=' + invalidTeamId);
     agent.attachCookies(req);
-    req.expect(404);
     req.end(function(err, res){
+      expect(res.statusCode).to.be.equal(404);
       expect(res.body).to.be.empty;
       done();
     });
@@ -155,8 +155,8 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
   it('retrieve team assessments with empty team id', function(done){
     var req = request(app).get('/api/assessment/view/' + 'teamId=' + '');
     agent.attachCookies(req);
-    req.expect(404);
     req.end(function(err, res){
+      expect(res.statusCode).to.be.equal(404);
       expect(res.body).to.be.empty;
       done();
     });
@@ -166,8 +166,8 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
     var query = querystring.stringify({'teamId': curr_assessment.team_id});
     var req = request(app).get('/api/assessment/view?' + query);
     agent.attachCookies(req);
-    req.expect(200);
     req.end(function(err, res){
+      expect(res.statusCode).to.be.equal(200);
       expect(res.body).to.be.a('object');
       expect(res.body).to.have.property('rows');
       expect(res.body.rows[0]).to.have.property('key');
@@ -179,8 +179,8 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
   it('retrieve assessment with non-existing id', function(done){
     var req = request(app).get('/api/assessment/view/' + 'assessId=' + invalidAssessId);
     agent.attachCookies(req);
-    req.expect(404);
     req.end(function(err, res){
+      expect(res.statusCode).to.be.equal(404);
       expect(res.body).to.be.empty
       done();
     });
@@ -189,8 +189,8 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
   it('retrieve assessments with empty team id', function(done){
     var req = request(app).get('/api/assessment/view/' + 'assessId=' + '');
     agent.attachCookies(req);
-    req.expect(404);
     req.end(function(err, res){
+      expect(res.statusCode).to.be.equal(404);
       expect(res.body).to.be.empty;
       done();
     });
@@ -200,8 +200,8 @@ describe('Assessment API Test [GET /api/assessment/view]: get team assessments',
     var query = querystring.stringify({'assessId': curr_assessment._id});
     var req = request(app).get('/api/assessment/view?' + query);
     agent.attachCookies(req);
-    req.expect(200);
     req.end(function(err, res){
+      expect(res.statusCode).to.be.equal(200);
       expect(res.body).to.be.a('object');
       expect(res.body).to.have.property('_id');
       expect(res.body._id).equal(curr_assessment._id);
@@ -216,8 +216,8 @@ describe('Assessment API Test [PUT /api/assessment/]: update team assessment', f
     var req = request(app).put('/api/assessment/');
     agent.attachCookies(req);
     req.send(noId);
-    req.expect(400);
     req.end(function(err, res){
+      expect(res.statusCode).to.be.equal(400);
       expect(res.body).to.have.property('error');
       expect(res.body.error).to.have.property('_id');
       expect(res.body.error._id[0]).to.be.equal('Record id is required.');
@@ -231,8 +231,8 @@ describe('Assessment API Test [PUT /api/assessment/]: update team assessment', f
     var req = request(app).put('/api/assessment/');
     agent.attachCookies(req);
     req.send(tempData);
-    req.expect(400);
     req.end(function(err, res){
+      expect(res.statusCode).to.be.equal(400);
       expect(res.body).to.have.property('error');
       expect(res.body.error).to.have.property('_id');
       expect(res.body.error._id[0]).to.be.equal('Record id is required.');
@@ -247,8 +247,8 @@ describe('Assessment API Test [PUT /api/assessment/]: update team assessment', f
     var req = request(app).put('/api/assessment/');
     agent.attachCookies(req);
     req.send(tempData);
-    req.expect(200);
     req.end(function(err, res){
+      expect(res.statusCode).to.be.equal(200);
       expect(res.body).to.be.a('object');
       expect(res.body).to.have.property('id');
       expect(res.body.id).equal(tempData._id);
@@ -264,8 +264,8 @@ describe('Assessment API Test [DELETE /api/assessment]: delete assessment', func
     var query = querystring.stringify({'docId': invalidAssessId, 'revId': currRevisionId});
     var req = request(app).delete('/api/assessment?' + query);
     agent.attachCookies(req);
-    req.expect(400);
     req.end(function(err, res){
+      expect(res.statusCode).to.be.equal(400);
       expect(res.body).to.be.a('object');
       expect(res.body).to.have.property('error');
       expect(res.body.error).equal('not_found');
@@ -277,8 +277,8 @@ describe('Assessment API Test [DELETE /api/assessment]: delete assessment', func
     var query = querystring.stringify({'docId': '', 'revId': currRevisionId});
     var req = request(app).delete('/api/assessment?' + query);
     agent.attachCookies(req);
-    req.expect(400);
     req.end(function(err, res){
+      expect(res.statusCode).to.be.equal(400);
       expect(res.body).to.be.a('object');
       expect(res.body).to.have.property('error');
       expect(res.body.error).equal('No id/rev for record deletion.');
@@ -290,8 +290,8 @@ describe('Assessment API Test [DELETE /api/assessment]: delete assessment', func
     var query = querystring.stringify({'docId': curr_assessment._id, 'revId': invalidRevisionId});
     var req = request(app).delete('/api/assessment?' + query);
     agent.attachCookies(req);
-    req.expect(400);
     req.end(function(err, res){
+      expect(res.statusCode).to.be.equal(400);
       expect(res.body).to.be.a('object');
       expect(res.body).to.have.property('error');
       expect(res.body.error).equal('conflict');
@@ -303,8 +303,8 @@ describe('Assessment API Test [DELETE /api/assessment]: delete assessment', func
     var query = querystring.stringify({'docId': curr_assessment._id, 'revId': ''});
     var req = request(app).delete('/api/assessment?' + query);
     agent.attachCookies(req);
-    req.expect(400);
     req.end(function(err, res){
+      expect(res.statusCode).to.be.equal(400);
       expect(res.body).to.be.a('object');
       expect(res.body).to.have.property('error');
       expect(res.body.error).equal('No id/rev for record deletion.');
@@ -316,8 +316,8 @@ describe('Assessment API Test [DELETE /api/assessment]: delete assessment', func
     var query = querystring.stringify({'docId': curr_assessment._id, 'revId': currRevisionId});
     var req = request(app).delete('/api/assessment?' + query);
     agent.attachCookies(req);
-    req.expect(200);
     req.end(function(err, res){
+      expect(res.statusCode).to.be.equal(200);
       expect(res.body).to.be.a('object');
       expect(res.body).to.have.property('ok');
       expect(res.body.ok).to.be.true;
