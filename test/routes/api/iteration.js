@@ -4,142 +4,24 @@ var crypto = require('crypto');
 var expect = chai.expect;
 var request = require('supertest');
 var iterationModel = require('../../../models/iteration');
+var iterationTestData = require('../../dummy-data.js');
 var app = require('../../../app');
 var validId;
 var docId;
 var iterationId;
-var iterationId3;
-var timeout = 100000;
 var adminUser = 'Yanliang.Gu1@ibm.com';
-var iterationDocValid = {
-  "_id": "testmyid-" + crypto.randomBytes(20).toString('hex'),
-  "type": "iterationinfo",
-  "team_id": "testteamid_1",
-  "iteration_name": "testiterationname-" + crypto.randomBytes(4).toString('hex'),
-  "iteration_start_dt": "07/19/2016",
-  "iteration_end_dt": "07/20/2016",
-  "iterationinfo_status": "Not complete",
-  "team_mbr_cnt": "1",
-  "nbr_committed_stories": "3",
-  "nbr_stories_dlvrd": "",
-  "nbr_committed_story_pts": "4",
-  "nbr_story_pts_dlvrd": "",
-  "iteration_comments": "",
-  "team_mbr_change": "No",
-  "last_updt_user": adminUser,
-  "fte_cnt": "0.0",
-  "nbr_dplymnts": "",
-  "nbr_defects": "",
-  "client_sat": "1.0",
-  "team_sat": "4",
-  "last_updt_dt": "2016-04-04 03:07:10 EDT",
-  "created_user": adminUser,
-  "created_dt": "2016-04-04 03:07:10 EDT"
-};
 
-var iterationDoc_duplicateIterName = {
-  "_id": "testmyid",
-  "type": "iterationinfo",
-  "team_id": "testteamid_1",
-  "iteration_name": "testiterationname-1",
-  "iteration_start_dt": "07/19/2016",
-  "iteration_end_dt": "07/20/2016",
-  "iterationinfo_status": "Not complete",
-  "team_mbr_cnt": "1",
-  "nbr_committed_stories": "3",
-  "nbr_stories_dlvrd": "",
-  "nbr_committed_story_pts": "4",
-  "nbr_story_pts_dlvrd": "",
-  "iteration_comments": "",
-  "team_mbr_change": "No",
-  "last_updt_user": adminUser,
-  "fte_cnt": "0.0",
-  "nbr_dplymnts": "",
-  "nbr_defects": "",
-  "client_sat": "1.0",
-  "team_sat": "4",
-  "last_updt_dt": "2016-04-04 03:07:10 EDT",
-  "created_user": adminUser,
-  "created_dt": "2016-04-04 03:07:10 EDT"
-};
+var iterationDocValid = iterationTestData.iterations.iterationDocValid;
+iterationDocValid.last_updt_user = adminUser;
 
-var iterationDocValid_sample1 = {
-  "_id": "testmyid-" + crypto.randomBytes(20).toString('hex'),
-  "type": "iterationinfo",
-  "team_id": "testteamid_1",
-  "iteration_name": "testiterationname-1",
-  "iteration_start_dt": "07/19/2016",
-  "iteration_end_dt": "07/20/2016",
-  "iterationinfo_status": "Not complete",
-  "team_mbr_cnt": "1",
-  "nbr_committed_stories": "3",
-  "nbr_stories_dlvrd": "",
-  "nbr_committed_story_pts": "4",
-  "nbr_story_pts_dlvrd": "",
-  "iteration_comments": "",
-  "team_mbr_change": "No",
-  "last_updt_user": adminUser,
-  "fte_cnt": "0.0",
-  "nbr_dplymnts": "",
-  "nbr_defects": "",
-  "client_sat": "1.0",
-  "team_sat": "4",
-  "last_updt_dt": "2016-04-04 03:07:10 EDT",
-  "created_user": adminUser,
-  "created_dt": "2016-04-04 03:07:10 EDT"
-};
+var iterationDoc_duplicateIterName = iterationTestData.iterations.iterationDoc_duplicateIterName;
+iterationDoc_duplicateIterName.last_updt_user = adminUser;
 
-var iterationDocValid_sample2 = {
-  "_id": "testmyid-" + crypto.randomBytes(20).toString('hex'),
-  "type": "iterationinfo",
-  "team_id": "testteamid_1",
-  "iteration_name": "testiterationname-1",
-  "iteration_start_dt": "07/19/2016",
-  "iteration_end_dt": "07/20/2016",
-  "iterationinfo_status": "Not complete",
-  "team_mbr_cnt": "1",
-  "nbr_committed_stories": "3",
-  "nbr_stories_dlvrd": "",
-  "nbr_committed_story_pts": "4",
-  "nbr_story_pts_dlvrd": "",
-  "iteration_comments": "",
-  "team_mbr_change": "No",
-  "last_updt_user": adminUser,
-  "fte_cnt": "0.0",
-  "nbr_dplymnts": "",
-  "nbr_defects": "",
-  "client_sat": "1.0",
-  "team_sat": "4",
-  "last_updt_dt": "2016-04-04 03:07:10 EDT",
-  "created_user": adminUser,
-  "created_dt": "2016-04-04 03:07:10 EDT"
-};
+var iterationDocValid_sample2 = iterationTestData.iterations.iterationDocValid_sample2;
+iterationDocValid_sample2.last_updt_user = adminUser;
 
-var iterationDocInvalid = {
-  "_id": "testmyid-" + crypto.randomBytes(20).toString('hex'),
-  "type": "iterationinfo",
-  "team_id": "",
-  "iteration_name": "",
-  "iteration_start_dt": "07/19/2016",
-  "iteration_end_dt": "07/20/2016",
-  "iterationinfo_status": "Not complete",
-  "team_mbr_cnt": "1",
-  "nbr_committed_stories": "3",
-  "nbr_stories_dlvrd": "",
-  "nbr_committed_story_pts": "4",
-  "nbr_story_pts_dlvrd": "",
-  "iteration_comments": "",
-  "team_mbr_change": "No",
-  "last_updt_user": adminUser,
-  "fte_cnt": "0.0",
-  "nbr_dplymnts": "",
-  "nbr_defects": "",
-  "client_sat": "alpha",
-  "team_sat": "-1",
-  "last_updt_dt": "2016-04-04 03:07:10 EDT",
-  "created_user": adminUser,
-  "created_dt": "2016-04-04 03:07:10 EDT"
-};
+var iterationDocInvalid = iterationTestData.iterations.iterationDocInvalid;
+iterationDocInvalid.last_updt_user = adminUser;
 
 var agent = request.agent(app);
 
@@ -154,55 +36,28 @@ before(function(done) {
     })
 });
 
-after(function(done){
+// delete the iteration file created in the test
+after(function(done) {
+  // console.log('Attempt to delete Doc1 docId: '+ iterationId);
   iterationModel.get(iterationId)
-  .then(function(result){
+  .then(function(result) {
     var _id = result._id;
     var _rev = result._rev;
     iterationModel.delete(_id, _rev)
-    .then(function(result){
-      //console.log('Successfully deleted Doc1 docId: '+_id);
+    .then(function(result) {
+      // console.log('Successfully deleted Doc1 docId: '+_id);
     })
-    .catch(function(err){
-      //console.log('Err: Attempt to delete Doc1 docId: ' + _id);
-      //console.log(err);
+    .catch(function(err) {
+      // console.log('Err: Attempt to delete Doc1 docId: ' + _id);
       expect(err).to.not.equal(null);
     });
   })
   .catch(function(err) {
-    //console.log('Err: Attempt to delete Doc1 docId: ' + iterationId);
-    //console.log(err);
+    // console.log('Err: Attempt to delete Doc1 docId: ' + iterationId);
     expect(err).to.not.equal(null);
   })
-  .finally(function(){
-    setTimeout(function() {
-      var iterationId2 = 'testmyid';
-      //console.log('Attempt to delete Doc2 docId: ' + iterationId2);
-      iterationModel.get(iterationId2)
-      .then(function(result) {
-        var _id = result._id;
-        var _rev = result._rev;
-        iterationModel.delete(_id, _rev)
-        .then(function(result) {
-          //console.log('Successfully deleted Doc2 docId: ' + _id);
-        })
-        .catch(function(err) {
-          //console.log('Err: Attempt to delete Doc2 docId: ' + iterationId2);
-          //console.log(err);
-          expect(err).to.not.equal(null);
-        });
-      })
-      .catch(function(err) {
-        //console.log('Err: Attempt to delete Doc1 docId: ' + iterationId2);
-        //console.log(err);
-        expect(err).to.not.equal(null);
-      })
-      .finally(function() {
-        setTimeout(function() {
-          done();
-        }, 3000);
-      });
-    }, 3000);
+  .finally(function() {
+    done();
   });
 });
 
@@ -211,11 +66,11 @@ describe('Iteration API Test [POST /api/iteration]: add team iteration document'
     var req = request(app).post('/api/iteration');
     agent.attachCookies(req);
     req.send(iterationDocValid);
-    req.expect(200);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('id');
         expect(res.body).to.have.property('ok');
@@ -230,11 +85,11 @@ describe('Iteration API Test [POST /api/iteration]: add team iteration document'
     var req =request(app).post('/api/iteration');
     agent.attachCookies(req);
     req.send(iterationDocInvalid);
-    req.expect(400);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.have.property('error');
       }
       done();
@@ -244,11 +99,11 @@ describe('Iteration API Test [POST /api/iteration]: add team iteration document'
   it('It will fail with empty document', function(done){
     var req =request(app).post('/api/iteration');
     agent.attachCookies(req);
-    req.expect(400);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.have.property('error');
       }
       done();
@@ -260,11 +115,11 @@ describe('Iteration API Test [GET /api/iteration/]: get iteration doucments', fu
   it('Get all team iteration documents', function(done){
     var req = request(app).get('/api/iteration/');
     agent.attachCookies(req);
-    req.expect(200);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('rows');
       }
@@ -276,11 +131,11 @@ describe('Iteration API Test [GET /api/iteration/]: get iteration doucments', fu
     var validTeamId = iterationDocValid.team_id;
     var req = request(app).get('/api/iteration/' + validTeamId);
     agent.attachCookies(req);
-    req.expect(200);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('rows');
         expect(res.body.rows[0]).to.have.property('key');
@@ -294,11 +149,11 @@ describe('Iteration API Test [GET /api/iteration/]: get iteration doucments', fu
     var invalidTeamId = '11111111';
     var req = request(app).get('/api/iteration/' + invalidTeamId);
     agent.attachCookies(req);
-    req.expect(200);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.have.property('rows');
         expect(res.body.rows).to.be.empty;
       }
@@ -312,11 +167,11 @@ describe('Iteration API Test [GET /api/iteration/completed]: get completed itera
     var query = querystring.stringify({'startkey':iterationDocValid.iteration_start_dt});
     var req = request(app).get('/api/iteration/completed?' + query);
     agent.attachCookies(req);
-    req.expect(200);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('rows');
       }
@@ -328,14 +183,15 @@ describe('Iteration API Test [GET /api/iteration/completed]: get completed itera
 describe('Iteration API Test [PUT /api/iteration/]: update iteration document', function(){
   it('It will successfully update iteration document', function(done){
     var req = request(app).put('/api/iteration/' + iterationId);
+    iterationDocValid_sample2._id = iterationId;
     agent.attachCookies(req);
     req.send(iterationDocValid_sample2);
-    req.expect(200);
     req.end(function(err, res){
         //console.log(res.body);
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.have.property('id');
         expect(res.body.id).to.be.equal(iterationId);
       }
@@ -347,11 +203,11 @@ describe('Iteration API Test [PUT /api/iteration/]: update iteration document', 
     var req = request(app).put('/api/iteration/');
     agent.attachCookies(req);
     req.send(iterationDocValid_sample2);
-    req.expect(400);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.be.equal('iterationId is missing');
       }
@@ -364,11 +220,11 @@ describe('Iteration API Test [PUT /api/iteration/]: update iteration document', 
     var emptyDoc = '';
     agent.attachCookies(req);
     req.send(emptyDoc);
-    req.expect(400);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.be.equal('Iteration data is missing');
       }
@@ -380,11 +236,11 @@ describe('Iteration API Test [PUT /api/iteration/]: update iteration document', 
     var req = request(app).put('/api/iteration/' + iterationId);
     agent.attachCookies(req);
     req.send(iterationDocInvalid);
-    req.expect(400);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.have.property('error');
       }
       done();
@@ -396,11 +252,11 @@ describe('Iteration API Test [GET /api/iteration/current]: get iteration doc by 
   it('It will successfully get iteration document', function(done){
     var req = request(app).get('/api/iteration/current/' + iterationId);
     agent.attachCookies(req);
-    req.expect(200);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.have.property('_id');
         expect(res.body._id).to.be.equal(iterationId);
       }
@@ -411,11 +267,11 @@ describe('Iteration API Test [GET /api/iteration/current]: get iteration doc by 
   it('It will fail to get iteration document with invalid id', function(done){
     var req = request(app).get('/api/iteration/current/' + 'undefined');
     agent.attachCookies(req);
-    req.expect(400);
     req.end(function(err, res){
       if (err) {
         //console.log(err);
       } else {
+        expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.have.property('error');
         expect(res.body.error.error).to.be.equal('not_found');
       }
