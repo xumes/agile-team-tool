@@ -13,20 +13,10 @@ var formatErrMsg = function(msg) {
   return { error : msg };
 };
 
-var successLogs = function(msg) {
-  loggers.get('models').info('Success: ' + msg);
-  return;
-};
-
-var infoLogs = function(msg) {
-  loggers.get('models').info(msg);
-  return;
-};
-
 var getTeams = function(userId){
   teamModel = require('../models/teams');
   return new Promise(function(resolve, reject){
-    infoLogs('Getting user teams of '+userId);
+    loggers.get('models').info('Getting user teams of '+userId);
     teamModel.getTeam('')
     .then(function(body){
       teamLists = body.rows;
@@ -85,9 +75,9 @@ module.exports.trimData = function(postData) {
 module.exports.getAdmins = function (accessId) {
   return new Promise(function(resolve, reject) {
     if(!(_.isEmpty(accessId))) {
-      infoLogs('Getting all admins and supports');
+      loggers.get('models').info('Getting all admins and supports');
       common.getRecord(accessId).then(function(body){
-        successLogs('Admin records obtained');
+        loggers.get('models').info('Success: Admin records obtained');
         resolve(body);
       }).catch(function(err) {
         msg = err.error;
@@ -104,10 +94,10 @@ module.exports.getAdmins = function (accessId) {
 module.exports.getSystemStatus = function (accessId) {
   return new Promise(function(resolve, reject) {
     if(!(_.isEmpty(accessId))) {
-      infoLogs('Getting system status');
+      loggers.get('models').info('Getting system status');
       common.getRecord(accessId)
         .then(function(body) {
-          successLogs('System status records obtained');
+          loggers.get('models').info('Success: System status records obtained');
           resolve(body);
         })
         .catch(function(err) {
@@ -185,7 +175,7 @@ module.exports.isUserMemberOfTeam = function(teamId, checkParent, teamLists, use
 
 module.exports.isValidUser = function(userId, teamId, checkParent){
   return new Promise(function(resolve, reject){
-    infoLogs('validating user '+userId+' for team '+teamId);
+    loggers.get('models').info('validating user '+userId+' for team '+teamId);
     module.exports.getAdmins('ag_ref_access_control')
     .then(function(body){
       return _.contains(body.ACL_Full_Admin, userId);
