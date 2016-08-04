@@ -284,8 +284,16 @@ function organizeTeamHierarchy(myTeamsOnly) {
 	if (!_.isEmpty(teamList)) {
 		$("#teamTree").append(createMainTwistySection("teamTreeMain", ""));
 		if (myTeamsOnly) {
+			var list = _.union(teamList._root, teamList._branch);
+			var cleanList = [];
+			var childIds = _.flatten(_.pluck(list, "child_team_id"));
+			_.each(list, function(team) {
+				if (childIds.indexOf(team._id) == -1)
+					cleanList.push(team);
+			});
+
 			_.each(_.sortBy(
-				_.union(teamList._root, teamList._branch), function(team) {return team.name})
+				cleanList, function(team) {return team.name})
 				, function(team) {
 					addTeamTwisty(team, "teamTreeMain");
 			});
@@ -318,8 +326,8 @@ function organizeTeamHierarchy(myTeamsOnly) {
 		$("#teamTree a.agile-team-link").each(function(index) {
 			var linkId = "link_"+index;
 			$(this).attr("id", linkId);
-			var teamId = $($(this)[0]).siblings("span")[0].innerHTML;
-			if (defSelTeamId != null && defSelTeamId != "" && defSelTeamId == teamId)
+			var teamId = $(this).siblings("span")[0].innerHTML;
+			if (defSelTeamId == teamId)
 				defSelIndex = linkId;
 			
 			// populate the filter search table (this is arranged according to hierarchy)
@@ -598,6 +606,9 @@ function loadDetails(elementId, setScrollPosition) {
 				type : "GET",
 				url : "/api/teams/" + encodeURIComponent(team["_id"]),
 				async : false
+			}).fail(function() {
+				$.unblockUI(); 
+			
 			}).done(function(currentTeam) {
 				team = currentTeam;
 				var lookupData = allTeamsLookup[currentTeam._id];
@@ -826,7 +837,8 @@ function loadDetails(elementId, setScrollPosition) {
 					if (!_.has(lookupData, "._rev")) 
 						allTeamsLookup[currentTeam._id] = lookupData;
 				}
-			}).done(function() {$.unblockUI();} );
+				$.unblockUI();
+			})
 			
 			openSelectedTeamTree(setScrollPosition);
 

@@ -242,7 +242,7 @@ var team = {
               updatedTeamDoc['_rev'] = oldTeamDocu['_rev'];
                 var finalTeamDoc = {};
                 _.each(oldTeamDocu,function(v,i,l){
-                  if(_.isEmpty(updatedTeamDoc[i]))
+                  if(_.isUndefined(updatedTeamDoc[i]))
                     finalTeamDoc[i] = oldTeamDocu[i];
                   else
                     finalTeamDoc[i] = updatedTeamDoc[i];

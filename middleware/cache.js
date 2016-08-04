@@ -188,7 +188,7 @@ var userCache = {
     var allTeams = req.session['allTeams'];
     if (!_.isEmpty(allTeamsLookup) && !_.isEmpty(team)) {
       var compactedTeam = compactTeam(team);
-      if (!_.isEmpty(allTeamsLookup[team._id]))
+      if (_.isEmpty(allTeamsLookup[team._id]))
         allTeams.push(compactedTeam);
       else
         _.extend(_.findWhere(allTeams, { _id: team._id}), compactedTeam)

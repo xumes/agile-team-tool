@@ -176,8 +176,24 @@ var getServerDateTime = function() {
  * @param textStatus
  * @param errorThrown
  */
-function errorHandler(jqXHR, textStatus, errorThrown) {
-	showMessagePopup("Something went wrong: " + textStatus + " " + errorThrown + " " + JSON.stringify(jqXHR));
+function errorHandler(xhr, textStatus, errorThrown) {
+	if (jqXHR.status == 400) {
+		var errMsgs = JSON.parse(xhr.responseText);
+		if (!_.isEmpty(errMsgs)) {
+			var msg = '';
+			if (errMsgs.error instanceof Array || errMsgs.error instanceof Object)
+			  _.each(errMsgs.error, function (err) {
+			    msg = msg + err[0];
+			    msg = msg + '<br>';
+			  });
+			else
+				msg = errMsgs.error;
+		 }
+  	showMessagePopup(msg);
+	
+	} else {
+		showMessagePopup("Something went wrong: " + errorThrown);
+	}
 }
 
 /**
@@ -349,40 +365,6 @@ function getFnName(fn) {
  * @param args - arguments to be used by the handler function.
  * @returns - any returnable object.
  */
-function getRemoteJsonpData(cUrl, _callback, args) {
-	var returnObj = null;
-	$.ajax({
-		type : "GET",
-		url : cUrl,
-		dataType : "jsonp"
-	}).done(function(data) {
-		if (data != undefined) {
-			if (data.rows != undefined) {
-				var list = [];
-				for ( var i = 0; i < data.rows.length; i++) {
-					list.push(data.rows[i].value);
-				}
-				// we let the callback function handle how the data will be handled.
-				showLog("data loaded: " + list.length);
-				args.push(list);
-				returnObj = list;
-			} else {
-				// call just returned one jsonp object
-				showLog("data loaded: " + JSON.stringify(data));
-				args.push(data);
-				returnObj = data;
-			}
-		}
-		
-		if (typeof _callback === "function") {
-			showLog("callback function: " + getFnName(_callback));
-			_callback.apply(this, args);
-		}
-	});
-	
-	return returnObj;
-}
-
 function getRemoteData(cUrl, _callback, args) {
 	var returnObj = null;
 	$.ajax({
@@ -450,14 +432,11 @@ function setTeam(jsonData, _callback, args) {
 	var returnObj = null;
 	$.ajax({
 		type 				: "PUT",
-		url 				: "/api/team/",
+		url 				: "/api/teams/",
 		contentType : "application/json",
 		data 				: JSON.stringify(jsonData),
 		error 			: errorHandler
 	}).done(function(data) {
-		var putResp = (typeof data == 'string' ? JSON.parse(data) : data);
-		var rev = putResp.rev;
-		showLog('Done updating ' + docId + '. The new revision is ' + rev + '.');
 		args.push(data);
 		returnObj = data;
 		
@@ -631,8 +610,8 @@ function getTeam(docId, _callback, args) {
 		_callback.apply(this, args);
 		return null;
 	}
-	var docUrl = "/api/team/" + encodeURIComponent(docId);
-	return getRemoteJsonpData(docUrl, _callback, args);
+	var docUrl = "/api/teams/" + encodeURIComponent(docId);
+	return getRemoteData(docUrl, _callback, args);
 }
 
 /**
