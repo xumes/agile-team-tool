@@ -110,7 +110,7 @@ describe('Team API Tests', function() {
   });
 
   it('it will return 200 when associating a team',function(done){
-    this.timeout(3000);
+    this.timeout(30000);
     var req = request(app).put('/api/teams/associates');
     agent.attachCookies(req);
     var putBody = {
