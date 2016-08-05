@@ -39,6 +39,23 @@ module.exports = function(app, includes) {
       });
   };
 
+  associateTeam = function(req, res){
+    var action = req.body.action;
+    var valid = teamModel.associateActions(action);
+    if(typeof valid === 'object' || valid === false){
+      res.status(400).send({ error : 'Invalid action' });
+    }else{
+      teamModel.associateTeams(req.body, action, req.session['email'])
+      .then(function(result){
+        res.send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        // cannot simulate this error during testing
+        res.status(400).send(err);
+      });
+    }
+  };
+
   getTeamRole = function(req, res){
     teamModel.getRole()
       .then(function(result){
@@ -92,6 +109,9 @@ getTeamName = function(req, res){
 
   // update existing team document
   app.put('/api/teams/', [includes.middleware.auth.requireLogin], updateTeam);
+
+  // associate team document
+  app.put('/api/teams/associates', [includes.middleware.auth.requireLogin], associateTeam);
 
   // get all applicable team roles
   app.get('/api/teams/roles', [includes.middleware.auth.requireLogin], getTeamRole);
