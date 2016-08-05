@@ -12,7 +12,8 @@ module.exports = function(app, includes) {
       .then(function(result){
         res.send(result);
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
+        /* cannot simulate Cloudant error during testing */
         res.status(400).send(err);
       });
     }
@@ -26,17 +27,18 @@ module.exports = function(app, includes) {
         });
     }
   };
-  
+
   getAssessmentTemplate = function(req, res) {
     assessmentModel.getAssessmentTemplate()
       .then(function(result){
         res.send(result);
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
+        /* cannot simulate Cloudant error during testing */
         res.status(400).send(err);
       });
   };
-  
+
   addAssessment = function(req, res) {
     assessmentModel.addTeamAssessment(req.session["user"].shortEmail, req.body)
       .then(function(result){
@@ -46,7 +48,7 @@ module.exports = function(app, includes) {
         res.status(400).send(err);
       });
   };
-  
+
   updateAssessment = function(req, res) {
     assessmentModel.updateTeamAssessment(req.session["user"].shortEmail, req.body)
       .then(function(result){
@@ -56,7 +58,7 @@ module.exports = function(app, includes) {
         res.status(400).send(err);
       });
   };
-  
+
   deleteAssessment = function(req, res) {
     var docId = req.query.docId;
     var revId = req.query.revId;
@@ -73,5 +75,5 @@ module.exports = function(app, includes) {
   app.get('/api/assessment/template', [includes.middleware.auth.requireLogin], getAssessmentTemplate);
   app.put('/api/assessment', [includes.middleware.auth.requireLogin], updateAssessment);
   app.delete('/api/assessment', [includes.middleware.auth.requireLogin], deleteAssessment);
-  app.post('/api/assessment', [includes.middleware.auth.requireLogin], addAssessment);  
+  app.post('/api/assessment', [includes.middleware.auth.requireLogin], addAssessment);
 };

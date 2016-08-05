@@ -186,12 +186,23 @@ describe('Assessment API Test', function(){
       });
     });
 
-    it('retrieve assessments with empty team id', function(done){
+    it('retrieve assessments with empty id', function(done){
       var req = request(app).get('/api/assessment/view/' + 'assessId=' + '');
       agent.attachCookies(req);
       req.end(function(err, res){
         expect(res.statusCode).to.be.equal(404);
         expect(res.body).to.be.empty;
+        done();
+      });
+    });
+
+    it('retrieve assessments with none', function(done){
+      var req = request(app).get('/api/assessment/view/');
+      agent.attachCookies(req);
+      req.end(function(err, res){
+        expect(res.statusCode).to.be.equal(400);
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.equal('No assessment id provided.');
         done();
       });
     });
