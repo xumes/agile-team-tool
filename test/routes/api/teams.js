@@ -59,6 +59,78 @@ describe('Team API Tests', function() {
     });
   });
 
+  it('it will return 400 when you associate a team with wrong action',function(done){
+    var req = request(app).put('/api/teams/associates');
+    agent.attachCookies(req);
+    req.send({});
+    req.end(function(err,res){
+      if (err) {
+        //console.log('err: ', err);
+      } else {
+        expect(res.statusCode).to.be.equal(400);
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.equal('Invalid action');
+      }
+      done();
+    });
+  });
+
+  it('it will return 201 when you create a team successfully for team association endpoint to be a parent',function(done){
+    var req = request(app).post('/api/teams');
+    agent.attachCookies(req);
+    var teamAssoc = dummyData.associate.validDoc();
+    req.send(teamAssoc);
+    req.end(function(err,res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(201);
+        expect(res.body).to.have.property('_id');
+        targetParent = res.body['_id'];
+      }
+      done();
+    });
+  });
+
+  it('it will return 201 when you create a team successfully for team association endpoint to be a child',function(done){
+    var req = request(app).post('/api/teams');
+    agent.attachCookies(req);
+    var teamAssoc = dummyData.associate.validDoc();
+    req.send(teamAssoc);
+    req.end(function(err,res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(201);
+        expect(res.body).to.have.property('_id');
+        targetParentTeamId = res.body['_id'];
+      }
+      done();
+    });
+  });
+
+  it('it will return 200 when associating a team',function(done){
+    this.timeout(3000);
+    var req = request(app).put('/api/teams/associates');
+    agent.attachCookies(req);
+    var putBody = {
+      'action' : 'associateParent',
+      'teamId' : targetParentTeamId,
+      'targetParent' : targetParent
+    };
+    req.send(putBody);
+    req.end(function(err,res){
+      if (err) {
+        //console.log('err: ', err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+      }
+      done();
+    });
+  });
+
+  // TODO: need additional test case for other team associate endpoint valid ACTION, ie. 'associateParent', 'associateChild', 'removeParent', 'removeChild'
+
   it('it will return 400 because Team document ID is none existing', function(done){
     var docu = { '_id' : 'none-existing-docu' + new Date().getTime() };
     var req = request(app).put('/api/teams');
