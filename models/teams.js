@@ -386,7 +386,7 @@ var team = {
         infoLogs(errorLists);
         reject(errorLists);
       }else if(_.isEmpty(teamObj['teamId'])){
-        errorLists['error']['teamId'] = 'Invalid teamd document ID';
+        errorLists['error']['teamId'] = 'Invalid team document ID';
         infoLogs(errorLists);
         reject(errorLists);
       }else{
@@ -540,20 +540,32 @@ var team = {
                 infoLogs(errorLists);
                 reject(errorLists);
               }else{
-                team.getTeam(teamObj['targetParent'])
+                var removeParent = [];
+                removeParent.push(team.getTeam(teamObj['teamId']));
+                removeParent.push(team.getTeam(teamObj['targetParent']));
+                Promise.all(removeParent)
                 .then(function(result){
-                  // do the saving
-                  //kung naay parent tong team, iremove sya as child sa parent team..
-                  //kung naay children ang team, iremove sya sa parent sa child teams...
-                  // do saving
-                  infoLogs('do the saving: ', teamObj);
-                  resolve(true);
+                  // target parent must be equal to current team parent team id
+                  if(result[0]['parent_team_id'] != result[1]['_id']){
+                    errorLists['error']['targetParent'] = 'Target parent is not parent of current team';
+                    infoLogs(errorLists);
+                    reject(errorLists);
+                  }else{
+                    formattedDocuments(result, action)
+                    .then(function(res){
+                      var bulkDocu = util.formatForBulkTransaction(res, userEmail, 'update');
+                      common.bulkUpdate(bulkDocu)
+                      .then(function(body){
+                        loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully removed parent team' + teamObj['targetParent']);
+                        resolve(body);
+                      })
+                    })
+                  }
                 })
-                .catch(function(err){
-                  // not allowed to be a parent of self
-                  errorLists['error']['targetParent'] = 'Invalid target parent';
-                  infoLogs(errorLists);
-                  reject(errorLists);
+                .catch( /* istanbul ignore next */ function(err){
+                  // cannot simulate Cloudant error during testing
+                  loggers.get('models').error('Error removing team parent');
+                  reject(err);
                 })
               }
               break;
@@ -660,6 +672,18 @@ var formattedDocuments = function(doc, action){
         tempDocHolder[0]  : currentTeam
         tempDocHolder n > 0]  : new child
         */
+        break;
+      case 'removeParent':
+        // get current team
+        // remove parent_team_id === ''
+        // get targetParent
+        // remove current team id to target parent child_team_id
+        tempDocHolder[0] = doc[0];
+        tempDocHolder[0]['parent_team_id'] = '';
+        tempDocHolder[1] = doc[1];
+        var newChild = _.without(tempDocHolder[1]['child_team_id'], tempDocHolder[0]['_id']);
+        tempDocHolder[1]['child_team_id'] = newChild;
+        resolve(tempDocHolder);
         break;
     }
   });

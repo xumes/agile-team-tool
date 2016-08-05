@@ -341,16 +341,30 @@ describe('Team models [associateTeams]: associate team relationship with other t
     })
   });
   
-  xit('will removed parent association', function(done){
-    teamModel.associateTeams({}, 'removeParent', associateTeamsUserValid)
+  it('will removed parent association', function(done){
+    teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
     .then(function(body){
-      expect(body).to.not.equal(null);
-      expect(body).to.have.property('targetParent');
-      expect(body.targetParent).to.have.be.equal();
-    })
-    .finally(function(){
-      done();
-    })
+      var associateDataParentValid = {
+        teamId : createdId,
+        targetParent : [body['_id']]
+      };
+      teamModel.associateTeams(associateDataParentValid, 'associateParent', dummyData.associate.validUser())
+      .then(function(body){
+        var associateRemoveParent = {
+          teamId : createdId,
+          targetParent : body[1]['id']
+        };
+        teamModel.associateTeams(associateRemoveParent, 'removeParent', dummyData.associate.validUser())
+        .then(function(body){
+          expect(body).to.not.equal(null);
+          expect(body[0]['id']).to.have.equal(associateRemoveParent['teamId']);
+          expect(body[1]['id']).to.have.equal(associateRemoveParent['targetParent']);
+        })
+        .finally(function(){
+          done();
+        })
+      })
+    });
   });
   
   xit('will removed child team', function(done){
