@@ -322,15 +322,22 @@ describe('Team models [associateTeams]: associate team relationship with other t
     })
   });
   
-  xit('will associate new child team', function(done){
-    teamModel.associateTeams({}, 'associateChild', associateTeamsUserValid)
+  it('will associate new child team', function(done){
+    teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
     .then(function(body){
-      expect(body).to.not.equal(null);
-      expect(body).to.have.property('associateChild');
-      expect(body.associateChild).to.have.be.equal();
-    })
-    .finally(function(){
-      done();
+      var associateDataChildValid = {
+        teamId : createdId,
+        targetChild : [body['_id']]
+      };
+      teamModel.associateTeams(associateDataChildValid, 'associateChild', dummyData.associate.validUser())
+      .then(function(body){
+        expect(body).to.not.equal(null);
+        expect(body[0]['id']).to.have.equal(associateDataChildValid['teamId']);
+        // need to have better assertion, ie check if targetChild is now existing in teamId child_team_id
+      })
+      .finally(function(){
+        done();
+      })
     })
   });
   

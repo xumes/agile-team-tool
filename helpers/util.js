@@ -117,28 +117,6 @@ module.exports.getServerTime = function () {
 };
 
 /**
- * Reformat document to delete document structure for BULK operation
- * 
- * @param docs - array of documents
- * @param email - email address as last update user, ie logged in user
- * @returns - reformatted object that will be passed directly to updateBulk
- */
-module.exports.formatForBulkDelete = function(docs, email){
-  //can use lodash cloneDeep
-  var reformatDocu = [];
-  _.each(docs, function(v, i, l){
-    var doc2 = v;
-    doc2['last_updt_user'] = email;
-    doc2['last_updt_dt'] = module.exports.getServerTime();
-    doc2['doc_status'] = 'delete';
-    reformatDocu.push(doc2);
-  });
-  return {
-    docs : reformatDocu
-  };
-}
-
-/**
  * Check if user is member on set of documents to edit
  * 
  * @param teamId - team document id to check if user is member
@@ -277,24 +255,32 @@ var children = _.isEmpty(children) ? [] : children;
 }
 
 /**
- * Reformat document to update document structure for BULK operation
+ * Reformat document to update/delete document structure for BULK operation
  * 
  * @param docs - array of documents
  * @param email - email address as last update user, ie logged in user
+ * @param action - action to perfrom ie. update or delete
  * @returns - reformatted object that will be passed directly to updateBulk
  */
 
- // TODO : can be merged with formatForBulkDelete
-module.exports.formatForBulkUpdate = function(docs, email){
+module.exports.formatForBulkTransaction = function(docs, email, action){
   //can use lodash cloneDeep
+  loggers.get('models').info('Start bulk documents formatting for ' + action + ' transaction');
   var reformatDocu = [];
   _.each(docs, function(v, i, l){
     var doc2 = v;
-    doc2['last_updt_user'] = email;
-    doc2['last_updt_dt'] = module.exports.getServerTime();
-    doc2['doc_status'] = '';
+    if( action === 'delete'){
+      doc2['last_updt_user'] = email;
+      doc2['last_updt_dt'] = module.exports.getServerTime();
+      doc2['doc_status'] = 'delete';
+    }else{
+      doc2['last_updt_user'] = email;
+      doc2['last_updt_dt'] = module.exports.getServerTime();
+      doc2['doc_status'] = '';
+    }
     reformatDocu.push(doc2);
   });
+  loggers.get('models').info('Bulk documents reformatted for ' + action + ' transaction');
   return {
     docs : reformatDocu
   };

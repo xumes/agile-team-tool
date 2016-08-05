@@ -137,7 +137,7 @@ var team = {
             bulkDocu.push(teamAssesments.rows);
             bulkDocu = _.flatten(bulkDocu);
             // reformat into delete docu
-            bulkDocu = util.formatForBulkDelete(bulkDocu, userEmail);
+            bulkDocu = util.formatForBulkTransaction(bulkDocu, userEmail, 'delete');
 
             infoLogs('Start team, assessment and iteration documents bulk delete');
             common.bulkUpdate(bulkDocu)
@@ -395,13 +395,6 @@ var team = {
         .then(function(body){
           infoLogs('Validating for ' + action );
           /*
-          sa child team update
-          - 2 team docs kung mag add kag new child (current team and child team)
-          - pag multiple child selected for delete, sample 3 child teams to delete, total of 4 docs ang iupdate (3 child team to remove the current team as parent, ug ang current team to remove the child teams)
-
-
-          */
-          /*
           FOR TEAM DELETE
           kung naay parent tong team, iremove sya as child sa parent team..
           kung naay children ang team, iremove sya sa parent sa child teams...
@@ -438,18 +431,18 @@ var team = {
                         reject(errorLists);
                       }else{
                         infoLogs('Data valid for savings in ' + action);
-                        // do saving
+                        // merge documents for update
                         var associateParent = [];
                         associateParent.push(team.getTeam(teamObj['teamId']));
                         associateParent.push(team.getTeam(teamObj['targetParent']));
                         Promise.all(associateParent)
                         .then(function(result){
-                          formattedDocuments(result, action, team)
+                          formattedDocuments(result, action)
                           .then(function(res){
-                            var bulkDocu = util.formatForBulkUpdate(res, userEmail);
+                            var bulkDocu = util.formatForBulkTransaction(res, userEmail, 'update');
                             common.bulkUpdate(bulkDocu)
                             .then(function(body){
-                              loggers.get('models').info('Success: Team successfully associated to parent');
+                              loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully associated to parent ' + teamObj['targetParent']);
                               resolve(body);
                             })
                             .catch( /* istanbul ignore next */ function(err){
@@ -500,11 +493,37 @@ var team = {
                       reject(errorLists);
                     }
                   })
-                  // do saving
-                  infoLogs('do the saving: ', teamObj);
-                  resolve(true);
+                  // start associateChild saving
+                  /*
+                  sa child team update
+                  - 2 team docs kung mag add kag new child (current team and child team)
+                  */
+                  // merge documents for update
+                  var associateChild = [];
+                  associateChild.push(team.getTeam(teamObj['teamId']));
+                  _.each(teamObj['targetChild'], function(v,i,l){
+                    associateChild.push(team.getTeam(v));
+                  });
+                  Promise.all(associateChild)
+                  .then(function(result){
+                    formattedDocuments(result, action)
+                    .then(function(res){
+                      var bulkDocu = util.formatForBulkTransaction(res, userEmail, 'update');
+                      common.bulkUpdate(bulkDocu)
+                      .then(function(body){
+                        loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully associated to child ' + JSON.stringify(teamObj['targetChild']));
+                        resolve(body);
+                      })
+                    })
+                  })
+                  .catch( /* istanbul ignore next */ function(err){
+                    // cannot simulate Cloudant error during testing
+                    loggers.get('models').error('Error associating team to a child');
+                    reject(err);
+                  })
                 })
                 .catch(function(err){
+                  loggers.get('models').error('Error associating team to a child');
                   reject(err);
                 })
               }
@@ -559,6 +578,8 @@ var team = {
                   // do saving
                   // kung naay parent tong team, iremove sya as child sa parent team..
                   // kung naay children ang team, iremove sya sa parent sa child teams...
+                  //- pag multiple child selected for delete, sample 3 child teams to delete, total of 4 docs ang iupdate (3 child team to remove the current team as parent, ug ang current team to remove the child teams)
+                  
                   infoLogs('do the saving: ', teamObj);
                   resolve(true);
                 })
@@ -579,7 +600,7 @@ var team = {
   }
 };
 
-var formattedDocuments = function(doc, action, team){
+var formattedDocuments = function(doc, action){
   return new Promise(function(resolve, reject){
     var tempDocHolder = [];
     switch(action){
@@ -611,7 +632,35 @@ var formattedDocuments = function(doc, action, team){
         tempDocHolder[1]  : teamToBeParent
         tempDocHolder[2]  : previousParent
         */
-        break;  
+        break; 
+      case 'associateChild':
+        // reformat team id to have new child, retain what is in db
+        var childToBe = [];
+        _.each(doc, function(v,i,l){
+          if(i > 0)
+            childToBe.push(v['_id']);
+        });
+        tempDocHolder[0] = doc[0];
+        if(_.isEmpty(tempDocHolder[0]['child_team_id']))
+          tempDocHolder[0]['child_team_id'] = childToBe;
+        else{
+          var newChildArr =  tempDocHolder[0]['child_team_id'].concat(childToBe);
+          tempDocHolder[0]['child_team_id'] = newChildArr;
+        }
+        var currentTeamId = tempDocHolder[0]['_id'];
+       _.each(doc, function(v,i,l){
+          // new children, update parent_team_id to be of current child
+          if(i > 0){
+            tempDocHolder[i] = v;
+            tempDocHolder[i]['parent_team_id'] = currentTeamId;
+          }
+        });
+        resolve(tempDocHolder);
+        /*
+        tempDocHolder[0]  : currentTeam
+        tempDocHolder n > 0]  : new child
+        */
+        break;
     }
   });
 }
