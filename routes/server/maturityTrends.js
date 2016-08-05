@@ -8,5 +8,5 @@ module.exports = function(app, includes) {
     render(req, res, 'maturityTrends', json);
   };
   
-  app.get("/maturityTrends", [includes.middleware.auth.requireLoginWithRedirect], showTrends);
+  app.get("/maturityTrends", showTrends);
 };

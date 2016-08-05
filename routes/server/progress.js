@@ -20,5 +20,9 @@ module.exports = function(app, includes) {
       render(req, res, 'progress', json);
   };
   
-  app.get('/progress', [includes.middleware.auth.requireLoginWithRedirect], showAssessmentProgress);
+  app.get('/progress',  
+    [
+      includes.middleware.auth.requireLoginWithRedirect,
+      includes.middleware.cache.setSystemInfoCache
+    ], showAssessmentProgress);
 };

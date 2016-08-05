@@ -19,5 +19,9 @@ module.exports = function(app, includes) {
     render(req, res, 'help', json);
   };
   
-  app.get('/help', [includes.middleware.auth.requireLoginWithRedirect], showHelp);
+  app.get('/help',  
+    [
+      includes.middleware.auth.requireLoginWithRedirect,
+      includes.middleware.cache.setSystemInfoCache
+    ], showHelp);
 };

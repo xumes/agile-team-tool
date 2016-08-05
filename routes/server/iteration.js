@@ -19,5 +19,9 @@ module.exports = function(app, includes) {
     render(req, res, 'iteration', json);
   };
 
-  app.get('/iteration', [includes.middleware.auth.requireLoginWithRedirect], showIteration);
+  app.get('/iteration',  
+    [
+      includes.middleware.auth.requireLoginWithRedirect,
+      includes.middleware.cache.setSystemInfoCache
+    ], showIteration);
 };

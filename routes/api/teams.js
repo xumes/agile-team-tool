@@ -8,6 +8,7 @@ module.exports = function(app, includes) {
     var teamDoc = req.body;
     teamModel.createTeam(teamDoc, req.session['user'])
       .then(function(result){
+        middleware.cache.updateTeamCache(req, result);
         res.status(201).send(result);
       })
       .catch(function(err){
@@ -32,6 +33,7 @@ module.exports = function(app, includes) {
   updateTeam = function(req, res){
     teamModel.updateOrDeleteTeam(req.body, req.session['user'], 'update')
       .then(function(result){
+        middleware.cache.updateTeamCache(req, result);
         res.send(result);
       })
       .catch(function(err){
@@ -67,7 +69,7 @@ module.exports = function(app, includes) {
       });
   };
 
-getTeamName = function(req, res){
+  getTeamName = function(req, res){
     var teamName = req.params.teamName;
     teamModel.getName(teamName)
       .then(function(result){
@@ -94,6 +96,7 @@ getTeamName = function(req, res){
     var teamId = req.params.teamId;
     teamModel.getTeam(teamId)
       .then(function(result){
+        middleware.cache.updateTeamCache(req, result);
         res.send(result);
       })
       .catch(function(err){

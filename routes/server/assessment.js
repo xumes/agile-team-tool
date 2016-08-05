@@ -20,5 +20,9 @@ module.exports = function(app, includes) {
     render(req, res, 'assessment', json);
   };
   
-  app.get('/assessment', [includes.middleware.auth.requireLoginWithRedirect], showAssessment);
+  app.get('/assessment',  
+    [
+      includes.middleware.auth.requireLoginWithRedirect,
+      includes.middleware.cache.setSystemInfoCache
+    ], showAssessment);
 };

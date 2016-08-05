@@ -118,6 +118,22 @@ var userCache = {
       });
   },
 
+  setSystemInfoCache: function(req, res, next) {
+    Promise.all(
+      [
+        userCache.setSystemAdmins(req, res),
+        userCache.setSystemStatus(req, res)
+      ])
+      .then(function() {
+        infoLogs("Done loading system information cache.");
+        return next();
+      })
+      .catch(function(err) {
+        infoLogs(err);
+        return next();
+      });
+  },
+
   setHomeCache: function(req, res, next) {
     Promise.all(
       [
@@ -187,7 +203,7 @@ var userCache = {
     var allTeamsLookup = req.session['allTeamsLookup'];
     var allTeams = req.session['allTeams'];
     if (!_.isEmpty(allTeamsLookup) && !_.isEmpty(team)) {
-      var compactedTeam = compactTeam(team);
+      var compactedTeam = userCache.compactTeam(team);
       if (_.isEmpty(allTeamsLookup[team._id]))
         allTeams.push(compactedTeam);
       else
@@ -195,8 +211,23 @@ var userCache = {
 
       allTeamsLookup[team._id] = compactedTeam;
     }
+
+    var myTeams = req.session['myTeams'];
+    var user = req.session['user'];
+    if (!_.isEmpty(user) && !_.isEmpty(team.members) && _.isEmpty(_.find(team.members, {id: user.shortEmail}))) {
+      var newTeam = new Object;
+      newTeam['_id'] = team['_id'];
+      newTeam['_rev'] = team['_rev'];
+      newTeam['name'] = team['name'];
+      newTeam['parent_team_id'] = team['parent_team_id'];
+      newTeam['child_team_id'] = team['child_team_id'];
+      newTeam['squadteam'] = team['squadteam'];
+      myTeams.push(newTeam);
+      req.session['myTeams'] = myTeams;
+    }
+
     req.session['allTeamsLookup'] = allTeamsLookup;
-    req.session['allTeams'] = _.sortBy(list, function(team) {return team.name});
+    req.session['allTeams'] = _.sortBy(allTeams, function(team) {return team.name});
     infoLogs('Done updating cached team data.');
   }
 };

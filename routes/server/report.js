@@ -8,5 +8,9 @@ module.exports = function(app, includes) {
     render(req, res, 'report', json);
   };
   
-  app.get("/report", [includes.middleware.auth.requireLoginWithRedirect], showReport);
+  app.get("/report",  
+    [
+      includes.middleware.auth.requireLoginWithRedirect,
+      includes.middleware.cache.setSystemInfoCache
+    ], showReport);
 };
