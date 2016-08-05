@@ -159,7 +159,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       expect(err).to.not.equal(null);
       expect(err).to.have.property('error');
       expect(err.error).to.have.property('teamId');
-      expect(err.error.teamId).to.have.be.equal('Invalid teamd document ID');
+      expect(err.error.teamId).to.have.be.equal('Invalid team document ID');
     })
     .finally(function(){
       done();
