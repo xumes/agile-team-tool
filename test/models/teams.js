@@ -367,15 +367,29 @@ describe('Team models [associateTeams]: associate team relationship with other t
     });
   });
   
-  xit('will removed child team', function(done){
-    teamModel.associateTeams({}, 'removeChild', associateTeamsUserValid)
+  it('will removed child team', function(done){
+    teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
     .then(function(body){
-      expect(body).to.not.equal(null);
-      expect(body).to.have.property('targetChild');
-      expect(body.targetChild).to.have.be.equal();
-    })
-    .finally(function(){
-      done();
+      var associateDataChildValid = {
+        teamId : createdId,
+        targetChild : [body['_id']]
+      };
+      teamModel.associateTeams(associateDataChildValid, 'associateChild', dummyData.associate.validUser())
+      .then(function(body){
+        var associateRemoveChild = {
+          teamId : createdId,
+          targetChild : associateDataChildValid['targetChild']
+        }
+        teamModel.associateTeams(associateRemoveChild, 'removeChild', dummyData.associate.validUser())
+        .then(function(body){
+          expect(body).to.not.equal(null);
+          expect(body[0]['id']).to.have.equal(associateDataChildValid['teamId']);
+          // need to have better assertion, ie check if targetChild is none existing in teamId child_team_id
+        })
+        .finally(function(){
+          done();
+        })
+      })
     })
   });
 });

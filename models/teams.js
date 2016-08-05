@@ -581,19 +581,22 @@ var team = {
                 infoLogs(errorLists);
                 reject(errorLists);
               }else{
-                var childLists = [];
+                var removeChild = [];
+                removeChild.push(team.getTeam(teamObj['teamId']));
                 _.each(teamObj['targetChild'], function(v,i,l){
-                  childLists.push(team.getTeam(v))
+                  removeChild.push(team.getTeam(v))
                 })
-                Promise.all(childLists)
+                Promise.all(removeChild)
                 .then(function(result){
-                  // do saving
-                  // kung naay parent tong team, iremove sya as child sa parent team..
-                  // kung naay children ang team, iremove sya sa parent sa child teams...
-                  //- pag multiple child selected for delete, sample 3 child teams to delete, total of 4 docs ang iupdate (3 child team to remove the current team as parent, ug ang current team to remove the child teams)
-                  
-                  infoLogs('do the saving: ', teamObj);
-                  resolve(true);
+                  formattedDocuments(result, action)
+                  .then(function(res){
+                    var bulkDocu = util.formatForBulkTransaction(res, userEmail, 'update');
+                    common.bulkUpdate(bulkDocu)
+                    .then(function(body){
+                      loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully removed child team' + JSON.stringify(teamObj['targetChild']));
+                      resolve(body);
+                    })
+                  })
                 })
                 .catch(function(err){
                   reject(err);
@@ -640,9 +643,9 @@ var formattedDocuments = function(doc, action){
           resolve(tempDocHolder);
         }
         /*
-        tempDocHolder[0]  : currentTeam
-        tempDocHolder[1]  : teamToBeParent
-        tempDocHolder[2]  : previousParent
+        tempDocHolder[0] : currentTeam
+        tempDocHolder[1] : teamToBeParent
+        tempDocHolder[2] : previousParent
         */
         break; 
       case 'associateChild':
@@ -669,21 +672,54 @@ var formattedDocuments = function(doc, action){
         });
         resolve(tempDocHolder);
         /*
-        tempDocHolder[0]  : currentTeam
-        tempDocHolder n > 0]  : new child
+        tempDocHolder[0] : currentTeam
+        tempDocHolder[n > 0] : new child
         */
         break;
       case 'removeParent':
         // get current team
-        // remove parent_team_id === ''
-        // get targetParent
-        // remove current team id to target parent child_team_id
         tempDocHolder[0] = doc[0];
+        // remove parent_team_id === ''
         tempDocHolder[0]['parent_team_id'] = '';
+        // get targetParent
         tempDocHolder[1] = doc[1];
+        // remove current team id to target parent child_team_id
         var newChild = _.without(tempDocHolder[1]['child_team_id'], tempDocHolder[0]['_id']);
         tempDocHolder[1]['child_team_id'] = newChild;
         resolve(tempDocHolder);
+        /*
+        tempDocHolder[0] : currentTeam
+        tempDocHolder[1] : parent to be removed
+        */
+        break;
+      case 'removeChild':
+        //- pag multiple child selected for delete
+        //sample 3 child teams to delete, total of 4 docs ang iupdate 
+        //(3 child team to remove the current team as parent, ug ang current team to remove the child teams)
+        var currentChild = doc[0]['child_team_id'];
+        var childToRemove = [];
+        _.each(doc, function(v,i,l){
+          if(i > 0){
+            childToRemove.push(v['_id'])
+          }
+        });
+        // remove child
+        _.each(childToRemove, function(v,i,l){
+          currentChild = _.without(currentChild, v);
+        });
+        doc[0]['child_team_id'] = currentChild;
+        tempDocHolder[0] = doc[0];
+        _.each(doc, function(v,i,l){
+          if(i > 0){
+            tempDocHolder[i] = v;
+            tempDocHolder[i]['parent_team_id'] = '';
+          }
+        });
+        resolve(tempDocHolder);
+         /*
+        tempDocHolder[0] : currentTeam
+        tempDocHolder[n > 0] : child to be removed
+        */
         break;
     }
   });
