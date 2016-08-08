@@ -1,5 +1,4 @@
 var chai = require('chai');
-
 var expect = chai.expect;
 var Promise = require('bluebird');
 var assessmentModel = require('../../models/assessment');
@@ -9,9 +8,9 @@ var _ = require('underscore');
 var util = require('../../helpers/util');
 var common = require('../../models/cloudant-driver');
 var lodash = require('lodash');
+var testData = require('../data/assessment');
 var timeout = 30000;
 
-var testData = require('../data/assessment');
 var noId = testData.noId;
 var teamData = testData.teamData;
 var curr_assessment = testData.currentAssessment;
@@ -110,8 +109,6 @@ function createTribe(){
   .then(function(body){
     if (!lodash.isEmpty(body))
       parentTeamData = body;
-  })
-  .catch(function(err){
   });
 };
 
@@ -131,25 +128,19 @@ function createSquad(){
   .then(function(body){
     if (!lodash.isEmpty(body))
       teamData = body;
-  })
-  .catch(function(err){
   });
 };
-
 
 function cleanupAssessment(recId){
   assessmentModel.getAssessment(recId)
    .then(function(body){
       return common.deleteRecord(body._id, body._rev);
-    })
-   .catch(function(err){
     });
 };
 
 describe('Assessment Model', function() {
   before(function(done){
     this.timeout(timeout);
-    var teamId;
     
     util.getAdmins('ag_ref_access_control')
       .then(function(body){
@@ -169,9 +160,6 @@ describe('Assessment Model', function() {
         userTeams = _.sortBy(list, function(team) {return team.name});
         return Promise.all([createDraft1(), createSubmit1(), createDelete1()]);
       })
-      .catch(function(err){
-
-      })
       .finally(function(){
         done();
       });
@@ -179,8 +167,8 @@ describe('Assessment Model', function() {
 
   after(function(done){
     this.timeout(timeout);
-    Promise.all([cleanupAssessment(draft_assessment._id),cleanupAssessment(sub_assessment._id), cleanupAssessment(del_assessment._id),
-      cleanupAssessment(draftAddId), cleanupAssessment(submitAddId), cleanupAssessment(curr_assessment._id)]);
+    Promise.all([cleanupAssessment(draft_assessment._id),cleanupAssessment(sub_assessment._id), 
+      cleanupAssessment(draftAddId), cleanupAssessment(submitAddId)]);
     
     teamModel.getTeam(teamData._id)
     .then(function(body){
@@ -202,11 +190,8 @@ describe('Assessment Model', function() {
     it("retrieve assessment template", function(done){
       assessmentModel.getAssessmentTemplate()
         .then(function(body){
-          expect(body).to.be.a('object');
+          expect(body).to.be.an('object');
           expect(body).to.have.property('rows');
-        })
-        .catch(function(err){
-          expect(err.error).to.be.equal('undefined');
         })
         .finally(function(){
           done();
@@ -223,7 +208,7 @@ describe('Assessment Model', function() {
       valAssessment.created_dt = '';
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment, allTeams, userTeams)
         .catch(function(err){
-          expect(err).to.be.a('object');
+          expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err).to.have.deep.property('error.created_dt[0]', 'Created date is required.');
         })
@@ -232,7 +217,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("valid draft assessment with team member", function(done){
+    it("valid draft assessment from team member", function(done){
       var valAssessment =lodash.cloneDeep(curr_assessment);
       valAssessment._id = draftAddId;
       valAssessment.assessmt_status = 'Draft';
@@ -243,9 +228,6 @@ describe('Assessment Model', function() {
         .then(function(body){
           expect(body.ok).to.be.true;
           expect(body.id).to.be.equal(valAssessment._id);
-        })
-        .catch(function(err){
-          expect(err.error).to.be.equal('undefined');
         })
         .finally(function(){
           done();
@@ -260,9 +242,6 @@ describe('Assessment Model', function() {
           expect(body.ok).to.be.true;
           expect(body.id).to.be.equal(draftForUpdate._id);
         })
-        .catch(function(err){
-          expect(err.error).to.be.equal('undefined');
-        })
         .finally(function(){
           done();
         });
@@ -273,7 +252,7 @@ describe('Assessment Model', function() {
       valAssessment.assessmt_cmpnt_rslts[0].assessed_cmpnt_tbl[0].cur_mat_lvl_achieved = '';
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment, allTeams, userTeams)
         .catch(function(err){
-          expect(err).to.be.a('object');
+          expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err).to.have.deep.property('error.cur_mat_lvl_achieved[0]', 'All assessment maturity practices need to be answered.  See highlighted practices in yellow.');
         })
@@ -287,7 +266,7 @@ describe('Assessment Model', function() {
       valAssessment.assessmt_cmpnt_rslts[0].assessed_cmpnt_tbl[0].cur_mat_lvl_achieved = '';
       assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, valAssessment, allTeams, userTeams)
         .catch(function(err){
-          expect(err).to.be.a('object');
+          expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err).to.have.deep.property('error.cur_mat_lvl_achieved[0]','All assessment maturity practices need to be answered.  See highlighted practices in yellow.');
         })
@@ -302,7 +281,7 @@ describe('Assessment Model', function() {
       valAssessment.team_proj_ops = 'General';
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment, allTeams, userTeams)
         .catch(function(err){
-          expect(err).to.be.a('object');
+          expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err).to.have.deep.property('error.team_proj_ops[0]','General is not included in the list');
         })
@@ -316,7 +295,7 @@ describe('Assessment Model', function() {
       valAssessment.assessmt_cmpnt_rslts[0].ovraltar_assessmt_score = '';
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment, allTeams, userTeams)
         .catch(function(err){
-          expect(err).to.be.a('object');
+          expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err).to.have.deep.property('error.ovraltar_assessmt_score[0]','Overall target assessment score is required.');
         })
@@ -346,7 +325,7 @@ describe('Assessment Model', function() {
       valAssessment.assessmt_action_plan_tbl[0] = action;
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment, allTeams, userTeams)
         .catch(function(err){
-          expect(err).to.be.a('object');
+          expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err).to.have.deep.property('error.principle_id[0]','Principle id is required.');
         })
@@ -363,7 +342,7 @@ describe('Assessment Model', function() {
     it("add assessment [no assessment id]", function(done){
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, noId, allTeams, userTeams)
         .catch(function(err){
-          expect(err).to.be.a('object');
+          expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err).to.have.deep.property('error._id[0]','Record id is required.');
         })
@@ -377,7 +356,7 @@ describe('Assessment Model', function() {
       emptyId._id = '';
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, emptyId, allTeams, userTeams)
         .catch(function(err){
-          expect(err).to.be.a('object');
+          expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err).to.have.deep.property('error._id[0]','Record id is required.');
         })
@@ -393,7 +372,7 @@ describe('Assessment Model', function() {
       valAssessment.created_user = 'test.user@ph.ibm.com';
       assessmentModel.addTeamAssessment('test.user@ph.ibm.com', valAssessment, allTeams, [])
         .catch(function(err){
-          expect(err).to.be.a('object');
+          expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err.error).to.equal('Unauthorized user.');
         })
@@ -407,12 +386,9 @@ describe('Assessment Model', function() {
       valAssessment._id = submitAddId;
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment, allTeams, userTeams)
       .then(function(body){
-        expect(body).to.be.a('object');
+        expect(body).to.be.an('object');
         expect(body.ok).to.be.true;
         expect(body.id).to.be.equal(valAssessment._id);
-      })
-      .catch(function(err){
-        expect(err.error).to.be.an('conflict');
       })
       .finally(function(){
         done();
@@ -424,6 +400,8 @@ describe('Assessment Model', function() {
       valAssessment._id = submitAddId;
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment, allTeams, userTeams)
         .catch(function(err){
+          expect(err).to.be.an('object');
+          expect(err).to.have.property('error');
           expect(err.error).to.be.equal('conflict');
         })
         .finally(function(){
@@ -437,12 +415,10 @@ describe('Assessment Model', function() {
     it("retrieve team assessments [valid team id]", function(done){
       assessmentModel.getTeamAssessments(sub_assessment.team_id)
         .then(function(body){
-          expect(body).to.be.a('object');
+          expect(body).to.be.an('object');
           expect(body).to.have.property('rows');
-          expect(body.rows[0].key).to.be.equal(sub_assessment._id);
-        })
-        .catch(function(err){
-          expect(err.error).to.be.an('undefined');
+          var idRecords = _.pluck(body.rows, 'id');
+          expect(idRecords).to.have.contain(sub_assessment._id);
         })
         .finally(function(){
           done();
@@ -454,9 +430,6 @@ describe('Assessment Model', function() {
         .then(function(body){
           expect(body.rows).to.be.empty;
         })
-        .catch(function(err){
-          expect(err.error).to.be.an('undefined');
-        })
         .finally(function(){
           done();
         })
@@ -464,11 +437,8 @@ describe('Assessment Model', function() {
 
     it("retrieve team assessments [empty team id]", function(done){
       assessmentModel.getTeamAssessments('')
-        .then(function(body){
-          expect(body).to.be.equal(null);
-        })
         .catch(function(err){
-          expect(err).to.not.equal(null);
+          expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err.error).to.be.equal('No team id provided.');
         })
@@ -483,10 +453,8 @@ describe('Assessment Model', function() {
     
     it("retrieve assessment [non-existing assessment id]", function(done){
       assessmentModel.getAssessment(invalidAssessId)
-        .then(function(body){
-          expect(body.rows).to.be.empty;
-        })
         .catch(function(err){
+          expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err.error).to.be.equal('not_found');
         })
@@ -498,7 +466,7 @@ describe('Assessment Model', function() {
     it("retrieve assessment [empty assessment id]", function(done){
       assessmentModel.getAssessment('')
         .catch(function(err){
-          expect(err).to.not.equal(null);
+          expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err.error).to.be.equal('No assessment id provided.');
         })
@@ -508,13 +476,10 @@ describe('Assessment Model', function() {
     });
 
     it("retrieve assessment [valid assessment id]", function(done){
-      assessmentModel.getAssessment(curr_assessment._id)
+      assessmentModel.getAssessment(sub_assessment._id)
         .then(function(body){
-          expect(body).to.be.a('object');
-          expect(body._id).equal(curr_assessment._id);
-        })
-        .catch(function(err){
-          expect(err.error).to.be.equal('not_found');
+          expect(body).to.be.an('object');
+          expect(body._id).to.be.equal(sub_assessment._id);
         })
         .finally(function(){
           done();
@@ -528,7 +493,7 @@ describe('Assessment Model', function() {
     it("update assessment [no assessment id]", function(done){
       assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, noId, allTeams, userTeams)
         .catch(function(err){
-          expect(err).to.be.a('object');
+          expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err).to.have.deep.property('error._id[0]','Record id is required.');
         })
@@ -542,7 +507,7 @@ describe('Assessment Model', function() {
       tempData._id='';
       assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, tempData, allTeams, userTeams)
         .catch(function(err){
-          expect(err).to.be.a('object');
+          expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err).to.have.deep.property('error._id[0]','Record id is required.');
         })
@@ -558,7 +523,7 @@ describe('Assessment Model', function() {
       tempData.last_updt_dt = util.getServerTime();
       assessmentModel.updateTeamAssessment('test.user@ph.ibm.com', tempData, allTeams, [])
         .catch(function(err){
-          expect(err).to.be.a('object');
+          expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err.error).to.equal('Unauthorized user.');
         })
@@ -575,7 +540,7 @@ describe('Assessment Model', function() {
       tempData._rev = invalidRevisionId;
       assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, tempData, allTeams, userTeams)
         .catch(function(err){
-          expect(err).to.be.a('object');
+          expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err.error).to.be.equal('conflict');
         })
@@ -591,12 +556,9 @@ describe('Assessment Model', function() {
       tempData.last_updt_dt = util.getServerTime();
       assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, tempData, allTeams, userTeams)
         .then(function(body){
-          expect(body).to.be.a('object');
+          expect(body).to.be.an('object');
           expect(body.id).equal(tempData._id);
           expect(body.ok).to.be.true;
-        })
-        .catch(function(err){
-          expect(err.error).to.be.equal('conflict');
         })
         .finally(function(){
           done();
@@ -668,9 +630,6 @@ describe('Assessment Model', function() {
         .then(function(body){
           expect(body).to.be.a('object');
           expect(body.ok).to.be.true;
-        })
-        .catch(function(err){
-          expect(err.error).to.be.an('not_found');
         })
         .finally(function(){
           done();
