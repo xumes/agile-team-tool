@@ -28,8 +28,7 @@ describe('Assessment API Test', function(){
       .send()
       .end(function(err, res) {
         if (err) throw err;
-        /*agent.saveCookies(res);
-        done();*/
+        //call home page to initialize session data
         agent
           .get('/')
           .send()
@@ -123,7 +122,6 @@ describe('Assessment API Test', function(){
     });
 
     it('add assessment with valid assessment data', function(done){
-      console.log('assessment id: '+curr_assessment._id);
       var req = request(app).post('/api/assessment/');
       agent.attachCookies(req);
       req.send(curr_assessment);
