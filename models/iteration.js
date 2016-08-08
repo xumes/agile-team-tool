@@ -32,7 +32,7 @@ var iteration = {
     return new Promise(function(resolve, reject){
       if (teamId) {
         infoLogs('[getByIterInfo] Getting team iteration for ' + teamId);
-        common.getByViewKey('teams', 'iterinfo', teamId)
+        common.getByViewKey('iterations', 'teamIteration', teamId)
         .then(function(body) {
           successLogs('[iterationModel.getByIterInfo] Team iteration docs obtained');
           resolve(body);
@@ -44,7 +44,7 @@ var iteration = {
         });
       } else {
         infoLogs('[getByIterInfo] Getting all team iterations docs');
-        common.getByView('teams', 'iterinfo')
+        common.getByView('iterations', 'teamIteration')
         .then(function(body) {
           successLogs('[getByIterInfo] Team iteration docs obtained');
           resolve(body);
@@ -74,7 +74,7 @@ var iteration = {
 
   getCompletedIterationsByKey: function(startkey, endkey) {
     return new Promise(function(resolve, reject){
-      common.getByViewWithStartOrEndKey('teams', 'getCompletedIterations', startkey, endkey)
+      common.getByViewWithStartOrEndKey('iterations', 'completed', startkey, endkey)
       .then(function(body) {
         successLogs('[iterationModel.getCompletedIterationsByKey] Completed iteration docs obtained');
         resolve(body);

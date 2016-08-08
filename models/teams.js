@@ -299,7 +299,7 @@ var team = {
   getRole : function(){
     infoLogs('Getting all team role records from Cloudant');
     return new Promise(function(resolve, reject) {
-      common.getByView('agile', 'roles')
+      common.getByView('utility', 'teamMemberRoles')
         .then(function(body){
           loggers.get('models').info('Success: Team roles obtained');
           resolve(body);
@@ -315,7 +315,7 @@ var team = {
     if(_.isEmpty(teamName)){
       infoLogs('Getting all team name records from Cloudant');
       return new Promise(function(resolve, reject) {
-        common.getByView('teams', 'getTeamNames')
+        common.getByView('teams', 'teamNames')
           .then(function(body){
             loggers.get('models').info('Success: Team names obtained');
             resolve(body);
@@ -329,7 +329,7 @@ var team = {
     }else{
       infoLogs('Getting team document with name: ' + teamName);
       return new Promise(function(resolve, reject) {
-        common.getByViewKey('teams', 'getTeamNames', teamName)
+        common.getByViewKey('teams', 'teamNames', teamName)
           .then(function(body){
             if(_.isEmpty(body.rows))
               loggers.get('models').info('Success: No team document with name ' + teamName);
