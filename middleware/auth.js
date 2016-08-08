@@ -20,3 +20,19 @@ module.exports.requireLoggedOutWithRedirect = function(req, res, next) {
   else
     return next();
 };
+
+module.exports.requireAdmin = function(req, res, next) {
+  //TODO
+  // if(_.isEmpty(req.user))
+  //   res.send(401, {status:401, message: 'Unauthorized'});
+  // else
+  //   return next();
+};
+
+module.exports.requireAdminOrSupport = function(req, res, next) {
+  //TODO
+  // if(_.isEmpty(req.user))
+  //   res.send(401, {status:401, message: 'Unauthorized'});
+  // else
+  //   return next();
+};

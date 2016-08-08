@@ -2,26 +2,7 @@ var chai = require('chai');
 var expect = chai.expect;
 var util = require('../../helpers/util');
 var timeout = 30000;
-var adminId = 'ag_ref_access_control';
 var systemId = 'ag_ref_system_status_control';
-
-describe("Util models [getAdmins]: get admins and supports", function(done){
-  this.timeout(timeout);
-  it("return admins and supports", function(done){
-    util.getAdmins(adminId)
-      .then(function(body){
-        expect(body).to.be.a('object');
-        expect(body).to.have.property('ACL_Full_Admin');
-        expect(body).to.have.property('ACL_User_Supt');
-      })
-      .catch(function(err){
-        expect(err.error).to.be.an('undefined');
-      })
-      .finally(function(){
-        done();
-      });
-  });
-});
 
 describe("Util models [getSystemStatus]: get system status", function(done){
   this.timeout(timeout);

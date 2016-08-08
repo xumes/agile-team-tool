@@ -6,9 +6,15 @@ var teamModel = require('../../models/teams');
 var dummyData = require('../data/dummy-data.js');
 var _ = require('underscore');
 var util = require('../../helpers/util');
+var users = require('../../models/users');
+
 var common = require('../../models/cloudant-driver');
 var lodash = require('lodash');
+<<<<<<< ee5dceeb88e15b1a35d078d9fde9ec46e68c7fc4
 var testData = require('../data/assessment');
+=======
+var users  = require('../../models/users')
+>>>>>>> created user model and api with tests and moved getAdmins from util to users
 var timeout = 30000;
 
 var noId = testData.noId;
@@ -142,7 +148,7 @@ describe('Assessment Model', function() {
   before(function(done){
     this.timeout(timeout);
     
-    util.getAdmins('ag_ref_access_control')
+    users.getAdmins()
       .then(function(body){
         adminList = body.ACL_Full_Admin;
         return Promise.all([createTribe(), createSquad()]);

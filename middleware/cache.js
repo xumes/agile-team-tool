@@ -5,7 +5,7 @@ var validate = require('validate.js');
 var loggers = require('../middleware/logger');
 var teamModel = require('../models/teams');
 var util = require('../helpers/util');
-var obj = [];
+var users = require('../models/users');
 
 var infoLogs = function(msg){
   tMsg = typeof msg === 'object' ? JSON.stringify(msg) : msg;
@@ -45,6 +45,95 @@ var returnObject = function(data) {
 };
 
 var userCache = {
+  setAllTeams: function(req, res) {
+    return new Promise(function(resolve, reject) {
+      teamModel.getTeam(null)
+        .then(function(result) {
+          var list = returnObject(result);
+          req.session['allTeamsLookup'] = _.indexBy(list, function(team) {return team._id});
+          req.session['allTeams'] = _.sortBy(list, function(team) {return team.name});
+          resolve();
+        })
+        .catch(function(err) {
+          req.session['allTeams'] = [];
+          resolve();
+        });
+      });
+  },
+
+  setMyTeams: function(req, res) {
+    return new Promise(function(resolve, reject) {
+      teamModel.getTeamByEmail(req.session['email'])
+        .then(function(result) {
+          var list = returnObject(result);
+          req.session['myTeams'] = list;
+          resolve();
+        })
+        .catch(function(err) {
+          req.session['myTeams'] = [];
+          resolve();
+        });
+      });
+  },
+
+  setTeamNames: function(req, res) {
+    return new Promise(function(resolve, reject) {
+      teamModel.getName(null)
+        .then(function(result) {
+          var list = returnObject(result);
+          req.session['allTeams'] = list;
+          resolve();
+        })
+        .catch(function(err) {
+          req.session['allTeams'] = [];
+          resolve();
+        });
+      });
+  },
+
+  setMemberRoles: function(req, res) {
+    return new Promise(function(resolve, reject) {
+      teamModel.getRole()
+        .then(function(result) {
+          var list = returnObject(result);
+          req.session['memberRoles'] = list;
+          resolve();
+        })
+        .catch(function(err) {
+          req.session['memberRoles'] = [];
+          resolve();
+        });
+      });
+  },
+
+  setSystemAdmins: function(req, res) {
+    return new Promise(function(resolve, reject) {
+      users.getAdmins()
+        .then(function(result) {
+          req.session['systemAdmin'] = returnObject(result);
+          resolve();
+        })
+        .catch(function(err) {
+          req.session['systemAdmin'] = [];
+          resolve();
+        });
+      });
+  },
+
+  setSystemStatus: function(req, res) {
+    return new Promise(function(resolve, reject) {
+      util.getSystemStatus('ag_ref_system_status_control')
+        .then(function(result) {
+          req.session['systemStatus'] = returnObject(result);
+          resolve();
+        })
+        .catch(function(err) {
+          req.session['systemStatus'] = [];
+          resolve();
+        });
+      });
+  },
+
   setSystemInfoCache: function(req, res, next) {
     var userEmail = null;
     var isRoute = true;

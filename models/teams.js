@@ -8,6 +8,7 @@ var util = require('../helpers/util');
 var iterationModels = require('./iteration');
 var assessmentModels = require('./assessment');
 var rules = require("./validate_rules/teams");
+var users = require('./users')
 
 var teamDocRules = rules.teamDocRules;
 var isAllowedUser = false;
@@ -91,7 +92,7 @@ var team = {
         infoLogs('Getting team document latest records');
         updateOrDeleteTeamValidation.push(team.getTeam(teamId));
         infoLogs('Getting tool admins');
-        updateOrDeleteTeamValidation.push(util.getAdmins('ag_ref_access_control'));
+        updateOrDeleteTeamValidation.push(users.getAdmins());
         infoLogs('Getting all team document');
         updateOrDeleteTeamValidation.push(team.getTeam(null)); // teamLists
         infoLogs('Getting all team document associated to user ' + user['shortEmail']);

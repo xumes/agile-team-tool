@@ -1,10 +1,8 @@
-"use strict";
-var root_path = '../../';
 var chai = require('chai');
 var crypto = require('crypto');
 var expect = chai.expect;
-var iterationModel = require(root_path + 'models/iteration');
-var dummyData = require('../data/iteration.js');
+var iterationModel = require('../../models/iteration');
+var dummyData = require('../data/dummy-data.js');
 var validId;
 var validTeamId;
 var timeout = 100000;

@@ -277,7 +277,7 @@ function isUserMemberOfTeam(teamId, checkParent) {
  * Loads the list of identified users with administrator access.
  */
 function getAllAdministrator() {
-	var cUrl = "/api/util/admins";
+	var cUrl = "/api/users/admins";
 	getRemoteData(cUrl, setGlobalAdministorList, []);
 }
 

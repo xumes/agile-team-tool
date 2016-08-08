@@ -9,6 +9,7 @@ var passport     = require('passport');
 var settings     = require('./settings');
 var RedisStore   = require('connect-redis')(session);
 var favicon      = require('serve-favicon');
+var helmet       = require('helmet')
 
 var app = express();
 app.use(favicon(__dirname + '/public/img/favicon.ico'));
@@ -27,6 +28,9 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+//security (mostly header stuff)
+app.use(helmet());
 
 // Force SSL
 /* istanbul ignore if */

@@ -3,13 +3,14 @@ var Promise = require('bluebird');
 var settings = require('../settings');
 var loggers = require('../middleware/logger');
 var _ = require('underscore');
+var users = require('../models/users')
 var msg;
 var teamLists = [];
 var userTeams = [];
 var teamModel;
 
 var formatErrMsg = function(msg) {
-  loggers.get('models').info('Error: ' + msg);
+  loggers.get('models').info('util helper Error: ' + msg);
   return { error : msg };
 };
 
@@ -68,26 +69,6 @@ module.exports.trimData = function(postData) {
     cleanData[index] = element;
   });
   return cleanData;
-};
-
-
-// Get users with administrative/support access
-module.exports.getAdmins = function (accessId) {
-  return new Promise(function(resolve, reject) {
-    if(!(_.isEmpty(accessId))) {
-      loggers.get('models').info('Getting all admins and supports');
-      common.getRecord(accessId).then(function(body){
-        loggers.get('models').info('Success: Admin records obtained');
-        resolve(body);
-      }).catch(function(err) {
-        msg = err.error;
-        reject(formatErrMsg(msg));
-      });
-    } else {
-      msg = 'admin access id is empty';
-      reject(formatErrMsg(msg));
-    }
-  });
 };
 
 // Get system status
@@ -154,7 +135,7 @@ module.exports.isUserMemberOfTeam = function(teamId, checkParent, teamLists, use
 module.exports.isValidUser = function(userId, teamId, checkParent){
   return new Promise(function(resolve, reject){
     loggers.get('models').info('validating user '+userId+' for team '+teamId);
-    module.exports.getAdmins('ag_ref_access_control')
+    users.getAdmins()
     .then(function(body){
       return _.contains(body.ACL_Full_Admin, userId);
     })
@@ -325,7 +306,7 @@ module.exports.isTeamMember = function(teamId, checkParent, teamLists, userTeams
 module.exports.isUserAllowed = function(userId, teamId, checkParent, allTeams, userTeams){
   return new Promise(function(resolve, reject){
     loggers.get('models').info('validating user '+userId+' for team '+teamId);
-    module.exports.getAdmins('ag_ref_access_control')
+    users.getAdmins()
     .then(function(body){
       return _.contains(body.ACL_Full_Admin, userId);
     })
@@ -350,3 +331,19 @@ module.exports.isUserAllowed = function(userId, teamId, checkParent, allTeams, u
     });
   });
 }
+
+
+
+module.exports.getAdmins = function (id) {
+  return new Promise(function(resolve, reject) {
+    loggers.get('models').info('Getting all admins and supports');
+    cloudantDriver.getRecord(id).then(function(body){
+      loggers.get('models').info('Success: Admin records obtained');
+      resolve(body);
+    }).catch(function(err) {
+      loggers.get('models').error('ERROR: users ' + err);
+      msg = err.error;
+      reject(msg);
+    });
+  });
+};

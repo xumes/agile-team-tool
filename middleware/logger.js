@@ -42,6 +42,14 @@ winston.loggers.add('models', {
   }
 });
 
+winston.loggers.add('model-users', {
+  console: {
+    level: logLevel,
+    colorize: logColors,
+    label: 'model-users'
+  }
+});
+
 winston.loggers.add('cache', {
   console: {
     level: logLevel,

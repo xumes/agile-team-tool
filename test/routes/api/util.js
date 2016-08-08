@@ -16,24 +16,6 @@ before(function(done) {
     })
 });
 
-describe('Util API Test [GET /api/util/admins]: get admins', function(){
-  it('It will return admins successfully', function(done){
-    var req = request(app).get('/api/util/admins/');
-    agent.attachCookies(req);
-    req.expect(200);
-    req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.body).to.be.a('object');
-        expect(res.body).to.have.property('ACL_Full_Admin');
-        expect(res.body).to.have.property('ACL_User_Supt');
-      }
-      done();
-    });
-  });
-});
-
 describe('Util API Test [GET /api/util/systemstatus]: get system status', function(){
   it('It will return system status successfully', function(done){
     var req = request(app).get('/api/util/systemstatus/');
