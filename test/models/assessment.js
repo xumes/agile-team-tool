@@ -10,11 +10,8 @@ var users = require('../../models/users');
 
 var common = require('../../models/cloudant-driver');
 var lodash = require('lodash');
-<<<<<<< ee5dceeb88e15b1a35d078d9fde9ec46e68c7fc4
 var testData = require('../data/assessment');
-=======
 var users  = require('../../models/users')
->>>>>>> created user model and api with tests and moved getAdmins from util to users
 var timeout = 30000;
 
 var noId = testData.noId;
