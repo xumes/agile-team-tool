@@ -331,19 +331,3 @@ module.exports.isUserAllowed = function(userId, teamId, checkParent, allTeams, u
     });
   });
 }
-
-
-
-module.exports.getAdmins = function (id) {
-  return new Promise(function(resolve, reject) {
-    loggers.get('models').info('Getting all admins and supports');
-    cloudantDriver.getRecord(id).then(function(body){
-      loggers.get('models').info('Success: Admin records obtained');
-      resolve(body);
-    }).catch(function(err) {
-      loggers.get('models').error('ERROR: users ' + err);
-      msg = err.error;
-      reject(msg);
-    });
-  });
-};

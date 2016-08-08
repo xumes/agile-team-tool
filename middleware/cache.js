@@ -145,7 +145,7 @@ var userCache = {
     }
     Promise.all(
       [
-        util.getAdmins('ag_ref_access_control'),
+        users.getAdmins(),
         util.getSystemStatus('ag_ref_system_status_control')
       ])
       .then(function(result) {
@@ -184,7 +184,7 @@ var userCache = {
       [
         teamModel.getTeam(), 
         teamModel.getTeamByEmail(userEmail),
-        util.getAdmins('ag_ref_access_control'),
+        users.getAdmins(),
         util.getSystemStatus('ag_ref_system_status_control')
       ])
       .then(function(result){
@@ -242,7 +242,7 @@ var userCache = {
       [
         teamModel.getTeam(), 
         teamModel.getTeamByEmail(userEmail),
-        util.getAdmins('ag_ref_access_control'),
+        users.getAdmins(),
         util.getSystemStatus('ag_ref_system_status_control'),
         teamModel.getRole()
       ])
