@@ -71,7 +71,7 @@ var assessment = {
       var msg = '';
       if(!_.isEmpty(teamId)){
         infoLogs('Getting all team assessment records from Cloudant.');
-        common.getByViewKey('agile', 'maturityAssessmentResult', teamId)
+        common.getByViewKey('assessments', 'teamMaturity', teamId)
           .then(function(body){
             successLogs('Team '+teamId+' assessment records retrieved.');
             resolve(body);
@@ -91,7 +91,7 @@ var assessment = {
     return new Promise(function(resolve, reject){
       var msg = '';
       infoLogs('Getting assessment template from Cloudant.');
-      common.getByView('agile', 'maturityAssessment')
+      common.getByView('assessments', 'template')
         .then(function(body){
           successLogs('Assessment template record retrieved.');
           resolve(body);
