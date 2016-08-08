@@ -16,6 +16,7 @@ var invalidTeamId = testData.invalidTeamId;
 var invalidAssessId = testData.invalidAssessId;
 var invalidRevisionId = testData.invalidRevisionId;
 var currRevisionId = '';
+var adminUser = 'Yanliang.Gu1@ibm.com';
 
 var agent = request.agent(app);
 
@@ -24,7 +25,7 @@ describe('Assessment API Test', function(){
   // do the login befre testing
   before(function(done) {
     agent
-      .get('/api/login/masquerade/Yanliang.Gu1@ibm.com')
+      .get('/api/login/masquerade/' + adminUser)
       .send()
       .end(function(err, res) {
         if (err) throw err;

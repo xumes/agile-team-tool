@@ -4,23 +4,23 @@ var crypto = require('crypto');
 var expect = chai.expect;
 var request = require('supertest');
 var iterationModel = require('../../../models/iteration');
-var iterationTestData = require('../../data/dummy-data.js');
+var iterationTestData = require('../../data/iteration.js');
 var app = require('../../../app');
 var validId;
 var docId;
 var iterationId;
 var adminUser = 'Yanliang.Gu1@ibm.com';
 
-var iterationDocValid = iterationTestData.iterations.iterationDocValid;
+var iterationDocValid = iterationTestData.iterationDocValid;
 iterationDocValid.last_updt_user = adminUser;
 
-var iterationDoc_duplicateIterName = iterationTestData.iterations.iterationDoc_duplicateIterName;
+var iterationDoc_duplicateIterName = iterationTestData.iterationDoc_duplicateIterName;
 iterationDoc_duplicateIterName.last_updt_user = adminUser;
 
-var iterationDocValid_sample2 = iterationTestData.iterations.iterationDocValid_sample2;
+var iterationDocValid_sample2 = iterationTestData.iterationDocValid_sample2;
 iterationDocValid_sample2.last_updt_user = adminUser;
 
-var iterationDocInvalid = iterationTestData.iterations.iterationDocInvalid;
+var iterationDocInvalid = iterationTestData.iterationDocInvalid;
 iterationDocInvalid.last_updt_user = adminUser;
 
 var agent = request.agent(app);

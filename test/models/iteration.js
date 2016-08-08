@@ -4,16 +4,16 @@ var chai = require('chai');
 var crypto = require('crypto');
 var expect = chai.expect;
 var iterationModel = require(root_path + 'models/iteration');
-var dummyData = require('../data/dummy-data.js');
+var dummyData = require('../data/iteration.js');
 var validId;
 var validTeamId;
 var timeout = 100000;
 var iterationId;
-var iterationDocValid = dummyData.iterations.iterationDocValid;
-var iterationDoc_duplicateIterName = dummyData.iterations.iterationDoc_duplicateIterName;
-var iterationDocValid_sample2 = dummyData.iterations.iterationDocValid_sample2;
-var iterationDocInvalid = dummyData.iterations.iterationDocInvalid;
-var user = dummyData.iterations.user;
+var iterationDocValid = dummyData.iterationDocValid;
+var iterationDoc_duplicateIterName = dummyData.iterationDoc_duplicateIterName;
+var iterationDocValid_sample2 = dummyData.iterationDocValid_sample2;
+var iterationDocInvalid = dummyData.iterationDocInvalid;
+var user = dummyData.user;
 
 describe('Iteration Model', function() {
 
@@ -154,7 +154,7 @@ describe('Iteration Model', function() {
       })
       .catch(function(err) {
         expect(err).to.not.equal(null);
-      })      
+      })
       .finally(function() {
         done();
       });
@@ -245,7 +245,7 @@ describe('Iteration Model', function() {
         done();
       });
     });
-    
+
     it('Return Iteration no/identifier already exists', function(done) {
       iterationModel.edit(iterationId, iterationDoc_duplicateIterName, user)
       .catch(function(err) {
