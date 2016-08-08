@@ -68,6 +68,7 @@ var infoLogs = function(msg){
 var assessment = {
   getTeamAssessments : function(teamId, callback) {
     return new Promise(function(resolve, reject){
+      var msg = '';
       if(!_.isEmpty(teamId)){
         infoLogs('Getting all team assessment records from Cloudant.');
         common.getByViewKey('agile', 'maturityAssessmentResult', teamId)
@@ -75,7 +76,8 @@ var assessment = {
             successLogs('Team '+teamId+' assessment records retrieved.');
             resolve(body);
           })
-          .catch(function(err){
+          .catch( /* istanbul ignore next */ function(err){
+            /* can't simulate Cloudant error during testing */
             msg = err.error;
             reject(formatErrMsg(msg));
           });
@@ -87,13 +89,15 @@ var assessment = {
   },
   getAssessmentTemplate : function(callback){
     return new Promise(function(resolve, reject){
+      var msg = '';
       infoLogs('Getting assessment template from Cloudant.');
       common.getByView('agile', 'maturityAssessment')
         .then(function(body){
           successLogs('Assessment template record retrieved.');
           resolve(body);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err){
+          /* can't simulate Cloudant error during testing */
           msg = err.error;
           reject(formatErrMsg(msg));
         });
@@ -101,6 +105,7 @@ var assessment = {
   },
   getAssessment : function(_id, callback){
     return new Promise(function(resolve, reject){
+      var msg = '';
       if(!_.isNull(_id) && !_.isEmpty(_id)){
         infoLogs('Getting assessment '+ _id +' record from Cloudant.');
         common.getRecord(_id)
@@ -118,11 +123,12 @@ var assessment = {
       }
     });
   },
-  addTeamAssessment : function(userId, data){
+  addTeamAssessment : function(userId, data, allTeams, userTeams){
     return new Promise(function(resolve, reject){
       infoLogs('addTeamAssessment user:'+userId+' team id:' +data.team_id+' status: '+data.assessmt_status);
+      var msg = '';
       validationError = [];
-      assessment.userValidation(userId, data.team_id)
+      util.isUserAllowed(userId, data.team_id, true, allTeams, userTeams)
         .then(function(body){
           var validateError;
           if(data.assessmt_status == 'Draft'){
@@ -159,11 +165,12 @@ var assessment = {
         });
       });
   },
-  updateTeamAssessment : function(userId, data){
+  updateTeamAssessment : function(userId, data, allTeams, userTeams){
     return new Promise(function(resolve, reject){
+      var msg = '';
       validationError = [];
       infoLogs('updateTeamAssessment '+userId+', team id: '+data.team_id);
-      assessment.userValidation(userId, data.team_id)
+      util.isUserAllowed(userId, data.team_id, true, allTeams, userTeams)
         .then(function(body){
           if(data.assessmt_status == 'Draft'){
             validateError = validate(data, recordConstraints);
@@ -199,14 +206,15 @@ var assessment = {
         });
       });
   },
-  deleteAssessment : function(userId, _id, _rev, callback){
+  deleteAssessment : function(userId, _id, _rev, allTeams, userTeams){
     return new Promise(function(resolve, reject){
+      var msg = '';
       infoLogs('Delete assessment '+ _id +' record rev '+_rev+ ' by '+userId+' to Cloudant.');
       if(!lodash.isEmpty(_id) && !lodash.isEmpty(_rev)){
         assessment.getAssessment(_id)
         .then(function(body){
           var teamId = body.team_id;
-          return assessment.userValidation(userId, teamId);
+          return util.isUserAllowed(userId, teamId, true, allTeams, userTeams);
         })
         .then(function(body){
           infoLogs('Delete assessment '+ _id +' record rev '+_rev+' to Cloudant.');
@@ -228,18 +236,6 @@ var assessment = {
         msg = 'No id/rev for record deletion.';
         reject(formatErrMsg(msg));
       }
-    });
-  },
-  userValidation : function(userId, teamId){
-    return new Promise(function(resolve, reject){
-      infoLogs('model validating user '+userId+' for team '+teamId);
-      util.isValidUser(userId, teamId, true)
-      .then(function(allowedUser){
-        resolve(allowedUser);
-      })
-      .catch(function(err){
-         reject(err);
-      });
     });
   }
 };

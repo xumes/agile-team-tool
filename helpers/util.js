@@ -285,3 +285,68 @@ module.exports.formatForBulkTransaction = function(docs, email, action){
     docs : reformatDocu
   };
 }
+
+module.exports.isTeamMember = function(teamId, checkParent, teamLists, userTeams) {
+  var userExist = false;
+  if (teamLists == null)
+    return userExist;
+
+  if (userTeams != null) {
+    for (var i in userTeams) {
+      if (userTeams[i]['_id'] == teamId) {         
+        userExist = true;
+        break;
+      }
+    }
+  } 
+
+  if (!userExist && checkParent) {
+    for ( var i = 0; i < teamLists.length; i++) {
+      if (teamLists[i]['_id'] == teamId && teamLists[i].value != undefined && teamLists[i].value.parent_team_id != "") {
+        return module.exports.isTeamMember(teamLists[i].value.parent_team_id, checkParent, teamLists, userTeams);
+      }
+    }
+  }
+
+  return userExist;
+}
+
+/**
+ * This will validate user access for create/update/delete operations
+ * 
+ * @param userId - user login id (email id)
+ * @param teamId - email address as last update user, ie logged in user
+ * @param checkParent - action to perfrom ie. update or delete
+ * @param allTeams - action to perfrom ie. update or delete
+ * @param userTeams - action to perfrom ie. update or delete
+ * @returns - true if access allowed otherwise throws an error with unauthorized user message
+ */
+
+module.exports.isUserAllowed = function(userId, teamId, checkParent, allTeams, userTeams){
+  return new Promise(function(resolve, reject){
+    loggers.get('models').info('validating user '+userId+' for team '+teamId);
+    module.exports.getAdmins('ag_ref_access_control')
+    .then(function(body){
+      return _.contains(body.ACL_Full_Admin, userId);
+    })
+    .then(function(isAdmin){
+      if (!isAdmin){
+        return module.exports.isTeamMember(teamId, checkParent, allTeams, userTeams);
+      }
+      else{
+        return isAdmin;
+      }
+    })
+    .then(function(allowedUser){
+      if (!allowedUser){
+        reject(formatErrMsg('Unauthorized user.'));
+      }
+      else{
+        resolve(allowedUser);
+      }
+    })
+    .catch(function(err){
+      reject(formatErrMsg(err.error));
+    });
+  });
+}
