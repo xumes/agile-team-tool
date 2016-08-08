@@ -106,7 +106,7 @@ describe('Assessment API Test', function(){
       });
     });
 
-    it('add assessment with empty assesment id', function(done){
+    it('add assesment with empty assesment id', function(done){
       var emptyId = _.clone(curr_assessment);
       emptyId._id = '';
       var req = request(app).post('/api/assessment/');
