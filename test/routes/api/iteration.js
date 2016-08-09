@@ -4,6 +4,7 @@ var crypto = require('crypto');
 var expect = chai.expect;
 var request = require('supertest');
 var iterationModel = require('../../../models/iteration');
+var teamModel = require('../../../models/teams');
 var iterationTestData = require('../../data/iteration.js');
 var app = require('../../../app');
 var validId;
@@ -25,16 +26,41 @@ iterationDocInvalid.last_updt_user = adminUser;
 
 var agent = request.agent(app);
 
+var teamDocValid = iterationTestData.iterations.teamDocValid;
+var userDetails = iterationTestData.iterations.userDetails;
+var userTeams = iterationTestData.iterations.userTeams;
+var allTeams = iterationTestData.iterations.allTeams;
+var user = iterationTestData.iterations.user;
+
 describe('Iteration API Test', function(){
-  // do the login befre testing
   before(function(done) {
-    agent
-      .get('/api/login/masquerade/' + adminUser)
-      .end(function(err, res) {
-        if (err) throw err;
-        agent.saveCookies(res);
-        done();
-      })
+    // If team document 'testteamid_1' does not exist lets create it because iteration info needs it
+    var teamName = 'testteamid_1';
+    teamModel.getName(teamName)
+    .then(function(result) {
+      if (result.length == 0) {
+        teamModel.createTeam(teamDocValid, userDetails)
+        .then(function(body) {
+          expect(body).to.be.a('object');
+          expect(body).to.have.property('_id');
+          var createdId = body['_id'];
+          validTeamId = body['key'];
+        });
+      } else {
+        validTeamId = result[0].key;
+      }
+    })
+    .finally(function() {
+      // done();
+      // do the login befre testing
+      agent
+        .get('/api/login/masquerade/' + adminUser)
+        .end(function(err, res) {
+          if (err) throw err;
+          agent.saveCookies(res);
+          done();
+        });
+    });
   });
 
   // delete the iteration file created in the test

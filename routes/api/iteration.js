@@ -4,6 +4,7 @@ var iterationModel = require('../../models/iteration');
 var loggers = require('../../middleware/logger');
 var validate = require('validate.js');
 var _ = require('underscore');
+var sprintf = require("sprintf-js").sprintf;
 
 var formatErrMsg = function(msg){
   loggers.get('api').info('Error: ' + msg);
@@ -82,7 +83,7 @@ module.exports = function(app, includes) {
     }
     // loggers.get('api').info('[createIteration] POST data:', data);
     // console.log('[createIteration] POST data:', data);
-    iterationModel.add(data, req.session['user'])
+    iterationModel.add(data, req.session['user'], req.session["allTeams"], req.session["myTeams"])
     .then(function(result) {
       res.send(result);
     })
@@ -109,7 +110,7 @@ module.exports = function(app, includes) {
       return res.status(400).send({ error: 'Iteration data is missing' });
     }
     // loggers.get('api').info('[updateIteration] POST data:', JSON.stringify(data, null, 4));
-    iterationModel.edit(curIterationId, data, req.session['user'])
+    iterationModel.edit(curIterationId, data, req.session['user'], req.session["allTeams"], req.session["myTeams"])
     .then(function(result) {
       res.send(result);
     })
@@ -120,6 +121,39 @@ module.exports = function(app, includes) {
     });
   };
 
+  var getCompletedTeamIteration = function(req, res, next) {
+    var team_id = req.query.team_id;
+    var end_date1 = req.query.end_date1;
+    var end_date2 = req.query.end_date2;
+
+    if (!team_id) {
+      return res.status(400).send({ error: 'Team Id is missing' });
+    }
+
+    if (!end_date1) {
+      return res.status(400).send({ error: 'Earliest end date is missing' });
+    }
+
+    if (!end_date2) {
+      return res.status(400).send({ error: 'Latest end date is missing' });
+    }
+
+    loggers.get('api').info('[iterationRoute.getCompletedTeamIteration] team_id:%s end_date1:%s end_date2:%s', team_id, end_date1, end_date2);
+    var q = '';
+    q = sprintf("team_id:%s AND status:Completed end_date:[%s TO %s]&sort=-end_date", team_id, end_date1, end_date2);
+    loggers.get('api').info('[iterationRoute.getCompletedTeamIteration] q:' + q);
+    iterationModel.completedTeamIteration(q)
+    .then(function(result) {
+      return res.status(200).send(result);
+    })
+    .catch( /* istanbul ignore next */ function(err) {
+      /* cannot simulate Cloudant error during testing */
+      formatErrMsg('[iterationRoute.getCompletedTeamIteration]:', err);
+      return res.status(400).send({ error: err });
+    });
+  };
+
+  app.get('/api/iteration/completed/byteam', [includes.middleware.auth.requireLogin], getCompletedTeamIteration);
   app.get('/api/iteration/completed', [includes.middleware.auth.requireLogin], getCompletedIterations);
   app.get('/api/iteration/:teamId?', [includes.middleware.auth.requireLogin], getIterinfo);
   app.get('/api/iteration/current/:id', [includes.middleware.auth.requireLogin], getIterationDoc);

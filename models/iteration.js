@@ -107,7 +107,9 @@ var iteration = {
     return duplicate;
   },
 
-  add: function(data, user) {
+  add: function(data, user, allTeams, userTeams) {
+    // loggers.get('models').info('[iterationModel.add] allTeams:', JSON.stringify(allTeams));
+    loggers.get('models').info('[iterationModel.add] userTeams:', JSON.stringify(userTeams));
     var cleanData = {};
     data['last_updt_dt'] = util.getServerTime();
     data['iterationinfo_status'] = iteration.calculateStatus(data);
@@ -125,7 +127,7 @@ var iteration = {
       if (validationErrors) {
         reject(formatErrMsg(validationErrors));
       } else {
-        util.isValidUser(user_id, team_id, checkParent)
+        util.isUserAllowed(user_id, team_id, checkParent, allTeams, userTeams)
         .then(function(validUser) {
           // console.log('[add] isValidUser:', validUser);
           if (validUser) {
@@ -175,7 +177,7 @@ var iteration = {
     });
   },
 
-  edit: function(iterationId, data, user) {
+  edit: function(iterationId, data, user, allTeams, userTeams) {
     var cleanData = {};
     data['last_updt_dt'] = util.getServerTime();
     data['last_updt_user'] = user['shortEmail'];
@@ -191,7 +193,7 @@ var iteration = {
       if (validationErrors) {
         reject(formatErrMsg(validationErrors));
       } else {
-        util.isValidUser(user_id, team_id, checkParent)
+        util.isUserAllowed(user_id, team_id, checkParent, allTeams, userTeams)
         .then(function(validUser) {
           // console.log('[edit] isValidUser:', validUser);
           if (validUser) {
@@ -279,7 +281,7 @@ var iteration = {
         .catch( /* istanbul ignore next */ function(err) {
           /* cannot simulate Cloudant error during testing */
           formatErrMsg('[iterationModel.edit] Err1:', err);
-          loggers.get('models').error('[iterationModel.edit] Err1: %s', err);
+          loggers.get('models').error('[iterationModel.edit] Err1:', err);
           var msg = err.message;
           reject(formatErrMsg(msg));
         });
@@ -350,6 +352,19 @@ var iteration = {
     }
 
     return status;
+  },
+
+  completedTeamIteration: function(q) {
+    return new Promise(function(resolve, reject) {
+      common.Search('iterations', 'searchAll', true, q)
+      .then(function(body) {
+        resolve(body);
+      })
+      .catch(function(err) {
+        var msg = err.error;
+        reject(formatErrMsg(msg));
+      });
+    });
   }
 
 };

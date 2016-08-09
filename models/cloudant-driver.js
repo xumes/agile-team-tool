@@ -118,3 +118,16 @@ exports.bulkUpdate = function(data) {
     })
   });
 };
+
+exports.Search = function(_design, _view, _include_docs, q) {
+  return new Promise(function(resolve, reject) {
+    _include_docs = _include_docs || false;
+    db.searchAsync(_design, _view, { 'q': q, 'include_docs': _include_docs })
+      .then(function(body) {
+        resolve(body);
+      })
+      .catch(function(err) {
+        reject(err);
+      });
+  });
+}
