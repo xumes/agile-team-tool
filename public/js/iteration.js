@@ -239,39 +239,47 @@ function setToolTips() {
 }
 
 function teamMemCount() {
-  var teamCount = 0;
-  var tmArr = [];
-  for ( var i = 0; i < teams.length; i++) {
-    if (teams[i]._id == $("#teamSelectList").val()) {
-      currentTeam = teams[i];
-      if (currentTeam.members != undefined) {
-        $.each(teams[i].members, function(key, member) {
-          if (tmArr.indexOf(member.id) == -1) {
-            teamCount++;
-            tmArr.push(member.id);
-          }
-        });
-      }
-    }
-  }
-  return teamCount;
+  var currentTeam = allTeamsLookup[($("#teamSelectList").val())];
+  if (!_.isEmpty(currentTeam)) {
+    return currentTeam.total_members;
+  } else return 0;
+  // var teamCount = 0;
+  // var tmArr = [];
+  // for ( var i = 0; i < teams.length; i++) {
+  //   if (teams[i]._id == $("#teamSelectList").val()) {
+  //     currentTeam = teams[i];
+  //     if (currentTeam.members != undefined) {
+  //       $.each(teams[i].members, function(key, member) {
+  //         if (tmArr.indexOf(member.id) == -1) {
+  //           teamCount++;
+  //           tmArr.push(member.id);
+  //         }
+  //       });
+  //     }
+  //   }
+  // }
+  // return teamCount;
 }
 
 function teamMemFTE() {
-  var teamCount = 0;
-  for ( var i = 0; i < teams.length; i++) {
-    if (teams[i]._id == $("#teamSelectList").val()) {
-      currentTeam = teams[i];
-      if (currentTeam.members != undefined) {
-        $.each(teams[i].members, function(key, member) {
-          teamCount = teamCount + member.allocation;
-        });
-      }
-    }
-  }
-  var val = parseFloat(teamCount / 100).toFixed(1);
+  var currentTeam = allTeamsLookup[($("#teamSelectList").val())];
+  if (!_.isEmpty(currentTeam)) {
+    return currentTeam.total_allocation;
+  } else return 0;
+  // var teamCount = 0;
+  // for ( var i = 0; i < teams.length; i++) {
+  //   if (teams[i]._id == $("#teamSelectList").val()) {
+  //     currentTeam = teams[i];
+  //     if (currentTeam.members != undefined) {
+  //       $.each(teams[i].members, function(key, member) {
+  //         teamCount = teamCount + member.allocation;
+  //       });
+  //     }
+  //   }
+  // }
+  // var val = parseFloat(teamCount / 100).toFixed(1);
 
-  return val;
+  // return val;
 }
 
 function refreshFTE() {
@@ -568,6 +576,7 @@ function addIteration(action) {
     async : false
   }).done(function(data) {
     if (data != undefined) {
+      updateAgileTeamCache(data);
       var jsonData = data;
       if (jsonData.squadteam != undefined && jsonData.squadteam.toLowerCase() == "no") {
         showMessagePopup("Team information has been changed to non squad.  Iteration information cannot be entered for non squad teams.");
@@ -823,11 +832,11 @@ function updateIterationInfo(action) {
 function addComputedDays(date) {
   /*var result = new Date(date);
   if (result.getDay() == 0) // Sunday
-    return addDays(date, 13);
-  if (result.getDay() == 1) // Monday
     return addDays(date, 12);
+  else if (result.getDay() == 1) // Monday
+    return addDays(date, 11);
   else
-    return addDays(date, 14);*/
+    return addDays(date, 13);*/
   return addDays(date, 13);
 }
 
@@ -842,7 +851,7 @@ function addDays(date, days) {
   /*
    * if(isNaN(day)){ return ""; }
    */
-  return month + "/" + day + "/" + result.getUTCFullYear();
+  return month + "/" + day + "/" + result.getFullYear();
 }
 
 function clearHighlightedIterErrors() {

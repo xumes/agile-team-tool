@@ -383,7 +383,7 @@ function showDateDDMMMYYYYTS(formatDate) {
 	var monthIndex = dateArr[1];
 	var year = dateArr[0];
 
-	return (day+monthNames[monthIndex-1]+year+" "+tsArr[1]+" "+tsArr[2]);
+	return (day+monthNames[monthIndex-1]+year+" "+tsArr[1]+" "+(tsArr.length > 2 ? tsArr[2] : ""));
 }
 
 function formatDDMMMYYYY(formatDate) {

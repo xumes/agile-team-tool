@@ -614,6 +614,52 @@ function getTeam(docId, _callback, args) {
 	return getRemoteData(docUrl, _callback, args);
 }
 
+function getAgileTeamCache(id) {
+	var copy = (_.isEmpty(allTeamsLookup[id]) || _.isEmpty(allTeamsLookup[id].doc)) ? allTeamsLookup[id] : allTeamsLookup[id].doc;
+	// return a copy of the object
+	return $.extend(true, {}, copy);
+	// return (_.isEmpty(allTeamsLookup[id]) || _.isEmpty(allTeamsLookup[id].doc)) ? allTeamsLookup[id] : allTeamsLookup[id].doc;
+}
+
+function compactTeam(team) {
+  var compactedTeam = new Object();
+  if (!_.isEmpty(team)) {
+    var teamMembers = [];
+    var teamCount = 0;
+    var teamAlloc = 0;
+    for (var i in team.members) {
+      if (teamMembers.indexOf(team.members[i].id) == -1) {
+        teamCount++;
+        teamMembers.push(team.members[i].id);
+      }
+      teamAlloc += parseInt(team.members[i].allocation);
+    }
+    teamAlloc = teamAlloc/100;
+    compactedTeam['_id'] = team._id, 
+    compactedTeam['name'] = team.name, 
+    compactedTeam['squadteam'] = team.squadteam,
+    compactedTeam['parent_team_id'] = team.parent_team_id,
+    compactedTeam['child_team_id'] = team.child_team_id,
+    compactedTeam['total_members'] = teamCount,
+    compactedTeam['total_allocation'] = teamAlloc
+    compactedTeam['doc'] = team;
+  }
+  return compactedTeam;
+};
+
+function updateAgileTeamCache(team) {
+  if (!_.isEmpty(allTeamsLookup) && !_.isEmpty(team)) {
+    var compactedTeam = compactTeam(team);
+    if (_.isEmpty(allTeamsLookup[team._id]))
+      allTeams.push(compactedTeam);
+    else
+      _.extend(_.findWhere(allTeams, { _id: team._id}), compactedTeam)
+
+    allTeamsLookup[team._id] = compactedTeam;
+  }
+  allTeams = _.sortBy(allTeams, function(team) {return team.name});
+};
+
 /**
  * Team document template to arrange field order accordingly.
  * @returns - empty team document.

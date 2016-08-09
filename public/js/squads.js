@@ -199,52 +199,6 @@ function agileTeamListHandler(teamId, teamList) {
 	$("#teamSelectList").removeAttr("disabled");
 }
 
-function getAgileTeamCache(id) {
-	var copy = (_.isEmpty(allTeamsLookup[id]) || _.isEmpty(allTeamsLookup[id].doc)) ? allTeamsLookup[id] : allTeamsLookup[id].doc;
-	// return a copy of the object
-	return $.extend(true, {}, copy);
-	// return (_.isEmpty(allTeamsLookup[id]) || _.isEmpty(allTeamsLookup[id].doc)) ? allTeamsLookup[id] : allTeamsLookup[id].doc;
-}
-
-function compactTeam(team) {
-  var compactedTeam = new Object();
-  if (!_.isEmpty(team)) {
-    var teamMembers = [];
-    var teamCount = 0;
-    var teamAlloc = 0;
-    for (var i in team.members) {
-      if (teamMembers.indexOf(team.members[i].id) == -1) {
-        teamCount++;
-        teamMembers.push(team.members[i].id);
-      }
-      teamAlloc += parseInt(team.members[i].allocation);
-    }
-    teamAlloc = teamAlloc/100;
-    compactedTeam['_id'] = team._id, 
-    compactedTeam['name'] = team.name, 
-    compactedTeam['squadteam'] = team.squadteam,
-    compactedTeam['parent_team_id'] = team.parent_team_id,
-    compactedTeam['child_team_id'] = team.child_team_id,
-    compactedTeam['total_members'] = teamCount,
-    compactedTeam['total_allocation'] = teamAlloc
-    compactedTeam['doc'] = team;
-  }
-  return compactedTeam;
-};
-
-function updateAgileTeamCache(team) {
-  if (!_.isEmpty(allTeamsLookup) && !_.isEmpty(team)) {
-    var compactedTeam = compactTeam(team);
-    if (_.isEmpty(allTeamsLookup[team._id]))
-      allTeams.push(compactedTeam);
-    else
-      _.extend(_.findWhere(allTeams, { _id: team._id}), compactedTeam)
-
-    allTeamsLookup[team._id] = compactedTeam;
-  }
-  allTeams = _.sortBy(allTeams, function(team) {return team.name});
-};
-
 function agileTeamRolesHandler(roles) {
 	var listOption = [];
 	for(var i=0; i<roles.length; i++) {
@@ -842,40 +796,44 @@ function updateAction(action) {
 	}
 }
 
-function handleTeamValidationErrors(errMsgs, action) {
-	if (!_.isEmpty(errMsgs)) {
-		var msg = '';
-		if (errMsgs.error instanceof Array || errMsgs.error instanceof Object)
-		  _.each(errMsgs.error, function (err) {
-		    msg = msg + err;
-		    msg = msg + '<br>';
-		  });
-		else
-			msg = errMsgs.error;
-	 }
+function handleTeamValidationErrors(errors, action) {
+	var fields = {
+    '_id': '',
+    'name': 'teamName',
+    'desc': 'teamDesc',
+    'squadteam': '',
+    'role': '',
+    'parent_team_id': 'parentSelectList',
+    'child_team_id': 'childSelectList'
+  };
 
-  showMessagePopup(msg);
-	if (_.has(errMsgs.error, "name"))
-		setFieldErrorHighlight("teamName");
-	if (_.has(errMsgs.error, "desc"))
-		setFieldErrorHighlight("teamDesc");
-	if (_.has(errMsgs.error, "squadteam")) {
-		// squadteam field error means this cannot be updated due to child or iteration related information
-		$("#teamSquadYesNo").attr("disabled", "disabled");
-		$("#select2-teamSquadYesNo-container").css('color', 'grey');
-	}
-	if (_.has(errMsgs.error, "members.name"))
-		setFieldErrorHighlight("teamMemberName");
-	if (_.has(errMsgs.error, "members.allocation"))
-		setFieldErrorHighlight("memberAllocation");
-	if (_.has(errMsgs.error, "members.role")) {
-		if ($("#memberRoleSelectList option:selected").val() == "other")
-			setFieldErrorHighlight("otherRoleDesc");
-		else
-			setFieldErrorHighlight("memberRoleSelectList");
-	}
-	if (_.has(errMsgs.error, "child_team_id"))
-		setFieldErrorHighlight("childSelectList");
+  var msgs = '';
+  errors = _.reduce(errors);
+  Object.keys(fields).forEach(function(key, index) {
+  	console.log("keys: " + key);
+    var frmElement = fields[key];
+    if (errors[key]) {
+    	if (frmElement == 'member.role') {
+    		if ($("#memberRoleSelectList option:selected").val() == "other")
+					setFieldErrorHighlight("otherRoleDesc");
+				else
+					setFieldErrorHighlight("memberRoleSelectList");
+    	} else if (frmElement) {
+        setFieldErrorHighlight(frmElement);
+      }
+      msgs = msgs + errors[key][0] + "<br>";
+    } else {
+      if (frmElement == 'member.role') {
+    		if ($("#memberRoleSelectList option:selected").val() == "other")
+					clearFieldErrorHighlight("otherRoleDesc");
+				else
+					clearFieldErrorHighlight("memberRoleSelectList");
+    	} else if (frmElement) {
+        clearFieldErrorHighlight(frmElement);
+      }
+    }
+  });
+  showMessagePopup(msgs);
 
 	// enable necessary controls
 	if (action == "add")
@@ -892,8 +850,6 @@ function handleTeamValidationErrors(errMsgs, action) {
 		$("#addMemberBtn").removeAttr("disabled");
 	else if (action == "updateTeamMember")
 		$("#updateMemberBtn").removeAttr("disabled");
-	else
-		alert(action);
 }
 
 function deleteTeam() {
