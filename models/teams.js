@@ -156,7 +156,7 @@ var team = {
             // validating required fields
             var validateTeam = validate(updatedTeamDoc, teamDocRules);
             if(!(_.isEmpty(validateTeam))){
-              reject(formatErrMsg(errorLists));
+              reject(formatErrMsg(validateTeam));
             }
             // this is team update, need additional validation
             /*

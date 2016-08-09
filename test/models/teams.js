@@ -118,17 +118,15 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
   });
 
   it('it will return success after updating document', function(done){
-    teamDocUpdateValid['name'] = teamDocUpdateValid['name'] + 'new name';
+    teamDocUpdateValid = dummyData.teams.validUpdateDoc();
     teamDocUpdateValid['_id'] = createdId;
-    delete teamDocUpdateValid['squadteam'];
     delete teamDocUpdateValid['child_team_id'];
     delete teamDocUpdateValid['parent_team_id'];
     teamModel.updateOrDeleteTeam(teamDocUpdateValid, userDetailsValid, 'update')
     .then(function(body){
       expect(body).to.be.a('object');
-      expect(body).to.have.property('id');
-      expect(body).to.have.property('ok');
-      expect(body.ok).to.be.equal(true);
+      expect(body).to.have.property('_id');
+      expect(body['_id']).to.be.equal(createdId);
     })
     .catch(function(err){
       expect(err.error).to.be.an('undefined');
