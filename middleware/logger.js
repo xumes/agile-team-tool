@@ -18,6 +18,15 @@ var logger = new (winston.Logger)({
   ]
 });
 
+winston.loggers.add('init', {
+  console: {
+    level: logLevel,
+    colorize: true,
+    label: 'init'
+  }
+});
+
+
 winston.loggers.add('auth', {
   console: {
     level: logLevel,

@@ -9,7 +9,22 @@ var passport     = require('passport');
 var settings     = require('./settings');
 var RedisStore   = require('connect-redis')(session);
 var favicon      = require('serve-favicon');
-var helmet       = require('helmet')
+var helmet       = require('helmet');
+var initCloudant = require('./cloudant/init');
+var loggers      = require('./middleware/logger')
+
+/* istanbul ignore if */
+if (process.env.NODE_ENV !== 'test'){
+  require('fs').readFile('./art', 'utf8', function (err,data) {
+    console.log(data);
+    loggers.get('init').info("Configuration Settings:");
+    console.log(settings);
+    initCloudant.init();
+  });
+}
+else
+  initCloudant.init();
+
 
 var app = express();
 app.use(favicon(__dirname + '/public/img/favicon.ico'));
@@ -96,9 +111,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
-/* istanbul ignore if */
-if (process.env.NODE_ENV !== 'test')
-  console.log(settings)
 
 module.exports = app;
