@@ -14,8 +14,8 @@ var initCloudant = require('./cloudant/init');
 var loggers      = require('./middleware/logger')
 
 /* istanbul ignore if */
-require('fs').readFile('./art', 'utf8', function (err,data) {
-  console.log(data);
+require('fs').readFile('./art', 'utf8', function (err,art) {
+  console.log(art);
   loggers.get('init').info("Configuration Settings:");
   console.log(settings);
   console.log("\n\n");
