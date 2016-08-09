@@ -14,17 +14,13 @@ var initCloudant = require('./cloudant/init');
 var loggers      = require('./middleware/logger')
 
 /* istanbul ignore if */
-if (process.env.NODE_ENV !== 'test'){
-  require('fs').readFile('./art', 'utf8', function (err,data) {
-    console.log(data);
-    loggers.get('init').info("Configuration Settings:");
-    console.log(settings);
-    initCloudant.init();
-  });
-}
-else
+require('fs').readFile('./art', 'utf8', function (err,data) {
+  console.log(data);
+  loggers.get('init').info("Configuration Settings:");
+  console.log(settings);
+  console.log("\n\n");
   initCloudant.init();
-
+});
 
 var app = express();
 app.use(favicon(__dirname + '/public/img/favicon.ico'));
