@@ -23,7 +23,7 @@ var isValidEmail = function(email){
 };
 
 var isModel = function(req){
-  return (typeof req === 'string' && !(_.isEmpty(req)) && isValidEmail(req) === null) ? true : false;
+  return (typeof req === 'string' && !(_.isEmpty(req)) && isValidEmail(req) === undefined) ? true : false;
 }
 
 var formattedCache = function(allCache){
@@ -185,79 +185,83 @@ var userCache = {
   },
 
   setSystemInfoCache: function(req, res, next) {
-    var userEmail = null;
-    var isRoute = true;
-    if(isModel(req)){ // explicitly passing an email as req means that we are calling this middleware from models
-      userEmail = req;
-      isRoute = false;
-    }else{ // if req is an object, this is from routes
-      userEmail = req.session['email'];
-    }
-    Promise.all(
-      [
-        users.getAdmins(),
-        util.getSystemStatus('ag_ref_system_status_control')
-      ])
-      .then(function(result) {
-        var allCache = {
-          'systemAdmin' : result[0],
-          'systemStatus' : result[1]
-        };
-        if(isRoute){ // this was accessed via routes middleware, set as session
-          _.each(allCache, function(v,i,l){
-            var obj = returnObject(v);
-            req.session[i] = obj;
-          });
-          infoLogs('Cache variable for setSystemInfoCache set as session');
+    return new Promise(function(resolve, reject){
+      var userEmail = null;
+      var isRoute = true;
+      if(isModel(req)){ // explicitly passing an email as req means that we are calling this middleware from models
+        userEmail = req;
+        isRoute = false;
+      }else{ // if req is an object, this is from routes
+        userEmail = req.session['email'];
+      }
+      Promise.all(
+        [
+          users.getAdmins(),
+          util.getSystemStatus('ag_ref_system_status_control')
+        ])
+        .then(function(result) {
+          var allCache = {
+            'systemAdmin' : result[0],
+            'systemStatus' : result[1]
+          };
+          if(isRoute){ // this was accessed via routes middleware, set as session
+            _.each(allCache, function(v,i,l){
+              var obj = returnObject(v);
+              req.session[i] = obj;
+            });
+            infoLogs('Cache variable for setSystemInfoCache set as session');
+            return next();
+          }else{ // accessed via models, return as object
+            infoLogs('Cache variable for setSystemInfoCache is not set as session');
+            resolve(formattedCache(allCache));
+          }
+        })
+        .catch(function(err) {
+          infoLogs(err);
           return next();
-        }else{ // accessed via models, return as object
-          infoLogs('Cache variable for setSystemInfoCache is not set as session');
-          resolve(formattedCache);
-        }
-      })
-      .catch(function(err) {
-        infoLogs(err);
-        return next();
+        });
       });
   },
 
   setHomeCache: function(req, res, next) {
-    var userEmail = null;
-    var isRoute = true;
-    if(isModel(req)){ // explicitly passing an email as req means that we are calling this middleware from models
-      userEmail = req;
-      isRoute = false;
-    }else{ // if req is an object, this is from routes
-      userEmail = req.session['email'];
-    }
-    Promise.all(
-      [
-        teamModel.getTeam(), 
-        teamModel.getTeamByEmail(userEmail),
-        users.getAdmins(),
-        util.getSystemStatus('ag_ref_system_status_control')
-      ])
-      .then(function(result){
-        var allCache = {
-          'allTeamsLookup' : result[0],
-          'allTeams' : result[0],
-          'myTeams' : result[1],
-          'systemAdmin' : result[2],
-          'systemStatus' : result[3]
-        };
-        if(isRoute){ // this was accessed via routes middleware, set as session
-          infoLogs('Cache variable for setHomeCache set as session');
-          _.each(formattedCache(allCache), function(v,i,l){
-            req.session[i] = v;
-          });
+    return new Promise(function(resolve, reject){
+      var userEmail = null;
+      var isRoute = true;
+      if(isModel(req)){ // explicitly passing an email as req means that we are calling this middleware from models
+        userEmail = req;
+        isRoute = false;
+      }else{ // if req is an object, this is from routes
+        userEmail = req.session['email'];
+      }
+      Promise.all(
+        [
+          teamModel.getTeam(), 
+          teamModel.getTeamByEmail(userEmail),
+          users.getAdmins(),
+          util.getSystemStatus('ag_ref_system_status_control')
+        ])
+        .then(function(result){
+          var allCache = {
+            'allTeamsLookup' : result[0],
+            'allTeams' : result[0],
+            'myTeams' : result[1],
+            'systemAdmin' : result[2],
+            'systemStatus' : result[3]
+          };
+          if(isRoute){ // this was accessed via routes middleware, set as session
+            infoLogs('Cache variable for setHomeCache set as session');
+            _.each(formattedCache(allCache), function(v,i,l){
+              req.session[i] = v;
+            });
+            return next();
+          }else{ // accessed via models, return as object
+            infoLogs('Cache variable for setHomeCache is not set as session');
+            resolve(formattedCache(allCache));
+          }
+        })
+        .catch(function(err) {
           return next();
-        }else{ // accessed via models, return as object
-          infoLogs('Cache variable for setHomeCache is not set as session');
-          resolve(formattedCache(allCache));
-        }
-      })
-      .catch(function(err) {
-        return next();
+        });
       });
   },
 
