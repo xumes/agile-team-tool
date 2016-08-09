@@ -1,5 +1,10 @@
 var crypto = require('crypto');
 var iterations = {
+  teamDocValid: {
+    name : 'testteamid_1',
+    desc : 'team document description',
+    squadteam : 'No'
+  },
   iterationDocValid: {
     "_id": "testmyid-" + crypto.randomBytes(20).toString('hex'),
     "type": "iterationinfo",

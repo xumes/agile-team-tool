@@ -4,6 +4,7 @@ var expect = chai.expect;
 var iterationModel = require('../../models/iteration');
 var teamModel = require('../../models/teams');
 var dummyData = require('../data/iteration.js');
+var timeout = 100000;
 var validId;
 var validTeamId;
 var iterationId;
@@ -27,7 +28,7 @@ describe('Iteration Model', function() {
         .then(function(body) {
           expect(body).to.be.a('object');
           expect(body).to.have.property('_id');
-          var createdId = body['_id'];
+          validId = body['_id'];
           validTeamId = body['key'];
         });
       } else {
@@ -40,7 +41,9 @@ describe('Iteration Model', function() {
   });
 
   describe('[add]: Add team iteration document', function() {
+    this.timeout(timeout);
     it('It will successfully add new iteration document', function(done) {
+      iterationDocValid.iteration_name = "testiterationname-" + crypto.randomBytes(4).toString('hex');
       iterationModel.add(iterationDocValid, user, allTeams, userTeams)
       .then(function(result) {
         iterationId = result.id;
@@ -56,6 +59,7 @@ describe('Iteration Model', function() {
     });
 
     it('Return Iteration no/identifier already exists', function(done) {
+      this.timeout(timeout);
       iterationModel.add(iterationDoc_duplicateIterName, user, allTeams, userTeams)
       .catch(function(err) {
         expect(err).to.not.equal(null);
@@ -77,46 +81,6 @@ describe('Iteration Model', function() {
   });
 
   describe('[getByIterInfo]: Get iteration document', function() {
-    this.timeout(timeout);
-    before(function(done) {
-      iterationModel.add(iterationDocValid, user, allTeams, userTeams)
-      .then(function(result) {
-        validId = result.id;
-        expect(result).to.be.a('object');
-        expect(result).to.have.property('id');
-        expect(result.ok).to.be.equal(true);
-      })
-      .catch(function(err) {
-        expect(err).to.not.equal(null);
-      })
-      .finally(function() {
-        done();
-      });
-    });
-
-    after(function(done) {
-      iterationModel.get(validId)
-      .then(function(result) {
-        var _id = result._id;
-        var _rev = result._rev;
-        iterationModel.delete(_id, _rev)
-        .then(function(result) {
-          // console.log('Successfully deleted Doc validId: '+_id);
-        })
-        .catch(function(err) {
-          // console.log('Err: Attempt to delete Doc1 docId: ' + _id);
-          expect(err).to.not.equal(null);
-        });
-      })
-      .catch(function(err) {
-        // console.log('Err: Attempt to delete Doc validId: ' + validId);
-        expect(err).to.not.equal(null);
-      })
-      .finally(function() {
-        done();
-      });
-    });
-
     it('Get all team iteration documents', function(done) {
       iterationModel.getByIterInfo(null)
       .then(function(result){
@@ -164,45 +128,32 @@ describe('Iteration Model', function() {
   });
 
   describe('[get]: Get specific iteration document', function() {
-    this.timeout(timeout);
     before(function(done) {
-      iterationModel.add(iterationDocValid, user, allTeams, userTeams)
+      iterationModel.getByIterInfo('testteamid_1')
       .then(function(result) {
-        validId = result.id;
-        // console.log('result validId:', validId);
-        expect(result).to.be.a('object');
-        expect(result).to.have.property('id');
-        expect(result.ok).to.be.equal(true);
-      })
-      .catch(function(err) {
-        expect(err).to.not.equal(null);
-      })
-      .finally(function() {
-        done();
-      });
-    });
-
-    after(function(done) {
-      iterationModel.get(validId)
-      .then(function(result) {
-        var _id = result._id;
-        var _rev = result._rev;
-        iterationModel.delete(_id, _rev)
-        .then(function(result) {
-          // console.log('Successfully deleted Doc validId: '+_id);
-        })
-        .catch(function(err) {
-          // console.log('Err: Attempt to delete Doc1 docId: ' + _id);
-          expect(err).to.not.equal(null);
-        });
-      })
-      .catch(function(err) {
-        done(err);
+        if (result.rows.length == 0) {
+          iterationModel.add(iterationDocValid, user, allTeams, userTeams)
+          .then(function(result) {
+            iterationId = result.id;
+            expect(result).to.be.a('object');
+            expect(result).to.have.property('id');
+            expect(result.ok).to.be.equal(true);
+          })
+          .catch(function(err) {
+            expect(err).to.not.equal(null);
+          })
+          .finally(function() {
+            done();
+          });
+        } else {
+          iterationId = result.rows[0].id;
+          done();
+        }
       });
     });
 
     it('Get a specific team iteration document', function(done) {
-      iterationModel.get(validId)
+      iterationModel.get(iterationId)
       .then(function(result) {
         expect(result).to.be.a('object');
         expect(result).to.have.property('_id');
@@ -235,22 +186,33 @@ describe('Iteration Model', function() {
   describe('[edit]: Edit team iteration document', function(){
     this.timeout(timeout);
     before(function(done) {
-      iterationModel.add(iterationDocValid, user, allTeams, userTeams)
+      var teamName = 'testteamid_1';
+      iterationModel.getByIterInfo(teamName)
       .then(function(result) {
-        iterationId = result.id;
-        // console.log('result iterationId:', iterationId);
-        expect(result).to.be.a('object');
-        expect(result).to.have.property('id');
-        expect(result.ok).to.be.equal(true);
-        done();
-      })
-      .catch(function(err) {
-        done(err);
+        if (result.rows.length == 0) {
+          iterationModel.add(iterationDocValid, user, allTeams, userTeams)
+          .then(function(result) {
+            iterationId = result.id;
+            expect(result).to.be.a('object');
+            expect(result).to.have.property('id');
+            expect(result.ok).to.be.equal(true);
+          })
+          .catch(function(err) {
+            expect(err).to.not.equal(null);
+          })
+          .finally(function() {
+            done();
+          });
+        } else {
+          iterationId = result.rows[0].id;
+          done();
+        }
       });
     });
 
     it('It will successfully update iteration document with same iteration name', function(done) {
       //iterationDocValid.team_mbr_change = 'YES';
+      iterationDocValid.iteration_name = "testiterationname-" + crypto.randomBytes(4).toString('hex');
       iterationModel.edit(iterationId, iterationDocValid, user, allTeams, userTeams)
       .then(function(result) {
         expect(result).to.be.a('object');
@@ -305,6 +267,7 @@ describe('Iteration Model', function() {
     });
 
     it('It will successfully updated document with New iteration name', function(done) {
+
       iterationDocValid.iteration_name = 'newiterationname-' + new Date().getTime();
       iterationModel.edit(iterationId, iterationDocValid, user, allTeams, userTeams)
       .then(function(result) {

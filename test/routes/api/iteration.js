@@ -26,11 +26,11 @@ iterationDocInvalid.last_updt_user = adminUser;
 
 var agent = request.agent(app);
 
-var teamDocValid = iterationTestData.iterations.teamDocValid;
-var userDetails = iterationTestData.iterations.userDetails;
-var userTeams = iterationTestData.iterations.userTeams;
-var allTeams = iterationTestData.iterations.allTeams;
-var user = iterationTestData.iterations.user;
+var teamDocValid = iterationTestData.teamDocValid;
+var userDetails = iterationTestData.userDetails;
+var userTeams = iterationTestData.userTeams;
+var allTeams = iterationTestData.allTeams;
+var user = iterationTestData.user;
 
 describe('Iteration API Test', function(){
   before(function(done) {

@@ -132,9 +132,12 @@ var iteration = {
           // console.log('[add] isValidUser:', validUser);
           if (validUser) {
             var iteration_name = cleanData['iteration_name'];
+            // console.log('[add] iteration_name:', iteration_name);
+            // console.log('[add] team_id:', team_id);
             iteration.getByIterInfo(team_id)
             .then(function(iterData) {
               if (iterData != undefined && iterData.rows) {
+                // console.log('[add] iterData:', JSON.stringify(iterData.rows));
                 var duplicate = iteration.isIterationNumExist(iteration_name, iterData);
                 if (duplicate) {
                   var msg = {
