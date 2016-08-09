@@ -22,6 +22,14 @@ var dummy = {
       name : '',
       desc : '',
       squadteam : 'YesNo'
+    },
+    validUpdateDoc : function(){
+      return {
+        name : 'Team document-' + new Date().getTime(),
+        desc : 'Updated Team Description',
+        squadteam : 'No',
+        created_user : dummy.user.details['shortEmail']
+      };
     }
   },
   userDetails :{

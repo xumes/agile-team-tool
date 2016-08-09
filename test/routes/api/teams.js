@@ -165,7 +165,7 @@ describe('Team API Tests', function() {
   });
 
   it('it will return 200 after updating document', function(done){
-    teamDocUpdateValid['name'] = teamDocUpdateValid['name'] + 'new name';
+    teamDocUpdateValid = dummyData.teams.validUpdateDoc();
     teamDocUpdateValid['_id'] = createdId;
     delete teamDocUpdateValid['parent_team_id'];
     var req = request(app).put('/api/teams');
