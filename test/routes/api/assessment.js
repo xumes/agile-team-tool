@@ -21,7 +21,6 @@ var adminUser = 'Yanliang.Gu1@ibm.com';
 var agent = request.agent(app);
 
 describe('Assessment API Test', function(){
-  this.timeout(30000);
   // do the login befre testing
   before(function(done) {
     agent
