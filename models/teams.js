@@ -444,7 +444,9 @@ var team = {
                             common.bulkUpdate(bulkDocu)
                             .then(function(body){
                               loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully associated to parent ' + teamObj['targetParent']);
-                              resolve(body);
+                              //resolve(body);
+                              // return updated documents
+                              resolve(bulkDocu['docs']);
                             })
                             .catch( /* istanbul ignore next */ function(err){
                               // cannot simulate Cloudant error during testing
@@ -513,7 +515,9 @@ var team = {
                       common.bulkUpdate(bulkDocu)
                       .then(function(body){
                         loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully associated to child ' + JSON.stringify(teamObj['targetChild']));
-                        resolve(body);
+                        //resolve(body);
+                        // return updated documents
+                        resolve(bulkDocu['docs']);
                       })
                     })
                   })
@@ -558,7 +562,9 @@ var team = {
                       common.bulkUpdate(bulkDocu)
                       .then(function(body){
                         loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully removed parent team' + teamObj['targetParent']);
-                        resolve(body);
+                        //resolve(body);
+                        // return updated documents
+                        resolve(bulkDocu['docs']);
                       })
                     })
                   }
@@ -595,7 +601,9 @@ var team = {
                     common.bulkUpdate(bulkDocu)
                     .then(function(body){
                       loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully removed child team' + JSON.stringify(teamObj['targetChild']));
-                      resolve(body);
+                      //resolve(body);
+                      // return updated documents
+                      resolve(bulkDocu['docs']);
                     })
                   })
                 })

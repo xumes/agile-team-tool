@@ -313,8 +313,8 @@ describe('Team models [associateTeams]: associate team relationship with other t
       teamModel.associateTeams(associateDataParentValid, 'associateParent', dummyData.associate.validUser())
       .then(function(body){
         expect(body).to.not.equal(null);
-        expect(body[0]['id']).to.have.equal(associateDataParentValid['teamId']);
-        expect(body[1]['id']).to.have.equal(associateDataParentValid['targetParent']);
+        expect(body[0]['_id']).to.have.equal(associateDataParentValid['teamId']);
+        expect(body[1]['_id']).to.have.equal(associateDataParentValid['targetParent']);
       })
       .finally(function(){
         done();
@@ -332,7 +332,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       teamModel.associateTeams(associateDataChildValid, 'associateChild', dummyData.associate.validUser())
       .then(function(body){
         expect(body).to.not.equal(null);
-        expect(body[0]['id']).to.have.equal(associateDataChildValid['teamId']);
+        expect(body[0]['_id']).to.have.equal(associateDataChildValid['teamId']);
         // need to have better assertion, ie check if targetChild is now existing in teamId child_team_id
       })
       .finally(function(){
@@ -357,8 +357,8 @@ describe('Team models [associateTeams]: associate team relationship with other t
         teamModel.associateTeams(associateRemoveParent, 'removeParent', dummyData.associate.validUser())
         .then(function(body){
           expect(body).to.not.equal(null);
-          expect(body[0]['id']).to.have.equal(associateRemoveParent['teamId']);
-          expect(body[1]['id']).to.have.equal(associateRemoveParent['targetParent']);
+          expect(body[0]['_id']).to.have.equal(associateRemoveParent['teamId']);
+          expect(body[1]['_id']).to.have.equal(associateRemoveParent['targetParent']);
         })
         .finally(function(){
           done();
@@ -383,7 +383,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
         teamModel.associateTeams(associateRemoveChild, 'removeChild', dummyData.associate.validUser())
         .then(function(body){
           expect(body).to.not.equal(null);
-          expect(body[0]['id']).to.have.equal(associateDataChildValid['teamId']);
+          expect(body[0]['_id']).to.have.equal(associateDataChildValid['teamId']);
           // need to have better assertion, ie check if targetChild is none existing in teamId child_team_id
         })
         .finally(function(){
