@@ -207,6 +207,74 @@ describe('Iteration API Test', function(){
     });
   });
 
+  describe('Iteration API Test [GET /api/iteration/completed/byteam]: ', function(){
+    it('It will return [Team Id is missing]', function(done){
+      var query = querystring.stringify({'end_date1' : iterationDocValid.iteration_end_dt, 'end_date2' : iterationDocValid.iteration_end_dt});
+      var req = request(app).get('/api/iteration/completed/byteam?' + query);
+      agent.attachCookies(req);
+      req.end(function(err, res){
+        if (err) {
+          //console.log(err);
+        } else {
+          expect(res.statusCode).to.be.equal(400);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.equal('Team Id is missing');
+        }
+        done();
+      });
+    });
+
+    it('It will return [Earliest end date is missing]', function(done){
+      var query = querystring.stringify({'team_id' : validTeamId, 'end_date2' : iterationDocValid.iteration_end_dt});
+      var req = request(app).get('/api/iteration/completed/byteam?' + query);
+      agent.attachCookies(req);
+      req.end(function(err, res){
+        if (err) {
+          //console.log(err);
+        } else {
+          expect(res.statusCode).to.be.equal(400);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.equal('Earliest end date is missing');
+        }
+        done();
+      });
+    });
+
+    it('It will return [Latest end date is missing]', function(done){
+      var query = querystring.stringify({'team_id' : validTeamId, 'end_date1' : iterationDocValid.iteration_end_dt});
+      var req = request(app).get('/api/iteration/completed/byteam?' + query);
+      agent.attachCookies(req);
+      req.end(function(err, res){
+        if (err) {
+          //console.log(err);
+        } else {
+          expect(res.statusCode).to.be.equal(400);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.equal('Latest end date is missing');
+        }
+        done();
+      });
+    });
+
+    it('It will return successfully completely team iteration doc', function(done){
+      var query = querystring.stringify({'team_id' : validTeamId, 'end_date1' : iterationDocValid.iteration_end_dt, 'end_date2' : iterationDocValid.iteration_end_dt});
+      var req = request(app).get('/api/iteration/completed/byteam?' + query);
+      agent.attachCookies(req);
+      req.end(function(err, res){
+        if (err) {
+          //console.log(err);
+        } else {
+          expect(res.statusCode).to.be.equal(200);
+          expect(res.body).to.have.property('rows');
+        }
+        done();
+      });
+    });
+  });
+
   describe('Iteration API Test [PUT /api/iteration/]: update iteration document', function(){
     it('It will successfully update iteration document', function(done){
       var req = request(app).put('/api/iteration/' + iterationId);
