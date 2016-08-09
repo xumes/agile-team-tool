@@ -8,7 +8,7 @@ var cloudantDb    = Cloudant(settings.cloudant.url);
 var dbName        = settings.cloudant.dbName;
 var db            = Promise.promisifyAll((cloudantDb.use(dbName)));
 
-var formatErrMsg = function(msg){
+var formatErrMsg = /* istanbul ignore next */ function(msg){
   loggers.get('models').info('Error: ' + msg);
   return { error : msg };
 };
@@ -62,7 +62,7 @@ exports.deleteRecord = function(_id, _rev) {
         .catch(function(err){
           reject(err);
         });
-    }else{
+    }else{ /* istanbul ignore next */
       reject(formatErrMsg('No document/revision id provided for deletion.'));
     }
   });
@@ -75,7 +75,7 @@ exports.getByView = function(_design, _view) {
         body = _.isEmpty(body.rows) ? {} : body;
         resolve(body);
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         reject(err);
       });
   });
@@ -87,7 +87,7 @@ exports.getByViewKey = function(_design, _view, _key) {
       .then(function(body){
         resolve(body);
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         reject(err);
       });
   });
@@ -100,7 +100,7 @@ exports.getByViewWithStartOrEndKey = function(_design, _view, _startkey, _endkey
         body = _.isEmpty(body.rows) ? {} : body;
         resolve(body);
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         reject(err);
       });
   });
@@ -113,7 +113,7 @@ exports.bulkUpdate = function(data) {
     .then(function(body){
       resolve(body);
     })
-    .catch(function(err){
+    .catch( /* istanbul ignore next */ function(err){
       reject(err);
     })
   });
@@ -126,7 +126,7 @@ exports.Search = function(_design, _view, _include_docs, q) {
       .then(function(body) {
         resolve(body);
       })
-      .catch(function(err) {
+      .catch( /* istanbul ignore next */ function(err) {
         reject(err);
       });
   });

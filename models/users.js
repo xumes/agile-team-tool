@@ -9,8 +9,7 @@ module.exports.getAdmins = function () {
         loggers.get('model-users').info('Success: Admin records obtained');
         resolve(body);
       })
-      /* istanbul ignore next */
-      .catch(function(err) {
+      .catch( /* istanbul ignore next */ function(err) {
         loggers.get('model-users').info('ERROR: '+err);
         msg = err.error;
         reject(msg);

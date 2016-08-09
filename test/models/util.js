@@ -11,12 +11,10 @@ describe("Util models [getSystemStatus]: get system status", function(done){
       .then(function(body){
         expect(body).to.be.a('object');
         expect(body).to.have.property('agildash_system_status_values_tbl');
+        done();
       })
       .catch(function(err){
-        expect(err.error).to.be.an('undefined');
-      })
-      .finally(function(){
-        done();
+        done(err);
       });
   });
 });
