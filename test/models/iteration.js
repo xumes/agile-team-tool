@@ -3,6 +3,7 @@ var crypto = require('crypto');
 var expect = chai.expect;
 var iterationModel = require('../../models/iteration');
 var dummyData = require('../data/iteration.js');
+var dateFormat = require('dateformat');
 var validId;
 var validTeamId;
 var iterationId;
@@ -156,6 +157,20 @@ describe('Iteration Model', function() {
   });
 
   describe('[edit]: Edit team iteration document', function(){
+    it('It will successfully update iteration document with same iteration name', function(done) {
+      //iterationDocValid.team_mbr_change = 'YES';
+      iterationModel.edit(iterationId, iterationDocValid, user)
+      .then(function(result) {
+        expect(result).to.be.a('object');
+        expect(result).to.have.property('id');
+        expect(result.ok).to.be.equal(true);
+        done();
+      })
+      .catch(function(err) {
+        done(err);
+      });
+    });
+
     it('It will successfully update iteration document', function(done) {
       iterationModel.edit(iterationId, iterationDocValid_sample2, user)
       .then(function(result) {
@@ -216,10 +231,21 @@ describe('Iteration Model', function() {
       iterationDocValid.iteration_name = 'newiterationname';
       iterationModel.edit(id, iterationDocValid, user)
       .catch(function(err) {
-        expect(err.error).to.equal('missing');
         expect(err).to.not.equal(null);
+        expect(err.error).to.equal('missing');
+        done();
       })
-      .finally(function() {
+    });
+  });
+
+  describe('[delete]: delete team iteration document', function() {
+    it('Should return _id/_rev is missing', function(done){
+      iterationModel.delete()
+      .catch(function(err){
+        expect(err).to.not.equal(null);
+        expect(err).to.have.property('error');
+        expect(err.error).to.have.property('_id');
+        expect(err.error._id[0]).to.be.equal('_id/_rev is missing');
         done();
       });
     });

@@ -260,8 +260,9 @@ var iteration = {
                     reject(formatErrMsg(msg));
                   });
                 }
-              } else {
+              } else { /* istanbul ignore next */
                 var msg = "not_found";
+                /* istanbul ignore next */
                 reject(formatErrMsg(msg));
               }
             })
@@ -334,11 +335,11 @@ var iteration = {
       if(diffDays > 3) {
         // console.log("diffDays > 3");
         status = "Completed";
-      } else if (nbr_stories_dlvrd != 0 || 
-        nbr_story_pts_dlvrd != 0 || 
-        nbr_dplymnts != 0 || 
-        nbr_defects != 0 || 
-        team_sat != 0 || 
+      } else if (nbr_stories_dlvrd != 0 ||
+        nbr_story_pts_dlvrd != 0 ||
+        nbr_dplymnts != 0 ||
+        nbr_defects != 0 ||
+        team_sat != 0 ||
         client_sat != 0) {
         status = "Completed";
       } else {
