@@ -200,7 +200,10 @@ function agileTeamListHandler(teamId, teamList) {
 }
 
 function getAgileTeamCache(id) {
-	 return (_.isEmpty(allTeamsLookup[id]) || _.isEmpty(allTeamsLookup[id].doc)) ? allTeamsLookup[id] : allTeamsLookup[id].doc;
+	var copy = (_.isEmpty(allTeamsLookup[id]) || _.isEmpty(allTeamsLookup[id].doc)) ? allTeamsLookup[id] : allTeamsLookup[id].doc;
+	// return a copy of the object
+	return $.extend(true, {}, copy);
+	// return (_.isEmpty(allTeamsLookup[id]) || _.isEmpty(allTeamsLookup[id].doc)) ? allTeamsLookup[id] : allTeamsLookup[id].doc;
 }
 
 function compactTeam(team) {
@@ -504,7 +507,7 @@ function disableAddTeam() {
 var children = [];
 function getAllChildren(parentId) {
 	var currentTeam = getAgileTeamCache(parentId);
-	if (currentTeam != null) {
+	if (!_.isEmpty(currentTeam)) {
 		if (currentTeam.child_team_id != undefined) {
 			for (var j in currentTeam.child_team_id) {
 				if (children.indexOf(currentTeam.child_team_id[j]) == -1) {
@@ -560,7 +563,7 @@ function loadTeamMembers(teamId) {
 	var found = false;
 	if (teamId != undefined) {
 		var currentTeam = getAgileTeamCache(teamId);
-		if (currentTeam != null) {
+		if (!_.isEmpty(currentTeam)) {
 			var members = sortTeamMembersByName(currentTeam.members);
 			for (var j = 0; j < members.length; j++) {
 				found = true;
@@ -645,53 +648,17 @@ function loadMemberInfo(index) {
 	});
 }
 
-function loadParentChildren(parentId, currentId) {
-	$("#siblingList").empty();
-	var found = false;
-	if (parentId != undefined) {
-		var currentTeam = getAgileTeamCache(parentId);
-		if (currentTeam != null && currentTeam.child_team_id != undefined) {
-			for (var j = 0; j < currentTeam.child_team_id.length; j++) {
-				if (currentTeam.child_team_id[j] != currentId) {
-					var childTeamId = currentTeam.child_team_id[j];
-					var childTeamName = "";
-					var childTeamDesc = "";
-					var childTeamChildren = 0;
-					var childTeam = getAgileTeamCache(childTeamId);
-					if (childTeam = null) {
-						found = true;
-						childTeamName = allTeams[k].name;
-						childTeamDesc = allTeams[k].desc;
-						if (childTeam.child_team_id != undefined)
-							childTeamChildren = childTeam.child_team_id.length;
-
-						var row = "<tr id='srow_" + k + "'>";
-						row = row + "<td>" + childTeamName + "</td>";
-						row = row + "<td>" + childTeamDesc + "</td>";
-						row = row + "<td>" + childTeamChildren + "</td>";
-						row = row + "</tr>";
-						$("#siblingList").append(row);
-					}
-				}
-			}
-		}
-	}
-	if (!found) {
-		$("#siblingList").append('<tr class="odd"><td valign="top" colspan="3" class="dataTables_empty">No data available</td></tr>');
-	}
-}
-
 function loadTeamChildren(currentId) {
 	$("#childrenList").empty();
 	var found = false;
 	if (currentId != undefined) {
 		var currentTeam = getAgileTeamCache(currentId);
-			if (currentTeam != null && currentTeam.child_team_id != undefined) {
+			if (!_.isEmpty(currentTeam) && currentTeam.child_team_id != undefined) {
 				var childTeams = [];
 				for (var j = 0; j < currentTeam.child_team_id.length; j++) {
 					var childTeamId = currentTeam.child_team_id[j];
 					var childTeam = getAgileTeamCache(childTeamId);
-					if (childTeam != null) {
+					if (!_.isEmpty(childTeam)) {
 						childTeams.push(childTeam);
 					}
 				}
@@ -828,6 +795,7 @@ function updateAction(action) {
 		  }
 
 		}).done(function (data) {
+			updateAgileTeamCache(data);
 			agileTeamListHandler(data._id, allTeams);
 			showMessagePopup(message);
 		});
@@ -867,6 +835,7 @@ function updateAction(action) {
 		  }
 
 		}).done(function (data) {
+			updateAgileTeamCache(data);
 			agileTeamListHandler(data._id, allTeams);
 			showMessagePopup("You have successfully added a team and you have been added as the first team member. You can now add additional team members.");
 		});
@@ -878,7 +847,7 @@ function handleTeamValidationErrors(errMsgs, action) {
 		var msg = '';
 		if (errMsgs.error instanceof Array || errMsgs.error instanceof Object)
 		  _.each(errMsgs.error, function (err) {
-		    msg = msg + err[0];
+		    msg = msg + err;
 		    msg = msg + '<br>';
 		  });
 		else
@@ -1134,6 +1103,13 @@ function addTeamMember(person, oldAlloc, newAlloc, oldRole, newRole, action) {
 		  } else {
 		  	errorHandler(xhr, textStatus, errorThrown);
 		  }
+		  if (action == "addTeamMember") {
+		  	currentTeam.members.pop();
+		  } else {
+		  	memberData.name = person.name;
+				memberData.role = oldRole;
+				memberData.allocation = isNaN(parseInt(oldAlloc)) ? 0 : oldAlloc;
+		  }
 
 		}).done(function (data) {
 			updateAgileTeamCache(data);
@@ -1361,7 +1337,11 @@ function updateMemberInfo(action) {
 			setFieldErrorHighlight("teamMemberName");
 			showMessagePopup("Unable to retrieve information from Faces for the member indicated.  Please try the selection again.");
 			hasError = true;
-		} 
+		} else if (isNaN(currAlloc) || (currAlloc < 0 || currAlloc > 100)) {
+			setFieldErrorHighlight("memberAllocation");
+			showMessagePopup("Team member allocation should be between <br> 0 - 100");
+			hasError = true;
+		}
 
 		if (hasError) {
 			if (action == "addTeamMember")
