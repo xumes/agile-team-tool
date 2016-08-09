@@ -193,7 +193,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       expect(err).to.not.equal(null);
       expect(err).to.have.property('error');
       expect(err.error).to.have.property('targetParent');
-      expect(err.error.targetParent).to.have.be.equal('Invalid target parent');
+      expect(err.error.targetParent).to.have.be.equal('Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.');
     })
     .finally(function(){
       done();
@@ -210,7 +210,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       expect(err).to.not.equal(null);
       expect(err).to.have.property('error');
       expect(err.error).to.have.property('targetChild');
-      expect(err.error.targetChild).to.have.be.equal('Invalid target child');
+      expect(err.error.targetChild).to.have.be.equal('Unable to add selected team as a child. Team may have been updated with another parent.');
     })
     .finally(function(){
       done();
@@ -227,7 +227,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       expect(err).to.not.equal(null);
       expect(err).to.have.property('error');
       expect(err.error).to.have.property('targetChild');
-      expect(err.error.targetChild).to.have.be.equal('Cannot add self as target child');
+      expect(err.error.targetChild).to.have.be.equal('Unable to add selected team as a child. Team may have been updated with another parent.');
     })
     .finally(function(){
       done();

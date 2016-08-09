@@ -72,7 +72,7 @@ var team = {
                   reject(err);
                 })
             }else{
-              msg = { name : ['Team documents with name ' + teamDoc['name'] + ' is already existing'] };
+              msg = { name : ['This team name already exists. Please enter a different team name'] };
               reject(formatErrMsg(msg));  
             }
           })
@@ -112,7 +112,7 @@ var team = {
           // res[5] team assessments
           var oldTeamDocu = res[0];
           var adminLists = res[1];
-          var teamLists = res[2]['rows'];
+          var teamLists = res[2];
           var userTeams = res[3];
           var teamIterations = res[4];
           var teamAssesments = res[5];
@@ -160,15 +160,18 @@ var team = {
               TODO: create view "where name === new name and _id != _id" if not empty, update not allowed
             */
             infoLogs('Validating name');
-            var nameExists = [];
-            _.reduce(teamLists, function(memo, item){
-              if(item['name'] === updatedTeamDoc['name'] && item['_id'] != updatedTeamDoc['_id'])
-                nameExists.push(item);
-            });
+            if(_.isEmpty(updatedTeamDoc['name'])){
+              errorLists.push( { name : ['Team name cannot be blank. Please enter a team name.'] });
+            }else{
+              var nameExists = [];
+              _.reduce(teamLists, function(memo, item){
+                if(item['name'] === updatedTeamDoc['name'] && item['_id'] != updatedTeamDoc['_id'])
+                  nameExists.push(item);
+              });
 
-            if(!(_.isEmpty(nameExists)))
-              errorLists.push( { name : ['Team document name is already existing'] });
-
+              if(!(_.isEmpty(nameExists)))
+                errorLists.push( { name : ['This team name already exists. Please enter a different team name'] });
+            }
             /*
             squadteam
                 from Yes to No = only allowed if no iteration data exist
@@ -177,11 +180,11 @@ var team = {
             */
             infoLogs('Validating squadteam');
             if(updatedTeamDoc['squadteam'] === 'No' && !(_.isEmpty(teamIterations.rows))){
-              errorLists.push( { squadteam : ['Cannot changed squadteam status to NO if iteration data exists'] });              
+              errorLists.push( { squadteam : ['Cannot change this team into a non squad team. Iteration information has been entered for this team.'] });              
             }else if(updatedTeamDoc['squadteam'] === 'Yes'){
               var newChild = updatedTeamDoc['child_team_id'];
               if(!(_.isEmpty(newChild))){
-                errorLists.push( { squadteam : ['Cannot changed squadteam status to YES if child teams are not empty'] });              
+                errorLists.push( { squadteam : ['Cannot change this team into a squad team. Child team has been entered for this team.'] });              
               }
             }
 
@@ -410,7 +413,7 @@ var team = {
                // parent_id 
               if(teamObj['teamId'] === teamObj['targetParent']){
                 // not allowed to be a parent of self
-                errorLists['error']['targetParent'] = 'Invalid target parent';
+                errorLists['error']['targetParent'] = 'Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.';
                 infoLogs(errorLists);
                 reject(errorLists);
               }else{
@@ -418,7 +421,7 @@ var team = {
                 .then(function(body){
                   if(body['squadteam'] === 'Yes'){
                     // selected parent team should not be a squad team
-                    errorLists['error']['targetParent'] = 'Invalid target parent';
+                    errorLists['error']['targetParent'] = 'Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.';
                     infoLogs(errorLists);
                     reject(errorLists);
                   }else{
@@ -427,7 +430,7 @@ var team = {
                     .then(function(body){
                       var teamChildren = getChildrenOfParent(teamObj['teamId'], body['rows']);
                       if(teamChildren.indexOf(teamObj['targetParent']) > -1){
-                        errorLists['error']['targetParent'] = 'Selected parent team should not be under your current team';
+                        errorLists['error']['targetParent'] = 'Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.';
                         infoLogs(errorLists);
                         reject(errorLists);
                       }else{
@@ -450,7 +453,7 @@ var team = {
                             })
                             .catch( /* istanbul ignore next */ function(err){
                               // cannot simulate Cloudant error during testing
-                              loggers.get('models').error('Error associating team to a parent');
+                              loggers.get('models').error('Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.');
                               reject(formatErrMsg(err.error));
                             })
                           })
@@ -463,21 +466,26 @@ var team = {
                   }
                 })
                 .catch(function(err){
-                  errorLists['error']['targetParent'] = 'Invalid target parent';
+                  errorLists['error']['targetParent'] = 'Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.';
                   infoLogs(errorLists);
                   reject(errorLists);
                 })
               }
               break;
             case 'associateChild':
+              if(_.isEmpty(teamObj['targetChild'])){
+                errorLists['error']['targetChild'] = 'No team selected to associate as a Child team.';
+                infoLogs(errorLists);
+                reject(errorLists);
+              }
               if(typeof teamObj['targetChild'] != 'object'){
                 // target child must be array of team id
-                errorLists['error']['targetChild'] = 'Invalid target child';
+                errorLists['error']['targetChild'] = 'Unable to add selected team as a child. Team may have been updated with another parent.';
                 infoLogs(errorLists);
                 reject(errorLists);
               }else if(teamObj['targetChild'].indexOf(teamObj['teamId']) > -1){
                 // not allowed to add self as a child
-                errorLists['error']['targetChild'] = 'Cannot add self as target child';
+                errorLists['error']['targetChild'] = 'Unable to add selected team as a child. Team may have been updated with another parent.';
                 infoLogs(errorLists);
                 reject(errorLists);
               }else{
@@ -491,7 +499,7 @@ var team = {
                   //only allowed to add teams that has no parent
                   _.each(result, function(v,i,l){
                     if(!(_.isEmpty(v['child_team_id'])) || !(_.isEmpty(v['parent_team_id']))){
-                      errorLists['error']['targetChild'] = 'Child team cannot have child or parent';
+                      errorLists['error']['targetChild'] = 'Unable to add selected team as a child. Team may have been updated with another parent.';
                       infoLogs(errorLists);
                       reject(errorLists);
                     }
@@ -523,12 +531,12 @@ var team = {
                   })
                   .catch( /* istanbul ignore next */ function(err){
                     // cannot simulate Cloudant error during testing
-                    loggers.get('models').error('Error associating team to a child');
+                    loggers.get('models').error('Unable to add selected team as a child. Team may have been updated with another parent.');
                     reject(err);
                   })
                 })
                 .catch(function(err){
-                  loggers.get('models').error('Error associating team to a child');
+                  loggers.get('models').error('Unable to add selected team as a child. Team may have been updated with another parent.');
                   reject(err);
                 })
               }
