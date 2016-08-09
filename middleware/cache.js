@@ -26,6 +26,56 @@ var isModel = function(req){
   return (typeof req === 'string' && !(_.isEmpty(req)) && isValidEmail(req) === null) ? true : false;
 }
 
+var formattedCache = function(allCache){
+  var cacheFormat = {};
+  _.each(allCache, function(v,i,l){
+    var obj = {};
+    var list = {};
+    switch(i){
+      case 'allTeamsLookup':
+        list = returnObject(v);
+        obj = _.indexBy(list, function(team) {return team._id});
+        break;
+      case 'allTeams':
+        list = returnObject(v);
+        obj = _.sortBy(list, function(team) {return team.name});
+        break;
+      case 'myTeams':
+      case 'systemAdmin':
+      case 'systemStatus':
+        obj = returnObject(v);
+        break;
+    }
+    cacheFormat[i] = obj;
+  });
+  return cacheFormat;
+}
+
+var formattedCacheAdmin = function(allCache){
+  var cacheFormat = {};
+  _.each(allCache, function(v,i,l){
+    var obj = {};
+    var list = {};
+    switch(i){
+      case 'allTeamsLookup':
+        list = returnObject(v);
+        obj = _.indexBy(list, function(team) {return team._id});
+        break;
+      case 'allTeams':
+        list = returnObject(v);
+        obj = _.sortBy(list, function(team) {return team.name});
+        break;
+      case 'myTeams':
+      case 'systemAdmin':
+      case 'systemStatus':
+      case 'memberRoles':
+        obj = returnObject(v);
+        break;
+    }
+    cacheFormat[i] = obj;
+  });
+  return cacheFormat;
+}
 
 var returnObject = function(data) {
   // pre process returned rows so we deal directly with the document objects
@@ -196,31 +246,14 @@ var userCache = {
           'systemStatus' : result[3]
         };
         if(isRoute){ // this was accessed via routes middleware, set as session
-          _.each(allCache, function(v,i,l){
-            var obj = {};
-            var list = {};
-            switch(i){
-              case 'allTeamsLookup':
-                list = returnObject(v);
-                obj = _.indexBy(list, function(team) {return team._id});
-                break;
-              case 'allTeams':
-                list = returnObject(v);
-                obj = _.sortBy(list, function(team) {return team.name});
-                break;
-              case 'myTeams':
-              case 'systemAdmin':
-              case 'systemStatus':
-                obj = returnObject(v);
-                break;
-            }
-            req.session[i] = obj;
-          });
           infoLogs('Cache variable for setHomeCache set as session');
+          _.each(formattedCache(allCache), function(v,i,l){
+            req.session[i] = v;
+          });
           return next();
         }else{ // accessed via models, return as object
           infoLogs('Cache variable for setHomeCache is not set as session');
-          resolve(formattedCache);
+          resolve(formattedCache(allCache));
         }
       })
       .catch(function(err) {
@@ -256,32 +289,14 @@ var userCache = {
           'memberRoles' : result[4]
         };
         if(isRoute){ // this was accessed via routes middleware, set as session
-          _.each(allCache, function(v,i,l){
-            var obj = {};
-            var list = {};
-            switch(i){
-              case 'allTeamsLookup':
-                list = returnObject(v);
-                obj = _.indexBy(list, function(team) {return team._id});
-                break;
-              case 'allTeams':
-                list = returnObject(v);
-                obj = _.sortBy(list, function(team) {return team.name});
-                break;
-              case 'myTeams':
-              case 'systemAdmin':
-              case 'systemStatus':
-              case 'memberRoles':
-                obj = returnObject(v);
-                break;
-            }
-            req.session[i] = obj;
+          _.each(formattedCacheAdmin(allCache), function(v,i,l){
+            req.session[i] = v;
           });
           infoLogs('Cache variable for setTeamCache set as session');
           return next();
         }else{ // accessed via models, return as object
           infoLogs('Cache variable for setTeamCache is not set as session');
-          resolve(formattedCache);
+          resolve(formattedCacheAdmin(allCache));
         }
       })
       .catch(function(err) {
