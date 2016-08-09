@@ -3,7 +3,6 @@ var crypto = require('crypto');
 var expect = chai.expect;
 var iterationModel = require('../../models/iteration');
 var dummyData = require('../data/iteration.js');
-var dateFormat = require('dateformat');
 var validId;
 var validTeamId;
 var iterationId;
