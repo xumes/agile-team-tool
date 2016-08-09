@@ -122,7 +122,7 @@ var team = {
             reject(formatErrMsg(msg));
           }
 
-          isAllowedUser = util.isUserMemberOfTeam(teamId, checkParent, teamLists, userTeams);
+          isAllowedUser = module.exports.isUserMemberOfTeam(teamId, checkParent, teamLists, userTeams);
           
           if((isAllowedUser === false) && (adminLists['ACL_Full_Admin'].indexOf(userEmail) === -1)){
               msg = 'User not authorized to do action';
@@ -425,7 +425,7 @@ var team = {
                     // ** selected parent team should not be from a team under  it
                     team.getTeam(null)
                     .then(function(body){
-                      var teamChildren = util.getChildrenOfParent(teamObj['teamId'], body['rows']);
+                      var teamChildren = getChildrenOfParent(teamObj['teamId'], body['rows']);
                       if(teamChildren.indexOf(teamObj['targetParent']) > -1){
                         errorLists['error']['targetParent'] = 'Selected parent team should not be under your current team';
                         infoLogs(errorLists);
@@ -735,3 +735,87 @@ var formattedDocuments = function(doc, action){
 }
 
 module.exports = team;
+
+/**
+ * Check if user is a member of a team so that they can edit the team document(s)
+ * 
+ * @param teamId - team document id to check if user is member
+ * @param checkParent - set to true if we need to check the parent team documents for user membership.
+ * @param teamLists - array of all team document
+ * @param userTeams - array of all team document with email ie from api/teams/member/:email endpoint (teams that the user is on ??)
+ * @returns {Boolean}
+ */
+module.exports.isUserMemberOfTeam = function(teamId, checkParent, teamLists, userTeams) {
+  var userExist = false;
+// console.log('exported..');
+  if (teamLists == null)
+    return userExist;
+
+  if (userTeams != null) {
+    for (var i in userTeams) {
+      if (userTeams[i]['id'] == teamId) {         
+        userExist = true;
+        break;
+      }
+    }
+  } 
+
+  if (!userExist && checkParent) {
+    for ( var i = 0; i < teamLists.length; i++) {
+      if (teamLists[i]['id'] == teamId && teamLists[i].value.parent_team_id != "") {
+        return module.exports.isUserMemberOfTeam(teamLists[i].value.parent_team_id, checkParent, teamLists, userTeams);
+      }
+    }
+  }
+
+  return userExist;
+}
+
+/**
+ * Get children of team in flatten structure
+ * 
+ * @param parentId - team document id to get children to
+ * @param allTeams - array of all team document
+ * @returns {array}
+ */
+var getChildrenOfParent = function(parentId, allTeams){
+var children = _.isEmpty(children) ? [] : children;
+ var currentTeam = _.isEmpty(allTeams[parentId]) ? allTeams[parentId] : null;
+  if (currentTeam != null) {
+    if (currentTeam.child_team_id != undefined) {
+      for (var j = 0; j < currentTeam.child_team_id.length; j++) {
+        if (children.indexOf(currentTeam.child_team_id[j]) == -1) {
+          children.push(currentTeam.child_team_id[j]);
+          module.exports.getChildrenOfParent(currentTeam.child_team_id[j], allTeams);
+        }
+      }
+    }
+  }
+  return children; 
+}
+
+module.exports.isTeamMember = function(teamId, checkParent, teamLists, userTeams) {
+  var userExist = false;
+  if (teamLists == null)
+    return userExist;
+
+  if (userTeams != null) {
+    for (var i in userTeams) {
+      if (userTeams[i]['_id'] == teamId) {         
+        userExist = true;
+        break;
+      }
+    }
+  } 
+
+  if (!userExist && checkParent) {
+    for ( var i = 0; i < teamLists.length; i++) {
+      if (teamLists[i]['_id'] == teamId && teamLists[i].value != undefined && 
+      teamLists[i].value.parent_team_id != "") {
+        return module.exports.isTeamMember(teamLists[i].value.parent_team_id, checkParent, teamLists, userTeams);
+      }
+    }
+  }
+
+  return userExist;
+}

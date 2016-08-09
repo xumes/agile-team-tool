@@ -7,7 +7,7 @@ var users = require('../models/users')
 var msg;
 var teamLists = [];
 var userTeams = [];
-var teamModel;
+var teamModel = require('../models/teams');
 
 var formatErrMsg = function(msg) {
   loggers.get('models').info('util helper Error: ' + msg);
@@ -97,41 +97,6 @@ module.exports.getServerTime = function () {
   return new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
 };
 
-/**
- * Check if user is member on set of documents to edit
- * 
- * @param teamId - team document id to check if user is member
- * @param checkParent - set to true if we need to check the parent team documents for user membership.
- * @param teamLists - array of all team document
- * @param userTeams - array of all team document with email ie from api/teams/member/:email endpoint
- * @returns {Boolean}
- */
-module.exports.isUserMemberOfTeam = function(teamId, checkParent, teamLists, userTeams) {
-  var userExist = false;
-// console.log('exported..');
-  if (teamLists == null)
-    return userExist;
-
-  if (userTeams != null) {
-    for (var i in userTeams) {
-      if (userTeams[i]['id'] == teamId) {         
-        userExist = true;
-        break;
-      }
-    }
-  } 
-
-  if (!userExist && checkParent) {
-    for ( var i = 0; i < teamLists.length; i++) {
-      if (teamLists[i]['id'] == teamId && teamLists[i].value.parent_team_id != "") {
-        return module.exports.isUserMemberOfTeam(teamLists[i].value.parent_team_id, checkParent, teamLists, userTeams);
-      }
-    }
-  }
-
-  return userExist;
-}
-
 module.exports.isValidUser = function(userId, teamId, checkParent){
   return new Promise(function(resolve, reject){
     loggers.get('models').info('validating user '+userId+' for team '+teamId);
@@ -213,29 +178,6 @@ module.exports.BulkDelete = function(docIds) {
 }
 
 /**
- * Get children of team in flatten structure
- * 
- * @param parentId - team document id to get children to
- * @param allTeams - array of all team document
- * @returns {array}
- */
-module.exports.getChildrenOfParent = function(parentId, allTeams){
-var children = _.isEmpty(children) ? [] : children;
- var currentTeam = _.isEmpty(allTeams[parentId]) ? allTeams[parentId] : null;
-  if (currentTeam != null) {
-    if (currentTeam.child_team_id != undefined) {
-      for (var j = 0; j < currentTeam.child_team_id.length; j++) {
-        if (children.indexOf(currentTeam.child_team_id[j]) == -1) {
-          children.push(currentTeam.child_team_id[j]);
-          module.exports.getChildrenOfParent(currentTeam.child_team_id[j], allTeams);
-        }
-      }
-    }
-  }
-  return children; 
-}
-
-/**
  * Reformat document to update/delete document structure for BULK operation
  * 
  * @param docs - array of documents
@@ -267,31 +209,6 @@ module.exports.formatForBulkTransaction = function(docs, email, action){
   };
 }
 
-module.exports.isTeamMember = function(teamId, checkParent, teamLists, userTeams) {
-  var userExist = false;
-  if (teamLists == null)
-    return userExist;
-
-  if (userTeams != null) {
-    for (var i in userTeams) {
-      if (userTeams[i]['_id'] == teamId) {         
-        userExist = true;
-        break;
-      }
-    }
-  } 
-
-  if (!userExist && checkParent) {
-    for ( var i = 0; i < teamLists.length; i++) {
-      if (teamLists[i]['_id'] == teamId && teamLists[i].value != undefined && teamLists[i].value.parent_team_id != "") {
-        return module.exports.isTeamMember(teamLists[i].value.parent_team_id, checkParent, teamLists, userTeams);
-      }
-    }
-  }
-
-  return userExist;
-}
-
 /**
  * This will validate user access for create/update/delete operations
  * 
@@ -312,7 +229,7 @@ module.exports.isUserAllowed = function(userId, teamId, checkParent, allTeams, u
     })
     .then(function(isAdmin){
       if (!isAdmin){
-        return module.exports.isTeamMember(teamId, checkParent, allTeams, userTeams);
+        return teamModel.isTeamMember(teamId, checkParent, allTeams, userTeams);
       }
       else{
         return isAdmin;
