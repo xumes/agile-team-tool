@@ -4,12 +4,11 @@ module.exports = function(app, includes) {
   var middleware  = includes.middleware;
 
   getAdmins = function(req, res) {
-    users.getAdmins(adminId)
+    users.getAdmins()
       .then(function(result){
         res.status(200).send(result);
       })
-      /* istanbul ignore next */
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         res.status(400).send(err);
       });
   };

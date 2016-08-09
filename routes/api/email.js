@@ -59,7 +59,7 @@ var processFeedbackRequest = function(req, res) {
   });
   //user email
   emails.push({
-    html: 
+    html:
     "Thank you for your feedback about the Agile Team Tool, submitted on: "+moment().format('MMMM Do YYYY, h:mm:ss a')+". We appreciate your comments! \
     <br><br>As a reminder, here is what you told us:\
     <br><b>Page:</b> "+req.body.feedback_page+"\
@@ -73,7 +73,7 @@ var processFeedbackRequest = function(req, res) {
     subject: "Agile Team Tool Feedback",
     applicationKey: EMAIL_APPKEY
   });
-  
+
   async.each(emails, function(email, callback) {
     sendRequest(email, function(error, result){
       /* istanbul ignore else  */
@@ -85,13 +85,14 @@ var processFeedbackRequest = function(req, res) {
   }, function(error){
       if(_.isEmpty(error))
         res.status(200).send("<h3 class='ibm-bold'>Thank you for your feedback!</h3> Your input helps us improve the Agile Team Tool.");
-      /* istanbul ignore else  */
       else{
+        /* istanbul ignore next  */
         logger.get('api').info('ERROR: ' + JSON.stringify(error));
+        /* istanbul ignore next  */ 
         res.status(500).send("There was a problem sending your feedback. Please visit our forum: https://w3-connections.ibm.com/forums/html/forum?id=d0e31d40-ff11-4691-bc65-c0d95bc0c426");
       }
     }
-  );  
+  );
 };
 
 module.exports = function(app, includes) {
