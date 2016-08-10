@@ -1,0 +1,7 @@
+{
+	"index": {
+		"fields": ["type", "child_team_id", "parent_team_id", "type"]
+	},
+	"name": "team-hierarchy-index",
+	"type": "json"
+}

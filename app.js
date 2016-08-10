@@ -18,7 +18,7 @@ require('fs').readFile('./art', 'utf8', function (err,art) {
   console.log(art);
   loggers.get('init').info("Configuration Settings:");
   console.log(settings);
-  console.log("\n\n");
+  console.log("\n");
   initCloudant.init();
 });
 

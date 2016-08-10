@@ -12,8 +12,9 @@ var async         = require('async');
 module.exports.init = function(){
   //only init cloudant if we are running locally or on app instance 0 in cloudfoundry
   if(_.isEmpty(process.env.CF_INSTANCE_INDEX) || process.env.CF_INSTANCE_INDEX == "0"){
-    logger.get('init').info("Checking Cloudant DB design docs...");
+    logger.get('init').info("Checking Cloudant DB design docs and indexes...");
     
+    //design docs
     Promise.join(getCloudantDocs(), getSourceDocs(), function(cloudantDocs, sourceDocs) {
         /*ignore if design doc exists in the DB but not in the source
           (might be a use case in the future for metrics) */
@@ -51,6 +52,23 @@ module.exports.init = function(){
 
         });
     });
+    
+    //indexes
+    getSourceIndexes()
+    .then(function(indexes){
+      _.each(indexes, function(index){
+        db.index(index, function(err, response) {
+          if (err)
+            logger.get('init').error(err);
+          else{
+            if(_.isEqual(response.result,"exists"))
+              logger.get('init').info(index.name+" already exists");        
+            else
+              logger.get('init').info("Index: "+index.name+" creation result:"+response.result);        
+          }
+        });
+      });
+    });
   }
 }
 
@@ -77,7 +95,25 @@ var getSourceDocs = function(){
          var designDoc = require("./design_docs/" + file);
          res.push(designDoc);
          callback();
-          
+      }, function() {
+           resolve(res);
+         }
+      );//async each
+    });//fs read dir
+  }); //promise
+}
+
+var getSourceIndexes = function(){
+  return new Promise(function(resolve, reject) {
+    fs.readdir("./cloudant/indexes", function(err, files){
+      if(err)
+        reject(err);
+        
+      var res = [];
+      async.each(files, function(file, callback) {
+         var index = require("./indexes/" + file);
+         res.push(index);
+         callback();
       }, function() {
            resolve(res);
          }
