@@ -3,17 +3,22 @@ var expect = chai.expect;
 var app = require('../../../app');
 var request = require('supertest');
 var dummyData = require('../../data/dummy-data.js');
-
+var common = require('../../../models/cloudant-driver.js');
+var teamModel = require('../../../models/teams.js');
 var teamDocValid = dummyData.teams.validDoc;
 var teamDocInvalid = dummyData.teams.invalidDoc;
 var teamDocUpdateInvalid = dummyData.teams.validDoc;
 var teamDocUpdateValid = dummyData.teams.validDoc;
 var userValidEmail = dummyData.user.details.shortEmail;
 var adminUser = 'Yanliang.Gu1@ibm.com';
+var adminInfo = null;
 var createdId = null;
+var targetParentId = null;
+var targetChildId = null;
 var agent = request.agent(app);
 
 describe('Team API Tests', function() {
+
   // do the login befre testing
   this.timeout(30000);
   before(function(done) {
@@ -33,6 +38,28 @@ describe('Team API Tests', function() {
           })
       })
   });
+
+  after(function(done){
+    deleteCreatedRecord(createdId);
+    deleteCreatedRecord(targetParentId);
+    deleteCreatedRecord(targetChildId);
+    done();
+  })
+
+  function deleteCreatedRecord(recordId){
+    teamModel.getTeam(recordId)
+      .then(function(result){
+        if (result.doc_status == 'delete') {
+          common.deleteRecord(result._id, result._rev)
+            .then(function(result){
+            })
+            .catch(function(err){
+            });
+        }
+      })
+      .catch(function(err){
+      });
+  };
 
   it('it will return 400 because team docment is not valid', function(done){
     var req = request(app).post('/api/teams');
@@ -95,6 +122,7 @@ describe('Team API Tests', function() {
         expect(res.statusCode).to.be.equal(201);
         expect(res.body).to.have.property('_id');
         targetParent = res.body['_id'];
+        targetParentId = res.body['_id'];
       }
       done();
     });
@@ -112,6 +140,7 @@ describe('Team API Tests', function() {
         expect(res.statusCode).to.be.equal(201);
         expect(res.body).to.have.property('_id');
         targetParentTeamId = res.body['_id'];
+        targetChildId = res.body['_id'];
       }
       done();
     });
@@ -380,6 +409,42 @@ describe('Team API Tests', function() {
     });
   });
 
+  it('it will return 204 after deleting associate document1', function(done){
+    var teamAssoc = dummyData.associate.validDoc();
+    teamAssoc['doc_status'] = 'delete';
+    teamAssoc['_id'] = targetParentId;
+    var req = request(app).delete('/api/teams');
+    agent.attachCookies(req);
+    req.send(teamAssoc);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(204);
+        expect(res.body).to.be.empty;
+      }
+      done();
+    });
+  });
+
+  it('it will return 204 after deleting associate document2', function(done){
+    var teamAssoc = dummyData.associate.validDoc();
+    teamAssoc['doc_status'] = 'delete';
+    teamAssoc['_id'] = targetChildId;
+    var req = request(app).delete('/api/teams');
+    agent.attachCookies(req);
+    req.send(teamAssoc);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(204);
+        expect(res.body).to.be.empty;
+      }
+      done();
+    });
+  });
+
   it('it will return 204 after deleting document', function(done){
     teamDocUpdateValid['doc_status'] = 'delete';
     teamDocUpdateValid['_id'] = createdId;
@@ -396,6 +461,7 @@ describe('Team API Tests', function() {
       done();
     });
   });
+
 
   it('it will return 200 to get top level teams', function(done){
     var req = request(app).get('/api/teams?parent_team_id');
