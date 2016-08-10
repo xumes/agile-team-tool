@@ -657,6 +657,19 @@ function updateAgileTeamCache(team) {
 
     allTeamsLookup[team._id] = compactedTeam;
   }
+
+  if (!_.isEmpty(user) && !_.isEmpty(team.members) && _.isEmpty(_.find(team.members, {id: user.shortEmail}))) {
+    var newTeam = new Object;
+    newTeam['_id'] = team['_id'];
+    newTeam['_rev'] = team['_rev'];
+    newTeam['name'] = team['name'];
+    newTeam['parent_team_id'] = team['parent_team_id'];
+    newTeam['child_team_id'] = team['child_team_id'];
+    newTeam['squadteam'] = team['squadteam'];
+    myTeams.push(newTeam);
+  }
+
+
   allTeams = _.sortBy(allTeams, function(team) {return team.name});
 };
 
