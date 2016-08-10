@@ -64,7 +64,7 @@ module.exports.init = function(){
             if(_.isEqual(response.result,"exists"))
               logger.get('init').info(index.name+" already exists");        
             else
-              logger.get('init').info("Index: "+index.name+" creation result:"+response.result);        
+              logger.get('init').info("Index: "+index.name+" creation result: "+response.result);        
           }
         });
       });
