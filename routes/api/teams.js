@@ -93,15 +93,28 @@ module.exports = function(app, includes) {
   }
 
   getTeam = function(req, res) {
-    var teamId = req.params.teamId;
-    teamModel.getTeam(teamId)
-      .then(function(result){
-        middleware.cache.updateTeamCache(req, result);
-        res.send(result);
-      })
-      .catch(function(err){
-        res.status(400).send(err);
-      });
+    /* use query to get top level, children or parent team */
+    if (!_.isEmpty(req.query)) {
+      teamModel.getRootTeams(req.query)
+        .then(function(result){
+          res.status(200).send(result);
+        })
+        .catch(function(err){
+          res.status(400).send(err);
+        });
+    }
+    /* get team by ID */
+    else {
+      var teamId = req.params.teamId;
+      teamModel.getTeam(teamId)
+        .then(function(result){
+          middleware.cache.updateTeamCache(req, result);
+          res.send(result);
+        })
+        .catch(function(err){
+          res.status(400).send(err);
+        });
+    }
   };
 
   // delete team document
@@ -127,4 +140,5 @@ module.exports = function(app, includes) {
 
   // get all team or team details if teamId exists
   app.get('/api/teams/:teamId?', [includes.middleware.auth.requireLogin], getTeam);
+
 };

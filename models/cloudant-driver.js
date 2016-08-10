@@ -131,3 +131,17 @@ exports.Search = function(_design, _view, _include_docs, q) {
       });
   });
 }
+
+exports.findBySelector = function(data) {
+  return new Promise(function(resolve, reject){
+    var selector = {'selector':data};
+    console.log(selector);
+    db.findAsync(selector)
+      .then(function(body){
+        resolve(body);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        reject(err);
+      });
+  });
+};

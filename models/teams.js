@@ -27,6 +27,19 @@ var infoLogs = function(msg){
 };
 
 var team = {
+  getRootTeams : function(data) {
+    return new Promise(function(resolve, reject){
+        data.type = 'team';
+        common.findBySelector(data)
+          .then(function(results){
+            resolve(results);
+          })
+          .catch( /* istanbul ignore next */ function(err){
+            reject(err);
+          });
+      });
+  },
+
   // define team documents default value when creating a new document
   defaultTeamDoc : function(raw, user){
     var newDocu = raw;
@@ -73,11 +86,11 @@ var team = {
                 })
             }else{
               msg = { name : ['This team name already exists. Please enter a different team name'] };
-              reject(formatErrMsg(msg));  
+              reject(formatErrMsg(msg));
             }
           })
         }else
-          reject(formatErrMsg(validateTeam));  
+          reject(formatErrMsg(validateTeam));
     });
   },
   updateOrDeleteTeam : function(updatedTeamDoc, session, action){ // transfer on routes
@@ -156,7 +169,7 @@ var team = {
               }
               // this is team update, need additional validation
               /*
-              name 
+              name
                 can be the same to existing docu but cannot be existing to DB when updated
                 TODO: create view "where name === new name and _id != _id" if not empty, update not allowed
               */
@@ -177,27 +190,27 @@ var team = {
               squadteam
                   from Yes to No = only allowed if no iteration data exist
                   from No to Yes = only allowed if no child teams are associated
-              
+
               */
               infoLogs('Validating squadteam');
               if(updatedTeamDoc['squadteam'] === 'No' && !(_.isEmpty(teamIterations.rows))){
-                errorLists.push( { squadteam : ['Cannot change this team into a non squad team. Iteration information has been entered for this team.'] });              
+                errorLists.push( { squadteam : ['Cannot change this team into a non squad team. Iteration information has been entered for this team.'] });
               }else if(updatedTeamDoc['squadteam'] === 'Yes'){
                 var newChild = updatedTeamDoc['child_team_id'];
                 if(!(_.isEmpty(newChild))){
-                  errorLists.push( { squadteam : ['Cannot change this team into a squad team. Child team has been entered for this team.'] });              
+                  errorLists.push( { squadteam : ['Cannot change this team into a squad team. Child team has been entered for this team.'] });
                 }
               }
 
               /*
-              parent_id 
+              parent_id
                   not allowed to be a parent of self
                   selected parent team should not be a squad team
                   query team details
               */
               infoLogs('Validating parent_id');
               if(!(_.isEmpty(updatedTeamDoc['parent_team_id'])) && updatedTeamDoc['parent_team_id'] === oldTeamDocu['_id'])
-                errorLists.push({ parent_id : ['Cannot set self as parent']});                              
+                errorLists.push({ parent_id : ['Cannot set self as parent']});
 
               if(!(_.isEmpty(updatedTeamDoc['parent_team_id']))){
                 var isSquadTeam = [];
@@ -205,7 +218,7 @@ var team = {
                   if(item['parent_team_id'] === updatedTeamDoc['parent_team_id'] && item['squadteam'] === 'Yes')
                     isSquadTeam.push(item);
                 });
-                
+
                 if(!(_.isEmpty(isSquadTeam)))
                   isSquadTeam.push( { parent_team_id : ['Parent team id must not be a squad team'] });
               }
@@ -335,7 +348,7 @@ var team = {
             msg = err.error;
             reject(formatErrMsg(msg));
           })
-      });  
+      });
     }else{
       infoLogs('Getting team document with name: ' + teamName);
       return new Promise(function(resolve, reject) {
@@ -351,7 +364,7 @@ var team = {
             // cannot simulate Cloudant error during testing
             reject(formatErrMsg(err));
           })
-      });  
+      });
     }
   },
   getTeamByEmail : function(email){
@@ -414,12 +427,12 @@ var team = {
           */
           /*
           for bulk updates
-          by the way, kato gani nay mga related na bulk operation na multiple team documents ang ginaupdate.... 
+          by the way, kato gani nay mga related na bulk operation na multiple team documents ang ginaupdate....
           pwede nimo ireturn as array of team docs tong mga doc?
           */
           switch(action){
             case 'associateParent':
-               // parent_id 
+               // parent_id
               if(_.isEmpty(teamObj['targetParent'])){
                 errorLists['error']['targetParent'] = 'Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.';
                 infoLogs(errorLists);
@@ -688,7 +701,7 @@ var formattedDocuments = function(doc, action){
         tempDocHolder[1] : teamToBeParent
         tempDocHolder[2] : previousParent
         */
-        break; 
+        break;
       case 'associateChild':
         // reformat team id to have new child, retain what is in db
         var childToBe = [];
@@ -735,7 +748,7 @@ var formattedDocuments = function(doc, action){
         break;
       case 'removeChild':
         //- pag multiple child selected for delete
-        //sample 3 child teams to delete, total of 4 docs ang iupdate 
+        //sample 3 child teams to delete, total of 4 docs ang iupdate
         //(3 child team to remove the current team as parent, ug ang current team to remove the child teams)
         var currentChild = doc[0]['child_team_id'];
         var childToRemove = [];
@@ -770,7 +783,7 @@ module.exports = team;
 
 /**
  * Get children of team in flatten structure
- * 
+ *
  * @param parentId - team document id to get children to
  * @param allTeams - array of all team document
  * @returns {array}
@@ -788,5 +801,5 @@ var children = _.isEmpty(children) ? [] : children;
       }
     }
   }
-  return children; 
+  return children;
 }
