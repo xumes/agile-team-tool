@@ -285,12 +285,6 @@ module.exports.isUserAllowed = function(userId, teamId, checkParent, allTeams, u
       }
     })
     .catch(function(err){
-      console.log('######');
-      console.log(teamModel);
-      console.log('######');
-      console.log('######');
-      console.log(err);
-      console.log('######');
       reject(formatErrMsg(err.error));
     });
   });
@@ -312,31 +306,3 @@ module.exports.returnObject = function(data) {
   } else
     return data;
 };
-
-///////////
-isTeamMember = function(teamId, checkParent, teamLists, userTeams) {
-  var userExist = false;
-  if (teamLists == null)
-    return userExist;
-
-  if (userTeams != null) {
-    for (var i in userTeams) {
-      if (userTeams[i]['_id'] == teamId) {         
-        userExist = true;
-        break;
-      }
-    }
-  } 
-
-  if (!userExist && checkParent) {
-    for ( var i = 0; i < teamLists.length; i++) {
-      if (teamLists[i]['_id'] == teamId && teamLists[i].value != undefined && 
-      teamLists[i].value.parent_team_id != "") {
-        return isTeamMember(teamLists[i].value.parent_team_id, checkParent, teamLists, userTeams);
-      }
-    }
-  }
-
-  return userExist;
-}
-////////////
