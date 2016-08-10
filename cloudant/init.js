@@ -12,14 +12,13 @@ var async         = require('async');
 module.exports.init = function(){
   //only init cloudant if we are running locally or on app instance 0 in cloudfoundry
   if(_.isEmpty(process.env.CF_INSTANCE_INDEX) || process.env.CF_INSTANCE_INDEX == "0"){
-    logger.get('init').info("Checking Cloudant DB fixtures...");
+    logger.get('init').info("Checking Cloudant DB design docs...");
     
     Promise.join(getCloudantDocs(), getSourceDocs(), function(cloudantDocs, sourceDocs) {
         /*ignore if design doc exists in the DB but not in the source
           (might be a use case in the future for metrics) */
-        logger.get('init').info("Success! "
-        +"# of cloudant design docs:"+cloudantDocs.length+", "
-        +"# of source design docs:"+sourceDocs.length);
+        logger.get('init').info("# of cloudant design docs:"+cloudantDocs.length
+        +", "+"# of source design docs:"+sourceDocs.length);
         //for each source doc, find the doc in cloudant
         _.each(sourceDocs, function(sDoc){ 
           var cDoc = _.find(cloudantDocs, function(cDoc){return _.isEqual(sDoc._id, cDoc.doc._id); });
@@ -37,8 +36,7 @@ module.exports.init = function(){
           //found in cloudant so check version
           else{
             if(!_.isEqual(sDoc.version, cDoc.doc.version)){
-              logger.get('init').warn(cDoc.doc._id+" cloudant design document is out of date. version="+cDoc.doc.version+", source version="+sDoc.version+". ");
-              
+              logger.get('init').warn(cDoc.doc._id+" cloudant design document is out of date. version="+cDoc.doc.version+", source version="+sDoc.version);
               sDoc["_rev"]=cDoc.doc._rev;
               db.insert(sDoc, function(err, body) {
                 if(!err)
