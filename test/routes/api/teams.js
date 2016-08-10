@@ -2,14 +2,14 @@ var chai = require('chai');
 var expect = chai.expect;
 var app = require('../../../app');
 var request = require('supertest');
-var dummyData = require('../../data/dummy-data.js');
+var teamsData = require('../../data/teams.js');
 var common = require('../../../models/cloudant-driver.js');
 var teamModel = require('../../../models/teams.js');
-var teamDocValid = dummyData.teams.validDoc;
-var teamDocInvalid = dummyData.teams.invalidDoc;
-var teamDocUpdateInvalid = dummyData.teams.validDoc;
-var teamDocUpdateValid = dummyData.teams.validDoc;
-var userValidEmail = dummyData.user.details.shortEmail;
+var teamDocValid = teamsData.teams.validDoc;
+var teamDocInvalid = teamsData.teams.invalidDoc;
+var teamDocUpdateInvalid = teamsData.teams.validDoc;
+var teamDocUpdateValid = teamsData.teams.validDoc;
+var userValidEmail = teamsData.user.details.shortEmail;
 var adminUser = 'Yanliang.Gu1@ibm.com';
 var adminInfo = null;
 var createdId = null;
@@ -39,14 +39,13 @@ describe('Team API Tests', function() {
       })
   });
 
-  // delete created records
-  // after(function(done){
-  //   deleteCreatedRecord(createdId);
-  //   deleteCreatedRecord(targetParentId);
-  //   deleteCreatedRecord(targetChildId);
-  //   console.log("delete created records ");
-  //   done();
-  // })
+  after(function(done){
+    deleteCreatedRecord(createdId);
+    deleteCreatedRecord(targetParentId);
+    deleteCreatedRecord(targetChildId);
+    console.log("delete created records ");
+    done();
+  })
 
   function deleteCreatedRecord(recordId){
     teamModel.getTeam(recordId)
@@ -115,7 +114,7 @@ describe('Team API Tests', function() {
   it('it will return 201 when you create a team successfully for team association endpoint to be a parent',function(done){
     var req = request(app).post('/api/teams');
     agent.attachCookies(req);
-    var teamAssoc = dummyData.associate.validDoc();
+    var teamAssoc = teamsData.associate.validDoc();
     req.send(teamAssoc);
     req.end(function(err,res){
       if (err) {
@@ -133,7 +132,7 @@ describe('Team API Tests', function() {
   it('it will return 201 when you create a team successfully for team association endpoint to be a child',function(done){
     var req = request(app).post('/api/teams');
     agent.attachCookies(req);
-    var teamAssoc = dummyData.associate.validDoc();
+    var teamAssoc = teamsData.associate.validDoc();
     req.send(teamAssoc);
     req.end(function(err,res){
       if (err) {
@@ -204,7 +203,7 @@ describe('Team API Tests', function() {
   });
 
   it('it will return 200 after updating document', function(done){
-    teamDocUpdateValid = dummyData.teams.validUpdateDoc();
+    teamDocUpdateValid = teamsData.teams.validUpdateDoc();
     teamDocUpdateValid['_id'] = createdId;
     delete teamDocUpdateValid['parent_team_id'];
     var req = request(app).put('/api/teams');
@@ -412,7 +411,7 @@ describe('Team API Tests', function() {
   });
 
   it('it will return 204 after deleting associate document1', function(done){
-    var teamAssoc = dummyData.associate.validDoc();
+    var teamAssoc = teamsData.associate.validDoc();
     teamAssoc['doc_status'] = 'delete';
     teamAssoc['_id'] = targetParentId;
     var req = request(app).delete('/api/teams');
@@ -430,7 +429,7 @@ describe('Team API Tests', function() {
   });
 
   it('it will return 204 after deleting associate document2', function(done){
-    var teamAssoc = dummyData.associate.validDoc();
+    var teamAssoc = teamsData.associate.validDoc();
     teamAssoc['doc_status'] = 'delete';
     teamAssoc['_id'] = targetChildId;
     var req = request(app).delete('/api/teams');
