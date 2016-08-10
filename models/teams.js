@@ -175,7 +175,7 @@ var team = {
               */
               infoLogs('Validating name');
               if(_.isEmpty(updatedTeamDoc['name'])){
-                errorLists.push( { name : ['Team name cannot be blank. Please enter a team name.'] });
+                reject(formatErrMsg({ name : ['Team name cannot be blank. Please enter a team name.'] }));
               }else{
                 var nameExists = [];
                 _.reduce(teamLists, function(memo, item){
@@ -183,8 +183,9 @@ var team = {
                     nameExists.push(item);
                 });
 
-                if(!(_.isEmpty(nameExists)))
-                  errorLists.push( { name : ['This team name already exists. Please enter a different team name'] });
+                if(!(_.isEmpty(nameExists))){
+                  reject(formatErrMsg({ name : ['This team name already exists. Please enter a different team name'] }));
+                }
               }
               /*
               squadteam
@@ -194,11 +195,11 @@ var team = {
               */
               infoLogs('Validating squadteam');
               if(updatedTeamDoc['squadteam'] === 'No' && !(_.isEmpty(teamIterations.rows))){
-                errorLists.push( { squadteam : ['Cannot change this team into a non squad team. Iteration information has been entered for this team.'] });
+                reject(formatErrMsg({ squadteam : ['Cannot change this team into a non squad team. Iteration information has been entered for this team.'] }));
               }else if(updatedTeamDoc['squadteam'] === 'Yes'){
                 var newChild = updatedTeamDoc['child_team_id'];
                 if(!(_.isEmpty(newChild))){
-                  errorLists.push( { squadteam : ['Cannot change this team into a squad team. Child team has been entered for this team.'] });
+                  reject(formatErrMsg({ squadteam : ['Cannot change this team into a squad team. Child team has been entered for this team.'] }));
                 }
               }
 
@@ -209,8 +210,10 @@ var team = {
                   query team details
               */
               infoLogs('Validating parent_id');
-              if(!(_.isEmpty(updatedTeamDoc['parent_team_id'])) && updatedTeamDoc['parent_team_id'] === oldTeamDocu['_id'])
-                errorLists.push({ parent_id : ['Cannot set self as parent']});
+              if(!(_.isEmpty(updatedTeamDoc['parent_team_id'])) && updatedTeamDoc['parent_team_id'] === oldTeamDocu['_id']){
+                reject(formatErrMsg({ parent_id : ['Cannot set self as parent']}));
+              }
+                
 
               if(!(_.isEmpty(updatedTeamDoc['parent_team_id']))){
                 var isSquadTeam = [];
@@ -219,8 +222,9 @@ var team = {
                     isSquadTeam.push(item);
                 });
 
-                if(!(_.isEmpty(isSquadTeam)))
-                  isSquadTeam.push( { parent_team_id : ['Parent team id must not be a squad team'] });
+                if(!(_.isEmpty(isSquadTeam))){
+                  reject(formatErrMsg({ parent_team_id : ['Parent team id must not be a squad team'] }))
+                }
               }
               /*
               child_team_id
@@ -230,7 +234,7 @@ var team = {
               */
               if(!(_.isEmpty(updatedTeamDoc['child_team_id']))){
                 if(updatedTeamDoc['child_team_id'].indexOf(oldTeamDocu['_id']) > -1)
-                  errorLists.push({ child_team_id : ['Cannot set self as child']});
+                  reject(formatErrMsg({ child_team_id : ['Cannot set self as child']}))
                 else{
                   var isValidChildTeam2 = [];
                   var isValidChildTeamId = _.every(updatedTeamDoc['child_team_id'], function(cId){
@@ -242,13 +246,13 @@ var team = {
                   });
 
                   if(!isValidChildTeamId){
-                    errorLists.push({ child_team_id : ['Child team cannot have parent']});
+                    reject(formatErrMsg({ child_team_id : ['Child team cannot have parent']}))
                   }
                  }
               }
 
               if(!(_.isEmpty(updatedTeamDoc['child_team_id'])) && (updatedTeamDoc['squadteam'] === 'Yes')){
-                errorLists.push({ child_team_id : ['Squad team cannot have child']});
+                reject(formatErrMsg({ child_team_id : ['Squad team cannot have child']}));
               }
 
               // start saving
