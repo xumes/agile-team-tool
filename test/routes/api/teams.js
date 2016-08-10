@@ -39,12 +39,14 @@ describe('Team API Tests', function() {
       })
   });
 
-  after(function(done){
-    deleteCreatedRecord(createdId);
-    deleteCreatedRecord(targetParentId);
-    deleteCreatedRecord(targetChildId);
-    done();
-  })
+  // delete created records
+  // after(function(done){
+  //   deleteCreatedRecord(createdId);
+  //   deleteCreatedRecord(targetParentId);
+  //   deleteCreatedRecord(targetChildId);
+  //   console.log("delete created records ");
+  //   done();
+  // })
 
   function deleteCreatedRecord(recordId){
     teamModel.getTeam(recordId)
