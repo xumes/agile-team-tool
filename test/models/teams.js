@@ -350,13 +350,18 @@ describe('Team models [associateTeams]: associate team relationship with other t
       .then(function(body){
         var associateRemoveParent = {
           teamId : createdId,
-          targetParent : body[1]['id']
+          targetParent : body[1]['_id']
         };
         teamModel.associateTeams(associateRemoveParent, 'removeParent', dummyData.associate.validUser())
         .then(function(body){
           expect(body).to.not.equal(null);
           expect(body[0]['_id']).to.have.equal(associateRemoveParent['teamId']);
           expect(body[1]['_id']).to.have.equal(associateRemoveParent['targetParent']);
+        })
+        .catch(function(err){
+          console.log('###############, line 371');
+          console.log(err);
+          console.log('###############');
         })
         .finally(function(){
           done();
@@ -461,13 +466,9 @@ describe("Team models [getTeam]: get all teams or get team details if team id is
   it("retrieve all team", function(done){
     teamModel.getTeam(null)
       .then(function(body){
-        expect(body).to.be.a('object');
-        expect(body).to.have.property('rows');
-        validId = body.rows[0]['id'];
-        validTeamName = body.rows[0]['value']['name'];
-      })
-      .catch(function(err){
-        expect(err.error).to.be.an('undefined');
+        expect(body).to.be.a('array');
+        validId = body[0]['id'];
+        validTeamName = body[0]['value']['name'];
       })
       .finally(function(){
         done();

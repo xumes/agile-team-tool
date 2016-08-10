@@ -192,8 +192,8 @@ describe('Team API Tests', function() {
         //console.log(err);
       } else {
         expect(res.statusCode).to.be.equal(200);
-        expect(res.body).to.be.a('object');
-        expect(res.body).to.have.property('rows');
+        expect(res.body).to.be.a('array');
+        expect(res.body[0]).to.have.property('id');
       }
       done();
     });
