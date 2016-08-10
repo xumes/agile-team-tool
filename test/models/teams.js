@@ -21,16 +21,15 @@ var teamDocInvalid = dummyData.teams.invalidDoc;
 
 // retrieve obj via cache, decoy for session
 var session = {};
-beforeEach(function(done) {
-  cache.setHomeCache(userDetails['shortEmail'])
-  .then(function(body){
-    session = body;
-    session['user'] = userDetails;
-    done();
-  })
-})
-
 describe('Team models [createTeam]: create a new team document', function(){
+  before(function(done) {
+    cache.setHomeCache(userDetails['shortEmail'])
+    .then(function(body){
+      session = body;
+      session['user'] = userDetails;
+      done();
+    })
+  })
   it('it will return error because team document is not valid', function(done){
     teamModel.createTeam(teamDocInvalid, userDetails)
     .then(function(body){
@@ -79,6 +78,14 @@ describe('Team models [createTeam]: create a new team document', function(){
 });
 
 describe('Team models [updateOrDeleteTeam] : update existing team document', function(){
+  before(function(done) {
+    cache.setHomeCache(userDetails['shortEmail'])
+    .then(function(body){
+      session = body;
+      session['user'] = userDetails;
+      done();
+    })
+  })
   it('it will return error because Team document ID is none existing', function(done){
     var docu = { '_id' : 'none-existing-docu' + new Date().getTime() };
     teamModel.updateOrDeleteTeam(docu, session, 'update')
@@ -150,6 +157,14 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
 });
 
 describe('Team models [associateTeams]: associate team relationship with other teams', function(){
+  before(function(done) {
+    cache.setHomeCache(userDetails['shortEmail'])
+    .then(function(body){
+      session = body;
+      session['user'] = userDetails;
+      done();
+    })
+  })
   it('will return error because action is not allowed', function(done){
     teamModel.associateTeams({}, 'invalid-action', session)
     .catch(function(err){
@@ -407,6 +422,14 @@ describe('Team models [associateTeams]: associate team relationship with other t
 });
 
 describe('Team models [deleteTeam] : delete existing team document', function(){
+  before(function(done) {
+    cache.setHomeCache(userDetails['shortEmail'])
+    .then(function(body){
+      session = body;
+      session['user'] = userDetails;
+      done();
+    })
+  })
   it('it will return error because user is not authorized to delete document', function(done){
     cache.setHomeCache(dummyData.associate.invalidUser())
     .then(function(body){
@@ -474,7 +497,15 @@ describe('Team models [deleteTeam] : delete existing team document', function(){
   });
 });
 
-describe("Team models [getTeam]: get all teams or get team details if team id is set ", function(){ 
+describe("Team models [getTeam]: get all teams or get team details if team id is set ", function(){
+  before(function(done) {
+    cache.setHomeCache(userDetails['shortEmail'])
+    .then(function(body){
+      session = body;
+      session['user'] = userDetails;
+      done();
+    })
+  }) 
   it("retrieve all team", function(done){
     teamModel.getTeam(null)
       .then(function(body){
@@ -518,6 +549,14 @@ describe("Team models [getTeam]: get all teams or get team details if team id is
 });
 
 describe('Team models [getRole]: get team role type', function(done){
+  before(function(done) {
+    cache.setHomeCache(userDetails['shortEmail'])
+    .then(function(body){
+      session = body;
+      session['user'] = userDetails;
+      done();
+    })
+  })
   it('retrieve all team role type', function(done){
     teamModel.getRole()
       .then(function(body){
@@ -534,6 +573,14 @@ describe('Team models [getRole]: get team role type', function(done){
 });
 
 describe('Team models [getName]: get all team names or team details if name is given', function(){
+  before(function(done) {
+    cache.setHomeCache(userDetails['shortEmail'])
+    .then(function(body){
+      session = body;
+      session['user'] = userDetails;
+      done();
+    })
+  })
   it('retrieve all team names', function(done){
     teamModel.getName(null)
       .then(function(body){
@@ -573,6 +620,14 @@ describe('Team models [getName]: get all team names or team details if name is g
 });
 
 describe('Team models [getTeamByEmail]: get all team lists for a given email address', function(){
+  before(function(done) {
+    cache.setHomeCache(userDetails['shortEmail'])
+    .then(function(body){
+      session = body;
+      session['user'] = userDetails;
+      done();
+    })
+  })
   it('return error for invalid email address', function(done){
     teamModel.getTeamByEmail('invalid-email-add')
       .then(function(body){
