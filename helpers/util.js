@@ -4,10 +4,12 @@ var settings = require('../settings');
 var loggers = require('../middleware/logger');
 var _ = require('underscore');
 var users = require('../models/users')
+var teamModel = require('../models/teams');
+var momenttz = require('moment-timezone');
+var jstz = require('jstimezonedetect');
 var msg;
 var teamLists = [];
 var userTeams = [];
-var teamModel = require('../models/teams');
 
 var formatErrMsg = function(msg) {
   loggers.get('models').info('util helper Error: ' + msg);
@@ -94,7 +96,9 @@ module.exports.getSystemStatus = function (accessId) {
 
 // Get server time (in million sec)
 module.exports.getServerTime = function () {
-  return new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+  //use server time
+  var timezone = jstz.determine().name();
+  return momenttz.tz(timezone).format('YYYY-MM-DD HH:mm:ss z');
 };
 
 module.exports.isValidUser = function(userId, teamId, checkParent){
@@ -152,7 +156,7 @@ module.exports.BulkDelete = function(docIds) {
         if (!_.isEmpty(body)) {
           _id = body._id;
           _rev = body._rev;
-          console.log('Attempt to delete Document _id: ' + _id + ' _rev: ' + _rev);
+          //console.log('Attempt to delete Document _id: ' + _id + ' _rev: ' + _rev);
           common.deleteRecord(_id, _rev)
           .then(function(body) {
             // loggers.get('models').info('[otherModel.BulkDelete] Successfully deleted docId id: '+ _id);
@@ -210,13 +214,49 @@ module.exports.formatForBulkTransaction = function(docs, email, action){
 }
 
 /**
+ * This will check if team/parent team is included in user teams
+ * 
+ * @param teamId - team id to search on
+ * @param checkParent - checking of parent is necessary
+ * @param allTeams - list of all teams
+ * @param userTeams - list of user teams
+ * @returns - true if team or team's parent is found in user teams
+ */
+
+function isTeamMember(teamId, checkParent, teamLists, userTeams) {
+  var userExist = false;
+  if (teamLists == null)
+    return userExist;
+
+  if (userTeams != null) {
+    for (var i in userTeams) {
+      if (userTeams[i]['_id'] == teamId) {         
+        userExist = true;
+        break;
+      }
+    }
+  } 
+
+  if (!userExist && checkParent) {
+    for ( var i = 0; i < teamLists.length; i++) {
+      if (teamLists[i]['_id'] == teamId && teamLists[i].value != undefined && 
+      teamLists[i].value.parent_team_id != "") {
+        return isTeamMember(teamLists[i].value.parent_team_id, checkParent, teamLists, userTeams);
+      }
+    }
+  }
+
+  return userExist;
+}
+
+/**
  * This will validate user access for create/update/delete operations
  * 
  * @param userId - user login id (email id)
- * @param teamId - email address as last update user, ie logged in user
- * @param checkParent - action to perfrom ie. update or delete
- * @param allTeams - action to perfrom ie. update or delete
- * @param userTeams - action to perfrom ie. update or delete
+ * @param teamId - team id to search on
+ * @param checkParent - checking of parent is necessary
+ * @param allTeams - list of all teams
+ * @param userTeams - list of user teams
  * @returns - true if access allowed otherwise throws an error with unauthorized user message
  */
 
@@ -229,7 +269,7 @@ module.exports.isUserAllowed = function(userId, teamId, checkParent, allTeams, u
     })
     .then(function(isAdmin){
       if (!isAdmin){
-        return teamModel.isTeamMember(teamId, checkParent, allTeams, userTeams);
+        return isTeamMember(teamId, checkParent, allTeams, userTeams);
       }
       else{
         return isAdmin;

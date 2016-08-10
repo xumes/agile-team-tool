@@ -806,29 +806,3 @@ var children = _.isEmpty(children) ? [] : children;
   }
   return children; 
 }
-
-module.exports.isTeamMember = function(teamId, checkParent, teamLists, userTeams) {
-  var userExist = false;
-  if (teamLists == null)
-    return userExist;
-
-  if (userTeams != null) {
-    for (var i in userTeams) {
-      if (userTeams[i]['_id'] == teamId) {         
-        userExist = true;
-        break;
-      }
-    }
-  } 
-
-  if (!userExist && checkParent) {
-    for ( var i = 0; i < teamLists.length; i++) {
-      if (teamLists[i]['_id'] == teamId && teamLists[i].value != undefined && 
-      teamLists[i].value.parent_team_id != "") {
-        return module.exports.isTeamMember(teamLists[i].value.parent_team_id, checkParent, teamLists, userTeams);
-      }
-    }
-  }
-
-  return userExist;
-}
