@@ -802,7 +802,8 @@ function handleTeamValidationErrors(errors, action) {
     'name': 'teamName',
     'desc': 'teamDesc',
     'squadteam': '',
-    'role': '',
+    'member.name': 'teamMemberName',
+    'member.role': '',
     'parent_team_id': 'parentSelectList',
     'child_team_id': 'childSelectList'
   };
@@ -833,6 +834,9 @@ function handleTeamValidationErrors(errors, action) {
       }
     }
   });
+	if (msgs == "") {
+		msgs = errors.error;
+	}
   showMessagePopup(msgs);
 
 	// enable necessary controls
@@ -1058,13 +1062,6 @@ function addTeamMember(person, oldAlloc, newAlloc, oldRole, newRole, action) {
 		    handleTeamValidationErrors(JSON.parse(xhr.responseText), action);
 		  } else {
 		  	errorHandler(xhr, textStatus, errorThrown);
-		  }
-		  if (action == "addTeamMember") {
-		  	currentTeam.members.pop();
-		  } else {
-		  	memberData.name = person.name;
-				memberData.role = oldRole;
-				memberData.allocation = isNaN(parseInt(oldAlloc)) ? 0 : oldAlloc;
 		  }
 
 		}).done(function (data) {
@@ -1296,6 +1293,14 @@ function updateMemberInfo(action) {
 		} else if (isNaN(currAlloc) || (currAlloc < 0 || currAlloc > 100)) {
 			setFieldErrorHighlight("memberAllocation");
 			showMessagePopup("Team member allocation should be between <br> 0 - 100");
+			hasError = true;
+		} else if ($("#memberRoleSelectList option:selected").val() == "") {
+			setFieldErrorHighlight("memberRoleSelectList");
+			showMessagePopup("Please select a valid role");
+			hasError = true;
+		} else if ($("#memberRoleSelectList option:selected").val() == "other" && $("#otherRoleDesc").val().trim() == "") {
+			setFieldErrorHighlight("otherRoleDesc");
+			showMessagePopup("Specify the \"Other\" role for the selected member.");
 			hasError = true;
 		}
 

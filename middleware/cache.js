@@ -350,7 +350,7 @@ var userCache = {
 
     var myTeams = req.session['myTeams'];
     var user = req.session['user'];
-    if (!_.isEmpty(user) && !_.isEmpty(team.members) && _.isEmpty(_.find(team.members, {id: user.shortEmail}))) {
+    if (!_.isEmpty(user) && !_.isEmpty(team.members) && !_.isEmpty(_.find(team.members, {id: user.shortEmail})) && _.isEmpty(_.find(myTeams, {_id: team._id}))) {
       var newTeam = new Object;
       newTeam['_id'] = team['_id'];
       newTeam['_rev'] = team['_rev'];

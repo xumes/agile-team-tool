@@ -658,7 +658,8 @@ function updateAgileTeamCache(team) {
     allTeamsLookup[team._id] = compactedTeam;
   }
 
-  if (!_.isEmpty(user) && !_.isEmpty(team.members) && _.isEmpty(_.find(team.members, {id: user.shortEmail}))) {
+  if (!_.isEmpty(user) && !_.isEmpty(team.members) 
+  	&& !_.isEmpty(_.find(team.members, {id: user.shortEmail})) && _.isEmpty(_.find(myTeams, {_id: team._id}))) {
     var newTeam = new Object;
     newTeam['_id'] = team['_id'];
     newTeam['_rev'] = team['_rev'];

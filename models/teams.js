@@ -46,19 +46,22 @@ var team = {
     var fullName = user['ldap']['hrFirstName'] + ' ' + user['ldap']['hrLastName'];
     var email = user['shortEmail'];
     var transTime = util.getServerTime();
+    var isSquad = _.isUndefined(newDocu['squadTeam']) || newDocu['squadTeam'] == 'Yes' ? true : false;
     var memberInfo = {
       "key": user['ldap']['serialNumber'],
       "id": email,
       "name": fullName,
       "allocation": 0,
-      "role": " Team Lead"
+      "role": isSquad ? "Iteration Manager" : "Team Lead"
     };
     newDocu['type'] = 'team';
     newDocu['created_user'] = email;
     newDocu['created_dt'] = transTime;
     newDocu['last_updt_dt'] = transTime;
     newDocu['last_updt_user'] = email;
-    newDocu['members'] = [ memberInfo ];
+    // default current user as the first member of the team
+    if (_.isUndefined(newDocu['members']) || _.size(newDocu['members']) == 0)
+      newDocu['members'] = [ memberInfo ];
     newDocu['child_team_id'] = [];
     newDocu['doc_status'] = '';
     var newTeamId = settings.prefixes.team + raw['name'] + "_" + new Date().getTime(); // define predefine document id
@@ -66,6 +69,7 @@ var team = {
     newDocu['_id'] = newTeamId;
     return newDocu;
   },
+
   createTeam : function(teamDoc, user){
     infoLogs('Creating new team records to Cloudant');
     return new Promise(function(resolve, reject){
@@ -202,7 +206,6 @@ var team = {
                   reject(formatErrMsg({ squadteam : ['Cannot change this team into a squad team. Child team has been entered for this team.'] }));
                 }
               }
-
               /*
               parent_id
                   not allowed to be a parent of self
