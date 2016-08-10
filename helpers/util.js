@@ -4,63 +4,14 @@ var settings = require('../settings');
 var loggers = require('../middleware/logger');
 var _ = require('underscore');
 var users = require('../models/users')
-var teamModel = require('../models/teams');
 var momenttz = require('moment-timezone');
 var jstz = require('jstimezonedetect');
 var msg;
-var teamLists = [];
-var userTeams = [];
 
 var formatErrMsg = function(msg) {
   loggers.get('models').info('util helper Error: ' + msg);
   return { error : msg };
 };
-
-var getTeams = function(userId){
-  teamModel = require('../models/teams');
-  return new Promise(function(resolve, reject){
-    loggers.get('models').info('Getting user teams of '+userId);
-    teamModel.getTeam('')
-    .then(function(body){
-      teamLists = body.rows;
-      return teamModel.getTeamByEmail(userId);
-    })
-    .then(function(body){
-      userTeams = body;
-      resolve(body);
-    })
-    .catch(function(err){
-      reject(formatErrMsg(err));
-    });
-  });
-};
-
-
-var isUserMemberOfTeam = function(teamId, checkParent) {
-  var userExist = false;
-
-  if (teamLists == null)
-    return userExist;
-
-  if (userTeams != null) {
-    for (var i in userTeams) {
-      if (userTeams[i]['id'] == teamId) {         
-        userExist = true;
-        break;
-      }
-    }
-  } 
-
-  if (!userExist && checkParent) {
-    for ( var i = 0; i < teamLists.length; i++) {
-      if (teamLists[i]['id'] == teamId && teamLists[i].value.parent_team_id != "") {
-        return isUserMemberOfTeam(teamLists[i].value.parent_team_id, checkParent);
-      }
-    }
-  }
-
-  return userExist;
-}
 
 module.exports.trimData = function(postData) {
   var cleanData = {};
@@ -101,42 +52,6 @@ module.exports.getServerTime = function () {
   return momenttz.tz(timezone).format('YYYY-MM-DD HH:mm:ss z');
 };
 
-module.exports.isValidUser = function(userId, teamId, checkParent){
-  return new Promise(function(resolve, reject){
-    loggers.get('models').info('validating user '+userId+' for team '+teamId);
-    users.getAdmins()
-    .then(function(body){
-      return _.contains(body.ACL_Full_Admin, userId);
-    })
-    .then(function(isAdmin){
-      if (!isAdmin){
-        return getTeams(userId);
-      }
-      else{
-        return isAdmin;
-      }
-    })
-    .then(function(body){
-      if (!_.isBoolean(body)){
-        return isUserMemberOfTeam(teamId, checkParent);
-      }
-      else{
-        return body;
-      }
-    })
-    .then(function(allowedUser){
-      if (!allowedUser){
-        reject(formatErrMsg('Unauthorized user.'));
-      }
-      else{
-        resolve(allowedUser);
-      }
-    })
-    .catch(function(err){
-      reject(err.error);
-    });
-  });
-}
 
 /**
  * Bulkdelete documents
@@ -223,29 +138,18 @@ module.exports.formatForBulkTransaction = function(docs, email, action){
  * @returns - true if team or team's parent is found in user teams
  */
 
-function isTeamMember(teamId, checkParent, teamLists, userTeams) {
+ function isTeamMember(teamId, checkParent, teamLists, userTeams) {
   var userExist = false;
   if (teamLists == null)
     return userExist;
-
   if (userTeams != null) {
-    for (var i in userTeams) {
-      if (userTeams[i]['_id'] == teamId) {         
-        userExist = true;
-        break;
-      }
-    }
+    userExist = !_.isEmpty(_.findWhere(userTeams, {_id: teamId}));
   } 
-
   if (!userExist && checkParent) {
-    for ( var i = 0; i < teamLists.length; i++) {
-      if (teamLists[i]['_id'] == teamId && teamLists[i].value != undefined && 
-      teamLists[i].value.parent_team_id != "") {
-        return isTeamMember(teamLists[i].value.parent_team_id, checkParent, teamLists, userTeams);
-      }
-    }
+    var team = _.findWhere(userTeams, {_id: teamId});
+    if (!_.isEmpty(team) && !_.isEmpty(team.parent_team_id))
+      return isTeamMember(team.parent_team_id, checkParent, teamLists, userTeams);
   }
-
   return userExist;
 }
 
