@@ -9,24 +9,51 @@ var fs            = require('fs');
 var _             = require('underscore');
 var async         = require('async');
 
-//TODO
 module.exports.init = function(){
   //only init cloudant if we are running locally or on app instance 0 in cloudfoundry
   if(_.isEmpty(process.env.CF_INSTANCE_INDEX) || process.env.CF_INSTANCE_INDEX == "0"){
     logger.get('init').info("Checking Cloudant DB fixtures...");
     
-    Promise.join(getCloudantDocs(), getSourceDocs(),
-        function(cloudantDocs, sourceDocs) {
-          
-        //TODO
-        // console.log(cloudantDocs);
-        // console.log("\n\n\n\n\n");
-        // console.log(sourceDocs);
+    Promise.join(getCloudantDocs(), getSourceDocs(), function(cloudantDocs, sourceDocs) {
+        /*ignore if design doc exists in the DB but not in the source
+          (might be a use case in the future for metrics) */
+        logger.get('init').info("Success! "
+        +"# of cloudant design docs:"+cloudantDocs.length+", "
+        +"# of source design docs:"+sourceDocs.length);
+        //for each source doc, find the doc in cloudant
+        _.each(sourceDocs, function(sDoc){ 
+          var cDoc = _.find(cloudantDocs, function(cDoc){return _.isEqual(sDoc._id, cDoc.doc._id); });
+          //not found in cloudant, so create it in cloudant
+          if(_.isEmpty(cDoc)){
+            logger.get('init').warn(sDoc._id + " NOT found in DB. Creating it now..");
+            
+            db.insert(sDoc, function(err, body) {
+              if(!err)
+                logger.get('init').info("Create Success: "+sDoc._id);
+              else
+                logger.get('init').error("Create Error: "+sDoc._id+". "+ err);
+            });
+          }
+          //found in cloudant so check version
+          else{
+            if(!_.isEqual(sDoc.version, cDoc.doc.version)){
+              logger.get('init').warn(cDoc.doc._id+" cloudant design document is out of date. version="+cDoc.doc.version+", source version="+sDoc.version+". ");
+              
+              sDoc["_rev"]=cDoc.doc._rev;
+              db.insert(sDoc, function(err, body) {
+                if(!err)
+                  logger.get('init').info("Update Success: "+sDoc._id+ " "+JSON.stringify(body));
+                else
+                  logger.get('init').error("Update Error: "+sDoc._id+". "+ err);
+              });
+            }
+            else
+              logger.get('init').info(cDoc.doc._id + " already up-to-date");
+          }
 
+        });
     });
-      
   }
-  
 }
 
 var getCloudantDocs = function(){
@@ -54,8 +81,9 @@ var getSourceDocs = function(){
          callback();
           
       }, function() {
-         resolve(res);
-       });
-    });
- });
+           resolve(res);
+         }
+      );//async each
+    });//fs read dir
+  }); //promise
 }
