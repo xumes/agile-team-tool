@@ -11,13 +11,13 @@ var teamDocUpdateInvalid = dummyData.teams.validDoc;
 
 var teamDocUpdateValid = dummyData.teams.validDoc;
 
-var teamDocValid = dummyData.teams.validDoc; 
+var teamDocValid = dummyData.teams.validDoc;
 
 var userDetailsValid = dummyData.user.details;
 
 var userDetails = dummyData.user.details;
 
-var teamDocInvalid = dummyData.teams.invalidDoc; 
+var teamDocInvalid = dummyData.teams.invalidDoc;
 
 // retrieve obj via cache, decoy for session
 var session = {};
@@ -101,7 +101,7 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
       done();
     })
   });
-  
+
   it('it will return error because update data is invalid', function(done){
     teamDocUpdateInvalid['parent_team_id'] = createdId;
     teamDocUpdateInvalid['squadteam'] = 'Yes';
@@ -207,7 +207,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       done();
     })
   });
-  
+
   it('will return error because associate data is invalid to associate parent', function(done){
     associateDataParentInvalid = {
       teamId : createdId,
@@ -224,7 +224,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       done();
     })
   });
-  
+
   it('will return error because associate data is invalid to associate child', function(done){
     associateDataChildInvalid = {
       teamId : createdId,
@@ -259,7 +259,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
     })
   });
 
-  
+
   it('will return error because associate data is invalid to removed parent', function(done){
     associateDataRemoveParentInvalid = {
       teamId : createdId,
@@ -276,7 +276,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       done();
     })
   });
-  
+
   it('will return error because associate data is invalid to removed parent', function(done){
     associateDataRemoveParentInvalid = {
       teamId : createdId,
@@ -327,7 +327,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       done();
     })
   });
-  
+
   it('will associate new parent team', function(done){
     teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
     .then(function(body){
@@ -346,7 +346,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       })
     })
   });
-  
+
   it('will associate new child team', function(done){
     teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
     .then(function(body){
@@ -365,7 +365,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       })
     })
   });
-  
+
   it('will removed parent association', function(done){
     teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
     .then(function(body){
@@ -393,7 +393,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       })
     });
   });
-  
+
   it('will removed child team', function(done){
     teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
     .then(function(body){
@@ -505,7 +505,7 @@ describe("Team models [getTeam]: get all teams or get team details if team id is
       session['user'] = userDetails;
       done();
     })
-  }) 
+  })
   it("retrieve all team", function(done){
     teamModel.getTeam(null)
       .then(function(body){
@@ -518,7 +518,7 @@ describe("Team models [getTeam]: get all teams or get team details if team id is
       });
   });
 
-  it("return empty none existent team details", function(done){    
+  it("return empty none existent team details", function(done){
     teamModel.getTeam('none-existing-team')
       .then(function(body){
         expect(body).to.be.equal(null);
@@ -567,7 +567,7 @@ describe('Team models [getRole]: get team role type', function(done){
         expect(err.error).to.be.an('undefined');
       })
       .finally(function(){
-        done();  
+        done();
       });
   });
 });
@@ -663,6 +663,21 @@ describe('Team models [getTeamByEmail]: get all team lists for a given email add
       .finally(function(){
         done();
       });
-  });    
+  });
 
+});
+
+describe('Team models [getRootTeams]: get top level, children or parent teams', function(){
+  it('return team lists for top level teams', function(done){
+    var data = {'parent_team_id':''};
+    teamModel.getRootTeams(data)
+      .then(function(body){
+        expect(body).to.be.have.property('docs');
+        expect(body.docs).to.not.empty;
+        done();
+      })
+      .catch(function(err){
+        done(err);
+      });
+  });
 });

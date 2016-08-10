@@ -397,4 +397,17 @@ describe('Team API Tests', function() {
     });
   });
 
+  it('it will return 200 to get top level teams', function(done){
+    var req = request(app).get('/api/teams?parent_team_id');
+    agent.attachCookies(req);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+        expect(res.body).to.have.property('docs');
+      }
+      done();
+    });
+  });
 });
