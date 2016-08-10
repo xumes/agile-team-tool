@@ -43,6 +43,17 @@ var dummy = {
             hrLastName: 'Doe'
           }
       };
+    },
+    invalid : function(){
+      return {
+        shortEmail: 'invalid-user@ibm.com',
+        ldap:
+          {
+            serialNumber: '123456PH1',
+            hrFirstName: 'John',
+            hrLastName: 'Doe'
+          }
+      };
     }
   },
   associate : {

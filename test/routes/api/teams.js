@@ -14,17 +14,25 @@ var createdId = null;
 var agent = request.agent(app);
 
 describe('Team API Tests', function() {
+  // do the login befre testing
+  this.timeout(30000);
   before(function(done) {
     agent
       .get('/api/login/masquerade/' + adminUser)
       .send()
       .end(function(err, res) {
         if (err) throw err;
-        agent.saveCookies(res);
-        done();
+        //call home page to initialize session data
+        agent
+          .get('/')
+          .send()
+          .end(function(err, res) {
+            if (err) throw err;
+            agent.saveCookies(res);
+            done();
+          })
       })
   });
-
 
   it('it will return 400 because team docment is not valid', function(done){
     var req = request(app).post('/api/teams');

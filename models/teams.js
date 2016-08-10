@@ -80,7 +80,8 @@ var team = {
           reject(formatErrMsg(validateTeam));  
     });
   },
-  updateOrDeleteTeam : function(updatedTeamDoc, user, action){ // transfer on routes
+  updateOrDeleteTeam : function(updatedTeamDoc, session, action){ // transfer on routes
+    var user = session['user'];
     var teamId = updatedTeamDoc['_id'];
     var checkParent = true;
     return new Promise(function(resolve, reject){
@@ -88,15 +89,16 @@ var team = {
         msg = 'Team documents id is required';
         reject(formatErrMsg(msg));
       }else{
+        /*
+        'allTeamsLookup' : result[0],
+            'allTeams' : result[0],
+            'myTeams' : result[1],
+            'systemAdmin' : result[2],
+            'systemStatus' : result[3]
+        */
         var updateOrDeleteTeamValidation = [];
         infoLogs('Getting team document latest records');
         updateOrDeleteTeamValidation.push(team.getTeam(teamId));
-        infoLogs('Getting tool admins');
-        updateOrDeleteTeamValidation.push(users.getAdmins());
-        infoLogs('Getting all team document');
-        updateOrDeleteTeamValidation.push(team.getTeam(null)); // teamLists
-        infoLogs('Getting all team document associated to user ' + user['shortEmail']);
-        updateOrDeleteTeamValidation.push(team.getTeamByEmail(user['shortEmail'])); // userTeams
         infoLogs('Getting iterations associated to ' + teamId);
         updateOrDeleteTeamValidation.push(iterationModels.getByIterInfo(teamId));
         infoLogs('Getting assessments associated to ' + teamId);
@@ -111,23 +113,18 @@ var team = {
           // res[4] team iterations
           // res[5] team assessments
           var oldTeamDocu = res[0];
-          var adminLists = res[1];
-          var teamLists = util.returnObject(res[2]);
-          var userTeams = util.returnObject(res[3]);
-          var teamIterations = res[4];
-          var teamAssesments = res[5];
+          var adminLists = session['systemAdmin'];
+          var teamLists = session['allTeams'];
+          var userTeams = session['myTeams'];
+          var teamIterations = res[1];
+          var teamAssesments = res[2];
           var userEmail = user['shortEmail'];
           if(oldTeamDocu['doc_status'] === 'delete'){
             msg = 'Invalid action';
             reject(formatErrMsg(msg));
           }
-
-          //isAllowedUser = module.exports.isUserMemberOfTeam(teamId, checkParent, teamLists, userTeams);
           util.isUserAllowed(userEmail, teamId, true, teamLists, userTeams)
-          .catch(function(err){
-            msg = 'User not authorized to do action';
-            reject(formatErrMsg(msg));
-          }).then(function(){
+          .then(function(){
             // START team document update
             if(action === 'delete'){
               var bulkDocu = [];
@@ -268,7 +265,11 @@ var team = {
                 reject(formatErrMsg(errorLists));
               }
             }
-          });
+          })
+          .catch(function(err){
+            msg = 'User not authorized to do action';
+            reject(formatErrMsg(msg));
+          })
         })
         .catch(function(err){
           reject(err);
@@ -386,7 +387,8 @@ var team = {
       }
     }
   },
-  associateTeams: function(teamObj, action, userEmail){
+  associateTeams: function(teamObj, action, session){
+    var userEmail = session['user']['shortEmail'];
     var errorLists = {};
     errorLists['error'] = {};
     return new Promise(function(resolve, reject){
@@ -400,257 +402,255 @@ var team = {
         reject(errorLists);
       }else{
         // check if user is authorized to do action
-        var assocObj = [];
-        assocObj.push(team.getTeam(null));
-        assocObj.push(team.getTeamByEmail(userEmail));
-        Promise.all(assocObj)
+        var teamLists = session['allTeams'];
+        var userTeams = session['myTeams'];
+        util.isUserAllowed(userEmail, teamObj['teamId'], true, teamLists, userTeams)
         .then(function(body){
-          var teamLists = util.returnObject(body[0]);
-          var userTeams = util.returnObject(body[1]);
-          util.isUserAllowed(userEmail, teamObj['teamId'], true, teamLists, userTeams)
-          .then(function(body){
-            infoLogs('Validating for ' + action );
-            /*
-            FOR TEAM DELETE
-            kung naay parent tong team, iremove sya as child sa parent team..
-            kung naay children ang team, iremove sya sa parent sa child teams...
-            */
-            /*
-            for bulk updates
-            by the way, kato gani nay mga related na bulk operation na multiple team documents ang ginaupdate.... 
-            pwede nimo ireturn as array of team docs tong mga doc?
-            */
-            switch(action){
-              case 'associateParent':
-                 // parent_id 
-                if(teamObj['teamId'] === teamObj['targetParent']){
-                  // not allowed to be a parent of self
-                  errorLists['error']['targetParent'] = 'Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.';
-                  infoLogs(errorLists);
-                  reject(errorLists);
-                }else{
-                  team.getTeam(teamObj['targetParent'])
-                  .then(function(body){
-                    if(body['squadteam'] === 'Yes'){
-                      // selected parent team should not be a squad team
-                      errorLists['error']['targetParent'] = 'Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.';
-                      infoLogs(errorLists);
-                      reject(errorLists);
-                    }else{
-                      // ** selected parent team should not be from a team under  it
-                      team.getTeam(null)
-                      .then(function(body){
-                        var teamChildren = getChildrenOfParent(teamObj['teamId'], body);
-                        if(teamChildren.indexOf(teamObj['targetParent']) > -1){
-                          errorLists['error']['targetParent'] = 'Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.';
-                          infoLogs(errorLists);
-                          reject(errorLists);
-                        }else{
-                          infoLogs('Data valid for savings in ' + action);
-                          // merge documents for update
-                          var associateParent = [];
-                          associateParent.push(team.getTeam(teamObj['teamId']));
-                          associateParent.push(team.getTeam(teamObj['targetParent']));
-                          Promise.all(associateParent)
-                          .then(function(result){
-                            formattedDocuments(result, action)
-                            .then(function(res){
-                              var bulkDocu = util.formatForBulkTransaction(res, userEmail, 'update');
-                              common.bulkUpdate(bulkDocu)
-                              .then(function(body){
-                                loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully associated to parent ' + teamObj['targetParent']);
-                                //resolve(body);
-                                // return updated documents
-                                resolve(bulkDocu['docs']);
-                              })
-                              .catch( /* istanbul ignore next */ function(err){
-                                // cannot simulate Cloudant error during testing
-                                loggers.get('models').error('Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.');
-                                reject(formatErrMsg(err.error));
-                              })
-                            })
-                            .catch(function(err){
-                              reject(err);
-                            })
-                          })
-                        }
-                      })
-                    }
-                  })
-                  .catch(function(err){
+          infoLogs('Validating for ' + action );
+          /*
+          FOR TEAM DELETE
+          kung naay parent tong team, iremove sya as child sa parent team..
+          kung naay children ang team, iremove sya sa parent sa child teams...
+          */
+          /*
+          for bulk updates
+          by the way, kato gani nay mga related na bulk operation na multiple team documents ang ginaupdate.... 
+          pwede nimo ireturn as array of team docs tong mga doc?
+          */
+          switch(action){
+            case 'associateParent':
+               // parent_id 
+              if(_.isEmpty(teamObj['targetParent'])){
+                errorLists['error']['targetParent'] = 'Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.';
+                infoLogs(errorLists);
+                reject(errorLists);
+              }
+              if(teamObj['teamId'] === teamObj['targetParent']){
+                // not allowed to be a parent of self
+                errorLists['error']['targetParent'] = 'Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.';
+                infoLogs(errorLists);
+                reject(errorLists);
+              }else{
+                team.getTeam(teamObj['targetParent'])
+                .then(function(body){
+                  if(body['squadteam'] === 'Yes'){
+                    // selected parent team should not be a squad team
                     errorLists['error']['targetParent'] = 'Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.';
                     infoLogs(errorLists);
                     reject(errorLists);
-                  })
-                }
-                break;
-              case 'associateChild':
-                if(_.isEmpty(teamObj['targetChild'])){
-                  errorLists['error']['targetChild'] = 'No team selected to associate as a Child team.';
-                  infoLogs(errorLists);
-                  reject(errorLists);
-                }
-                if(typeof teamObj['targetChild'] != 'object'){
-                  // target child must be array of team id
-                  errorLists['error']['targetChild'] = 'Unable to add selected team as a child. Team may have been updated with another parent.';
-                  infoLogs(errorLists);
-                  reject(errorLists);
-                }else if(teamObj['targetChild'].indexOf(teamObj['teamId']) > -1){
-                  // not allowed to add self as a child
-                  errorLists['error']['targetChild'] = 'Unable to add selected team as a child. Team may have been updated with another parent.';
-                  infoLogs(errorLists);
-                  reject(errorLists);
-                }else{
-                  var childLists = [];
-                  _.each(teamObj['targetChild'], function(v,i,l){
-                    childLists.push(team.getTeam(v))
-                  })
-                  Promise.all(childLists)
-                  .then(function(result){
-                    //squad teams cannot have child teams
-                    //only allowed to add teams that has no parent
-                    _.each(result, function(v,i,l){
-                      if(!(_.isEmpty(v['child_team_id'])) || !(_.isEmpty(v['parent_team_id']))){
-                        errorLists['error']['targetChild'] = 'Unable to add selected team as a child. Team may have been updated with another parent.';
+                  }else{
+                    // ** selected parent team should not be from a team under  it
+                    team.getTeam(null)
+                    .then(function(body){
+                      var teamChildren = getChildrenOfParent(teamObj['teamId'], body);
+                      if(teamChildren.indexOf(teamObj['targetParent']) > -1){
+                        errorLists['error']['targetParent'] = 'Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.';
                         infoLogs(errorLists);
                         reject(errorLists);
+                      }else{
+                        infoLogs('Data valid for savings in ' + action);
+                        // merge documents for update
+                        var associateParent = [];
+                        associateParent.push(team.getTeam(teamObj['teamId']));
+                        associateParent.push(team.getTeam(teamObj['targetParent']));
+                        Promise.all(associateParent)
+                        .then(function(result){
+                          formattedDocuments(result, action)
+                          .then(function(res){
+                            var bulkDocu = util.formatForBulkTransaction(res, userEmail, 'update');
+                            common.bulkUpdate(bulkDocu)
+                            .then(function(body){
+                              loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully associated to parent ' + teamObj['targetParent']);
+                              //resolve(body);
+                              // return updated documents
+                              resolve(bulkDocu['docs']);
+                            })
+                            .catch( /* istanbul ignore next */ function(err){
+                              // cannot simulate Cloudant error during testing
+                              loggers.get('models').error('Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.');
+                              reject(formatErrMsg(err.error));
+                            })
+                          })
+                          .catch(function(err){
+                            reject(err);
+                          })
+                        })
                       }
                     })
-                    // start associateChild saving
-                    /*
-                    sa child team update
-                    - 2 team docs kung mag add kag new child (current team and child team)
-                    */
-                    // merge documents for update
-                    var associateChild = [];
-                    associateChild.push(team.getTeam(teamObj['teamId']));
-                    _.each(teamObj['targetChild'], function(v,i,l){
-                      associateChild.push(team.getTeam(v));
-                    });
-                    Promise.all(associateChild)
-                    .then(function(result){
-                      formattedDocuments(result, action)
-                      .then(function(res){
-                        var bulkDocu = util.formatForBulkTransaction(res, userEmail, 'update');
-                        common.bulkUpdate(bulkDocu)
-                        .then(function(body){
-                          loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully associated to child ' + JSON.stringify(teamObj['targetChild']));
-                          //resolve(body);
-                          // return updated documents
-                          resolve(bulkDocu['docs']);
-                        })
-                      })
-                    })
-                    .catch( /* istanbul ignore next */ function(err){
-                      // cannot simulate Cloudant error during testing
-                      loggers.get('models').error('Unable to add selected team as a child. Team may have been updated with another parent.');
-                      reject(err);
-                    })
-                  })
-                  .catch(function(err){
-                    loggers.get('models').error('Unable to add selected team as a child. Team may have been updated with another parent.');
-                    reject(err);
-                  })
-                }
-                break;
-              case 'removeParent':
-                if(_.isEmpty(teamObj['targetParent'])){
-                  // not allowed to be a parent of self
-                  errorLists['error']['targetParent'] = 'Target parent cannot be blank';
+                  }
+                })
+                .catch(function(err){
+                  errorLists['error']['targetParent'] = 'Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.';
                   infoLogs(errorLists);
                   reject(errorLists);
-                }else if(teamObj['teamId'] === teamObj['targetParent']){
-                  // not allowed to be a parent of self
-                  errorLists['error']['targetParent'] = 'Target parent cannot be equal to self';
-                  infoLogs(errorLists);
-                  reject(errorLists);
-                }else{
-                  var removeParent = [];
-                  removeParent.push(team.getTeam(teamObj['teamId']));
-                  removeParent.push(team.getTeam(teamObj['targetParent']));
-                  Promise.all(removeParent)
-                  .then(function(result){
-                    // target parent must be equal to current team parent team id
-                    if(result[0]['parent_team_id'] != result[1]['_id']){
-                      errorLists['error']['targetParent'] = 'Target parent is not parent of current team';
+                })
+              }
+              break;
+            case 'associateChild':
+              if(_.isEmpty(teamObj['targetChild'])){
+                errorLists['error']['targetChild'] = 'No team selected to associate as a Child team.';
+                infoLogs(errorLists);
+                reject(errorLists);
+              }
+              if(typeof teamObj['targetChild'] != 'object'){
+                // target child must be array of team id
+                errorLists['error']['targetChild'] = 'Unable to add selected team as a child. Team may have been updated with another parent.';
+                infoLogs(errorLists);
+                reject(errorLists);
+              }else if(teamObj['targetChild'].indexOf(teamObj['teamId']) > -1){
+                // not allowed to add self as a child
+                errorLists['error']['targetChild'] = 'Unable to add selected team as a child. Team may have been updated with another parent.';
+                infoLogs(errorLists);
+                reject(errorLists);
+              }else{
+                var childLists = [];
+                _.each(teamObj['targetChild'], function(v,i,l){
+                  childLists.push(team.getTeam(v))
+                })
+                Promise.all(childLists)
+                .then(function(result){
+                  //squad teams cannot have child teams
+                  //only allowed to add teams that has no parent
+                  _.each(result, function(v,i,l){
+                    if(!(_.isEmpty(v['child_team_id'])) || !(_.isEmpty(v['parent_team_id']))){
+                      errorLists['error']['targetChild'] = 'Unable to add selected team as a child. Team may have been updated with another parent.';
                       infoLogs(errorLists);
                       reject(errorLists);
-                    }else{
-                      formattedDocuments(result, action)
-                      .then(function(res){
-                        var bulkDocu = util.formatForBulkTransaction(res, userEmail, 'update');
-                        common.bulkUpdate(bulkDocu)
-                        .then(function(body){
-                          loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully removed parent team' + teamObj['targetParent']);
-                          //resolve(body);
-                          // return updated documents
-                          resolve(bulkDocu['docs']);
-                        })
-                        .catch( /* istanbul ignore next */ function(err){
-                          // cannot simulate Cloudant error during testing
-                          loggers.get('models').error('Error removing team parent');
-                          reject(err);
-                        })
-                      })
-                      .catch( /* istanbul ignore next */ function(err){
-                    // cannot simulate Cloudant error during testing
-                    loggers.get('models').error('Error removing team parent');
-                    reject(err);
-                  })
                     }
                   })
-                  .catch( /* istanbul ignore next */ function(err){
-                    // cannot simulate Cloudant error during testing
-                    loggers.get('models').error('Error removing team parent');
-                    reject(err);
-                  })
-                }
-                break;
-              case 'removeChild':
-                if(typeof teamObj['targetChild'] != 'object'){
-                  // target child must be array of team id
-                  errorLists['error']['targetChild'] = 'Invalid target child';
-                  infoLogs(errorLists);
-                  reject(errorLists);
-                }else if(teamObj['targetChild'].indexOf(teamObj['teamId']) > -1){
-                  // not allowed to add self as a child
-                  errorLists['error']['targetChild'] = 'Invalid target child';
-                  infoLogs(errorLists);
-                  reject(errorLists);
-                }else{
-                  var removeChild = [];
-                  removeChild.push(team.getTeam(teamObj['teamId']));
+                  // start associateChild saving
+                  /*
+                  sa child team update
+                  - 2 team docs kung mag add kag new child (current team and child team)
+                  */
+                  // merge documents for update
+                  var associateChild = [];
+                  associateChild.push(team.getTeam(teamObj['teamId']));
                   _.each(teamObj['targetChild'], function(v,i,l){
-                    removeChild.push(team.getTeam(v))
-                  })
-                  Promise.all(removeChild)
+                    associateChild.push(team.getTeam(v));
+                  });
+                  Promise.all(associateChild)
                   .then(function(result){
                     formattedDocuments(result, action)
                     .then(function(res){
                       var bulkDocu = util.formatForBulkTransaction(res, userEmail, 'update');
                       common.bulkUpdate(bulkDocu)
                       .then(function(body){
-                        loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully removed child team' + JSON.stringify(teamObj['targetChild']));
+                        loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully associated to child ' + JSON.stringify(teamObj['targetChild']));
                         //resolve(body);
                         // return updated documents
                         resolve(bulkDocu['docs']);
                       })
                     })
                   })
-                  .catch(function(err){
+                  .catch( /* istanbul ignore next */ function(err){
+                    // cannot simulate Cloudant error during testing
+                    loggers.get('models').error('Unable to add selected team as a child. Team may have been updated with another parent.');
                     reject(err);
                   })
-                }
-                break;
-            }
-          })
-          .catch(function(err){
-            errorLists['error']['user'] = 'User not authorized to do action';
-            infoLogs(errorLists);
-            reject(errorLists);
-          });
-          ///////
+                })
+                .catch(function(err){
+                  loggers.get('models').error('Unable to add selected team as a child. Team may have been updated with another parent.');
+                  reject(err);
+                })
+              }
+              break;
+            case 'removeParent':
+              if(_.isEmpty(teamObj['targetParent'])){
+                // not allowed to be a parent of self
+                errorLists['error']['targetParent'] = 'Target parent cannot be blank';
+                infoLogs(errorLists);
+                reject(errorLists);
+              }else if(teamObj['teamId'] === teamObj['targetParent']){
+                // not allowed to be a parent of self
+                errorLists['error']['targetParent'] = 'Target parent cannot be equal to self';
+                infoLogs(errorLists);
+                reject(errorLists);
+              }else{
+                var removeParent = [];
+                removeParent.push(team.getTeam(teamObj['teamId']));
+                removeParent.push(team.getTeam(teamObj['targetParent']));
+                Promise.all(removeParent)
+                .then(function(result){
+                  // target parent must be equal to current team parent team id
+                  if(result[0]['parent_team_id'] != result[1]['_id']){
+                    errorLists['error']['targetParent'] = 'Target parent is not parent of current team';
+                    infoLogs(errorLists);
+                    reject(errorLists);
+                  }else{
+                    formattedDocuments(result, action)
+                    .then(function(res){
+                      var bulkDocu = util.formatForBulkTransaction(res, userEmail, 'update');
+                      common.bulkUpdate(bulkDocu)
+                      .then(function(body){
+                        loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully removed parent team' + teamObj['targetParent']);
+                        //resolve(body);
+                        // return updated documents
+                        resolve(bulkDocu['docs']);
+                      })
+                      .catch( /* istanbul ignore next */ function(err){
+                        // cannot simulate Cloudant error during testing
+                        loggers.get('models').error('Error removing team parent');
+                        reject(err);
+                      })
+                    })
+                    .catch( /* istanbul ignore next */ function(err){
+                  // cannot simulate Cloudant error during testing
+                  loggers.get('models').error('Error removing team parent');
+                  reject(err);
+                })
+                  }
+                })
+                .catch( /* istanbul ignore next */ function(err){
+                  // cannot simulate Cloudant error during testing
+                  loggers.get('models').error('Error removing team parent');
+                  reject(err);
+                })
+              }
+              break;
+            case 'removeChild':
+              if(typeof teamObj['targetChild'] != 'object'){
+                // target child must be array of team id
+                errorLists['error']['targetChild'] = 'Invalid target child';
+                infoLogs(errorLists);
+                reject(errorLists);
+              }else if(teamObj['targetChild'].indexOf(teamObj['teamId']) > -1){
+                // not allowed to add self as a child
+                errorLists['error']['targetChild'] = 'Invalid target child';
+                infoLogs(errorLists);
+                reject(errorLists);
+              }else{
+                var removeChild = [];
+                removeChild.push(team.getTeam(teamObj['teamId']));
+                _.each(teamObj['targetChild'], function(v,i,l){
+                  removeChild.push(team.getTeam(v))
+                })
+                Promise.all(removeChild)
+                .then(function(result){
+                  formattedDocuments(result, action)
+                  .then(function(res){
+                    var bulkDocu = util.formatForBulkTransaction(res, userEmail, 'update');
+                    common.bulkUpdate(bulkDocu)
+                    .then(function(body){
+                      loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully removed child team' + JSON.stringify(teamObj['targetChild']));
+                      //resolve(body);
+                      // return updated documents
+                      resolve(bulkDocu['docs']);
+                    })
+                  })
+                })
+                .catch(function(err){
+                  reject(err);
+                })
+              }
+              break;
+          }
         })
+        .catch(function(err){
+          errorLists['error']['user'] = 'User not authorized to do action';
+          infoLogs(errorLists);
+          reject(errorLists);
+        });
       }
     });
   }
@@ -767,41 +767,6 @@ var formattedDocuments = function(doc, action){
 }
 
 module.exports = team;
-
-/**
- * Check if user is a member of a team so that they can edit the team document(s)
- * 
- * @param teamId - team document id to check if user is member
- * @param checkParent - set to true if we need to check the parent team documents for user membership.
- * @param teamLists - array of all team document
- * @param userTeams - array of all team document with email ie from api/teams/member/:email endpoint (teams that the user is on ??)
- * @returns {Boolean}
- */
-module.exports.isUserMemberOfTeam = function(teamId, checkParent, teamLists, userTeams) {
-  var userExist = false;
-// console.log('exported..');
-  if (teamLists == null)
-    return userExist;
-
-  if (userTeams != null) {
-    for (var i in userTeams) {
-      if (userTeams[i]['id'] == teamId) {         
-        userExist = true;
-        break;
-      }
-    }
-  } 
-
-  if (!userExist && checkParent) {
-    for ( var i = 0; i < teamLists.length; i++) {
-      if (teamLists[i]['id'] == teamId && teamLists[i].value.parent_team_id != "") {
-        return module.exports.isUserMemberOfTeam(teamLists[i].value.parent_team_id, checkParent, teamLists, userTeams);
-      }
-    }
-  }
-
-  return userExist;
-}
 
 /**
  * Get children of team in flatten structure

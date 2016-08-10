@@ -18,7 +18,7 @@ module.exports = function(app, includes) {
 
   deleteTeam = function(req, res){
     if(!(_.isEmpty(req.body['doc_status'])) &&  req.body['doc_status'] === 'delete'){
-      teamModel.updateOrDeleteTeam(req.body, req.session['user'], 'delete')
+      teamModel.updateOrDeleteTeam(req.body, req.session, 'delete')
         .then(function(result){
           res.status(204).send(result);
         })
@@ -31,7 +31,7 @@ module.exports = function(app, includes) {
   }
 
   updateTeam = function(req, res){
-    teamModel.updateOrDeleteTeam(req.body, req.session['user'], 'update')
+    teamModel.updateOrDeleteTeam(req.body, req.session, 'update')
       .then(function(result){
         middleware.cache.updateTeamCache(req, result);
         res.send(result);
@@ -47,7 +47,7 @@ module.exports = function(app, includes) {
     if(typeof valid === 'object' || valid === false){
       res.status(400).send({ error : 'Invalid action' });
     }else{
-      teamModel.associateTeams(req.body, action, req.session['email'])
+      teamModel.associateTeams(req.body, action, req.session)
       .then(function(result){
         res.send(result);
       })
