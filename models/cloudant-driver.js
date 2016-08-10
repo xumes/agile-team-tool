@@ -134,7 +134,15 @@ exports.Search = function(_design, _view, _include_docs, q) {
 
 exports.findBySelector = function(data) {
   return new Promise(function(resolve, reject){
-    var selector = {'selector':data};
+    var selector = {
+      'selector' : data,
+      'fields' : [
+        '_id',
+        'child_team_id',
+        'parent_team_id',
+        'name'
+      ]
+    };
     db.findAsync(selector)
       .then(function(body){
         resolve(body);
