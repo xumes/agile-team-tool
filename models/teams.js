@@ -216,16 +216,10 @@ var team = {
               if(!(_.isEmpty(updatedTeamDoc['parent_team_id'])) && updatedTeamDoc['parent_team_id'] === oldTeamDocu['_id']){
                 return reject(formatErrMsg({ parent_id : ['Cannot set self as parent']}));
               }
-                
 
-              if(!(_.isEmpty(updatedTeamDoc['parent_team_id']))){
-                var isSquadTeam = [];
-                _.reduce(teamLists, function(memo, item){
-                  if(item['parent_team_id'] === updatedTeamDoc['parent_team_id'] && item['squadteam'] === 'Yes')
-                    isSquadTeam.push(item);
-                });
-
-                if(!(_.isEmpty(isSquadTeam))){
+              if(oldTeamDocu['parent_team_id'] != updatedTeamDoc['parent_team_id'] && !(_.isEmpty(updatedTeamDoc['parent_team_id']))){
+                var refParent = _.findWhere(teamLists, { '_id' : updatedTeamDoc['parent_team_id'] });
+                if(refParent['squadteam'] === 'Yes'){
                   return reject(formatErrMsg({ parent_team_id : ['Parent team id must not be a squad team'] }))
                 }
               }
@@ -235,20 +229,22 @@ var team = {
                   squad teams cannot have child teams
                   only allowed to add teams that has no parent
               */
-              if(!(_.isEmpty(updatedTeamDoc['child_team_id']))){
+              if( !(_.isEqual(oldTeamDocu['child_team_id'], updatedTeamDoc['child_team_id']))){
                 if(updatedTeamDoc['child_team_id'].indexOf(oldTeamDocu['_id']) > -1)
                   return reject(formatErrMsg({ child_team_id : ['Cannot set self as child']}))
                 else{
+                  var newChildToBe = _.difference(updatedTeamDoc['child_team_id'], oldTeamDocu['child_team_id']);
                   var isValidChildTeam2 = [];
-                  var isValidChildTeamId = _.every(updatedTeamDoc['child_team_id'], function(cId){
+                  var isValidChildTeamId = _.every(newChildToBe, function(cId){
                     _.reduce(teamLists, function(memo, item){
-                      if(item['_id'] === cId && !(_.isEmpty(item['parent_team_id'])) )
+                      if(item['_id'] === cId && !(_.isEmpty(item['parent_team_id'])) ){
                         isValidChildTeam2.push(item);
+                      }
                     });
                     return _.isEmpty(isValidChildTeam2);
                   });
                   if(!isValidChildTeamId){
-                    return reject(formatErrMsg({ child_team_id : ['Child team cannot have parent']}))
+                    return reject(formatErrMsg({ child_team_id : ['Unable to add selected team as a child. Team may have been updated with another parent.']}))
                   }
                  }
               }

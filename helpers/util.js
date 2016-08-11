@@ -142,8 +142,9 @@ module.exports.formatForBulkTransaction = function(docs, email, action){
   var userExist = false;
   if (teamLists == null)
     return userExist;
+
   if (userTeams != null) {
-    userExist = !_.isEmpty(_.findWhere(userTeams, {_id: teamId}));
+    userExist = !_.isEmpty(_.findWhere(userTeams, {_id: teamId})) ? true : false;
   }
   if (!userExist && checkParent) {
     var team = _.findWhere(teamLists, { '_id' : teamId});
@@ -186,7 +187,7 @@ module.exports.isUserAllowed = function(userId, teamId, checkParent, allTeams, u
         reject(formatErrMsg('Unauthorized user.'));
       }
       else{
-        resolve(allowedUser);
+        return resolve(allowedUser);
       }
     })
     .catch(function(err){
