@@ -89,14 +89,10 @@ var getSourceDocs = function(){
     fs.readdir("./cloudant/design_docs", function(err, files){
       if(err)
         reject(err);
-      for (var i = 0; i < files.length; i++) {
-        if(files[i].substring(files[i].length - 4, files[i].length) != 'json') {
-          files.splice(i,1);
-        }
-      }
+
       var res = [];
       async.each(files, function(file, callback) {
-
+         if(file.indexOf('.json')<0) return callback();
          var designDoc = require("./design_docs/" + file);
          res.push(designDoc);
          callback();
@@ -113,13 +109,10 @@ var getSourceIndexes = function(){
     fs.readdir("./cloudant/indexes", function(err, files){
       if(err)
         reject(err);
-        for (var i = 0; i < files.length; i++) {
-          if(files[i].substring(files[i].length - 4, files[i].length) != 'json') {
-            files.splice(i,1);
-          }
-        }
+        
       var res = [];
       async.each(files, function(file, callback) {
+         if(file.indexOf('.json')<0) return callback();
          var index = require("./indexes/" + file);
          res.push(index);
          callback();
