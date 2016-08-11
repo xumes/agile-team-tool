@@ -340,7 +340,6 @@ describe('Team models [associateTeams]: associate team relationship with other t
       };
       teamModel.associateTeams(associateDataParentValid, 'associateParent', session)
       .then(function(body){
-        console.log(body);
         expect(body).to.not.equal(null);
         expect(body[0]['_id']).to.have.equal(associateDataParentValid['teamId']);
         expect(body[1]['_id']).to.have.equal(associateDataParentValid['targetParent']);
@@ -361,7 +360,6 @@ describe('Team models [associateTeams]: associate team relationship with other t
       };
       teamModel.associateTeams(associateDataChildValid, 'associateChild', session)
       .then(function(body){
-        console.log(body);
         expect(body).to.not.equal(null);
         expect(body[0]['_id']).to.have.equal(associateDataChildValid['teamId']);
         // need to have better assertion, ie check if targetChild is now existing in teamId child_team_id
@@ -388,7 +386,6 @@ describe('Team models [associateTeams]: associate team relationship with other t
         };
         teamModel.associateTeams(associateRemoveParent, 'removeParent', session)
         .then(function(body){
-          console.log(body);
           expect(body).to.not.equal(null);
           expect(body[0]['_id']).to.have.equal(associateRemoveParent['teamId']);
           expect(body[1]['_id']).to.have.equal(associateRemoveParent['targetParent']);
@@ -418,7 +415,6 @@ describe('Team models [associateTeams]: associate team relationship with other t
         }
         teamModel.associateTeams(associateRemoveChild, 'removeChild', session)
         .then(function(body){
-          console.log(body);
           expect(body).to.not.equal(null);
           expect(body[0]['_id']).to.have.equal(associateDataChildValid['teamId']);
           // need to have better assertion, ie check if targetChild is none existing in teamId child_team_id
