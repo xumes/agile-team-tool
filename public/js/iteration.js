@@ -264,7 +264,7 @@ function teamMemCount() {
 function teamMemFTE() {
   var currentTeam = allTeamsLookup[($("#teamSelectList").val())];
   if (!_.isEmpty(currentTeam)) {
-    return currentTeam.total_allocation;
+    return parseFloat(currentTeam.total_allocation).toFixed(1);
   } else return 0;
   // var teamCount = 0;
   // for ( var i = 0; i < teams.length; i++) {
@@ -735,6 +735,7 @@ function handleIterationErrors(jqXHR, textStatus, errorThrown) {
 }
 
 function getIterationErrorPopup(errors) {
+  console.log('error list: '+JSON.stringify(errors));
   var errorLists = '';
   // Model fields/Form element field
   var fields = {
