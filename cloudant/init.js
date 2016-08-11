@@ -94,7 +94,6 @@ var getSourceDocs = function(){
           files.splice(i,1);
         }
       }
-      console.log(files);
       var res = [];
       async.each(files, function(file, callback) {
 

@@ -8,6 +8,7 @@ var timeout = 100000;
 var validId;
 var validTeamId;
 var iterationId;
+var iterationRev;
 var iterationDocValid = dummyData.iterationDocValid;
 var iterationDoc_duplicateIterName = dummyData.iterationDoc_duplicateIterName;
 var iterationDocValid_sample2 = dummyData.iterationDocValid_sample2;
@@ -40,6 +41,19 @@ describe('Iteration Model', function() {
     });
   });
 
+  after(function(done){
+    iterationModel.delete(iterationId, iterationRev)
+      .then(function(result){
+        expect(result).to.be.a('object');
+        expect(result).to.have.property('ok');
+        expect(result).to.have.property('id');
+        done();
+      })
+      .catch(function(err){
+        done(err);
+      })
+  });
+
   describe('[add]: Add team iteration document', function() {
     this.timeout(timeout);
     it('It will successfully add new iteration document', function(done) {
@@ -47,6 +61,7 @@ describe('Iteration Model', function() {
       iterationModel.add(iterationDocValid, user, allTeams, userTeams)
       .then(function(result) {
         iterationId = result.id;
+        iterationRev = result.rev;
         // console.log('result iterationId:', iterationId);
         expect(result).to.be.a('object');
         expect(result).to.have.property('id');
@@ -193,6 +208,7 @@ describe('Iteration Model', function() {
           iterationModel.add(iterationDocValid, user, allTeams, userTeams)
           .then(function(result) {
             iterationId = result.id;
+            iterationRev = result.rev;
             expect(result).to.be.a('object');
             expect(result).to.have.property('id');
             expect(result.ok).to.be.equal(true);
@@ -215,6 +231,7 @@ describe('Iteration Model', function() {
       iterationDocValid.iteration_name = "testiterationname-" + crypto.randomBytes(4).toString('hex');
       iterationModel.edit(iterationId, iterationDocValid, user, allTeams, userTeams)
       .then(function(result) {
+        iterationRev =result.rev;
         expect(result).to.be.a('object');
         expect(result).to.have.property('id');
         expect(result.ok).to.be.equal(true);
@@ -228,6 +245,7 @@ describe('Iteration Model', function() {
     it('It will successfully update iteration document', function(done) {
       iterationModel.edit(iterationId, iterationDocValid_sample2, user, allTeams, userTeams)
       .then(function(result) {
+        iterationRev =result.rev;
         expect(result).to.be.a('object');
         expect(result).to.have.property('id');
         expect(result.ok).to.be.equal(true);
@@ -271,6 +289,7 @@ describe('Iteration Model', function() {
       iterationDocValid.iteration_name = 'newiterationname-' + new Date().getTime();
       iterationModel.edit(iterationId, iterationDocValid, user, allTeams, userTeams)
       .then(function(result) {
+        iterationRev =result.rev;
         expect(result).to.be.a('object');
         expect(result).to.have.property('id');
         expect(result.ok).to.be.equal(true);

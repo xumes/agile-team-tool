@@ -43,7 +43,6 @@ describe('Team API Tests', function() {
     deleteCreatedRecord(createdId);
     deleteCreatedRecord(targetParentId);
     deleteCreatedRecord(targetChildId);
-    console.log("delete created records ");
     done();
   })
 
