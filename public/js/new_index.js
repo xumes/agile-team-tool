@@ -253,7 +253,7 @@ function organizeTeamList(teamList) {
  * @param id - element id for either "My teams" or "All teams".
  */
 function filter(id) {
-	//$.({message: ""});
+	
 
 	selectedTeam = "";
 	
@@ -273,7 +273,7 @@ function filter(id) {
 }
 
 function organizeTeamHierarchy(myTeamsOnly) {
-	//$.({message: ""});
+	
 	var start = new Date().getTime();
 
 	$("#teamTree").empty();
@@ -370,7 +370,7 @@ function organizeTeamHierarchy(myTeamsOnly) {
 	else if ($("#teamTree a.agile-team-link").length > 0)
 		loadDetails($("#teamTree a.agile-team-link")[0].id);
 	else		
-		//$.un();
+		
 	
 	var end = new Date().getTime();
 	
@@ -599,14 +599,14 @@ function loadDetails(elementId, setScrollPosition) {
 	if (!_.isEmpty(team) && defSelTeamId != teamId) {
 		if (team._id == teamId) {
 			removeHighlightParents();
-			// $.({message: ""});
+			
 			defSelTeamId = teamId;
 			// make sure team data is always the latest data to show
 			$.ajax({
 				type : "GET",
 				url : "/api/teams/" + encodeURIComponent(team["_id"])
 			}).fail(function() {
-				// $.un(); 
+				
 			
 			}).done(function(currentTeam) {
 				team = currentTeam;
@@ -702,8 +702,8 @@ function loadDetails(elementId, setScrollPosition) {
 						getTeamIterations(team["_id"], teamIterationListHander, [team["_id"]]);
 						getTeamAssessments(team["_id"], teamAssessmentListHander, [team["_id"]]);
 						//this is done to display back the 2 other chart groups as 1st batch of rollup will only show velocity and throughput
-						//$("#chartgrp2").show();
-						//$("#chartgrp3").show();
+						
+						
 						$('#nsquad_team_scard').hide();
 						$('#squad_team_scard').show();
 						$('#iterationSection .agile-section-nav').show();
@@ -836,14 +836,14 @@ function loadDetails(elementId, setScrollPosition) {
 					if (!_.has(lookupData, "._rev")) 
 						allTeamsLookup[currentTeam._id] = lookupData;
 				}
-				//$.un();
+				
 			})
 			
 			openSelectedTeamTree(setScrollPosition);
 
 		} 
 	} else {
-		//$.un();
+		
 		openSelectedTeamTree(setScrollPosition);
 	}
 }

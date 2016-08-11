@@ -1770,7 +1770,6 @@ function completedIterationsHandler(teamId, teamName, squadList, iterationList) 
 }
 
 function parentIterationScoreCard(teamId, teamName, squadList, iterationsList) {
-	$.blockUI({message: ""});
 	var teamIterations=[];
 	if (!_.isEmpty(iterationsList) && !_.isEmpty(squadList)) {
 		_.each(squadList, function(id) {
@@ -1778,5 +1777,4 @@ function parentIterationScoreCard(teamId, teamName, squadList, iterationsList) {
 		});
 		iterationScoreCard(teamId, teamName, teamIterations);
 	}
-	$.unblockUI();
 }

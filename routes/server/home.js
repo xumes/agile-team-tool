@@ -16,7 +16,7 @@ module.exports = function(app, includes) {
         'systemStatus'    : req.session['systemStatus'],
         'environment'     : settings.environment
       };
-    render(req, res, 'index', json);
+    render(req, res, 'home', json);
   };
   
   app.get('/', 

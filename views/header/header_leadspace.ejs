@@ -1,18 +1,4 @@
-<% include ../feedback.ejs %>
 <header role="banner" aria-labelledby="ibm-pagetitle-h1">
-  <div id="ibm-leadspace-head" class="ibm-alternate">
-    <div id="ibm-leadspace-body">
-      <div class="ibm-columns">
-        <div class="ibm-col-6-5">
-          <h1 id="ibm-pagetitle-h1" class="ibm-h1 ibm-bold" style="padding-bottom:2px;width:1085px;"> <%= siteTitle %><span id="systMsg"></span></h1>
-        </div>
-        <div>
-          <span class="customSpan ibm-textcolor-red-50" id="environment"></span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- LEADSPACE_END -->
   
   <!-- CONTENT_NAV_BEGIN -->
   <nav role="navigation" aria-labelledby="ibm-pagetitle-h1">
@@ -43,14 +29,6 @@
           <% }else{ %>
             <li role="presentation"><a role="tab" href="/assessment"/> Maturity Assessment</a></li>
           <% } %>
-          
-          <%if(pageTitle=="Help"){ %>
-            <li role="presentation" class="ibm-active"><a role="tab" href="/help" aria-selected="true"/> Help</a></li>
-          <% }else{ %>
-            <li role="presentation"><a role="tab" href="/help"/>Help</a></li>
-          <% } %>
-
-          <li role="presentation" class= "feedback" style="float: right;"> <a class= "feedback" href="javascript: launchFeeback('<%- userEmail%>');">Feedback</a> </li>
         </ul>
       </div>
 
