@@ -144,7 +144,7 @@ module.exports.formatForBulkTransaction = function(docs, email, action){
     return userExist;
 
   if (userTeams != null) {
-    userExist = !_.isEmpty(_.findWhere(userTeams, {_id: teamId})) ? true : false;
+    userExist = !(_.isEmpty(_.findWhere(userTeams, {_id: teamId}))) ? true : false;
   }
   if (!userExist && checkParent) {
     var team = _.findWhere(teamLists, { '_id' : teamId});

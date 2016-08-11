@@ -229,7 +229,8 @@ var team = {
                   squad teams cannot have child teams
                   only allowed to add teams that has no parent
               */
-              if( !(_.isEqual(oldTeamDocu['child_team_id'], updatedTeamDoc['child_team_id']))){
+
+              if( typeof updatedTeamDoc['child_team_id'] != 'undefined' && !(_.isEqual(oldTeamDocu['child_team_id'], updatedTeamDoc['child_team_id']))){
                 if(updatedTeamDoc['child_team_id'].indexOf(oldTeamDocu['_id']) > -1)
                   return reject(formatErrMsg({ child_team_id : ['Cannot set self as child']}))
                 else{
