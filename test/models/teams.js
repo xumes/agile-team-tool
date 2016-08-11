@@ -1,6 +1,7 @@
 var chai = require('chai');
 var expect = chai.expect;
 var teamModel = require('../../models/teams');
+var common = require('../../models/cloudant-driver');
 var dummyData = require('../data/dummy-data.js');
 var cache = require('../../middleware/cache');
 var validId = null;
@@ -164,7 +165,8 @@ describe('Team models [associateTeams]: associate team relationship with other t
       session['user'] = userDetails;
       done();
     })
-  })
+  });
+
   it('will return error because action is not allowed', function(done){
     teamModel.associateTeams({}, 'invalid-action', session)
     .catch(function(err){
@@ -327,7 +329,8 @@ describe('Team models [associateTeams]: associate team relationship with other t
       done();
     })
   });
-
+  var removedId = [];
+  var removedRev = [];
   it('will associate new parent team', function(done){
     teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
     .then(function(body){
@@ -337,9 +340,11 @@ describe('Team models [associateTeams]: associate team relationship with other t
       };
       teamModel.associateTeams(associateDataParentValid, 'associateParent', session)
       .then(function(body){
+        console.log(body);
         expect(body).to.not.equal(null);
         expect(body[0]['_id']).to.have.equal(associateDataParentValid['teamId']);
         expect(body[1]['_id']).to.have.equal(associateDataParentValid['targetParent']);
+        removedId.push(body[1]['_id']);
       })
       .finally(function(){
         done();
@@ -356,9 +361,11 @@ describe('Team models [associateTeams]: associate team relationship with other t
       };
       teamModel.associateTeams(associateDataChildValid, 'associateChild', session)
       .then(function(body){
+        console.log(body);
         expect(body).to.not.equal(null);
         expect(body[0]['_id']).to.have.equal(associateDataChildValid['teamId']);
         // need to have better assertion, ie check if targetChild is now existing in teamId child_team_id
+        removedId.push(body[1]['_id']);
       })
       .finally(function(){
         done();
@@ -381,9 +388,11 @@ describe('Team models [associateTeams]: associate team relationship with other t
         };
         teamModel.associateTeams(associateRemoveParent, 'removeParent', session)
         .then(function(body){
+          console.log(body);
           expect(body).to.not.equal(null);
           expect(body[0]['_id']).to.have.equal(associateRemoveParent['teamId']);
           expect(body[1]['_id']).to.have.equal(associateRemoveParent['targetParent']);
+          removedId.push(body[1]['_id']);
         })
         .catch(function(err){
         })
@@ -409,15 +418,36 @@ describe('Team models [associateTeams]: associate team relationship with other t
         }
         teamModel.associateTeams(associateRemoveChild, 'removeChild', session)
         .then(function(body){
+          console.log(body);
           expect(body).to.not.equal(null);
           expect(body[0]['_id']).to.have.equal(associateDataChildValid['teamId']);
           // need to have better assertion, ie check if targetChild is none existing in teamId child_team_id
+          removedId.push(body[1]['_id']);
         })
         .finally(function(){
           done();
         })
       })
     })
+  });
+
+  /* delete all association records */
+  after(function(done){
+    for (var i = 0; i < removedId.length; i++) {
+      teamModel.getTeam(removedId[i])
+        .then(function(result){
+          common.deleteRecord(result._id, result._rev)
+            .then(function(result){
+            })
+            .catch(function(err){
+              done(err);
+            })
+        })
+        .catch(function(err){
+          done(err);
+        });
+    }
+    done();
   });
 });
 
@@ -679,5 +709,22 @@ describe('Team models [getRootTeams]: get top level, children or parent teams', 
       .catch(function(err){
         done(err);
       });
+  });
+
+  /* delete created team */
+  after(function(done){
+      teamModel.getTeam(createdId)
+        .then(function(result){
+          common.deleteRecord(result._id, result._rev)
+            .then(function(result){
+              done();
+            })
+            .catch(function(err){
+              done(err);
+            })
+        })
+        .catch(function(err){
+          done(err);
+        });
   });
 });
