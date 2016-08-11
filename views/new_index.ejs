@@ -8,7 +8,6 @@
 <script src="//code.highcharts.com/highcharts-more.js"></script>
 <script src="//code.highcharts.com/modules/no-data-to-display.js"></script>
 
-
 <script type="text/javascript" src="js/index.js?v=<%=Math.random()%>"></script>
 <script type="text/javascript" src="js/indexIteration.js?v=<%=Math.random()%>"></script>
 <script type="text/javascript" src="js/indexAssessment.js?v=<%=Math.random()%>"></script>
@@ -19,9 +18,10 @@
 
 </head>
 
+<%- include ./header/header.ejs %>
+
 <body id="ibm-com" class="ibm-type" onload="siteEnv();">
   <div id="ibm-top" class="ibm-landing-page">
-    <%- include ./header/header_masthead.ejs %>
     
     <div id="ibm-content-wrapper">
       <%- include ./header/header_leadspace.ejs %>
@@ -223,7 +223,7 @@
         </div>
       </div>
     </div>
-    <%- include ./footer.ejs %>
+    <%- include ./_footer.ejs %>
   </div>
 </body>
 </html>
