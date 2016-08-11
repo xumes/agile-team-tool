@@ -18,8 +18,8 @@ module.exports.init = function(){
     Promise.join(getCloudantDocs(), getSourceDocs(), function(cloudantDocs, sourceDocs) {
         /*ignore if design doc exists in the DB but not in the source
           (might be a use case in the future for metrics) */
-        logger.get('init').info("# of cloudant design docs:"+cloudantDocs.length
-        +", "+"# of source design docs:"+sourceDocs.length);
+        logger.get('init').info("Cloudant design docs:"+cloudantDocs.length
+        +", "+"Source design docs:"+sourceDocs.length);
         //for each source doc, find the doc in cloudant
         _.each(sourceDocs, function(sDoc){ 
           var cDoc = _.find(cloudantDocs, function(cDoc){return _.isEqual(sDoc._id, cDoc.doc._id); });
@@ -98,9 +98,9 @@ var getSourceDocs = function(){
       }, function() {
            resolve(res);
          }
-      );//async each
-    });//fs read dir
-  }); //promise
+      );
+    });
+  });
 }
 
 var getSourceIndexes = function(){
@@ -117,7 +117,7 @@ var getSourceIndexes = function(){
       }, function() {
            resolve(res);
          }
-      );//async each
-    });//fs read dir
-  }); //promise
+      );
+    });
+  });
 }
