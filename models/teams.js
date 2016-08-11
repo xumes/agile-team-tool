@@ -90,11 +90,11 @@ var team = {
                 })
             }else{
               msg = { name : ['This team name already exists. Please enter a different team name'] };
-              reject(formatErrMsg(msg));
+              return reject(formatErrMsg(msg));
             }
           })
         }else
-          reject(formatErrMsg(validateTeam));
+          return reject(formatErrMsg(validateTeam));
     });
   },
   updateOrDeleteTeam : function(updatedTeamDoc, session, action){ // transfer on routes
@@ -104,7 +104,7 @@ var team = {
     return new Promise(function(resolve, reject){
       if(_.isEmpty(teamId)){
         msg = 'Team documents id is required';
-        reject(formatErrMsg(msg));
+        return reject(formatErrMsg(msg));
       }else{
         /*
         'allTeamsLookup' : result[0],
@@ -138,7 +138,7 @@ var team = {
           var userEmail = user['shortEmail'];
           if(oldTeamDocu['doc_status'] === 'delete'){
             msg = 'Invalid action';
-            reject(formatErrMsg(msg));
+            return reject(formatErrMsg(msg));
           }
           util.isUserAllowed(userEmail, teamId, true, teamLists, userTeams)
           .then(function(){
@@ -162,14 +162,14 @@ var team = {
               .catch( /* istanbul ignore next */ function(err){
                 // cannot simulate Cloudant error during testing
                 infoLogs('Team, assessment and iteration documents bulk delete FAIL');
-                reject(formatErrMsg(err.error));
+                return reject(formatErrMsg(err.error));
               })
             }else{
               var errorLists = [];
               // validating required fields
               var validateTeam = validate(updatedTeamDoc, teamDocRules);
               if(!(_.isEmpty(validateTeam))){
-                reject(formatErrMsg(validateTeam));
+                return reject(formatErrMsg(validateTeam));
               }
               // this is team update, need additional validation
               /*
@@ -179,7 +179,7 @@ var team = {
               */
               infoLogs('Validating name');
               if(_.isEmpty(updatedTeamDoc['name'])){
-                reject(formatErrMsg({ name : ['Team name cannot be blank. Please enter a team name.'] }));
+                return reject(formatErrMsg({ name : ['Team name cannot be blank. Please enter a team name.'] }));
               }else{
                 var nameExists = [];
                 _.reduce(teamLists, function(memo, item){
@@ -188,7 +188,7 @@ var team = {
                 });
 
                 if(!(_.isEmpty(nameExists))){
-                  reject(formatErrMsg({ name : ['This team name already exists. Please enter a different team name'] }));
+                  return reject(formatErrMsg({ name : ['This team name already exists. Please enter a different team name'] }));
                 }
               }
               /*
@@ -199,11 +199,11 @@ var team = {
               */
               infoLogs('Validating squadteam');
               if(updatedTeamDoc['squadteam'] === 'No' && !(_.isEmpty(teamIterations.rows))){
-                reject(formatErrMsg({ squadteam : ['Cannot change this team into a non squad team. Iteration information has been entered for this team.'] }));
+                return reject(formatErrMsg({ squadteam : ['Cannot change this team into a non squad team. Iteration information has been entered for this team.'] }));
               }else if(updatedTeamDoc['squadteam'] === 'Yes'){
                 var newChild = updatedTeamDoc['child_team_id'];
                 if(!(_.isEmpty(newChild))){
-                  reject(formatErrMsg({ squadteam : ['Cannot change this team into a squad team. Child team has been entered for this team.'] }));
+                  return reject(formatErrMsg({ squadteam : ['Cannot change this team into a squad team. Child team has been entered for this team.'] }));
                 }
               }
               /*
@@ -214,7 +214,7 @@ var team = {
               */
               infoLogs('Validating parent_id');
               if(!(_.isEmpty(updatedTeamDoc['parent_team_id'])) && updatedTeamDoc['parent_team_id'] === oldTeamDocu['_id']){
-                reject(formatErrMsg({ parent_id : ['Cannot set self as parent']}));
+                return reject(formatErrMsg({ parent_id : ['Cannot set self as parent']}));
               }
                 
 
@@ -226,7 +226,7 @@ var team = {
                 });
 
                 if(!(_.isEmpty(isSquadTeam))){
-                  reject(formatErrMsg({ parent_team_id : ['Parent team id must not be a squad team'] }))
+                  return reject(formatErrMsg({ parent_team_id : ['Parent team id must not be a squad team'] }))
                 }
               }
               /*
@@ -237,7 +237,7 @@ var team = {
               */
               if(!(_.isEmpty(updatedTeamDoc['child_team_id']))){
                 if(updatedTeamDoc['child_team_id'].indexOf(oldTeamDocu['_id']) > -1)
-                  reject(formatErrMsg({ child_team_id : ['Cannot set self as child']}))
+                  return reject(formatErrMsg({ child_team_id : ['Cannot set self as child']}))
                 else{
                   var isValidChildTeam2 = [];
                   var isValidChildTeamId = _.every(updatedTeamDoc['child_team_id'], function(cId){
@@ -247,15 +247,14 @@ var team = {
                     });
                     return _.isEmpty(isValidChildTeam2);
                   });
-
                   if(!isValidChildTeamId){
-                    reject(formatErrMsg({ child_team_id : ['Child team cannot have parent']}))
+                    return reject(formatErrMsg({ child_team_id : ['Child team cannot have parent']}))
                   }
                  }
               }
 
               if(!(_.isEmpty(updatedTeamDoc['child_team_id'])) && (updatedTeamDoc['squadteam'] === 'Yes')){
-                reject(formatErrMsg({ child_team_id : ['Squad team cannot have child']}));
+                return reject(formatErrMsg({ child_team_id : ['Squad team cannot have child']}));
               }
 
               // start saving
@@ -278,17 +277,17 @@ var team = {
                   })
                   .catch( /* istanbul ignore next */ function(err){
                     // cannot simulate Cloudant error during testing
-                    reject(formatErrMsg(err.error));
+                    return reject(formatErrMsg(err.error));
                   });
               }else{
                 infoLogs('Error updating ' + oldTeamDocu['_id']);
-                reject(formatErrMsg(errorLists));
+                return reject(formatErrMsg(errorLists));
               }
             }
           })
           .catch(function(err){
             msg = 'User not authorized to do action';
-            reject(formatErrMsg(msg));
+            return reject(formatErrMsg(msg));
           })
         })
         .catch(function(err){
@@ -309,7 +308,7 @@ var team = {
         .catch( /* istanbul ignore next */ function(err){
           // cannot simulate Cloudant error during testing
           msg = err.error;
-          reject(formatErrMsg(msg));
+          return reject(formatErrMsg(msg));
         });
     }else{
       infoLogs('Getting team records for ' + teamId + ' from Cloudant');
@@ -321,7 +320,7 @@ var team = {
         .catch( /* istanbul ignore next */ function(err){
           // cannot simulate Cloudant error during testing
           msg = err.error;
-          reject(formatErrMsg(msg));
+          return reject(formatErrMsg(msg));
         });
     }
     });
@@ -337,7 +336,7 @@ var team = {
         .catch( /* istanbul ignore next */ function(err){
           // cannot simulate Cloudant error during testing
           msg = err.error;
-          reject(formatErrMsg(msg));
+          return reject(formatErrMsg(msg));
         })
     });
   },
@@ -353,7 +352,7 @@ var team = {
           .catch( /* istanbul ignore next */ function(err){
             // cannot simulate Cloudant error during testing
             msg = err.error;
-            reject(formatErrMsg(msg));
+            return reject(formatErrMsg(msg));
           })
       });
     }else{
@@ -369,7 +368,7 @@ var team = {
           })
           .catch( /* istanbul ignore next */ function(err){
             // cannot simulate Cloudant error during testing
-            reject(formatErrMsg(err));
+            return reject(formatErrMsg(err));
           })
       });
     }
@@ -378,7 +377,7 @@ var team = {
     return new Promise(function(resolve, reject){
       var err = validate({ email: email}, { email : { email : true }});
       if(err){
-        reject(formatErrMsg(err));
+        return reject(formatErrMsg(err));
       }else{
         common.getByViewKey('teams', 'teamsWithMember', email)
           .then(function(body){
@@ -390,7 +389,7 @@ var team = {
           })
           .catch( /* istanbul ignore next */ function(err){
             // cannot simulate Cloudant error during testing
-            reject(formatErrMsg(err));
+            return reject(formatErrMsg(err));
           })
         }
     });
@@ -488,7 +487,7 @@ var team = {
                             .catch( /* istanbul ignore next */ function(err){
                               // cannot simulate Cloudant error during testing
                               loggers.get('models').error('Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.');
-                              reject(formatErrMsg(err.error));
+                              return reject(formatErrMsg(err.error));
                             })
                           })
                           .catch(function(err){
