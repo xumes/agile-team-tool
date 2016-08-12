@@ -35,10 +35,6 @@
                   <div class="ibm-col-6-2">
                     <h2 class="agile-section-title">Agile Teams</h2>
                     <div class="agile-section-nav">
-                      <p class="ibm-item-note-alternate"><span class="agile-team-squad">*</span> indicates squad team</p>                 
-                    </div>
-                    <div class="ibm-rule ibm-alternate-1">
-                      <hr>
                     </div>
                     <div class="agile-section-filter">
                       <p class="ibm-button-link" id="filterLinks">
@@ -52,9 +48,7 @@
                         <a href="#" id="teamExpand">Expand all</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#" id="teamCollapse">Collapse all</a>
                       </p>
                     </div>
-                    <div class="ibm-rule ibm-alternate ibm-gray-30">
-                      <hr>
-                    </div>
+                    <br>
                     <div class="agile-team-nav" data-widget="scrollable" data-height="600">
                       <div id="teamTree"></div>
                       <table class="ibm-data-table" id="teamTable" summary="__REPLACE_ME__">
@@ -65,23 +59,24 @@
                   </div>
     
                   <div class="ibm-col-6-4">
-                    <h2 class="agile-section-title" id="teamHeader">&nbsp;</h2>
-                    <div class="ibm-rule ibm-alternate-1">
-                      <hr>
+                    
+                    <div id="teamHeader" style="display:none">
+                      <h2 class="agile-section-title" id="teamName">&nbsp;</h2>
+                      <div class="ibm-rule ibm-alternate-1">
+                        <hr>
+                      </div>
                     </div>
                     
                     <div data-widget="showhide" data-type="panel" class="ibm-show-hide" id="iterationSection">
                       <h2 class="agile-section-title" data-open="true">Iteration trends</h2>
-                      <div class="agile-section-nav">
+                      <div style="display:none" class="agile-section-nav">
                         <label for="gotoIterationList">Go to iteration:</label>
                         <select id="gotoIterationList"><option value="" selected="selected">Select one</option></select>
                         <input style="padding: 3px; border: 1px solid #323232;" type="button" class="ibm-btn-sec ibm-btn-small" id="GoIterationBtn" value="Go" />
                         <input style="padding: 3px; border: 1px solid #323232;width:130px" type="button" class="ibm-btn-sec ibm-btn-small" id="CreateIterationBtn" value="Create iteration" /> 
-                        
+                      
                       </div>
-                      <div class="ibm-rule ibm-alternate-1">
-                        <hr>
-                      </div>
+
                       <div class="ibm-container-body">
                         <div id="nsquad_team_scard" style="display: none">
                           <div class="ibm-columns">
@@ -93,7 +88,7 @@
                               <div id="pthroughputChart" style="min-width: 210px; min-height: 280px;"></div>
                             </div>
                           </div>
-                          <div class="ibm-rule ibm-alternate ibm-gray-30"><hr></div>
+                          <br>
                           
                           <div class="ibm-columns">
                                
@@ -104,7 +99,7 @@
                               <div id="pstatisfactionChart" style="min-width: 210px; min-height: 280px;"></div>
                             </div>
                           </div>
-                          <div class="ibm-rule ibm-alternate ibm-gray-30"><hr></div>
+                          <br>
                           
                           <div class="ibm-columns">
                             <div class="ibm-col-6-2">
@@ -128,7 +123,7 @@
                             </div>
                           </div>
                           <div id="chartgrp2">
-                          <div class="ibm-rule ibm-alternate ibm-gray-30"><hr></div>
+                          <br>
                           
                           <div class="ibm-columns">
                             <div class="ibm-col-6-2">
@@ -141,7 +136,7 @@
                           </div>
                           </div>
                           <div id="chartgrp3">
-                          <div class="ibm-rule ibm-alternate ibm-gray-30"><hr></div>
+                          <br>
                           
                           <div class="ibm-columns">
                             <div class="ibm-col-6-2">
@@ -155,14 +150,14 @@
                           </div>
                         </div>
                         
-                        <div class="ibm-rule ibm-alternate ibm-gray-30"><hr></div>
+                        <br>
                         
                       </div>
                     </div>     
                     
                     <div data-widget="showhide" data-type="panel" class="ibm-show-hide" id="assessmentSection">
                       <h2 class="agile-section-title">Maturity assessment trends</h2>
-                      <div class="agile-section-nav">
+                      <div style="display:none" class="agile-section-nav">
                         <label for="gotoAssesmentList">Go to assessment:</label>
                         <select id="gotoAssesmentList"><option value="" selected="selected">Select one</option></select>
                         <input style="padding: 3px; border: 1px solid #323232;" type="button" class="ibm-btn-sec ibm-btn-small" id="GoAssesmentBtn" value="Go" /> 
