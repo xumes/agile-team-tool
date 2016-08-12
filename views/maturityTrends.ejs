@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="geo.country" content="US" />
+<meta name="dcterms.rights" content="© Copyright IBM Corp. 2015" />
+<title> <%= siteTitle %> | <%= pageTitle%> </title>
+
+<script>
+  digitalData = {
+    "page" : {
+      "category" : {
+        "primaryCategory" : "REPLACE"
+      },
+      "pageInfo" : {
+        "effectiveDate" : "2015-01-01",
+        "expiryDate" : "2025-01-01",
+        "language" : "en-US",
+        "publishDate" : "2015-01-01",
+        "publisher" : "IBM Corporation",
+        "version" : "v18",
+        "ibm" : {
+          "contentDelivery" : "REPLACE",
+          "contentProducer" : "REPLACE",
+          "country" : "US",
+          "industry" : "CIO",
+          "owner" : "Cheryl Rabenstein/Sterling Forest/IBM",
+          "subject" : "REPLACE",
+          "type" : "REPLACE"
+        }
+      }
+    }
+  };
+</script>
+
+<script src="//1.www.s81c.com/common/stats/ida_stats.js"></script>
+<link href="//1.www.s81c.com/common/v18/css/www.css" rel="stylesheet" />
+<script src="//1.www.s81c.com/common/v18/js/www.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+
+<link href="css/dash.css?v=<%=Math.random()%>" rel="stylesheet" />
+<script type="text/javascript" src="js/dashUtils.js?v=<%=Math.random()%>"></script>
+
+
+<script type="text/javascript">    
+  IBMCore.common.util.config.set({
+    //disable the ibm profile button
+    "masthead" : {
+      "type" : "alternate",
+      "enabled": false,
+      logoanimation: {
+          enabled: false
+      },
+      marketplaceLink: {
+          enabled: false
+      },
+      megamenu: { 
+          enabled: false
+      },
+      mobilemenu: { 
+          enabled: false
+      },
+      notifications: {
+          enabled: false
+      },
+      profile: {
+          enabled: true
+      },
+      search: {
+          enabled: false,
+          typeahead: {
+              enabled: false
+          }
+      },
+      sticky: {
+          enabled: true
+      },
+    },
+    "footer" : {
+      "type" : "alternate",
+      "enabled" : false
+    }
+  });
+  var $ = jQuery.noConflict();
+
+</script>
+
+<script src="//code.highcharts.com/highcharts.js"></script>
+<script src="//code.highcharts.com/highcharts-more.js"></script>
+
+<style type="text/css">
+#ibm-universal-nav, #ibm-footer, #footer {
+  display:none !important;
+}
+</style>
+<script type="text/javascript">
+jQuery(function($) {
+  $(document).ready(function() {
+    var urlParameters = getJsonParametersFromUrl();
+    if (urlParameters != undefined && urlParameters.id != undefined) {
+      $.ajax({
+        type : "GET",
+        url : "/api/assessment/trend?teamId=" + encodeURIComponent(urlParameters.id),
+        async: false
+      }).done(function(teamAssessments) { 
+        if (_.has(teamAssessments, "rows")) {
+          if (_.has(teamAssessments.rows, "doc"))
+            teamAssessments = _.pluck(teamAssessments.rows, 'doc');
+          else 
+            teamAssessments = _.pluck(teamAssessments.rows, 'value');
+
+        } else if (teamAssessments.length > 0) {
+          if (!_.isEmpty(teamAssessments[0].doc)) 
+            teamAssessments = _.pluck(teamAssessments, 'doc')
+          else 
+            teamAssessments = _.pluck(teamAssessments, 'value');
+
+        }
+        plotAssessmentSeries(sortAssessments(teamAssessments));
+      });
+    }
+  });
+});
+
+function plotAssessmentSeries(teamAssessments) {  
+  //get the 5 latest submitted results
+  var assessmentsToPlot = [];
+  for (var i=0; i<teamAssessments.length && assessmentsToPlot.length <= 5; i++) {
+    if (teamAssessments[i]["assessmt_status"] != null && teamAssessments[i]["assessmt_status"].toLowerCase() == "submitted") {
+      assessmentsToPlot.push(teamAssessments[i]);
+    }
+  }
+  
+  chartSeries = [];
+  var chartData = new Object();
+  
+  if (assessmentsToPlot.length > 0)
+    $("#assessmentCharts").empty();
+
+  for (i=assessmentsToPlot.length-1; i>-1; i--) {
+    var results = assessmentsToPlot[i]["assessmt_cmpnt_rslts"];
+        
+    for (var j=0; j<results.length; j++) {
+      var found = false;
+      var identifier = "";
+      if ((results[j]["assessed_cmpnt_name"].toLowerCase().indexOf("leadership") > -1 && results[j]["assessed_cmpnt_name"].toLowerCase().indexOf("ops") == -1)
+          && (results[j]["assessed_cmpnt_name"].toLowerCase().indexOf("leadership") > -1 && results[j]["assessed_cmpnt_name"].toLowerCase().indexOf("operations") == -1)) {
+        identifier = "prj";
+      } else if ((results[j]["assessed_cmpnt_name"].toLowerCase().indexOf("leadership") > -1 && results[j]["assessed_cmpnt_name"].toLowerCase().indexOf("ops") > -1)
+          || (results[j]["assessed_cmpnt_name"].toLowerCase().indexOf("leadership") > -1 && results[j]["assessed_cmpnt_name"].toLowerCase().indexOf("operations") > -1)) {
+        identifier = "ops";
+      } else if (results[j]["assessed_cmpnt_name"].toLowerCase().indexOf("delivery") > -1) {
+        identifier = "devops";
+      }
+      
+      $.each(chartSeries, function(index, obj) {
+        if (obj["prefixId"] == identifier) {
+          found = true;
+          chartData = obj;
+          // assessment name to be shown as graph title
+          chartData["title"] = results[j]["assessed_cmpnt_name"];
+              
+        }
+      });
+      if (!found) {
+        // create a section in the page for the particular assessment group
+        $("#assessmentCharts").append(createChartSection(identifier));
+        var hrDiv = document.createElement("div");
+        hrDiv.setAttribute("class", "ibm-rule ibm-alternate ibm-gray-30");
+        hrDiv.appendChild(document.createElement("hr"));
+        $("#assessmentCharts").append(hrDiv);
+        
+        chartData = new Object();
+        // page element id that will render the graph data
+        chartData["prefixId"] = identifier;
+        // assessment name to be shown as graph title
+        chartData["title"] = results[j]["assessed_cmpnt_name"];
+        // x-axis graph labels
+        chartData["categories"] = [];
+        // data series to plot
+        chartData["targetScore"] = [];
+        chartData["currentScore"] = [];
+        // placeholder for the spider chart data containing the answers to all practices for the particular assessment
+        chartData["assessmentResult"] = [];
+        // holder for all chart data to be shown
+        chartSeries.push(chartData);
+
+      }
+
+      var submitDate = showDateDDMMMYYYY(assessmentsToPlot[i]["self-assessmt_dt"].split(" ")[0]);
+      chartData["categories"].push(submitDate);
+      chartData["targetScore"].push(isNaN(parseFloat(results[j]["ovraltar_assessmt_score"])) ? 0 : parseFloat(results[j]["ovraltar_assessmt_score"]));
+      chartData["currentScore"].push(isNaN(parseFloat(results[j]["ovralcur_assessmt_score"])) ? 0 : parseFloat(results[j]["ovralcur_assessmt_score"]));
+      chartData["assessmentResult"].push(results[j]["assessed_cmpnt_tbl"]);
+      
+    }
+  }
+  // plot the line graph of selected maturity assessments
+  $.each(chartSeries, function(index, chartData) {
+    $("#"+chartData["prefixId"] + "_Chart").highcharts({
+      chart : {
+        type : "line"
+      },
+
+      title : {
+        style : {
+          "fontSize" : "14px"
+        },
+        text : "Overall Maturity for " + chartData["title"]
+      },
+
+      xAxis : {
+        labels : {
+          style : {
+            "fontSize" : "9px"
+          }
+        },
+        categories : chartData["categories"],
+        tickmarkPlacement : 'on'
+      },
+
+      yAxis : {
+        max : 4,
+        min : 0,
+        title : {
+          text : "Maturity level"
+        },
+        labels : {
+          style : {
+            "fontSize" : "9px"
+          }
+        },
+        endOnTick: false,
+        tickInterval: 1,
+        allowDecimals : false
+      },
+      
+      tooltip : {
+        shared : true,
+        //pointFormat : '<span style="color:{series.color}">{series.name}: <b>{point.y:,.1f}</b><br/>'
+        formatter : function() {
+          var tt = this.x + "<br/>";
+          for ( var i = 0; i < this.points.length; i++) {
+            tt = tt + "<label style='color:" + this.points[i].color + ";'>" + this.points[i].series.name + "</label>: " + "<label style='font-weight: bold;'>" + this.points[i].y + "</label><br/>";
+          }
+          tt = tt + "<i style='font-size: 8pt;'>Select to see practice results</i>";
+          return tt;
+        },
+        useHTML : true,
+        style : {
+          "fontSize" : "11px"
+        }
+      },
+      
+      legend : {
+        align : 'center',
+        verticalAlign : 'bottom',
+        layout : 'horizontal'
+      },
+
+      series : 
+        [ 
+          {
+            name : "Current",
+            data : chartData["currentScore"],
+            point : { 
+              // click event callback to render spider graph data of practices for the particular series point.
+              events : {
+                click : function() {
+                  plotAssessment(this.index, chartData);
+                }
+              }
+            }
+          }/*, {
+            name : "Target overall",
+            data : chartData["targetScore"],
+            point : { 
+              // click event callback to render spider graph data of  practices for the particular series point.
+              events : {
+                click : function() {
+                  console.log(this);
+                  plotAssessment(this.index, chartData);
+                }
+              }
+            }
+          }*/
+        ]
+    });
+  });
+  
+  // plot the spider graph of the last assessment in the series.
+  for (i=0; i<chartSeries.length; i++) {
+    var lastResultIndex = chartSeries[i]["assessmentResult"].length - 1;
+    plotAssessment(lastResultIndex, chartSeries[i]);
+  }
+}
+
+function plotAssessment(index, chartData) {
+  spiderData = new Object();
+  spiderData["title"] = chartData["title"] + " Practices for " + chartData["categories"][index];// "Assessment Practices for " + chartData["categories"][index];
+  spiderData["prefixId"] = chartData["prefixId"];
+  spiderData["categories"] = [];
+  spiderData["targetScore"] = [];
+  spiderData["currentScore"] = [];
+  var practices = chartData["assessmentResult"][index];
+  
+  for (var i=0; i<practices.length; i++) {
+    spiderData["categories"].push(practices[i]["practice_name"]);
+    spiderData["targetScore"].push(isNaN(parseFloat(practices[i]["tar_mat_lvl_score"])) ? 0 : parseFloat(practices[i]["tar_mat_lvl_score"]));
+    spiderData["currentScore"].push(isNaN(parseFloat(practices[i]["cur_mat_lvl_score"])) ? 0 : parseFloat(practices[i]["cur_mat_lvl_score"]));
+  }
+  
+  if ($("#"+spiderData["prefixId"] + "_SpiderChart").highcharts() != null)
+    $("#"+spiderData["prefixId"] + "_SpiderChart").highcharts().destroy();
+  
+  $("#"+spiderData["prefixId"] + "_SpiderChart").highcharts({
+    chart : {
+      polar : true,
+      type : "line",
+      events : {
+        load : function() {
+          var text = this.renderer.text("Select an overall score on the adjacent graph to view practice results.", 30, 295)
+          .css({
+            width : '450px',
+            color : '#222',
+            fontSize : '10px'
+          }).add();
+        }
+      }
+    },
+
+    title : {
+      style : {
+        "fontSize" : "13px"
+      },
+      text : spiderData["title"]
+    },
+
+    xAxis : {
+      reserveSpace : false,
+      labels : {
+        style : {
+          "whiteSpace" : "nowrap",
+          "fontSize" : "10px"
+        },
+        formatter : function() {
+          var text = this.value, formatted = text.length > 15 ? text.substring(0, 15) + '...' : text;
+
+          return formatted;
+        }
+      },
+      categories : spiderData["categories"],
+      tickmarkPlacement : 'on',
+      lineWidth : 0
+    },
+
+    yAxis : {
+      labels : {
+        style : {
+          "fontSize" : "9px"
+        },
+        enabled: false
+      },
+      gridLineInterpolation : 'polygon',
+      lineWidth : 0,
+      max : 4,
+      min : 0,
+      maxPadding : 0.1,
+      tickInterval: 1,
+      allowDecimals : false
+    },
+
+    tooltip : {
+      shared : true,
+      pointFormat : '<span style="color:{series.color}">{series.name}: <b>{point.y:,.1f}</b><br/>'
+    },
+
+    legend : {
+      align : 'center',
+      verticalAlign : 'bottom',
+      layout : 'horizontal'
+    },
+
+    series : [ {
+      name : "Current",
+      data : spiderData["currentScore"],
+    }, {
+      name : "Target",
+      data : spiderData["targetScore"],
+    } ]
+  });
+}
+
+function createChartSection(prefixId) {
+  var mainDiv = document.createElement("div");
+  mainDiv.setAttribute("class", "ibm-columns");
+  
+  var colDiv = document.createElement("div");
+  colDiv.setAttribute("class", "ibm-col-2-1");
+  
+  var div = document.createElement("div");
+  div.setAttribute("id", prefixId+"_Chart");
+  div.setAttribute("style", "min-width: 210px; min-height: 310px; margin: 0 auto");
+  colDiv.appendChild(div);
+  mainDiv.appendChild(colDiv);
+  
+  colDiv = document.createElement("div");
+  colDiv.setAttribute("class", "ibm-col-2-1");
+  div = document.createElement("div");
+  div.setAttribute("id", prefixId+"_SpiderChart");
+  div.setAttribute("style", "min-width: 210px; min-height: 310px; margin: 0 auto");
+  colDiv.appendChild(div);
+  mainDiv.appendChild(colDiv);
+  
+  return mainDiv;
+}
+
+</script>
+</head>
+<body id="ibm-com" class="ibm-type" aria-label="Main page">
+  <div id="ibm-top" class="ibm-landing-page">
+    <!-- MASTHEAD_BEGIN -->
+    <div id="ibm-masthead" role="banner" aria-label="IBM">
+      <div id="ibm-mast-options">
+        <ul role="toolbar" aria-labelledby="ibm-masthead">
+          <li id="ibm-geo" role="presentation"><a href="http://www.ibm.com/planetwide/select/selector.html" role="button" aria-label="United States selected - Choose a country">United States</a></li>
+          <li id="ibm-language" role="presentation"><span class="ibm-active" role="button" aria-disabled="true">English</span> <a href="http://www.ibm.com/us/en/" lang="en-US" role="button">English</a></li>
+        </ul>
+      </div>
+      
+      <div id="ibm-universal-nav">
+        <nav role="navigation" aria-label="IBM">
+          <div id="ibm-home">
+            <a href="http://www.ibm.com/us/en/">IBM®</a>
+          </div>
+          <ul id="ibm-menu-links" role="toolbar" aria-label="Site map">
+            <li><a href="http://www.ibm.com/sitemap/us/en/">Site map</a></li>
+          </ul>
+        </nav>
+    
+        <div id="ibm-search-module" role="search" aria-labelledby="ibm-masthead">
+          <form id="ibm-search-form" action="http://www.ibm.com/Search/" method="get">
+            <p>
+              <label for="q">IBM</label> 
+              <input type="text" maxlength="100" value="" placeholder="Search" name="q" id="q" aria-label="Search" /> 
+              <input type="hidden" value="18" name="v" /> 
+              <input type="hidden" value="utf" name="en" /> 
+              <input type="hidden" value="en" name="lang" /> 
+              <input type="hidden" value="us" name="cc" /> 
+              <input type="submit" id="ibm-search" class="ibm-btn-search" value="Submit" />
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- MASTHEAD_END -->
+    
+    <div id="ibm-content-wrapper">
+      <header role="banner" aria-labelledby="ibm-pagetitle-h1">
+        <div id="ibm-leadspace-head" class="ibm-alternate" style="height: 40px;">
+          <div id="ibm-leadspace-body">
+            <div class="ibm-columns">
+              <div class="ibm-col-6-5">
+                <h1 id="ibm-pagetitle-h1" class="ibm-h2 ibm-bold" style="padding-bottom: 2px; width: 1085px; margin-top: -10px;"><%= siteTitle %><span id="systMsg"></span></h1>
+                <!-- <p>Subtitle</p> -->
+              </div>
+              <div>
+                <span class="customSpan ibm-textcolor-red-50" id="environment"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- LEADSPACE_END -->
+        
+        <!-- CONTENT_NAV_BEGIN -->
+        <nav role="navigation" aria-labelledby="ibm-pagetitle-h1">
+          <div id="ibm-content-nav">
+            
+          </div>
+        </nav>
+        <!-- CONTENT_NAV_END -->
+      </header>    
+
+      <main role="main" aria-labelledby="Team maturity assessment">
+        <div id="ibm-pcon">
+          <div id="ibm-content">
+            <div id="ibm-content-body">
+              <div id="ibm-content-main">
+                <div class="ibm-columns">
+                  <div id="assessmentCharts"><p>No assessments found to display</p></div>
+                </div>
+              </div>  
+            </div>
+          </div>
+        </div>
+      </main>
+  
+      <div id="ibm-related-content">
+        <div id="ibm-merchandising-module">
+          <!-- MTE will generate this -->
+          <!-- <aside role="complementary" aria-label="Related content"> MTE dynamic modules populate in here. <aside> -->
+          <!-- /MTE -->
+        </div>
+      </div>
+    </div>
+    <%- include ./footer.ejs %>
+    
+  </div>
+</body>
+</html>
