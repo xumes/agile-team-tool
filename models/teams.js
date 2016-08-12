@@ -106,13 +106,6 @@ var team = {
         msg = 'Team documents id is required';
         return reject(formatErrMsg(msg));
       }else{
-        /*
-        'allTeamsLookup' : result[0],
-            'allTeams' : result[0],
-            'myTeams' : result[1],
-            'systemAdmin' : result[2],
-            'systemStatus' : result[3]
-        */
         var updateOrDeleteTeamValidation = [];
         infoLogs('Getting team document latest records');
         updateOrDeleteTeamValidation.push(team.getTeam(teamId));
@@ -123,12 +116,6 @@ var team = {
         infoLogs('Start validation for team UPDATE or DELETE');
         Promise.all(updateOrDeleteTeamValidation)
         .then(function(res){
-          // res[0] team details
-          // res[1] admin lists
-          // res[2] teamLists
-          // res[3] team by email
-          // res[4] team iterations
-          // res[5] team assessments
           var oldTeamDocu = res[0];
           var adminLists = session['systemAdmin'];
           var teamLists = session['allTeams'];
@@ -175,7 +162,6 @@ var team = {
               /*
               name
                 can be the same to existing docu but cannot be existing to DB when updated
-                TODO: create view "where name === new name and _id != _id" if not empty, update not allowed
               */
               infoLogs('Validating name');
               if(_.isEmpty(updatedTeamDoc['name'])){
@@ -195,7 +181,6 @@ var team = {
               squadteam
                   from Yes to No = only allowed if no iteration data exist
                   from No to Yes = only allowed if no child teams are associated
-
               */
               infoLogs('Validating squadteam');
               if(updatedTeamDoc['squadteam'] === 'No' && !(_.isEmpty(teamIterations.rows))){
@@ -210,7 +195,6 @@ var team = {
               parent_id
                   not allowed to be a parent of self
                   selected parent team should not be a squad team
-                  query team details
               */
               infoLogs('Validating parent_id');
               if(!(_.isEmpty(updatedTeamDoc['parent_team_id'])) && updatedTeamDoc['parent_team_id'] === oldTeamDocu['_id']){
@@ -229,7 +213,6 @@ var team = {
                   squad teams cannot have child teams
                   only allowed to add teams that has no parent
               */
-
               if( typeof updatedTeamDoc['child_team_id'] != 'undefined' && !(_.isEqual(oldTeamDocu['child_team_id'], updatedTeamDoc['child_team_id']))){
                 if(updatedTeamDoc['child_team_id'].indexOf(oldTeamDocu['_id']) > -1)
                   return reject(formatErrMsg({ child_team_id : ['Cannot set self as child']}))
@@ -252,6 +235,19 @@ var team = {
 
               if(!(_.isEmpty(updatedTeamDoc['child_team_id'])) && (updatedTeamDoc['squadteam'] === 'Yes')){
                 return reject(formatErrMsg({ child_team_id : ['Squad team cannot have child']}));
+              }
+
+              // validating team members
+              if(!_.isEmpty(updatedTeamDoc['members']) && typeof updatedTeamDoc['members'] === 'object'){
+                infoLogs('Validation Team members');
+                for(var i in updatedTeamDoc['members']) {
+                  if (updatedTeamDoc['members'][i].name == '' || updatedTeamDoc['members'][i].id == '' || updatedTeamDoc['members'][i].key == '') { 
+                    reject(formatErrMsg({'member.name': ['Member details are required.']}));
+                  }
+                  if (updatedTeamDoc['members'][i].role == '') {
+                    reject(formatErrMsg({'member.role': ['Please select a valid role.  If "Other" was selected, indicate the role description.']})); 
+                  }
+                }
               }
 
               // start saving
@@ -423,16 +419,6 @@ var team = {
         util.isUserAllowed(userEmail, teamObj['teamId'], true, teamLists, userTeams)
         .then(function(body){
           infoLogs('Validating for ' + action );
-          /*
-          FOR TEAM DELETE
-          kung naay parent tong team, iremove sya as child sa parent team..
-          kung naay children ang team, iremove sya sa parent sa child teams...
-          */
-          /*
-          for bulk updates
-          by the way, kato gani nay mga related na bulk operation na multiple team documents ang ginaupdate....
-          pwede nimo ireturn as array of team docs tong mga doc?
-          */
           switch(action){
             case 'associateParent':
                // parent_id
@@ -477,7 +463,6 @@ var team = {
                             common.bulkUpdate(bulkDocu)
                             .then(function(body){
                               loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully associated to parent ' + teamObj['targetParent']);
-                              //resolve(body);
                               // return updated documents
                               resolve(bulkDocu['docs']);
                             })
@@ -487,7 +472,8 @@ var team = {
                               return reject(formatErrMsg(err.error));
                             })
                           })
-                          .catch(function(err){
+                          .catch(/* istanbul ignore next */function(err){
+                            // cannot simulate Cloudant error during testing
                             reject(err);
                           })
                         })
@@ -495,7 +481,8 @@ var team = {
                     })
                   }
                 })
-                .catch(function(err){
+                .catch(/* istanbul ignore next */function(err){
+                  // cannot simulate Cloudant error during testing
                   errorLists['error']['targetParent'] = 'Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.';
                   infoLogs(errorLists);
                   reject(errorLists);
@@ -534,12 +521,6 @@ var team = {
                       reject(errorLists);
                     }
                   })
-                  // start associateChild saving
-                  /*
-                  sa child team update
-                  - 2 team docs kung mag add kag new child (current team and child team)
-                  */
-                  // merge documents for update
                   var associateChild = [];
                   associateChild.push(team.getTeam(teamObj['teamId']));
                   _.each(teamObj['targetChild'], function(v,i,l){
@@ -565,7 +546,8 @@ var team = {
                     reject(err);
                   })
                 })
-                .catch(function(err){
+                .catch(/* istanbul ignore next */function(err){
+                  // cannot simulate Cloudant error during testing
                   loggers.get('models').error('Unable to add selected team as a child. Team may have been updated with another parent.');
                   reject(err);
                 })
@@ -655,14 +637,16 @@ var team = {
                     })
                   })
                 })
-                .catch(function(err){
+                .catch(/* istanbul ignore next */function(err){
+                  // cannot simulate Cloudant error during testing
                   reject(err);
                 })
               }
               break;
           }
         })
-        .catch(function(err){
+        .catch(/* istanbul ignore next */ function(err){
+          // cannot simulate Cloudant error during testing
           errorLists['error']['user'] = 'User not authorized to do action';
           infoLogs(errorLists);
           reject(errorLists);
@@ -684,7 +668,6 @@ var formattedDocuments = function(doc, action){
         tempDocHolder[1]['child_team_id'].push(currentTeam['_id']);
         if(!(_.isEmpty(currentTeam['parent_team_id']))){
           infoLogs('Current team has existing parent, clear the parent child association');
-          //- 3 team docs kung naa syay parent lain, unya giilisan nimo (so old parent, current parent, ug current team)..
           team.getTeam(currentTeam['parent_team_id'])
           .then(function(body){
             tempDocHolder[2] = body;
@@ -696,7 +679,6 @@ var formattedDocuments = function(doc, action){
         }else{
           infoLogs('Current team has no parent, reformat document and do save');
           tempDocHolder[0]['parent_team_id'] = teamToBeParent['_id'];
-          //- 2 team docs kung walay parent daan si current team, or kung gi remove lang nimo iyang association sa parent..
           resolve(tempDocHolder);
         }
         /*
@@ -706,7 +688,6 @@ var formattedDocuments = function(doc, action){
         */
         break;
       case 'associateChild':
-        // reformat team id to have new child, retain what is in db
         var childToBe = [];
         _.each(doc, function(v,i,l){
           if(i > 0)
@@ -721,7 +702,6 @@ var formattedDocuments = function(doc, action){
         }
         var currentTeamId = tempDocHolder[0]['_id'];
        _.each(doc, function(v,i,l){
-          // new children, update parent_team_id to be of current child
           if(i > 0){
             tempDocHolder[i] = v;
             tempDocHolder[i]['parent_team_id'] = currentTeamId;
@@ -750,9 +730,6 @@ var formattedDocuments = function(doc, action){
         */
         break;
       case 'removeChild':
-        //- pag multiple child selected for delete
-        //sample 3 child teams to delete, total of 4 docs ang iupdate
-        //(3 child team to remove the current team as parent, ug ang current team to remove the child teams)
         var currentChild = doc[0]['child_team_id'];
         var childToRemove = [];
         _.each(doc, function(v,i,l){
