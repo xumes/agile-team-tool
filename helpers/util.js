@@ -15,9 +15,22 @@ var formatErrMsg = function(msg) {
 
 module.exports.trimData = function(postData) {
   var cleanData = {};
+  var forceArray = ['members', 'child_team_id']; // somehow this array is being converted to object
   _.each(postData, function(element, index, list) {
     if (typeof element === 'string') {
       element = element.trim();
+    }else if(typeof element === 'object' && forceArray.indexOf(index) === -1){
+      var tempObj = {};
+      _.each(element, function(v,i,l){
+        tempObj[i] = typeof v === 'string' ? v.trim() : v;
+      })
+      element = tempObj;
+    }else if(typeof element === 'array' || forceArray.indexOf(index) > -1){ // somehow, members array is being catch as OBJECT
+      var tempArr = [];
+      _.each(element, function(v,i,l){
+        tempArr.push(typeof v === 'string' ? v.trim() : v);
+      })
+      element = tempArr;
     }
     cleanData[index] = element;
   });

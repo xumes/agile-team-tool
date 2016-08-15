@@ -74,6 +74,7 @@ var team = {
     infoLogs('Creating new team records to Cloudant');
     return new Promise(function(resolve, reject){
       teamDoc = team.defaultTeamDoc(teamDoc, user);
+      teamDoc = util.trimData(teamDoc);
       var validateTeam = validate(teamDoc, teamDocRules);
       if(_.isEmpty(validateTeam)){
         team.getName(teamDoc['name'])
@@ -99,6 +100,7 @@ var team = {
   },
   updateOrDeleteTeam : function(updatedTeamDoc, session, action){ // transfer on routes
     var user = session['user'];
+    updatedTeamDoc = util.trimData(updatedTeamDoc);
     var teamId = updatedTeamDoc['_id'];
     var checkParent = true;
     return new Promise(function(resolve, reject){
