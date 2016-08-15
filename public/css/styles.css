@@ -276,6 +276,15 @@ nav ul li:first-child {
   margin-left: 0;
 }
 
+.headerTabs{
+  float: left;
+  margin-left: 3px;
+}
+
+.headerTabsInner{
+  margin-top: 10px;
+}
+
 nav ul li a {
   color: #313b3c;
   font-size: 15px;
