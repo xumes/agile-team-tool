@@ -8,6 +8,7 @@ var db            = cloudantDb.use(dbName);
 var fs            = require('fs');
 var _             = require('underscore');
 var async         = require('async');
+var util          = require('../helpers/util');
 
 module.exports.init = function(){
   //only init cloudant if we are running locally or on app instance 0 in cloudfoundry
@@ -36,6 +37,7 @@ module.exports.init = function(){
           }
           //found in cloudant so check version
           else{
+            logger.get('init').info(cDoc.doc._id + " [Source version: " +sDoc.version+ " Cloudant version: " +cDoc.doc.version+"]");
             if(!_.isEqual(sDoc.version, cDoc.doc.version)){
               logger.get('init').warn(cDoc.doc._id+" cloudant design document is out of date. version="+cDoc.doc.version+", source version="+sDoc.version);
               sDoc["_rev"]=cDoc.doc._rev;
@@ -51,6 +53,7 @@ module.exports.init = function(){
           }
 
         });
+        initIndex();
     });
 
     //indexes
@@ -69,6 +72,7 @@ module.exports.init = function(){
         });
       });
     });
+
   }
 }
 
@@ -120,6 +124,121 @@ var getSourceIndexes = function(){
            resolve(res);
          }
       );
+    });
+  });
+}
+
+var getAllChildren = function(teamId, teamList) {
+  var children = _.isEmpty(children) ? [] : children;
+  var team = teamList[teamId];
+  if (!_.isEmpty(team)) {
+    if (!_.isEmpty(team.child_team_id)) {
+      children = _.union(children, team.child_team_id);
+      _.each(team.child_team_id, function(id) {
+        children = _.union(children, getAllChildren(id, teamList, children));
+      });
+    }
+  }
+  return children;
+}
+
+var getAllParents = function(teamId, teamList) {
+  var parents = _.isEmpty(parents) ? [] : parents;
+  var team = teamList[teamId];
+  if (!_.isEmpty(team) && !_.isEmpty(team.parent_team_id)) {
+    parents = _.union(parents, [team.parent_team_id]);
+    parents = _.union(parents, getAllParents(team.parent_team_id, teamList));
+  }
+  return parents;
+}
+
+var initIndex = function() {
+  var indexDocument = new Object();
+  indexDocument._id = "ag_ref_team_index";
+  indexDocument.domains = [];
+  indexDocument.tribes = [];
+  indexDocument.squads = [];
+
+
+  logger.get('init').info("Processing all teams for lookup index.");
+  db.view('teams', 'teams', function(err, body) {
+    var allTeams = util.returnObject(body.rows);
+    var teamList = _.indexBy(allTeams, function(team) {return team._id});
+
+    allTeams = _.groupBy(allTeams, function(team) {
+      var level =  "squads";
+      if (_.isEmpty(team.parent_team_id) && (!_.isEmpty(team.squadteam) && team.squadteam.toLowerCase() == 'no'))
+        level = "domains";
+      else if (!_.isEmpty(team.parent_team_id) && (!_.isEmpty(team.squadteam) && team.squadteam.toLowerCase() == 'no'))
+        level = "tribes";
+      return level;
+    });
+
+    if (_.has(allTeams, 'domains'))
+      allTeams.domains = _.sortBy(allTeams.domains, function(team) {return team.name});
+    if (_.has(allTeams, 'tribes'))
+      allTeams.tribes = _.sortBy(allTeams.tribes, function(team) {return team.name});
+    if (_.has(allTeams, 'squads')) 
+      allTeams.squads = _.sortBy(allTeams.squads, function(team) {return team.name});
+
+    _.each(allTeams.domains, function(team) {
+      var indexObj = new Object();
+      indexObj._id = team._id;
+      indexObj.name = team.name;
+      indexObj.parents = !_.isEmpty(team.parent_team_id) ? [team.parent_team_id] : [];
+      indexObj.children = _.union(team.child_team_id, getAllChildren(team._id, teamList));
+      indexDocument.domains.push(indexObj);
+    });
+
+    _.each(allTeams.tribes, function(team) {
+      var indexObj = new Object();
+      indexObj._id = team._id;
+      indexObj.name = team.name;
+      indexObj.parents = _.union([team.parent_team_id], getAllParents(team._id, teamList));
+      indexObj.children = _.union(team.child_team_id, getAllChildren(team._id, teamList));
+      indexDocument.tribes.push(indexObj);
+    });
+
+    _.each(allTeams.squads, function(team) {
+      var indexObj = new Object();
+      indexObj._id = team._id;
+      indexObj.name = team.name;
+      indexObj.parents = !_.isEmpty(team.parent_team_id) ? [team.parent_team_id] : [];
+      indexObj.children = team.child_team_id;
+
+      var tribeIndex = _.findWhere(indexDocument.tribes, {_id : team.parent_team_id});
+      if (!_.isEmpty(tribeIndex)) {
+        indexObj.parents = _.union(indexObj.parents, tribeIndex.parents);
+      }
+
+      indexDocument.squads.push(indexObj);
+    });
+
+    logger.get('init').info("Squads: " + _.size(indexDocument.squads));
+    logger.get('init').info("Tribes: " + _.size(indexDocument.tribes));
+    logger.get('init').info("Domains: " + _.size(indexDocument.domains));
+
+    // TODO: stil evaluating if a flat lookup is better suited for the purpose of this document.
+    // var allIndex = new Object();
+    // allIndex._id = "ag_ref_team_index";
+    // allIndex      
+    // _.union(indexDocument.domains, indexDocument.tribes);
+    // allIndex = _.union(allIndex, indexDocument.squads);
+    logger.get('init').info("Finding current lookup index.");
+    db.get("ag_ref_team_index", function(err, body) {
+      if (err) {
+        logger.get('init').error("Failed to find lookup index.");
+      } else {
+        if (_.has(body, "_rev"))
+          indexDocument._rev = body._rev;
+        
+        db.insert(indexDocument, function(err, body) {
+          if (!err)
+            logger.get('init').info("Lookup index updated.");
+          else
+            logger.get('init').error("Failed to update lookup index.");
+        });
+      }
     });
   });
 }
