@@ -8,7 +8,8 @@ exports.teamDocRules = {
   desc : {
     presence : false,
     length : {
-      maximum : 200
+      maximum : 1000,
+      message : "^Team description is too long."
     }
   },
   squadteam : {
