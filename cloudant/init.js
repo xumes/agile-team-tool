@@ -227,7 +227,12 @@ var initIndex = function() {
     logger.get('init').info("Finding current lookup index.");
     db.get("ag_ref_team_index", function(err, body) {
       if (err) {
-        logger.get('init').error("Failed to find lookup index.");
+        db.insert(indexDocument, function(err, body) {
+          if (!err)
+            logger.get('init').info("Lookup index created.");
+          else
+            logger.get('init').error("Failed to create lookup index.");
+        });
       } else {
         if (_.has(body, "_rev"))
           indexDocument._rev = body._rev;
