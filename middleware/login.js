@@ -92,6 +92,7 @@ module.exports = function(passport) {
           req.session['user'] = ldapObject;
           req.session['environment'] = settings.environment;
           loggers.get('auth').info('Successfully authenticated %s', email);
+          loggers.get('auth').info('ldapObject: ', ldapObject);
           return done(null, ldapObject);
         }
         else {
