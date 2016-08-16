@@ -9,6 +9,7 @@ var _           = require('underscore');
 var loggers     = require('../middleware/logger');
 var validate    = require('validate.js');
 var moment      = require('moment');
+var sprintf     = require("sprintf-js").sprintf;
 
 var formatErrMsg = function(msg){
   loggers.get('models').info('Error: ', msg);
@@ -24,8 +25,6 @@ var infoLogs = function(msg){
   loggers.get('models').info(msg);
   return;
 };
-
-var iterationDocRules = require('./validate_rules/iteration.js');
 
 var iteration = {
   getByIterInfo: function(teamId) {
@@ -110,6 +109,7 @@ var iteration = {
   add: function(data, user, allTeams, userTeams) {
     // loggers.get('models').info('[iterationModel.add] allTeams:', JSON.stringify(allTeams));
     loggers.get('models').info('[iterationModel.add] userTeams:', JSON.stringify(userTeams));
+    var iterationDocRules = require('./validate_rules/iteration.js');
     var cleanData = {};
     data['last_updt_dt'] = util.getServerTime();
     data['iterationinfo_status'] = iteration.calculateStatus(data);
@@ -181,6 +181,7 @@ var iteration = {
   },
 
   edit: function(iterationId, data, user, allTeams, userTeams) {
+    var iterationDocRules = require('./validate_rules/iteration.js');
     var cleanData = {};
     data['last_updt_dt'] = util.getServerTime();
     data['last_updt_user'] = user['shortEmail'];
@@ -368,8 +369,61 @@ var iteration = {
         reject(formatErrMsg(msg));
       });
     });
-  }
+  },
 
+  searchTeamIteration: function(p) {
+    return new Promise(function(resolve, reject) {
+      var iterationSearchAllDocRules = require('./validate_rules/iterationSearchAll.js');
+      var team_id = p.id;
+      var status = p.status;
+      var startdate = p.startdate;
+      var enddate = p.enddate;
+      var limit = p.limit;
+      var include_docs = p.includeDocs;
+      var sortBy = "-end_date";
+      var lucene_query = "";
+
+      var validationErrors = validate(p, iterationSearchAllDocRules);
+      if (validationErrors) {
+        reject(formatErrMsg(validationErrors));
+      } else {
+          // teamId
+          lucene_query = lucene_query + sprintf("team_id:%s", team_id);
+          // completed status
+          if (status) {
+            lucene_query = lucene_query + sprintf(" AND completed:%s", status);
+          }
+          // earliest and latest end date
+          if (startdate && enddate) {
+            lucene_query = lucene_query + sprintf(" AND end_date:[%s TO %s]", startdate, enddate);
+          } else {
+            if (startdate) {
+              lucene_query = lucene_query + sprintf(" AND end_date:%s", startdate);
+            }
+            if (enddate) {
+              lucene_query = lucene_query + sprintf(" AND end_date:%s", enddate);
+            }
+          }
+
+          var params = {
+            'q': lucene_query,
+            'include_docs': include_docs,
+            'sort': sortBy,
+            'limit': limit
+          }
+          loggers.get('models').info('[iterationModel.searchTeamIteration] lucene_query: ' + lucene_query);
+          common.Search('iterations', 'searchAll', params)
+          .then(function(body) {
+            resolve(body);
+          })
+          .catch(function(err) {
+            loggers.get('models').error('[iterationModel.searchTeamIteration]:', err);
+            var msg = err.error;
+            reject(formatErrMsg(msg));
+          });
+      }
+    });
+  }
 };
 
 module.exports = iteration;

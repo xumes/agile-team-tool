@@ -119,10 +119,23 @@ exports.bulkUpdate = function(data) {
   });
 };
 
-exports.Search = function(_design, _view, _include_docs, q) {
+exports.Search = function(_design, _view, p) {
   return new Promise(function(resolve, reject) {
-    _include_docs = _include_docs || false;
-    db.searchAsync(_design, _view, { 'q': q, 'include_docs': _include_docs })
+    var params = new Object();
+
+    params.include_docs = false;
+    params.q = p.q;
+
+    if (p.include_docs) {
+      params.include_docs = p.include_docs;
+    }
+    if (p.limit) {
+      params.limit = p.limit;
+    }
+    if (p.sort) {
+      params.sort = p.sort;
+    }
+    db.searchAsync(_design, _view, params)
       .then(function(body) {
         resolve(body);
       })
