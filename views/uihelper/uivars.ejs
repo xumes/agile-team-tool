@@ -3,16 +3,16 @@
 <script type="text/javascript">
   var user            = <%-JSON.stringify(user)%>
   const userSession = {
-    //id: 64522,
+    //id: not defined in ldap object,
     uid: user.ldap.uid,
     building: user.ldap.buildingName,
-    //is-employee: true,
+    //is-employee: not defined in ldap object,
     bio: user.ldap.jobresponsibilities,
-    //location: "Cebu, CEB, PH",
+    //location: not defined in ldap object,
     email: user.ldap.emailAddress,
     name: user.ldap.hrFirstName + ' ' + user.ldap.hrLastName,
     "office-phone": user.ldap.telephoneNumber,
-    //org-title: "Global Business Services",
+    //org-title: not defined in ldap object,
     "notes-id": user.ldap.notesId
   };
 
