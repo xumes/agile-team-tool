@@ -2,7 +2,20 @@
 
 <script type="text/javascript">
   var user            = <%-JSON.stringify(user)%>
-  
+  const userSession = {
+    //id: 64522,
+    uid: user.ldap.uid,
+    building: user.ldap.buildingName,
+    //is-employee: true,
+    bio: user.ldap.jobresponsibilities,
+    //location: "Cebu, CEB, PH",
+    email: user.ldap.emailAddress,
+    name: user.ldap.hrFirstName + ' ' + user.ldap.hrLastName,
+    "office-phone": user.ldap.telephoneNumber,
+    //org-title: "Global Business Services",
+    "notes-id": user.ldap.notesId
+  };
+
   <% if (environment != null && environment != '') { %>
   var environment     = "<%-environment%>";
   <% } %>

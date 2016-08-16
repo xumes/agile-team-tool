@@ -35,8 +35,7 @@ function getAuthenticatedUser(userEmail) {
 
 var userInfo;
 function setAuthenticatedUser(userEmail, facesPerson) {
-	console.log(facesPerson);
-	userInfo = facesPerson;
+	userInfo = userSession;
 	if (userInfo == null) {
 		userInfo = new Object();
 		userInfo.email = userEmail;
