@@ -9,12 +9,10 @@ var fs            = require('fs');
 var _             = require('underscore');
 var async         = require('async');
 var util          = require('../helpers/util');
-
 module.exports.init = function(){
   //only init cloudant if we are running locally or on app instance 0 in cloudfoundry
   if(_.isEmpty(process.env.CF_INSTANCE_INDEX) || process.env.CF_INSTANCE_INDEX == "0"){
     logger.get('init').info("Checking Cloudant DB design docs and indexes...");
-
     //design docs
     Promise.join(getCloudantDocs(), getSourceDocs(), function(cloudantDocs, sourceDocs) {
         /*ignore if design doc exists in the DB but not in the source
