@@ -121,39 +121,50 @@ module.exports = function(app, includes) {
     });
   };
 
-  var getCompletedTeamIteration = function(req, res, next) {
-    var team_id = req.query.team_id;
-    var end_date1 = req.query.end_date1;
-    var end_date2 = req.query.end_date2;
+  /**
+   * Search index function for Iteration docs
+   * Cloudant views: _design/iterations/_search/searchAll?q=teamId AND completed:Y AND end_date:[20160401 TO 20160723]&include_docs=true&sort="-end_date"
+   * Accepts querystring parameters such as:
+   * @param {String}    id (teamId) (required)
+   * @param {String}    status (Y or N) (optional)
+   * @param {Date}      startdate (format: YYYYMMDD) (optional)
+   * @param {Date}      enddate (format: YYYYMMDD) (optional)
+   * @param {Number}    limit (optional)
+   * @param {Boolean}   includeDocs (true or false) (optional)
+   */
+  var searchTeamIteration = function(req, res, next) {
+    var team_id = req.query.id;
+    var status = req.query.status;
+    var startdate = req.query.startdate;
+    var enddate = req.query.enddate;
+    var limit = req.query.limit;
+    var includeDocs = req.query.includeDocs;
 
     if (!team_id) {
-      return res.status(400).send({ error: 'Team Id is missing' });
+      return res.status(400).send({ error: 'TeamId is required' });
     }
+    var params = {
+      id: team_id,
+      status: status,
+      startdate: startdate,
+      enddate: enddate,
+      includeDocs: includeDocs,
+      limit: limit
+    };
 
-    if (!end_date1) {
-      return res.status(400).send({ error: 'Earliest end date is missing' });
-    }
-
-    if (!end_date2) {
-      return res.status(400).send({ error: 'Latest end date is missing' });
-    }
-
-    loggers.get('api').info('[iterationRoute.getCompletedTeamIteration] team_id:%s end_date1:%s end_date2:%s', team_id, end_date1, end_date2);
-    var q = '';
-    q = sprintf("team_id:%s AND status:Completed end_date:[%s TO %s]&sort=-end_date", team_id, end_date1, end_date2);
-    loggers.get('api').info('[iterationRoute.getCompletedTeamIteration] q:' + q);
-    iterationModel.completedTeamIteration(q)
+    loggers.get('api').info('[iterationRoute.searchTeamIteration] params:', JSON.stringify(params));
+    iterationModel.searchTeamIteration(params)
     .then(function(result) {
       return res.status(200).send(result);
     })
     .catch( /* istanbul ignore next */ function(err) {
       /* cannot simulate Cloudant error during testing */
-      formatErrMsg('[iterationRoute.getCompletedTeamIteration]:', err);
+      formatErrMsg('[iterationRoute.searchTeamIteration]:', err);
       return res.status(400).send({ error: err });
     });
   };
 
-  app.get('/api/iteration/completed/byteam', [includes.middleware.auth.requireLogin], getCompletedTeamIteration);
+  app.get('/api/iteration/searchTeamIteration', [includes.middleware.auth.requireLogin], searchTeamIteration);
   app.get('/api/iteration/completed', [includes.middleware.auth.requireLogin], getCompletedIterations);
   app.get('/api/iteration/:teamId?', [includes.middleware.auth.requireLogin], getIterinfo);
   app.get('/api/iteration/current/:id', [includes.middleware.auth.requireLogin], getIterationDoc);
