@@ -15,11 +15,11 @@
 
 <body id="ibm-com" class="ibm-type" onload="siteEnv();">
   <div id="ibm-top" class="ibm-landing-page">
-    
+
     <div id="ibm-content-wrapper">
       <%- include ./header/header_leadspace.ejs %>
 
-      <main role="main" aria-labelledby="Agile teams">    
+      <main role="main" aria-labelledby="Agile teams">
         <div id="ibm-pcon">
           <div id="ibm-content">
             <div id="ibm-content-body">
@@ -30,115 +30,115 @@
                     <div class="ibm-rule ibm-alternate-1">
                       <hr>
                     </div>
-    
+
                     <form id="createTeamForm" class="ibm-column-form">
                       <p>
-                        <label style="line-height: 20px;" for="teamSelectList">Create or select an existing team:<span class="ibm-required">*</span></label> 
-                        <span> 
+                        <label style="line-height: 20px;" for="teamSelectList">Create or select an existing team:<span class="ibm-required">*</span></label>
+                        <span>
                           <select id="teamSelectList" name="teamSelectList" style="min-width: 380px">
                             <option value="new" selected="selected">Create new...</option>
                           </select>
                         </span>
                       </p>
-                      
+
                       <div class="agile-read-only-status ibm-item-note-alternate" id="userEditMsg" style="display:none; margin-left: 650px;"></div>
-                      
+
                       <p>
                         <label for="teamName">&nbsp;<span class="ibm-access">Team name:</span></label>
-                        <span> 
+                        <span>
                           <input type="text" name="teamName" id="teamName" size="50" value="" placeholder="Type team name" aria-label="Team name"
                           style="width: 400px;">
                         </span>
                       </p>
-  
+
                       <p>
-                        <label for="teamDesc">Team description:</label> 
-                        <span> 
+                        <label for="teamDesc">Team description:</label>
+                        <span>
                           <textarea name="teamDesc" id="teamDesc" placeholder="Type a short team description" style="width: 400px; height: 70px;"></textarea>
                         </span>
                       </p>
-  
+
                       <p>
                         <label for="teamSquadYesNo">Is this a squad team?<span class="ibm-required">*</span>
                           <a class="ibm-information-link" data-widget="tooltip" data-contentid="squadToolTip" style="position: relative; top: -5px; left: 10px;"><span class="ibm-access">Tooltip</span></a>
-                        </label> 
-                        <span> 
+                        </label>
+                        <span>
                           <select id="teamSquadYesNo" name="teamSquadYesNo" style="width: 380px">
                             <option value="Yes" selected="selected">Yes</option>
                             <option value="No">No</option>
                         </select>
                         </span>
                       </p>
-    
+
                       <div id="squadToolTip" class="ibm-tooltip-content">
                         <p class="toolTip">
                           You can change the Squad Team Indicator from No to Yes if the team does not have any associated Child Teams.<br> <br> You can change the Squad Team Indicator from Yes
                           to No if there is no associated data like Iteration Information.<br> <br> Otherwise, you cannot change the squad team indicator.
                         </p>
-    
+
                       </div>
-  
+
                       <p>
                         <label>&nbsp;<span class="ibm-access">Update buttons</span></label>
-                        <span class="ibm-btn-row"> 
-                          <input type="button" class="ibm-btn-pri ibm-btn-small" id="addTeamBtn" value="Add team" onclick="updateTeamInfo('add');" /> 
-                          <input type="button" class="ibm-btn-sec ibm-btn-small" id="updateTeamBtn" value="Update team" onclick="updateTeamInfo('update');" disabled /> 
-                          <input type="button" class="ibm-btn-sec ibm-btn-small" id="deleteTeamBtn" value="Delete team" onclick="updateTeamInfo('delete');" disabled /> 
+                        <span class="ibm-btn-row">
+                          <input type="button" class="ibm-btn-pri ibm-btn-small" id="addTeamBtn" value="Add team" onclick="updateTeamInfo('add');" />
+                          <input type="button" class="ibm-btn-sec ibm-btn-small" id="updateTeamBtn" value="Update team" onclick="updateTeamInfo('update');" disabled />
+                          <input type="button" class="ibm-btn-sec ibm-btn-small" id="deleteTeamBtn" value="Delete team" onclick="updateTeamInfo('delete');" disabled />
                           <input type="button" class="ibm-btn-sec ibm-btn-small" id="cancelTeamBtn" value="Reset team" onclick="updateTeamInfo('reset');" />
                         </span>
                       </p>
-  
+
                       <div style="display:none" id="teamDetailsPageSection" class="squad-sections">
                         <div data-widget="showhide" data-type="panel" class="ibm-show-hide">
                           <h2 class="ibm-bold ibm-h4">Team membership</h2>
                           <div class="ibm-container-body" id="newMemberPageSection">
-  
+
                             <p id="new_member_section_id">
-                              <label for="teamMemberName">Team member<span class="ibm-required">*</span></label> 
-                              <span> 
+                              <label for="teamMemberName">Team member<span class="ibm-required">*</span></label>
+                              <span>
                                 <input type="text" placeholder="Ex: Name or Email Adress" value="" size="50"
                                 id="teamMemberName" name="teamMemberName" style="width: 400px;">
                               </span>
                             </p>
-  
+
                             <p id="new_role_section_id" class="ibm-form-elem-grp">
                               <label for="memberRoleSelectList">Role
                                 <a class="ibm-information-link" data-widget="tooltip" data-contentid="squadToolTip-role" style="position: relative; top: -5px; left: 10px;"><span class="ibm-access">Tooltip</span></a>
-                              </label> 
-                              <span> 
+                              </label>
+                              <span>
                                 <select id="memberRoleSelectList" name="memberRoleSelectList" style="width: 380px;">
                                   <option value="" selected="selected">Select one</option>
                                 </select>
                               </span>
                             </p>
-    
+
                             <div id="squadToolTip-role" class="ibm-tooltip-content">
                               <p class="toolTip">Please refer to the User Guide's appendix for details explanation of roles.</p>
                             </div>
-    
-      
+
+
                             <p id="otherRoleDescSection" class="ibm-form-elem-grp" style="display: none;">
                               <label>&nbsp;</label>
                               <span> <input type="text" name="otherRoleDesc" id="otherRoleDesc" size="50" value="" placeholder="Other role description"
                                 aria-labelledby="Other role" style="width: 400px">
                               </span>
                             </p>
-  
+
                             <p id="new_alloc_section_id">
                               <label for="memberAllocation">Member allocation(%):<span class="ibm-required"></span></label> <span> <input type="text" name="memberAllocation"
                                 id="memberAllocation" maxlength="3" size="50" value="0" placeholder="Ex: 100" onkeypress="return isNumber(event)" style="width: 400px">
                               </span>
                             </p>
-  
+
                             <p id="team_member_btns_id" class="ibm-btn-row">
                               <label>&nbsp;<span class="ibm-access">Update buttons</span></label>
-                              <span> 
-                                <input type="button" class="ibm-btn-pri ibm-btn-small" id="addMemberBtn" value="Add team member" onclick="updateMemberInfo('addTeamMember')" /> 
-                                <input type="button" class="ibm-btn-sec ibm-btn-small" id="updateMemberBtn" value="Update team member" onclick="updateMemberInfo('updateTeamMember')" /> 
+                              <span>
+                                <input type="button" class="ibm-btn-pri ibm-btn-small" id="addMemberBtn" value="Add team member" onclick="updateMemberInfo('addTeamMember')" />
+                                <input type="button" class="ibm-btn-sec ibm-btn-small" id="updateMemberBtn" value="Update team member" onclick="updateMemberInfo('updateTeamMember')" />
                                 <input type="button" class="ibm-btn-sec ibm-btn-small" id="cancelMemberBtn" value="Reset team member" onclick="updateMemberInfo('clear');" />
                               </span>
                             </p>
-  
+
                             <div class="ibm-rule ibm-alternate-1">
                               <hr>
                             </div>
@@ -146,7 +146,7 @@
                               <caption>
                                 <em id="teamNameTitle" class="ibm-bold">Team members</em>
                                 <p style="float: right; width: 400px;">
-                                  <span id="spin" style="display: none" class="ibm-spinner"></span> 
+                                  <span id="spin" style="display: none" class="ibm-spinner"></span>
                                   <span style="width: 350px;">
                                   <label for="memberListAction" class="ibm-access">Action</label>
                                   <select id="memberListAction" name="memberListAction" style="width: 150px;">
@@ -171,25 +171,25 @@
                               </tbody>
                             </table>
                           </div>
-    
+
                           <h2 class="ibm-bold ibm-h4">Parent team association</h2>
                           <div class="ibm-container-body" id="assocParentPageSection">
                             <p>
-                              <label for="parentSelectList">Select a parent team:<span class="ibm-required">*</span></label> 
-                              <span> 
+                              <label for="parentSelectList">Select a parent team:<span class="ibm-required">*</span></label>
+                              <span>
                                 <select id="parentSelectList" name="parentSelectList" style="width: 380px;">
                                   <option value="" selected="selected">Select one</option>
                               </select>
                               </span>
                             </p>
-  
+
                             <p class="ibm-btn-row">
                               <label>&nbsp;<span class="ibm-access">Update buttons</span></label>
-                              <span> 
+                              <span>
                                 <input type="button" class="ibm-btn-pri ibm-btn-small" id="updateParentBtn" value="Associate team to a parent team" onclick="updateTeamInfo('parent');" />
                               </span>
                             </p>
-  
+
                             <div class="ibm-rule ibm-alternate-1">
                               <hr>
                             </div>
@@ -207,9 +207,9 @@
                               <tbody id="siblingList">
                               </tbody>
                             </table>
-    
+
                           </div>
-    
+
                           <h2 class="ibm-bold ibm-h4">Child team association</h2>
                           <div class="ibm-container-body" id="assocChildPageSection">
                             <div id="squadChildPageSection" style="display: none;">
@@ -217,21 +217,21 @@
                             </div>
                             <div id="nonSquadChildPageSection" style="display: none;">
                               <p>
-                                <label for="childSelectList">Select a team:<span class="ibm-required">*</span></label> 
-                                <span> 
+                                <label for="childSelectList">Select a team:<span class="ibm-required">*</span></label>
+                                <span>
                                   <select id="childSelectList" name="childSelectList" style="width: 380px;">
                                     <option value="" selected="selected">Select one</option>
                                 </select>
                                 </span>
                               </p>
-  
+
                               <p class="ibm-btn-row">
                                 <label>&nbsp;<span class="ibm-access">Update buttons</span></label>
-                                <span> 
+                                <span>
                                   <input type="button" class="ibm-btn-pri ibm-btn-small" id="updateChildBtn" value="Associate team as a child" onclick="updateTeamInfo('child');" />
                                 </span>
                               </p>
-  
+
                               <div class="ibm-rule ibm-alternate-1">
                                 <hr>
                               </div>
@@ -239,7 +239,7 @@
                                 <caption>
                                   <em id="childrenNameTitle" class="ibm-bold">Childream teams</em>
                                   <p style="float: right;  width: 400px;">
-                                    <span id="spin" style="display: none" class="ibm-spinner"></span> 
+                                    <span id="spin" style="display: none" class="ibm-spinner"></span>
                                     <span style="width: 350px;">
                                     <label for="childrenListAction" class="ibm-access">Action</label>
                                     <select id="childrenListAction" name="childrenListAction" style="width: 150px;">
@@ -262,7 +262,7 @@
                               </table>
                             </div>
                           </div>
-    
+
                           <h2 class="ibm-bold ibm-h4">Iteration information</h2>
                           <div class="ibm-container-body" id="iterationPageSection">
                             <div id="nonSquadIterationPageSection" style="display: none;">
@@ -297,7 +297,7 @@
                                   <label> <a class="ibm-arrow-forward-bold-link">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Less..</a> </label>
                                 </p>
                               </div>
-                             
+
                             </div>
                           </div>
                           <h2 class="ibm-bold ibm-h4">Assessment information</h2>
@@ -336,14 +336,14 @@
                               </div>
                             </div>
                           </div>
-    
+
                           <h2 class="ibm-bold ibm-h4">Last update</h2>
                           <div class="ibm-container-body" id="auditInfoSection">
                             <div class="ibm-columns">
                               <div class="ibm-col-2-1">
                                 <p>
                                   <label><span style="font-size: 9pt">Last update user:</span></label> <span style="font-size: 9pt" id="lastUpdateUser"></span>
-    
+
                                 </p>
                               </div>
                               <div class="ibm-col-2-1">
@@ -352,7 +352,15 @@
                                 </p>
                               </div>
                             </div>
-    
+                            <div id="assessmentLinkSection">
+                              <!-- style="display:none;" -->
+                              <p>
+                              
+                                <label><span STYLE="font-size: 9pt">Maturity assessment link: </span></label>
+                                    <a href='/maturityTrends?id=' id="maturityLink"> </a>
+                              </p>
+                            </div>
+
                             <div id="debugSection">
                               <!-- style="display:none;" -->
                               <p>
@@ -380,7 +388,7 @@
       </div>
     </div>
     <%- include ./footer.ejs %>
-    
+
   </div>
 </body>
 </html>
