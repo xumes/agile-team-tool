@@ -36,6 +36,8 @@ function getAuthenticatedUser(userEmail) {
 var userInfo;
 function setAuthenticatedUser(userEmail, facesPerson) {
 	userInfo = userSession;
+	console.log(facesPerson);
+	userInfo = facesPerson;
 	if (userInfo == null) {
 		userInfo = new Object();
 		userInfo.email = userEmail;
@@ -176,7 +178,7 @@ var getServerDateTime = function() {
  * @param errorThrown
  */
 function errorHandler(xhr, textStatus, errorThrown) {
-	if (jqXHR.status == 400) {
+	if (xhr.status == 400) {
 		var errMsgs = JSON.parse(xhr.responseText);
 		if (!_.isEmpty(errMsgs)) {
 			var msg = '';
@@ -368,10 +370,7 @@ function getRemoteData(cUrl, _callback, args) {
 	var returnObj = null;
 	$.ajax({
 		type : "GET",
-		url : cUrl,
-		//TODO: Removing "async: false" tends to give the impression that the page has loaded all its data
-		// even though it is still processing the ajax call.  Need to work on a busy indicator if removed.
-		async: false
+		url : cUrl
 	}).done(function(data) {
 		if (data != undefined) {
 			var list = [];
