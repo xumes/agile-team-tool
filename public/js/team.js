@@ -961,7 +961,6 @@ function updateChildAssociation(team) {
 			teamId 				: team._id,
 			targetChild		: newChild
 		};
-
 		setAssociation(associate, action, message);
 
 	} else {
