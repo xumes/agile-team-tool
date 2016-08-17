@@ -37,7 +37,6 @@ module.exports.init = function(){
           }
           //found in cloudant so check version
           else{
-            logger.get('init').info(cDoc.doc._id + " [Source version: " +sDoc.version+ " Cloudant version: " +cDoc.doc.version+"]");
             if(!_.isEqual(sDoc.version, cDoc.doc.version)){
               logger.get('init').warn(cDoc.doc._id+" cloudant design document is out of date. version="+cDoc.doc.version+", source version="+sDoc.version);
               sDoc["_rev"]=cDoc.doc._rev;
