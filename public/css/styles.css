@@ -94,18 +94,6 @@ body, input, textarea, select, table {
   font-family: 'HelveticaNeueETW01-55Rg', sans-serif;
 }
 
-h1 {
-  font-family: 'HelveticaNeueETW01-55Rg', sans-serif;
-}
-
-h2 {
-  font-family: 'HelveticaNeueETW01-75Bd';
-  font-weight: normal;
-  color: #303a3b;
-  line-height: 30px;
-  font-size: 30px;
-}
-
 #AA-h4 {
   box-sizing:border-box;
   color: #fff;
@@ -115,15 +103,6 @@ h2 {
   font-weight: bold;
   padding: 0 0 0 0;
 }
-
-h6 {
-  font-size: 14px;
-  line-height: 18px;
-  color: #ffffff;
-  margin: 0 0 14px;
-  font-style: italic;
-}
-
 
 #outer-wrap {
   width: 100%;
