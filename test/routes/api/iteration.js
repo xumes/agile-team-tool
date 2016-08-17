@@ -189,10 +189,25 @@ describe('Iteration API Test', function(){
     });
   });
 
-  describe('Iteration API Test [GET /api/iteration/completed]: get completed iteration', function(){
-    it('Get completed iteration documents', function(done){
-      var query = querystring.stringify({'startkey':iterationDocValid.iteration_start_dt});
-      var req = request(app).get('/api/iteration/completed?' + query);
+  describe('Iteration API Test [GET /api/iteration/searchTeamIteration]: Search team iteration', function(){
+    it('Search by team id', function(done) {
+      var query = querystring.stringify({'id':iterationDocValid._id});
+      var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
+      agent.attachCookies(req);
+      req.end(function(err, res){
+        if (err) {
+          //console.log(err);
+        } else {
+          expect(res.statusCode).to.be.equal(200);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('rows');
+        }
+        done();
+      });
+    });
+    it('Search by team id with startdate/enddate', function(done) {
+      var query = querystring.stringify({'id':iterationDocValid._id, 'startdate': '20160701', 'enddate': '20160701'});
+      var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
       agent.attachCookies(req);
       req.end(function(err, res){
         if (err) {

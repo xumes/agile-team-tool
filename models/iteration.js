@@ -358,20 +358,8 @@ var iteration = {
     return status;
   },
 
-  completedTeamIteration: function(q) {
-    return new Promise(function(resolve, reject) {
-      common.Search('iterations', 'searchAll', true, q)
-      .then(function(body) {
-        resolve(body);
-      })
-      .catch(function(err) {
-        var msg = err.error;
-        reject(formatErrMsg(msg));
-      });
-    });
-  },
-
   searchTeamIteration: function(p) {
+    loggers.get('models').info('[iterationModel.searchTeamIteration] params: ', JSON.stringify(p,null,1));
     return new Promise(function(resolve, reject) {
       var iterationSearchAllDocRules = require('./validate_rules/iterationSearchAll.js');
       var team_id = p.id;
@@ -382,8 +370,12 @@ var iteration = {
       var include_docs = p.includeDocs;
       var sortBy = "-end_date";
       var lucene_query = "";
-
+      var dateFormat = "YYYYMMDD";
+      var isvalid_startdate = moment(startdate, dateFormat, true).isValid();
+      var isvalid_enddate = moment(enddate, dateFormat, true).isValid();
       var validationErrors = validate(p, iterationSearchAllDocRules);
+      validationErrors = iteration.isValidStartEndDate(startdate, enddate, "YYYYMMDD", validationErrors);
+
       if (validationErrors) {
         reject(formatErrMsg(validationErrors));
       } else {
@@ -416,13 +408,39 @@ var iteration = {
           .then(function(body) {
             resolve(body);
           })
-          .catch(function(err) {
+          .catch( /* istanbul ignore next */ function(err) {
+            /* cannot simulate Cloudant error during testing */
             loggers.get('models').error('[iterationModel.searchTeamIteration]:', err);
             var msg = err.error;
             reject(formatErrMsg(msg));
           });
       }
     });
+  },
+
+  isValidStartEndDate: function(startdate, enddate, dateFormat, validationErrors) {
+    var isvalid_startdate = moment(startdate, dateFormat, true).isValid();
+    var isvalid_enddate = moment(enddate, dateFormat, true).isValid();
+    if (startdate && !isvalid_startdate) {
+      if (validationErrors === undefined) {
+        validationErrors = new Object();
+      }
+      if (validationErrors && ! validationErrors['startdate']) {
+        validationErrors['startdate'] = [];
+      }
+      validationErrors['startdate'].push('Start date is not a valid date');
+    }
+    if (enddate && !isvalid_enddate) {
+      if (validationErrors === undefined) {
+        validationErrors = new Object();
+      }
+      if (validationErrors && ! validationErrors['startdate']) {
+        validationErrors['enddate'] = [];
+      }
+      validationErrors['enddate'].push('End date is not a valid date');
+    }
+
+    return validationErrors;
   }
 };
 

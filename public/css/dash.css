@@ -186,6 +186,7 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
 #teamTree li {
 	padding-top: 0px;
 	padding-bottom: 0px;
+	line-height: 1.625rem
 }
 
 #teamTree li > a {

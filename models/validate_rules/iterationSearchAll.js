@@ -3,14 +3,6 @@ var moment = require('moment');
 var _ = require('underscore');
 var dateFormat = "YYYYMMDD";
 
-validate.validators.checkDate = function(value, options, key, attrib) {
-  if (value) {
-    var dt = moment(value, dateFormat, true).isValid();
-    if (!dt)
-      return "^" + options['message'];
-  }
-};
-
 validate.validators.compareDate = function(value, options, key, attrib) {
   var startdate = attrib['startdate'];
   var enddate = attrib['enddate'];
@@ -42,8 +34,9 @@ var iterationSearchAllDocRules = {
   },
   "startdate": {
     presence: false,
-    checkDate: {
-      message: "Start date must be in format YYYYMMDD"
+    format: {
+      pattern: /\d{4}\d{2}\d{2}/,
+      message: "^Start date must be in format YYYYMMDD"
     },
     compareDate: {
       field: "startdate",
@@ -51,8 +44,9 @@ var iterationSearchAllDocRules = {
   },
   "enddate": {
     presence: false,
-    checkDate: {
-      message: "End date must be in format YYYYMMDD"
+    format: {
+      pattern: /\d{4}\d{2}\d{2}/,
+      message: "^End date must be in format YYYYMMDD"
     },
     compareDate: {
       field: "enddate",
