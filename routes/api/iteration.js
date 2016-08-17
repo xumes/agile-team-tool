@@ -152,7 +152,6 @@ module.exports = function(app, includes) {
       limit: limit
     };
 
-    loggers.get('api').info('[iterationRoute.searchTeamIteration] params:', JSON.stringify(params));
     iterationModel.searchTeamIteration(params)
     .then(function(result) {
       return res.status(200).send(result);
