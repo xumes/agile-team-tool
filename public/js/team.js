@@ -950,15 +950,16 @@ function updateChildAssociation(team) {
 	var action = "associateChild";
 	var message = "You have successfully created a Child team association.";
 	var childId = $("#childSelectList option:selected").val();
+	var newChild = [];
 
 	if (team.child_team_id.indexOf(childId) == -1)
-		team.child_team_id.push(childId);
+		newChild.push(childId);
 
 	if (childId != "") {
 		var associate = {
 			action 				: action,
 			teamId 				: team._id,
-			targetChild		: team.child_team_id
+			targetChild		: newChild
 		};
 
 		setAssociation(associate, action, message);
