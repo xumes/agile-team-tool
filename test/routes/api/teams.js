@@ -16,6 +16,7 @@ var createdId = null;
 var targetParentId = null;
 var targetChildId = null;
 var agent = request.agent(app);
+var lookupId = null;
 
 describe('Team API Tests', function() {
 
@@ -476,4 +477,189 @@ describe('Team API Tests', function() {
       done();
     });
   });
+
+  // lookup by team id
+  it('it will return 200 empty array because of an invalid team id', function(done){
+    var req = request(app).get('/api/teams/lookup/team/' + 'none-existent-team');
+    agent.attachCookies(req);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+        expect(res.body).to.be.a('array');
+        expect(res.body).to.be.empty;
+      }
+      done();
+    });
+  });
+
+  it('it will return 200 empty because no team id was indicated', function(done){
+    var req = request(app).get('/api/teams/lookup/team');
+    agent.attachCookies(req);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+        expect(res.body).to.be.a('array');
+        expect(res.body).to.be.empty;
+      }
+      done();
+    });
+  });
+
+  // lookup by team id
+  it('it will return 200 and empty if there are no valid data on the lookup, array of objects if otherwise', function(done){
+    var req = request(app).get('/api/teams/lookup/team');
+    agent.attachCookies(req);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+        if (res.body.length == 0)
+          expect(res.body).to.be.empty;
+        else {
+          expect(res.body[0]).to.have.property('_id');
+          expect(res.body[0]).to.have.property('name');
+          expect(res.body[0]).to.have.property('squadteam');
+          expect(res.body[0]).to.have.property('parents');
+          expect(res.body[0]).to.have.property('children');
+          expect(res.body[0]['parents']).to.be.a('array');
+          expect(res.body[0]['children']).to.be.a('array');
+          lookupId = res.body[0]['_id'];
+        }
+      }
+      done();
+    });
+  });
+
+  // lookup selectable children teams of a team
+  it('it will return 200 and empty array possible children because of an invalid team id', function(done){
+    var req = request(app).get('/api/teams/lookup/children/' + 'none-existent-team');
+    agent.attachCookies(req);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+        expect(res.body).to.be.a('array');
+        expect(res.body).to.be.empty;
+      }
+      done();
+    });
+  });
+
+  it('it will return 200 and empty array possible children because no team id was indicated', function(done){
+    var req = request(app).get('/api/teams/lookup/children/');
+    agent.attachCookies(req);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+        expect(res.body).to.be.a('array');
+        expect(res.body).to.be.empty;
+      }
+      done();
+    });
+  });
+
+  // lookup selectable children teams of a team
+  it('it will return 200 an array of objects as possible children lookup', function(done){
+    var req = request(app).get('/api/teams/lookup/children/' + lookupId);
+    agent.attachCookies(req);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+        if (res.body.length == 0) {
+          expect(res.body).to.be.empty;
+        } else {
+          expect(res.body[0]).to.have.property('_id');
+          expect(res.body[0]).to.have.property('name');
+          lookupId = res.body[0]['_id'];
+        }
+      }
+      done();
+    });
+  });
+
+  // lookup selectable parent teams of a team
+  it('it will return 200 and empty array possible parents because of an invalid team id', function(done){
+    var req = request(app).get('/api/teams/lookup/parents/' + 'none-existent-team');
+    agent.attachCookies(req);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+        expect(res.body).to.be.a('array');
+        expect(res.body).to.be.empty;
+      }
+      done();
+    });
+  });
+
+  // lookup selectable parent teams of a team
+  it('it will return 200 an array of objects as possible parent lookup', function(done){
+    var req = request(app).get('/api/teams/lookup/parents/' + lookupId);
+    agent.attachCookies(req);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+        if (res.body.length == 0) {
+          expect(res.body).to.be.empty;
+        } else {
+          expect(res.body[0]).to.have.property('_id');
+          expect(res.body[0]).to.have.property('name');
+          lookupId = res.body[0]['_id'];
+        }
+      }
+      done();
+    });
+  });
+
+  // lookup squads teams of a team
+  it('it will return 200 and empty array of squad teams because of an invalid team id', function(done){
+    var req = request(app).get('/api/teams/lookup/squads/' + 'none-existent-team');
+    agent.attachCookies(req);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+        expect(res.body).to.be.a('array');
+        expect(res.body).to.be.empty;
+      }
+      done();
+    });
+  });
+
+  // lookup squads teams of a team
+  it('it will return 200 and empty if there are no valid data on the lookup, array of objects if otherwise', function(done){
+    var req = request(app).get('/api/teams/lookup/squads/' + lookupId);
+    agent.attachCookies(req);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+        if (res.body.length == 0) {
+          expect(res.body).to.be.empty;
+        } else {
+          expect(res.body[0]).to.have.property('_id');
+          expect(res.body[0]).to.have.property('name');
+          lookupId = res.body[0]['_id'];
+        }
+      }
+      done();
+    });
+  })
+
+
 });
