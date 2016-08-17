@@ -91,7 +91,9 @@ var team = {
         common.getByViewKey('teams', 'lookupTeamsWithSquad', teamId)
         .then(function(result) {
           infoLogs("All squad teams lookup loaded for " + teamId);
-          resolve(util.returnObject(result));
+          result = util.returnObject(result);
+          result = !_.isEmpty(result) ? result : [];
+          resolve(result);
         })
         .catch( /* istanbul ignore next */ function(err) {
           reject(err);
@@ -106,7 +108,9 @@ var team = {
         common.getByView('teams', 'lookup')
         .then(function(result) {
           infoLogs("All teams lookup loaded.");
-          resolve(util.returnObject(result));
+          result = util.returnObject(result);
+          result = !_.isEmpty(result) ? result : [];
+          resolve(result);
         })
         .catch( /* istanbul ignore next */ function(err) {
           reject(err);
@@ -134,7 +138,9 @@ var team = {
           common.getByView('teams', 'lookupNonSquad')
           .then(function(result) {
             infoLogs("All nonsquad teams lookup loaded.");
-            resolve(util.returnObject(result));
+            result = util.returnObject(result);
+            result = !_.isEmpty(result) ? result : [];
+            resolve(result);
           })
           .catch( /* istanbul ignore next */ function(err) {
             reject(err);
@@ -143,7 +149,9 @@ var team = {
           common.getByView('teams', 'lookupSquad')
           .then(function(result) {
             infoLogs("All squad teams lookup loaded.");
-            resolve(util.returnObject(result));
+            result = util.returnObject(result);
+            result = !_.isEmpty(result) ? result : [];
+            resolve(result);
           })
           .catch( /* istanbul ignore next */ function(err) {
             reject(err);

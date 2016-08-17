@@ -472,14 +472,14 @@ describe('Team API Tests', function() {
         //console.log(err);
       } else {
         expect(res.statusCode).to.be.equal(200);
-        expect(res.body).to.have.property('docs');
+        expect(res.body).to.have.property('docs');  
       }
       done();
     });
   });
 
   // lookup by team id
-  it('it will return 200 empty array because of an invalid team id', function(done){
+  it('it will return 200 empty lookup object because of an invalid team id', function(done){
     var req = request(app).get('/api/teams/lookup/team/' + 'none-existent-team');
     agent.attachCookies(req);
     req.end(function(err, res){
@@ -487,22 +487,6 @@ describe('Team API Tests', function() {
         //console.log(err);
       } else {
         expect(res.statusCode).to.be.equal(200);
-        expect(res.body).to.be.a('array');
-        expect(res.body).to.be.empty;
-      }
-      done();
-    });
-  });
-
-  it('it will return 200 empty because no team id was indicated', function(done){
-    var req = request(app).get('/api/teams/lookup/team');
-    agent.attachCookies(req);
-    req.end(function(err, res){
-      if (err) {
-        //console.log(err);
-      } else {
-        expect(res.statusCode).to.be.equal(200);
-        expect(res.body).to.be.a('array');
         expect(res.body).to.be.empty;
       }
       done();
