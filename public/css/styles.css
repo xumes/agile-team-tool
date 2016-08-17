@@ -1,4 +1,4 @@
-
+/*
 
 blockquote, q {
   quotes: none;
@@ -317,7 +317,7 @@ nav ul li.active a:before {
 
 /* Footer
 ========================================================================================*/
-fieldset, input, textarea {
+fieldset, textarea {
   border: 0;
   padding: 0;
   margin: 0;
@@ -567,4 +567,4 @@ fieldset, input, textarea {
 
   body header nav ul li:hover {
     margin-top: 3px;
-  }
+  }*/
