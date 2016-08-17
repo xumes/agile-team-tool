@@ -9,10 +9,12 @@ var fs            = require('fs');
 var _             = require('underscore');
 var async         = require('async');
 var util          = require('../helpers/util');
+
 module.exports.init = function(){
   //only init cloudant if we are running locally or on app instance 0 in cloudfoundry
   if(_.isEmpty(process.env.CF_INSTANCE_INDEX) || process.env.CF_INSTANCE_INDEX == "0"){
     logger.get('init').info("Checking Cloudant DB design docs and indexes...");
+
     //design docs
     Promise.join(getCloudantDocs(), getSourceDocs(), function(cloudantDocs, sourceDocs) {
         /*ignore if design doc exists in the DB but not in the source
@@ -35,7 +37,7 @@ module.exports.init = function(){
           }
           //found in cloudant so check version
           else{
-            //logger.get('init').info(cDoc.doc._id + " [Source version: " +sDoc.version+ " Cloudant version: " +cDoc.doc.version+"]");
+            logger.get('init').info(cDoc.doc._id + " [Source version: " +sDoc.version+ " Cloudant version: " +cDoc.doc.version+"]");
             if(!_.isEqual(sDoc.version, cDoc.doc.version)){
               logger.get('init').warn(cDoc.doc._id+" cloudant design document is out of date. version="+cDoc.doc.version+", source version="+sDoc.version);
               sDoc["_rev"]=cDoc.doc._rev;
@@ -183,6 +185,7 @@ var initIndex = function() {
       var indexObj = new Object();
       indexObj._id = team._id;
       indexObj.name = team.name;
+      indexObj.squadteam = team.squadteam;
       indexObj.parents = !_.isEmpty(team.parent_team_id) ? [team.parent_team_id] : [];
       indexObj.children = _.union(team.child_team_id, getAllChildren(team._id, teamList));
       indexDocument.domains.push(indexObj);
@@ -192,6 +195,7 @@ var initIndex = function() {
       var indexObj = new Object();
       indexObj._id = team._id;
       indexObj.name = team.name;
+      indexObj.squadteam = team.squadteam;
       indexObj.parents = _.union([team.parent_team_id], getAllParents(team._id, teamList));
       indexObj.children = _.union(team.child_team_id, getAllChildren(team._id, teamList));
       indexDocument.tribes.push(indexObj);
@@ -201,6 +205,7 @@ var initIndex = function() {
       var indexObj = new Object();
       indexObj._id = team._id;
       indexObj.name = team.name;
+      indexObj.squadteam = team.squadteam;
       indexObj.parents = !_.isEmpty(team.parent_team_id) ? [team.parent_team_id] : [];
       indexObj.children = team.child_team_id;
 
@@ -216,30 +221,29 @@ var initIndex = function() {
     logger.get('init').info("Tribes: " + _.size(indexDocument.tribes));
     logger.get('init').info("Domains: " + _.size(indexDocument.domains));
 
-    // TODO: stil evaluating if a flat lookup is better suited for the purpose of this document.
-    // var allIndex = new Object();
-    // allIndex._id = "ag_ref_team_index";
-    // allIndex      
-    // _.union(indexDocument.domains, indexDocument.tribes);
-    // allIndex = _.union(allIndex, indexDocument.squads);
+    var allIndex = new Object();
+    allIndex._id = "ag_ref_team_index";
+    allIndex.lookup = _.union(indexDocument.domains, indexDocument.tribes, indexDocument.squads);
+    logger.get('init').info("Index size: " + _.size(allIndex.lookup));
+    
     logger.get('init').info("Finding current lookup index.");
     db.get("ag_ref_team_index", function(err, body) {
       if (err) {
-        db.insert(indexDocument, function(err, body) {
+        db.insert(allIndex, function(err, body) {
           if (!err)
             logger.get('init').info("Lookup index created.");
           else
-            logger.get('init').error("Failed to create lookup index.");
+            logger.get('init').error("Failed to create lookup index. " + err);
         });
       } else {
         if (_.has(body, "_rev"))
-          indexDocument._rev = body._rev;
+          allIndex._rev = body._rev;
         
-        db.insert(indexDocument, function(err, body) {
+        db.insert(allIndex, function(err, body) {
           if (!err)
             logger.get('init').info("Lookup index updated.");
           else
-            logger.get('init').error("Failed to update lookup index.");
+            logger.get('init').error("Failed to update lookup index. " + err);
         });
       }
     });

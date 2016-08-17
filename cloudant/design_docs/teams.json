@@ -1,6 +1,6 @@
 {
   "_id": "_design/teams",
-  "version": 0.1,
+  "version": 0.2,
   "views": {
     "teams": {
       "map": "function (doc) {\n  if ((doc.type == 'team') && (doc.doc_status === null || doc.doc_status != 'delete')) {\n    var teamMembers = [];\n    var teamCount = 0;\n    var teamAlloc = 0;\n    for (var i in doc.members) {\n  \t\tif (teamMembers.indexOf(doc.members[i].id) == -1) {\n  \t\t\tteamCount++;\n  \t\t\tteamMembers.push(doc.members[i].id);\n  \t\t}\n  \t\tteamAlloc += parseInt(doc.members[i].allocation);\n  \t}\n  \tteamAlloc = teamAlloc/100;\n  \temit(doc._id, \n      {\n        '_id': doc._id, \n        'name': doc.name, \n        'squadteam': doc.squadteam,\n        'parent_team_id': doc.parent_team_id,\n        'child_team_id': doc.child_team_id,\n        'total_members': teamCount,\n        'total_allocation': teamAlloc\n      });\n  }\n}"
@@ -12,10 +12,16 @@
       "map": "function (doc) {\n  if ((doc.type == 'team') && (doc.doc_status === null || doc.doc_status != 'delete'))\n      emit(doc.name, {_id: doc._id, name: doc.name}); \n}"
     },
     "lookup": {
-      "map": "function (doc) {\n  if (doc._id == \"ag_ref_team_index\") {\n    for (var i in doc.domains)\n      emit(doc.domains[i]._id, doc.domains[i]);\n    for (i in doc.tribes)\n      emit(doc.tribes[i]._id, doc.tribes[i]);\n    for (i in doc.squads)\n      emit(doc.squads[i]._id, doc.squads[i]);\n  }\n}"
+      "map": "function (doc) {\n  if (doc._id == \"ag_ref_team_index\") {\n    for (var i in doc.lookup)\n      emit(doc.lookup[i]._id, doc.lookup[i]);\n  }\n}"
     },
     "lookupTeamsWithSquad": {
-      "map": "function (doc) {\n  if (doc._id == \"ag_ref_team_index\") {\n    for (var i in doc.squads) {\n      for (var j in doc.squads[i].parents)\n        emit(doc.squads[i].parents[j], \n          {\n            _id: doc.squads[i]._id,\n            name: doc.squads[i].name\n          }\n          );\n    }\n  }\n}"
+      "map": "function (doc) {\n  if (doc._id == \"ag_ref_team_index\") {\n    for (var i in doc.lookup) {\n      if (doc.lookup[i].squadteam.toLowerCase() == \"yes\") {\n        for (var j in doc.lookup[i].parents)\n          emit(doc.lookup[i].parents[j], \n            {\n              _id: doc.lookup[i]._id,\n              name: doc.lookup[i].name\n            }\n            );\n      }\n    }\n  }\n}"
+    },
+    "lookupNonSquad": {
+      "map": "function (doc) {\n  if (doc._id == \"ag_ref_team_index\") {\n    for (var i in doc.lookup) {\n      if (doc.lookup[i].squadteam.toLowerCase() == \"no\") {\n        emit(doc.lookup[i]._id, \n            {\n              _id: doc.lookup[i]._id,\n              name: doc.lookup[i].name\n            });\n      }\n    }\n  }\n}"
+    },
+    "lookupSquad": {
+      "map": "function (doc) {\n  if (doc._id == \"ag_ref_team_index\") {\n    for (var i in doc.lookup) {\n      if (doc.lookup[i].squadteam.toLowerCase() == \"yes\") {\n        emit(doc.lookup[i]._id, \n            {\n              _id: doc.lookup[i]._id,\n              name: doc.lookup[i].name\n            });\n      }\n    }\n  }\n}"
     }
   },
   "indexes": {
