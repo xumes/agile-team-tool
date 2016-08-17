@@ -343,9 +343,9 @@ body {
 }
 
 html .ibm-type,
-body .ibm-type {
+/*body .ibm-type {
     font-family: "HelvRegularIBM", "Helvetica Neue", Arial, sans-serif
-}
+}*/
 
 ins {
     text-decoration: none
@@ -632,7 +632,6 @@ ol {
     margin: 0;
     list-style: none;
     font-size: 1rem;
-    line-height: 1.625rem
 }
 
 ul>li,
