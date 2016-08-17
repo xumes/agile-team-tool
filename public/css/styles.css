@@ -106,12 +106,14 @@ h2 {
   font-size: 30px;
 }
 
-h4 {
-  font-size: 20px;
+#AA-h4 {
+  box-sizing:border-box;
+  color: #fff;
+  font-size: 16px;
   line-height: 26px;
-  color: #303a3a;
   margin: 0 0 17px;
   font-weight: bold;
+  padding: 0 0 0 0;
 }
 
 h6 {
