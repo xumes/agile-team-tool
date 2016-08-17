@@ -212,16 +212,23 @@ module.exports.isUserAllowed = function(userId, teamId, checkParent, allTeams, u
 module.exports.returnObject = function(data) {
   // pre process returned rows so we deal directly with the document objects
   // doc attribute of data are valid for compacted views that requested for "include_doc=true"
-  if (_.has(data, "rows")) {
-    if (_.has(data.rows, "doc"))
-      return _.pluck(data.rows, 'doc');
-    else 
-      return _.pluck(data.rows, 'value');
-  } else if (data.length > 0) {
-    if (!_.isEmpty(data[0].doc)) 
-      return _.pluck(data, 'doc');
+  var returnData = new Object();
+  if (_.has(data, 'rows')) {
+    if (_.has(data.rows, 'doc'))
+      returnData = _.pluck(data.rows, 'doc');
+    else if (!_.has(data.rows, 'value'))
+      returnData =  _.pluck(data.rows, 'value');
     else
-      return _.pluck(data, 'value');
+      returnData =  data.rows;
+  } else if (data instanceof Array) {
+    if (_.has(data[0], 'doc') && !_.isEmpty(data[0].doc)) 
+      returnData =  _.pluck(data, 'doc');
+    else if (_.has(data[0], 'value') && !_.isEmpty(data[0].value))
+      returnData =  _.pluck(data, 'value');
+    else 
+      returnData =  data;
   } else
-    return data;
+    returnData =  data;
+
+  return returnData;
 };

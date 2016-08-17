@@ -4,6 +4,9 @@ var teamModel = require('../../models/teams');
 var common = require('../../models/cloudant-driver');
 var dummyData = require('../data/dummy-data.js');
 var cache = require('../../middleware/cache');
+var _ = require('underscore');
+var lookupSquadId = null;
+var lookupNonsquadId = null;
 var validId = null;
 var validTeamName = null;
 var createdId = null;
@@ -709,18 +712,119 @@ describe('Team models [getRootTeams]: get top level, children or parent teams', 
 
   /* delete created team */
   after(function(done){
-      teamModel.getTeam(createdId)
-        .then(function(result){
-          common.deleteRecord(result._id, result._rev)
-            .then(function(result){
-              done();
-            })
-            .catch(function(err){
-              done(err);
-            })
-        })
-        .catch(function(err){
-          done(err);
-        });
+    teamModel.getTeam(createdId)
+      .then(function(result){
+        common.deleteRecord(result._id, result._rev)
+          .then(function(result){
+            done();
+          })
+          .catch(function(err){
+            done(err);
+          })
+      })
+      .catch(function(err){
+        done(err);
+      });
+  });
+});
+
+describe('Team models [getLookupTeamByType]: get lookup team list or object', function() {
+  before(function(done) {
+    teamModel.getLookupIndex()
+    .then(function(lookupIndex){
+      var team1 = _.find(lookupIndex, {squadteam: 'Yes'});
+      lookupSquadId = team1._id;
+      var team2 = _.find(lookupIndex, {squadteam: 'No'});
+      lookupNonsquadId = team2._id;
+      done();
+    })
+  })
+
+  it('return squad lookup object', function(done){
+    var squadType = true;
+    teamModel.getLookupTeamByType(lookupSquadId, squadType)
+      .then(function(body){
+        expect(body).to.be.a('object');
+        expect(body).to.have.property('_id');
+        expect(body).to.have.property('name');
+        expect(body['_id']).to.be.equal(lookupSquadId);
+        done();
+      })
+      .catch(function(err){
+        done(err);
+      });
+  });
+
+  it('return empty squad lookup object', function(done){
+    var squadType = false;
+    teamModel.getLookupTeamByType(lookupSquadId, squadType)
+      .then(function(body){
+        expect(body).to.be.a('object');
+        expect(body).to.be.empty;
+        done();
+      })
+      .catch(function(err){
+        done(err);
+      });
+  });
+
+  it('return squad lookup lists', function(done){
+    var squadType = true;
+    teamModel.getLookupTeamByType(null, squadType)
+      .then(function(body){
+        expect(body).to.be.a('array');
+        if (!_.isEmpty(body)) {
+          expect(body[0]).to.have.property('_id');
+          expect(body[0]).to.have.property('name');
+        }
+        done();
+      })
+      .catch(function(err){
+        done(err);
+      });
+  });
+
+  it('return non-squad lookup object', function(done){
+    var squadType = false;
+    teamModel.getLookupTeamByType(lookupNonsquadId, squadType)
+      .then(function(body){
+        expect(body).to.be.a('object');
+        expect(body).to.have.property('_id');
+        expect(body).to.have.property('name');
+        expect(body['_id']).to.be.equal(lookupNonsquadId);
+        done();
+      })
+      .catch(function(err){
+        done(err);
+      });
+  });
+
+  it('return empty non-squad lookup object', function(done){
+    var squadType = true;
+    teamModel.getLookupTeamByType(lookupNonsquadId, squadType)
+      .then(function(body){
+        expect(body).to.be.a('object');
+        expect(body).to.be.empty;
+        done();
+      })
+      .catch(function(err){
+        done(err);
+      });
+  });
+
+  it('return non-squad lookup lists', function(done){
+    var squadType = false;
+    teamModel.getLookupTeamByType(null, squadType)
+      .then(function(body){
+        expect(body).to.be.a('array');
+        if (!_.isEmpty(body)) {
+          expect(body[0]).to.have.property('_id');
+          expect(body[0]).to.have.property('name');
+        }
+        done();
+    })
+    .catch(function(err){
+      done(err);
+    });
   });
 });

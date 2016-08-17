@@ -39,130 +39,141 @@ var infoLogs = function(msg){
 };
 
 var team = {
-  // getSelectableParents: function(teamId) {
-  //   return new Promise(function(resolve, reject) {
-  //     if (_.isEmpty(teamId))
-  //       resolve([]);
-  //     else {
-  //       Promise.join(team.getLookupIndex(teamId), team.getLookupTeamType(null, false), function(currentTeam, nonSquadTeams) {
-  //         if (!_.isEmpty(currentTeam)) {
-  //           var invalidTeams = currentTeam.children;
-  //           invalidTeams.push(teamId);
-  //           var parentList = _.reject(nonSquadTeams, function(team) {
-  //             return (invalidTeams.indexOf(team._id) > -1)
-  //           });
-  //           infoLogs("Selectable parent teams for " + currentTeam.name + ": " + parentList.length);
-  //           resolve(parentList);
-  //         } else
-  //           infoLogs("No selectable parent teams found for " + currentTeam.name);
-  //           resolve([]);
-  //       });
-  //     }
-  //   });
-  // },
+  getSelectableParents: function(teamId) {
+    return new Promise(function(resolve, reject) {
+      if (_.isEmpty(teamId))
+        resolve([]);
+      else {
+        Promise.join(team.getLookupIndex(teamId), team.getLookupTeamByType(null, false), function(currentTeam, nonSquadTeams) {
+          if (!_.isEmpty(currentTeam)) {
+            var invalidTeams = currentTeam.children;
+            invalidTeams.push(teamId);
+            var parentList = _.reject(nonSquadTeams, function(team) {
+              return (invalidTeams.indexOf(team._id) > -1)
+            });
+            infoLogs("Selectable parent teams for " + currentTeam.name + ": " + parentList.length);
+            resolve(parentList);
+          } else {
+            infoLogs("No selectable parent teams found for " + teamId);
+            resolve([]);
+          }
+        });
+      }
+    });
+  },
 
-  // getSelectableChildren: function(teamId) {
-  //   return new Promise(function(resolve, reject) {
-  //     if (_.isEmpty(teamId))
-  //       resolve([]);
-  //     else {
-  //       Promise.join(team.getLookupIndex(teamId), team.getLookupIndex(), function(currentTeam, stanadAloneTeams) {
-  //         var childrenList = _.reject(stanadAloneTeams, function(team) {
-  //           return (!_.isEmpty(team.parents) || _.isEqual(team._id, teamId))
-  //         });
-  //         infoLogs("Selectable child teams for " + currentTeam.name + ": " + childrenList.length);
-  //         resolve(childrenList);
-  //       });
-  //     }
-  //   });
-  // },
+  getSelectableChildren: function(teamId) {
+    return new Promise(function(resolve, reject) {
+      if (_.isEmpty(teamId))
+        resolve([]);
+      else {
+        Promise.join(team.getLookupIndex(teamId), team.getLookupIndex(), function(currentTeam, stanadAloneTeams) {
+          if (!_.isEmpty(currentTeam)) {
+            var childrenList = _.reject(stanadAloneTeams, function(team) {
+              return (!_.isEmpty(team.parents) || _.isEqual(team._id, teamId))
+            });
+            infoLogs("Selectable child teams for " + currentTeam.name + ": " + childrenList.length);
+            resolve(childrenList);
+          } else {
+            infoLogs("No selectable parent teams found for " + teamId);
+            resolve([]);
+          }
+        });
+      }
+    });
+  },
 
-  // getSquadsOfParent: function(teamId) {
-  //   return new Promise(function(resolve, reject) {
-  //     if (_.isEmpty(teamId)) {
-  //       resolve([]);
-  //     } else {
-  //       common.getByViewKey('teams', 'lookupTeamsWithSquad', teamId)
-  //       .then(function(result) {
-  //         infoLogs("All squad teams lookup loaded for " + teamId);
-  //         resolve(util.returnObject(result));
-  //       })
-  //       .catch( /* istanbul ignore next */ function(err) {
-  //         reject(err);
-  //       });
-  //     }
-  //   });
-  // },
+  getSquadsOfParent: function(teamId) {
+    return new Promise(function(resolve, reject) {
+      if (_.isEmpty(teamId)) {
+        resolve([]);
+      } else {
+        common.getByViewKey('teams', 'lookupTeamsWithSquad', teamId)
+        .then(function(result) {
+          infoLogs("All squad teams lookup loaded for " + teamId);
+          resolve(util.returnObject(result));
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          reject(err);
+        });
+      }
+    });
+  },
 
-  // getLookupIndex: function(teamId) {
-  //   return new Promise(function(resolve, reject) {
-  //     if (_.isEmpty(teamId)) {
-  //       common.getByView('teams', 'lookup')
-  //       .then(function(result) {
-  //         infoLogs("All teams lookup loaded.");
-  //         resolve(util.returnObject(result));
-  //       })
-  //       .catch( /* istanbul ignore next */ function(err) {
-  //         reject(err);
-  //       });
-  //     } else {
-  //       common.getByViewKey('teams', 'lookup', teamId)
-  //       .then(function(result) {
-  //         result = util.returnObject(result);
-  //         resolve(result[0]);
-  //       })
-  //       .catch( /* istanbul ignore next */ function(err) {
-  //         reject(err);
-  //       });
-  //     }
-  //   });
-  // },
+  getLookupIndex: function(teamId) {
+    return new Promise(function(resolve, reject) {
+      if (_.isEmpty(teamId)) {
+        common.getByView('teams', 'lookup')
+        .then(function(result) {
+          infoLogs("All teams lookup loaded.");
+          resolve(util.returnObject(result));
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          reject(err);
+        });
+      } else {
+        common.getByViewKey('teams', 'lookup', teamId)
+        .then(function(result) {
+          result = util.returnObject(result);
+          result = !_.isEmpty(result) ? result[0] : new Object();
+          resolve(result);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          reject(err);
+        });
+      }
+    });
+  },
 
-  // getLookupTeamType: function(teamId, squadType) {
-  //   return new Promise(function(resolve, reject) {
-  //     if (_.isEmpty(teamId)) {
-  //       if (_.isEmpty(squadType) || !squadType) {
-  //         common.getByView('teams', 'lookupNonSquad')
-  //         .then(function(result) {
-  //           infoLogs("All nonsquad teams lookup loaded.");
-  //           resolve(util.returnObject(result));
-  //         })
-  //         .catch( /* istanbul ignore next */ function(err) {
-  //           reject(err);
-  //         });
-  //       } else {
-  //         common.getByView('teams', 'lookupSquad')
-  //         .then(function(result) {
-  //           infoLogs("All squad teams lookup loaded.");
-  //           resolve(util.returnObject(result));
-  //         })
-  //         .catch( /* istanbul ignore next */ function(err) {
-  //           reject(err);
-  //         });
-  //       }
-  //     } else {
-  //       if (_.isEmpty(squadType) || !squadType) {
-  //         common.getByViewKey('teams', 'lookupNonSquad', teamId)
-  //         .then(function(result) {
-  //           result = util.returnObject(result);
-  //           resolve(result[0]);
-  //         })
-  //         .catch( /* istanbul ignore next */ function(err) {
-  //           reject(err);
-  //         });
-  //       } else {
-  //         common.getByViewKey('teams', 'lookupSquad', teamId)
-  //         .then(function(result) {
-  //           result = util.returnObject(result);
-  //           resolve(result[0]);
-  //         })
-  //         .catch( /* istanbul ignore next */ function(err) {
-  //           reject(err);
-  //         });
-  //       }
-  //     }
-  //   });
-  // },
+  getLookupTeamByType: function(teamId, squadType) {
+    teamId = teamId || "";
+    squadType = squadType || false;
+    return new Promise(function(resolve, reject) {
+      if (_.isEmpty(teamId)) {
+        if (!squadType) {
+          common.getByView('teams', 'lookupNonSquad')
+          .then(function(result) {
+            infoLogs("All nonsquad teams lookup loaded.");
+            resolve(util.returnObject(result));
+          })
+          .catch( /* istanbul ignore next */ function(err) {
+            reject(err);
+          });
+        } else {
+          common.getByView('teams', 'lookupSquad')
+          .then(function(result) {
+            infoLogs("All squad teams lookup loaded.");
+            resolve(util.returnObject(result));
+          })
+          .catch( /* istanbul ignore next */ function(err) {
+            reject(err);
+          });
+        }
+      } else {
+        if (!squadType) {
+          common.getByViewKey('teams', 'lookupNonSquad', teamId)
+          .then(function(result) {
+            result = util.returnObject(result);
+            result = !_.isEmpty(result) ? result[0] : new Object();
+            resolve(result);
+          })
+          .catch( /* istanbul ignore next */ function(err) {
+            reject(err);
+          });
+        } else {
+          common.getByViewKey('teams', 'lookupSquad', teamId)
+          .then(function(result) {
+            result = util.returnObject(result);
+            result = !_.isEmpty(result) ? result[0] : new Object();
+            resolve(result);
+          })
+          .catch( /* istanbul ignore next */ function(err) {
+            reject(err);
+          });
+        }
+      }
+    });
+  },
 
   // /**
   //   accept
@@ -334,22 +345,24 @@ var team = {
     var fullName = user['ldap']['hrFirstName'] + ' ' + user['ldap']['hrLastName'];
     var email = user['shortEmail'];
     var transTime = util.getServerTime();
-    var isSquad = _.isUndefined(newDocu['squadTeam']) || newDocu['squadTeam'] == 'Yes' ? true : false;
-    var memberInfo = {
-      "key": user['ldap']['serialNumber'],
-      "id": email,
-      "name": fullName,
-      "allocation": 0,
-      "role": isSquad ? "Iteration Manager" : "Team Lead"
-    };
     newDocu['type'] = 'team';
     newDocu['created_user'] = email;
     newDocu['created_dt'] = transTime;
     newDocu['last_updt_dt'] = transTime;
     newDocu['last_updt_user'] = email;
     // default current user as the first member of the team
-    if (_.isUndefined(newDocu['members']) || _.size(newDocu['members']) == 0)
+    if (_.isUndefined(newDocu['members']) || _.size(newDocu['members']) == 0) {
+      var isSquad = _.isUndefined(newDocu['squadTeam']) || newDocu['squadTeam'] == 'Yes' ? true : false;
+      var memberInfo = {
+        "key": user['ldap']['serialNumber'],
+        "id": email,
+        "name": fullName,
+        "allocation": 0,
+        "role": isSquad ? "Iteration Manager" : "Team Lead"
+      };
+
       newDocu['members'] = [ memberInfo ];
+    }
     newDocu['child_team_id'] = [];
     newDocu['doc_status'] = '';
     var newTeamId = settings.prefixes.team + raw['name'] + "_" + new Date().getTime(); // define predefine document id
