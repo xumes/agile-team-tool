@@ -5,16 +5,16 @@ var roles;
 var taPerson;
 var isIter = false;
 
-jQuery(function ($) {
+jQuery(function ($) {	
 	$(document).ready(function () {
 		$(".ibm-close-link" ).click(function() {
 			if($('#teamDetailsPageSection h2 .ibm-show-active').length == 0){
 				$('#teamDetailsPageSection h2 a').eq(0).trigger("click");
 			}
-			$('html, body').animate({scrollTop: $("#teamDetailsPageSection h2 a").offset().top}, 1000);
+			$('html, body').animate({scrollTop: $("#teamDetailsPageSection h2 a").offset().top}, 1000);	
 		});
 
-
+		
 		var urlParameters = getJsonParametersFromUrl();
 		if (urlParameters != undefined && urlParameters.id != undefined)
 			agileTeamListHandler(urlParameters.id, allTeams);
@@ -36,7 +36,7 @@ jQuery(function ($) {
 			updateTeamInfo("clear");
 			displayEditStatus(false);
 			disableAddTeam();
-
+			
 		} else {
 			$("#teamDetailsPageSection .ibm-show-hide a[class='ibm-show-active']").click();
 			// retrieve and load latest data about the team and update local cached data
@@ -190,7 +190,7 @@ jQuery(function ($) {
 });
 
 function agileTeamListHandler(teamId, teamList) {
-	$("#teamSelectList").attr("disabled", "disabled");
+	$("#teamSelectList").attr("disabled", "disabled");	
 	var listOption = getAgileTeamDropdownList(teamList, false);
 	setSelectOptions("teamSelectList", listOption, ["new", "Create new..."], null, teamId);
 	if (teamId != undefined && teamId != "new") {
@@ -226,8 +226,6 @@ function loadSelectedAgileTeam() {
 		$('#lastUpdateUser').html(currentTeam.last_updt_user);
 		$('#lastUpdateTimestamp').html(showDateDDMMMYYYYTS(currentTeam.last_updt_dt));
 		$('#doc_id').html(currentTeam._id);
-		$('#maturityLink').html($('#maturityLink').attr('href')+currentTeam._id);
-		$('#maturityLink').attr('href', $('#maturityLink').attr('href')+currentTeam._id);
 		clearFieldErrorHighlight("teamName");
 		clearFieldErrorHighlight("teamMemberName");
 		clearFieldErrorHighlight("memberAllocation");
@@ -253,7 +251,7 @@ function loadSelectedAgileTeam() {
 				url 	: "/api/iteration/" + encodeURIComponent(currentTeam._id),
 				async	: false
 			}).done(function (data) {
-				if (!_.isEmpty(data)) {
+				if (!_.isEmpty(data)) {					
 					var list = _.pluck(data.rows, "value");
 					if (!_.isEmpty(list)) {
 						$("#teamSquadYesNo").attr("disabled", "disabled");
@@ -297,7 +295,7 @@ function loadSelectedAgileTeam() {
 		$("#select2-teamSquadYesNo-container").text($("#teamSquadYesNo option:selected").text());
 		$("#select2-teamSquadYesNo-container").attr("title", $("#teamSquadYesNo option:selected").text());
 	}
-
+	
 	$("#addTeamBtn").attr("disabled", "disabled");
 	$("#teamDetailsPageSection").fadeIn();
 	$("#teamMemberTable").fadeIn();
@@ -392,7 +390,7 @@ function loadIterationInformation(iterationList, more) {
 function loadAssessmentInformation(assessmentlist, more) {
 	$("#moreAssessments").hide();
 	$("#lessAssessments").hide();
-
+	
 	$("#assessmentList").empty();
 	var numRec = 5;
 	if (more){
@@ -404,12 +402,12 @@ function loadAssessmentInformation(assessmentlist, more) {
 		for (var x=0; x<assessmentlist.length && x<numRec; x++) {
 			var item = assessmentlist[x];
 			if (item.assessmt_status == 'Submitted'){
-				link = "<a style='text-decoration: underline;color:black;' href='progress?id=" + encodeURIComponent(item.team_id) + "&assessId=" + encodeURIComponent(item._id) + "'>" +
+				link = "<a style='text-decoration: underline;color:black;' href='progress?id=" + encodeURIComponent(item.team_id) + "&assessId=" + encodeURIComponent(item._id) + "'>" + 
 				showDateDDMMMYYYY(item["self-assessmt_dt"].substring(0,item["self-assessmt_dt"].indexOf(" "))) + "</a>";
 			}
 			else{
 				hasDraft = true;
-				link = "<a style='text-decoration: underline;color:black;' href='assessment?id=" + encodeURIComponent(item.team_id) + "&assessId=" + encodeURIComponent(item._id) + "'>" +
+				link = "<a style='text-decoration: underline;color:black;' href='assessment?id=" + encodeURIComponent(item.team_id) + "&assessId=" + encodeURIComponent(item._id) + "'>" + 
 				showDateDDMMMYYYY(item.created_dt.substring(0,item.created_dt.indexOf(" "))) + "</a>";
 			}
 			var row = "<tr id='asmntrow_"+x+"'>";
@@ -425,14 +423,14 @@ function loadAssessmentInformation(assessmentlist, more) {
 		}
 
 		if (assessmentlist.length > 5 && numRec == 5){
-			$("#assessmentTitle").html("Last 5 Assessments for " + $("#teamSelectList option:selected").text());
+			$("#assessmentTitle").html("Last 5 Assessments for " + $("#teamSelectList option:selected").text());			
 			$("#moreAssessments").show();
 		} else if(assessmentlist.length > 5 && numRec > 5){
 			$("#assessmentTitle").html("All Assessments for " + $("#teamSelectList option:selected").text());
 			$("#lessAssessments").show();
 		} else {
 			$("#assessmentTitle").html("Last 5 Assessments for " + $("#teamSelectList option:selected").text());
-
+			
 		}
 
 		$('#moreAssessments').click(function () {
@@ -450,8 +448,8 @@ function loadAssessmentInformation(assessmentlist, more) {
 }
 
 function disableAddTeam() {
-	if (localStorage.getItem("sysStatusFlag") != undefined
-			&& localStorage.getItem("sysStatusFlag") == 'AdminOnlyChange'
+	if (localStorage.getItem("sysStatusFlag") != undefined 
+			&& localStorage.getItem("sysStatusFlag") == 'AdminOnlyChange' 
 			&& !isAdmin()) {
 		$("#updateTeamBtn,#addTeamBtn").attr("disabled", "disabled");
 		$("#teamName,#teamDesc").attr("disabled", "disabled");
@@ -526,7 +524,7 @@ function loadTeamMembers(teamId) {
 				var member = members[j];
 				var row = "<tr id='mrow_" + j + "'>";
 				row = row + "<td scope='row' class='ibm-table-row'>";
-				if (hasAccess($("#teamSelectList option:selected").val(), true))
+				if (hasAccess($("#teamSelectList option:selected").val(), true)) 
 					row = row + "<input name='member' id='member_"+ j + "' type='checkbox' value='" + j + "' onclick='selectMember($(this))' />";
 				else
 					row = row + "<input name='member' id='member_"+ j + "' type='checkbox' value='" + j + "' disabled='true' />";
@@ -556,7 +554,7 @@ function loadTeamMembers(teamId) {
 function loadMemberInfo(index) {
 	var email = $("#email_ref_" + index).text();
 	var svcRoot = 'https://faces.tap.ibm.com/api/';
-	var svcFunc = 'find/?format=faces&limit=100&q=email:' + escape(email);
+	var svcFunc = 'find/?format=faces&limit=100&q=email:' + escape(email); 
 	var svcURL = svcRoot + svcFunc;
 	$("#addMemberBtn").attr("disabled", "disabled");
 	$("#updateMemberBtn").attr("disabled", "disabled");
@@ -651,7 +649,7 @@ function loadTeamChildren(currentId) {
 				}
 			}
 	}
-
+	
 	if (!found) {
 		$("#childrenList").append('<tr class="odd"><td valign="top" colspan="4" class="dataTables_empty">No data available</td></tr>');
 	}
@@ -678,83 +676,121 @@ function updateAction(action) {
 	var teamId = $("#teamSelectList option:selected").val();
 	var currentTeam = getAgileTeamCache(teamId);
 	if (!_.isEmpty(currentTeam)) {
+		// var message = "You have successfully updated Team Information.";
+		// if (action == "update") {
+		// 	currentTeam.name = $("#teamName").val().trim();
+		// 	currentTeam.desc = $("#teamDesc").val();
+		// 	currentTeam.squadteam = $("#teamSquadYesNo option:selected").val();
+
+		// } else if (action == "delete") {
+		// 	deleteTeam();
+		// 	return;
+
+		// } else if (action == "parent") {
+		// 	message = "You have successfully updated the Parent team association.";
+		// 	var parentId = $("#parentSelectList option:selected").val();
+
+		// 	// TODO: parent/child end point
+		// 	// if parent team changed, remove as a child of the original parent
+		// 	if (!_.isEmpty(currentTeam.parent_team_id))
+		// 		removeChildOfParent(currentTeam.parent_team_id, currentTeam._id);
+
+		// 	// assign selected parent
+		// 	currentTeam.parent_team_id = parentId;
+		// 	if (parentId != "")
+		// 		updateParentWithChild(parentId, currentTeam._id);
+
+
+		// } else if (action == "child") {
+		// 	message = "You have successfully created a Child team association.";
+		// 	var childId = $("#childSelectList option:selected").val();
+
+		// 	// TODO: parent/child end point
+		// 	var found = false;
+		// 	if (currentTeam.child_team_id != undefined && 
+		// 			currentTeam.child_team_id.indexOf(childId) != -1) {
+		// 		found = true;
+		// 	}
+			
+		// 	if (!found)
+		// 		currentTeam.child_team_id.push(childId);
+
+		// 	if (childId != "") {
+		// 		updateChildTeamWithParent(childId, currentTeam._id);
+
+		// 	} else {
+		// 		setFieldErrorHighlight("childSelectList");
+		// 		showMessagePopup("No team selected to associate as a Child team.");
+		// 		var errorMsg ={
+		// 		  "error": {
+		// 		    "child_team_id": [
+		// 		      "No team selected to associate as a Child team."
+		// 		    ]
+		// 		  }
+		// 		};
+		// 		handleTeamValidationErrors(errorMsg, action);
+		// 		return;
+
+		// 	}
+
+		// }
+		// currentTeam = $.extend(true, {}, initTeamTemplate(), currentTeam);
+		// $.ajax({
+		// 	type 				: "PUT",
+		// 	url 				: "/api/teams/",
+		// 	async 			: false,
+		// 	contentType : "application/json",
+		// 	data 				: JSON.stringify(currentTeam),
+		// }).fail(function(xhr, textStatus, errorThrown) {
+		// 	if (xhr.status = 400) {
+		//     handleTeamValidationErrors(JSON.parse(xhr.responseText), action);
+		//   } else {
+		//   	errorHandler(xhr, textStatus, errorThrown);
+		//   }
+
+		// }).done(function (data) {
+		// 	updateAgileTeamCache(data);
+		// 	agileTeamListHandler(data._id, allTeams);
+		// 	showMessagePopup(message);
+		// });
 		var message = "You have successfully updated Team Information.";
 		if (action == "update") {
 			currentTeam.name = $("#teamName").val().trim();
 			currentTeam.desc = $("#teamDesc").val();
 			currentTeam.squadteam = $("#teamSquadYesNo option:selected").val();
 
+			currentTeam = $.extend(true, {}, initTeamTemplate(), currentTeam);
+			$.ajax({
+				type 				: "PUT",
+				url 				: "/api/teams/",
+				async 			: false,
+				contentType : "application/json",
+				data 				: JSON.stringify(currentTeam),
+			}).fail(function(xhr, textStatus, errorThrown) {
+				if (xhr.status = 400) {
+			    handleTeamValidationErrors(JSON.parse(xhr.responseText), action);
+			  } else {
+			  	errorHandler(xhr, textStatus, errorThrown);
+			  }
+
+			}).done(function (data) {
+				agileTeamListHandler(data._id, allTeams);
+				showMessagePopup(message);
+			});
+
 		} else if (action == "delete") {
-			deleteTeam();
+			deleteTeam(currentTeam);
 			return;
 
 		} else if (action == "parent") {
-			message = "You have successfully updated the Parent team association.";
-			var parentId = $("#parentSelectList option:selected").val();
-
-			// TODO: parent/child end point
-			// if parent team changed, remove as a child of the original parent
-			if (!_.isEmpty(currentTeam.parent_team_id))
-				removeChildOfParent(currentTeam.parent_team_id, currentTeam._id);
-
-			// assign selected parent
-			currentTeam.parent_team_id = parentId;
-			if (parentId != "")
-				updateParentWithChild(parentId, currentTeam._id);
-
+			updateParentAssociation(currentTeam);
+			return;
 
 		} else if (action == "child") {
-			message = "You have successfully created a Child team association.";
-			var childId = $("#childSelectList option:selected").val();
-
-			// TODO: parent/child end point
-			var found = false;
-			if (currentTeam.child_team_id != undefined &&
-					currentTeam.child_team_id.indexOf(childId) != -1) {
-				found = true;
-			}
-
-			if (!found)
-				currentTeam.child_team_id.push(childId);
-
-			if (childId != "") {
-				updateChildTeamWithParent(childId, currentTeam._id);
-
-			} else {
-				setFieldErrorHighlight("childSelectList");
-				showMessagePopup("No team selected to associate as a Child team.");
-				var errorMsg ={
-				  "error": {
-				    "child_team_id": [
-				      "No team selected to associate as a Child team."
-				    ]
-				  }
-				};
-				handleTeamValidationErrors(errorMsg, action);
-				return;
-
-			}
+			updateChildAssociation(currentTeam);
+			return;
 
 		}
-		currentTeam = $.extend(true, {}, initTeamTemplate(), currentTeam);
-		$.ajax({
-			type 				: "PUT",
-			url 				: "/api/teams/",
-			async 			: false,
-			contentType : "application/json",
-			data 				: JSON.stringify(currentTeam),
-		}).fail(function(xhr, textStatus, errorThrown) {
-			if (xhr.status = 400) {
-		    handleTeamValidationErrors(JSON.parse(xhr.responseText), action);
-		  } else {
-		  	errorHandler(xhr, textStatus, errorThrown);
-		  }
-
-		}).done(function (data) {
-			updateAgileTeamCache(data);
-			agileTeamListHandler(data._id, allTeams);
-			showMessagePopup(message);
-		});
 
 	} else {
 		currentTeam = initTeamTemplate();
@@ -800,14 +836,16 @@ function updateAction(action) {
 
 function handleTeamValidationErrors(errors, action) {
 	var fields = {
-    '_id': '',
-    'name': 'teamName',
-    'desc': 'teamDesc',
-    'squadteam': '',
-    'member.name': 'teamMemberName',
-    'member.role': '',
+    '_id'						: '',
+    'name'					: 'teamName',
+    'desc'					: 'teamDesc',
+    'squadteam'			: '',
+    'member.name'		: 'teamMemberName',
+    'member.role'		: '',
     'parent_team_id': 'parentSelectList',
-    'child_team_id': 'childSelectList'
+    'targetparent'	: 'parentSelectList',
+    'child_team_id'	: 'childSelectList',
+    'targetChild'		: 'childSelectList'
   };
 
   var msgs = '';
@@ -836,7 +874,7 @@ function handleTeamValidationErrors(errors, action) {
       }
     }
   });
-	if (msgs == "") {
+	if (_.isEmpty(msgs)) {
 		msgs = errors.error;
 	}
   showMessagePopup(msgs);
@@ -848,14 +886,95 @@ function handleTeamValidationErrors(errors, action) {
 		$("#updateTeamBtn").removeAttr("disabled");
 	else if (action == "delete")
 		$("#deleteTeamBtn").removeAttr("disabled");
-	else if (action == "parent")
+	else if (action == "associateParent" || action == "removeParent" || action == "parent")
 		$("#updateParentBtn").removeAttr("disabled");
-	else if (action == "child")
+	else if (action == "associateChild" || action == "removeChild" || action == "child")
 		$("#updateChildBtn").removeAttr("disabled");
 	else if (action == "addTeamMember")
 		$("#addMemberBtn").removeAttr("disabled");
 	else if (action == "updateTeamMember")
 		$("#updateMemberBtn").removeAttr("disabled");
+}
+
+
+function setAssociation(obj, action, msg) {	
+	$.ajax({
+		type 				: "PUT",
+		url 				: "/api/teams/associates",
+		contentType : "application/json",
+		data 				: JSON.stringify(obj)
+	}).fail(function(xhr, textStatus, errorThrown) {
+		if (xhr.status = 400) {
+	    handleTeamValidationErrors(JSON.parse(xhr.responseText), action);
+	  } else {
+	  	errorHandler(xhr, textStatus, errorThrown);
+	  }
+
+	}).done(function (data) {
+		_.each(data, function(obj) {
+			updateAgileTeamCache(obj);
+		})
+		loadSelectedAgileTeam();
+		if (!_.isEmpty(msg))
+			showMessagePopup(msg);
+	});
+}
+
+function updateParentAssociation(team) {
+	var action = "";
+	var message = "You have successfully updated the Parent team association.";
+	var parentId = $("#parentSelectList option:selected").val();
+
+	if (team.parent_team_id == parentId) return;
+	
+	if (parentId == "") {
+		action = "removeParent";
+		var associate = {
+			action 				: action,
+			teamId 				: team._id,
+			targetParent	: team.parent_team_id
+		};
+	} else {
+		action = "associateParent";
+		var associate = {
+			action 				: action,
+			teamId 				: team._id,
+			targetParent	: parentId
+		};
+	}
+
+	setAssociation(associate, action, message);
+}
+
+function updateChildAssociation(team) {
+	var action = "associateChild";
+	var message = "You have successfully created a Child team association.";
+	var childId = $("#childSelectList option:selected").val();
+
+	if (team.child_team_id.indexOf(childId) == -1)
+		team.child_team_id.push(childId);
+
+	if (childId != "") {
+		var associate = {
+			action 				: action,
+			teamId 				: team._id,
+			targetChild		: team.child_team_id
+		};
+
+		setAssociation(associate, action, message);
+
+	} else {
+		setFieldErrorHighlight("childSelectList");
+		showMessagePopup("No team selected to associate as a Child team.");
+		var errorMsg ={
+		  "error": {
+		    "child_team_id": [
+		      "No team selected to associate as a Child team."
+		    ]
+		  }
+		};
+		handleTeamValidationErrors(errorMsg, action);
+	}
 }
 
 function deleteTeam() {
@@ -896,77 +1015,34 @@ function deleteTeamHandler(team, iterations, assessments) {
 		}
 		if (!hasAssoc)
 			msg = msg + "\t Team has no associations. \n";
-
+		
 		msg = msg + "\n\t *You can return to Team Management page to review any of these associations. \n\n";
-
+		
 		msg = msg + "If you delete this team, any parent/child associations, iteration information, and maturity assessments will be DELETED. \n\n";
 
 		msg = msg + "Select OK to proceed with the team delete or Cancel.";
-
+		
 		if (confirm(msg)) {
-			// var serverDateTime = getServerDateTime();
-			// var docs = new Object();
-			// docs.docs = [];
-
-			// // delete parent/child association
-			// if (team.parent_team_id != undefined && team.parent_team_id != "") {
-			// 	removeChildOfParent(team.parent_team_id, team._id);
-			// }
-
-			// if (team.child_team_id != undefined ) {
-			// 	for (var i = 0; i < team.child_team_id.length; i++)
-			// 		removeParentOfChild(team.child_team_id[i]);
-			// }
-
-			// // soft delete iteration information
-			// for (var i in iterations) {
-			// 	iterations[i] = $.extend(true, {}, initIterationTemplate(), iterations[i]);
-			// 	iterations[i].doc_status = "delete";
-			// 	iterations[i].last_updt_dt = serverDateTime;
-			// 	iterations[i].last_updt_user = userInfo.email;
-			// 	docs.docs.push(iterations[i]);
-			// }
-
-			// // soft delete assessments
-			// for (var i in assessments) {
-			// 	assessments[i] = $.extend(true, {}, initAssessmentAnswersTemplate(), assessments[i]);
-			// 	assessments[i].doc_status = "delete";
-			// 	assessments[i].last_updt_dt = serverDateTime;
-			// 	assessments[i].last_updt_user = userInfo.email;
-			// 	docs.docs.push(assessments[i]);
-			// }
-
-			// // set team details for soft delete
-			// team = $.extend(true, {}, initTeamTemplate(), team);
-			// team.doc_status = "delete";
-			// team.last_updt_dt = serverDateTime;
-			// team.last_updt_user = userInfo.email;
-			// docs.docs.push(team);
-
-			// if (docs.docs.length > 0) {
-			// 	// make the bulk commit
-			// 	_db.bulkSave(docs, {
-			// 	  success: function(resp){
-			// 	  	console.log(resp.length + " document(s) deleted.");
-			// 	  	updateTeamInfo('reset');
-			// 	  	showMessagePopup("You have successfully deleted the team.");
-			// 	  },
-			// 	  error: errorHandler
-			// 	});
-			// }
-
 			// delete parent/child association
-			if (team.parent_team_id != undefined && team.parent_team_id != "") {
-				removeChildOfParent(team.parent_team_id, team._id);
+			if (team.parent_team_id != undefined && !_.isEmpty(team.parent_team_id)) {
+				var action = "removeParent";
+				var associate = {
+					action 				: action,
+					teamId 				: team._id,
+					targetParent	: team.parent_team_id
+				};
+				setAssociation(associate, action, "");
 			}
 
-			if (team.child_team_id != undefined ) {
-				_.each(team.child_team_id, function(id) {
-					if (id != "")
-						removeParentOfChild(id);
-				});
-			}
-
+			if (team.child_team_id != undefined && !_.isEmpty(team.child_team_id)) {
+				var action = "removeChild";
+				var associate = {
+					action 				: action,
+					teamId 				: team._id,
+					targetChild		: team.child_team_id
+				};
+				setAssociation(associate, action, "");
+			}			
 
 			// set team details for soft delete
 			team = $.extend(true, {}, initTeamTemplate(), team);
@@ -985,6 +1061,7 @@ function deleteTeamHandler(team, iterations, assessments) {
 			  }
 
 			}).done(function (data) {
+				updateAgileTeamCache(team);
 				updateTeamInfo('reset');
 				showMessagePopup("You have successfully deleted the team.");
 			});
@@ -1025,7 +1102,7 @@ function updateChildTeamWithParent(childId, parentId) {
 function updateChildTeamWithParentHandler(parentId, team) {
 	team = $.extend(true, {}, initTeamTemplate(), team);
 	team.parent_team_id = parentId;
-	setTeam(team, updateAgileTeamCache, []);
+	setTeam(team, updateAgileTeamCache, []);	
 }
 
 function addTeamMember(person, oldAlloc, newAlloc, oldRole, newRole, action) {
@@ -1056,7 +1133,6 @@ function addTeamMember(person, oldAlloc, newAlloc, oldRole, newRole, action) {
 		$.ajax({
 			type 				: "PUT",
 			url 				: "/api/teams/",
-			async 			: false,
 			contentType : "application/json",
 			data 				: JSON.stringify(currentTeam)
 		}).fail(function(xhr, textStatus, errorThrown) {
@@ -1097,7 +1173,7 @@ function deleteTeamMember() {
 
 				} else {
 					members.push(currentTeam.members[i]);
-
+				
 				}
 			}
 			currentTeam.members = members;
@@ -1106,7 +1182,6 @@ function deleteTeamMember() {
 		$.ajax({
 			type 				: "PUT",
 			url 				: "/api/teams/",
-			async 			: false,
 			contentType : "application/json",
 			data 				: JSON.stringify(currentTeam)
 		}).fail(function(xhr, textStatus, errorThrown) {
@@ -1126,54 +1201,80 @@ function deleteTeamMember() {
 }
 
 function deleteChildTeam() {
+	var message = "You have successfully removed Child team association(s).";
 	var teamId = $("#teamSelectList option:selected").val();
 	var currentTeam = getAgileTeamCache(teamId);
 	if (!_.isEmpty(currentTeam)) {
-		var childTeams = [];
+		var remainingChildren = [];
 
 		// get the remaining children listed in the table
 		for (var i in currentTeam.child_team_id) {
 			$("#childrenList tr td[id^='ref_id_']").each(function () {
 				var childId = $(this).attr("id").split("ref_id_")[1];
-				if (currentTeam.child_team_id[i] == childId) {
-					childTeams.push(currentTeam.child_team_id[i]);
-				}
+				remainingChildren.push(childId);
 			});
 		}
 
-		var removeParents = [];
-		for (var i in currentTeam.child_team_id) {
-			if (!_.isEmpty(currentTeam.child_team_id[i]) && childTeams.indexOf(currentTeam.child_team_id[i]) == -1) {
-				removeParents.push(currentTeam.child_team_id[i]);
-			}
+		var removeChildren = _.difference(currentTeam.child_team_id, remainingChildren);
+		var action = "removeChild";
+		var associate = {
+				action 				: action,
+				teamId 				: currentTeam._id,
+				targetChild		: removeChildren
+			};
 		}
 
-		_.each(removeParents, function(id) {
-			removeParentOfChild(id);
-		});
-
-		currentTeam.child_team_id = childTeams;
-		$.ajax({
-			type 				: "PUT",
-			url 				: "/api/teams/",
-			async 			: false,
-			contentType : "application/json",
-			data 				: JSON.stringify(currentTeam),
-			error 			: errorHandler
-		}).fail(function(xhr, textStatus, errorThrown) {
-			if (xhr.status = 400) {
-		    handleTeamValidationErrors(JSON.parse(xhr.responseText), "deleteChildTeam");
-		  } else {
-		  	errorHandler(xhr, textStatus, errorThrown);
-		  }
-
-		}).done(function (data) {
-			updateAgileTeamCache(data);
-			loadTeamChildren(currentTeam._id);
-			showMessagePopup("You have successfully removed Child team association(s).");
-		});
-	}
+		setAssociation(associate, action, message);
 }
+
+// function deleteChildTeam() {
+// 	var teamId = $("#teamSelectList option:selected").val();
+// 	var currentTeam = getAgileTeamCache(teamId);
+// 	if (!_.isEmpty(currentTeam)) {
+// 		var childTeams = [];
+
+// 		// get the remaining children listed in the table
+// 		for (var i in currentTeam.child_team_id) {
+// 			$("#childrenList tr td[id^='ref_id_']").each(function () {
+// 				var childId = $(this).attr("id").split("ref_id_")[1];
+// 				if (currentTeam.child_team_id[i] == childId) {
+// 					childTeams.push(currentTeam.child_team_id[i]);
+// 				}
+// 			});
+// 		}
+
+// 		var removeParents = [];
+// 		for (var i in currentTeam.child_team_id) {
+// 			if (!_.isEmpty(currentTeam.child_team_id[i]) && childTeams.indexOf(currentTeam.child_team_id[i]) == -1) {
+// 				removeParents.push(currentTeam.child_team_id[i]);
+// 			}
+// 		}
+
+// 		_.each(removeParents, function(id) {
+// 			removeParentOfChild(id);
+// 		});
+
+// 		currentTeam.child_team_id = childTeams;
+// 		$.ajax({
+// 			type 				: "PUT",
+// 			url 				: "/api/teams/",
+// 			contentType : "application/json",
+// 			data 				: JSON.stringify(currentTeam),
+// 			error 			: errorHandler
+// 		}).fail(function(xhr, textStatus, errorThrown) {
+// 			if (xhr.status = 400) {
+// 		    handleTeamValidationErrors(JSON.parse(xhr.responseText), "deleteChildTeam");
+// 		  } else {
+// 		  	errorHandler(xhr, textStatus, errorThrown);
+// 		  }
+
+// 		}).done(function (data) {
+// 			updateAgileTeamCache(data);
+// 			loadTeamChildren(currentTeam._id);
+// 			showMessagePopup("You have successfully removed Child team association(s).");
+// 		});
+// 	}
+// }
 
 function removeParentOfChild(teamId) {
 	getTeam(teamId, removeParentOfChildTeamHandler, []);
@@ -1193,7 +1294,7 @@ function updateTeamInfo(action) {
 	} else if (action == "update") {
 		$("#updateTeamBtn").attr("disabled", "disabled");
 		updateAction(action);
-
+		
 	} else if (action == "delete") {
 		$("#deleteTeamBtn").attr("disabled", "disabled");
 		updateAction(action)
@@ -1406,13 +1507,13 @@ function selectChild(elmnt) {
 
 $(function () {
 	ta1 = FacesTypeAhead.init(
-			$('#teamMemberName')[0],
+			$('#teamMemberName')[0], 
 			{
 				key : "ciodashboard;agileteamtool@us.ibm.com",
 				resultsAlign : "left",
 				showMoreResults : false,
 				faces : {
-					headerLabel : "People",
+					headerLabel : "People",	
 					onclick : function (person) {
 						taPerson = person;
 						return person["notes-id"];

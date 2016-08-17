@@ -20,6 +20,7 @@ module.exports = function(app, includes) {
     if(!(_.isEmpty(req.body['doc_status'])) &&  req.body['doc_status'] === 'delete'){
       teamModel.updateOrDeleteTeam(req.body, req.session, 'delete')
         .then(function(result){
+          middleware.cache.updateTeamCache(req, req.body);
           res.status(204).send(result);
         })
         .catch(function(err){
@@ -48,7 +49,10 @@ module.exports = function(app, includes) {
       res.status(400).send({ error : 'Invalid action' });
     }else{
       teamModel.associateTeams(req.body, action, req.session)
-      .then(function(result){
+      .then(function(result) {
+        _.each(result, function(team) {
+          middleware.cache.updateTeamCache(req, team);
+        });
         res.send(result);
       })
       .catch( /* istanbul ignore next */ function(err){
@@ -117,6 +121,52 @@ module.exports = function(app, includes) {
     }
   };
 
+  getSelectableParents = function(req, res) {
+    var teamId = req.params.teamId;
+    teamModel.getSelectableParents(teamId)
+    .then(function(result) {
+      res.status(200).send(result);
+    })
+    .catch( /* istanbul ignore next */ function(err){
+      res.status(400).send(err);
+    });
+  };
+
+  getSelectableChildren = function(req, res) {
+    console.log(req.params.teamId);
+    var teamId = req.params.teamId;
+    teamModel.getSelectableChildren(teamId)
+    .then(function(result) {
+      res.status(200).send(result);
+    })
+    .catch( /* istanbul ignore next */ function(err){
+      res.status(400).send(err);
+    });
+  };
+
+  getLookupIndex = function(req, res) {
+    var teamId = req.params.teamId;
+    teamModel.getLookupIndex(teamId)
+    .then(function(result) {
+      res.status(200).send(result);
+    })
+    .catch( /* istanbul ignore next */ function(err){
+      console.log("route error");
+      res.status(400).send(err);
+    });
+  };
+
+  getSquadsOfParent = function(req, res) {
+    var teamId = req.params.teamId;
+    teamModel.getSquadsOfParent(teamId)
+    .then(function(result) {
+      res.status(200).send(result);
+    })
+    .catch( /* istanbul ignore next */ function(err){
+      res.status(400).send(err);
+    });
+  };
+
   // delete team document
   app.delete('/api/teams/', [includes.middleware.auth.requireLogin], deleteTeam);
 
@@ -140,5 +190,17 @@ module.exports = function(app, includes) {
 
   // get all team or team details if teamId exists
   app.get('/api/teams/:teamId?', [includes.middleware.auth.requireLogin], getTeam);
+
+  // selectable parent teams of a team
+  app.get('/api/teams/lookup/parents/:teamId?', [includes.middleware.auth.requireLogin], getSelectableParents);
+
+  // selectable child teams of a team
+  app.get('/api/teams/lookup/children/:teamId?', [includes.middleware.auth.requireLogin], getSelectableChildren);
+
+  // list of squad teams associated with the team
+  app.get('/api/teams/lookup/squads/:teamId?', [includes.middleware.auth.requireLogin], getSquadsOfParent);
+
+  // list of parent and child team ids associated with the team
+  app.get('/api/teams/lookup/team/:teamId?', [includes.middleware.auth.requireLogin], getLookupIndex);
 
 };
