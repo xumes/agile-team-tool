@@ -358,11 +358,11 @@ function loadAgileTeamIterationInfo(teamId, iterationId) {
   // retrieve and load latest iteration information for the team
   $.ajax({
     type : "GET",
-    url : "/api/iteration/" + encodeURIComponent(teamId)
+    url : "/api/iteration/searchTeamIteration?id=" + encodeURIComponent(teamId) + "&includeDocs=true"
   }).done(function(data) {
     var list = [];
     if (data != undefined) {
-      list = _.pluck(data.rows, "value");
+      list = _.pluck(data.rows, "doc");
     }
     teamIterInfo = list;
 
@@ -406,7 +406,6 @@ function loadAgileTeamIterationInfo(teamId, iterationId) {
     $("#iterationSelectList").removeAttr("disabled");
     $("#select2-iterationSelectList-container").css('color', 'black');
   });
-
 }
 
 function loadSelectedAgileTeamIterationInfo() {
