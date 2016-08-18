@@ -197,6 +197,21 @@ function errorHandler(xhr, textStatus, errorThrown) {
 	}
 }
 
+function handleSearchAllErrors(jqXHR, textStatus, errorThrown) {
+  var errorlist = '';
+  var response = jqXHR.responseText;
+  console.log('Error response:', response);
+  if (response) {
+    var msg = '';
+    var errMsgs = JSON.parse(response);
+    _.each(errMsgs.error, function (err) {
+      msg = msg + err[0];
+      msg = msg + '<br>';
+    });
+    showMessagePopup(msg);
+  }
+}
+
 /**
  * Loads all available team information used for referencing user access to team related documents.
  */

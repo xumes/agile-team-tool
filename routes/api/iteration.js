@@ -1,6 +1,7 @@
 "use strict";
 
 var iterationModel = require('../../models/iteration');
+var util = require('../../helpers/util');
 var loggers = require('../../middleware/logger');
 var validate = require('validate.js');
 var _ = require('underscore');
@@ -159,7 +160,7 @@ module.exports = function(app, includes) {
     .catch( /* istanbul ignore next */ function(err) {
       /* cannot simulate Cloudant error during testing */
       formatErrMsg('[iterationRoute.searchTeamIteration]:', err);
-      return res.status(400).send({ error: err });
+      return res.status(400).send(err);
     });
   };
 

@@ -358,28 +358,24 @@ function loadAgileTeamIterationInfo(teamId, iterationId) {
   // retrieve and load latest iteration information for the team
   $.ajax({
     type : "GET",
-    url : "/api/iteration/searchTeamIteration?id=" + encodeURIComponent(teamId) + "&includeDocs=true"
-  }).done(function(data) {
+    url : "/api/iteration/searchTeamIteration?id=" + encodeURIComponent(teamId)
+  })
+  .fail(function(xhr, textStatus, errorThrown) {
+    if (xhr.status === 400) {
+      handleSearchAllErrors(xhr, textStatus, errorThrown);
+    }
+  })
+  .done(function(data) {
     var list = [];
     if (data != undefined) {
-      list = _.pluck(data.rows, "doc");
+      list = _.pluck(data.rows, "fields");
     }
     teamIterInfo = list;
-
-    // sort by date
-    teamIterInfo = teamIterInfo.sort(function(a, b) {
-      if (new Date(b.iteration_end_dt).getTime() == new Date(a.iteration_end_dt).getTime()) {
-        return 0;
-      } else {
-        return (new Date(b.iteration_end_dt).getTime() > new Date(a.iteration_end_dt).getTime()) ? 1 : -1;
-      }
-    });
-
     var iterInfo = [];
     for ( var i = 0; i < teamIterInfo.length; i++) {
       var iteration = new Object();
-      iteration._id = teamIterInfo[i]._id;
-      iteration.name = teamIterInfo[i].iteration_name;
+      iteration._id = teamIterInfo[i].id;
+      iteration.name = teamIterInfo[i].name;
       iterInfo.push(iteration);
     }
 
@@ -410,97 +406,100 @@ function loadAgileTeamIterationInfo(teamId, iterationId) {
 
 function loadSelectedAgileTeamIterationInfo() {
   var iterationId = $("#iterationSelectList option:selected").val();
-  if (teamIterInfo != undefined) {
-    for ( var i = 0; i < teamIterInfo.length; i++) {
-      if (teamIterInfo[i]._id == iterationId) {
-        console.log(teamIterInfo[i]);
-        clearFieldErrorHighlight("iterationName");
-        clearFieldErrorHighlight("iterationStartDate");
-        clearFieldErrorHighlight("iterationEndDate");
-        $("#iterationSelectList").val(teamIterInfo[i]._id);
-        $("#select2-iterationSelectList-container").text($("#iterationSelectList option:selected").text());
-        $("#select2-iterationSelectList-container").attr("title", $("#iterationSelectList option:selected").text());
-        $("#iterationName").val(teamIterInfo[i].iteration_name);
-        $("#iterationStartDate").val(showDateDDMMMYYYY(teamIterInfo[i].iteration_start_dt));
-        $("#iterationEndDate").val(showDateDDMMMYYYY(teamIterInfo[i].iteration_end_dt));
-        $("#iterationinfoStatus").val(teamIterInfo[i].iterationinfo_status);
-        $("#commStories").val(teamIterInfo[i].nbr_committed_stories);
-        $("#commPoints").val(teamIterInfo[i].nbr_committed_story_pts);
-        $("#memberCount").val(teamIterInfo[i].team_mbr_cnt);
-        $("#commStoriesDel").val(teamIterInfo[i].nbr_stories_dlvrd);
-        $("#commPointsDel").val(teamIterInfo[i].nbr_story_pts_dlvrd);
-        $("#storyPullIn").val(teamIterInfo[i].nbr_stories_pulled_in);
-        $("#storyPtPullIn").val(teamIterInfo[i].nbr_story_pts_pulled_in);
-        $("#retroItems").val(teamIterInfo[i].retro_action_items);
-        $("#retroItemsComplete").val(teamIterInfo[i].retro_action_items_complete);
-        $("#teamChangeList").val(teamIterInfo[i].team_mbr_change);
-        $("#select2-teamChangeList-container").text($("#teamChangeList option:selected").text());
-        $("#select2-teamChangeList-container").attr("title", $("#teamChangeList option:selected").text());
-        $("#lastUpdateUser").html(teamIterInfo[i].last_updt_user);
-        $("#lastUpdateTimestamp").html(showDateDDMMMYYYYTS(teamIterInfo[i].last_updt_dt));
-        $('#commentIter').val(teamIterInfo[i].iteration_comments);
-        $('#doc_id').html(teamIterInfo[i]._id);
-        if (teamIterInfo[i].fte_cnt != "") {
-          //$("#fteThisiteration").val(teamIterInfo[i].fte_cnt);
-          var alloc = parseFloat(teamIterInfo[i].fte_cnt).toFixed(1);
-          $("#fteThisiteration").val(alloc);
-        }
-        // $("#fteThisiteration").val(teamIterInfo[i].fte_cnt);
-        $("#DeploythisIteration").val(teamIterInfo[i].nbr_dplymnts);
-        $("#defectsIteration").val(teamIterInfo[i].nbr_defects);
-        $("#clientSatisfaction").val(teamIterInfo[i].client_sat);
-        $("#teamSatisfaction").val(teamIterInfo[i].team_sat);
-        var storiesFTE = $("#commStoriesDel").val() / $("#fteThisiteration").val();
-        $("#unitcostStoriesFTE").val(storiesFTE.toFixed(1));
-        var strPointsFTE = $("#commPointsDel").val() / $("#fteThisiteration").val();
-        $("#unitcostStorypointsFTE").val(strPointsFTE.toFixed(1));
-
-        var temp = 0;
-        if (teamIterInfo[i].nbr_committed_stories != 0) {
-          temp = (teamIterInfo[i].nbr_stories_dlvrd / teamIterInfo[i].nbr_committed_stories) * 100;
-          $("#percStoriesDel").val(parseFloat(temp).toFixed(0) + "%");
-        } else {
-          temp = "N/A";
-          $("#percStoriesDel").val(temp);
-        }
-
-        temp = 0;
-        if (teamIterInfo[i].nbr_committed_story_pts != 0) {
-          temp = (teamIterInfo[i].nbr_story_pts_dlvrd / teamIterInfo[i].nbr_committed_story_pts) * 100;
-          $("#percPointsDel").val(parseFloat(temp).toFixed(0) + "%");
-        } else {
-          temp = "N/A";
-          $("#percPointsDel").val(temp);
-        }
-
-        if (teamIterInfo[i].team_mbr_cnt < 10)
-          temp = "<10";
-        else
-          temp = ">=10";
-        $("#pizzaRule").val(temp);
-
-        $("#addIterationBtn").attr("disabled", "disabled");
-        $("#updateIterationBtn").removeAttr("disabled");
-
-        if (!hasAccess(teamIterInfo[i].team_id, true)) {
-          $("#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount").attr("disabled", "disabled");
-          $("#fteThisiteration,#DeploythisIteration,#defectsIteration,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter").attr("disabled", "disabled");
-          $("#addIterationBtn,#updateIterationBtn").attr("disabled", "disabled");
-          $("#select2-teamChangeList-container,#commentIter").css('color', 'grey');
-          $("#refreshFTE").removeAttr("onclick");
-        } else {
-          $("#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount").removeAttr("disabled");
-          $("#fteThisiteration,#DeploythisIteration,#defectsIteration,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter").removeAttr("disabled");
-          $("#select2-teamChangeList-container,#commentIter").css('color', 'black');
-          $("#refreshFTE").attr("onclick", "refreshFTE()");
-
-        }
-      }
+  // retrieve and load latest iteration information for the team
+  $.ajax({
+    type : "GET",
+    url : "/api/iteration/current/" + encodeURIComponent(iterationId)
+  })
+  .fail(function(xhr, textStatus, errorThrown) {
+    if (xhr.status === 400) {
+      handleSearchAllErrors(xhr, textStatus, errorThrown);
     }
-  }
+  })
+  .done(function(data) {
+    teamIterInfo = data;
+    clearFieldErrorHighlight("iterationName");
+    clearFieldErrorHighlight("iterationStartDate");
+    clearFieldErrorHighlight("iterationEndDate");
+    $("#iterationSelectList").val(teamIterInfo._id);
+    $("#select2-iterationSelectList-container").text($("#iterationSelectList option:selected").text());
+    $("#select2-iterationSelectList-container").attr("title", $("#iterationSelectList option:selected").text());
+    $("#iterationName").val(teamIterInfo.iteration_name);
+    $("#iterationStartDate").val(showDateDDMMMYYYY(teamIterInfo.iteration_start_dt));
+    $("#iterationEndDate").val(showDateDDMMMYYYY(teamIterInfo.iteration_end_dt));
+    $("#iterationinfoStatus").val(teamIterInfo.iterationinfo_status);
+    $("#commStories").val(teamIterInfo.nbr_committed_stories);
+    $("#commPoints").val(teamIterInfo.nbr_committed_story_pts);
+    $("#memberCount").val(teamIterInfo.team_mbr_cnt);
+    $("#commStoriesDel").val(teamIterInfo.nbr_stories_dlvrd);
+    $("#commPointsDel").val(teamIterInfo.nbr_story_pts_dlvrd);
+    $("#storyPullIn").val(teamIterInfo.nbr_stories_pulled_in);
+    $("#storyPtPullIn").val(teamIterInfo.nbr_story_pts_pulled_in);
+    $("#retroItems").val(teamIterInfo.retro_action_items);
+    $("#retroItemsComplete").val(teamIterInfo.retro_action_items_complete);
+    $("#teamChangeList").val(teamIterInfo.team_mbr_change);
+    $("#select2-teamChangeList-container").text($("#teamChangeList option:selected").text());
+    $("#select2-teamChangeList-container").attr("title", $("#teamChangeList option:selected").text());
+    $("#lastUpdateUser").html(teamIterInfo.last_updt_user);
+    $("#lastUpdateTimestamp").html(showDateDDMMMYYYYTS(teamIterInfo.last_updt_dt));
+    $('#commentIter').val(teamIterInfo.iteration_comments);
+    $('#doc_id').html(teamIterInfo._id);
+    if (teamIterInfo.fte_cnt != "") {
+      var alloc = parseFloat(teamIterInfo.fte_cnt).toFixed(1);
+      $("#fteThisiteration").val(alloc);
+    }
+    $("#DeploythisIteration").val(teamIterInfo.nbr_dplymnts);
+    $("#defectsIteration").val(teamIterInfo.nbr_defects);
+    $("#clientSatisfaction").val(teamIterInfo.client_sat);
+    $("#teamSatisfaction").val(teamIterInfo.team_sat);
+    var storiesFTE = $("#commStoriesDel").val() / $("#fteThisiteration").val();
+    $("#unitcostStoriesFTE").val(storiesFTE.toFixed(1));
+    var strPointsFTE = $("#commPointsDel").val() / $("#fteThisiteration").val();
+    $("#unitcostStorypointsFTE").val(strPointsFTE.toFixed(1));
+
+    var temp = 0;
+    if (teamIterInfo.nbr_committed_stories != 0) {
+      temp = (teamIterInfo.nbr_stories_dlvrd / teamIterInfo.nbr_committed_stories) * 100;
+      $("#percStoriesDel").val(parseFloat(temp).toFixed(0) + "%");
+    } else {
+      temp = "N/A";
+      $("#percStoriesDel").val(temp);
+    }
+
+    temp = 0;
+    if (teamIterInfo.nbr_committed_story_pts != 0) {
+      temp = (teamIterInfo.nbr_story_pts_dlvrd / teamIterInfo.nbr_committed_story_pts) * 100;
+      $("#percPointsDel").val(parseFloat(temp).toFixed(0) + "%");
+    } else {
+      temp = "N/A";
+      $("#percPointsDel").val(temp);
+    }
+
+    if (teamIterInfo.team_mbr_cnt < 10)
+      temp = "<10";
+    else
+      temp = ">=10";
+    $("#pizzaRule").val(temp);
+
+    $("#addIterationBtn").attr("disabled", "disabled");
+    $("#updateIterationBtn").removeAttr("disabled");
+
+    if (!hasAccess(teamIterInfo.team_id, true)) {
+      $("#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount").attr("disabled", "disabled");
+      $("#fteThisiteration,#DeploythisIteration,#defectsIteration,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter").attr("disabled", "disabled");
+      $("#addIterationBtn,#updateIterationBtn").attr("disabled", "disabled");
+      $("#select2-teamChangeList-container,#commentIter").css('color', 'grey');
+      $("#refreshFTE").removeAttr("onclick");
+    } else {
+      $("#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount").removeAttr("disabled");
+      $("#fteThisiteration,#DeploythisIteration,#defectsIteration,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter").removeAttr("disabled");
+      $("#select2-teamChangeList-container,#commentIter").css('color', 'black');
+      $("#refreshFTE").attr("onclick", "refreshFTE()");
+    }
+  });
 }
 
-function updateIterationCache(iteration) {
+function updateIterationCache_old(iteration) {
   var found = false;
   for (var i = 0; i < teamIterInfo.length; i++) {
     if (iteration._id == teamIterInfo[i]._id) {
@@ -522,6 +521,36 @@ function updateIterationCache(iteration) {
   }
 
   addOptions("iterationSelectList", iterInfo, [ "new", "Create new..." ], null, iteration._id);
+}
+
+function updateIterationCache(iteration) {
+  var teamId = iteration.team_id;
+  var currentIterId = iteration._id;
+  var iterInfo = [];
+  // retrieve and load latest iteration information for the team
+  $.ajax({
+    type : "GET",
+    url : "/api/iteration/searchTeamIteration?id=" + encodeURIComponent(teamId)
+  })
+  .fail(function(xhr, textStatus, errorThrown) {
+    if (xhr.status === 400) {
+      handleSearchAllErrors(xhr, textStatus, errorThrown);
+    }
+  })
+  .done(function(data) {
+    var list = [];
+    if (data != undefined) {
+      list = _.pluck(data.rows, "fields");
+    }
+    var teamIterInfo = list;
+    for ( var i = 0; i < teamIterInfo.length; i++) {
+      var iteration = new Object();
+      iteration._id = teamIterInfo[i].id;
+      iteration.name = teamIterInfo[i].name;
+      iterInfo.push(iteration);
+    }
+    addOptions("iterationSelectList", iterInfo, [ "new", "Create new..." ], null, currentIterId);
+  });
 }
 
 function addOptions(id, list) {
@@ -588,17 +617,17 @@ function addIteration(action) {
       var currentIteration = new Object();
 
       if (teamIterInfo != undefined) {
-        // find if team data already exists
-        for ( var i = 0; i < teamIterInfo.length; i++) {
-          if (teamIterInfo[i].team_id == $("#teamSelectList").val() && teamIterInfo[i]._id == $("#iterationSelectList").val()) {
-            exists = true;
-            currentIteration = teamIterInfo[i];
-          }
+        var teamSelectList = $("#teamSelectList").val();
+        var iterationSelectList = $("#iterationSelectList").val();
+        var iterationInfoId = teamIterInfo._id
+        var iterationInfoTeamId = teamIterInfo.team_id
+
+        if((iterationInfoTeamId == teamSelectList) && (iterationInfoId == iterationSelectList)) {
+          exists = true;
+          currentIteration = teamIterInfo;
         }
       }
-
       if (exists) {
-
         $.ajax({
           type : "GET",
           url : "/api/iteration/current/" + encodeURIComponent(currentIteration._id)
@@ -606,26 +635,7 @@ function addIteration(action) {
           var jsonData = data;
           var rev = jsonData._rev;
           console.log('Updating ' + currentIteration._id + '. The current revision is ' + rev + '.');
-          jsonData.iteration_name = $("#iterationName").val();
-          jsonData.iteration_start_dt = formatMMDDYYYY($("#iterationStartDate").val());
-          jsonData.iteration_end_dt = formatMMDDYYYY($("#iterationEndDate").val());
-          jsonData.team_mbr_cnt = $("#memberCount").val();
-          jsonData.nbr_committed_stories = $("#commStories").val();
-          jsonData.nbr_stories_dlvrd = $("#commStoriesDel").val();
-          jsonData.nbr_committed_story_pts = $("#commPoints").val();
-          jsonData.nbr_story_pts_dlvrd = $("#commPointsDel").val();
-          jsonData.nbr_stories_pulled_in = $("#storyPullIn").val();
-          jsonData.nbr_story_pts_pulled_in = $("#storyPtPullIn").val();
-          jsonData.retro_action_items = $("#retroItems").val();
-          jsonData.retro_action_items_complete = $("#retroItemsComplete").val();
-          jsonData.iteration_comments = $("#commentIter").val();
-          jsonData.team_mbr_change = $("#teamChangeList").val();
-          jsonData.fte_cnt = $("#fteThisiteration").val();
-          jsonData.nbr_dplymnts = $("#DeploythisIteration").val();
-          jsonData.nbr_defects = $("#defectsIteration").val();
-          jsonData.client_sat = $("#clientSatisfaction").val();
-          jsonData.team_sat = $("#teamSatisfaction").val();
-          jsonData = $.extend(true, {}, initIterationTemplate(), jsonData);
+          jsonData = updateIterationData(jsonData);
           $.ajax({
             type        : "PUT",
             url         : "/api/iteration/" + encodeURIComponent(currentIteration._id),
@@ -641,18 +651,12 @@ function addIteration(action) {
             var putResp = (typeof data == 'string' ? JSON.parse(data) : data);
             var rev2 = putResp.rev;
             console.log('Done updating ' + currentIteration._id + '. The new revision is ' + rev2 + '.');
-
             // update cache
             updateIterationCache(jsonData);
             loadSelectedAgileTeamIterationInfo();
             clearHighlightedIterErrors();
             showMessagePopup("You have successfully updated Iteration information.");
-
           });
-          // update cache
-          // updateIterationCache(jsonData);
-          // loadSelectedAgileTeamIterationInfo();
-          // showMessagePopup("You have successfully updated Iteration information.");
         });
       } else {
         // showMessagePopup ("insert new iteration");
@@ -661,30 +665,7 @@ function addIteration(action) {
 
         // showMessagePopup ("newIterationId: " + newIterationId);
         var serverDateTime = getServerDateTime();
-        var jsonData = new Object();
-        jsonData._id = newIterationId;
-        jsonData.type = "iterationinfo";
-        jsonData.team_id = $("#teamSelectList").val();
-        jsonData.iteration_name = $("#iterationName").val();
-        jsonData.iteration_start_dt = formatMMDDYYYY($("#iterationStartDate").val());
-        jsonData.iteration_end_dt = formatMMDDYYYY($("#iterationEndDate").val());
-        jsonData.team_mbr_cnt = $("#memberCount").val();
-        jsonData.nbr_committed_stories = $("#commStories").val();
-        jsonData.nbr_stories_dlvrd = $("#commStoriesDel").val();
-        jsonData.nbr_committed_story_pts = $("#commPoints").val();
-        jsonData.nbr_story_pts_dlvrd = $("#commPointsDel").val();
-        jsonData.nbr_stories_pulled_in = $("#storyPullIn").val();
-        jsonData.nbr_story_pts_pulled_in = $("#storyPtPullIn").val();
-        jsonData.retro_action_items = $("#retroItems").val();
-        jsonData.retro_action_items_complete = $("#retroItemsComplete").val();
-        jsonData.iteration_comments = $("#commentIter").val();
-        jsonData.team_mbr_change = $("#teamChangeList").val();
-        jsonData.fte_cnt = $("#fteThisiteration").val();
-        jsonData.nbr_dplymnts = $("#DeploythisIteration").val();
-        jsonData.nbr_defects = $("#defectsIteration").val();
-        jsonData.client_sat = $("#clientSatisfaction").val();
-        jsonData.team_sat = $("#teamSatisfaction").val();
-        jsonData = $.extend(true, {}, initIterationTemplate(), jsonData);
+        jsonData = createIterationData(newIterationId);
         console.log(jsonData);
         console.log(JSON.stringify(jsonData));
         $.ajax({
@@ -710,6 +691,57 @@ function addIteration(action) {
       }
     }
   });
+}
+
+function createIterationData(newIterationId) {
+  var jsonData = new Object();
+  jsonData._id = newIterationId;
+  jsonData.type = "iterationinfo";
+  jsonData.team_id = $("#teamSelectList").val();
+  jsonData.iteration_name = $("#iterationName").val();
+  jsonData.iteration_start_dt = formatMMDDYYYY($("#iterationStartDate").val());
+  jsonData.iteration_end_dt = formatMMDDYYYY($("#iterationEndDate").val());
+  jsonData.team_mbr_cnt = $("#memberCount").val();
+  jsonData.nbr_committed_stories = $("#commStories").val();
+  jsonData.nbr_stories_dlvrd = $("#commStoriesDel").val();
+  jsonData.nbr_committed_story_pts = $("#commPoints").val();
+  jsonData.nbr_story_pts_dlvrd = $("#commPointsDel").val();
+  jsonData.nbr_stories_pulled_in = $("#storyPullIn").val();
+  jsonData.nbr_story_pts_pulled_in = $("#storyPtPullIn").val();
+  jsonData.retro_action_items = $("#retroItems").val();
+  jsonData.retro_action_items_complete = $("#retroItemsComplete").val();
+  jsonData.iteration_comments = $("#commentIter").val();
+  jsonData.team_mbr_change = $("#teamChangeList").val();
+  jsonData.fte_cnt = $("#fteThisiteration").val();
+  jsonData.nbr_dplymnts = $("#DeploythisIteration").val();
+  jsonData.nbr_defects = $("#defectsIteration").val();
+  jsonData.client_sat = $("#clientSatisfaction").val();
+  jsonData.team_sat = $("#teamSatisfaction").val();
+  jsonData = $.extend(true, {}, initIterationTemplate(), jsonData);
+  return jsonData;
+}
+
+function updateIterationData(jsonData) {
+  jsonData.iteration_name = $("#iterationName").val();
+  jsonData.iteration_start_dt = formatMMDDYYYY($("#iterationStartDate").val());
+  jsonData.iteration_end_dt = formatMMDDYYYY($("#iterationEndDate").val());
+  jsonData.team_mbr_cnt = $("#memberCount").val();
+  jsonData.nbr_committed_stories = $("#commStories").val();
+  jsonData.nbr_stories_dlvrd = $("#commStoriesDel").val();
+  jsonData.nbr_committed_story_pts = $("#commPoints").val();
+  jsonData.nbr_story_pts_dlvrd = $("#commPointsDel").val();
+  jsonData.nbr_stories_pulled_in = $("#storyPullIn").val();
+  jsonData.nbr_story_pts_pulled_in = $("#storyPtPullIn").val();
+  jsonData.retro_action_items = $("#retroItems").val();
+  jsonData.retro_action_items_complete = $("#retroItemsComplete").val();
+  jsonData.iteration_comments = $("#commentIter").val();
+  jsonData.team_mbr_change = $("#teamChangeList").val();
+  jsonData.fte_cnt = $("#fteThisiteration").val();
+  jsonData.nbr_dplymnts = $("#DeploythisIteration").val();
+  jsonData.nbr_defects = $("#defectsIteration").val();
+  jsonData.client_sat = $("#clientSatisfaction").val();
+  jsonData.team_sat = $("#teamSatisfaction").val();
+  return jsonData;
 }
 
 function handleIterationErrors(jqXHR, textStatus, errorThrown) {
