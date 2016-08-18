@@ -232,7 +232,7 @@ function teamIterationListHander(teamId, teamIterations) {
 		});
 	}
 	
-	$("#homeSpinner").hide();
+	$("#spinnerContainer").hide();
 	$("#mainContent").show(); 
 }
 
@@ -1748,7 +1748,7 @@ function iterationScoreCard(teamId, teamName, teamIterations) {
 	loadSatisfactionChartParent('pstatisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', 'Iteration results by month',teamStatParSer,teamStatSeries,clientStatParSer,clientStatSeries, 'Points',false,ctsYMax);
 	loadPiePizzaChart('piePizzaChart', '2 Pizza Rule (Squad Teams - Current)', 'pie', pData,cenTitle);
 	
-	$("#homeSpinner").hide();
+	$("#spinnerContainer").hide();
 	$("#mainContent").show();
 }
 

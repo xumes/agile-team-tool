@@ -595,7 +595,7 @@ function loadDetails(elementId, setScrollPosition) {
 	var isSquadTeam = false;
 	if (!_.isEmpty(team) && defSelTeamId != teamId) {
 		$('#mainContent').hide();
-		$('#homeSpinner').show();
+		$('#spinnerContainer').show();
 
 		if (team._id == teamId) {
 			removeHighlightParents();
