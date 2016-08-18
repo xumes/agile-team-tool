@@ -25,8 +25,7 @@ jQuery(function($) {
 		}
 
 		// default to My team(s) view
-		$("#myTeams").click();
-
+		filter($('#myTeams').attr("id"));
 	});
 
 	$("#teamFilter").keyup(function() {
@@ -47,27 +46,19 @@ jQuery(function($) {
 	});
 	
 	$("#myTeams").click(function() {
-		if ($(this).hasClass("ibm-btn-pri ibm-btn-blue-50"))
-				return;
-		
-		$($(this)).removeClass("ibm-btn-sec ibm-btn-gray-50");
-		$($(this)).addClass("ibm-btn-pri ibm-btn-blue-50");
-
-		$("#allTeams").removeClass("ibm-btn-pri ibm-btn-blue-50");
-		$("#allTeams").addClass("ibm-btn-sec ibm-btn-gray-50");
-		filter($(this).attr("id"));
-	});
+    if ($(this).attr('data-state') != "open"){
+      $($(this)).attr('data-state', 'open');
+      $("#allTeams").attr('data-state', '');
+      filter($(this).attr("id"));
+    }
+  });
 	
 	$("#allTeams").click(function() {
-		if ($(this).hasClass("ibm-btn-pri ibm-btn-blue-50"))
-			return;
-
-		$($(this)).removeClass("ibm-btn-sec ibm-btn-gray-50");
-		$($(this)).addClass("ibm-btn-pri ibm-btn-blue-50");
-		
-		$("#myTeams").removeClass("ibm-btn-pri ibm-btn-blue-50");
-		$("#myTeams").addClass("ibm-btn-sec ibm-btn-gray-50");
-		filter($(this).attr("id"));
+   if ($(this).attr('data-state') != "open"){
+      $($(this)).attr('data-state', 'open');
+      $("#myTeams").attr('data-state', '');
+      filter($(this).attr("id"));
+    }
 	});
 
 	$("#teamExpand").click(function() {
@@ -177,13 +168,19 @@ function openSelectedTeamTree(setScrollPosition) {
  * @param section - collapsable section id.
  */
 function redrawCharts(section) {
+	console.log(Highcharts.charts)
 	$(Highcharts.charts).each(function(i,chart) {
 		if (chart == null) return;
 		
+		
+		console.log("@@@@@" + $("#" + section + " #" + $(chart.container).attr("id")).length)
 		if ($("#" + section + " #" + $(chart.container).attr("id")).length > 0) {
 			showLog("adjusting graphs at section: " + section);
 			var height = chart.renderTo.clientHeight; 
 	    var width = chart.renderTo.clientWidth; 
+			console.log(height)
+			console.log(width)
+
 	    chart.setSize(width, height); 
 		}
   });
@@ -597,6 +594,7 @@ function loadDetails(elementId, setScrollPosition) {
 	var team = allTeamsLookup[teamId];
 	var isSquadTeam = false;
 	if (!_.isEmpty(team) && defSelTeamId != teamId) {
+		$('#mainContent').hide();
 		if (team._id == teamId) {
 			removeHighlightParents();
 			// $.({message: ""});
@@ -634,7 +632,6 @@ function loadDetails(elementId, setScrollPosition) {
 						if (tn.trim() == "")
 							tn = "&nbsp;";
 						$("#teamName").html("Data for: " + tn);
-						$('#teamHeader').show();
 						keyValue = "<a href='team?id=" + encodeURIComponent(team["_id"]) + "' title='Manage team information'>" + tn + "</a>";
 						appendRowDetail(keyLabel, keyValue);
 					}
@@ -829,7 +826,9 @@ function loadDetails(elementId, setScrollPosition) {
 					} else {
 						$("#membersList").append('<tr class="odd"><td valign="top" colspan="4" class="dataTables_empty">No data available</td></tr>');
 					}
-
+					
+					$('#mainContent').show();
+					
 					if ($("#iterationSection h2 a").hasClass("ibm-show-active"))
 						redrawCharts("iterationSection");
 					if ($("#assessmentSection h2 a").hasClass("ibm-show-active"))
@@ -837,14 +836,10 @@ function loadDetails(elementId, setScrollPosition) {
 					if (!_.has(lookupData, "._rev")) 
 						allTeamsLookup[currentTeam._id] = lookupData;
 				}
-				//$.un();
-			})
-			
+			});
 			openSelectedTeamTree(setScrollPosition);
-
 		} 
 	} else {
-		//$.un();
 		openSelectedTeamTree(setScrollPosition);
 	}
 }

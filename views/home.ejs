@@ -36,29 +36,41 @@
                     <div class="agile-section-nav">
                     </div>
                     <div class="agile-section-filter">
+                      
+                      <nav class="tab-nav">
+                        <ul class="tab-ul" role="tablist">
+                            <li id="myTeams" class="tab-ul--item" role="tab" data-state="open">My teams</li>
+                            <li class="tab-ul--item" role="tab">Search</li>
+                            <li id="allTeams" class="tab-ul--item" role="tab">Show hierarchy</li>
+                        </ul>
+                      </nav>
+                      <!--
                       <p class="ibm-button-link" id="filterLinks">
                         <a id="myTeams" role="button" class="ibm-btn-sec ibm-btn-gray-50 ibm-btn-small" style="min-width: 160px; width: 49.5%; padding: 2px;">My team(s)</a> 
                         <a id="allTeams" role="button" class="ibm-btn-sec ibm-btn-gray-50 ibm-btn-small" style="min-width: 160px; width: 49.5%; padding: 2px;">All teams</a>
                       </p>
+                      -->
+                      
+                      
                       <p>
-                        <input class="clearable" type="text" name="teamFilter" id="teamFilter" value="" placeholder="Enter team name to filter..." aria-label="Name filter for teams" style="width: 94%" />
+                        <input style="display:none;"class="clearable" type="text" name="teamFilter" id="teamFilter" value="" placeholder="Enter team name to filter..." aria-label="Name filter for teams" style="width: 94%" />
                       </p>
+                      <!--
                       <p class="agile-section-expand-collapse">
                         <a href="#" id="teamExpand">Expand all</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#" id="teamCollapse">Collapse all</a>
                       </p>
+                    -->
                     </div>
                     <div class="agile-team-nav" data-widget="scrollable" data-height="600">
                       <div id="teamTree"></div>
                       <table class="ibm-data-table" id="teamTable" summary="__REPLACE_ME__">
-                        <thead class="ibm-access"><tr><th>Agile Teams</th></tr></thead>
-                        <tbody></tbody>
                       </table>
                     </div>
                   </div>
     
-                  <div class="ibm-col-6-4">
+                  <div id="mainContent" style="display:none" class="ibm-col-6-4">
                     
-                    <div id="teamHeader" style="display:none">
+                    <div id="teamHeader">
                       <h2 class="agile-section-title" id="teamName">&nbsp;</h2>
                       <div class="ibm-rule ibm-alternate-1">
                         <hr>
@@ -75,8 +87,8 @@
                       
                       </div>
 
-                      <div class="ibm-container-body">
-                        <div id="nsquad_team_scard" style="display: none">
+                      <div style="margin-top:2em" class="ibm-container-body">
+                        <div id="nsquad_team_scard" style="display: none;">
                           <div class="ibm-columns">
                             <div class="ibm-col-6-2">
                               <div id="pvelocityChart" style="min-width: 210px; min-height: 280px;"></div>

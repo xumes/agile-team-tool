@@ -20,6 +20,49 @@
 	height: 70px;
 }
 
+/* Whitewater tabs */
+.tab-nav {
+    font-family: HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+    color: #323232;
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+    position: relative;
+}
+
+.tab-ul {
+	  display: inline-block;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.tab-ul--item {
+    padding-bottom: 1rem;
+    display: inline-block
+}
+
+.tab-ul--item:not(:last-child) {
+    margin-right: 2rem
+}
+
+.tab-ul--item:hover {
+    border-bottom: 1px solid #323232;
+    margin-bottom: -.062rem;
+    cursor: pointer
+}
+
+.tab-ul--item[data-state="open"] {
+    border-bottom: 1px solid #323232;
+    margin-bottom: -.062rem;
+    font-family: HelveticaNeue-Bold, "Helvetica Neue Bold", HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 600
+}
+/* END Whitewater tabs */
+
+
+
 .ibm-tabs {
 	font-size: 85%;
 }
