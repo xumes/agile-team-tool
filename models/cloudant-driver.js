@@ -153,7 +153,8 @@ exports.findBySelector = function(data) {
         '_id',
         'child_team_id',
         'parent_team_id',
-        'name'
+        'name',
+        'squadteam'
       ]
     };
     db.findAsync(selector)
