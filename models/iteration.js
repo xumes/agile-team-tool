@@ -368,11 +368,8 @@ var iteration = {
       var enddate = p.enddate;
       var limit = p.limit;
       var include_docs = p.includeDocs;
-      var sortBy = "-end_date";
+      var sortBy = "-end_dt";
       var lucene_query = "";
-      var dateFormat = "YYYYMMDD";
-      var isvalid_startdate = moment(startdate, dateFormat, true).isValid();
-      var isvalid_enddate = moment(enddate, dateFormat, true).isValid();
       var validationErrors = validate(p, iterationSearchAllDocRules);
       validationErrors = iteration.isValidStartEndDate(startdate, enddate, "YYYYMMDD", validationErrors);
 
@@ -387,13 +384,13 @@ var iteration = {
           }
           // earliest and latest end date
           if (startdate && enddate) {
-            lucene_query = lucene_query + sprintf(" AND end_date:[%s TO %s]", startdate, enddate);
+            lucene_query = lucene_query + sprintf(" AND end_dt:[%s TO %s]", startdate, enddate);
           } else {
             if (startdate) {
-              lucene_query = lucene_query + sprintf(" AND end_date:%s", startdate);
+              lucene_query = lucene_query + sprintf(" AND end_dt:%s", startdate);
             }
             if (enddate) {
-              lucene_query = lucene_query + sprintf(" AND end_date:%s", enddate);
+              lucene_query = lucene_query + sprintf(" AND end_dt:%s", enddate);
             }
           }
 

@@ -56,14 +56,14 @@ var iterationSearchAllDocRules = {
     presence: false,
     inclusion : {
       within: {'Y':'Y', 'N':'N'},
-      message: "^Invalid status please choose either Y or N"
+      message: "^The value of status is not valid. It must be either Y or N"
     }
   },
   "includeDocs": {
     presence: false,
     inclusion : {
       within: {'true':'true', 'false':'false'},
-      message: "^Invalid includeDocs please choose either true or false"
+      message: "^The value of includeDocs is not valid. It must be either true or false"
     }
   },
   "limit": {

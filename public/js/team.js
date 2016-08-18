@@ -249,11 +249,16 @@ function loadSelectedAgileTeam() {
       // disable squad indicator if iteration data exist
       $.ajax({
         type  : "GET",
-        url   : "/api/iteration/searchTeamIteration?id=" + encodeURIComponent(currentTeam._id) + "&includeDocs=true",
-        async : false
-      }).done(function (data) {
+        url   : "/api/iteration/searchTeamIteration?id=" + encodeURIComponent(currentTeam._id)
+      })
+      .fail(function(xhr, textStatus, errorThrown) {
+        if (xhr.status === 400) {
+          handleSearchAllErrors(xhr, textStatus, errorThrown);
+        }
+      })
+      .done(function (data) {
         if (!_.isEmpty(data)) {
-          var list = _.pluck(data.rows, "doc");
+          var list = _.pluck(data.rows, "fields");
           if (!_.isEmpty(list)) {
             $("#teamSquadYesNo").attr("disabled", "disabled");
             $("#select2-teamSquadYesNo-container").css('color', 'grey');
@@ -356,7 +361,8 @@ function loadIterationInformation(iterationList, more) {
 		for (var j = 0; j < iterationList.length && j < noOfIter; j++) {
 			found = true;
 			var iter = iterationList[j];
-			var iterLink = "<a style='text-decoration: underline;color:black;' href='iteration?id=" + encodeURIComponent(iter.team_id) + "&iter=" + encodeURIComponent(iter._id) + "' title='Manage current iteration information'>" + iter.iteration_name + "</a>";
+      console.log('iter:', iter)
+			var iterLink = "<a style='text-decoration: underline;color:black;' href='iteration?id=" + encodeURIComponent(iter.team_id) + "&iter=" + encodeURIComponent(iter.id) + "' title='Manage current iteration information'>" + iter.name + "</a>";
 			var row = "<tr id='irow_" + j + "'>";
 			row = row + "<td></td>";
 			row = row + "<td>" + iterLink + "</td>";
