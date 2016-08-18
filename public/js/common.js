@@ -352,8 +352,8 @@ function resetChangeIndiactor() {
  * @param message - message to show on console.
  */
 function showLog(message) {
-	if (environment != null && environment.toLowerCase() == 'sit')
-		console.log(message);
+	//if (environment != null && environment.toLowerCase() == 'sit')
+		//console.log(message);
 }
 
 

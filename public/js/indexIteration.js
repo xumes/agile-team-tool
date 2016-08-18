@@ -230,7 +230,10 @@ function teamIterationListHander(teamId, teamIterations) {
 		$("#CreateIterationBtn").click(function(e) {
 			window.location = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=new';
 		});
-	} 
+	}
+	
+	$("#homeSpinner").hide();
+	$("#mainContent").show(); 
 }
 
 function destroyIterationCharts() {
@@ -1744,6 +1747,9 @@ function iterationScoreCard(teamId, teamName, teamIterations) {
 	loadDeploymentsChartParent('pdefectsChart', 'Deployments/Defects', 'line', graphCategory, 'Count', 'Iteration results by month',deployParSer,deploySeries,defectsParSer,defectsSeries, 'Points',false);
 	loadSatisfactionChartParent('pstatisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', 'Iteration results by month',teamStatParSer,teamStatSeries,clientStatParSer,clientStatSeries, 'Points',false,ctsYMax);
 	loadPiePizzaChart('piePizzaChart', '2 Pizza Rule (Squad Teams - Current)', 'pie', pData,cenTitle);
+	
+	$("#homeSpinner").hide();
+	$("#mainContent").show();
 }
 
 function iterationEmptyScoreCard(teamId, teamName) {

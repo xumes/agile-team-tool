@@ -595,6 +595,8 @@ function loadDetails(elementId, setScrollPosition) {
 	var isSquadTeam = false;
 	if (!_.isEmpty(team) && defSelTeamId != teamId) {
 		$('#mainContent').hide();
+		$('#homeSpinner').show();
+
 		if (team._id == teamId) {
 			removeHighlightParents();
 			// $.({message: ""});
@@ -711,43 +713,7 @@ function loadDetails(elementId, setScrollPosition) {
 					} else {
 						destroyIterationCharts();
 						destroyAssessmentCharts();
-						/* This commented code is intended for rollup using cloudant query
-						 * 
-						var currDate = getServerDateTime().split(" ")[0].replace(/-/g, "/");
-						var dateArr = currDate.split("/");
-						var tempDate = parseInt(dateArr[2]);
-						if (tempDate == 1){
-							currDate = dateArr[0]+"/"+dateArr[1]+"/"+"02";
-						}
-						var tempDate = new Date(currDate);
 						
-						var currMonth = tempDate.getUTCMonth()+1;
-						var startMonth;
-						var startYear;
-						if (currMonth > 5)
-							startMonth = currMonth - 5;
-						else{
-							startMonth = 13 - (6 - currMonth);
-							startYear = tempDate.getUTCFullYear()-1;
-						}
-						var startDate = showDateMMDDYYYY(startYear+"/"+startMonth+"/"+"02");
-						var endDate = showDateMMDDYYYY(currDate);
-						//reset the squadList for selected parent team to refresh for new selected parent
-						squadList = [];
-						var children = team.child_team_id;
-						
-						if (children.length > 0){
-							//this will get all squad teams of selected parent team and store in squadList (global variable)
-							getSquadChildren(team["_id"]);
-						}
-						
-						if (squadList.length > 0){
-							retrieveIterations(squadList, startDate, endDate, iterationScoreCard, [team["_id"], team['name']);
-						}
-						else{
-							iterationEmptyScoreCard(team["_id"], team['name']);
-						}
-						 */
 						var currDate = getServerDateTime().split(" ")[0].replace(/-/g, "/");
 						var dateArr = currDate.split("/");
 						var tempDate = parseInt(dateArr[2]);
@@ -827,7 +793,6 @@ function loadDetails(elementId, setScrollPosition) {
 						$("#membersList").append('<tr class="odd"><td valign="top" colspan="4" class="dataTables_empty">No data available</td></tr>');
 					}
 					
-					$('#mainContent').show();
 					
 					if ($("#iterationSection h2 a").hasClass("ibm-show-active"))
 						redrawCharts("iterationSection");
