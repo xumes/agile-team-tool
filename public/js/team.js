@@ -274,9 +274,9 @@ function loadSelectedAgileTeam() {
         async : false
       }).done(function (data) {
         if (!_.isEmpty(data)) {
-          var list = _.pluck(data.rows, "value");
-          teamAssessments = list;
-          loadAssessmentInformation(sortAssessments(list), false);
+          //var list = _.pluck(data.rows, "value");
+          //teamAssessments = list;
+          loadAssessmentInformation(sortAssessments(data), false);
         }
       });
 
@@ -997,7 +997,7 @@ function deleteTeamHandler(team, iterations, assessments) {
 			return;
 		}
 		if (assessments == null) {
-			getTeamAssessments(team._id, deleteTeamHandler, [team, iterations]);
+			getTeamAssessments(team._id, true, deleteTeamHandler, [team, iterations]);
 			return;
 		}
 		var hasAssoc = false;

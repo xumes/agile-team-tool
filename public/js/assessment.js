@@ -23,7 +23,7 @@ jQuery(function($) {
   	
   	$("#teamSelectList").change(function() {
   		var teamId = $("#teamSelectList option:selected").val();
-  		getTeamAssessments(teamId, teamAssessmentListHander, ["assessmentSelectList", teamId, "new"]);
+  		getTeamAssessments(teamId, false, teamAssessmentListHander, ["assessmentSelectList", teamId, "new"]);
 		});
     
     $("#assessmentSelectList").change(function() {
@@ -115,7 +115,7 @@ function agileTeamListHandler(elementId, teamId, assessmentId, firstOption, last
 	$("#" + elementId).removeAttr("disabled");
 
 	if (assessmentId != null)
-		getTeamAssessments(teamId, teamAssessmentListHander, ["assessmentSelectList", teamId, assessmentId]);
+		getTeamAssessments(teamId, true, teamAssessmentListHander, ["assessmentSelectList", teamId, assessmentId]);
 
 	setScreenControls();
 };
@@ -582,7 +582,6 @@ function setPracticeAnswerStatus() {
 		else if (optionName.indexOf("_ind") > -1)
 			principleId = optionName.substring(0, optionName.indexOf("_ind"));
 		
-		//console.log(principleId);
 		var status = "";
 		if (isReviewer(gTeamAssessment) && getAssessmentStatus(gTeamAssessment).toLowerCase() == "independent review") {
 			var indAnswered = $("[name='"+principleId+"_ind']:checked").length > 0;
@@ -619,7 +618,6 @@ function setCollapsableLinks() {
 		var id = $(obj).attr("id");
 		var sectionId = id.substring(0, id.indexOf("_show"));
 		var bodyId = "body" + sectionId;
-		// console.log(bodyId);
 		$(obj).bind("click", function() {
 			$("div[id='"+bodyId+"'] > ul > li[class=''] > a").each(function (index, obj) {
 				$(obj).click();
@@ -637,7 +635,6 @@ function setCollapsableLinks() {
 				sectionId = sectionId + "_";
 		}
 		var bodyId = "body" + sectionId;
-		// console.log(bodyId);
 		$(obj).bind("click", function(event) {
 			$("div[id='"+bodyId+"'] > ul > li[class='ibm-active'] > a").each(function (index, obj) {
 			  $(obj).click();
@@ -860,7 +857,7 @@ function updateAgileTeamAssessment(action) {
 			contentType : "application/json",
 			data : JSON.stringify(screenAnswers)
 		}).done(function(data) {
-				getTeamAssessments($("#teamSelectList option:selected").val(), teamAssessmentListHander, ["assessmentSelectList", $("#teamSelectList option:selected").val(), screenAnswers["_id"]]);
+				getTeamAssessments($("#teamSelectList option:selected").val(), false, teamAssessmentListHander, ["assessmentSelectList", $("#teamSelectList option:selected").val(), screenAnswers["_id"]]);
     		showMessagePopup(msg);
     }).fail(function( jqXHR, textStatus, errorThrown){
 			if (jqXHR.status == 400){
@@ -886,9 +883,8 @@ function updateAgileTeamAssessment(action) {
 					url : "/api/assessment" + "?docId=" + encodeURIComponent(jsonData["_id"]) + '&revId=' + jsonData["_rev"]
 				}).done(function(data) {
 					showMessagePopup("Draft assessment has been deleted.");
-					getTeamAssessments(jsonData["team_id"], teamAssessmentListHander, ["assessmentSelectList", jsonData["team_id"], "new"]);
+					getTeamAssessments(jsonData["team_id"], false, teamAssessmentListHander, ["assessmentSelectList", jsonData["team_id"], "new"]);
 				}).fail(function( jqXHR, textStatus, errorThrown){
-					console.log('error >> '+JSON.stringify(jqXHR));
 					if (jqXHR.status == 400){
 						if (jqXHR.responseJSON.error != null)
 							validationHandler(jqXHR.responseJSON.error);
@@ -898,7 +894,6 @@ function updateAgileTeamAssessment(action) {
 			} else {			
 				var screenAnswers = getScreenAnswers();
 				var serverDateTime = getServerDateTime();
-				console.log('removing some fields..');
 				jsonData["team_proj_ops"] = screenAnswers["team_proj_ops"];
 				jsonData["team_dlvr_software"] = screenAnswers["team_dlvr_software"];
 				jsonData["assessmt_cmpnt_rslts"] = screenAnswers["assessmt_cmpnt_rslts"];
@@ -998,7 +993,6 @@ function setScreenAnswers(teamAssessment) {
 	if (teamAssessment == null) {
 		return;
 	}
-	console.log(teamAssessment);
 	var found = true;
 	var msg = "";
 	var eleVersionId = "atma_ver_" + gAssessmentTemplate["atma_version"];
@@ -1536,7 +1530,6 @@ function validationHandler(errors){
 	var defaultMsg = '';
 	if (_.isObject(errors)){
 	_.each(errors, function(err, attr){
-		console.log('attr: '+attr+' -- err:'+err);
 		if (attr != null && attr.contains('mat_lvl_achieved')){
 			unfilled = true;
 			defaultMsg = err;
@@ -1612,7 +1605,6 @@ function highlightFields(){
 		if (currStatus == "submitted" || currStatus == "draft") {			
 			$("#assessmentContainer li[id*='_prac']").each(function() {
 				var answers = this.id;
-				console.log('answers: '+answers);
 				// query for section unanswered practices
 				var thisSectionComplete = true;
 				if ($("[name*='"+answers+"_curr']:checked").length == 0 || $("[name*='"+answers+"_targ']:checked").length == 0) {

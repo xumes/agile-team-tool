@@ -495,7 +495,7 @@ var team = {
               oldTeamDocu['doc_status'] = 'delete';
               bulkDocu.push(oldTeamDocu);
               bulkDocu.push(teamIterations.rows);
-              bulkDocu.push(teamAssesments.rows);
+              bulkDocu.push(teamAssesments);
               bulkDocu = _.flatten(bulkDocu);
               // reformat into delete docu
               bulkDocu = util.formatForBulkTransaction(bulkDocu, userEmail, 'delete');

@@ -391,8 +391,10 @@ function getRemoteData(cUrl, _callback, args) {
 			} else if (data.length > 0) {
 				if (!_.isEmpty(data[0].doc)) 
 					list = _.pluck(data, 'doc')
-				else 
+				else if (_.has(data, 'value'))
 					list = _.pluck(data, 'value');
+				else
+					list = data;
 
 				args.push(list);
 				showLog("data loaded: " + list.length);
@@ -558,12 +560,12 @@ function setAgileTeamsForUser(teams, newTeam) {
  * @param args - arguments to be used by the handler function.
  * @returns - any returnable object.
  */
-function getTeamAssessments(teamId, _callback, args) {
+function getTeamAssessments(teamId, docs, _callback, args) {
 	if (teamId == null || teamId == "") {
 		_callback.apply(this, args);
 		return null;
 	}
-	var teamUrl = "/api/assessment/view?teamId=" + encodeURIComponent(teamId);
+	var teamUrl = "/api/assessment/view?teamId=" + encodeURIComponent(teamId)+'&docs='+docs;
 	return getRemoteData(teamUrl, _callback, args);
 }
 
