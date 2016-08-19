@@ -49,6 +49,7 @@ jQuery(function($) {
     if ($(this).attr('data-state') != "open"){
       $($(this)).attr('data-state', 'open');
       $("#allTeams").attr('data-state', '');
+			$("#mainContent").hide();
       filter($(this).attr("id"));
     }
   });
@@ -57,6 +58,7 @@ jQuery(function($) {
    if ($(this).attr('data-state') != "open"){
       $($(this)).attr('data-state', 'open');
       $("#myTeams").attr('data-state', '');
+			$("#no-teams-highlightbox").hide();
       filter($(this).attr("id"));
     }
 	});
@@ -173,13 +175,10 @@ function redrawCharts(section) {
 		if (chart == null) return;
 		
 		
-		console.log("@@@@@" + $("#" + section + " #" + $(chart.container).attr("id")).length)
 		if ($("#" + section + " #" + $(chart.container).attr("id")).length > 0) {
 			showLog("adjusting graphs at section: " + section);
 			var height = chart.renderTo.clientHeight; 
 	    var width = chart.renderTo.clientWidth; 
-			console.log(height)
-			console.log(width)
 
 	    chart.setSize(width, height); 
 		}
@@ -210,10 +209,14 @@ function agileTeamListHandler(show, allTeamList) {
  * @param userTeamList - array of teams where user email exists as a member.
  */
 function userAgileTeamListHandler(show, userEmail, userTeamList) {
+	if(_.isEmpty(userTeamList)){
+		$("#spinnerContainer").hide();
+		$("#no-teams-highlightbox").show();
+	}
 	myTeams = organizeTeamList(userTeamList);
 	if (show) 
 		organizeTeamHierarchy(true);
-
+	
 }
 
 /**

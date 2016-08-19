@@ -194,6 +194,78 @@
 /* spinner end */
 
 
+/*  whitewater highlight box  */
+._grid {
+    font-family: HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1em;
+    line-height: 1.75;
+    color: #323232;
+    background-color: #fff;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+}
+
+._tight {
+    position: relative;
+    min-height: 1px;
+    padding-right: .75rem;
+    padding-left: .75rem;
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%
+}
+
+@media (min-width: 64em) {
+    ._tight {
+        position: relative;
+        min-height: 1px;
+        padding-right: .75rem;
+        padding-left: .75rem;
+        -webkit-box-flex: 0;
+        -webkit-flex: 0 0 66.66667%;
+        flex: 0 0 66.66667%;
+        max-width: 66.66667%;
+        margin-left: 16.66667%
+    }
+}
+
+.markdown a {
+    background-image: -webkit-linear-gradient(bottom, #fff 75%, #4178be 75%);
+    background-image: linear-gradient(to top, #fff 75%, #4178be 75%);
+    background-size: .125em .21875em;
+    background-position: 0 1.08625em;
+    text-shadow: 0.1rem 0 #fff, -0.1rem 0 #fff, 0.15rem 0 #fff, -0.15rem 0 #fff;
+    text-decoration: none;
+    background-repeat: repeat-x;
+    color: #4178be;
+    text-decoration: none
+}
+
+.highlight-box--NOTIFY {
+    border-left: #323232 solid .375rem;
+    fill: #323232;
+    background-color: #fff;
+    background: -webkit-repeating-linear-gradient(315deg, #fff, #fff .375rem, #f4f4f4 .375rem, #f4f4f4 .75rem);
+    background: repeating-linear-gradient(135deg, #fff, #fff .375rem, #f4f4f4 .375rem, #f4f4f4 .75rem);
+    padding: .75rem 1.5rem .75rem 0
+}
+
+.highlight-box--message {
+    width: -webkit-calc(100% - 4.5rem);
+    width: calc(100% - 4.5rem);
+    display: inline-block;
+    vertical-align: top
+}
+
+.highlight-box--message--NO-IMAGE {
+    margin-left: 1.125rem;
+    display: inline-block;
+    vertical-align: top
+}
+/*  end whitewater highlight box  */
+
 
 .ibm-tabs {
 	font-size: 85%;
