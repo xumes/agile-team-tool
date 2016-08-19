@@ -66,15 +66,24 @@ var infoLogs = function(msg){
 };
 
 var assessment = {
-  getTeamAssessments : function(teamId, callback) {
+  getTeamAssessments : function(teamId, docs) {
     return new Promise(function(resolve, reject){
       var msg = '';
       if(!_.isEmpty(teamId)){
         infoLogs('Getting all team assessment records from Cloudant.');
-        common.getByViewKey('assessments', 'teamMaturity', teamId)
+        var includeDocs = false;
+        if (!lodash.isEmpty(docs))
+          includeDocs = docs;
+        var params = {
+            'q': 'team_id:' +teamId,
+            'include_docs': includeDocs,
+            'limit': 200
+          }
+        common.Search('assessments', 'teamSearch', params)  
           .then(function(body){
+            var result = util.returnObject(body);
             successLogs('Team '+teamId+' assessment records retrieved.');
-            resolve(body);
+            resolve(result);
           })
           .catch( /* istanbul ignore next */ function(err){
             /* can't simulate Cloudant error during testing */

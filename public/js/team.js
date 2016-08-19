@@ -997,7 +997,7 @@ function deleteTeamHandler(team, iterations, assessments) {
 			return;
 		}
 		if (assessments == null) {
-			getTeamAssessments(team._id, deleteTeamHandler, [team, iterations]);
+			getTeamAssessments(team._id, true, deleteTeamHandler, [team, iterations]);
 			return;
 		}
 		var hasAssoc = false;
