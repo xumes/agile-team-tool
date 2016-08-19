@@ -46,7 +46,10 @@ function resetData(){
       'totClientStatIter' : 0,
       'teamsLt5' : 0,
       'teams5to12' : 0,
-      'teamsGt12' : 0
+      'teamsGt12' : 0,
+      'totalSquad' : 0,
+      'partialMonth' : true
+
     },
     {
       'totalPoints' : 0,
@@ -60,7 +63,10 @@ function resetData(){
       'totClientStatIter' : 0,
       'teamsLt5' : 0,
       'teams5to12' : 0,
-      'teamsGt12' : 0
+      'teamsGt12' : 0,
+      'totalSquad' : 0,
+      'partialMonth' : false
+
     },
     {
       'totalPoints' : 0,
@@ -74,7 +80,10 @@ function resetData(){
       'totClientStatIter' : 0,
       'teamsLt5' : 0,
       'teams5to12' : 0,
-      'teamsGt12' : 0
+      'teamsGt12' : 0,
+      'totalSquad' : 0,
+      'partialMonth' : false
+
     },
     {
       'totalPoints' : 0,
@@ -88,7 +97,10 @@ function resetData(){
       'totClientStatIter' : 0,
       'teamsLt5' : 0,
       'teams5to12' : 0,
-      'teamsGt12' : 0
+      'teamsGt12' : 0,
+      'totalSquad' : 0,
+      'partialMonth' : false
+
     },
     {
       'totalPoints' : 0,
@@ -102,7 +114,9 @@ function resetData(){
       'totClientStatIter' : 0,
       'teamsLt5' : 0,
       'teams5to12' : 0,
-      'teamsGt12' : 0
+      'teamsGt12' : 0,
+      'totalSquad' : 0,
+      'partialMonth' : false
     },
     {
       'totalPoints' : 0,
@@ -116,7 +130,9 @@ function resetData(){
       'totClientStatIter' : 0,
       'teamsLt5' : 0,
       'teams5to12' : 0,
-      'teamsGt12' : 0
+      'teamsGt12' : 0,
+      'totalSquad' : 0,
+      'partialMonth' : true
     }
   ];
 };
@@ -149,7 +165,6 @@ function getIterationDocs(startTime, endTime) {
       })
       .catch( /* istanbul ignore next */ function(err){
         var msg = err.error;
-        console.log('1: ',err);
         reject(formatErrMsg(msg));
       })
   });
@@ -170,7 +185,6 @@ function getAllSquads() {
             squadsByParent[id] = [];
           }
         });
-        //console.log(squadsByParent);
         teamModel.getSquadTeams()
           .then(function(squadTeams){
             _.each(squadTeams.rows, function(squadTeam){
@@ -182,16 +196,14 @@ function getAllSquads() {
             });
             resolve(squadsByParent);
           })
-          .catch(function(err){
+          .catch( /* istanbul ignore next */ function(err){
             var msg = err.error;
-            console.log(err);
             reject(formatErrMsg(msg));
           });
       })
       .catch(function(err){
         var msg = err.error;
-        console.log(err);
-        reject(formatErrMsg(msg));
+        reject( /* istanbul ignore next */ formatErrMsg(msg));
       });
   });
 };
@@ -209,8 +221,8 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
     rollUpIterationsData[teamId] = currData;
     var currDate = new Date(util.getServerTime());
     _.each(iterationDocs, function(iterationDoc){
-      var iterationDocData = new Date(iterationDoc['iteration_end_dt']);
-      var iterationDocIndex = 5 - monthDiff(iterationDocData, currDate);
+      var iterationDocDate = new Date(iterationDoc['iteration_end_dt']);
+      var iterationDocIndex = 5 - monthDiff(iterationDocDate, currDate);
       if (iterationDocIndex < 0 || iterationDocIndex > iterationMonth) {
         var msg = 'iteationDoc: ' + iterationDocData._id + ' end date is not correct';
         reject(formatErrMsg(msg));
@@ -282,8 +294,12 @@ function rollUpIterationsByNonSquad(squads, nonSquadTeamId, squadsCalResults, is
                         'timestamp' : timestamp,
                         'type' : 'roll_up_data'
                      };
+    var teams = [];
+    for (var i = 0; i <= iterationMonth; i++) {
+      teams.push(0);
+    }
     for (var i = 0; i < squadDoc.length; i++) {
-      for (var j = 0; j < iterationMonth; j++) {
+      for (var j = 0; j <= iterationMonth; j++) {
         if (!(_.isEmpty(squadsCalResults[squadDoc[i]])) && !(_.isUndefined(squadsCalResults[squadDoc[i]]))) {
           var squadIterationResult = squadsCalResults[squadDoc[i]];
           currData[j].totalPoints = currData[j].totalPoints + squadIterationResult[j].totalPoints;
@@ -298,9 +314,22 @@ function rollUpIterationsByNonSquad(squads, nonSquadTeamId, squadsCalResults, is
           currData[j].teamsGt12 = currData[j].teamsGt12 + squadIterationResult[j].teamsGt12;
           currData[j].teams5to12 = currData[j].teams5to12 + squadIterationResult[j].teams5to12;
           currData[j].totalCompleted = currData[j].totalCompleted + squadIterationResult[j].totalCompleted;
+          if (squadIterationResult[j].totalCompleted > 0) {
+            teams[j] = teams[j] + 1;
+          }
         }
       }
     }
+    for (var i = 0; i <= iterationMonth; i++) {
+      currData[i].totalSquad = teams[i];
+      if(currData[i].totTeamStatIter > 0){
+        currData[i].totTeamStat = currData[i].totTeamStat/currData[i].totTeamStatIter;
+      }
+      if(currData[i].totClientStatIter > 0){
+        currData[i].totClientStat = currData[i].totClientStat/currData[i].totClientStatIter;
+      }
+    }
+
     if (isUpdate) {
       if(!(_.isEmpty(oldRollUpDataRev)) && !(_.isUndefined(oldRollUpDataRev))) {
         nonSquadCalResult._rev = oldRollUpDataRev;
@@ -396,25 +425,21 @@ var snapshot = {
                     })
                     .catch( /* istanbul ignore next */ function(err){
                       var msg = err.error;
-                      console.log(err);
                       reject(formatErrMsg(msg));
                     });
                 })
                 .catch( /* istanbul ignore next */ function(err){
                   var msg = err.error;
-                  console.log(err);
                   reject(formatErrMsg(msg));
                 });
             })
             .catch( /* istanbul ignore next */ function(err){
               var msg = err.error;
-              console.log(err);
               reject(formatErrMsg(msg));
             });
         })
         .catch( /* istanbul ignore next */ function(err){
           var msg = err.error;
-          console.log(err);
           reject(formatErrMsg(msg));
         });
     });
@@ -455,21 +480,18 @@ var snapshot = {
                   })
                   .catch( /* istanbul ignore next */ function(err){
                     var msg = err.error;
-                    console.log('5: ',err);
                     reject(formatErrMsg(msg));
-                  })
+                  });
               })
               .catch( /* istanbul ignore next */ function(err){
                 var msg = err.error;
-                console.log('6: ',err);
                 reject(formatErrMsg(msg));
-              })
+              });
           })
           .catch( /* istanbul ignore next */ function(err){
             var msg = err.error;
-            console.log('7: ',err);
             reject(formatErrMsg(msg));
-          })
+          });
       }
     });
   }
