@@ -216,7 +216,7 @@ module.exports.returnObject = function(data) {
   if (_.has(data, 'rows')) {
     if (_.has(data.rows, 'doc') || _.find(data.rows, 'doc'))
       returnData = _.pluck(data.rows, 'doc');
-    else if (_.has(data.rows, 'value'))
+    else if (_.has(data.rows, 'value') || _.find(data.rows, 'value'))
       returnData =  _.pluck(data.rows, 'value');
     else if (_.find(data.rows, 'fields') != null){
       var result = _.map(data.rows, function(val, key){
