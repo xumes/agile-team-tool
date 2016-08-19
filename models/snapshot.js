@@ -215,47 +215,49 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
         var msg = 'iteationDoc: ' + iterationDocData._id + ' end date is not correct';
         reject(formatErrMsg(msg));
       } else {
-        var pts = iterationDoc["nbr_story_pts_dlvrd"];
-        var stories = iterationDoc["nbr_stories_dlvrd"];
-        var teamCnt = iterationDoc["team_mbr_cnt"];
-        var defects = iterationDoc["nbr_defects"];
-        var dplymnts = iterationDoc["nbr_dplymnts"];
-        var teamStat = iterationDoc["team_sat"];
-        var clientStat = iterationDoc["client_sat"];
-        if (pts != undefined && pts !=""){
-          currData[iterationDocIndex].totalPoints = currData[iterationDocIndex].totalPoints + parseInt(pts);
-        }
-        if (stories != undefined && stories !=""){
-          currData[iterationDocIndex].totalStories = currData[iterationDocIndex].totalStories+ parseInt(stories);
-        }
-
-        if (defects != undefined && defects !=""){
-          currData[iterationDocIndex].totalDefects = currData[iterationDocIndex].totalDefects + parseInt(defects);
-        }
-        if (dplymnts != undefined && dplymnts !=""){
-          currData[iterationDocIndex].totalDplymts = currData[iterationDocIndex].totalDplymts+ parseInt(dplymnts);
-        }
-
-        if (teamStat != undefined && teamStat !="" && (parseInt(teamStat) != 0)){
-          currData[iterationDocIndex].totTeamStat = currData[iterationDocIndex].totTeamStat + parseInt(teamStat);
-          currData[iterationDocIndex].totTeamStatIter = currData[iterationDocIndex].totTeamStatIter + 1;
-        }
-        if (clientStat != undefined && clientStat !="" && (parseInt(clientStat) != 0)){
-          currData[iterationDocIndex].totClientStat = currData[iterationDocIndex].totClientStat+ parseInt(clientStat);
-          currData[iterationDocIndex].totClientStatIter = currData[iterationDocIndex].totClientStatIter + 1;
-        }
-
-        if(teamCnt != undefined && teamCnt !=""){
-          teamCnt = parseInt(teamCnt);
-          if(teamCnt < 5){
-            currData[iterationDocIndex].teamsLt5 = currData[iterationDocIndex].teamsLt5 + 1;
-          }else if(teamCnt > 12){
-            currData[iterationDocIndex].teamsGt12 = currData[iterationDocIndex].teamsGt12 + 1;
-          }else{
-            currData[iterationDocIndex].teams5to12 = currData[iterationDocIndex].teams5to12 + 1;
+        if(!isNaN(iterationDocIndex)){
+          var pts = iterationDoc["nbr_story_pts_dlvrd"];
+          var stories = iterationDoc["nbr_stories_dlvrd"];
+          var teamCnt = iterationDoc["team_mbr_cnt"];
+          var defects = iterationDoc["nbr_defects"];
+          var dplymnts = iterationDoc["nbr_dplymnts"];
+          var teamStat = iterationDoc["team_sat"];
+          var clientStat = iterationDoc["client_sat"];
+          if (pts != undefined && pts !=""){
+            currData[iterationDocIndex].totalPoints = currData[iterationDocIndex].totalPoints + parseInt(pts);
           }
+          if (stories != undefined && stories !=""){
+            currData[iterationDocIndex].totalStories = currData[iterationDocIndex].totalStories+ parseInt(stories);
+          }
+
+          if (defects != undefined && defects !=""){
+            currData[iterationDocIndex].totalDefects = currData[iterationDocIndex].totalDefects + parseInt(defects);
+          }
+          if (dplymnts != undefined && dplymnts !=""){
+            currData[iterationDocIndex].totalDplymts = currData[iterationDocIndex].totalDplymts+ parseInt(dplymnts);
+          }
+
+          if (teamStat != undefined && teamStat !="" && (parseInt(teamStat) != 0)){
+            currData[iterationDocIndex].totTeamStat = currData[iterationDocIndex].totTeamStat + parseInt(teamStat);
+            currData[iterationDocIndex].totTeamStatIter = currData[iterationDocIndex].totTeamStatIter + 1;
+          }
+          if (clientStat != undefined && clientStat !="" && (parseInt(clientStat) != 0)){
+            currData[iterationDocIndex].totClientStat = currData[iterationDocIndex].totClientStat+ parseInt(clientStat);
+            currData[iterationDocIndex].totClientStatIter = currData[iterationDocIndex].totClientStatIter + 1;
+          }
+
+          if(teamCnt != undefined && teamCnt !=""){
+            teamCnt = parseInt(teamCnt);
+            if(teamCnt < 5){
+              currData[iterationDocIndex].teamsLt5 = currData[iterationDocIndex].teamsLt5 + 1;
+            }else if(teamCnt > 12){
+              currData[iterationDocIndex].teamsGt12 = currData[iterationDocIndex].teamsGt12 + 1;
+            }else{
+              currData[iterationDocIndex].teams5to12 = currData[iterationDocIndex].teams5to12 + 1;
+            }
+          }
+          currData[iterationDocIndex].totalCompleted = currData[iterationDocIndex].totalCompleted + 1;
         }
-        currData[iterationDocIndex].totalCompleted = currData[iterationDocIndex].totalCompleted + 1;
       }
     });
     resolve(rollUpIterationsData);
