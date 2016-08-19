@@ -171,6 +171,30 @@ var team = {
     });
   },
   
+  getSquadsTeams: function(teamId) {
+    return new Promise(function(resolve, reject){
+      common.getByViewKey('teams','lookupTeamsWithSquad',teamId)
+        .then(function(results){
+          resolve(results);
+        })
+        .catch(function(err){
+          reject(err);
+        });
+    });
+  },
+
+  getNonSquadsTeams: function() {
+    return new Promise(function(resolve, reject){
+      common.getByView('teams','lookupNonSquad')
+        .then(function(results){
+          resolve(results);
+        })
+        .catch(function(err){
+          reject(err);
+        });
+    });
+  },
+    
   getRootTeams : function(data) {
     return new Promise(function(resolve, reject){
         data.type = 'team';
@@ -719,7 +743,7 @@ var team = {
                                           })
                                           .catch( /* istanbul ignore next */ function(err){
                                             loggers.get('models').info('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
-                                            setTimeOut(teamIndex.initIndex(), 2000);
+                                            setTimeout(teamIndex.initIndex(), 2000);
                                             resolve(bulkDocu['docs']);
                                           }); // updateIndexDocument
                                       }); // updateLookup
@@ -823,7 +847,7 @@ var team = {
                                     })
                                     .catch( /* istanbul ignore next */ function(err){
                                       loggers.get('models').info('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
-                                      setTimeOut(teamIndex.initIndex(), 2000);
+                                      setTimeout(teamIndex.initIndex(), 2000);
                                       resolve(bulkDocu['docs']);
                                     }); // updateIndexDocument
                                 }); // updateLookup
