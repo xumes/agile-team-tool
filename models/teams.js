@@ -207,31 +207,6 @@ var team = {
     });
   },
 
-  getNonSquadsTeams: function() {
-    return new Promise(function(resolve, reject){
-      common.getByView('teams','lookupNonSquad')
-        .then(function(results){
-          resolve(results);
-        })
-        .catch(function(err){
-          reject(err);
-        });
-    });
-  },
-
-  getRootTeams : function(data) {
-    return new Promise(function(resolve, reject){
-        data.type = 'team';
-        common.findBySelector(data)
-          .then(function(results){
-            resolve(results);
-          })
-          .catch( /* istanbul ignore next */ function(err){
-            reject(err);
-          });
-      });
-  },
-
   // define team documents default value when creating a new document
   defaultTeamDoc : function(raw, user){
     var newDocu = raw;

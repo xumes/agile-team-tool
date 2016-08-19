@@ -97,7 +97,7 @@ var index = {
         });
 
         var lookupIndex = _.union(indexDocument.domains, indexDocument.tribes, indexDocument.squads);
-        logger.get('team').info("Index size: " + _.size(lookupIndex));
+        logger.get('models').info("Index size: " + _.size(lookupIndex));
         
         index.updateIndexDocument(lookupIndex)
           .then(function(result) {
