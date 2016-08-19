@@ -6,11 +6,16 @@ var util = require('../helpers/util');
 var iterationModel = require('./iteration');
 var teamModel = require('./teams');
 var moment = require('moment');
+var validate = require('validate.js');
 
 var iterationMonth = 5;
-var squadteamData = {};
-var iterationDocsBySquad = {}
-var iterationDocsCalResults = {};
+var prefix = 'ag_iter_data_';
+var timestamp = Math.floor(Date.now() / 1000);
+var iterationDocRules = require('./validate_rules/iteration.js');
+var snapshotValidationRules = require('./validate_rules/snapshot.js');
+var nonSquadTeamRule = snapshotValidationRules.nonSquadTeamRule;
+var squadTeamRule = snapshotValidationRules.squadTeamRule;
+
 
 var formatErrMsg = /* istanbul ignore next */ function(msg){
   loggers.get('models').info('Error: ', msg);
@@ -26,38 +31,6 @@ var infoLogs = /* istanbul ignore next */ function(msg){
   loggers.get('models').info(msg);
   return;
 };
-
-var prefix = 'ag_iter_data_';
-var timestamp = Math.floor(Date.now() / 1000);
-
-var getTimeRange = function(){
-  var date = new Date();
-  var day  = date.getDate() + 1;
-  var month = date.getMonth() + 1;
-  var year = date.getFullYear();
-  if (day < 10) {
-    day = '0' + day;
-  }
-  var beforeDate;
-  var beforeMonth;
-  var beforeYear;
-  if ((month - iterationMonth) <= 0) {
-    beforeMonth = 12 + (month - iterationMonth);
-    beforeYear = year - 1;
-  } else {
-    beforeMonth = month - iterationMonth;
-    beforeYear = year;
-  }
-  if (beforeMonth < 10) {
-    beforeMonth = '0' + beforeMonth;
-  }
-  if (month < 10) {
-    month = '0' + month;
-  }
-  var nowDate = month + '/' + day + '/' + year;
-  beforeDate = beforeMonth + '/' + day + '/' + beforeYear;
-  return [beforeDate, nowDate];
-}
 
 function resetData(){
   return [
@@ -148,242 +121,354 @@ function resetData(){
   ];
 };
 
-function rollUpSquads(data){
+/**
+ * Get completed iteration docs from startTime to endTime,
+ * and seperate them by team.
+ * @param string startTime (03/18/2016)
+ * @param string endTime (08/18/2016)
+ * @return Object squadIterationDocs
+ */
+function getIterationDocs(startTime, endTime) {
+  var squadIterationDocs = {};
   return new Promise(function(resolve, reject){
-    var currData = resetData();
-    squads = data.value;
-    var returnData = {
-                        '_id' : prefix + data._id,
-                        'value' : [],
-                        'timestamp' : timestamp,
-                        'type' : 'roll_up_data'
-                     };
-    for (var i = 0; i < squads.length; i++) {
-      for (var j = 0; j < iterationMonth; j++) {
-        currData[j].totalPoints = currData[j].totalPoints + squads[i][j].totalPoints;
-        currData[j].totalStories = currData[j].totalStories + squads[i][j].totalStories;
-        currData[j].totalDefects = currData[j].totalDefects + squads[i][j].totalDefects;
-        currData[j].totalDplymts = currData[j].totalDplymts + squads[i][j].totalDplymts;
-        currData[j].totTeamStat = currData[j].totTeamStat + squads[i][j].totTeamStat;
-        currData[j].totTeamStatIter = currData[j].totTeamStatIter + squads[i][j].totTeamStatIter;
-        currData[j].totClientStat = currData[j].totClientStat + squads[i][j].totClientStat;
-        currData[j].totClientStatIter = currData[j].totClientStatIter + squads[i][j].totClientStatIter;
-        currData[j].teamsLt5 = currData[j].teamsLt5 + squads[i][j].teamsLt5;
-        currData[j].teamsGt12 = currData[j].teamsGt12 + squads[i][j].teamsGt12;
-        currData[j].teams5to12 = currData[j].teams5to12 + squads[i][j].teams5to12;
-        currData[j].totalCompleted = currData[j].totalCompleted + squads[i][j].totalCompleted;
-      }
-    }
-    returnData.value = currData;
-    common.getByViewKey('iterations','rollUpData',returnData._id)
-      .then(function(result){
-        if (result.rows.length > 0) {
-          returnData._rev = result.rows[0].value._rev;
-        }
-        resolve(returnData);
+    iterationModel.getCompletedIterationsByKey(startTime,endTime)
+      .then(function(completedIterations){
+        _.each(completedIterations.rows, function(doc){
+          var validationErrors = validate(doc.value, iterationDocRules);
+          if (!validationErrors) {
+            if (doc.value.team_id != '') {
+              var teamId = doc.value.team_id;
+              if (_.isEmpty(squadIterationDocs[teamId])) {
+                squadIterationDocs[teamId] = [];
+              }
+              squadIterationDocs[teamId].push(doc.value);
+            }
+          }
+        });
+        return resolve(squadIterationDocs);
       })
       .catch( /* istanbul ignore next */ function(err){
         var msg = err.error;
+        console.log('1: ',err);
         reject(formatErrMsg(msg));
-      });
-  });
-}
-
-function rollUpSquadIterations(iterationDocs, teamId) {
-
-  return new Promise(function(resolve, reject){
-    var currData = resetData();
-    var currDate = new Date(util.getServerTime());
-    var currMonth = currDate.getMonth();
-    var currYear = currDate.getYear();
-    var startDate = 0;
-    if ((currMonth - iterationMonth) < 0) {
-      startDate = (currYear - 1) * 100 + (12 - Math.abs(currMonth - iterationMonth));
-    } else {
-      startDate = currYear * 100 + (currMonth - iterationMonth);
-    }
-    var finishDate = currYear * 100 + currMonth;
-    if (iterationDocs.length > 0) {
-      for (var i = 0; i < iterationDocs.length; i++) {
-        var iterationDoc = iterationDocs[i];
-        var dataDate = new Date(iterationDoc['iteration_end_dt']);
-        var dataMonth = dataDate.getMonth();
-        var dataYear = dataDate.getYear();
-        if ((dataYear * 100 + dataMonth) >= startDate && (dataYear * 100 + dataMonth) <= finishDate) {
-            dataIndex = 5 - Math.abs(currMonth - dataMonth);
-            var pts = iterationDoc["nbr_story_pts_dlvrd"];
-            var stories = iterationDoc["nbr_stories_dlvrd"];
-            var teamCnt = iterationDoc["team_mbr_cnt"];
-            var defects = iterationDoc["nbr_defects"];
-            var dplymnts = iterationDoc["nbr_dplymnts"];
-            var teamStat = iterationDoc["team_sat"];
-            var clientStat = iterationDoc["client_sat"];
-            if (pts != undefined && pts !=""){
-              currData[dataIndex].totalPoints = currData[dataIndex].totalPoints + parseInt(pts);
-            }
-            if (stories != undefined && stories !=""){
-              currData[dataIndex].totalStories = currData[dataIndex].totalStories+ parseInt(stories);
-            }
-
-            if (defects != undefined && defects !=""){
-              currData[dataIndex].totalDefects = currData[dataIndex].totalDefects + parseInt(defects);
-            }
-            if (dplymnts != undefined && dplymnts !=""){
-              currData[dataIndex].totalDplymts = currData[dataIndex].totalDplymts+ parseInt(dplymnts);
-            }
-
-            if (teamStat != undefined && teamStat !="" && (parseInt(teamStat) != 0)){
-              currData[dataIndex].totTeamStat = currData[dataIndex].totTeamStat + parseInt(teamStat);
-              currData[dataIndex].totTeamStatIter = currData[dataIndex].totTeamStatIter + 1;
-            }
-            if (clientStat != undefined && clientStat !="" && (parseInt(clientStat) != 0)){
-              currData[dataIndex].totClientStat = currData[dataIndex].totClientStat+ parseInt(clientStat);
-              currData[dataIndex].totClientStatIter = currData[dataIndex].totClientStatIter + 1;
-            }
-
-            if(teamCnt != undefined && teamCnt !=""){
-              teamCnt = parseInt(teamCnt);
-              if(teamCnt < 5){
-                currData[dataIndex].teamsLt5 = currData[dataIndex].teamsLt5 + 1;
-              }else if(teamCnt > 12){
-                currData[dataIndex].teamsGt12 = currData[dataIndex].teamsGt12 + 1;
-              }else{
-                currData[dataIndex].teams5to12 = currData[dataIndex].teams5to12 + 1;
-              }
-            }
-            currData[dataIndex].totalCompleted = currData[dataIndex].totalCompleted + 1;
-        }
-      }
-    }
-    iterationDocsCalResults[teamId] = currData;
-
-    resolve(teamId);
+      })
   });
 };
 
-
-function getSquads(teamId) {
-  var squads = {};
-  squads['_id'] = teamId;
-  squads['value'] = [];
-  var schema = resetData();
-  return new Promise(function(resolve, reject){
-    teamModel.getSquadsTeams(teamId)
-      .then(function(result){
-        _.each(result.rows, function(squad){
-          if (_.isEmpty(iterationDocsCalResults[squad.value._id])) {
-            squads['value'].push(schema);
-          } else {
-            squads['value'].push(iterationDocsCalResults[squad.value._id]);
-          }
-        });
-        resolve(squads);
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        var msg = err.error;
-        reject(formatErrMsg(msg));
-      })
-  });
-}
-
+/**
+ * Get all squads teams and return an Object [{parantId, [squads]},...]
+ * @return Array squadTeams
+ */
 function getAllSquads() {
   return new Promise(function(resolve, reject){
-    teamModel.getNonSquadsTeams()
-      .then(function(results){
-        var promiseArray = [];
-        _.each(results.rows, function(team){
-          promiseArray.push(getSquads(team.value._id));
+    teamModel.getNonSquadTeams()
+      .then(function(nonSquadTeams){
+        var squadsByParent = {};
+        _.each(nonSquadTeams.rows, function(nonSquadTeam){
+          if(!(_.isUndefined(nonSquadTeam.value._id)) && !(_.isEmpty(nonSquadTeam.value._id))) {
+            var id = nonSquadTeam.value._id
+            squadsByParent[id] = [];
+          }
         });
-        Promise.all(promiseArray)
-          .then( /* istanbul ignore next */ function(results){
-            resolve(results);
+        //console.log(squadsByParent);
+        teamModel.getSquadTeams()
+          .then(function(squadTeams){
+            _.each(squadTeams.rows, function(squadTeam){
+              if (squadTeam.value.squadteam == 'Yes') {
+                _.each(squadTeam.value.parents, function(parent){
+                  squadsByParent[parent].push(squadTeam.value._id);
+                });
+              }
+            });
+            resolve(squadsByParent);
           })
-          .catch( /* istanbul ignore next */ function(err){
+          .catch(function(err){
             var msg = err.error;
+            console.log(err);
             reject(formatErrMsg(msg));
           });
       })
-      .catch( /* istanbul ignore next */ function(err){
+      .catch(function(err){
         var msg = err.error;
+        console.log(err);
         reject(formatErrMsg(msg));
-      })
+      });
   });
+};
+
+/**
+ * Roll up iteration docs data in the same squad
+ * @param Array iterationDocs
+ * @param string teamId (nonsquad team id)
+ * @return Object rollUpIterationsData
+ */
+function rollUpIterationsBySquad(iterationDocs, teamId) {
+  return new Promise(function(resolve, reject){
+    var currData = resetData();
+    var rollUpIterationsData = {};
+    rollUpIterationsData[teamId] = currData;
+    var currDate = new Date(util.getServerTime());
+    _.each(iterationDocs, function(iterationDoc){
+      var iterationDocData = new Date(iterationDoc['iteration_end_dt']);
+      var iterationDocIndex = 5 - monthDiff(iterationDocData, currDate);
+      if (iterationDocIndex < 0 || iterationDocIndex > iterationMonth) {
+        var msg = 'iteationDoc: ' + iterationDocData._id + ' end date is not correct';
+        reject(formatErrMsg(msg));
+      } else {
+        var pts = iterationDoc["nbr_story_pts_dlvrd"];
+        var stories = iterationDoc["nbr_stories_dlvrd"];
+        var teamCnt = iterationDoc["team_mbr_cnt"];
+        var defects = iterationDoc["nbr_defects"];
+        var dplymnts = iterationDoc["nbr_dplymnts"];
+        var teamStat = iterationDoc["team_sat"];
+        var clientStat = iterationDoc["client_sat"];
+        if (pts != undefined && pts !=""){
+          currData[iterationDocIndex].totalPoints = currData[iterationDocIndex].totalPoints + parseInt(pts);
+        }
+        if (stories != undefined && stories !=""){
+          currData[iterationDocIndex].totalStories = currData[iterationDocIndex].totalStories+ parseInt(stories);
+        }
+
+        if (defects != undefined && defects !=""){
+          currData[iterationDocIndex].totalDefects = currData[iterationDocIndex].totalDefects + parseInt(defects);
+        }
+        if (dplymnts != undefined && dplymnts !=""){
+          currData[iterationDocIndex].totalDplymts = currData[iterationDocIndex].totalDplymts+ parseInt(dplymnts);
+        }
+
+        if (teamStat != undefined && teamStat !="" && (parseInt(teamStat) != 0)){
+          currData[iterationDocIndex].totTeamStat = currData[iterationDocIndex].totTeamStat + parseInt(teamStat);
+          currData[iterationDocIndex].totTeamStatIter = currData[iterationDocIndex].totTeamStatIter + 1;
+        }
+        if (clientStat != undefined && clientStat !="" && (parseInt(clientStat) != 0)){
+          currData[iterationDocIndex].totClientStat = currData[iterationDocIndex].totClientStat+ parseInt(clientStat);
+          currData[iterationDocIndex].totClientStatIter = currData[iterationDocIndex].totClientStatIter + 1;
+        }
+
+        if(teamCnt != undefined && teamCnt !=""){
+          teamCnt = parseInt(teamCnt);
+          if(teamCnt < 5){
+            currData[iterationDocIndex].teamsLt5 = currData[iterationDocIndex].teamsLt5 + 1;
+          }else if(teamCnt > 12){
+            currData[iterationDocIndex].teamsGt12 = currData[iterationDocIndex].teamsGt12 + 1;
+          }else{
+            currData[iterationDocIndex].teams5to12 = currData[iterationDocIndex].teams5to12 + 1;
+          }
+        }
+        currData[iterationDocIndex].totalCompleted = currData[iterationDocIndex].totalCompleted + 1;
+      }
+    });
+    resolve(rollUpIterationsData);
+  });
+};
+
+/**
+ * Roll up squads data together by non-squad team
+ * @param Object squads
+ * @param string teamId (non-squad team id)
+ * @param Object squadsCalResults
+ * @return nonSquadCalResult
+ */
+function rollUpIterationsByNonSquad(squads, nonSquadTeamId, squadsCalResults, isUpdate, oldRollUpDataRev){
+  return new Promise(function(resolve, reject){
+    var squadDoc = squads;
+    var currData = resetData();
+    var nonSquadCalResult = {
+                        '_id' : prefix + nonSquadTeamId,
+                        'value' : currData,
+                        'team_id' : nonSquadTeamId,
+                        'timestamp' : timestamp,
+                        'type' : 'roll_up_data'
+                     };
+    for (var i = 0; i < squadDoc.length; i++) {
+      for (var j = 0; j < iterationMonth; j++) {
+        if (!(_.isEmpty(squadsCalResults[squadDoc[i]])) && !(_.isUndefined(squadsCalResults[squadDoc[i]]))) {
+          var squadIterationResult = squadsCalResults[squadDoc[i]];
+          currData[j].totalPoints = currData[j].totalPoints + squadIterationResult[j].totalPoints;
+          currData[j].totalStories = currData[j].totalStories + squadIterationResult[j].totalStories;
+          currData[j].totalDefects = currData[j].totalDefects + squadIterationResult[j].totalDefects;
+          currData[j].totalDplymts = currData[j].totalDplymts + squadIterationResult[j].totalDplymts;
+          currData[j].totTeamStat = currData[j].totTeamStat + squadIterationResult[j].totTeamStat;
+          currData[j].totTeamStatIter = currData[j].totTeamStatIter + squadIterationResult[j].totTeamStatIter;
+          currData[j].totClientStat = currData[j].totClientStat + squadIterationResult[j].totClientStat;
+          currData[j].totClientStatIter = currData[j].totClientStatIter + squadIterationResult[j].totClientStatIter;
+          currData[j].teamsLt5 = currData[j].teamsLt5 + squadIterationResult[j].teamsLt5;
+          currData[j].teamsGt12 = currData[j].teamsGt12 + squadIterationResult[j].teamsGt12;
+          currData[j].teams5to12 = currData[j].teams5to12 + squadIterationResult[j].teams5to12;
+          currData[j].totalCompleted = currData[j].totalCompleted + squadIterationResult[j].totalCompleted;
+        }
+      }
+    }
+    if (isUpdate) {
+      if(!(_.isEmpty(oldRollUpDataRev)) && !(_.isUndefined(oldRollUpDataRev))) {
+        nonSquadCalResult._rev = oldRollUpDataRev;
+      }
+    }
+    resolve(nonSquadCalResult);
+  });
+};
+
+/**
+ * Get _rev for roll up data
+ * @return Object {teamid:_rev}
+ */
+function getRollUpDataHistory() {
+  return new Promise(function(resolve, reject){
+     common.getByView('iterations','rollUpData')
+      .then(function(oldRollUpData){
+        var rollUpDataRevs = {};
+        _.each(oldRollUpData.rows, function(data){
+          rollUpDataRevs[data.value._id] = data.value._rev;
+        });
+        resolve(rollUpDataRevs);
+      })
+      .catch(function(err){
+
+      })
+  })
+}
+/**
+ * Calculate month different
+ * @param date d1 (start time)
+ * @param date d2 (end time)
+ * @return int months
+ */
+function monthDiff(d1, d2) {
+    var months;
+    months = (d2.getFullYear() - d1.getFullYear()) * 12;
+    months -= d1.getMonth();
+    months += d2.getMonth();
+    return months;
+};
+
+/**
+ * Get a dateobject (Six months previous) from another date object
+ * @param date date
+ * @param int months
+ * @return date newDate
+ */
+function addMonths(date, months) {
+  var newDate = new Date(util.getServerTime());
+  newDate.setMonth(date.getMonth() + months);
+  return new Date(newDate);
 }
 
-function getAllIterationDocs(startTime, endTime) {
-  return new Promise(function(resolve, reject){
-    iterationDocsBySquad = {};
-    iterationModel.getCompletedIterationsByKey(startTime,endTime)
-      .then(function(results){
-        _.each(results.rows, function(doc){
-          if (!(_.isEmpty(doc.value.team_id))) {
-            var teamId = doc.value.team_id;
-            if (_.isEmpty(iterationDocsBySquad[teamId])) {
-              iterationDocsBySquad[teamId] = [];
-            }
-            iterationDocsBySquad[teamId].push(doc.value);
-          }
-        });
-        var promiseArray = [];
-        _.each(Object.keys(iterationDocsBySquad), function(teamId){
-          promiseArray.push(rollUpSquadIterations(iterationDocsBySquad[teamId], teamId));
-        });
-        Promise.all(promiseArray)
-          .then(function(results){
-            //resolve(iterationDocsCalResults);
-            getAllSquads()
-              .then(function(results){
-                var promiseArray2 = []
-                _.each(results, function(team){
-                  promiseArray2.push(rollUpSquads(team));
+var snapshot = {
+  updateRollUpData : /* istanbul ignore next */ function() {
+    return new Promise(function(resolve, reject){
+      iterationMonth = 5;
+      var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+      var endTime = new Date(util.getServerTime());
+      var startTime = addMonths(endTime, -iterationMonth);
+      endTime = endTime.toLocaleDateString('en-US',options);
+      startTime = startTime.toLocaleDateString('en-US',options);
+      var promiseArray = [];
+      promiseArray.push(getIterationDocs(startTime, endTime));
+      promiseArray.push(getAllSquads());
+      promiseArray.push(getRollUpDataHistory());
+      Promise.all(promiseArray)
+        .then(function(promiseResults){
+          var squadIterationDocs = promiseResults[0];
+          var squadsByParent = promiseResults[1];
+          var oldRollUpDataRevs = promiseResults[2];
+          var promiseArray2 = [];
+          _.each(Object.keys(squadIterationDocs), function(squadTeamId){
+            promiseArray2.push(rollUpIterationsBySquad(squadIterationDocs[squadTeamId],squadTeamId));
+          });
+          Promise.all(promiseArray2)
+            .then(function(squadsCalResultsArray){
+              var squadsCalResults = {};
+              _.each(squadsCalResultsArray, function(squadsCalResult){
+                squadsCalResults[Object.keys(squadsCalResult)[0]] = squadsCalResult[Object.keys(squadsCalResult)[0]];
+              });
+              var promiseArray3 = [];
+              _.each(Object.keys(squadsByParent), function(nonSquadTeamId){
+                promiseArray3.push(rollUpIterationsByNonSquad(squadsByParent[nonSquadTeamId], nonSquadTeamId, squadsCalResults, true, oldRollUpDataRevs[prefix+nonSquadTeamId]));
+              });
+              Promise.all(promiseArray3)
+                .then(function(nonSquadCalResults){
+                  var updateRequest = {'docs' : nonSquadCalResults};
+                  common.bulkUpdate(updateRequest)
+                    .then(function(results){
+                      resolve(results);
+                    })
+                    .catch( /* istanbul ignore next */ function(err){
+                      var msg = err.error;
+                      console.log(err);
+                      reject(formatErrMsg(msg));
+                    });
+                })
+                .catch( /* istanbul ignore next */ function(err){
+                  var msg = err.error;
+                  console.log(err);
+                  reject(formatErrMsg(msg));
                 });
-                Promise.all(promiseArray2)
-                  .then(function(results){
-                    var updateRequest = {'docs' : results};
-                    common.bulkUpdate(updateRequest)
-                      .then(function(results){
-                        resolve(results);
-                      })
-                      .catch( /* istanbul ignore next */ function(err){
-                        var msg = err.error;
-                        reject(formatErrMsg(msg));
-                      });
+            })
+            .catch( /* istanbul ignore next */ function(err){
+              var msg = err.error;
+              console.log(err);
+              reject(formatErrMsg(msg));
+            });
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          var msg = err.error;
+          console.log(err);
+          reject(formatErrMsg(msg));
+        });
+    });
+  },
+
+  getRollUpData : function(startTime, endTime) {
+    return new Promise(function(resolve, reject){
+      var squadIterationDocs = {};
+      iterationMonth = monthDiff(new Date(startTime), new Date(endTime));
+      if (iterationMonth < 0) {
+        var msg = 'end time is before start time';
+        reject(formatErrMsg(msg));
+      } else {
+        var promiseArray = [];
+        promiseArray.push(getIterationDocs(startTime, endTime));
+        promiseArray.push(getAllSquads());
+        Promise.all(promiseArray)
+          .then(function(promiseResults){
+            var squadIterationDocs = promiseResults[0];
+            var squadsByParent = promiseResults[1];
+            var promiseArray2 = [];
+            _.each(Object.keys(squadIterationDocs), function(squadTeamId){
+              promiseArray2.push(rollUpIterationsBySquad(squadIterationDocs[squadTeamId],squadTeamId));
+            });
+            Promise.all(promiseArray2)
+              .then(function(squadsCalResultsArray){
+                var squadsCalResults = {};
+                _.each(squadsCalResultsArray, function(squadsCalResult){
+                  squadsCalResults[Object.keys(squadsCalResult)[0]] = squadsCalResult[Object.keys(squadsCalResult)[0]];
+                });
+                var promiseArray3 = [];
+                _.each(Object.keys(squadsByParent), function(nonSquadTeamId){
+                  promiseArray3.push(rollUpIterationsByNonSquad(squadsByParent[nonSquadTeamId], nonSquadTeamId, squadsCalResults, false, {}));
+                });
+                Promise.all(promiseArray3)
+                  .then(function(nonSquadCalResults){
+                    resolve(nonSquadCalResults);
                   })
                   .catch( /* istanbul ignore next */ function(err){
                     var msg = err.error;
+                    console.log('5: ',err);
                     reject(formatErrMsg(msg));
-                  });
+                  })
               })
               .catch( /* istanbul ignore next */ function(err){
                 var msg = err.error;
+                console.log('6: ',err);
                 reject(formatErrMsg(msg));
               })
           })
           .catch( /* istanbul ignore next */ function(err){
             var msg = err.error;
+            console.log('7: ',err);
             reject(formatErrMsg(msg));
-          });
-        //resolve(iterationDocsBySquad);
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        var msg = err.error;
-        reject(formatErrMsg(msg));
-      });
-  });
-}
-
-var snapshot = {
-  calculation : function() {
-    var timeRange = getTimeRange();
-    return new Promise(function(resolve, reject){
-      getAllIterationDocs(timeRange[0],timeRange[1])
-        .then(function(result){
-          resolve(result);
-        })
-        .catch(function(err){
-          var msg = err.error;
-          reject(formatErrMsg(msg));
-        })
+          })
+      }
     });
   }
 };

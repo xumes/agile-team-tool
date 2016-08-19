@@ -6,7 +6,8 @@ var _       = require('underscore');
 var util    = require('../../../helpers/util')
 var agent   = request.agent(app);
 
-describe('Snapshot API Test [GET /api/snapshot/rollUpData]: calculate and update non squad teams iteartions' , function(){
+describe('Snapshot API Test [GET /api/snapshot/getrollupdata]: calculate and update non squad teams iteartions' , function(){
+  this.timeout(60000);
   // do the login befre testing
   before(function(done) {
     agent
@@ -20,7 +21,7 @@ describe('Snapshot API Test [GET /api/snapshot/rollUpData]: calculate and update
   });
 
   it('Successfully update', function(done){
-    var req = request(app).get('/api/snapshot/rollUpData');
+    var req = request(app).get('/api/snapshot/getrollupdata');
     agent.attachCookies(req);
     req.end(function(err, res){
       if (err) {

@@ -334,9 +334,9 @@ var team = {
   //   });
   // },
 
-  getSquadsTeams: function(teamId) {
+  getSquadTeams: function(teamId) {
     return new Promise(function(resolve, reject){
-      common.getByViewKey('teams','lookupTeamsWithSquad',teamId)
+      common.getByViewKey('teams','lookup')
         .then(function(results){
           resolve(results);
         })
@@ -346,7 +346,7 @@ var team = {
     });
   },
 
-  getNonSquadsTeams: function() {
+  getNonSquadTeams: function() {
     return new Promise(function(resolve, reject){
       common.getByView('teams','lookupNonSquad')
         .then(function(results){
