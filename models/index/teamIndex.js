@@ -38,7 +38,7 @@ var index = {
       indexDocument.tribes = [];
       indexDocument.squads = [];
 
-      logger.get('model').info("Processing all teams for lookup index.");
+      logger.get('models').info("Processing all teams for lookup index.");
       common.getByView('teams', 'teams')
       .then(function(allTeams) {
         var allTeams = util.returnObject(allTeams);
