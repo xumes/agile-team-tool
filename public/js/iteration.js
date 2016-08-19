@@ -362,7 +362,7 @@ function loadAgileTeamIterationInfo(teamId, iterationId) {
   })
   .fail(function(xhr, textStatus, errorThrown) {
     if (xhr.status === 400) {
-      handleSearchAllErrors(xhr, textStatus, errorThrown);
+      errorHandler(xhr, textStatus, errorThrown);
     }
   })
   .done(function(data) {
@@ -413,7 +413,7 @@ function loadSelectedAgileTeamIterationInfo() {
   })
   .fail(function(xhr, textStatus, errorThrown) {
     if (xhr.status === 400) {
-      handleSearchAllErrors(xhr, textStatus, errorThrown);
+      errorHandler(xhr, textStatus, errorThrown);
     }
   })
   .done(function(data) {
@@ -534,7 +534,7 @@ function updateIterationCache(iteration) {
   })
   .fail(function(xhr, textStatus, errorThrown) {
     if (xhr.status === 400) {
-      handleSearchAllErrors(xhr, textStatus, errorThrown);
+      errorHandler(xhr, textStatus, errorThrown);
     }
   })
   .done(function(data) {

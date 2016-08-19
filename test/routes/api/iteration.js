@@ -315,7 +315,7 @@ describe('Iteration API Test', function(){
         } else {
           expect(res.statusCode).to.be.equal(400);
           expect(res.body).to.have.property('error');
-          expect(res.body.error.error).to.be.equal('not_found');
+          expect(res.body.error).to.be.equal('not_found');
         }
         done();
       });

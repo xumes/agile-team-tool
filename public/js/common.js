@@ -178,37 +178,25 @@ var getServerDateTime = function() {
  * @param errorThrown
  */
 function errorHandler(xhr, textStatus, errorThrown) {
-	if (xhr.status == 400) {
-		var errMsgs = JSON.parse(xhr.responseText);
-		if (!_.isEmpty(errMsgs)) {
-			var msg = '';
-			if (errMsgs.error instanceof Array || errMsgs.error instanceof Object)
-			  _.each(errMsgs.error, function (err) {
-			    msg = msg + err[0];
-			    msg = msg + '<br>';
-			  });
-			else
-				msg = errMsgs.error;
-		 }
-  	showMessagePopup(msg);
-	
-	} else {
-		showMessagePopup("Something went wrong: " + errorThrown);
-	}
-}
-
-function handleSearchAllErrors(jqXHR, textStatus, errorThrown) {
-  var errorlist = '';
-  var response = jqXHR.responseText;
-  console.log('Error response:', response);
-  if (response) {
-    var msg = '';
-    var errMsgs = JSON.parse(response);
-    _.each(errMsgs.error, function (err) {
-      msg = msg + err[0];
-      msg = msg + '<br>';
-    });
+  if (xhr.status == 400) {
+    var errMsgs = JSON.parse(xhr.responseText);
+    if (!_.isEmpty(errMsgs)) {
+      var msg = '';
+      if (errMsgs.error instanceof Array || errMsgs.error instanceof Object) {
+        _.each(errMsgs.error, function (err) {
+          msg = msg + err[0];
+          msg = msg + '<br>';
+        });
+      } else {
+        msg = errMsgs.error;
+        if (msg == 'not_found') {
+          msg = "Record does not exist in the database!"
+        }
+      }
+    }
     showMessagePopup(msg);
+  } else {
+    showMessagePopup("Something went wrong: " + errorThrown);
   }
 }
 
