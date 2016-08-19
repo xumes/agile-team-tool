@@ -212,26 +212,37 @@ module.exports.isUserAllowed = function(userId, teamId, checkParent, allTeams, u
 module.exports.returnObject = function(data) {
   // pre process returned rows so we deal directly with the document objects
   // doc attribute of data are valid for compacted views that requested for "include_doc=true"
+  // field attribute of data are valid for index queries that exposes fields as part of query result
   var returnData = new Object();
   if (_.has(data, 'rows')) {
-    if (_.has(data.rows, 'doc') || _.find(data.rows, 'doc'))
-      returnData = _.pluck(data.rows, 'doc');
-    else if (_.has(data.rows, 'value') || _.find(data.rows, 'value'))
-      returnData =  _.pluck(data.rows, 'value');
-    else if (_.find(data.rows, 'fields') != null){
-      var result = _.map(data.rows, function(val, key){
-        return _.extend(val.fields, {'_id':val.id});
-      });
-      returnData =  result;
-    }
-    else
+    if (!_.isEmpty(data.rows)) {
+      if (_.has(data.rows[0], 'doc'))
+        returnData = _.pluck(data.rows, 'doc');
+      else if (_.has(data.rows[0], 'value'))
+        returnData =  _.pluck(data.rows, 'value');
+      else if (_.has(data.rows[0], 'fields')) {
+        returnData = _.map(data.rows, function(val, key) {
+          //add document id property into each fields result
+          var merged = _.extend(val.fields, {'_id':val.id});
+            return merged;
+          });
+      }
+    } else
       returnData =  data.rows;
   } else if (data instanceof Array) {
-    if (_.has(data[0], 'doc') && !_.isEmpty(data[0].doc)) 
-      returnData =  _.pluck(data, 'doc');
-    else if (_.has(data[0], 'value') && !_.isEmpty(data[0].value))
-      returnData =  _.pluck(data, 'value');
-    else 
+    if (!_.isEmpty(data)) {
+      if (_.has(data[0], 'doc') && !_.isEmpty(data[0].doc)) 
+        returnData =  _.pluck(data, 'doc');
+      else if (_.has(data[0], 'value') && !_.isEmpty(data[0].value))
+        returnData =  _.pluck(data, 'value');
+      else if (_.has(data[0], 'fields') && !_.isEmpty(data[0].fields)) {
+        returnData = _.map(data.rows, function(val, key) {
+          //add document id property into each fields result
+          var merged = _.extend(val.fields, {'_id':val.id});
+            return merged;
+          });
+      }
+    } else
       returnData =  data;
   } else
     returnData =  data;
