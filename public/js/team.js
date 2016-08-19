@@ -276,7 +276,8 @@ function loadSelectedAgileTeam() {
         if (!_.isEmpty(data)) {
           //var list = _.pluck(data.rows, "value");
           //teamAssessments = list;
-          loadAssessmentInformation(sortAssessments(data), false);
+          //loadAssessmentInformation(sortAssessments(data), false);
+          loadAssessmentInformation(data, false);
         }
       });
 
