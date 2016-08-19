@@ -395,9 +395,8 @@ describe('Assessment Model', function() {
     it("retrieve team assessments [valid team id]", function(done){
       assessmentModel.getTeamAssessments(sub_assessment.team_id)
         .then(function(body){
-          expect(body).to.be.an('object');
-          expect(body).to.have.property('rows');
-          var idRecords = _.pluck(body.rows, 'id');
+          expect(body).to.be.instanceof(Array);
+          var idRecords = _.pluck(body, '_id');
           expect(idRecords).to.have.contain(sub_assessment._id);
           done();
         })
@@ -409,7 +408,8 @@ describe('Assessment Model', function() {
     it("retrieve team assessments [non-existing team id]", function(done){
       assessmentModel.getTeamAssessments(invalidTeamId)
         .then(function(body){
-          expect(body.rows).to.be.empty;
+          expect(body).to.be.instanceof(Array);
+          expect(body).to.be.empty;
           done();
         })
         .catch(function(err){

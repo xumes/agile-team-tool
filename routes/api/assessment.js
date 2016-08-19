@@ -7,8 +7,9 @@ module.exports = function(app, includes) {
   getAssessment = function(req, res) {
     var teamId = req.query.teamId;
     var assessId = req.query.assessId;
+    var docs = req.query.docs;
     if (!_.isUndefined(teamId)){
-      assessmentModel.getTeamAssessments(teamId)
+      assessmentModel.getTeamAssessments(teamId, docs)
       .then(function(result){
         res.send(result);
       })

@@ -122,7 +122,7 @@ function retrieveAssessmentResult(teamId, assessId){
 
 function teamListHandler(teamId, assessId, teamList) {
 	team = allTeamsLookup[teamId];
-	getTeamAssessments(teamId, processData, [teamId, assessId]);
+	getTeamAssessments(teamId, true, processData, [teamId, assessId]);
 }
 
 function getSummaryData(teamId, assessId){
@@ -132,7 +132,7 @@ function getSummaryData(teamId, assessId){
 			data: {"key":"\""+encodeURIComponent(teamId)+"\""},
 			dataType: "jsonp"
 		}).done (function(data) {
-			getTeamAssessments(teamId, processData, [teamId, assessId]);
+			getTeamAssessments(teamId, true, processData, [teamId, assessId]);
 	});
 }
 
@@ -551,13 +551,13 @@ function updateActionPlan(action){
 		addEmptyRow();
 		break;
 	case "delete":
-		getTeamAssessments(team._id, deleteActionItems, []);
+		getTeamAssessments(team._id, true, deleteActionItems, []);
 		break;
 	case "update":
-		getTeamAssessments(team._id, processActionPlan, []);
+		getTeamAssessments(team._id, true, processActionPlan, []);
 		break;
 	case "reset":
-		getTeamAssessments(team._id, resetActionPlan, []);
+		getTeamAssessments(team._id, true, resetActionPlan, []);
 		break;
 	}
 }

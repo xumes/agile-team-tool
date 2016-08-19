@@ -176,10 +176,11 @@ describe('Assessment API Test', function(){
       agent.attachCookies(req);
       req.end(function(err, res){
         expect(res.statusCode).to.be.equal(200);
-        expect(res.body).to.be.a('object');
-        expect(res.body).to.have.property('rows');
-        expect(res.body.rows[0]).to.have.property('key');
-        expect(res.body.rows[0].key).to.be.equal(curr_assessment.team_id);
+        expect(res.body).to.be.instanceof(Array);
+        var idRecords = _.pluck(res.body, '_id');
+        expect(idRecords).to.have.contain(curr_assessment._id);
+        var iteamIRecords = _.pluck(res.body, 'team_id');
+        expect(iteamIRecords).to.have.contain(curr_assessment.team_id);
         done();
       });
     });

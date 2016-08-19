@@ -214,10 +214,16 @@ module.exports.returnObject = function(data) {
   // doc attribute of data are valid for compacted views that requested for "include_doc=true"
   var returnData = new Object();
   if (_.has(data, 'rows')) {
-    if (_.has(data.rows, 'doc'))
+    if (_.has(data.rows, 'doc') || _.find(data.rows, 'doc'))
       returnData = _.pluck(data.rows, 'doc');
-    else if (!_.has(data.rows, 'value'))
+    else if (_.has(data.rows, 'value'))
       returnData =  _.pluck(data.rows, 'value');
+    else if (_.find(data.rows, 'fields') != null){
+      var result = _.map(data.rows, function(val, key){
+        return _.extend(val.fields, {'_id':val.id});
+      });
+      returnData =  result;
+    }
     else
       returnData =  data.rows;
   } else if (data instanceof Array) {

@@ -701,7 +701,7 @@ function loadDetails(elementId, setScrollPosition) {
 
 					if (isSquadTeam) {
 						getTeamIterations(team["_id"], teamIterationListHander, [team["_id"]]);
-						getTeamAssessments(team["_id"], teamAssessmentListHander, [team["_id"]]);
+						getTeamAssessments(team["_id"], true, teamAssessmentListHander, [team["_id"]]);
 						//this is done to display back the 2 other chart groups as 1st batch of rollup will only show velocity and throughput
 						//$("#chartgrp2").show();
 						//$("#chartgrp3").show();
