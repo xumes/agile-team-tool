@@ -405,6 +405,19 @@ describe('Assessment Model', function() {
         });
     });
 
+    it("retrieve team assessments [valid team id-all assessment information]", function(done){
+      assessmentModel.getTeamAssessments(sub_assessment.team_id, 'true')
+        .then(function(body){
+          expect(body).to.be.instanceof(Array);
+          var idRecords = _.pluck(body, '_id');
+          expect(idRecords).to.have.contain(sub_assessment._id);
+          done();
+        })
+        .catch(function(err){
+          done(err);
+        });
+    });
+
     it("retrieve team assessments [non-existing team id]", function(done){
       assessmentModel.getTeamAssessments(invalidTeamId)
         .then(function(body){
