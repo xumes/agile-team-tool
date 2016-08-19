@@ -27,6 +27,30 @@ var infoLogs = function(msg){
 };
 
 var team = {
+  getNonSquadTeams: function() {
+    return new Promise(function(resolve, reject) {
+      common.getByView('teams', 'lookup')
+        .then(function(result){
+          resolve(result);
+        })
+        .catch(function(err){
+          reject(err);
+        });
+    });
+  },
+
+  getSquadTeams: function() {
+    return new Promise(function(resolve, reject) {
+      common.getByView('teams', 'lookupTeamsWithSquad')
+        .then(function(result){
+          resolve(result);
+        })
+        .catch(function(err){
+          reject(err);
+        });
+    });
+  },
+
   getSelectableParents: function(teamId) {
     return new Promise(function(resolve, reject) {
       if (_.isEmpty(teamId))
@@ -170,7 +194,7 @@ var team = {
       }
     });
   },
-  
+
   getSquadsTeams: function(teamId) {
     return new Promise(function(resolve, reject){
       common.getByViewKey('teams','lookupTeamsWithSquad',teamId)
@@ -194,7 +218,7 @@ var team = {
         });
     });
   },
-    
+
   getRootTeams : function(data) {
     return new Promise(function(resolve, reject){
         data.type = 'team';
@@ -267,7 +291,7 @@ var team = {
                     teamIndex.updateLookup(indexDocument, [lookupObj])
                       .then(function(lookupIndex) {
                         teamIndex.updateIndexDocument(lookupIndex)
-                          .then(function(result) {                             
+                          .then(function(result) {
                             loggers.get('models').info('Success: New team record created');
                             resolve(teamDoc);
                           })
@@ -279,7 +303,7 @@ var team = {
                       }); // updateLookup
                     })
                     .catch( /* istanbul ignore next */ function(err){
-                      loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);                              
+                      loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);
                       resolve(teamDoc);
                     }); // getIndexDocument
                 })
@@ -287,7 +311,7 @@ var team = {
                   // cannot simulate Cloudant error during testing
                   reject(err);
                 }); // addRecord
-                  
+
             }else{
               msg = { name : ['This team name already exists. Please enter a different team name'] };
               return reject(formatErrMsg(msg));
@@ -351,7 +375,7 @@ var team = {
                       teamIndex.updateLookup(indexDocument, [lookupObj])
                         .then(function(lookupIndex) {
                           teamIndex.updateIndexDocument(lookupIndex)
-                            .then(function(result) {                             
+                            .then(function(result) {
                               loggers.get('models').info('Success: Team, assessment and iteration documents bulk deleted');
                               resolve(results[0]);
                             })
@@ -363,7 +387,7 @@ var team = {
                         }); // updateLookup
                     })
                     .catch( /* istanbul ignore next */ function(err){
-                      loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);                              
+                      loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);
                       resolve(results[0]);
                     }); // getIndexDocument
 
@@ -509,7 +533,7 @@ var team = {
                           teamIndex.updateLookup(indexDocument, [lookupObj])
                             .then(function(lookupIndex) {
                               teamIndex.updateIndexDocument(lookupIndex)
-                                .then(function(result) {                             
+                                .then(function(result) {
                                   loggers.get('models').info('Success: Team document ' + finalTeamDoc['_id'] + ' successfully updated');
                                   resolve(finalTeamDoc);
                                 })
@@ -521,7 +545,7 @@ var team = {
                             }); // updateLookup
                         })
                         .catch( /* istanbul ignore next */ function(err){
-                          loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);                              
+                          loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);
                           resolve(finalTeamDoc);
                         }); // getIndexDocument
 
@@ -737,7 +761,7 @@ var team = {
                                     teamIndex.updateLookup(indexDocument, [lookupObj])
                                       .then(function(lookupIndex) {
                                         teamIndex.updateIndexDocument(lookupIndex)
-                                          .then(function(result) {                             
+                                          .then(function(result) {
                                             loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully associated to parent ' + teamObj['targetParent']);
                                             resolve(bulkDocu['docs']);
                                           })
@@ -749,7 +773,7 @@ var team = {
                                       }); // updateLookup
                                   })
                                   .catch( /* istanbul ignore next */ function(err){
-                                    loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);                              
+                                    loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);
                                     resolve(bulkDocu['docs']);
                                   }); // getIndexDocument
 
@@ -821,7 +845,7 @@ var team = {
                     });
                     Promise.all(associateChild)
                     .then(function(result){
-                      var lookupObjArr = []; 
+                      var lookupObjArr = [];
                       _.each(result, function(team) {
                         if (teamObj['targetChild'].indexOf(team._id) > -1 && !_.isEqual(teamObj['teamId'], team._id)) {
                           var lookupObj = teamIndex.createLookupObj(team._id, team.name, team.squadteam, '', teamObj['teamId'], team.parent_team_id);
@@ -841,7 +865,7 @@ var team = {
                               teamIndex.updateLookup(indexDocument, lookupObjArr)
                                 .then(function(lookupIndex) {
                                   teamIndex.updateIndexDocument(lookupIndex)
-                                    .then(function(result) {                             
+                                    .then(function(result) {
                                       loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully associated to child ' + JSON.stringify(teamObj['targetChild']));
                                       resolve(bulkDocu['docs']);
                                     })
@@ -853,7 +877,7 @@ var team = {
                                 }); // updateLookup
                             })
                             .catch( /* istanbul ignore next */ function(err){
-                              loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);                              
+                              loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);
                               resolve(bulkDocu['docs']);
                             }); // getIndexDocument
 
@@ -918,7 +942,7 @@ var team = {
                                 teamIndex.updateLookup(indexDocument, [lookupObj])
                                   .then(function(lookupIndex) {
                                     teamIndex.updateIndexDocument(lookupIndex)
-                                      .then(function(result) {                             
+                                      .then(function(result) {
                                         loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully removed parent team ' + teamObj['targetParent']);
                                         resolve(bulkDocu['docs']);
                                       })
@@ -930,7 +954,7 @@ var team = {
                                   }); // updateLookup
                               })
                               .catch( /* istanbul ignore next */ function(err){
-                                loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);                              
+                                loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);
                                 resolve(bulkDocu['docs']);
                               });
 
@@ -998,7 +1022,7 @@ var team = {
                               teamIndex.updateLookup(indexDocument, lookupObjArr)
                                 .then(function(lookupIndex) {
                                   teamIndex.updateIndexDocument(lookupIndex)
-                                    .then(function(result) {                             
+                                    .then(function(result) {
                                       loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully removed child team ' + JSON.stringify(teamObj['targetChild']));
                                       resolve(bulkDocu['docs']);
                                     })
@@ -1010,7 +1034,7 @@ var team = {
                                 }); // updateLookup
                             })
                             .catch( /* istanbul ignore next */ function(err){
-                              loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);                              
+                              loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);
                               resolve(bulkDocu['docs']);
                             });
                           // loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully removed child team' + JSON.stringify(teamObj['targetChild']));
@@ -1026,9 +1050,9 @@ var team = {
                   })
                 }
                 break;
-            }  
+            }
           })
-          
+
         })
         .catch(/* istanbul ignore next */ function(err){
           // cannot simulate Cloudant error during testing
@@ -1060,16 +1084,16 @@ var formattedDocuments = function(doc, action){
             tempDocHolder[0]['parent_team_id'] = teamToBeParent['_id'];
             tempDocHolder[2]['child_team_id'] = newChildTeamId;
             _.each(tempDocHolder, function(v,i,l){
-              tempDocHolder[i]['child_team_id'] = _.uniq(tempDocHolder[i]['child_team_id']);  
-            
+              tempDocHolder[i]['child_team_id'] = _.uniq(tempDocHolder[i]['child_team_id']);
+
             })
             resolve(tempDocHolder);
           })
         }else{
           infoLogs('Current team has no parent, reformat document and do save');
           _.each(tempDocHolder, function(v,i,l){
-            tempDocHolder[i]['child_team_id'] = _.uniq(tempDocHolder[i]['child_team_id']);  
-          
+            tempDocHolder[i]['child_team_id'] = _.uniq(tempDocHolder[i]['child_team_id']);
+
           })
           tempDocHolder[0]['parent_team_id'] = teamToBeParent['_id'];
           resolve(tempDocHolder);
@@ -1101,8 +1125,8 @@ var formattedDocuments = function(doc, action){
           }
         });
        _.each(tempDocHolder, function(v,i,l){
-          tempDocHolder[i]['child_team_id'] = _.uniq(tempDocHolder[i]['child_team_id']);  
-        
+          tempDocHolder[i]['child_team_id'] = _.uniq(tempDocHolder[i]['child_team_id']);
+
         })
         resolve(tempDocHolder);
         /*
