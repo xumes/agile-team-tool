@@ -51,6 +51,19 @@ var team = {
     });
   },
 
+  getRootTeams : function(data) {
+  return new Promise(function(resolve, reject){
+      data.type = 'team';
+      common.findBySelector(data)
+        .then(function(results){
+          resolve(results);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject(err);
+        });
+    });
+  },
+
   getSelectableParents: function(teamId) {
     return new Promise(function(resolve, reject) {
       if (_.isEmpty(teamId))
