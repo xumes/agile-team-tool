@@ -195,16 +195,17 @@ var team = {
     });
   },
 
-  getSquadsTeams: function(teamId) {
+  getRootTeams : function(data) {
     return new Promise(function(resolve, reject){
-      common.getByViewKey('teams','lookupTeamsWithSquad',teamId)
-        .then(function(results){
-          resolve(results);
-        })
-        .catch(function(err){
-          reject(err);
-        });
-    });
+        data.type = 'team';
+        common.findBySelector(data)
+          .then(function(results){
+            resolve(results);
+          })
+          .catch( /* istanbul ignore next */ function(err){
+            reject(err);
+          });
+      });
   },
 
   // define team documents default value when creating a new document
