@@ -2,7 +2,8 @@ function teamAssessmentListHander(teamId, teamAssessments) {
 	$("#gotoAssesmentList").attr("disabled", "disabled");
 	
 	var allowAccess = hasAccess(teamId, true);
-	var listOption = getAssessmentDropdownList(sortAssessments(teamAssessments));
+	//var listOption = getAssessmentDropdownList(sortAssessments(teamAssessments));
+	var listOption = getAssessmentDropdownList(teamAssessments);
 	
 	var draftExist = false;
 	for (var i=0; i<listOption.length; i++) {

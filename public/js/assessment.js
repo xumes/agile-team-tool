@@ -204,7 +204,8 @@ function teamAssessmentListHander(elementId, teamId, assessmentId, teamAssessmen
 	
 	$("#" + elementId).attr("disabled", "disabled");
 	
-	gTeamAssessmentList = sortAssessments(teamAssessments);		
+	//gTeamAssessmentList = sortAssessments(teamAssessments);		
+	gTeamAssessmentList = teamAssessments;
 	var allowAccess = hasAccess(teamId, true);
 	var listOption = getAssessmentDropdownList(gTeamAssessmentList);
 	var firstOption = null;

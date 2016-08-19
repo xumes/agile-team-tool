@@ -77,6 +77,7 @@ var assessment = {
         var params = {
             'q': 'team_id:' +teamId,
             'include_docs': includeDocs,
+            'sort': ['assessmt_status<string>','-sort_dt<number>'],
             'limit': 200
           }
         common.Search('assessments', 'teamSearch', params)  
