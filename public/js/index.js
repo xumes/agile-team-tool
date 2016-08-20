@@ -50,6 +50,7 @@ jQuery(function($) {
       $($(this)).attr('data-state', 'open');
       $("#allTeams").attr('data-state', '');
 			$("#mainContent").hide();
+			$(".nano").nanoScroller({ destroy: true });
       filter($(this).attr("id"));
     }
   });
@@ -264,8 +265,9 @@ function filter(id) {
 			getAllAgileTeamsForUser(user.shortEmail, userAgileTeamListHandler, [true, user.shortEmail]);
 
 	} else {
-		if (allTeams != null)
+		if (allTeams != null){
 			agileTeamListHandler(true, allTeams);
+		}
 		else
 			getAllAgileTeams(agileTeamListHandler, [true]);
 
@@ -377,7 +379,6 @@ function organizeTeamHierarchy(myTeamsOnly) {
 	showLog("Organized teams duration: " + (end-start)/1000);
 	// force and show scroll bar
 	$(".nano").nanoScroller();
-	
 }
 
 function addTeamTwisty(team, twistyId) {
