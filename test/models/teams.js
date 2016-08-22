@@ -1014,3 +1014,42 @@ describe('Team models [indexDocument]: updates the team relation lookup document
       });
   });
 });
+
+describe('Team models [getSelectableParents]', function(){
+  it('it will return empty array because team id is empty', function(done) {
+    teamModel.getSelectableParents(null)
+      .then(function(body){
+        expect(body).to.be.a('array');
+        expect(body).to.have.length(0);
+      })
+      .finally(function(){
+        done();
+      });
+  });
+});
+
+describe('Team models [getSquadsOfParent]', function(){
+  it('it will return empty array because team id is empty', function(done) {
+    teamModel.getSquadsOfParent(null)
+      .then(function(body){
+        expect(body).to.be.a('array');
+        expect(body).to.have.length(0);
+      })
+      .finally(function(){
+        done();
+      });
+  });
+});
+
+describe('Team models [getLookupIndex]', function(){
+  it('it will return empty array because team id is none existent', function(done) {
+    teamModel.getLookupIndex(dummyData.teams.invalidId())
+      .then(function(body){
+        expect(body).to.be.a('array');
+        expect(body).to.have.length(0);
+      })
+      .finally(function(){
+        done();
+      });
+  });
+});
