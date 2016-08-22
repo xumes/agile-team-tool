@@ -11,6 +11,7 @@ var validId;
 var docId;
 var iterationId;
 var adminUser = 'Yanliang.Gu1@ibm.com';
+var timeout = 100000;
 
 var iterationDocValid = iterationTestData.iterationDocValid;
 iterationDocValid.last_updt_user = adminUser;
@@ -20,6 +21,8 @@ iterationDoc_duplicateIterName.last_updt_user = adminUser;
 
 var iterationDocValid_sample2 = iterationTestData.iterationDocValid_sample2;
 iterationDocValid_sample2.last_updt_user = adminUser;
+
+var iterationDocValid_sample3 = iterationTestData.iterationDocValid_sample3;
 
 var iterationDocInvalid = iterationTestData.iterationDocInvalid;
 iterationDocInvalid.last_updt_user = adminUser;
@@ -89,6 +92,7 @@ describe('Iteration API Test', function(){
   });
 
   describe('Iteration API Test [POST /api/iteration]: add team iteration document', function(){
+    this.timeout(timeout);
     it('It will successfully add new iteration document', function(done){
       var req = request(app).post('/api/iteration');
       agent.attachCookies(req);
@@ -139,6 +143,7 @@ describe('Iteration API Test', function(){
   });
 
   describe('Iteration API Test [GET /api/iteration/]: get iteration doucments', function(){
+    this.timeout(timeout);
     it('Get all team iteration documents', function(done){
       var req = request(app).get('/api/iteration/');
       agent.attachCookies(req);
@@ -205,6 +210,7 @@ describe('Iteration API Test', function(){
         done();
       });
     });
+
     it('Search by team id with startdate/enddate', function(done) {
       var query = querystring.stringify({'id':iterationDocValid._id, 'startdate': '20160701', 'enddate': '20160701'});
       var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
@@ -220,9 +226,151 @@ describe('Iteration API Test', function(){
         done();
       });
     });
+
+    it('Search by team id with startdate <= enddate', function(done) {
+      var query = querystring.stringify({'id':iterationDocValid_sample3._id, 'startdate': '20160801', 'enddate': '20160814'});
+      var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
+      agent.attachCookies(req);
+      req.end(function(err, res){
+        if (err) {
+          //console.log(err);
+        } else {
+          expect(res.statusCode).to.be.equal(200);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('rows');
+        }
+        done();
+      });
+    });
+
+    it('Missing TeamId', function(done) {
+      var req = request(app).get('/api/iteration/searchTeamIteration');
+      agent.attachCookies(req);
+      req.end(function(err, res){
+        if (err) {
+          // console.log(err);
+        } else {
+          expect(res.statusCode).to.be.equal(400);
+          expect(res.body.error).to.be.equal('TeamId is required');
+        }
+        done();
+      });
+    });
+
+    it('Cannot retrieve documents with invalid status', function(done) {
+      var query = querystring.stringify({'id':iterationDocValid._id, 'status': 'X'});
+      var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
+      agent.attachCookies(req);
+      req.end(function(err, res){
+        if (err) {
+          // console.log(err);
+        } else {
+          expect(res.statusCode).to.be.equal(400);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.have.property('status');
+        }
+        done();
+      });
+    });
+
+    it('Successfully fetch documents with valid status', function(done) {
+      var query = querystring.stringify({'id':iterationDocValid._id, 'status': 'Y'});
+      var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
+      agent.attachCookies(req);
+      req.end(function(err, res){
+        if (err) {
+          // console.log(err);
+        } else {
+          expect(res.statusCode).to.be.equal(200);
+          expect(res.body).to.have.property('rows');
+        }
+        done();
+      });
+    });
+
+    it('Successfully fetch documents with valid startdate', function(done) {
+      var query = querystring.stringify({'id':iterationDocValid._id, 'startdate': '20160820'});
+      var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
+      agent.attachCookies(req);
+      req.end(function(err, res){
+        if (err) {
+          // console.log(err);
+        } else {
+          expect(res.statusCode).to.be.equal(200);
+          expect(res.body).to.have.property('rows');
+        }
+        done();
+      });
+    });
+
+    it('Cannot retrieve documents with invalid startdate', function(done) {
+      var query = querystring.stringify({'id':iterationDocValid._id, 'startdate': '12345678'});
+      var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
+      agent.attachCookies(req);
+      req.end(function(err, res){
+        if (err) {
+          // console.log(err);
+        } else {
+          expect(res.statusCode).to.be.equal(400);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.have.property('startdate');
+        }
+        done();
+      });
+    });
+
+    it('Successfully fetch documents with valid enddate', function(done) {
+      var query = querystring.stringify({'id':iterationDocValid._id, 'enddate': '20160820'});
+      var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
+      agent.attachCookies(req);
+      req.end(function(err, res){
+        if (err) {
+          // console.log(err);
+        } else {
+          expect(res.statusCode).to.be.equal(200);
+          expect(res.body).to.have.property('rows');
+        }
+        done();
+      });
+    });
+
+    it('Cannot retrieve documents due to invalid enddate', function(done) {
+      var query = querystring.stringify({'id':iterationDocValid._id, 'enddate': '12345678'});
+      var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
+      agent.attachCookies(req);
+      req.end(function(err, res){
+        if (err) {
+          // console.log(err);
+        } else {
+          expect(res.statusCode).to.be.equal(400);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.have.property('enddate');
+        }
+        done();
+      });
+    });
+  });
+
+  describe('Iteration API Test [GET /api/iteration/completed]: get completed iteration', function(){
+    it('Get completed iteration documents', function(done){
+      var query = querystring.stringify({'startkey':iterationDocValid.iteration_start_dt});
+      var req = request(app).get('/api/iteration/completed?' + query);
+      agent.attachCookies(req);
+      req.end(function(err, res){
+        if (err) {
+          //console.log(err);
+        } else {
+          expect(res.statusCode).to.be.equal(200);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('rows');
+        }
+        done();
+      });
+    });
   });
 
   describe('Iteration API Test [PUT /api/iteration/]: update iteration document', function(){
+    this.timeout(timeout);
     it('It will successfully update iteration document', function(done){
       var req = request(app).put('/api/iteration/' + iterationId);
       iterationDocValid_sample2._id = iterationId;
