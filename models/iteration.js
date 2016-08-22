@@ -330,10 +330,11 @@ var iteration = {
     var dateFormat = "MM/DD/YYYY";
     var status;
     var endDate = new Date(iteration_end_dt);
-    var serDate = new Date(util.getServerTime());
-    var d1 = moment(endDate, dateFormat);
-    var d2 = moment(serDate, dateFormat);
-
+    var d1 = moment(endDate).format(dateFormat);
+    var d2 = util.getServerTime();
+    d2 = moment(d2).format(dateFormat);
+    var d1 = moment(d1, dateFormat);
+    var d2 = moment(d2, dateFormat);
     if (d1 <= d2) {
       // console.log('endDate is <= than serDate');
       var diffDays = d2.diff(d1, 'days');

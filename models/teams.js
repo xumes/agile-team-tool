@@ -33,7 +33,7 @@ var team = {
         .then(function(result){
           resolve(result);
         })
-        .catch(function(err){
+        .catch(/* istanbul ignore next */ function(err){
           reject(err);
         });
     });
@@ -45,7 +45,7 @@ var team = {
         .then(function(result){
           resolve(result);
         })
-        .catch(function(err){
+        .catch(/* istanbul ignore next */ function(err){
           reject(err);
         });
     });
