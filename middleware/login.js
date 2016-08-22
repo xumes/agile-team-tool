@@ -88,12 +88,11 @@ module.exports = function(passport) {
       .then(function(ldapObject) {
         ldapObject = typeof ldapObject === 'string' ? JSON.parse(ldapObject) : ldapObject;
         if (!(_.isEmpty(ldapObject['ldap']))) {
-          req.session['email'] = ldapObject['shortEmail'];
+          req.session['email'] = ldapObject['ldap']['preferredIdentity']; //ldapObject['shortEmail'];
           req.session['user'] = ldapObject;
           req.session['environment'] = settings.environment;
           loggers.get('auth').info('Successfully authenticated %s', email);
           loggers.get('auth').info('ldapObject: ', ldapObject);
-          console.log(JSON.stringify(ldapObject));
           return done(null, ldapObject);
         }
         else {
