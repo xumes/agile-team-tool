@@ -23,6 +23,9 @@ var dummy = {
       desc : '',
       squadteam : 'YesNo'
     },
+    invalidId : function(){
+      return 'id_' + crypto.randomBytes(20).toString('hex');
+    },
     validUpdateDoc : function(){
       return {
         name : 'Team document-' + new Date().getTime(),
