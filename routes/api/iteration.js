@@ -84,7 +84,7 @@ module.exports = function(app, includes) {
     }
     // loggers.get('api').info('[createIteration] POST data:', data);
     // console.log('[createIteration] POST data:', data);
-    iterationModel.add(data, req.session['user'], req.session["allTeams"], req.session["myTeams"])
+    iterationModel.add(data, req.session['user'])
     .then(function(result) {
       res.send(result);
     })
@@ -111,7 +111,7 @@ module.exports = function(app, includes) {
       return res.status(400).send({ error: 'Iteration data is missing' });
     }
     // loggers.get('api').info('[updateIteration] POST data:', JSON.stringify(data, null, 4));
-    iterationModel.edit(curIterationId, data, req.session['user'], req.session["allTeams"], req.session["myTeams"])
+    iterationModel.edit(curIterationId, data, req.session['user'])
     .then(function(result) {
       res.send(result);
     })

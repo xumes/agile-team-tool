@@ -14,7 +14,8 @@ module.exports = function(app, includes) {
         'myTeams'         : req.session['myTeams'],
         'systemAdmin'     : req.session['systemAdmin'],
         'systemStatus'    : req.session['systemStatus'],
-        'environment'     : settings.environment
+        'environment'     : settings.environment,
+        'userTeams'       : req.userTeams
       };
     render(req, res, 'home', json);
   };
@@ -22,6 +23,7 @@ module.exports = function(app, includes) {
   app.get('/', 
     [
       includes.middleware.auth.requireLoginWithRedirect,
-      includes.middleware.cache.setHomeCache
+      includes.middleware.cache.setHomeCache,
+      includes.middleware.cache.setUserTeams
     ], showHome);
 };

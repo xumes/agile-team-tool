@@ -58,7 +58,7 @@ describe('Iteration Model', function() {
     this.timeout(timeout);
     it('It will successfully add new iteration document', function(done) {
       iterationDocValid.iteration_name = "testiterationname-" + crypto.randomBytes(4).toString('hex');
-      iterationModel.add(iterationDocValid, user, allTeams, userTeams)
+      iterationModel.add(iterationDocValid, user)
       .then(function(result) {
         iterationId = result.id;
         iterationRev = result.rev;
@@ -75,7 +75,7 @@ describe('Iteration Model', function() {
 
     it('Return Iteration no/identifier already exists', function(done) {
       this.timeout(timeout);
-      iterationModel.add(iterationDoc_duplicateIterName, user, allTeams, userTeams)
+      iterationModel.add(iterationDoc_duplicateIterName, user)
       .catch(function(err) {
         expect(err).to.not.equal(null);
         expect(err).to.have.property('error');
@@ -87,7 +87,7 @@ describe('Iteration Model', function() {
     });
 
     it('It will fail to add iteration document', function(done) {
-      iterationModel.add(iterationDocInvalid, user, allTeams, userTeams)
+      iterationModel.add(iterationDocInvalid, user)
       .catch(function(err) {
         expect(err).to.have.property('error');
         done();
@@ -147,7 +147,7 @@ describe('Iteration Model', function() {
       iterationModel.getByIterInfo('testteamid_1')
       .then(function(result) {
         if (result.rows.length == 0) {
-          iterationModel.add(iterationDocValid, user, allTeams, userTeams)
+          iterationModel.add(iterationDocValid, user)
           .then(function(result) {
             iterationId = result.id;
             expect(result).to.be.a('object');
@@ -205,7 +205,7 @@ describe('Iteration Model', function() {
       iterationModel.getByIterInfo(teamName)
       .then(function(result) {
         if (result.rows.length == 0) {
-          iterationModel.add(iterationDocValid, user, allTeams, userTeams)
+          iterationModel.add(iterationDocValid, user)
           .then(function(result) {
             iterationId = result.id;
             iterationRev = result.rev;
@@ -229,7 +229,7 @@ describe('Iteration Model', function() {
     it('It will successfully update iteration document with same iteration name', function(done) {
       //iterationDocValid.team_mbr_change = 'YES';
       iterationDocValid.iteration_name = "testiterationname-" + crypto.randomBytes(4).toString('hex');
-      iterationModel.edit(iterationId, iterationDocValid, user, allTeams, userTeams)
+      iterationModel.edit(iterationId, iterationDocValid, user)
       .then(function(result) {
         iterationRev =result.rev;
         expect(result).to.be.a('object');
@@ -243,7 +243,7 @@ describe('Iteration Model', function() {
     });
 
     it('It will successfully update iteration document', function(done) {
-      iterationModel.edit(iterationId, iterationDocValid_sample2, user, allTeams, userTeams)
+      iterationModel.edit(iterationId, iterationDocValid_sample2, user)
       .then(function(result) {
         iterationRev =result.rev;
         expect(result).to.be.a('object');
@@ -257,7 +257,7 @@ describe('Iteration Model', function() {
     });
 
     it('Return Iteration no/identifier already exists', function(done) {
-      iterationModel.edit(iterationId, iterationDoc_duplicateIterName, user, allTeams, userTeams)
+      iterationModel.edit(iterationId, iterationDoc_duplicateIterName, user)
       .catch(function(err) {
         expect(err).to.not.equal(null);
         expect(err.error).to.have.property('iteration_name');
@@ -271,7 +271,7 @@ describe('Iteration Model', function() {
     });
 
     it('It will fail to update iteration document', function(done) {
-      iterationModel.edit(iterationId, iterationDocInvalid, user, allTeams, userTeams)
+      iterationModel.edit(iterationId, iterationDocInvalid, user)
       .catch(function(err) {
         // console.log('[edit] It will fail to update iteration document:', err);
         expect(err).to.be.a('object');
@@ -287,7 +287,7 @@ describe('Iteration Model', function() {
     it('It will successfully updated document with New iteration name', function(done) {
 
       iterationDocValid.iteration_name = 'newiterationname-' + new Date().getTime();
-      iterationModel.edit(iterationId, iterationDocValid, user, allTeams, userTeams)
+      iterationModel.edit(iterationId, iterationDocValid, user)
       .then(function(result) {
         iterationRev =result.rev;
         expect(result).to.be.a('object');
@@ -303,7 +303,7 @@ describe('Iteration Model', function() {
     it('Should return missing', function(done) {
       var id = '111111';
       iterationDocValid.iteration_name = 'newiterationname';
-      iterationModel.edit(id, iterationDocValid, user, allTeams, userTeams)
+      iterationModel.edit(id, iterationDocValid, user)
       .catch(function(err) {
         expect(err).to.not.equal(null);
         expect(err.error).to.equal('missing');

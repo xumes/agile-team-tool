@@ -15,7 +15,8 @@ module.exports = function(app, includes) {
         'systemAdmin'     : req.session['systemAdmin'],
         'systemStatus'    : req.session['systemStatus'],
         'environment'     : settings.environment,
-        'prefix'          : settings.prefixes.assessment
+        'prefix'          : settings.prefixes.assessment,
+        'userTeams'       : req.userTeams
       };
       render(req, res, 'progress', json);
   };
@@ -23,6 +24,7 @@ module.exports = function(app, includes) {
   app.get('/progress',  
     [
       includes.middleware.auth.requireLoginWithRedirect,
-      includes.middleware.cache.setSystemInfoCache
+      includes.middleware.cache.setSystemInfoCache,
+      includes.middleware.cache.setUserTeams
     ], showAssessmentProgress);
 };

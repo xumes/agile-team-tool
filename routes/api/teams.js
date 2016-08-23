@@ -8,8 +8,14 @@ module.exports = function(app, includes) {
     var teamDoc = req.body;
     teamModel.createTeam(teamDoc, req.session['user'])
       .then(function(result){
+        var addResult = new Object();
         middleware.cache.updateTeamCache(req, result);
-        res.status(201).send(result);
+        middleware.cache.retrieveUserTeams(req.session['email'])
+        .then(function (body){
+          addResult.team = result;
+          addResult.userTeams = body;
+          res.status(201).send(addResult);
+        });
       })
       .catch(function(err){
         res.status(400).send(err);
@@ -20,8 +26,14 @@ module.exports = function(app, includes) {
     if(!(_.isEmpty(req.body['doc_status'])) &&  req.body['doc_status'] === 'delete'){
       teamModel.updateOrDeleteTeam(req.body, req.session, 'delete')
         .then(function(result){
+          var delResult = new Object();
           middleware.cache.updateTeamCache(req, req.body);
-          res.status(204).send(result);
+          middleware.cache.retrieveUserTeams(req.session['email'])
+          .then(function (body){
+            delResult.team = result;
+            delResult.userTeams = body;
+            res.status(200).send(delResult);
+          });
         })
         .catch(function(err){
           res.status(400).send(err);
@@ -34,8 +46,14 @@ module.exports = function(app, includes) {
   updateTeam = function(req, res){
     teamModel.updateOrDeleteTeam(req.body, req.session, 'update')
       .then(function(result){
+        var updateResult = new Object();
         middleware.cache.updateTeamCache(req, result);
-        res.send(result);
+        middleware.cache.retrieveUserTeams(req.session['email'])
+        .then(function (body){
+          updateResult.team = result;
+          updateResult.userTeams = body;
+          res.send(updateResult);
+        });
       })
       .catch(function(err){
         res.status(400).send(err);
@@ -53,7 +71,14 @@ module.exports = function(app, includes) {
         _.each(result, function(team) {
           middleware.cache.updateTeamCache(req, team);
         });
-        res.send(result);
+
+        var associateResult = new Object();
+        middleware.cache.retrieveUserTeams(req.session['email'])
+        .then(function (body){
+          associateResult.team = result;
+          associateResult.userTeams = body;
+          res.send(associateResult);
+        });
       })
       .catch( /* istanbul ignore next */ function(err){
         // cannot simulate this error during testing
@@ -167,6 +192,17 @@ module.exports = function(app, includes) {
     });
   };
 
+  getUserTeam = function(req,res){
+    var email = req.params.email;
+    teamModel.getUserTeams(email)
+      .then(function(result){
+        res.send(result);
+      })
+      .catch(function(err){
+        res.status(400).send(err);
+      });
+  };
+
   // delete team document
   app.delete('/api/teams/', [includes.middleware.auth.requireLogin], deleteTeam);
 
@@ -202,5 +238,8 @@ module.exports = function(app, includes) {
 
   // list of parent and child team ids associated with the team
   app.get('/api/teams/lookup/team/:teamId?', [includes.middleware.auth.requireLogin], getLookupIndex);
+
+  // get list of teams where user has access
+  app.get('/api/teams/userTeams/:email',[includes.middleware.auth.requireLogin], getUserTeam);
 
 };

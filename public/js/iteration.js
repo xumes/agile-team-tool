@@ -329,11 +329,12 @@ function loadAgileTeams(selected, iteration) {
   $("#iterationSelectList").attr("disabled", "disabled");
   $("#select2-iterationSelectList-container").css('color', 'grey');
 
-  teams = _.filter(allTeams, function(team) {
+  /*teams = _.filter(allTeams, function(team) {
   if (team.squadteam.toLowerCase() == 'yes') 
     return team;
-  });
-  addOptions("teamSelectList", teams, null, null, selected);
+  });*/
+  //addOptions("teamSelectList", teams, null, null, selected);
+  addOptions("teamSelectList", squadTeams, null, null, selected);
   $("#teamSelectList").removeAttr("disabled");
 
   if (iteration != undefined && iteration != "")

@@ -9,13 +9,15 @@ module.exports = function(app, includes) {
       {
         'pageTitle'       : 'Maturity Assessment',
         'user'            : req.session['user'],
-        'allTeams'        : req.session['allTeams'],
+        'allTeams'        : [],
         'allTeamsLookup'  : req.session['allTeamsLookup'],
         'myTeams'         : req.session['myTeams'],
         'systemAdmin'     : req.session['systemAdmin'],
         'systemStatus'    : req.session['systemStatus'],
         'environment'     : settings.environment,
-        'prefix'          : settings.prefixes.assessment
+        'prefix'          : settings.prefixes.assessment,
+        'squadTeams'      : req.squadTeams,
+        'userTeams'       : req.userTeams
       };
     render(req, res, 'assessment', json);
   };
@@ -23,6 +25,8 @@ module.exports = function(app, includes) {
   app.get('/assessment',  
     [
       includes.middleware.auth.requireLoginWithRedirect,
-      includes.middleware.cache.setSystemInfoCache
+      includes.middleware.cache.setSystemInfoCache,
+      includes.middleware.cache.setSquadTeams,
+      includes.middleware.cache.setUserTeams
     ], showAssessment);
 };

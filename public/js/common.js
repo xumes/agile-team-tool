@@ -251,28 +251,8 @@ function hasAccess(teamId, checkParent) {
  */
 function isUserMemberOfTeam(teamId, checkParent) {
 	var userExist = false;
-	
-	if (allTeams == null)
-		return userExist;
-
-	var userTeams = myTeams;
-	if (_.has(userTeams, "_root") || _.has(userTeams, "_branch") || _.has(userTeams, "_standalone"))
-		userTeams = _.union(_.union(userTeams._root, userTeams._branch), userTeams._standalone);
-
-	if (userTeams != null) {
-		for (var i in userTeams) {
-			if (userTeams[i]._id == teamId) {					
-				userExist = true;
-				break;
-			}
-		}
-	} 
-
-	if (!userExist && checkParent) {
-		var team = allTeamsLookup[teamId];
-		if (!_.isEmpty(team) && !_.isEmpty(team.parent_team_id))
-			return isUserMemberOfTeam(team.parent_team_id, checkParent);
-	}
+	if (userTeams != null)
+		userExist = _.contains(userTeams, teamId);
 
 	return userExist;
 }

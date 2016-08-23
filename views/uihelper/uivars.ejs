@@ -25,6 +25,7 @@
   var myTeams         = <%-JSON.stringify(myTeams)%>;
   var systemAdmin     = <%-JSON.stringify(systemAdmin)%>;
   var systemStatus    = <%-JSON.stringify(systemStatus)%>;
+  var userTeams       = <%-JSON.stringify(userTeams)%>;
 
   <% if (pageTitle=="Team Management") { %>
   var prefixTeam      = "<%-prefix%>";
@@ -32,8 +33,10 @@
 
   <% } else if (pageTitle=="Iteration Management") { %>
   var prefixIteration = "<%-prefix%>";
+  var squadTeams = <%-JSON.stringify(squadTeams)%>;
   
   <% } else if (pageTitle=="Maturity Assessment") { %>
   var prefixAssessment = "<%-prefix%>";
+  var squadTeams = <%-JSON.stringify(squadTeams)%>;
   <% } %>
 </script>

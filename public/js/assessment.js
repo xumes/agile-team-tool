@@ -9,12 +9,12 @@ jQuery(function($) {
 		}
   	if (urlParameters != undefined && urlParameters.id != undefined && urlParameters.id != "") {
   		if (urlParameters.assessId != undefined && urlParameters.assessId != "") {
-  			agileTeamListHandler("teamSelectList", urlParameters.id, urlParameters.assessId, null, null, allTeams);
+  			agileTeamListHandler("teamSelectList", urlParameters.id, urlParameters.assessId, null, null, squadTeams);
   		} else {
-  			agileTeamListHandler("teamSelectList", urlParameters.id, "new", null, null, allTeams); 
+  			agileTeamListHandler("teamSelectList", urlParameters.id, "new", null, null, squadTeams); 
   		}
   	} else {
-  		agileTeamListHandler("teamSelectList", null, null, null, null, allTeams);
+  		agileTeamListHandler("teamSelectList", null, null, null, null, squadTeams);
   	}
   	
   	setToolTips();
@@ -110,7 +110,7 @@ function setToolTips() {
 
 function agileTeamListHandler(elementId, teamId, assessmentId, firstOption, lastOption, teamList) {
 	$("#" + elementId).attr("disabled", "disabled");
-	var listOption = getAgileTeamDropdownList(teamList, true);
+	var listOption = getSquadDropdownList(teamList);
 	setSelectOptions(elementId, listOption, firstOption, lastOption, teamId);
 	$("#" + elementId).removeAttr("disabled");
 
@@ -144,8 +144,6 @@ function getTeamAssessmentAnswers(assessmentId, _callback, args) {
 			type : "GET",
 			url : "/api/assessment/view?assessId=" + encodeURIComponent(assessmentId),
 			async : false
-			// url : baseUrlDb + "/" + encodeURIComponent(assessmentId),
-			// dataType : "jsonp"
 		}).done(function(data) {
 			if (data != undefined) {
 				gTeamAssessment = data;
@@ -176,12 +174,16 @@ function assessmentQuestionnaireHandler(teamAssessment, assessmentTemplateList) 
 		gAssessmentTemplate = assessmentTemplateList[0];
 
 	if (teamAssessment != null) {		
-		for (var i=0; i<gAssessmentTemplateList.length; i++)
-			if (gAssessmentTemplateList[i]["atma_version"] == teamAssessment["assessmt_version"] ||
-					gAssessmentTemplateList[i]["_id"] == teamAssessment["assessmt_version"]) {
-				gAssessmentTemplate = gAssessmentTemplateList[i];
-				break;
+		
+		var result = _.find(gAssessmentTemplateList, function(value){
+			if (value.atma_version == teamAssessment.assessmt_version ||
+				value._id == teamAssessment.assessmt_version){
+				return value;
 			}
+		});
+		if (result != null){
+			gAssessmentTemplate = result;
+		}
 	}
 	
 	createAssessmentTable(gAssessmentTemplate);
@@ -204,7 +206,6 @@ function teamAssessmentListHander(elementId, teamId, assessmentId, teamAssessmen
 	
 	$("#" + elementId).attr("disabled", "disabled");
 	
-	//gTeamAssessmentList = sortAssessments(teamAssessments);		
 	gTeamAssessmentList = teamAssessments;
 	var allowAccess = hasAccess(teamId, true);
 	var listOption = getAssessmentDropdownList(gTeamAssessmentList);
@@ -872,8 +873,6 @@ function updateAgileTeamAssessment(action) {
 			type : "GET",
 			url : "/api/assessment/view?assessId=" + encodeURIComponent($("#assessmentSelectList").val()),
 			async : false
-			// url : baseUrlDb + "/" + encodeURIComponent($("#assessmentSelectList").val()),
-			// dataType : "jsonp"
 		}).done(function(data) {
 			
 			var jsonData = data;
@@ -1038,7 +1037,7 @@ function setScreenAnswers(teamAssessment) {
 						var current = answer["cur_mat_lvl_achieved"];
 						var target = answer["tar_mat_lvl_achieved"];	
 						var independent = answer["ind_mat_lvl_achieved"];
-						console.log(elePracticeId + " " + current + "/" + target + "/" + independent);
+						//console.log(elePracticeId + " " + current + "/" + target + "/" + independent);
 						$("[name='"+elePracticeId+"_curr']").each(function(index, obj) {
 							if ($(obj).attr("value") == current)
 								$($(obj)).iCheck("check");
