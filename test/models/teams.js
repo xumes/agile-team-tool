@@ -5,6 +5,7 @@ var common = require('../../models/cloudant-driver');
 var dummyData = require('../data/dummy-data.js');
 var cache = require('../../middleware/cache');
 var _ = require('underscore');
+var teamIndex = require('../../models/index/teamIndex');
 var lookupSquadId = null;
 var lookupNonsquadId = null;
 var validId = null;
@@ -22,6 +23,10 @@ var userDetailsValid = dummyData.user.details;
 var userDetails = dummyData.user.details;
 
 var teamDocInvalid = dummyData.teams.invalidDoc;
+
+var indexDocument = dummyData.index.indexDocument;
+
+var teamAssociations = dummyData.index.teamAssociations;
 
 // retrieve obj via cache, decoy for session
 var session = {};
@@ -826,5 +831,225 @@ describe('Team models [getLookupTeamByType]: get lookup team list or object', fu
     .catch(function(err){
       done(err);
     });
+  });
+});
+
+describe('Team models [indexDocument]: updates the team relation lookup document ', function(){
+  before(function(done) {
+    teamIndex.getIndexDocument()
+      .then(function(body) {
+        if (!_.isEmpty(body)) {
+          indexDocument = body;
+          expect(body).to.be.have.property('lookup');
+          expect(body['lookup']).to.be.a('array');
+        } else {
+          teamIndex.initIndex()
+            .then(function(body) {
+              indexDocument = body;
+              expect(body).to.be.have.property('lookup');
+              expect(body['lookup']).to.be.a('array');
+            });
+        }
+        done();
+      });
+  });
+  it('add new associations to the lookup index', function(done) {
+    teamIndex.updateLookup(indexDocument, teamAssociations)
+      .then(function(body){
+        expect(body).to.be.a('array');
+        expect(body).to.have.length.above(0);
+        _.each(teamAssociations, function(team) {
+          expect(_.find(body, {_id: team._id})).to.exist;
+        })
+        indexDocument.lookup = body;
+        done();
+      })
+      .catch(function(err){
+        done(err);
+      });
+  });
+  it('add new 3 level associations (child->parent) to the lookup index A->B->C', function(done) {
+    var newParent = _.find(teamAssociations, {_id: 'teamA'});
+    newParent.newParentId = 'teamB'
+    teamIndex.updateLookup(indexDocument, [newParent])
+      .then(function(body){
+        expect(body).to.be.a('array');
+        expect(body).to.have.length.above(0);
+        var teamA = _.find(body, {_id: "teamA"});
+        var teamB = _.find(body, {_id: "teamB"});
+        expect(teamA.parents).to.have.members(['teamB']);
+        expect(teamB.children).to.have.members(['teamA']);
+
+        var newParent = _.find(teamAssociations, {_id: 'teamB'});
+        newParent.newParentId = 'teamC'
+        teamIndex.updateLookup(indexDocument, [newParent])
+          .then(function(body){
+            expect(body).to.be.a('array');
+            expect(body).to.have.length.above(0);
+            var teamA = _.find(body, {_id: "teamA"});
+            var teamB = _.find(body, {_id: "teamB"});
+            var teamC = _.find(body, {_id: "teamC"});
+            expect(teamA.parents).to.have.members(['teamB','teamC']);
+            expect(teamB.parents).to.have.members(['teamC']);
+            expect(teamB.children).to.have.members(['teamA']);
+            expect(teamC.children).to.have.members(['teamB','teamA']);
+          });
+        done();
+      })
+      .catch(function(err){
+        done(err);
+      });
+  });
+  it('move associations (child->parent) to the lookup index FROM (A->B->C) TO (A->C and B->C)', function(done) {
+    var newParent = _.find(teamAssociations, {_id: 'teamA'});
+    newParent.newParentId = 'teamC';
+    newParent.oldParentId = 'teamB';
+    teamIndex.updateLookup(indexDocument, [newParent])
+      .then(function(body){
+        expect(body).to.be.a('array');
+        expect(body).to.have.length.above(0);
+        var teamA = _.find(body, {_id: "teamA"});
+        var teamB = _.find(body, {_id: "teamB"});
+        var teamC = _.find(body, {_id: "teamC"});
+        expect(teamA.parents).to.have.members(['teamC']);
+        expect(teamB.parents).to.have.members(['teamC']);
+        expect(teamB.children).to.be.empty;
+        expect(teamC.children).to.have.members(['teamB','teamA']);
+        done();
+      })
+      .catch(function(err){
+        done(err);
+      });
+  });
+  it('add associations (child->parent) to the lookup index FROM (A->C and B->C) TO (C->D and E->A->C->D)', function(done) {
+    var newParent = _.find(teamAssociations, {_id: 'teamC'});
+    newParent.newParentId = 'teamD';
+    var newChild = _.find(teamAssociations, {_id: 'teamE'});
+    newChild.newParentId = 'teamA';
+    teamIndex.updateLookup(indexDocument, [newParent, newChild])
+      .then(function(body){
+        expect(body).to.be.a('array');
+        expect(body).to.have.length.above(0);
+        var teamA = _.find(body, {_id: "teamA"});
+        expect(teamA.parents).to.have.members(['teamC','teamD']);
+        expect(teamA.children).to.have.members(['teamE']);
+
+        var teamB = _.find(body, {_id: "teamB"});
+        expect(teamB.parents).to.have.members(['teamC','teamD']);
+        expect(teamB.children).to.be.empty;
+
+        var teamC = _.find(body, {_id: "teamC"});
+        expect(teamC.parents).to.have.members(['teamD']);
+        expect(teamC.children).to.have.members(['teamB','teamA','teamE']);
+
+        var teamD = _.find(body, {_id: "teamD"});
+        expect(teamD.parents).to.be.empty;
+        expect(teamD.children).to.have.members(['teamB','teamA','teamC','teamE']);
+
+        var teamE = _.find(body, {_id: "teamE"});
+        expect(teamE.parents).to.have.members(['teamA','teamC','teamD']);
+        expect(teamE.children).to.be.empty;
+
+        done();
+      })
+      .catch(function(err){
+        done(err);
+      });
+  });
+  it('deletes a team and remove association from the lookup index FROM (C->D and E->A->C->D) delete C', function(done) {
+    var deleteTeam = _.find(teamAssociations, {_id: 'teamC'});
+    deleteTeam.newParentId = '';
+    deleteTeam.oldParentId = 'teamD';
+    deleteTeam.doc_status = 'delete';
+    var lookupSize = _.size(indexDocument.lookup);
+    teamIndex.updateLookup(indexDocument, [deleteTeam])
+      .then(function(body){
+        expect(body).to.be.a('array');
+        expect(body).to.have.length.above(0);
+        var teamA = _.find(body, {_id: "teamA"});
+        expect(teamA.parents).to.be.empty;
+        expect(teamA.children).to.have.members(['teamE']);
+
+        var teamB = _.find(body, {_id: "teamB"});
+        expect(teamB.parents).to.be.empty;
+        expect(teamB.children).to.be.empty;
+
+        var teamC = _.find(body, {_id: "teamC"});
+        expect(teamC).to.be.empty;
+
+        var teamD = _.find(body, {_id: "teamD"});
+        expect(teamD.parents).to.be.empty;
+        expect(teamD.children).to.be.empty;
+
+        var teamE = _.find(body, {_id: "teamE"});
+        expect(teamE.parents).to.have.members(['teamA']);
+        expect(teamE.children).to.be.empty;
+
+        expect(body).to.have.length.below(lookupSize);
+
+        done();
+      })
+      .catch(function(err){
+        done(err);
+      });
+  });  
+  it('deletes a team and remove association from the lookup index FROM (C and E->A and D) delete D', function(done) {
+    var deleteTeam = _.find(teamAssociations, {_id: 'teamD'});
+    deleteTeam.newParentId = '';
+    deleteTeam.oldParentId = '';
+    deleteTeam.doc_status = 'delete';
+    var lookupSize = _.size(indexDocument.lookup);
+    teamIndex.updateLookup(indexDocument, [deleteTeam])
+      .then(function(body){
+        expect(body).to.be.a('array');
+        expect(body).to.have.length.above(0);
+        var teamD = _.find(body, {_id: "teamD"});
+        expect(teamD).to.be.empty;
+        expect(body).to.have.length.below(lookupSize);
+
+        done();
+      })
+      .catch(function(err){
+        done(err);
+      });
+  });
+});
+
+describe('Team models [getSelectableParents]', function(){
+  it('it will return empty array because team id is empty', function(done) {
+    teamModel.getSelectableParents(null)
+      .then(function(body){
+        expect(body).to.be.a('array');
+        expect(body).to.have.length(0);
+      })
+      .finally(function(){
+        done();
+      });
+  });
+});
+
+describe('Team models [getSquadsOfParent]', function(){
+  it('it will return empty array because team id is empty', function(done) {
+    teamModel.getSquadsOfParent(null)
+      .then(function(body){
+        expect(body).to.be.a('array');
+        expect(body).to.have.length(0);
+      })
+      .finally(function(){
+        done();
+      });
+  });
+});
+
+describe('Team models [getLookupIndex]', function(){
+  it('it will return empty array because team id is none existent', function(done) {
+    teamModel.getLookupIndex(dummyData.teams.invalidId())
+      .then(function(body){
+        expect(body).to.be.a('array');
+        expect(body).to.have.length(0);
+      })
+      .finally(function(){
+        done();
+      });
   });
 });

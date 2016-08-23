@@ -410,10 +410,10 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 204 after deleting associate document1', function(done){
+  it('it will return 204 after deleting associate document2', function(done){
     var teamAssoc = teamsData.associate.validDoc();
     teamAssoc['doc_status'] = 'delete';
-    teamAssoc['_id'] = targetParentId;
+    teamAssoc['_id'] = targetChildId;
     var req = request(app).delete('/api/teams');
     agent.attachCookies(req);
     req.send(teamAssoc);
@@ -427,11 +427,11 @@ describe('Team API Tests', function() {
       done();
     });
   });
-
-  it('it will return 204 after deleting associate document2', function(done){
+  
+  it('it will return 204 after deleting associate document1', function(done){
     var teamAssoc = teamsData.associate.validDoc();
     teamAssoc['doc_status'] = 'delete';
-    teamAssoc['_id'] = targetChildId;
+    teamAssoc['_id'] = targetParentId;
     var req = request(app).delete('/api/teams');
     agent.attachCookies(req);
     req.send(teamAssoc);
@@ -472,7 +472,7 @@ describe('Team API Tests', function() {
         //console.log(err);
       } else {
         expect(res.statusCode).to.be.equal(200);
-        expect(res.body).to.have.property('docs');  
+        expect(res.body).to.have.property('docs');
       }
       done();
     });

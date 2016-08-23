@@ -164,7 +164,12 @@ function getIterationDocs(startTime, endTime) {
         return resolve(squadIterationDocs);
       })
       .catch( /* istanbul ignore next */ function(err){
-        var msg = err.error;
+        var msg;
+        if (err.error) {
+          msg = err.error;
+        } else {
+          msg = err;
+        }
         reject(formatErrMsg(msg));
       })
   });
@@ -197,13 +202,23 @@ function getAllSquads() {
             resolve(squadsByParent);
           })
           .catch( /* istanbul ignore next */ function(err){
-            var msg = err.error;
+            var msg;
+            if (err.error) {
+              msg = err.error;
+            } else {
+              msg = err;
+            }
             reject(formatErrMsg(msg));
           });
       })
-      .catch(function(err){
-        var msg = err.error;
-        reject( /* istanbul ignore next */ formatErrMsg(msg));
+      .catch( /* istanbul ignore next */ function(err){
+        var msg;
+        if (err.error) {
+          msg = err.error;
+        } else {
+          msg = err;
+        }
+        reject(formatErrMsg(msg));
       });
   });
 };
@@ -353,8 +368,14 @@ function getRollUpDataHistory() {
         });
         resolve(rollUpDataRevs);
       })
-      .catch(function(err){
-
+      .catch(  /* istanbul ignore next */ function(err){
+        var msg;
+        if (err.error) {
+          msg = err.error;
+        } else {
+          msg = err;
+        }
+        reject(formatErrMsg(msg));
       })
   })
 }
@@ -424,22 +445,42 @@ var snapshot = {
                       resolve(results);
                     })
                     .catch( /* istanbul ignore next */ function(err){
-                      var msg = err.error;
+                      var msg;
+                      if (err.error) {
+                        msg = err.error;
+                      } else {
+                        msg = err;
+                      }
                       reject(formatErrMsg(msg));
                     });
                 })
                 .catch( /* istanbul ignore next */ function(err){
-                  var msg = err.error;
+                  var msg;
+                  if (err.error) {
+                    msg = err.error;
+                  } else {
+                    msg = err;
+                  }
                   reject(formatErrMsg(msg));
                 });
             })
             .catch( /* istanbul ignore next */ function(err){
-              var msg = err.error;
+              var msg;
+              if (err.error) {
+                msg = err.error;
+              } else {
+                msg = err;
+              }
               reject(formatErrMsg(msg));
             });
         })
         .catch( /* istanbul ignore next */ function(err){
-          var msg = err.error;
+          var msg;
+          if (err.error) {
+            msg = err.error;
+          } else {
+            msg = err;
+          }
           reject(formatErrMsg(msg));
         });
     });
@@ -479,17 +520,32 @@ var snapshot = {
                     resolve(nonSquadCalResults);
                   })
                   .catch( /* istanbul ignore next */ function(err){
-                    var msg = err.error;
+                    var msg;
+                    if (err.error) {
+                      msg = err.error;
+                    } else {
+                      msg = err;
+                    }
                     reject(formatErrMsg(msg));
                   });
               })
               .catch( /* istanbul ignore next */ function(err){
-                var msg = err.error;
+                var msg;
+                if (err.error) {
+                  msg = err.error;
+                } else {
+                  msg = err;
+                }
                 reject(formatErrMsg(msg));
               });
           })
           .catch( /* istanbul ignore next */ function(err){
-            var msg = err.error;
+            var msg;
+            if (err.error) {
+              msg = err.error;
+            } else {
+              msg = err;
+            }
             reject(formatErrMsg(msg));
           });
       }

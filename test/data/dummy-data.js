@@ -23,6 +23,9 @@ var dummy = {
       desc : '',
       squadteam : 'YesNo'
     },
+    invalidId : function(){
+      return 'id_' + crypto.randomBytes(20).toString('hex');
+    },
     validUpdateDoc : function(){
       return {
         name : 'Team document-' + new Date().getTime(),
@@ -70,6 +73,61 @@ var dummy = {
           squadteam : 'No'
         };
     }
+  },
+  index: {
+    indexDocument : {
+      lookup: [
+        {
+          _id : 'teamZZZ',
+          name: 'Team ZZZ',
+          squadteam: 'No',
+          parents: [],
+          children: []
+        }
+      ]
+    },
+    teamAssociations : [
+      {
+        _id : 'teamA',
+        name: 'Team A',
+        squadteam: 'No',
+        doc_status: '',
+        newParentId: '',
+        oldParentId: ''
+      },
+      {
+        _id : 'teamB',
+        name: 'Team B',
+        squadteam: 'No',
+        doc_status: '',
+        newParentId: '',
+        oldParentId: ''
+      },
+      {
+        _id : 'teamC',
+        name: 'Team C',
+        squadteam: 'No',
+        doc_status: '',
+        newParentId: '',
+        oldParentId: ''
+      },
+      {
+        _id : 'teamD',
+        name: 'Team D',
+        squadteam: 'No',
+        doc_status: '',
+        newParentId: '',
+        oldParentId: ''
+      },
+      {
+        _id : 'teamE',
+        name: 'Team E',
+        squadteam: 'No',
+        doc_status: '',
+        newParentId: '',
+        oldParentId: ''
+      }
+    ]
   }
 };
 
