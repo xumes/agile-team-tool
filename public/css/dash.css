@@ -843,3 +843,12 @@ table.action td {
 	font-size: 10.5pt;
 	color: black; 
 }
+
+li #myteams {
+  width: 100%;
+  text-align: center;
+}
+li #allTeams {
+  width: 100%;
+  text-align: center;
+}
