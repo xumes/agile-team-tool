@@ -28,21 +28,20 @@ describe('Iteration Model', function() {
     var teamName = 'testteamid_1';
     teamModel.getName(teamName)
     .then(function(result) {
-
-      if (result.length == 0) {
+      if (result.length === 0) {
         teamModel.createTeam(teamDocValid, userDetails)
         .then(function(body) {
           expect(body).to.be.a('object');
           expect(body).to.have.property('_id');
           validId = body['_id'];
-          validTeamId = body['key'];
+          validTeamId = body['name'];
+          done();
         });
       } else {
         validTeamId = result[0].key;
+        validId = result[0].id;
+        done();
       }
-    })
-    .finally(function() {
-      done();
     });
   });
 
@@ -420,6 +419,24 @@ describe('Iteration Model', function() {
   });
 
   describe('[delete]: delete team iteration document', function() {
+    after(function(done) {
+      iterationModel.getByIterInfo(validTeamId)
+      .then(function(result) {
+        if (result && result.rows.length > 0) {
+          for(i=0; i < result.rows.length; i++) {
+            var id = result.rows[i].id;
+            var rev = result.rows[i].value._rev;
+              iterationModel.delete(id, rev)
+              .then(function(res) {
+              }).catch(function(err) {});
+          }
+        }
+      })
+      .finally(function() {
+        done();
+      });
+    });
+
     it('Should return _id/_rev is missing', function(done){
       iterationModel.delete()
       .catch(function(err){

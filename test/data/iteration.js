@@ -3,7 +3,8 @@ var iterations = {
   teamDocValid: {
     name : 'testteamid_1',
     desc : 'team document description',
-    squadteam : 'No'
+    squadteam : 'No',
+    testdata : 'Yes'
   },
   iterationDocValid: {
     "_id": "testmyid-" + crypto.randomBytes(20).toString('hex'),
@@ -28,7 +29,8 @@ var iterations = {
     "team_sat": "4",
     "last_updt_dt": "2016-04-04 03:07:10 EDT",
     "created_user": "ortegaaa@ph.ibm.com",
-    "created_dt": "2016-04-04 03:07:10 EDT"
+    "created_dt": "2016-04-04 03:07:10 EDT",
+    "testdata": "Yes"
   },
   iterationDoc_duplicateIterName: {
     "_id": "testmyid",
@@ -53,7 +55,8 @@ var iterations = {
     "team_sat": "4",
     "last_updt_dt": "2016-04-04 03:07:10 EDT",
     "created_user": "ortegaaa@ph.ibm.com",
-    "created_dt": "2016-04-04 03:07:10 EDT"
+    "created_dt": "2016-04-04 03:07:10 EDT",
+    "testdata": "Yes"
   },
   iterationDocInvalid: {
     "_id": "testmyid-" + crypto.randomBytes(20).toString('hex'),
@@ -78,7 +81,8 @@ var iterations = {
     "team_sat": "-1",
     "last_updt_dt": "2016-04-04 03:07:10 EDT",
     "created_user": "ortegaaa@ph.ibm.com",
-    "created_dt": "2016-04-04 03:07:10 EDT"
+    "created_dt": "2016-04-04 03:07:10 EDT",
+    "testdata": "Yes"
   },
   iterationDocValid_sample2: {
     "_id": "testmyid-" + crypto.randomBytes(20).toString('hex'),
@@ -103,7 +107,8 @@ var iterations = {
     "team_sat": "1.5",
     "last_updt_dt": "2016-04-04 03:07:10 EDT",
     "created_user": "ortegaaa@ph.ibm.com",
-    "created_dt": "2016-04-04 03:07:10 EDT"
+    "created_dt": "2016-04-04 03:07:10 EDT",
+    "testdata": "Yes"
   },
   iterationDocValid_sample3: {
     "_id": "testmyid-" + crypto.randomBytes(20).toString('hex'),
@@ -128,12 +133,15 @@ var iterations = {
     "team_sat": "1.5",
     "last_updt_dt": "2016-04-04 03:07:10 EDT",
     "created_user": "ortegaaa@ph.ibm.com",
-    "created_dt": "2016-04-04 03:07:10 EDT"
+    "created_dt": "2016-04-04 03:07:10 EDT",
+    "testdata": "Yes"
   },
   user: {
-    'shortEmail': 'john.doe@ph.ibm.com'
+    'shortEmail': 'john.doe@ph.ibm.com',
+    'testdata': 'Yes'
   },
   userDetails : {
+    testdata: 'Yes',
     shortEmail: 'john.doe@ph.ibm.com',
     ldap:
       {
@@ -145,6 +153,7 @@ var iterations = {
   allTeams: [
               {
                 _id: 'ag_team_CIOServicesEMEA-CGTest_1460465673227',
+                testdata: 'Yes',
                 name: 'CIO Services EMEA - CG Test',
                 squadteam: 'Yes',
                 parent_team_id: '',
@@ -154,6 +163,7 @@ var iterations = {
               },
               {
                 _id: 'ag_team_zTESTTeamSquaderl_1457798006050',
+                testdata: 'Yes',
                 name: 'zTEST Team Squad erl',
                 squadteam: 'Yes',
                 parent_team_id: '',
@@ -165,6 +175,7 @@ var iterations = {
   userTeams: [
                 {
                   _id: 'testteamid_1',
+                  testdata: 'Yes',
                   _rev: '1-826f7437fc89b1b4d7370c7dd5f8fc0b',
                   name: 'testteamid_1',
                   parent_team_id: '',
