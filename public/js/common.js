@@ -379,32 +379,46 @@ function getRemoteData(cUrl, _callback, args) {
 			var list = [];
 			console.log("data has rows " + _.has(data.rows, 'rows'));
 			console.log("data has value " + _.has(data, 'value'));
-			if (_.has(data, "rows")) {
-				if (_.has(data.rows, "doc"))
-					list = _.pluck(data.rows, 'doc');
-				else 
-					list = _.pluck(data.rows, 'value');
-				args.push(list);
-				showLog("data loaded: " + list.length);
-				returnObj = list;
+			if (_.has(data, 'rows')) {
+			  if (!_.isEmpty(data.rows)) {
+			    if (_.has(data.rows[0], 'doc'))
+			      list = _.pluck(data.rows, 'doc');
+			    else if (_.has(data.rows[0], 'value'))
+			      list =  _.pluck(data.rows, 'value');
+			    else if (_.has(data.rows[0], 'fields')) {
+			      list = _.map(data.rows, function(val, key) {
+			        //add document id property into each fields result
+			        var merged = _.extend(val.fields, {'_id':val.id});
+			          return merged;
+			        });
+			    }
+			  } else
+			    list =  data.rows;
 
-			} else if (data.length > 0) {
-				if (!_.isEmpty(data[0].doc)) 
-					list = _.pluck(data, 'doc')
-				else if (_.has(data[0], 'value'))
-					list = _.pluck(data, 'value');
-				else
-					list = data;
+			   args.push(list);
+			   returnObj = list;
 
-				args.push(list);
-				showLog("data loaded: " + list.length);
-				returnObj = list;
+			} else if (data instanceof Array) {
+			  if (!_.isEmpty(data)) {
+			    if (_.has(data[0], 'doc') && !_.isEmpty(data[0].doc)) 
+			      list =  _.pluck(data, 'doc');
+			    else if (_.has(data[0], 'value') && !_.isEmpty(data[0].value))
+			      list =  _.pluck(data, 'value');
+			    else if (_.has(data[0], 'fields') && !_.isEmpty(data[0].fields)) {
+			      list = _.map(data.rows, function(val, key) {
+			        //add document id property into each fields result
+			        var merged = _.extend(val.fields, {'_id':val.id});
+			          return merged;
+			        });
+			    }
+			  } else
+			    list =  data;
 
+			   args.push(list);
+			   returnObj = list;
 			} else {
-				// call just returned one object
-				showLog("data loaded: " + JSON.stringify(data));
 				args.push(data);
-				returnObj = data;
+				returnObj =  data;
 			}
 		}
 		
@@ -594,7 +608,8 @@ function getTeamIterations(teamId, _callback, args) {
 		_callback.apply(this, args);
 		return null;
 	}
-	var teamUrl = "/api/iteration/" + encodeURIComponent(teamId);
+	// var teamUrl = "/api/iteration/" + encodeURIComponent(teamId);
+	var teamUrl = "/api/iteration/searchTeamIteration?id=" + encodeURIComponent(teamId) + "&includeDocs=true&limit=200";
 	return getRemoteData(teamUrl, _callback, args);
 }
 
