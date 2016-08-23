@@ -478,6 +478,22 @@ describe('Team API Tests', function() {
     });
   });
 
+  // initializes lookup to set relationship references
+  it('it will return 200 and recreates the team lookup document', function(done){
+    var req = request(app).get('/api/teams/lookup/initialize');
+    agent.attachCookies(req);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+        expect(res.body).to.have.property('id');
+        expect(res.body['id']).to.be.equal('ag_ref_team_index');
+      }
+      done();
+    });
+  });
+
   // lookup by team id
   it('it will return 200 empty lookup object because of an invalid team id', function(done){
     var req = request(app).get('/api/teams/lookup/team/' + 'none-existent-team');
@@ -513,6 +529,46 @@ describe('Team API Tests', function() {
           expect(res.body[0]['parents']).to.be.a('array');
           expect(res.body[0]['children']).to.be.a('array');
           lookupId = res.body[0]['_id'];
+        }
+      }
+      done();
+    });
+  });
+
+  // lookup non-squad teams
+  it('it will return 200 and empty if there are no valid data on the lookup, array of objects if otherwise', function(done){
+    var req = request(app).get('/api/teams/lookup/team?squadteam=no');
+    agent.attachCookies(req);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+        if (res.body.length == 0)
+          expect(res.body).to.be.empty;
+        else {
+          expect(res.body[0]).to.have.property('_id');
+          expect(res.body[0]).to.have.property('name');
+        }
+      }
+      done();
+    });
+  });
+
+  // lookup squad teams
+  it('it will return 200 and empty if there are no valid data on the lookup, array of objects if otherwise', function(done){
+    var req = request(app).get('/api/teams/lookup/team?squadteam=yes');
+    agent.attachCookies(req);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+        if (res.body.length == 0)
+          expect(res.body).to.be.empty;
+        else {
+          expect(res.body[0]).to.have.property('_id');
+          expect(res.body[0]).to.have.property('name');
         }
       }
       done();
