@@ -36,8 +36,7 @@ function getAuthenticatedUser(userEmail) {
 var userInfo;
 function setAuthenticatedUser(userEmail, facesPerson) {
 	userInfo = userSession;
-	console.log(facesPerson);
-	userInfo = facesPerson;
+	//userInfo = facesPerson;
 	if (userInfo == null) {
 		userInfo = new Object();
 		userInfo.email = userEmail;
@@ -391,6 +390,8 @@ function getRemoteData(cUrl, _callback, args) {
 			          return merged;
 			        });
 			    }
+			    else
+			    	list = data;
 			  } else
 			    list =  data;
 
