@@ -273,10 +273,11 @@ function getAgileTeamDropdownList(teams, squadOnly) {
 	var listOption = [];
 
 	if (teams == undefined || teams == null) return listOption;
+	teams = sortAgileTeamsByName(teams);
 
 	for (var i in teams) {
 		var option = [];
-		if ((teams[i].doc_status === undefined || teams[i].doc_status.toLowerCase() != "deleted")) {
+		if ((teams[i].doc_status === undefined || teams[i].doc_status.toLowerCase() != "delete")) {
 			if (squadOnly) {
 				if (teams[i].squadteam != undefined && teams[i].squadteam.toLowerCase() == "yes") {
 					option.push(teams[i]._id);

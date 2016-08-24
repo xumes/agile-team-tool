@@ -25,8 +25,7 @@ jQuery(function($) {
 		}
 
 		// default to My team(s) view
-		$("#myTeams").click();
-
+		filter($('#myTeams').attr("id"));
 	});
 
 	$("#teamFilter").keyup(function() {
@@ -47,27 +46,22 @@ jQuery(function($) {
 	});
 	
 	$("#myTeams").click(function() {
-		if ($(this).hasClass("ibm-btn-pri ibm-btn-blue-50"))
-				return;
-		
-		$($(this)).removeClass("ibm-btn-sec ibm-btn-gray-50");
-		$($(this)).addClass("ibm-btn-pri ibm-btn-blue-50");
-
-		$("#allTeams").removeClass("ibm-btn-pri ibm-btn-blue-50");
-		$("#allTeams").addClass("ibm-btn-sec ibm-btn-gray-50");
-		filter($(this).attr("id"));
-	});
+    if ($(this).attr('data-state') != "open"){
+      $($(this)).attr('data-state', 'open');
+      $("#allTeams").attr('data-state', '');
+			$("#mainContent").hide();
+			$(".nano").nanoScroller({ destroy: true });
+      filter($(this).attr("id"));
+    }
+  });
 	
 	$("#allTeams").click(function() {
-		if ($(this).hasClass("ibm-btn-pri ibm-btn-blue-50"))
-			return;
-
-		$($(this)).removeClass("ibm-btn-sec ibm-btn-gray-50");
-		$($(this)).addClass("ibm-btn-pri ibm-btn-blue-50");
-		
-		$("#myTeams").removeClass("ibm-btn-pri ibm-btn-blue-50");
-		$("#myTeams").addClass("ibm-btn-sec ibm-btn-gray-50");
-		filter($(this).attr("id"));
+   if ($(this).attr('data-state') != "open"){
+      $($(this)).attr('data-state', 'open');
+      $("#myTeams").attr('data-state', '');
+			$("#no-teams-highlightbox").hide();
+      filter($(this).attr("id"));
+    }
 	});
 
 	$("#teamExpand").click(function() {
@@ -177,13 +171,16 @@ function openSelectedTeamTree(setScrollPosition) {
  * @param section - collapsable section id.
  */
 function redrawCharts(section) {
+	console.log(Highcharts.charts)
 	$(Highcharts.charts).each(function(i,chart) {
 		if (chart == null) return;
+		
 		
 		if ($("#" + section + " #" + $(chart.container).attr("id")).length > 0) {
 			showLog("adjusting graphs at section: " + section);
 			var height = chart.renderTo.clientHeight; 
 	    var width = chart.renderTo.clientWidth; 
+
 	    chart.setSize(width, height); 
 		}
   });
@@ -213,10 +210,14 @@ function agileTeamListHandler(show, allTeamList) {
  * @param userTeamList - array of teams where user email exists as a member.
  */
 function userAgileTeamListHandler(show, userEmail, userTeamList) {
+	if(_.isEmpty(userTeamList)){
+		$("#spinnerContainer").hide();
+		$("#no-teams-highlightbox").show();
+	}
 	myTeams = organizeTeamList(userTeamList);
 	if (show) 
 		organizeTeamHierarchy(true);
-
+	
 }
 
 /**
@@ -264,8 +265,9 @@ function filter(id) {
 			getAllAgileTeamsForUser(user.shortEmail, userAgileTeamListHandler, [true, user.shortEmail]);
 
 	} else {
-		if (allTeams != null)
+		if (allTeams != null){
 			agileTeamListHandler(true, allTeams);
+		}
 		else
 			getAllAgileTeams(agileTeamListHandler, [true]);
 
@@ -377,7 +379,6 @@ function organizeTeamHierarchy(myTeamsOnly) {
 	showLog("Organized teams duration: " + (end-start)/1000);
 	// force and show scroll bar
 	$(".nano").nanoScroller();
-	
 }
 
 function addTeamTwisty(team, twistyId) {
@@ -597,6 +598,9 @@ function loadDetails(elementId, setScrollPosition) {
 	var team = allTeamsLookup[teamId];
 	var isSquadTeam = false;
 	if (!_.isEmpty(team) && defSelTeamId != teamId) {
+		$('#mainContent').hide();
+		$('#spinnerContainer').show();
+
 		if (team._id == teamId) {
 			removeHighlightParents();
 			// $.({message: ""});
@@ -634,7 +638,6 @@ function loadDetails(elementId, setScrollPosition) {
 						if (tn.trim() == "")
 							tn = "&nbsp;";
 						$("#teamName").html("Data for: " + tn);
-						$('#teamHeader').show();
 						keyValue = "<a href='team?id=" + encodeURIComponent(team["_id"]) + "' title='Manage team information'>" + tn + "</a>";
 						appendRowDetail(keyLabel, keyValue);
 					}
@@ -714,43 +717,7 @@ function loadDetails(elementId, setScrollPosition) {
 					} else {
 						destroyIterationCharts();
 						destroyAssessmentCharts();
-						/* This commented code is intended for rollup using cloudant query
-						 * 
-						var currDate = getServerDateTime().split(" ")[0].replace(/-/g, "/");
-						var dateArr = currDate.split("/");
-						var tempDate = parseInt(dateArr[2]);
-						if (tempDate == 1){
-							currDate = dateArr[0]+"/"+dateArr[1]+"/"+"02";
-						}
-						var tempDate = new Date(currDate);
 						
-						var currMonth = tempDate.getUTCMonth()+1;
-						var startMonth;
-						var startYear;
-						if (currMonth > 5)
-							startMonth = currMonth - 5;
-						else{
-							startMonth = 13 - (6 - currMonth);
-							startYear = tempDate.getUTCFullYear()-1;
-						}
-						var startDate = showDateMMDDYYYY(startYear+"/"+startMonth+"/"+"02");
-						var endDate = showDateMMDDYYYY(currDate);
-						//reset the squadList for selected parent team to refresh for new selected parent
-						squadList = [];
-						var children = team.child_team_id;
-						
-						if (children.length > 0){
-							//this will get all squad teams of selected parent team and store in squadList (global variable)
-							getSquadChildren(team["_id"]);
-						}
-						
-						if (squadList.length > 0){
-							retrieveIterations(squadList, startDate, endDate, iterationScoreCard, [team["_id"], team['name']);
-						}
-						else{
-							iterationEmptyScoreCard(team["_id"], team['name']);
-						}
-						 */
 						var currDate = getServerDateTime().split(" ")[0].replace(/-/g, "/");
 						var dateArr = currDate.split("/");
 						var tempDate = parseInt(dateArr[2]);
@@ -829,7 +796,8 @@ function loadDetails(elementId, setScrollPosition) {
 					} else {
 						$("#membersList").append('<tr class="odd"><td valign="top" colspan="4" class="dataTables_empty">No data available</td></tr>');
 					}
-
+					
+					
 					if ($("#iterationSection h2 a").hasClass("ibm-show-active"))
 						redrawCharts("iterationSection");
 					if ($("#assessmentSection h2 a").hasClass("ibm-show-active"))
@@ -837,14 +805,10 @@ function loadDetails(elementId, setScrollPosition) {
 					if (!_.has(lookupData, "._rev")) 
 						allTeamsLookup[currentTeam._id] = lookupData;
 				}
-				//$.un();
-			})
-			
+			});
 			openSelectedTeamTree(setScrollPosition);
-
 		} 
 	} else {
-		//$.un();
 		openSelectedTeamTree(setScrollPosition);
 	}
 }

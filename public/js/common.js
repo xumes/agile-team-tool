@@ -332,8 +332,8 @@ function resetChangeIndiactor() {
  * @param message - message to show on console.
  */
 function showLog(message) {
-	if (environment != null && environment.toLowerCase() == 'sit')
-		console.log(message);
+	//if (environment != null && environment.toLowerCase() == 'sit')
+		//console.log(message);
 }
 
 
@@ -371,7 +371,7 @@ function getRemoteData(cUrl, _callback, args) {
 			} else if (data.length > 0) {
 				if (!_.isEmpty(data[0].doc)) 
 					list = _.pluck(data, 'doc')
-				else if (_.has(data, 'value'))
+				else if (_.has(data[0], 'value'))
 					list = _.pluck(data, 'value');
 				else
 					list = data;
@@ -623,6 +623,7 @@ function compactTeam(team) {
     compactedTeam['squadteam'] = team.squadteam,
     compactedTeam['parent_team_id'] = team.parent_team_id,
     compactedTeam['child_team_id'] = team.child_team_id,
+    compactedTeam['doc_status'] = team.doc_status; 
     compactedTeam['total_members'] = teamCount,
     compactedTeam['total_allocation'] = teamAlloc
     compactedTeam['doc'] = team;

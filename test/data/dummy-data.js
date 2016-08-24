@@ -16,7 +16,8 @@ var dummy = {
     validDoc : {
       name : 'Team document-' + new Date().getTime(),
       desc : 'team document description',
-      squadteam : 'No'
+      squadteam : 'No',
+      testdata : 'Yes'
     },
     invalidDoc : {
       name : '',
@@ -31,7 +32,8 @@ var dummy = {
         name : 'Team document-' + new Date().getTime(),
         desc : 'Updated Team Description',
         squadteam : 'No',
-        created_user : dummy.user.details['shortEmail']
+        created_user : dummy.user.details['shortEmail'],
+        testdata : 'Yes'
       };
     }
   },
@@ -70,7 +72,8 @@ var dummy = {
         return {
           name : 'Team document-' + new Date().getTime(),
           desc : 'team document description',
-          squadteam : 'No'
+          squadteam : 'No',
+          testdata : 'Yes'
         };
     }
   },
