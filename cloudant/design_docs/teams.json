@@ -1,6 +1,6 @@
 {
   "_id": "_design/teams",
-  "version": 0.2,
+  "version": 0.3,
   "views": {
     "teams": {
       "map": "function (doc) {\n  if ((doc.type == 'team') && (doc.doc_status === null || doc.doc_status != 'delete')) {\n    var teamMembers = [];\n    var teamCount = 0;\n    var teamAlloc = 0;\n    for (var i in doc.members) {\n  \t\tif (teamMembers.indexOf(doc.members[i].id) == -1) {\n  \t\t\tteamCount++;\n  \t\t\tteamMembers.push(doc.members[i].id);\n  \t\t}\n  \t\tteamAlloc += parseInt(doc.members[i].allocation);\n  \t}\n  \tteamAlloc = teamAlloc/100;\n  \temit(doc._id, \n      {\n        '_id': doc._id, \n        'name': doc.name, \n        'squadteam': doc.squadteam,\n        'parent_team_id': doc.parent_team_id,\n        'child_team_id': doc.child_team_id,\n        'total_members': teamCount,\n        'total_allocation': teamAlloc\n      });\n  }\n}"
@@ -22,6 +22,9 @@
     },
     "lookupSquad": {
       "map": "function (doc) {\n  if (doc._id == \"ag_ref_team_index\") {\n    for (var i in doc.lookup) {\n      if (doc.lookup[i].squadteam.toLowerCase() == \"yes\") {\n        emit(doc.lookup[i]._id, \n            {\n              _id: doc.lookup[i]._id,\n              name: doc.lookup[i].name\n            });\n      }\n    }\n  }\n}"
+    },
+    "teamsByUid": {
+      "map": "function (doc) {\r\n  if (doc.type == \"team\" && (doc.doc_status === null || doc.doc_status != 'delete')) {\r\n    if (doc.members !== undefined && doc.members.length > 0) {\r\n      for(i=0; i<doc.members.length; i++)\r\n          emit(doc.members[i].key, \r\n          { \r\n            '_id': doc._id,\r\n            '_rev': doc._rev,\r\n            'name': doc.name,\r\n            'parent_team_id': doc.parent_team_id,\r\n            'child_team_id': doc.child_team_id,\r\n            'squadteam': doc.squadteam\r\n          }); \r\n    }\r\n  }\r\n}"
     }
   },
   "indexes": {

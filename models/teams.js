@@ -656,6 +656,27 @@ var team = {
         }
     });
   },
+  getTeamByUid : function(uid){
+    return new Promise(function(resolve, reject){
+      if(_.isEmpty(uid)){
+        var err = { uid : ['Employee serial number/uid is required.' ] };
+        return reject(formatErrMsg(err));
+      }else{
+        common.getByViewKey('teams', 'teamsByUid', uid)
+          .then(function(body){
+            if(_.isEmpty(body.rows))
+              loggers.get('models').info('No team for serial number ' + uid);
+            else
+              loggers.get('models').info('Team lists for serial number  ' + uid + ' obtained');
+            resolve(body.rows);
+          })
+          .catch( /* istanbul ignore next */ function(err){
+            // cannot simulate Cloudant error during testing
+            return reject(formatErrMsg(err));
+          })
+        }
+    });
+  },
   associateActions: function(action){
     var validActions = ['associateParent', 'associateChild', 'removeParent', 'removeChild'];
     if(_.isEmpty(action))
