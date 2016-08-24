@@ -410,6 +410,8 @@ function getRemoteData(cUrl, _callback, args) {
 			          return merged;
 			        });
 			    }
+			    else
+			    	list = data;
 			  } else
 			    list =  data;
 
