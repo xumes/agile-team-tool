@@ -327,6 +327,7 @@ var userCache = {
       compactedTeam['squadteam'] = team.squadteam,
       compactedTeam['parent_team_id'] = team.parent_team_id,
       compactedTeam['child_team_id'] = team.child_team_id,
+      compactedTeam['doc_status'] = team.doc_status; 
       compactedTeam['total_members'] = teamCount,
       compactedTeam['total_allocation'] = teamAlloc
       compactedTeam['doc'] = team;

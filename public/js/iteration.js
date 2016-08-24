@@ -359,7 +359,7 @@ function loadAgileTeamIterationInfo(teamId, iterationId) {
   // retrieve and load latest iteration information for the team
   $.ajax({
     type : "GET",
-    url : "/api/iteration/searchTeamIteration?id=" + encodeURIComponent(teamId)
+    url : "/api/iteration/searchTeamIteration?id=" + encodeURIComponent(teamId) + "&limit=200"
   })
   .fail(function(xhr, textStatus, errorThrown) {
     if (xhr.status === 400) {
