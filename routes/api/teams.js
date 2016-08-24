@@ -97,6 +97,17 @@ module.exports = function(app, includes) {
       })
   }
 
+  getTeamByUid = function(req,res){
+    var uid = req.params.uid;
+    teamModel.getTeamByUid(uid)
+      .then(function(result){
+        res.send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      })
+  }
+
   getTeam = function(req, res) {
     /* use query to get top level, children or parent team */
     if (!_.isEmpty(req.query)) {
@@ -211,6 +222,9 @@ module.exports = function(app, includes) {
 
   // get all team by email
   app.get('/api/teams/members/:email', [includes.middleware.auth.requireLogin], getTeamByEmail);
+
+  // get all team by serial number/ uid
+  app.get('/api/teams/membersUid/:uid', [includes.middleware.auth.requireLogin], getTeamByUid);
 
   // get all team or team details if teamId exists
   app.get('/api/teams/:teamId?', [includes.middleware.auth.requireLogin], getTeam);
