@@ -116,6 +116,9 @@ var iteration = {
     data['created_dt'] = util.getServerTime();
     data['type'] = 'iterationinfo';
     cleanData = util.trimData(data);
+    var newIterationId = settings.prefixes.iteration + cleanData['team_id'] + " " + cleanData['iteration_name'] + "_" + new Date().getTime();
+    newIterationId = newIterationId.replace(/^[^a-z]+|[^\w:.-]+/gi, "");
+    cleanData['_id'] = newIterationId;
     var user_id = user['shortEmail'];
     var team_id = cleanData['team_id'];
     // console.log('ADD cleanData:', cleanData);

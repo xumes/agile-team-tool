@@ -3,7 +3,7 @@ var iterations = {
   teamDocValid: {
     name : 'testteamid_1',
     desc : 'team document description',
-    squadteam : 'No',
+    squadteam : 'Yes',
     testdata : 'Yes'
   },
   iterationDocValid: {
@@ -33,7 +33,7 @@ var iterations = {
     "testdata": "Yes"
   },
   iterationDoc_duplicateIterName: {
-    "_id": "testmyid",
+    "_id": "testmyid-" + crypto.randomBytes(20).toString('hex'),
     "type": "iterationinfo",
     "team_id": "testteamid_1",
     "iteration_name": "testiterationname-1",
