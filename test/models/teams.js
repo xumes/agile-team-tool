@@ -1195,3 +1195,19 @@ describe('Team models [getLookupIndex]', function(){
       });
   });
 });
+
+describe('Team models [defaultTeamDoc]', function(){
+  it('it will return default team doc format/ structure', function(done) {
+    var body = teamModel.defaultTeamDoc({ 'squadTeam' : 'Yes' }, userDetailsValid);
+    expect(body).to.be.a('object');
+    expect(body).to.have.property('_id');
+    done();
+  });
+
+  it('it will return default team doc format/ structure', function(done) {
+    var body = teamModel.defaultTeamDoc({ 'squadTeam' : 'No' }, userDetailsValid);
+    expect(body).to.be.a('object');
+    expect(body).to.have.property('_id');
+    done();
+  });
+});
