@@ -85,21 +85,25 @@ describe('Iteration Model', function() {
 
   after(function(done) {
     var bulkDeleteIds = [];
-    iterationModel.getByIterInfo(validId)
-    .then(function(result) {
-      if (result && result.rows.length > 0) {
-        for(i=0; i < result.rows.length; i++) {
-          var id = result.rows[i].id;
-          bulkDeleteIds.push(id);
-        }
-        util.BulkDelete(bulkDeleteIds)
-        .then(function(result) {
+    if(validId) {
+      iterationModel.getByIterInfo(validId)
+      .then(function(result) {
+        if (result && result.rows.length > 0) {
+          for(i=0; i < result.rows.length; i++) {
+            var id = result.rows[i].id;
+            bulkDeleteIds.push(id);
+          }
+          util.BulkDelete(bulkDeleteIds)
+          .then(function(result) {
+            done();
+          });
+        } else {
           done();
-        });
-      } else {
-        done();
-      }
-    });
+        }
+      });
+    } else {
+      done();
+    }
   });
 
   describe('[add]: Add team iteration document', function() {
