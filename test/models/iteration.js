@@ -520,7 +520,6 @@ describe('Iteration Model', function() {
     before(function(done) {
       var doc = _.clone(iterationDocValid_sample3);
       doc._id = "testmyid-" + crypto.randomBytes(20).toString('hex');
-      tmpIterationId = doc._id;
       doc.iteration_name = "testiterationname-" + crypto.randomBytes(5).toString('hex');
       var currentDate = moment().format("MM/DD/YYYY");
       doc.iteration_start_dt = currentDate;
@@ -531,6 +530,7 @@ describe('Iteration Model', function() {
       doc.team_id = validId;
       iterationModel.add(doc, user, allTeams, userTeams)
       .then(function(result) {
+        tmpIterationId = result.id;
         expect(result).to.be.a('object');
         expect(result).to.have.property('id');
         expect(result.ok).to.be.equal(true);
