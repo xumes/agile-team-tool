@@ -11,7 +11,7 @@ jQuery(function($) {
 
 		var urlParameters = getJsonParametersFromUrl();
 		if (urlParameters != undefined && urlParameters.testUser != undefined) {
-			resetUser(urlParameters.testUser);
+			setTestUser(urlParameters.testUser);
 			alert("here TestUser is: " + urlParameters.testUser);
 		}
 

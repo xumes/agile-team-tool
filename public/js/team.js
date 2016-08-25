@@ -7,29 +7,32 @@ var isIter = false;
 
 jQuery(function ($) {	
 	$(document).ready(function () {
-		$(".ibm-close-link" ).click(function() {
-			if($('#teamDetailsPageSection h2 .ibm-show-active').length == 0){
-				$('#teamDetailsPageSection h2 a').eq(0).trigger("click");
-			}
-			$('html, body').animate({scrollTop: $("#teamDetailsPageSection h2 a").offset().top}, 1000);	
-		});
-
-		
-		var urlParameters = getJsonParametersFromUrl();
-		if (urlParameters != undefined && urlParameters.id != undefined)
-			agileTeamListHandler(urlParameters.id, allTeams);
-		else
-			agileTeamListHandler("new", allTeams);
-
-		if (urlParameters != undefined && urlParameters.testUser != undefined) {
-			resetUser(urlParameters.testUser);
-			alert("here TestUser is: " + urlParameters.testUser);
-		}
-
-		agileTeamRolesHandler(memberRoles);
-		disableAddTeam();
-
+    getSessionVars(initPageAction);
 	});
+
+  function initPageAction() {
+    $(".ibm-close-link" ).click(function() {
+      if($('#teamDetailsPageSection h2 .ibm-show-active').length == 0){
+        $('#teamDetailsPageSection h2 a').eq(0).trigger("click");
+      }
+      $('html, body').animate({scrollTop: $("#teamDetailsPageSection h2 a").offset().top}, 1000); 
+    });
+
+    
+    var urlParameters = getJsonParametersFromUrl();
+    if (urlParameters != undefined && urlParameters.id != undefined)
+      agileTeamListHandler(urlParameters.id, allTeams);
+    else
+      agileTeamListHandler("new", allTeams);
+
+    if (urlParameters != undefined && urlParameters.testUser != undefined) {
+      setTestUser(urlParameters.testUser);
+      alert("here TestUser is: " + urlParameters.testUser);
+    }
+
+    agileTeamRolesHandler(memberRoles);
+    disableAddTeam();    
+  }
 
 	$("#teamSelectList").change(function () {
 		if ($("#teamSelectList option:selected").val() == "new") {

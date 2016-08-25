@@ -8,21 +8,25 @@ var teamId = '';
 var assessId = '';
 jQuery(function($) {
   $(document).ready(function() {
-    var urlParameters = getJsonParametersFromUrl();
-    if (urlParameters != undefined) {
-      teamId = urlParameters.id;
-      assessId = urlParameters.assessId;
-      if (teamId != undefined && assessId != undefined) {
-        retrieveAssessmentResult(teamId, assessId);
-        setAssessmentLink(teamId, assessId);
-      }
-    }
-    if (urlParameters != undefined && urlParameters.testUser != undefined) {
-			resetUser(urlParameters.testUser);
-			alert("here TestUser is: " + urlParameters.testUser);
-		}
+  	getSessionVars(initPageAction);
   });
 });
+
+function initPageAction() {
+  var urlParameters = getJsonParametersFromUrl();
+  if (urlParameters != undefined) {
+    teamId = urlParameters.id;
+    assessId = urlParameters.assessId;
+    if (teamId != undefined && assessId != undefined) {
+      retrieveAssessmentResult(teamId, assessId);
+      setAssessmentLink(teamId, assessId);
+    }
+  }
+  if (urlParameters != undefined && urlParameters.testUser != undefined) {
+		setTestUser(urlParameters.testUser);
+		alert("here TestUser is: " + urlParameters.testUser);
+	}	
+}
 
 function setIndAssessor(assessor){
 	$("#indAssessor").text(assessor);
