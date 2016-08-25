@@ -29,7 +29,7 @@ var infoLogs = function(msg){
 var team = {
   getNonSquadTeams: function() {
     return new Promise(function(resolve, reject) {
-      common.getByView('teams', 'lookup')
+      common.getByView('teams', 'lookupNonSquad')
         .then(function(result){
           resolve(result);
         })
@@ -41,7 +41,7 @@ var team = {
 
   getSquadTeams: function() {
     return new Promise(function(resolve, reject) {
-      common.getByView('teams', 'lookupTeamsWithSquad')
+      common.getByView('teams', 'lookup')
         .then(function(result){
           resolve(result);
         })
@@ -53,7 +53,7 @@ var team = {
 
   getRootTeams : function(data) {
   return new Promise(function(resolve, reject){
-      data.type = 'team';
+      //data.type = 'team';
       common.findBySelector(data)
         .then(function(results){
           resolve(results);
@@ -266,7 +266,8 @@ var team = {
                           })
                           .catch( /* istanbul ignore next */ function(err){
                             loggers.get('models').info('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
-                            setTimeout(teamIndex.initIndex, 2000);
+
+                            //setTimeout(teamIndex.initIndex(), 2000);
                             resolve(teamDoc);
                           }); // updateIndexDocument
                       }); // updateLookup
@@ -305,9 +306,9 @@ var team = {
         updateOrDeleteTeamValidation.push(team.getTeam(teamId)); //res[0]
         infoLogs('Getting iterations associated to ' + teamId);
         updateOrDeleteTeamValidation.push(iterationModels.getByIterInfo(teamId)); //res[1]
-        infoLogs('Getting assessments associated to ' + teamId); 
+        infoLogs('Getting assessments associated to ' + teamId);
         updateOrDeleteTeamValidation.push(assessmentModels.getTeamAssessments(teamId)); //res[2]
-        infoLogs('Getting teams associated to ' + teamId); 
+        infoLogs('Getting teams associated to ' + teamId);
         _.each(updatedTeamDoc['child_team_id'], function(id) {
           updateOrDeleteTeamValidation.push(team.getTeam(id));
         });
@@ -360,7 +361,7 @@ var team = {
                   }
                 }
                 associatedDocu = util.formatForBulkTransaction(associatedDocu, userEmail, 'update');
-                bulkDocu = {docs: _.union(bulkDocu.docs, associatedDocu.docs)};              
+                bulkDocu = {docs: _.union(bulkDocu.docs, associatedDocu.docs)};
               }
 
               infoLogs('Start team, assessment and iteration documents bulk delete');
@@ -378,7 +379,8 @@ var team = {
                             })
                             .catch( /* istanbul ignore next */ function(err){
                               loggers.get('models').info('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
-                              setTimeout(teamIndex.initIndex, 2000);
+
+                              //setTimeout(teamIndex.initIndex(), 2000);
                               resolve(results[0]);
                             }); //updateIndexDocument
                         }); // updateLookup
@@ -524,7 +526,7 @@ var team = {
                                 })
                                 .catch( /* istanbul ignore next */ function(err){
                                   loggers.get('models').info('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
-                                  setTimeout(teamIndex.initIndex, 2000);
+                                  //setTimeout(teamIndex.initIndex(), 2000);
                                   resolve(finalTeamDoc);
                                 }); //updateIndexDocument
                             }); // updateLookup
@@ -774,7 +776,7 @@ var team = {
                                           })
                                           .catch( /* istanbul ignore next */ function(err){
                                             loggers.get('models').info('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
-                                            setTimeout(teamIndex.initIndex, 2000);
+                                            //setTimeout(teamIndex.initIndex(), 2000);
                                             resolve(bulkDocu['docs']);
                                           }); // updateIndexDocument
                                       }); // updateLookup
@@ -878,7 +880,7 @@ var team = {
                                     })
                                     .catch( /* istanbul ignore next */ function(err){
                                       loggers.get('models').info('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
-                                      setTimeout(teamIndex.initIndex, 2000);
+                                      //setTimeout(teamIndex.initIndex(), 2000);
                                       resolve(bulkDocu['docs']);
                                     }); // updateIndexDocument
                                 }); // updateLookup
@@ -955,7 +957,7 @@ var team = {
                                       })
                                       .catch( /* istanbul ignore next */ function(err){
                                         loggers.get('models').info('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
-                                        setTimeout(teamIndex.initIndex, 2000);
+                                        //setTimeout(teamIndex.initIndex(), 2000);
                                         resolve(bulkDocu['docs']);
                                       }); // updateIndexDocument
                                   }); // updateLookup
@@ -1035,7 +1037,7 @@ var team = {
                                     })
                                     .catch( /* istanbul ignore next */ function(err){
                                       loggers.get('models').info('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
-                                      setTimeout(teamIndex.initIndex, 2000);
+                                      //setTimeout(teamIndex.initIndex(), 2000);
                                       resolve(bulkDocu['docs']);
                                     }); // updateIndexDocument
                                 }); // updateLookup
