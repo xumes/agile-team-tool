@@ -368,7 +368,7 @@ var userCache = {
     infoLogs('Done updating cached team data.');
   },
 
-  setSquadTeams: function(req, res, next) {
+  setActiveSquadTeams: function(req, res, next) {
     return new Promise(function(resolve, reject) {
       teamModel.getLookupTeamByType(null, true)
         .then(function(result) {
@@ -385,26 +385,14 @@ var userCache = {
   setUserTeams: function(req, res, next) {
     var userEmail = req.session['email'];
     return new Promise(function(resolve, reject) {
-      userCache.retrieveUserTeams(userEmail)
-        .then(function(result) {
-          req.userTeams = result;
-          return next();
-        })
-        .catch(function(err) {
-          req.userTeams = [];
-          return next();
-        });
-      });
-  },
-
-  retrieveUserTeams: function(userEmail){
-    return new Promise(function(resolve, reject) {
       teamModel.getUserTeams(userEmail)
         .then(function(result) {
-          resolve(result);
+          req.userTeamList = result;
+          return next();
         })
         .catch(function(err) {
-          resolve([]);
+          req.userTeamList = [];
+          return next();
         });
       });
   }

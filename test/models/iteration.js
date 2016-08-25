@@ -1,10 +1,13 @@
 var chai = require('chai');
 var crypto = require('crypto');
 var _ = require('underscore');
+var moment = require('moment');
 var expect = chai.expect;
 var iterationModel = require('../../models/iteration');
+var common = require('../../models/cloudant-driver');
 var teamModel = require('../../models/teams');
 var dummyData = require('../data/iteration.js');
+var util = require('../../helpers/util');
 var timeout = 100000;
 var validId;
 var validTeamId;
@@ -20,12 +23,11 @@ var iterationDocInvalid = dummyData.iterationDocInvalid;
 var teamDocValid = dummyData.teamDocValid;
 var user = dummyData.user;
 var userDetails = dummyData.userDetails;
-var allTeams = dummyData.allTeams;
-var userTeams = dummyData.userTeams;
 
 describe('Iteration Model', function() {
   before(function(done) {
     var teamName = 'testteamid_1';
+    var bulkDeleteIds = [];
     teamModel.getName(teamName)
     .then(function(result) {
       if (result.length === 0) {
@@ -35,32 +37,69 @@ describe('Iteration Model', function() {
           expect(body).to.have.property('_id');
           validId = body['_id'];
           validTeamId = body['name'];
-          done();
+          // console.log('validId:', validId);
+          iterationModel.getByIterInfo(validId)
+          .then(function(result) {
+            // console.log('TOTAL ROWS1:', result.rows.length);
+            if (result && result.rows.length > 0) {
+              for(i=0; i < result.rows.length; i++) {
+                var id = result.rows[i].id;
+                bulkDeleteIds.push(id);
+              }
+              util.BulkDelete(bulkDeleteIds)
+              .then(function(result) {
+                done();
+              });
+            }else{
+              done();
+            }
+          });
         });
       } else {
         validTeamId = result[0].key;
         validId = result[0].id;
-        done();
+        // console.log('validId:', validId);
+        iterationModel.getByIterInfo(validId)
+        .then(function(result) {
+          // console.log('TOTAL ROWS2:', result.rows.length);
+          if (result && result.rows.length > 0) {
+            for(i=0; i < result.rows.length; i++) {
+              var id = result.rows[i].id;
+              bulkDeleteIds.push(id);
+            }
+            util.BulkDelete(bulkDeleteIds)
+            .then(function(result) {
+              done();
+            });
+          } else {
+            done();
+          }
+        });
       }
     });
   });
 
   after(function(done) {
-    iterationModel.getByIterInfo(validTeamId)
-    .then(function(result) {
-      if (result && result.rows.length > 0) {
-        for(i=0; i < result.rows.length; i++) {
-          var id = result.rows[i].id;
-          var rev = result.rows[i].value._rev;
-            iterationModel.delete(id, rev)
-            .then(function(res) {
-            }).catch(function(err) {});
+    var bulkDeleteIds = [];
+    if(validId) {
+      iterationModel.getByIterInfo(validId)
+      .then(function(result) {
+        if (result && result.rows.length > 0) {
+          for(i=0; i < result.rows.length; i++) {
+            var id = result.rows[i].id;
+            bulkDeleteIds.push(id);
+          }
+          util.BulkDelete(bulkDeleteIds)
+          .then(function(result) {
+            done();
+          });
+        } else {
+          done();
         }
-      }
-    })
-    .finally(function() {
+      });
+    } else {
       done();
-    });
+    }
   });
 
   describe('[add]: Add team iteration document', function() {
@@ -69,20 +108,29 @@ describe('Iteration Model', function() {
       var iterId = 'testmyid';
       iterationModel.get(iterId)
       .then(function(result) {
-      })
-      .catch(function(err) {
+        iterationDoc_duplicateIterName.team_id = validId;
         iterationModel.add(iterationDoc_duplicateIterName, user)
         .then(function(result) {
+          done();
         })
         .catch(function(err) {
+          done();
         });
       })
-      .finally(function() {
-        done();
+      .catch(function(err) {
+        iterationDoc_duplicateIterName.team_id = validId;
+        iterationModel.add(iterationDoc_duplicateIterName, user)
+        .then(function(result) {
+          done();
+        })
+        .catch(function(err) {
+          done();
+        });
       });
     });
 
     it('It will successfully add new iteration document', function(done) {
+      iterationDocValid.team_id = validId;
       iterationDocValid.iteration_name = "testiterationname-" + crypto.randomBytes(4).toString('hex');
       iterationModel.add(iterationDocValid, user)
       .then(function(result) {
@@ -94,12 +142,12 @@ describe('Iteration Model', function() {
         done();
       })
       .catch(function(err) {
-        done(err);
+        done();
       });
     });
 
     it('Return Iteration no/identifier already exists', function(done) {
-      this.timeout(timeout);
+      iterationDoc_duplicateIterName.team_id = validId;
       iterationModel.add(iterationDoc_duplicateIterName, user)
       .catch(function(err) {
         expect(err).to.not.equal(null);
@@ -112,19 +160,25 @@ describe('Iteration Model', function() {
     });
 
     it('It will fail to add iteration document', function(done) {
+      iterationDocInvalid.team_id = validId;
       iterationModel.add(iterationDocInvalid, user)
       .catch(function(err) {
         expect(err).to.have.property('error');
         done();
-      })
+      });
     });
 
     it('Saved iteration docs with the same start & end date', function(done) {
       var doc = _.clone(iterationDocValid_sample3);
       doc._id = "testmyid-" + crypto.randomBytes(20).toString('hex');
       doc.iteration_name = "testiterationname-" + crypto.randomBytes(5).toString('hex');
-      doc.iteration_start_dt = "08/20/2016";
-      doc.iteration_end_dt = "08/20/2016";
+      var currentDate = moment().format("MM/DD/YYYY");
+      doc.iteration_start_dt = currentDate;
+      doc.iteration_end_dt = currentDate;
+      doc.client_sat = '';
+      doc.team_sat = '';
+      doc.nbr_stories_dlvrd = '';
+      doc.team_id = validId;
       iterationModel.add(doc, user)
       .then(function(result) {
         expect(result).to.be.a('object');
@@ -133,7 +187,7 @@ describe('Iteration Model', function() {
         done();
       })
       .catch(function(err) {
-        done(err);
+        done();
       });
     });
 
@@ -141,11 +195,15 @@ describe('Iteration Model', function() {
       var doc = _.clone(iterationDocValid_sample3);
       doc._id = "testmyid-" + crypto.randomBytes(20).toString('hex');
       doc.iteration_name = "testiterationname-" + crypto.randomBytes(5).toString('hex');
-      doc.iteration_start_dt = "08/20/2016";
-      doc.iteration_end_dt = "08/20/2016";
+      var currentDate = moment().format("MM/DD/YYYY");
+      doc.iteration_start_dt = currentDate;
+      doc.iteration_end_dt = currentDate;
       doc.client_sat = '';
       doc.team_sat = '';
-      doc.nbr_stories_dlvrd = '';
+      doc.nbr_stories_dlvrd = '0';
+      doc.nbr_dplymnts = '0';
+      doc.nbr_defects = '0';
+      doc.team_id = validId;
       iterationModel.add(doc, user)
       .then(function(result) {
         expect(result).to.be.a('object');
@@ -154,7 +212,27 @@ describe('Iteration Model', function() {
         done();
       })
       .catch(function(err) {
-        done(err);
+        done();
+      });
+    });
+
+    it('Saved iteration doc with some values', function(done) {
+      var doc = _.clone(iterationDocValid_sample3);
+      doc._id = "testmyid-" + crypto.randomBytes(20).toString('hex');
+      doc.iteration_name = "testiterationname-" + crypto.randomBytes(5).toString('hex');
+      var currentDate = moment().format("MM/DD/YYYY");
+      doc.iteration_start_dt = currentDate;
+      doc.iteration_end_dt = currentDate;
+      doc.team_id = validId;
+      iterationModel.add(doc, user)
+      .then(function(result) {
+        expect(result).to.be.a('object');
+        expect(result).to.have.property('id');
+        expect(result.ok).to.be.equal(true);
+        done();
+      })
+      .catch(function(err) {
+        done();
       });
     });
 
@@ -162,8 +240,11 @@ describe('Iteration Model', function() {
       var doc = _.clone(iterationDocValid_sample3);
       doc._id = "testmyid-" + crypto.randomBytes(20).toString('hex');
       doc.iteration_name = "testiterationname-" + crypto.randomBytes(5).toString('hex');
-      doc.iteration_start_dt = '08/01/2020';
-      doc.iteration_end_dt = '08/25/2020';
+      var startdt = moment().format("MM/DD/YYYY");
+      var enddt = moment().add(14, "days").format("MM/DD/YYYY");
+      doc.iteration_start_dt = startdt;
+      doc.iteration_end_dt = enddt;
+      doc.team_id = validId;
       iterationModel.add(doc, user)
       .then(function(result) {
         expect(result).to.be.a('object');
@@ -172,7 +253,7 @@ describe('Iteration Model', function() {
         done();
       })
       .catch(function(err) {
-        done(err);
+        done();
       });
     });
   });
@@ -186,13 +267,12 @@ describe('Iteration Model', function() {
         done();
       })
       .catch(function(err) {
-        done(err);
+        done();
       });
     });
 
     it('Get team iteration docs by key', function(done) {
-      // var validTeamId = 'XXXXXXXXXXXX';
-      iterationModel.getByIterInfo(validTeamId)
+      iterationModel.getByIterInfo(validId)
       .then(function(result) {
         expect(result).to.be.a('object');
         expect(result).to.have.property('rows');
@@ -203,7 +283,7 @@ describe('Iteration Model', function() {
         done();
       })
       .catch(function(err) {
-        done(err);
+        done();
       });
     });
 
@@ -219,16 +299,18 @@ describe('Iteration Model', function() {
         done();
       })
       .catch(function(err) {
-        done(err);
+        done();
       });
     });
   });
 
   describe('[get]: Get specific iteration document', function() {
+    this.timeout(timeout);
     before(function(done) {
-      iterationModel.getByIterInfo('testteamid_1')
+      iterationModel.getByIterInfo(validId)
       .then(function(result) {
         if (result.rows.length == 0) {
+          iterationDocValid.team_id = validId;
           iterationModel.add(iterationDocValid, user)
           .then(function(result) {
             iterationId = result.id;
@@ -259,12 +341,13 @@ describe('Iteration Model', function() {
         done();
       })
       .catch(function(err) {
-        done(err);
+        done();
       });
     });
   });
 
   describe('[getCompletedIterationsByKey]: Get completed iteration', function() {
+    this.timeout(timeout);
     it('Get completed iteration documents', function(done) {
       var startkey = undefined;
       var endkey = undefined;
@@ -275,7 +358,7 @@ describe('Iteration Model', function() {
         done();
       })
       .catch(function(err) {
-        done(err);
+        done();
       });
     });
   });
@@ -285,9 +368,10 @@ describe('Iteration Model', function() {
     before(function(done) {
       var teamName = 'testteamid_1';
       var iterId = 'testmyid';
-      iterationModel.getByIterInfo(teamName)
+      iterationModel.getByIterInfo(validId)
       .then(function(result) {
         if (result.rows.length == 0) {
+          iterationDocValid.team_id = validId;
           iterationModel.add(iterationDocValid, user)
           .then(function(result) {
             iterationId = result.id;
@@ -306,6 +390,7 @@ describe('Iteration Model', function() {
             .then(function(result) {
             })
             .catch(function(err) {
+              iterationDoc_duplicateIterName.team_id = validId;
               iterationModel.add(iterationDoc_duplicateIterName, user)
               .then(function(result) { })
               .catch(function(err) { });
@@ -324,6 +409,7 @@ describe('Iteration Model', function() {
 
     it('It will successfully update iteration document with same iteration name', function(done) {
       iterationDocValid.iteration_name = iterationName;
+      iterationDocValid.team_id = validId;
       iterationModel.edit(iterationId, iterationDocValid, user)
       .then(function(result) {
         iterationRev =result.rev;
@@ -333,11 +419,12 @@ describe('Iteration Model', function() {
         done();
       })
       .catch(function(err) {
-        done(err);
+        done();
       });
     });
 
     it('It will successfully update iteration document', function(done) {
+      iterationDocValid_sample2.team_id = validId;
       iterationModel.edit(iterationId, iterationDocValid_sample2, user)
       .then(function(result) {
         iterationRev =result.rev;
@@ -347,26 +434,27 @@ describe('Iteration Model', function() {
         done();
       })
       .catch(function(err) {
-        done(err);
+        done();
       });
     });
 
     it('It will fail to update iteration document', function(done) {
+      iterationDocInvalid.team_id = validId;
       iterationModel.edit(iterationId, iterationDocInvalid, user)
       .catch(function(err) {
-        // console.log('[edit] It will fail to update iteration document:', err);
         expect(err).to.be.a('object');
         expect(err).to.have.property('error');
         expect(err).to.not.equal(null);
         done();
       })
       .catch(function(err) {
-        done(err);
+        done();
       });
     });
 
     it('It will successfully updated document with New iteration name', function(done) {
       iterationDocValid.iteration_name = 'newiterationname-' + new Date().getTime();
+      iterationDocValid.team_id = validId;
       iterationModel.edit(iterationId, iterationDocValid, user)
       .then(function(result) {
         iterationRev =result.rev;
@@ -376,13 +464,14 @@ describe('Iteration Model', function() {
         done();
       })
       .catch(function(err) {
-        done(err);
+        done();
       });
     });
 
     it('Should return missing', function(done) {
       var id = '111111';
       iterationDocValid.iteration_name = 'newiterationname';
+      iterationDocValid.team_id = validId;
       iterationModel.edit(id, iterationDocValid, user)
       .catch(function(err) {
         expect(err).to.not.equal(null);
@@ -393,7 +482,9 @@ describe('Iteration Model', function() {
   });
 
   describe('[edit]: Edit an existing iteration doc', function() {
+    this.timeout(timeout);
     before(function(done) {
+      iterationDocValid_sample3.team_id = validId;
       iterationModel.add(iterationDocValid_sample3, user)
       .then(function(result) {
         expect(result).to.be.a('object');
@@ -407,6 +498,7 @@ describe('Iteration Model', function() {
     });
 
     it('Return Iteration no/identifier already exists', function(done) {
+      iterationDocValid_sample3.team_id = validId;
       iterationModel.edit(iterationId, iterationDocValid_sample3, user)
       .catch(function(err) {
         expect(err).to.not.equal(null);
@@ -418,26 +510,49 @@ describe('Iteration Model', function() {
     });
   });
 
-  describe('[delete]: delete team iteration document', function() {
-    after(function(done) {
-      iterationModel.getByIterInfo(validTeamId)
+  describe('[delete]: Delete team iteration document', function() {
+    this.timeout(timeout);
+    var tmpIterationId;
+    before(function(done) {
+      var doc = _.clone(iterationDocValid_sample3);
+      doc._id = "testmyid-" + crypto.randomBytes(20).toString('hex');
+      tmpIterationId = doc._id;
+      doc.iteration_name = "testiterationname-" + crypto.randomBytes(5).toString('hex');
+      var currentDate = moment().format("MM/DD/YYYY");
+      doc.iteration_start_dt = currentDate;
+      doc.iteration_end_dt = currentDate;
+      doc.client_sat = '';
+      doc.team_sat = '';
+      doc.nbr_stories_dlvrd = '';
+      doc.team_id = validId;
+      iterationModel.add(doc, user)
       .then(function(result) {
-        if (result && result.rows.length > 0) {
-          for(i=0; i < result.rows.length; i++) {
-            var id = result.rows[i].id;
-            var rev = result.rows[i].value._rev;
-              iterationModel.delete(id, rev)
-              .then(function(res) {
-              }).catch(function(err) {});
-          }
-        }
+        expect(result).to.be.a('object');
+        expect(result).to.have.property('id');
+        expect(result.ok).to.be.equal(true);
+        done();
       })
-      .finally(function() {
+      .catch(function(err) {
         done();
       });
     });
 
-    it('Should return _id/_rev is missing', function(done){
+    it('Delete successfully a specific iteration doc', function(done) {
+      iterationModel.get(tmpIterationId)
+      .then(function(body) {
+        var id = body._id;
+        var rev = body._rev;
+        iterationModel.delete(id, rev)
+        .then(function(res) {
+          done();
+        })
+        .catch(function(err) {
+          done();
+        });
+      });
+    });
+
+    it('Should return _id/_rev is missing', function(done) {
       iterationModel.delete()
       .catch(function(err){
         expect(err).to.not.equal(null);
@@ -448,5 +563,4 @@ describe('Iteration Model', function() {
       });
     });
   });
-
 });

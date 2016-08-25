@@ -16,7 +16,7 @@ module.exports = function(app, includes) {
         'environment'     : settings.environment,
         'prefix'          : settings.prefixes.iteration,
         'squadTeams'      : req.squadTeams,
-        'userTeams'       : req.userTeams
+        'userTeamList'    : req.userTeamList
       };
     render(req, res, 'iteration', json);
   };
@@ -25,7 +25,7 @@ module.exports = function(app, includes) {
     [
       includes.middleware.auth.requireLoginWithRedirect,
       includes.middleware.cache.setSystemInfoCache,
-      includes.middleware.cache.setSquadTeams,
+      includes.middleware.cache.setActiveSquadTeams,
       includes.middleware.cache.setUserTeams
     ], showIteration);
 };

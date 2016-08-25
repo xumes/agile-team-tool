@@ -17,7 +17,7 @@ module.exports = function(app, includes) {
         'memberRoles'     : req.session['memberRoles'],
         'environment'     : settings.environment,
         'prefix'          : settings.prefixes.team,
-        'userTeams'       : req.userTeams
+        'userTeamList'    : req.userTeamList
       };
     render(req, res, 'team', json);
   };

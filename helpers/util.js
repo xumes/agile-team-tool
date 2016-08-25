@@ -172,6 +172,9 @@ module.exports.formatForBulkTransaction = function(docs, email, action){
  * 
  * @param userId - user login id (email id)
  * @param teamId - team id to search on
+ * @param checkParent - checking of parent is necessary
+ * @param allTeams - list of all teams
+ * @param userTeams - list of user teams
  * @returns - true if access allowed otherwise throws an error with unauthorized user message
  */
 

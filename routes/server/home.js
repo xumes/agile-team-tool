@@ -15,7 +15,7 @@ module.exports = function(app, includes) {
         'systemAdmin'     : req.session['systemAdmin'],
         'systemStatus'    : req.session['systemStatus'],
         'environment'     : settings.environment,
-        'userTeams'       : req.userTeams
+        'userTeamList'    : req.userTeamList
       };
     render(req, res, 'home', json);
   };

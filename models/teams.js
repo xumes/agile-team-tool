@@ -343,8 +343,8 @@ var team = {
               bulkDocu = util.formatForBulkTransaction(bulkDocu, userEmail, 'delete');
 
               // this block pertains to updating the related parent/child team records
-              if (res.length > 3) {
-                var lookupObjArr = [];
+              var lookupObjArr = [];
+              if (res.length > 3) {                
                 for (var i=3; i<res.length; i++) {
                   var team = res[i];
                   if (!_.isEqual(team._id, oldTeamDocu.parent_team_id)) {
@@ -361,6 +361,9 @@ var team = {
                 }
                 associatedDocu = util.formatForBulkTransaction(associatedDocu, userEmail, 'update');
                 bulkDocu = {docs: _.union(bulkDocu.docs, associatedDocu.docs)};              
+              } else {
+                var lookupObj = teamIndex.createLookupObj(oldTeamDocu._id, oldTeamDocu.name, oldTeamDocu.squadteam, 'delete', '', oldTeamDocu.parent_team_id);
+                lookupObjArr.push(lookupObj);
               }
 
               infoLogs('Start team, assessment and iteration documents bulk delete');
@@ -647,6 +650,27 @@ var team = {
               loggers.get('models').info('No team for email ' + email);
             else
               loggers.get('models').info('Team lists for email ' + email + ' obtained');
+            resolve(body.rows);
+          })
+          .catch( /* istanbul ignore next */ function(err){
+            // cannot simulate Cloudant error during testing
+            return reject(formatErrMsg(err));
+          })
+        }
+    });
+  },
+  getTeamByUid : function(uid){
+    return new Promise(function(resolve, reject){
+      if(_.isEmpty(uid)){
+        var err = { uid : ['Employee serial number/uid is required.' ] };
+        return reject(formatErrMsg(err));
+      }else{
+        common.getByViewKey('teams', 'teamsByUid', uid)
+          .then(function(body){
+            if(_.isEmpty(body.rows))
+              loggers.get('models').info('No team for serial number ' + uid);
+            else
+              loggers.get('models').info('Team lists for serial number  ' + uid + ' obtained');
             resolve(body.rows);
           })
           .catch( /* istanbul ignore next */ function(err){
@@ -1049,21 +1073,7 @@ var team = {
       }
     });
   },
-  getSquadTeams : function(){
-    return new Promise(function(resolve, reject){
-      infoLogs('Getting squad team list from Cloudant');
-      common.getByView('teams', 'squadTeams')
-        .then(function(body){
-          loggers.get('models').info('Success: Team records obtained');
-          resolve(body.rows);
-        })
-        .catch( /* istanbul ignore next */ function(err){
-          // cannot simulate Cloudant error during testing
-          msg = err.error;
-          return reject(formatErrMsg(msg));
-        });
-    });
-  },
+  
   getUserTeams : function(userEmail){
     return new Promise(function(resolve, reject){
       infoLogs('Getting user team list from Cloudant');
@@ -1088,7 +1098,7 @@ var team = {
             resolve(body);
           })
           .catch(function(err){
-            return reject(formatErrMsg(msg));
+            reject(formatErrMsg(msg));
           })
           loggers.get('models').info('Success: Team records obtained');
           
@@ -1096,7 +1106,7 @@ var team = {
         .catch( /* istanbul ignore next */ function(err){
           // cannot simulate Cloudant error during testing
           msg = err.error;
-          return reject(formatErrMsg(msg));
+          reject(formatErrMsg(msg));
         });
     });
   }
@@ -1240,12 +1250,12 @@ function getSelectedTeams(teamList, userTeams){
           var parentTeams = _.difference(parentTeams, userTeams);
           if (_.size(parentTeams) > 0)
             getSelectedTeams(parentTeams, userTeams);
-          loggers.get('models').info('Success: Team records obtained');
+          loggers.get('models').info('Success: Team records obtained.');
           resolve(userTeams);
         })
         .catch( function(err){
           msg = err.error;
-          return reject(formatErrMsg(msg));
+          reject(formatErrMsg(msg));
         });
       });
 }

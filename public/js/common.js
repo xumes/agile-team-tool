@@ -235,7 +235,7 @@ function hasAccess(teamId, checkParent) {
 			flag = false;
 		}
 	} else {
-		flag = isAdmin() || isUserMemberOfTeam(teamId, checkParent);
+		flag = isAdmin() || isUserMemberOfTeam(teamId);
 
 	}
 	return flag;
@@ -248,10 +248,10 @@ function hasAccess(teamId, checkParent) {
  * @param checkParent - set to true if we need to check the parent team documents for user membership.
  * @returns {Boolean}
  */
-function isUserMemberOfTeam(teamId, checkParent) {
+function isUserMemberOfTeam(teamId) {
 	var userExist = false;
-	if (userTeams != null)
-		userExist = _.contains(userTeams, teamId);
+	if (userTeamList != null)
+		userExist = _.contains(userTeamList, teamId);
 
 	return userExist;
 }
@@ -397,6 +397,7 @@ function getRemoteData(cUrl, _callback, args) {
 
 			   args.push(list);
 			   returnObj = list;
+
 			} else {
 				args.push(data);
 				returnObj =  data;
@@ -413,7 +414,7 @@ function getRemoteData(cUrl, _callback, args) {
 			_callback.apply(this, args);
 		}
 	})
-	
+
 	return returnObj;
 }
 

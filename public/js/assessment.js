@@ -174,7 +174,6 @@ function assessmentQuestionnaireHandler(teamAssessment, assessmentTemplateList) 
 		gAssessmentTemplate = assessmentTemplateList[0];
 
 	if (teamAssessment != null) {		
-		
 		var result = _.find(gAssessmentTemplateList, function(value){
 			if (value.atma_version == teamAssessment.assessmt_version ||
 				value._id == teamAssessment.assessmt_version){

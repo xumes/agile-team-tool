@@ -799,6 +799,51 @@ describe('Team models [getTeamByEmail]: get all team lists for a given email add
 
 });
 
+describe('Team models [getTeamByUid]: get all team lists for a given serial number/ uid', function(){
+  before(function(done) {
+    cache.setHomeCache(userDetails['shortEmail'])
+    .then(function(body){
+      session = body;
+      session['user'] = userDetails;
+      done();
+    })
+  })
+
+  it('return error becuase serial number/ uid is empty', function(done){
+    teamModel.getTeamByUid(null)
+      .then(function(body){
+        expect(body).to.be.empty;
+      })
+      .finally(function(){
+        done();
+      });
+  });
+
+  it('return empty team lists serial number/ uid without team', function(done){
+    teamModel.getTeamByUid('invalid-uid')
+      .then(function(body){
+        expect(body).to.be.empty;
+      })
+      .finally(function(){
+        done();
+      });
+  });
+
+  it('return team lists for this serial number/ uid', function(done){
+    teamModel.getTeamByUid(userDetails['ldap']['serialNumber'])
+      .then(function(body){
+        expect(body[0]['key']).to.be.equal(userDetails['ldap']['serialNumber']);
+      })
+      .catch(function(err){
+        expect(err).to.be.equal(null);
+      })
+      .finally(function(){
+        done();
+      });
+  });
+
+});
+
 describe('Team models [getRootTeams]: get top level, children or parent teams', function(){
   it('return team lists for top level teams', function(done){
     var data = {'parent_team_id':''};
