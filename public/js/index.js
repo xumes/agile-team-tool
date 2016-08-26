@@ -8,7 +8,10 @@ jQuery.expr[':'].Contains = function(a, i, m) {
 
 jQuery(function($) {
 	$(document).ready(function() {
+		getSessionVars(initPageAction);
+	});
 
+	function initPageAction() {
 		var urlParameters = getJsonParametersFromUrl();
 		if (urlParameters != undefined && urlParameters.testUser != undefined) {
 			setTestUser(urlParameters.testUser);
@@ -18,7 +21,7 @@ jQuery(function($) {
 		// default to My team(s) view
 		//$("#myTeams").click();
 		getMyTeams();
-	});
+	}
 
 	$("#myTeams").click(function() {
     if ($(this).attr('data-state') != "open"){
