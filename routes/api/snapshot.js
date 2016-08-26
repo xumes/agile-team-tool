@@ -1,4 +1,5 @@
 var snapshotModel = require('../../models/snapshot');
+var _ = require('underscore');
 
 module.exports = function(app, includes) {
   var middleware = includes.middleware;
@@ -12,6 +13,22 @@ module.exports = function(app, includes) {
         res.status(400).send(err);
       });
   },
+
+  getRollUpDataByTeam = function(req, res) {
+    console.log(req.params.teamId);
+    if (!_.isEmpty(req.params.teamId) && (req.params.teamId != undefined)) {
+      snapshotModel.getRollUpDataByTeam(req.params.teamId)
+        .then(function(result){
+          res.status(200).send(result);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          res.status(400).send(err);
+        });
+    } else {
+      var msg = {'error' : 'team id is not right'};
+      res.status(400).send(msg)
+    }
+  }
 
   getRollUpData = function(req,res) {
     var startTime = req.query.startTime;
@@ -43,5 +60,6 @@ module.exports = function(app, includes) {
   }
 
   app.get('/api/snapshot/updaterollupdata/', [includes.middleware.auth.requireLogin], updateRollUpData);
+  app.get('/api/snapshot/rollupdatabyteam/:teamId', [includes.middleware.auth.requireLogin], getRollUpDataByTeam);
   app.get('/api/snapshot/getrollupdata', [includes.middleware.auth.requireLogin], getRollUpData);
 };

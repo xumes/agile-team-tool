@@ -448,16 +448,16 @@ function getJsonParametersFromUrl() {
 }
 
 function siteEnv() {
-	if (environment != null) {
-		if (environment.toLowerCase() != 'prod') {
-			$("#environment").text(environment);
-		}
-		if (environment.toLowerCase() == 'sit') {
-			$("#debugSection").show();
-		} else {
-			$("#debugSection").hide();
-		}
-	}
+// 	if (environment != null) {
+// 		if (environment.toLowerCase() != 'prod') {
+// 			$("#environment").text(environment);
+// 		}
+// 		if (environment.toLowerCase() == 'sit') {
+// 			$("#debugSection").show();
+// 		} else {
+// 			$("#debugSection").hide();
+// 		}
+// 	}
 }
 
 function displayEditStatus(status) {

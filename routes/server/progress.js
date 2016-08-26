@@ -16,7 +16,7 @@ module.exports = function(app, includes) {
         'systemStatus'    : req.session['systemStatus'],
         'environment'     : settings.environment,
         'prefix'          : settings.prefixes.assessment,
-        'userTeams'       : req.userTeams
+        'userTeamList'    : req.userTeamList
       };
       render(req, res, 'progress', json);
   };

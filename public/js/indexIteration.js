@@ -5,47 +5,47 @@ function teamIterationListHander(teamId, teamIterations) {
 	var velocitySeries = new Object();
 	velocitySeries.name = "Iteration date";
 	velocitySeries.data = [];
-	
+
 	var throughputSeries = new Object();
 	throughputSeries.name = "Iteration date";
 	throughputSeries.data = [];
-	
+
 	var teamMemSeries = new Object();
 	teamMemSeries.name = "Team Members";
 	teamMemSeries.data = [];
 	var teamMemCountArr = [];
-	
+
 	var fteSeries = new Object();
 	fteSeries.name = "FTE";
 	fteSeries.data = [];
 	fteSeries.color = '#A52A2A';
 	var fteCountArr = [];
-	
+
 	var targetSeries = new Object();
 	targetSeries.name = "Member goal (5 - 12)";
 	targetSeries.data = [];
 	targetSeries.color = '#93FF93';
-	
+
 	var defectsSeries = new Object();
 	defectsSeries.name = "Defects";
 	defectsSeries.data = [];
-	
+
 	var deploySeries = new Object();
 	deploySeries.name = "Deployments";
 	deploySeries.data = [];
-	
+
 	var teamSatSeries = new Object();
 	teamSatSeries.name = "Team Satisfaction";
 	teamSatSeries.data = [];
-	
+
 	var clientSatSeries = new Object();
 	clientSatSeries.name = "Client Satisfaction";
 	clientSatSeries.data = [];
-	
+
 	var storyFTESeries = new Object();
 	storyFTESeries.name = "Stories/FTE";
 	storyFTESeries.data = [];
-	
+
 	var storyPointFTESeries = new Object();
 	storyPointFTESeries.name = "Story points/FTE";
 	storyPointFTESeries.data = [];
@@ -58,7 +58,7 @@ function teamIterationListHander(teamId, teamIterations) {
 	var priorIter = "";
 	var p6Iterations = [];
 	var listOption = [];
-	
+
 	var iterIndx = 0;
 	if (teamIterations != null) {
 		teamIterations = sortIterations(teamIterations);
@@ -70,7 +70,7 @@ function teamIterationListHander(teamId, teamIterations) {
 					var option = [ value._id, value.iteration_name ];
 					listOption.push(option);
 					p6Iterations.push(value);
-				} 
+				}
 				if (crntIter == "") {
 					crntIter = value;
 				} else if (priorIter == "") {
@@ -82,11 +82,11 @@ function teamIterationListHander(teamId, teamIterations) {
 				listOption.push(option);
 			}
 		});
-	}	
+	}
 
-	setSelectOptions("gotoIterationList", listOption, null, null, null);	
+	setSelectOptions("gotoIterationList", listOption, null, null, null);
 	IBMCore.common.widget.selectlist.init("#gotoIterationList");
-	
+
 	// charts
 	for ( var i = p6Iterations.length - 1; i > -1; i--) {
 		var graphCat;
@@ -123,7 +123,7 @@ function teamIterationListHander(teamId, teamIterations) {
 		tData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
 		tData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
 		throughputSeries.data.push(tData);
-		
+
 		tmData.name = p6Iterations[i].iteration_name;
 		tmData.y = isNaN(parseInt(p6Iterations[i].team_mbr_cnt)) ? 0 : parseInt(p6Iterations[i].team_mbr_cnt);
 		tmData.iterURL = iterationURL + p6Iterations[i]._id;
@@ -131,7 +131,7 @@ function teamIterationListHander(teamId, teamIterations) {
 		tmData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
 		teamMemSeries.data.push(tmData);
 		teamMemCountArr.push(tmData.y);
-		
+
 		fteData.name = p6Iterations[i].iteration_name;
 		fteData.y = isNaN(parseInt(p6Iterations[i].fte_cnt)) ? 0 : parseFloat(p6Iterations[i].fte_cnt);
 		fteData.iterURL = iterationURL + p6Iterations[i]._id;
@@ -139,50 +139,50 @@ function teamIterationListHander(teamId, teamIterations) {
 		fteData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
 		fteSeries.data.push(fteData);
 		fteCountArr.push(fteData.y);
-		
+
 		targetSeries.data.push(-1);
-		
+
 		defectData.name = p6Iterations[i].iteration_name;
 		defectData.y = isNaN(parseInt(p6Iterations[i].nbr_defects)) ? 0 : parseInt(p6Iterations[i].nbr_defects);
 		defectData.iterURL = iterationURL + p6Iterations[i]._id;
 		defectData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
 		defectData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
 		defectsSeries.data.push(defectData);
-		
+
 		deployData.name = p6Iterations[i].iteration_name;
 		deployData.y = isNaN(parseInt(p6Iterations[i].nbr_dplymnts)) ? 0 : parseInt(p6Iterations[i].nbr_dplymnts);
 		deployData.iterURL = iterationURL + p6Iterations[i]._id;
 		deployData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
 		deployData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
 		deploySeries.data.push(deployData);
-		
+
 		teamSatData.name = p6Iterations[i].iteration_name;
 		teamSatData.y = isNaN(parseInt(p6Iterations[i].team_sat)) ? 0 : parseFloat(p6Iterations[i].team_sat);
 		teamSatData.iterURL = iterationURL + p6Iterations[i]._id;
 		teamSatData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
 		teamSatData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
 		teamSatSeries.data.push(teamSatData);
-		
+
 		clientSatData.name = p6Iterations[i].iteration_name;
 		clientSatData.y = isNaN(parseInt(p6Iterations[i].client_sat)) ? 0 : parseFloat(p6Iterations[i].client_sat);
 		clientSatData.iterURL = iterationURL + p6Iterations[i]._id;
 		clientSatData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
 		clientSatData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
 		clientSatSeries.data.push(clientSatData);
-		
+
 		var StoriesDel = isNaN(parseInt(p6Iterations[i].nbr_stories_dlvrd)) ? 0 : parseInt(p6Iterations[i].nbr_stories_dlvrd);
 		var StoryPointDel = isNaN(parseInt(p6Iterations[i].nbr_story_pts_dlvrd)) ? 0 : parseInt(p6Iterations[i].nbr_story_pts_dlvrd);
 		var fte = isNaN(parseInt(p6Iterations[i].fte_cnt)) ? 0 : parseFloat(p6Iterations[i].fte_cnt);
 		var storiesFTE = isNaN(parseInt((StoriesDel / fte).toFixed(1))) ? 0 : parseFloat((StoriesDel / fte).toFixed(1));
 		var strPointsFTE = isNaN(parseInt((StoryPointDel / fte).toFixed(1))) ? 0 : parseFloat((StoryPointDel / fte).toFixed(1));
-		
+
 		storiesFTEData.name = p6Iterations[i].iteration_name;
 		storiesFTEData.y = storiesFTE;
 		storiesFTEData.iterURL = iterationURL + p6Iterations[i]._id;
 		storiesFTEData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
 		storiesFTEData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
 		storyFTESeries.data.push(storiesFTEData);
-		
+
 		storyPointFTEData.name = p6Iterations[i].iteration_name;
 		storyPointFTEData.y = strPointsFTE;
 		storyPointFTEData.iterURL = iterationURL + p6Iterations[i]._id;
@@ -191,25 +191,25 @@ function teamIterationListHander(teamId, teamIterations) {
 		storyPointFTESeries.data.push(storyPointFTEData);
 
 	}
-	
+
 	var teamMemMax = getMax(teamMemCountArr);
 	var fteMax = getMax(fteCountArr);
 	var yMax = Math.max(teamMemMax,fteMax);
 	if(yMax <= 12){
 		yMax = 12;
 	}
-	
+
 	if (!(teamMemSeries.data.length > 0 || fteSeries.data.length > 0 || targetSeries.data.length > 0)) {
 		yMax = null;
 	}
-	
+
 	var sMax = 4;
 	if (!(teamSatSeries.data.length > 0 || clientSatSeries.data.length > 0)) {
 		sMax = null;
 	}
-	
+
 	destroyIterationCharts();
-	
+
 	loadScoreChart('velocityChart', 'Velocity', 'line', graphCategory, 'Story points', velocitySeries, 'Points','Iteration Dates', '* Indicates Team Change', false, true);
 	loadScoreChart('throughputChart', 'Throughput', 'line', graphCategory, 'Stories/tickets/cards', throughputSeries, 'Points', 'Iteration Dates','* Indicates Team Change', false, true);
 	loadPizzaChart('pizzaChart', '2 Pizza Rule (Team Members)', 'line', graphCategory, 'Count',yMax, teamMemSeries,fteSeries,targetSeries, 'Points');
@@ -223,7 +223,7 @@ function teamIterationListHander(teamId, teamIterations) {
 		window.location = 'iteration?id=' + teamID + '&iter=' + iterID;
 	});
 	$("#gotoIterationList").removeAttr("disabled");
-	
+
 	$("#CreateIterationBtn").attr("disabled", "disabled");
 	if (hasAccess(teamId, true)) {
 		$("#CreateIterationBtn").removeAttr("disabled");
@@ -231,9 +231,9 @@ function teamIterationListHander(teamId, teamIterations) {
 			window.location = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=new';
 		});
 	}
-	
+
 	$("#spinnerContainer").hide();
-	$("#mainContent").show(); 
+	$("#mainContent").show();
 }
 
 function destroyIterationCharts() {
@@ -350,7 +350,7 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj, unit
 
 function loadPizzaChart(id, title, type, categories, yAxisLabel,yMax, seriesObj1,seriesObj2,seriesObj3, unit) {
 	var plotBandOptions = null;
-	
+
 	if (seriesObj1.data.length > 0 || seriesObj2.data.length > 0 || seriesObj3.data.length > 0) {
 		plotBandOptions = [{
 			color: '#93FF93',
@@ -401,7 +401,7 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel,yMax, seriesObj1
 				text : yAxisLabel
 			},
 			plotBands: plotBandOptions
-			
+
 		},
 
 		plotOptions : {
@@ -409,7 +409,7 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel,yMax, seriesObj1
 				pointPlacement : 'on'
 			}
 		},
-		
+
 		tooltip : {
 			shared : true,
 			formatter : function() {
@@ -471,7 +471,7 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel,yMax, seriesObj1
 }
 
 function loadStackedPizzaChart(id, title, type, categories, yAxisLabel, seriesObj1,seriesObj2,seriesObj3) {
-	
+
 
 	new Highcharts.Chart({
 		chart : {
@@ -545,14 +545,14 @@ function loadStackedPizzaChart(id, title, type, categories, yAxisLabel, seriesOb
 			name : seriesObj1.name,
 			data : seriesObj1.data,
 			color : seriesObj1.color
-			
+
 		},
 		{
 			showInLegend : true,
 			name : seriesObj2.name,
 			data : seriesObj2.data,
 			color : seriesObj2.color
-			
+
 		},
 		{
 			showInLegend : true,
@@ -584,7 +584,7 @@ function loadBarPizzaChart(id, title, type, categories, seriesObj1,seriesObj2 , 
 			style: {"fontSize" : "15px" },
 			text : title
 		},
-		
+
 		legend: {
 	        itemStyle: {
 	            color: 'orange'
@@ -632,14 +632,14 @@ function loadBarPizzaChart(id, title, type, categories, seriesObj1,seriesObj2 , 
 			name : seriesObj1.name,
 			data : seriesObj1.data,
 			color : seriesObj1.color
-			
+
 		},
 		{
 			showInLegend : true,
 			name : seriesObj2.name,
 			data : seriesObj2.data,
 			color : seriesObj2.color
-			
+
 		}]
 	});
 }
@@ -665,7 +665,7 @@ function loadPiePizzaChart(id, title, type, seriesObj,subtitle) {
 			style: {"fontSize" : "15px" },
 			text : title
 		},
-		
+
 		 plotOptions: {
 	            series: {
 	                dataLabels: {
@@ -692,7 +692,7 @@ function loadPiePizzaChart(id, title, type, seriesObj,subtitle) {
 		credits : {
 			enabled : false
 		},
-		
+
 		subtitle : {
 			text : subtitle,
 			verticalAlign : 'bottom',
@@ -721,7 +721,7 @@ function loadChartMulSeries(id, title, type, categories, yAxisLabel,xAxisLabel, 
 		chart : {
 			type : type,
 			renderTo : id
-		},				
+		},
 		lang : {
 			noData : "No results reported"
 		},
@@ -819,7 +819,7 @@ function loadChartPartialSeries(id, title, type, categories, yAxisLabel,xAxisLab
 		chart : {
 			type : type,
 			renderTo : id
-		},				
+		},
 		lang : {
 			noData : "No results reported"
 		},
@@ -878,7 +878,7 @@ function loadChartPartialSeries(id, title, type, categories, yAxisLabel,xAxisLab
 		credits : {
 			enabled : false
 		},
-		
+
 		subtitle : {
 			text : '---Partial month',
 			verticalAlign : 'bottom',
@@ -891,20 +891,20 @@ function loadChartPartialSeries(id, title, type, categories, yAxisLabel,xAxisLab
 			}
 		},
 
-		series : [ 
+		series : [
 			{
 				showInLegend : false,
 				name : seriesObj1.name,
 				data : seriesObj1.data,
 				color : seriesObj1.color,
 				dashStyle : seriesObj1.dashStyle
-			}  ,       
+			}  ,
 		 {
 			showInLegend : false,
 			name : seriesObj2.name,
 			data : seriesObj2.data
 		}
-		
+
 		]
 	});
 }
@@ -914,7 +914,7 @@ function loadDeploymentsChartParent(id, title, type, categories, yAxisLabel,xAxi
 		chart : {
 			type : type,
 			renderTo : id
-		},				
+		},
 		lang : {
 			noData : "No results reported"
 		},
@@ -977,7 +977,7 @@ function loadDeploymentsChartParent(id, title, type, categories, yAxisLabel,xAxi
 		credits : {
 			enabled : false
 		},
-		
+
 		subtitle : {
 			text : '---Partial month',
 			verticalAlign : 'bottom',
@@ -990,7 +990,7 @@ function loadDeploymentsChartParent(id, title, type, categories, yAxisLabel,xAxi
 			}
 		},
 
-		series : [ 
+		series : [
 		 {
 			showInLegend : false,
 			name : seriesObj1.name,
@@ -1000,7 +1000,7 @@ function loadDeploymentsChartParent(id, title, type, categories, yAxisLabel,xAxi
 			marker: {
                 symbol: 'circle'
             }
-		 },       
+		 },
 		 {
 			showInLegend : true,
 			name : seriesObj2.name,
@@ -1018,7 +1018,7 @@ function loadDeploymentsChartParent(id, title, type, categories, yAxisLabel,xAxi
 			marker: {
                 symbol: 'triangle'
             }
-		 },       
+		 },
 		 {
 			showInLegend : true,
 			name : seriesObj4.name,
@@ -1027,7 +1027,7 @@ function loadDeploymentsChartParent(id, title, type, categories, yAxisLabel,xAxi
                 symbol: 'triangle'
             }
 		}
-		
+
 		]
 	});
 }
@@ -1037,7 +1037,7 @@ function loadSatisfactionChartParent(id, title, type, categories, yAxisLabel,xAx
 		chart : {
 			type : type,
 			renderTo : id
-		},				
+		},
 		lang : {
 			noData : "No results reported"
 		},
@@ -1103,7 +1103,7 @@ function loadSatisfactionChartParent(id, title, type, categories, yAxisLabel,xAx
 		credits : {
 			enabled : false
 		},
-		
+
 		subtitle : {
 			text : '---Partial month',
 			verticalAlign : 'bottom',
@@ -1116,7 +1116,7 @@ function loadSatisfactionChartParent(id, title, type, categories, yAxisLabel,xAx
 			}
 		},
 
-		series : [ 
+		series : [
 		 {
 			showInLegend : false,
 			name : seriesObj1.name,
@@ -1126,7 +1126,7 @@ function loadSatisfactionChartParent(id, title, type, categories, yAxisLabel,xAx
 			marker: {
                 symbol: 'circle'
             }
-		 },       
+		 },
 		 {
 			showInLegend : true,
 			name : seriesObj2.name,
@@ -1144,7 +1144,7 @@ function loadSatisfactionChartParent(id, title, type, categories, yAxisLabel,xAx
 			marker: {
                 symbol: 'triangle'
             }
-		 },       
+		 },
 		 {
 			showInLegend : true,
 			name : seriesObj4.name,
@@ -1153,7 +1153,7 @@ function loadSatisfactionChartParent(id, title, type, categories, yAxisLabel,xAx
                 symbol: 'triangle'
             }
 		}
-		
+
 		]
 	});
 }
@@ -1261,31 +1261,31 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
 function retrieveIterations(teamIds, startDate, endDate, _callback, args){
 	var start = getMonthlyRange(startDate);
 	var end = getMonthlyRange(endDate);
-	
+
 	var iterQuery = new Object();
 	iterQuery.selector = new Object();
 	iterQuery.sort = [];
-	
+
 	var selector = new Object();
 	selector.type = "iterationinfo";
-	
+
 	var condition1 = new Object();
 	condition1.$in = teamIds;
 	selector.team_id = condition1;
-	
+
 	var condition2 = new Object();
 	condition2.$regex = start + ' || ' + end;
 	selector.iteration_end_dt = condition2;
-	
+
 	var condition3 = new Object();
 	condition3.$eq = "Completed";
 	selector.iterationinfo_status = condition3;
-	
-	
+
+
 	iterQuery.selector = selector;
 	var sort = new Object();
 	sort.iteration_end_dt = "asc";
-	
+
 	iterQuery.sort.push(sort);
 	iterations = selectorQuery(iterQuery, _callback, args);
 }
@@ -1302,13 +1302,13 @@ function currentTeamStats(){
 	var fte5to12=0;
 	var fteGt12=0;
 	var entry = new Object();
-	
+
 	for (var i in squadList) {
 		var team = allTeamsLookup[squadList[i]];
 		if (!_.isEmpty(team))
 			squadTeams.push(team);
 	}
-	
+
 	for (var x=0; x < squadTeams.length; x++){
 		var teamCnt = squadTeams[x]["total_members"] != null ? squadTeams[x]["total_members"] : teamMemCount(squadTeams[x]["members"]);
 		var teamFTE = squadTeams[x]["total_allocation"] != null ? squadTeams[x]["total_allocation"] : teamMemFTE(squadTeams[x]["members"]);
@@ -1322,7 +1322,7 @@ function currentTeamStats(){
 				teamsGt12 = teamsGt12 + 1;
 				fteGt12 = fteGt12 + teamFTE;
 				tcGt12 = tcGt12 + teamCnt;
-				
+
 			}else{
 				teams5to12 = teams5to12 + 1;
 				fte5to12 = fte5to12 + teamFTE;
@@ -1333,15 +1333,15 @@ function currentTeamStats(){
 	entry.teamsLt5 = teamsLt5;
 	entry.tcLt5 = tcLt5;
 	entry.fteLt5 = fteLt5;
-	
+
 	entry.teams5to12 = teams5to12;
 	entry.tc5to12 = tc5to12;
 	entry.fte5to12 = fte5to12;
-	
+
 	entry.teamsGt12 = teamsGt12;
 	entry.tcGt12 = tcGt12;
 	entry.fteGt12 = fteGt12;
-	
+
 	return entry;
 }
 
@@ -1351,7 +1351,7 @@ function monthlyIterations(teamIterations){
 	//var today = getServerDateTime();
 	if (teamIterations != undefined){
 		for (var i=0; i < teamIterations.length; i++){
-			
+
 			var currDate = new Date(teamIterations[i]["iteration_end_dt"]);
 			//var currMonth = currDate.getUTCMonth() + 1;
 			var currMonth = currDate.getMonth() + 1;
@@ -1388,21 +1388,21 @@ function monthlyIterations(teamIterations){
 						var dplymnts = teamIterations[x]["nbr_dplymnts"];
 						var teamStat = teamIterations[x]["team_sat"];
 						var clientStat = teamIterations[x]["client_sat"];
-						
+
 						if (pts != undefined && pts !=""){
 							totalPoints = totalPoints + parseInt(teamIterations[x]["nbr_story_pts_dlvrd"]);
 						}
 						if (stories != undefined && stories !=""){
 							totalStories = totalStories+ parseInt(teamIterations[x]["nbr_stories_dlvrd"]);
 						}
-						
+
 						if (defects != undefined && defects !=""){
 							totalDefects = totalDefects + parseInt(teamIterations[x]["nbr_defects"]);
 						}
 						if (dplymnts != undefined && dplymnts !=""){
 							totalDplymts = totalDplymts+ parseInt(teamIterations[x]["nbr_dplymnts"]);
 						}
-						
+
 						if (teamStat != undefined && teamStat !="" && (parseInt(teamStat) != 0)){
 							totTeamStat = totTeamStat + parseInt(teamStat);
 							totTeamStatIter = totTeamStatIter + 1;
@@ -1411,7 +1411,7 @@ function monthlyIterations(teamIterations){
 							totClientStat = totClientStat+ parseInt(clientStat);
 							totClientStatIter = totClientStatIter + 1;
 						}
-						
+
 						if(teamCnt != undefined && teamCnt !=""){
 							teamCnt = parseInt(teamIterations[x]["team_mbr_cnt"]);
 							if(teamCnt < 5){
@@ -1443,7 +1443,7 @@ function monthlyIterations(teamIterations){
 				if(totClientStatIter > 0){
 					entry.totClientStat = totClientStat/totClientStatIter;
 				}
-				
+
 				//if(today.getMonth()+1 == currMonth){
 				if(today.getUTCMonth()+1 == currMonth){
 					entry.partialMonth = true;
@@ -1459,102 +1459,102 @@ function monthlyIterations(teamIterations){
 
 function iterationScoreCard(teamId, teamName, teamIterations) {
 	var graphCategory = [];
-	
+
 	var velocitySeries = new Object();
 	velocitySeries.name = teamName;
 	velocitySeries.data = [];
-	
+
 	var velocityParSer = new Object();
 	velocityParSer.name = "Partial month";
 	velocityParSer.data = [];
 	velocityParSer.dashStyle = "dash";
 	velocityParSer.color = "orange";
-	
+
 	var throughputSeries = new Object();
 	throughputSeries.name = teamName;
 	throughputSeries.data = [];
-	
+
 	var throughputParSer = new Object();
 	throughputParSer.name = "Partial month";
 	throughputParSer.data = [];
 	throughputParSer.dashStyle = "dash";
 	throughputParSer.color = "orange";
-	
+
 	var teamLt5Ser = new Object();
 	teamLt5Ser.name = "Teams <5 mbrs";
 	teamLt5Ser.data = [];
 	teamLt5Ser.color = '#D3D3D3';
-	
+
 	var team5to12Ser = new Object();
 	team5to12Ser.name = "Teams 5-12 mbrs";
 	team5to12Ser.data = [];
 	team5to12Ser.color = '#93FF93';
-	
+
 	var teamGt12Ser = new Object();
 	teamGt12Ser.name = "Teams >12 mbrs";
 	teamGt12Ser.data = [];
 	teamGt12Ser.color = '#808080';
-	
+
 	var defectsSeries = new Object();
 	defectsSeries.name = "Defects";
 	defectsSeries.data = [];
-	
+
 	var defectsParSer = new Object();
 	defectsParSer.name = "Defects";
 	defectsParSer.data = [];
 	defectsParSer.dashStyle = "dash";
 	defectsParSer.color = "orange";
-	
+
 	var deploySeries = new Object();
 	deploySeries.name = "Deployments";
 	deploySeries.data = [];
-	
+
 	var deployParSer = new Object();
 	deployParSer.name = "Deployments";
 	deployParSer.data = [];
 	deployParSer.dashStyle = "dash";
 	deployParSer.color = "orange";
-	
+
 	//------
 	var clientStatSeries = new Object();
 	clientStatSeries.name = "Client Satisfaction";
 	clientStatSeries.data = [];
-	
+
 	var clientStatParSer = new Object();
 	clientStatParSer.name = "Client Satisfaction";
 	clientStatParSer.data = [];
 	clientStatParSer.dashStyle = "dash";
 	clientStatParSer.color = "orange";
-	
+
 	var teamStatSeries = new Object();
 	teamStatSeries.name = "Team Satisfaction";
 	teamStatSeries.data = [];
-	
+
 	var teamStatParSer = new Object();
 	teamStatParSer.name = "Team Satisfaction";
 	teamStatParSer.data = [];
 	teamStatParSer.dashStyle = "dash";
 	teamStatParSer.color = "orange";
-	
+
 	var partialSeries = new Object();
 	partialSeries.name = "Partial month";
 	partialSeries.data = [];
 	partialSeries.color =  "orange";
 
-	var monthList = monthlyIterations(teamIterations);
+	var monthList = teamIterations;//monthlyIterations(teamIterations);
 	monthList = sortMMMYYYY(monthList);
 	var curTeamstat = currentTeamStats();
-	
+
 	for ( var i = monthList.length - 1; i > -1; i--) {
 		var graphCat;
-		
+
 		var tLt5Data = new Object();
 		var t5to12Data = new Object();
 		var tGt12Data = new Object();
-		
+
 		graphCat =   monthList[i].month;
 		graphCategory.push(graphCat);
-		
+
 		if(monthList[i].partialMonth == true){
 			var vpData = new Object();
 			vpData.name = monthList[i].month;
@@ -1563,7 +1563,7 @@ function iterationScoreCard(teamId, teamName, teamIterations) {
 			vpData.totalCompleted =  isNaN(parseInt(monthList[i].totalCompleted)) ? 0 : parseInt(monthList[i].totalCompleted);
 			vpData.totalSquad = isNaN(parseInt(monthList[i].totalSquad)) ? 0 : parseInt(monthList[i].totalSquad);
 			velocityParSer.data.push(vpData);
-			
+
 			var vpData = new Object();
 			vpData.name = monthList[i+1].month;
 			vpData.x = graphCategory.indexOf(monthList[i+1].month);
@@ -1571,7 +1571,7 @@ function iterationScoreCard(teamId, teamName, teamIterations) {
 			vpData.totalCompleted =  isNaN(parseInt(monthList[i+1].totalCompleted)) ? 0 : parseInt(monthList[i+1].totalCompleted);
 			vpData.totalSquad = isNaN(parseInt(monthList[i+1].totalSquad)) ? 0 : parseInt(monthList[i+1].totalSquad);
 			velocityParSer.data.push(vpData);
-			
+
 			var tpData = new Object();
 			tpData.name = monthList[i].month;
 			tpData.x = graphCategory.indexOf(monthList[i].month);
@@ -1579,7 +1579,7 @@ function iterationScoreCard(teamId, teamName, teamIterations) {
 			tpData.totalCompleted =  isNaN(parseInt(monthList[i].totalCompleted)) ? 0 : parseInt(monthList[i].totalCompleted);
 			tpData.totalSquad = isNaN(parseInt(monthList[i].totalSquad)) ? 0 : parseInt(monthList[i].totalSquad);
 			throughputParSer.data.push(tpData);
-			
+
 			var tpData = new Object();
 			tpData.name = monthList[i+1].month;
 			tpData.x = graphCategory.indexOf(monthList[i+1].month);
@@ -1587,49 +1587,49 @@ function iterationScoreCard(teamId, teamName, teamIterations) {
 			tpData.totalCompleted =  isNaN(parseInt(monthList[i+1].totalCompleted)) ? 0 : parseInt(monthList[i+1].totalCompleted);
 			tpData.totalSquad = isNaN(parseInt(monthList[i+1].totalSquad)) ? 0 : parseInt(monthList[i+1].totalSquad);
 			throughputParSer.data.push(tpData);
-			
+
 			var defPData = new Object();
 			defPData.name = monthList[i].month;
 			defPData.x = graphCategory.indexOf(monthList[i].month);
 			defPData.y = isNaN(parseInt(monthList[i].totalDefects)) ? 0 : parseInt(monthList[i].totalDefects);
 			defectsParSer.data.push(defPData);
-			
+
 			var defPData = new Object();
 			defPData.name = monthList[i+1].month;
 			defPData.x = graphCategory.indexOf(monthList[i+1].month);
 			defPData.y = isNaN(parseInt(monthList[i+1].totalDefects)) ? 0 : parseInt(monthList[i+1].totalDefects);
 			defectsParSer.data.push(defPData);
-			
+
 			var depPData = new Object();
 			depPData.name = monthList[i].month;
 			depPData.x = graphCategory.indexOf(monthList[i].month);
 			depPData.y = isNaN(parseInt(monthList[i].totalDplymts)) ? 0 : parseInt(monthList[i].totalDplymts);
 			deployParSer.data.push(depPData);
-			
+
 			var depPData = new Object();
 			depPData.name = monthList[i+1].month;
 			depPData.x = graphCategory.indexOf(monthList[i+1].month);
 			depPData.y = isNaN(parseInt(monthList[i+1].totalDplymts)) ? 0 : parseInt(monthList[i+1].totalDplymts);
 			deployParSer.data.push(depPData);
-			
+
 			var tsPData = new Object();
 			tsPData.name = monthList[i].month;
 			tsPData.x = graphCategory.indexOf(monthList[i].month);
 			tsPData.y = isNaN(parseInt(monthList[i].totTeamStat)) ? null : parseFloat(monthList[i].totTeamStat.toFixed(1));
 			teamStatParSer.data.push(tsPData);
-			
+
 			var tsPData = new Object();
 			tsPData.name = monthList[i+1].month;
 			tsPData.x = graphCategory.indexOf(monthList[i+1].month);
 			tsPData.y = isNaN(parseInt(monthList[i+1].totTeamStat)) ? null : parseFloat(monthList[i+1].totTeamStat.toFixed(1));
 			teamStatParSer.data.push(tsPData);
-			
+
 			var csPData = new Object();
 			csPData.name = monthList[i].month;
 			csPData.x = graphCategory.indexOf(monthList[i].month);
 			csPData.y = isNaN(parseInt(monthList[i].totClientStat)) ? null : parseFloat(monthList[i].totClientStat.toFixed(1));
 			clientStatParSer.data.push(csPData);
-			
+
 			var csPData = new Object();
 			csPData.name = monthList[i+1].month;
 			csPData.x = graphCategory.indexOf(monthList[i+1].month);
@@ -1643,14 +1643,14 @@ function iterationScoreCard(teamId, teamName, teamIterations) {
 			vData.totalCompleted =  isNaN(parseInt(monthList[i].totalCompleted)) ? 0 : parseInt(monthList[i].totalCompleted);
 			vData.totalSquad = isNaN(parseInt(monthList[i].totalSquad)) ? 0 : parseInt(monthList[i].totalSquad);
 			velocitySeries.data.push(vData);
-			
+
 			var tData = new Object();
 			tData.name = monthList[i].month;
 			tData.y = isNaN(parseInt(monthList[i].totalStories)) ? 0 : parseInt(monthList[i].totalStories);
 			tData.totalCompleted =  isNaN(parseInt(monthList[i].totalCompleted)) ? 0 : parseInt(monthList[i].totalCompleted);
 			tData.totalSquad = isNaN(parseInt(monthList[i].totalSquad)) ? 0 : parseInt(monthList[i].totalSquad);
 			throughputSeries.data.push(tData);
-			
+
 			var defData = new Object();
 			defData.name = monthList[i].month;
 			defData.y = isNaN(parseInt(monthList[i].totalDefects)) ? 0 : parseInt(monthList[i].totalDefects);
@@ -1660,7 +1660,7 @@ function iterationScoreCard(teamId, teamName, teamIterations) {
 			depData.name = monthList[i].month;
 			depData.y = isNaN(parseInt(monthList[i].totalDplymts)) ? 0 : parseInt(monthList[i].totalDplymts);
 			deploySeries.data.push(depData);
-			
+
 			var tsData = new Object();
 			tsData.name = monthList[i].month;
 			tsData.y = isNaN(parseInt(monthList[i].totTeamStat)) ? null : parseFloat(monthList[i].totTeamStat.toFixed(1));
@@ -1671,12 +1671,12 @@ function iterationScoreCard(teamId, teamName, teamIterations) {
 			csData.y = isNaN(parseInt(monthList[i].totClientStat)) ? null : parseFloat(monthList[i].totClientStat.toFixed(1));
 			clientStatSeries.data.push(csData);
 		}
-		
+
 		tLt5Data.name = monthList[i].month;
 		tLt5Data.y = isNaN(parseInt(monthList[i].teamsLt5)) ? null : parseInt(monthList[i].teamsLt5) == 0 ? null : parseInt(monthList[i].teamsLt5);
 		tLt5Data.totalCompleted =  isNaN(parseInt(monthList[i].totalCompleted)) ? 0 : parseInt(monthList[i].totalCompleted);
 		teamLt5Ser.data.push(tLt5Data);
-		
+
 		t5to12Data.name = monthList[i].month;
 		var i5to12 = isNaN(parseInt(monthList[i].teams5to12)) ? null : parseInt(monthList[i].teams5to12) == 0 ? null : parseInt(monthList[i].teams5to12);
 		var totIter = isNaN(parseInt(monthList[i].totalCompleted)) ? 0 : parseInt(monthList[i].totalCompleted);
@@ -1690,13 +1690,13 @@ function iterationScoreCard(teamId, teamName, teamIterations) {
 		}
 		team5to12Ser.data.push(t5to12Data);
 		//partialSeries.data.push(0);
-		
+
 		tGt12Data.name = monthList[i].month;
 		tGt12Data.y = isNaN(parseInt(monthList[i].teamsGt12)) ? null : parseInt(monthList[i].teamsGt12) == 0 ? null : parseInt(monthList[i].teamsGt12);
 		tGt12Data.totalCompleted =  isNaN(parseInt(monthList[i].totalCompleted)) ? 0 : parseInt(monthList[i].totalCompleted);
 		teamGt12Ser.data.push(tGt12Data);
 	}
-	
+
 	var pData = [];
 	var pDataObj = new Object();
 	pDataObj.name = "Teams <5 mbrs";
@@ -1705,7 +1705,7 @@ function iterationScoreCard(teamId, teamName, teamIterations) {
 	pDataObj.fte = curTeamstat.fteLt5.toFixed(1);
 	pDataObj.color = '#D3D3D3';
 	pData.push(pDataObj);
-	
+
 	pDataObj = new Object();
 	pDataObj.name = "Teams 5-12 mbrs";
 	pDataObj.y = curTeamstat.teams5to12 == 0 ? null : curTeamstat.teams5to12;
@@ -1713,7 +1713,7 @@ function iterationScoreCard(teamId, teamName, teamIterations) {
 	pDataObj.fte = curTeamstat.fte5to12.toFixed(1);
 	pDataObj.color = '#93FF93';
 	pData.push(pDataObj);
-	
+
 	pDataObj = new Object();
 	pDataObj.name = "Teams >12 mbrs";
 	pDataObj.y = curTeamstat.teamsGt12 == 0 ? null : curTeamstat.teamsGt12;
@@ -1721,21 +1721,20 @@ function iterationScoreCard(teamId, teamName, teamIterations) {
 	pDataObj.fte = curTeamstat.fteGt12.toFixed(1);
 	pDataObj.color = '#808080';
 	pData.push(pDataObj);
-	
-	
+
+
 	var totTeamCnt = curTeamstat.teamsLt5 + curTeamstat.teams5to12 + curTeamstat.teamsGt12;
 	var cenTitle = 'Total team count:<br>' + totTeamCnt;
-	
+
 	var pizYMax = 100;
 	if (!team5to12Ser.data.length > 0) {
 		pizYMax = null;
 	}
-	
+
 	var ctsYMax = 4;
 	if (!(teamStatParSer.data.length > 0 || teamStatSeries.data.length > 0 || clientStatParSer.data.length > 0 || clientStatSeries.data.length > 0)) {
 		ctsYMax = null;
 	}
-	
 	destroyIterationCharts();
 	//loadScoreChart('pvelocityChart', 'Velocity', 'line', graphCategory, 'Story points', velocitySeries, 'Points', 'Iteration results by month', null, false, false);
 	loadChartPartialSeries('pvelocityChart', 'Velocity', 'line', graphCategory, 'Story points', 'Iteration results by month',velocityParSer,velocitySeries, 'Points',false);
@@ -1747,30 +1746,30 @@ function iterationScoreCard(teamId, teamName, teamIterations) {
 	loadDeploymentsChartParent('pdefectsChart', 'Deployments/Defects', 'line', graphCategory, 'Count', 'Iteration results by month',deployParSer,deploySeries,defectsParSer,defectsSeries, 'Points',false);
 	loadSatisfactionChartParent('pstatisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', 'Iteration results by month',teamStatParSer,teamStatSeries,clientStatParSer,clientStatSeries, 'Points',false,ctsYMax);
 	loadPiePizzaChart('piePizzaChart', '2 Pizza Rule (Squad Teams - Current)', 'pie', pData,cenTitle);
-	
+
 	$("#spinnerContainer").hide();
 	$("#mainContent").show();
 }
 
 function iterationEmptyScoreCard(teamId, teamName) {
 	var graphCategory = [];
-		
+
 	var velocitySeries = new Object();
 	velocitySeries.name = teamName;
 	velocitySeries.data = [];
-	
+
 	var throughputSeries = new Object();
 	throughputSeries.name = teamName;
 	throughputSeries.data = [];
 
 	destroyIterationCharts();
-	
+
 	loadScoreChart('velocityChart', 'Velocity', 'line', graphCategory, 'Story points', velocitySeries, 'Points', 'Iteration results by month', null, false, false);
 	loadScoreChart('throughputChart', 'Throughput', 'line', graphCategory, 'Stories/tickets/cards', throughputSeries, 'Points', 'Iteration results by month', null, false, false);
 }
 
 function completedIterationsHandler(teamId, teamName, squadList, iterationList) {
-	collectedIterations = iterationList;	
+	collectedIterations = iterationList;
 	parentIterationScoreCard(teamId, teamName, squadList, collectedIterations);
 
 }

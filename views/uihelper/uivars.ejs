@@ -1,36 +1,10 @@
 <!-- UI variables -->
 
 <script type="text/javascript">
-  var user            = <%-JSON.stringify(user)%>
-  const userSession = {
-    //id: not defined in ldap object,
-    uid: user.ldap.uid,
-    building: user.ldap.buildingName,
-    //is-employee: not defined in ldap object,
-    bio: user.ldap.jobresponsibilities,
-    //location: not defined in ldap object,
-    email: user.ldap.preferredIdentity,
-    name: user.ldap.hrFirstName + ' ' + user.ldap.hrLastName,
-    "office-phone": user.ldap.telephoneNumber,
-    //org-title: not defined in ldap object,
-    "notes-id": user.ldap.notesId
-  };
-
-  <% if (environment != null && environment != '') { %>
-  var environment     = "<%-environment%>";
-  <% } %>
-
-  //TODO dont do this
-  var allTeams        = <%-JSON.stringify(allTeams)%>;
-  var allTeamsLookup  = <%-JSON.stringify(allTeamsLookup)%>;
-  var myTeams         = <%-JSON.stringify(myTeams)%>;
-  var systemAdmin     = <%-JSON.stringify(systemAdmin)%>;
-  var systemStatus    = <%-JSON.stringify(systemStatus)%>;
   var userTeamList    = <%-JSON.stringify(userTeamList)%>;
 
   <% if (pageTitle=="Team Management") { %>
-  var prefixTeam      = "<%-prefix%>";
-  var memberRoles     = <%-JSON.stringify(memberRoles)%>
+  var prefixTeam      = "<%-prefix%>"
 
   <% } else if (pageTitle=="Iteration Management") { %>
   var prefixIteration = "<%-prefix%>";
@@ -42,4 +16,5 @@
       var squadTeams = <%-JSON.stringify(squadTeams)%>;
     <% } %>
   <% } %>
+
 </script>

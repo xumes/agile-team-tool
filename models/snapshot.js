@@ -15,7 +15,8 @@ var iterationDocRules = require('./validate_rules/iteration.js');
 var snapshotValidationRules = require('./validate_rules/snapshot.js');
 var nonSquadTeamRule = snapshotValidationRules.nonSquadTeamRule;
 var squadTeamRule = snapshotValidationRules.squadTeamRule;
-
+var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+var monthArray = [];
 
 var formatErrMsg = /* istanbul ignore next */ function(msg){
   loggers.get('models').info('Error: ', msg);
@@ -48,23 +49,7 @@ function resetData(){
       'teams5to12' : 0,
       'teamsGt12' : 0,
       'totalSquad' : 0,
-      'partialMonth' : true
-
-    },
-    {
-      'totalPoints' : 0,
-      'totalStories' : 0,
-      'totalCompleted' : 0,
-      'totalDefects' : 0,
-      'totalDplymts' : 0,
-      'totTeamStat' : 0,
-      'totClientStat' : 0,
-      'totTeamStatIter' : 0,
-      'totClientStatIter' : 0,
-      'teamsLt5' : 0,
-      'teams5to12' : 0,
-      'teamsGt12' : 0,
-      'totalSquad' : 0,
+      'month':'',
       'partialMonth' : false
 
     },
@@ -82,6 +67,7 @@ function resetData(){
       'teams5to12' : 0,
       'teamsGt12' : 0,
       'totalSquad' : 0,
+      'month':'',
       'partialMonth' : false
 
     },
@@ -99,6 +85,7 @@ function resetData(){
       'teams5to12' : 0,
       'teamsGt12' : 0,
       'totalSquad' : 0,
+      'month':'',
       'partialMonth' : false
 
     },
@@ -116,6 +103,25 @@ function resetData(){
       'teams5to12' : 0,
       'teamsGt12' : 0,
       'totalSquad' : 0,
+      'month':'',
+      'partialMonth' : false
+
+    },
+    {
+      'totalPoints' : 0,
+      'totalStories' : 0,
+      'totalCompleted' : 0,
+      'totalDefects' : 0,
+      'totalDplymts' : 0,
+      'totTeamStat' : 0,
+      'totClientStat' : 0,
+      'totTeamStatIter' : 0,
+      'totClientStatIter' : 0,
+      'teamsLt5' : 0,
+      'teams5to12' : 0,
+      'teamsGt12' : 0,
+      'totalSquad' : 0,
+      'month':'',
       'partialMonth' : false
     },
     {
@@ -132,7 +138,8 @@ function resetData(){
       'teams5to12' : 0,
       'teamsGt12' : 0,
       'totalSquad' : 0,
-      'partialMonth' : true
+      'month':'',
+      'partialMonth' : false
     }
   ];
 };
@@ -199,6 +206,7 @@ function getAllSquads() {
                 });
               }
             });
+            //console.log(squadsByParent);
             resolve(squadsByParent);
           })
           .catch( /* istanbul ignore next */ function(err){
@@ -332,11 +340,13 @@ function rollUpIterationsByNonSquad(squads, nonSquadTeamId, squadsCalResults, is
           if (squadIterationResult[j].totalCompleted > 0) {
             teams[j] = teams[j] + 1;
           }
+          //console.log(currData[j].totalPoints);
         }
       }
     }
     for (var i = 0; i <= iterationMonth; i++) {
       currData[i].totalSquad = teams[i];
+      currData[i].month = monthArray[i];
       if(currData[i].totTeamStatIter > 0){
         currData[i].totTeamStat = currData[i].totTeamStat/currData[i].totTeamStatIter;
       }
@@ -409,11 +419,20 @@ var snapshot = {
   updateRollUpData : /* istanbul ignore next */ function() {
     return new Promise(function(resolve, reject){
       iterationMonth = 5;
+      monthArray = [];
       var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-      var endTime = new Date(util.getServerTime());
-      var startTime = addMonths(endTime, -iterationMonth);
-      endTime = endTime.toLocaleDateString('en-US',options);
+      var nowTime = new Date(util.getServerTime());
+      var startTime = addMonths(nowTime, -iterationMonth);
+      var endTime = nowTime.toLocaleDateString('en-US',options);
       startTime = startTime.toLocaleDateString('en-US',options);
+
+      for (var i = 0; i <= iterationMonth; i++) {
+        var time = (addMonths(nowTime, -(iterationMonth-i))).toLocaleDateString('en-US',options);
+        var month = monthNames[parseInt(time.substring(0,2))-1];
+        var year = time.substring(time.length-4,time.length);
+        monthArray[i] = month + '-' + year;
+      }
+
       var promiseArray = [];
       promiseArray.push(getIterationDocs(startTime, endTime));
       promiseArray.push(getAllSquads());
@@ -483,6 +502,25 @@ var snapshot = {
           }
           reject(formatErrMsg(msg));
         });
+    });
+  },
+
+  getRollUpDataByTeam : function(teamId) {
+    return new Promise(function(resolve, reject){
+      rollUpDataId = 'ag_iter_data_' + teamId;
+      common.getByViewKey('iterations','rollUpData',rollUpDataId)
+        .then(function(rollUpData){
+          resolve(rollUpData);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          var msg;
+          if (err.error) {
+            msg = err.error;
+          } else {
+            msg = err;
+          }
+          reject(formatErrMsg(msg));
+        })
     });
   },
 
