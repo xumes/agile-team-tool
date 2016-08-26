@@ -39,63 +39,75 @@ var allTeams = iterationTestData.allTeams;
 var user = iterationTestData.user;
 
 describe('Iteration API Test', function(){
+  this.timeout(timeout);
   before(function(done) {
-    // If team document 'testteamid_1' does not exist lets create it because iteration info needs it
-    var teamName = 'testteamid_1';
-    teamModel.getName(teamName)
-    .then(function(result) {
-      if (result.length === 0) {
-        teamModel.createTeam(teamDocValid, userDetails)
-        .then(function(body) {
-          expect(body).to.be.a('object');
-          expect(body).to.have.property('_id');
-          validId = body['_id'];
-          validTeamId = body['name'];
-          userTeams[0]._id = validId;
-        }).catch(function(err) {});
-      } else {
-        validTeamId = result[0].key;
-        validId = result[0].id;
-        userTeams[0]._id = validId;
-      }
-    })
-    .finally(function() {
-      // done();
-      // do the login befre testing
-      agent
-        .get('/api/login/masquerade/' + adminUser)
-        .end(function(err, res) {
-          if (err) throw err;
-          agent.saveCookies(res);
-          done();
-        });
-    });
+    agent
+      .get('/api/login/masquerade/' + adminUser)
+      .send()
+      .end(function(err, res) {
+        if (err) throw err;
+        //call home page to initialize session data
+        agent
+          .get('/')
+          .send()
+          .end(function(err, res) {
+            if (err) throw err;
+            agent.saveCookies(res);
+                var teamName = 'testteamid_1';
+                teamModel.getName(teamName)
+                .then(function(result) {
+                  if (result.length === 0) {
+                    teamModel.createTeam(teamDocValid, userDetails)
+                    .then(function(body) {
+                      expect(body).to.be.a('object');
+                      expect(body).to.have.property('_id');
+                      validId = body['_id'];
+                      validTeamId = body['name'];
+                      // console.log('validId:', validId);
+                      userTeams[0]._id = validId;
+                      done();
+                    }).catch(function(err) {});
+                  } else {
+                    validTeamId = result[0].key;
+                    validId = result[0].id;
+                    // console.log('validId:', validId);
+                    userTeams[0]._id = validId;
+                    done();
+                  }
+                });
+          })
+      })
   });
 
   after(function(done) {
     var bulkDeleteIds = [];
-    iterationModel.getByIterInfo(validId)
-    .then(function(result) {
-      // console.log('TOTAL ROWS1:', result.rows.length);
-      if (result && result.rows.length > 0) {
-        for(i=0; i < result.rows.length; i++) {
-          var id = result.rows[i].id;
-          bulkDeleteIds.push(id);
+    if(validId) {
+      iterationModel.getByIterInfo(validId)
+      .then(function(result) {
+        // console.log('TOTAL validId:', validId);
+        // console.log('TOTAL ROWS1:', result.rows.length);
+        if (result && result.rows.length > 0) {
+          for(i=0; i < result.rows.length; i++) {
+            var id = result.rows[i].id;
+            bulkDeleteIds.push(id);
+          }
+          util.BulkDelete(bulkDeleteIds)
+          .then(function(result) {
+            done();
+          })
+          .catch(function(err){
+            done();
+          });
+        } else {
+          done();
         }
-        util.BulkDelete(bulkDeleteIds)
-        .then(function(result) {
-          done();
-        })
-        .catch(function(err){
-          done();
-        });
-      } else {
+      })
+      .catch(function(err){
         done();
-      }
-    })
-    .catch(function(err){
+      });
+    } else {
       done();
-    });
+    }
   });
 
   describe('Iteration API Test [POST /api/iteration]: add team iteration document', function(){
