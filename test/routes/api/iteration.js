@@ -13,7 +13,7 @@ var validId;
 var validTeamId;
 var docId;
 var iterationId;
-var adminUser = 'Yanliang.Gu1@ibm.com';
+
 var timeout = 100000;
 
 var iterationDocValid = iterationTestData.iterationDocValid;
@@ -37,46 +37,47 @@ var userDetails = iterationTestData.userDetails;
 var userTeams = iterationTestData.userTeams;
 var allTeams = iterationTestData.allTeams;
 var user = iterationTestData.user;
+var adminUser = userDetails.shortEmail;
 
 describe('Iteration API Test', function(){
   this.timeout(timeout);
   before(function(done) {
-    agent
-      .get('/api/login/masquerade/' + adminUser)
-      .send()
-      .end(function(err, res) {
-        if (err) throw err;
-        //call home page to initialize session data
-        agent
-          .get('/')
-          .send()
-          .end(function(err, res) {
+    this.timeout(timeout);
+    var teamName = 'testteamid_1';
+    teamModel.getName(teamName)
+    .then(function(result) {
+      if (result.length === 0) {
+        teamModel.createTeam(teamDocValid, userDetails)
+        .then(function(body) {
+          expect(body).to.be.a('object');
+          expect(body).to.have.property('_id');
+          validId = body['_id'];
+          validTeamId = body['name'];
+          userTeams[0]._id = validId;
+          // console.log('validId1:', validId);
+          agent.get('/api/login/masquerade/' + adminUser).send().end(function(err, res) {
             if (err) throw err;
-            agent.saveCookies(res);
-                var teamName = 'testteamid_1';
-                teamModel.getName(teamName)
-                .then(function(result) {
-                  if (result.length === 0) {
-                    teamModel.createTeam(teamDocValid, userDetails)
-                    .then(function(body) {
-                      expect(body).to.be.a('object');
-                      expect(body).to.have.property('_id');
-                      validId = body['_id'];
-                      validTeamId = body['name'];
-                      // console.log('validId:', validId);
-                      userTeams[0]._id = validId;
-                      done();
-                    }).catch(function(err) {});
-                  } else {
-                    validTeamId = result[0].key;
-                    validId = result[0].id;
-                    // console.log('validId:', validId);
-                    userTeams[0]._id = validId;
-                    done();
-                  }
-                });
-          })
-      })
+              //call home page to initialize session data
+              agent.get('/').send().end(function(err, res) {
+                agent.saveCookies(res);
+                // console.log('\n back to homepage 1...\n');
+                done();
+              });
+          });
+        }).catch(function(err) {});
+      } else {
+        validId = result[0].id;
+        userTeams[0]._id = validId;
+        agent.get('/api/login/masquerade/' + adminUser).send().end(function(err, res) {
+          if (err) throw err;
+            //call home page to initialize session data
+            agent.get('/').send().end(function(err, res) {
+              agent.saveCookies(res);
+              done();
+            });
+        });
+      }
+    });
   });
 
   after(function(done) {
@@ -98,6 +99,7 @@ describe('Iteration API Test', function(){
           .catch(function(err){
             done();
           });
+          // done();
         } else {
           done();
         }
@@ -196,6 +198,23 @@ describe('Iteration API Test', function(){
 
   describe('Iteration API Test [GET /api/iteration/]: get iteration doucments', function(){
     this.timeout(timeout);
+    before(function(done) {
+      var doc = _.clone(iterationDocValid);
+      doc.team_id = validId;
+      doc.iteration_name = "testiterationname-" + crypto.randomBytes(4).toString('hex');
+      iterationModel.add(doc, user, allTeams, userTeams)
+      .then(function(result) {
+        iterationId = result.id;
+        iterationRev = result.rev;
+        expect(result).to.be.a('object');
+        expect(result).to.have.property('id');
+        expect(result.ok).to.be.equal(true);
+        done();
+      })
+      .catch(function(err) {
+        done();
+      });
+    });
     it('Get all team iteration documents', function(done){
       var req = request(app).get('/api/iteration/');
       agent.attachCookies(req);
@@ -246,6 +265,7 @@ describe('Iteration API Test', function(){
   });
 
   describe('Iteration API Test [GET /api/iteration/searchTeamIteration]: Search team iteration', function(){
+    this.timeout(timeout);
     it('Search by team id', function(done) {
       iterationDocValid.team_id = validId;
       var query = querystring.stringify({'id':iterationDocValid._id});
@@ -412,9 +432,30 @@ describe('Iteration API Test', function(){
   });
 
   describe('Iteration API Test [GET /api/iteration/completed]: get completed iteration', function(){
+    this.timeout(timeout);
+    before(function(done) {
+      var doc = _.clone(iterationDocValid);
+      doc.team_id = validId;
+      var currentDate = moment().format("MM/DD/YYYY");
+      doc.iteration_start_dt = currentDate;
+      doc.iteration_end_dt = currentDate;
+      doc.iteration_name = "testiterationname-" + crypto.randomBytes(4).toString('hex');
+      iterationModel.add(doc, user, allTeams, userTeams)
+      .then(function(result) {
+        iterationId = result.id;
+        iterationRev = result.rev;
+        expect(result).to.be.a('object');
+        expect(result).to.have.property('id');
+        expect(result.ok).to.be.equal(true);
+        done();
+      })
+      .catch(function(err) {
+        done();
+      });
+    });
+
     it('Get completed iteration documents', function(done){
-      iterationDocValid.team_id = validId;
-      var query = querystring.stringify({'startkey':iterationDocValid.iteration_start_dt});
+      var query = querystring.stringify({'startkey': '07/19/2016'});
       var req = request(app).get('/api/iteration/completed?' + query);
       agent.attachCookies(req);
       req.end(function(err, res){

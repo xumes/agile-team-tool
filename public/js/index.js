@@ -120,6 +120,16 @@ function highlightParents(treeLinkId) {
 	}
 }
 
+function expandParentTeam(treeLinkId) {
+	if (treeLinkId != null) {
+		if ($("#"+jq(treeLinkId)).attr("hasChildren") != "Yes") {
+			var parentId = treeLinkId.substring(4, treeLinkId.length);
+			getAllAgileTeamsByParentId(parentId, false);
+		}
+		$("#"+jq(treeLinkId)).attr("hasChildren","Yes");
+	}
+}
+
 function getAllAgileTeamsByParentId(parentId, showLoading) {
 	if (showLoading) {
 		$('#mainContent').hide();
@@ -159,8 +169,12 @@ function getAllAgileTeamsByParentId(parentId, showLoading) {
 						twistyId = "bodysub_" + parentId;
 					}
 					//$("#"+jq(twistyId)).twisty();
+					if (data.docs.length > 0) {
+						var mainTwistyId = "main_sub_" + parentId;
+						$("#" + jq(twistyId)).append(createMainTwistySection(mainTwistyId, ""));
+					}
 					_.each(data.docs, function(team){
-						addTeamToTree(team, twistyId);
+						addTeamToTree(team, mainTwistyId);
 					});
 					$('#mainContent').show();
 					$('#spinnerContainer').hide();
@@ -240,9 +254,10 @@ function addTeamToTree(team, twistyId) {
 		var trigger = $("#" + jq(subTwistyId)).find("a.ibm-twisty-trigger");
 		trigger.attr("title", "Expand/Collapse").on("click", function() {
 			if ($("#" + jq(subTwistyId)).hasClass("ibm-active")) {
-				removeHighlightParents(subTwistyId);
+				//removeHighlightParents(subTwistyId);
 			} else {
-				highlightParents(subTwistyId);
+				//highlightParents(subTwistyId);
+				expandParentTeam(subTwistyId);
 			}
 		});
 	}
@@ -386,7 +401,7 @@ function loadDetails(elementId, setScrollPosition) {
 		$('#spinnerContainer').show();
 
 		if (teamId == teamId) {
-			removeHighlightParents();
+			//removeHighlightParents();
 			// $.({message: ""});
 			defSelTeamId = teamId;
 			// make sure team data is always the latest data to show

@@ -840,10 +840,12 @@ describe('Team models [getTeamByUid]: get all team lists for a given serial numb
     })
   })
 
-  it('return error becuase serial number/ uid is empty', function(done){
+  it('return error because serial number/ uid is empty', function(done){
     teamModel.getTeamByUid(null)
-      .then(function(body){
-        expect(body).to.be.empty;
+      .catch(function(err){
+        expect(err).to.not.equal(null);
+        expect(err).to.have.property('error');
+        expect(err.error).to.have.property('uid');
       })
       .finally(function(){
         done();
