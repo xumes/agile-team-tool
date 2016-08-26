@@ -66,7 +66,7 @@ function getRootTeams() {
 	$("#teamTable tbody").empty();
 	$("#teamTable").hide();
 
-	getAllAgileTeamsByParentId('');
+	getAllAgileTeamsByParentId('', true);
 }
 
 function getMyTeamsFromDb() {
@@ -104,7 +104,7 @@ function highlightParents(treeLinkId) {
 		//console.log(treeLinkId);
 		if ($("#"+jq(treeLinkId)).attr("hasChildren") != "Yes") {
 			var parentId = treeLinkId.substring(4, treeLinkId.length);
-			getAllAgileTeamsByParentId(parentId);
+			getAllAgileTeamsByParentId(parentId, false);
 		}
 		$("#"+jq(treeLinkId)).attr("hasChildren","Yes");
 		$("#" +jq(treeLinkId)).removeClass("agile-team-parent-selected");
@@ -120,9 +120,11 @@ function highlightParents(treeLinkId) {
 	}
 }
 
-function getAllAgileTeamsByParentId(parentId) {
-	$('#mainContent').hide();
-	$('#spinnerContainer').show();
+function getAllAgileTeamsByParentId(parentId, showLoading) {
+	if (showLoading) {
+		$('#mainContent').hide();
+		$('#spinnerContainer').show();
+	}
 	var cUrl;
 	if (parentId == 'ag_team_standalone') {
 		cUrl = "/api/teams?parent_team_id=";
