@@ -48,7 +48,7 @@ module.exports = function(app, includes) {
     })
     .catch( /* istanbul ignore next */ function(err) {
       /* cannot simulate Cloudant error during testing */
-      formatErrMsg('[iterationRoute.getIterationDoc]:' + err);
+      formatErrMsg('[iterationRoute.getIterationDoc]:', JSON.stringify(err));
       return res.status(400).send(err);
     });
   };

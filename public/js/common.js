@@ -417,6 +417,7 @@ function getRemoteData(cUrl, _callback, args) {
 
 			   args.push(list);
 			   returnObj = list;
+
 			} else {
 				args.push(data);
 				returnObj =  data;
@@ -433,7 +434,7 @@ function getRemoteData(cUrl, _callback, args) {
 			_callback.apply(this, args);
 		}
 	})
-	
+
 	return returnObj;
 }
 
