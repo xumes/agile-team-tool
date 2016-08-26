@@ -7,9 +7,13 @@ var global_currentAction = undefined;
 
 jQuery(function($) {
   $(document).ready(function() {
+    getSessionVars(initPageAction);
+  });
+
+  function initPageAction() {    
     var urlParameters = getJsonParametersFromUrl();
     if (urlParameters != undefined && urlParameters.testUser != undefined) {
-      resetUser(urlParameters.testUser);
+      setTestUser(urlParameters.testUser);
       alert("here TestUser is: " + urlParameters.testUser);
     }
 
@@ -41,7 +45,7 @@ jQuery(function($) {
           event.preventDefault();
         }
     });
-  });
+  }
 
   $("#teamSelectList").change(function() {
     updateIterationInfo("clearIteration");

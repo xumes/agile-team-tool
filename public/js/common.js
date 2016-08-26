@@ -1,16 +1,43 @@
 jQuery(function($) {
 	$(document).ready(function() {
-		// set current user
-		getAuthenticatedUser(user.shortEmail);
-
-		// set current system status
-		setGlobalSystemStatus(systemStatus);
-
-		gDialogWindow.init();
-	
+		gDialogWindow.init();	
 	});
 });
 
+var user, userInfo, allTeams, membeRoles, allTeamsLookup, myTeams, systemAdmin, systemStatus, environment;
+function getSessionVars(_callback) {
+	$.get('/api/sessionvars', function(data, status) {
+	  if (status == 'success') {
+	    user 						= data.user;
+	    allTeams 				= data.allTeams;
+	    allTeamsLookup 	= data.allTeamsLookup;
+	    myTeams 				= data.myTeams;
+	    memberRoles			= data.memberRoles;
+	    systemAdmin 		= data.systemAdmin;
+	    systemStatus 		= data.systemStatus;
+	    environment 		= data.environment;
+
+	    userInfo = {
+	      //id: not defined in ldap object,
+	      "uid"         : user.ldap.uid,
+	      "building"    : user.ldap.buildingName,
+	      //is-employee: not defined in ldap object,
+	      "bio"         : user.ldap.jobresponsibilities,
+	      //location: not defined in ldap object,
+	      "email"       : user.ldap.preferredIdentity,
+	      "name"        : user.ldap.hrFirstName + ' ' + user.ldap.hrLastName,
+	      "office-phone": user.ldap.telephoneNumber,
+	      //org-title: not defined in ldap object,
+	      "notes-id"    : user.ldap.notesId
+	    };
+
+	    localStorage.setItem("userInfo", JSON.stringify(userInfo));
+	  }
+	  if (typeof _callback === "function") {
+		  _callback.apply(this);
+		}
+	})
+}
 /**
  * Modal dialog used to show messages in place of the regular javascript alert.
  */
@@ -29,46 +56,15 @@ var gConfirmWindow = IBMCore.common.widget.overlay.createOverlay({
 	titled : true
 });
 
-function getAuthenticatedUser(userEmail) {
-	return getPersonFromFaces(userEmail, setAuthenticatedUser, [userEmail]);
-}
+function setTestUser(userEmail, testUserInfo, testUserTeams) {
+	if (testUserInfo === undefined)
+		getPersonFromFaces(userEmail, setTestUser, [userEmail]);
+	
+	userInfo = testUserInfo;
+	if (testUserTeams === undefined)
+		getAllAgileTeamsForUser(userEmail, setTestUser, [userEmail, userInfo]);
 
-var userInfo;
-function setAuthenticatedUser(userEmail, facesPerson) {
-	userInfo = userSession;
-	//userInfo = facesPerson;
-	if (userInfo == null) {
-		userInfo = new Object();
-		userInfo.email = userEmail;
-		userInfo.uid = "";
-		showLog("setting default user info: " + userInfo);
-		return getPersonFromFaces(userEmail, showUserDetails, []);
-	} else {
-		showLog("setting user info from faces: " + userInfo);
-		setUserDetails(userInfo.name, userInfo.uid);
-	}
-	localStorage.setItem("userInfo", JSON.stringify(userInfo));
-	return userInfo;
-}
-
-function resetUser(userEmail) {
-	return getAuthenticatedUser(userEmail);
-}
-
-function showUserDetails() {
-  if (localStorage.getItem("userInfo") != null) {
-  	setUserDetails(JSON.parse(localStorage.getItem("userInfo")).name, JSON.parse(localStorage.getItem("userInfo")).uid);
-  }
-}
-
-function setUserDetails(userName, userImage) {
-	$('#ibm-universal-nav').append('<span style="position: relative; left: 20px; padding-top: 15px; width:600px; float:left; color: #0061ff;font-size: 16px; important">' + userName + '</span>');
-	$('.ibm-masthead-signin-link').css({
-		'background-image' : 'url("//faces.tap.ibm.com/imagesrv/' + userImage + '?s=30")',
-		'background-repeat' : 'no-repeat',
-		'background-position' : '-4px 10px'
-	});
-	$('.ibm-masthead-signin-link').removeClass('ibm-masthead-signin-link');
+	myTeams = testUserTeams;
 }
 
 /**
@@ -118,9 +114,9 @@ function getPersonFromFaces(userEmail, _callback, args) {
 			timeout : 5000,
 			dataType : "jsonp"
 		}).always(function(data) {
-				if (data != null) {
-					person = data[0];
-					for (var i=0; i<data.length; i++) {
+				if (data != null && data.length > 0) {
+					person = null;
+					for (var i in data) {
 						if (data[i].email.toUpperCase() == userEmail.toUpperCase())
 							person = data[i];
 					}
@@ -417,7 +413,6 @@ function getRemoteData(cUrl, _callback, args) {
 
 			   args.push(list);
 			   returnObj = list;
-
 			} else {
 				args.push(data);
 				returnObj =  data;
@@ -434,7 +429,7 @@ function getRemoteData(cUrl, _callback, args) {
 			_callback.apply(this, args);
 		}
 	})
-
+	
 	return returnObj;
 }
 
