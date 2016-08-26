@@ -467,7 +467,7 @@ function loadDetails(elementId, setScrollPosition) {
 						if (parent_team_id != "") {
 							var parentLinkId = $("#link_sub_"+jq(parent_team_id));
 							if(parentLinkId){
-								var parentName = parentLinkId.attr("title");
+								var parentName = parentLinkId.html();
 								found = true;
 							} else {
 								//TODO need use id to get info from db
