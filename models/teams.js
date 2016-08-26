@@ -1097,16 +1097,15 @@ var team = {
           .then(function(body){
             resolve(body);
           })
-          .catch(function(err){
-            reject(formatErrMsg(msg));
+          .catch( /* istanbul ignore next */ function(err){
+            reject(formatErrMsg(err.error));
           })
           loggers.get('models').info('Success: Team records obtained');
           
         })
         .catch( /* istanbul ignore next */ function(err){
           // cannot simulate Cloudant error during testing
-          msg = err.error;
-          reject(formatErrMsg(msg));
+          reject(formatErrMsg(err.error));
         });
     });
   }
@@ -1253,9 +1252,8 @@ function getSelectedTeams(teamList, userTeams){
           loggers.get('models').info('Success: Team records obtained.');
           resolve(userTeams);
         })
-        .catch( function(err){
-          msg = err.error;
-          reject(formatErrMsg(msg));
+        .catch( /* istanbul ignore next */ function(err){
+          reject(formatErrMsg(err.error));
         });
       });
 }
