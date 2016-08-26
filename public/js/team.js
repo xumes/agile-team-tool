@@ -723,7 +723,8 @@ function updateAction(action) {
         }
 
       }).done(function (data) {
-        agileTeamListHandler(data._id, allTeams);
+        userTeamList = data.userTeams;
+        agileTeamListHandler(data.team._id, allTeams);
         showMessagePopup(message);
       });
 
@@ -776,8 +777,9 @@ function updateAction(action) {
       }
 
     }).done(function (data) {
-      updateAgileTeamCache(data);
-      agileTeamListHandler(data._id, allTeams);
+      userTeamList = data.userTeams;
+      updateAgileTeamCache(data.team);
+      agileTeamListHandler(data.team._id, allTeams);
       showMessagePopup("You have successfully added a team and you have been added as the first team member. You can now add additional team members.");
     });
   }
@@ -860,7 +862,8 @@ function setAssociation(obj, action, msg) {
     }
 
   }).done(function (data) {
-    _.each(data, function(obj) {
+    userTeamList = data.userTeams;
+    _.each(data.team, function(obj) {
       updateAgileTeamCache(obj);
     })
     loadSelectedAgileTeam();
@@ -987,7 +990,7 @@ function deleteTeamHandler(team, iterations, assessments) {
         }
 
       }).success(function (data) {
-        userTeams = data.userTeams;
+        userTeamList = data;
         updateAgileTeamCache(team);
             updateTeamInfo('reset');
         showMessagePopup("You have successfully deleted the team.");
@@ -1070,7 +1073,8 @@ function addTeamMember(person, oldAlloc, newAlloc, oldRole, newRole, action) {
       }
 
     }).done(function (data) {
-      updateAgileTeamCache(data);
+      userTeamList = data.userTeams;
+      updateAgileTeamCache(data.team);
       loadSelectedAgileTeam();
       updateMemberInfo("clear");
 
@@ -1119,7 +1123,8 @@ function deleteTeamMember() {
       }
 
     }).done(function (data) {
-      updateAgileTeamCache(data);
+      userTeamList = data.userTeams;
+      updateAgileTeamCache(data.team);
       loadSelectedAgileTeam();
       updateMemberInfo("clear");
       showMessagePopup("You have successfully removed Team member(s).");
