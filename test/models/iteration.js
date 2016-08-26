@@ -59,7 +59,6 @@ describe('Iteration Model', function() {
           });
         });
       } else {
-        validTeamId = result[0].key;
         validId = result[0].id;
         userTeams[0]._id = validId;
         // console.log('validId:', validId);
@@ -263,6 +262,7 @@ describe('Iteration Model', function() {
   });
 
   describe('[getByIterInfo]: Get iteration document', function() {
+    this.timeout(timeout);
     it('Get all team iteration documents', function(done) {
       iterationModel.getByIterInfo(null)
       .then(function(result){
