@@ -163,6 +163,37 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
       done();
     })
   });
+
+  it('it will return error because update document is invalid', function(done){
+    teamDocUpdateValid['_id'] = createdId;
+    delete teamDocUpdateValid['name'];
+    teamModel.updateOrDeleteTeam(teamDocUpdateValid, session, 'update')
+    .catch(function(err){
+      expect(err).to.not.equal(null);
+      expect(err).to.have.property('error');
+      expect(err.error).to.have.property('name');
+    })
+    .finally(function(){
+      done();
+    })
+  });
+
+  it('it will return error because update document is invalid/ team name already exists', function(done){
+    teamDocUpdateValid['_id'] = createdId;
+    teamModel.getTeam(null)
+    .then(function(body){
+      teamDocUpdateValid['name'] = body[0]['value']['name'];
+      teamModel.updateOrDeleteTeam(teamDocUpdateValid, session, 'update')
+      .catch(function(err){
+        expect(err).to.not.equal(null);
+        expect(err).to.have.property('error');
+        expect(err.error).to.have.property('name');
+      })
+      .finally(function(){
+        done();
+      })
+    })
+  });
 });
 
 describe('Team models [associateTeams]: associate team relationship with other teams', function(){
@@ -1193,5 +1224,21 @@ describe('Team models [getLookupIndex]', function(){
       .finally(function(){
         done();
       });
+  });
+});
+
+describe('Team models [defaultTeamDoc]', function(){
+  it('it will return default team doc format/ structure', function(done) {
+    var body = teamModel.defaultTeamDoc({ 'squadTeam' : 'Yes' }, userDetailsValid);
+    expect(body).to.be.a('object');
+    expect(body).to.have.property('_id');
+    done();
+  });
+
+  it('it will return default team doc format/ structure', function(done) {
+    var body = teamModel.defaultTeamDoc({ 'squadTeam' : 'No' }, userDetailsValid);
+    expect(body).to.be.a('object');
+    expect(body).to.have.property('_id');
+    done();
   });
 });
