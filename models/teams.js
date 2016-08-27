@@ -1095,13 +1095,12 @@ var team = {
           var parentTeams = _.difference(parentTeams, userTeamsList);
           getSelectedTeams(parentTeams, userTeamsList)
           .then(function(body){
+            loggers.get('models').info('Success: User team records obtained.');
             resolve(body);
           })
           .catch( /* istanbul ignore next */ function(err){
             reject(formatErrMsg(err.error));
           })
-          loggers.get('models').info('Success: Team records obtained');
-          
         })
         .catch( /* istanbul ignore next */ function(err){
           // cannot simulate Cloudant error during testing
@@ -1231,6 +1230,7 @@ module.exports = team;
 function getSelectedTeams(teamList, userTeams){
   return new Promise(function(resolve, reject){
       var data = new Object();
+      data.type = 'team';
       data._id = new Object();
       data._id.$in = teamList;
       common.findBySelector(data)
@@ -1249,7 +1249,7 @@ function getSelectedTeams(teamList, userTeams){
           var parentTeams = _.difference(parentTeams, userTeams);
           if (_.size(parentTeams) > 0)
             getSelectedTeams(parentTeams, userTeams);
-          loggers.get('models').info('Success: Team records obtained.');
+          loggers.get('models').info('Success: Selected team records obtained.');
           resolve(userTeams);
         })
         .catch( /* istanbul ignore next */ function(err){
