@@ -1457,7 +1457,7 @@ function monthlyIterations(teamIterations){
 	return monthly;
 }
 
-function iterationScoreCard(teamId, teamName, teamIterations) {
+function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
 	var graphCategory = [];
 
 	var velocitySeries = new Object();
@@ -1543,7 +1543,7 @@ function iterationScoreCard(teamId, teamName, teamIterations) {
 
 	var monthList = teamIterations;//monthlyIterations(teamIterations);
 	monthList = sortMMMYYYY(monthList);
-	var curTeamstat = currentTeamStats();
+	var curTeamstat = nonsquadScore;//currentTeamStats();
 
 	for ( var i = monthList.length - 1; i > -1; i--) {
 		var graphCat;

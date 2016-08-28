@@ -189,7 +189,7 @@ function getAllAgileTeamsByParentId(parentId, showLoading) {
 function getSnapshot(teamId, teamName) {
 	$('#mainContent').hide();
 	$('#spinnerContainer').show();
-	var cUrl = "/api/snapshot/rollupdatabyteam/" + encodeURIComponent(teamId);
+	var cUrl = "/api/snapshot/rollupsquadsbyteam/" + encodeURIComponent(teamId);
 	$.ajax({
 		type : "GET",
 		url : cUrl
@@ -203,8 +203,30 @@ function getSnapshot(teamId, teamName) {
 				} else if (data.rows.length <= 0) {
 					console.log("no iteation data for team: ", teamId);
 				} else {
-					var iterationData = data.rows[0].value.value;
-					iterationScoreCard(teamId, teamName, iterationData);
+					var nonsquadScore = data.rows[0].value.value;
+					var cUrl = "/api/snapshot/rollupdatabyteam/" + encodeURIComponent(teamId);
+					$.ajax({
+						type : "GET",
+						url : cUrl
+					}).done(function(data) {
+						if (data != undefined) {
+							console.log("data has rows " + _.has(data, 'rows'));
+							//console.log("data has value " + _.has(data, 'value'));
+							if (_.has(data, "rows")) {
+								if (data.rows == null) {
+									console.log("data loaded failed");
+								} else if (data.rows.length <= 0) {
+									console.log("no iteation data for team: ", teamId);
+								} else {
+									var iterationData = data.rows[0].value.value;
+									iterationScoreCard(teamId, teamName, iterationData, nonsquadScore);
+								}
+							} else {
+								showLog("data loaded: " + JSON.stringify(data));
+							}
+						}
+					});
+					// iterationScoreCard(teamId, teamName, iterationData);
 				}
 			} else {
 				showLog("data loaded: " + JSON.stringify(data));
@@ -496,7 +518,9 @@ function loadDetails(elementId, setScrollPosition) {
 					} else {
 						destroyIterationCharts();
 						destroyAssessmentCharts();
+
 						getSnapshot(team["_id"], team["name"]);
+
 						$('#nsquad_team_scard').show();
 						$('#squad_team_scard').hide();
 						$('#iterationSection .agile-section-nav').hide();
