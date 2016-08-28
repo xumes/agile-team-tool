@@ -1,6 +1,6 @@
 {
   "_id": "_design/iterations",
-  "version": 0.3,
+  "version": 0.4,
   "views": {
     "completed": {
       "map": "function (doc) {\n  if (doc.type == \"iterationinfo\" && (doc.doc_status === null || doc.doc_status != 'delete')) {\n    if (doc.iterationinfo_status == \"Completed\") {\n          emit(doc.iteration_end_dt, doc);\n    }\n  }\n} "
@@ -10,6 +10,9 @@
     },
     "rollUpData": {
       "map": "function (doc) {\r\n  if ((doc.type == \"roll_up_data\") && (doc.doc_status === null || doc.doc_status != 'delete')) {\r\n    emit(doc._id, doc);\r\n  }\r\n}"
+    },
+    "rollUpSquads": {
+      "map": "function (doc) {\r\n  if ((doc.type == \"roll_up_squads\") && (doc.doc_status === null || doc.doc_status != 'delete')) {\r\n    emit(doc._id, doc);\r\n  }\r\n}"
     }
   },
   "language": "javascript",

@@ -10,6 +10,7 @@ var validate = require('validate.js');
 
 var iterationMonth = 5;
 var prefix = 'ag_iter_data_';
+var squad_prefix = 'ag_squad_data_';
 var timestamp = Math.floor(Date.now() / 1000);
 var iterationDocRules = require('./validate_rules/iteration.js');
 var snapshotValidationRules = require('./validate_rules/snapshot.js');
@@ -415,7 +416,208 @@ function addMonths(date, months) {
   return new Date(newDate);
 }
 
+/**
+ * Get _rev for roll up squads
+ * @return Object {teamid:_rev}
+ */
+function getRollUpSquadsHistory() {
+  return new Promise(function(resolve, reject){
+     common.getByView('iterations','rollUpSquads')
+      .then(function(oldRollUpData){
+        var rollUpDataRevs = new Object();
+        _.each(oldRollUpData.rows, function(data){
+          rollUpDataRevs[data.value._id] = data.value._rev;
+        });
+        resolve(rollUpDataRevs);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        var msg;
+        if (err.error) {
+          msg = err.error;
+        } else {
+          msg = err;
+        }
+        reject(formatErrMsg(msg));
+      })
+  })
+}
+
+/**
+ * Get suqad team data
+ * @return Object squadTeams
+ */
+ function getSquadsData() {
+   var squadTeams = new Object();
+   return new Promise(function(resolve, reject){
+     teamModel.getTeam()
+       .then(function(teams){
+         if (teams.length <= 0) {
+           var msg;
+           msg = 'No team found';
+           reject(formatErrMsg(msg));
+         } else {
+           _.each(teams, function(team){
+             if ((team.value.squadteam != undefined) && (team.value.squadteam == 'Yes')) {
+               squadTeams[team.value._id] = team.value;
+             }
+           });
+           resolve(squadTeams);
+         }
+       })
+       .catch( /* istanbul ignore next */ function(err){
+         var msg;
+         if (err.error) {
+           msg = err.error;
+         } else {
+           msg = err;
+         }
+         reject(formatErrMsg(msg));
+       });
+   });
+ }
+
+/**
+ * Roll up total_members and total_allocation data
+ * @param Array squadsList
+ * @param Object squadTeams
+ * @return Object entry
+ */
+function rollUpSquadsData(squadsList, squadTeams) {
+  var entry = new Object();
+  var teamsLt5=0;
+  var teams5to12=0;
+  var teamsGt12=0;
+  var tcLt5=0;
+  var tc5to12=0;
+  var tcGt12=0;
+  var fteLt5=0;
+  var fte5to12=0;
+  var fteGt12=0;
+
+  _.each(squadsList, function(squadId){
+    squad = squadTeams[squadId];
+    var teamCnt = squad["total_members"] != null ? squad["total_members"] : 0;
+		var teamFTE = squad["total_allocation"] != null ? squad["total_allocation"] : 0;
+    if(teamCnt != undefined && teamCnt !=""){
+			teamCnt = parseInt(teamCnt);
+			if(teamCnt < 5){
+				teamsLt5 = teamsLt5 + 1;
+				fteLt5 = fteLt5 + teamFTE;
+				tcLt5 = tcLt5 + teamCnt;
+			}else if(teamCnt > 12){
+				teamsGt12 = teamsGt12 + 1;
+				fteGt12 = fteGt12 + teamFTE;
+				tcGt12 = tcGt12 + teamCnt;
+
+			}else{
+				teams5to12 = teams5to12 + 1;
+				fte5to12 = fte5to12 + teamFTE;
+				tc5to12 = tc5to12 + teamCnt;
+			}
+    }
+  });
+
+  entry.teamsLt5 = teamsLt5;
+  entry.tcLt5 = tcLt5;
+  entry.fteLt5 = fteLt5;
+
+  entry.teams5to12 = teams5to12;
+  entry.tc5to12 = tc5to12;
+  entry.fte5to12 = fte5to12;
+
+  entry.teamsGt12 = teamsGt12;
+  entry.tcGt12 = tcGt12;
+  entry.fteGt12 = fteGt12;
+
+  return entry;
+}
+
 var snapshot = {
+
+  updateRollUpSquads : /* istanbul ignore next */ function() {
+    return new Promise(function(resolve, reject){
+      var squadTeams = new Object();
+      var oldRollUpDataRevs = new Object();
+      var promiseArray = [];
+      promiseArray.push(getSquadsData());
+      promiseArray.push(getRollUpSquadsHistory());
+      Promise.all(promiseArray)
+        .then(function(results){
+          squadTeams = results[0];
+          oldRollUpDataRevs = results[1];
+          var nonsquadsScore = [];
+          getAllSquads()
+            .then(function(squadsByParent){
+              _.each(Object.keys(squadsByParent), function(nonsquadId){
+                var score = rollUpSquadsData(squadsByParent[nonsquadId], squadTeams);
+                var entry = new Object();
+                if (!_.isEmpty(oldRollUpDataRevs[squad_prefix + nonsquadId])) {
+                  entry['_rev'] = oldRollUpDataRevs[squad_prefix + nonsquadId];
+                }
+                entry['_id'] = squad_prefix + nonsquadId;
+                entry['team_id'] = nonsquadId;
+                entry['type'] = 'roll_up_squads';
+                entry['timestamp'] = timestamp;
+                entry['value'] = score;
+                nonsquadsScore.push(entry);
+              });
+              var updateRequest = {'docs' : nonsquadsScore};
+              common.bulkUpdate(updateRequest)
+                .then(function(results){
+                  resolve(results);
+                })
+                .catch( /* istanbul ignore next */ function(err){
+                  var msg;
+                  if (err.error) {
+                    msg = err.error;
+                  } else {
+                    msg = err;
+                  }
+                  reject(formatErrMsg(msg));
+                });
+            })
+            .catch( /* istanbul ignore next */ function(err){
+              var msg;
+              if (err.error) {
+                msg = err.error;
+              } else {
+                msg = err;
+              }
+              reject(formatErrMsg(msg));
+            });
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          var msg;
+          if (err.error) {
+            msg = err.error;
+          } else {
+            msg = err;
+          }
+          reject(formatErrMsg(msg));
+        });
+    });
+  },
+
+  getRollUpSquadsByTeam : function(teamId) {
+    return new Promise(function(resolve, reject){
+      rollUpDataId = 'ag_squad_data_' + teamId;
+      common.getByViewKey('iterations','rollUpSquads',rollUpDataId)
+        .then(function(rollUpData){
+          resolve(rollUpData);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          var msg;
+          if (err.error) {
+            msg = err.error;
+          } else {
+            msg = err;
+          }
+          reject(formatErrMsg(msg));
+        })
+    });
+  },
+
+
   updateRollUpData : /* istanbul ignore next */ function() {
     return new Promise(function(resolve, reject){
       iterationMonth = 5;
