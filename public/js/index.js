@@ -83,8 +83,8 @@ function getMyTeamsFromDb() {
 				});
 				var defaultTeam = ($('#teamTreeMain li')[0]).id
 				loadDetails(defaultTeam);
-				$('#mainContent').show();
-				$('#spinnerContainer').hide();
+				// $('#mainContent').show();
+				// $('#spinnerContainer').hide();
 			} else {
 				showLog("data loaded: " + JSON.stringify(data));
 			}
@@ -180,8 +180,8 @@ function getAllAgileTeamsByParentId(parentId, showLoading) {
 					});
 					var defaultTeam = ($('#teamTreeMain li')[0]).id
 					loadDetails(defaultTeam);
-					$('#mainContent').show();
-					$('#spinnerContainer').hide();
+					// $('#mainContent').show();
+					// $('#spinnerContainer').hide();
 				}
 			} else {
 				showLog("data loaded: " + JSON.stringify(data));
