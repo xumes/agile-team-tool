@@ -76,7 +76,7 @@ function getMyTeamsFromDb(initial) {
 		url : cUrl
 	}).done(function(data) {
 		if (data != undefined) {
-			if (data.length >= 0) {
+			if (data.length > 0) {
 				var twistyId = 'teamTreeMain';
 				_.each(data, function(team){
 					addTeamToTree(team, twistyId);
@@ -89,6 +89,8 @@ function getMyTeamsFromDb(initial) {
 					$('#spinnerContainer').hide();
 				}
 			} else {
+				$('#spinnerContainer').hide();
+				$("#no-teams-highlightbox").show();
 				showLog("data loaded: " + JSON.stringify(data));
 			}
 		}
