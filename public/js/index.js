@@ -38,7 +38,7 @@ jQuery(function($) {
       $($(this)).attr('data-state', 'open');
       $("#myTeams").attr('data-state', '');
 			$("#no-teams-highlightbox").hide();
-      getRootTeams();
+      getRootTeams(true);
     }
 	});
 });
@@ -54,7 +54,7 @@ function getMyTeams() {
 
 	$("#teamTree").append(createMainTwistySection("teamTreeMain", ""));
 	$("#teamTreeMain").twisty();
-	getMyTeamsFromDb();
+	getMyTeamsFromDb(true);
 }
 
 function getRootTeams() {
@@ -66,10 +66,10 @@ function getRootTeams() {
 	$("#teamTable tbody").empty();
 	$("#teamTable").hide();
 
-	getAllAgileTeamsByParentId('', true);
+	getAllAgileTeamsByParentId('', true, true);
 }
 
-function getMyTeamsFromDb() {
+function getMyTeamsFromDb(initial) {
 	var cUrl = "/api/snapshot/getteams/" + encodeURIComponent(userInfo.email);
 	$.ajax({
 		type : "GET",
@@ -81,10 +81,13 @@ function getMyTeamsFromDb() {
 				_.each(data, function(team){
 					addTeamToTree(team, twistyId);
 				});
-				var defaultTeam = ($('#teamTreeMain li')[0]).id
-				loadDetails(defaultTeam);
-				// $('#mainContent').show();
-				// $('#spinnerContainer').hide();
+				if (initial) {
+					var defaultTeam = ($('#teamTreeMain li')[0]).id
+					loadDetails(defaultTeam);
+				} else {
+					$('#mainContent').show();
+					$('#spinnerContainer').hide();
+				}
 			} else {
 				showLog("data loaded: " + JSON.stringify(data));
 			}
@@ -132,7 +135,7 @@ function expandParentTeam(treeLinkId) {
 	}
 }
 
-function getAllAgileTeamsByParentId(parentId, showLoading) {
+function getAllAgileTeamsByParentId(parentId, showLoading, initial) {
 	if (showLoading) {
 		$('#mainContent').hide();
 		$('#spinnerContainer').show();
@@ -178,10 +181,13 @@ function getAllAgileTeamsByParentId(parentId, showLoading) {
 					_.each(data.docs, function(team){
 						addTeamToTree(team, mainTwistyId);
 					});
-					var defaultTeam = ($('#teamTreeMain li')[0]).id
-					loadDetails(defaultTeam);
-					// $('#mainContent').show();
-					// $('#spinnerContainer').hide();
+					if (initial) {
+						var defaultTeam = ($('#teamTreeMain li')[0]).id
+						loadDetails(defaultTeam);
+					} else {
+						$('#mainContent').show();
+						$('#spinnerContainer').hide();
+					}
 				}
 			} else {
 				showLog("data loaded: " + JSON.stringify(data));
