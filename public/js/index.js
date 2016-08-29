@@ -75,6 +75,7 @@ function getMyTeamsFromDb(initial) {
 		type : "GET",
 		url : cUrl
 	}).done(function(data) {
+		console.log(JSON.stringify(data));
 		if (data != undefined) {
 			if (data.length > 0) {
 				var twistyId = 'teamTreeMain';
@@ -95,7 +96,17 @@ function getMyTeamsFromDb(initial) {
 				showLog("data loaded: " + JSON.stringify(data));
 			}
 		}
-	});
+	}).fail(function(e) {
+    if(e.status == 404){
+			$('#spinnerContainer').hide();
+			$("#no-teams-highlightbox").show();
+		}
+		else{
+			//todo :^)
+			$('#spinnerContainer').hide();
+			alert("something went wrong :'( ")
+		}
+  });
 }
 
 function removeHighlightParents(treeLinkId) {
