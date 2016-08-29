@@ -1,4 +1,4 @@
-var requests = []; //global array to maintain ajax calls
+var requests = []; //global array to keep track of the ajax called; used to cancel pending requests when switching tabs
 var defSelTeamId="";
 var defSelIndex="";
 var squadList = [];
