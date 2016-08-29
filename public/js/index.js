@@ -84,6 +84,7 @@ function getMyTeamsFromDb(initial) {
 				if (initial) {
 					var defaultTeam = ($('#teamTreeMain li')[0]).id
 					loadDetails(defaultTeam);
+					$(".nano").nanoScroller();
 				} else {
 					$('#mainContent').show();
 					$('#spinnerContainer').hide();
@@ -186,6 +187,7 @@ function getAllAgileTeamsByParentId(parentId, showLoading, initial) {
 					if (initial) {
 						var defaultTeam = ($('#teamTreeMain li')[0]).id
 						loadDetails(defaultTeam);
+						$(".nano").nanoScroller();
 					} else {
 						$('#mainContent').show();
 						$('#spinnerContainer').hide();
