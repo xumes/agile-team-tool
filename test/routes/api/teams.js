@@ -22,7 +22,6 @@ var lookupId = null;
 describe('Team API Tests', function() {
 
   // do the login befre testing
-  this.timeout(30000);
   before(function(done) {
     agent
       .get('/api/login/masquerade/' + adminUser)
@@ -149,7 +148,6 @@ describe('Team API Tests', function() {
   });
 
   it('it will return 200 when associating a team',function(done){
-    this.timeout(30000);
     var req = request(app).put('/api/teams/associates');
     agent.attachCookies(req);
     var putBody = {
