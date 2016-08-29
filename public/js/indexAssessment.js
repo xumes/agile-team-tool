@@ -352,7 +352,7 @@ function createChartSection(prefixId) {
 	
 	var div = document.createElement("div");
 	div.setAttribute("id", prefixId+"_Chart");
-	div.setAttribute("style", "min-width: 210px; min-height: 310px; margin: 0 auto");
+	div.setAttribute("style", "min-width: 460px; min-height: 310px; margin: 0 auto");
 	colDiv.appendChild(div);
 	mainDiv.appendChild(colDiv);
 	
@@ -360,7 +360,7 @@ function createChartSection(prefixId) {
 	colDiv.setAttribute("class", "ibm-col-6-2");
   div = document.createElement("div");
 	div.setAttribute("id", prefixId+"_SpiderChart");
-	div.setAttribute("style", "min-width: 210px; min-height: 310px; margin: 0 auto");
+	div.setAttribute("style", "min-width: 460px; min-height: 310px; margin: 0 auto");
 	colDiv.appendChild(div);
 	mainDiv.appendChild(colDiv);
 	

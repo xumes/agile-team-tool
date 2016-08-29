@@ -1,16 +1,43 @@
 jQuery(function($) {
 	$(document).ready(function() {
-		// set current user
-		getAuthenticatedUser(user.shortEmail);
-
-		// set current system status
-		setGlobalSystemStatus(systemStatus);
-
-		gDialogWindow.init();
-	
+		gDialogWindow.init();	
 	});
 });
 
+var user, userInfo, allTeams, membeRoles, allTeamsLookup, myTeams, systemAdmin, systemStatus, environment;
+function getSessionVars(_callback) {
+	$.get('/api/sessionvars', function(data, status) {
+	  if (status == 'success') {
+	    user 						= data.user;
+	    allTeams 				= data.allTeams;
+	    allTeamsLookup 	= data.allTeamsLookup;
+	    myTeams 				= data.myTeams;
+	    memberRoles			= data.memberRoles;
+	    systemAdmin 		= data.systemAdmin;
+	    systemStatus 		= data.systemStatus;
+	    environment 		= data.environment;
+
+	    userInfo = {
+	      //id: not defined in ldap object,
+	      "uid"         : user.ldap.uid,
+	      "building"    : user.ldap.buildingName,
+	      //is-employee: not defined in ldap object,
+	      "bio"         : user.ldap.jobresponsibilities,
+	      //location: not defined in ldap object,
+	      "email"       : user.ldap.preferredIdentity,
+	      "name"        : user.ldap.hrFirstName + ' ' + user.ldap.hrLastName,
+	      "office-phone": user.ldap.telephoneNumber,
+	      //org-title: not defined in ldap object,
+	      "notes-id"    : user.ldap.notesId
+	    };
+
+	    localStorage.setItem("userInfo", JSON.stringify(userInfo));
+	  }
+	  if (typeof _callback === "function") {
+		  _callback.apply(this);
+		}
+	})
+}
 /**
  * Modal dialog used to show messages in place of the regular javascript alert.
  */
@@ -29,47 +56,15 @@ var gConfirmWindow = IBMCore.common.widget.overlay.createOverlay({
 	titled : true
 });
 
-function getAuthenticatedUser(userEmail) {
-	return getPersonFromFaces(userEmail, setAuthenticatedUser, [userEmail]);
-}
+function setTestUser(userEmail, testUserInfo, testUserTeams) {
+	if (testUserInfo === undefined)
+		getPersonFromFaces(userEmail, setTestUser, [userEmail]);
+	
+	userInfo = testUserInfo;
+	if (testUserTeams === undefined)
+		getAllAgileTeamsForUser(userEmail, setTestUser, [userEmail, userInfo]);
 
-var userInfo;
-function setAuthenticatedUser(userEmail, facesPerson) {
-	userInfo = userSession;
-	console.log(facesPerson);
-	userInfo = facesPerson;
-	if (userInfo == null) {
-		userInfo = new Object();
-		userInfo.email = userEmail;
-		userInfo.uid = "";
-		showLog("setting default user info: " + userInfo);
-		return getPersonFromFaces(userEmail, showUserDetails, []);
-	} else {
-		showLog("setting user info from faces: " + userInfo);
-		setUserDetails(userInfo.name, userInfo.uid);
-	}
-	localStorage.setItem("userInfo", JSON.stringify(userInfo));
-	return userInfo;
-}
-
-function resetUser(userEmail) {
-	return getAuthenticatedUser(userEmail);
-}
-
-function showUserDetails() {
-  if (localStorage.getItem("userInfo") != null) {
-  	setUserDetails(JSON.parse(localStorage.getItem("userInfo")).name, JSON.parse(localStorage.getItem("userInfo")).uid);
-  }
-}
-
-function setUserDetails(userName, userImage) {
-	$('#ibm-universal-nav').append('<span style="position: relative; left: 20px; padding-top: 15px; width:600px; float:left; color: #0061ff;font-size: 16px; important">' + userName + '</span>');
-	$('.ibm-masthead-signin-link').css({
-		'background-image' : 'url("//faces.tap.ibm.com/imagesrv/' + userImage + '?s=30")',
-		'background-repeat' : 'no-repeat',
-		'background-position' : '-4px 10px'
-	});
-	$('.ibm-masthead-signin-link').removeClass('ibm-masthead-signin-link');
+	myTeams = testUserTeams;
 }
 
 /**
@@ -119,9 +114,9 @@ function getPersonFromFaces(userEmail, _callback, args) {
 			timeout : 5000,
 			dataType : "jsonp"
 		}).always(function(data) {
-				if (data != null) {
-					person = data[0];
-					for (var i=0; i<data.length; i++) {
+				if (data != null && data.length > 0) {
+					person = null;
+					for (var i in data) {
 						if (data[i].email.toUpperCase() == userEmail.toUpperCase())
 							person = data[i];
 					}
@@ -352,8 +347,8 @@ function resetChangeIndiactor() {
  * @param message - message to show on console.
  */
 function showLog(message) {
-	if (environment != null && environment.toLowerCase() == 'sit')
-		console.log(message);
+	//if (environment != null && environment.toLowerCase() == 'sit')
+		//console.log(message);
 }
 
 
@@ -379,32 +374,48 @@ function getRemoteData(cUrl, _callback, args) {
 			var list = [];
 			console.log("data has rows " + _.has(data.rows, 'rows'));
 			console.log("data has value " + _.has(data, 'value'));
-			if (_.has(data, "rows")) {
-				if (_.has(data.rows, "doc"))
-					list = _.pluck(data.rows, 'doc');
-				else 
-					list = _.pluck(data.rows, 'value');
-				args.push(list);
-				showLog("data loaded: " + list.length);
-				returnObj = list;
+			if (_.has(data, 'rows')) {
+			  if (!_.isEmpty(data.rows)) {
+			    if (_.has(data.rows[0], 'doc'))
+			      list = _.pluck(data.rows, 'doc');
+			    else if (_.has(data.rows[0], 'value'))
+			      list =  _.pluck(data.rows, 'value');
+			    else if (_.has(data.rows[0], 'fields')) {
+			      list = _.map(data.rows, function(val, key) {
+			        //add document id property into each fields result
+			        var merged = _.extend(val.fields, {'_id':val.id});
+			          return merged;
+			        });
+			    }
+			  } else
+			    list =  data.rows;
 
-			} else if (data.length > 0) {
-				if (!_.isEmpty(data[0].doc)) 
-					list = _.pluck(data, 'doc')
-				else if (_.has(data, 'value'))
-					list = _.pluck(data, 'value');
-				else
-					list = data;
+			   args.push(list);
+			   returnObj = list;
 
-				args.push(list);
-				showLog("data loaded: " + list.length);
-				returnObj = list;
+			} else if (data instanceof Array) {
+			  if (!_.isEmpty(data)) {
+			    if (_.has(data[0], 'doc') && !_.isEmpty(data[0].doc)) 
+			      list =  _.pluck(data, 'doc');
+			    else if (_.has(data[0], 'value') && !_.isEmpty(data[0].value))
+			      list =  _.pluck(data, 'value');
+			    else if (_.has(data[0], 'fields') && !_.isEmpty(data[0].fields)) {
+			      list = _.map(data.rows, function(val, key) {
+			        //add document id property into each fields result
+			        var merged = _.extend(val.fields, {'_id':val.id});
+			          return merged;
+			        });
+			    }
+			    else
+			    	list = data;
+			  } else
+			    list =  data;
 
+			   args.push(list);
+			   returnObj = list;
 			} else {
-				// call just returned one object
-				showLog("data loaded: " + JSON.stringify(data));
 				args.push(data);
-				returnObj = data;
+				returnObj =  data;
 			}
 		}
 		
@@ -594,7 +605,8 @@ function getTeamIterations(teamId, _callback, args) {
 		_callback.apply(this, args);
 		return null;
 	}
-	var teamUrl = "/api/iteration/" + encodeURIComponent(teamId);
+	// var teamUrl = "/api/iteration/" + encodeURIComponent(teamId);
+	var teamUrl = "/api/iteration/searchTeamIteration?id=" + encodeURIComponent(teamId) + "&includeDocs=true&limit=200";
 	return getRemoteData(teamUrl, _callback, args);
 }
 
@@ -643,6 +655,7 @@ function compactTeam(team) {
     compactedTeam['squadteam'] = team.squadteam,
     compactedTeam['parent_team_id'] = team.parent_team_id,
     compactedTeam['child_team_id'] = team.child_team_id,
+    compactedTeam['doc_status'] = team.doc_status; 
     compactedTeam['total_members'] = teamCount,
     compactedTeam['total_allocation'] = teamAlloc
     compactedTeam['doc'] = team;

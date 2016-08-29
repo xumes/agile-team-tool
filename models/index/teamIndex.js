@@ -148,7 +148,14 @@ var index = {
           })
           .catch( /* istanbul ignore next */ function(err) {
             logger.get('models').info("Document based team indexing not created.");
-            reject(err);
+            // try to rebuild index again
+            index.initIndex()
+            .then(function(result) {
+              resolve(result);
+            })
+            .catch( /* istanbul ignore next */ function(err) {
+              reject(err);
+            })
           });        
         })
         .catch( /* istanbul ignore next */ function(err) {
@@ -163,7 +170,14 @@ var index = {
           })
           .catch( /* istanbul ignore next */ function(err) {
             logger.get('models').info("Document based team indexing not created.");
-            reject(err);
+            // try to rebuild index again
+            index.initIndex()
+            .then(function(result) {
+              resolve(result);
+            })
+            .catch( /* istanbul ignore next */ function(err) {
+              reject(err);
+            })
           });  
         });        
     });
@@ -302,7 +316,7 @@ var index = {
             lookupObj.parents = [];
             lookupObj.children = [];
 
-            allTeams.push(lookupObj);
+            allTeams = _.union(allTeams, [lookupObj]);
           }
           if (_.isEqual(teamAssociation.doc_status, "delete")) {
             logger.get('models').info('Need to delete lookup object for ' + teamAssociation.name);

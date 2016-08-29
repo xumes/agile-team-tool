@@ -10,6 +10,7 @@ var teamDocInvalid = teamsData.teams.invalidDoc;
 var teamDocUpdateInvalid = teamsData.teams.validDoc;
 var teamDocUpdateValid = teamsData.teams.validDoc;
 var userValidEmail = teamsData.user.details.shortEmail;
+var userUid = '123456PH1';
 var adminUser = 'Yanliang.Gu1@ibm.com';
 var adminInfo = null;
 var createdId = null;
@@ -373,6 +374,36 @@ describe('Team API Tests', function() {
     });
   });
 
+  // Get by serial number/ uid api tests
+  it('it will return 200 and empty team lists because serial id/ uids without team', function(done){
+    var req = request(app).get('/api/teams/membersUid/' + 'uid-without-team');
+    agent.attachCookies(req);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+        expect(res.body).to.be.empty;
+      }
+      done();
+    });
+  });
+
+  it('it will return 200 and team lists for this serial number/ uid', function(done){
+    var req = request(app).get('/api/teams/membersUid/' + userUid);
+    agent.attachCookies(req);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+        expect(res.body[0]).to.have.property('key');
+        expect(res.body[0]['key']).to.be.equal(userUid);
+      }
+      done();
+    });
+  });
+
   // Delete api test
   it('it will return 400 because delete status not equal to delete', function(done){
     teamDocUpdateValid['doc_status'] = '';
@@ -478,6 +509,22 @@ describe('Team API Tests', function() {
     });
   });
 
+  // initializes lookup to set relationship references
+  it('it will return 200 and recreates the team lookup document', function(done){
+    var req = request(app).get('/api/teams/lookup/initialize');
+    agent.attachCookies(req);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+        expect(res.body).to.have.property('id');
+        expect(res.body['id']).to.be.equal('ag_ref_team_index');
+      }
+      done();
+    });
+  });
+
   // lookup by team id
   it('it will return 200 empty lookup object because of an invalid team id', function(done){
     var req = request(app).get('/api/teams/lookup/team/' + 'none-existent-team');
@@ -513,6 +560,46 @@ describe('Team API Tests', function() {
           expect(res.body[0]['parents']).to.be.a('array');
           expect(res.body[0]['children']).to.be.a('array');
           lookupId = res.body[0]['_id'];
+        }
+      }
+      done();
+    });
+  });
+
+  // lookup non-squad teams
+  it('it will return 200 and empty if there are no valid data on the lookup, array of objects if otherwise', function(done){
+    var req = request(app).get('/api/teams/lookup/team?squadteam=no');
+    agent.attachCookies(req);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+        if (res.body.length == 0)
+          expect(res.body).to.be.empty;
+        else {
+          expect(res.body[0]).to.have.property('_id');
+          expect(res.body[0]).to.have.property('name');
+        }
+      }
+      done();
+    });
+  });
+
+  // lookup squad teams
+  it('it will return 200 and empty if there are no valid data on the lookup, array of objects if otherwise', function(done){
+    var req = request(app).get('/api/teams/lookup/team?squadteam=yes');
+    agent.attachCookies(req);
+    req.end(function(err, res){
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+        if (res.body.length == 0)
+          expect(res.body).to.be.empty;
+        else {
+          expect(res.body[0]).to.have.property('_id');
+          expect(res.body[0]).to.have.property('name');
         }
       }
       done();

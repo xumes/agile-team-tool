@@ -10,12 +10,14 @@ var validate = require('validate.js');
 
 var iterationMonth = 5;
 var prefix = 'ag_iter_data_';
+var squad_prefix = 'ag_squad_data_';
 var timestamp = Math.floor(Date.now() / 1000);
 var iterationDocRules = require('./validate_rules/iteration.js');
 var snapshotValidationRules = require('./validate_rules/snapshot.js');
 var nonSquadTeamRule = snapshotValidationRules.nonSquadTeamRule;
 var squadTeamRule = snapshotValidationRules.squadTeamRule;
-
+var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+var monthArray = [];
 
 var formatErrMsg = /* istanbul ignore next */ function(msg){
   loggers.get('models').info('Error: ', msg);
@@ -48,23 +50,7 @@ function resetData(){
       'teams5to12' : 0,
       'teamsGt12' : 0,
       'totalSquad' : 0,
-      'partialMonth' : true
-
-    },
-    {
-      'totalPoints' : 0,
-      'totalStories' : 0,
-      'totalCompleted' : 0,
-      'totalDefects' : 0,
-      'totalDplymts' : 0,
-      'totTeamStat' : 0,
-      'totClientStat' : 0,
-      'totTeamStatIter' : 0,
-      'totClientStatIter' : 0,
-      'teamsLt5' : 0,
-      'teams5to12' : 0,
-      'teamsGt12' : 0,
-      'totalSquad' : 0,
+      'month':'',
       'partialMonth' : false
 
     },
@@ -82,6 +68,7 @@ function resetData(){
       'teams5to12' : 0,
       'teamsGt12' : 0,
       'totalSquad' : 0,
+      'month':'',
       'partialMonth' : false
 
     },
@@ -99,6 +86,7 @@ function resetData(){
       'teams5to12' : 0,
       'teamsGt12' : 0,
       'totalSquad' : 0,
+      'month':'',
       'partialMonth' : false
 
     },
@@ -116,6 +104,25 @@ function resetData(){
       'teams5to12' : 0,
       'teamsGt12' : 0,
       'totalSquad' : 0,
+      'month':'',
+      'partialMonth' : false
+
+    },
+    {
+      'totalPoints' : 0,
+      'totalStories' : 0,
+      'totalCompleted' : 0,
+      'totalDefects' : 0,
+      'totalDplymts' : 0,
+      'totTeamStat' : 0,
+      'totClientStat' : 0,
+      'totTeamStatIter' : 0,
+      'totClientStatIter' : 0,
+      'teamsLt5' : 0,
+      'teams5to12' : 0,
+      'teamsGt12' : 0,
+      'totalSquad' : 0,
+      'month':'',
       'partialMonth' : false
     },
     {
@@ -132,7 +139,8 @@ function resetData(){
       'teams5to12' : 0,
       'teamsGt12' : 0,
       'totalSquad' : 0,
-      'partialMonth' : true
+      'month':'',
+      'partialMonth' : false
     }
   ];
 };
@@ -195,10 +203,14 @@ function getAllSquads() {
             _.each(squadTeams.rows, function(squadTeam){
               if (squadTeam.value.squadteam == 'Yes') {
                 _.each(squadTeam.value.parents, function(parent){
-                  squadsByParent[parent].push(squadTeam.value._id);
+                  if(!_.isEmpty(squadsByParent[parent]))
+                    squadsByParent[parent].push(squadTeam.value._id);
+                  else
+                    loggers.get('models').warn('Snapshot: '+ parent + ' in squadsByParent was undefined');
                 });
               }
             });
+            //console.log(squadsByParent);
             resolve(squadsByParent);
           })
           .catch( /* istanbul ignore next */ function(err){
@@ -332,11 +344,13 @@ function rollUpIterationsByNonSquad(squads, nonSquadTeamId, squadsCalResults, is
           if (squadIterationResult[j].totalCompleted > 0) {
             teams[j] = teams[j] + 1;
           }
+          //console.log(currData[j].totalPoints);
         }
       }
     }
     for (var i = 0; i <= iterationMonth; i++) {
       currData[i].totalSquad = teams[i];
+      currData[i].month = monthArray[i];
       if(currData[i].totTeamStatIter > 0){
         currData[i].totTeamStat = currData[i].totTeamStat/currData[i].totTeamStatIter;
       }
@@ -403,17 +417,288 @@ function addMonths(date, months) {
   var newDate = new Date(util.getServerTime());
   newDate.setMonth(date.getMonth() + months);
   return new Date(newDate);
-}
+};
+
+/**
+ * Get _rev for roll up squads
+ * @return Object {teamid:_rev}
+ */
+function getRollUpSquadsHistory() {
+  return new Promise(function(resolve, reject){
+     common.getByView('iterations','rollUpSquads')
+      .then(function(oldRollUpData){
+        var rollUpDataRevs = new Object();
+        _.each(oldRollUpData.rows, function(data){
+          rollUpDataRevs[data.value._id] = data.value._rev;
+        });
+        resolve(rollUpDataRevs);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        var msg;
+        if (err.error) {
+          msg = err.error;
+        } else {
+          msg = err;
+        }
+        reject(formatErrMsg(msg));
+      })
+  })
+};
+
+/**
+ * Get suqad team data
+ * @return Object squadTeams
+ */
+ function getSquadsData() {
+   var squadTeams = new Object();
+   return new Promise(function(resolve, reject){
+     teamModel.getTeam()
+       .then(function(teams){
+         if (teams.length <= 0) {
+           var msg;
+           msg = 'No team found';
+           reject(formatErrMsg(msg));
+         } else {
+           _.each(teams, function(team){
+             if ((team.value.squadteam != undefined) && (team.value.squadteam == 'Yes')) {
+               squadTeams[team.value._id] = team.value;
+             }
+           });
+           resolve(squadTeams);
+         }
+       })
+       .catch( /* istanbul ignore next */ function(err){
+         var msg;
+         if (err.error) {
+           msg = err.error;
+         } else {
+           msg = err;
+         }
+         reject(formatErrMsg(msg));
+       });
+   });
+ };
+
+/**
+ * Roll up total_members and total_allocation data
+ * @param Array squadsList
+ * @param Object squadTeams
+ * @return Object entry
+ */
+function rollUpSquadsData(squadsList, squadTeams) {
+  var entry = new Object();
+  var teamsLt5=0;
+  var teams5to12=0;
+  var teamsGt12=0;
+  var tcLt5=0;
+  var tc5to12=0;
+  var tcGt12=0;
+  var fteLt5=0;
+  var fte5to12=0;
+  var fteGt12=0;
+
+  _.each(squadsList, function(squadId){
+    squad = squadTeams[squadId];
+    var teamCnt = squad["total_members"] != null ? squad["total_members"] : 0;
+		var teamFTE = squad["total_allocation"] != null ? squad["total_allocation"] : 0;
+    if(teamCnt != undefined && teamCnt !=""){
+			teamCnt = parseInt(teamCnt);
+			if(teamCnt < 5){
+				teamsLt5 = teamsLt5 + 1;
+				fteLt5 = fteLt5 + teamFTE;
+				tcLt5 = tcLt5 + teamCnt;
+			}else if(teamCnt > 12){
+				teamsGt12 = teamsGt12 + 1;
+				fteGt12 = fteGt12 + teamFTE;
+				tcGt12 = tcGt12 + teamCnt;
+
+			}else{
+				teams5to12 = teams5to12 + 1;
+				fte5to12 = fte5to12 + teamFTE;
+				tc5to12 = tc5to12 + teamCnt;
+			}
+    }
+  });
+
+  entry.teamsLt5 = teamsLt5;
+  entry.tcLt5 = tcLt5;
+  entry.fteLt5 = fteLt5;
+
+  entry.teams5to12 = teams5to12;
+  entry.tc5to12 = tc5to12;
+  entry.fte5to12 = fte5to12;
+
+  entry.teamsGt12 = teamsGt12;
+  entry.tcGt12 = tcGt12;
+  entry.fteGt12 = fteGt12;
+
+  return entry;
+};
+
+function sortRootTeam(teams) {
+
+};
 
 var snapshot = {
+
+  getTopLevelTeams : function (email) {
+    return new Promise(function(resolve, reject){
+      teamModel.getTeamByEmail(email)
+        .then(function(teams){
+          var teamIds = [];
+          _.each(teams, function(team){
+            teamIds.push(team.id);
+          });
+          if (teamIds.length > 0) {
+            teamModel.getLookupIndex()
+              .then(function(lookUpTeams){
+                var teamList = [];
+                var childrenList = [];
+                _.each(teamIds, function(teamId){
+                  _.find(lookUpTeams, function(lookUpTeam){
+                    if (lookUpTeam._id == teamId) {
+                      teamList.push(lookUpTeam);
+                      childrenList = _.flatten(_.pluck(teamList, 'children'));
+                    }
+                  });
+                });
+                var rootTeams = [];
+                _.each(teamList, function(team) {
+          				if (childrenList.indexOf(team._id) == -1) {
+                    team.parent_team_id = "";
+                    team.child_team_id = team.children;
+                    rootTeams.push(team);
+                  }
+          			});
+                resolve(rootTeams);
+              })
+              .catch(function(err){
+                var msg;
+                if (err.error) {
+                  msg = err.error;
+                } else {
+                  msg = err;
+                }
+                reject(formatErrMsg(msg));
+              });
+          } else {
+            var msg = 'no team under your email';
+            reject(formatErrMsg(msg));
+          }
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          var msg;
+          if (err.error) {
+            msg = err.error;
+          } else {
+            msg = err;
+          }
+          reject(formatErrMsg(msg));
+        })
+    });
+  },
+
+  updateRollUpSquads : /* istanbul ignore next */ function() {
+    return new Promise(function(resolve, reject){
+      var squadTeams = new Object();
+      var oldRollUpDataRevs = new Object();
+      var promiseArray = [];
+      promiseArray.push(getSquadsData());
+      promiseArray.push(getRollUpSquadsHistory());
+      Promise.all(promiseArray)
+        .then(function(results){
+          squadTeams = results[0];
+          oldRollUpDataRevs = results[1];
+          var nonsquadsScore = [];
+          getAllSquads()
+            .then(function(squadsByParent){
+              _.each(Object.keys(squadsByParent), function(nonsquadId){
+                var score = rollUpSquadsData(squadsByParent[nonsquadId], squadTeams);
+                var entry = new Object();
+                if (!_.isEmpty(oldRollUpDataRevs[squad_prefix + nonsquadId])) {
+                  entry['_rev'] = oldRollUpDataRevs[squad_prefix + nonsquadId];
+                }
+                entry['_id'] = squad_prefix + nonsquadId;
+                entry['team_id'] = nonsquadId;
+                entry['type'] = 'roll_up_squads';
+                entry['timestamp'] = timestamp;
+                entry['value'] = score;
+                nonsquadsScore.push(entry);
+              });
+              var updateRequest = {'docs' : nonsquadsScore};
+              common.bulkUpdate(updateRequest)
+                .then(function(results){
+                  resolve(results);
+                })
+                .catch( /* istanbul ignore next */ function(err){
+                  var msg;
+                  if (err.error) {
+                    msg = err.error;
+                  } else {
+                    msg = err;
+                  }
+                  reject(formatErrMsg(msg));
+                });
+            })
+            .catch( /* istanbul ignore next */ function(err){
+              var msg;
+              if (err.error) {
+                msg = err.error;
+              } else {
+                msg = err;
+              }
+              reject(formatErrMsg(msg));
+            });
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          var msg;
+          if (err.error) {
+            msg = err.error;
+          } else {
+            msg = err;
+          }
+          reject(formatErrMsg(msg));
+        });
+    });
+  },
+
+  getRollUpSquadsByTeam : function(teamId) {
+    return new Promise(function(resolve, reject){
+      rollUpDataId = 'ag_squad_data_' + teamId;
+      common.getByViewKey('iterations','rollUpSquads',rollUpDataId)
+        .then(function(rollUpData){
+          resolve(rollUpData);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          var msg;
+          if (err.error) {
+            msg = err.error;
+          } else {
+            msg = err;
+          }
+          reject(formatErrMsg(msg));
+        })
+    });
+  },
+
+
   updateRollUpData : /* istanbul ignore next */ function() {
     return new Promise(function(resolve, reject){
       iterationMonth = 5;
+      monthArray = [];
       var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-      var endTime = new Date(util.getServerTime());
-      var startTime = addMonths(endTime, -iterationMonth);
-      endTime = endTime.toLocaleDateString('en-US',options);
+      var nowTime = new Date(util.getServerTime());
+      var startTime = addMonths(nowTime, -iterationMonth);
+      var endTime = nowTime.toLocaleDateString('en-US',options);
       startTime = startTime.toLocaleDateString('en-US',options);
+
+      for (var i = 0; i <= iterationMonth; i++) {
+        var time = (addMonths(nowTime, -(iterationMonth-i))).toLocaleDateString('en-US',options);
+        var month = monthNames[parseInt(time.substring(0,2))-1];
+        var year = time.substring(time.length-4,time.length);
+        monthArray[i] = month + '-' + year;
+      }
+
       var promiseArray = [];
       promiseArray.push(getIterationDocs(startTime, endTime));
       promiseArray.push(getAllSquads());
@@ -483,6 +768,25 @@ var snapshot = {
           }
           reject(formatErrMsg(msg));
         });
+    });
+  },
+
+  getRollUpDataByTeam : function(teamId) {
+    return new Promise(function(resolve, reject){
+      rollUpDataId = 'ag_iter_data_' + teamId;
+      common.getByViewKey('iterations','rollUpData',rollUpDataId)
+        .then(function(rollUpData){
+          resolve(rollUpData);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          var msg;
+          if (err.error) {
+            msg = err.error;
+          } else {
+            msg = err;
+          }
+          reject(formatErrMsg(msg));
+        })
     });
   },
 

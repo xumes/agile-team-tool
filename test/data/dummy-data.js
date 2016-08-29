@@ -16,19 +16,24 @@ var dummy = {
     validDoc : {
       name : 'Team document-' + new Date().getTime(),
       desc : 'team document description',
-      squadteam : 'No'
+      squadteam : 'No',
+      testdata : 'Yes'
     },
     invalidDoc : {
       name : '',
       desc : '',
       squadteam : 'YesNo'
     },
+    invalidId : function(){
+      return 'id_' + crypto.randomBytes(20).toString('hex');
+    },
     validUpdateDoc : function(){
       return {
         name : 'Team document-' + new Date().getTime(),
         desc : 'Updated Team Description',
         squadteam : 'No',
-        created_user : dummy.user.details['shortEmail']
+        created_user : dummy.user.details['shortEmail'],
+        testdata : 'Yes'
       };
     }
   },
@@ -67,7 +72,8 @@ var dummy = {
         return {
           name : 'Team document-' + new Date().getTime(),
           desc : 'team document description',
-          squadteam : 'No'
+          squadteam : 'No',
+          testdata : 'Yes'
         };
     }
   },

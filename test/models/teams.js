@@ -163,6 +163,37 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
       done();
     })
   });
+
+  it('it will return error because update document is invalid', function(done){
+    teamDocUpdateValid['_id'] = createdId;
+    delete teamDocUpdateValid['name'];
+    teamModel.updateOrDeleteTeam(teamDocUpdateValid, session, 'update')
+    .catch(function(err){
+      expect(err).to.not.equal(null);
+      expect(err).to.have.property('error');
+      expect(err.error).to.have.property('name');
+    })
+    .finally(function(){
+      done();
+    })
+  });
+
+  it('it will return error because update document is invalid/ team name already exists', function(done){
+    teamDocUpdateValid['_id'] = createdId;
+    teamModel.getTeam(null)
+    .then(function(body){
+      teamDocUpdateValid['name'] = body[0]['value']['name'];
+      teamModel.updateOrDeleteTeam(teamDocUpdateValid, session, 'update')
+      .catch(function(err){
+        expect(err).to.not.equal(null);
+        expect(err).to.have.property('error');
+        expect(err.error).to.have.property('name');
+      })
+      .finally(function(){
+        done();
+      })
+    })
+  });
 });
 
 describe('Team models [associateTeams]: associate team relationship with other teams', function(){
@@ -246,6 +277,23 @@ describe('Team models [associateTeams]: associate team relationship with other t
       expect(err).to.have.property('error');
       expect(err.error).to.have.property('targetChild');
       expect(err.error.targetChild).to.have.be.equal('Unable to add selected team as a child. Team may have been updated with another parent.');
+    })
+    .finally(function(){
+      done();
+    })
+  });
+
+  it('will return error because associate data is invalid to associate child', function(done){
+    associateDataChildInvalid = {
+      teamId : createdId,
+      targetChild : []
+    };
+    teamModel.associateTeams(associateDataChildInvalid, 'associateChild', session)
+    .catch(function(err){
+      expect(err).to.not.equal(null);
+      expect(err).to.have.property('error');
+      expect(err.error).to.have.property('targetChild');
+      expect(err.error.targetChild).to.have.be.equal('No team selected to associate as a Child team.');
     })
     .finally(function(){
       done();
@@ -366,20 +414,36 @@ describe('Team models [associateTeams]: associate team relationship with other t
         teamId : createdId,
         targetChild : [body['_id']]
       };
+      removedId.push(body['_id']);        
       teamModel.associateTeams(associateDataChildValid, 'associateChild', session)
       .then(function(body){
         expect(body).to.not.equal(null);
         expect(body[0]['_id']).to.have.equal(associateDataChildValid['teamId']);
-        // need to have better assertion, ie check if targetChild is now existing in teamId child_team_id
-        removedId.push(body[1]['_id']);
-      })
+        var invalidChildId = body[1]['_id'];
+        teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
+        .then(function(body){
+          var associateDataChildInvalid = {
+            teamId : body['_id'],
+            targetChild : invalidChildId
+          };
+          removedId.push(body['_id']);
+          teamModel.associateTeams(associateDataChildValid, 'associateChild', session)
+          .catch(function(err){ 
+            expect(err).to.not.equal(null);
+            expect(err).to.have.property('error');
+            expect(err.error).to.have.property('targetChild');
+            expect(err.error.targetChild).to.have.be.equal('Unable to add selected team as a child. Team may have been updated with another parent.');
+          });
+        });
+          // need to have better assertion, ie check if targetChild is now existing in teamId child_team_id
+      }) 
       .finally(function(){
         done();
       })
     })
   });
 
-  it('will removed parent association', function(done){
+  it('will remove parent association', function(done){
     teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
     .then(function(body){
       var associateDataParentValid = {
@@ -405,10 +469,39 @@ describe('Team models [associateTeams]: associate team relationship with other t
           done();
         })
       })
+
     });
   });
 
-  it('will removed child team', function(done){
+  it('will delete an associated team ', function(done){
+    teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
+    .then(function(body){
+      var associateDataParentValid = {
+        teamId : createdId,
+        targetParent : [body['_id']]
+      };
+      removedId.push(body['_id']);
+      teamModel.associateTeams(associateDataParentValid, 'associateParent', session)
+      .then(function(body){
+        removedId.push(body[1]['_id']);
+        session['myTeams'].push(body[0]);
+        session['myTeams'].push(body[1]);
+        teamModel.updateOrDeleteTeam(body[1], session, 'delete')
+        .then(function(body){
+          expect(body).to.not.equal(null);
+          expect(body['parent_team_id']).to.have.equal(createdId);
+          expect(body['doc_status']).to.have.equal('delete');
+        })
+        .catch(function(err){
+        })
+        .finally(function(){
+          done();
+        })
+      })
+    });
+  });
+
+  it('will remove child team', function(done){
     teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
     .then(function(body){
       var associateDataChildValid = {
@@ -435,8 +528,44 @@ describe('Team models [associateTeams]: associate team relationship with other t
     })
   });
 
+  it('will delete an associated team', function(done){
+    teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
+    .then(function(body){
+      var targetTeam = body['_id'];
+      removedId.push(body['_id']);
+      session['myTeams'].push(body);
+      teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
+      .then(function(body){
+        var associateDataParentValid = {
+          teamId : targetTeam,
+          targetParent : [body['_id']]
+        };
+        removedId.push(body['_id']);
+        session['myTeams'].push(body);
+        teamModel.associateTeams(associateDataParentValid, 'associateParent', session)
+        .then(function(body){
+          removedId.push(body[0]['_id']);
+          session['myTeams'].push(body[0]);
+          session['myTeams'].push(body[1]);
+          teamModel.updateOrDeleteTeam(body[0], session, 'delete')
+          .then(function(body){
+            expect(body).to.not.equal(null);
+            expect(body['child_team_id']).to.have.equal(createdId);
+            expect(body['doc_status']).to.have.equal('delete');
+          })
+          .catch(function(err){
+          })
+          .finally(function(){
+            done();
+          })
+        })
+      });
+    });
+  });
+
   /* delete all association records */
   after(function(done){
+    removedId = _.uniq(removedId);
     for (var i = 0; i < removedId.length; i++) {
       teamModel.getTeam(removedId[i])
         .then(function(result){
@@ -489,7 +618,7 @@ describe('Team models [deleteTeam] : delete existing team document', function(){
     teamToDelete['_id'] = createdId;
     teamModel.updateOrDeleteTeam(teamToDelete, session, 'delete')
     .catch(function(err){
-      expect(err.error).to.contain('action');
+      expect(err.error).to.contain('id is required');
     })
     .finally(function(){
       done();
@@ -690,6 +819,53 @@ describe('Team models [getTeamByEmail]: get all team lists for a given email add
     teamModel.getTeamByEmail(session['user']['shortEmail'])
       .then(function(body){
         expect(body[0]['key']).to.be.equal(session['user']['shortEmail']);
+      })
+      .catch(function(err){
+        expect(err).to.be.equal(null);
+      })
+      .finally(function(){
+        done();
+      });
+  });
+
+});
+
+describe('Team models [getTeamByUid]: get all team lists for a given serial number/ uid', function(){
+  before(function(done) {
+    cache.setHomeCache(userDetails['shortEmail'])
+    .then(function(body){
+      session = body;
+      session['user'] = userDetails;
+      done();
+    })
+  })
+
+  it('return error because serial number/ uid is empty', function(done){
+    teamModel.getTeamByUid(null)
+      .catch(function(err){
+        expect(err).to.not.equal(null);
+        expect(err).to.have.property('error');
+        expect(err.error).to.have.property('uid');
+      })
+      .finally(function(){
+        done();
+      });
+  });
+
+  it('return empty team lists serial number/ uid without team', function(done){
+    teamModel.getTeamByUid('invalid-uid')
+      .then(function(body){
+        expect(body).to.be.empty;
+      })
+      .finally(function(){
+        done();
+      });
+  });
+
+  it('return team lists for this serial number/ uid', function(done){
+    teamModel.getTeamByUid(userDetails['ldap']['serialNumber'])
+      .then(function(body){
+        expect(body[0]['key']).to.be.equal(userDetails['ldap']['serialNumber']);
       })
       .catch(function(err){
         expect(err).to.be.equal(null);
@@ -1012,5 +1188,59 @@ describe('Team models [indexDocument]: updates the team relation lookup document
       .catch(function(err){
         done(err);
       });
+  });
+});
+
+describe('Team models [getSelectableParents]', function(){
+  it('it will return empty array because team id is empty', function(done) {
+    teamModel.getSelectableParents(null)
+      .then(function(body){
+        expect(body).to.be.a('array');
+        expect(body).to.have.length(0);
+      })
+      .finally(function(){
+        done();
+      });
+  });
+});
+
+describe('Team models [getSquadsOfParent]', function(){
+  it('it will return empty array because team id is empty', function(done) {
+    teamModel.getSquadsOfParent(null)
+      .then(function(body){
+        expect(body).to.be.a('array');
+        expect(body).to.have.length(0);
+      })
+      .finally(function(){
+        done();
+      });
+  });
+});
+
+describe('Team models [getLookupIndex]', function(){
+  it('it will return empty array because team id is none existent', function(done) {
+    teamModel.getLookupIndex(dummyData.teams.invalidId())
+      .then(function(body){
+        expect(body).to.be.empty;
+      })
+      .finally(function(){
+        done();
+      });
+  });
+});
+
+describe('Team models [defaultTeamDoc]', function(){
+  it('it will return default team doc format/ structure', function(done) {
+    var body = teamModel.defaultTeamDoc({ 'squadTeam' : 'Yes' }, userDetailsValid);
+    expect(body).to.be.a('object');
+    expect(body).to.have.property('_id');
+    done();
+  });
+
+  it('it will return default team doc format/ structure', function(done) {
+    var body = teamModel.defaultTeamDoc({ 'squadTeam' : 'No' }, userDetailsValid);
+    expect(body).to.be.a('object');
+    expect(body).to.have.property('_id');
+    done();
   });
 });

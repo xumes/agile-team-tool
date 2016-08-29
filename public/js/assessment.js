@@ -1,92 +1,95 @@
 // some function calls are found on dashUtils.js, commons.js
 jQuery(function($) {
   $(document).ready(function() {
-   	getAssessmentQuestionnaire(assessmentQuestionnaireHandler, [null]);
-  	var urlParameters = getJsonParametersFromUrl();
-  	if (urlParameters != undefined && urlParameters.testUser != undefined) {
-			resetUser(urlParameters.testUser);
+  	getSessionVars(initPageAction);
+	});
+
+	function initPageAction() {
+		getAssessmentQuestionnaire(assessmentQuestionnaireHandler, [null]);
+		var urlParameters = getJsonParametersFromUrl();
+		if (urlParameters != undefined && urlParameters.testUser != undefined) {
+			setTestUser(urlParameters.testUser);
 			alert("here TestUser is: " + urlParameters.testUser);
 		}
-  	if (urlParameters != undefined && urlParameters.id != undefined && urlParameters.id != "") {
-  		if (urlParameters.assessId != undefined && urlParameters.assessId != "") {
-  			agileTeamListHandler("teamSelectList", urlParameters.id, urlParameters.assessId, null, null, allTeams);
-  		} else {
-  			agileTeamListHandler("teamSelectList", urlParameters.id, "new", null, null, allTeams); 
-  		}
-  	} else {
-  		agileTeamListHandler("teamSelectList", null, null, null, null, allTeams);
-  	}
-  	
-  	setToolTips();
-  	$("#assessmentDate").datepicker({ maxDate: 0 , dateFormat: 'ddMyy' });
-  	$("#assessmentDate" ).datepicker( "option", "dateFormat", 'ddMyy' );
-  	
-  	$("#teamSelectList").change(function() {
-  		var teamId = $("#teamSelectList option:selected").val();
-  		getTeamAssessments(teamId, false, teamAssessmentListHander, ["assessmentSelectList", teamId, "new"]);
+		if (urlParameters != undefined && urlParameters.id != undefined && urlParameters.id != "") {
+			if (urlParameters.assessId != undefined && urlParameters.assessId != "") {
+				agileTeamListHandler("teamSelectList", urlParameters.id, urlParameters.assessId, null, null, allTeams);
+			} else {
+				agileTeamListHandler("teamSelectList", urlParameters.id, "new", null, null, allTeams); 
+			}
+		} else {
+			agileTeamListHandler("teamSelectList", null, null, null, null, allTeams);
+		}
+		
+		setToolTips();
+		$("#assessmentDate").datepicker({ maxDate: 0 , dateFormat: 'ddMyy' });
+		$("#assessmentDate" ).datepicker( "option", "dateFormat", 'ddMyy' );	
+	}
+
+	$("#teamSelectList").change(function() {
+		var teamId = $("#teamSelectList option:selected").val();
+		getTeamAssessments(teamId, false, teamAssessmentListHander, ["assessmentSelectList", teamId, "new"]);
+	});
+
+	$("#assessmentSelectList").change(function() {
+		getTeamAssessmentAnswers($("#assessmentSelectList option:selected").val(), assessmentQuestionnaireHandler, []);	
+	});
+
+	$("#teamTypeSelectList").change(function() {
+		var opsExist = false;
+		$("#assessmentContainer > ul > li > a").each(function() {
+			if (($(this).html().toLowerCase().indexOf("ops") > -1) || ($(this).html().toLowerCase().indexOf("operations") > -1)) {
+				opsExist = true;
+			}
 		});
-    
-    $("#assessmentSelectList").change(function() {
-    	getTeamAssessmentAnswers($("#assessmentSelectList option:selected").val(), assessmentQuestionnaireHandler, []);
-    	
-    });
-    
-    $("#teamTypeSelectList").change(function() {
-    	var opsExist = false;
-  		$("#assessmentContainer > ul > li > a").each(function() {
-  			if (($(this).html().toLowerCase().indexOf("ops") > -1) || ($(this).html().toLowerCase().indexOf("operations") > -1)) {
-  				opsExist = true;
-  			}
-  		});
-  		if (opsExist) {
-	    	if ($("#teamTypeSelectList option:selected").val().toLowerCase() == "operations") {
-	    		$("#assessmentContainer > ul > li > a").each(function() {
-	    			if ($(this).html().toLowerCase().indexOf("leadership") > -1) {
-	    				$(this).parent().hide();
-	    			}
-	    			if (($(this).html().toLowerCase().indexOf("ops") > -1) || ($(this).html().toLowerCase().indexOf("operations") > -1)) {
-	    				$(this).parent().show();
-	    			}
-	    		});
-		    		
-	    	} else {
-	    		$("#assessmentContainer > ul > li > a").each(function() {
-	    			if ($(this).html().toLowerCase().indexOf("leadership") > -1) {
-	    				$(this).parent().show();
-	    			}
-	    			if (($(this).html().toLowerCase().indexOf("ops") > -1) || ($(this).html().toLowerCase().indexOf("operations") > -1)) {
-	    				$(this).parent().hide();
-	    			}
-	    		});
-	
-	    	}
-    	}
-    	
-    	if (gTeamAssessment != null)
-    		gTeamAssessment["team_proj_ops"] = $("#teamTypeSelectList option:selected").val();
-    });
-
-    $("#softwareYesNo").change(function() {
-    	if ($("#softwareYesNo option:selected").val().toLowerCase() == "no") {
-    		$("#assessmentContainer > ul > li > a").each(function() {
-    			if ($(this).html().toLowerCase().indexOf("delivery") > -1) {
-    				$(this).parent().hide();
-    			}
-    		});
+		if (opsExist) {
+	  	if ($("#teamTypeSelectList option:selected").val().toLowerCase() == "operations") {
+	  		$("#assessmentContainer > ul > li > a").each(function() {
+	  			if ($(this).html().toLowerCase().indexOf("leadership") > -1) {
+	  				$(this).parent().hide();
+	  			}
+	  			if (($(this).html().toLowerCase().indexOf("ops") > -1) || ($(this).html().toLowerCase().indexOf("operations") > -1)) {
+	  				$(this).parent().show();
+	  			}
+	  		});
 	    		
-    	} else {
-    		$("#assessmentContainer > ul > li > a").each(function() {
-    			if ($(this).html().toLowerCase().indexOf("delivery") > -1) {
-    				$(this).parent().show();
-    			}
-    		});
+	  	} else {
+	  		$("#assessmentContainer > ul > li > a").each(function() {
+	  			if ($(this).html().toLowerCase().indexOf("leadership") > -1) {
+	  				$(this).parent().show();
+	  			}
+	  			if (($(this).html().toLowerCase().indexOf("ops") > -1) || ($(this).html().toLowerCase().indexOf("operations") > -1)) {
+	  				$(this).parent().hide();
+	  			}
+	  		});
 
-    	}
+	  	}
+		}
+		
+		if (gTeamAssessment != null)
+			gTeamAssessment["team_proj_ops"] = $("#teamTypeSelectList option:selected").val();
+	});
 
-  		if (gTeamAssessment != null)
-  			gTeamAssessment["team_dlvr_software"] = $("#softwareYesNo option:selected").val();
-    });
-  });
+	$("#softwareYesNo").change(function() {
+		if ($("#softwareYesNo option:selected").val().toLowerCase() == "no") {
+			$("#assessmentContainer > ul > li > a").each(function() {
+				if ($(this).html().toLowerCase().indexOf("delivery") > -1) {
+					$(this).parent().hide();
+				}
+			});
+	  		
+		} else {
+			$("#assessmentContainer > ul > li > a").each(function() {
+				if ($(this).html().toLowerCase().indexOf("delivery") > -1) {
+					$(this).parent().show();
+				}
+			});
+
+		}
+
+		if (gTeamAssessment != null)
+			gTeamAssessment["team_dlvr_software"] = $("#softwareYesNo option:selected").val();
+	});
 });
 
 function setToolTips() {
@@ -118,7 +121,7 @@ function agileTeamListHandler(elementId, teamId, assessmentId, firstOption, last
 		getTeamAssessments(teamId, true, teamAssessmentListHander, ["assessmentSelectList", teamId, assessmentId]);
 
 	setScreenControls();
-};
+}
 
 /**
  * Global variable to hold current team maturity assessment document being handled by the page.
@@ -160,7 +163,7 @@ function getTeamAssessmentAnswers(assessmentId, _callback, args) {
 			}
 		});
 	}
-};
+}
 
 /**
  * Global variable holder for maturity assessment questionnaire template.

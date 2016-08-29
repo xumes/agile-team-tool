@@ -1,15 +1,18 @@
 {
   "_id": "_design/iterations",
-  "version": 0.2,
+  "version": 0.4,
   "views": {
     "completed": {
       "map": "function (doc) {\n  if (doc.type == \"iterationinfo\" && (doc.doc_status === null || doc.doc_status != 'delete')) {\n    if (doc.iterationinfo_status == \"Completed\") {\n          emit(doc.iteration_end_dt, doc);\n    }\n  }\n} "
     },
     "teamIteration": {
-      "map": "function (doc) {\r\n  if (doc.type == \"iterationinfo\" && (doc.doc_status === null || doc.doc_status != 'delete')) {\r\n    emit(doc.team_id, doc);\r\n  }\r\n} "
+      "map": "function (doc) {\r\n  if (doc.type == \"iterationinfo\" && (doc.doc_status === null || doc.doc_status != 'delete')) {\r\n    emit(doc.team_id, \r\n        {\r\n            'team_id': doc.team_id,\r\n            'iteration_name': doc.iteration_name,\r\n            'iteration_start_date' : doc.iteration_start_date,\r\n            'iteration_end_date' : doc.iteration_start_date,\r\n            'iteration_status' : doc.iteration_status\r\n        });\r\n  }\r\n} "
     },
     "rollUpData": {
       "map": "function (doc) {\r\n  if ((doc.type == \"roll_up_data\") && (doc.doc_status === null || doc.doc_status != 'delete')) {\r\n    emit(doc._id, doc);\r\n  }\r\n}"
+    },
+    "rollUpSquads": {
+      "map": "function (doc) {\r\n  if ((doc.type == \"roll_up_squads\") && (doc.doc_status === null || doc.doc_status != 'delete')) {\r\n    emit(doc._id, doc);\r\n  }\r\n}"
     }
   },
   "language": "javascript",

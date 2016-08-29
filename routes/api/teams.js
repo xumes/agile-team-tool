@@ -1,4 +1,5 @@
 var teamModel = require('../../models/teams');
+var teamIndex = require('../../models/index/teamIndex');
 var validate = require('validate.js');
 var _ = require('underscore');
 
@@ -96,6 +97,17 @@ module.exports = function(app, includes) {
       })
   }
 
+  getTeamByUid = function(req,res){
+    var uid = req.params.uid;
+    teamModel.getTeamByUid(uid)
+      .then(function(result){
+        res.send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      })
+  }
+
   getTeam = function(req, res) {
     /* use query to get top level, children or parent team */
     if (!_.isEmpty(req.query)) {
@@ -121,6 +133,17 @@ module.exports = function(app, includes) {
     }
   };
 
+  initLookupIndex = function(req, res) {
+    var teamId = req.params.teamId;
+    teamIndex.initIndex()
+    .then(function(result) {
+      res.status(200).send(result);
+    })
+    .catch( /* istanbul ignore next */ function(err){
+      res.status(400).send(err);
+    });
+  };
+
   getSelectableParents = function(req, res) {
     var teamId = req.params.teamId;
     teamModel.getSelectableParents(teamId)
@@ -133,7 +156,6 @@ module.exports = function(app, includes) {
   };
 
   getSelectableChildren = function(req, res) {
-    console.log(req.params.teamId);
     var teamId = req.params.teamId;
     teamModel.getSelectableChildren(teamId)
     .then(function(result) {
@@ -145,15 +167,28 @@ module.exports = function(app, includes) {
   };
 
   getLookupIndex = function(req, res) {
-    var teamId = req.params.teamId;
-    teamModel.getLookupIndex(teamId)
-    .then(function(result) {
-      res.status(200).send(result);
-    })
-    .catch( /* istanbul ignore next */ function(err){
-      console.log("route error");
-      res.status(400).send(err);
-    });
+    if (!_.isEmpty(req.query)) {
+      var id = req.query.id || '';
+      var squadteam = req.query.squadteam || 'no';
+      squadteam = squadteam.toUpperCase() == "YES" ? true : false;
+      teamModel.getLookupTeamByType(id, squadteam)
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
+
+    } else {
+      var teamId = req.params.teamId;
+      teamModel.getLookupIndex(teamId)
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
+    }
   };
 
   getSquadsOfParent = function(req, res) {
@@ -188,8 +223,14 @@ module.exports = function(app, includes) {
   // get all team by email
   app.get('/api/teams/members/:email', [includes.middleware.auth.requireLogin], getTeamByEmail);
 
+  // get all team by serial number/ uid
+  app.get('/api/teams/membersUid/:uid', [includes.middleware.auth.requireLogin], getTeamByUid);
+
   // get all team or team details if teamId exists
   app.get('/api/teams/:teamId?', [includes.middleware.auth.requireLogin], getTeam);
+
+  // list of parent and child team ids associated with the team
+  app.get('/api/teams/lookup/initialize', [includes.middleware.auth.requireLogin], initLookupIndex);
 
   // selectable parent teams of a team
   app.get('/api/teams/lookup/parents/:teamId?', [includes.middleware.auth.requireLogin], getSelectableParents);

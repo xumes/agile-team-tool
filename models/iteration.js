@@ -107,8 +107,6 @@ var iteration = {
   },
 
   add: function(data, user, allTeams, userTeams) {
-    // loggers.get('models').info('[iterationModel.add] allTeams:', JSON.stringify(allTeams));
-    loggers.get('models').info('[iterationModel.add] userTeams:', JSON.stringify(userTeams));
     var iterationDocRules = require('./validate_rules/iteration.js');
     var cleanData = {};
     data['last_updt_dt'] = util.getServerTime();
@@ -118,6 +116,9 @@ var iteration = {
     data['created_dt'] = util.getServerTime();
     data['type'] = 'iterationinfo';
     cleanData = util.trimData(data);
+    var newIterationId = settings.prefixes.iteration + cleanData['team_id'] + " " + cleanData['iteration_name'] + "_" + new Date().getTime();
+    newIterationId = newIterationId.replace(/^[^a-z]+|[^\w:.-]+/gi, "");
+    cleanData['_id'] = newIterationId;
     var user_id = user['shortEmail'];
     var team_id = cleanData['team_id'];
     var checkParent = true;
@@ -330,10 +331,11 @@ var iteration = {
     var dateFormat = "MM/DD/YYYY";
     var status;
     var endDate = new Date(iteration_end_dt);
-    var serDate = new Date(util.getServerTime());
-    var d1 = moment(endDate, dateFormat);
-    var d2 = moment(serDate, dateFormat);
-
+    var d1 = moment(endDate).format(dateFormat);
+    var d2 = util.getServerTime();
+    d2 = moment(d2).format(dateFormat);
+    var d1 = moment(d1, dateFormat);
+    var d2 = moment(d2, dateFormat);
     if (d1 <= d2) {
       // console.log('endDate is <= than serDate');
       var diffDays = d2.diff(d1, 'days');
