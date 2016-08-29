@@ -4,6 +4,16 @@ var _ = require('underscore');
 module.exports = function(app, includes) {
   var middleware = includes.middleware;
 
+  getTopLevelTeams = function(req, res) {
+    snapshotModel.getTopLevelTeams(req.params.email)
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
+  },
+
   updateRollUpSquads = function(req, res) {
     snapshotModel.updateRollUpSquads()
       .then(function(result){
@@ -83,6 +93,7 @@ module.exports = function(app, includes) {
     }
   }
 
+  app.get('/api/snapshot/getteams/:email', [includes.middleware.auth.requireLogin], getTopLevelTeams);
   app.get('/api/snapshot/updaterollupsquads', [includes.middleware.auth.requireLogin], updateRollUpSquads);
   app.get('/api/snapshot/updaterollupdata/', [includes.middleware.auth.requireLogin], updateRollUpData);
   app.get('/api/snapshot/rollupdatabyteam/:teamId', [includes.middleware.auth.requireLogin], getRollUpDataByTeam);

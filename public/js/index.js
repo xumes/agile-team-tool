@@ -70,7 +70,7 @@ function getRootTeams() {
 }
 
 function getMyTeamsFromDb() {
-	var cUrl = "/api/teams/members/" + encodeURIComponent(userInfo.email);
+	var cUrl = "/api/snapshot/getteams/" + encodeURIComponent(userInfo.email);
 	$.ajax({
 		type : "GET",
 		url : cUrl
@@ -79,8 +79,10 @@ function getMyTeamsFromDb() {
 			if (data.length >= 0) {
 				var twistyId = 'teamTreeMain';
 				_.each(data, function(team){
-					addTeamToTree(team.value, twistyId);
+					addTeamToTree(team, twistyId);
 				});
+				var defaultTeam = ($('#teamTreeMain li')[0]).id
+				loadDetails(defaultTeam);
 				$('#mainContent').show();
 				$('#spinnerContainer').hide();
 			} else {
@@ -176,6 +178,8 @@ function getAllAgileTeamsByParentId(parentId, showLoading) {
 					_.each(data.docs, function(team){
 						addTeamToTree(team, mainTwistyId);
 					});
+					var defaultTeam = ($('#teamTreeMain li')[0]).id
+					loadDetails(defaultTeam);
 					$('#mainContent').show();
 					$('#spinnerContainer').hide();
 				}
@@ -249,7 +253,7 @@ function addTeamToTree(team, twistyId) {
 		var subTwistyId = "sub_" + team._id;
 
 
-		if (twistyId == "bodysub_ag_team_standalone") {
+		if (twistyId == "main_sub_ag_team_standalone") {
 			if (team.child_team_id.length == 0 && (team.parent_team_id == "" || team.parent_team_id == undefined)) {
 				$("#"+jq(twistyId)).append(createSubTwistySection(subTwistyId, label, "agile-team-standalone" + (isSquad ? " agile-team-squad" : ""), team._id));
 			}
@@ -260,6 +264,8 @@ function addTeamToTree(team, twistyId) {
 				$("#"+jq(twistyId)).append(createSubTwistySection(subTwistyId, label, (isSquad ? "agile-team-standalone" : ""), team._id));
 			} else if (_.isEmpty(team.child_team_id) && team.parent_team_id != "" && team.parent_team_id != undefined) {
 				$("#"+jq(twistyId)).append(createSubTwistySection(subTwistyId, label, "agile-team-standalone" + (isSquad ? " agile-team-squad" : ""), team._id));
+			} else {
+
 			}
 		}
 

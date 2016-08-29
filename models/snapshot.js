@@ -414,7 +414,7 @@ function addMonths(date, months) {
   var newDate = new Date(util.getServerTime());
   newDate.setMonth(date.getMonth() + months);
   return new Date(newDate);
-}
+};
 
 /**
  * Get _rev for roll up squads
@@ -440,7 +440,7 @@ function getRollUpSquadsHistory() {
         reject(formatErrMsg(msg));
       })
   })
-}
+};
 
 /**
  * Get suqad team data
@@ -474,7 +474,7 @@ function getRollUpSquadsHistory() {
          reject(formatErrMsg(msg));
        });
    });
- }
+ };
 
 /**
  * Roll up total_members and total_allocation data
@@ -530,9 +530,70 @@ function rollUpSquadsData(squadsList, squadTeams) {
   entry.fteGt12 = fteGt12;
 
   return entry;
-}
+};
+
+function sortRootTeam(teams) {
+
+};
 
 var snapshot = {
+
+  getTopLevelTeams : function (email) {
+    return new Promise(function(resolve, reject){
+      teamModel.getTeamByEmail(email)
+        .then(function(teams){
+          var teamIds = [];
+          _.each(teams, function(team){
+            teamIds.push(team.id);
+          });
+          if (teamIds.length > 0) {
+            teamModel.getLookupIndex()
+              .then(function(lookUpTeams){
+                var teamList = [];
+                var childrenList = [];
+                _.each(teamIds, function(teamId){
+                  _.find(lookUpTeams, function(lookUpTeam){
+                    if (lookUpTeam._id == teamId) {
+                      teamList.push(lookUpTeam);
+                      childrenList = _.flatten(_.pluck(teamList, 'children'));
+                    }
+                  });
+                });
+                var rootTeams = [];
+                _.each(teamList, function(team) {
+          				if (childrenList.indexOf(team._id) == -1) {
+                    team.parent_team_id = "";
+                    team.child_team_id = team.children;
+                    rootTeams.push(team);
+                  }
+          			});
+                resolve(rootTeams);
+              })
+              .catch(function(err){
+                var msg;
+                if (err.error) {
+                  msg = err.error;
+                } else {
+                  msg = err;
+                }
+                reject(formatErrMsg(msg));
+              });
+          } else {
+            var msg = 'no team under your email';
+            reject(formatErrMsg(msg));
+          }
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          var msg;
+          if (err.error) {
+            msg = err.error;
+          } else {
+            msg = err;
+          }
+          reject(formatErrMsg(msg));
+        })
+    });
+  },
 
   updateRollUpSquads : /* istanbul ignore next */ function() {
     return new Promise(function(resolve, reject){
