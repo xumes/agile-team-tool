@@ -8,6 +8,7 @@ var timeout = 100000;
 var validId;
 var validTeamId;
 var iterationId;
+var iterationName;
 var iterationRev;
 var iterationDocValid = dummyData.iterationDocValid;
 var iterationDoc_duplicateIterName = dummyData.iterationDoc_duplicateIterName;
@@ -208,6 +209,7 @@ describe('Iteration Model', function() {
           iterationModel.add(iterationDocValid, user, allTeams, userTeams)
           .then(function(result) {
             iterationId = result.id;
+            iterationName = result.iteration_name;
             iterationRev = result.rev;
             expect(result).to.be.a('object');
             expect(result).to.have.property('id');
@@ -221,10 +223,29 @@ describe('Iteration Model', function() {
           });
         } else {
           iterationId = result.rows[0].id;
+          iterationName = result.rows[0].value.iteration_name;
           done();
         }
       });
     });
+
+    it('It will successfully update iteration document with same iteration name - compare old with the new - isNew = false', function(done) {
+      //iterationDocValid.team_mbr_change = 'YES';
+      //iterationDocValid.iteration_name = "testiterationname-" + crypto.randomBytes(4).toString('hex');
+      iterationDocValid.iteration_name = iterationName;
+      iterationModel.edit(iterationId, iterationDocValid, user, allTeams, userTeams)
+      .then(function(result) {
+        iterationRev =result.rev;
+        expect(result).to.be.a('object');
+        expect(result).to.have.property('id');
+        expect(result.ok).to.be.equal(true);
+        done();
+      })
+      .catch(function(err) {
+        done(err);
+      });
+    });
+
 
     it('It will successfully update iteration document with same iteration name', function(done) {
       //iterationDocValid.team_mbr_change = 'YES';
