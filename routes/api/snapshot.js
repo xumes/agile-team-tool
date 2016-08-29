@@ -10,7 +10,11 @@ module.exports = function(app, includes) {
         res.status(200).send(result);
       })
       .catch( /* istanbul ignore next */ function(err){
-        res.status(400).send(err);
+        if (err.error == 'no team under your email') {
+          res.status(404).send(err);
+        } else {
+          res.status(400).send(err);
+        }
       });
   },
 
