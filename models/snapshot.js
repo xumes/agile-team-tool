@@ -579,11 +579,11 @@ var snapshot = {
                 } else {
                   msg = err;
                 }
-                reject(formatErrMsg(msg));
+                resolve(formatErrMsg(msg));
               });
           } else {
-            var msg = 'no team under your email';
-            reject(formatErrMsg(msg));
+            //no team data
+            resolve([]);
           }
         })
         .catch( /* istanbul ignore next */ function(err){
