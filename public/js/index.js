@@ -70,7 +70,7 @@ function getRootTeams() {
 }
 
 function getMyTeamsFromDb(initial) {
-	var cUrl = "/api/snapshot/getteams/" + encodeURIComponent("cjscotta@us.ibm.com");
+	var cUrl = "/api/snapshot/getteams/" + encodeURIComponent(userInfo.email);
 	$.ajax({
 		type : "GET",
 		url : cUrl
