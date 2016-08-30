@@ -203,10 +203,9 @@ function getAllSquads() {
             _.each(squadTeams.rows, function(squadTeam){
               if (squadTeam.value.squadteam == 'Yes') {
                 _.each(squadTeam.value.parents, function(parent){
-                  if(!_.isEmpty(squadsByParent[parent]))
+                  if(!_.isUndefined(squadsByParent[parent])) {
                     squadsByParent[parent].push(squadTeam.value._id);
-                  else
-                    loggers.get('models').warn('Snapshot: '+ parent + ' in squadsByParent was undefined');
+                  }
                 });
               }
             });

@@ -154,7 +154,8 @@ exports.findBySelector = function(data) {
         'child_team_id',
         'parent_team_id',
         'name',
-        'squadteam'
+        'squadteam',
+        'doc_status',
       ]
     };
     db.findAsync(selector)
