@@ -233,7 +233,9 @@ function teamIterationListHander(teamId, teamIterations) {
 	}
 
 	$("#spinnerContainer").hide();
+	
 	$("#mainContent").show();
+
 }
 
 function destroyIterationCharts() {

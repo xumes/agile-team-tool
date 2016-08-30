@@ -328,7 +328,7 @@ var team = {
             msg = 'Invalid action';
             return reject(formatErrMsg(msg));
           }
-          util.isUserAllowed(userEmail, teamId, true, teamLists, userTeams)
+          util.isUserAllowed(userEmail, teamId)
           .then(function(){
             // START team document update
             var associatedDocu = [];
@@ -709,7 +709,7 @@ var team = {
         // check if user is authorized to do action
         var teamLists = session['allTeams'];
         var userTeams = session['myTeams'];
-        util.isUserAllowed(userEmail, teamObj['teamId'], true, teamLists, userTeams)
+        util.isUserAllowed(userEmail, teamObj['teamId'])
         .then(function(body){
           infoLogs('Validating for ' + action );
           team.getTeam(teamObj['teamId'])
@@ -1072,6 +1072,41 @@ var team = {
         });
       }
     });
+  },
+  
+  getUserTeams : function(userEmail){
+    return new Promise(function(resolve, reject){
+      infoLogs('Getting user team list from Cloudant');
+      var userTeamsList = [];
+      team.getTeamByEmail(userEmail)
+        .then(function(body){
+          var result = util.returnObject(body);
+          var parentTeams = _.map(result, function(val, key){
+            if (!_.isEmpty(val.child_team_id)){
+              userTeamsList.push(val._id);
+              return val.child_team_id;
+            }
+            else{
+              userTeamsList.push(val._id);
+              return [];
+            }
+          });
+          parentTeams = _.flatten(parentTeams);
+          var parentTeams = _.difference(parentTeams, userTeamsList);
+          getSelectedTeams(parentTeams, userTeamsList)
+          .then(function(body){
+            loggers.get('models').info('Success: User team records obtained.');
+            resolve(body);
+          })
+          .catch( /* istanbul ignore next */ function(err){
+            reject(formatErrMsg(err.error));
+          })
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          // cannot simulate Cloudant error during testing
+          reject(formatErrMsg(err.error));
+        });
+    });
   }
 };
 
@@ -1191,6 +1226,37 @@ var formattedDocuments = function(doc, action){
 }
 
 module.exports = team;
+
+function getSelectedTeams(teamList, userTeams){
+  return new Promise(function(resolve, reject){
+      var data = new Object();
+      data.type = 'team';
+      data._id = new Object();
+      data._id.$in = teamList;
+      common.findBySelector(data)
+        .then(function(body){
+          var parentTeams = _.map(body.docs, function(val, key){
+            if (!_.isEmpty(val.child_team_id)){
+              userTeams.push(val._id);
+              return val.child_team_id;
+            }
+            else{
+              userTeams.push(val._id);
+              return [];
+            }
+          });
+          parentTeams = _.flatten(parentTeams);
+          var parentTeams = _.difference(parentTeams, userTeams);
+          if (_.size(parentTeams) > 0)
+            getSelectedTeams(parentTeams, userTeams);
+          loggers.get('models').info('Success: Selected team records obtained.');
+          resolve(userTeams);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject(formatErrMsg(err.error));
+        });
+      });
+}
 
 // /**
 //  * Get children of team in flatten structure

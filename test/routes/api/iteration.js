@@ -40,9 +40,8 @@ var user = iterationTestData.user;
 var adminUser = userDetails.shortEmail;
 
 describe('Iteration API Test', function(){
-  this.timeout(timeout);
   before(function(done) {
-    this.timeout(timeout);
+    this.timeout(50000);
     var teamName = 'testteamid_1';
     teamModel.getName(teamName)
     .then(function(result) {

@@ -143,7 +143,7 @@ exports.Search = function(_design, _view, p) {
         reject(err);
       });
   });
-}
+};
 
 exports.findBySelector = function(data) {
   return new Promise(function(resolve, reject){
@@ -154,7 +154,8 @@ exports.findBySelector = function(data) {
         'child_team_id',
         'parent_team_id',
         'name',
-        'squadteam'
+        'squadteam',
+        'doc_status',
       ]
     };
     db.findAsync(selector)
@@ -166,3 +167,24 @@ exports.findBySelector = function(data) {
       });
   });
 };
+
+exports.findRevBySelector = function(id) {
+  return new Promise(function(resolve, reject){
+    var data = new Object();
+    data['_id'] = id;
+    var selector = {
+      'selector' : data,
+      'fields' : [
+        '_id',
+        '_rev'
+      ]
+    };
+    db.findAsync(selector)
+      .then(function(body){
+        resolve(body);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        reject(err);
+      });
+  });
+}

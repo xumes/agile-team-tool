@@ -231,7 +231,7 @@ function hasAccess(teamId, checkParent) {
 			flag = false;
 		}
 	} else {
-		flag = isAdmin() || isUserMemberOfTeam(teamId, checkParent);
+		flag = isAdmin() || isUserMemberOfTeam(teamId);
 
 	}
 	return flag;
@@ -244,30 +244,10 @@ function hasAccess(teamId, checkParent) {
  * @param checkParent - set to true if we need to check the parent team documents for user membership.
  * @returns {Boolean}
  */
-function isUserMemberOfTeam(teamId, checkParent) {
+function isUserMemberOfTeam(teamId) {
 	var userExist = false;
-	
-	if (allTeams == null)
-		return userExist;
-
-	var userTeams = myTeams;
-	if (_.has(userTeams, "_root") || _.has(userTeams, "_branch") || _.has(userTeams, "_standalone"))
-		userTeams = _.union(_.union(userTeams._root, userTeams._branch), userTeams._standalone);
-
-	if (userTeams != null) {
-		for (var i in userTeams) {
-			if (userTeams[i]._id == teamId) {					
-				userExist = true;
-				break;
-			}
-		}
-	} 
-
-	if (!userExist && checkParent) {
-		var team = allTeamsLookup[teamId];
-		if (!_.isEmpty(team) && !_.isEmpty(team.parent_team_id))
-			return isUserMemberOfTeam(team.parent_team_id, checkParent);
-	}
+	if (userTeamList != null)
+		userExist = _.contains(userTeamList, teamId);
 
 	return userExist;
 }
@@ -299,7 +279,7 @@ function setGlobalAdministorList(administrator) {
  */
 function isAdmin() {
 	if (!_.isEmpty(systemAdmin) && !_.isEmpty(user)) {
-		return systemAdmin.ACL_Full_Admin.indexOf(user.shortEmail) > -1;
+		return systemAdmin.ACL_Full_Admin.indexOf(user.email ) > -1;
 	}
 	return false;
 }

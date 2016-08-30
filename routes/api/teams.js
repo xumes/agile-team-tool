@@ -10,7 +10,13 @@ module.exports = function(app, includes) {
     teamModel.createTeam(teamDoc, req.session['user'])
       .then(function(result){
         middleware.cache.updateTeamCache(req, result);
-        res.status(201).send(result);
+        teamModel.getUserTeams(req.session['email'])
+        .then(function (body){
+          var addResult = new Object();
+          addResult.team = result;
+          addResult.userTeams = body;
+          res.status(201).send(addResult);
+        });
       })
       .catch(function(err){
         res.status(400).send(err);
@@ -22,7 +28,10 @@ module.exports = function(app, includes) {
       teamModel.updateOrDeleteTeam(req.body, req.session, 'delete')
         .then(function(result){
           middleware.cache.updateTeamCache(req, req.body);
-          res.status(204).send(result);
+          teamModel.getUserTeams(req.session['email'])
+          .then(function (body){
+            res.status(200).send(body);
+          });
         })
         .catch(function(err){
           res.status(400).send(err);
@@ -36,7 +45,13 @@ module.exports = function(app, includes) {
     teamModel.updateOrDeleteTeam(req.body, req.session, 'update')
       .then(function(result){
         middleware.cache.updateTeamCache(req, result);
-        res.send(result);
+        teamModel.getUserTeams(req.session['email'])
+        .then(function (body){
+          var updateResult = new Object();
+          updateResult.team = result;
+          updateResult.userTeams = body;
+          res.send(updateResult);
+        });
       })
       .catch(function(err){
         res.status(400).send(err);
@@ -54,7 +69,14 @@ module.exports = function(app, includes) {
         _.each(result, function(team) {
           middleware.cache.updateTeamCache(req, team);
         });
-        res.send(result);
+
+        var associateResult = new Object();
+        teamModel.getUserTeams(req.session['email'])
+        .then(function (body){
+          associateResult.team = result;
+          associateResult.userTeams = body;
+          res.send(associateResult);
+        });
       })
       .catch( /* istanbul ignore next */ function(err){
         // cannot simulate this error during testing

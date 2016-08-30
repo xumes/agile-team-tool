@@ -366,6 +366,35 @@ var userCache = {
     req.session['allTeamsLookup'] = allTeamsLookup;
     req.session['allTeams'] = _.sortBy(allTeams, function(team) {return team.name});
     infoLogs('Done updating cached team data.');
+  },
+
+  setActiveSquadTeams: function(req, res, next) {
+    return new Promise(function(resolve, reject) {
+      teamModel.getLookupTeamByType(null, true)
+        .then(function(result) {
+          req.squadTeams = result;
+          return next();
+        })
+        .catch(function(err) {
+          req.squadTeams = [];
+          return next();
+        });
+      });
+  },
+
+  setUserTeams: function(req, res, next) {
+    var userEmail = req.session['email'];
+    return new Promise(function(resolve, reject) {
+      teamModel.getUserTeams(userEmail)
+        .then(function(result) {
+          req.userTeamList = result;
+          return next();
+        })
+        .catch(function(err) {
+          req.userTeamList = [];
+          return next();
+        });
+      });
   }
 };
 

@@ -203,10 +203,9 @@ function getAllSquads() {
             _.each(squadTeams.rows, function(squadTeam){
               if (squadTeam.value.squadteam == 'Yes') {
                 _.each(squadTeam.value.parents, function(parent){
-                  if(!_.isEmpty(squadsByParent[parent]))
+                  if(!_.isUndefined(squadsByParent[parent])) {
                     squadsByParent[parent].push(squadTeam.value._id);
-                  else
-                    loggers.get('models').warn('Snapshot: '+ parent + ' in squadsByParent was undefined');
+                  }
                 });
               }
             });
@@ -579,11 +578,11 @@ var snapshot = {
                 } else {
                   msg = err;
                 }
-                reject(formatErrMsg(msg));
+                resolve(formatErrMsg(msg));
               });
           } else {
-            var msg = 'no team under your email';
-            reject(formatErrMsg(msg));
+            //no team data
+            resolve([]);
           }
         })
         .catch( /* istanbul ignore next */ function(err){

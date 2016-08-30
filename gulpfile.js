@@ -6,7 +6,10 @@ var jshint   = require('gulp-jshint');
 
 gulp.task('jshint', function() {
   return gulp.src(['*.js'])
-    .pipe(jshint());
+    .pipe(jshint())
+    .once('end', function() {
+      process.exit();
+    })
 });
 
 gulp.task('pre-test', function () {
@@ -35,4 +38,4 @@ gulp.task('test', ['jshint', 'pre-test'], function () {
     .once('end', function() {
       process.exit();
     })
-});
+ });
