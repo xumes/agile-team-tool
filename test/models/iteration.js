@@ -92,6 +92,8 @@ describe('Iteration Model', function() {
             var id = result.rows[i].id;
             bulkDeleteIds.push(id);
           }
+          // Delete the created Team document 'testteamid_1' that is used for testing
+          bulkDeleteIds.push(validId);
           util.BulkDelete(bulkDeleteIds)
           .then(function(result) {
             done();
