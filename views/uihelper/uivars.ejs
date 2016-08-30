@@ -1,7 +1,9 @@
 <!-- UI variables -->
 
 <script type="text/javascript">
-  var userTeamList    = <%-JSON.stringify(userTeamList)%>;
+  <% if (typeof userTeamList != "undefined"){ %>
+  var userTeamList = <%-JSON.stringify(userTeamList)%>;
+  <% } %>
 
   <% if (pageTitle=="Team Management") { %>
   var prefixTeam      = "<%-prefix%>"
