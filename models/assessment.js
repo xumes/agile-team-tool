@@ -133,12 +133,12 @@ var assessment = {
       }
     });
   },
-  addTeamAssessment : function(userId, data, allTeams, userTeams){
+  addTeamAssessment : function(userId, data){
     return new Promise(function(resolve, reject){
       infoLogs('addTeamAssessment user:'+userId+' team id:' +data.team_id+' status: '+data.assessmt_status);
       var msg = '';
       validationError = [];
-      util.isUserAllowed(userId, data.team_id, true, allTeams, userTeams)
+      util.isUserAllowed(userId, data.team_id)
         .then(function(body){
           var validateError;
           if(data.assessmt_status == 'Draft'){
@@ -175,12 +175,12 @@ var assessment = {
         });
       });
   },
-  updateTeamAssessment : function(userId, data, allTeams, userTeams){
+  updateTeamAssessment : function(userId, data){
     return new Promise(function(resolve, reject){
       var msg = '';
       validationError = [];
       infoLogs('updateTeamAssessment '+userId+', team id: '+data.team_id);
-      util.isUserAllowed(userId, data.team_id, true, allTeams, userTeams)
+      util.isUserAllowed(userId, data.team_id)
         .then(function(body){
           if(data.assessmt_status == 'Draft'){
             validateError = validate(data, recordConstraints);
@@ -216,7 +216,7 @@ var assessment = {
         });
       });
   },
-  deleteAssessment : function(userId, _id, _rev, allTeams, userTeams){
+  deleteAssessment : function(userId, _id, _rev){
     return new Promise(function(resolve, reject){
       var msg = '';
       infoLogs('Delete assessment '+ _id +' record rev '+_rev+ ' by '+userId+' to Cloudant.');
@@ -224,7 +224,7 @@ var assessment = {
         assessment.getAssessment(_id)
         .then(function(body){
           var teamId = body.team_id;
-          return util.isUserAllowed(userId, teamId, true, allTeams, userTeams);
+          return util.isUserAllowed(userId, teamId);
         })
         .then(function(body){
           infoLogs('Delete assessment '+ _id +' record rev '+_rev+' to Cloudant.');

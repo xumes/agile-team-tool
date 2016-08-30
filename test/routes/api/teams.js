@@ -88,8 +88,8 @@ describe('Team API Tests', function() {
         //console.log(err);
       } else {
         expect(res.statusCode).to.be.equal(201);
-        expect(res.body).to.have.property('_id');
-        createdId = res.body['_id'];
+        expect(res.body.team).to.have.property('_id');
+        createdId = res.body.team['_id'];
       }
       done();
     });
@@ -121,9 +121,9 @@ describe('Team API Tests', function() {
         //console.log(err);
       } else {
         expect(res.statusCode).to.be.equal(201);
-        expect(res.body).to.have.property('_id');
-        targetParent = res.body['_id'];
-        targetParentId = res.body['_id'];
+        expect(res.body.team).to.have.property('_id');
+        targetParent = res.body.team['_id'];
+        targetParentId = res.body.team['_id'];
       }
       done();
     });
@@ -139,9 +139,9 @@ describe('Team API Tests', function() {
         //console.log(err);
       } else {
         expect(res.statusCode).to.be.equal(201);
-        expect(res.body).to.have.property('_id');
-        targetParentTeamId = res.body['_id'];
-        targetChildId = res.body['_id'];
+        expect(res.body.team).to.have.property('_id');
+        targetParentTeamId = res.body.team['_id'];
+        targetChildId = res.body.team['_id'];
       }
       done();
     });
@@ -213,8 +213,8 @@ describe('Team API Tests', function() {
         //console.log(err);
       } else {
         expect(res.statusCode).to.be.equal(200);
-        expect(res.body).to.have.property('_id');
-        expect(res.body._id).to.be.equal(createdId);
+        expect(res.body.team).to.have.property('_id');
+        expect(res.body.team._id).to.be.equal(createdId);
       }
       done();
     });
@@ -439,7 +439,7 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 204 after deleting associate document2', function(done){
+  it('it will return 200 after deleting associate document2', function(done){
     var teamAssoc = teamsData.associate.validDoc();
     teamAssoc['doc_status'] = 'delete';
     teamAssoc['_id'] = targetChildId;
@@ -450,14 +450,14 @@ describe('Team API Tests', function() {
       if (err) {
         //console.log(err);
       } else {
-        expect(res.statusCode).to.be.equal(204);
-        expect(res.body).to.be.empty;
+        expect(res.statusCode).to.be.equal(200);
+        expect(res.body).to.be.instanceof(Array);
       }
       done();
     });
   });
   
-  it('it will return 204 after deleting associate document1', function(done){
+  it('it will return 200 after deleting associate document1', function(done){
     var teamAssoc = teamsData.associate.validDoc();
     teamAssoc['doc_status'] = 'delete';
     teamAssoc['_id'] = targetParentId;
@@ -468,14 +468,14 @@ describe('Team API Tests', function() {
       if (err) {
         //console.log(err);
       } else {
-        expect(res.statusCode).to.be.equal(204);
-        expect(res.body).to.be.empty;
+        expect(res.statusCode).to.be.equal(200);
+        expect(res.body).to.be.instanceof(Array);
       }
       done();
     });
   });
 
-  it('it will return 204 after deleting document', function(done){
+  it('it will return 200 after deleting document', function(done){
     teamDocUpdateValid['doc_status'] = 'delete';
     teamDocUpdateValid['_id'] = createdId;
     var req = request(app).delete('/api/teams');
@@ -485,8 +485,8 @@ describe('Team API Tests', function() {
       if (err) {
         //console.log(err);
       } else {
-        expect(res.statusCode).to.be.equal(204);
-        expect(res.body).to.be.empty;
+        expect(res.statusCode).to.be.equal(200);
+        expect(res.body).to.be.instanceof(Array);
       }
       done();
     });

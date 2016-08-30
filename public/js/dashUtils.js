@@ -295,6 +295,20 @@ function getAgileTeamDropdownList(teams, squadOnly) {
 	return listOption;
 }
 
+function getSquadDropdownList(teams) {
+	var listOption = [];
+	if (teams == undefined || teams == null) 
+		return listOption;
+	
+	var listOption = _.map(teams, function(val, key){
+		var option = [];
+		option.push(val._id);
+		option.push(val.name);
+		return option; 
+	});
+	return listOption;
+}
+
 /**
  * Sorts the list of iteration documents by date.
  * 

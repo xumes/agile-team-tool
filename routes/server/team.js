@@ -16,7 +16,8 @@ module.exports = function(app, includes) {
         'systemStatus'    : req.session['systemStatus'],
         'memberRoles'     : req.session['memberRoles'],
         'environment'     : settings.environment,
-        'prefix'          : settings.prefixes.team
+        'prefix'          : settings.prefixes.team,
+        'userTeamList'    : req.userTeamList
       };
     render(req, res, 'team', json);
   };
@@ -24,6 +25,7 @@ module.exports = function(app, includes) {
   app.get('/team', 
     [
       includes.middleware.auth.requireLoginWithRedirect,
-      includes.middleware.cache.setTeamCache
+      includes.middleware.cache.setTeamCache,
+      includes.middleware.cache.setUserTeams
     ], showTeamManagement);
 };

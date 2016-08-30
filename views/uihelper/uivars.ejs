@@ -1,15 +1,20 @@
 <!-- UI variables -->
 
 <script type="text/javascript">
+  var userTeamList    = <%-JSON.stringify(userTeamList)%>;
 
   <% if (pageTitle=="Team Management") { %>
   var prefixTeam      = "<%-prefix%>"
 
   <% } else if (pageTitle=="Iteration Management") { %>
   var prefixIteration = "<%-prefix%>";
+  var squadTeams = <%-JSON.stringify(squadTeams)%>;
   
   <% } else if (pageTitle=="Maturity Assessment") { %>
   var prefixAssessment = "<%-prefix%>";
+    <% if (typeof squadTeams != "undefined"){ %>
+      var squadTeams = <%-JSON.stringify(squadTeams)%>;
+    <% } %>
   <% } %>
 
 </script>

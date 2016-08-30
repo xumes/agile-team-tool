@@ -106,7 +106,7 @@ var iteration = {
     return duplicate;
   },
 
-  add: function(data, user, allTeams, userTeams) {
+  add: function(data, user) {
     var iterationDocRules = require('./validate_rules/iteration.js');
     var cleanData = {};
     data['last_updt_dt'] = util.getServerTime();
@@ -121,14 +121,13 @@ var iteration = {
     cleanData['_id'] = newIterationId;
     var user_id = user['shortEmail'];
     var team_id = cleanData['team_id'];
-    var checkParent = true;
     // console.log('ADD cleanData:', cleanData);
     return new Promise(function(resolve, reject) {
       var validationErrors = validate(cleanData, iterationDocRules);
       if (validationErrors) {
         reject(formatErrMsg(validationErrors));
       } else {
-        util.isUserAllowed(user_id, team_id, checkParent, allTeams, userTeams)
+        util.isUserAllowed(user_id, team_id)
         .then(function(validUser) {
           // console.log('[add] isValidUser:', validUser);
           if (validUser) {
@@ -181,7 +180,7 @@ var iteration = {
     });
   },
 
-  edit: function(iterationId, data, user, allTeams, userTeams) {
+  edit: function(iterationId, data, user) {
     var iterationDocRules = require('./validate_rules/iteration.js');
     var cleanData = {};
     data['last_updt_dt'] = util.getServerTime();
@@ -192,13 +191,12 @@ var iteration = {
     // console.log('EDIT cleanData:', cleanData);
     var user_id = user['shortEmail'];
     var team_id = cleanData['team_id'];
-    var checkParent = true;
     return new Promise(function(resolve, reject){
       var validationErrors = validate(cleanData, iterationDocRules);
       if (validationErrors) {
         reject(formatErrMsg(validationErrors));
       } else {
-        util.isUserAllowed(user_id, team_id, checkParent, allTeams, userTeams)
+        util.isUserAllowed(user_id, team_id)
         .then(function(validUser) {
           // console.log('[edit] isValidUser:', validUser);
           if (validUser) {

@@ -151,21 +151,20 @@ module.exports.formatForBulkTransaction = function(docs, email, action){
  * @returns - true if team or team's parent is found in user teams
  */
 
- function isTeamMember(teamId, checkParent, teamLists, userTeams) {
-  var userExist = false;
-  if (teamLists == null)
-    return userExist;
-
-  if (userTeams != null) {
-    userExist = !(_.isEmpty(_.findWhere(userTeams, {_id: teamId}))) ? true : false;
-  }
-  if (!userExist && checkParent) {
-    var team = _.findWhere(teamLists, { '_id' : teamId});
-    if (!_.isEmpty(team) && !_.isEmpty(team.parent_team_id)){
-      return isTeamMember(team.parent_team_id, checkParent, teamLists, userTeams);
-    }
-  }
-  return userExist;
+ function isTeamMember(userId, teamId) {
+  var teamModel = require('../models/teams');
+  return new Promise(function(resolve, reject){
+    teamModel.getUserTeams(userId)
+    .then(function(body){
+      var hasAccess = false;
+      if (_.contains(body, teamId))
+        hasAccess = true;
+      resolve(hasAccess);
+    })
+    .catch(function(err){
+      reject(formatErrMsg(err.error));
+    });
+  });
 }
 
 /**
@@ -179,7 +178,7 @@ module.exports.formatForBulkTransaction = function(docs, email, action){
  * @returns - true if access allowed otherwise throws an error with unauthorized user message
  */
 
-module.exports.isUserAllowed = function(userId, teamId, checkParent, allTeams, userTeams){
+module.exports.isUserAllowed = function(userId, teamId){
   return new Promise(function(resolve, reject){
     loggers.get('models').info('validating user '+userId+' for team '+teamId);
     users.getAdmins()
@@ -189,7 +188,7 @@ module.exports.isUserAllowed = function(userId, teamId, checkParent, allTeams, u
     .then(function(isAdmin){
 
       if (!isAdmin){
-        return isTeamMember(teamId, checkParent, allTeams, userTeams);
+        return isTeamMember(userId, teamId);
       }
       else{
         return isAdmin;

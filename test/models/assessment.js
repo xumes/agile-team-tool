@@ -31,25 +31,6 @@ var parentTeamData = testData.parentTeamData;
 var parentUser = testData.parentUser;
 
 var adminList;
-var allTeams = [];
-var userTeams = [];
-
-function returnObject(data) {
-  // pre process returnd rows so we deal directly with the document objects
-  // doc attribute of data are valid for compacted views that requested for "include_doc=true"
-  if (_.has(data, "rows")) {
-    if (_.has(data.rows, "doc"))
-      return _.pluck(data.rows, 'doc');
-    else
-      return _.pluck(data.rows, 'value');
-  } else if (data.length > 0) {
-    if (!_.isEmpty(data[0].doc))
-      return _.pluck(data, 'doc');
-    else
-      return _.pluck(data, 'value');
-  } else
-    return data;
-};
 
 function createDraft1(){
   common.addRecord(draft_assessment)
@@ -149,16 +130,6 @@ describe('Assessment Model', function() {
         return Promise.all([createTribe(), createSquad()]);
       })
       .then(function(list){
-        return teamModel.getTeam('');
-      })
-      .then(function(body){
-        var list = returnObject(body);
-        allTeams = _.sortBy(list, function(team) {return team.name});
-        return teamModel.getTeamByEmail(dummyData.user.details.shortEmail);
-      })
-      .then(function(body){
-        var list = returnObject(body);
-        userTeams = _.sortBy(list, function(team) {return team.name});
         return Promise.all([createDraft1(), createSubmit1(), createDelete1()]);
       })
       .finally(function(){
@@ -205,7 +176,7 @@ describe('Assessment Model', function() {
       valAssessment.assessmt_status = 'Draft';
       valAssessment.assessmt_cmpnt_rslts[0].assessed_cmpnt_tbl[0].cur_mat_lvl_score = '';
       valAssessment.created_dt = '';
-      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment, allTeams, userTeams)
+      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
         .catch(function(err){
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
@@ -221,7 +192,7 @@ describe('Assessment Model', function() {
       valAssessment.assessmt_cmpnt_rslts[0].assessed_cmpnt_tbl[0].cur_mat_lvl_score = '';
       valAssessment.created_dt = util.getServerTime();
       valAssessment.created_user = dummyData.user.details.shortEmail;
-      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment, allTeams, userTeams)
+      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
         .then(function(body){
           expect(body.ok).to.be.true;
           expect(body.id).to.be.equal(valAssessment._id);
@@ -235,7 +206,7 @@ describe('Assessment Model', function() {
     it("draft assessment for update (using parent team member)", function(done){
       var draftForUpdate = lodash.cloneDeep(draft_assessment);
       draftForUpdate.last_updt_dt = util.getServerTime();
-      assessmentModel.updateTeamAssessment(parentUser.shortEmail, draftForUpdate, allTeams, userTeams)
+      assessmentModel.updateTeamAssessment(parentUser.shortEmail, draftForUpdate)
         .then(function(body){
           expect(body.ok).to.be.true;
           expect(body.id).to.be.equal(draftForUpdate._id);
@@ -249,7 +220,7 @@ describe('Assessment Model', function() {
     it("new submitted assessment (unaswered question)", function(done){
       var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment.assessmt_cmpnt_rslts[0].assessed_cmpnt_tbl[0].cur_mat_lvl_achieved = '';
-      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment, allTeams, userTeams)
+      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
         .catch(function(err){
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
@@ -261,7 +232,7 @@ describe('Assessment Model', function() {
     it("update assessment (unaswered question)", function(done){
       var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment.assessmt_cmpnt_rslts[0].assessed_cmpnt_tbl[0].cur_mat_lvl_achieved = '';
-      assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, valAssessment, allTeams, userTeams)
+      assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
         .catch(function(err){
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
@@ -274,7 +245,7 @@ describe('Assessment Model', function() {
     it("new submitted assessment (invalid project type)", function(done){
       var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment.team_proj_ops = 'General';
-      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment, allTeams, userTeams)
+      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
         .catch(function(err){
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
@@ -286,7 +257,7 @@ describe('Assessment Model', function() {
     it("new submitted assessment (no overall assessment score)", function(done){
      var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment.assessmt_cmpnt_rslts[0].ovraltar_assessmt_score = '';
-      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment, allTeams, userTeams)
+      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
         .catch(function(err){
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
@@ -314,7 +285,7 @@ describe('Assessment Model', function() {
       action.review_dt = '';
       action.action_item_status = 'Open';
       valAssessment.assessmt_action_plan_tbl[0] = action;
-      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment, allTeams, userTeams)
+      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
         .catch(function(err){
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
@@ -328,7 +299,7 @@ describe('Assessment Model', function() {
   describe("assessment model [addTeamAssessment] ", function(){
 
     it("add assessment [no assessment id]", function(done){
-      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, noId, allTeams, userTeams)
+      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, noId)
         .catch(function(err){
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
@@ -340,7 +311,7 @@ describe('Assessment Model', function() {
     it("add assessment [empty assessment id]", function(done){
       var emptyId = lodash.cloneDeep(curr_assessment);
       emptyId._id = '';
-      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, emptyId, allTeams, userTeams)
+      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, emptyId)
         .catch(function(err){
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
@@ -354,7 +325,7 @@ describe('Assessment Model', function() {
       valAssessment._id = submitAddId;
       valAssessment.created_dt = util.getServerTime();
       valAssessment.created_user = 'test.user@ph.ibm.com';
-      assessmentModel.addTeamAssessment('test.user@ph.ibm.com', valAssessment, allTeams, [])
+      assessmentModel.addTeamAssessment('test.user@ph.ibm.com', valAssessment)
         .catch(function(err){
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
@@ -366,7 +337,7 @@ describe('Assessment Model', function() {
     it("add assessment [valid assessment data]", function(done){
       var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment._id = submitAddId;
-      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment, allTeams, userTeams)
+      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
       .then(function(body){
         expect(body).to.be.an('object');
         expect(body.ok).to.be.true;
@@ -381,7 +352,7 @@ describe('Assessment Model', function() {
     it("add assessment [duplicate assessment id]", function(done){
       var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment._id = submitAddId;
-      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment, allTeams, userTeams)
+      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
         .catch(function(err){
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
@@ -479,7 +450,7 @@ describe('Assessment Model', function() {
 
   describe("assessment model [updateTeamAssessment] ", function(){
     it("update assessment [no assessment id]", function(done){
-      assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, noId, allTeams, userTeams)
+      assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, noId)
         .catch(function(err){
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
@@ -491,7 +462,7 @@ describe('Assessment Model', function() {
     it("update assessment [empty assessment id]", function(done){
       var tempData = lodash.cloneDeep(curr_assessment);
       tempData._id='';
-      assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, tempData, allTeams, userTeams)
+      assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, tempData)
         .catch(function(err){
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
@@ -505,7 +476,7 @@ describe('Assessment Model', function() {
       var tempData = lodash.cloneDeep(sub_assessment);
       tempData.last_updt_user = 'test.user@ph.ibm.com';
       tempData.last_updt_dt = util.getServerTime();
-      assessmentModel.updateTeamAssessment('test.user@ph.ibm.com', tempData, allTeams, [])
+      assessmentModel.updateTeamAssessment('test.user@ph.ibm.com', tempData)
         .catch(function(err){
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
@@ -520,7 +491,7 @@ describe('Assessment Model', function() {
       tempData.last_updt_user = dummyData.user.details.shortEmail;
       tempData.last_updt_dt = util.getServerTime();
       tempData._rev = invalidRevisionId;
-      assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, tempData, allTeams, userTeams)
+      assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, tempData)
         .catch(function(err){
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
@@ -534,7 +505,7 @@ describe('Assessment Model', function() {
       var tempData = lodash.cloneDeep(sub_assessment);
       tempData.last_updt_user = dummyData.user.details.shortEmail;
       tempData.last_updt_dt = util.getServerTime();
-      assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, tempData, allTeams, userTeams)
+      assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, tempData)
         .then(function(body){
           expect(body).to.be.an('object');
           expect(body.id).equal(tempData._id);
@@ -549,7 +520,7 @@ describe('Assessment Model', function() {
 
   describe("assessment model [deleteAssessment] ", function(){
     it("delete assessment [non-existing assessment id]", function(done){
-      assessmentModel.deleteAssessment(dummyData.user.details.shortEmail, invalidAssessId, del_assessment._rev, allTeams, userTeams)
+      assessmentModel.deleteAssessment(dummyData.user.details.shortEmail, invalidAssessId, del_assessment._rev)
         .catch(function(err){
           expect(err).to.have.property('error');
           expect(err.error).to.be.equal('not_found');
@@ -558,7 +529,7 @@ describe('Assessment Model', function() {
     });
 
     it("delete assessment [empty assessment id]", function(done){
-      assessmentModel.deleteAssessment(dummyData.user.details.shortEmail,'', del_assessment._rev, allTeams, userTeams)
+      assessmentModel.deleteAssessment(dummyData.user.details.shortEmail,'', del_assessment._rev)
         .catch(function(err){
           expect(err).to.have.property('error');
           expect(err.error).to.be.equal('No id/rev for record deletion.');
@@ -567,7 +538,7 @@ describe('Assessment Model', function() {
     });
 
     it("delete assessment [non-existing revision id]", function(done){
-      assessmentModel.deleteAssessment(dummyData.user.details.shortEmail, del_assessment._id, invalidRevisionId, allTeams, userTeams)
+      assessmentModel.deleteAssessment(dummyData.user.details.shortEmail, del_assessment._id, invalidRevisionId)
         .catch(function(err){
           expect(err).to.have.property('error');
           expect(err.error).to.be.equal('conflict');
@@ -576,7 +547,7 @@ describe('Assessment Model', function() {
     });
 
     it("delete assessment [empty revision id]", function(done){
-      assessmentModel.deleteAssessment(dummyData.user.details.shortEmail, del_assessment._id, '', allTeams, userTeams)
+      assessmentModel.deleteAssessment(dummyData.user.details.shortEmail, del_assessment._id, '')
         .catch(function(err){
           expect(err).to.not.equal(null);
           expect(err).to.have.property('error');
@@ -586,7 +557,7 @@ describe('Assessment Model', function() {
     });
 
     it("delete assessment [invalid assessment id and revision id]", function(done){
-      assessmentModel.deleteAssessment(dummyData.user.details.shortEmail, invalidAssessId, invalidRevisionId, allTeams, userTeams)
+      assessmentModel.deleteAssessment(dummyData.user.details.shortEmail, invalidAssessId, invalidRevisionId)
         .catch(function(err){
           expect(err).to.have.property('error');
           expect(err.error).to.be.equal('not_found');
@@ -596,7 +567,7 @@ describe('Assessment Model', function() {
 
     it("delete assessment [valid assessment and revision id] using admin user", function(done){
       //make sure to have latest document revision id
-      assessmentModel.deleteAssessment(adminList[0], del_assessment._id, del_assessment._rev, allTeams, userTeams)
+      assessmentModel.deleteAssessment(adminList[0], del_assessment._id, del_assessment._rev)
         .then(function(body){
           expect(body).to.be.a('object');
           expect(body.ok).to.be.true;
