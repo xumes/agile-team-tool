@@ -1,9 +1,12 @@
 {
   "_id": "_design/utility",
-  "version": 0,
+  "version": 0.1,
   "views": {
     "teamMemberRoles": {
       "map": "function (doc) {\n  if (doc._id == 'ag_ref_team_type_role') \n    for (var n in doc.team_type_role_tbl)\n      emit(doc.team_type_role_tbl[n].name, doc.team_type_role_tbl[n]);\n}"
+    },
+    "cleanUpData": {
+      "map": "function (doc) {\n emit(doc._id, doc._rev); \n}"
     }
   },
   "language": "javascript"
