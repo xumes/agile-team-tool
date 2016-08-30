@@ -207,7 +207,7 @@ function getAllAgileTeamsByParentId(parentId, showLoading, initial) {
 						$("#" + jq(twistyId)).append(createMainTwistySection(mainTwistyId, ""));
 					}
 					_.each(data.docs, function(team){
-						if (team.doc_status != 'deleted') {
+						if (team.doc_status != 'delete') {
 							addTeamToTree(team, mainTwistyId, false);
 						}
 					});
