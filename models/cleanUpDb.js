@@ -12,6 +12,7 @@ var cleanUp = {
           _.each(ids, function(id){
             _.find(docs.rows, function(doc){
               if (id == doc.id) {
+                console.log(id);
                 var deleteDoc = new Object();
                 deleteDoc['_id'] = id;
                 deleteDoc['_rev'] = doc.value;
