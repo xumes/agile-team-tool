@@ -4,7 +4,7 @@ var logLevel = process.env.logLevel || 'verbose';
 var logColors = process.env.logColors == 'true';
 
 if (process.env.isGulpTest){
-  var logLevel = rocess.env.logLevel || 'info';
+  var logLevel = process.env.logLevel || 'info';
   var logColors = true;
 }
 
