@@ -10,7 +10,7 @@ module.exports.getAdmins = function () {
         resolve(body);
       })
       .catch( /* istanbul ignore next */ function(err) {
-        loggers.get('model-users').info('ERROR: '+err);
+        loggers.get('model-users').error('ERROR: '+err);
         msg = err.error;
         reject(msg);
       });

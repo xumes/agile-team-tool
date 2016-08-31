@@ -19,7 +19,7 @@ var db = Promise.promisifyAll(cloudantDb.use(dbName));
 
 
 var formatErrMsg = /* istanbul ignore next */ function(msg){
-  loggers.get('models').info('Error: ' + msg);
+  loggers.get('models').error('Error: ' + msg);
   return { error : msg };
 };
 

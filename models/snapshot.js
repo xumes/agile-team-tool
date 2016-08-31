@@ -20,7 +20,7 @@ var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept'
 var monthArray = [];
 
 var formatErrMsg = /* istanbul ignore next */ function(msg){
-  loggers.get('models').info('Error: ', msg);
+  loggers.get('models').error('Error: ', msg);
   return { error : msg };
 };
 

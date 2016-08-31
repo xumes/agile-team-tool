@@ -9,7 +9,7 @@ var jstz = require('jstimezonedetect');
 var msg;
 
 var formatErrMsg = function(msg) {
-  loggers.get('models').info('util helper Error: ' + msg);
+  loggers.get('models').error('util helper Error: ' + msg);
   return { error : msg };
 };
 

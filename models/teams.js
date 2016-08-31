@@ -265,14 +265,14 @@ var team = {
                             resolve(teamDoc);
                           })
                           .catch( /* istanbul ignore next */ function(err){
-                            loggers.get('models').info('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
+                            loggers.get('models').error('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
                             setTimeout(teamIndex.initIndex, 2000);
                             resolve(teamDoc);
                           }); // updateIndexDocument
                       }); // updateLookup
                     })
                     .catch( /* istanbul ignore next */ function(err){
-                      loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);
+                      loggers.get('models').error('Something went wrong while getting the lookup index. ' + err.error);
                       resolve(teamDoc);
                     }); // getIndexDocument
                 })
@@ -380,14 +380,14 @@ var team = {
                               resolve(results[0]);
                             })
                             .catch( /* istanbul ignore next */ function(err){
-                              loggers.get('models').info('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
+                              loggers.get('models').error('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
                               setTimeout(teamIndex.initIndex, 2000);
                               resolve(results[0]);
                             }); //updateIndexDocument
                         }); // updateLookup
                     })
                     .catch( /* istanbul ignore next */ function(err){
-                      loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);
+                      loggers.get('models').error('Something went wrong while getting the lookup index. ' + err.error);
                       resolve(results[0]);
                     }); // getIndexDocument
 
@@ -526,14 +526,14 @@ var team = {
                                   resolve(finalTeamDoc);
                                 })
                                 .catch( /* istanbul ignore next */ function(err){
-                                  loggers.get('models').info('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
+                                  loggers.get('models').error('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
                                   setTimeout(teamIndex.initIndex, 2000);
                                   resolve(finalTeamDoc);
                                 }); //updateIndexDocument
                             }); // updateLookup
                         })
                         .catch( /* istanbul ignore next */ function(err){
-                          loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);
+                          loggers.get('models').error('Something went wrong while getting the lookup index. ' + err.error);
                           resolve(finalTeamDoc);
                         }); // getIndexDocument
 
@@ -776,14 +776,14 @@ var team = {
                                             resolve(bulkDocu['docs']);
                                           })
                                           .catch( /* istanbul ignore next */ function(err){
-                                            loggers.get('models').info('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
+                                            loggers.get('models').error('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
                                             setTimeout(teamIndex.initIndex, 2000);
                                             resolve(bulkDocu['docs']);
                                           }); // updateIndexDocument
                                       }); // updateLookup
                                   })
                                   .catch( /* istanbul ignore next */ function(err){
-                                    loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);
+                                    loggers.get('models').error('Something went wrong while getting the lookup index. ' + err.error);
                                     resolve(bulkDocu['docs']);
                                   }); // getIndexDocument
 
@@ -880,14 +880,14 @@ var team = {
                                       resolve(bulkDocu['docs']);
                                     })
                                     .catch( /* istanbul ignore next */ function(err){
-                                      loggers.get('models').info('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
+                                      loggers.get('models').error('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
                                       setTimeout(teamIndex.initIndex, 2000);
                                       resolve(bulkDocu['docs']);
                                     }); // updateIndexDocument
                                 }); // updateLookup
                             })
                             .catch( /* istanbul ignore next */ function(err){
-                              loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);
+                              loggers.get('models').error('Something went wrong while getting the lookup index. ' + err.error);
                               resolve(bulkDocu['docs']);
                             }); // getIndexDocument
 
@@ -957,14 +957,14 @@ var team = {
                                         resolve(bulkDocu['docs']);
                                       })
                                       .catch( /* istanbul ignore next */ function(err){
-                                        loggers.get('models').info('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
+                                        loggers.get('models').error('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
                                         setTimeout(teamIndex.initIndex, 2000);
                                         resolve(bulkDocu['docs']);
                                       }); // updateIndexDocument
                                   }); // updateLookup
                               })
                               .catch( /* istanbul ignore next */ function(err){
-                                loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);
+                                loggers.get('models').error('Something went wrong while getting the lookup index. ' + err.error);
                                 resolve(bulkDocu['docs']);
                               });
 
@@ -1037,14 +1037,14 @@ var team = {
                                       resolve(bulkDocu['docs']);
                                     })
                                     .catch( /* istanbul ignore next */ function(err){
-                                      loggers.get('models').info('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
+                                      loggers.get('models').error('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
                                       setTimeout(teamIndex.initIndex, 2000);
                                       resolve(bulkDocu['docs']);
                                     }); // updateIndexDocument
                                 }); // updateLookup
                             })
                             .catch( /* istanbul ignore next */ function(err){
-                              loggers.get('models').info('Something went wrong while getting the lookup index. ' + err.error);
+                              loggers.get('models').error('Something went wrong while getting the lookup index. ' + err.error);
                               resolve(bulkDocu['docs']);
                             });
                           // loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully removed child team' + JSON.stringify(teamObj['targetChild']));

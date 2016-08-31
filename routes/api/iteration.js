@@ -8,7 +8,7 @@ var _ = require('underscore');
 var sprintf = require("sprintf-js").sprintf;
 
 var formatErrMsg = function(msg){
-  loggers.get('api').info('Error: ' + msg);
+  loggers.get('api').error('Error: ' + msg);
   return { error : msg };
 };
 

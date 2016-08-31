@@ -12,7 +12,7 @@ var moment      = require('moment');
 var sprintf     = require("sprintf-js").sprintf;
 
 var formatErrMsg = function(msg){
-  loggers.get('models').info('Error: ', msg);
+  loggers.get('models').error('Error: ', msg);
   return { error : msg };
 };
 
