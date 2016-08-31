@@ -343,9 +343,13 @@ function rollUpIterationsByNonSquad(squads, nonSquadTeamId, squadsCalResults, is
           if (squadIterationResult[j].totalCompleted > 0) {
             teams[j] = teams[j] + 1;
           }
-          //console.log(currData[j].totalPoints);
         }
       }
+    }
+    var newDate = new Date();
+    var days = daysInMonth(newDate.getMonth() + 1, newDate.getFullYear());
+    if (newDate.getDate() < days) {
+      currData[iterationMonth].partialMonth = true;
     }
     for (var i = 0; i <= iterationMonth; i++) {
       currData[i].totalSquad = teams[i];
@@ -418,6 +422,16 @@ function addMonths(date, months) {
   newDate.setMonth(date.getMonth() + months);
   return new Date(newDate);
 };
+
+/**
+ * Get how many days in the month
+ * @param int month
+ * @param int year
+ * @return int days
+ */
+function daysInMonth(month,year) {
+    return new Date(year, month, 0).getDate();
+}
 
 /**
  * Get _rev for roll up squads
@@ -533,10 +547,6 @@ function rollUpSquadsData(squadsList, squadTeams) {
   entry.fteGt12 = fteGt12;
 
   return entry;
-};
-
-function sortRootTeam(teams) {
-
 };
 
 var snapshot = {
@@ -686,7 +696,6 @@ var snapshot = {
     return new Promise(function(resolve, reject){
       iterationMonth = 5;
       monthArray = [];
-
       var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
       var nowTime = new Date(util.getServerTime());
       var endTime = nowTime.toLocaleDateString('en-US',options);
@@ -706,7 +715,6 @@ var snapshot = {
         var year = time.substring(time.length-4,time.length);
         monthArray[i] = month + '-' + year;
       }
-      console.log(startTime);
       var promiseArray = [];
       promiseArray.push(getIterationDocs(startTime, endTime));
       promiseArray.push(getAllSquads());
