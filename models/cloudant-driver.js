@@ -7,8 +7,8 @@ var loggers       = require('../middleware/logger');
 var dbName        = settings.cloudant.dbName;
 
 var cloudantDb    = Cloudant(settings.cloudant.url, function(err, cloudant, reply) {
-  if(err){
-    loggers.get('init').error("Failed to initialize Cloudant: " + err.message);}
+  if(err)
+    loggers.get('init').error("Failed to initialize Cloudant: " + err.message);
   else{
     loggers.get('init').info("Cloudant User: " + reply.userCtx.name);
     loggers.get('init').info("Cloudant User Roles: " + reply.userCtx.roles +"\n");
