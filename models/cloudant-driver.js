@@ -1,12 +1,14 @@
 var Promise       = require('bluebird');
-var Cloudant      = require('cloudant');
 var _             = require('underscore');
 var lodash        = require('lodash');
 var settings      = require('../settings');
 var loggers       = require('../middleware/logger');
-var dbName        = settings.cloudant.dbName;
 
-var cloudantDb    = Cloudant(settings.cloudant.url, function(err, cloudant, reply) {
+var Cloudant      = require('cloudant');
+var dbName        = settings.cloudant.dbName;
+var db;
+//init cloudant connection
+Cloudant(settings.cloudant.url, function(err, cloudant, reply) {
   if(err){
     loggers.get('init').error("Failed to initialize Cloudant: " + err.message);}
   else{
