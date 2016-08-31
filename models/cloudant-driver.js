@@ -8,14 +8,15 @@ var dbName        = settings.cloudant.dbName;
 var db;
 
 var cloudantDb    = Cloudant(settings.cloudant.url, function(err, cloudant, reply) {
-  if(err)
-    loggers.get('init').error("Failed to initialize Cloudant: " + err.message);
+  if(err){
+    loggers.get('init').error("Failed to initialize Cloudant: " + err.message);}
   else{
-    db = Promise.promisifyAll(cloudant.db.use(dbName));
+    //db = Promise.promisifyAll(cloudant.db.use(dbName));
     loggers.get('init').info("Cloudant User: " + reply.userCtx.name);
     loggers.get('init').info("Cloudant User Roles: " + reply.userCtx.roles +"\n");
   }
 });
+db = Promise.promisifyAll(cloudantDb.db.use(dbName));
 
 
 var formatErrMsg = /* istanbul ignore next */ function(msg){
