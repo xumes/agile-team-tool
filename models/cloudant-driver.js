@@ -5,7 +5,6 @@ var lodash        = require('lodash');
 var settings      = require('../settings');
 var loggers       = require('../middleware/logger');
 var dbName        = settings.cloudant.dbName;
-var db;
 
 var cloudantDb    = Cloudant(settings.cloudant.url, function(err, cloudant, reply) {
   if(err){
@@ -16,7 +15,7 @@ var cloudantDb    = Cloudant(settings.cloudant.url, function(err, cloudant, repl
     loggers.get('init').info("Cloudant User Roles: " + reply.userCtx.roles +"\n");
   }
 });
-db = Promise.promisifyAll(cloudantDb.db.use(dbName));
+var db = Promise.promisifyAll(cloudantDb.use(dbName));
 
 
 var formatErrMsg = /* istanbul ignore next */ function(msg){
