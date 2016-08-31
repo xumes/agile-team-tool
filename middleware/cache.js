@@ -33,17 +33,17 @@ var formattedCache = function(allCache){
     var list = {};
     switch(i){
       case 'allTeamsLookup':
-        list = returnObject(v);
+        list = util.returnObject(v);
         obj = _.indexBy(list, function(team) {return team._id});
         break;
       case 'allTeams':
-        list = returnObject(v);
+        list = util.returnObject(v);
         obj = _.sortBy(list, function(team) {return team.name});
         break;
       case 'myTeams':
       case 'systemAdmin':
       case 'systemStatus':
-        obj = returnObject(v);
+        obj = util.returnObject(v);
         break;
     }
     cacheFormat[i] = obj;
@@ -58,18 +58,18 @@ var formattedCacheAdmin = function(allCache){
     var list = {};
     switch(i){
       case 'allTeamsLookup':
-        list = returnObject(v);
+        list = util.returnObject(v);
         obj = _.indexBy(list, function(team) {return team._id});
         break;
       case 'allTeams':
-        list = returnObject(v);
+        list = util.returnObject(v);
         obj = _.sortBy(list, function(team) {return team.name});
         break;
       case 'myTeams':
       case 'systemAdmin':
       case 'systemStatus':
       case 'memberRoles':
-        obj = returnObject(v);
+        obj = util.returnObject(v);
         break;
     }
     cacheFormat[i] = obj;
@@ -77,29 +77,29 @@ var formattedCacheAdmin = function(allCache){
   return cacheFormat;
 }
 
-var returnObject = function(data) {
-  // pre process returned rows so we deal directly with the document objects
-  // doc attribute of data are valid for compacted views that requested for "include_doc=true"
-  if (_.has(data, "rows")) {
-    if (_.has(data.rows, "doc"))
-      return _.pluck(data.rows, 'doc');
-    else 
-      return _.pluck(data.rows, 'value');
-  } else if (data.length > 0) {
-    if (!_.isEmpty(data[0].doc)) 
-      return _.pluck(data, 'doc');
-    else
-      return _.pluck(data, 'value');
-  } else
-    return data;
-};
+// var returnObject = function(data) {
+//   // pre process returned rows so we deal directly with the document objects
+//   // doc attribute of data are valid for compacted views that requested for "include_doc=true"
+//   if (_.has(data, "rows")) {
+//     if (_.has(data.rows, "doc"))
+//       return _.pluck(data.rows, 'doc');
+//     else 
+//       return _.pluck(data.rows, 'value');
+//   } else if (data.length > 0) {
+//     if (!_.isEmpty(data[0].doc)) 
+//       return _.pluck(data, 'doc');
+//     else
+//       return _.pluck(data, 'value');
+//   } else
+//     return data;
+// };
 
 var userCache = {
   setAllTeams: function(req, res) {
     return new Promise(function(resolve, reject) {
       teamModel.getTeam(null)
         .then(function(result) {
-          var list = returnObject(result);
+          var list = util.returnObject(result);
           req.session['allTeamsLookup'] = _.indexBy(list, function(team) {return team._id});
           req.session['allTeams'] = _.sortBy(list, function(team) {return team.name});
           resolve();
@@ -115,7 +115,7 @@ var userCache = {
     return new Promise(function(resolve, reject) {
       teamModel.getTeamByEmail(req.session['email'])
         .then(function(result) {
-          var list = returnObject(result);
+          var list = util.returnObject(result);
           req.session['myTeams'] = list;
           resolve();
         })
@@ -130,7 +130,7 @@ var userCache = {
     return new Promise(function(resolve, reject) {
       teamModel.getName(null)
         .then(function(result) {
-          var list = returnObject(result);
+          var list = util.returnObject(result);
           req.session['allTeams'] = list;
           resolve();
         })
@@ -145,7 +145,7 @@ var userCache = {
     return new Promise(function(resolve, reject) {
       teamModel.getRole()
         .then(function(result) {
-          var list = returnObject(result);
+          var list = util.returnObject(result);
           req.session['memberRoles'] = list;
           resolve();
         })
@@ -160,7 +160,7 @@ var userCache = {
     return new Promise(function(resolve, reject) {
       users.getAdmins()
         .then(function(result) {
-          req.session['systemAdmin'] = returnObject(result);
+          req.session['systemAdmin'] = util.returnObject(result);
           resolve();
         })
         .catch(function(err) {
@@ -174,7 +174,7 @@ var userCache = {
     return new Promise(function(resolve, reject) {
       util.getSystemStatus('ag_ref_system_status_control')
         .then(function(result) {
-          req.session['systemStatus'] = returnObject(result);
+          req.session['systemStatus'] = util.returnObject(result);
           resolve();
         })
         .catch(function(err) {
@@ -206,7 +206,7 @@ var userCache = {
           };
           if(isRoute){ // this was accessed via routes middleware, set as session
             _.each(allCache, function(v,i,l){
-              var obj = returnObject(v);
+              var obj = util.returnObject(v);
               req.session[i] = obj;
             });
             infoLogs('Cache variable for setSystemInfoCache set as session');
