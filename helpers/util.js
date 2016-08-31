@@ -3,9 +3,10 @@ var Promise = require('bluebird');
 var settings = require('../settings');
 var loggers = require('../middleware/logger');
 var _ = require('underscore');
-var users = require('../models/users')
+var users = require('../models/users');
 var momenttz = require('moment-timezone');
 var jstz = require('jstimezonedetect');
+var request = require('request');
 var msg;
 
 var formatErrMsg = function(msg) {
@@ -247,4 +248,21 @@ module.exports.returnObject = function(data) {
     returnData =  data;
 
   return returnData;
+};
+
+module.exports.queryLDAP = function(id) {
+  return new Promise(function(resolve, reject) {
+    var opts = {
+      url: settings['ldapAuthURL'] + '/id/' + id + '/email'
+    };
+
+    request.get(opts, function(err, res, body) {
+      if (err) {
+        reject(body);
+      }
+      else {
+        resolve(body);
+      }
+    })
+  });
 };

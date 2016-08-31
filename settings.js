@@ -1,6 +1,6 @@
 module.exports = {
   dbUrl: process.env.dbUrl || 'test.cloudant.com',
-  ldapAuthURL: process.env.ldapAuthURL || 'http://ifundit-dp.tap.ibm.com:3004/auth',
+  ldapAuthURL: process.env.ldapAuthURL || 'http://ifundit-dp.tap.ibm.com:3004',
   redisDb: {
     url: process.env.redisURL || 'redis://localhost:6379',
     prefix: process.env.redisPrefix || 'agileteamtool:'
@@ -12,7 +12,7 @@ module.exports = {
     dbName: process.env.cloudantDb || 'localDb'
   },
   saml: {
-    path: '/auth/sso/callback',
+    path: '/auth/saml/ibm/callback',
     identifierFormat: 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
     issuer: 'https://w3id.sso.ibm.com/auth/sps/samlidp/saml20',
     entryPoint: process.env['samlEntrypoint'],
