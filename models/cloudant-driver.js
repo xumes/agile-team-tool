@@ -4,9 +4,19 @@ var _             = require('underscore');
 var lodash        = require('lodash');
 var settings      = require('../settings');
 var loggers       = require('../middleware/logger');
-var cloudantDb    = Cloudant(settings.cloudant.url);
 var dbName        = settings.cloudant.dbName;
-var db            = Promise.promisifyAll((cloudantDb.use(dbName)));
+var db;
+
+var cloudantDb    = Cloudant(settings.cloudant.url, function(err, cloudant, reply) {
+  if(err)
+    loggers.get('init').error("Failed to initialize Cloudant: " + err.message);
+  else{
+    db = Promise.promisifyAll(cloudant.db.use(dbName));
+    loggers.get('init').info("Cloudant User: " + reply.userCtx.name);
+    loggers.get('init').info("Cloudant User Roles: " + reply.userCtx.roles +"\n");
+  }
+});
+
 
 var formatErrMsg = /* istanbul ignore next */ function(msg){
   loggers.get('models').info('Error: ' + msg);
