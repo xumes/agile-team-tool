@@ -22,7 +22,7 @@ var formatErrMsg = function(msg){
 
 var infoLogs = function(msg){
   tMsg = typeof msg === 'object' ? JSON.stringify(msg) : msg;
-  loggers.get('models').info(tMsg);
+  loggers.get('models').verbose(tMsg);
   return;
 };
 
@@ -261,7 +261,7 @@ var team = {
                       .then(function(lookupIndex) {
                         teamIndex.updateIndexDocument(lookupIndex)
                           .then(function(result) {
-                            loggers.get('models').info('Success: New team record created');
+                            loggers.get('models').verbose('Success: New team record created');
                             resolve(teamDoc);
                           })
                           .catch( /* istanbul ignore next */ function(err){
@@ -376,7 +376,7 @@ var team = {
                         .then(function(lookupIndex) {
                           teamIndex.updateIndexDocument(lookupIndex)
                             .then(function(result) {
-                              loggers.get('models').info('Success: Team, assessment and iteration documents bulk deleted');
+                              loggers.get('models').verbose('Success: Team, assessment and iteration documents bulk deleted');
                               resolve(results[0]);
                             })
                             .catch( /* istanbul ignore next */ function(err){
@@ -392,7 +392,7 @@ var team = {
                     }); // getIndexDocument
 
 
-                  loggers.get('models').info('Success: Team, assessment and iteration documents bulk deleted');
+                  loggers.get('models').verbose('Success: Team, assessment and iteration documents bulk deleted');
                   resolve(results[0]);
                 })
                 .catch( /* istanbul ignore next */ function(err){
@@ -522,7 +522,7 @@ var team = {
                             .then(function(lookupIndex) {
                               teamIndex.updateIndexDocument(lookupIndex)
                                 .then(function(result) {
-                                  loggers.get('models').info('Success: Team document ' + finalTeamDoc['_id'] + ' successfully updated');
+                                  loggers.get('models').verbose('Success: Team document ' + finalTeamDoc['_id'] + ' successfully updated');
                                   resolve(finalTeamDoc);
                                 })
                                 .catch( /* istanbul ignore next */ function(err){
@@ -537,7 +537,7 @@ var team = {
                           resolve(finalTeamDoc);
                         }); // getIndexDocument
 
-                    //   loggers.get('models').info('Success: Team document ' + finalTeamDoc['_id'] + ' successfully updated');
+                    //   loggers.get('models').verbose('Success: Team document ' + finalTeamDoc['_id'] + ' successfully updated');
                     //   resolve(finalTeamDoc);
                     })
                     .catch( /* istanbul ignore next */ function(err){
@@ -567,7 +567,7 @@ var team = {
       infoLogs('Getting all team records from Cloudant');
       common.getByView('teams', 'teams')
         .then(function(body){
-          loggers.get('models').info('Success: Team records obtained');
+          loggers.get('models').verbose('Success: Team records obtained');
           resolve(body.rows);
         })
         .catch( /* istanbul ignore next */ function(err){
@@ -579,7 +579,7 @@ var team = {
       infoLogs('Getting team records for ' + teamId + ' from Cloudant');
       common.getRecord(teamId)
         .then(function(body){
-          loggers.get('models').info('Success: Team records obtained');
+          loggers.get('models').verbose('Success: Team records obtained');
           resolve(body);
         })
         .catch( /* istanbul ignore next */ function(err){
@@ -595,7 +595,7 @@ var team = {
     return new Promise(function(resolve, reject) {
       common.getByView('utility', 'teamMemberRoles')
         .then(function(body){
-          loggers.get('models').info('Success: Team roles obtained');
+          loggers.get('models').verbose('Success: Team roles obtained');
           resolve(body);
         })
         .catch( /* istanbul ignore next */ function(err){
@@ -611,7 +611,7 @@ var team = {
       return new Promise(function(resolve, reject) {
         common.getByView('teams', 'teamNames')
           .then(function(body){
-            loggers.get('models').info('Success: Team names obtained');
+            loggers.get('models').verbose('Success: Team names obtained');
             resolve(body);
           })
           .catch( /* istanbul ignore next */ function(err){
@@ -626,9 +626,9 @@ var team = {
         common.getByViewKey('teams', 'teamNames', teamName)
           .then(function(body){
             if(_.isEmpty(body.rows))
-              loggers.get('models').info('Success: No team document with name ' + teamName);
+              loggers.get('models').verbose('Success: No team document with name ' + teamName);
             else
-              loggers.get('models').info('Success: Team with name ' + teamName + ' obtained');
+              loggers.get('models').verbose('Success: Team with name ' + teamName + ' obtained');
             resolve(body.rows);
           })
           .catch( /* istanbul ignore next */ function(err){
@@ -647,9 +647,9 @@ var team = {
         common.getByViewKey('teams', 'teamsWithMember', email)
           .then(function(body){
             if(_.isEmpty(body.rows))
-              loggers.get('models').info('No team for email ' + email);
+              loggers.get('models').verbose('No team for email ' + email);
             else
-              loggers.get('models').info('Team lists for email ' + email + ' obtained');
+              loggers.get('models').verbose('Team lists for email ' + email + ' obtained');
             resolve(body.rows);
           })
           .catch( /* istanbul ignore next */ function(err){
@@ -668,9 +668,9 @@ var team = {
         common.getByViewKey('teams', 'teamsByUid', uid)
           .then(function(body){
             if(_.isEmpty(body.rows))
-              loggers.get('models').info('No team for serial number ' + uid);
+              loggers.get('models').verbose('No team for serial number ' + uid);
             else
-              loggers.get('models').info('Team lists for serial number  ' + uid + ' obtained');
+              loggers.get('models').verbose('Team lists for serial number  ' + uid + ' obtained');
             resolve(body.rows);
           })
           .catch( /* istanbul ignore next */ function(err){
@@ -772,7 +772,7 @@ var team = {
                                       .then(function(lookupIndex) {
                                         teamIndex.updateIndexDocument(lookupIndex)
                                           .then(function(result) {
-                                            loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully associated to parent ' + teamObj['targetParent']);
+                                            loggers.get('models').verbose('Success: Team ' + teamObj['teamId'] + ' successfully associated to parent ' + teamObj['targetParent']);
                                             resolve(bulkDocu['docs']);
                                           })
                                           .catch( /* istanbul ignore next */ function(err){
@@ -787,7 +787,7 @@ var team = {
                                     resolve(bulkDocu['docs']);
                                   }); // getIndexDocument
 
-                                // loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully associated to parent ' + teamObj['targetParent']);
+                                // loggers.get('models').verbose('Success: Team ' + teamObj['teamId'] + ' successfully associated to parent ' + teamObj['targetParent']);
                                 // // return updated documents
                                 // resolve(bulkDocu['docs']);
                               })
@@ -876,7 +876,7 @@ var team = {
                                 .then(function(lookupIndex) {
                                   teamIndex.updateIndexDocument(lookupIndex)
                                     .then(function(result) {
-                                      loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully associated to child ' + JSON.stringify(teamObj['targetChild']));
+                                      loggers.get('models').verbose('Success: Team ' + teamObj['teamId'] + ' successfully associated to child ' + JSON.stringify(teamObj['targetChild']));
                                       resolve(bulkDocu['docs']);
                                     })
                                     .catch( /* istanbul ignore next */ function(err){
@@ -891,7 +891,7 @@ var team = {
                               resolve(bulkDocu['docs']);
                             }); // getIndexDocument
 
-                          // loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully associated to child ' + JSON.stringify(teamObj['targetChild']));
+                          // loggers.get('models').verbose('Success: Team ' + teamObj['teamId'] + ' successfully associated to child ' + JSON.stringify(teamObj['targetChild']));
                           // //resolve(body);
                           // // return updated documents
                           // resolve(bulkDocu['docs']);
@@ -953,7 +953,7 @@ var team = {
                                   .then(function(lookupIndex) {
                                     teamIndex.updateIndexDocument(lookupIndex)
                                       .then(function(result) {
-                                        loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully removed parent team ' + teamObj['targetParent']);
+                                        loggers.get('models').verbose('Success: Team ' + teamObj['teamId'] + ' successfully removed parent team ' + teamObj['targetParent']);
                                         resolve(bulkDocu['docs']);
                                       })
                                       .catch( /* istanbul ignore next */ function(err){
@@ -968,7 +968,7 @@ var team = {
                                 resolve(bulkDocu['docs']);
                               });
 
-                          // loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully removed parent team' + teamObj['targetParent']);
+                          // loggers.get('models').verbose('Success: Team ' + teamObj['teamId'] + ' successfully removed parent team' + teamObj['targetParent']);
                           // //resolve(body);
                           // // return updated documents
                           // resolve(bulkDocu['docs']);
@@ -1033,7 +1033,7 @@ var team = {
                                 .then(function(lookupIndex) {
                                   teamIndex.updateIndexDocument(lookupIndex)
                                     .then(function(result) {
-                                      loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully removed child team ' + JSON.stringify(teamObj['targetChild']));
+                                      loggers.get('models').verbose('Success: Team ' + teamObj['teamId'] + ' successfully removed child team ' + JSON.stringify(teamObj['targetChild']));
                                       resolve(bulkDocu['docs']);
                                     })
                                     .catch( /* istanbul ignore next */ function(err){
@@ -1047,7 +1047,7 @@ var team = {
                               loggers.get('models').error('Something went wrong while getting the lookup index. ' + err.error);
                               resolve(bulkDocu['docs']);
                             });
-                          // loggers.get('models').info('Success: Team ' + teamObj['teamId'] + ' successfully removed child team' + JSON.stringify(teamObj['targetChild']));
+                          // loggers.get('models').verbose('Success: Team ' + teamObj['teamId'] + ' successfully removed child team' + JSON.stringify(teamObj['targetChild']));
                           // //resolve(body);
                           // // return updated documents
                           // resolve(bulkDocu['docs']);
@@ -1095,7 +1095,7 @@ var team = {
           var parentTeams = _.difference(parentTeams, userTeamsList);
           getSelectedTeams(parentTeams, userTeamsList)
           .then(function(body){
-            loggers.get('models').info('Success: User team records obtained.');
+            loggers.get('models').verbose('Success: User team records obtained.');
             resolve(body);
           })
           .catch( /* istanbul ignore next */ function(err){
@@ -1249,7 +1249,7 @@ function getSelectedTeams(teamList, userTeams){
           var parentTeams = _.difference(parentTeams, userTeams);
           if (_.size(parentTeams) > 0)
             getSelectedTeams(parentTeams, userTeams);
-          loggers.get('models').info('Success: Selected team records obtained.');
+          loggers.get('models').verbose('Success: Selected team records obtained.');
           resolve(userTeams);
         })
         .catch( /* istanbul ignore next */ function(err){

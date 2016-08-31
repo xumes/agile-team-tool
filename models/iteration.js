@@ -17,12 +17,12 @@ var formatErrMsg = function(msg){
 };
 
 var successLogs = function(msg){
-  loggers.get('models').info('Success: ' + msg);
+  loggers.get('models').verbose('Success: ' + msg);
   return;
 };
 
 var infoLogs = function(msg){
-  loggers.get('models').info(msg);
+  loggers.get('models').verbose(msg);
   return;
 };
 
@@ -203,7 +203,7 @@ var iteration = {
             common.getRecord(iterationId)
             .then(function(body) {
               if (!_.isEmpty(body) && (body._id != undefined)) {
-                // loggers.get('models').info('[edit] Team iteration info obtained: ', JSON.stringify(body, null, 4));
+                // loggers.get('models').verbose('[edit] Team iteration info obtained: ', JSON.stringify(body, null, 4));
                 var _rev = body._rev;
                 var _id = body._id;
                 cleanData._rev = _rev;
@@ -304,7 +304,7 @@ var iteration = {
         common.deleteRecord(docId, revId)
         .then(function(body) {
           // console.log('iteration.delete RESULT:', body);
-          loggers.get('models').info('[iterationModel.delete] result:', body);
+          loggers.get('models').verbose('[iterationModel.delete] result:', body);
           resolve(body);
         })
         .catch( /* istanbul ignore next */ function(err) {
@@ -359,7 +359,7 @@ var iteration = {
   },
 
   searchTeamIteration: function(p) {
-    loggers.get('models').info('[iterationModel.searchTeamIteration] params: ', JSON.stringify(p,null,1));
+    loggers.get('models').verbose('[iterationModel.searchTeamIteration] params: ', JSON.stringify(p,null,1));
     return new Promise(function(resolve, reject) {
       var iterationSearchAllDocRules = require('./validate_rules/iterationSearchAll.js');
       var team_id = p.id;
@@ -400,7 +400,7 @@ var iteration = {
             'sort': sortBy,
             'limit': limit
           }
-          loggers.get('models').info('[iterationModel.searchTeamIteration] lucene_query: ' + lucene_query);
+          loggers.get('models').verbose('[iterationModel.searchTeamIteration] lucene_query: ' + lucene_query);
           common.Search('iterations', 'searchAll', params)
           .then(function(body) {
             resolve(body);

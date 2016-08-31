@@ -9,7 +9,7 @@ var users = require('../models/users');
 
 var infoLogs = function(msg){
   tMsg = typeof msg === 'object' ? JSON.stringify(msg) : msg;
-  loggers.get('cache').info(tMsg);
+  loggers.get('cache').verbose(tMsg);
   return;
 };
 

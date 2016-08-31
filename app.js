@@ -30,7 +30,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 /* istanbul ignore if */
-if (process.env.NODE_ENV !== 'test')
+if (!process.env.isGulpTest)
   app.use(logger('dev'));
 
 app.use(bodyParser.json());

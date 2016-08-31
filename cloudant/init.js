@@ -1,5 +1,6 @@
 var Promise       = require('bluebird');
 var logger        = require('../middleware/logger');
+var initLogger    = logger.get('init');
 var settings      = require('../settings');
 var Cloudant      = require('cloudant');
 var cloudantDb    = Cloudant(settings.cloudant.url);
@@ -13,42 +14,42 @@ var team          = require('../models/index/teamIndex');
 module.exports.init = function(){
   //only init cloudant if we are running locally or on app instance 0 in cloudfoundry
   if(_.isEmpty(process.env.CF_INSTANCE_INDEX) || process.env.CF_INSTANCE_INDEX == "0"){
-    logger.get('init').info("Checking Cloudant DB design docs and indexes...");
+    initLogger.info("Checking Cloudant DB design docs and indexes...");
 
     //design docs
     Promise.join(getCloudantDocs(), getSourceDocs(), function(cloudantDocs, sourceDocs) {
         /*ignore if design doc exists in the DB but not in the source
           (might be a use case in the future for metrics) */
-        logger.get('init').info("Cloudant design docs:"+cloudantDocs.length
+        initLogger.info("Cloudant design docs:"+cloudantDocs.length
         +", "+"Source design docs:"+sourceDocs.length);
         //for each source doc, find the doc in cloudant
         _.each(sourceDocs, function(sDoc){
           var cDoc = _.find(cloudantDocs, function(cDoc){return _.isEqual(sDoc._id, cDoc.doc._id); });
           //not found in cloudant, so create it in cloudant
           if(_.isEmpty(cDoc)){
-            logger.get('init').warn(sDoc._id + " NOT found in DB. Creating it now..");
+            initLogger.warn(sDoc._id + " NOT found in DB. Creating it now..");
 
             db.insert(sDoc, function(err, body) {
               if(!err)
-                logger.get('init').info("Create Success: "+sDoc._id);
+                initLogger.info("Create Success: "+sDoc._id);
               else
-                logger.get('init').error("Create Error: "+sDoc._id+". "+ err);
+                initLogger.error("Create Error: "+sDoc._id+". "+ err);
             });
           }
           //found in cloudant so check version
           else{
             if(!_.isEqual(sDoc.version, cDoc.doc.version)){
-              logger.get('init').warn(cDoc.doc._id+" cloudant design document is out of date. version="+cDoc.doc.version+", source version="+sDoc.version);
+              initLogger.warn(cDoc.doc._id+" cloudant design document is out of date. version="+cDoc.doc.version+", source version="+sDoc.version);
               sDoc["_rev"]=cDoc.doc._rev;
               db.insert(sDoc, function(err, body) {
                 if(!err)
-                  logger.get('init').info("Update Success: "+sDoc._id+ " "+JSON.stringify(body));
+                  initLogger.info("Update Success: "+sDoc._id+ " "+JSON.stringify(body));
                 else
-                  logger.get('init').error("Update Error: "+sDoc._id+". "+ err);
+                  initLogger.error("Update Error: "+sDoc._id+". "+ err);
               });
             }
             else
-              logger.get('init').info(cDoc.doc._id + " already up-to-date");
+              initLogger.info(cDoc.doc._id + " already up-to-date");
           }
 
         });
@@ -61,12 +62,12 @@ module.exports.init = function(){
       _.each(indexes, function(index){
         db.index(index, function(err, response) {
           if (err)
-            logger.get('init').error(err);
+            initLogger.error(err);
           else{
             if(_.isEqual(response.result,"exists"))
-              logger.get('init').info(index.name+" already exists");
+              initLogger.info(index.name+" already exists");
             else
-              logger.get('init').info("Index: "+index.name+" creation result: "+response.result);
+              initLogger.info("Index: "+index.name+" creation result: "+response.result);
           }
         });
       });
@@ -81,20 +82,20 @@ module.exports.init = function(){
             if(_.isEqual(err.error, "not_found")) {
               db.insert(doc, function(err, body) {
                 if(!err)
-                  logger.get('init').info("Create Success: "+doc._id+ " "+body.rev);
+                  initLogger.info("Create Success: "+doc._id+ " "+body.rev);
                 else
-                  logger.get('init').error("Create Error: "+doc._id+". "+ err);
+                  initLogger.error("Create Error: "+doc._id+". "+ err);
               });
             }
           } else {
             if(_.isEqual(response._id, doc._id))
-              logger.get('init').info(doc._id+" already exists");
+              initLogger.info(doc._id+" already exists");
             else {
               db.insert(doc, function(err, body) {
                 if(!err)
-                  logger.get('init').info("Create Success: "+doc._id+ " "+body.rev);
+                  initLogger.info("Create Success: "+doc._id+ " "+body.rev);
                 else
-                  logger.get('init').error("Create Error: "+doc._id+". "+ err);
+                  initLogger.error("Create Error: "+doc._id+". "+ err);
               });
             }
           }

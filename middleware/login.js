@@ -71,7 +71,7 @@ module.exports = function(passport) {
     issuer: settings.saml.issuer,
     cert: settings.saml.cert
   }, function(profile, done) {
-    loggers.get('auth').info('Successfully authenticated %s', profile);
+    loggers.get('auth').verbose('Successfully authenticated %s', profile);
     return done(null, profile);
   });
 
@@ -83,7 +83,7 @@ module.exports = function(passport) {
     passwordField: 'password',
     passReqToCallback: true
   }, function(req, email, password, done) {
-    loggers.get('auth').info('Attempting to do LDAP authentication email=%s', email);
+    loggers.get('auth').verbose('Attempting to do LDAP authentication email=%s', email);
     ldapAuth(email, password)
       .then(function(ldapObject) {
         ldapObject = typeof ldapObject === 'string' ? JSON.parse(ldapObject) : ldapObject;
@@ -91,8 +91,8 @@ module.exports = function(passport) {
           req.session['email'] = ldapObject['ldap']['preferredIdentity']; //ldapObject['shortEmail'];
           req.session['user'] = ldapObject;
           req.session['environment'] = settings.environment;
-          loggers.get('auth').info('Successfully authenticated %s', email);
-          loggers.get('auth').info('ldapObject: ', ldapObject);
+          loggers.get('auth').verbose('Successfully authenticated %s', email);
+          loggers.get('auth').verbose('ldapObject: ', ldapObject);
           return done(null, ldapObject);
         }
         else {

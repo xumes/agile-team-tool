@@ -1,22 +1,12 @@
 var winston = require('winston');
 
-if (process.env.NODE_ENV == 'test')
-  var logLevel = 'NONE';
-else
-  var logLevel = process.env.logLevel || 'info';
-
+var logLevel = process.env.logLevel || 'verbose';
 var logColors = process.env.logColors == 'true';
 
-// Add additional transports here if needed
-var logger = new (winston.Logger)({
-  level: process.env.logLevel || 'info',
-  transports: [
-    new winston.transports.Console({
-      level: logLevel,
-      colorize: logColors 
-    })
-  ]
-});
+if (process.env.isGulpTest){
+  var logLevel = 'info';
+  var logColors = true;
+}
 
 winston.loggers.add('init', {
   console: {
@@ -25,7 +15,6 @@ winston.loggers.add('init', {
     label: 'init'
   }
 });
-
 
 winston.loggers.add('auth', {
   console: {

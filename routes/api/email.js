@@ -24,13 +24,13 @@ var sendRequest = function(emailObj, cb) {
       rejectUnauthorized: false
     }
   };
-  logger.get('api').info('Sending email');
+  logger.get('api').verbose('Sending email');
 
   return request(options, function(error, response, body) {
     var obj;
     /* istanbul ignore else  */
     if (_.isEmpty(error)){
-      logger.get('api').info('%s, Email sent to: %s', response.statusCode, emailObj.sendTo);
+      logger.get('api').verbose('%s, Email sent to: %s', response.statusCode, emailObj.sendTo);
       cb(null, "Email sent to: " + emailObj.sendTo);
     }
     else {
@@ -87,7 +87,7 @@ var processFeedbackRequest = function(req, res) {
         res.status(200).send("<h3 class='ibm-bold'>Thank you for your feedback!</h3> Your input helps us improve the Agile Team Tool.");
       else{
         /* istanbul ignore next  */
-        logger.get('api').info('ERROR: ' + JSON.stringify(error));
+        logger.get('api').verbose('ERROR: ' + JSON.stringify(error));
         /* istanbul ignore next  */ 
         res.status(500).send("There was a problem sending your feedback. Please visit our forum: https://w3-connections.ibm.com/forums/html/forum?id=d0e31d40-ff11-4691-bc65-c0d95bc0c426");
       }

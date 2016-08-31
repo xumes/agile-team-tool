@@ -56,12 +56,12 @@ var formatErrMsg = function(msg){
 };
 
 var successLogs = function(msg){
-  loggers.get('models').info('Success: ' + msg);
+  loggers.get('models').verbose('Success: ' + msg);
   return;
 };
 
 var infoLogs = function(msg){
-  loggers.get('models').info(msg);
+  loggers.get('models').verbose(msg);
   return;
 };
 

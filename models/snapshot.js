@@ -25,12 +25,12 @@ var formatErrMsg = /* istanbul ignore next */ function(msg){
 };
 
 var successLogs = /* istanbul ignore next */ function(msg){
-  loggers.get('models').info('Success: ' + msg);
+  loggers.get('models').verbose('Success: ' + msg);
   return;
 };
 
 var infoLogs = /* istanbul ignore next */ function(msg){
-  loggers.get('models').info(msg);
+  loggers.get('models').verbose(msg);
   return;
 };
 

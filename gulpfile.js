@@ -18,6 +18,7 @@ gulp.task('pre-test', function () {
 });
 
 gulp.task('test', ['jshint', 'pre-test'], function () {
+  process.env.isGulpTest = true;
   return gulp.src(['test/*.js', 'test/*/*/*.js', 'test/*/*.js'])
     .pipe(mocha({
       reporter: process.env.REPORTER || 'spec',
