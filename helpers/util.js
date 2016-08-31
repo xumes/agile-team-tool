@@ -9,7 +9,7 @@ var jstz = require('jstimezonedetect');
 var msg;
 
 var formatErrMsg = function(msg) {
-  loggers.get('models').info('util helper Error: ' + msg);
+  loggers.get('models').error('util helper Error: ' + msg);
   return { error : msg };
 };
 
@@ -41,10 +41,10 @@ module.exports.trimData = function(postData) {
 module.exports.getSystemStatus = function (accessId) {
   return new Promise(function(resolve, reject) {
     if(!(_.isEmpty(accessId))) {
-      loggers.get('models').info('Getting system status');
+      loggers.get('models').verbose('Getting system status');
       common.getRecord(accessId)
         .then(function(body) {
-          loggers.get('models').info('Success: System status records obtained');
+          loggers.get('models').verbose('Success: System status records obtained');
           resolve(body);
         })
         .catch(function(err) {
@@ -87,7 +87,7 @@ module.exports.BulkDelete = function(docIds) {
           //console.log('Attempt to delete Document _id: ' + _id + ' _rev: ' + _rev);
           common.deleteRecord(_id, _rev)
           .then(function(body) {
-            // loggers.get('models').info('[otherModel.BulkDelete] Successfully deleted docId id: '+ _id);
+            // loggers.get('models').verbose('[otherModel.BulkDelete] Successfully deleted docId id: '+ _id);
             deletedIds.push(_id);
             var result = {
               'Failed to delete docIds': failedIds,
@@ -120,7 +120,7 @@ module.exports.BulkDelete = function(docIds) {
 
 module.exports.formatForBulkTransaction = function(docs, email, action){
   //can use lodash cloneDeep
-  loggers.get('models').info('Start bulk documents formatting for ' + action + ' transaction');
+  loggers.get('models').verbose('Start bulk documents formatting for ' + action + ' transaction');
   var reformatDocu = [];
   _.each(docs, function(v, i, l){
     var doc2 = v;
@@ -135,7 +135,7 @@ module.exports.formatForBulkTransaction = function(docs, email, action){
     }
     reformatDocu.push(doc2);
   });
-  loggers.get('models').info('Bulk documents reformatted for ' + action + ' transaction');
+  loggers.get('models').verbose('Bulk documents reformatted for ' + action + ' transaction');
   return {
     docs : reformatDocu
   };
@@ -180,7 +180,7 @@ module.exports.formatForBulkTransaction = function(docs, email, action){
 
 module.exports.isUserAllowed = function(userId, teamId){
   return new Promise(function(resolve, reject){
-    loggers.get('models').info('validating user '+userId+' for team '+teamId);
+    loggers.get('models').verbose('validating user '+userId+' for team '+teamId);
     users.getAdmins()
     .then(function(body){
       return _.contains(body.ACL_Full_Admin, userId);

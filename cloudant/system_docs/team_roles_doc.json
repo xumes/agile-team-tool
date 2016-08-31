@@ -1,0 +1,57 @@
+{
+  "_id": "ag_ref_team_type_role",
+  "team_type_role_tbl": [
+    {
+      "type": "AgileRole",
+      "name": "Product Owner"
+    },
+    {
+      "type": "AgileRole",
+      "name": "Iteration Manager"
+    },
+    {
+      "type": "RoleCat",
+      "name": "Analyst"
+    },
+    {
+      "type": "RoleCat",
+      "name": "Architect"
+    },
+    {
+      "type": "RoleCat",
+      "name": "Consultant"
+    },
+    {
+      "type": "RoleCat",
+      "name": "DBA"
+    },
+    {
+      "type": "RoleCat",
+      "name": "Designer"
+    },
+    {
+      "type": "RoleCat",
+      "name": "Developer"
+    },
+    {
+      "type": "RoleCat",
+      "name": "Infrastructure"
+    },
+    {
+      "type": "RoleCat",
+      "name": "Manager"
+    },
+    {
+      "type": "RoleCat",
+      "name": "Operations and Support"
+    },
+    {
+      "type": "RoleCat",
+      "name": "Program & Project Mgmt"
+    },
+    {
+      "type": "RoleCat",
+      "name": "Tester"
+    }
+  ]
+}

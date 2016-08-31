@@ -4,12 +4,22 @@ var _             = require('underscore');
 var lodash        = require('lodash');
 var settings      = require('../settings');
 var loggers       = require('../middleware/logger');
-var cloudantDb    = Cloudant(settings.cloudant.url);
 var dbName        = settings.cloudant.dbName;
-var db            = Promise.promisifyAll((cloudantDb.use(dbName)));
+
+var cloudantDb    = Cloudant(settings.cloudant.url, function(err, cloudant, reply) {
+  if(err)
+    loggers.get('init').error("Failed to initialize Cloudant: " + err.message);
+  else{
+    loggers.get('init').info("Cloudant User: " + reply.userCtx.name);
+    loggers.get('init').info("Cloudant User Roles: " + reply.userCtx.roles +"\n");
+  }
+});
+
+var db = Promise.promisifyAll(cloudantDb.use(dbName));
+
 
 var formatErrMsg = /* istanbul ignore next */ function(msg){
-  loggers.get('models').info('Error: ' + msg);
+  loggers.get('models').error('Error: ' + msg);
   return { error : msg };
 };
 
@@ -52,11 +62,11 @@ exports.updateRecord = function(data) {
 
 exports.deleteRecord = function(_id, _rev) {
   return new Promise(function(resolve, reject){
-    loggers.get('models').info('Deleting record '+_id+' rev: '+_rev);
+    loggers.get('models').verbose('Deleting record '+_id+' rev: '+_rev);
     if(!lodash.isEmpty(_id) && !lodash.isEmpty(_rev)){
       db.destroyAsync(_id, _rev)
         .then(function(body){
-          loggers.get('models').info('Success: Record '+_id+' rev: '+_rev+' has been deleted successfully.');
+          loggers.get('models').verbose('Success: Record '+_id+' rev: '+_rev+' has been deleted successfully.');
           resolve(body);
         })
         .catch(function(err){

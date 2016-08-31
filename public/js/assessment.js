@@ -828,9 +828,9 @@ function updateAgileTeamAssessment(action) {
 		screenAnswers["_id"] = _id;
 		screenAnswers["assessmt_status"] = "Draft";	
 		screenAnswers["created_dt"] = serverDateTime;
-		screenAnswers["created_user"] = JSON.parse(localStorage.getItem("userInfo")).email;
+		screenAnswers["created_user"] = userInfo.email;
 		screenAnswers["last_updt_dt"] = serverDateTime;
-		screenAnswers["last_updt_user"] = JSON.parse(localStorage.getItem("userInfo")).email;
+		screenAnswers["last_updt_user"] = userInfo.email;
 		
 		if (action == "save as draft") {
 			screenAnswers["assessmt_status"] = "Draft";
@@ -839,7 +839,7 @@ function updateAgileTeamAssessment(action) {
 
 		} else if (action == "submit") {
 			screenAnswers["assessmt_status"] = "Submitted";
-			screenAnswers["submitter_id"] = JSON.parse(localStorage.getItem("userInfo")).email;
+			screenAnswers["submitter_id"] = userInfo.email;
 			//screenAnswers["self-assessmt_dt"] = serverDateTime;
 			if(screenAnswers["self-assessmt_dt"] == undefined || screenAnswers["self-assessmt_dt"].length == 0){
 				screenAnswers["self-assessmt_dt"] = serverDateTime;
@@ -849,7 +849,7 @@ function updateAgileTeamAssessment(action) {
 
 		}
 
-		$("#lastUpdateUser").html(JSON.parse(localStorage.getItem("userInfo")).email);
+		$("#lastUpdateUser").html(userInfo.email);
 		$("#lastUpdateTimestamp").html(showDateDDMMMYYYYTS(serverDateTime));
 		$("#doc_id").html(_id);
 
@@ -901,7 +901,7 @@ function updateAgileTeamAssessment(action) {
 				jsonData["assessmt_cmpnt_rslts"] = screenAnswers["assessmt_cmpnt_rslts"];
 				jsonData["self-assessmt_dt"] = screenAnswers["self-assessmt_dt"];
 				jsonData["last_updt_dt"] = serverDateTime;
-				jsonData["last_updt_user"] = JSON.parse(localStorage.getItem("userInfo")).email;
+				jsonData["last_updt_user"] = userInfo.email;
 	
 				if (action == "save as draft" && getAssessmentStatus(jsonData).toLowerCase() == "draft") {
 					jsonData["assessmt_status"] = "Draft";
@@ -910,7 +910,7 @@ function updateAgileTeamAssessment(action) {
 	
 				} else if (action == "submit" && getAssessmentStatus(jsonData).toLowerCase() == "draft") {
 					jsonData["assessmt_status"] = "Submitted";
-					jsonData["submitter_id"] = JSON.parse(localStorage.getItem("userInfo")).email;
+					jsonData["submitter_id"] = userInfo.email;
 					//jsonData["self-assessmt_dt"] = serverDateTime;
 					if(screenAnswers["self-assessmt_dt"] != undefined && screenAnswers["self-assessmt_dt"].length > 0){
 						jsonData["self-assessmt_dt"] = screenAnswers["self-assessmt_dt"];
@@ -925,20 +925,20 @@ function updateAgileTeamAssessment(action) {
 				} else if (action == "save as draft" && getAssessmentStatus(jsonData).toLowerCase() == "independent review") {
 					jsonData["assessmt_status"] = "Submitted";
 					jsonData["ind_assessmt_status"] = "Draft";
-					jsonData["ind_assessor_id"] = JSON.parse(localStorage.getItem("userInfo")).email;
+					jsonData["ind_assessor_id"] = userInfo.email;
 					jsonData["assessmt_action_plan_tbl"] = mergeActionItems(jsonData["assessmt_action_plan_tbl"], screenAnswers["assessmt_action_plan_tbl"]);
 					msg = "Independent review for the maturity assessment has been saved as draft.";
 					
 				} else if (action == "submit" && getAssessmentStatus(jsonData).toLowerCase() == "independent review") {
 					jsonData["ind_assessmt_status"] = "Submitted";
-					jsonData["ind_assessor_id"] = JSON.parse(localStorage.getItem("userInfo")).email;
+					jsonData["ind_assessor_id"] = userInfo.email;
 					jsonData["ind_assessmt_dt"] = serverDateTime;
 					jsonData["assessmt_action_plan_tbl"] = mergeActionItems(jsonData["assessmt_action_plan_tbl"], screenAnswers["assessmt_action_plan_tbl"]);
 					msg = "Independent review for the maturity assessment has been submitted.";
 					
 				}
 				
-				$("#lastUpdateUser").html(JSON.parse(localStorage.getItem("userInfo")).email);
+				$("#lastUpdateUser").html(userInfo.email);
 				$("#lastUpdateTimestamp").html(showDateDDMMMYYYYTS(serverDateTime));
 				$("#doc_id").html(jsonData["_id"]);
 				
@@ -1307,7 +1307,7 @@ function getAssessmentStatus(teamAssessment) {
 }
 
 function isReviewer(teamAssessment) {
-	var user = (localStorage.getItem("userInfo") == null) ? "" : JSON.parse(localStorage.getItem("userInfo")).email;
+	var user = _.isEmpty(userInfo) ? "" : userInfo.email;
 	return (teamAssessment["ind_assessor_id"] != null && (teamAssessment["ind_assessor_id"].toLowerCase() == user || isAdmin()));
 
 }

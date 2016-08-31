@@ -51,17 +51,17 @@ validate.validators.checkActionTable = function(value, options, key, attrib) {
 };
 
 var formatErrMsg = function(msg){
-  loggers.get('models').info('Error: ' + msg);
+  loggers.get('models').error('Error: ' + msg);
   return { error : msg };
 };
 
 var successLogs = function(msg){
-  loggers.get('models').info('Success: ' + msg);
+  loggers.get('models').verbose('Success: ' + msg);
   return;
 };
 
 var infoLogs = function(msg){
-  loggers.get('models').info(msg);
+  loggers.get('models').verbose(msg);
   return;
 };
 

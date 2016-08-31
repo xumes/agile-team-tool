@@ -8,7 +8,7 @@ var _ = require('underscore');
 var sprintf = require("sprintf-js").sprintf;
 
 var formatErrMsg = function(msg){
-  loggers.get('api').info('Error: ' + msg);
+  loggers.get('api').error('Error: ' + msg);
   return { error : msg };
 };
 
@@ -23,7 +23,7 @@ module.exports = function(app, includes) {
    */
   var getIterinfo = function(req, res, next) {
     var teamId = req.params.teamId || undefined;
-    loggers.get('api').info('[iterationRoute.getIterinfo] teamId:', teamId);
+    loggers.get('api').verbose('[iterationRoute.getIterinfo] teamId:', teamId);
     iterationModel.getByIterInfo(teamId)
     .then(function(result) {
       res.send(result);
@@ -41,7 +41,7 @@ module.exports = function(app, includes) {
    */
   var getIterationDoc = function(req, res, next) {
     var docId = req.params.id || undefined;
-    loggers.get('api').info('[iterationRoute.getIterationDoc] docId:', docId);
+    loggers.get('api').verbose('[iterationRoute.getIterationDoc] docId:', docId);
     iterationModel.get(docId)
     .then(function(result) {
       res.send(result);
@@ -61,7 +61,7 @@ module.exports = function(app, includes) {
   var getCompletedIterations = function(req, res, next) {
     var startkey = req.query.startkey || undefined;
     var endkey = req.query.endkey || undefined;
-    loggers.get('api').info('[iterationRoute.getCompletedIterations] startkey:%s endkey:%s', startkey, endkey);
+    loggers.get('api').verbose('[iterationRoute.getCompletedIterations] startkey:%s endkey:%s', startkey, endkey);
     iterationModel.getCompletedIterationsByKey(startkey, endkey)
     .then(function(result) {
       res.send(result);
@@ -82,7 +82,7 @@ module.exports = function(app, includes) {
     if (_.isEmpty(data)) {
       return res.status(400).send({ error: 'Iteration data is missing' });
     }
-    // loggers.get('api').info('[createIteration] POST data:', data);
+    // loggers.get('api').verbose('[createIteration] POST data:', data);
     // console.log('[createIteration] POST data:', data);
     iterationModel.add(data, req.session['user'])
     .then(function(result) {
@@ -110,7 +110,7 @@ module.exports = function(app, includes) {
     if (_.isEmpty(data)) {
       return res.status(400).send({ error: 'Iteration data is missing' });
     }
-    // loggers.get('api').info('[updateIteration] POST data:', JSON.stringify(data, null, 4));
+    // loggers.get('api').verbose('[updateIteration] POST data:', JSON.stringify(data, null, 4));
     iterationModel.edit(curIterationId, data, req.session['user'])
     .then(function(result) {
       res.send(result);

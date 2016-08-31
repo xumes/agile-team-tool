@@ -1,9 +1,4 @@
-var allTeams;
-var allTeamsLookup;
-var members;
-var roles;
 var taPerson;
-var isIter = false;
 
 jQuery(function ($) {	
 	$(document).ready(function () {
@@ -11,6 +6,25 @@ jQuery(function ($) {
 	});
 
   function initPageAction() {
+    FacesTypeAhead.init(
+      $('#teamMemberName')[0], 
+      {
+        key : "ciodashboard;agileteamtool@us.ibm.com",
+        resultsAlign : "left",
+        showMoreResults : false,
+        faces : {
+          headerLabel : "People", 
+          onclick : function (person) {
+            taPerson = person;
+            return person["notes-id"];
+          }
+      },
+      topsearch : {
+        headerLabel : "w3 Results",
+        enabled : true
+      }
+    });
+    
     $(".ibm-close-link" ).click(function() {
       if($('#teamDetailsPageSection h2 .ibm-show-active').length == 0){
         $('#teamDetailsPageSection h2 a').eq(0).trigger("click");
@@ -460,8 +474,8 @@ function loadAssessmentInformation(assessmentlist, more) {
 }
 
 function disableAddTeam() {
-  if (localStorage.getItem("sysStatusFlag") != undefined 
-      && localStorage.getItem("sysStatusFlag") == 'AdminOnlyChange' 
+  if (!_.isEmpty(systemStatus)
+      && systemStatus.agildash_system_status_display == 'AdminOnlyChange' 
       && !isAdmin()) {
     $("#updateTeamBtn,#addTeamBtn").attr("disabled", "disabled");
     $("#teamName,#teamDesc").attr("disabled", "disabled");
@@ -750,11 +764,10 @@ function updateAction(action) {
     currentTeam.squadteam = $("#teamSquadYesNo option:selected").val();
     currentTeam.parent_team_id = $("#parentSelectList option:selected").val();
 
-    var person = JSON.parse(localStorage.getItem("userInfo"));
     var memberData = new Object();
-    memberData.key = person.uid;
-    memberData.id = person.email;
-    memberData.name = person.name;
+    memberData.key = userInfo.uid;
+    memberData.id = userInfo.email;
+    memberData.name = userInfo.name;
     memberData.allocation = 0;
     if ($("#teamSquadYesNo option:selected").val().toLowerCase() == 'yes')
       memberData.role = "Iteration Manager";

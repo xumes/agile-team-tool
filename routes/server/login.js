@@ -29,7 +29,7 @@ module.exports = function(app, includes) {
       // console.log("err=", err);
       req.session['email'] = user.nameID;
       req.session['user'] = user;
-      loggers.get('auth').info('Successfully authenticated %s', user);
+      loggers.get('auth').verbose('Successfully authenticated %s', user);
       return res.redirect('/')
     });
     return passportAuth(req, res, next);
