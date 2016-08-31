@@ -595,7 +595,7 @@ function getSelectedAssessment(assessmentList){
 
 function submitActionPlan(jsonData, msg){
 	jsonData.last_updt_dt = getServerDateTime();
-	jsonData.last_updt_user = JSON.parse(localStorage.getItem("userInfo")).email;
+	jsonData.last_updt_user = userInfo.email;
 	
 	$("#lastUpdateUser").html(jsonData.last_updt_user);
 	$("#lastUpdateTimestamp").html(showDateDDMMMYYYYTS(jsonData.last_updt_dt));

@@ -30,8 +30,6 @@ function getSessionVars(_callback) {
 	      //org-title: not defined in ldap object,
 	      "notes-id"    : user.ldap.notesId
 	    };
-
-	    localStorage.setItem("userInfo", JSON.stringify(userInfo));
 	  }
 	  if (typeof _callback === "function") {
 		  _callback.apply(this);
