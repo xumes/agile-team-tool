@@ -72,6 +72,36 @@ module.exports.init = function(){
       });
     });
 
+    //system docs
+    getSystemDocs()
+    .then(function(docs){
+      _.each(docs, function(doc){
+        db.get(doc._id, function(err, response) {
+          if (err) {
+            if(_.isEqual(err.error, "not_found")) {
+              db.insert(doc, function(err, body) {
+                if(!err)
+                  logger.get('init').info("Create Success: "+doc._id+ " "+body.rev);
+                else
+                  logger.get('init').error("Create Error: "+doc._id+". "+ err);
+              });
+            }
+          } else {
+            if(_.isEqual(response._id, doc._id))
+              logger.get('init').info(doc._id+" already exists");
+            else {
+              db.insert(doc, function(err, body) {
+                if(!err)
+                  logger.get('init').info("Create Success: "+doc._id+ " "+body.rev);
+                else
+                  logger.get('init').error("Create Error: "+doc._id+". "+ err);
+              });
+            }
+          }
+        });
+      });
+    });
+
   }
 }
 
@@ -117,6 +147,26 @@ var getSourceIndexes = function(){
       async.each(files, function(file, callback) {
          if(file.indexOf('.json')<0) return callback();
          var index = require("./indexes/" + file);
+         res.push(index);
+         callback();
+      }, function() {
+           resolve(res);
+         }
+      );
+    });
+  });
+}
+
+var getSystemDocs = function(){
+  return new Promise(function(resolve, reject) {
+    fs.readdir("./cloudant/system_docs", function(err, files){
+      if(err)
+        reject(err);
+        
+      var res = [];
+      async.each(files, function(file, callback) {
+         if(file.indexOf('.json')<0) return callback();
+         var index = require("./system_docs/" + file);
          res.push(index);
          callback();
       }, function() {

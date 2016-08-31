@@ -1,0 +1,22 @@
+{
+  "_id": "ag_ref_system_status_control",
+  "agildash_system_status_display": "",
+  "agildash_system_status_msgtext_display": "",
+  "agildash_system_status_values_tbl": [
+    {
+      "system_status_flag": "DynamicChange",
+      "system_status_msgtext": "System status: Normal.",
+      "system_status_desc": "system is open to all users for read and authorized update"
+    },
+    {
+      "system_status_flag": "AdminOnlyChange",
+      "system_status_msgtext": "System is in Read-only mode until hh:mm XXX (TimeZone) mm/dd/yyyy due to maintenance",
+      "system_status_desc": "system is only open to authorizied Admin users {see access control} for update; all users will have read-only access"
+    },
+    {
+      "system_status_flag": "AdminOnlyReadChange",
+      "system_status_msgtext": "System is unavailable for all users until hh:mm XXX (TimeZone) mm/dd/yyyy for conversion processing",
+      "system_status_desc": "System status: system is only open to authorizied Admin users {see access control} for read and authorized update; general users will be blocked from read and update access; general users may be presented a splash page indicating a system status message"
+    }
+  ]
+}
