@@ -414,6 +414,7 @@ function monthDiff(d1, d2) {
  */
 function addMonths(date, months) {
   var newDate = new Date(util.getServerTime());
+  newDate.setDate(1);
   newDate.setMonth(date.getMonth() + months);
   return new Date(newDate);
 };
@@ -685,11 +686,19 @@ var snapshot = {
     return new Promise(function(resolve, reject){
       iterationMonth = 5;
       monthArray = [];
+
       var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
       var nowTime = new Date(util.getServerTime());
-      var startTime = addMonths(nowTime, -iterationMonth);
       var endTime = nowTime.toLocaleDateString('en-US',options);
+      var startTime = new Date(util.getServerTime());
+      startTime = new Date(startTime.setDate(1));
+      startTime = new Date(startTime.setMonth(nowTime.getMonth() - iterationMonth));
       startTime = startTime.toLocaleDateString('en-US',options);
+
+      // var nowTime = new Date(util.getServerTime());
+      // var startTime = addMonths(nowTime, -iterationMonth);
+      // var endTime = nowTime.toLocaleDateString('en-US',options);
+      // startTime = startTime.toLocaleDateString('en-US',options);
 
       for (var i = 0; i <= iterationMonth; i++) {
         var time = (addMonths(nowTime, -(iterationMonth-i))).toLocaleDateString('en-US',options);
@@ -697,7 +706,7 @@ var snapshot = {
         var year = time.substring(time.length-4,time.length);
         monthArray[i] = month + '-' + year;
       }
-
+      console.log(startTime);
       var promiseArray = [];
       promiseArray.push(getIterationDocs(startTime, endTime));
       promiseArray.push(getAllSquads());
