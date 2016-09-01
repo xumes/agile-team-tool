@@ -123,6 +123,12 @@ function getMyTeamsFromDb(initial) {
 	requests.push(req);
 }
 
+//add refresh timestamp after Iteration trend title
+function addRefreshDate(timestamp){
+	var myDate = new Date(timestamp*1000); // creates a date that represents the number of milliseconds after midnight GMT on Januray 1st 1970.
+	$("#refreshDate").html(myDate);
+}
+
 function removeHighlightParents(treeLinkId) {
 	if (treeLinkId != null) {
 		//console.log($("#"+jq(treeLinkId)).children("a.agile-team-link")[0]);
@@ -261,6 +267,7 @@ function getSnapshot(teamId, teamName) {
 									console.log("no iteation data for team: ", teamId);
 								} else {
 									var iterationData = data.rows[0].value.value;
+									addRefreshDate(data.rows[0].value.timestamp);  //TODO
 									iterationScoreCard(teamId, teamName, iterationData, nonsquadScore);
 								}
 							} else {
@@ -564,6 +571,7 @@ function loadDetails(elementId, setScrollPosition) {
 						//this is done to display back the 2 other chart groups as 1st batch of rollup will only show velocity and throughput
 						//$("#chartgrp2").show();
 						//$("#chartgrp3").show();
+						$('#refreshDate').hide(); //hiding the refresh snapshot date
 						$('#nsquad_team_scard').hide();
 						$('#squad_team_scard').show();
 						$('#iterationSection .agile-section-nav').show();
@@ -574,7 +582,7 @@ function loadDetails(elementId, setScrollPosition) {
 						destroyAssessmentCharts();
 
 						getSnapshot(team["_id"], team["name"]);
-
+            $('#refreshDate').show(); //show the refresh snapshot date
 						$('#nsquad_team_scard').show();
 						$('#squad_team_scard').hide();
 						$('#iterationSection .agile-section-nav').hide();
