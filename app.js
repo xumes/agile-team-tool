@@ -1,3 +1,11 @@
+var settings     = require('./settings');
+
+// Make sure New Relic is loaded first
+if (settings.newRelic == 'true') {
+  require('newrelic');
+  console.log('New Relic enabled');
+}
+
 var express      = require('express');
 var session      = require('express-session');
 var path         = require('path');
@@ -6,7 +14,6 @@ var logger       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var passport     = require('passport');
-var settings     = require('./settings');
 var RedisStore   = require('connect-redis')(session);
 var favicon      = require('serve-favicon');
 var helmet       = require('helmet');

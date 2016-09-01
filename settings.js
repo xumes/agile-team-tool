@@ -28,5 +28,6 @@ module.exports = {
     assessment : 'ag_mar_'
   },
   environment: process.env.deploy || 'SIT',
-  googleAnalyticsKey: process.env.googleAnalyticsKey || ''
+  googleAnalyticsKey: process.env.googleAnalyticsKey || '',
+  useNewRelic: process.env.useNewRelic || false
 };
