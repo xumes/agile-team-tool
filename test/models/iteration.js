@@ -12,6 +12,7 @@ var timeout = 100000;
 var validId;
 var validTeamId;
 var iterationId;
+var iterationName;
 var iterationRev;
 var iterationName;
 var iterationDocValid = dummyData.iterationDocValid;
