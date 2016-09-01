@@ -238,26 +238,6 @@ describe('Iteration Model', function() {
       });
     });
 
-    it('Saved iteration doc with some values', function(done) {
-      var doc = _.clone(iterationDocValid_sample3);
-      doc._id = "testmyid-" + crypto.randomBytes(20).toString('hex');
-      doc.iteration_name = "testiterationname-" + crypto.randomBytes(5).toString('hex');
-      var currentDate = moment().format("MM/DD/YYYY");
-      doc.iteration_start_dt = currentDate;
-      doc.iteration_end_dt = currentDate;
-      doc.team_id = validId;
-      iterationModel.add(doc, user)
-      .then(function(result) {
-        expect(result).to.be.a('object');
-        expect(result).to.have.property('id');
-        expect(result.ok).to.be.equal(true);
-        done();
-      })
-      .catch(function(err) {
-        done();
-      });
-    });
-
     it('set status to Not complete', function(done) {
       var doc = _.clone(iterationDocValid_sample3);
       doc._id = "testmyid-" + crypto.randomBytes(20).toString('hex');
