@@ -1,3 +1,5 @@
+var settings = require('../../settings');
+
 module.exports = function(app, includes) {
   var middleware  = includes.middleware;
   var render = includes.render;
