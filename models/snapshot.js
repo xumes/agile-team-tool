@@ -608,7 +608,7 @@ var snapshot = {
     });
   },
 
-  updateRollUpSquads : /* istanbul ignore next */ function() {
+  updateRollUpSquads : function() {
     return new Promise(function(resolve, reject){
       var squadTeams = new Object();
       var oldRollUpDataRevs = new Object();
@@ -692,7 +692,7 @@ var snapshot = {
   },
 
 
-  updateRollUpData : /* istanbul ignore next */ function() {
+  updateRollUpData : function() {
     return new Promise(function(resolve, reject){
       iterationMonth = 5;
       monthArray = [];
@@ -806,71 +806,71 @@ var snapshot = {
     });
   },
 
-  getRollUpData : function(startTime, endTime) {
-    return new Promise(function(resolve, reject){
-      var squadIterationDocs = {};
-      iterationMonth = monthDiff(new Date(startTime), new Date(endTime));
-      if (iterationMonth < 0) {
-        var msg = 'end time is before start time';
-        reject(formatErrMsg(msg));
-      } else {
-        var promiseArray = [];
-        promiseArray.push(getIterationDocs(startTime, endTime));
-        promiseArray.push(getAllSquads());
-        Promise.all(promiseArray)
-          .then(function(promiseResults){
-            var squadIterationDocs = promiseResults[0];
-            var squadsByParent = promiseResults[1];
-            var promiseArray2 = [];
-            _.each(Object.keys(squadIterationDocs), function(squadTeamId){
-              promiseArray2.push(rollUpIterationsBySquad(squadIterationDocs[squadTeamId],squadTeamId));
-            });
-            Promise.all(promiseArray2)
-              .then(function(squadsCalResultsArray){
-                var squadsCalResults = {};
-                _.each(squadsCalResultsArray, function(squadsCalResult){
-                  squadsCalResults[Object.keys(squadsCalResult)[0]] = squadsCalResult[Object.keys(squadsCalResult)[0]];
-                });
-                var promiseArray3 = [];
-                _.each(Object.keys(squadsByParent), function(nonSquadTeamId){
-                  promiseArray3.push(rollUpIterationsByNonSquad(squadsByParent[nonSquadTeamId], nonSquadTeamId, squadsCalResults, false, {}));
-                });
-                Promise.all(promiseArray3)
-                  .then(function(nonSquadCalResults){
-                    resolve(nonSquadCalResults);
-                  })
-                  .catch( /* istanbul ignore next */ function(err){
-                    var msg;
-                    if (err.error) {
-                      msg = err.error;
-                    } else {
-                      msg = err;
-                    }
-                    reject(formatErrMsg(msg));
-                  });
-              })
-              .catch( /* istanbul ignore next */ function(err){
-                var msg;
-                if (err.error) {
-                  msg = err.error;
-                } else {
-                  msg = err;
-                }
-                reject(formatErrMsg(msg));
-              });
-          })
-          .catch( /* istanbul ignore next */ function(err){
-            var msg;
-            if (err.error) {
-              msg = err.error;
-            } else {
-              msg = err;
-            }
-            reject(formatErrMsg(msg));
-          });
-      }
-    });
-  }
+  // getRollUpData : function(startTime, endTime) {
+  //   return new Promise(function(resolve, reject){
+  //     var squadIterationDocs = {};
+  //     iterationMonth = monthDiff(new Date(startTime), new Date(endTime));
+  //     if (iterationMonth < 0) {
+  //       var msg = 'end time is before start time';
+  //       reject(formatErrMsg(msg));
+  //     } else {
+  //       var promiseArray = [];
+  //       promiseArray.push(getIterationDocs(startTime, endTime));
+  //       promiseArray.push(getAllSquads());
+  //       Promise.all(promiseArray)
+  //         .then(function(promiseResults){
+  //           var squadIterationDocs = promiseResults[0];
+  //           var squadsByParent = promiseResults[1];
+  //           var promiseArray2 = [];
+  //           _.each(Object.keys(squadIterationDocs), function(squadTeamId){
+  //             promiseArray2.push(rollUpIterationsBySquad(squadIterationDocs[squadTeamId],squadTeamId));
+  //           });
+  //           Promise.all(promiseArray2)
+  //             .then(function(squadsCalResultsArray){
+  //               var squadsCalResults = {};
+  //               _.each(squadsCalResultsArray, function(squadsCalResult){
+  //                 squadsCalResults[Object.keys(squadsCalResult)[0]] = squadsCalResult[Object.keys(squadsCalResult)[0]];
+  //               });
+  //               var promiseArray3 = [];
+  //               _.each(Object.keys(squadsByParent), function(nonSquadTeamId){
+  //                 promiseArray3.push(rollUpIterationsByNonSquad(squadsByParent[nonSquadTeamId], nonSquadTeamId, squadsCalResults, false, {}));
+  //               });
+  //               Promise.all(promiseArray3)
+  //                 .then(function(nonSquadCalResults){
+  //                   resolve(nonSquadCalResults);
+  //                 })
+  //                 .catch( /* istanbul ignore next */ function(err){
+  //                   var msg;
+  //                   if (err.error) {
+  //                     msg = err.error;
+  //                   } else {
+  //                     msg = err;
+  //                   }
+  //                   reject(formatErrMsg(msg));
+  //                 });
+  //             })
+  //             .catch( /* istanbul ignore next */ function(err){
+  //               var msg;
+  //               if (err.error) {
+  //                 msg = err.error;
+  //               } else {
+  //                 msg = err;
+  //               }
+  //               reject(formatErrMsg(msg));
+  //             });
+  //         })
+  //         .catch( /* istanbul ignore next */ function(err){
+  //           var msg;
+  //           if (err.error) {
+  //             msg = err.error;
+  //           } else {
+  //             msg = err;
+  //           }
+  //           reject(formatErrMsg(msg));
+  //         });
+  //     }
+  //   });
+  // }
 };
 
 module.exports = snapshot;
