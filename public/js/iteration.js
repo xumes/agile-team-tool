@@ -7,7 +7,7 @@ var global_currentAction = undefined;
 
 jQuery(function($) {
   $(document).ready(function() {
-    getSessionVars(initPageAction);
+    getPageVariables('iteration', initPageAction);
   });
 
   function initPageAction() {    
@@ -333,7 +333,7 @@ function loadAgileTeams(selected, iteration) {
   $("#iterationSelectList").attr("disabled", "disabled");
   $("#select2-iterationSelectList-container").css('color', 'grey');
 
-  addOptions("teamSelectList", squadTeams, null, null, selected);
+  addOptions("teamSelectList", sortAgileTeamsByName(squadTeams), null, null, selected);
   $("#teamSelectList").removeAttr("disabled");
 
   if (iteration != undefined && iteration != "")
@@ -660,8 +660,8 @@ function addIteration(action) {
         });
       } else {
         // showMessagePopup ("insert new iteration");
-        var newIterationId = prefixIteration + $("#teamSelectList").val() + " " + $("#iterationName").val() + "_" + new Date().getTime();
-        newIterationId = newIterationId.replace(/^[^a-z]+|[^\w:.-]+/gi, "");
+        // var newIterationId = prefixIteration + $("#teamSelectList").val() + " " + $("#iterationName").val() + "_" + new Date().getTime();
+        // newIterationId = newIterationId.replace(/^[^a-z]+|[^\w:.-]+/gi, "");
 
         // showMessagePopup ("newIterationId: " + newIterationId);
         var serverDateTime = getServerDateTime();
@@ -695,7 +695,7 @@ function addIteration(action) {
 
 function createIterationData(newIterationId) {
   var jsonData = new Object();
-  jsonData._id = newIterationId;
+  // jsonData._id = newIterationId;
   jsonData.type = "iterationinfo";
   jsonData.team_id = $("#teamSelectList").val();
   jsonData.iteration_name = $("#iterationName").val();

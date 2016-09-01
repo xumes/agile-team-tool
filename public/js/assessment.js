@@ -1,7 +1,7 @@
 // some function calls are found on dashUtils.js, commons.js
 jQuery(function($) {
   $(document).ready(function() {
-  	getSessionVars(initPageAction);
+  	getPageVariables('assessment', initPageAction);
 	});
 
 	function initPageAction() {

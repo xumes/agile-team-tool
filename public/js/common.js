@@ -4,18 +4,19 @@ jQuery(function($) {
 	});
 });
 
-var user, userInfo, allTeams, membeRoles, allTeamsLookup, myTeams, systemAdmin, systemStatus, environment;
-function getSessionVars(_callback) {
-	$.get('/api/sessionvars', function(data, status) {
+var user, userInfo, allTeams, memberRoles, allTeamsLookup, userTeamList, systemAdmin, systemStatus, squadTeams, environment;
+function getPageVariables(page, _callback) {
+	$.get('/api/uihelper/' + page, function(data, status) {
 	  if (status == 'success') {
-	    user 						= data.user;
-	    allTeams 				= data.allTeams;
-	    allTeamsLookup 	= data.allTeamsLookup;
-	    myTeams 				= data.myTeams;
+	    user 				= data.user;				// required for all page
+	    systemAdmin 		= data.systemAdmin;			// required for all page
+	    systemStatus 		= data.systemStatus;		// required for all page
+	    environment 		= data.environment;			// required for all page
+	    allTeams 			= data.allTeams;
+	    allTeamsLookup 		= data.allTeamsLookup;
+	    squadTeams			= data.squadTeams;
+	    userTeamList		= data.userTeamList;
 	    memberRoles			= data.memberRoles;
-	    systemAdmin 		= data.systemAdmin;
-	    systemStatus 		= data.systemStatus;
-	    environment 		= data.environment;
 
 	    userInfo = {
 	      //id: not defined in ldap object,
@@ -62,7 +63,7 @@ function setTestUser(userEmail, testUserInfo, testUserTeams) {
 	if (testUserTeams === undefined)
 		getAllAgileTeamsForUser(userEmail, setTestUser, [userEmail, userInfo]);
 
-	myTeams = testUserTeams;
+	userTeamList = _.pluck(testUserTeams, "_id");
 }
 
 /**
@@ -383,8 +384,7 @@ function getRemoteData(cUrl, _callback, args) {
 			        var merged = _.extend(val.fields, {'_id':val.id});
 			          return merged;
 			        });
-			    }
-			    else
+			    } else
 			    	list = data;
 			  } else
 			    list =  data;
@@ -611,7 +611,6 @@ function getAgileTeamCache(id) {
 	var copy = (_.isEmpty(allTeamsLookup[id]) || _.isEmpty(allTeamsLookup[id].doc)) ? allTeamsLookup[id] : allTeamsLookup[id].doc;
 	// return a copy of the object
 	return $.extend(true, {}, copy);
-	// return (_.isEmpty(allTeamsLookup[id]) || _.isEmpty(allTeamsLookup[id].doc)) ? allTeamsLookup[id] : allTeamsLookup[id].doc;
 }
 
 function compactTeam(team) {
@@ -653,15 +652,8 @@ function updateAgileTeamCache(team) {
   }
 
   if (!_.isEmpty(user) && !_.isEmpty(team.members) 
-  	&& !_.isEmpty(_.find(team.members, {id: user.shortEmail})) && _.isEmpty(_.find(myTeams, {_id: team._id}))) {
-    var newTeam = new Object;
-    newTeam['_id'] = team['_id'];
-    newTeam['_rev'] = team['_rev'];
-    newTeam['name'] = team['name'];
-    newTeam['parent_team_id'] = team['parent_team_id'];
-    newTeam['child_team_id'] = team['child_team_id'];
-    newTeam['squadteam'] = team['squadteam'];
-    myTeams.push(newTeam);
+  	&& !_.isEmpty(_.find(team.members, {id: user.shortEmail})) && userTeamList.indexOf(team._id < 0)) {
+    userTeamList.push(team._id);
   }
 
 

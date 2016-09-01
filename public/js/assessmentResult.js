@@ -8,7 +8,7 @@ var teamId = '';
 var assessId = '';
 jQuery(function($) {
   $(document).ready(function() {
-  	getSessionVars(initPageAction);
+  	getPageVariables('progress', initPageAction);
   });
 });
 

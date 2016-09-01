@@ -290,8 +290,7 @@ var team = {
           return reject(formatErrMsg(validateTeam));
     });
   },
-  updateOrDeleteTeam : function(updatedTeamDoc, session, action){ // transfer on routes
-    var user = session['user'];
+  updateOrDeleteTeam : function(updatedTeamDoc, user, action){ // transfer on routes
     updatedTeamDoc = util.trimData(updatedTeamDoc);
     var teamId = updatedTeamDoc['_id'];
     var checkParent = true;
@@ -307,6 +306,8 @@ var team = {
         updateOrDeleteTeamValidation.push(iterationModels.getByIterInfo(teamId)); //res[1]
         infoLogs('Getting assessments associated to ' + teamId); 
         updateOrDeleteTeamValidation.push(assessmentModels.getTeamAssessments(teamId)); //res[2]
+        infoLogs('Getting existing team names that might match ' + updatedTeamDoc['name']);
+        updateOrDeleteTeamValidation.push(team.getName(updatedTeamDoc['name'])); //res[3]
         infoLogs('Getting teams associated to ' + teamId);
         _.each(updatedTeamDoc['child_team_id'], function(id) {
           updateOrDeleteTeamValidation.push(team.getTeam(id));
@@ -318,11 +319,9 @@ var team = {
         Promise.all(updateOrDeleteTeamValidation)
         .then(function(res){
           var oldTeamDocu = res[0];
-          var adminLists = session['systemAdmin'];
-          var teamLists = session['allTeams'];
-          var userTeams = session['myTeams'];
           var teamIterations = res[1];
           var teamAssesments = res[2];
+          var teamName = res[3];
           var userEmail = user['shortEmail'];
           if(oldTeamDocu['doc_status'] === 'delete'){
             msg = 'Invalid action';
@@ -343,16 +342,20 @@ var team = {
               bulkDocu = util.formatForBulkTransaction(bulkDocu, userEmail, 'delete');
 
               // this block pertains to updating the related parent/child team records
+              var parentTeam = new Object();
+              var childTeams = [];
               var lookupObjArr = [];
-              if (res.length > 3) {
-                for (var i=3; i<res.length; i++) {
+              if (res.length > 4) {
+                for (var i=4; i<res.length; i++) {
                   var team = res[i];
                   if (!_.isEqual(team._id, oldTeamDocu.parent_team_id)) {
+                    childTeams.push[team];
                     var lookupObj = teamIndex.createLookupObj(team._id, team.name, team.squadteam, '', '', team.parent_team_id);
                     lookupObjArr.push(lookupObj);
                     team.parent_team_id = '';
                     associatedDocu.push(team);
                   } else {
+                    parentTeam = team;
                     var lookupObj = teamIndex.createLookupObj(oldTeamDocu._id, oldTeamDocu.name, oldTeamDocu.squadteam, 'delete', '', oldTeamDocu.parent_team_id);
                     lookupObjArr.push(lookupObj);
                     team.child_team_id = _.difference(team.child_team_id, [oldTeamDocu._id]);
@@ -412,20 +415,12 @@ var team = {
               name
                 can be the same to existing docu but cannot be existing to DB when updated
               */
-              // infoLogs('Validating name');
-              // if(_.isEmpty(updatedTeamDoc['name'])){
-              //   return reject(formatErrMsg({ name : ['Team name cannot be blank. Please enter a team name.'] }));
-              // }else{
-                var nameExists = [];
-                _.reduce(teamLists, function(memo, item){
-                  if(item['name'] === updatedTeamDoc['name'] && item['_id'] != updatedTeamDoc['_id'])
-                    nameExists.push(item);
-                });
-
-                if(!(_.isEmpty(nameExists))){
+              _.each(util.returnObject(teamName), function(team) {
+                if (team._id != updatedTeamDoc._id && team.name == updatedTeamDoc.name) {
+                  infoLogs('Team ' +team._id+ ' has the same name with ' +updatedTeamDoc._id);
                   return reject(formatErrMsg({ name : ['This team name already exists. Please enter a different team name'] }));
                 }
-              // }
+              })
               /*
               squadteam
                   from Yes to No = only allowed if no iteration data exist
@@ -451,7 +446,7 @@ var team = {
               }
 
               if(oldTeamDocu['parent_team_id'] != updatedTeamDoc['parent_team_id'] && !(_.isEmpty(updatedTeamDoc['parent_team_id']))){
-                var refParent = _.findWhere(teamLists, { '_id' : updatedTeamDoc['parent_team_id'] });
+                var refParent = parentTeam; //_.findWhere(teamLists, { '_id' : updatedTeamDoc['parent_team_id'] });
                 if(refParent['squadteam'] === 'Yes'){
                   return reject(formatErrMsg({ parent_team_id : ['Parent team id must not be a squad team'] }))
                 }
@@ -469,7 +464,8 @@ var team = {
                   var newChildToBe = _.difference(updatedTeamDoc['child_team_id'], oldTeamDocu['child_team_id']);
                   var isValidChildTeam2 = [];
                   var isValidChildTeamId = _.every(newChildToBe, function(cId){
-                    _.reduce(teamLists, function(memo, item){
+                    // _.reduce(teamLists, function(memo, item){
+                    _.reduce(childTeams, function(memo, item){
                       if(item['_id'] === cId && !(_.isEmpty(item['parent_team_id'])) ){
                         isValidChildTeam2.push(item);
                       }
@@ -692,8 +688,8 @@ var team = {
       }
     }
   },
-  associateTeams: function(teamObj, action, session){
-    var userEmail = session['user']['shortEmail'];
+  associateTeams: function(teamObj, action, user){
+    var userEmail = user['shortEmail'];
     var errorLists = {};
     errorLists['error'] = {};
     return new Promise(function(resolve, reject){
@@ -707,8 +703,6 @@ var team = {
         reject(errorLists);
       }else{
         // check if user is authorized to do action
-        var teamLists = session['allTeams'];
-        var userTeams = session['myTeams'];
         util.isUserAllowed(userEmail, teamObj['teamId'])
         .then(function(body){
           infoLogs('Validating for ' + action );
@@ -1078,34 +1072,57 @@ var team = {
     return new Promise(function(resolve, reject){
       infoLogs('Getting user team list from Cloudant');
       var userTeamsList = [];
-      team.getTeamByEmail(userEmail)
-        .then(function(body){
-          var result = util.returnObject(body);
-          var parentTeams = _.map(result, function(val, key){
-            if (!_.isEmpty(val.child_team_id)){
-              userTeamsList.push(val._id);
-              return val.child_team_id;
-            }
-            else{
-              userTeamsList.push(val._id);
-              return [];
-            }
-          });
-          parentTeams = _.flatten(parentTeams);
-          var parentTeams = _.difference(parentTeams, userTeamsList);
-          getSelectedTeams(parentTeams, userTeamsList)
+      if (_.isEmpty(userEmail)) {
+        resolve(userTeamsList);
+      } else {
+        team.getTeamByEmail(userEmail)
           .then(function(body){
             loggers.get('models').verbose('Success: User team records obtained.');
             resolve(body);
+            var userTeams = util.returnObject(body);
+            team.getLookupIndex()
+            .then(function(result) {
+              _.each(userTeams, function(team) {
+                var lookupObj = _.findWhere(result, {_id: team._id});
+                if (!_.isEmpty(lookupObj)) {
+                  userTeamsList = _.union([team._id], lookupObj.children, userTeamsList);
+                } else {
+                  userTeamsList = _.union([team._id], team.child_team_id, userTeamsList);
+                }
+              });
+              userTeamsList = _.uniq(userTeamsList);
+              loggers.get('models').info('Success: User team records obtained.');
+              resolve(userTeamsList);
+            })
+
+            // var result = util.returnObject(body);
+            // var parentTeams = _.map(result, function(val, key){
+            //   if (!_.isEmpty(val.child_team_id)){
+            //     userTeamsList.push(val._id);
+            //     return val.child_team_id;
+            //   }
+            //   else{
+            //     userTeamsList.push(val._id);
+            //     return [];
+            //   }
+            // });
+            // parentTeams = _.flatten(parentTeams);
+            // var parentTeams = _.difference(parentTeams, userTeamsList);          
+            // getSelectedTeams(parentTeams, userTeamsList)
+            // .then(function(body){
+            //   loggers.get('models').info('Success: User team records obtained.');
+            //   resolve(body);
+            // })
+            .catch( /* istanbul ignore next */ function(err){
+              // console.log("error" + err);
+              reject(formatErrMsg(err.error));
+            })
           })
           .catch( /* istanbul ignore next */ function(err){
+            // cannot simulate Cloudant error during testing
             reject(formatErrMsg(err.error));
-          })
-        })
-        .catch( /* istanbul ignore next */ function(err){
-          // cannot simulate Cloudant error during testing
-          reject(formatErrMsg(err.error));
-        });
+          });
+        }
     });
   }
 };
@@ -1227,56 +1244,33 @@ var formattedDocuments = function(doc, action){
 
 module.exports = team;
 
-function getSelectedTeams(teamList, userTeams){
-  return new Promise(function(resolve, reject){
-      var data = new Object();
-      data.type = 'team';
-      data._id = new Object();
-      data._id.$in = teamList;
-      common.findBySelector(data)
-        .then(function(body){
-          var parentTeams = _.map(body.docs, function(val, key){
-            if (!_.isEmpty(val.child_team_id)){
-              userTeams.push(val._id);
-              return val.child_team_id;
-            }
-            else{
-              userTeams.push(val._id);
-              return [];
-            }
-          });
-          parentTeams = _.flatten(parentTeams);
-          var parentTeams = _.difference(parentTeams, userTeams);
-          if (_.size(parentTeams) > 0)
-            getSelectedTeams(parentTeams, userTeams);
-          loggers.get('models').verbose('Success: Selected team records obtained.');
-          resolve(userTeams);
-        })
-        .catch( /* istanbul ignore next */ function(err){
-          reject(formatErrMsg(err.error));
-        });
-      });
-}
-
-// /**
-//  * Get children of team in flatten structure
-//  *
-//  * @param parentId - team document id to get children to
-//  * @param allTeams - array of all team document
-//  * @returns {array}
-//  */
-// var getChildrenOfParent = function(parentId, allTeams){
-// var children = _.isEmpty(children) ? [] : children;
-//  var currentTeam = _.isEmpty(allTeams[parentId]) ? allTeams[parentId] : null;
-//   if (currentTeam != null) {
-//     if (currentTeam.child_team_id != undefined) {
-//       for (var j = 0; j < currentTeam.child_team_id.length; j++) {
-//         if (children.indexOf(currentTeam.child_team_id[j]) == -1) {
-//           children.push(currentTeam.child_team_id[j]);
-//           module.exports.getChildrenOfParent(currentTeam.child_team_id[j], allTeams);
-//         }
-//       }
-//     }
-//   }
-//   return children;
+// function getSelectedTeams(teamList, userTeams){
+//   return new Promise(function(resolve, reject){
+//       var data = new Object();
+//       data.type = 'team';
+//       data._id = new Object();
+//       data._id.$in = teamList;
+//       common.findBySelector(data)
+//         .then(function(body){
+//           var parentTeams = _.map(body.docs, function(val, key){
+//             if (!_.isEmpty(val.child_team_id)){
+//               userTeams.push(val._id);
+//               return val.child_team_id;
+//             }
+//             else{
+//               userTeams.push(val._id);
+//               return [];
+//             }
+//           });
+//           parentTeams = _.flatten(parentTeams);
+//           var parentTeams = _.difference(parentTeams, userTeams);
+//           if (_.size(parentTeams) > 0)
+//             getSelectedTeams(parentTeams, userTeams);
+//           loggers.get('models').verbose('Success: Selected team records obtained.');
+//           resolve(userTeams);
+//         })
+//         .catch( /* istanbul ignore next */ function(err){
+//           reject(formatErrMsg(err.error));
+//         });
+//       });
 // }
