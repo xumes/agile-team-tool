@@ -245,7 +245,7 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
     var currData = resetData();
     var rollUpIterationsData = {};
     rollUpIterationsData[teamId] = currData;
-    var currDate = new Date(util.getServerTime());
+    var currDate = new Date();
     _.each(iterationDocs, function(iterationDoc){
       var iterationDocDate = new Date(iterationDoc['iteration_end_dt']);
       var iterationDocIndex = 5 - monthDiff(iterationDocDate, currDate);
@@ -417,7 +417,7 @@ function monthDiff(d1, d2) {
  * @return date newDate
  */
 function addMonths(date, months) {
-  var newDate = new Date(util.getServerTime());
+  var newDate = new Date();
   newDate.setDate(1);
   newDate.setMonth(date.getMonth() + months);
   return new Date(newDate);
@@ -697,14 +697,14 @@ var snapshot = {
       iterationMonth = 5;
       monthArray = [];
       var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-      var nowTime = new Date(util.getServerTime());
+      var nowTime = new Date();
       var endTime = nowTime.toLocaleDateString('en-US',options);
-      var startTime = new Date(util.getServerTime());
+      var startTime = new Date();
       startTime = new Date(startTime.setDate(1));
       startTime = new Date(startTime.setMonth(nowTime.getMonth() - iterationMonth));
       startTime = startTime.toLocaleDateString('en-US',options);
 
-      // var nowTime = new Date(util.getServerTime());
+      // var nowTime = new Date();
       // var startTime = addMonths(nowTime, -iterationMonth);
       // var endTime = nowTime.toLocaleDateString('en-US',options);
       // startTime = startTime.toLocaleDateString('en-US',options);
