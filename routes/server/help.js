@@ -5,7 +5,7 @@ module.exports = function(app, includes) {
   showHelp = function(req, res) {
     var json = 
       {
-        'pageTitle'       : 'Help'
+        'pageTitle'       : 'Help',
         'user'            : req.session['user'],
         'allTeams'        : req.session['allTeams'],
         'allTeamsLookup'  : req.session['allTeamsLookup'],

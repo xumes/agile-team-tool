@@ -7,7 +7,7 @@ module.exports = function(app, includes) {
     var json = 
       {
         'pageTitle'       : 'Iteration Management',
-        'prefix'          : settings.prefixes.iteration
+        'prefix'          : settings.prefixes.iteration,
         'user'            : req.session['user'],
         'allTeams'        : req.session['allTeams'],
         'allTeamsLookup'  : req.session['allTeamsLookup'],
