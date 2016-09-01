@@ -17,7 +17,8 @@ module.exports = function(app, includes) {
         'memberRoles'     : req.session['memberRoles'],
         'environment'     : settings.environment,
         'prefix'          : settings.prefixes.team,
-        'userTeamList'    : req.userTeamList
+        'userTeamList'    : req.userTeamList,
+        'googleAnalyticsKey' : settings.googleAnalyticsKey
       };
     render(req, res, 'team', json);
   };

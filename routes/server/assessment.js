@@ -17,7 +17,8 @@ module.exports = function(app, includes) {
         'environment'     : settings.environment,
         'prefix'          : settings.prefixes.assessment,
         'squadTeams'      : req.squadTeams,
-        'userTeamList'    : req.userTeamList
+        'userTeamList'    : req.userTeamList,
+        'googleAnalyticsKey' : settings.googleAnalyticsKey
       };
     render(req, res, 'assessment', json);
   };

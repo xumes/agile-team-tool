@@ -14,7 +14,8 @@ module.exports = function(app, includes) {
         'myTeams'         : req.session['myTeams'],
         'systemAdmin'     : req.session['systemAdmin'],
         'systemStatus'    : req.session['systemStatus'],
-        'environment'     : settings.environment
+        'environment'     : settings.environment,
+        'googleAnalyticsKey' : settings.googleAnalyticsKey
       };
     render(req, res, 'help', json);
   };
