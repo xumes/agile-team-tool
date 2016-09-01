@@ -277,8 +277,8 @@ function setGlobalAdministorList(administrator) {
  * @returns {Boolean}
  */
 function isAdmin() {
-	if (!_.isEmpty(systemAdmin) && !_.isEmpty(user)) {
-		return systemAdmin.ACL_Full_Admin.indexOf(user.email ) > -1;
+	if (!_.isEmpty(systemAdmin) && !_.isEmpty(userInfo)) {
+		return systemAdmin.ACL_Full_Admin.indexOf(userInfo.email ) > -1;
 	}
 	return false;
 }
