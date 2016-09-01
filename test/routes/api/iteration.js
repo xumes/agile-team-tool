@@ -239,8 +239,10 @@ describe('Iteration API Test', function(){
           expect(res.statusCode).to.be.equal(200);
           expect(res.body).to.be.a('object');
           expect(res.body).to.have.property('rows');
-          expect(res.body.rows[0]).to.have.property('key');
-          expect(res.body.rows[0].key).to.be.equal(validId);
+          if (res.body.rows.length > 0) {
+            expect(res.body.rows[0]).to.have.property('key');
+            expect(res.body.rows[0].key).to.be.equal(validId);
+          }
         }
         done();
       });

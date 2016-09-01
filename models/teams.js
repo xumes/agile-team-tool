@@ -1078,7 +1078,6 @@ var team = {
         team.getTeamByEmail(userEmail)
           .then(function(body){
             loggers.get('models').verbose('Success: User team records obtained.');
-            resolve(body);
             var userTeams = util.returnObject(body);
             team.getLookupIndex()
             .then(function(result) {
