@@ -704,7 +704,7 @@ var snapshot = {
       startTime = new Date(startTime.setMonth(nowTime.getMonth() - iterationMonth));
       startTime = startTime.toLocaleDateString('en-US',options);
 
-      // var nowTime = new Date(util.getServerTime());
+      // var nowTime = new Date();
       // var startTime = addMonths(nowTime, -iterationMonth);
       // var endTime = nowTime.toLocaleDateString('en-US',options);
       // startTime = startTime.toLocaleDateString('en-US',options);
