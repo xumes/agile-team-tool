@@ -1,9 +1,10 @@
 var settings     = require('./settings');
+var loggers      = require('./middleware/logger');
 
 // Make sure New Relic is loaded first
-if (settings.newRelic == 'true') {
+if (process.env.newRelicKey && process.env.newRelicKey != '') {
   require('newrelic');
-  console.log('New Relic enabled');
+  loggers.get('init').info('New Relic loaded');
 }
 
 var express      = require('express');
@@ -18,7 +19,6 @@ var RedisStore   = require('connect-redis')(session);
 var favicon      = require('serve-favicon');
 var helmet       = require('helmet');
 var initCloudant = require('./cloudant/init');
-var loggers      = require('./middleware/logger')
 
 /* istanbul ignore if */
 require('fs').readFile('./art', 'utf8', function (err,art) {
