@@ -543,6 +543,7 @@ function loadDetails(elementId, setScrollPosition) {
 
 					/* Get parent name and link */
 					if (team["parent_team_id"] != undefined && team["parent_team_id"] != "") {
+						var notShowInMyTeam = false;
 						var parent_team_id = team["parent_team_id"];
 						keyLabel = "Parent Team Name";
 						keyValue = "(No parent team infomation)";
@@ -550,8 +551,13 @@ function loadDetails(elementId, setScrollPosition) {
 						if (parent_team_id != "") {
 							var parentLinkId = $("#link_sub_"+jq(parent_team_id));
 							if(parentLinkId){
-								var parentName = parentLinkId.html();
-								found = true;
+								var parentName;
+								if (parentLinkId.html() != undefined) {
+									parentName = parentLinkId.html();
+									found = true;
+								} else {
+									notShowInMyTeam = true;
+								}
 							} else {
 								//TODO need use id to get info from db
 							}
@@ -561,7 +567,9 @@ function loadDetails(elementId, setScrollPosition) {
 						} else {
 							keyValue = "<p style=\"display:inline-block\" class=\"ibm-ind-link\"><a style=\"display:inline; padding-left: 0px;\" title=\"View parent team information\" alt=\"View parent team information\" id ='parentName' href='#' onclick=\"javascript:displaySelected('" + team["parent_team_id"] + "');\">"+ parentName +"</a>"+"<a title=\"View parent team information\" alt=\"View parent team information\" style=\"display:inline;top:-5px;left:5px;\" class=\"ibm-forward-link\" href='#' onclick=\"javascript:displaySelected('" + team["parent_team_id"] + "');\"><span class='ibm-access'>Go to parent team</span></a></p>";
 						}
-						appendRowDetail(keyLabel, keyValue);
+						if (!notShowInMyTeam) {
+							appendRowDetail(keyLabel, keyValue);
+						}
 					}
 
 					/* draw iteration and assessment charts */
@@ -628,36 +636,34 @@ function openSelectedTeamTree(setScrollPosition) {
 
 	var scrollLink = "link_"+selectedElement;
 
-	var positionFound = false;
-	var parentFound = false;
-	while(!positionFound) {
-		if (!$("#"+scrollLink).is(":visible")) {
-			if ($("#"+scrollLink).parents("li").length > 0) {
-				scrollLink = "link_"+$($("#"+scrollLink).parents("li")).id
-			} else {
-				break;
-			}
-		} else {
-			positionFound = true;
-		}
-	}
-
-	if (!IBMCore.common.util.scrolledintoview($("#"+jq(selectedElement)))) {
-		//document.getElementById("ibm-content-main").scrollIntoView();
-		if (positionFound) {
-			$(".nano").nanoScroller();
-			$(".nano").nanoScroller({
-				scrollTo : $("#" + jq(scrollLink))
-			});
-		}
-	}
-
 	if (setScrollPosition != undefined && setScrollPosition) {
-		if (positionFound) {
 			$(".nano").nanoScroller();
 			$(".nano").nanoScroller({
 				scrollTo : $("#" + jq(scrollLink))
 			});
-		}
 	}
+
+	// var positionFound = false;
+	// var parentFound = false;
+	// while(!positionFound) {
+	// 	if (!$("#"+scrollLink).is(":visible")) {
+	// 		if ($("#"+scrollLink).parents("li").length > 0) {
+	// 			scrollLink = "link_"+$($("#"+scrollLink).parents("li")).id
+	// 		} else {
+	// 			break;
+	// 		}
+	// 	} else {
+	// 		positionFound = true;
+	// 	}
+	// }
+
+	// if (!IBMCore.common.util.scrolledintoview($("#"+jq(selectedElement)))) {
+	// 	document.getElementById("ibm-content-main").scrollIntoView();
+	// 	if (positionFound) {
+	// 		$(".nano").nanoScroller();
+	// 		$(".nano").nanoScroller({
+	// 			scrollTo : $("#" + jq(scrollLink))
+	// 		});
+	// 	}
+	// }
 }
