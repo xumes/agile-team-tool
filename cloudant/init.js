@@ -88,9 +88,20 @@ module.exports.init = function(){
               });
             }
           } else {
-            if(_.isEqual(response._id, doc._id))
+            if(_.isEqual(response._id, doc._id)) {
               initLogger.info(doc._id+" already exists");
-            else {
+              if (doc._id == "ag_ref_team_type_role") {
+                if (_.isUndefined(response.version) || _.isEmpty(response.version) || (response.version < doc.version)) {
+                  doc["_rev"] = response._rev;
+                  db.insert(doc, function(err, body) {
+                    if(!err)
+                      initLogger.info("Create Success: "+doc._id+ " "+body.rev);
+                    else
+                      initLogger.error("Create Error: "+doc._id+". "+ err);
+                  });
+                }
+              }
+            } else {
               db.insert(doc, function(err, body) {
                 if(!err)
                   initLogger.info("Create Success: "+doc._id+ " "+body.rev);
@@ -143,7 +154,7 @@ var getSourceIndexes = function(){
     fs.readdir("./cloudant/indexes", function(err, files){
       if(err)
         reject(err);
-        
+
       var res = [];
       async.each(files, function(file, callback) {
          if(file.indexOf('.json')<0) return callback();
@@ -163,7 +174,7 @@ var getSystemDocs = function(){
     fs.readdir("./cloudant/system_docs", function(err, files){
       if(err)
         reject(err);
-        
+
       var res = [];
       async.each(files, function(file, callback) {
          if(file.indexOf('.json')<0) return callback();

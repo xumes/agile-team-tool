@@ -168,7 +168,7 @@ header, nav, section, footer {
   background: #fff;
   padding: 10px 27px 10px 14px;
   box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.3);
-  z-index: 999;
+  z-index: 900;
   position: relative;
 }
 

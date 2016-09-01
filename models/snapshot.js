@@ -16,7 +16,7 @@ var iterationDocRules = require('./validate_rules/iteration.js');
 var snapshotValidationRules = require('./validate_rules/snapshot.js');
 var nonSquadTeamRule = snapshotValidationRules.nonSquadTeamRule;
 var squadTeamRule = snapshotValidationRules.squadTeamRule;
-var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 var monthArray = [];
 
 var formatErrMsg = /* istanbul ignore next */ function(msg){
@@ -343,9 +343,13 @@ function rollUpIterationsByNonSquad(squads, nonSquadTeamId, squadsCalResults, is
           if (squadIterationResult[j].totalCompleted > 0) {
             teams[j] = teams[j] + 1;
           }
-          //console.log(currData[j].totalPoints);
         }
       }
+    }
+    var newDate = new Date();
+    var days = daysInMonth(newDate.getMonth() + 1, newDate.getFullYear());
+    if (newDate.getDate() < days) {
+      currData[iterationMonth].partialMonth = true;
     }
     for (var i = 0; i <= iterationMonth; i++) {
       currData[i].totalSquad = teams[i];
@@ -418,6 +422,16 @@ function addMonths(date, months) {
   newDate.setMonth(date.getMonth() + months);
   return new Date(newDate);
 };
+
+/**
+ * Get how many days in the month
+ * @param int month
+ * @param int year
+ * @return int days
+ */
+function daysInMonth(month,year) {
+    return new Date(year, month, 0).getDate();
+}
 
 /**
  * Get _rev for roll up squads
@@ -535,10 +549,6 @@ function rollUpSquadsData(squadsList, squadTeams) {
   return entry;
 };
 
-function sortRootTeam(teams) {
-
-};
-
 var snapshot = {
 
   getTopLevelTeams : function (email) {
@@ -598,7 +608,7 @@ var snapshot = {
     });
   },
 
-  updateRollUpSquads : /* istanbul ignore next */ function() {
+  updateRollUpSquads : function() {
     return new Promise(function(resolve, reject){
       var squadTeams = new Object();
       var oldRollUpDataRevs = new Object();
@@ -682,11 +692,10 @@ var snapshot = {
   },
 
 
-  updateRollUpData : /* istanbul ignore next */ function() {
+  updateRollUpData : function() {
     return new Promise(function(resolve, reject){
       iterationMonth = 5;
       monthArray = [];
-
       var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
       var nowTime = new Date(util.getServerTime());
       var endTime = nowTime.toLocaleDateString('en-US',options);
@@ -706,7 +715,6 @@ var snapshot = {
         var year = time.substring(time.length-4,time.length);
         monthArray[i] = month + '-' + year;
       }
-      console.log(startTime);
       var promiseArray = [];
       promiseArray.push(getIterationDocs(startTime, endTime));
       promiseArray.push(getAllSquads());
@@ -798,71 +806,71 @@ var snapshot = {
     });
   },
 
-  getRollUpData : function(startTime, endTime) {
-    return new Promise(function(resolve, reject){
-      var squadIterationDocs = {};
-      iterationMonth = monthDiff(new Date(startTime), new Date(endTime));
-      if (iterationMonth < 0) {
-        var msg = 'end time is before start time';
-        reject(formatErrMsg(msg));
-      } else {
-        var promiseArray = [];
-        promiseArray.push(getIterationDocs(startTime, endTime));
-        promiseArray.push(getAllSquads());
-        Promise.all(promiseArray)
-          .then(function(promiseResults){
-            var squadIterationDocs = promiseResults[0];
-            var squadsByParent = promiseResults[1];
-            var promiseArray2 = [];
-            _.each(Object.keys(squadIterationDocs), function(squadTeamId){
-              promiseArray2.push(rollUpIterationsBySquad(squadIterationDocs[squadTeamId],squadTeamId));
-            });
-            Promise.all(promiseArray2)
-              .then(function(squadsCalResultsArray){
-                var squadsCalResults = {};
-                _.each(squadsCalResultsArray, function(squadsCalResult){
-                  squadsCalResults[Object.keys(squadsCalResult)[0]] = squadsCalResult[Object.keys(squadsCalResult)[0]];
-                });
-                var promiseArray3 = [];
-                _.each(Object.keys(squadsByParent), function(nonSquadTeamId){
-                  promiseArray3.push(rollUpIterationsByNonSquad(squadsByParent[nonSquadTeamId], nonSquadTeamId, squadsCalResults, false, {}));
-                });
-                Promise.all(promiseArray3)
-                  .then(function(nonSquadCalResults){
-                    resolve(nonSquadCalResults);
-                  })
-                  .catch( /* istanbul ignore next */ function(err){
-                    var msg;
-                    if (err.error) {
-                      msg = err.error;
-                    } else {
-                      msg = err;
-                    }
-                    reject(formatErrMsg(msg));
-                  });
-              })
-              .catch( /* istanbul ignore next */ function(err){
-                var msg;
-                if (err.error) {
-                  msg = err.error;
-                } else {
-                  msg = err;
-                }
-                reject(formatErrMsg(msg));
-              });
-          })
-          .catch( /* istanbul ignore next */ function(err){
-            var msg;
-            if (err.error) {
-              msg = err.error;
-            } else {
-              msg = err;
-            }
-            reject(formatErrMsg(msg));
-          });
-      }
-    });
-  }
+  // getRollUpData : function(startTime, endTime) {
+  //   return new Promise(function(resolve, reject){
+  //     var squadIterationDocs = {};
+  //     iterationMonth = monthDiff(new Date(startTime), new Date(endTime));
+  //     if (iterationMonth < 0) {
+  //       var msg = 'end time is before start time';
+  //       reject(formatErrMsg(msg));
+  //     } else {
+  //       var promiseArray = [];
+  //       promiseArray.push(getIterationDocs(startTime, endTime));
+  //       promiseArray.push(getAllSquads());
+  //       Promise.all(promiseArray)
+  //         .then(function(promiseResults){
+  //           var squadIterationDocs = promiseResults[0];
+  //           var squadsByParent = promiseResults[1];
+  //           var promiseArray2 = [];
+  //           _.each(Object.keys(squadIterationDocs), function(squadTeamId){
+  //             promiseArray2.push(rollUpIterationsBySquad(squadIterationDocs[squadTeamId],squadTeamId));
+  //           });
+  //           Promise.all(promiseArray2)
+  //             .then(function(squadsCalResultsArray){
+  //               var squadsCalResults = {};
+  //               _.each(squadsCalResultsArray, function(squadsCalResult){
+  //                 squadsCalResults[Object.keys(squadsCalResult)[0]] = squadsCalResult[Object.keys(squadsCalResult)[0]];
+  //               });
+  //               var promiseArray3 = [];
+  //               _.each(Object.keys(squadsByParent), function(nonSquadTeamId){
+  //                 promiseArray3.push(rollUpIterationsByNonSquad(squadsByParent[nonSquadTeamId], nonSquadTeamId, squadsCalResults, false, {}));
+  //               });
+  //               Promise.all(promiseArray3)
+  //                 .then(function(nonSquadCalResults){
+  //                   resolve(nonSquadCalResults);
+  //                 })
+  //                 .catch( /* istanbul ignore next */ function(err){
+  //                   var msg;
+  //                   if (err.error) {
+  //                     msg = err.error;
+  //                   } else {
+  //                     msg = err;
+  //                   }
+  //                   reject(formatErrMsg(msg));
+  //                 });
+  //             })
+  //             .catch( /* istanbul ignore next */ function(err){
+  //               var msg;
+  //               if (err.error) {
+  //                 msg = err.error;
+  //               } else {
+  //                 msg = err;
+  //               }
+  //               reject(formatErrMsg(msg));
+  //             });
+  //         })
+  //         .catch( /* istanbul ignore next */ function(err){
+  //           var msg;
+  //           if (err.error) {
+  //             msg = err.error;
+  //           } else {
+  //             msg = err;
+  //           }
+  //           reject(formatErrMsg(msg));
+  //         });
+  //     }
+  //   });
+  // }
 };
 
 module.exports = snapshot;
