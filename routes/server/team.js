@@ -5,7 +5,18 @@ module.exports = function(app, includes) {
   showTeamManagement = function(req, res) {
     var json = 
       {
-        'pageTitle'       : 'Team Management'
+        'pageTitle'       : 'Team Management',
+        'user'            : req.session['user'],
+        'allTeams'        : req.session['allTeams'],
+        'allTeamsLookup'  : req.session['allTeamsLookup'],
+        'myTeams'         : req.session['myTeams'],
+        'systemAdmin'     : req.session['systemAdmin'],
+        'systemStatus'    : req.session['systemStatus'],
+        'memberRoles'     : req.session['memberRoles'],
+        'environment'     : settings.environment,
+        'prefix'          : settings.prefixes.team,
+        'userTeamList'    : req.userTeamList,
+        'googleAnalyticsKey' : settings.googleAnalyticsKey
       };
     render(req, res, 'team', json);
   };

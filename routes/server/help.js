@@ -6,6 +6,14 @@ module.exports = function(app, includes) {
     var json = 
       {
         'pageTitle'       : 'Help'
+        'user'            : req.session['user'],
+        'allTeams'        : req.session['allTeams'],
+        'allTeamsLookup'  : req.session['allTeamsLookup'],
+        'myTeams'         : req.session['myTeams'],
+        'systemAdmin'     : req.session['systemAdmin'],
+        'systemStatus'    : req.session['systemStatus'],
+        'environment'     : settings.environment,
+        'googleAnalyticsKey' : settings.googleAnalyticsKey
       };
     render(req, res, 'help', json);
   };

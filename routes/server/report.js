@@ -5,7 +5,17 @@ module.exports = function(app, includes) {
   showReport = function(req, res) {
     var json = 
       {
-        'pageTitle'       : 'Report'
+        'pageTitle'       : 'Report',
+        'user'            : req.session['user'],
+        'allTeams'        : req.session['allTeams'],
+        'allTeamsLookup'  : req.session['allTeamsLookup'],
+        'myTeams'         : req.session['myTeams'],
+        'systemAdmin'     : req.session['systemAdmin'],
+        'systemStatus'    : req.session['systemStatus'],
+        'environment'     : settings.environment,
+        'prefix'          : settings.prefixes.assessment,
+        'userTeams'       : req.userTeams,
+        'googleAnalyticsKey' : settings.googleAnalyticsKey
       };
     render(req, res, 'report', json);
   };
