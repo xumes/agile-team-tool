@@ -16,7 +16,7 @@ var iterationDocRules = require('./validate_rules/iteration.js');
 var snapshotValidationRules = require('./validate_rules/snapshot.js');
 var nonSquadTeamRule = snapshotValidationRules.nonSquadTeamRule;
 var squadTeamRule = snapshotValidationRules.squadTeamRule;
-var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 var monthArray = [];
 
 var formatErrMsg = /* istanbul ignore next */ function(msg){
