@@ -8,7 +8,7 @@ jQuery.expr[':'].Contains = function(a, i, m) {
 
 jQuery(function($) {
 	$(document).ready(function() {
-		getSessionVars(initPageAction);
+		getPageVariables('home', initPageAction);
 	});
 
 	function initPageAction() {

@@ -299,6 +299,7 @@ function getSquadDropdownList(teams) {
 	var listOption = [];
 	if (teams == undefined || teams == null) 
 		return listOption;
+	teams = sortAgileTeamsByName(teams);
 	
 	var listOption = _.map(teams, function(val, key){
 		var option = [];

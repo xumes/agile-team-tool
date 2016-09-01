@@ -24,7 +24,7 @@ describe('Assessment API Test', function(){
   // do the login befre testing
   before(function(done) {
     agent
-      .get('/api/login/masquerade/' + adminUser)
+      .get('/api/login/masquerade/' + dummyData.user.details.shortEmail)
       .send()
       .end(function(err, res) {
         if (err) throw err;
@@ -63,6 +63,7 @@ describe('Assessment API Test', function(){
       //set current team id for assessment
       curr_assessment.team_id = teamId;
       curr_assessment._id = 'ag_mar_'+teamId+'_1469112933083';
+      noId.team_id = teamId;
       return assessmentModel.getAssessment(curr_assessment._id);
     })
     .then(function(body){

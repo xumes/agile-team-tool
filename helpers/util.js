@@ -241,7 +241,8 @@ module.exports.returnObject = function(data) {
           var merged = _.extend(val.fields, {'_id':val.id});
             return merged;
           });
-      }
+      } else
+        returnData = data;
     } else
       returnData =  data;
   } else

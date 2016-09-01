@@ -2,7 +2,7 @@ var taPerson;
 
 jQuery(function ($) {	
 	$(document).ready(function () {
-    getSessionVars(initPageAction);
+    getPageVariables('team', initPageAction);
 	});
 
   function initPageAction() {
@@ -738,6 +738,7 @@ function updateAction(action) {
 
       }).done(function (data) {
         userTeamList = data.userTeams;
+        updateAgileTeamCache(data.team);
         agileTeamListHandler(data.team._id, allTeams);
         showMessagePopup(message);
       });
@@ -1005,7 +1006,7 @@ function deleteTeamHandler(team, iterations, assessments) {
       }).success(function (data) {
         userTeamList = data;
         updateAgileTeamCache(team);
-            updateTeamInfo('reset');
+        updateTeamInfo('reset');
         showMessagePopup("You have successfully deleted the team.");
       });
 
