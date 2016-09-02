@@ -49,7 +49,9 @@ jQuery(function($) {
 
   $("#teamSelectList").change(function() {
     updateIterationInfo("clearIteration");
-    loadAgileTeamIterationInfo($("#teamSelectList option:selected").val(), "new");
+    var teamId = $("#teamSelectList option:selected").val();
+    getTeam(teamId, updateAgileTeamCache, []);
+    loadAgileTeamIterationInfo(teamId, "new");
 
   });
 

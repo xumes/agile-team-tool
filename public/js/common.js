@@ -362,8 +362,6 @@ function getRemoteData(cUrl, _callback, args) {
 	}).done(function(data) {
 		if (data != undefined) {
 			var list = [];
-			console.log("data has rows " + _.has(data.rows, 'rows'));
-			console.log("data has value " + _.has(data, 'value'));
 			if (_.has(data, 'rows')) {
 			  if (!_.isEmpty(data.rows)) {
 			    if (_.has(data.rows[0], 'doc'))
@@ -652,6 +650,12 @@ function compactTeam(team) {
 };
 
 function updateAgileTeamCache(team) {
+	if (_.isEmpty(allTeams) && !_.isEmpty(squadTeams))
+		allTeams = squadTeams;
+
+  if (_.isEmpty(allTeamsLookup))
+  	allTeamsLookup = _.indexBy(allTeams, function(team) {return team._id});
+
   if (!_.isEmpty(allTeamsLookup) && !_.isEmpty(team)) {
     var compactedTeam = compactTeam(team);
     if (_.isEmpty(allTeamsLookup[team._id]))
