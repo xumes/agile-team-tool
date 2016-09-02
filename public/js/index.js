@@ -2,6 +2,127 @@ var requests = []; //global array to keep track of the ajax called; used to canc
 var defSelTeamId="";
 var defSelIndex="";
 var squadList = [];
+var tempIterationData = [
+	{
+		'totalPoints' : 0,
+		'totalStories' : 0,
+		'totalCompleted' : 0,
+		'totalDefects' : 0,
+		'totalDplymts' : 0,
+		'totTeamStat' : 0,
+		'totClientStat' : 0,
+		'totTeamStatIter' : 0,
+		'totClientStatIter' : 0,
+		'teamsLt5' : 0,
+		'teams5to12' : 0,
+		'teamsGt12' : 0,
+		'totalSquad' : 0,
+		'month':'',
+		'partialMonth' : false
+
+	},
+	{
+		'totalPoints' : 0,
+		'totalStories' : 0,
+		'totalCompleted' : 0,
+		'totalDefects' : 0,
+		'totalDplymts' : 0,
+		'totTeamStat' : 0,
+		'totClientStat' : 0,
+		'totTeamStatIter' : 0,
+		'totClientStatIter' : 0,
+		'teamsLt5' : 0,
+		'teams5to12' : 0,
+		'teamsGt12' : 0,
+		'totalSquad' : 0,
+		'month':'',
+		'partialMonth' : false
+
+	},
+	{
+		'totalPoints' : 0,
+		'totalStories' : 0,
+		'totalCompleted' : 0,
+		'totalDefects' : 0,
+		'totalDplymts' : 0,
+		'totTeamStat' : 0,
+		'totClientStat' : 0,
+		'totTeamStatIter' : 0,
+		'totClientStatIter' : 0,
+		'teamsLt5' : 0,
+		'teams5to12' : 0,
+		'teamsGt12' : 0,
+		'totalSquad' : 0,
+		'month':'',
+		'partialMonth' : false
+
+	},
+	{
+		'totalPoints' : 0,
+		'totalStories' : 0,
+		'totalCompleted' : 0,
+		'totalDefects' : 0,
+		'totalDplymts' : 0,
+		'totTeamStat' : 0,
+		'totClientStat' : 0,
+		'totTeamStatIter' : 0,
+		'totClientStatIter' : 0,
+		'teamsLt5' : 0,
+		'teams5to12' : 0,
+		'teamsGt12' : 0,
+		'totalSquad' : 0,
+		'month':'',
+		'partialMonth' : false
+
+	},
+	{
+		'totalPoints' : 0,
+		'totalStories' : 0,
+		'totalCompleted' : 0,
+		'totalDefects' : 0,
+		'totalDplymts' : 0,
+		'totTeamStat' : 0,
+		'totClientStat' : 0,
+		'totTeamStatIter' : 0,
+		'totClientStatIter' : 0,
+		'teamsLt5' : 0,
+		'teams5to12' : 0,
+		'teamsGt12' : 0,
+		'totalSquad' : 0,
+		'month':'',
+		'partialMonth' : false
+	},
+	{
+		'totalPoints' : 0,
+		'totalStories' : 0,
+		'totalCompleted' : 0,
+		'totalDefects' : 0,
+		'totalDplymts' : 0,
+		'totTeamStat' : 0,
+		'totClientStat' : 0,
+		'totTeamStatIter' : 0,
+		'totClientStatIter' : 0,
+		'teamsLt5' : 0,
+		'teams5to12' : 0,
+		'teamsGt12' : 0,
+		'totalSquad' : 0,
+		'month':'',
+		'partialMonth' : false
+	}
+];
+
+var tempSquadScore = {
+	"fte5to12" : 0,
+	"fteGt12" : 0,
+	"fteLt5" : 0,
+	"tc5to12" : 0,
+	"tcGt12" : 0,
+	"tcLt5" : 0,
+	"teams5to12" : 0,
+	"teamsGt12" : 0,
+	"teamsLt5" : 0
+};
+
 jQuery.expr[':'].Contains = function(a, i, m) {
 	return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
 };
@@ -100,7 +221,7 @@ function getMyTeamsFromDb(initial) {
 			if (data.length > 0) {
 				var twistyId = 'teamTreeMain';
 				//no duplicates
-				var uniqueTeams = _.uniq(data, function(item) { 
+				var uniqueTeams = _.uniq(data, function(item) {
 				    return item._id;
 				});
 				_.each(uniqueTeams, function(team){
@@ -241,6 +362,7 @@ function getAllAgileTeamsByParentId(parentId, showLoading, initial) {
 function getSnapshot(teamId, teamName) {
 	$('#mainContent').hide();
 	$('#spinnerContainer').show();
+	console.log(teamId);
 	var cUrl = "/api/snapshot/rollupsquadsbyteam/" + encodeURIComponent(teamId);
 	var req = $.ajax({
 		type : "GET",
@@ -253,7 +375,9 @@ function getSnapshot(teamId, teamName) {
 				if (data.rows == null) {
 					//console.log("data loaded failed");
 				} else if (data.rows.length <= 0) {
-					//console.log("no iteation data for team: ", teamId);
+					console.log("no iteation data for team: ", teamId);
+					$("#refreshDate").html("Waiting for updating");
+					iterationScoreCard(teamId, teamName, tempIterationData, tempSquadScore);
 				} else {
 					var nonsquadScore = data.rows[0].value.value;
 					var cUrl = "/api/snapshot/rollupdatabyteam/" + encodeURIComponent(teamId);
@@ -268,7 +392,9 @@ function getSnapshot(teamId, teamName) {
 								if (data.rows == null) {
 									console.log("data loaded failed");
 								} else if (data.rows.length <= 0) {
-									console.log("no iteation data for team: ", teamId);
+									console.log("no squad data for team: ", teamId);
+									$("#refreshDate").html("Waiting for updating");
+									iterationScoreCard(teamId, teamName, data.rows[0].value.value, tempSquadScore);
 								} else {
 									var iterationData = data.rows[0].value.value;
 									addRefreshDate(data.rows[0].value.timestamp);  //TODO
@@ -286,7 +412,10 @@ function getSnapshot(teamId, teamName) {
 				showLog("data loaded: " + JSON.stringify(data));
 			}
 		}
-	});
+	})
+	.fail(function(err){
+
+	})
 	requests.push(req);
 }
 
@@ -496,7 +625,6 @@ function loadDetails(elementId, setScrollPosition) {
 				type : "GET",
 				url : "/api/teams/" + encodeURIComponent(teamId)
 			}).fail(function() {
-				// $.un();
 
 			}).done(function(currentTeam) {
 				team = currentTeam;
