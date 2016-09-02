@@ -18,7 +18,8 @@ jQuery(function($) {
     }
 
     if (urlParameters != undefined && urlParameters.id != undefined) {
-      if (urlParameters != undefined && urlParameters.iter != undefined && urlParameters.iter != "")
+      getTeam(urlParameters.id, updateAgileTeamCache, []);
+      if (urlParameters != undefined && urlParameters.iter != undefined && urlParameters.iter != "") 
         loadAgileTeams(urlParameters.id, urlParameters.iter);
       else
         loadAgileTeams(urlParameters.id, "new");
