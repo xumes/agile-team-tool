@@ -659,13 +659,8 @@ function addIteration(action) {
           });
         });
       } else {
-        // showMessagePopup ("insert new iteration");
-        // var newIterationId = prefixIteration + $("#teamSelectList").val() + " " + $("#iterationName").val() + "_" + new Date().getTime();
-        // newIterationId = newIterationId.replace(/^[^a-z]+|[^\w:.-]+/gi, "");
-
-        // showMessagePopup ("newIterationId: " + newIterationId);
         var serverDateTime = getServerDateTime();
-        jsonData = createIterationData(newIterationId);
+        jsonData = createIterationData();
         console.log(jsonData);
         console.log(JSON.stringify(jsonData));
         $.ajax({
@@ -695,7 +690,6 @@ function addIteration(action) {
 
 function createIterationData(newIterationId) {
   var jsonData = new Object();
-  // jsonData._id = newIterationId;
   jsonData.type = "iterationinfo";
   jsonData.team_id = $("#teamSelectList").val();
   jsonData.iteration_name = $("#iterationName").val();

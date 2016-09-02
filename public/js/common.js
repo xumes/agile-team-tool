@@ -31,12 +31,23 @@ function getPageVariables(page, _callback) {
 	      //org-title: not defined in ldap object,
 	      "notes-id"    : user.ldap.notesId
 	    };
+
+	    // LDAP employee name has different convetion from Faces API value
+	    getPersonFromFaces(userInfo.email, updateUserInfo, []);
+
 	  }
 	  if (typeof _callback === "function") {
 		  _callback.apply(this);
 		}
 	})
 }
+
+function updateUserInfo(personObj) {
+	if (!_.isEmpty(personObj)) {
+		userInfo.name = !_.isEmpty(personObj.name) ? personObj.name : userInfo.name;
+  }
+}
+
 /**
  * Modal dialog used to show messages in place of the regular javascript alert.
  */
