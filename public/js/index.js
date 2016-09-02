@@ -716,6 +716,11 @@ function loadDetails(elementId, setScrollPosition) {
 						$('#squad_team_scard').show();
 						$('#iterationSection .agile-section-nav').show();
 						$('#assessmentSection .agile-section-nav').show();
+
+						$('assessmentSection .agile-section-title').addClass('ibm-showing');
+						$('#assessmentSection a').addClass('ibm-show-active');
+						$('#assessmentSection .ibm-container-body').css('display','block');
+
 						isSquadTeam = false;
 					} else {
 						destroyIterationCharts();
@@ -727,6 +732,10 @@ function loadDetails(elementId, setScrollPosition) {
 						$('#squad_team_scard').hide();
 						$('#iterationSection .agile-section-nav').hide();
 						$('#assessmentSection .agile-section-nav').hide();
+
+						$('assessmentSection .agile-section-title').removeClass('ibm-showing');
+						$('#assessmentSection a').removeClass('ibm-show-active');
+						$('#assessmentSection .ibm-container-body').css('display','none');
 						isSquadTeam = false;
 					}
 
