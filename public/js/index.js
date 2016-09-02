@@ -642,7 +642,7 @@ function loadDetails(elementId, setScrollPosition) {
 						var tn = team["name"];
 						if (tn.trim() == "")
 							tn = "&nbsp;";
-						$("#teamName").html("Data for: " + tn);
+						$("#teamName").html(tn);
 						keyValue = "<a href='team?id=" + encodeURIComponent(team["_id"]) + "' title='Manage team information'>" + tn + "</a>";
 						appendRowDetail(keyLabel, keyValue);
 					}

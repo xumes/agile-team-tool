@@ -1,14 +1,4 @@
-#ibm-leadspace-head {
-	background: url(../img/banner.jpg) no-repeat;
-	background-size: cover;
-	color: #FFFFFF;
-}
-
 #ibm-leadspace-body {
-	padding-top: 10px;
-}
-
-.ibm-landing-page #ibm-content-body {
 	padding-top: 10px;
 }
 
@@ -60,6 +50,24 @@
     font-weight: 600
 }
 /* END Whitewater tabs */
+
+#dataFor {
+	font-family: HelveticaNeue-Bold, "Helvetica Neue Bold", HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 16px;
+	font-weight: 600;
+	color: #323232;
+	background-color: #fff;
+	padding-bottom: 1rem;
+	box-sizing: inherit;
+	line-height: 1.75;
+}
+
+.div--team{
+	font-family: HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 16px;
+	border-bottom: 1px solid #e0e0e0;
+	padding-bottom: 1rem;
+}
 
 
 /* Matts dank spinner */

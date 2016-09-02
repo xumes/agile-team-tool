@@ -4445,12 +4445,8 @@ button[class*="ibm-btn-"][class*="-sec"][disabled]:hover {
 }
 
 #ibm-content-body {
-    padding-top: 20px;
+    margin-top: 1.5em;
     background: #fff
-}
-
-.ibm-landing-page #ibm-content-body {
-    padding-top: 40px
 }
 
 .ibm-default #ibm-content-main {
