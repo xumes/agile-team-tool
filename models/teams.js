@@ -241,7 +241,7 @@ var team = {
   },
 
   createTeam : function(teamDoc, user){
-    infoLogs('Creating new team records to Cloudant');
+    infoLogs('Creating new team record.');
     return new Promise(function(resolve, reject){
       teamDoc = team.defaultTeamDoc(teamDoc, user);
       teamDoc = util.trimData(teamDoc);
@@ -324,7 +324,7 @@ var team = {
           var teamName = res[3];
           var userEmail = user['shortEmail'];
           if(oldTeamDocu['doc_status'] === 'delete'){
-            msg = 'Invalid action';
+            msg = { name : ['Invalid action'] };
             return reject(formatErrMsg(msg));
           }
           util.isUserAllowed(userEmail, teamId)
@@ -560,10 +560,10 @@ var team = {
   getTeam : function(teamId){
     return new Promise(function(resolve, reject){
       if(_.isEmpty(teamId)){
-      infoLogs('Getting all team records from Cloudant');
+      infoLogs('Getting all team records.');
       common.getByView('teams', 'teams')
         .then(function(body){
-          loggers.get('models').verbose('Success: Team records obtained');
+          loggers.get('models').verbose('Success: eam records obtained');
           resolve(body.rows);
         })
         .catch( /* istanbul ignore next */ function(err){
@@ -572,10 +572,10 @@ var team = {
           return reject(formatErrMsg(msg));
         });
     }else{
-      infoLogs('Getting team records for ' + teamId + ' from Cloudant');
+      infoLogs('Getting team records for ' + teamId + '.');
       common.getRecord(teamId)
         .then(function(body){
-          loggers.get('models').verbose('Success: Team records obtained');
+          loggers.get('models').verbose('Success: Team record obtained for ' + teamId);
           resolve(body);
         })
         .catch( /* istanbul ignore next */ function(err){
@@ -688,69 +688,68 @@ var team = {
       }
     }
   },
-  associateTeams: function(teamObj, action, user){
+  associateTeams: function(associateObj, action, user){
     var userEmail = user['shortEmail'];
     var errorLists = {};
     errorLists['error'] = {};
     return new Promise(function(resolve, reject){
       if(!(team.associateActions(action))){
-        errorLists['error']['action'] = 'Invalid action';
+        errorLists['error']['action'] = ['Invalid action'];
         infoLogs(errorLists);
         reject(errorLists);
-      }else if(_.isEmpty(teamObj['teamId'])){
-        errorLists['error']['teamId'] = 'Invalid team document ID';
+      }else if(_.isEmpty(associateObj['teamId'])){
+        errorLists['error']['teamId'] = ['Invalid team document ID'];
         infoLogs(errorLists);
         reject(errorLists);
       }else{
         // check if user is authorized to do action
-        util.isUserAllowed(userEmail, teamObj['teamId'])
+        util.isUserAllowed(userEmail, associateObj['teamId'])
         .then(function(body){
           infoLogs('Validating for ' + action );
-          team.getTeam(teamObj['teamId'])
-          .then(function(oldRec){
+          team.getTeam(associateObj['teamId'])
+          .then(function(currentTeam){
             switch(action){
               case 'associateParent':
                  // parent_id
-                if(_.isEmpty(teamObj['targetParent'])){
-                  errorLists['error']['targetParent'] = 'Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.';
+                if(_.isEmpty(associateObj['targetParent'])){
+                  errorLists['error']['targetParent'] = ['Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.'];
                   infoLogs(errorLists);
                   reject(errorLists);
                 }
-                if(teamObj['teamId'] === teamObj['targetParent']){
+                if(associateObj['teamId'] === associateObj['targetParent']){
                   // not allowed to be a parent of self
-                  errorLists['error']['targetParent'] = 'Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.';
+                  errorLists['error']['targetParent'] = ['Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.'];
                   infoLogs(errorLists);
                   reject(errorLists);
                 }else{
-                  team.getTeam(teamObj['targetParent'])
+                  team.getTeam(associateObj['targetParent'])
                   .then(function(body){
                     if(body['squadteam'] === 'Yes'){
                       // selected parent team should not be a squad team
-                      errorLists['error']['targetParent'] = 'Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.';
+                      errorLists['error']['targetParent'] = ['Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.'];
                       infoLogs(errorLists);
                       reject(errorLists);
                     }else{
                       // ** selected parent team should not be from a team under  it
-                      // team.getTeam(null)
-                      team.getLookupIndex(teamObj['teamId'])
+                      team.getLookupIndex(associateObj['teamId'])
                       .then(function(body){
-                        var teamChildren = !_.isEmpty(body) && !_.isEmpty(body.children) ? body.children : []; //getChildrenOfParent(teamObj['teamId'], body);
-                        if(teamChildren.indexOf(teamObj['targetParent']) > -1){
-                          errorLists['error']['targetParent'] = 'Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.';
+                        var teamChildren = !_.isEmpty(body) && !_.isEmpty(body.children) ? body.children : []; //getChildrenOfParent(associateObj['teamId'], body);
+                        if(teamChildren.indexOf(associateObj['targetParent']) > -1){
+                          errorLists['error']['targetParent'] = ['Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.'];
                           infoLogs(errorLists);
                           reject(errorLists);
                         }else{
                           infoLogs('Data valid for savings in ' + action);
                           // merge documents for update
                           var associateParent = [];
-                          associateParent.push(team.getTeam(teamObj['teamId']));
-                          associateParent.push(team.getTeam(teamObj['targetParent']));
+                          associateParent.push(team.getTeam(associateObj['teamId']));
+                          associateParent.push(team.getTeam(associateObj['targetParent']));
                           Promise.all(associateParent)
                           .then(function(result){
                             var lookupObj = new Object();
                             _.each(result, function(team) {
-                              if (_.isEqual(teamObj['teamId'], team._id))
-                                lookupObj = teamIndex.createLookupObj(team._id, team.name, team.squadteam, '', teamObj['targetParent'], team.parent_team_id);
+                              if (_.isEqual(associateObj['teamId'], team._id))
+                                lookupObj = teamIndex.createLookupObj(team._id, team.name, team.squadteam, '', associateObj['targetParent'], team.parent_team_id);
                             });
 
                             formattedDocuments(result, action)
@@ -766,7 +765,7 @@ var team = {
                                       .then(function(lookupIndex) {
                                         teamIndex.updateIndexDocument(lookupIndex)
                                           .then(function(result) {
-                                            loggers.get('models').verbose('Success: Team ' + teamObj['teamId'] + ' successfully associated to parent ' + teamObj['targetParent']);
+                                            loggers.get('models').verbose('Success: Team ' + associateObj['teamId'] + ' successfully associated to parent ' + associateObj['targetParent']);
                                             resolve(bulkDocu['docs']);
                                           })
                                           .catch( /* istanbul ignore next */ function(err){
@@ -781,7 +780,7 @@ var team = {
                                     resolve(bulkDocu['docs']);
                                   }); // getIndexDocument
 
-                                // loggers.get('models').verbose('Success: Team ' + teamObj['teamId'] + ' successfully associated to parent ' + teamObj['targetParent']);
+                                // loggers.get('models').verbose('Success: Team ' + associateObj['teamId'] + ' successfully associated to parent ' + associateObj['targetParent']);
                                 // // return updated documents
                                 // resolve(bulkDocu['docs']);
                               })
@@ -802,57 +801,61 @@ var team = {
                   })
                   .catch( /* istanbul ignore next */ function(err){
                     // cannot simulate Cloudant error during testing
-                    errorLists['error']['targetParent'] = 'Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.';
+                    errorLists['error']['targetParent'] = ['Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.'];
                     infoLogs(errorLists);
                     reject(errorLists);
                   })
                 }
                 break;
               case 'associateChild':
-                if(_.isEmpty(teamObj['targetChild'])){
-                  errorLists['error']['targetChild'] = 'No team selected to associate as a Child team.';
+                if(_.isEmpty(associateObj['targetChild'])){
+                  errorLists['error']['targetChild'] = ['No team selected to associate as a Child team.'];
                   infoLogs(errorLists);
                   reject(errorLists);
                 }
-                if(typeof teamObj['targetChild'] != 'object'){
-                  // target child must be array of team id
-                  errorLists['error']['targetChild'] = 'Unable to add selected team as a child. Team may have been updated with another parent.';
-                  infoLogs(errorLists);
-                  reject(errorLists);
-                }else if(teamObj['targetChild'].indexOf(teamObj['teamId']) > -1){
+                // I dont think we need this check to check if its an object since we are passing an array of string as possible "child team id"
+                // if(typeof associateObj['targetChild'] != 'object'){
+                //   // target child must be array of team id
+                //   errorLists['error']['targetChild'] = ['Unable to add selected team as a child. Team may have been updated with another parent.'];
+                //   infoLogs(errorLists);
+                //   reject(errorLists);
+                // }else 
+                // we actually need to get the latest team docs to see if it has been associated already with another parent
+                if(associateObj['targetChild'].indexOf(associateObj['teamId']) > -1){
                   // not allowed to add self as a child
-                  errorLists['error']['targetChild'] = 'Unable to add selected team as a child. Team may have been updated with another parent.';
+                  console.log("not allowed to add self as a child");
+                  errorLists['error']['targetChild'] = ['Unable to add selected team as a child. Team may have been updated with another parent.'];
                   infoLogs(errorLists);
                   reject(errorLists);
                 }else{
                   var childLists = [];
-                  _.each(teamObj['targetChild'], function(v,i,l){
-                    childLists.push(team.getTeam(v))
-                  })
+                  _.each(associateObj['targetChild'], function(id){
+                    childLists.push(team.getTeam(id))
+                  });
                   Promise.all(childLists)
                   .then(function(result){
                     //squad teams cannot have child teams
                     //only allowed to add teams that has no parent
-                    _.each(result, function(v,i,l){
-                      if(oldRec['child_team_id'].indexOf(v['_id']) === -1){
-                        if(!(_.isEmpty(v['child_team_id'])) || !(_.isEmpty(v['parent_team_id']))){
-                          errorLists['error']['targetChild'] = 'Unable to add selected team as a child. Team may have been updated with another parent.';
+                    _.each(result, function(team){
+                      if(currentTeam['child_team_id'].indexOf(team['_id']) == -1){
+                        if(!_.isEmpty(team['parent_team_id'])){
+                          errorLists['error']['targetChild'] = ['Unable to add selected team as a child. Team may have been updated with another parent.'];
                           infoLogs(errorLists);
                           reject(errorLists);
                         }
                       }
-                    })
+                    });
                     var associateChild = [];
-                    associateChild.push(team.getTeam(teamObj['teamId']));
-                    _.each(teamObj['targetChild'], function(v,i,l){
+                    associateChild.push(team.getTeam(associateObj['teamId']));
+                    _.each(associateObj['targetChild'], function(v,i,l){
                       associateChild.push(team.getTeam(v));
                     });
                     Promise.all(associateChild)
                     .then(function(result){
                       var lookupObjArr = [];
                       _.each(result, function(team) {
-                        if (teamObj['targetChild'].indexOf(team._id) > -1 && !_.isEqual(teamObj['teamId'], team._id)) {
-                          var lookupObj = teamIndex.createLookupObj(team._id, team.name, team.squadteam, '', teamObj['teamId'], team.parent_team_id);
+                        if (associateObj['targetChild'].indexOf(team._id) > -1 && !_.isEqual(associateObj['teamId'], team._id)) {
+                          var lookupObj = teamIndex.createLookupObj(team._id, team.name, team.squadteam, '', associateObj['teamId'], team.parent_team_id);
                           lookupObjArr.push(lookupObj);
                         }
                       });
@@ -870,7 +873,7 @@ var team = {
                                 .then(function(lookupIndex) {
                                   teamIndex.updateIndexDocument(lookupIndex)
                                     .then(function(result) {
-                                      loggers.get('models').verbose('Success: Team ' + teamObj['teamId'] + ' successfully associated to child ' + JSON.stringify(teamObj['targetChild']));
+                                      loggers.get('models').verbose('Success: Team ' + associateObj['teamId'] + ' successfully associated to child ' + JSON.stringify(associateObj['targetChild']));
                                       resolve(bulkDocu['docs']);
                                     })
                                     .catch( /* istanbul ignore next */ function(err){
@@ -885,7 +888,7 @@ var team = {
                               resolve(bulkDocu['docs']);
                             }); // getIndexDocument
 
-                          // loggers.get('models').verbose('Success: Team ' + teamObj['teamId'] + ' successfully associated to child ' + JSON.stringify(teamObj['targetChild']));
+                          // loggers.get('models').verbose('Success: Team ' + associateObj['teamId'] + ' successfully associated to child ' + JSON.stringify(associateObj['targetChild']));
                           // //resolve(body);
                           // // return updated documents
                           // resolve(bulkDocu['docs']);
@@ -906,31 +909,31 @@ var team = {
                 }
                 break;
               case 'removeParent':
-                if(_.isEmpty(teamObj['targetParent'])){
+                if(_.isEmpty(associateObj['targetParent'])){
                   // not allowed to be a parent of self
-                  errorLists['error']['targetParent'] = 'Target parent cannot be blank';
+                  errorLists['error']['targetParent'] = ['Target parent cannot be blank'];
                   infoLogs(errorLists);
                   reject(errorLists);
-                }else if(teamObj['teamId'] === teamObj['targetParent']){
+                }else if(associateObj['teamId'] === associateObj['targetParent']){
                   // not allowed to be a parent of self
-                  errorLists['error']['targetParent'] = 'Target parent cannot be equal to self';
+                  errorLists['error']['targetParent'] = ['Target parent cannot be equal to self'];
                   infoLogs(errorLists);
                   reject(errorLists);
                 }else{
                   var removeParent = [];
-                  removeParent.push(team.getTeam(teamObj['teamId']));
-                  removeParent.push(team.getTeam(teamObj['targetParent']));
+                  removeParent.push(team.getTeam(associateObj['teamId']));
+                  removeParent.push(team.getTeam(associateObj['targetParent']));
                   Promise.all(removeParent)
                   .then(function(result){
                     var lookupObj = new Object();
                     _.each(result, function(team) {
-                      if (_.isEqual(teamObj['teamId'], team._id))
+                      if (_.isEqual(associateObj['teamId'], team._id))
                         lookupObj = teamIndex.createLookupObj(team._id, team.name, team.squadteam, '', '', team.parent_team_id);
                     });
 
                     // target parent must be equal to current team parent team id
                     if(result[0]['parent_team_id'] != result[1]['_id']){
-                      errorLists['error']['targetParent'] = 'Target parent is not parent of current team';
+                      errorLists['error']['targetParent'] = ['Target parent is not parent of current team'];
                       infoLogs(errorLists);
                       reject(errorLists);
                     }else{
@@ -947,7 +950,7 @@ var team = {
                                   .then(function(lookupIndex) {
                                     teamIndex.updateIndexDocument(lookupIndex)
                                       .then(function(result) {
-                                        loggers.get('models').verbose('Success: Team ' + teamObj['teamId'] + ' successfully removed parent team ' + teamObj['targetParent']);
+                                        loggers.get('models').verbose('Success: Team ' + associateObj['teamId'] + ' successfully removed parent team ' + associateObj['targetParent']);
                                         resolve(bulkDocu['docs']);
                                       })
                                       .catch( /* istanbul ignore next */ function(err){
@@ -962,7 +965,7 @@ var team = {
                                 resolve(bulkDocu['docs']);
                               });
 
-                          // loggers.get('models').verbose('Success: Team ' + teamObj['teamId'] + ' successfully removed parent team' + teamObj['targetParent']);
+                          // loggers.get('models').verbose('Success: Team ' + associateObj['teamId'] + ' successfully removed parent team' + associateObj['targetParent']);
                           // //resolve(body);
                           // // return updated documents
                           // resolve(bulkDocu['docs']);
@@ -988,28 +991,28 @@ var team = {
                 }
                 break;
               case 'removeChild':
-                if(typeof teamObj['targetChild'] != 'object'){
+                if(typeof associateObj['targetChild'] != 'object'){
                   // target child must be array of team id
-                  errorLists['error']['targetChild'] = 'Invalid target child';
+                  errorLists['error']['targetChild'] = ['Invalid target child'];
                   infoLogs(errorLists);
                   reject(errorLists);
-                }else if(teamObj['targetChild'].indexOf(teamObj['teamId']) > -1){
+                }else if(associateObj['targetChild'].indexOf(associateObj['teamId']) > -1){
                   // not allowed to add self as a child
-                  errorLists['error']['targetChild'] = 'Invalid target child';
+                  errorLists['error']['targetChild'] = ['Invalid target child'];
                   infoLogs(errorLists);
                   reject(errorLists);
                 }else{
                   var removeChild = [];
-                  removeChild.push(team.getTeam(teamObj['teamId']));
-                  _.each(teamObj['targetChild'], function(v,i,l){
+                  removeChild.push(team.getTeam(associateObj['teamId']));
+                  _.each(associateObj['targetChild'], function(v,i,l){
                     removeChild.push(team.getTeam(v))
                   })
                   Promise.all(removeChild)
                   .then(function(result){
                     var lookupObjArr = [];
                     _.each(result, function(team) {
-                      if (teamObj['targetChild'].indexOf(team._id) > -1 && !_.isEqual(teamObj['teamId'], team._id)) {
-                        var lookupObj = teamIndex.createLookupObj(team._id, team.name, team.squadteam, '', '', teamObj['teamId']);
+                      if (associateObj['targetChild'].indexOf(team._id) > -1 && !_.isEqual(associateObj['teamId'], team._id)) {
+                        var lookupObj = teamIndex.createLookupObj(team._id, team.name, team.squadteam, '', '', associateObj['teamId']);
                         lookupObjArr.push(lookupObj);
                       }
                     });
@@ -1027,7 +1030,7 @@ var team = {
                                 .then(function(lookupIndex) {
                                   teamIndex.updateIndexDocument(lookupIndex)
                                     .then(function(result) {
-                                      loggers.get('models').verbose('Success: Team ' + teamObj['teamId'] + ' successfully removed child team ' + JSON.stringify(teamObj['targetChild']));
+                                      loggers.get('models').verbose('Success: Team ' + associateObj['teamId'] + ' successfully removed child team ' + JSON.stringify(associateObj['targetChild']));
                                       resolve(bulkDocu['docs']);
                                     })
                                     .catch( /* istanbul ignore next */ function(err){
@@ -1041,7 +1044,7 @@ var team = {
                               loggers.get('models').error('Something went wrong while getting the lookup index. ' + err.error);
                               resolve(bulkDocu['docs']);
                             });
-                          // loggers.get('models').verbose('Success: Team ' + teamObj['teamId'] + ' successfully removed child team' + JSON.stringify(teamObj['targetChild']));
+                          // loggers.get('models').verbose('Success: Team ' + associateObj['teamId'] + ' successfully removed child team' + JSON.stringify(associateObj['targetChild']));
                           // //resolve(body);
                           // // return updated documents
                           // resolve(bulkDocu['docs']);
@@ -1060,7 +1063,7 @@ var team = {
         })
         .catch( /* istanbul ignore next */ function(err){
           // cannot simulate Cloudant error during testing
-          errorLists['error']['user'] = 'User not authorized to do action';
+          errorLists['error']['user'] = ['User not authorized to do action'];
           infoLogs(errorLists);
           reject(errorLists);
         });
@@ -1070,15 +1073,15 @@ var team = {
   
   getUserTeams : function(userEmail){
     return new Promise(function(resolve, reject){
-      infoLogs('Getting user team list from Cloudant');
       var userTeamsList = [];
       if (_.isEmpty(userEmail)) {
+        infoLogs('No user teams found!');
         resolve(userTeamsList);
       } else {
         team.getTeamByEmail(userEmail)
           .then(function(body){
-            loggers.get('models').verbose('Success: User team records obtained.');
             var userTeams = util.returnObject(body);
+            loggers.get('models').verbose('Found ' +userTeams.length+' team(s) for ' + userEmail);
             team.getLookupIndex()
             .then(function(result) {
               _.each(userTeams, function(team) {
@@ -1090,30 +1093,10 @@ var team = {
                 }
               });
               userTeamsList = _.uniq(userTeamsList);
-              loggers.get('models').info('Success: User team records obtained.');
+              loggers.get('models').info('Success: '+userEmail+' has '+userTeamsList.length+' accessible team(s) by relationship.');
               resolve(userTeamsList);
             })
-
-            // var result = util.returnObject(body);
-            // var parentTeams = _.map(result, function(val, key){
-            //   if (!_.isEmpty(val.child_team_id)){
-            //     userTeamsList.push(val._id);
-            //     return val.child_team_id;
-            //   }
-            //   else{
-            //     userTeamsList.push(val._id);
-            //     return [];
-            //   }
-            // });
-            // parentTeams = _.flatten(parentTeams);
-            // var parentTeams = _.difference(parentTeams, userTeamsList);          
-            // getSelectedTeams(parentTeams, userTeamsList)
-            // .then(function(body){
-            //   loggers.get('models').info('Success: User team records obtained.');
-            //   resolve(body);
-            // })
             .catch( /* istanbul ignore next */ function(err){
-              // console.log("error" + err);
               reject(formatErrMsg(err.error));
             })
           })
