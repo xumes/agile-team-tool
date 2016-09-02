@@ -10,8 +10,9 @@ var getAllChildren = function(teamId, teamList) {
   var team = teamList[teamId];
   if (!_.isEmpty(team)) {
     if (!_.isEmpty(team.child_team_id)) {
-      children = _.union(children, team.child_team_id);
-      _.each(team.child_team_id, function(id) {
+      // remove cyclic references
+      children = _.union(children, _.difference(team.child_team_id, [team._id]));
+      _.each(_.difference(team.child_team_id, [team._id]), function(id) {
         children = _.union(children, getAllChildren(id, teamList, children));
       });
     }
