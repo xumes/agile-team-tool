@@ -74,6 +74,7 @@ module.exports = function(app, includes) {
 
             if (!(_.isEmpty(ldapObject['ldap']))) {
               req.session['email'] = ldapObject['ldap']['preferredIdentity']; //ldapObject['shortEmail'];
+              ldapObject.shortEmail = ldapObject['ldap']['preferredIdentity']; // Normalize shortEmail with preferredIdentity
               req.session['user'] = ldapObject;
               req.session['environment'] = settings.environment;
               loggers.get('auth').verbose('Successfully authenticated %s via SAML', user);
