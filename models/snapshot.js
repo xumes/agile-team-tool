@@ -610,6 +610,7 @@ var snapshot = {
 
   updateRollUpSquads : function() {
     return new Promise(function(resolve, reject){
+      timestamp = Math.floor(Date.now() / 1000);
       var squadTeams = new Object();
       var oldRollUpDataRevs = new Object();
       var promiseArray = [];
@@ -694,6 +695,7 @@ var snapshot = {
 
   updateRollUpData : function() {
     return new Promise(function(resolve, reject){
+      timestamp = Math.floor(Date.now() / 1000);
       iterationMonth = 5;
       monthArray = [];
       var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
