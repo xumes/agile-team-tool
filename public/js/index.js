@@ -100,8 +100,8 @@ function getMyTeamsFromDb(initial) {
 			if (data.length > 0) {
 				var twistyId = 'teamTreeMain';
 				//no duplicates
-				var uniqueTeams = _.uniq(data, function(item, key, id) { 
-				    return item.id;
+				var uniqueTeams = _.uniq(data, function(item) { 
+				    return item._id;
 				});
 				_.each(uniqueTeams, function(team){
 					addTeamToTree(team, twistyId, true);
