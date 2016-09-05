@@ -1394,8 +1394,6 @@ module.exports = {
 	invalidRevisionId : '12-*219#',
 	parentTeamId : 'ag_team_JMParentTestTeam_1469853919284',
   childTeamId : 'ag_team_JMTestTeam_1469457533966',
-  draftAddId : 'ag_mar_ag_team_JMTestTeam_1469457533966-4',
-  submitAddId : 'ag_mar_ag_team_JMTestTeam_1469457533966-5',
   parentTeamData : {name:'JM Parent Test Team',desc:'JM Parent Test Team',squadteam:'No'},
   parentUser : {shortEmail: 'jazz.ma@ph.ibm.com',ldap:{serialNumber: '153456PH1',hrFirstName: 'Jazz',hrLastName: 'Ma'}}
 

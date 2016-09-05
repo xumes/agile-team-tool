@@ -7,6 +7,7 @@ var dummyData = require('../../data/dummy-data.js');
 var teamModel = require('../../../models/teams');
 var assessmentModel = require('../../../models/assessment');
 var _ = require('underscore');
+var lodash = require('lodash');
 
 var testData = require('../../data/assessment');
 var noId = testData.noId;
@@ -92,36 +93,6 @@ describe('Assessment API Test', function(){
   });
 
   describe('Assesment API Test [POST /api/assessment]: add team assessment', function(){
-    it('add assessment with no assessment id', function(done){
-      var req = request(app).post('/api/assessment/');
-      agent.attachCookies(req);
-      req.send(noId);
-      req.end(function(err, res){
-        expect(res.statusCode).to.be.equal(400);
-        expect(res.body).to.be.a('object');
-        expect(res.body).to.have.property('error');
-        expect(res.body.error).to.have.property('_id');
-        expect(res.body.error._id[0]).to.be.equal('Record id is required.');
-        done();
-      });
-    });
-
-    it('add assesment with empty assesment id', function(done){
-      var emptyId = _.clone(curr_assessment);
-      emptyId._id = '';
-      var req = request(app).post('/api/assessment/');
-      agent.attachCookies(req);
-      req.send(emptyId);
-      req.end(function(err, res){
-        expect(res.statusCode).to.be.equal(400);
-        expect(res.body).to.be.a('object');
-        expect(res.body).to.have.property('error');
-        expect(res.body.error).to.have.property('_id');
-        expect(res.body.error._id[0]).to.be.equal('Record id is required.');
-        done();
-      });
-    });
-
     it('add assessment with valid assessment data', function(done){
       var req = request(app).post('/api/assessment/');
       agent.attachCookies(req);
@@ -130,21 +101,23 @@ describe('Assessment API Test', function(){
         expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.be.a('object');
         expect(res.body.ok).to.be.true;
-        expect(res.body.id).to.be.equal(curr_assessment._id);
+        curr_assessment._id = res.body.id;
         currRevisionId = res.body.rev;
         done();
       });
     });
 
-    it('add assessment with duplicate assessment id', function(done){
+    it('add assessment with invalid assessment data', function(done){
+      var invalidAssessment =  lodash.cloneDeep(curr_assessment);
+      invalidAssessment.created_dt = '';
       var req = request(app).post('/api/assessment/');
       agent.attachCookies(req);
-      req.send(curr_assessment);
+      req.send(invalidAssessment);
       req.end(function(err, res){
         expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('error');
-        expect(res.body.error).to.be.equal('conflict');
+        expect(res.body.error).to.have.deep.property('created_dt[0]', 'Created date is required.');
         done();
       });
     });

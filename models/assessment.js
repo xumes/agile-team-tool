@@ -7,6 +7,7 @@ var util         = require('../helpers/util');
 var teams        = require('./teams');
 var lodash       = require('lodash');
 var rules        = require('./validate_rules/assessment');
+var settings     = require('../settings');
 
 var recordConstraints = rules.recordConstraints;
 var assessmentConstraints = rules.assessmentConstraints;
@@ -141,6 +142,8 @@ var assessment = {
       util.isUserAllowed(userId, data.team_id)
         .then(function(body){
           var validateError;
+          var assessmentId = settings.prefixes.assessment +  data.team_id + "_" + new Date().getTime();
+          data._id = assessmentId;
           if(data.assessmt_status == 'Draft'){
             validateError = validate(data, recordConstraints);
           }else{
@@ -163,7 +166,8 @@ var assessment = {
                 successLogs('Assessment '+ data._id +' record inserted.');
                 resolve(body);
               })
-              .catch(function(err){
+              .catch( /* istanbul ignore next */ function(err){
+                /* can't simulate Cloudant error during testing */
                 msg = err.error;
                 reject(formatErrMsg(msg));
               });
