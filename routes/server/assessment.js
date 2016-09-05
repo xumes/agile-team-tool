@@ -7,18 +7,7 @@ module.exports = function(app, includes) {
   showAssessment = function(req, res) {
     var json = 
       {
-        'pageTitle'       : 'Maturity Assessment',
-        'prefix'          : settings.prefixes.assessment,
-        'user'            : req.session['user'],
-        'allTeams'        : [],
-        'allTeamsLookup'  : [],
-        'myTeams'         : [],
-        'systemAdmin'     : req.session['systemAdmin'],
-        'systemStatus'    : req.session['systemStatus'],
-        'environment'     : settings.environment,
-        'prefix'          : settings.prefixes.assessment,
-        'squadTeams'      : req.squadTeams,
-        'userTeamList'    : req.userTeamList,
+        'pageTitle'          : 'Maturity Assessment',
         'googleAnalyticsKey' : settings.googleAnalyticsKey
       };
     render(req, res, 'assessment', json);
