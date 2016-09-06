@@ -250,8 +250,9 @@ function getMyTeamsFromDb(initial) {
 
 //add refresh timestamp after Iteration trend title
 function addRefreshDate(timestamp){
-	var myDate = new Date(timestamp*1000); // creates a date that represents the number of milliseconds after midnight GMT on Januray 1st 1970.
-	$("#refreshDate").html(myDate);
+	//var myDate = new Date(timestamp*1000); // creates a date that represents the number of milliseconds after midnight GMT on Januray 1st 1970.
+	//$("#refreshDate").html(moment(myDate).format("DD-MMM-YYYY, hh:mm"));
+	$("#refreshDate").html(moment.utc(timestamp*1000).format("DD-MMM-YYYY, HH:mm (z)"));
 }
 
 //refresh button on the screen to refresh snapshot from workers
