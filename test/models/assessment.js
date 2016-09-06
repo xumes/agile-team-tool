@@ -25,12 +25,10 @@ var del_assessment = testData.deleteAssessment;
 
 var parentTeamId = testData.parentTeamId;
 var childTeamId = testData.childTeamId;
-var draftAddId = testData.draftAddId;
-var submitAddId = testData.submitAddId;
 var parentTeamData = testData.parentTeamData;
 var parentUser = testData.parentUser;
-
 var adminList;
+var assessmentIds = [];
 
 function createDraft1(){
   common.addRecord(draft_assessment)
@@ -139,7 +137,7 @@ describe('Assessment Model', function() {
 
   after(function(done){
     Promise.all([cleanupAssessment(draft_assessment._id),cleanupAssessment(sub_assessment._id),
-      cleanupAssessment(draftAddId), cleanupAssessment(submitAddId)]);
+      cleanupAssessment(assessmentIds[0]), cleanupAssessment(assessmentIds[1])]);
 
     teamModel.getTeam(teamData._id)
     .then(function(body){
@@ -187,7 +185,6 @@ describe('Assessment Model', function() {
 
     it("valid draft assessment from team member", function(done){
       var valAssessment =lodash.cloneDeep(curr_assessment);
-      valAssessment._id = draftAddId;
       valAssessment.assessmt_status = 'Draft';
       valAssessment.assessmt_cmpnt_rslts[0].assessed_cmpnt_tbl[0].cur_mat_lvl_score = '';
       valAssessment.created_dt = util.getServerTime();
@@ -196,6 +193,7 @@ describe('Assessment Model', function() {
         .then(function(body){
           expect(body.ok).to.be.true;
           expect(body.id).to.be.equal(valAssessment._id);
+          assessmentIds.push(body.id);
           done();
         })
         .catch(function(err){
@@ -298,31 +296,8 @@ describe('Assessment Model', function() {
 
   describe("assessment model [addTeamAssessment] ", function(){
 
-    it("add assessment [no assessment id]", function(done){
-      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, noId)
-        .catch(function(err){
-          expect(err).to.be.an('object');
-          expect(err).to.have.property('error');
-          expect(err).to.have.deep.property('error._id[0]','Record id is required.');
-          done();
-        });
-    });
-
-    it("add assessment [empty assessment id]", function(done){
-      var emptyId = lodash.cloneDeep(curr_assessment);
-      emptyId._id = '';
-      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, emptyId)
-        .catch(function(err){
-          expect(err).to.be.an('object');
-          expect(err).to.have.property('error');
-          expect(err).to.have.deep.property('error._id[0]','Record id is required.');
-          done();
-        });
-    });
-
     it("valid assessment with non-existing user", function(done){
       var valAssessment =lodash.cloneDeep(curr_assessment);
-      valAssessment._id = submitAddId;
       valAssessment.created_dt = util.getServerTime();
       valAssessment.created_user = 'test.user@ph.ibm.com';
       assessmentModel.addTeamAssessment('test.user@ph.ibm.com', valAssessment)
@@ -336,12 +311,12 @@ describe('Assessment Model', function() {
 
     it("add assessment [valid assessment data]", function(done){
       var valAssessment = lodash.cloneDeep(curr_assessment);
-      valAssessment._id = submitAddId;
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
       .then(function(body){
         expect(body).to.be.an('object');
         expect(body.ok).to.be.true;
         expect(body.id).to.be.equal(valAssessment._id);
+        assessmentIds.push(body.id);
         done();
       })
       .catch(function(err){
@@ -349,17 +324,6 @@ describe('Assessment Model', function() {
       });
     });
 
-    it("add assessment [duplicate assessment id]", function(done){
-      var valAssessment = lodash.cloneDeep(curr_assessment);
-      valAssessment._id = submitAddId;
-      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
-        .catch(function(err){
-          expect(err).to.be.an('object');
-          expect(err).to.have.property('error');
-          expect(err.error).to.be.equal('conflict');
-          done();
-        });
-    });
   });
 
   describe("assessment models [getTeamAssessments]", function(){

@@ -245,7 +245,7 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
     var currData = resetData();
     var rollUpIterationsData = {};
     rollUpIterationsData[teamId] = currData;
-    var currDate = new Date(util.getServerTime());
+    var currDate = new Date();
     _.each(iterationDocs, function(iterationDoc){
       var iterationDocDate = new Date(iterationDoc['iteration_end_dt']);
       var iterationDocIndex = 5 - monthDiff(iterationDocDate, currDate);
@@ -417,7 +417,7 @@ function monthDiff(d1, d2) {
  * @return date newDate
  */
 function addMonths(date, months) {
-  var newDate = new Date(util.getServerTime());
+  var newDate = new Date();
   newDate.setDate(1);
   newDate.setMonth(date.getMonth() + months);
   return new Date(newDate);
@@ -610,6 +610,7 @@ var snapshot = {
 
   updateRollUpSquads : function() {
     return new Promise(function(resolve, reject){
+      timestamp = Math.floor(Date.now() / 1000);
       var squadTeams = new Object();
       var oldRollUpDataRevs = new Object();
       var promiseArray = [];
@@ -694,17 +695,18 @@ var snapshot = {
 
   updateRollUpData : function() {
     return new Promise(function(resolve, reject){
+      timestamp = Math.floor(Date.now() / 1000);
       iterationMonth = 5;
       monthArray = [];
       var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-      var nowTime = new Date(util.getServerTime());
+      var nowTime = new Date();
       var endTime = nowTime.toLocaleDateString('en-US',options);
-      var startTime = new Date(util.getServerTime());
+      var startTime = new Date();
       startTime = new Date(startTime.setDate(1));
       startTime = new Date(startTime.setMonth(nowTime.getMonth() - iterationMonth));
       startTime = startTime.toLocaleDateString('en-US',options);
 
-      // var nowTime = new Date(util.getServerTime());
+      // var nowTime = new Date();
       // var startTime = addMonths(nowTime, -iterationMonth);
       // var endTime = nowTime.toLocaleDateString('en-US',options);
       // startTime = startTime.toLocaleDateString('en-US',options);
@@ -804,73 +806,7 @@ var snapshot = {
           reject(formatErrMsg(msg));
         })
     });
-  },
-
-  // getRollUpData : function(startTime, endTime) {
-  //   return new Promise(function(resolve, reject){
-  //     var squadIterationDocs = {};
-  //     iterationMonth = monthDiff(new Date(startTime), new Date(endTime));
-  //     if (iterationMonth < 0) {
-  //       var msg = 'end time is before start time';
-  //       reject(formatErrMsg(msg));
-  //     } else {
-  //       var promiseArray = [];
-  //       promiseArray.push(getIterationDocs(startTime, endTime));
-  //       promiseArray.push(getAllSquads());
-  //       Promise.all(promiseArray)
-  //         .then(function(promiseResults){
-  //           var squadIterationDocs = promiseResults[0];
-  //           var squadsByParent = promiseResults[1];
-  //           var promiseArray2 = [];
-  //           _.each(Object.keys(squadIterationDocs), function(squadTeamId){
-  //             promiseArray2.push(rollUpIterationsBySquad(squadIterationDocs[squadTeamId],squadTeamId));
-  //           });
-  //           Promise.all(promiseArray2)
-  //             .then(function(squadsCalResultsArray){
-  //               var squadsCalResults = {};
-  //               _.each(squadsCalResultsArray, function(squadsCalResult){
-  //                 squadsCalResults[Object.keys(squadsCalResult)[0]] = squadsCalResult[Object.keys(squadsCalResult)[0]];
-  //               });
-  //               var promiseArray3 = [];
-  //               _.each(Object.keys(squadsByParent), function(nonSquadTeamId){
-  //                 promiseArray3.push(rollUpIterationsByNonSquad(squadsByParent[nonSquadTeamId], nonSquadTeamId, squadsCalResults, false, {}));
-  //               });
-  //               Promise.all(promiseArray3)
-  //                 .then(function(nonSquadCalResults){
-  //                   resolve(nonSquadCalResults);
-  //                 })
-  //                 .catch( /* istanbul ignore next */ function(err){
-  //                   var msg;
-  //                   if (err.error) {
-  //                     msg = err.error;
-  //                   } else {
-  //                     msg = err;
-  //                   }
-  //                   reject(formatErrMsg(msg));
-  //                 });
-  //             })
-  //             .catch( /* istanbul ignore next */ function(err){
-  //               var msg;
-  //               if (err.error) {
-  //                 msg = err.error;
-  //               } else {
-  //                 msg = err;
-  //               }
-  //               reject(formatErrMsg(msg));
-  //             });
-  //         })
-  //         .catch( /* istanbul ignore next */ function(err){
-  //           var msg;
-  //           if (err.error) {
-  //             msg = err.error;
-  //           } else {
-  //             msg = err;
-  //           }
-  //           reject(formatErrMsg(msg));
-  //         });
-  //     }
-  //   });
-  // }
+  }
 };
 
 module.exports = snapshot;

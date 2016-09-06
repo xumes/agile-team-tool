@@ -1,7 +1,7 @@
 // some function calls are found on dashUtils.js, commons.js
 jQuery(function($) {
   $(document).ready(function() {
-  	getSessionVars(initPageAction);
+  	getPageVariables('assessment', initPageAction);
 	});
 
 	function initPageAction() {
@@ -822,10 +822,8 @@ function assessmentAction(obj) {
 function updateAgileTeamAssessment(action) {
 	var msg = "";
 	if ($("#assessmentSelectList").val().toLowerCase() == "new") {
-		var _id = prefixAssessment + $("#teamSelectList").val() + "_" + new Date().getTime();
 		var serverDateTime = getServerDateTime();
 		var screenAnswers = getScreenAnswers();
-		screenAnswers["_id"] = _id;
 		screenAnswers["assessmt_status"] = "Draft";	
 		screenAnswers["created_dt"] = serverDateTime;
 		screenAnswers["created_user"] = userInfo.email;
@@ -851,7 +849,6 @@ function updateAgileTeamAssessment(action) {
 
 		$("#lastUpdateUser").html(userInfo.email);
 		$("#lastUpdateTimestamp").html(showDateDDMMMYYYYTS(serverDateTime));
-		$("#doc_id").html(_id);
 
 		gTeamAssessment = screenAnswers;
 		showLog(screenAnswers);
@@ -861,8 +858,9 @@ function updateAgileTeamAssessment(action) {
 			contentType : "application/json",
 			data : JSON.stringify(screenAnswers)
 		}).done(function(data) {
-				getTeamAssessments($("#teamSelectList option:selected").val(), false, teamAssessmentListHander, ["assessmentSelectList", $("#teamSelectList option:selected").val(), screenAnswers["_id"]]);
-    		showMessagePopup(msg);
+			$("#doc_id").html(data.id);
+			getTeamAssessments($("#teamSelectList option:selected").val(), false, teamAssessmentListHander, ["assessmentSelectList", $("#teamSelectList option:selected").val(), data.id]);
+   		showMessagePopup(msg);
     }).fail(function( jqXHR, textStatus, errorThrown){
 			if (jqXHR.status == 400){
 				if (jqXHR.responseJSON.error  != null)

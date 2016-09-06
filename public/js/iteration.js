@@ -7,7 +7,7 @@ var global_currentAction = undefined;
 
 jQuery(function($) {
   $(document).ready(function() {
-    getSessionVars(initPageAction);
+    getPageVariables('iteration', initPageAction);
   });
 
   function initPageAction() {    
@@ -18,7 +18,8 @@ jQuery(function($) {
     }
 
     if (urlParameters != undefined && urlParameters.id != undefined) {
-      if (urlParameters != undefined && urlParameters.iter != undefined && urlParameters.iter != "")
+      getTeam(urlParameters.id, updateAgileTeamCache, []);
+      if (urlParameters != undefined && urlParameters.iter != undefined && urlParameters.iter != "") 
         loadAgileTeams(urlParameters.id, urlParameters.iter);
       else
         loadAgileTeams(urlParameters.id, "new");
@@ -49,7 +50,9 @@ jQuery(function($) {
 
   $("#teamSelectList").change(function() {
     updateIterationInfo("clearIteration");
-    loadAgileTeamIterationInfo($("#teamSelectList option:selected").val(), "new");
+    var teamId = $("#teamSelectList option:selected").val();
+    getTeam(teamId, updateAgileTeamCache, []);
+    loadAgileTeamIterationInfo(teamId, "new");
 
   });
 
@@ -333,7 +336,7 @@ function loadAgileTeams(selected, iteration) {
   $("#iterationSelectList").attr("disabled", "disabled");
   $("#select2-iterationSelectList-container").css('color', 'grey');
 
-  addOptions("teamSelectList", squadTeams, null, null, selected);
+  addOptions("teamSelectList", sortAgileTeamsByName(squadTeams), null, null, selected);
   $("#teamSelectList").removeAttr("disabled");
 
   if (iteration != undefined && iteration != "")
@@ -659,13 +662,8 @@ function addIteration(action) {
           });
         });
       } else {
-        // showMessagePopup ("insert new iteration");
-        var newIterationId = prefixIteration + $("#teamSelectList").val() + " " + $("#iterationName").val() + "_" + new Date().getTime();
-        newIterationId = newIterationId.replace(/^[^a-z]+|[^\w:.-]+/gi, "");
-
-        // showMessagePopup ("newIterationId: " + newIterationId);
         var serverDateTime = getServerDateTime();
-        jsonData = createIterationData(newIterationId);
+        jsonData = createIterationData();
         console.log(jsonData);
         console.log(JSON.stringify(jsonData));
         $.ajax({
@@ -695,7 +693,6 @@ function addIteration(action) {
 
 function createIterationData(newIterationId) {
   var jsonData = new Object();
-  jsonData._id = newIterationId;
   jsonData.type = "iterationinfo";
   jsonData.team_id = $("#teamSelectList").val();
   jsonData.iteration_name = $("#iterationName").val();

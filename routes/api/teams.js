@@ -4,12 +4,10 @@ var validate = require('validate.js');
 var _ = require('underscore');
 
 module.exports = function(app, includes) {
-  var middleware  = includes.middleware;
   createTeam = function(req, res){
     var teamDoc = req.body;
     teamModel.createTeam(teamDoc, req.session['user'])
       .then(function(result){
-        middleware.cache.updateTeamCache(req, result);
         teamModel.getUserTeams(req.session['email'])
         .then(function (body){
           var addResult = new Object();
@@ -25,9 +23,8 @@ module.exports = function(app, includes) {
 
   deleteTeam = function(req, res){
     if(!(_.isEmpty(req.body['doc_status'])) &&  req.body['doc_status'] === 'delete'){
-      teamModel.updateOrDeleteTeam(req.body, req.session, 'delete')
+      teamModel.updateOrDeleteTeam(req.body, req.session["user"], 'delete')
         .then(function(result){
-          middleware.cache.updateTeamCache(req, req.body);
           teamModel.getUserTeams(req.session['email'])
           .then(function (body){
             res.status(200).send(body);
@@ -42,9 +39,8 @@ module.exports = function(app, includes) {
   }
 
   updateTeam = function(req, res){
-    teamModel.updateOrDeleteTeam(req.body, req.session, 'update')
+    teamModel.updateOrDeleteTeam(req.body, req.session["user"], 'update')
       .then(function(result){
-        middleware.cache.updateTeamCache(req, result);
         teamModel.getUserTeams(req.session['email'])
         .then(function (body){
           var updateResult = new Object();
@@ -64,12 +60,8 @@ module.exports = function(app, includes) {
     if(typeof valid === 'object' || valid === false){
       res.status(400).send({ error : 'Invalid action' });
     }else{
-      teamModel.associateTeams(req.body, action, req.session)
+      teamModel.associateTeams(req.body, action, req.session["user"])
       .then(function(result) {
-        _.each(result, function(team) {
-          middleware.cache.updateTeamCache(req, team);
-        });
-
         var associateResult = new Object();
         teamModel.getUserTeams(req.session['email'])
         .then(function (body){
@@ -146,7 +138,6 @@ module.exports = function(app, includes) {
       var teamId = req.params.teamId;
       teamModel.getTeam(teamId)
         .then(function(result){
-          middleware.cache.updateTeamCache(req, result);
           res.send(result);
         })
         .catch(function(err){

@@ -4,18 +4,19 @@ jQuery(function($) {
 	});
 });
 
-var user, userInfo, allTeams, membeRoles, allTeamsLookup, myTeams, systemAdmin, systemStatus, environment;
-function getSessionVars(_callback) {
-	$.get('/api/sessionvars', function(data, status) {
+var user, userInfo, allTeams, memberRoles, allTeamsLookup, userTeamList, systemAdmin, systemStatus, squadTeams, environment;
+function getPageVariables(page, _callback) {
+	$.get('/api/uihelper/' + page, function(data, status) {
 	  if (status == 'success') {
-	    user 						= data.user;
-	    allTeams 				= data.allTeams;
-	    allTeamsLookup 	= data.allTeamsLookup;
-	    myTeams 				= data.myTeams;
+	    user 				= data.user;				// required for all page
+	    systemAdmin 		= data.systemAdmin;			// required for all page
+	    systemStatus 		= data.systemStatus;		// required for all page
+	    environment 		= data.environment;			// required for all page
+	    allTeams 			= data.allTeams;
+	    allTeamsLookup 		= data.allTeamsLookup;
+	    squadTeams			= data.squadTeams;
+	    userTeamList		= data.userTeamList;
 	    memberRoles			= data.memberRoles;
-	    systemAdmin 		= data.systemAdmin;
-	    systemStatus 		= data.systemStatus;
-	    environment 		= data.environment;
 
 	    userInfo = {
 	      //id: not defined in ldap object,
@@ -30,12 +31,23 @@ function getSessionVars(_callback) {
 	      //org-title: not defined in ldap object,
 	      "notes-id"    : user.ldap.notesId
 	    };
+
+	    // LDAP employee name has different convetion from Faces API value
+	    getPersonFromFaces(userInfo.email, updateUserInfo, []);
+
 	  }
 	  if (typeof _callback === "function") {
 		  _callback.apply(this);
 		}
 	})
 }
+
+function updateUserInfo(personObj) {
+	if (!_.isEmpty(personObj)) {
+		userInfo.name = !_.isEmpty(personObj.name) ? personObj.name : userInfo.name;
+  }
+}
+
 /**
  * Modal dialog used to show messages in place of the regular javascript alert.
  */
@@ -62,7 +74,7 @@ function setTestUser(userEmail, testUserInfo, testUserTeams) {
 	if (testUserTeams === undefined)
 		getAllAgileTeamsForUser(userEmail, setTestUser, [userEmail, userInfo]);
 
-	myTeams = testUserTeams;
+	userTeamList = _.pluck(testUserTeams, "_id");
 }
 
 /**
@@ -276,8 +288,8 @@ function setGlobalAdministorList(administrator) {
  * @returns {Boolean}
  */
 function isAdmin() {
-	if (!_.isEmpty(systemAdmin) && !_.isEmpty(user)) {
-		return systemAdmin.ACL_Full_Admin.indexOf(user.email ) > -1;
+	if (!_.isEmpty(systemAdmin) && !_.isEmpty(userInfo)) {
+		return systemAdmin.ACL_Full_Admin.indexOf(userInfo.email ) > -1;
 	}
 	return false;
 }
@@ -350,8 +362,6 @@ function getRemoteData(cUrl, _callback, args) {
 	}).done(function(data) {
 		if (data != undefined) {
 			var list = [];
-			console.log("data has rows " + _.has(data.rows, 'rows'));
-			console.log("data has value " + _.has(data, 'value'));
 			if (_.has(data, 'rows')) {
 			  if (!_.isEmpty(data.rows)) {
 			    if (_.has(data.rows[0], 'doc'))
@@ -383,8 +393,7 @@ function getRemoteData(cUrl, _callback, args) {
 			        var merged = _.extend(val.fields, {'_id':val.id});
 			          return merged;
 			        });
-			    }
-			    else
+			    } else
 			    	list = data;
 			  } else
 			    list =  data;
@@ -611,7 +620,6 @@ function getAgileTeamCache(id) {
 	var copy = (_.isEmpty(allTeamsLookup[id]) || _.isEmpty(allTeamsLookup[id].doc)) ? allTeamsLookup[id] : allTeamsLookup[id].doc;
 	// return a copy of the object
 	return $.extend(true, {}, copy);
-	// return (_.isEmpty(allTeamsLookup[id]) || _.isEmpty(allTeamsLookup[id].doc)) ? allTeamsLookup[id] : allTeamsLookup[id].doc;
 }
 
 function compactTeam(team) {
@@ -642,6 +650,12 @@ function compactTeam(team) {
 };
 
 function updateAgileTeamCache(team) {
+	if (_.isEmpty(allTeams) && !_.isEmpty(squadTeams))
+		allTeams = squadTeams;
+
+  if (_.isEmpty(allTeamsLookup))
+  	allTeamsLookup = _.indexBy(allTeams, function(team) {return team._id});
+
   if (!_.isEmpty(allTeamsLookup) && !_.isEmpty(team)) {
     var compactedTeam = compactTeam(team);
     if (_.isEmpty(allTeamsLookup[team._id]))
@@ -653,15 +667,8 @@ function updateAgileTeamCache(team) {
   }
 
   if (!_.isEmpty(user) && !_.isEmpty(team.members) 
-  	&& !_.isEmpty(_.find(team.members, {id: user.shortEmail})) && _.isEmpty(_.find(myTeams, {_id: team._id}))) {
-    var newTeam = new Object;
-    newTeam['_id'] = team['_id'];
-    newTeam['_rev'] = team['_rev'];
-    newTeam['name'] = team['name'];
-    newTeam['parent_team_id'] = team['parent_team_id'];
-    newTeam['child_team_id'] = team['child_team_id'];
-    newTeam['squadteam'] = team['squadteam'];
-    myTeams.push(newTeam);
+  	&& !_.isEmpty(_.find(team.members, {id: user.shortEmail})) && userTeamList.indexOf(team._id < 0)) {
+    userTeamList.push(team._id);
   }
 
 

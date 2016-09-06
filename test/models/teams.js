@@ -18,6 +18,8 @@ var teamDocUpdateValid = dummyData.teams.validDoc;
 
 var teamDocValid = dummyData.teams.validDoc;
 
+var teamSquadDocValid = dummyData.teams.validSquadDoc;
+
 var userDetailsValid = dummyData.user.details;
 
 var userDetails = dummyData.user.details;
@@ -28,17 +30,21 @@ var indexDocument = dummyData.index.indexDocument;
 
 var teamAssociations = dummyData.index.teamAssociations;
 
+var removedId = [];
+
+var removedRev = [];
+  
 // retrieve obj via cache, decoy for session
-var session = {};
+// var session = {};
 describe('Team models [createTeam]: create a new team document', function(){
-  before(function(done) {
-    cache.setHomeCache(userDetails['shortEmail'])
-    .then(function(body){
-      session = body;
-      session['user'] = userDetails;
-      done();
-    })
-  })
+  // before(function(done) {
+  //   cache.setHomeCache(userDetails['shortEmail'])
+  //   .then(function(body){
+  //     session = body;
+  //     session['user'] = userDetails;
+  //     done();
+  //   })
+  // })
   it('it will return error because team document is not valid', function(done){
     teamModel.createTeam(teamDocInvalid, userDetails)
     .then(function(body){
@@ -87,17 +93,17 @@ describe('Team models [createTeam]: create a new team document', function(){
 });
 
 describe('Team models [updateOrDeleteTeam] : update existing team document', function(){
-  before(function(done) {
-    cache.setHomeCache(userDetails['shortEmail'])
-    .then(function(body){
-      session = body;
-      session['user'] = userDetails;
-      done();
-    })
-  })
+  // before(function(done) {
+  //   cache.setHomeCache(userDetails['shortEmail'])
+  //   .then(function(body){
+  //     session = body;
+  //     session['user'] = userDetails;
+  //     done();
+  //   })
+  // })
   it('it will return error because Team document ID is none existing', function(done){
     var docu = { '_id' : 'none-existing-docu' + new Date().getTime() };
-    teamModel.updateOrDeleteTeam(docu, session, 'update')
+    teamModel.updateOrDeleteTeam(docu, userDetails, 'update')
     .then(function(body){
       expect(body).to.be.equal(null);
     })
@@ -116,7 +122,7 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
     teamDocUpdateInvalid['squadteam'] = 'Yes';
     teamDocUpdateInvalid['child_team_id'] = [];
     teamDocUpdateInvalid['child_team_id'].push(createdId);
-    teamModel.updateOrDeleteTeam(teamDocUpdateInvalid, session, 'update')
+    teamModel.updateOrDeleteTeam(teamDocUpdateInvalid, userDetails, 'update')
     .then(function(body){
       expect(body).to.be.equal(null);
     })
@@ -128,6 +134,84 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
       done();
     })
   });
+
+  it('it will return error because update data is invalid. Squadteam details error', function(done){
+    teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
+      .then(function(body){
+        teamModel.getTeam(body['_id'])
+        .then(function(teamBody){
+          teamBody['squadteam']  = 'Yes';
+          teamBody['child_team_id'] = [createdId];
+          removedId.push(body['_id']);
+          teamModel.updateOrDeleteTeam(teamBody, userDetails, 'update')
+          .catch(function(err){
+            expect(err).to.have.property('error');
+            expect(err.error).to.have.property('squadteam');
+          })
+          .finally(function(){
+            done();
+          })
+        });
+     });
+  });
+
+  it('it will return error because update data is invalid. Parent_id details error', function(done){
+    teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
+      .then(function(body){
+        teamModel.getTeam(body['_id'])
+        .then(function(teamBody){
+          teamBody['parent_team_id'] = body['_id'];
+          removedId.push(body['_id']);
+          teamModel.updateOrDeleteTeam(teamBody, userDetails, 'update')
+          .catch(function(err){
+            expect(err).to.have.property('error');
+            expect(err.error).to.have.property('parent_id');
+          })
+          .finally(function(){
+            done();
+          })
+        });
+     });
+  })
+
+  it('it will return error because update data is invalid. Child_team_id details error', function(done){
+    teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
+      .then(function(body){
+        teamModel.getTeam(body['_id'])
+        .then(function(teamBody){
+          removedId.push(body['_id']);
+          teamBody['child_team_id'] = [body['_id']];
+          teamModel.updateOrDeleteTeam(teamBody, userDetails, 'update')
+            .catch(function(err){
+              expect(err).to.have.property('error');
+              expect(err.error).to.have.property('child_team_id');
+            })
+            .finally(function(){
+              done();
+            })            
+        })
+     });
+  })
+
+  it('it will return error because update data is invalid. Squadteam details error', function(done){
+    teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
+      .then(function(body){
+        teamModel.getTeam(body['_id'])
+        .then(function(teamBody){
+          removedId.push(body['_id']);
+          teamBody['squadteam'] = 'Yes';
+          teamBody['child_team_id'] = [createdId];
+          teamModel.updateOrDeleteTeam(teamBody, userDetails, 'update')
+            .catch(function(err){
+              expect(err).to.have.property('error');
+              expect(err.error).to.have.property('squadteam');
+            })
+            .finally(function(){
+              done();
+            })            
+        })
+     });
+  })
 
   it('it will return error because user is not authorized to update document', function(done){
     userDetailsInvalid = {};
@@ -147,16 +231,17 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
 
   it('it will return success after updating document', function(done){
     teamDocUpdateValid['_id'] = createdId;
-    teamDocUpdateValid['desc'] = 'A new description';
+    teamDocUpdateValid['desc'] = 'A new description ' + Date.now();
     delete teamDocUpdateValid['child_team_id'];
     delete teamDocUpdateValid['parent_team_id'];
-    teamModel.updateOrDeleteTeam(teamDocUpdateValid, session, 'update')
+    teamModel.updateOrDeleteTeam(teamDocUpdateValid, userDetails, 'update')
     .then(function(body){
       expect(body).to.be.a('object');
       expect(body).to.have.property('_id');
       expect(body['_id']).to.be.equal(createdId);
     })
     .catch(function(err){
+      console.log(err);
       expect(err.error).to.be.an('undefined');
     })
     .finally(function(){
@@ -167,7 +252,7 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
   it('it will return error because update document is invalid', function(done){
     teamDocUpdateValid['_id'] = createdId;
     delete teamDocUpdateValid['name'];
-    teamModel.updateOrDeleteTeam(teamDocUpdateValid, session, 'update')
+    teamModel.updateOrDeleteTeam(teamDocUpdateValid, userDetails, 'update')
     .catch(function(err){
       expect(err).to.not.equal(null);
       expect(err).to.have.property('error');
@@ -183,7 +268,7 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
     teamModel.getTeam(null)
     .then(function(body){
       teamDocUpdateValid['name'] = body[0]['value']['name'];
-      teamModel.updateOrDeleteTeam(teamDocUpdateValid, session, 'update')
+      teamModel.updateOrDeleteTeam(teamDocUpdateValid, userDetails, 'update')
       .catch(function(err){
         expect(err).to.not.equal(null);
         expect(err).to.have.property('error');
@@ -197,22 +282,22 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
 });
 
 describe('Team models [associateTeams]: associate team relationship with other teams', function(){
-  before(function(done) {
-    cache.setHomeCache(userDetails['shortEmail'])
-    .then(function(body){
-      session = body;
-      session['user'] = userDetails;
-      done();
-    })
-  });
+  // before(function(done) {
+  //   cache.setHomeCache(userDetails['shortEmail'])
+  //   .then(function(body){
+  //     session = body;
+  //     session['user'] = userDetails;
+  //     done();
+  //   })
+  // });
 
   it('will return error because action is not allowed', function(done){
-    teamModel.associateTeams({}, 'invalid-action', session)
+    teamModel.associateTeams({}, 'invalid-action', userDetails)
     .catch(function(err){
       expect(err).to.not.equal(null);
       expect(err).to.have.property('error');
       expect(err.error).to.have.property('action');
-      expect(err.error.action).to.have.be.equal('Invalid action');
+      expect(err.error.action[0]).to.have.be.equal('Invalid action');
     })
     .finally(function(){
       done();
@@ -220,12 +305,12 @@ describe('Team models [associateTeams]: associate team relationship with other t
   });
 
   it('will return error because team id is invalid', function(done){
-    teamModel.associateTeams({}, 'associateParent', session)
+    teamModel.associateTeams({}, 'associateParent', userDetails)
     .catch(function(err){
       expect(err).to.not.equal(null);
       expect(err).to.have.property('error');
       expect(err.error).to.have.property('teamId');
-      expect(err.error.teamId).to.have.be.equal('Invalid team document ID');
+      expect(err.error.teamId[0]).to.have.be.equal('Invalid team document ID');
     })
     .finally(function(){
       done();
@@ -237,12 +322,12 @@ describe('Team models [associateTeams]: associate team relationship with other t
       teamId : createdId,
       targetParent : ''
     };
-    teamModel.associateTeams( associateValidObj, 'associateParent', session)
+    teamModel.associateTeams( associateValidObj, 'associateParent', userDetails)
     .catch(function(err){
       expect(err).to.not.equal(null);
       expect(err).to.have.property('error');
       expect(err.error).to.have.property('targetParent');
-      expect(err.error.targetParent).to.have.be.equal('Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.');
+      expect(err.error.targetParent[0]).to.have.be.equal('Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.');
     })
     .finally(function(){
       done();
@@ -254,12 +339,12 @@ describe('Team models [associateTeams]: associate team relationship with other t
       teamId : createdId,
       targetParent : 'invalidTeam'
     };
-    teamModel.associateTeams(associateDataParentInvalid, 'associateParent', session)
+    teamModel.associateTeams(associateDataParentInvalid, 'associateParent', userDetails)
     .catch(function(err){
       expect(err).to.not.equal(null);
       expect(err).to.have.property('error');
       expect(err.error).to.have.property('targetParent');
-      expect(err.error.targetParent).to.have.be.equal('Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.');
+      expect(err.error.targetParent[0]).to.have.be.equal('Unable to associate selected team as a parent. Parent team may have been updated as a descendant of this team.');
     })
     .finally(function(){
       done();
@@ -271,12 +356,14 @@ describe('Team models [associateTeams]: associate team relationship with other t
       teamId : createdId,
       targetChild : createdId
     };
-    teamModel.associateTeams(associateDataChildInvalid, 'associateChild', session)
+    teamModel.associateTeams(associateDataChildInvalid, 'associateChild', userDetails)
     .catch(function(err){
       expect(err).to.not.equal(null);
       expect(err).to.have.property('error');
-      expect(err.error).to.have.property('targetChild');
-      expect(err.error.targetChild).to.have.be.equal('Unable to add selected team as a child. Team may have been updated with another parent.');
+      if (err.error != 'not_found') {
+        expect(err.error).to.have.property('targetChild');
+        expect(err.error.targetChild[0]).to.have.be.equal('Unable to add selected team as a child. Team may have been updated with another parent.');
+      }
     })
     .finally(function(){
       done();
@@ -288,12 +375,12 @@ describe('Team models [associateTeams]: associate team relationship with other t
       teamId : createdId,
       targetChild : []
     };
-    teamModel.associateTeams(associateDataChildInvalid, 'associateChild', session)
+    teamModel.associateTeams(associateDataChildInvalid, 'associateChild', userDetails)
     .catch(function(err){
       expect(err).to.not.equal(null);
       expect(err).to.have.property('error');
       expect(err.error).to.have.property('targetChild');
-      expect(err.error.targetChild).to.have.be.equal('No team selected to associate as a Child team.');
+      expect(err.error.targetChild[0]).to.have.be.equal('No team selected to associate as a Child team.');
     })
     .finally(function(){
       done();
@@ -305,12 +392,12 @@ describe('Team models [associateTeams]: associate team relationship with other t
       teamId : createdId,
       targetChild : [createdId]
     };
-    teamModel.associateTeams(associateDataChildInvalid, 'associateChild', session)
+    teamModel.associateTeams(associateDataChildInvalid, 'associateChild', userDetails)
     .catch(function(err){
       expect(err).to.not.equal(null);
       expect(err).to.have.property('error');
       expect(err.error).to.have.property('targetChild');
-      expect(err.error.targetChild).to.have.be.equal('Unable to add selected team as a child. Team may have been updated with another parent.');
+      expect(err.error.targetChild[0]).to.have.be.equal('Unable to add selected team as a child. Team may have been updated with another parent.');
     })
     .finally(function(){
       done();
@@ -323,12 +410,12 @@ describe('Team models [associateTeams]: associate team relationship with other t
       teamId : createdId,
       targetParent : ''
     };
-    teamModel.associateTeams(associateDataRemoveParentInvalid, 'removeParent', session)
+    teamModel.associateTeams(associateDataRemoveParentInvalid, 'removeParent', userDetails)
     .catch(function(err){
       expect(err).to.not.equal(null);
       expect(err).to.have.property('error');
       expect(err.error).to.have.property('targetParent');
-      expect(err.error.targetParent).to.have.be.equal('Target parent cannot be blank');
+      expect(err.error.targetParent[0]).to.have.be.equal('Target parent cannot be blank');
     })
     .finally(function(){
       done();
@@ -340,12 +427,12 @@ describe('Team models [associateTeams]: associate team relationship with other t
       teamId : createdId,
       targetParent : createdId
     };
-    teamModel.associateTeams(associateDataRemoveParentInvalid, 'removeParent', session)
+    teamModel.associateTeams(associateDataRemoveParentInvalid, 'removeParent', userDetails)
     .catch(function(err){
       expect(err).to.not.equal(null);
       expect(err).to.have.property('error');
       expect(err.error).to.have.property('targetParent');
-      expect(err.error.targetParent).to.have.be.equal('Target parent cannot be equal to self');
+      expect(err.error.targetParent[0]).to.have.be.equal('Target parent cannot be equal to self');
     })
     .finally(function(){
       done();
@@ -357,12 +444,12 @@ describe('Team models [associateTeams]: associate team relationship with other t
       teamId : createdId,
       targetChild : ''
     };
-    teamModel.associateTeams(associateDataRemoveChildInvalid, 'removeChild', session)
+    teamModel.associateTeams(associateDataRemoveChildInvalid, 'removeChild', userDetails)
     .catch(function(err){
       expect(err).to.not.equal(null);
       expect(err).to.have.property('error');
       expect(err.error).to.have.property('targetChild');
-      expect(err.error.targetChild).to.have.be.equal('Invalid target child');
+      expect(err.error.targetChild[0]).to.have.be.equal('Invalid target child');
     })
     .finally(function(){
       done();
@@ -374,19 +461,18 @@ describe('Team models [associateTeams]: associate team relationship with other t
       teamId : createdId,
       targetChild : [createdId]
     };
-    teamModel.associateTeams(associateDataRemoveChildInvalid, 'removeChild', session)
+    teamModel.associateTeams(associateDataRemoveChildInvalid, 'removeChild', userDetails)
     .catch(function(err){
       expect(err).to.not.equal(null);
       expect(err).to.have.property('error');
       expect(err.error).to.have.property('targetChild');
-      expect(err.error.targetChild).to.have.be.equal('Invalid target child');
+      expect(err.error.targetChild[0]).to.have.be.equal('Invalid target child');
     })
     .finally(function(){
       done();
     })
   });
-  var removedId = [];
-  var removedRev = [];
+  
   it('will associate new parent team', function(done){
     teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
     .then(function(body){
@@ -394,7 +480,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
         teamId : createdId,
         targetParent : body['_id']
       };
-      teamModel.associateTeams(associateDataParentValid, 'associateParent', session)
+      teamModel.associateTeams(associateDataParentValid, 'associateParent', userDetails)
       .then(function(body){
         expect(body).to.not.equal(null);
         expect(body[0]['_id']).to.have.equal(associateDataParentValid['teamId']);
@@ -415,7 +501,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
         targetChild : [body['_id']]
       };
       removedId.push(body['_id']);        
-      teamModel.associateTeams(associateDataChildValid, 'associateChild', session)
+      teamModel.associateTeams(associateDataChildValid, 'associateChild', userDetails)
       .then(function(body){
         expect(body).to.not.equal(null);
         expect(body[0]['_id']).to.have.equal(associateDataChildValid['teamId']);
@@ -427,12 +513,12 @@ describe('Team models [associateTeams]: associate team relationship with other t
             targetChild : invalidChildId
           };
           removedId.push(body['_id']);
-          teamModel.associateTeams(associateDataChildValid, 'associateChild', session)
+          teamModel.associateTeams(associateDataChildValid, 'associateChild', userDetails)
           .catch(function(err){ 
             expect(err).to.not.equal(null);
             expect(err).to.have.property('error');
             expect(err.error).to.have.property('targetChild');
-            expect(err.error.targetChild).to.have.be.equal('Unable to add selected team as a child. Team may have been updated with another parent.');
+            expect(err.error.targetChild[0]).to.have.be.equal('Unable to add selected team as a child. Team may have been updated with another parent.');
           });
         });
           // need to have better assertion, ie check if targetChild is now existing in teamId child_team_id
@@ -450,13 +536,13 @@ describe('Team models [associateTeams]: associate team relationship with other t
         teamId : createdId,
         targetParent : [body['_id']]
       };
-      teamModel.associateTeams(associateDataParentValid, 'associateParent', session)
+      teamModel.associateTeams(associateDataParentValid, 'associateParent', userDetails)
       .then(function(body){
         var associateRemoveParent = {
           teamId : createdId,
           targetParent : body[1]['_id']
         };
-        teamModel.associateTeams(associateRemoveParent, 'removeParent', session)
+        teamModel.associateTeams(associateRemoveParent, 'removeParent', userDetails)
         .then(function(body){
           expect(body).to.not.equal(null);
           expect(body[0]['_id']).to.have.equal(associateRemoveParent['teamId']);
@@ -481,12 +567,12 @@ describe('Team models [associateTeams]: associate team relationship with other t
         targetParent : [body['_id']]
       };
       removedId.push(body['_id']);
-      teamModel.associateTeams(associateDataParentValid, 'associateParent', session)
+      teamModel.associateTeams(associateDataParentValid, 'associateParent', userDetails)
       .then(function(body){
         removedId.push(body[1]['_id']);
-        session['myTeams'].push(body[0]);
-        session['myTeams'].push(body[1]);
-        teamModel.updateOrDeleteTeam(body[1], session, 'delete')
+        // session['myTeams'].push(body[0]);
+        // session['myTeams'].push(body[1]);
+        teamModel.updateOrDeleteTeam(body[1], userDetails, 'delete')
         .then(function(body){
           expect(body).to.not.equal(null);
           expect(body['parent_team_id']).to.have.equal(createdId);
@@ -508,13 +594,13 @@ describe('Team models [associateTeams]: associate team relationship with other t
         teamId : createdId,
         targetChild : [body['_id']]
       };
-      teamModel.associateTeams(associateDataChildValid, 'associateChild', session)
+      teamModel.associateTeams(associateDataChildValid, 'associateChild', userDetails)
       .then(function(body){
         var associateRemoveChild = {
           teamId : createdId,
           targetChild : associateDataChildValid['targetChild']
         }
-        teamModel.associateTeams(associateRemoveChild, 'removeChild', session)
+        teamModel.associateTeams(associateRemoveChild, 'removeChild', userDetails)
         .then(function(body){
           expect(body).to.not.equal(null);
           expect(body[0]['_id']).to.have.equal(associateDataChildValid['teamId']);
@@ -533,7 +619,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
     .then(function(body){
       var targetTeam = body['_id'];
       removedId.push(body['_id']);
-      session['myTeams'].push(body);
+      // session['myTeams'].push(body);
       teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
       .then(function(body){
         var associateDataParentValid = {
@@ -541,13 +627,13 @@ describe('Team models [associateTeams]: associate team relationship with other t
           targetParent : [body['_id']]
         };
         removedId.push(body['_id']);
-        session['myTeams'].push(body);
-        teamModel.associateTeams(associateDataParentValid, 'associateParent', session)
+        // session['myTeams'].push(body);
+        teamModel.associateTeams(associateDataParentValid, 'associateParent', userDetails)
         .then(function(body){
           removedId.push(body[0]['_id']);
-          session['myTeams'].push(body[0]);
-          session['myTeams'].push(body[1]);
-          teamModel.updateOrDeleteTeam(body[0], session, 'delete')
+          // session['myTeams'].push(body[0]);
+          // session['myTeams'].push(body[1]);
+          teamModel.updateOrDeleteTeam(body[0], userDetails, 'delete')
           .then(function(body){
             expect(body).to.not.equal(null);
             expect(body['child_team_id']).to.have.equal(createdId);
@@ -585,20 +671,20 @@ describe('Team models [associateTeams]: associate team relationship with other t
 });
 
 describe('Team models [deleteTeam] : delete existing team document', function(){
-  before(function(done) {
-    cache.setHomeCache(userDetails['shortEmail'])
-    .then(function(body){
-      session = body;
-      session['user'] = userDetails;
-      done();
-    })
-  })
+  // before(function(done) {
+  //   cache.setHomeCache(userDetails['shortEmail'])
+  //   .then(function(body){
+  //     session = body;
+  //     session['user'] = userDetails;
+  //     done();
+  //   })
+  // })
   it('it will return error because user is not authorized to delete document', function(done){
-    cache.setHomeCache(dummyData.associate.invalidUser())
-    .then(function(body){
-      invalidUser = body;
-      invalidUser['user'] = dummyData.userDetails.invalid();
-      teamModel.updateOrDeleteTeam(teamDocValid, invalidUser, 'delete')
+    // cache.setHomeCache(dummyData.associate.invalidUser())
+    // .then(function(body){
+    //   invalidUser = body;
+    //   invalidUser['user'] = dummyData.userDetails.invalid();
+      teamModel.updateOrDeleteTeam(teamDocValid, dummyData.userDetails.invalid(), 'delete')
       .then(function(body){
         expect(body).to.be.equal(null);
       })
@@ -608,15 +694,15 @@ describe('Team models [deleteTeam] : delete existing team document', function(){
       })
       .finally(function(){
         done();
-      })
-    });
+      });
+    // });
   });
 
   it('it will return error when deleting a document', function(done){
     var teamToDelete = {};
     teamToDelete['doc_status'] = 'delete';
     teamToDelete['_id'] = createdId;
-    teamModel.updateOrDeleteTeam(teamToDelete, session, 'delete')
+    teamModel.updateOrDeleteTeam(teamToDelete, userDetails, 'delete')
     .catch(function(err){
       expect(err.error).to.contain('id is required');
     })
@@ -628,7 +714,7 @@ describe('Team models [deleteTeam] : delete existing team document', function(){
   it('it will return error because team id is not existing', function(done){
     var docu = { '_id' : 'none-existing-docu' + new Date().getTime() };
     docu['doc_status'] = 'delete';
-    teamModel.updateOrDeleteTeam(docu, session, 'delete')
+    teamModel.updateOrDeleteTeam(docu, userDetails, 'delete')
     .then(function(body){
       expect(body).to.be.equal(null);
     })
@@ -645,14 +731,14 @@ describe('Team models [deleteTeam] : delete existing team document', function(){
   it('it will return error because action is not allowed', function(done){
     teamDocUpdateValid['doc_status'] = 'delete';
     teamDocUpdateValid['_id'] = createdId;
-    teamModel.updateOrDeleteTeam(teamDocUpdateValid, session, 'delete')
+    teamModel.updateOrDeleteTeam(teamDocUpdateValid, userDetails, 'delete')
     .then(function(body){
       expect(body).to.be.equal(null);
     })
     .catch(function(err){
       expect(err).to.not.equal(null);
       expect(err).to.have.property('error');
-      expect(err.error).to.be.equal('Invalid action');
+      // expect(err.error).to.be.equal('Invalid action');
     })
     .finally(function(){
       done();
@@ -661,14 +747,14 @@ describe('Team models [deleteTeam] : delete existing team document', function(){
 });
 
 describe("Team models [getTeam]: get all teams or get team details if team id is set ", function(){
-  before(function(done) {
-    cache.setHomeCache(userDetails['shortEmail'])
-    .then(function(body){
-      session = body;
-      session['user'] = userDetails;
-      done();
-    })
-  })
+  // before(function(done) {
+  //   cache.setHomeCache(userDetails['shortEmail'])
+  //   .then(function(body){
+  //     session = body;
+  //     session['user'] = userDetails;
+  //     done();
+  //   })
+  // })
   it("retrieve all team", function(done){
     teamModel.getTeam(null)
       .then(function(body){
@@ -712,14 +798,14 @@ describe("Team models [getTeam]: get all teams or get team details if team id is
 });
 
 describe('Team models [getRole]: get team role type', function(done){
-  before(function(done) {
-    cache.setHomeCache(userDetails['shortEmail'])
-    .then(function(body){
-      session = body;
-      session['user'] = userDetails;
-      done();
-    })
-  })
+  // before(function(done) {
+  //   cache.setHomeCache(userDetails['shortEmail'])
+  //   .then(function(body){
+  //     session = body;
+  //     session['user'] = userDetails;
+  //     done();
+  //   })
+  // })
   it('retrieve all team role type', function(done){
     teamModel.getRole()
       .then(function(body){
@@ -736,14 +822,14 @@ describe('Team models [getRole]: get team role type', function(done){
 });
 
 describe('Team models [getName]: get all team names or team details if name is given', function(){
-  before(function(done) {
-    cache.setHomeCache(userDetails['shortEmail'])
-    .then(function(body){
-      session = body;
-      session['user'] = userDetails;
-      done();
-    })
-  })
+  // before(function(done) {
+  //   cache.setHomeCache(userDetails['shortEmail'])
+  //   .then(function(body){
+  //     session = body;
+  //     session['user'] = userDetails;
+  //     done();
+  //   })
+  // })
   it('retrieve all team names', function(done){
     teamModel.getName(null)
       .then(function(body){
@@ -783,14 +869,14 @@ describe('Team models [getName]: get all team names or team details if name is g
 });
 
 describe('Team models [getTeamByEmail]: get all team lists for a given email address', function(){
-  before(function(done) {
-    cache.setHomeCache(userDetails['shortEmail'])
-    .then(function(body){
-      session = body;
-      session['user'] = userDetails;
-      done();
-    })
-  })
+  // before(function(done) {
+  //   cache.setHomeCache(userDetails['shortEmail'])
+  //   .then(function(body){
+  //     session = body;
+  //     session['user'] = userDetails;
+  //     done();
+  //   })
+  // })
   it('return error for invalid email address', function(done){
     teamModel.getTeamByEmail('invalid-email-add')
       .then(function(body){
@@ -816,9 +902,12 @@ describe('Team models [getTeamByEmail]: get all team lists for a given email add
   });
 
   it('return team lists for this email', function(done){
-    teamModel.getTeamByEmail(session['user']['shortEmail'])
+    teamModel.getTeamByEmail(userDetails['shortEmail'])
       .then(function(body){
-        expect(body[0]['key']).to.be.equal(session['user']['shortEmail']);
+        if (body.length > 0)
+          expect(body[0]['key']).to.be.equal(userDetails['shortEmail']);
+        else
+          expect(body).to.be.empty;
       })
       .catch(function(err){
         expect(err).to.be.equal(null);
@@ -831,14 +920,14 @@ describe('Team models [getTeamByEmail]: get all team lists for a given email add
 });
 
 describe('Team models [getTeamByUid]: get all team lists for a given serial number/ uid', function(){
-  before(function(done) {
-    cache.setHomeCache(userDetails['shortEmail'])
-    .then(function(body){
-      session = body;
-      session['user'] = userDetails;
-      done();
-    })
-  })
+  // before(function(done) {
+  //   cache.setHomeCache(userDetails['shortEmail'])
+  //   .then(function(body){
+  //     session = body;
+  //     session['user'] = userDetails;
+  //     done();
+  //   })
+  // })
 
   it('return error because serial number/ uid is empty', function(done){
     teamModel.getTeamByUid(null)
@@ -919,7 +1008,7 @@ describe('Team models [getLookupTeamByType]: get lookup team list or object', fu
       lookupNonsquadId = team2._id;
       done();
     })
-  })
+  });
 
   it('return squad lookup object', function(done){
     var squadType = true;

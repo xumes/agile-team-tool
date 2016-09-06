@@ -27,5 +27,7 @@ module.exports = {
     iteration : 'ag_iterationinfo_',
     assessment : 'ag_mar_'
   },
-  environment: process.env.deploy || 'SIT'
+  environment: process.env.deploy || 'SIT',
+  googleAnalyticsKey: process.env.googleAnalyticsKey || '',
+  useNewRelic: process.env.useNewRelic || false
 };

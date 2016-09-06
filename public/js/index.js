@@ -2,13 +2,134 @@ var requests = []; //global array to keep track of the ajax called; used to canc
 var defSelTeamId="";
 var defSelIndex="";
 var squadList = [];
+var tempIterationData = [
+	{
+		'totalPoints' : 0,
+		'totalStories' : 0,
+		'totalCompleted' : 0,
+		'totalDefects' : 0,
+		'totalDplymts' : 0,
+		'totTeamStat' : 0,
+		'totClientStat' : 0,
+		'totTeamStatIter' : 0,
+		'totClientStatIter' : 0,
+		'teamsLt5' : 0,
+		'teams5to12' : 0,
+		'teamsGt12' : 0,
+		'totalSquad' : 0,
+		'month':'',
+		'partialMonth' : false
+
+	},
+	{
+		'totalPoints' : 0,
+		'totalStories' : 0,
+		'totalCompleted' : 0,
+		'totalDefects' : 0,
+		'totalDplymts' : 0,
+		'totTeamStat' : 0,
+		'totClientStat' : 0,
+		'totTeamStatIter' : 0,
+		'totClientStatIter' : 0,
+		'teamsLt5' : 0,
+		'teams5to12' : 0,
+		'teamsGt12' : 0,
+		'totalSquad' : 0,
+		'month':'',
+		'partialMonth' : false
+
+	},
+	{
+		'totalPoints' : 0,
+		'totalStories' : 0,
+		'totalCompleted' : 0,
+		'totalDefects' : 0,
+		'totalDplymts' : 0,
+		'totTeamStat' : 0,
+		'totClientStat' : 0,
+		'totTeamStatIter' : 0,
+		'totClientStatIter' : 0,
+		'teamsLt5' : 0,
+		'teams5to12' : 0,
+		'teamsGt12' : 0,
+		'totalSquad' : 0,
+		'month':'',
+		'partialMonth' : false
+
+	},
+	{
+		'totalPoints' : 0,
+		'totalStories' : 0,
+		'totalCompleted' : 0,
+		'totalDefects' : 0,
+		'totalDplymts' : 0,
+		'totTeamStat' : 0,
+		'totClientStat' : 0,
+		'totTeamStatIter' : 0,
+		'totClientStatIter' : 0,
+		'teamsLt5' : 0,
+		'teams5to12' : 0,
+		'teamsGt12' : 0,
+		'totalSquad' : 0,
+		'month':'',
+		'partialMonth' : false
+
+	},
+	{
+		'totalPoints' : 0,
+		'totalStories' : 0,
+		'totalCompleted' : 0,
+		'totalDefects' : 0,
+		'totalDplymts' : 0,
+		'totTeamStat' : 0,
+		'totClientStat' : 0,
+		'totTeamStatIter' : 0,
+		'totClientStatIter' : 0,
+		'teamsLt5' : 0,
+		'teams5to12' : 0,
+		'teamsGt12' : 0,
+		'totalSquad' : 0,
+		'month':'',
+		'partialMonth' : false
+	},
+	{
+		'totalPoints' : 0,
+		'totalStories' : 0,
+		'totalCompleted' : 0,
+		'totalDefects' : 0,
+		'totalDplymts' : 0,
+		'totTeamStat' : 0,
+		'totClientStat' : 0,
+		'totTeamStatIter' : 0,
+		'totClientStatIter' : 0,
+		'teamsLt5' : 0,
+		'teams5to12' : 0,
+		'teamsGt12' : 0,
+		'totalSquad' : 0,
+		'month':'',
+		'partialMonth' : false
+	}
+];
+
+var tempSquadScore = {
+	"fte5to12" : 0,
+	"fteGt12" : 0,
+	"fteLt5" : 0,
+	"tc5to12" : 0,
+	"tcGt12" : 0,
+	"tcLt5" : 0,
+	"teams5to12" : 0,
+	"teamsGt12" : 0,
+	"teamsLt5" : 0
+};
+
 jQuery.expr[':'].Contains = function(a, i, m) {
 	return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
 };
 
 jQuery(function($) {
 	$(document).ready(function() {
-		getSessionVars(initPageAction);
+		getPageVariables('home', initPageAction);
 	});
 
 	function initPageAction() {
@@ -99,7 +220,11 @@ function getMyTeamsFromDb(initial) {
 		if (data != undefined) {
 			if (data.length > 0) {
 				var twistyId = 'teamTreeMain';
-				_.each(data, function(team){
+				//no duplicates
+				var uniqueTeams = _.uniq(data, function(item) {
+				    return item._id;
+				});
+				_.each(uniqueTeams, function(team){
 					addTeamToTree(team, twistyId, true);
 				});
 				if (initial) {
@@ -244,6 +369,7 @@ function getAllAgileTeamsByParentId(parentId, showLoading, initial) {
 function getSnapshot(teamId, teamName) {
 	$('#mainContent').hide();
 	$('#spinnerContainer').show();
+	console.log(teamId);
 	var cUrl = "/api/snapshot/rollupsquadsbyteam/" + encodeURIComponent(teamId);
 	var req = $.ajax({
 		type : "GET",
@@ -256,7 +382,9 @@ function getSnapshot(teamId, teamName) {
 				if (data.rows == null) {
 					//console.log("data loaded failed");
 				} else if (data.rows.length <= 0) {
-					//console.log("no iteation data for team: ", teamId);
+					console.log("no iteation data for team: ", teamId);
+					$("#refreshDate").html("Waiting for updating");
+					iterationScoreCard(teamId, teamName, tempIterationData, tempSquadScore);
 				} else {
 					var nonsquadScore = data.rows[0].value.value;
 					var cUrl = "/api/snapshot/rollupdatabyteam/" + encodeURIComponent(teamId);
@@ -271,7 +399,9 @@ function getSnapshot(teamId, teamName) {
 								if (data.rows == null) {
 									console.log("data loaded failed");
 								} else if (data.rows.length <= 0) {
-									console.log("no iteation data for team: ", teamId);
+									console.log("no squad data for team: ", teamId);
+									$("#refreshDate").html("Waiting for updating");
+									iterationScoreCard(teamId, teamName, data.rows[0].value.value, tempSquadScore);
 								} else {
 									var iterationData = data.rows[0].value.value;
 									addRefreshDate(data.rows[0].value.timestamp);  //TODO
@@ -289,7 +419,10 @@ function getSnapshot(teamId, teamName) {
 				showLog("data loaded: " + JSON.stringify(data));
 			}
 		}
-	});
+	})
+	.fail(function(err){
+
+	})
 	requests.push(req);
 }
 
@@ -468,7 +601,7 @@ var selectedElement = "";
  *
  * @param elementId - selected element id. ('sub_xxxx')
  */
- 
+
 function performSnapshotPull(teamId, teamName){
  destroyIterationCharts();
  destroyAssessmentCharts();
@@ -505,7 +638,6 @@ function loadDetails(elementId, setScrollPosition) {
 				type : "GET",
 				url : "/api/teams/" + encodeURIComponent(teamId)
 			}).fail(function() {
-				// $.un();
 
 			}).done(function(currentTeam) {
 				team = currentTeam;
@@ -523,7 +655,7 @@ function loadDetails(elementId, setScrollPosition) {
 						var tn = team["name"];
 						if (tn.trim() == "")
 							tn = "&nbsp;";
-						$("#teamName").html("Data for: " + tn);
+						$("#teamName").html(tn);
 						keyValue = "<a href='team?id=" + encodeURIComponent(team["_id"]) + "' title='Manage team information'>" + tn + "</a>";
 						appendRowDetail(keyLabel, keyValue);
 					}
@@ -556,6 +688,7 @@ function loadDetails(elementId, setScrollPosition) {
 
 					/* Get parent name and link */
 					if (team["parent_team_id"] != undefined && team["parent_team_id"] != "") {
+						var notShowInMyTeam = false;
 						var parent_team_id = team["parent_team_id"];
 						keyLabel = "Parent Team Name";
 						keyValue = "(No parent team infomation)";
@@ -563,8 +696,13 @@ function loadDetails(elementId, setScrollPosition) {
 						if (parent_team_id != "") {
 							var parentLinkId = $("#link_sub_"+jq(parent_team_id));
 							if(parentLinkId){
-								var parentName = parentLinkId.html();
-								found = true;
+								var parentName;
+								if (parentLinkId.html() != undefined) {
+									parentName = parentLinkId.html();
+									found = true;
+								} else {
+									notShowInMyTeam = true;
+								}
 							} else {
 								//TODO need use id to get info from db
 							}
@@ -574,7 +712,9 @@ function loadDetails(elementId, setScrollPosition) {
 						} else {
 							keyValue = "<p style=\"display:inline-block\" class=\"ibm-ind-link\"><a style=\"display:inline; padding-left: 0px;\" title=\"View parent team information\" alt=\"View parent team information\" id ='parentName' href='#' onclick=\"javascript:displaySelected('" + team["parent_team_id"] + "');\">"+ parentName +"</a>"+"<a title=\"View parent team information\" alt=\"View parent team information\" style=\"display:inline;top:-5px;left:5px;\" class=\"ibm-forward-link\" href='#' onclick=\"javascript:displaySelected('" + team["parent_team_id"] + "');\"><span class='ibm-access'>Go to parent team</span></a></p>";
 						}
-						appendRowDetail(keyLabel, keyValue);
+						if (!notShowInMyTeam) {
+							appendRowDetail(keyLabel, keyValue);
+						}
 					}
 
 					/* draw iteration and assessment charts */
@@ -589,6 +729,11 @@ function loadDetails(elementId, setScrollPosition) {
 						$('#squad_team_scard').show();
 						$('#iterationSection .agile-section-nav').show();
 						$('#assessmentSection .agile-section-nav').show();
+
+						$('assessmentSection .agile-section-title').addClass('ibm-showing');
+						$('#assessmentSection a').addClass('ibm-show-active');
+						$('#assessmentSection .ibm-container-body').css('display','block');
+
 						isSquadTeam = false;
 					} else {
 						destroyIterationCharts();
@@ -600,7 +745,10 @@ function loadDetails(elementId, setScrollPosition) {
 						$('#squad_team_scard').hide();
 						$('#iterationSection .agile-section-nav').hide();
 						$('#assessmentSection .agile-section-nav').hide();
-						$('#refreshData').attr("onclick", "performChartRefresh("+team._id+","+ team.name+")");
+						$('#refreshData').attr("onclick", "performChartRefresh('"+team._id+"','"+ team.name+"')");
+						$('assessmentSection .agile-section-title').removeClass('ibm-showing');
+						$('#assessmentSection a').removeClass('ibm-show-active');
+						$('#assessmentSection .ibm-container-body').css('display','none');
 						isSquadTeam = false;
 					}
 
@@ -642,36 +790,34 @@ function openSelectedTeamTree(setScrollPosition) {
 
 	var scrollLink = "link_"+selectedElement;
 
-	var positionFound = false;
-	var parentFound = false;
-	while(!positionFound) {
-		if (!$("#"+scrollLink).is(":visible")) {
-			if ($("#"+scrollLink).parents("li").length > 0) {
-				scrollLink = "link_"+$($("#"+scrollLink).parents("li")).id
-			} else {
-				break;
-			}
-		} else {
-			positionFound = true;
-		}
-	}
-
-	if (!IBMCore.common.util.scrolledintoview($("#"+jq(selectedElement)))) {
-		//document.getElementById("ibm-content-main").scrollIntoView();
-		if (positionFound) {
-			$(".nano").nanoScroller();
-			$(".nano").nanoScroller({
-				scrollTo : $("#" + jq(scrollLink))
-			});
-		}
-	}
-
 	if (setScrollPosition != undefined && setScrollPosition) {
-		if (positionFound) {
 			$(".nano").nanoScroller();
 			$(".nano").nanoScroller({
 				scrollTo : $("#" + jq(scrollLink))
 			});
-		}
 	}
+
+	// var positionFound = false;
+	// var parentFound = false;
+	// while(!positionFound) {
+	// 	if (!$("#"+scrollLink).is(":visible")) {
+	// 		if ($("#"+scrollLink).parents("li").length > 0) {
+	// 			scrollLink = "link_"+$($("#"+scrollLink).parents("li")).id
+	// 		} else {
+	// 			break;
+	// 		}
+	// 	} else {
+	// 		positionFound = true;
+	// 	}
+	// }
+
+	// if (!IBMCore.common.util.scrolledintoview($("#"+jq(selectedElement)))) {
+	// 	document.getElementById("ibm-content-main").scrollIntoView();
+	// 	if (positionFound) {
+	// 		$(".nano").nanoScroller();
+	// 		$(".nano").nanoScroller({
+	// 			scrollTo : $("#" + jq(scrollLink))
+	// 		});
+	// 	}
+	// }
 }

@@ -41,7 +41,7 @@ module.exports = function(app, includes) {
   };
 
   addAssessment = function(req, res) {
-    assessmentModel.addTeamAssessment(req.session["user"].shortEmail, req.body, req.session["allTeams"], req.session["myTeams"])
+    assessmentModel.addTeamAssessment(req.session["user"].shortEmail, req.body)
       .then(function(result){
         res.send(result);
       })
@@ -51,7 +51,7 @@ module.exports = function(app, includes) {
   };
 
   updateAssessment = function(req, res) {
-    assessmentModel.updateTeamAssessment(req.session["user"].shortEmail, req.body, req.session["allTeams"], req.session["myTeams"])
+    assessmentModel.updateTeamAssessment(req.session["user"].shortEmail, req.body)
       .then(function(result){
         res.send(result);
       })

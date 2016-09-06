@@ -1,5 +1,4 @@
-var settings  = require('../../settings');
-var _         = require('underscore');
+var settings = require('../../settings');
 
 module.exports = function(app, includes) {
   var render = includes.render;
@@ -7,23 +6,11 @@ module.exports = function(app, includes) {
   showHome = function(req, res) {
     var json = 
       {
-        'pageTitle'       : 'Home',
-        'user'            : req.session['user'],
-        'allTeams'        : req.session['allTeams'],
-        'allTeamsLookup'  : req.session['allTeamsLookup'],
-        'myTeams'         : req.session['myTeams'],
-        'systemAdmin'     : req.session['systemAdmin'],
-        'systemStatus'    : req.session['systemStatus'],
-        'environment'     : settings.environment,
-        'userTeamList'    : req.userTeamList
+        'pageTitle'          : 'Home',
+        'googleAnalyticsKey' : settings.googleAnalyticsKey
       };
     render(req, res, 'home', json);
   };
   
-  app.get('/', 
-    [
-      includes.middleware.auth.requireLoginWithRedirect,
-      includes.middleware.cache.setHomeCache,
-      includes.middleware.cache.setUserTeams
-    ], showHome);
+  app.get('/', includes.middleware.auth.requireLoginWithRedirect, showHome);
 };

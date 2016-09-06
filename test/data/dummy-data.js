@@ -19,6 +19,11 @@ var dummy = {
       squadteam : 'No',
       testdata : 'Yes'
     },
+    validSquadDoc : {
+      name : 'Team document-' + crypto.randomBytes(20).toString('hex'),
+      desc : 'team document description',
+      squadteam : 'Yes'
+    },
     invalidDoc : {
       name : '',
       desc : '',

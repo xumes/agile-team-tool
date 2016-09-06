@@ -8,7 +8,7 @@ var teamId = '';
 var assessId = '';
 jQuery(function($) {
   $(document).ready(function() {
-  	getSessionVars(initPageAction);
+  	getPageVariables('progress', initPageAction);
   });
 });
 
@@ -121,11 +121,11 @@ function setAssessor(){
 }
 
 function retrieveAssessmentResult(teamId, assessId){
-	teamListHandler(teamId, assessId, allTeams);
+	getTeam(teamId, teamListHandler, [teamId, assessId]);
 }
 
-function teamListHandler(teamId, assessId, teamList) {
-	team = allTeamsLookup[teamId];
+function teamListHandler(teamId, assessId, teamData) {
+	team = teamData;
 	getTeamAssessments(teamId, true, processData, [teamId, assessId]);
 }
 

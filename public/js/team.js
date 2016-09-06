@@ -2,7 +2,7 @@ var taPerson;
 
 jQuery(function ($) {	
 	$(document).ready(function () {
-    getSessionVars(initPageAction);
+    getPageVariables('team', initPageAction);
 	});
 
   function initPageAction() {
@@ -679,7 +679,7 @@ function loadTeamChildren(currentId) {
             row = row + "<label for='child_" + index + "' class='ibm-access'>Select " + childTeamName + "</label>";
             row = row + "</td>";
             row = row + "<td id='ref_id_" + childTeamId + "'>" + childTeamName + "</td>";
-            row = row + "<td>" + childSquadIndicator + "</td>";
+            row = row + "<td id='ref_squadteam_" + index + "'>" + childSquadIndicator + "</td>";
             row = row + "<td id='ref_desc_"+index+"'>" + childTeamDesc + "</td>";
             row = row + "</tr>";
             $("#childrenList").append(row);
@@ -698,6 +698,7 @@ function loadTeamChildren(currentId) {
 function getTeamDetailHandler(index, team) {
   if (team != null) {
     $("#ref_desc_" + index).text(team.desc);
+    $("#ref_squadteam_" + index).text(team.squadteam);
     updateAgileTeamCache(team);
   } else {
     $("#ref_desc_" + index).text("-unavailable-");
@@ -738,6 +739,7 @@ function updateAction(action) {
 
       }).done(function (data) {
         userTeamList = data.userTeams;
+        updateAgileTeamCache(data.team);
         agileTeamListHandler(data.team._id, allTeams);
         showMessagePopup(message);
       });
@@ -1005,7 +1007,7 @@ function deleteTeamHandler(team, iterations, assessments) {
       }).success(function (data) {
         userTeamList = data;
         updateAgileTeamCache(team);
-            updateTeamInfo('reset');
+        updateTeamInfo('reset');
         showMessagePopup("You have successfully deleted the team.");
       });
 

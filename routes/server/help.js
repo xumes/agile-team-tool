@@ -1,5 +1,5 @@
 var settings = require('../../settings');
- 		
+
 module.exports = function(app, includes) {
   var middleware  = includes.middleware;
   var render = includes.render;
@@ -7,21 +7,11 @@ module.exports = function(app, includes) {
   showHelp = function(req, res) {
     var json = 
       {
-        'pageTitle'       : 'Help',
-        'user'            : req.session['user'],
-        'allTeams'        : req.session['allTeams'],
-        'allTeamsLookup'  : req.session['allTeamsLookup'],
-        'myTeams'         : req.session['myTeams'],
-        'systemAdmin'     : req.session['systemAdmin'],
-        'systemStatus'    : req.session['systemStatus'],
-        'environment'     : settings.environment
+        'pageTitle'           : 'Help',
+        'googleAnalyticsKey'  : settings.googleAnalyticsKey
       };
     render(req, res, 'help', json);
   };
   
-  app.get('/help',  
-    [
-      includes.middleware.auth.requireLoginWithRedirect,
-      includes.middleware.cache.setSystemInfoCache
-    ], showHelp);
+  app.get('/help', includes.middleware.auth.requireLoginWithRedirect, showHelp);
 };
