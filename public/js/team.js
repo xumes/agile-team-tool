@@ -731,7 +731,7 @@ function updateAction(action) {
         contentType : "application/json",
         data        : JSON.stringify(currentTeam),
       }).fail(function(xhr, textStatus, errorThrown) {
-        if (xhr.status = 400) {
+        if (xhr.status == 400) {
           handleTeamValidationErrors(JSON.parse(xhr.responseText), action);
         } else {
           errorHandler(xhr, textStatus, errorThrown);
@@ -785,7 +785,7 @@ function updateAction(action) {
       contentType : "application/json",
       data        : JSON.stringify(currentTeam)
     }).fail(function(xhr, textStatus, errorThrown) {
-      if (xhr.status = 400) {
+      if (xhr.status == 400) {
         handleTeamValidationErrors(JSON.parse(xhr.responseText), action);
       } else {
         errorHandler(xhr, textStatus, errorThrown);
@@ -870,7 +870,7 @@ function setAssociation(obj, action, msg) {
     contentType : "application/json",
     data        : JSON.stringify(obj)
   }).fail(function(xhr, textStatus, errorThrown) {
-    if (xhr.status = 400) {
+    if (xhr.status == 400) {
       handleTeamValidationErrors(JSON.parse(xhr.responseText), action);
     } else {
       errorHandler(xhr, textStatus, errorThrown);
@@ -998,7 +998,7 @@ function deleteTeamHandler(team, iterations, assessments) {
         contentType : "application/json",
         data        : JSON.stringify(team)
       }).fail(function(xhr, textStatus, errorThrown) {
-        if (xhr.status = 400) {
+        if (xhr.status == 400) {
           handleTeamValidationErrors(JSON.parse(xhr.responseText), "delete");
         } else {
           errorHandler(xhr, textStatus, errorThrown);
@@ -1081,7 +1081,7 @@ function addTeamMember(person, oldAlloc, newAlloc, oldRole, newRole, action) {
       contentType : "application/json",
       data        : JSON.stringify(currentTeam)
     }).fail(function(xhr, textStatus, errorThrown) {
-      if (xhr.status = 400) {
+      if (xhr.status == 400) {
         handleTeamValidationErrors(JSON.parse(xhr.responseText), action);
       } else {
         errorHandler(xhr, textStatus, errorThrown);
@@ -1131,7 +1131,7 @@ function deleteTeamMember() {
       contentType : "application/json",
       data        : JSON.stringify(currentTeam)
     }).fail(function(xhr, textStatus, errorThrown) {
-      if (xhr.status = 400) {
+      if (xhr.status == 400) {
         handleTeamValidationErrors(JSON.parse(xhr.responseText), "deleteTeamMember");
       } else {
         errorHandler(xhr, textStatus, errorThrown);
