@@ -129,6 +129,13 @@ function addRefreshDate(timestamp){
 	$("#refreshDate").html(myDate);
 }
 
+//refresh button on the screen to refresh snapshot from workers
+function performChartRefresh(teamId, teamName){
+    destroyIterationCharts();
+    destroyAssessmentCharts();
+    getSnapshot(teamId, teamName);
+}
+
 function removeHighlightParents(treeLinkId) {
 	if (treeLinkId != null) {
 		//console.log($("#"+jq(treeLinkId)).children("a.agile-team-link")[0]);
@@ -461,6 +468,12 @@ var selectedElement = "";
  *
  * @param elementId - selected element id. ('sub_xxxx')
  */
+ 
+function performSnapshotPull(teamId, teamName){
+ destroyIterationCharts();
+ destroyAssessmentCharts();
+ getSnapshot(teamId, teamName);
+}
 
 function loadDetails(elementId, setScrollPosition) {
 	if (selectedElement == elementId || $("#"+jq(elementId)).html() == "Standalone teams") {
@@ -571,7 +584,7 @@ function loadDetails(elementId, setScrollPosition) {
 						//this is done to display back the 2 other chart groups as 1st batch of rollup will only show velocity and throughput
 						//$("#chartgrp2").show();
 						//$("#chartgrp3").show();
-						$('#refreshDate').hide(); //hiding the refresh snapshot date
+						$('#snapshotPull').hide(); //hiding the refresh snapshot date
 						$('#nsquad_team_scard').hide();
 						$('#squad_team_scard').show();
 						$('#iterationSection .agile-section-nav').show();
@@ -582,11 +595,12 @@ function loadDetails(elementId, setScrollPosition) {
 						destroyAssessmentCharts();
 
 						getSnapshot(team["_id"], team["name"]);
-            $('#refreshDate').show(); //show the refresh snapshot date
+            $('#snapshotPull').show(); //show the refresh snapshot date
 						$('#nsquad_team_scard').show();
 						$('#squad_team_scard').hide();
 						$('#iterationSection .agile-section-nav').hide();
 						$('#assessmentSection .agile-section-nav').hide();
+						$('#refreshData').attr("onclick", "performChartRefresh("+team._id+","+ team.name+")");
 						isSquadTeam = false;
 					}
 
