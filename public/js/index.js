@@ -213,7 +213,7 @@ function getRootTeams(parentsTree) {
 }
 
 function getMyTeamsFromDb(initial, loadStandalone) {
-	var cUrl = "/api/snapshot/getteams/" + encodeURIComponent("bfouts@us.ibm.com");
+	var cUrl = "/api/snapshot/getteams/" + encodeURIComponent(userInfo.email);
 	var req = $.ajax({
 		type : "GET",
 		url : cUrl
