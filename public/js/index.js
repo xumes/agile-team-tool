@@ -356,7 +356,7 @@ function getAllAgileTeamsByParentId(parentId, showLoading, initial, parentsTree)
 						} else {
 							if (loadedParentId != undefined && loadedParentId != "") {
 								var subTwistyId = "sub_" + loadedParentId;
-								loadDetails(jq(subTwistyId),true);
+								loadDetails(subTwistyId,true);
 								$(".nano").nanoScroller();
 							}
 							// $('#mainContent').show();
@@ -384,7 +384,6 @@ function getAllAgileTeamsByParentId(parentId, showLoading, initial, parentsTree)
 function getSnapshot(teamId, teamName) {
 	$('#mainContent').hide();
 	$('#spinnerContainer').show();
-	console.log(teamId);
 	var cUrl = "/api/snapshot/rollupsquadsbyteam/" + encodeURIComponent(teamId);
 	var req = $.ajax({
 		type : "GET",
