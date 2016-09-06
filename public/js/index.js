@@ -484,12 +484,12 @@ function addTeamToTree(team, twistyId, isMyTeams) {
 			if (!_.isEmpty(team.child_team_id)) {
 				$("#"+jq(twistyId)).append(createSubTwistySection(subTwistyId, label, (isSquad ? "agile-team-standalone" : ""), team._id));
 			} else {
-				$("#"+jq(twistyId)).append(createSubTwistySection(subTwistyId, label, "agile-team-standalone" + (isSquad ? " agile-team-squad" : ""), team._id));
+				$("#"+jq(twistyId)).append(createSubTwistySection(subTwistyId, label, "agile-team-standalone", team._id));
 			}
 		} else {
 			if (twistyId == "main_sub_ag_team_standalone") {
 				if (team.child_team_id.length == 0 && (team.parent_team_id == "" || team.parent_team_id == undefined)) {
-					$("#"+jq(twistyId)).append(createSubTwistySection(subTwistyId, label, "agile-team-standalone" + (isSquad ? " agile-team-squad" : ""), team._id));
+					$("#"+jq(twistyId)).append(createSubTwistySection(subTwistyId, label, "agile-team-standalone", team._id));
 				}
 			} else {
 				if (team._id == 'ag_team_standalone') {
@@ -498,7 +498,7 @@ function addTeamToTree(team, twistyId, isMyTeams) {
 					if (!_.isEmpty(team.child_team_id)) {
 						$("#"+jq(twistyId)).append(createSubTwistySection(subTwistyId, label, (isSquad ? "agile-team-standalone" : ""), team._id));
 					} else if (_.isEmpty(team.child_team_id) && team.parent_team_id != "" && team.parent_team_id != undefined) {
-						$("#"+jq(twistyId)).append(createSubTwistySection(subTwistyId, label, "agile-team-standalone" + (isSquad ? " agile-team-squad" : ""), team._id));
+						$("#"+jq(twistyId)).append(createSubTwistySection(subTwistyId, label, "agile-team-standalone", team._id));
 					}
 				}
 			}
@@ -534,6 +534,7 @@ function createMainTwistySection(twistyId, extraClass) {
 }
 
 function createSubTwistySection(twistyId, twistyLabel, extraClass, teamId) {
+	
 	var li = document.createElement("li");
 	li.setAttribute("data-open", "false");
 	if (extraClass.indexOf("agile-team-standalone") > -1)
