@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+
+  <%- include ./header/header_meta.ejs %>
+
+  <style type="text/css">
+    header fieldset {
+      display: none;
+    }
+    body {
+      background-color: white;
+    }
+    html, body {
+      height: 100%;
+    }
+    header {
+      box-shadow: none !important;
+    }
+    .message {
+      padding-top: 10%;
+      text-align: center;
+    }
+  </style>
+
+</head>
+
+<%- include ./header/header.ejs %>
+
+<body id="ibm-com" class="ibm-type">
+
+<div class="message">
+  <h2><%= message %></h2>
+
+</div>
+
+</body>
+</html>
