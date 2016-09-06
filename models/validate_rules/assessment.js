@@ -49,8 +49,7 @@ var recordConstraints = {
   created_user: {
     presence : {
       message: '^Created user id is required.'
-    },
-    email: true
+    }
   },
   last_updt_dt:{
     presence : {
@@ -60,8 +59,7 @@ var recordConstraints = {
   last_updt_user:{
     presence : {
       message: '^Last update user id is required.'
-    },
-    email: true
+    }
   }
 };
 

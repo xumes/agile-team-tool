@@ -23,8 +23,7 @@ exports.teamDocRules = {
     }
   },
   created_user : {
-    presence : true,
-    email : true
+    presence : true
   },
   doc_status : {
     inclusion : ['delete', '']
