@@ -321,6 +321,9 @@ function getAllAgileTeamsByParentId(parentId, showLoading, initial, parentsTree)
 					console.log("data loaded failed");
 				} else {
 					var twistyId;
+					var sortedTeams = _.sortBy(data.docs, function(team){
+						return team.name.toUpperCase();
+					});
 					if (parentId == '') {
 						twistyId = 'teamTreeMain';
 						$("#teamTree").append(createMainTwistySection("teamTreeMain", ""));
@@ -330,20 +333,17 @@ function getAllAgileTeamsByParentId(parentId, showLoading, initial, parentsTree)
 							'isSquad' : false,
 							'name' : 'Standalone Teams',
 						};
-						data.docs.push(standaloneTeam);
+						sortedTeams.push(standaloneTeam);
 					} else {
 						//twistyId = 'main_' + parentId;
 						//$("#"+ 'bodysub_' + jq(parentId)).append(createMainTwistySection(twistyId, ""));
 						twistyId = "bodysub_" + parentId;
 					}
 					//$("#"+jq(twistyId)).twisty();
-					if (data.docs.length > 0) {
+					if (sortedTeams.length > 0) {
 						var mainTwistyId = "main_sub_" + parentId;
 						$("#" + jq(twistyId)).append(createMainTwistySection(mainTwistyId, ""));
 					}
-					var sortedTeams = _.sortBy(data.docs, function(team){
-						return team.name.toUpperCase();
-					});
 					_.each(sortedTeams, function(team){
 						if (team.doc_status != 'delete') {
 							addTeamToTree(team, mainTwistyId, false);
@@ -764,7 +764,7 @@ function loadDetails(elementId, setScrollPosition) {
 						//$("#chartgrp2").show();
 						//$("#chartgrp3").show();
 						$('#teamType').html("Team:&nbsp;");
-						
+
 						$('#refreshDate').hide(); //hiding the refresh snapshot date
 						$('#nsquad_team_scard').hide();
 						$('#squad_team_scard').show();
@@ -780,7 +780,7 @@ function loadDetails(elementId, setScrollPosition) {
 						destroyAssessmentCharts();
 
 						getSnapshot(team["_id"], team["name"]);
-						
+
 						$('#teamType').html("Squad:&nbsp;");
             $('#refreshDate').show(); //show the refresh snapshot date
 						$('#nsquad_team_scard').show();
