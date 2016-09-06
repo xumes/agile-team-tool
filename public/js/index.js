@@ -2,6 +2,7 @@ var requests = []; //global array to keep track of the ajax called; used to canc
 var defSelTeamId="";
 var defSelIndex="";
 var squadList = [];
+var loadedParentId = "";
 var tempIterationData = [
 	{
 		'totalPoints' : 0,
@@ -165,7 +166,7 @@ jQuery(function($) {
       $("#myTeams").attr('data-state', '');
 
 			hideAllContentAreaDivs();
-      getRootTeams(true);
+      getRootTeams();
     }
 	});
 });
@@ -199,7 +200,7 @@ function getMyTeams() {
 	getMyTeamsFromDb(true);
 }
 
-function getRootTeams() {
+function getRootTeams(parentsTree) {
 	selectedElement = "";
 	$('#mainContent').hide();
 	$('#spinnerContainer').show();
@@ -208,7 +209,7 @@ function getRootTeams() {
 	$("#teamTable tbody").empty();
 	$("#teamTable").hide();
 
-	getAllAgileTeamsByParentId('', true, true);
+	getAllAgileTeamsByParentId('', true, true, parentsTree);
 }
 
 function getMyTeamsFromDb(initial) {
@@ -224,7 +225,10 @@ function getMyTeamsFromDb(initial) {
 				var uniqueTeams = _.uniq(data, function(item) {
 				    return item._id;
 				});
-				_.each(uniqueTeams, function(team){
+				var sortedTeams = _.sortBy(uniqueTeams, function(team){
+					return team.name.toUpperCase();
+				});
+				_.each(sortedTeams, function(team){
 					addTeamToTree(team, twistyId, true);
 				});
 				if (initial) {
@@ -249,7 +253,7 @@ function getMyTeamsFromDb(initial) {
 }
 
 //add refresh timestamp after Iteration trend title
-function addRefreshDate(timestamp){
+function setRefreshDate(timestamp){
 	//var myDate = new Date(timestamp*1000); // creates a date that represents the number of milliseconds after midnight GMT on Januray 1st 1970.
 	//$("#refreshDate").html(moment(myDate).format("DD-MMM-YYYY, hh:mm"));
 	$("#refreshDate").html(moment.utc(timestamp*1000).format("DD-MMM-YYYY, HH:mm (z)"));
@@ -292,7 +296,7 @@ function highlightParents(treeLinkId) {
 	}
 }
 
-function expandParentTeam(treeLinkId) {
+function expandParentTeam(treeLinkId, parentsTree) {
 	if (treeLinkId != null) {
 		if ($("#"+jq(treeLinkId)).attr("hasChildren") != "Yes") {
 			var parentId = treeLinkId.substring(4, treeLinkId.length);
@@ -302,7 +306,7 @@ function expandParentTeam(treeLinkId) {
 	}
 }
 
-function getAllAgileTeamsByParentId(parentId, showLoading, initial) {
+function getAllAgileTeamsByParentId(parentId, showLoading, initial, parentsTree) {
 	if (showLoading) {
 		$('#mainContent').hide();
 		$('#spinnerContainer').show();
@@ -345,18 +349,40 @@ function getAllAgileTeamsByParentId(parentId, showLoading, initial) {
 						var mainTwistyId = "main_sub_" + parentId;
 						$("#" + jq(twistyId)).append(createMainTwistySection(mainTwistyId, ""));
 					}
-					_.each(data.docs, function(team){
+					var sortedTeams = _.sortBy(data.docs, function(team){
+						return team.name.toUpperCase();
+					});
+					_.each(sortedTeams, function(team){
 						if (team.doc_status != 'delete') {
 							addTeamToTree(team, mainTwistyId, false);
 						}
 					});
-					if (initial) {
-						var defaultTeam = ($('#teamTreeMain li')[0]).id
-						loadDetails(defaultTeam);
-						$(".nano").nanoScroller();
+					if (parentsTree != undefined) {
+						if (!_.isEmpty(parentsTree)){
+							var parentTeamId = parentsTree[parentsTree.length - 1];
+							$("#sub_"+jq(parentTeamId)).addClass("ibm-active");
+							$("#sub_"+jq(parentTeamId)).attr("hasChildren","Yes");
+							$("#sub_"+jq(parentTeamId)+(" a.ibm-twisty-body")).css("display","block");
+							loadedParentId = parentsTree.splice(parentsTree.length - 1, 1);
+							getAllAgileTeamsByParentId(parentTeamId, false, false, parentsTree);
+						} else {
+							if (loadedParentId != undefined && loadedParentId != "") {
+								var subTwistyId = "sub_" + loadedParentId;
+								loadDetails(subTwistyId,true);
+								$(".nano").nanoScroller();
+							}
+							// $('#mainContent').show();
+							// $('#spinnerContainer').hide();
+						}
 					} else {
-						$('#mainContent').show();
-						$('#spinnerContainer').hide();
+						if (initial) {
+							var defaultTeam = ($('#teamTreeMain li')[0]).id
+							loadDetails(defaultTeam);
+							$(".nano").nanoScroller();
+						} else {
+							$('#mainContent').show();
+							$('#spinnerContainer').hide();
+						}
 					}
 				}
 			} else {
@@ -370,7 +396,6 @@ function getAllAgileTeamsByParentId(parentId, showLoading, initial) {
 function getSnapshot(teamId, teamName) {
 	$('#mainContent').hide();
 	$('#spinnerContainer').show();
-	console.log(teamId);
 	var cUrl = "/api/snapshot/rollupsquadsbyteam/" + encodeURIComponent(teamId);
 	var req = $.ajax({
 		type : "GET",
@@ -405,7 +430,7 @@ function getSnapshot(teamId, teamName) {
 									iterationScoreCard(teamId, teamName, data.rows[0].value.value, tempSquadScore);
 								} else {
 									var iterationData = data.rows[0].value.value;
-									addRefreshDate(data.rows[0].value.timestamp);  //TODO
+									setRefreshDate(data.rows[0].value.timestamp);  //TODO
 									iterationScoreCard(teamId, teamName, iterationData, nonsquadScore);
 								}
 							} else {
@@ -422,10 +447,32 @@ function getSnapshot(teamId, teamName) {
 		}
 	})
 	.fail(function(err){
-
+		$('#spinnerContainer').hide();
 	})
 	requests.push(req);
-}
+};
+
+function getParentName(team) {
+	var keyLabel = "Parent Team Name";
+	var keyValue = "(No parent team information)"
+	if (team['parent_team_id'] != "" && team['parent_team_id'] != undefined) {
+		var cUrl = "/api/teams/lookup/team/" + encodeURIComponent(team['parent_team_id']);
+		var req = $.ajax({
+			type : "GET",
+			url : cUrl
+		}).done(function(data) {
+			if (data != null && data.name != undefined) {
+				keyValue = "<p style=\"display:inline-block\" class=\"ibm-ind-link\"><a style=\"display:inline; padding-left: 0px;\" title=\"View parent team information\" alt=\"View parent team information\" id ='parentName' href='#' onclick=\"javascript:loadParentInAllTeams('" + team["_id"] + "');\">" + data.name + "</a>"+"<a title=\"View parent team information\" alt=\"View parent team information\" style=\"display:inline;top:-5px;left:5px;\" class=\"ibm-forward-link\" href='#' onclick=\"javascript:loadParentInAllTeams('" + team["_id"] + "');\"><span class='ibm-access'>Go to parent team</span></a></p>";
+			}
+			appendRowDetail(keyLabel, keyValue);
+		})
+		.fail(function(err){
+			console.log(err);
+			appendRowDetail(keyLabel, keyValue);
+		});
+		requests.push(req);
+	}
+};
 
 function jq( myid ) {
     return myid.replace( /(:|\.|\[|\]|,|\/| )/g, "\\$1" );
@@ -625,7 +672,7 @@ function loadDetails(elementId, setScrollPosition) {
 	$("#"+"link_"+jq(elementId)).addClass("agile-team-selected");
 
 	var teamId = elementId.substring(4,elementId.length);
-	var isSquadTeam = false;
+	var isLeafTeam = false;
 	if (defSelTeamId != teamId) {
 		$('#mainContent').hide();
 		$('#spinnerContainer').show();
@@ -665,7 +712,7 @@ function loadDetails(elementId, setScrollPosition) {
 						keyLabel = "Squad Team?";
 						keyValue = team["squadteam"];
 						if (keyValue.toLowerCase() == "yes") {
-							isSquadTeam = true;
+							isLeafTeam = true;
 						}
 					}
 
@@ -713,19 +760,24 @@ function loadDetails(elementId, setScrollPosition) {
 						} else {
 							keyValue = "<p style=\"display:inline-block\" class=\"ibm-ind-link\"><a style=\"display:inline; padding-left: 0px;\" title=\"View parent team information\" alt=\"View parent team information\" id ='parentName' href='#' onclick=\"javascript:displaySelected('" + team["parent_team_id"] + "');\">"+ parentName +"</a>"+"<a title=\"View parent team information\" alt=\"View parent team information\" style=\"display:inline;top:-5px;left:5px;\" class=\"ibm-forward-link\" href='#' onclick=\"javascript:displaySelected('" + team["parent_team_id"] + "');\"><span class='ibm-access'>Go to parent team</span></a></p>";
 						}
-						if (!notShowInMyTeam) {
+						if (notShowInMyTeam) {
+							getParentName(team);
+							keyLabel = "View Parent Team Information";
+							keyValue = "<p style=\"display:inline-block\" class=\"ibm-ind-link\"><a style=\"display:inline; padding-left: 0px;\" title=\"View parent team information\" alt=\"View parent team information\" id ='parentName' href='#' onclick=\"javascript:loadParentInAllTeams('" + team["_id"] + "');\">" + "</a>"+"<a title=\"View parent team information\" alt=\"View parent team information\" style=\"display:inline;top:-5px;left:5px;\" class=\"ibm-forward-link\" href='#' onclick=\"javascript:loadParentInAllTeams('" + team["_id"] + "');\"><span class='ibm-access'>Go to parent team</span></a></p>";
+						} else {
 							appendRowDetail(keyLabel, keyValue);
 						}
 					}
 
 					/* draw iteration and assessment charts */
-					if (isSquadTeam) {
+					if (isLeafTeam) {
 						getTeamIterations(team["_id"], teamIterationListHander, [team["_id"]]);
 						getTeamAssessments(team["_id"], true, teamAssessmentListHander, [team["_id"]]);
 						//this is done to display back the 2 other chart groups as 1st batch of rollup will only show velocity and throughput
 						//$("#chartgrp2").show();
 						//$("#chartgrp3").show();
 						$('#snapshotPull').hide(); //hiding the refresh snapshot date
+						$('#teamType').html("Team:&nbsp;");
 						$('#nsquad_team_scard').hide();
 						$('#squad_team_scard').show();
 						$('#iterationSection .agile-section-nav').show();
@@ -735,13 +787,13 @@ function loadDetails(elementId, setScrollPosition) {
 						$('#assessmentSection a').addClass('ibm-show-active');
 						$('#assessmentSection .ibm-container-body').css('display','block');
 
-						isSquadTeam = false;
 					} else {
 						destroyIterationCharts();
 						destroyAssessmentCharts();
 
 						getSnapshot(team["_id"], team["name"]);
             $('#snapshotPull').show(); //show the refresh snapshot date
+						$('#teamType').html("Squad:&nbsp;");
 						$('#nsquad_team_scard').show();
 						$('#squad_team_scard').hide();
 						$('#iterationSection .agile-section-nav').hide();
@@ -750,7 +802,6 @@ function loadDetails(elementId, setScrollPosition) {
 						$('assessmentSection .agile-section-title').removeClass('ibm-showing');
 						$('#assessmentSection a').removeClass('ibm-show-active');
 						$('#assessmentSection .ibm-container-body').css('display','none');
-						isSquadTeam = false;
 					}
 
 					$("#membersList").empty();
@@ -822,3 +873,37 @@ function openSelectedTeamTree(setScrollPosition) {
 	// 	}
 	// }
 }
+
+function loadParentInAllTeams(teamId) {
+	$('#mainContent').hide();
+	$('#spinnerContainer').show();
+	var cUrl = "/api/teams/lookup/team/" + encodeURIComponent(teamId);
+	var req = $.ajax({
+		type : "GET",
+		url : cUrl
+	}).done(function(data) {
+		if (data != null) {
+			if (data.parents != undefined && !_.isEmpty(data.parents)) {
+				if ($("#allTeams").attr('data-state') != "open"){
+
+					 clearRequests();
+
+					 $($("#allTeams")).attr('data-state', 'open');
+					 $("#myTeams").attr('data-state', '');
+
+					 hideAllContentAreaDivs();
+					 getRootTeams(data.parents);
+				 }
+			}
+		}
+	});
+}
+//
+// function trigger(data) {
+// 	// for (var i = data.parents.length-1; i >= 0; i++) {
+// 	// 	console.log(data.parents[i]);
+// 		var trigger = $($("#sub_" + jq(data.parents[2]) + 'a.ibm-twisty-trigger')[0])
+// 		//var trigger = $("#sub_" + jq(data.parents[2])).find("a.ibm-twisty-trigger");
+// 		trigger.click();
+// 	// }
+// }
