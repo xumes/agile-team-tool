@@ -251,7 +251,7 @@ function getMyTeamsFromDb(initial) {
 }
 
 //add refresh timestamp after Iteration trend title
-function addRefreshDate(timestamp){
+function setRefreshDate(timestamp){
 	var myDate = new Date(timestamp*1000); // creates a date that represents the number of milliseconds after midnight GMT on Januray 1st 1970.
 	$("#refreshDate").html(myDate);
 }
@@ -418,7 +418,7 @@ function getSnapshot(teamId, teamName) {
 									iterationScoreCard(teamId, teamName, data.rows[0].value.value, tempSquadScore);
 								} else {
 									var iterationData = data.rows[0].value.value;
-									addRefreshDate(data.rows[0].value.timestamp);  //TODO
+									setRefreshDate(data.rows[0].value.timestamp);  //TODO
 									iterationScoreCard(teamId, teamName, iterationData, nonsquadScore);
 								}
 							} else {
@@ -654,7 +654,7 @@ function loadDetails(elementId, setScrollPosition) {
 	$("#"+"link_"+jq(elementId)).addClass("agile-team-selected");
 
 	var teamId = elementId.substring(4,elementId.length);
-	var isSquadTeam = false;
+	var isLeafTeam = false;
 	if (defSelTeamId != teamId) {
 		$('#mainContent').hide();
 		$('#spinnerContainer').show();
@@ -694,7 +694,7 @@ function loadDetails(elementId, setScrollPosition) {
 						keyLabel = "Squad Team?";
 						keyValue = team["squadteam"];
 						if (keyValue.toLowerCase() == "yes") {
-							isSquadTeam = true;
+							isLeafTeam = true;
 						}
 					}
 
@@ -752,7 +752,7 @@ function loadDetails(elementId, setScrollPosition) {
 					}
 
 					/* draw iteration and assessment charts */
-					if (isSquadTeam) {
+					if (isLeafTeam) {
 						getTeamIterations(team["_id"], teamIterationListHander, [team["_id"]]);
 						getTeamAssessments(team["_id"], true, teamAssessmentListHander, [team["_id"]]);
 						//this is done to display back the 2 other chart groups as 1st batch of rollup will only show velocity and throughput
@@ -768,7 +768,7 @@ function loadDetails(elementId, setScrollPosition) {
 						$('#assessmentSection a').addClass('ibm-show-active');
 						$('#assessmentSection .ibm-container-body').css('display','block');
 
-						isSquadTeam = false;
+						isLeafTeam = false;
 					} else {
 						destroyIterationCharts();
 						destroyAssessmentCharts();
@@ -783,7 +783,7 @@ function loadDetails(elementId, setScrollPosition) {
 						$('assessmentSection .agile-section-title').removeClass('ibm-showing');
 						$('#assessmentSection a').removeClass('ibm-show-active');
 						$('#assessmentSection .ibm-container-body').css('display','none');
-						isSquadTeam = false;
+						isLeafTeam = false;
 					}
 
 					$("#membersList").empty();

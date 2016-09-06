@@ -70,6 +70,14 @@
 }
 
 
+.div--refreshDate{
+	font-size: 9pt;
+	font-style: italic;
+	font-weight: normal;
+	float: right;
+	padding-top: .5em;
+}
+
 /* Matts dank spinner */
 /* The Modal (background) */
 /* Clear Loading */
