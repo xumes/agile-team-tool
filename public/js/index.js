@@ -768,7 +768,6 @@ function loadDetails(elementId, setScrollPosition) {
 						$('#assessmentSection a').addClass('ibm-show-active');
 						$('#assessmentSection .ibm-container-body').css('display','block');
 
-						isLeafTeam = false;
 					} else {
 						destroyIterationCharts();
 						destroyAssessmentCharts();
@@ -783,7 +782,6 @@ function loadDetails(elementId, setScrollPosition) {
 						$('assessmentSection .agile-section-title').removeClass('ibm-showing');
 						$('#assessmentSection a').removeClass('ibm-show-active');
 						$('#assessmentSection .ibm-container-body').css('display','none');
-						isLeafTeam = false;
 					}
 
 					$("#membersList").empty();
