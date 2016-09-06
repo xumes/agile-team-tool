@@ -51,8 +51,8 @@
 }
 /* END Whitewater tabs */
 
-#dataFor {
-	font-family: HelveticaNeue-Bold, "Helvetica Neue Bold", HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif;
+.heading-teamType {
+	font-family: HelveticaNeue-Bold, "Helvetica Neue Bold", HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 	font-size: 16px;
 	font-weight: 600;
 	color: #323232;
@@ -60,6 +60,7 @@
 	padding-bottom: 1rem;
 	box-sizing: inherit;
 	line-height: 1.75;
+	display:inline;
 }
 
 .div--team{
@@ -433,12 +434,6 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
 .agile-team-selected {
 	font-weight: bold;
 	background-color: #5aaafa;
-}
-
-
-.agile-team-squad, #teamTree li.agile-team-squad a::after, #teamTree a.agile-team-squad::after,  #teamTable a.agile-team-squad::after{
-	content: " * ";
-	color: red;
 }
 
 #teamTree .ibm-twisty-body > p {

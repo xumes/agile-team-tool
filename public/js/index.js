@@ -758,6 +758,8 @@ function loadDetails(elementId, setScrollPosition) {
 						//this is done to display back the 2 other chart groups as 1st batch of rollup will only show velocity and throughput
 						//$("#chartgrp2").show();
 						//$("#chartgrp3").show();
+						$('#teamType').html("Team:&nbsp;");
+						
 						$('#refreshDate').hide(); //hiding the refresh snapshot date
 						$('#nsquad_team_scard').hide();
 						$('#squad_team_scard').show();
@@ -773,6 +775,8 @@ function loadDetails(elementId, setScrollPosition) {
 						destroyAssessmentCharts();
 
 						getSnapshot(team["_id"], team["name"]);
+						
+						$('#teamType').html("Squad:&nbsp;");
             $('#refreshDate').show(); //show the refresh snapshot date
 						$('#nsquad_team_scard').show();
 						$('#squad_team_scard').hide();
