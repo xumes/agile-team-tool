@@ -225,7 +225,9 @@ function getMyTeamsFromDb(initial) {
 				var uniqueTeams = _.uniq(data, function(item) {
 				    return item._id;
 				});
-				var sortedTeams = _.sortBy(uniqueTeams, 'name');
+				var sortedTeams = _.sortBy(uniqueTeams, function(team){
+					return team.name.toUpperCase();
+				});
 				_.each(sortedTeams, function(team){
 					addTeamToTree(team, twistyId, true);
 				});
@@ -339,7 +341,9 @@ function getAllAgileTeamsByParentId(parentId, showLoading, initial, parentsTree)
 						var mainTwistyId = "main_sub_" + parentId;
 						$("#" + jq(twistyId)).append(createMainTwistySection(mainTwistyId, ""));
 					}
-					var sortedTeams = _.sortBy(data.docs, 'name');
+					var sortedTeams = _.sortBy(data.docs, function(team){
+						return team.name.toUpperCase();
+					});
 					_.each(sortedTeams, function(team){
 						if (team.doc_status != 'delete') {
 							addTeamToTree(team, mainTwistyId, false);
