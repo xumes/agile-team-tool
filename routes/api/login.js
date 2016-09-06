@@ -9,7 +9,12 @@ module.exports = function(app, includes) {
 
   app.get('/logout', function(req, res){
     req.session.destroy(function (err) {
-      res.redirect('/login');
+      if (settings.authType == 'saml') {
+        res.redirect('/ssologout');
+      }
+      else {
+        res.redirect('/login');
+      }
     });
   });
 

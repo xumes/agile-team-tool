@@ -307,12 +307,6 @@ function removeHighlightParents(treeLinkId) {
 
 function highlightParents(treeLinkId) {
 	if (treeLinkId != null) {
-		//console.log(treeLinkId);
-		if ($("#"+jq(treeLinkId)).attr("hasChildren") != "Yes") {
-			var parentId = treeLinkId.substring(4, treeLinkId.length);
-			getAllAgileTeamsByParentId(parentId, false);
-		}
-		$("#"+jq(treeLinkId)).attr("hasChildren","Yes");
 		$("#" +jq(treeLinkId)).removeClass("agile-team-parent-selected");
 		if (treeLinkId != "" && $("#" +jq(treeLinkId)+" a.agile-team-selected").length == 1) {
 			$($("#" +jq(treeLinkId)).children("a.agile-team-link")[0]).addClass("agile-team-parent-selected");
@@ -562,9 +556,9 @@ function addTeamToTree(team, twistyId, isMyTeams) {
 		var trigger = $("#" + jq(subTwistyId)).find("a.ibm-twisty-trigger");
 		trigger.attr("title", "Expand/Collapse").on("click", function() {
 			if ($("#" + jq(subTwistyId)).hasClass("ibm-active")) {
-				//removeHighlightParents(subTwistyId);
+				highlightParents(subTwistyId);
 			} else {
-				//highlightParents(subTwistyId);
+				removeHighlightParents(subTwistyId);
 				expandParentTeam(subTwistyId);
 			}
 		});
@@ -716,7 +710,7 @@ function loadDetails(elementId, setScrollPosition) {
 		$('#spinnerContainer').show();
 
 		if (teamId == teamId) {
-			//removeHighlightParents();
+			removeHighlightParents();
 			// $.({message: ""});
 			defSelTeamId = teamId;
 			// make sure team data is always the latest data to show
