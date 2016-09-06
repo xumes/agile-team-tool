@@ -299,7 +299,7 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
 
 .agile-section-title {
 	font-size: 90% !important;
-	font-weight: bold !important;		
+	font-weight: bold !important;
 	padding-bottom: 0px;
 	margin-top: 6px;
 }
@@ -308,13 +308,13 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
 	border-top-width: 0px !important;
 	padding-top: 0px !important;
 	padding-bottom: 0px !important;
-	font-weight: bold !important;	
+	font-weight: bold !important;
 	color: #323232 !important;
 	width: 195px !important;
 	padding-left: 20px !important;
 }
 
-.agile-section-title a::before, .squad-sections .ibm-show-hide h2 a::before, 
+.agile-section-title a::before, .squad-sections .ibm-show-hide h2 a::before,
 .agile-maturity .agile-summary a::before {
 	font-size: 1rem !important;
 }
@@ -326,8 +326,8 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
 .agile-section-nav {
 	margin-left: 120px;
 	margin-top: -28px;
-	display: inline-block; 
-	float: right;"	
+	display: inline-block;
+	float: right;"
 }
 
 .agile-section-nav p {
@@ -354,7 +354,7 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
 }
 
 .agile-section-nav .ibm-btn-sec {
-	padding: 3px; 
+	padding: 3px;
 	border: 1px solid #323232;
 }
 
@@ -379,7 +379,7 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
 
 .agile-section-filter-input {
 	margin-left: 0px;
-	display: inline-block; 
+	display: inline-block;
 	top: -15px;
 	margin-top: 15px;
 	margin-left: 15px;
@@ -415,6 +415,7 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
 	margin-left: 15px;
 	padding-left: 5px;
 	border-bottom: 1px dotted !important;
+	cursor: pointer;
 }
 
 .agile-team-parent-selected {
@@ -472,18 +473,18 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
  }
 
 .agile-index-btn {
-	margin: 0 10px; 
-	min-width: 40px; 
-	padding-bottom: 1px; 
-	padding-top: 1px; 
-	padding-left: 1px; 
-	padding-right: 1px; 
+	margin: 0 10px;
+	min-width: 40px;
+	padding-bottom: 1px;
+	padding-top: 1px;
+	padding-left: 1px;
+	padding-right: 1px;
 	border: 1px solid #323232;
 }
 
 #assessmentForm [class='ibm-btn-row'] input[type='button'] {
-	padding-bottom: 5px; 
-	padding-top: 5px; 
+	padding-bottom: 5px;
+	padding-top: 5px;
 	margin-bottom: 0px;
 }
 
@@ -517,7 +518,7 @@ ul[class='ibm-twisty agile-principle'], ul[class='ibm-twisty agile-practice'] {
 
 .agile-assessment > li > div > p, .agile-principle > li > div > p {
 	font-size: 9.5pt;
-	margin-left: -12px; 
+	margin-left: -12px;
 	padding-left: 22px;
 	padding-bottom: 0px;
 }
@@ -550,7 +551,7 @@ ul[class='ibm-twisty agile-principle'], ul[class='ibm-twisty agile-practice'] {
 }
 
 #assessmentStatus {
-	float: left; 
+	float: left;
 	margin-left: 30px;
 }
 
@@ -574,7 +575,7 @@ input.ibm-btn-small[class*="ibm-btn-"],button.ibm-btn-small[class*="ibm-btn-"],a
 	font-size: 10.5pt;
 }
 
-table.dataTable thead th, table.dataTable tbody th, table.dataTable tbody td, 
+table.dataTable thead th, table.dataTable tbody th, table.dataTable tbody td,
 .ibm-data-table thead th, .ibm-data-table tbody th, .ibm-data-table tbody td {
 	padding: 7px 7px;
 }
@@ -614,14 +615,14 @@ ibm-btn-pri ibm-btn-small {
 
 #agile-dialog .ibm-overlay-heading-con, #agile-dialog p {
 	margin-left: 0px;
-	margin-bottom: 0px; 
+	margin-bottom: 0px;
 	padding-bottom: 0px;
 }
 
 #agile-dialog .content, #agile-dialog p {
 	margin-left: 0px;
 	margin-bottom: 0px;
-	padding-bottom: 20px; 
+	padding-bottom: 20px;
 	text-align: center;
 	font-size: 10.5pt;
 }
@@ -727,7 +728,7 @@ span.customSpan{
 .inputCustom:focus {
 	background: #fff none repeat scroll 0 0;
   border: 1px solid #000;
-}    
+}
 
 .inputCustom:hover {
 	border-color: #4178be;
@@ -768,7 +769,7 @@ span.customSpan{
     position: relative;
     top: -10px;
     width: 731px;
-}   
+}
 
 
 .agile-maturity .ibm-container-body {
@@ -827,8 +828,8 @@ table.action td {
   border-radius: 3px;
   transition: background 0.4s;
 }
-.clearable.x  { background-position: right 5px center; } 
-.clearable.onX{ cursor: pointer; }            
+.clearable.x  { background-position: right 5px center; }
+.clearable.onX{ cursor: pointer; }
 .clearable::-ms-clear {display: none; width:0; height:0;}
 
 #helpcol2 p, #helpcol1 p {
@@ -849,7 +850,7 @@ table.action td {
 	max-height: 20px;
 	min-height: 20px;
 	font-size: 10.5pt;
-	color: black; 
+	color: black;
 }
 
 li #myteams {
