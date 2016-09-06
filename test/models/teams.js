@@ -18,6 +18,8 @@ var teamDocUpdateValid = dummyData.teams.validDoc;
 
 var teamDocValid = dummyData.teams.validDoc;
 
+var teamSquadDocValid = dummyData.teams.validSquadDoc;
+
 var userDetailsValid = dummyData.user.details;
 
 var userDetails = dummyData.user.details;
@@ -28,6 +30,10 @@ var indexDocument = dummyData.index.indexDocument;
 
 var teamAssociations = dummyData.index.teamAssociations;
 
+var removedId = [];
+
+var removedRev = [];
+  
 // retrieve obj via cache, decoy for session
 // var session = {};
 describe('Team models [createTeam]: create a new team document', function(){
@@ -128,6 +134,84 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
       done();
     })
   });
+
+  it('it will return error because update data is invalid. Squadteam details error', function(done){
+    teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
+      .then(function(body){
+        teamModel.getTeam(body['_id'])
+        .then(function(teamBody){
+          teamBody['squadteam']  = 'Yes';
+          teamBody['child_team_id'] = [createdId];
+          removedId.push(body['_id']);
+          teamModel.updateOrDeleteTeam(teamBody, userDetails, 'update')
+          .catch(function(err){
+            expect(err).to.have.property('error');
+            expect(err.error).to.have.property('squadteam');
+          })
+          .finally(function(){
+            done();
+          })
+        });
+     });
+  });
+
+  it('it will return error because update data is invalid. Parent_id details error', function(done){
+    teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
+      .then(function(body){
+        teamModel.getTeam(body['_id'])
+        .then(function(teamBody){
+          teamBody['parent_team_id'] = body['_id'];
+          removedId.push(body['_id']);
+          teamModel.updateOrDeleteTeam(teamBody, userDetails, 'update')
+          .catch(function(err){
+            expect(err).to.have.property('error');
+            expect(err.error).to.have.property('parent_id');
+          })
+          .finally(function(){
+            done();
+          })
+        });
+     });
+  })
+
+  it('it will return error because update data is invalid. Child_team_id details error', function(done){
+    teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
+      .then(function(body){
+        teamModel.getTeam(body['_id'])
+        .then(function(teamBody){
+          removedId.push(body['_id']);
+          teamBody['child_team_id'] = [body['_id']];
+          teamModel.updateOrDeleteTeam(teamBody, userDetails, 'update')
+            .catch(function(err){
+              expect(err).to.have.property('error');
+              expect(err.error).to.have.property('child_team_id');
+            })
+            .finally(function(){
+              done();
+            })            
+        })
+     });
+  })
+
+  it('it will return error because update data is invalid. Squadteam details error', function(done){
+    teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
+      .then(function(body){
+        teamModel.getTeam(body['_id'])
+        .then(function(teamBody){
+          removedId.push(body['_id']);
+          teamBody['squadteam'] = 'Yes';
+          teamBody['child_team_id'] = [createdId];
+          teamModel.updateOrDeleteTeam(teamBody, userDetails, 'update')
+            .catch(function(err){
+              expect(err).to.have.property('error');
+              expect(err.error).to.have.property('squadteam');
+            })
+            .finally(function(){
+              done();
+            })            
+        })
+     });
+  })
 
   it('it will return error because user is not authorized to update document', function(done){
     userDetailsInvalid = {};
@@ -388,8 +472,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       done();
     })
   });
-  var removedId = [];
-  var removedRev = [];
+  
   it('will associate new parent team', function(done){
     teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
     .then(function(body){
