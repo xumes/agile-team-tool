@@ -212,7 +212,7 @@ function getRootTeams(parentsTree) {
 	getAllAgileTeamsByParentId('', true, true, parentsTree);
 }
 
-function getMyTeamsFromDb(initial) {
+function getMyTeamsFromDb(initial, loadStandalone) {
 	var cUrl = "/api/snapshot/getteams/" + encodeURIComponent(userInfo.email);
 	var req = $.ajax({
 		type : "GET",
@@ -220,21 +220,51 @@ function getMyTeamsFromDb(initial) {
 	}).done(function(data) {
 		if (data != undefined) {
 			if (data.length > 0) {
-				var twistyId = 'teamTreeMain';
 				//no duplicates
 				var uniqueTeams = _.uniq(data, function(item) {
-				    return item._id;
+						return item._id;
 				});
+				var twistyId = "teamTreeMain";
+				var standalone = false;
 				var sortedTeams = _.sortBy(uniqueTeams, function(team){
+					if (team.children.length == 0 && team.parents.length == 0) {
+						standalone = true;
+					}
 					return team.name.toUpperCase();
 				});
+
+				if (standalone) {
+					var standaloneTeam = {
+						'_id' : 'ag_team_standalone',
+						'isSquad' : false,
+						'name' : 'Standalone Teams',
+					};
+					sortedTeams.push(standaloneTeam);
+				}
 				_.each(sortedTeams, function(team){
 					addTeamToTree(team, twistyId, true);
 				});
 				if (initial) {
-					var defaultTeam = ($('#teamTreeMain li')[0]).id
-					loadDetails(defaultTeam);
-					$(".nano").nanoScroller();
+					if (standalone) {
+						twistyId = "main_sub_ag_team_standalone";
+						$("#bodysub_ag_team_standalone").append(createMainTwistySection(twistyId, ""));
+						_.each(sortedTeams, function(team){
+							addTeamToTree(team, twistyId, true);
+						});
+						$("#sub_"+jq("ag_team_standalone")).addClass("ibm-active");
+						$("#sub_"+jq("ag_team_standalone")).attr("hasChildren","Yes");
+						$("#sub_"+jq("ag_team_standalone")+(" a.ibm-twisty-body")).css("display","block");
+						var defaultTeam = ($('#teamTreeMain li')[0]).id
+						if (defaultTeam == "sub_ag_team_standalone") {
+							defaultTeam = ($("#sub_ag_team_standalone li")[0]).id
+						}
+						loadDetails(defaultTeam);
+						$(".nano").nanoScroller();
+					} else {
+						var defaultTeam = ($('#teamTreeMain li')[0]).id
+						loadDetails(defaultTeam);
+						$(".nano").nanoScroller();
+					}
 				} else {
 					if ( $("#no-teams-highlightbox").css('display') == 'none' )
 						$('#mainContent').show();
@@ -479,21 +509,28 @@ function addTeamToTree(team, twistyId, isMyTeams) {
 		var label = team.name;
 		var subTwistyId = "sub_" + team._id;
 
-
-		if (isMyTeams) {
-			if (!_.isEmpty(team.child_team_id)) {
-				$("#"+jq(twistyId)).append(createSubTwistySection(subTwistyId, label, (isSquad ? "agile-team-standalone" : ""), team._id));
+		if (twistyId == "main_sub_ag_team_standalone") {
+			if (isMyTeams) {
+				if (team._id != "ag_team_standalone") {
+					if (team.parents.length == 0 && team.children.length == 0) {
+						$("#"+jq(twistyId)).append(createSubTwistySection(subTwistyId, label, "agile-team-standalone", team._id));
+					}
+				}
 			} else {
-				$("#"+jq(twistyId)).append(createSubTwistySection(subTwistyId, label, "agile-team-standalone", team._id));
-			}
-		} else {
-			if (twistyId == "main_sub_ag_team_standalone") {
 				if (team.child_team_id.length == 0 && (team.parent_team_id == "" || team.parent_team_id == undefined)) {
 					$("#"+jq(twistyId)).append(createSubTwistySection(subTwistyId, label, "agile-team-standalone", team._id));
 				}
+			}
+		} else {
+			if (team._id == 'ag_team_standalone') {
+				$("#"+jq(twistyId)).append(createSubTwistySection(subTwistyId, label, "", team._id));
 			} else {
-				if (team._id == 'ag_team_standalone') {
-					$("#"+jq(twistyId)).append(createSubTwistySection(subTwistyId, label, "", team._id));
+				if (isMyTeams) {
+					if (!_.isEmpty(team.child_team_id)) {
+						$("#"+jq(twistyId)).append(createSubTwistySection(subTwistyId, label, (isSquad ? "agile-team-standalone" : ""), team._id));
+					} else if (team.children.length == 0 && team.parents.length > 0) {
+						$("#"+jq(twistyId)).append(createSubTwistySection(subTwistyId, label, "agile-team-standalone", team._id));
+					}
 				} else {
 					if (!_.isEmpty(team.child_team_id)) {
 						$("#"+jq(twistyId)).append(createSubTwistySection(subTwistyId, label, (isSquad ? "agile-team-standalone" : ""), team._id));
