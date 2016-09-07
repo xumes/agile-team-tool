@@ -338,7 +338,7 @@ function loadSelectedAgileTeam() {
   $("#select2-childrenListAction-container").text("Actions...");
   $("#select2-childrenListAction-container").attr("title", "Actions...");
 
-  if (!hasAccess($("#teamSelectList option:selected").val(), true)) {
+  if (!hasAccess($("#teamSelectList option:selected").val())) {
     $("#addTeamBtn,#updateTeamBtn,#deleteTeamBtn,#updateChildBtn,#addMemberBtn,#updateParentBtn,#cancelMemberBtn").attr("disabled", "disabled");
     $("#teamName,#teamDesc,#teamMemberName,#memberAllocation").attr("disabled", "disabled");
     $("#teamSquadYesNo,#memberRoleSelectList,#memberListAction,#parentSelectList,#childSelectList,#childrenListAction,#iterTeamBtn,#assessBtn").attr("disabled", "disabled");
@@ -564,7 +564,7 @@ function loadTeamMembers(teamId) {
         var member = members[j];
         var row = "<tr id='mrow_" + j + "'>";
         row = row + "<td scope='row' class='ibm-table-row'>";
-        if (hasAccess($("#teamSelectList option:selected").val(), true))
+        if (hasAccess($("#teamSelectList option:selected").val()))
           row = row + "<input name='member' id='member_"+ j + "' type='checkbox' value='" + j + "' onclick='selectMember($(this))' />";
         else
           row = row + "<input name='member' id='member_"+ j + "' type='checkbox' value='" + j + "' disabled='true' />";
@@ -672,7 +672,7 @@ function loadTeamChildren(currentId) {
             childTeamDesc = sortedChildTeams[x].desc;
             var row = "<tr id='crow_" + index + "'>";
             row = row + "<td scope='row' class='ibm-table-row'>";
-            if (hasAccess($("#teamSelectList option:selected").val(), true))
+            if (hasAccess($("#teamSelectList option:selected").val()))
               row = row + "<input name='child' id='child_" + index + "'type='checkbox' value='" + index + "' onclick='selectChild($(this))' />";
             else
               row = row + "<input name='child' id='child_" + index + "'type='checkbox' value='" + index + "' disabled='true'/>";

@@ -1,7 +1,7 @@
 function teamAssessmentListHander(teamId, teamAssessments) {
 	$("#gotoAssesmentList").attr("disabled", "disabled");
 	
-	var allowAccess = hasAccess(teamId, true);
+	var allowAccess = hasAccess(teamId);
 	//var listOption = getAssessmentDropdownList(sortAssessments(teamAssessments));
 	var listOption = getAssessmentDropdownList(teamAssessments);
 	
