@@ -848,7 +848,7 @@ function updateAgileTeamAssessment(action) {
 		}
 
 		$("#lastUpdateUser").html(userInfo.email);
-		$("#lastUpdateTimestamp").html(showDateDDMMMYYYYTS(serverDateTime));
+		$("#lastUpdateTimestamp").html(showDateUTC(serverDateTime));
 
 		gTeamAssessment = screenAnswers;
 		showLog(screenAnswers);
@@ -937,7 +937,7 @@ function updateAgileTeamAssessment(action) {
 				}
 
 				$("#lastUpdateUser").html(userInfo.email);
-				$("#lastUpdateTimestamp").html(showDateDDMMMYYYYTS(serverDateTime));
+				$("#lastUpdateTimestamp").html(showDateUTC(serverDateTime));
 				$("#doc_id").html(jsonData["_id"]);
 
 				// copy object to persist to follow hierarchy of columns in the template
@@ -1066,7 +1066,7 @@ function setScreenAnswers(teamAssessment) {
 	}
 
 	$("#lastUpdateUser").html(teamAssessment["last_updt_user"]);
-	$("#lastUpdateTimestamp").html(showDateDDMMMYYYYTS(teamAssessment["last_updt_dt"]));
+	$("#lastUpdateTimestamp").html(showDateUTC(teamAssessment["last_updt_dt"]));
 	$("#doc_id").html(teamAssessment["_id"]);
 
 	if (!found)
