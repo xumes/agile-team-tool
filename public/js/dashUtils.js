@@ -389,7 +389,7 @@ function showDateYYYYMMDDTS(formatDate) {
 }
 
 function showDateUTC(formatDate) {
-  if (formatDate == null || formatDate == "") return "";
+  if (formatDate == null || formatDate == "" || formatDate == "NaN") return "Not available";
   var utcTime = moment(formatDate).format("MMMM DD, YYYY, H:mm");
   return utcTime + " (UTC)";
 }
