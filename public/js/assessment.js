@@ -15,15 +15,15 @@ jQuery(function($) {
 			if (urlParameters.assessId != undefined && urlParameters.assessId != "") {
 				agileTeamListHandler("teamSelectList", urlParameters.id, urlParameters.assessId, null, null, squadTeams);
 			} else {
-				agileTeamListHandler("teamSelectList", urlParameters.id, "new", null, null, squadTeams); 
+				agileTeamListHandler("teamSelectList", urlParameters.id, "new", null, null, squadTeams);
 			}
 		} else {
 			agileTeamListHandler("teamSelectList", null, null, null, null, squadTeams);
 		}
-		
+
 		setToolTips();
 		$("#assessmentDate").datepicker({ maxDate: 0 , dateFormat: 'ddMyy' });
-		$("#assessmentDate" ).datepicker( "option", "dateFormat", 'ddMyy' );	
+		$("#assessmentDate" ).datepicker( "option", "dateFormat", 'ddMyy' );
 	}
 
 	$("#teamSelectList").change(function() {
@@ -32,7 +32,7 @@ jQuery(function($) {
 	});
 
 	$("#assessmentSelectList").change(function() {
-		getTeamAssessmentAnswers($("#assessmentSelectList option:selected").val(), assessmentQuestionnaireHandler, []);	
+		getTeamAssessmentAnswers($("#assessmentSelectList option:selected").val(), assessmentQuestionnaireHandler, []);
 	});
 
 	$("#teamTypeSelectList").change(function() {
@@ -52,7 +52,7 @@ jQuery(function($) {
 	  				$(this).parent().show();
 	  			}
 	  		});
-	    		
+
 	  	} else {
 	  		$("#assessmentContainer > ul > li > a").each(function() {
 	  			if ($(this).html().toLowerCase().indexOf("leadership") > -1) {
@@ -65,7 +65,7 @@ jQuery(function($) {
 
 	  	}
 		}
-		
+
 		if (gTeamAssessment != null)
 			gTeamAssessment["team_proj_ops"] = $("#teamTypeSelectList option:selected").val();
 	});
@@ -77,7 +77,7 @@ jQuery(function($) {
 					$(this).parent().hide();
 				}
 			});
-	  		
+
 		} else {
 			$("#assessmentContainer > ul > li > a").each(function() {
 				if ($(this).html().toLowerCase().indexOf("delivery") > -1) {
@@ -93,7 +93,7 @@ jQuery(function($) {
 });
 
 function setToolTips() {
-	var tt = "Operations teams support a repeatable process that delivers value to the customer.  Unlike a project, it normally has no definite start and end date.  " 
+	var tt = "Operations teams support a repeatable process that delivers value to the customer.  Unlike a project, it normally has no definite start and end date.  "
 					+ "Operation examples include recruitment, budgeting, call centers, supply chain and software operations.";
 	$("#teamTypeTT").attr("title", tt);
 	$("#teamTypeTT").tooltip();
@@ -101,11 +101,11 @@ function setToolTips() {
 	tt = "Answering yes to this will add the optional DevOps software delivery practices.";
 	$("#softwareTT").attr("title", tt);
 	$("#softwareTT").tooltip();
-	
+
 	tt = "The assessment date is assigned when the Submit action is taken.  To assign a specific date, i.e. when recording a previously completed assessment, select the date to use as the assessment date.";
 	$("#assDateTT").attr("title", tt);
 	$("#assDateTT").tooltip();
-	
+
 	$("div.ui-helper-hidden-accessible").each(function (index, obj) {
 		$(obj).attr("aria-label", "Tooltip");
 	});
@@ -136,13 +136,13 @@ function getTeamAssessmentAnswers(assessmentId, _callback, args) {
 
 		args.push(gTeamAssessment);
 		args.push(gAssessmentTemplateList);
-		
+
 		if (typeof _callback === "function") {
 			showLog("callback function: " + getFnName(_callback));
 			_callback.apply(this, args);
 		}
-		
-	} else {			
+
+	} else {
 		$.ajax({
 			type : "GET",
 			url : "/api/assessment/view?assessId=" + encodeURIComponent(assessmentId),
@@ -152,7 +152,7 @@ function getTeamAssessmentAnswers(assessmentId, _callback, args) {
 				gTeamAssessment = data;
 				args.push(gTeamAssessment);
 				args.push(gAssessmentTemplateList);
-				
+
 				showLog("data loaded: " + JSON.stringify(data));
 				if (typeof _callback === "function") {
 					showLog("callback function: " + getFnName(_callback));
@@ -176,7 +176,7 @@ function assessmentQuestionnaireHandler(teamAssessment, assessmentTemplateList) 
 	if (assessmentTemplateList.length > 0)
 		gAssessmentTemplate = assessmentTemplateList[0];
 
-	if (teamAssessment != null) {		
+	if (teamAssessment != null) {
 		var result = _.find(gAssessmentTemplateList, function(value){
 			if (value.atma_version == teamAssessment.assessmt_version ||
 				value._id == teamAssessment.assessmt_version){
@@ -187,7 +187,7 @@ function assessmentQuestionnaireHandler(teamAssessment, assessmentTemplateList) 
 			gAssessmentTemplate = result;
 		}
 	}
-	
+
 	createAssessmentTable(gAssessmentTemplate);
 	setScreenAnswers(teamAssessment);
 	setScreenControls();
@@ -203,17 +203,17 @@ function teamAssessmentListHander(elementId, teamId, assessmentId, teamAssessmen
 		setSelectOptions(elementId, null, ["new", "Create new assessment..."], null, "new");
 		assessmentQuestionnaireHandler(gTeamAssessment, gAssessmentTemplateList);
 		return;
-		
+
 	}
-	
+
 	$("#" + elementId).attr("disabled", "disabled");
-	
+
 	gTeamAssessmentList = teamAssessments;
 	var allowAccess = hasAccess(teamId, true);
 	var listOption = getAssessmentDropdownList(gTeamAssessmentList);
 	var firstOption = null;
 	var draftExist = false;
-	
+
 	if (teamId != "" && assessmentId != "new" && assessmentId != "") {
 		for (var i=0; i<listOption.length; i++) {
 			if (listOption[i][1].toLowerCase().indexOf("draft") > -1) {
@@ -222,26 +222,26 @@ function teamAssessmentListHander(elementId, teamId, assessmentId, teamAssessmen
 				break;
 			}
 		}
-		
+
 		if (!draftExist && allowAccess)
 			firstOption = ["new", "Create new assessment..."];
 
 		setSelectOptions(elementId, listOption, firstOption, null, assessmentId);
 		getTeamAssessmentAnswers(assessmentId, assessmentQuestionnaireHandler, []);
-		
+
 	} else if (teamId != "" && assessmentId == "new") {
 		for (var i=0; i<listOption.length; i++) {
 			if (listOption[i][1].toLowerCase().indexOf("draft") > -1) {
 				firstOption = null;
-				assessmentId = listOption[i][0];				
+				assessmentId = listOption[i][0];
 				draftExist = true;
-				setSelectOptions(elementId, listOption, firstOption, null, assessmentId);				
-				getTeamAssessmentAnswers(assessmentId, assessmentQuestionnaireHandler, []);				
+				setSelectOptions(elementId, listOption, firstOption, null, assessmentId);
+				getTeamAssessmentAnswers(assessmentId, assessmentQuestionnaireHandler, []);
 				break;
 			}
 		}
 
-		if (!draftExist) {			
+		if (!draftExist) {
 			if (allowAccess) {
 				firstOption = ["new", "Create new assessment..."];
 				gTeamAssessment = initAssessmentAnswersTemplate();
@@ -254,16 +254,16 @@ function teamAssessmentListHander(elementId, teamId, assessmentId, teamAssessmen
 			assessmentQuestionnaireHandler(gTeamAssessment, gAssessmentTemplateList);
 
 		}
-		
+
 	} else {
 		setSelectOptions(elementId, listOption, null, null, assessmentId);
 		gTeamAssessment = null;
 		assessmentQuestionnaireHandler(gTeamAssessment, gAssessmentTemplateList);
-		
+
 	}
-	
+
 	$("#" + elementId).removeAttr("disabled");
-	
+
 }
 
 function updateAgileTeamAssessmentsCache(teamAssessment) {
@@ -278,10 +278,10 @@ function updateAgileTeamAssessmentsCache(teamAssessment) {
 	if (!found) {
 		gTeamAssessmentList.push(teamAssessment);
 	}
-	
+
 	gTeamAssessmentList = sortAssessments(gTeamAssessmentList);
 	var listOption = getAssessmentDropdownList(gTeamAssessmentList);
-	
+
 	var draftExist = false;
 	var firstOption = "";
 	var selectedOption = teamAssessment._id;
@@ -296,7 +296,7 @@ function updateAgileTeamAssessmentsCache(teamAssessment) {
 	if (!draftExist) {
 		firstOption = ["new", "Create new assessment..."];
 	}
-	
+
 	setSelectOptions("assessmentSelectList", listOption, firstOption, null, selectedOption);
 }
 
@@ -309,7 +309,7 @@ function createAssessmentTable(assessmentTemplate) {
 		$("#assessmentContainer").append(p);
 		return;
 	}
-	
+
 	var assessments = assessmentTemplate["atma_cmpnt_tbl"];
 	var versionId = "atma_ver_" + assessmentTemplate["atma_version"];
 	var html = createMainTwistySection(versionId, "agile-assessment");
@@ -319,35 +319,35 @@ function createAssessmentTable(assessmentTemplate) {
 		label = assessments[i]["atma_name"];
 		html = createSubTwistySection(atmaId, label, "", false);
 		$("#"+versionId).append(html);
-		
+
 		var mainPrincipleId = atmaId + "_prin";
 		html = createMainTwistySection(mainPrincipleId, "agile-principle");
 		$("#body"+atmaId).append(html);
-		
+
 		var principles = assessments[i]["principle_tbl"];
 		for (var j=0; j<principles.length; j++) {
 			var principleId = mainPrincipleId + "_" + principles[j]["principle_id"];
 			label = principles[j]["principle_name"];
 			html = createSubTwistySection(principleId, label, "", false);
 			$("#"+mainPrincipleId).append(html);
-		
+
 			var mainPracticeId = principleId + "_prac";
 			html = createMainTwistySection(mainPracticeId, "agile-practice");
 			$("#body"+principleId).append(html);
-			
+
 			var practices = principles[j]["practice_tbl"];
 			for (var k=0; k<practices.length; k++) {
 				label = practices[k]["practice_name"];
-				
+
 				var practiceId = mainPracticeId + "_" + practices[k]["practice_id"];
 				html = createSubTwistySection(practiceId, label, "", false);
 				$("#"+mainPracticeId).append(html);
-				
+
 				createCriteriaTable(practices[k], "body"+practiceId, practiceId);
 			}
 		}
 	}
-	
+
 	jQuery("#"+versionId).attr("data-widget", "twisty");
 	jQuery("#"+versionId).twisty();
 	$("input:radio").each(function() {
@@ -371,16 +371,16 @@ function createSubTwistySection(twistyId, twistyLabel, extraClass, collapseLink)
 	li.setAttribute("data-open", "true");
 	li.setAttribute("class", extraClass);
 	li.setAttribute("id", twistyId);
-	
+
 	var span = document.createElement("span");
 	span.setAttribute("class", "ibm-twisty-head");
 	span.appendChild(document.createTextNode(twistyLabel));
 	li.appendChild(span);
-	
+
 	var div = document.createElement("div");
 	div.setAttribute("class", "ibm-twisty-body");
 	div.setAttribute("id", "body"+twistyId);
-	
+
 	if (collapseLink) {
 		var p = document.createElement("p");
 		p.setAttribute("class", extraClass);
@@ -395,7 +395,7 @@ function createSubTwistySection(twistyId, twistyLabel, extraClass, collapseLink)
 		a.setAttribute("href", "");
 		a.appendChild(document.createTextNode("Show all"));
 		p.appendChild(a);
-		
+
 		div.appendChild(p);
 	}
 
@@ -409,46 +409,46 @@ function createCriteriaTable(practice, htmlLoc, practiceId) {
 	table.setAttribute("class", "ibm-data-table ibm-altrows agile-practice");
 	table.setAttribute("width", "100%");
 	table.setAttribute("summary", "Maturity assessment level and description for the identified practice.");
-	
+
 	var caption = document.createElement("caption");
 	caption.appendChild(document.createTextNode(practice["practice_desc"]));
 	table.appendChild(caption);
-	
+
 	var thead = document.createElement("thead");
 	var tr = document.createElement("tr");
 	var th = document.createElement("th");
 	var a =  document.createElement("a");
-	
+
 	th.setAttribute("scope", "col");
 	th.setAttribute("width", "15%");
 	th.appendChild(document.createTextNode("Maturity level"));
 	tr.appendChild(th);
-	
+
 	th = document.createElement("th");
 	th.setAttribute("scope", "col");
 	tr.appendChild(th);
-	
+
 	th = document.createElement("th");
 	th.setAttribute("scope", "col");
 	th.setAttribute("width", "8%");
 	th.setAttribute("id", practiceId+"_th_curr");
 	th.setAttribute("style", "text-align: center; display: none");
 	th.appendChild(document.createTextNode("Current"));
-	
+
 	a.setAttribute("class", "ibm-information-link");
 	a.setAttribute("id", practiceId+"_currentTT");
 	a.setAttribute("data-widget", "tooltip");
 	a.setAttribute("style", "cursor: default; position: relative; left: 5px; top :0px; display: inline;");
 	th.appendChild(a);
 	tr.appendChild(th);
-	
+
 	th = document.createElement("th");
 	th.setAttribute("scope", "col");
 	th.setAttribute("width", "8%");
 	th.setAttribute("id", practiceId+"_th_targ");
 	th.setAttribute("style", "text-align: center; display: none");
 	th.appendChild(document.createTextNode("Target"));
-	
+
 	a = document.createElement("a");
 	a.setAttribute("class", "ibm-information-link");
 	a.setAttribute("id", practiceId+"_targetTT");
@@ -456,7 +456,7 @@ function createCriteriaTable(practice, htmlLoc, practiceId) {
 	a.setAttribute("style", "cursor: default; position: relative; left: 5px; top :0px; display: inline;");
 	th.appendChild(a);
 	tr.appendChild(th);
-	
+
 	th = document.createElement("th");
 	th.setAttribute("scope", "col");
 	th.setAttribute("width", "8%");
@@ -464,11 +464,11 @@ function createCriteriaTable(practice, htmlLoc, practiceId) {
 	th.appendChild(document.createTextNode("Independent"));
 	th.setAttribute("style", "text-align: center; display: none");
 	tr.appendChild(th);
-	
+
 	thead.appendChild(tr);
 	table.appendChild(thead);
-	
-	var tbody = document.createElement("tbody");	
+
+	var tbody = document.createElement("tbody");
 	var criteria = practice["mat_criteria_tbl"];
 	for (var i=0; i<criteria.length; i++) {
 		tr = document.createElement("tr");
@@ -477,7 +477,7 @@ function createCriteriaTable(practice, htmlLoc, practiceId) {
 		var td = document.createElement("td");
 		td.appendChild(document.createTextNode(criteria[i]["mat_lvl_name"]));
 		tr.appendChild(td);
-		
+
 		td = document.createElement("td");
 		var ul = document.createElement("ul");
 		for (var j=0; j<criteria[i]["mat_lvl_criteria"].length; j++) {
@@ -487,7 +487,7 @@ function createCriteriaTable(practice, htmlLoc, practiceId) {
 		}
 		td.appendChild(ul);
 		tr.appendChild(td);
-		
+
 		var radio = document.createElement("input");
 		radio.setAttribute("type", "radio");
 		radio.setAttribute("name", practiceId+"_curr");
@@ -499,7 +499,7 @@ function createCriteriaTable(practice, htmlLoc, practiceId) {
 		td.setAttribute("style", "display: none;");
 		td.appendChild(radio);
 		tr.appendChild(td);
-		
+
 		radio = document.createElement("input");
 		radio.setAttribute("type", "radio");
 		radio.setAttribute("name", practiceId+"_targ");
@@ -511,7 +511,7 @@ function createCriteriaTable(practice, htmlLoc, practiceId) {
 		td.setAttribute("style", "display: none;");
 		td.appendChild(radio);
 		tr.appendChild(td);
-		
+
 		radio = document.createElement("input");
 		radio.setAttribute("type", "radio");
 		radio.setAttribute("name", practiceId+"_ind");
@@ -523,11 +523,11 @@ function createCriteriaTable(practice, htmlLoc, practiceId) {
 		td.setAttribute("style", "display: none;");
 		td.appendChild(radio);
 		tr.appendChild(td);
-		
+
 		tbody.appendChild(tr);
 	}
 	tr = document.createElement("tr");
-	tr.setAttribute("id", practiceId+"_tbtr_action");	
+	tr.setAttribute("id", practiceId+"_tbtr_action");
 	tr.setAttribute("style", "display: none;");
 	var textArea = document.createElement("textarea");
 	textArea.setAttribute("style", "width:1120px");
@@ -567,7 +567,7 @@ function createCriteriaTable(practice, htmlLoc, practiceId) {
 
 function setPracticeAnswerStatus() {
 	if (gAssessmentTemplate == null) return;
-	
+
 	$("#assessmentContainer [id^='atma_ver'] [id*='_prac'] a[class*='ibm-twisty-trigger']").each(function(index, obj) {
 		var span = document.createElement("span");
 		span.setAttribute("id", $(obj).parent().attr("id") + "_ans");
@@ -575,7 +575,7 @@ function setPracticeAnswerStatus() {
 			span.appendChild(document.createTextNode("Not answered"));
 		$(obj).append(span);
 	});
-	
+
 	jQuery("#assessmentContainer input[name^='atma_ver']").on("ifChanged", function(event){
 		var optionName = this.name;
 		var principleId = "";
@@ -585,12 +585,12 @@ function setPracticeAnswerStatus() {
 			principleId = optionName.substring(0, optionName.indexOf("_targ"));
 		else if (optionName.indexOf("_ind") > -1)
 			principleId = optionName.substring(0, optionName.indexOf("_ind"));
-		
+
 		var status = "";
 		if (isReviewer(gTeamAssessment) && getAssessmentStatus(gTeamAssessment).toLowerCase() == "independent review") {
 			var indAnswered = $("[name='"+principleId+"_ind']:checked").length > 0;
 			status = (indAnswered ? "Review: " + $("[name='"+principleId+"_ind']:checked").attr("value") : "Unanswered");
-		
+
 		} else if (getAssessmentStatus(gTeamAssessment).toLowerCase() == "submitted and reviewed") {
 			var currAnswered = $("[name='"+principleId+"_curr']:checked").length > 0;
 			var targAnswered = $("[name='"+principleId+"_targ']:checked").length > 0;
@@ -598,7 +598,7 @@ function setPracticeAnswerStatus() {
 			status = status + " | Target: "+ (targAnswered ? $("[name='"+principleId+"_targ']:checked").attr("value") : "---");
 			var indAnswered = $("[name='"+principleId+"_ind']:checked").length > 0;
 			status = status + " | Review: " + (indAnswered ? $("[name='"+principleId+"_ind']:checked").attr("value") : "---");
-				
+
 		} else {
 			var currAnswered = $("[name='"+principleId+"_curr']:checked").length > 0;
 			var targAnswered = $("[name='"+principleId+"_targ']:checked").length > 0;
@@ -608,10 +608,10 @@ function setPracticeAnswerStatus() {
 		}
 		$("#"+principleId+" > a").removeAttr("style");
 		$("#"+principleId+"_ans").html(status);
-			
+
 		setChangeIndiactor();
 	});
-	
+
 	jQuery("#assessmentContainer textarea[id^='atma_ver']").on("change", function(event) {
 		setChangeIndiactor();
 	});
@@ -629,7 +629,7 @@ function setCollapsableLinks() {
 			return false;
 		});
 	});
-	
+
 	$("#assessmentContainer div > p > a[id*='_hide']").each(function (index, obj) {
 		var id = $(obj).attr("id");
 		var sectionId = "";
@@ -654,13 +654,13 @@ function setAssessmentToolTips() {
 		$(obj).attr("title", tt);
 		$(obj).tooltip();
 	});
-	
+
 	tt = "Your team's targets for the next 90 days.  Choose the practices that the team agrees will have the most impact.";
 	$("#assessmentContainer [id*='targetTT']").each(function (index, obj) {
 		$(obj).attr("title", tt);
 		$(obj).tooltip();
 	});
-	
+
 	$("div.ui-helper-hidden-accessible").each(function (index, obj) {
 		$(obj).attr("aria-label", "Tooltip");
 	});
@@ -670,21 +670,21 @@ function assessmentAction(obj) {
 	$("input[type='button']").each(function () {
 		$(this).attr("disabled", "disabled");
 	});
-	
+
 	var action = obj.value.toLowerCase();
 	if (action == "save as draft") {
 		updateAgileTeamAssessment(action);
 		return true;
-		
+
 	} else if (action == "delete draft") {
 		if (confirm("You have requested to delete this draft assessment.  All saved progress will be deleted. Please confirm that you want to proceed with this delete."))
 			updateAgileTeamAssessment(action);
-		
-		else 
+
+		else
 			setScreenControls();
-		
+
 		return true;
-		
+
 	} else if (action == "submit") {
 		// store selected values
 		gTeamAssessment["team_proj_ops"] = $("#teamTypeSelectList option:selected").val();
@@ -700,7 +700,7 @@ function assessmentAction(obj) {
 				leadershipID = $(this).parent().attr("id");
 			}
 		});
-		
+
 		var deliveryID = "";
 		var includeDelivery = $("#softwareYesNo option:selected").val().toLowerCase() == "yes";
 		// look for delivery section if presented and store prefix id of children elements
@@ -709,11 +709,11 @@ function assessmentAction(obj) {
 				deliveryID = $(this).parent().attr("id");
 			}
 		});
-		
+
 		var isOperations = false;
 		var operationsID = "";
 		var opsExist = false;
-		// look for operations section if presented in the template 
+		// look for operations section if presented in the template
 		$("#assessmentContainer > ul > li > a").each(function() {
 			if (($(this).html().toLowerCase().indexOf("ops") > -1) || ($(this).html().toLowerCase().indexOf("operations") > -1)) {
 				opsExist = true;
@@ -731,10 +731,10 @@ function assessmentAction(obj) {
 				}
 			});
   	}
-		
+
 		var isComplete = true;
-		var errorMsg = "";		
-		if (getAssessmentStatus(gTeamAssessment).toLowerCase() == "draft") {			
+		var errorMsg = "";
+		if (getAssessmentStatus(gTeamAssessment).toLowerCase() == "draft") {
 			$("#assessmentContainer li[id*='_prac']").each(function() {
 				var answers = this.id;
 				// query for section unanswered practices
@@ -763,14 +763,14 @@ function assessmentAction(obj) {
 					}
 				}
 			});
-			
+
 			errorMsg = "All assessment maturity practices need to be answered.  See highlighted practices in yellow.";
-			
+
 		} else if (getAssessmentStatus(gTeamAssessment).toLowerCase() == "independent review") {
 			$("#assessmentContainer li[id*='_prac']").each(function() {
 				var answers = this.id;
 				// query for section unanswered practices
-				var thisSectionComplete = true;				
+				var thisSectionComplete = true;
 				if ($("[name*='"+answers+"_ind']:checked").length == 0) {
 					if (opsExist) {
 						if (answers.indexOf(leadershipID) > -1 && isOperations) {
@@ -795,11 +795,11 @@ function assessmentAction(obj) {
 					}
 				}
 			});
-			
+
 			errorMsg = "All assessment maturity practices need to be answered.  See highlighted practices in yellow.";
-			
+
 		}
-		
+
 		if (!isComplete) {
 			showMessagePopup(errorMsg);
 			$("input[type='button']").each(function () {
@@ -810,13 +810,13 @@ function assessmentAction(obj) {
 		*/
 		updateAgileTeamAssessment(action);
 		return true;
-		
+
 	} else if (action == "cancel current changes") {
 		getTeamAssessmentAnswers($("#assessmentSelectList option:selected").val(), assessmentQuestionnaireHandler, []);
 		showMessagePopup("Current changes have been cancelled.");
 		return true;
 	}
-	
+
 }
 
 function updateAgileTeamAssessment(action) {
@@ -824,12 +824,12 @@ function updateAgileTeamAssessment(action) {
 	if ($("#assessmentSelectList").val().toLowerCase() == "new") {
 		var serverDateTime = getServerDateTime();
 		var screenAnswers = getScreenAnswers();
-		screenAnswers["assessmt_status"] = "Draft";	
+		screenAnswers["assessmt_status"] = "Draft";
 		screenAnswers["created_dt"] = serverDateTime;
 		screenAnswers["created_user"] = userInfo.email;
 		screenAnswers["last_updt_dt"] = serverDateTime;
 		screenAnswers["last_updt_user"] = userInfo.email;
-		
+
 		if (action == "save as draft") {
 			screenAnswers["assessmt_status"] = "Draft";
 			screenAnswers["assessmt_action_plan_tbl"] = [];
@@ -848,7 +848,7 @@ function updateAgileTeamAssessment(action) {
 		}
 
 		$("#lastUpdateUser").html(userInfo.email);
-		$("#lastUpdateTimestamp").html(showDateDDMMMYYYYTS(serverDateTime));
+		$("#lastUpdateTimestamp").html(showDateUTC(serverDateTime));
 
 		gTeamAssessment = screenAnswers;
 		showLog(screenAnswers);
@@ -867,14 +867,14 @@ function updateAgileTeamAssessment(action) {
 					validationHandler(jqXHR.responseJSON.error);
 			}
 		});
-		
+
 	} else {
-		$.ajax({		
+		$.ajax({
 			type : "GET",
 			url : "/api/assessment/view?assessId=" + encodeURIComponent($("#assessmentSelectList").val()),
 			async : false
 		}).done(function(data) {
-			
+
 			var jsonData = data;
 			if (action == "delete draft") {
 				showLog(JSON.stringify(jsonData));
@@ -890,8 +890,8 @@ function updateAgileTeamAssessment(action) {
 							validationHandler(jqXHR.responseJSON.error);
 					}
 				});
-				
-			} else {			
+
+			} else {
 				var screenAnswers = getScreenAnswers();
 				var serverDateTime = getServerDateTime();
 				jsonData["team_proj_ops"] = screenAnswers["team_proj_ops"];
@@ -900,12 +900,12 @@ function updateAgileTeamAssessment(action) {
 				jsonData["self-assessmt_dt"] = screenAnswers["self-assessmt_dt"];
 				jsonData["last_updt_dt"] = serverDateTime;
 				jsonData["last_updt_user"] = userInfo.email;
-	
+
 				if (action == "save as draft" && getAssessmentStatus(jsonData).toLowerCase() == "draft") {
 					jsonData["assessmt_status"] = "Draft";
-					jsonData["assessmt_action_plan_tbl"] = [];				
+					jsonData["assessmt_action_plan_tbl"] = [];
 					msg = "Maturity assessment has been saved as draft.";
-	
+
 				} else if (action == "submit" && getAssessmentStatus(jsonData).toLowerCase() == "draft") {
 					jsonData["assessmt_status"] = "Submitted";
 					jsonData["submitter_id"] = userInfo.email;
@@ -919,27 +919,27 @@ function updateAgileTeamAssessment(action) {
 					}
 					jsonData["assessmt_action_plan_tbl"] = screenAnswers["assessmt_action_plan_tbl"];
 					msg = "Maturity assessment has been submitted.";
-	
+
 				} else if (action == "save as draft" && getAssessmentStatus(jsonData).toLowerCase() == "independent review") {
 					jsonData["assessmt_status"] = "Submitted";
 					jsonData["ind_assessmt_status"] = "Draft";
 					jsonData["ind_assessor_id"] = userInfo.email;
 					jsonData["assessmt_action_plan_tbl"] = mergeActionItems(jsonData["assessmt_action_plan_tbl"], screenAnswers["assessmt_action_plan_tbl"]);
 					msg = "Independent review for the maturity assessment has been saved as draft.";
-					
+
 				} else if (action == "submit" && getAssessmentStatus(jsonData).toLowerCase() == "independent review") {
 					jsonData["ind_assessmt_status"] = "Submitted";
 					jsonData["ind_assessor_id"] = userInfo.email;
 					jsonData["ind_assessmt_dt"] = serverDateTime;
 					jsonData["assessmt_action_plan_tbl"] = mergeActionItems(jsonData["assessmt_action_plan_tbl"], screenAnswers["assessmt_action_plan_tbl"]);
 					msg = "Independent review for the maturity assessment has been submitted.";
-					
+
 				}
-				
+
 				$("#lastUpdateUser").html(userInfo.email);
-				$("#lastUpdateTimestamp").html(showDateDDMMMYYYYTS(serverDateTime));
+				$("#lastUpdateTimestamp").html(showDateUTC(serverDateTime));
 				$("#doc_id").html(jsonData["_id"]);
-				
+
 				// copy object to persist to follow hierarchy of columns in the template
 				jsonData = $.extend(true, {}, screenAnswers, jsonData);
 				$.ajax({
@@ -970,11 +970,11 @@ function mergeActionItems(oldAnswers, newAnswers) {
 	for (var i=0; i<newAnswers.length; i++) {
 		var found = false;
 		for (var j=0; j<oldAnswers.length; j++) {
-			if ((newAnswers[i]["principle_id"] == oldAnswers[j]["principle_id"] || 
+			if ((newAnswers[i]["principle_id"] == oldAnswers[j]["principle_id"] ||
 					newAnswers[i]["principle_name"] == oldAnswers[j]["principle_name"]) &&
 					(newAnswers[i]["practice_id"] == oldAnswers[j]["practice_id"] ||
 					newAnswers[i]["practice_name"] == oldAnswers[j]["practice_name"])) {
-				
+
 				newAnswers[i]["progress_summ"] = oldAnswers[j]["progress_summ"];
 				newAnswers[i]["key_metric"] = oldAnswers[j]["key_metric"];
 				newAnswers[i]["review_dt"] = oldAnswers[j]["review_dt"];
@@ -1000,10 +1000,10 @@ function setScreenAnswers(teamAssessment) {
 	for (var i=0; i<assessments.length; i++) {
 		var eleAtmaId = eleVersionId + "_" + i;
 		var eleMainPrincipleId = eleAtmaId + "_prin";
-		
+
 		var result = teamAssessment["assessmt_cmpnt_rslts"];
 		if (result == null) break;
-		
+
 		var processAnswers = null;
 		for (var a=0; a<result.length; a++) {
 			if (result[a]["assessed_cmpnt_name"] != null && assessments[i]["atma_name"] != null
@@ -1012,18 +1012,18 @@ function setScreenAnswers(teamAssessment) {
 			}
 		}
 		if (processAnswers == null) continue;
-		
+
 		var principles = assessments[i]["principle_tbl"];
 		for (var j=0; j<principles.length; j++) {
 			var principleName = principles[j]["principle_name"];
 			var principleId = principles[j]["principle_id"];
 			var elePrincipleId = eleMainPrincipleId + "_" + principles[j]["principle_id"];
-			
+
 			var practices = principles[j]["practice_tbl"];
 			for (var k=0; k<practices.length; k++) {
 				var eleMainPracticeId = elePrincipleId + "_prac";
 				var elePracticeId = eleMainPracticeId + "_" + practices[k]["practice_id"];
-	      
+
 				var practiceName = practices[k]["practice_name"];
 				var practiceId = practices[k]["practice_id"];
 				for (var b=0; b<processAnswers.length; b++) {
@@ -1031,11 +1031,11 @@ function setScreenAnswers(teamAssessment) {
 					if ((answer["principle_name"] == null || answer["principle_name"] == ""  )
 							&& (answer["practice_name"] == null || answer["practice_name"] == ""))
 							continue;
-					
+
 					if ((answer["principle_name"].toLowerCase() == principleName.toLowerCase() || answer["principle_id"] == principleId)
 							&& (answer["practice_name"].toLowerCase() == practiceName.toLowerCase() || answer["practice_id"] == practiceId)) {
 						var current = answer["cur_mat_lvl_achieved"];
-						var target = answer["tar_mat_lvl_achieved"];	
+						var target = answer["tar_mat_lvl_achieved"];
 						var independent = answer["ind_mat_lvl_achieved"];
 						//console.log(elePracticeId + " " + current + "/" + target + "/" + independent);
 						$("[name='"+elePracticeId+"_curr']").each(function(index, obj) {
@@ -1051,12 +1051,12 @@ function setScreenAnswers(teamAssessment) {
 								$($(obj)).iCheck("check");
 							}
 						});
-						
+
 						$("#"+elePracticeId+"_action").val(answer["how_better_action_item"]);
 						$("#"+elePracticeId+"_comment").val(answer["ind_assessor_cmnt"]);
 					} else {
 						found = true;
-						
+
 					}
 				}
 				if (!found)
@@ -1064,14 +1064,14 @@ function setScreenAnswers(teamAssessment) {
 			}
 		}
 	}
-	
+
 	$("#lastUpdateUser").html(teamAssessment["last_updt_user"]);
-	$("#lastUpdateTimestamp").html(showDateDDMMMYYYYTS(teamAssessment["last_updt_dt"]));
+	$("#lastUpdateTimestamp").html(showDateUTC(teamAssessment["last_updt_dt"]));
 	$("#doc_id").html(teamAssessment["_id"]);
 
 	if (!found)
 		showMessagePopup("Previous answers for the the following practice(s) cannot be mapped to the current template: <br>" + msg);
-	
+
 	if (isReviewer(teamAssessment) && getAssessmentStatus(teamAssessment).toLowerCase() == "independent review") {
 		$("[id*='th_ind'], [id*='td_ind'], [id*='tbtr_comment']").each(function() {
 			$(this).show();
@@ -1087,7 +1087,7 @@ function setScreenAnswers(teamAssessment) {
 		$("[id*='th_curr'], [id*='td_curr'], [id*='th_targ'], [id*='td_targ'], [id*='tbtr_action']").each(function() {
 			$(this).show();
 		});
-		
+
 	} else {
 		$("[id*='th_ind'], [id*='td_ind'], [id*='tbtr_comment']").each(function() {
 			$(this).hide();
@@ -1095,7 +1095,7 @@ function setScreenAnswers(teamAssessment) {
 		$("[id*='th_curr'], [id*='td_curr'], [id*='th_targ'], [id*='td_targ'], [id*='tbtr_action']").each(function() {
 			$(this).show();
 		});
-		
+
 	}
 }
 
@@ -1115,7 +1115,7 @@ function setProgressLink(teamId, assessId) {
 	$("#progressLink").append(document.createTextNode("Team Assessment Summary"));
 
 	var progressPage = "progress";
-	if ((teamId != null && teamId != "") 
+	if ((teamId != null && teamId != "")
 			&& (assessId != null && (assessId != "" || assessId != "new"))
 			&& getAssessmentStatus(gTeamAssessment).toLowerCase() != "draft" ) {
 		progressPage = progressPage + "?id=" + teamId;
@@ -1123,7 +1123,7 @@ function setProgressLink(teamId, assessId) {
 		var link = document.createElement("a");
 		link.setAttribute("href", progressPage);
 		link.appendChild(document.createTextNode("Team Assessment Summary"));
-		
+
 		$("#progressLink").empty();
 		$("#progressLink").append(link);
 		$("#progressSep").show();
@@ -1151,33 +1151,33 @@ function getScreenAnswers() {
 			opsExist = true;
 		}
 	});
-	
+
 	var actionItemsList = [];
 	for (var i=0; i<assessments.length; i++) {
 		var eleAtmaId = eleVersionId + "_" + i;
 		var eleMainPrincipleId = eleAtmaId + "_prin";
 
 		console.log(assessments[i]["atma_name"]);
-		
+
 		if (assessments[i]["atma_name"] != null && assessments[i]["atma_name"].toLowerCase().indexOf("leadership") > -1) {
 			if (opsExist) {
 				if ($("#teamTypeSelectList option:selected").val().toLowerCase() == "operations") {
-					if ((assessments[i]["atma_name"].toLowerCase().indexOf("leadership") > -1 && assessments[i]["atma_name"].toLowerCase().indexOf("ops") == -1) 
+					if ((assessments[i]["atma_name"].toLowerCase().indexOf("leadership") > -1 && assessments[i]["atma_name"].toLowerCase().indexOf("ops") == -1)
 							&& (assessments[i]["atma_name"].toLowerCase().indexOf("leadership") > -1 && assessments[i]["atma_name"].toLowerCase().indexOf("operations") == -1)) {
-							//alert("skip: " +assessments[i]["atma_name"]);							
-							continue;						
+							//alert("skip: " +assessments[i]["atma_name"]);
+							continue;
 					}
 				} else if ((assessments[i]["atma_name"].toLowerCase().indexOf("ops") > -1) || (assessments[i]["atma_name"].toLowerCase().indexOf("operations") > -1)) {
-					//alert("skip: " +assessments[i]["atma_name"]);							
-					continue;						
+					//alert("skip: " +assessments[i]["atma_name"]);
+					continue;
 				}
 			}
 		}
-			
+
 
 		if (assessments[i]["atma_name"] != null && assessments[i]["atma_name"].toLowerCase().indexOf("delivery") > -1) {
 			if ($("#softwareYesNo option:selected").val().toLowerCase() == "no") {
-				//alert("skip: " +assessments[i]["atma_name"]);	
+				//alert("skip: " +assessments[i]["atma_name"]);
 				continue;
 			}
 		}
@@ -1185,7 +1185,7 @@ function getScreenAnswers() {
 		var assessmentName = new Object();
 		assessmentName["assessed_cmpnt_name"] = assessments[i]["atma_name"];
 		assessmentName["assessed_cmpnt_tbl"] = [];
-		
+
 		var principles = assessments[i]["principle_tbl"];
 		var totalCurrentScore = 0;
 		var totalTargetScore = 0;
@@ -1194,16 +1194,16 @@ function getScreenAnswers() {
 			var principleName = principles[j]["principle_name"];
 			var principleId = principles[j]["principle_id"];
 			var elePrincipleId = eleMainPrincipleId + "_" + principles[j]["principle_id"];
-			
+
 			var practices = principles[j]["practice_tbl"];
 			for (var k=0; k<practices.length; k++) {
 				totalPractices += 1;
 				var eleMainPracticeId = elePrincipleId + "_prac";
 				var elePracticeId = eleMainPracticeId + "_" + practices[k]["practice_id"];
-	      
+
 				var practiceName = practices[k]["practice_name"];
 				var practiceId = practices[k]["practice_id"];
-				
+
 				var current = "";
 				var target = "";
 				var independent = "";
@@ -1213,7 +1213,7 @@ function getScreenAnswers() {
 					target = $("[name='"+elePracticeId+"_targ']:checked").attr("value");
 				if ($("[name='"+elePracticeId+"_ind']:checked").length > 0)
 					independent = $("[name='"+elePracticeId+"_ind']:checked").attr("value");
-			
+
 				var currentScore = 0;
 				var targetScore = 0;
 				var independentScore = 0;
@@ -1228,7 +1228,7 @@ function getScreenAnswers() {
 				}
 				totalCurrentScore += currentScore;
 				totalTargetScore += targetScore;
-					
+
 				var practiceAnswers = new Object();
 				practiceAnswers["principle_id"] = principleId;
 				practiceAnswers["principle_name"] = principleName;
@@ -1243,7 +1243,7 @@ function getScreenAnswers() {
 				practiceAnswers["how_better_action_item"] = $("#"+elePracticeId+"_action").val();
 				practiceAnswers["ind_assessor_cmnt"] =  $("#"+elePracticeId+"_comment").val();
 				assessmentName["assessed_cmpnt_tbl"].push(practiceAnswers);
-				
+
 				if ($("#"+elePracticeId+"_action").val() != null && $("#"+elePracticeId+"_action").val() != "") {
 					var actionItems = new Object();
 					actionItems["action_plan_entry_id"] = (actionItemsList.length).toString();
@@ -1265,7 +1265,7 @@ function getScreenAnswers() {
 					actionItemsList.push(actionItems);
 				}
 			}
-			
+
 		}
 		//alert (totalCurrentScore +  " " + totalTargetScore + " " + practices.length);
 		if (totalPractices > 0) {
@@ -1275,32 +1275,32 @@ function getScreenAnswers() {
 			assessmentName["ovralcur_assessmt_score"] = 0;
 			assessmentName["ovraltar_assessmt_score"] = 0;
 		}
-		
+
 		screenAnswers["assessmt_cmpnt_rslts"].push(assessmentName);
-		
+
 	}
 	screenAnswers["assessmt_action_plan_tbl"] = actionItemsList;
-	
+
 	return screenAnswers;
 }
 
 function getAssessmentStatus(teamAssessment) {
 	if (teamAssessment == null)
 		return "Draft";
-	
+
 	if (teamAssessment["assessmt_status"] != null && teamAssessment["assessmt_status"].toLowerCase() == "submitted") {
-		if (teamAssessment["ind_assessor_id"] != null && teamAssessment["ind_assessor_id"] != "" 
+		if (teamAssessment["ind_assessor_id"] != null && teamAssessment["ind_assessor_id"] != ""
 			&& teamAssessment["ind_assessmt_dt"] != null && teamAssessment["ind_assessmt_dt"] == "")
 			return "Independent Review";
-		else if (teamAssessment["ind_assessor_id"] != null && teamAssessment["ind_assessor_id"] != "" 
+		else if (teamAssessment["ind_assessor_id"] != null && teamAssessment["ind_assessor_id"] != ""
 			&& teamAssessment["ind_assessmt_dt"] != null && teamAssessment["ind_assessmt_dt"] != "")
 			return "Submitted and Reviewed";
 		else
 			return "Submitted";
-	
+
 	} else {
 		return "Draft";
-		
+
 	}
 }
 
@@ -1315,7 +1315,7 @@ function isInactiveTemplate(version) {
 	if (gAssessmentTemplateList != null) {
 		for (var i=0; i<gAssessmentTemplateList.length; i++) {
 			var template = gAssessmentTemplateList[i];
-			if (template["atma_version"] == version || template["_id"] == version)			
+			if (template["atma_version"] == version || template["_id"] == version)
 				inactive = (template["atma_status"] != null && template["atma_status"].toLowerCase() == "inactive");
 		}
 	}
@@ -1327,7 +1327,7 @@ function setScreenControls() {
 	displayEditStatus(false);
 
 	setProgressLink($("#teamSelectList option:selected").val(), $("#assessmentSelectList option:selected").val());
-	
+
 	if (($("#teamSelectList option:selected").val() != "") && $("#assessmentSelectList option:selected").val() == "new") {
 		if (allowAccess) {
 			$("input[type='button']").each(function () {
@@ -1338,12 +1338,12 @@ function setScreenControls() {
 
 		$("#softwareYesNo").val("Yes"); // default value
 		$("#softwareYesNo").trigger("change");
-		
+
 		$("#teamTypeSelectList").val("Project"); // default value
-		$("#teamTypeSelectList").trigger("change");	
+		$("#teamTypeSelectList").trigger("change");
 		$("#assessmentDate").val("");
 	}
-	
+
 	if (gTeamAssessment == null) {
 		$("#assessmentContainer input[type='radio'], #assessmentContainer textarea[id*='_action'], #assessmentContainer textarea[id*='_comment']").each(function() {
 			$(this).attr("disabled", "disabled");
@@ -1354,39 +1354,39 @@ function setScreenControls() {
 			$(this).attr("disabled", "disabled");
 		});
 		$("#softwareYesNo").val("Yes"); // default value
-		$("#softwareYesNo").trigger("change");		
+		$("#softwareYesNo").trigger("change");
 		$("#softwareYesNo").attr("disabled", "disabled");
-		
+
 		$("#teamTypeSelectList").val("Project"); // default value
-		$("#teamTypeSelectList").trigger("change");		
+		$("#teamTypeSelectList").trigger("change");
 		$("#teamTypeSelectList").attr("disabled", "disabled");
 		$("#assessmentDate").attr("disabled", "disabled");
 		$($("#assessmentForm > p[class='ibm-btn-row']")[1]).attr("style","display: none");
-		
+
 		if (!allowAccess && ($("#teamSelectList option:selected").val() != ""))
 			displayEditStatus(true);
-		
+
 		$("#assessmentStatus").hide();
-		
-		
+
+
 	} else {
 		if(gTeamAssessment["self-assessmt_dt"] != undefined && gTeamAssessment["self-assessmt_dt"].length > 0){
 			$("#assessmentDate").val(formatDDMMMYYYY(gTeamAssessment["self-assessmt_dt"]));
 		}else{
 			$("#assessmentDate").val(gTeamAssessment["self-assessmt_dt"]);
 		}
-		
+
 		var hasDeliveryAssessment = gTeamAssessment["team_dlvr_software"] != null && gTeamAssessment["team_dlvr_software"].toLowerCase() == "yes";
 		//var hasOperationAssessment = gTeamAssessment["team_proj_ops"] != null && gTeamAssessment["team_proj_ops"].toLowerCase() == "operations";
-		
-		if (getAssessmentStatus(gTeamAssessment).toLowerCase() != "draft") {			
+
+		if (getAssessmentStatus(gTeamAssessment).toLowerCase() != "draft") {
 			$("#assessmentContainer input[type='radio'], #assessmentContainer textarea").each(function() {
-				if (($(this).attr("name") != null && $(this).attr("name") != "" && $(this).attr("name").indexOf("_ind") == -1) 
+				if (($(this).attr("name") != null && $(this).attr("name") != "" && $(this).attr("name").indexOf("_ind") == -1)
 						|| ($(this).attr("id") != null && $(this).attr("id") != "" && $(this).attr("id").indexOf("_comment") == -1)) {// disable non independent related input
 					$(this).attr("disabled", "disabled");
 				} else if (getAssessmentStatus(gTeamAssessment).toLowerCase() == "submitted and reviewed") {
 					$(this).attr("disabled", "disabled");
-				} else if (isReviewer(gTeamAssessment) 
+				} else if (isReviewer(gTeamAssessment)
 						&& getAssessmentStatus(gTeamAssessment).toLowerCase() == "independent review") {
 					$(this).removeAttr("disabled");
 				}
@@ -1398,7 +1398,7 @@ function setScreenControls() {
 			}
 			$("#softwareYesNo").trigger("change");
 			$("#softwareYesNo").attr("disabled", "disabled");
-			
+
 			if (gTeamAssessment["team_proj_ops"] == null || gTeamAssessment["team_proj_ops"] == "" || gTeamAssessment["team_proj_ops"].toLowerCase() == "project") {
 				$("#teamTypeSelectList").val("Project");
 			} else {
@@ -1406,9 +1406,9 @@ function setScreenControls() {
 			}
 			$("#teamTypeSelectList").trigger("change");
 			$("#teamTypeSelectList").attr("disabled", "disabled");
-			
+
 			$("#assessmentDate").attr("disabled", "disabled");
-			if (isReviewer(gTeamAssessment) && getAssessmentStatus(gTeamAssessment).toLowerCase() == "independent review") {					
+			if (isReviewer(gTeamAssessment) && getAssessmentStatus(gTeamAssessment).toLowerCase() == "independent review") {
 				$("input[type='button']").each(function () {
 					if ($(this).attr("value").toLowerCase() == "delete draft") {
 						$(this).hide();
@@ -1417,22 +1417,22 @@ function setScreenControls() {
 						$(this).show();
 						$(this).removeAttr("disabled");
 					}
-					
+
 				});
 			} else {
 				$("input[type='button']").each(function () {
 					if (getAssessmentStatus(gTeamAssessment).toLowerCase() == "submitted and reviewed")
-						$(this).hide();						
+						$(this).hide();
 					else if ($(this).attr("value").toLowerCase() == "delete draft")
 						$(this).hide();
-					
+
 					$(this).attr("disabled", "disabled");
 				});
-				
+
 				if (!allowAccess && !isReviewer(gTeamAssessment) && ($("#teamSelectList option:selected").val() != ""))
 					displayEditStatus(true);
 			}
-			
+
 		} else {
 			$("#assessmentContainer input[type='radio'], #assessmentContainer textarea").each(function() {
 				if (($(this).attr("name") != null && $(this).attr("name") != "" && $(this).attr("name").indexOf("_ind") > -1)
@@ -1452,14 +1452,14 @@ function setScreenControls() {
 				$("#softwareYesNo").val("No");
 			}
 			$("#softwareYesNo").trigger("change");
-			
+
 			if (gTeamAssessment["team_proj_ops"] == null || gTeamAssessment["team_proj_ops"] == "" || gTeamAssessment["team_proj_ops"].toLowerCase() == "project") {
 				$("#teamTypeSelectList").val("Project");
 			} else {
 				$("#teamTypeSelectList").val("Operations");
 			}
 			$("#teamTypeSelectList").trigger("change");
-			
+
 			if (allowAccess) {
 				//if (isInactiveTemplate(gTeamAssessment["assessmt_version"]))
 				//	showMessagePopup("This draft assessment was created using questionnaires from a template that was already deactivated.  You need to delete or submit this assessment before a new assessment can be initiated using the latest questionnaire.");
@@ -1469,29 +1469,29 @@ function setScreenControls() {
 				$("input[type='button']").each(function () {
 					if ($(this).attr("value").toLowerCase() == "delete draft") {
 						$(this).show();
-						if (gTeamAssessment["assessmt_status"] != "") 
+						if (gTeamAssessment["assessmt_status"] != "")
 							$(this).removeAttr("disabled");
 						else
 							$(this).attr("disabled", "disabled");
-						
-					} else { 
+
+					} else {
 						$(this).show();
 						$(this).removeAttr("disabled");
 					}
 				});
-				
+
 			} else {
 				$("input[type='button']").each(function () {
 					$(this).attr("disabled", "disabled");
 				});
-				
+
 				displayEditStatus(true);
-				
+
 			}
-			
+
 		}
 		$($("#assessmentForm > p[class='ibm-btn-row']")[1]).attr("style","text-align: right;");
-		
+
 		var teamStatus = "";
 		var reviewStatus = "";
 		if (gTeamAssessment["assessmt_status"] != null) {
@@ -1502,7 +1502,7 @@ function setScreenControls() {
 			} else {
 				teamStatus = "Team assessment status: <span>" + gTeamAssessment["assessmt_status"] + "</span>";
 			}
-		
+
 			if (gTeamAssessment["assessmt_status"].toLowerCase() == "submitted" &&
 					(gTeamAssessment["ind_assessor_id"] != null && gTeamAssessment["ind_assessor_id"] != "")) {
 				if (gTeamAssessment["ind_assessmt_status"] == null || gTeamAssessment["ind_assessmt_status"] == "") {
@@ -1515,10 +1515,10 @@ function setScreenControls() {
 				}
 			}
 		}
-		
+
 		$("#assessmentStatus").html(teamStatus + (reviewStatus == "" ? "" : "<br>"+reviewStatus));
 		$("#assessmentStatus").show();
-		
+
 	}
 
 	resetChangeIndiactor();
@@ -1540,7 +1540,7 @@ function validationHandler(errors){
 }
 else{
 	defaultMsg = errors;
-}	
+}
 	$("input[type='button']").each(function () {
 		$(this).removeAttr("disabled");
 	});
@@ -1569,7 +1569,7 @@ function highlightFields(){
 				leadershipID = $(this).parent().attr("id");
 			}
 		});
-		
+
 		var deliveryID = "";
 		var includeDelivery = $("#softwareYesNo option:selected").val().toLowerCase() == "yes";
 		// look for delivery section if presented and store prefix id of children elements
@@ -1578,11 +1578,11 @@ function highlightFields(){
 				deliveryID = $(this).parent().attr("id");
 			}
 		});
-		
+
 		var isOperations = false;
 		var operationsID = "";
 		var opsExist = false;
-		// look for operations section if presented in the template 
+		// look for operations section if presented in the template
 		$("#assessmentContainer > ul > li > a").each(function() {
 			if (($(this).html().toLowerCase().indexOf("ops") > -1) || ($(this).html().toLowerCase().indexOf("operations") > -1)) {
 				opsExist = true;
@@ -1600,9 +1600,9 @@ function highlightFields(){
 				}
 			});
   	}
-		
+
 		var currStatus = getAssessmentStatus(gTeamAssessment).toLowerCase();
-		if (currStatus == "submitted" || currStatus == "draft") {			
+		if (currStatus == "submitted" || currStatus == "draft") {
 			$("#assessmentContainer li[id*='_prac']").each(function() {
 				var answers = this.id;
 				// query for section unanswered practices
@@ -1634,7 +1634,7 @@ function highlightFields(){
 			$("#assessmentContainer li[id*='_prac']").each(function() {
 				var answers = this.id;
 				// query for section unanswered practices
-				var thisSectionComplete = true;				
+				var thisSectionComplete = true;
 				if ($("[name*='"+answers+"_ind']:checked").length == 0) {
 					if (opsExist) {
 						if (answers.indexOf(leadershipID) > -1 && isOperations) {

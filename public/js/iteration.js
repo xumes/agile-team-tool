@@ -10,7 +10,7 @@ jQuery(function($) {
     getPageVariables('iteration', initPageAction);
   });
 
-  function initPageAction() {    
+  function initPageAction() {
     var urlParameters = getJsonParametersFromUrl();
     if (urlParameters != undefined && urlParameters.testUser != undefined) {
       setTestUser(urlParameters.testUser);
@@ -19,7 +19,7 @@ jQuery(function($) {
 
     if (urlParameters != undefined && urlParameters.id != undefined) {
       getTeam(urlParameters.id, updateAgileTeamCache, []);
-      if (urlParameters != undefined && urlParameters.iter != undefined && urlParameters.iter != "") 
+      if (urlParameters != undefined && urlParameters.iter != undefined && urlParameters.iter != "")
         loadAgileTeams(urlParameters.id, urlParameters.iter);
       else
         loadAgileTeams(urlParameters.id, "new");
@@ -41,7 +41,7 @@ jQuery(function($) {
 
     $(".numnodecimal").on("keypress keyup blur",function (event) {
        $(this).val($(this).val().replace(/[^\d].+/, ""));
-       if ((event.which < 48 || event.which > 57) && 
+       if ((event.which < 48 || event.which > 57) &&
           (event.which != 8 && event.which != 127 )) {
           event.preventDefault();
         }
@@ -444,7 +444,7 @@ function loadSelectedAgileTeamIterationInfo() {
     $("#select2-teamChangeList-container").text($("#teamChangeList option:selected").text());
     $("#select2-teamChangeList-container").attr("title", $("#teamChangeList option:selected").text());
     $("#lastUpdateUser").html(teamIterInfo.last_updt_user);
-    $("#lastUpdateTimestamp").html(showDateDDMMMYYYYTS(teamIterInfo.last_updt_dt));
+    $("#lastUpdateTimestamp").html(showDateUTC(teamIterInfo.last_updt_dt));
     $('#commentIter').val(teamIterInfo.iteration_comments);
     $('#doc_id').html(teamIterInfo._id);
     if (teamIterInfo.fte_cnt != "") {
