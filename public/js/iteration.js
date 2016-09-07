@@ -444,7 +444,7 @@ function loadSelectedAgileTeamIterationInfo() {
     $("#select2-teamChangeList-container").text($("#teamChangeList option:selected").text());
     $("#select2-teamChangeList-container").attr("title", $("#teamChangeList option:selected").text());
     $("#lastUpdateUser").html(teamIterInfo.last_updt_user);
-    $("#lastUpdateTimestamp").html(showDateUTC(teamIterInfo.last_updt_dt));
+    $("#lastUpdateTimestamp").html(showDateDDMMMYYYYTS(teamIterInfo.last_updt_dt));
     $('#commentIter').val(teamIterInfo.iteration_comments);
     $('#doc_id').html(teamIterInfo._id);
     if (teamIterInfo.fte_cnt != "") {

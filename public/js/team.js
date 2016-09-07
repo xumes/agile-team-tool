@@ -242,7 +242,7 @@ function loadSelectedAgileTeam() {
     $("#teamName").val(currentTeam.name);
     $("#teamDesc").val(currentTeam.desc);
     $('#lastUpdateUser').html(currentTeam.last_updt_user);
-    $('#lastUpdateTimestamp').html(showDateUTC(currentTeam.last_updt_dt));
+    $('#lastUpdateTimestamp').html(showDateDDMMMYYYYTS(currentTeam.last_updt_dt));
     $('#doc_id').html(currentTeam._id);
     clearFieldErrorHighlight("teamName");
     clearFieldErrorHighlight("teamMemberName");

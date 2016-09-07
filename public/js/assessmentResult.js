@@ -598,7 +598,7 @@ function submitActionPlan(jsonData, msg){
 	jsonData.last_updt_user = userInfo.email;
 
 	$("#lastUpdateUser").html(jsonData.last_updt_user);
-	$("#lastUpdateTimestamp").html(showDateUTC(jsonData.last_updt_dt));
+	$("#lastUpdateTimestamp").html(showDateDDMMMYYYYTS(jsonData.last_updt_dt));
 
 	$.ajax({
 		type : "PUT",
@@ -734,7 +734,7 @@ function displaySelected(assessmt_data){
 				loadHeader(team.name, selfAsstDate, assessmt.assessmt_status, indAsstDate, assessmt.ind_assessmt_status);
 
 				$("#lastUpdateUser").html(assessmt.last_updt_user);
-				$("#lastUpdateTimestamp").html(showDateUTC(assessmt.last_updt_dt));
+				$("#lastUpdateTimestamp").html(showDateDDMMMYYYYTS(assessmt.last_updt_dt));
 				$("#doc_id").html(assessmt["_id"]);
 
 				if (assessmt.ind_assessmt_status == "Submitted"){
