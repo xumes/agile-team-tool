@@ -390,13 +390,8 @@ function showDateYYYYMMDDTS(formatDate) {
 
 function showDateUTC(formatDate) {
   if (formatDate == null || formatDate == "") return "";
-  var newDate = new Date(formatDate);
-  var options = {
-    year: "numeric", month: "short",
-    day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false
-  };
-  var utcTime = newDate.toLocaleTimeString("en-us", options) + " (UTC)";
-  return utcTime;
+  var utcTime = moment(formatDate).format("MMMM DD, YYYY, H:mm");
+  return utcTime + " (UTC)";
 }
 
 function showDateDDMMMYYYYTS(formatDate) {
