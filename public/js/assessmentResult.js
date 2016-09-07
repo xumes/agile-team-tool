@@ -25,7 +25,7 @@ function initPageAction() {
   if (urlParameters != undefined && urlParameters.testUser != undefined) {
 		setTestUser(urlParameters.testUser);
 		alert("here TestUser is: " + urlParameters.testUser);
-	}	
+	}
 }
 
 function setIndAssessor(assessor){
@@ -71,7 +71,7 @@ function updateAssessorInfo(action) {
 		loadAgileRoles();
 		$("#indAssessorName").val(""); clearFieldErrorHighlight("indAssessorName");
 		return;
-	}	
+	}
 
 	if (action == "add") {
 		var hasError = false;
@@ -80,20 +80,20 @@ function updateAssessorInfo(action) {
 			dialogPopup ("Unable to retrieve information from Faces for the member indicated.  Please try the selection again.");
 			hasError = true;
 		}
-		
+
 		if (hasError) {
 			if (action == "add")
 				$("#addMemberBtn").removeAttr("disabled");
 			else if (action == "update")
 				$("#updateMemberBtn").removeAttr("disabled");
-			
+
 			return;
 		}
 	}
-	
+
 	var name = taPerson["name"];
 	var email = taPerson["email"];
-	
+
 	if (action == "add") {
 		assignAssessor();
 	}
@@ -110,7 +110,7 @@ function setAssessor(){
 			taPerson = null;
 		else if (taPerson != undefined && $("#indAssessorName").val() != taPerson["notes-id"])
 			taPerson = null;
-		
+
 		if (taPerson != null)
 		  clearFieldErrorHighlight("indAssessorName");
 	});
@@ -149,7 +149,7 @@ function processData(teamId, assessId, jsonData){
 
 function displayOverAll(id, ovralcur_assessmt_score, ovraltar_assessmt_score, assessed_index){
 	loadDefaultChart(id, assessed_index);
-	loadOverAll(id, ovraltar_assessmt_score, ovralcur_assessmt_score, assessed_index);		
+	loadOverAll(id, ovraltar_assessmt_score, ovralcur_assessmt_score, assessed_index);
 }
 
 function loadOverAll(id, ovralctar_assessmt_score, ovralcur_assessmt_score, assessed_index){
@@ -161,7 +161,7 @@ function loadOverAll(id, ovralctar_assessmt_score, ovralcur_assessmt_score, asse
 	else if (id == 'deliveryResult'){
 		graphId = 'deliveryContainer';
 	}
-		var link = "<a role='button' onclick=displaySelectedChart(" +assessed_index+","+"'"+label+ "'"+","+graphId+") style='cursor: pointer;'>" + 
+		var link = "<a role='button' onclick=displaySelectedChart(" +assessed_index+","+"'"+label+ "'"+","+graphId+") style='cursor: pointer;'>" +
 					'Overall'  + "</a>";
 		row = "<tr> <td> "+ link + "</td>";
 		row += "<td>" + (ovralcur_assessmt_score != "" && ovralcur_assessmt_score != undefined? ovralcur_assessmt_score:"-")+ "</td>";
@@ -188,7 +188,7 @@ function loadResult(id, result, assessed_index){
 	else if (id == 'deliveryResult'){
 		graphId = 'deliveryContainer';
 	}
-		var link = "<a role='button' onclick=displaySelectedChart(" +assessed_index+ ","+result.practice_id+ "," +graphId+")  style='cursor: pointer;'>" + 
+		var link = "<a role='button' onclick=displaySelectedChart(" +assessed_index+ ","+result.practice_id+ "," +graphId+")  style='cursor: pointer;'>" +
 					result.practice_name + "</a>";
 		row = "<tr> <td> "+ link + "</td>";
 		row += "<td>" + (result.cur_mat_lvl_score != ""? result.cur_mat_lvl_score:"-")+ "</td>";
@@ -196,11 +196,11 @@ function loadResult(id, result, assessed_index){
 		if (hasIndAssessment){
 			row += "<td>" + result.ind_target_mat_lvl_score + "</td>";
 		}
-		
+
 		row = row + "</tr>";
 		$("#"+id).append(row);
 }
-	
+
 function loadDefaultChart(id, index){
 	var label = "Overall";
 	var graphId='';
@@ -248,10 +248,10 @@ function displaySelectedChart(assessed_index, id, elementId) {
 			data : chartData.current_score,
 		} ];
 	}
-	
-	
+
+
 	loadResultChart(elementId, title, 'line', chartData.categories, 'Maturity Level', assessments,
-			null, "Select practice from adjacent table to see the results."); 
+			null, "Select practice from adjacent table to see the results.");
 }
 
 function getChartData(data){
@@ -382,10 +382,10 @@ function setAssessmentLink(teamId, assessId) {
 		assessmentPage = assessmentPage + "?id=" + teamId;
 		assessmentPage = assessmentPage + "&assessId=" + assessId;
 		$("#assessmentLink").attr("href", assessmentPage);
-		
+
 	} else {
 		$("#assessmentLink").attr("href", assessmentPage);
-		
+
 	}
 }
 
@@ -421,7 +421,7 @@ function displayActionPlan(data){
 				row = row + "<td style='min-width: 15px;'>" + "&nbsp;" + "</td>";
 				row = row + "<td id='td_practice_"+index+"' style='width: 120px;'>"  + replaceEmpty(data[index].practice_name) + "</td>";
 			}
-			
+
 			row = row + "<td id='td_principle_"+index+"' style='min-width: 120px;'>"  + replaceEmpty(data[index].principle_name) + "</td>";
 			row = row + "<td id='td_curScore_"+index+"'>"  + replaceEmpty(data[index].cur_mat_lvl_score) + "</td>";
 			row = row + "<td id='td_tarScore_"+index+"'>"  + replaceEmpty(data[index].tar_mat_lvl_score) + "</td>";
@@ -447,7 +447,7 @@ function displayActionPlan(data){
 		if (allowEdit == "disabled"){
 			$("#status_"+index).css('color', 'grey');
 		}
-	
+
 	}
 }
 
@@ -485,7 +485,7 @@ function addEmptyRow(index){
 	row = row + "<td id='td_practice_"+index+"' >"  +"<span> <select aria-label='Practice list' id='practice_"+index+"' name='practice_"+index+"'  style='width: 120px; font-size: 11px;' onchange='prepopulate("+index+")'> " +
 	 "<option value='' selected='selected'></option>" +
 		"</select></span></td>";
-	row = row + "<td id='td_principle_"+index+"' style='min-width: 120px;'>"  + "" + "</td>";		
+	row = row + "<td id='td_principle_"+index+"' style='min-width: 120px;'>"  + "" + "</td>";
 	row = row + "<td id='td_curScore_"+index+"'>"  + "" + "</td>";
 	row = row + "<td id='td_tarScore_"+index+"'>"  + "" + "</td>";
 	row = row + "<td>" + "<span><textarea aria-label='Action item' id='action_item_"+index+"' maxlength = '350' cols='28' style='resize: none; font-size: 11px;' type='text' name='action_item_"+index+"' disabled/></span> </td>";
@@ -518,10 +518,10 @@ function executeReset(actionPlan){
 function prepopulate(index){
 	var practiceIndex = $("#practice_"+index+" option:selected").val();
 	if (practiceIndex == "") {
-		
+
 	}
 	//$("#select_item_"+index).removeAttr("disabled");
-	$("#action_item_"+index).removeAttr("disabled");		
+	$("#action_item_"+index).removeAttr("disabled");
 	$("#summary_"+index).removeAttr("disabled");
 	$("#metric_"+index).removeAttr("disabled");
 	$("#revDate_"+index).removeAttr("disabled");
@@ -569,7 +569,7 @@ function updateActionPlan(action){
 function processActionPlan(assessmentList){
 	if (assessmentList != null && assessmentList != undefined){
 		var selected = getSelectedAssessment(assessmentList);
-		
+
 		if (selected != null && selected != undefined){
 			var updatedActions = getUpdatedAction(selected);
 			if (updatedActions != false){
@@ -596,10 +596,10 @@ function getSelectedAssessment(assessmentList){
 function submitActionPlan(jsonData, msg){
 	jsonData.last_updt_dt = getServerDateTime();
 	jsonData.last_updt_user = userInfo.email;
-	
+
 	$("#lastUpdateUser").html(jsonData.last_updt_user);
-	$("#lastUpdateTimestamp").html(showDateDDMMMYYYYTS(jsonData.last_updt_dt));
-	
+	$("#lastUpdateTimestamp").html(showDateUTC(jsonData.last_updt_dt));
+
 	$.ajax({
 		type : "PUT",
 		//url : baseUrlDb + "/" + encodeURIComponent(jsonData._id),
@@ -624,17 +624,17 @@ function getUpdatedAction(actions){
 	var actionId = -1;
 	var hasError = false;
 	for (var x= 0; x < $('#actionPlan > tr').length;x++){
-		
+
 		var practiceIndex = $("#practice_"+x+" option:selected").val();
 		if ($("#select_item_"+x).length && practiceIndex == ""){
 			hasError = true;
 			break;
 		}
-		
+
 		if (actions.assessmt_action_plan_tbl[x] == undefined){
 			actions.assessmt_action_plan_tbl[x] = new Object();
 		}
-		
+
 		if (actions.assessmt_action_plan_tbl[x].action_plan_entry_id != undefined && actions.assessmt_action_plan_tbl[x].action_plan_entry_id != ""){
 			actionId = parseInt(actions.assessmt_action_plan_tbl[x].action_plan_entry_id);
 		}
@@ -642,7 +642,7 @@ function getUpdatedAction(actions){
 			actionId +=1;
 		}
 		actions.assessmt_action_plan_tbl[x].action_plan_entry_id = actionId;
-		
+
 		if ($("#select_item_"+x).length){
 			actions.assessmt_action_plan_tbl[x].user_created = "Yes";
 		}
@@ -674,10 +674,10 @@ function getUpdatedAction(actions){
 
 /**
  * Filters all Submitted assessment of certain type based on the first assessment it finds.
- * 
+ *
  * @param assessmtList - list of assessments for a team.
  * @param teamId - team id
- * @param assessId - assessment id 
+ * @param assessId - assessment id
  * @returns {Array} - list of filtered assessments of certain type.
  */
 function filterSubmitted(assessmtList, teamId, assessId){
@@ -691,19 +691,19 @@ function filterSubmitted(assessmtList, teamId, assessId){
 				break;
 			}
 		}
-		
+
 		for ( var i = 0; i < assessmtList.length; i++) {
 			if(assessmtList[i].team_id == teamId && assessmtList[i].assessmt_status == 'Submitted') {
 				identifier = getAssessmentType(assessmtList[i]);
-				
+
 				if (assessmtType == "") {
 					assessmtType = identifier;
 					assessmt_data.push(assessmtList[i]);
-					
+
 				} else if (assessmtType == identifier) {
 					assessmt_data.push(assessmtList[i]);
-					
-				}	
+
+				}
 			}
 		}
 	}
@@ -718,32 +718,32 @@ function displaySelected(assessmt_data){
 			var assessmt = assessmt_data[y];
 			if (assessmt._id == assessId){
 				lastRecord = y;
-				
+
 				var selfAsstDate = "";
 				if (assessmt["self-assessmt_dt"] != null && assessmt["self-assessmt_dt"] != ""){
 					selfAsstDate = showDateMMDDYYYY(assessmt["self-assessmt_dt"].substring(0,assessmt["self-assessmt_dt"].indexOf(" ")));
 				}
-				
+
 				var indAsstDate = "";
-				
+
 				if (assessmt.ind_assessmt_dt != null && assessmt.ind_assessmt_dt != ""){
 					indAsstDate = showDateMMDDYYYY(assessmt.ind_assessmt_dt.substring(0,assessmt.ind_assessmt_dt.indexOf(" ")));
 				}
-				
+
 				setIndAssessor(assessmt.ind_assessor_id);
 				loadHeader(team.name, selfAsstDate, assessmt.assessmt_status, indAsstDate, assessmt.ind_assessmt_status);
-				
+
 				$("#lastUpdateUser").html(assessmt.last_updt_user);
-				$("#lastUpdateTimestamp").html(showDateDDMMMYYYYTS(assessmt.last_updt_dt));
+				$("#lastUpdateTimestamp").html(showDateUTC(assessmt.last_updt_dt));
 				$("#doc_id").html(assessmt["_id"]);
-				
+
 				if (assessmt.ind_assessmt_status == "Submitted"){
 					hasIndAssessment = true;
 				}
 				else{
 					removeIndAssessment();
 				}
-				
+
 				var firstIndex = lastRecord-6;
 				if (firstIndex < 0){
 					firstIndex = 0;
@@ -756,7 +756,7 @@ function displaySelected(assessmt_data){
 						assessmentData.push(assessmt_data[x]);
 					}
 				}
-				
+
 				if (assessmt.assessmt_cmpnt_rslts != null){
 					var practicesCnt = 0;
 					for (var x=0;x<assessmt.assessmt_cmpnt_rslts.length;x++){
@@ -772,10 +772,10 @@ function displaySelected(assessmt_data){
 							//adjust min length
 							//$("#assessContainer_1").css("min-height", "470px");
 						}
-					
+
 						setAssessHeader(x, assessmt_cmpnt_rslts.assessed_cmpnt_name);
 						displayOverAll(id,assessmt_cmpnt_rslts.ovralcur_assessmt_score,assessmt_cmpnt_rslts.ovraltar_assessmt_score,x);
-						
+
 						for (var y=0;y<assessmt_cmpnt_rslts.assessed_cmpnt_tbl.length;y++){
 							var assessed_cmpnt = assessmt_cmpnt_rslts.assessed_cmpnt_tbl[y];
 							loadResult(id, assessed_cmpnt, x);
@@ -784,12 +784,12 @@ function displaySelected(assessmt_data){
 						}
 					}
 				}
-				
+
 				hasDevOps(assessmt.team_dlvr_software);
-				
+
 				if (assessmt.assessmt_action_plan_tbl != null){
 					displayActionPlan(assessmt.assessmt_action_plan_tbl);
-					
+
 					if (hasAccess(teamId, true)){
 						if (assessmt.assessmt_action_plan_tbl.length > 0){
 							$("#saveActPlanBtn").removeAttr("disabled");
@@ -805,7 +805,7 @@ function displaySelected(assessmt_data){
 		//This is a temporary note while action plan is not yet fully implemented
 		//addNote();
 }
-	
+
 function storePrinciples(index, assessed_cmpnt, assessmt_cmpnt_name){
 	var obj = new Object();
 	obj.index = index;
@@ -840,7 +840,7 @@ function deleteActionItems(assessmentList){
 		confirmAction("You have requested to delete the selected action item(s). Please confirm that you want to proceed with the deletion.",  "Delete", "Cancel", executeDelete, [selected,deleteList]);
 	}
 }
-	
+
 function executeDelete(selected, deleteList){
 	submitActionPlan(selected,"Actions item(s) deleted successfully.");
 	for (var x= 0; x < deleteList.length; x++){
@@ -848,14 +848,14 @@ function executeDelete(selected, deleteList){
 	}
 	$("#deleteActPlanBtn").attr("disabled","disabled");
 }
-	
+
 function confirmAction(message, btn1,btn2, action, args){
 	$("#dialog").dialog({
 		autoOpen: false,
 		modal: true,
 		height:'auto',
 		width: 520,
-		buttons : 
+		buttons :
 		[
 			{
 				id: "btn1",
@@ -874,7 +874,7 @@ function confirmAction(message, btn1,btn2, action, args){
 			}
 		]
 		});
-	
+
 	$("#dialog").text(message);
 	$("#dialog").dialog("open");
 }

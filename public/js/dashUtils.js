@@ -39,7 +39,7 @@ function clearFieldErrorHighlight(id) {
 
 /**
  * Updates the HTML select element options based on the values passed in the parameter.
- * 
+ *
  * @param elementId - HTML select element id
  * @param listOption - array of [value, description] options
  * @param firstOption - [value, description] to show as the first option
@@ -81,11 +81,11 @@ function setSelectOptions(elementId, listOption, firstOption, lastOption, select
 				option.setAttribute("value", listOption[i][0]);
 				option.appendChild(document.createTextNode(listOption[i][1]));
 			}
-	
+
 			$("#" + elementId).append(option);
 		}
 	}
-	
+
 	if (lastOption != undefined) {
 		option = document.createElement("option");
 		option.setAttribute("value", lastOption[0]);
@@ -95,7 +95,7 @@ function setSelectOptions(elementId, listOption, firstOption, lastOption, select
 		}
 		option.appendChild(document.createTextNode(lastOption[1]));
 		$("#" + elementId).append(option);
-	
+
 	}
 	//IBMCore.common.widget.selectlist.init("#" + elementId);
 	//$("#" + elementId).trigger("change");
@@ -117,7 +117,7 @@ function isNumber(evt) {
 
 /**
  * Sorts teams by name attribute.
- * 
+ *
  * @param members - array of members in the agile team.
  * @returns
  */
@@ -127,7 +127,7 @@ function sortAgileTeamsByName(teams) {
 
 /**
  * Create a lookup list by team id.
- * 
+ *
  * @param teamList - Array of team information.
  * @returns a lookup array for team related information.
  */
@@ -137,7 +137,7 @@ function getLookupListById(teams) {
 
 /**
  * Sorts the list member by name attribute.
- * 
+ *
  * @param members - array of members in the agile team.
  * @returns
  */
@@ -148,7 +148,7 @@ function sortTeamMembersByName(members) {
 
 /**
  * Sorts the list assessment template.
- * 
+ *
  * @param members - array of members in the agile team.
  * @returns
  */
@@ -175,7 +175,7 @@ function sortAssessmentTemplate(templates) {
 
 /**
  * Sorts the list of maturity assessments by status and date attribute.
- * 
+ *
  * @param assessments - array of maturity assessment documents.
  * @returns
  */
@@ -219,9 +219,9 @@ function sortAssessments(assessments) {
  */
 function getAssessmentDropdownList(assessments) {
 	var listOption = [];
-	
+
 	if (assessments == undefined || assessments == null) return listOption;
-	
+
 	for ( var i = 0; i < assessments.length; i++) {
 		var option = [];
 		option.push(assessments[i]._id);
@@ -237,25 +237,25 @@ function getAssessmentDropdownList(assessments) {
 
 /**
  * Find the assessment component that would indicate if its a Project or Ops related assessment.
- * 
+ *
  * @param assessment - assessment to verify
  * @returns {String} - assessment type.
  */
 function getAssessmentType(assessment) {
 	var identifier = "";
-	var results = assessment["assessmt_cmpnt_rslts"];						
-	for (var j=0; j<results.length; j++) {						
+	var results = assessment["assessmt_cmpnt_rslts"];
+	for (var j=0; j<results.length; j++) {
 		if ((results[j]["assessed_cmpnt_name"].toLowerCase().indexOf("leadership") > -1 && results[j]["assessed_cmpnt_name"].toLowerCase().indexOf("ops") == -1)
 				&& (results[j]["assessed_cmpnt_name"].toLowerCase().indexOf("leadership") > -1 && results[j]["assessed_cmpnt_name"].toLowerCase().indexOf("operations") == -1)) {
 			identifier = "Project";
-			
+
 		} else if ((results[j]["assessed_cmpnt_name"].toLowerCase().indexOf("leadership") > -1 && results[j]["assessed_cmpnt_name"].toLowerCase().indexOf("ops") > -1)
 				|| (results[j]["assessed_cmpnt_name"].toLowerCase().indexOf("leadership") > -1 && results[j]["assessed_cmpnt_name"].toLowerCase().indexOf("operations") > -1)) {
 			identifier = "Ops";
-		
+
 		} else {
 			identifier = "";
-			
+
 		}
 		break;
 	}
@@ -264,7 +264,7 @@ function getAssessmentType(assessment) {
 
 /**
  * Assembles the list of options available for the team select HTML element.
- * 
+ *
  * @param teams - array of team documents.
  * @param squadOnly - flag to check if only squad teams are needed
  * @returns {Array} - an array of [value, description] values.
@@ -297,22 +297,22 @@ function getAgileTeamDropdownList(teams, squadOnly) {
 
 function getSquadDropdownList(teams) {
 	var listOption = [];
-	if (teams == undefined || teams == null) 
+	if (teams == undefined || teams == null)
 		return listOption;
 	teams = sortAgileTeamsByName(teams);
-	
+
 	var listOption = _.map(teams, function(val, key){
 		var option = [];
 		option.push(val._id);
 		option.push(val.name);
-		return option; 
+		return option;
 	});
 	return listOption;
 }
 
 /**
  * Sorts the list of iteration documents by date.
- * 
+ *
  * @param iterations - array of iteration documents.
  * @returns
  */
@@ -331,15 +331,15 @@ function sortIterations(iterations) {
 
 /**
  * Assembles the list of options available for the iteration select HTML element.
- * 
+ *
  * @param iterations - array of iteration documents.
  * @returns {Array} - an array of [value, description] values.
  */
 function getIterationDropdownList(iterations) {
 	var listOption = [];
-	
+
 	if (iterations == undefined || iterations == null) return listOption;
-	
+
 	for ( var i = 0; i < iterations.length; i++) {
 		var option = [];
 		option.push(iterations[i]._id);
@@ -386,6 +386,17 @@ function showDateYYYYMMDDTS(formatDate) {
 	var year = formatDate.substring(5,9);
 
 	return (year+"-"+month+"-"+day+" 00:00:01 EDT");
+}
+
+function showDateUTC(formatDate) {
+  if (formatDate == null || formatDate == "") return "";
+  var newDate = new Date(formatDate);
+  var options = {
+    year: "numeric", month: "short",
+    day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false
+  };
+  var utcTime = newDate.toLocaleTimeString("en-us", options) + " (UTC)";
+  return utcTime;
 }
 
 function showDateDDMMMYYYYTS(formatDate) {
@@ -555,7 +566,7 @@ function loadResultChart(id, title, type, categories, yAxisLabel, series, unit, 
 
 /**
  * This will create regular expression for monthly range in a year
- * -it will generate based from minimum from passed 
+ * -it will generate based from minimum from passed
  * 	date until the end of the year
  *  -e.g selected date is 06/25/2016 then regular expression
  *  	resulted is [1-6]/[0-3][0-9]/2016
@@ -570,7 +581,7 @@ function getMonthlyRange(selectedDate){
 	var tempStart = selectedDate.split("/");
 	var month = tempStart[0];
 	var yr = tempStart[2];
-	
+
 	var tempMonth = month.charAt(0);
 	var startReg = '0';
 	if (tempMonth != '0'){
@@ -588,7 +599,7 @@ function selectorQuery(query, _callback, args){
 	$.ajax({
 		type : "POST",
 		url : baseUrlDb + "/_find",
-		
+
 		contentType : "application/json",
 		headers : {
 			"Authorization" : "Basic " + btoa(user + ":" + pass)
@@ -614,7 +625,7 @@ function sortMMMYYYY(iterations) {
 	var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
 	if (iterations != null && iterations.length > 1) {
 		iterations.sort(function(a, b) {
-			
+
 			var date1 = a.month.split("-");
 			var date2 = b.month.split("-");
 			var month1 = monthNames.indexOf(date1[0]);
@@ -637,7 +648,7 @@ function sortMMMYYYY(iterations) {
 
 /**
  * JS utility to validate parent/child links.
- * 
+ *
  * @param teamList - array of all available teams to check.
  */
 function checkParentChildLink(teamList) {
@@ -657,14 +668,14 @@ function checkParentChildLink(teamList) {
 					notFound++;
 				} else {
 					childTeamFound = true;
-					
+
 				}
 
 				if (childTeamFound) {
 					if (childTeam.parent_team_id != currTeam._id) {
 						invalid++;
 						console.log("Child team [" + childTeam.name + " / " + childTeam._id + "] indicated a different parent id [" + childTeam.parent_team_id + "] instead of [" + currTeam.name + " / "+ currTeam._id +"]");
-						
+
 						var otherTeam = lookup[childTeam.parent_team_id];
 						if (otherTeam == null) {
 							console.log("\t Parent team [" + childTeam.parent_team_id + "] not found.");
@@ -673,20 +684,20 @@ function checkParentChildLink(teamList) {
 							for (var b=0; b<otherTeam.child_team_id.length; b++) {
 								if (otherTeam.child_team_id[b] == childTeam._id) {
 									console.log("\t Also found as child of team  [" + otherTeam.name + " / "+ otherTeam._id +"]");
-									foundAsChild = true;	
+									foundAsChild = true;
 								}
 							}
 							if (!foundAsChild)
 								console.log("\t Not found as child of team  [" + otherTeam.name + " / "+ otherTeam._id +"]");
 						}
-						
+
 					} else {
 						count++;
 					}
-				} 
+				}
 			}
 		}
-		
+
 		if (currTeam.parent_id != null && currTeam.parent_id != "") {
 			var parentTeam = lookup[currTeam.parent_id];
 			if (parentTeam == null)
