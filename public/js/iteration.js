@@ -63,7 +63,7 @@ jQuery(function($) {
 
   $("#iterationName").blur(function() {
     if ($("#iterationName").val().trim() != "") {
-      if (hasAccess($("#teamSelectList").val(), true)) {
+      if (hasAccess($("#teamSelectList").val())) {
         $("#memberCount").val(teamMemCount());
         $("#fteThisiteration").val(teamMemFTE());
         $("#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount").removeAttr("disabled");
@@ -107,7 +107,7 @@ jQuery(function($) {
   $("#iterationSelectList").change(function() {
     if ($("#iterationSelectList").val() == "new") {
       updateIterationInfo("clearIteration");
-      if (hasAccess($("#teamSelectList").val(), true)) {
+      if (hasAccess($("#teamSelectList").val())) {
         $("#memberCount").val(teamMemCount());
         $("#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount").removeAttr("disabled");
         $("#fteThisiteration,#DeploythisIteration,#defectsIteration,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter").removeAttr("disabled");
@@ -344,7 +344,7 @@ function loadAgileTeams(selected, iteration) {
 }
 
 function loadAgileTeamIterationInfo(teamId, iterationId) {
-  var hasAcc = hasAccess(teamId, true);
+  var hasAcc = hasAccess(teamId);
   console.log("loadAgileTeamIterationInfo: " + teamId + " / " + iterationId);
   if (teamId == null || teamId == "") {
     loadAgileTeams("new", "");;
@@ -487,7 +487,7 @@ function loadSelectedAgileTeamIterationInfo() {
     $("#addIterationBtn").attr("disabled", "disabled");
     $("#updateIterationBtn").removeAttr("disabled");
 
-    if (!hasAccess(teamIterInfo.team_id, true)) {
+    if (!hasAccess(teamIterInfo.team_id)) {
       $("#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount").attr("disabled", "disabled");
       $("#fteThisiteration,#DeploythisIteration,#defectsIteration,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter").attr("disabled", "disabled");
       $("#addIterationBtn,#updateIterationBtn").attr("disabled", "disabled");

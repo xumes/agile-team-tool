@@ -225,10 +225,9 @@ function setGlobalTeamList(teamList) {
  * Checks the access of the current user to the specific team.
  * 
  * @param teamId - team id to check user membership.
- * @param checkParent - set to true if we need to check the parent team documents for user membership.
  * @returns {Boolean}
  */
-function hasAccess(teamId, checkParent) {
+function hasAccess(teamId) {
 	var flag = false;
 
 	// valid admin status for Admin user related updates only.
