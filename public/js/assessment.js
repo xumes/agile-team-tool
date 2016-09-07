@@ -209,7 +209,7 @@ function teamAssessmentListHander(elementId, teamId, assessmentId, teamAssessmen
 	$("#" + elementId).attr("disabled", "disabled");
 
 	gTeamAssessmentList = teamAssessments;
-	var allowAccess = hasAccess(teamId, true);
+	var allowAccess = hasAccess(teamId);
 	var listOption = getAssessmentDropdownList(gTeamAssessmentList);
 	var firstOption = null;
 	var draftExist = false;
@@ -1323,7 +1323,7 @@ function isInactiveTemplate(version) {
 }
 
 function setScreenControls() {
-	var allowAccess = hasAccess($("#teamSelectList option:selected").val(), true);
+	var allowAccess = hasAccess($("#teamSelectList option:selected").val());
 	displayEditStatus(false);
 
 	setProgressLink($("#teamSelectList option:selected").val(), $("#assessmentSelectList option:selected").val());

@@ -225,7 +225,7 @@ function teamIterationListHander(teamId, teamIterations) {
 	$("#gotoIterationList").removeAttr("disabled");
 
 	$("#CreateIterationBtn").attr("disabled", "disabled");
-	if (hasAccess(teamId, true)) {
+	if (hasAccess(teamId)) {
 		$("#CreateIterationBtn").removeAttr("disabled");
 		$("#CreateIterationBtn").click(function(e) {
 			window.location = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=new';

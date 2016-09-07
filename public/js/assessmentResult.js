@@ -405,7 +405,7 @@ function replaceEmpty(input){
 
 function displayActionPlan(data){
 	var allowEdit = "disabled";
-	if (hasAccess(teamId, true)){
+	if (hasAccess(teamId)){
 		allowEdit = "";
 	}
 	for (var index=0; index<data.length;index++){
@@ -790,7 +790,7 @@ function displaySelected(assessmt_data){
 				if (assessmt.assessmt_action_plan_tbl != null){
 					displayActionPlan(assessmt.assessmt_action_plan_tbl);
 
-					if (hasAccess(teamId, true)){
+					if (hasAccess(teamId)){
 						if (assessmt.assessmt_action_plan_tbl.length > 0){
 							$("#saveActPlanBtn").removeAttr("disabled");
 							$("#cancelActPlanBtn").removeAttr("disabled");
