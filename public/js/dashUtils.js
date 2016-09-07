@@ -464,12 +464,12 @@ function siteEnv() {
 // 		if (environment.toLowerCase() != 'prod') {
 // 			$("#environment").text(environment);
 // 		}
-// 		if (environment.toLowerCase() == 'sit') {
-// 			$("#debugSection").show();
-// 		} else {
-// 			$("#debugSection").hide();
-// 		}
-// 	}
+		if (_.isEmpty(environment) || environment.toLowerCase() == 'development') {
+			$("#debugSection").show();
+		} else {
+			$("#debugSection").hide();
+		}
+	// }
 }
 
 function displayEditStatus(status) {

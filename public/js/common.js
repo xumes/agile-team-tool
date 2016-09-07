@@ -31,7 +31,7 @@ function getPageVariables(page, _callback) {
 	      //org-title: not defined in ldap object,
 	      "notes-id"    : user.ldap.notesId
 	    };
-
+	    siteEnv();
 	    // LDAP employee name has different convetion from Faces API value
 	    getPersonFromFaces(userInfo.email, updateUserInfo, []);
 
