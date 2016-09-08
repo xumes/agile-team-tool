@@ -73,6 +73,7 @@ var assessment = {
     return new Promise(function(resolve, reject) {
       var msg = '';
       if (!_.isEmpty(teamId)) {
+        teamId = util.specialCharsHandler(teamId);
         infoLogs('Getting all team assessment records from Cloudant.');
         var includeDocs = false;
         if (!lodash.isEmpty(docs))
