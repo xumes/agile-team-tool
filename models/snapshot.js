@@ -174,7 +174,7 @@ function getIterationDocs(startTime, endTime) {
           msg = err;
         }
         reject(formatErrMsg(msg));
-      })
+      });
   });
 };
 
@@ -189,7 +189,7 @@ function getAllSquads() {
         var squadsByParent = {};
         _.each(nonSquadTeams.rows, function(nonSquadTeam) {
           if (!(_.isUndefined(nonSquadTeam.value._id)) && !(_.isEmpty(nonSquadTeam.value._id))) {
-            var id = nonSquadTeam.value._id
+            var id = nonSquadTeam.value._id;
             squadsByParent[id] = [];
           }
         });
@@ -249,37 +249,37 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
         reject(formatErrMsg(msg));
       } else {
         if (!isNaN(iterationDocIndex)) {
-          var pts = iterationDoc["nbr_story_pts_dlvrd"];
-          var stories = iterationDoc["nbr_stories_dlvrd"];
-          var teamCnt = iterationDoc["team_mbr_cnt"];
-          var defects = iterationDoc["nbr_defects"];
-          var dplymnts = iterationDoc["nbr_dplymnts"];
-          var teamStat = iterationDoc["team_sat"];
-          var clientStat = iterationDoc["client_sat"];
-          if (pts != undefined && pts != "") {
+          var pts = iterationDoc['nbr_story_pts_dlvrd'];
+          var stories = iterationDoc['nbr_stories_dlvrd'];
+          var teamCnt = iterationDoc['team_mbr_cnt'];
+          var defects = iterationDoc['nbr_defects'];
+          var dplymnts = iterationDoc['nbr_dplymnts'];
+          var teamStat = iterationDoc['team_sat'];
+          var clientStat = iterationDoc['client_sat'];
+          if (pts != undefined && pts != '') {
             currData[iterationDocIndex].totalPoints = currData[iterationDocIndex].totalPoints + parseInt(pts);
           }
-          if (stories != undefined && stories != "") {
+          if (stories != undefined && stories != '') {
             currData[iterationDocIndex].totalStories = currData[iterationDocIndex].totalStories + parseInt(stories);
           }
 
-          if (defects != undefined && defects != "") {
+          if (defects != undefined && defects != '') {
             currData[iterationDocIndex].totalDefects = currData[iterationDocIndex].totalDefects + parseInt(defects);
           }
-          if (dplymnts != undefined && dplymnts != "") {
+          if (dplymnts != undefined && dplymnts != '') {
             currData[iterationDocIndex].totalDplymts = currData[iterationDocIndex].totalDplymts + parseInt(dplymnts);
           }
 
-          if (teamStat != undefined && teamStat != "" && (parseInt(teamStat) != 0)) {
+          if (teamStat != undefined && teamStat != '' && (parseInt(teamStat) != 0)) {
             currData[iterationDocIndex].totTeamStat = currData[iterationDocIndex].totTeamStat + parseInt(teamStat);
             currData[iterationDocIndex].totTeamStatIter = currData[iterationDocIndex].totTeamStatIter + 1;
           }
-          if (clientStat != undefined && clientStat != "" && (parseInt(clientStat) != 0)) {
+          if (clientStat != undefined && clientStat != '' && (parseInt(clientStat) != 0)) {
             currData[iterationDocIndex].totClientStat = currData[iterationDocIndex].totClientStat + parseInt(clientStat);
             currData[iterationDocIndex].totClientStatIter = currData[iterationDocIndex].totClientStatIter + 1;
           }
 
-          if (teamCnt != undefined && teamCnt != "") {
+          if (teamCnt != undefined && teamCnt != '') {
             teamCnt = parseInt(teamCnt);
             if (teamCnt < 5) {
               currData[iterationDocIndex].teamsLt5 = currData[iterationDocIndex].teamsLt5 + 1;
@@ -388,8 +388,8 @@ function getRollUpDataHistory() {
           msg = err;
         }
         reject(formatErrMsg(msg));
-      })
-  })
+      });
+  });
 }
 /**
  * Calculate month different
@@ -450,8 +450,8 @@ function getRollUpSquadsHistory() {
           msg = err;
         }
         reject(formatErrMsg(msg));
-      })
-  })
+      });
+  });
 };
 
 /**
@@ -508,9 +508,9 @@ function rollUpSquadsData(squadsList, squadTeams) {
 
   _.each(squadsList, function(squadId) {
     squad = squadTeams[squadId];
-    var teamCnt = squad["total_members"] != null ? squad["total_members"] : 0;
-    var teamFTE = squad["total_allocation"] != null ? squad["total_allocation"] : 0;
-    if (teamCnt != undefined && teamCnt != "") {
+    var teamCnt = squad['total_members'] != null ? squad['total_members'] : 0;
+    var teamFTE = squad['total_allocation'] != null ? squad['total_allocation'] : 0;
+    if (teamCnt != undefined && teamCnt != '') {
       teamCnt = parseInt(teamCnt);
       if (teamCnt < 5) {
         teamsLt5 = teamsLt5 + 1;
@@ -570,7 +570,7 @@ var snapshot = {
                 var rootTeams = [];
                 _.each(teamList, function(team) {
                   if (childrenList.indexOf(team._id) == -1) {
-                    team.parent_team_id = "";
+                    team.parent_team_id = '';
                     team.child_team_id = team.children;
                     rootTeams.push(team);
                   }
@@ -599,7 +599,7 @@ var snapshot = {
             msg = err;
           }
           reject(formatErrMsg(msg));
-        })
+        });
     });
   },
 
@@ -685,7 +685,7 @@ var snapshot = {
             msg = err;
           }
           reject(formatErrMsg(msg));
-        })
+        });
     });
   },
 
@@ -807,7 +807,7 @@ var snapshot = {
             msg = err;
           }
           reject(formatErrMsg(msg));
-        })
+        });
     });
   }
 };

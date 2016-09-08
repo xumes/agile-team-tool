@@ -3,11 +3,11 @@ var valCount = 0;
 var hasError = false;
 jQuery(function($) {
   $(document).ready(function() {
-    $("#feedback").keyup(function() {
-      if ($("#feedback").val().trim() !== "") {
-        $("#feeback_submit").removeAttr("disabled");
+    $('#feedback').keyup(function() {
+      if ($('#feedback').val().trim() !== '') {
+        $('#feeback_submit').removeAttr('disabled');
       } else {
-        $("#feeback_submit").attr("disabled", "disabled");
+        $('#feeback_submit').attr('disabled', 'disabled');
       }
     });
   });
@@ -22,7 +22,7 @@ function teamNamesHandler(teams) {
     option.push(teams[i].name);
     listOption.push(option);
   }
-  setSelectOptions("feedback_teamName", listOption, ["Not specified", "Not specified"], null, "Not specified");
+  setSelectOptions('feedback_teamName', listOption, ['Not specified', 'Not specified'], null, 'Not specified');
 }
 
 function submitFeedback() {
@@ -36,28 +36,28 @@ function submitFeedback() {
 }
 
 function processFeedback() {
-  $("#feeback_submit").attr("disabled", "disabled");
-  $("#sendFeedback").css("cursor", "progress");
+  $('#feeback_submit').attr('disabled', 'disabled');
+  $('#sendFeedback').css('cursor', 'progress');
   $.ajax({
-    type: "POST",
-    url: "/email/feedback",
+    type: 'POST',
+    url: '/email/feedback',
     data: {
-      "feedback_sender": $("#feedback_sender").val(),
-      "feedback_senderName": $("#feedback_senderName").val(),
-      "feedback_page": $("#feedback_page").val(),
-      "feedback_teamName": $("#feedback_teamName").val(),
-      "feedback": $("#feedback").val()
+      'feedback_sender': $('#feedback_sender').val(),
+      'feedback_senderName': $('#feedback_senderName').val(),
+      'feedback_page': $('#feedback_page').val(),
+      'feedback_teamName': $('#feedback_teamName').val(),
+      'feedback': $('#feedback').val()
     },
     async: true
   }).done(function(message) {
-    $("#sendFeedback").css("cursor", "default");
+    $('#sendFeedback').css('cursor', 'default');
     showMessagePopup(message);
     IBMCore.common.widget.overlay.hide('sendFeedback');
   });
 }
 
 function closeFeedback() {
-  $("#sendFeedback").css("cursor", "default");
+  $('#sendFeedback').css('cursor', 'default');
   IBMCore.common.widget.overlay.hide('sendFeedback');
 }
 
@@ -65,11 +65,11 @@ function initFeedback(userEmail) {
   hasError = false;
   ccIds = [];
   valCount = 0;
-  $("#feedback_sender").val(userInfo.email);
-  $("#feedback_senderName").val(userInfo.name);
-  $("#feedback_teamName").val("");
-  $("#feedback").val("");
-  $("#userEmail").html(userInfo.email);
+  $('#feedback_sender').val(userInfo.email);
+  $('#feedback_senderName').val(userInfo.name);
+  $('#feedback_teamName').val('');
+  $('#feedback').val('');
+  $('#userEmail').html(userInfo.email);
   document.getElementById('feedback_cancel').disabled = false;
 }
 
@@ -77,22 +77,22 @@ function launchFeeback(userEmail) {
   getTeamNames(teamNamesHandler, []);
 
   IBMCore.common.widget.overlay.show('sendFeedback');
-  $("#feeback_submit").attr("disabled", "disabled");
+  $('#feeback_submit').attr('disabled', 'disabled');
   initFeedback(userEmail);
 }
 
 function validateEmail() {
   var isValid = false;
-  var ids = $("#feedback_cc").val();
-  if (ids === "" || ids.indexOf("/") == -1) {
+  var ids = $('#feedback_cc').val();
+  if (ids === '' || ids.indexOf('/') == -1) {
     isValid = true;
   }
-  if (ids !== "") {
-    ids = ids.split(",");
+  if (ids !== '') {
+    ids = ids.split(',');
     $.each(ids, function(index, item) {
-      if (item.length > 1 && item !== " ") {
+      if (item.length > 1 && item !== ' ') {
         item = item.replace(/^\s\s*/, '').replace(/\s*$/, '');
-        if (item.indexOf("/") > 0) {
+        if (item.indexOf('/') > 0) {
           valCount += 1;
           getEmail(item);
         } else {
@@ -122,11 +122,11 @@ function getEmail(notesId) {
     'scriptCharset': 'UTF-8',
     'success': function(data) {
       if (data.persons.length === 0) {
-        showMessagePopup("Your feedback could not be submitted because at least one of the cc email addresses is not in internet address or NotesID format.");
+        showMessagePopup('Your feedback could not be submitted because at least one of the cc email addresses is not in internet address or NotesID format.');
         return false;
       }
       var facesPerson = data.persons[0].person;
-      if (facesPerson["notes-id"] == notesId) {
+      if (facesPerson['notes-id'] == notesId) {
         var emailId = facesPerson.email;
         if (ccIds.indexOf(emailId) == -1) {
           ccIds.push(emailId);
@@ -137,7 +137,7 @@ function getEmail(notesId) {
         }
       } else {
         hasError = true;
-        showMessagePopup("Your feedback could not be submitted because at least one of the cc email addresses is not in internet address or NotesID format.");
+        showMessagePopup('Your feedback could not be submitted because at least one of the cc email addresses is not in internet address or NotesID format.');
         return false;
       }
     },

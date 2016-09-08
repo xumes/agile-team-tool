@@ -13,7 +13,7 @@ before(function(done) {
       if (err) throw err;
       agent.saveCookies(res);
       done();
-    })
+    });
 });
 
 describe('Page variables API Test [GET /api/uihelper/home]: get variables used for client side interaction at home page', function() {

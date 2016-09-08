@@ -26,13 +26,13 @@ module.exports.trimData = function(postData) {
       var tempObj = {};
       _.each(element, function(v, i, l) {
         tempObj[i] = typeof v === 'string' ? v.trim() : v;
-      })
+      });
       element = tempObj;
     } else if (typeof element === 'array' || forceArray.indexOf(index) > -1) { // somehow, members array is being catch as OBJECT
       var tempArr = [];
       _.each(element, function(v, i, l) {
         tempArr.push(typeof v === 'string' ? v.trim() : v);
-      })
+      });
       element = tempArr;
     }
     cleanData[index] = element;
@@ -95,7 +95,7 @@ module.exports.BulkDelete = function(docIds) {
                 var result = {
                   'Failed to delete docIds': failedIds,
                   'Successfully deleted docIds': deletedIds
-                }
+                };
                 resolve(result);
               })
               .catch(function(err) {
@@ -110,7 +110,7 @@ module.exports.BulkDelete = function(docIds) {
         });
     });
   });
-}
+};
 
 /**
  * Reformat document to update/delete document structure for BULK operation
@@ -142,7 +142,7 @@ module.exports.formatForBulkTransaction = function(docs, email, action) {
   return {
     docs: reformatDocu
   };
-}
+};
 
 /**
  * This will check if team/parent team is included in user teams
@@ -207,7 +207,7 @@ module.exports.isUserAllowed = function(userId, teamId) {
         reject(formatErrMsg(err.error));
       });
   });
-}
+};
 
 module.exports.returnObject = function(data) {
   // pre process returned rows so we deal directly with the document objects
@@ -267,10 +267,10 @@ module.exports.queryLDAP = function(id) {
       } else {
         resolve(body);
       }
-    })
+    });
   });
 };
 
 module.exports.specialCharsHandler = function(id) {
-  return id.replace( /(:|\.|\[|\]|,|\/| )/g, "\\$1" );
-}
+  return id.replace( /(:|\.|\[|\]|,|\/| )/g, '\\$1' );
+};

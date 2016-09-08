@@ -18,14 +18,14 @@ var RedisStore = require('connect-redis')(session);
 var favicon = require('serve-favicon');
 var helmet = require('helmet');
 var initCloudant = require('./cloudant/init');
-var loggers = require('./middleware/logger')
+var loggers = require('./middleware/logger');
 
 /* istanbul ignore if */
 require('fs').readFile('./art', 'utf8', function(err, art) {
   console.log(art);
-  loggers.get('init').info("Configuration Settings:");
+  loggers.get('init').info('Configuration Settings:');
   console.log(settings);
-  console.log("\n");
+  console.log('\n');
   initCloudant.init();
 });
 
@@ -52,11 +52,11 @@ app.use(helmet());
 
 // Force SSL
 /* istanbul ignore if */
-if (process.env.forceSSL == "true") {
+if (process.env.forceSSL == 'true') {
   app.use(function(req, res, next) {
     if (req.headers['x-forwarded-proto'] != 'https')
       return res.redirect(['https://', req.get('Host'), req.url].join(''));
-    return next()
+    return next();
   });
 }
 
@@ -79,10 +79,10 @@ require('./routes')(app, passport);
  */
 /* istanbul ignore next */
 process.on('uncaughtException', function(err) {
-  console.error((new Date).toUTCString() + ' uncaughtException:', err.message)
-  console.error(err.stack)
-  process.exit(1)
-})
+  console.error((new Date).toUTCString() + ' uncaughtException:', err.message);
+  console.error(err.stack);
+  process.exit(1);
+});
 
 
 // catch 404 and forward to error handler

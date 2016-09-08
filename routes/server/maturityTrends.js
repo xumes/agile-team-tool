@@ -4,11 +4,11 @@
 
       showTrends = function(req, res) {
         json = {
-          "pageTitle": "Maturity Assessment Trends",
-          "user": req.session["user"]
+          'pageTitle': 'Maturity Assessment Trends',
+          'user': req.session['user']
         };
         render(req, res, 'maturityTrends', json);
       };
 
-      app.get("/maturityTrends", showTrends);
+      app.get('/maturityTrends', showTrends);
     };

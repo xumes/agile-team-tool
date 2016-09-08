@@ -13,12 +13,12 @@ before(function(done) {
       if (err) throw err;
       agent.saveCookies(res);
       done();
-    })
+    });
 });
 
 
 describe('GET /maturityTrends', function() {
-  it("should return 200", function(done) {
+  it('should return 200', function(done) {
     var req = request(app).get('/maturityTrends');
     agent.attachCookies(req);
     req.expect(200);

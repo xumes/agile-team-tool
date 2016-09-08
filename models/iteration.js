@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var Cloudant = require('cloudant');
 var Promise = require('bluebird');
@@ -9,7 +9,7 @@ var _ = require('underscore');
 var loggers = require('../middleware/logger');
 var validate = require('validate.js');
 var moment = require('moment');
-var sprintf = require("sprintf-js").sprintf;
+var sprintf = require('sprintf-js').sprintf;
 
 var formatErrMsg = function(msg) {
   loggers.get('models').error('Error: ', msg);
@@ -118,8 +118,8 @@ var iteration = {
     data['created_dt'] = util.getServerTime();
     data['type'] = 'iterationinfo';
     cleanData = util.trimData(data);
-    var newIterationId = settings.prefixes.iteration + cleanData['team_id'] + " " + cleanData['iteration_name'] + "_" + new Date().getTime();
-    newIterationId = newIterationId.replace(/^[^a-z]+|[^\w:.-]+/gi, "");
+    var newIterationId = settings.prefixes.iteration + cleanData['team_id'] + ' ' + cleanData['iteration_name'] + '_' + new Date().getTime();
+    newIterationId = newIterationId.replace(/^[^a-z]+|[^\w:.-]+/gi, '');
     cleanData['_id'] = newIterationId;
     var user_id = user['shortEmail'];
     var team_id = cleanData['team_id'];
@@ -143,8 +143,8 @@ var iteration = {
                     var duplicate = iteration.isIterationNumExist(iteration_name, iterData);
                     if (duplicate) {
                       var msg = {
-                        iteration_name: ["Iteration number/identifier already exists"]
-                      }
+                        iteration_name: ['Iteration number/identifier already exists']
+                      };
                       reject(formatErrMsg(msg));
                     } else {
                       common.addRecord(cleanData)
@@ -239,8 +239,8 @@ var iteration = {
                             var duplicate = iteration.isIterationNumExist(new_iteration_name, iterData);
                             if (duplicate) {
                               var msg = {
-                                iteration_name: ["Iteration number/identifier already exists"]
-                              }
+                                iteration_name: ['Iteration number/identifier already exists']
+                              };
                               reject(formatErrMsg(msg));
                             } else {
                               common.updateRecord(cleanData)
@@ -268,7 +268,7 @@ var iteration = {
                         });
                     }
                   } else { /* istanbul ignore next */
-                    var msg = "not_found";
+                    var msg = 'not_found';
                     /* istanbul ignore next */
                     reject(formatErrMsg(msg));
                   }
@@ -299,8 +299,8 @@ var iteration = {
     return new Promise(function(resolve, reject) {
       if (!docId && !revId) {
         var msg = {
-          _id: ["_id/_rev is missing"]
-        }
+          _id: ['_id/_rev is missing']
+        };
         reject(formatErrMsg(msg));
       } else {
         common.deleteRecord(docId, revId)
@@ -328,7 +328,7 @@ var iteration = {
     var nbr_defects = data['nbr_defects'];
     var team_sat = data['team_sat'];
     var client_sat = data['client_sat'];
-    var dateFormat = "MM/DD/YYYY";
+    var dateFormat = 'MM/DD/YYYY';
     var status;
     var endDate = new Date(iteration_end_dt);
     var d1 = moment(endDate).format(dateFormat);
@@ -342,19 +342,19 @@ var iteration = {
       // updating status for only having more than 3 days from iteration end date
       if (diffDays > 3) {
         // console.log("diffDays > 3");
-        status = "Completed";
+        status = 'Completed';
       } else if (nbr_stories_dlvrd != 0 ||
         nbr_story_pts_dlvrd != 0 ||
         nbr_dplymnts != 0 ||
         nbr_defects != 0 ||
         team_sat != 0 ||
         client_sat != 0) {
-        status = "Completed";
+        status = 'Completed';
       } else {
-        status = "Not complete";
+        status = 'Not complete';
       }
     } else {
-      status = "Not complete";
+      status = 'Not complete';
     }
 
     return status;
@@ -370,29 +370,29 @@ var iteration = {
       var enddate = p.enddate;
       var limit = p.limit;
       var include_docs = p.includeDocs;
-      var sortBy = "-end_dt";
-      var lucene_query = "";
+      var sortBy = '-end_dt';
+      var lucene_query = '';
       var validationErrors = validate(p, iterationSearchAllDocRules);
-      validationErrors = iteration.isValidStartEndDate(startdate, enddate, "YYYYMMDD", validationErrors);
+      validationErrors = iteration.isValidStartEndDate(startdate, enddate, 'YYYYMMDD', validationErrors);
 
       if (validationErrors) {
         reject(formatErrMsg(validationErrors));
       } else {
         // teamId
-        lucene_query = lucene_query + sprintf("team_id:%s", team_id);
+        lucene_query = lucene_query + sprintf('team_id:%s', team_id);
         // completed status
         if (status) {
-          lucene_query = lucene_query + sprintf(" AND completed:%s", status);
+          lucene_query = lucene_query + sprintf(' AND completed:%s', status);
         }
         // earliest and latest end date
         if (startdate && enddate) {
-          lucene_query = lucene_query + sprintf(" AND end_dt:[%s TO %s]", startdate, enddate);
+          lucene_query = lucene_query + sprintf(' AND end_dt:[%s TO %s]', startdate, enddate);
         } else {
           if (startdate) {
-            lucene_query = lucene_query + sprintf(" AND end_dt:%s", startdate);
+            lucene_query = lucene_query + sprintf(' AND end_dt:%s', startdate);
           }
           if (enddate) {
-            lucene_query = lucene_query + sprintf(" AND end_dt:%s", enddate);
+            lucene_query = lucene_query + sprintf(' AND end_dt:%s', enddate);
           }
         }
 
@@ -401,7 +401,7 @@ var iteration = {
           'include_docs': include_docs,
           'sort': sortBy,
           'limit': limit
-        }
+        };
         loggers.get('models').verbose('[iterationModel.searchTeamIteration] lucene_query: ' + lucene_query);
         common.Search('iterations', 'searchAll', params)
           .then(function(body) {

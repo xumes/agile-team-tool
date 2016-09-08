@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
 var iterationModel = require('../../models/iteration');
 var util = require('../../helpers/util');
 var loggers = require('../../middleware/logger');
 var validate = require('validate.js');
 var _ = require('underscore');
-var sprintf = require("sprintf-js").sprintf;
+var sprintf = require('sprintf-js').sprintf;
 
 var formatErrMsg = function(msg) {
   loggers.get('api').error('Error: ' + msg);

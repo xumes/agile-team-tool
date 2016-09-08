@@ -57,7 +57,7 @@ describe('Team models [createTeam]: create a new team document', function() {
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
   it('it will return success for creating a new team document', function(done) {
@@ -72,7 +72,7 @@ describe('Team models [createTeam]: create a new team document', function() {
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
   it('it will return error because Team name is already existing', function(done) {
@@ -88,7 +88,7 @@ describe('Team models [createTeam]: create a new team document', function() {
       })
       .finally(function() {
         done();
-      })
+      });
   });
 });
 
@@ -116,7 +116,7 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
   it('it will return error because update data is invalid', function(done) {
@@ -134,7 +134,7 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
   it('it will return error because update data is invalid. Squadteam details error', function(done) {
@@ -152,7 +152,7 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
               })
               .finally(function() {
                 done();
-              })
+              });
           });
       });
   });
@@ -171,10 +171,10 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
               })
               .finally(function() {
                 done();
-              })
+              });
           });
       });
-  })
+  });
 
   it('it will return error because update data is invalid. Child_team_id details error', function(done) {
     teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
@@ -190,10 +190,10 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
               })
               .finally(function() {
                 done();
-              })
-          })
+              });
+          });
       });
-  })
+  });
 
   it('it will return error because update data is invalid. Squadteam details error', function(done) {
     teamModel.createTeam(dummyData.associate.validDoc(), dummyData.userDetails.valid())
@@ -210,10 +210,10 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
               })
               .finally(function() {
                 done();
-              })
-          })
+              });
+          });
       });
-  })
+  });
 
   it('it will return error because user is not authorized to update document', function(done) {
     userDetailsInvalid = {};
@@ -228,7 +228,7 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
   it('it will return success after updating document', function(done) {
@@ -248,7 +248,7 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
   it('it will return error because update document is invalid', function(done) {
@@ -262,7 +262,7 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
   it('it will return error because update document is invalid/ team name already exists', function(done) {
@@ -278,8 +278,8 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
           })
           .finally(function() {
             done();
-          })
-      })
+          });
+      });
   });
 });
 
@@ -303,7 +303,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
   it('will return error because team id is invalid', function(done) {
@@ -316,7 +316,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
   it('will return error because target parent is not defined', function(done) {
@@ -333,7 +333,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
   it('will return error because associate data is invalid to associate parent', function(done) {
@@ -350,7 +350,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
   it('will return error because associate data is invalid to associate child', function(done) {
@@ -369,7 +369,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
   it('will return error because associate data is invalid to associate child', function(done) {
@@ -386,7 +386,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
   it('will return error because associate data is invalid to associate child', function(done) {
@@ -403,7 +403,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
 
@@ -421,7 +421,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
   it('will return error because associate data is invalid to removed parent', function(done) {
@@ -438,7 +438,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
   it('will return error because associate data is invalid to removed child', function(done) {
@@ -455,7 +455,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
   it('will return error because associate data is invalid to removed child', function(done) {
@@ -472,7 +472,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
   it('will associate new parent team', function(done) {
@@ -491,8 +491,8 @@ describe('Team models [associateTeams]: associate team relationship with other t
           })
           .finally(function() {
             done();
-          })
-      })
+          });
+      });
   });
 
   it('will associate new child team', function(done) {
@@ -527,8 +527,8 @@ describe('Team models [associateTeams]: associate team relationship with other t
           })
           .finally(function() {
             done();
-          })
-      })
+          });
+      });
   });
 
   it('will remove parent association', function(done) {
@@ -554,8 +554,8 @@ describe('Team models [associateTeams]: associate team relationship with other t
               .catch(function(err) {})
               .finally(function() {
                 done();
-              })
-          })
+              });
+          });
 
       });
   });
@@ -582,8 +582,8 @@ describe('Team models [associateTeams]: associate team relationship with other t
               .catch(function(err) {})
               .finally(function() {
                 done();
-              })
-          })
+              });
+          });
       });
   });
 
@@ -599,7 +599,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
             var associateRemoveChild = {
               teamId: createdId,
               targetChild: associateDataChildValid['targetChild']
-            }
+            };
             teamModel.associateTeams(associateRemoveChild, 'removeChild', userDetails)
               .then(function(body) {
                 expect(body).to.not.equal(null);
@@ -609,9 +609,9 @@ describe('Team models [associateTeams]: associate team relationship with other t
               })
               .finally(function() {
                 done();
-              })
-          })
-      })
+              });
+          });
+      });
   });
 
   it('will delete an associated team', function(done) {
@@ -642,8 +642,8 @@ describe('Team models [associateTeams]: associate team relationship with other t
                   .catch(function(err) {})
                   .finally(function() {
                     done();
-                  })
-              })
+                  });
+              });
           });
       });
   });
@@ -658,7 +658,7 @@ describe('Team models [associateTeams]: associate team relationship with other t
             .then(function(result) {})
             .catch(function(err) {
               done(err);
-            })
+            });
         })
         .catch(function(err) {
           done(err);
@@ -706,7 +706,7 @@ describe('Team models [deleteTeam] : delete existing team document', function() 
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
   it('it will return error because team id is not existing', function(done) {
@@ -725,7 +725,7 @@ describe('Team models [deleteTeam] : delete existing team document', function() 
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
   it('it will return error because action is not allowed', function(done) {
@@ -742,11 +742,11 @@ describe('Team models [deleteTeam] : delete existing team document', function() 
       })
       .finally(function() {
         done();
-      })
+      });
   });
 });
 
-describe("Team models [getTeam]: get all teams or get team details if team id is set ", function() {
+describe('Team models [getTeam]: get all teams or get team details if team id is set ', function() {
   // before(function(done) {
   //   cache.setHomeCache(userDetails['shortEmail'])
   //   .then(function(body){
@@ -755,7 +755,7 @@ describe("Team models [getTeam]: get all teams or get team details if team id is
   //     done();
   //   })
   // })
-  it("retrieve all team", function(done) {
+  it('retrieve all team', function(done) {
     teamModel.getTeam(null)
       .then(function(body) {
         expect(body).to.be.a('array');
@@ -767,7 +767,7 @@ describe("Team models [getTeam]: get all teams or get team details if team id is
       });
   });
 
-  it("return empty none existent team details", function(done) {
+  it('return empty none existent team details', function(done) {
     teamModel.getTeam('none-existing-team')
       .then(function(body) {
         expect(body).to.be.equal(null);
@@ -779,10 +779,10 @@ describe("Team models [getTeam]: get all teams or get team details if team id is
       })
       .finally(function() {
         done();
-      })
+      });
   });
 
-  it("return team details", function(done) {
+  it('return team details', function(done) {
     teamModel.getTeam(validId)
       .then(function(body) {
         expect(body).to.be.a('object');
@@ -992,7 +992,7 @@ describe('Team models [getRootTeams]: get top level, children or parent teams', 
           })
           .catch(function(err) {
             done(err);
-          })
+          });
       })
       .catch(function(err) {
         done(err);
@@ -1013,7 +1013,7 @@ describe('Team models [getLookupTeamByType]: get lookup team list or object', fu
         });
         lookupNonsquadId = team2._id;
         done();
-      })
+      });
   });
 
   it('return squad lookup object', function(done) {
@@ -1133,7 +1133,7 @@ describe('Team models [indexDocument]: updates the team relation lookup document
           expect(_.find(body, {
             _id: team._id
           })).to.exist;
-        })
+        });
         indexDocument.lookup = body;
         done();
       })
@@ -1145,16 +1145,16 @@ describe('Team models [indexDocument]: updates the team relation lookup document
     var newParent = _.find(teamAssociations, {
       _id: 'teamA'
     });
-    newParent.newParentId = 'teamB'
+    newParent.newParentId = 'teamB';
     teamIndex.updateLookup(indexDocument, [newParent])
       .then(function(body) {
         expect(body).to.be.a('array');
         expect(body).to.have.length.above(0);
         var teamA = _.find(body, {
-          _id: "teamA"
+          _id: 'teamA'
         });
         var teamB = _.find(body, {
-          _id: "teamB"
+          _id: 'teamB'
         });
         expect(teamA.parents).to.have.members(['teamB']);
         expect(teamB.children).to.have.members(['teamA']);
@@ -1162,19 +1162,19 @@ describe('Team models [indexDocument]: updates the team relation lookup document
         var newParent = _.find(teamAssociations, {
           _id: 'teamB'
         });
-        newParent.newParentId = 'teamC'
+        newParent.newParentId = 'teamC';
         teamIndex.updateLookup(indexDocument, [newParent])
           .then(function(body) {
             expect(body).to.be.a('array');
             expect(body).to.have.length.above(0);
             var teamA = _.find(body, {
-              _id: "teamA"
+              _id: 'teamA'
             });
             var teamB = _.find(body, {
-              _id: "teamB"
+              _id: 'teamB'
             });
             var teamC = _.find(body, {
-              _id: "teamC"
+              _id: 'teamC'
             });
             expect(teamA.parents).to.have.members(['teamB', 'teamC']);
             expect(teamB.parents).to.have.members(['teamC']);
@@ -1198,13 +1198,13 @@ describe('Team models [indexDocument]: updates the team relation lookup document
         expect(body).to.be.a('array');
         expect(body).to.have.length.above(0);
         var teamA = _.find(body, {
-          _id: "teamA"
+          _id: 'teamA'
         });
         var teamB = _.find(body, {
-          _id: "teamB"
+          _id: 'teamB'
         });
         var teamC = _.find(body, {
-          _id: "teamC"
+          _id: 'teamC'
         });
         expect(teamA.parents).to.have.members(['teamC']);
         expect(teamB.parents).to.have.members(['teamC']);
@@ -1230,31 +1230,31 @@ describe('Team models [indexDocument]: updates the team relation lookup document
         expect(body).to.be.a('array');
         expect(body).to.have.length.above(0);
         var teamA = _.find(body, {
-          _id: "teamA"
+          _id: 'teamA'
         });
         expect(teamA.parents).to.have.members(['teamC', 'teamD']);
         expect(teamA.children).to.have.members(['teamE']);
 
         var teamB = _.find(body, {
-          _id: "teamB"
+          _id: 'teamB'
         });
         expect(teamB.parents).to.have.members(['teamC', 'teamD']);
         expect(teamB.children).to.be.empty;
 
         var teamC = _.find(body, {
-          _id: "teamC"
+          _id: 'teamC'
         });
         expect(teamC.parents).to.have.members(['teamD']);
         expect(teamC.children).to.have.members(['teamB', 'teamA', 'teamE']);
 
         var teamD = _.find(body, {
-          _id: "teamD"
+          _id: 'teamD'
         });
         expect(teamD.parents).to.be.empty;
         expect(teamD.children).to.have.members(['teamB', 'teamA', 'teamC', 'teamE']);
 
         var teamE = _.find(body, {
-          _id: "teamE"
+          _id: 'teamE'
         });
         expect(teamE.parents).to.have.members(['teamA', 'teamC', 'teamD']);
         expect(teamE.children).to.be.empty;
@@ -1278,30 +1278,30 @@ describe('Team models [indexDocument]: updates the team relation lookup document
         expect(body).to.be.a('array');
         expect(body).to.have.length.above(0);
         var teamA = _.find(body, {
-          _id: "teamA"
+          _id: 'teamA'
         });
         expect(teamA.parents).to.be.empty;
         expect(teamA.children).to.have.members(['teamE']);
 
         var teamB = _.find(body, {
-          _id: "teamB"
+          _id: 'teamB'
         });
         expect(teamB.parents).to.be.empty;
         expect(teamB.children).to.be.empty;
 
         var teamC = _.find(body, {
-          _id: "teamC"
+          _id: 'teamC'
         });
         expect(teamC).to.be.empty;
 
         var teamD = _.find(body, {
-          _id: "teamD"
+          _id: 'teamD'
         });
         expect(teamD.parents).to.be.empty;
         expect(teamD.children).to.be.empty;
 
         var teamE = _.find(body, {
-          _id: "teamE"
+          _id: 'teamE'
         });
         expect(teamE.parents).to.have.members(['teamA']);
         expect(teamE.children).to.be.empty;
@@ -1327,7 +1327,7 @@ describe('Team models [indexDocument]: updates the team relation lookup document
         expect(body).to.be.a('array');
         expect(body).to.have.length.above(0);
         var teamD = _.find(body, {
-          _id: "teamD"
+          _id: 'teamD'
         });
         expect(teamD).to.be.empty;
         expect(body).to.have.length.below(lookupSize);

@@ -26,7 +26,7 @@ var isValidEmail = function(email) {
 
 var isModel = function(req) {
   return (typeof req === 'string' && !(_.isEmpty(req)) && isValidEmail(req) === undefined) ? true : false;
-}
+};
 
 var formattedCache = function(allCache) {
   var cacheFormat = {};
@@ -37,13 +37,13 @@ var formattedCache = function(allCache) {
       case 'allTeamsLookup':
         list = util.returnObject(v);
         obj = _.indexBy(list, function(team) {
-          return team._id
+          return team._id;
         });
         break;
       case 'allTeams':
         list = util.returnObject(v);
         obj = _.sortBy(list, function(team) {
-          return team.name
+          return team.name;
         });
         break;
       case 'userTeamList':
@@ -56,7 +56,7 @@ var formattedCache = function(allCache) {
     cacheFormat[i] = obj;
   });
   return cacheFormat;
-}
+};
 
 var userCache = {
   setSystemInfoCache: function() {

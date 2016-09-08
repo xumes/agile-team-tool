@@ -37,8 +37,8 @@ describe('Assessment API Test', function() {
             if (err) throw err;
             agent.saveCookies(res);
             done();
-          })
-      })
+          });
+      });
   });
 
   // prepare the team data
@@ -78,7 +78,7 @@ describe('Assessment API Test', function() {
   });
 
   describe('Assesment API Test [GET /api/assessment/template]: get assessment template', function() {
-    it("retrieve assessment template", function(done) {
+    it('retrieve assessment template', function(done) {
       var req = request(app).get('/api/assessment/template');
       agent.attachCookies(req);
       req.end(function(err, res) {
@@ -164,7 +164,7 @@ describe('Assessment API Test', function() {
       agent.attachCookies(req);
       req.end(function(err, res) {
         expect(res.statusCode).to.be.equal(404);
-        expect(res.body).to.be.empty
+        expect(res.body).to.be.empty;
         done();
       });
     });

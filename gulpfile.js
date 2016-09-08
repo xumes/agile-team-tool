@@ -6,15 +6,12 @@ var eslint   = require('gulp-eslint');
 gulp.task('lint', function() {
   return gulp.src(['**/*.js', '!node_modules/**'])
     .pipe(eslint({
-      useEslintrc: false,
-      envs: ['node', 'mocha'],
-      rules: {
-        'indent': ['error', 2, { "SwitchCase": 1, "MemberExpression": 1, "VariableDeclarator": 1}]
-      }
+      useEslintrc: true,
+      envs: ['node', 'mocha']
     }))
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
-})
+});
 
 gulp.task('pre-test', function() {
   return gulp.src(['*.js', 'routes/*.js', 'routes/*/*.js', 'models/*.js'])
@@ -42,5 +39,5 @@ gulp.task('test', ['lint', 'pre-test'], function() {
     }))
     .once('end', function() {
       process.exit();
-    })
+    });
 });

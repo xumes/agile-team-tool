@@ -23,7 +23,7 @@ module.exports = function(passport) {
           reject(body);
         } else
           resolve(body);
-      })
+      });
 
     });
   };
@@ -76,7 +76,7 @@ module.exports = function(passport) {
       .catch(function(err) {
         loggers.get('auth').error('Unable to authenticate email=%s, err=%s', email, err);
         return done(null, false);
-      })
+      });
   }));
 
 };

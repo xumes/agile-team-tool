@@ -18,7 +18,7 @@ var getAllChildren = function(teamId, teamList) {
     }
   }
   return children;
-}
+};
 
 var getAllParents = function(teamId, teamList) {
   var parents = _.isEmpty(parents) ? [] : parents;
@@ -28,45 +28,45 @@ var getAllParents = function(teamId, teamList) {
     parents = _.union(parents, getAllParents(team.parent_team_id, teamList));
   }
   return parents;
-}
+};
 
 var index = {
   initIndex: function() {
     return new Promise(function(resolve, reject) {
       var indexDocument = new Object();
-      indexDocument._id = "ag_ref_team_index";
+      indexDocument._id = 'ag_ref_team_index';
       indexDocument.domains = [];
       indexDocument.tribes = [];
       indexDocument.squads = [];
 
-      logger.get('models').verbose("Processing all teams for lookup index.");
+      logger.get('models').verbose('Processing all teams for lookup index.');
       common.getByView('teams', 'teams')
         .then(function(allTeams) {
           var allTeams = util.returnObject(allTeams);
           var teamList = _.indexBy(allTeams, function(team) {
-            return team._id
+            return team._id;
           });
 
           allTeams = _.groupBy(allTeams, function(team) {
-            var level = "squads";
+            var level = 'squads';
             if (_.isEmpty(team.parent_team_id) && (!_.isEmpty(team.squadteam) && team.squadteam.toLowerCase() == 'no'))
-              level = "domains";
+              level = 'domains';
             else if (!_.isEmpty(team.parent_team_id) && (!_.isEmpty(team.squadteam) && team.squadteam.toLowerCase() == 'no'))
-              level = "tribes";
+              level = 'tribes';
             return level;
           });
 
           if (_.has(allTeams, 'domains'))
             allTeams.domains = _.sortBy(allTeams.domains, function(team) {
-              return team.name
+              return team.name;
             });
           if (_.has(allTeams, 'tribes'))
             allTeams.tribes = _.sortBy(allTeams.tribes, function(team) {
-              return team.name
+              return team.name;
             });
           if (_.has(allTeams, 'squads'))
             allTeams.squads = _.sortBy(allTeams.squads, function(team) {
-              return team.name
+              return team.name;
             });
 
           _.each(allTeams.domains, function(team) {
@@ -108,7 +108,7 @@ var index = {
           });
 
           var lookupIndex = _.union(indexDocument.domains, indexDocument.tribes, indexDocument.squads);
-          logger.get('models').verbose("Index size: " + _.size(lookupIndex));
+          logger.get('models').verbose('Index size: ' + _.size(lookupIndex));
 
           index.updateIndexDocument(lookupIndex)
             .then(function(result) {
@@ -124,7 +124,7 @@ var index = {
 
   getIndexDocument: function() {
     return new Promise(function(resolve, reject) {
-      common.getRecord("ag_ref_team_index")
+      common.getRecord('ag_ref_team_index')
         .then(function(result) {
           resolve(result);
         })
@@ -154,11 +154,11 @@ var index = {
           indexDocument.lookup = lookupIndex;
           common.updateRecord(indexDocument)
             .then(function(result) {
-              logger.get('models').debug("Document based team indexing updated.");
+              logger.get('models').debug('Document based team indexing updated.');
               resolve(result);
             })
             .catch( /* istanbul ignore next */ function(err) {
-              logger.get('models').debug("Document based team indexing not created.");
+              logger.get('models').debug('Document based team indexing not created.');
               // try to rebuild index again
               index.initIndex()
                 .then(function(result) {
@@ -166,21 +166,21 @@ var index = {
                 })
                 .catch( /* istanbul ignore next */ function(err) {
                   reject(err);
-                })
+                });
             });
         })
         .catch( /* istanbul ignore next */ function(err) {
           var indexDocument = new Object();
-          indexDocument._id = "ag_ref_team_index";
+          indexDocument._id = 'ag_ref_team_index';
           indexDocument.lookup = lookupIndex;
 
           common.addRecord(indexDocument)
             .then(function(result) {
-              logger.get('models').verbose("Document based team indexing updated.");
+              logger.get('models').verbose('Document based team indexing updated.');
               resolve(result);
             })
             .catch( /* istanbul ignore next */ function(err) {
-              logger.get('models').verbose("Document based team indexing not created.");
+              logger.get('models').verbose('Document based team indexing not created.');
               // try to rebuild index again
               index.initIndex()
                 .then(function(result) {
@@ -188,14 +188,14 @@ var index = {
                 })
                 .catch( /* istanbul ignore next */ function(err) {
                   reject(err);
-                })
+                });
             });
         });
     });
   },
 
   /**
-    teamAssociations accepts an array of object with the following format 
+    teamAssociations accepts an array of object with the following format
     {
       _id: current team ID,
       name: current team name
@@ -220,14 +220,14 @@ var index = {
             logger.get('models').verbose('Success: current team found ' + teamAssociation._id);
             if (!_.isEqual(currentTeam.name, teamAssociation.name) ||
               !_.isEqual(currentTeam.squadteam, teamAssociation.squadteam) ||
-              _.isEqual(teamAssociation.doc_status, "delete"))
+              _.isEqual(teamAssociation.doc_status, 'delete'))
               updateRequired = true;
 
             currentTeam.name = teamAssociation.name;
             currentTeam.squadteam = teamAssociation.squadteam;
-            /* 
+            /*
               there is an existing team lookup data, and association needs to be updated
-              to remove old parent association 
+              to remove old parent association
                 get current team parents as P
                 get current team children as C
                 iterate P teams and remove C + current team id ids in P.children
@@ -239,7 +239,7 @@ var index = {
               var parents = currentTeam.parents;
               var children = currentTeam.children;
               var childrenList = _.union([currentTeam._id], currentTeam.children);
-              // for all parents of the current team, remove current team and children 
+              // for all parents of the current team, remove current team and children
               var pCount = 0;
               _.each(parents, function(parentId) {
                 var parentTeam = _.findWhere(allTeams, {
@@ -262,7 +262,7 @@ var index = {
                   _id: childId
                 });
                 if (!_.isEmpty(childTeam)) {
-                  if (_.isEqual(teamAssociation.doc_status, "delete"))
+                  if (_.isEqual(teamAssociation.doc_status, 'delete'))
                     childTeam.parents = _.difference(childTeam.parents, parentList);
                   else
                     childTeam.parents = _.difference(childTeam.parents, currentTeam.parents);
@@ -272,11 +272,11 @@ var index = {
               // now we remove its old parent association
               currentTeam.parents = _.difference(currentTeam.parents, [teamAssociation.oldParentId], oldParentTeam.parents);
               logger.get('models').verbose('Done removing old lookup data for ' + currentTeam.name +
-                ".  Removed " + pCount + " relationship(s) from parent record(s).  Removed " + cCount + " relationship(s) from child record(s).");
+                '.  Removed ' + pCount + ' relationship(s) from parent record(s).  Removed ' + cCount + ' relationship(s) from child record(s).');
 
             }
           }
-          if (!_.isEmpty(currentTeam) && !_.isEmpty(teamAssociation.newParentId) && !_.isEqual(teamAssociation.doc_status, "delete")) {
+          if (!_.isEmpty(currentTeam) && !_.isEmpty(teamAssociation.newParentId) && !_.isEqual(teamAssociation.doc_status, 'delete')) {
             /*
               to add parent association
                 get current team children as currentTeam
@@ -285,7 +285,7 @@ var index = {
                 set new parent team id and NP as parents for currentTeam
                 set new parent team NC to include currentTeam._id and currentTeam.children
                 iterate NP teams to include currentTeam._id and currentTeam.children as new children
-                iterate currentTeam.children to include NP as parents 
+                iterate currentTeam.children to include NP as parents
             */
             var newParentTeam = _.findWhere(allTeams, {
               _id: teamAssociation.newParentId
@@ -325,13 +325,13 @@ var index = {
                 }
               });
               logger.get('models').verbose('Done updating new lookup data for ' + currentTeam.name +
-                ".  Updated " + pCount + " relationship(s) from parent record(s).  Updated " + cCount + " relationship(s) from child record(s).");
+                '.  Updated ' + pCount + ' relationship(s) from parent record(s).  Updated ' + cCount + ' relationship(s) from child record(s).');
 
             }
           }
-          if (!_.isEqual(teamAssociation.doc_status, "delete") && _.isEmpty(currentTeam) &&
+          if (!_.isEqual(teamAssociation.doc_status, 'delete') && _.isEmpty(currentTeam) &&
             _.isEmpty(teamAssociation.newParentId) && _.isEmpty(teamAssociation.oldParentId)) {
-            // this is a new team 
+            // this is a new team
             logger.get('models').verbose('Creating new lookup object for ' + teamAssociation.name);
             updateRequired = true;
             var lookupObj = new Object();
@@ -343,7 +343,7 @@ var index = {
 
             allTeams = _.union(allTeams, [lookupObj]);
           }
-          if (_.isEqual(teamAssociation.doc_status, "delete")) {
+          if (_.isEqual(teamAssociation.doc_status, 'delete')) {
             logger.get('models').verbose('Need to delete lookup object for ' + teamAssociation.name);
             deleteTeams.push(teamAssociation._id);
           }
@@ -358,6 +358,6 @@ var index = {
       resolve(allTeams);
     });
   }
-}
+};
 
 module.exports = index;

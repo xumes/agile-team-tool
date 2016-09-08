@@ -12,14 +12,14 @@ jQuery(function() {
       var emailAddress = jQuery.trim(jQuery('#username').val());
       var password = jQuery.trim(jQuery('#password').val());
       // condition changed for legecy Ids
-      if (emailAddress !== "" && password !== "") {
+      if (emailAddress !== '' && password !== '') {
         document.forms['ibmid-signin-form'].submit();
         event.preventDefault();
-      } else if (emailAddress !== "" && password === "") {
+      } else if (emailAddress !== '' && password === '') {
         jQuery('#password').focus();
         jQuery('#password').removeClass('success').addClass('error');
         event.preventDefault();
-      } else if (emailAddress === "" && password !== "") {
+      } else if (emailAddress === '' && password !== '') {
         jQuery('#username').removeClass('success').addClass('error');
         jQuery('#username').focus();
         event.preventDefault();
@@ -35,14 +35,14 @@ jQuery(function() {
     var emailAddress = jQuery.trim(jQuery('#username').val());
     var password = jQuery.trim(jQuery('#password').val());
 
-    if (emailAddress !== "" && password !== "") {
+    if (emailAddress !== '' && password !== '') {
       document.forms['ibmid-signin-form'].submit();
       event.preventDefault();
-    } else if (emailAddress !== "" && password === "") {
+    } else if (emailAddress !== '' && password === '') {
       jQuery('#password').focus();
       jQuery('#password').removeClass('success').addClass('error');
       event.preventDefault();
-    } else if (emailAddress === "" && password !== "") {
+    } else if (emailAddress === '' && password !== '') {
       jQuery('#username').removeClass('success').addClass('error');
       jQuery('#username').focus();
       event.preventDefault();
@@ -53,7 +53,7 @@ jQuery(function() {
     }
     event.preventDefault();
   });
-  jQuery(":input").on('keyup', function() {
+  jQuery(':input').on('keyup', function() {
     if (jQuery(this).val() !== '') {
       jQuery(this).removeClass('error');
     }
@@ -69,5 +69,5 @@ jQuery(function() {
     }
     e.preventDefault();
   });
-  jQuery('#ibmid-signin-form').trigger("reset");
+  jQuery('#ibmid-signin-form').trigger('reset');
 });

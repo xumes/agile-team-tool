@@ -13,7 +13,7 @@ before(function(done) {
       if (err) throw err;
       agent.saveCookies(res);
       done();
-    })
+    });
 });
 
 describe('Users API Test [GET /api/users/admins]: get admins', function() {

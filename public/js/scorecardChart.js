@@ -1,10 +1,10 @@
 /**
- * 
+ *
  */
 
 function loadTeamScoreCard2(teamId, containerId) {
-  var curIterInfoTxt = "N/A";
-  var preIterInfoTxt = "N/A";
+  var curIterInfoTxt = 'N/A';
+  var preIterInfoTxt = 'N/A';
   var completedIter = [];
   var graphCategory = [];
   var velocitySeries = new Object();
@@ -12,19 +12,19 @@ function loadTeamScoreCard2(teamId, containerId) {
   var restrospectiveSeries = new Object();
   var teamSizeSeries = new Object();
 
-  velocitySeries.name = "Velocity";
+  velocitySeries.name = 'Velocity';
   velocitySeries.data = [];
-  throughputSeries.name = "Throughput";
+  throughputSeries.name = 'Throughput';
   throughputSeries.data = [];
-  restrospectiveSeries.name = "Retrospective action items";
+  restrospectiveSeries.name = 'Retrospective action items';
   restrospectiveSeries.data = [];
-  teamSizeSeries.name = "Team size";
+  teamSizeSeries.name = 'Team size';
   teamSizeSeries.data = [];
 
   $.ajax({
-    type: "GET",
-    url: baseUrlDb + "/_design/teams/_view/iterinfo?keys=[\"" + encodeURIComponent(teamId) + "\"]",
-    dataType: "jsonp",
+    type: 'GET',
+    url: baseUrlDb + '/_design/teams/_view/iterinfo?keys=["' + encodeURIComponent(teamId) + '"]',
+    dataType: 'jsonp',
     async: false
   }).done(function(data) {
     var list = [];
@@ -59,9 +59,9 @@ function loadTeamScoreCard2(teamId, containerId) {
       });
       console.log(completedIter);
       if (completedIter.length > 1)
-        preIterInfoTxt = completedIter[completedIter.length - 1].iteration_name + " " + completedIter[completedIter.length - 1].iteration_start_dt + " - " + completedIter[completedIter.length - 1].iteration_end_dt;
+        preIterInfoTxt = completedIter[completedIter.length - 1].iteration_name + ' ' + completedIter[completedIter.length - 1].iteration_start_dt + ' - ' + completedIter[completedIter.length - 1].iteration_end_dt;
       if (completedIter.length > 0)
-        curIterInfoTxt = completedIter[0].iteration_name + " " + completedIter[0].iteration_start_dt + " - " + completedIter[0].iteration_end_dt;
+        curIterInfoTxt = completedIter[0].iteration_name + ' ' + completedIter[0].iteration_start_dt + ' - ' + completedIter[0].iteration_end_dt;
 
       for (i = completedIter.length - 1; i > -1; i--) {
         //alert(i);
@@ -71,7 +71,7 @@ function loadTeamScoreCard2(teamId, containerId) {
           velocitySeries.data.push(0);
           throughputSeries.data.push(0);
           restrospectiveSeries.data.push(0);
-          
+
         } else {*/
         graphCategory.push(completedIter[i].iteration_end_dt);
         velocitySeries.data.push(isNaN(parseInt(completedIter[i].nbr_story_pts_dlvrd)) ? 0 : parseInt(completedIter[i].nbr_story_pts_dlvrd));
@@ -96,7 +96,7 @@ function loadTeamScoreCard2(teamId, containerId) {
             //center
         },
         subtitle: {
-          text: preIterInfoTxt + " to " + curIterInfoTxt,
+          text: preIterInfoTxt + ' to ' + curIterInfoTxt,
           x: -20
         },
         xAxis: {

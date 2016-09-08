@@ -12,7 +12,7 @@ module.exports = function(app, includes) {
   };
 
   app.get('/cio/dashboard', function(req, res) {
-    res.redirect("/")
+    res.redirect('/');
   });
   app.get('/', includes.middleware.auth.requireLoginWithRedirect, showHome);
 };

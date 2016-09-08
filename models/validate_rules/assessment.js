@@ -22,7 +22,7 @@ var recordConstraints = {
       message: '^Team primary type is required.'
     },
     inclusion: {
-      within: ["Project", "Operations"]
+      within: ['Project', 'Operations']
     }
   },
   team_dlvr_software: {
@@ -30,7 +30,7 @@ var recordConstraints = {
       message: '^Team software delivery is required.'
     },
     inclusion: {
-      within: ["Yes", "No"]
+      within: ['Yes', 'No']
     }
   },
   assessmt_status: {
@@ -38,7 +38,7 @@ var recordConstraints = {
       message: '^Assessment status is required.'
     },
     inclusion: {
-      within: ["Draft", "Submitted"]
+      within: ['Draft', 'Submitted']
     }
   },
   created_dt: {
@@ -87,7 +87,7 @@ var assessmentConstraints = {
       message: '^Team primary type is required.'
     },
     inclusion: {
-      within: ["Project", "Operations"]
+      within: ['Project', 'Operations']
     }
   },
   team_dlvr_software: {
@@ -95,7 +95,7 @@ var assessmentConstraints = {
       message: '^Team software delivery is required.'
     },
     inclusion: {
-      within: ["Yes", "No"]
+      within: ['Yes', 'No']
     }
   },
   assessmt_status: {
@@ -103,7 +103,7 @@ var assessmentConstraints = {
       message: '^Assessment status is required.'
     },
     inclusion: {
-      within: ["Draft", "Submitted"]
+      within: ['Draft', 'Submitted']
     }
   },
   submitter_id: {
@@ -112,7 +112,7 @@ var assessmentConstraints = {
     },
     email: true
   },
-  "self-assessmt_dt": {
+  'self-assessmt_dt': {
     presence: {
       message: '^Self assessment date is required.'
     }
@@ -123,7 +123,7 @@ var assessmentConstraints = {
   ind_assessmt_status: {
     presence: false,
     inclusion: {
-      within: ["Draft", "Submitted"]
+      within: ['Draft', 'Submitted']
     }
   },
   ind_assessmt_dt: {
@@ -246,7 +246,7 @@ var actionPlanTbl = {
       message: '^User created is required.'
     },
     inclusion: {
-      within: ["Yes", "No"]
+      within: ['Yes', 'No']
     }
   },
   assessmt_cmpnt_name: {
@@ -322,7 +322,7 @@ var actionPlanTbl = {
       message: '^Action item status is required.'
     },
     inclusion: {
-      within: ["Open", "In-progress", "Closed"]
+      within: ['Open', 'In-progress', 'Closed']
     }
   }
 };

@@ -11,7 +11,7 @@ var users = require('../../models/users');
 var common = require('../../models/cloudant-driver');
 var lodash = require('lodash');
 var testData = require('../data/assessment');
-var users = require('../../models/users')
+var users = require('../../models/users');
 
 var noId = testData.noId;
 var teamData = testData.teamData;
@@ -37,7 +37,7 @@ function createDraft1() {
         draft_assessment._rev = body.rev;
     })
     .catch(function(err) {
-      return assessmentModel.getAssessment(draft_assessment._id)
+      return assessmentModel.getAssessment(draft_assessment._id);
     })
     .then(function(body) {
       if (!lodash.isEmpty(body))
@@ -52,7 +52,7 @@ function createSubmit1() {
         sub_assessment._rev = body.rev;
     })
     .catch(function(err) {
-      return assessmentModel.getAssessment(sub_assessment._id)
+      return assessmentModel.getAssessment(sub_assessment._id);
     })
     .then(function(body) {
       if (!lodash.isEmpty(body))
@@ -67,7 +67,7 @@ function createDelete1() {
         del_assessment._rev = body.rev;
     })
     .catch(function(err) {
-      return assessmentModel.getAssessment(del_assessment._id)
+      return assessmentModel.getAssessment(del_assessment._id);
     })
     .then(function(body) {
       if (!lodash.isEmpty(body))
@@ -143,21 +143,21 @@ describe('Assessment Model', function() {
 
     teamModel.getTeam(teamData._id)
       .then(function(body) {
-        return common.deleteRecord(body._id, body._rev)
+        return common.deleteRecord(body._id, body._rev);
       })
       .then(function(body) {
-        return teamModel.getTeam(parentTeamData._id)
+        return teamModel.getTeam(parentTeamData._id);
       })
       .then(function(body) {
-        return common.deleteRecord(body._id, body._rev)
+        return common.deleteRecord(body._id, body._rev);
       })
       .finally(function() {
         done();
       });
   });
 
-  describe("assessment models [getAssessmentTemplate]", function() {
-    it("retrieve assessment template", function(done) {
+  describe('assessment models [getAssessmentTemplate]', function() {
+    it('retrieve assessment template', function(done) {
       assessmentModel.getAssessmentTemplate()
         .then(function(body) {
           expect(body).to.be.an('object');
@@ -170,8 +170,8 @@ describe('Assessment Model', function() {
     });
   });
 
-  describe("assessment models [document validation]", function() {
-    it("draft assessment with no created date", function(done) {
+  describe('assessment models [document validation]', function() {
+    it('draft assessment with no created date', function(done) {
       var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment.assessmt_status = 'Draft';
       valAssessment.assessmt_cmpnt_rslts[0].assessed_cmpnt_tbl[0].cur_mat_lvl_score = '';
@@ -185,7 +185,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("valid draft assessment from team member", function(done) {
+    it('valid draft assessment from team member', function(done) {
       var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment.assessmt_status = 'Draft';
       valAssessment.assessmt_cmpnt_rslts[0].assessed_cmpnt_tbl[0].cur_mat_lvl_score = '';
@@ -203,7 +203,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("draft assessment for update (using parent team member)", function(done) {
+    it('draft assessment for update (using parent team member)', function(done) {
       var draftForUpdate = lodash.cloneDeep(draft_assessment);
       draftForUpdate.last_updt_dt = util.getServerTime();
       assessmentModel.updateTeamAssessment(parentUser.shortEmail, draftForUpdate)
@@ -217,7 +217,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("new submitted assessment (unaswered question)", function(done) {
+    it('new submitted assessment (unaswered question)', function(done) {
       var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment.assessmt_cmpnt_rslts[0].assessed_cmpnt_tbl[0].cur_mat_lvl_achieved = '';
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
@@ -229,7 +229,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("update assessment (unaswered question)", function(done) {
+    it('update assessment (unaswered question)', function(done) {
       var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment.assessmt_cmpnt_rslts[0].assessed_cmpnt_tbl[0].cur_mat_lvl_achieved = '';
       assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
@@ -242,7 +242,7 @@ describe('Assessment Model', function() {
     });
 
 
-    it("new submitted assessment (invalid project type)", function(done) {
+    it('new submitted assessment (invalid project type)', function(done) {
       var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment.team_proj_ops = 'General';
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
@@ -254,7 +254,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("new submitted assessment (no overall assessment score)", function(done) {
+    it('new submitted assessment (no overall assessment score)', function(done) {
       var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment.assessmt_cmpnt_rslts[0].ovraltar_assessmt_score = '';
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
@@ -267,7 +267,7 @@ describe('Assessment Model', function() {
     });
 
 
-    it("new submitted assessment (incomplete action plan field)", function(done) {
+    it('new submitted assessment (incomplete action plan field)', function(done) {
       var valAssessment = lodash.cloneDeep(curr_assessment);
       var action = new Object();
       action.action_plan_entry_id = 0;
@@ -296,9 +296,9 @@ describe('Assessment Model', function() {
 
   });
 
-  describe("assessment model [addTeamAssessment] ", function() {
+  describe('assessment model [addTeamAssessment] ', function() {
 
-    it("valid assessment with non-existing user", function(done) {
+    it('valid assessment with non-existing user', function(done) {
       var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment.created_dt = util.getServerTime();
       valAssessment.created_user = 'test.user@ph.ibm.com';
@@ -311,7 +311,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("add assessment [valid assessment data]", function(done) {
+    it('add assessment [valid assessment data]', function(done) {
       var valAssessment = lodash.cloneDeep(curr_assessment);
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
         .then(function(body) {
@@ -328,8 +328,8 @@ describe('Assessment Model', function() {
 
   });
 
-  describe("assessment models [getTeamAssessments]", function() {
-    it("retrieve team assessments [valid team id]", function(done) {
+  describe('assessment models [getTeamAssessments]', function() {
+    it('retrieve team assessments [valid team id]', function(done) {
       assessmentModel.getTeamAssessments(sub_assessment.team_id)
         .then(function(body) {
           expect(body).to.be.instanceof(Array);
@@ -342,7 +342,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("retrieve team assessments [valid team id-all assessment information]", function(done) {
+    it('retrieve team assessments [valid team id-all assessment information]', function(done) {
       assessmentModel.getTeamAssessments(sub_assessment.team_id, 'true')
         .then(function(body) {
           expect(body).to.be.instanceof(Array);
@@ -355,7 +355,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("retrieve team assessments [non-existing team id]", function(done) {
+    it('retrieve team assessments [non-existing team id]', function(done) {
       assessmentModel.getTeamAssessments(invalidTeamId)
         .then(function(body) {
           expect(body).to.be.instanceof(Array);
@@ -367,7 +367,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("retrieve team assessments [empty team id]", function(done) {
+    it('retrieve team assessments [empty team id]', function(done) {
       assessmentModel.getTeamAssessments('')
         .catch(function(err) {
           expect(err).to.be.an('object');
@@ -378,9 +378,9 @@ describe('Assessment Model', function() {
     });
   });
 
-  describe("assessment model [getAssessment] ", function() {
+  describe('assessment model [getAssessment] ', function() {
 
-    it("retrieve assessment [non-existing assessment id]", function(done) {
+    it('retrieve assessment [non-existing assessment id]', function(done) {
       assessmentModel.getAssessment(invalidAssessId)
         .catch(function(err) {
           expect(err).to.be.an('object');
@@ -390,7 +390,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("retrieve assessment [empty assessment id]", function(done) {
+    it('retrieve assessment [empty assessment id]', function(done) {
       assessmentModel.getAssessment('')
         .catch(function(err) {
           expect(err).to.be.an('object');
@@ -400,7 +400,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("retrieve assessment [valid assessment id]", function(done) {
+    it('retrieve assessment [valid assessment id]', function(done) {
       assessmentModel.getAssessment(sub_assessment._id)
         .then(function(body) {
           expect(body).to.be.an('object');
@@ -414,8 +414,8 @@ describe('Assessment Model', function() {
 
   });
 
-  describe("assessment model [updateTeamAssessment] ", function() {
-    it("update assessment [no assessment id]", function(done) {
+  describe('assessment model [updateTeamAssessment] ', function() {
+    it('update assessment [no assessment id]', function(done) {
       assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, noId)
         .catch(function(err) {
           expect(err).to.be.an('object');
@@ -425,7 +425,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("update assessment [empty assessment id]", function(done) {
+    it('update assessment [empty assessment id]', function(done) {
       var tempData = lodash.cloneDeep(curr_assessment);
       tempData._id = '';
       assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, tempData)
@@ -437,7 +437,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("update assessment [valid assessment data] with non-existing user", function(done) {
+    it('update assessment [valid assessment data] with non-existing user', function(done) {
       //make sure to have latest document revision id
       var tempData = lodash.cloneDeep(sub_assessment);
       tempData.last_updt_user = 'test.user@ph.ibm.com';
@@ -451,7 +451,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("update assessment [valid assessment data] invalid revision id", function(done) {
+    it('update assessment [valid assessment data] invalid revision id', function(done) {
       //make sure to have latest document revision id
       var tempData = lodash.cloneDeep(sub_assessment);
       tempData.last_updt_user = dummyData.user.details.shortEmail;
@@ -466,7 +466,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("update assessment [valid assessment data]", function(done) {
+    it('update assessment [valid assessment data]', function(done) {
       //make sure to have latest document revision id
       var tempData = lodash.cloneDeep(sub_assessment);
       tempData.last_updt_user = dummyData.user.details.shortEmail;
@@ -484,8 +484,8 @@ describe('Assessment Model', function() {
     });
   });
 
-  describe("assessment model [deleteAssessment] ", function() {
-    it("delete assessment [non-existing assessment id]", function(done) {
+  describe('assessment model [deleteAssessment] ', function() {
+    it('delete assessment [non-existing assessment id]', function(done) {
       assessmentModel.deleteAssessment(dummyData.user.details.shortEmail, invalidAssessId, del_assessment._rev)
         .catch(function(err) {
           expect(err).to.have.property('error');
@@ -494,7 +494,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("delete assessment [empty assessment id]", function(done) {
+    it('delete assessment [empty assessment id]', function(done) {
       assessmentModel.deleteAssessment(dummyData.user.details.shortEmail, '', del_assessment._rev)
         .catch(function(err) {
           expect(err).to.have.property('error');
@@ -503,7 +503,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("delete assessment [non-existing revision id]", function(done) {
+    it('delete assessment [non-existing revision id]', function(done) {
       assessmentModel.deleteAssessment(dummyData.user.details.shortEmail, del_assessment._id, invalidRevisionId)
         .catch(function(err) {
           expect(err).to.have.property('error');
@@ -512,7 +512,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("delete assessment [empty revision id]", function(done) {
+    it('delete assessment [empty revision id]', function(done) {
       assessmentModel.deleteAssessment(dummyData.user.details.shortEmail, del_assessment._id, '')
         .catch(function(err) {
           expect(err).to.not.equal(null);
@@ -522,7 +522,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("delete assessment [invalid assessment id and revision id]", function(done) {
+    it('delete assessment [invalid assessment id and revision id]', function(done) {
       assessmentModel.deleteAssessment(dummyData.user.details.shortEmail, invalidAssessId, invalidRevisionId)
         .catch(function(err) {
           expect(err).to.have.property('error');
@@ -531,7 +531,7 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("delete assessment [valid assessment and revision id] using admin user", function(done) {
+    it('delete assessment [valid assessment and revision id] using admin user', function(done) {
       //make sure to have latest document revision id
       assessmentModel.deleteAssessment(adminList[0], del_assessment._id, del_assessment._rev)
         .then(function(body) {

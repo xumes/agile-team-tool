@@ -13,7 +13,7 @@ before(function(done) {
       if (err) throw err;
       agent.saveCookies(res);
       done();
-    })
+    });
 });
 
 describe('Util API Test [GET /api/util/systemstatus]: get system status', function() {

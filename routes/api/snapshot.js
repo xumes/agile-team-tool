@@ -47,7 +47,7 @@ module.exports = function(app, includes) {
         var msg = {
           'error': 'team id is not right'
         };
-        res.status(400).send(msg)
+        res.status(400).send(msg);
       }
     },
 
@@ -64,7 +64,7 @@ module.exports = function(app, includes) {
         var msg = {
           'error': 'team id is not right'
         };
-        res.status(400).send(msg)
+        res.status(400).send(msg);
       }
     },
 

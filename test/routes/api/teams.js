@@ -36,8 +36,8 @@ describe('Team API Tests', function() {
             if (err) throw err;
             agent.saveCookies(res);
             done();
-          })
-      })
+          });
+      });
   });
 
   after(function(done) {
@@ -45,7 +45,7 @@ describe('Team API Tests', function() {
     deleteCreatedRecord(targetParentId);
     deleteCreatedRecord(targetChildId);
     done();
-  })
+  });
 
   function deleteCreatedRecord(recordId) {
     teamModel.getTeam(recordId)
@@ -729,7 +729,7 @@ describe('Team API Tests', function() {
       }
       done();
     });
-  })
+  });
 
 
 });

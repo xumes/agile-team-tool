@@ -1,61 +1,61 @@
 function teamIterationListHander(teamId, teamIterations) {
-  $("#gotoIterationList").attr("disabled", "disabled");
+  $('#gotoIterationList').attr('disabled', 'disabled');
 
   var graphCategory = [];
   var velocitySeries = new Object();
-  velocitySeries.name = "Iteration date";
+  velocitySeries.name = 'Iteration date';
   velocitySeries.data = [];
 
   var throughputSeries = new Object();
-  throughputSeries.name = "Iteration date";
+  throughputSeries.name = 'Iteration date';
   throughputSeries.data = [];
 
   var teamMemSeries = new Object();
-  teamMemSeries.name = "Team Members";
+  teamMemSeries.name = 'Team Members';
   teamMemSeries.data = [];
   var teamMemCountArr = [];
 
   var fteSeries = new Object();
-  fteSeries.name = "FTE";
+  fteSeries.name = 'FTE';
   fteSeries.data = [];
   fteSeries.color = '#A52A2A';
   var fteCountArr = [];
 
   var targetSeries = new Object();
-  targetSeries.name = "Member goal (5 - 12)";
+  targetSeries.name = 'Member goal (5 - 12)';
   targetSeries.data = [];
   targetSeries.color = '#93FF93';
 
   var defectsSeries = new Object();
-  defectsSeries.name = "Defects";
+  defectsSeries.name = 'Defects';
   defectsSeries.data = [];
 
   var deploySeries = new Object();
-  deploySeries.name = "Deployments";
+  deploySeries.name = 'Deployments';
   deploySeries.data = [];
 
   var teamSatSeries = new Object();
-  teamSatSeries.name = "Team Satisfaction";
+  teamSatSeries.name = 'Team Satisfaction';
   teamSatSeries.data = [];
 
   var clientSatSeries = new Object();
-  clientSatSeries.name = "Client Satisfaction";
+  clientSatSeries.name = 'Client Satisfaction';
   clientSatSeries.data = [];
 
   var storyFTESeries = new Object();
-  storyFTESeries.name = "Stories/FTE";
+  storyFTESeries.name = 'Stories/FTE';
   storyFTESeries.data = [];
 
   var storyPointFTESeries = new Object();
-  storyPointFTESeries.name = "Story points/FTE";
+  storyPointFTESeries.name = 'Story points/FTE';
   storyPointFTESeries.data = [];
 
   var series = [];
   var iterationURL = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=';
 
   // Get last 6 iterations
-  var crntIter = "";
-  var priorIter = "";
+  var crntIter = '';
+  var priorIter = '';
   var p6Iterations = [];
   var listOption = [];
 
@@ -71,9 +71,9 @@ function teamIterationListHander(teamId, teamIterations) {
           listOption.push(option);
           p6Iterations.push(value);
         }
-        if (crntIter == "") {
+        if (crntIter == '') {
           crntIter = value;
-        } else if (priorIter == "") {
+        } else if (priorIter == '') {
           priorIter = value;
         }
         iterIndx++;
@@ -84,8 +84,8 @@ function teamIterationListHander(teamId, teamIterations) {
     });
   }
 
-  setSelectOptions("gotoIterationList", listOption, null, null, null);
-  IBMCore.common.widget.selectlist.init("#gotoIterationList");
+  setSelectOptions('gotoIterationList', listOption, null, null, null);
+  IBMCore.common.widget.selectlist.init('#gotoIterationList');
 
   // charts
   for (var i = p6Iterations.length - 1; i > -1; i--) {
@@ -102,7 +102,7 @@ function teamIterationListHander(teamId, teamIterations) {
     var storyPointFTEData = new Object();
 
     if (p6Iterations[i].team_mbr_change == 'Yes') {
-      graphCat = "*" + showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+      graphCat = '*' + showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
       vData.color = '#FFA500';
       tData.color = '#FFA500';
     } else {
@@ -222,27 +222,27 @@ function teamIterationListHander(teamId, teamIterations) {
     var teamID = encodeURIComponent(teamId);
     window.location = 'iteration?id=' + teamID + '&iter=' + iterID;
   });
-  $("#gotoIterationList").removeAttr("disabled");
+  $('#gotoIterationList').removeAttr('disabled');
 
-  $("#CreateIterationBtn").attr("disabled", "disabled");
+  $('#CreateIterationBtn').attr('disabled', 'disabled');
   if (hasAccess(teamId)) {
-    $("#CreateIterationBtn").removeAttr("disabled");
-    $("#CreateIterationBtn").click(function(e) {
+    $('#CreateIterationBtn').removeAttr('disabled');
+    $('#CreateIterationBtn').click(function(e) {
       window.location = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=new';
     });
   }
 
-  $("#spinnerContainer").hide();
+  $('#spinnerContainer').hide();
 
-  $("#mainContent").show();
+  $('#mainContent').show();
 
 }
 
 function destroyIterationCharts() {
-  var chartIds = ["velocityChart", "throughputChart", "pizzaChart", "defectsChart", "statisfactionChart", "unitCostChart", "pvelocityChart", "pthroughputChart", "pPizzaChart", "pdefectsChart", "piePizzaChart"];
+  var chartIds = ['velocityChart', 'throughputChart', 'pizzaChart', 'defectsChart', 'statisfactionChart', 'unitCostChart', 'pvelocityChart', 'pthroughputChart', 'pPizzaChart', 'pdefectsChart', 'piePizzaChart'];
   $.each(chartIds, function(index, id) {
-    if ($("#" + id).highcharts() != null)
-      $("#" + id).highcharts().destroy();
+    if ($('#' + id).highcharts() != null)
+      $('#' + id).highcharts().destroy();
   });
 }
 
@@ -253,7 +253,7 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj, unit
       renderTo: id
     },
     lang: {
-      noData: "No results reported"
+      noData: 'No results reported'
     },
     noData: {
       style: {
@@ -264,7 +264,7 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj, unit
     },
     title: {
       style: {
-        "fontSize": "15px"
+        'fontSize': '15px'
       },
       text: title
     },
@@ -278,10 +278,10 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj, unit
       tickmarkPlacement: 'on',
       labels: {
         style: {
-          "fontSize": "9px"
+          'fontSize': '9px'
         },
         formatter: function() {
-          if (typeof this.value === 'string' && this.value.indexOf("*") >= 0) {
+          if (typeof this.value === 'string' && this.value.indexOf('*') >= 0) {
             return '<span style="fill: orange;">' + this.value + '</span>';
           } else {
             return this.value;
@@ -372,7 +372,7 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
       renderTo: id
     },
     lang: {
-      noData: "No results reported"
+      noData: 'No results reported'
     },
     noData: {
       style: {
@@ -383,7 +383,7 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
     },
     title: {
       style: {
-        "fontSize": "15px"
+        'fontSize': '15px'
       },
       text: title
     },
@@ -391,7 +391,7 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
     xAxis: {
       labels: {
         style: {
-          "fontSize": "9px"
+          'fontSize': '9px'
         }
       },
       title: {
@@ -424,7 +424,7 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
       formatter: function() {
         var formatResult = '<b>' + this.points[0].key + '</b><br>';
         for (var i = 0; i < this.points.length; i++) {
-          formatResult = formatResult + '<span style="color:' + this.points[i].series.color + "\">\u25CF</span>" + this.points[i].series.name + ' :<b>' + this.points[i].y + '</b><br/>';
+          formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25CF</span>' + this.points[i].series.name + ' :<b>' + this.points[i].y + '</b><br/>';
         }
         formatResult = formatResult + '<br>' + this.points[0].point.startDate + ' - ' + this.points[0].point.endDate;
         return formatResult;
@@ -486,7 +486,7 @@ function loadStackedPizzaChart(id, title, type, categories, yAxisLabel, seriesOb
       renderTo: id
     },
     lang: {
-      noData: "No results reported"
+      noData: 'No results reported'
     },
     noData: {
       style: {
@@ -497,7 +497,7 @@ function loadStackedPizzaChart(id, title, type, categories, yAxisLabel, seriesOb
     },
     title: {
       style: {
-        "fontSize": "15px"
+        'fontSize': '15px'
       },
       text: title
     },
@@ -505,7 +505,7 @@ function loadStackedPizzaChart(id, title, type, categories, yAxisLabel, seriesOb
     xAxis: {
       labels: {
         style: {
-          "fontSize": "9px"
+          'fontSize': '9px'
         }
       },
       title: {
@@ -580,7 +580,7 @@ function loadBarPizzaChart(id, title, type, categories, seriesObj1, seriesObj2, 
       renderTo: id
     },
     lang: {
-      noData: "No results reported"
+      noData: 'No results reported'
     },
     noData: {
       style: {
@@ -591,7 +591,7 @@ function loadBarPizzaChart(id, title, type, categories, seriesObj1, seriesObj2, 
     },
     title: {
       style: {
-        "fontSize": "15px"
+        'fontSize': '15px'
       },
       text: title
     },
@@ -605,7 +605,7 @@ function loadBarPizzaChart(id, title, type, categories, seriesObj1, seriesObj2, 
     xAxis: {
       labels: {
         style: {
-          "fontSize": "9px"
+          'fontSize': '9px'
         }
       },
       title: {
@@ -664,7 +664,7 @@ function loadPiePizzaChart(id, title, type, seriesObj, subtitle) {
       renderTo: id
     },
     lang: {
-      noData: "No results reported"
+      noData: 'No results reported'
     },
     noData: {
       style: {
@@ -675,7 +675,7 @@ function loadPiePizzaChart(id, title, type, seriesObj, subtitle) {
     },
     title: {
       style: {
-        "fontSize": "15px"
+        'fontSize': '15px'
       },
       text: title
     },
@@ -737,7 +737,7 @@ function loadChartMulSeries(id, title, type, categories, yAxisLabel, xAxisLabel,
       renderTo: id
     },
     lang: {
-      noData: "No results reported"
+      noData: 'No results reported'
     },
     noData: {
       style: {
@@ -748,7 +748,7 @@ function loadChartMulSeries(id, title, type, categories, yAxisLabel, xAxisLabel,
     },
     title: {
       style: {
-        "fontSize": "15px"
+        'fontSize': '15px'
       },
       text: title
     },
@@ -756,7 +756,7 @@ function loadChartMulSeries(id, title, type, categories, yAxisLabel, xAxisLabel,
     xAxis: {
       labels: {
         style: {
-          "fontSize": "9px"
+          'fontSize': '9px'
         }
       },
       title: {
@@ -783,7 +783,7 @@ function loadChartMulSeries(id, title, type, categories, yAxisLabel, xAxisLabel,
       formatter: function() {
         var formatResult = '<b>' + this.points[0].key + '</b><br>';
         for (var i = 0; i < this.points.length; i++) {
-          formatResult = formatResult + '<span style="color:' + this.points[i].series.color + "\">\u25CF</span>" + this.points[i].series.name + ' :<b>' + this.points[i].y + '</b><br/>';
+          formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25CF</span>' + this.points[i].series.name + ' :<b>' + this.points[i].y + '</b><br/>';
         }
         if (this.points[0].point.startDate != undefined) {
           formatResult = formatResult + '<br>' + this.points[0].point.startDate + ' - ' + this.points[0].point.endDate;
@@ -837,7 +837,7 @@ function loadChartPartialSeries(id, title, type, categories, yAxisLabel, xAxisLa
       renderTo: id
     },
     lang: {
-      noData: "No results reported"
+      noData: 'No results reported'
     },
     noData: {
       style: {
@@ -848,7 +848,7 @@ function loadChartPartialSeries(id, title, type, categories, yAxisLabel, xAxisLa
     },
     title: {
       style: {
-        "fontSize": "15px"
+        'fontSize': '15px'
       },
       text: title
     },
@@ -856,7 +856,7 @@ function loadChartPartialSeries(id, title, type, categories, yAxisLabel, xAxisLa
     xAxis: {
       labels: {
         style: {
-          "fontSize": "9px"
+          'fontSize': '9px'
         }
       },
       title: {
@@ -932,7 +932,7 @@ function loadDeploymentsChartParent(id, title, type, categories, yAxisLabel, xAx
       renderTo: id
     },
     lang: {
-      noData: "No results reported"
+      noData: 'No results reported'
     },
     noData: {
       style: {
@@ -943,7 +943,7 @@ function loadDeploymentsChartParent(id, title, type, categories, yAxisLabel, xAx
     },
     title: {
       style: {
-        "fontSize": "15px"
+        'fontSize': '15px'
       },
       text: title
     },
@@ -951,7 +951,7 @@ function loadDeploymentsChartParent(id, title, type, categories, yAxisLabel, xAx
     xAxis: {
       labels: {
         style: {
-          "fontSize": "9px"
+          'fontSize': '9px'
         }
       },
       title: {
@@ -980,7 +980,7 @@ function loadDeploymentsChartParent(id, title, type, categories, yAxisLabel, xAx
         var serName = '';
         for (var i = 0; i < this.points.length; i++) {
           if (serName != this.points[i].series.name) {
-            formatResult = formatResult + '<span style="color:' + this.points[i].series.color + "\">\u25CF</span>" + this.points[i].series.name + ' :<b>' + this.points[i].y + '</b><br/>';
+            formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25CF</span>' + this.points[i].series.name + ' :<b>' + this.points[i].y + '</b><br/>';
           }
           serName = this.points[i].series.name;
         }
@@ -1055,7 +1055,7 @@ function loadSatisfactionChartParent(id, title, type, categories, yAxisLabel, xA
       renderTo: id
     },
     lang: {
-      noData: "No results reported"
+      noData: 'No results reported'
     },
     noData: {
       style: {
@@ -1066,7 +1066,7 @@ function loadSatisfactionChartParent(id, title, type, categories, yAxisLabel, xA
     },
     title: {
       style: {
-        "fontSize": "15px"
+        'fontSize': '15px'
       },
       text: title
     },
@@ -1074,7 +1074,7 @@ function loadSatisfactionChartParent(id, title, type, categories, yAxisLabel, xA
     xAxis: {
       labels: {
         style: {
-          "fontSize": "9px"
+          'fontSize': '9px'
         }
       },
       title: {
@@ -1106,7 +1106,7 @@ function loadSatisfactionChartParent(id, title, type, categories, yAxisLabel, xA
         var serName = '';
         for (var i = 0; i < this.points.length; i++) {
           if (serName != this.points[i].series.name) {
-            formatResult = formatResult + '<span style="color:' + this.points[i].series.color + "\">\u25CF</span>" + this.points[i].series.name + ' :<b>' + this.points[i].y + '</b><br/>';
+            formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25CF</span>' + this.points[i].series.name + ' :<b>' + this.points[i].y + '</b><br/>';
           }
           serName = this.points[i].series.name;
         }
@@ -1181,7 +1181,7 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
       renderTo: id
     },
     lang: {
-      noData: "No results reported"
+      noData: 'No results reported'
     },
     noData: {
       style: {
@@ -1193,7 +1193,7 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
 
     title: {
       style: {
-        "fontSize": "15px"
+        'fontSize': '15px'
       },
       text: title
     },
@@ -1201,7 +1201,7 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
     xAxis: {
       labels: {
         style: {
-          "fontSize": "9px"
+          'fontSize': '9px'
         }
       },
       title: {
@@ -1232,7 +1232,7 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
       formatter: function() {
         var formatResult = '<b>' + this.points[0].key + '</b><br>';
         for (var i = 0; i < this.points.length; i++) {
-          formatResult = formatResult + '<span style="color:' + this.points[i].series.color + "\">\u25CF</span>" + this.points[i].series.name + ' :<b>' + this.points[i].y + '</b><br/>';
+          formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25CF</span>' + this.points[i].series.name + ' :<b>' + this.points[i].y + '</b><br/>';
         }
         formatResult = formatResult + '<br>' + this.points[0].point.startDate + ' - ' + this.points[0].point.endDate;
         return formatResult;
@@ -1284,7 +1284,7 @@ function retrieveIterations(teamIds, startDate, endDate, _callback, args) {
   iterQuery.sort = [];
 
   var selector = new Object();
-  selector.type = "iterationinfo";
+  selector.type = 'iterationinfo';
 
   var condition1 = new Object();
   condition1.$in = teamIds;
@@ -1295,13 +1295,13 @@ function retrieveIterations(teamIds, startDate, endDate, _callback, args) {
   selector.iteration_end_dt = condition2;
 
   var condition3 = new Object();
-  condition3.$eq = "Completed";
+  condition3.$eq = 'Completed';
   selector.iterationinfo_status = condition3;
 
 
   iterQuery.selector = selector;
   var sort = new Object();
-  sort.iteration_end_dt = "asc";
+  sort.iteration_end_dt = 'asc';
 
   iterQuery.sort.push(sort);
   iterations = selectorQuery(iterQuery, _callback, args);
@@ -1327,9 +1327,9 @@ function currentTeamStats() {
   }
 
   for (var x = 0; x < squadTeams.length; x++) {
-    var teamCnt = squadTeams[x]["total_members"] != null ? squadTeams[x]["total_members"] : teamMemCount(squadTeams[x]["members"]);
-    var teamFTE = squadTeams[x]["total_allocation"] != null ? squadTeams[x]["total_allocation"] : teamMemFTE(squadTeams[x]["members"]);
-    if (teamCnt != undefined && teamCnt != "") {
+    var teamCnt = squadTeams[x]['total_members'] != null ? squadTeams[x]['total_members'] : teamMemCount(squadTeams[x]['members']);
+    var teamFTE = squadTeams[x]['total_allocation'] != null ? squadTeams[x]['total_allocation'] : teamMemFTE(squadTeams[x]['members']);
+    if (teamCnt != undefined && teamCnt != '') {
       teamCnt = parseInt(teamCnt);
       if (teamCnt < 5) {
         teamsLt5 = teamsLt5 + 1;
@@ -1369,7 +1369,7 @@ function monthlyIterations(teamIterations) {
   if (teamIterations != undefined) {
     for (var i = 0; i < teamIterations.length; i++) {
 
-      var currDate = new Date(teamIterations[i]["iteration_end_dt"]);
+      var currDate = new Date(teamIterations[i]['iteration_end_dt']);
       //var currMonth = currDate.getUTCMonth() + 1;
       var currMonth = currDate.getMonth() + 1;
       var totalPoints = 0;
@@ -1395,42 +1395,42 @@ function monthlyIterations(teamIterations) {
         var teams = [];
         var entry = new Object();
         for (var x = 0; x < teamIterations.length; x++) {
-          var tempDate = new Date(teamIterations[x]["iteration_end_dt"]);
+          var tempDate = new Date(teamIterations[x]['iteration_end_dt']);
           //if (tempDate.getUTCMonth()+1 == currMonth){
           if (tempDate.getMonth() + 1 == currMonth) {
-            var pts = teamIterations[x]["nbr_story_pts_dlvrd"];
-            var stories = teamIterations[x]["nbr_stories_dlvrd"];
-            var teamCnt = teamIterations[x]["team_mbr_cnt"];
-            var defects = teamIterations[x]["nbr_defects"];
-            var dplymnts = teamIterations[x]["nbr_dplymnts"];
-            var teamStat = teamIterations[x]["team_sat"];
-            var clientStat = teamIterations[x]["client_sat"];
+            var pts = teamIterations[x]['nbr_story_pts_dlvrd'];
+            var stories = teamIterations[x]['nbr_stories_dlvrd'];
+            var teamCnt = teamIterations[x]['team_mbr_cnt'];
+            var defects = teamIterations[x]['nbr_defects'];
+            var dplymnts = teamIterations[x]['nbr_dplymnts'];
+            var teamStat = teamIterations[x]['team_sat'];
+            var clientStat = teamIterations[x]['client_sat'];
 
-            if (pts != undefined && pts != "") {
-              totalPoints = totalPoints + parseInt(teamIterations[x]["nbr_story_pts_dlvrd"]);
+            if (pts != undefined && pts != '') {
+              totalPoints = totalPoints + parseInt(teamIterations[x]['nbr_story_pts_dlvrd']);
             }
-            if (stories != undefined && stories != "") {
-              totalStories = totalStories + parseInt(teamIterations[x]["nbr_stories_dlvrd"]);
-            }
-
-            if (defects != undefined && defects != "") {
-              totalDefects = totalDefects + parseInt(teamIterations[x]["nbr_defects"]);
-            }
-            if (dplymnts != undefined && dplymnts != "") {
-              totalDplymts = totalDplymts + parseInt(teamIterations[x]["nbr_dplymnts"]);
+            if (stories != undefined && stories != '') {
+              totalStories = totalStories + parseInt(teamIterations[x]['nbr_stories_dlvrd']);
             }
 
-            if (teamStat != undefined && teamStat != "" && (parseInt(teamStat) != 0)) {
+            if (defects != undefined && defects != '') {
+              totalDefects = totalDefects + parseInt(teamIterations[x]['nbr_defects']);
+            }
+            if (dplymnts != undefined && dplymnts != '') {
+              totalDplymts = totalDplymts + parseInt(teamIterations[x]['nbr_dplymnts']);
+            }
+
+            if (teamStat != undefined && teamStat != '' && (parseInt(teamStat) != 0)) {
               totTeamStat = totTeamStat + parseInt(teamStat);
               totTeamStatIter = totTeamStatIter + 1;
             }
-            if (clientStat != undefined && clientStat != "" && (parseInt(clientStat) != 0)) {
+            if (clientStat != undefined && clientStat != '' && (parseInt(clientStat) != 0)) {
               totClientStat = totClientStat + parseInt(clientStat);
               totClientStatIter = totClientStatIter + 1;
             }
 
-            if (teamCnt != undefined && teamCnt != "") {
-              teamCnt = parseInt(teamIterations[x]["team_mbr_cnt"]);
+            if (teamCnt != undefined && teamCnt != '') {
+              teamCnt = parseInt(teamIterations[x]['team_mbr_cnt']);
               if (teamCnt < 5) {
                 teamsLt5 = teamsLt5 + 1;
               } else if (teamCnt > 12) {
@@ -1482,81 +1482,81 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
   velocitySeries.data = [];
 
   var velocityParSer = new Object();
-  velocityParSer.name = "Partial month";
+  velocityParSer.name = 'Partial month';
   velocityParSer.data = [];
-  velocityParSer.dashStyle = "dash";
-  velocityParSer.color = "orange";
+  velocityParSer.dashStyle = 'dash';
+  velocityParSer.color = 'orange';
 
   var throughputSeries = new Object();
   throughputSeries.name = teamName;
   throughputSeries.data = [];
 
   var throughputParSer = new Object();
-  throughputParSer.name = "Partial month";
+  throughputParSer.name = 'Partial month';
   throughputParSer.data = [];
-  throughputParSer.dashStyle = "dash";
-  throughputParSer.color = "orange";
+  throughputParSer.dashStyle = 'dash';
+  throughputParSer.color = 'orange';
 
   var teamLt5Ser = new Object();
-  teamLt5Ser.name = "Teams <5 mbrs";
+  teamLt5Ser.name = 'Teams <5 mbrs';
   teamLt5Ser.data = [];
   teamLt5Ser.color = '#D3D3D3';
 
   var team5to12Ser = new Object();
-  team5to12Ser.name = "Teams 5-12 mbrs";
+  team5to12Ser.name = 'Teams 5-12 mbrs';
   team5to12Ser.data = [];
   team5to12Ser.color = '#93FF93';
 
   var teamGt12Ser = new Object();
-  teamGt12Ser.name = "Teams >12 mbrs";
+  teamGt12Ser.name = 'Teams >12 mbrs';
   teamGt12Ser.data = [];
   teamGt12Ser.color = '#808080';
 
   var defectsSeries = new Object();
-  defectsSeries.name = "Defects";
+  defectsSeries.name = 'Defects';
   defectsSeries.data = [];
 
   var defectsParSer = new Object();
-  defectsParSer.name = "Defects";
+  defectsParSer.name = 'Defects';
   defectsParSer.data = [];
-  defectsParSer.dashStyle = "dash";
-  defectsParSer.color = "orange";
+  defectsParSer.dashStyle = 'dash';
+  defectsParSer.color = 'orange';
 
   var deploySeries = new Object();
-  deploySeries.name = "Deployments";
+  deploySeries.name = 'Deployments';
   deploySeries.data = [];
 
   var deployParSer = new Object();
-  deployParSer.name = "Deployments";
+  deployParSer.name = 'Deployments';
   deployParSer.data = [];
-  deployParSer.dashStyle = "dash";
-  deployParSer.color = "orange";
+  deployParSer.dashStyle = 'dash';
+  deployParSer.color = 'orange';
 
   //------
   var clientStatSeries = new Object();
-  clientStatSeries.name = "Client Satisfaction";
+  clientStatSeries.name = 'Client Satisfaction';
   clientStatSeries.data = [];
 
   var clientStatParSer = new Object();
-  clientStatParSer.name = "Client Satisfaction";
+  clientStatParSer.name = 'Client Satisfaction';
   clientStatParSer.data = [];
-  clientStatParSer.dashStyle = "dash";
-  clientStatParSer.color = "orange";
+  clientStatParSer.dashStyle = 'dash';
+  clientStatParSer.color = 'orange';
 
   var teamStatSeries = new Object();
-  teamStatSeries.name = "Team Satisfaction";
+  teamStatSeries.name = 'Team Satisfaction';
   teamStatSeries.data = [];
 
   var teamStatParSer = new Object();
-  teamStatParSer.name = "Team Satisfaction";
+  teamStatParSer.name = 'Team Satisfaction';
   teamStatParSer.data = [];
-  teamStatParSer.dashStyle = "dash";
-  teamStatParSer.color = "orange";
+  teamStatParSer.dashStyle = 'dash';
+  teamStatParSer.color = 'orange';
 
   var partialSeries = new Object();
-  partialSeries.name = "Partial month";
+  partialSeries.name = 'Partial month';
   partialSeries.data = [];
-  partialSeries.color = "orange";
+  partialSeries.color = 'orange';
 
   var monthList = teamIterations; //monthlyIterations(teamIterations);
   monthList = sortMMMYYYY(monthList);
@@ -1703,7 +1703,7 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
     t5to12Data.squadTeams = i5to12;
     t5to12Data.percentage = percen;
     if (monthList[i].partialMonth == true) {
-      t5to12Data.color = "orange";
+      t5to12Data.color = 'orange';
     }
     team5to12Ser.data.push(t5to12Data);
     //partialSeries.data.push(0);
@@ -1716,7 +1716,7 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
 
   var pData = [];
   var pDataObj = new Object();
-  pDataObj.name = "Teams <5 mbrs";
+  pDataObj.name = 'Teams <5 mbrs';
   pDataObj.y = curTeamstat.teamsLt5 == 0 ? null : curTeamstat.teamsLt5;
   pDataObj.tc = curTeamstat.tcLt5;
   pDataObj.fte = curTeamstat.fteLt5.toFixed(1);
@@ -1724,7 +1724,7 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
   pData.push(pDataObj);
 
   pDataObj = new Object();
-  pDataObj.name = "Teams 5-12 mbrs";
+  pDataObj.name = 'Teams 5-12 mbrs';
   pDataObj.y = curTeamstat.teams5to12 == 0 ? null : curTeamstat.teams5to12;
   pDataObj.tc = curTeamstat.tc5to12;
   pDataObj.fte = curTeamstat.fte5to12.toFixed(1);
@@ -1732,7 +1732,7 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
   pData.push(pDataObj);
 
   pDataObj = new Object();
-  pDataObj.name = "Teams >12 mbrs";
+  pDataObj.name = 'Teams >12 mbrs';
   pDataObj.y = curTeamstat.teamsGt12 == 0 ? null : curTeamstat.teamsGt12;
   pDataObj.tc = curTeamstat.tcGt12;
   pDataObj.fte = curTeamstat.fteGt12.toFixed(1);
@@ -1764,8 +1764,8 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
   loadSatisfactionChartParent('pstatisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', 'Iteration results by month', teamStatParSer, teamStatSeries, clientStatParSer, clientStatSeries, 'Points', false, ctsYMax);
   loadPiePizzaChart('piePizzaChart', '2 Pizza Rule (Squad Teams - Current)', 'pie', pData, cenTitle);
 
-  $("#spinnerContainer").hide();
-  $("#mainContent").show();
+  $('#spinnerContainer').hide();
+  $('#mainContent').show();
 }
 
 function iterationEmptyScoreCard(teamId, teamName) {

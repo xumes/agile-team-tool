@@ -18,12 +18,12 @@ module.exports = function(app, includes) {
       })
       .catch(function(err) {
         res.status(400).send(err);
-      })
+      });
   };
 
   deleteTeam = function(req, res) {
     if (!(_.isEmpty(req.body['doc_status'])) && req.body['doc_status'] === 'delete') {
-      teamModel.updateOrDeleteTeam(req.body, req.session["user"], 'delete')
+      teamModel.updateOrDeleteTeam(req.body, req.session['user'], 'delete')
         .then(function(result) {
           teamModel.getUserTeams(req.session['email'])
             .then(function(body) {
@@ -32,16 +32,16 @@ module.exports = function(app, includes) {
         })
         .catch(function(err) {
           res.status(400).send(err);
-        })
+        });
     } else {
       res.status(400).send({
         error: 'Invalid request'
       });
     }
-  }
+  };
 
   updateTeam = function(req, res) {
-    teamModel.updateOrDeleteTeam(req.body, req.session["user"], 'update')
+    teamModel.updateOrDeleteTeam(req.body, req.session['user'], 'update')
       .then(function(result) {
         teamModel.getUserTeams(req.session['email'])
           .then(function(body) {
@@ -64,7 +64,7 @@ module.exports = function(app, includes) {
         error: 'Invalid action'
       });
     } else {
-      teamModel.associateTeams(req.body, action, req.session["user"])
+      teamModel.associateTeams(req.body, action, req.session['user'])
         .then(function(result) {
           var associateResult = new Object();
           teamModel.getUserTeams(req.session['email'])
@@ -112,8 +112,8 @@ module.exports = function(app, includes) {
       })
       .catch(function(err) {
         res.status(400).send(err);
-      })
-  }
+      });
+  };
 
   getTeamByUid = function(req, res) {
     var uid = req.params.uid;
@@ -123,8 +123,8 @@ module.exports = function(app, includes) {
       })
       .catch( /* istanbul ignore next */ function(err) {
         res.status(400).send(err);
-      })
-  }
+      });
+  };
 
   getTeam = function(req, res) {
     /* use query to get top level, children or parent team */
@@ -187,7 +187,7 @@ module.exports = function(app, includes) {
     if (!_.isEmpty(req.query)) {
       var id = req.query.id || '';
       var squadteam = req.query.squadteam || 'no';
-      squadteam = squadteam.toUpperCase() == "YES" ? true : false;
+      squadteam = squadteam.toUpperCase() == 'YES' ? true : false;
       teamModel.getLookupTeamByType(id, squadteam)
         .then(function(result) {
           res.status(200).send(result);

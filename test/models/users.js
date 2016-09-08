@@ -2,8 +2,8 @@ var chai = require('chai');
 var expect = chai.expect;
 var users = require('../../models/users');
 
-describe("Users model [getAdmins]: get admins and supports", function(done) {
-  it("return admins and supports", function(done) {
+describe('Users model [getAdmins]: get admins and supports', function(done) {
+  it('return admins and supports', function(done) {
     users.getAdmins()
       .then(function(body) {
         expect(body).to.be.a('object');

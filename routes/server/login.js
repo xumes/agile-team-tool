@@ -16,9 +16,9 @@ module.exports = function(app, includes) {
       return res.redirect('/auth/saml/ibm');
     }
     json = {
-      "pageTitle": "Login",
-      "action": action,
-      "authType": authType
+      'pageTitle': 'Login',
+      'action': action,
+      'authType': authType
     };
     render(req, res, 'login', json);
   };
@@ -39,7 +39,7 @@ module.exports = function(app, includes) {
     }
     doc = (new Dom).parseFromString(xml);
     if (!this.validateReferences(doc)) {
-      console.error("Reference validation fails! (Continuing to Signature Validation...)");
+      console.error('Reference validation fails! (Continuing to Signature Validation...)');
     }
     if (!this.validateSignatureValue()) {
       return false;
@@ -100,7 +100,7 @@ module.exports = function(app, includes) {
     return passportAuth(req, res, next);
   };
 
-  app.get("/login", [includes.middleware.auth.requireLoggedOutWithRedirect], showLogin);
-  app.get("/auth/saml/ibm", includes.passport.authenticate('w3-saml', {}));
-  app.post("/auth/saml/ibm/callback", authSaml);
+  app.get('/login', [includes.middleware.auth.requireLoggedOutWithRedirect], showLogin);
+  app.get('/auth/saml/ibm', includes.passport.authenticate('w3-saml', {}));
+  app.post('/auth/saml/ibm/callback', authSaml);
 };

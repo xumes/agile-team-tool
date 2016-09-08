@@ -116,9 +116,9 @@ describe('Iteration API Test', function() {
     it('It will successfully add new iteration document', function(done) {
       var req = request(app).post('/api/iteration');
       agent.attachCookies(req);
-      iterationDocValid._id = "testmyid-" + crypto.randomBytes(20).toString('hex');
+      iterationDocValid._id = 'testmyid-' + crypto.randomBytes(20).toString('hex');
       iterationDocValid.team_id = validId;
-      iterationDocValid.iteration_name = "testiterationname-" + crypto.randomBytes(4).toString('hex');
+      iterationDocValid.iteration_name = 'testiterationname-' + crypto.randomBytes(4).toString('hex');
       req.send(iterationDocValid);
       req.end(function(err, res) {
         if (err) {
@@ -136,15 +136,15 @@ describe('Iteration API Test', function() {
     });
 
     it('It will successfully add iteration doc with default values', function(done) {
-      iterationDocValid._id = "testmyid-" + crypto.randomBytes(20).toString('hex');
+      iterationDocValid._id = 'testmyid-' + crypto.randomBytes(20).toString('hex');
       iterationDocValid.client_sat = '';
       iterationDocValid.team_sat = '';
       iterationDocValid.nbr_stories_dlvrd = '';
       iterationDocValid.team_id = validId;
-      var currentDate = moment().format("MM/DD/YYYY");
+      var currentDate = moment().format('MM/DD/YYYY');
       iterationDocValid.iteration_start_dt = currentDate;
       iterationDocValid.iteration_end_dt = currentDate;
-      iterationDocValid.iteration_name = "testiterationname-" + crypto.randomBytes(4).toString('hex');
+      iterationDocValid.iteration_name = 'testiterationname-' + crypto.randomBytes(4).toString('hex');
       var req = request(app).post('/api/iteration');
       agent.attachCookies(req);
       req.send(iterationDocValid);
@@ -166,7 +166,7 @@ describe('Iteration API Test', function() {
     it('It will fail to add invalid iteration document', function(done) {
       var req = request(app).post('/api/iteration');
       agent.attachCookies(req);
-      iterationDocInvalid._id = "testmyid-" + crypto.randomBytes(20).toString('hex');
+      iterationDocInvalid._id = 'testmyid-' + crypto.randomBytes(20).toString('hex');
       iterationDocInvalid.team_id = validId;
       req.send(iterationDocInvalid);
       req.end(function(err, res) {
@@ -200,7 +200,7 @@ describe('Iteration API Test', function() {
     before(function(done) {
       var doc = _.clone(iterationDocValid);
       doc.team_id = validId;
-      doc.iteration_name = "testiterationname-" + crypto.randomBytes(4).toString('hex');
+      doc.iteration_name = 'testiterationname-' + crypto.randomBytes(4).toString('hex');
       iterationModel.add(doc, user, allTeams, userTeams)
         .then(function(result) {
           iterationId = result.id;
@@ -465,10 +465,10 @@ describe('Iteration API Test', function() {
     before(function(done) {
       var doc = _.clone(iterationDocValid);
       doc.team_id = validId;
-      var currentDate = moment().format("MM/DD/YYYY");
+      var currentDate = moment().format('MM/DD/YYYY');
       doc.iteration_start_dt = currentDate;
       doc.iteration_end_dt = currentDate;
-      doc.iteration_name = "testiterationname-" + crypto.randomBytes(4).toString('hex');
+      doc.iteration_name = 'testiterationname-' + crypto.randomBytes(4).toString('hex');
       iterationModel.add(doc, user, allTeams, userTeams)
         .then(function(result) {
           iterationId = result.id;

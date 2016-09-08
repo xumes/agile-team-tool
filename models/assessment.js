@@ -2,7 +2,7 @@ var Promise = require('bluebird');
 var common = require('./cloudant-driver');
 var _ = require('underscore');
 var loggers = require('../middleware/logger');
-var validate = require("validate.js");
+var validate = require('validate.js');
 var util = require('../helpers/util');
 var teams = require('./teams');
 var lodash = require('lodash');
@@ -83,7 +83,7 @@ var assessment = {
           'include_docs': includeDocs,
           'sort': ['assessmt_status<string>', '-sort_dt<number>'],
           'limit': 200
-        }
+        };
         common.Search('assessments', 'teamSearch', params)
           .then(function(body) {
             var result = util.returnObject(body);
@@ -145,7 +145,7 @@ var assessment = {
       util.isUserAllowed(userId, data.team_id)
         .then(function(body) {
           var validateError;
-          var assessmentId = settings.prefixes.assessment + data.team_id + "_" + new Date().getTime();
+          var assessmentId = settings.prefixes.assessment + data.team_id + '_' + new Date().getTime();
           data._id = assessmentId;
           if (data.assessmt_status == 'Draft') {
             validateError = validate(data, recordConstraints);

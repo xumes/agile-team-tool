@@ -1,4 +1,4 @@
-_ = require("underscore");
+_ = require('underscore');
 module.exports.requireLogin = function(req, res, next) {
   if (_.isEmpty(req.user))
     res.send(401, {
@@ -13,13 +13,13 @@ module.exports.requireLoginWithRedirect = function(req, res, next) {
   if (req.path == '/auth' || req.path == '/auth/saml/ibm/callback')
     return next();
   else if (_.isEmpty(req.user))
-    return res.redirect("/login");
+    return res.redirect('/login');
   else
     return next();
 };
 module.exports.requireLoggedOutWithRedirect = function(req, res, next) {
   if (!_.isEmpty(req.user))
-    return res.redirect("/");
+    return res.redirect('/');
   else
     return next();
 };

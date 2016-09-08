@@ -8,7 +8,7 @@ module.exports = function(app, includes) {
   getHomeVariables = function(req, res) {
     Promise.join(
         cache.setSystemInfoCache(),
-        cache.setUserTeams(req.session["email"]),
+        cache.setUserTeams(req.session['email']),
         function(systemCache, userTeamList) {
           var json = {
             'user': req.session['user'],
@@ -24,12 +24,12 @@ module.exports = function(app, includes) {
         })
       .catch( /* istanbul ignore next */ function(err) {
         res.status(400).send(err);
-      })
+      });
   };
 
   getTeamManagementVariables = function(req, res) {
     Promise.join(
-        cache.setTeamCache(req.session["email"]),
+        cache.setTeamCache(req.session['email']),
         function(allCache) {
           var json = {
             'user': req.session['user'],
@@ -46,14 +46,14 @@ module.exports = function(app, includes) {
         })
       .catch( /* istanbul ignore next */ function(err) {
         res.status(400).send(err);
-      })
+      });
   };
 
   getIterationManagementVariables = function(req, res) {
     Promise.join(
         cache.setSystemInfoCache(),
         cache.setActiveSquadTeams(),
-        cache.setUserTeams(req.session["email"]),
+        cache.setUserTeams(req.session['email']),
         function(systemCache, squadTeams, userTeamList) {
           var json = {
             'user': req.session['user'],
@@ -70,14 +70,14 @@ module.exports = function(app, includes) {
         })
       .catch( /* istanbul ignore next */ function(err) {
         res.status(400).send(err);
-      })
+      });
   };
 
   getAssessmentManagementVariables = function(req, res) {
     Promise.join(
         cache.setSystemInfoCache(),
         cache.setActiveSquadTeams(),
-        cache.setUserTeams(req.session["email"]),
+        cache.setUserTeams(req.session['email']),
         function(systemCache, squadTeams, userTeamList) {
           var json = {
             'user': req.session['user'],
@@ -94,14 +94,14 @@ module.exports = function(app, includes) {
         })
       .catch( /* istanbul ignore next */ function(err) {
         res.status(400).send(err);
-      })
+      });
   };
 
   getHelpVariables = function(req, res) {
     Promise.join(
         cache.setSystemInfoCache(),
         cache.setAllTeams(),
-        cache.setUserTeams(req.session["email"]),
+        cache.setUserTeams(req.session['email']),
         function(systemCache, allTeams, userTeamList) {
           var json = {
             'user': req.session['user'],
@@ -116,7 +116,7 @@ module.exports = function(app, includes) {
         })
       .catch( /* istanbul ignore next */ function(err) {
         res.status(400).send(err);
-      })
+      });
   };
 
   app.get('/api/uihelper/home', [includes.middleware.auth.requireLogin], getHomeVariables);

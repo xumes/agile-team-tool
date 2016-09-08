@@ -21,26 +21,26 @@ function getPageVariables(page, _callback) {
 
       userInfo = {
         //id: not defined in ldap object,
-        "uid": user.ldap.uid,
-        "building": user.ldap.buildingName,
+        'uid': user.ldap.uid,
+        'building': user.ldap.buildingName,
         //is-employee: not defined in ldap object,
-        "bio": user.ldap.jobresponsibilities,
+        'bio': user.ldap.jobresponsibilities,
         //location: not defined in ldap object,
-        "email": user.ldap.preferredIdentity,
-        "name": user.ldap.hrFirstName + ' ' + user.ldap.hrLastName,
-        "office-phone": user.ldap.telephoneNumber,
+        'email': user.ldap.preferredIdentity,
+        'name': user.ldap.hrFirstName + ' ' + user.ldap.hrLastName,
+        'office-phone': user.ldap.telephoneNumber,
         //org-title: not defined in ldap object,
-        "notes-id": user.ldap.notesId
+        'notes-id': user.ldap.notesId
       };
       siteEnv();
       // LDAP employee name has different convetion from Faces API value
       getPersonFromFaces(userInfo.email, updateUserInfo, []);
 
     }
-    if (typeof _callback === "function") {
+    if (typeof _callback === 'function') {
       _callback.apply(this);
     }
-  })
+  });
 }
 
 function updateUserInfo(personObj) {
@@ -54,16 +54,16 @@ function updateUserInfo(personObj) {
  */
 var gDialogWindow = IBMCore.common.widget.overlay.createOverlay({
   fullwidth: false,
-  id: "agile-dialog",
-  contentHtml: "This is a dialog message handler.",
-  classes: "ibm-overlay ibm-overlay-alt"
+  id: 'agile-dialog',
+  contentHtml: 'This is a dialog message handler.',
+  classes: 'ibm-overlay ibm-overlay-alt'
 });
 
 var gConfirmWindow = IBMCore.common.widget.overlay.createOverlay({
   fullwidth: false,
-  id: "agile-confirm",
-  contentHtml: "This is a dialog message handler.",
-  classes: "ibm-overlay ibm-overlay-alt",
+  id: 'agile-confirm',
+  contentHtml: 'This is a dialog message handler.',
+  classes: 'ibm-overlay ibm-overlay-alt',
   titled: true
 });
 
@@ -75,7 +75,7 @@ function setTestUser(userEmail, testUserInfo, testUserTeams) {
   if (testUserTeams === undefined)
     getAllAgileTeamsForUser(userEmail, setTestUser, [userEmail, userInfo]);
 
-  userTeamList = _.pluck(testUserTeams, "_id");
+  userTeamList = _.pluck(testUserTeams, '_id');
 }
 
 /**
@@ -85,7 +85,7 @@ var gFacesCache = [];
 
 /**
  * Get person object from faces API.
- * 
+ *
  * @param userEmail - email address of person.
  * @param _callback - handler function to handle data.
  * @param args - arguments to be used by the handler function.
@@ -93,25 +93,25 @@ var gFacesCache = [];
  */
 function getPersonFromFaces(userEmail, _callback, args) {
   var person = null;
-  if (userEmail != "") {
+  if (userEmail != '') {
     var done = false;
-    gFacesCache = JSON.parse(localStorage.getItem("facesCache"));
+    gFacesCache = JSON.parse(localStorage.getItem('facesCache'));
     if (gFacesCache != null) {
       gFacesCache.forEach(function(personCache) {
         if (!done && personCache != undefined && personCache.email.toUpperCase() == userEmail.toUpperCase()) {
           person = personCache;
-          if (typeof _callback === "function") {
-            if (typeof args != "undefined")
+          if (typeof _callback === 'function') {
+            if (typeof args != 'undefined')
               args.push(person);
 
-            showLog("Person cache, callback function: " + getFnName(_callback));
+            showLog('Person cache, callback function: ' + getFnName(_callback));
             _callback.apply(this, args);
           }
           done = true;
         }
       });
       if (done) {
-        showLog("Person cache found: " + userEmail);
+        showLog('Person cache found: ' + userEmail);
         return person;
       }
     } else
@@ -123,7 +123,7 @@ function getPersonFromFaces(userEmail, _callback, args) {
     $.ajax({
       url: svcURL,
       timeout: 5000,
-      dataType: "jsonp"
+      dataType: 'jsonp'
     }).always(function(data) {
       if (data != null && data.length > 0) {
         person = null;
@@ -141,17 +141,17 @@ function getPersonFromFaces(userEmail, _callback, args) {
         }
         if (!cached) {
           gFacesCache.push(person);
-          localStorage.setItem("facesCache", JSON.stringify(gFacesCache));
+          localStorage.setItem('facesCache', JSON.stringify(gFacesCache));
         }
 
-        if (typeof args != "undefined")
+        if (typeof args != 'undefined')
           args.push(person);
       } else {
-        if (typeof args != "undefined")
+        if (typeof args != 'undefined')
           args.push(null);
       }
-      if (typeof _callback === "function") {
-        showLog("success callback function: " + getFnName(_callback));
+      if (typeof _callback === 'function') {
+        showLog('success callback function: ' + getFnName(_callback));
         _callback.apply(this, args);
       }
       return person;
@@ -165,10 +165,10 @@ function getPersonFromFaces(userEmail, _callback, args) {
  * Gets the server date and time.
  */
 var getServerDateTime = function() {
-  var dateTime = "";
+  var dateTime = '';
   $.ajax({
-    type: "GET",
-    url: "/api/util/servertime",
+    type: 'GET',
+    url: '/api/util/servertime',
     async: false
   }).done(function(data) {
     dateTime = data;
@@ -178,7 +178,7 @@ var getServerDateTime = function() {
 
 /**
  * Generic error handler used in ajax calls.
- * 
+ *
  * @param jqXHR
  * @param textStatus
  * @param errorThrown
@@ -196,13 +196,13 @@ function errorHandler(xhr, textStatus, errorThrown) {
       } else {
         msg = errMsgs.error;
         if (msg == 'not_found') {
-          msg = "Record does not exist in the database!"
+          msg = 'Record does not exist in the database!';
         }
       }
     }
     showMessagePopup(msg);
   } else {
-    showMessagePopup("Something went wrong: " + errorThrown);
+    showMessagePopup('Something went wrong: ' + errorThrown);
   }
 }
 
@@ -215,7 +215,7 @@ function getGlobalAgileTeamList() {
 
 /**
  * List of teams referenced when checking user access to team related documents.
- * 
+ *
  * @param teamList - array of agile team documents.
  */
 function setGlobalTeamList(teamList) {
@@ -224,7 +224,7 @@ function setGlobalTeamList(teamList) {
 
 /**
  * Checks the access of the current user to the specific team.
- * 
+ *
  * @param teamId - team id to check user membership.
  * @returns {Boolean}
  */
@@ -249,7 +249,7 @@ function hasAccess(teamId) {
 
 /**
  *  Checks the membership of the current user to the specific team.
- *  
+ *
  * @param teamId - team id to check user membership.
  * @param checkParent - set to true if we need to check the parent team documents for user membership.
  * @returns {Boolean}
@@ -266,25 +266,25 @@ function isUserMemberOfTeam(teamId) {
  * Loads the list of identified users with administrator access.
  */
 function getAllAdministrator() {
-  var cUrl = "/api/users/admins";
+  var cUrl = '/api/users/admins';
   getRemoteData(cUrl, setGlobalAdministorList, []);
 }
 
 /**
  * Administrator list referenced when checking user access to team related documents.
- * 
+ *
  * @param administrator - administrator document.
  */
 function setGlobalAdministorList(administrator) {
   if (!_.isEmpty(administrator))
     systemAdmin = administrator.ACL_Full_Admin;
   else
-    systemAdmin = []
+    systemAdmin = [];
 }
 
 /**
  * Checks user information if user has Admin access.
- * 
+ *
  * @returns {Boolean}
  */
 function isAdmin() {
@@ -296,7 +296,7 @@ function isAdmin() {
 
 /**
  * Global implementation of modal dialog popup.
- * 
+ *
  * @param message
  */
 function showMessagePopup(message) {
@@ -309,7 +309,7 @@ function showMessagePopup(message) {
  * Gets the hidden input HTML element indicator any change action done.
  */
 function hasChanges() {
-  if ($("#changeIndicator").val() == 1)
+  if ($('#changeIndicator').val() == 1)
     return true;
   else
     return false;
@@ -319,9 +319,9 @@ function hasChanges() {
  * Sets the hidden input HTML element indicator if page update action needs to be tracked.
  */
 function setChangeIndiactor() {
-  $("#changeIndicator").val(1);
+  $('#changeIndicator').val(1);
   window.onbeforeunload = function() {
-    return "You have unsaved changes on this page.";
+    return 'You have unsaved changes on this page.';
   };
 };
 
@@ -329,13 +329,13 @@ function setChangeIndiactor() {
  * Resets the hidden input HTML element indicator for page update actions.
  */
 function resetChangeIndiactor() {
-  $("#changeIndicator").val("");
+  $('#changeIndicator').val('');
   window.onbeforeunload = null;
 };
 
 /**
  * Convenience function to show console logs only on certain environment.
- * 
+ *
  * @param message - message to show on console.
  */
 function showLog(message) {
@@ -350,7 +350,7 @@ function getFnName(fn) {
 
 /**
  * Ajax call to get remote Cloudant jsonp data.
- * 
+ *
  * @param cUrl - Cloudant API URL.
  * @param _callback - handler function to handle data.
  * @param args - arguments to be used by the handler function.
@@ -359,7 +359,7 @@ function getFnName(fn) {
 function getRemoteData(cUrl, _callback, args) {
   var returnObj = null;
   $.ajax({
-    type: "GET",
+    type: 'GET',
     url: cUrl
   }).done(function(data) {
     if (data != undefined) {
@@ -412,23 +412,23 @@ function getRemoteData(cUrl, _callback, args) {
       }
     }
 
-    if (typeof _callback === "function") {
-      showLog("callback function: " + getFnName(_callback));
+    if (typeof _callback === 'function') {
+      showLog('callback function: ' + getFnName(_callback));
       _callback.apply(this, args);
     }
   }).fail(function() {
-    if (typeof _callback === "function") {
-      showLog("callback function: " + getFnName(_callback));
+    if (typeof _callback === 'function') {
+      showLog('callback function: ' + getFnName(_callback));
       _callback.apply(this, args);
     }
-  })
+  });
 
   return returnObj;
 }
 
 /**
  * Ajax call to update remote Cloudant jsonp data.
- * 
+ *
  * @param docId - document ID.
  * @param jsonData - document.
  * @param _callback - handler function to handle data.
@@ -438,17 +438,17 @@ function getRemoteData(cUrl, _callback, args) {
 function setTeam(jsonData, _callback, args) {
   var returnObj = null;
   $.ajax({
-    type: "PUT",
-    url: "/api/teams/",
-    contentType: "application/json",
+    type: 'PUT',
+    url: '/api/teams/',
+    contentType: 'application/json',
     data: JSON.stringify(jsonData),
     error: errorHandler
   }).done(function(data) {
     args.push(data);
     returnObj = data;
 
-    if (typeof _callback === "function") {
-      showLog("callback function: " + getFnName(_callback));
+    if (typeof _callback === 'function') {
+      showLog('callback function: ' + getFnName(_callback));
       _callback.apply(this, args);
     }
   });
@@ -460,13 +460,13 @@ function setTeam(jsonData, _callback, args) {
  * Get current system status.
  */
 function getSystemStatus() {
-  var cUrl = "/api/util/systemstatus"
+  var cUrl = '/api/util/systemstatus';
   getRemoteData(cUrl, setGlobalSystemStatus, []);
 }
 
 /**
  * Updates localStorage of system status referenced when checking user access.
- * 
+ *
  * @param systemStatus
  */
 function setGlobalSystemStatus() {
@@ -475,7 +475,7 @@ function setGlobalSystemStatus() {
       var validStatus = systemStatus.agildash_system_status_values_tbl;
       for (var i in validStatus) {
         if (systemStatus.agildash_system_status_display.toUpperCase() == validStatus[i].system_status_flag.toUpperCase()) {
-          $('#systMsg').addClass("sysMsg");
+          $('#systMsg').addClass('sysMsg');
           $('#systMsg').show();
           $('#systMsg').html(systemStatus.agildash_system_status_msgtext_display);
 
@@ -489,44 +489,44 @@ function setGlobalSystemStatus() {
 
 /**
  * Get all available teams.
- * 
+ *
  * @param _callback - handler function to handle data.
  * @param args - arguments to be used by the handler function.
  * @returns - any returnable object.
  */
 function getAllAgileTeams(_callback, args) {
-  var teamUrl = "/api/teams";
+  var teamUrl = '/api/teams';
   return getRemoteData(teamUrl, _callback, args);
 }
 
 function getTeamNames(_callback, args) {
-  var teamUrl = "/api/teams/names";
+  var teamUrl = '/api/teams/names';
   return getRemoteData(teamUrl, _callback, args);
 }
 
 
 /**
  * Get all available roles for team members.
- * 
+ *
  * @param _callback - handler function to handle data.
  * @param args - arguments to be used by the handler function.
  * @returns - any returnable object.
  */
 function getAllAgileTeamRoles(_callback, args) {
-  var teamUrl = "/api/teams/roles";
+  var teamUrl = '/api/teams/roles';
   return getRemoteData(teamUrl, _callback, args);
 }
 
 /**
  * Get all avaialable team for the person with indicated user email.
- * 
+ *
  * @param userEmail - email address to process.
  * @param _callback - handler function to handle data.
  * @param args - arguments to be used by the handler function.
  * @returns - any returnable object.
  */
 function getAllAgileTeamsForUser(userEmail, _callback, args) {
-  if (userEmail == null || userEmail == "") {
+  if (userEmail == null || userEmail == '') {
     _callback.apply(this, args);
     return null;
   }
@@ -559,48 +559,48 @@ function setAgileTeamsForUser(teams, newTeam) {
 
 /**
  * Get all assessments available for the team.
- * 
+ *
  * @param teamId - team id to process
  * @param _callback - handler function to handle data.
  * @param args - arguments to be used by the handler function.
  * @returns - any returnable object.
  */
 function getTeamAssessments(teamId, docs, _callback, args) {
-  if (teamId == null || teamId == "") {
+  if (teamId == null || teamId == '') {
     _callback.apply(this, args);
     return null;
   }
-  var teamUrl = "/api/assessment/view?teamId=" + encodeURIComponent(teamId) + '&docs=' + docs;
+  var teamUrl = '/api/assessment/view?teamId=' + encodeURIComponent(teamId) + '&docs=' + docs;
   return getRemoteData(teamUrl, _callback, args);
 }
 
 /**
  * Get all available assessment maturity templates.
- * 
+ *
  * @param _callback - handler function to handle data.
  * @param args - arguments to be used by the handler function.
  * @returns - any returnable object.
  */
 function getAssessmentQuestionnaire(_callback, args) {
-  var teamUrl = "/api/assessment/template";
+  var teamUrl = '/api/assessment/template';
   return getRemoteData(teamUrl, _callback, args);
 }
 
 /**
  * Get all iterations available for the team.
- * 
+ *
  * @param teamId - team id to process
  * @param _callback - handler function to handle data.
  * @param args - arguments to be used by the handler function.
  * @returns - any returnable object.
  */
 function getTeamIterations(teamId, _callback, args) {
-  if (teamId == null || teamId == "") {
+  if (teamId == null || teamId == '') {
     _callback.apply(this, args);
     return null;
   }
   // var teamUrl = "/api/iteration/" + encodeURIComponent(teamId);
-  var teamUrl = "/api/iteration/searchTeamIteration?id=" + encodeURIComponent(teamId) + "&includeDocs=true&limit=200";
+  var teamUrl = '/api/iteration/searchTeamIteration?id=' + encodeURIComponent(teamId) + '&includeDocs=true&limit=200';
   return getRemoteData(teamUrl, _callback, args);
 }
 
@@ -610,16 +610,16 @@ function getCompletedIterations(startDate, endDate, _callback, args) {
     _callback.apply(this, args);
     return null;
   }
-  var teamUrl = "/api/iteration/completed?startkey=" + startDate + "&endkey=" + endDate + "";
+  var teamUrl = '/api/iteration/completed?startkey=' + startDate + '&endkey=' + endDate + '';
   return getRemoteData(teamUrl, _callback, args);
 }
 
 function getTeam(docId, _callback, args) {
-  if (docId == null || docId == "") {
+  if (docId == null || docId == '') {
     _callback.apply(this, args);
     return null;
   }
-  var docUrl = "/api/teams/" + encodeURIComponent(docId);
+  var docUrl = '/api/teams/' + encodeURIComponent(docId);
   return getRemoteData(docUrl, _callback, args);
 }
 
@@ -650,7 +650,7 @@ function compactTeam(team) {
       compactedTeam['child_team_id'] = team.child_team_id,
       compactedTeam['doc_status'] = team.doc_status;
     compactedTeam['total_members'] = teamCount,
-      compactedTeam['total_allocation'] = teamAlloc
+      compactedTeam['total_allocation'] = teamAlloc;
     compactedTeam['doc'] = team;
   }
   return compactedTeam;
@@ -662,7 +662,7 @@ function updateAgileTeamCache(team) {
 
   if (_.isEmpty(allTeamsLookup))
     allTeamsLookup = _.indexBy(allTeams, function(team) {
-      return team._id
+      return team._id;
     });
 
   if (!_.isEmpty(allTeamsLookup) && !_.isEmpty(team)) {
@@ -672,7 +672,7 @@ function updateAgileTeamCache(team) {
     else
       _.extend(_.findWhere(allTeams, {
         _id: team._id
-      }), compactedTeam)
+      }), compactedTeam);
 
     allTeamsLookup[team._id] = compactedTeam;
   }
@@ -686,7 +686,7 @@ function updateAgileTeamCache(team) {
 
 
   allTeams = _.sortBy(allTeams, function(team) {
-    return team.name
+    return team.name;
   });
 };
 
@@ -696,28 +696,28 @@ function updateAgileTeamCache(team) {
  */
 function initTeamTemplate() {
   var teamTemplate = {
-    "_id": "",
+    '_id': '',
     //"_rev": "",
-    "type": "",
-    "name": "",
-    "desc": "",
-    "squadteam": "",
-    "parent_team_id": "",
-    "last_updt_dt": "",
-    "last_updt_user": "",
-    "created_user": "",
-    "created_dt": "",
-    "doc_status": "",
-    "members": [{
-      "key": "",
-      "id": "",
-      "name": "",
-      "allocation": 0,
-      "role": ""
+    'type': '',
+    'name': '',
+    'desc': '',
+    'squadteam': '',
+    'parent_team_id': '',
+    'last_updt_dt': '',
+    'last_updt_user': '',
+    'created_user': '',
+    'created_dt': '',
+    'doc_status': '',
+    'members': [{
+      'key': '',
+      'id': '',
+      'name': '',
+      'allocation': 0,
+      'role': ''
     }],
-    "child_team_id": []
+    'child_team_id': []
   };
-  teamTemplate["members"] = [];
+  teamTemplate['members'] = [];
   return teamTemplate;
 }
 
@@ -727,31 +727,31 @@ function initTeamTemplate() {
  */
 function initIterationTemplate() {
   var iterationTemplate = {
-    "_id": "",
+    '_id': '',
     //"_rev": "",
-    "type": "iterationinfo",
-    "team_id": "",
-    "iteration_name": "",
-    "iteration_start_dt": "",
-    "iteration_end_dt": "",
-    "iterationinfo_status": "",
-    "team_mbr_cnt": "",
-    "nbr_committed_stories": "",
-    "nbr_stories_dlvrd": "",
-    "nbr_committed_story_pts": "",
-    "nbr_story_pts_dlvrd": "",
-    "iteration_comments": "",
-    "team_mbr_change": "",
-    "last_updt_user": "",
-    "fte_cnt": "",
-    "nbr_dplymnts": "",
-    "nbr_defects": "",
-    "client_sat": "",
-    "team_sat": "",
-    "last_updt_dt": "",
-    "created_user": "",
-    "created_dt": "",
-    "doc_status": ""
+    'type': 'iterationinfo',
+    'team_id': '',
+    'iteration_name': '',
+    'iteration_start_dt': '',
+    'iteration_end_dt': '',
+    'iterationinfo_status': '',
+    'team_mbr_cnt': '',
+    'nbr_committed_stories': '',
+    'nbr_stories_dlvrd': '',
+    'nbr_committed_story_pts': '',
+    'nbr_story_pts_dlvrd': '',
+    'iteration_comments': '',
+    'team_mbr_change': '',
+    'last_updt_user': '',
+    'fte_cnt': '',
+    'nbr_dplymnts': '',
+    'nbr_defects': '',
+    'client_sat': '',
+    'team_sat': '',
+    'last_updt_dt': '',
+    'created_user': '',
+    'created_dt': '',
+    'doc_status': ''
   };
   return iterationTemplate;
 }
@@ -762,61 +762,61 @@ function initIterationTemplate() {
  */
 function initAssessmentAnswersTemplate() {
   var assessmentAnswersTemplate = {
-    "_id": "",
+    '_id': '',
     //"_rev": "",
-    "type": "matassessmtrslt",
-    "team_id": "",
-    "assessmt_version": "",
-    "team_proj_ops": "",
-    "team_dlvr_software": "",
-    "assessmt_status": "",
-    "submitter_id": "",
-    "self-assessmt_dt": "",
-    "ind_assessor_id": "",
-    "ind_assessmt_status": "",
-    "ind_assessmt_dt": "",
-    "created_dt": "",
-    "created_user": "",
-    "last_updt_dt": "",
-    "last_updt_user": "",
-    "doc_status": "",
-    "assessmt_cmpnt_rslts": [{
-      "assessed_cmpnt_name": "",
-      "assessed_cmpnt_tbl": [{
-        "principle_id": "",
-        "principle_name": "",
-        "practice_id": "",
-        "practice_name": "",
-        "cur_mat_lvl_achieved": "",
-        "cur_mat_lvl_score": "",
-        "tar_mat_lvl_achieved": "",
-        "tar_mat_lvl_score": "",
-        "ind_mat_lvl_achieved": "",
-        "ind_target_mat_lvl_score": "",
-        "how_better_action_item": "",
-        "ind_assessor_cmnt": ""
+    'type': 'matassessmtrslt',
+    'team_id': '',
+    'assessmt_version': '',
+    'team_proj_ops': '',
+    'team_dlvr_software': '',
+    'assessmt_status': '',
+    'submitter_id': '',
+    'self-assessmt_dt': '',
+    'ind_assessor_id': '',
+    'ind_assessmt_status': '',
+    'ind_assessmt_dt': '',
+    'created_dt': '',
+    'created_user': '',
+    'last_updt_dt': '',
+    'last_updt_user': '',
+    'doc_status': '',
+    'assessmt_cmpnt_rslts': [{
+      'assessed_cmpnt_name': '',
+      'assessed_cmpnt_tbl': [{
+        'principle_id': '',
+        'principle_name': '',
+        'practice_id': '',
+        'practice_name': '',
+        'cur_mat_lvl_achieved': '',
+        'cur_mat_lvl_score': '',
+        'tar_mat_lvl_achieved': '',
+        'tar_mat_lvl_score': '',
+        'ind_mat_lvl_achieved': '',
+        'ind_target_mat_lvl_score': '',
+        'how_better_action_item': '',
+        'ind_assessor_cmnt': ''
       }]
     },
-      "ovralcur_assessmt_score",
-      "ovraltar_assessmt_score"
+      'ovralcur_assessmt_score',
+      'ovraltar_assessmt_score'
     ],
-    "assessmt_action_plan_tbl": [{
-      "action_plan_entry_id": "",
-      "assessmt_cmpnt_name": "",
-      "principle_id": "",
-      "principle_name": "",
-      "practice_id": "",
-      "practice_name": "",
-      "how_better_action_item": "",
-      "cur_mat_lvl_score": "",
-      "tar_mat_lvl_score": "",
-      "progress_summ": "",
-      "key_metric": "",
-      "review_dt": "",
-      "action_item_status": ""
+    'assessmt_action_plan_tbl': [{
+      'action_plan_entry_id': '',
+      'assessmt_cmpnt_name': '',
+      'principle_id': '',
+      'principle_name': '',
+      'practice_id': '',
+      'practice_name': '',
+      'how_better_action_item': '',
+      'cur_mat_lvl_score': '',
+      'tar_mat_lvl_score': '',
+      'progress_summ': '',
+      'key_metric': '',
+      'review_dt': '',
+      'action_item_status': ''
     }]
   };
-  assessmentAnswersTemplate["assessmt_cmpnt_rslts"] = [];
-  assessmentAnswersTemplate["assessmt_action_plan_tbl"] = [];
+  assessmentAnswersTemplate['assessmt_cmpnt_rslts'] = [];
+  assessmentAnswersTemplate['assessmt_action_plan_tbl'] = [];
   return assessmentAnswersTemplate;
 }

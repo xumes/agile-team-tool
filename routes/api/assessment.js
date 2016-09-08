@@ -40,7 +40,7 @@ module.exports = function(app, includes) {
   };
 
   addAssessment = function(req, res) {
-    assessmentModel.addTeamAssessment(req.session["user"].shortEmail, req.body)
+    assessmentModel.addTeamAssessment(req.session['user'].shortEmail, req.body)
       .then(function(result) {
         res.send(result);
       })
@@ -50,7 +50,7 @@ module.exports = function(app, includes) {
   };
 
   updateAssessment = function(req, res) {
-    assessmentModel.updateTeamAssessment(req.session["user"].shortEmail, req.body)
+    assessmentModel.updateTeamAssessment(req.session['user'].shortEmail, req.body)
       .then(function(result) {
         res.send(result);
       })
@@ -62,7 +62,7 @@ module.exports = function(app, includes) {
   deleteAssessment = function(req, res) {
     var docId = req.query.docId;
     var revId = req.query.revId;
-    assessmentModel.deleteAssessment(req.session["user"].shortEmail, docId, revId, req.session["allTeams"], req.session["myTeams"])
+    assessmentModel.deleteAssessment(req.session['user'].shortEmail, docId, revId, req.session['allTeams'], req.session['myTeams'])
       .then(function(result) {
         res.send(result);
       })

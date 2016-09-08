@@ -3,7 +3,7 @@ var expect = chai.expect;
 var app = require('../../../app');
 var request = require('supertest');
 var _ = require('underscore');
-var util = require('../../../helpers/util')
+var util = require('../../../helpers/util');
 var querystring = require('querystring');
 var agent = request.agent(app);
 var userEmail = 'john.doe@ph.ibm.com';
@@ -19,7 +19,7 @@ describe('Snapshot API Test [GET /api/snapshot/getrollupdata]: calculate and upd
         if (err) throw err;
         agent.saveCookies(res);
         done();
-      })
+      });
   });
 
   it('Successfully roll up data', function(done) {

@@ -8,10 +8,10 @@ var dbName = settings.cloudant.dbName;
 
 var cloudantDb = Cloudant(settings.cloudant.url, function(err, cloudant, reply) {
   if (err)
-    loggers.get('init').error("Failed to initialize Cloudant: " + err.message);
+    loggers.get('init').error('Failed to initialize Cloudant: ' + err.message);
   else {
-    loggers.get('init').info("Cloudant User: " + reply.userCtx.name);
-    loggers.get('init').info("Cloudant User Roles: " + reply.userCtx.roles + "\n");
+    loggers.get('init').info('Cloudant User: ' + reply.userCtx.name);
+    loggers.get('init').info('Cloudant User Roles: ' + reply.userCtx.roles + '\n');
   }
 });
 
@@ -33,7 +33,7 @@ exports.addRecord = function(data) {
       })
       .catch(function(err) {
         reject(err);
-      })
+      });
   });
 };
 
@@ -58,7 +58,7 @@ exports.updateRecord = function(data) {
       })
       .catch(function(err) {
         reject(err);
-      })
+      });
   });
 };
 
@@ -122,7 +122,7 @@ exports.getByViewWithStartOrEndKey = function(_design, _view, _startkey, _endkey
         reject(err);
       });
   });
-}
+};
 
 exports.bulkUpdate = function(data) {
   // document id and revision _id are required on data
@@ -133,7 +133,7 @@ exports.bulkUpdate = function(data) {
       })
       .catch( /* istanbul ignore next */ function(err) {
         reject(err);
-      })
+      });
   });
 };
 
@@ -205,4 +205,4 @@ exports.findRevBySelector = function(id) {
         reject(err);
       });
   });
-}
+};

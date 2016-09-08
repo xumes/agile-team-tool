@@ -133,7 +133,7 @@ describe('Iteration Model', function() {
 
     it('It will successfully add new iteration document', function(done) {
       iterationDocValid.team_id = validId;
-      iterationDocValid.iteration_name = "testiterationname-" + crypto.randomBytes(4).toString('hex');
+      iterationDocValid.iteration_name = 'testiterationname-' + crypto.randomBytes(4).toString('hex');
       iterationModel.add(iterationDocValid, user)
         .then(function(result) {
           iterationId = result.id;
@@ -172,9 +172,9 @@ describe('Iteration Model', function() {
 
     it('Saved iteration docs with the same start & end date', function(done) {
       var doc = _.clone(iterationDocValid_sample3);
-      doc._id = "testmyid-" + crypto.randomBytes(20).toString('hex');
-      doc.iteration_name = "testiterationname-" + crypto.randomBytes(5).toString('hex');
-      var currentDate = moment().format("MM/DD/YYYY");
+      doc._id = 'testmyid-' + crypto.randomBytes(20).toString('hex');
+      doc.iteration_name = 'testiterationname-' + crypto.randomBytes(5).toString('hex');
+      var currentDate = moment().format('MM/DD/YYYY');
       doc.iteration_start_dt = currentDate;
       doc.iteration_end_dt = currentDate;
       doc.client_sat = '';
@@ -195,9 +195,9 @@ describe('Iteration Model', function() {
 
     it('Saved iteration doc with default values', function(done) {
       var doc = _.clone(iterationDocValid_sample3);
-      doc._id = "testmyid-" + crypto.randomBytes(20).toString('hex');
-      doc.iteration_name = "testiterationname-" + crypto.randomBytes(5).toString('hex');
-      var currentDate = moment().format("MM/DD/YYYY");
+      doc._id = 'testmyid-' + crypto.randomBytes(20).toString('hex');
+      doc.iteration_name = 'testiterationname-' + crypto.randomBytes(5).toString('hex');
+      var currentDate = moment().format('MM/DD/YYYY');
       doc.iteration_start_dt = currentDate;
       doc.iteration_end_dt = currentDate;
       doc.client_sat = '';
@@ -220,9 +220,9 @@ describe('Iteration Model', function() {
 
     it('Saved iteration doc with some values', function(done) {
       var doc = _.clone(iterationDocValid_sample3);
-      doc._id = "testmyid-" + crypto.randomBytes(20).toString('hex');
-      doc.iteration_name = "testiterationname-" + crypto.randomBytes(5).toString('hex');
-      var currentDate = moment().format("MM/DD/YYYY");
+      doc._id = 'testmyid-' + crypto.randomBytes(20).toString('hex');
+      doc.iteration_name = 'testiterationname-' + crypto.randomBytes(5).toString('hex');
+      var currentDate = moment().format('MM/DD/YYYY');
       doc.iteration_start_dt = currentDate;
       doc.iteration_end_dt = currentDate;
       doc.team_id = validId;
@@ -240,9 +240,9 @@ describe('Iteration Model', function() {
 
     it('Saved iteration doc with some values', function(done) {
       var doc = _.clone(iterationDocValid_sample3);
-      doc._id = "testmyid-" + crypto.randomBytes(20).toString('hex');
-      doc.iteration_name = "testiterationname-" + crypto.randomBytes(5).toString('hex');
-      var currentDate = moment().format("MM/DD/YYYY");
+      doc._id = 'testmyid-' + crypto.randomBytes(20).toString('hex');
+      doc.iteration_name = 'testiterationname-' + crypto.randomBytes(5).toString('hex');
+      var currentDate = moment().format('MM/DD/YYYY');
       doc.iteration_start_dt = currentDate;
       doc.iteration_end_dt = currentDate;
       doc.team_id = validId;
@@ -260,10 +260,10 @@ describe('Iteration Model', function() {
 
     it('set status to Not complete', function(done) {
       var doc = _.clone(iterationDocValid_sample3);
-      doc._id = "testmyid-" + crypto.randomBytes(20).toString('hex');
-      doc.iteration_name = "testiterationname-" + crypto.randomBytes(5).toString('hex');
-      var startdt = moment().format("MM/DD/YYYY");
-      var enddt = moment().add(14, "days").format("MM/DD/YYYY");
+      doc._id = 'testmyid-' + crypto.randomBytes(20).toString('hex');
+      doc.iteration_name = 'testiterationname-' + crypto.randomBytes(5).toString('hex');
+      var startdt = moment().format('MM/DD/YYYY');
+      var enddt = moment().add(14, 'days').format('MM/DD/YYYY');
       doc.iteration_start_dt = startdt;
       doc.iteration_end_dt = enddt;
       doc.team_id = validId;
@@ -500,7 +500,7 @@ describe('Iteration Model', function() {
           // expect(err).to.have.property('error');
           // expect(err.error).to.equal('missing');
           done();
-        })
+        });
     });
   });
 
@@ -538,9 +538,9 @@ describe('Iteration Model', function() {
     var tmpIterationId;
     before(function(done) {
       var doc = _.clone(iterationDocValid_sample3);
-      doc._id = "testmyid-" + crypto.randomBytes(20).toString('hex');
-      doc.iteration_name = "testiterationname-" + crypto.randomBytes(5).toString('hex');
-      var currentDate = moment().format("MM/DD/YYYY");
+      doc._id = 'testmyid-' + crypto.randomBytes(20).toString('hex');
+      doc.iteration_name = 'testiterationname-' + crypto.randomBytes(5).toString('hex');
+      var currentDate = moment().format('MM/DD/YYYY');
       doc.iteration_start_dt = currentDate;
       doc.iteration_end_dt = currentDate;
       doc.client_sat = '';
