@@ -2,28 +2,27 @@ var assessmentModel = require('../../models/assessment');
 var _ = require('underscore');
 
 module.exports = function(app, includes) {
-  var middleware  = includes.middleware;
+  var middleware = includes.middleware;
 
   getAssessment = function(req, res) {
     var teamId = req.query.teamId;
     var assessId = req.query.assessId;
     var docs = req.query.docs;
-    if (!_.isUndefined(teamId)){
+    if (!_.isUndefined(teamId)) {
       assessmentModel.getTeamAssessments(teamId, docs)
-      .then(function(result){
-        res.send(result);
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        /* cannot simulate Cloudant error during testing */
-        res.status(400).send(err);
-      });
-    }
-    else{
-      assessmentModel.getAssessment(assessId)
-        .then(function(result){
+        .then(function(result) {
           res.send(result);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err) {
+          /* cannot simulate Cloudant error during testing */
+          res.status(400).send(err);
+        });
+    } else {
+      assessmentModel.getAssessment(assessId)
+        .then(function(result) {
+          res.send(result);
+        })
+        .catch(function(err) {
           res.status(400).send(err);
         });
     }
@@ -31,10 +30,10 @@ module.exports = function(app, includes) {
 
   getAssessmentTemplate = function(req, res) {
     assessmentModel.getAssessmentTemplate()
-      .then(function(result){
+      .then(function(result) {
         res.send(result);
       })
-      .catch( /* istanbul ignore next */ function(err){
+      .catch( /* istanbul ignore next */ function(err) {
         /* cannot simulate Cloudant error during testing */
         res.status(400).send(err);
       });
@@ -42,20 +41,20 @@ module.exports = function(app, includes) {
 
   addAssessment = function(req, res) {
     assessmentModel.addTeamAssessment(req.session["user"].shortEmail, req.body)
-      .then(function(result){
+      .then(function(result) {
         res.send(result);
       })
-      .catch(function(err){
+      .catch(function(err) {
         res.status(400).send(err);
       });
   };
 
   updateAssessment = function(req, res) {
     assessmentModel.updateTeamAssessment(req.session["user"].shortEmail, req.body)
-      .then(function(result){
+      .then(function(result) {
         res.send(result);
       })
-      .catch(function(err){
+      .catch(function(err) {
         res.status(400).send(err);
       });
   };
@@ -64,10 +63,10 @@ module.exports = function(app, includes) {
     var docId = req.query.docId;
     var revId = req.query.revId;
     assessmentModel.deleteAssessment(req.session["user"].shortEmail, docId, revId, req.session["allTeams"], req.session["myTeams"])
-      .then(function(result){
+      .then(function(result) {
         res.send(result);
       })
-      .catch(function(err){
+      .catch(function(err) {
         res.status(400).send(err);
       });
   };

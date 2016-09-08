@@ -1,8 +1,8 @@
 var Promise = require('bluebird');
-var _       = require('underscore');
-var common  = require('../cloudant-driver');
-var logger  = require('../../middleware/logger');
-var util    = require('../../helpers/util');
+var _ = require('underscore');
+var common = require('../cloudant-driver');
+var logger = require('../../middleware/logger');
+var util = require('../../helpers/util');
 
 
 var getAllChildren = function(teamId, teamList) {
@@ -41,74 +41,84 @@ var index = {
 
       logger.get('models').verbose("Processing all teams for lookup index.");
       common.getByView('teams', 'teams')
-      .then(function(allTeams) {
-        var allTeams = util.returnObject(allTeams);
-        var teamList = _.indexBy(allTeams, function(team) {return team._id});
+        .then(function(allTeams) {
+          var allTeams = util.returnObject(allTeams);
+          var teamList = _.indexBy(allTeams, function(team) {
+            return team._id
+          });
 
-        allTeams = _.groupBy(allTeams, function(team) {
-          var level =  "squads";
-          if (_.isEmpty(team.parent_team_id) && (!_.isEmpty(team.squadteam) && team.squadteam.toLowerCase() == 'no'))
-            level = "domains";
-          else if (!_.isEmpty(team.parent_team_id) && (!_.isEmpty(team.squadteam) && team.squadteam.toLowerCase() == 'no'))
-            level = "tribes";
-          return level;
+          allTeams = _.groupBy(allTeams, function(team) {
+            var level = "squads";
+            if (_.isEmpty(team.parent_team_id) && (!_.isEmpty(team.squadteam) && team.squadteam.toLowerCase() == 'no'))
+              level = "domains";
+            else if (!_.isEmpty(team.parent_team_id) && (!_.isEmpty(team.squadteam) && team.squadteam.toLowerCase() == 'no'))
+              level = "tribes";
+            return level;
+          });
+
+          if (_.has(allTeams, 'domains'))
+            allTeams.domains = _.sortBy(allTeams.domains, function(team) {
+              return team.name
+            });
+          if (_.has(allTeams, 'tribes'))
+            allTeams.tribes = _.sortBy(allTeams.tribes, function(team) {
+              return team.name
+            });
+          if (_.has(allTeams, 'squads'))
+            allTeams.squads = _.sortBy(allTeams.squads, function(team) {
+              return team.name
+            });
+
+          _.each(allTeams.domains, function(team) {
+            var indexObj = new Object();
+            indexObj._id = team._id;
+            indexObj.name = team.name;
+            indexObj.squadteam = team.squadteam;
+            indexObj.parents = !_.isEmpty(team.parent_team_id) ? [team.parent_team_id] : [];
+            indexObj.children = _.union(team.child_team_id, getAllChildren(team._id, teamList));
+            indexDocument.domains.push(indexObj);
+          });
+
+          _.each(allTeams.tribes, function(team) {
+            var indexObj = new Object();
+            indexObj._id = team._id;
+            indexObj.name = team.name;
+            indexObj.squadteam = team.squadteam;
+            indexObj.parents = _.union([team.parent_team_id], getAllParents(team._id, teamList));
+            indexObj.children = _.union(team.child_team_id, getAllChildren(team._id, teamList));
+            indexDocument.tribes.push(indexObj);
+          });
+
+          _.each(allTeams.squads, function(team) {
+            var indexObj = new Object();
+            indexObj._id = team._id;
+            indexObj.name = team.name;
+            indexObj.squadteam = team.squadteam;
+            indexObj.parents = !_.isEmpty(team.parent_team_id) ? [team.parent_team_id] : [];
+            indexObj.children = team.child_team_id;
+
+            var tribeIndex = _.findWhere(indexDocument.tribes, {
+              _id: team.parent_team_id
+            });
+            if (!_.isEmpty(tribeIndex)) {
+              indexObj.parents = _.union(indexObj.parents, tribeIndex.parents);
+            }
+
+            indexDocument.squads.push(indexObj);
+          });
+
+          var lookupIndex = _.union(indexDocument.domains, indexDocument.tribes, indexDocument.squads);
+          logger.get('models').verbose("Index size: " + _.size(lookupIndex));
+
+          index.updateIndexDocument(lookupIndex)
+            .then(function(result) {
+              resolve(result);
+            })
+            .catch( /* istanbul ignore next */ function(err) {
+              logger.get('models').error('Error retrieving lookup document ' + err);
+              reject(err);
+            });
         });
-
-        if (_.has(allTeams, 'domains'))
-          allTeams.domains = _.sortBy(allTeams.domains, function(team) {return team.name});
-        if (_.has(allTeams, 'tribes'))
-          allTeams.tribes = _.sortBy(allTeams.tribes, function(team) {return team.name});
-        if (_.has(allTeams, 'squads')) 
-          allTeams.squads = _.sortBy(allTeams.squads, function(team) {return team.name});
-
-        _.each(allTeams.domains, function(team) {
-          var indexObj = new Object();
-          indexObj._id = team._id;
-          indexObj.name = team.name;
-          indexObj.squadteam = team.squadteam;
-          indexObj.parents = !_.isEmpty(team.parent_team_id) ? [team.parent_team_id] : [];
-          indexObj.children = _.union(team.child_team_id, getAllChildren(team._id, teamList));
-          indexDocument.domains.push(indexObj);
-        });
-
-        _.each(allTeams.tribes, function(team) {
-          var indexObj = new Object();
-          indexObj._id = team._id;
-          indexObj.name = team.name;
-          indexObj.squadteam = team.squadteam;
-          indexObj.parents = _.union([team.parent_team_id], getAllParents(team._id, teamList));
-          indexObj.children = _.union(team.child_team_id, getAllChildren(team._id, teamList));
-          indexDocument.tribes.push(indexObj);
-        });
-
-        _.each(allTeams.squads, function(team) {
-          var indexObj = new Object();
-          indexObj._id = team._id;
-          indexObj.name = team.name;
-          indexObj.squadteam = team.squadteam;
-          indexObj.parents = !_.isEmpty(team.parent_team_id) ? [team.parent_team_id] : [];
-          indexObj.children = team.child_team_id;
-
-          var tribeIndex = _.findWhere(indexDocument.tribes, {_id : team.parent_team_id});
-          if (!_.isEmpty(tribeIndex)) {
-            indexObj.parents = _.union(indexObj.parents, tribeIndex.parents);
-          }
-
-          indexDocument.squads.push(indexObj);
-        });
-
-        var lookupIndex = _.union(indexDocument.domains, indexDocument.tribes, indexDocument.squads);
-        logger.get('models').verbose("Index size: " + _.size(lookupIndex));
-        
-        index.updateIndexDocument(lookupIndex)
-          .then(function(result) {
-            resolve(result);
-          })
-          .catch( /* istanbul ignore next */ function(err) {
-            logger.get('models').error('Error retrieving lookup document ' + err);
-            reject(err);
-          });        
-      });
     });
   },
 
@@ -116,23 +126,23 @@ var index = {
     return new Promise(function(resolve, reject) {
       common.getRecord("ag_ref_team_index")
         .then(function(result) {
-          resolve(result);     
+          resolve(result);
         })
         .catch( /* istanbul ignore next */ function(err) {
-          reject(err);  
-        });        
+          reject(err);
+        });
     });
   },
 
   /* istanbul ignore next */
   createLookupObj: function(_id, name, squadteam, doc_status, newParentId, oldParentId) {
     var obj = {
-      '_id'         : _id,
-      'name'        : name,
-      'squadteam'   : squadteam,
-      'doc_status'   : doc_status || '',
-      'newParentId' : newParentId || '',
-      'oldParentId' : oldParentId || ''
+      '_id': _id,
+      'name': name,
+      'squadteam': squadteam,
+      'doc_status': doc_status || '',
+      'newParentId': newParentId || '',
+      'oldParentId': oldParentId || ''
     };
     return obj;
   },
@@ -143,21 +153,21 @@ var index = {
         .then(function(indexDocument) {
           indexDocument.lookup = lookupIndex;
           common.updateRecord(indexDocument)
-          .then(function(result) {
-            logger.get('models').debug("Document based team indexing updated.");
-            resolve(result);
-          })
-          .catch( /* istanbul ignore next */ function(err) {
-            logger.get('models').debug("Document based team indexing not created.");
-            // try to rebuild index again
-            index.initIndex()
             .then(function(result) {
+              logger.get('models').debug("Document based team indexing updated.");
               resolve(result);
             })
             .catch( /* istanbul ignore next */ function(err) {
-              reject(err);
-            })
-          });        
+              logger.get('models').debug("Document based team indexing not created.");
+              // try to rebuild index again
+              index.initIndex()
+                .then(function(result) {
+                  resolve(result);
+                })
+                .catch( /* istanbul ignore next */ function(err) {
+                  reject(err);
+                })
+            });
         })
         .catch( /* istanbul ignore next */ function(err) {
           var indexDocument = new Object();
@@ -165,22 +175,22 @@ var index = {
           indexDocument.lookup = lookupIndex;
 
           common.addRecord(indexDocument)
-          .then(function(result) {
-            logger.get('models').verbose("Document based team indexing updated.");
-            resolve(result);
-          })
-          .catch( /* istanbul ignore next */ function(err) {
-            logger.get('models').verbose("Document based team indexing not created.");
-            // try to rebuild index again
-            index.initIndex()
             .then(function(result) {
+              logger.get('models').verbose("Document based team indexing updated.");
               resolve(result);
             })
             .catch( /* istanbul ignore next */ function(err) {
-              reject(err);
-            })
-          });  
-        });        
+              logger.get('models').verbose("Document based team indexing not created.");
+              // try to rebuild index again
+              index.initIndex()
+                .then(function(result) {
+                  resolve(result);
+                })
+                .catch( /* istanbul ignore next */ function(err) {
+                  reject(err);
+                })
+            });
+        });
     });
   },
 
@@ -202,17 +212,19 @@ var index = {
       logger.get('models').verbose('Success: All teams lookup document count: ' + _.size(allTeams));
       if (!_.isEmpty(allTeams)) {
         _.each(teamAssociations, function(teamAssociation) {
-          var currentTeam = _.findWhere(allTeams, {_id: teamAssociation._id});
+          var currentTeam = _.findWhere(allTeams, {
+            _id: teamAssociation._id
+          });
           var updateRequired = false;
           if (!_.isEmpty(currentTeam)) {
             logger.get('models').verbose('Success: current team found ' + teamAssociation._id);
-            if (!_.isEqual(currentTeam.name, teamAssociation.name) 
-              || !_.isEqual(currentTeam.squadteam, teamAssociation.squadteam)
-              || _.isEqual(teamAssociation.doc_status, "delete"))
+            if (!_.isEqual(currentTeam.name, teamAssociation.name) ||
+              !_.isEqual(currentTeam.squadteam, teamAssociation.squadteam) ||
+              _.isEqual(teamAssociation.doc_status, "delete"))
               updateRequired = true;
 
             currentTeam.name = teamAssociation.name;
-            currentTeam.squadteam = teamAssociation.squadteam;            
+            currentTeam.squadteam = teamAssociation.squadteam;
             /* 
               there is an existing team lookup data, and association needs to be updated
               to remove old parent association 
@@ -230,32 +242,38 @@ var index = {
               // for all parents of the current team, remove current team and children 
               var pCount = 0;
               _.each(parents, function(parentId) {
-                var parentTeam = _.findWhere(allTeams, {_id: parentId});
+                var parentTeam = _.findWhere(allTeams, {
+                  _id: parentId
+                });
                 if (!_.isEmpty(parentTeam)) {
                   parentTeam.children = _.difference(parentTeam.children, childrenList);
-                  pCount += 1; 
+                  pCount += 1;
                 }
               });
 
-              var oldParentTeam = _.findWhere(allTeams, {_id: teamAssociation.oldParentId});
+              var oldParentTeam = _.findWhere(allTeams, {
+                _id: teamAssociation.oldParentId
+              });
               var parentList = _.union(currentTeam.parents, [currentTeam._id]);
               // for all children of the current team, remove current team and parents
               var cCount = 0;
               _.each(children, function(childId) {
-                var childTeam = _.findWhere(allTeams, {_id: childId});
+                var childTeam = _.findWhere(allTeams, {
+                  _id: childId
+                });
                 if (!_.isEmpty(childTeam)) {
                   if (_.isEqual(teamAssociation.doc_status, "delete"))
                     childTeam.parents = _.difference(childTeam.parents, parentList);
                   else
                     childTeam.parents = _.difference(childTeam.parents, currentTeam.parents);
-                  cCount += 1; 
+                  cCount += 1;
                 }
               });
               // now we remove its old parent association
               currentTeam.parents = _.difference(currentTeam.parents, [teamAssociation.oldParentId], oldParentTeam.parents);
-              logger.get('models').verbose('Done removing old lookup data for ' + currentTeam.name + 
+              logger.get('models').verbose('Done removing old lookup data for ' + currentTeam.name +
                 ".  Removed " + pCount + " relationship(s) from parent record(s).  Removed " + cCount + " relationship(s) from child record(s).");
-              
+
             }
           }
           if (!_.isEmpty(currentTeam) && !_.isEmpty(teamAssociation.newParentId) && !_.isEqual(teamAssociation.doc_status, "delete")) {
@@ -269,7 +287,9 @@ var index = {
                 iterate NP teams to include currentTeam._id and currentTeam.children as new children
                 iterate currentTeam.children to include NP as parents 
             */
-            var newParentTeam = _.findWhere(allTeams, {_id: teamAssociation.newParentId});
+            var newParentTeam = _.findWhere(allTeams, {
+              _id: teamAssociation.newParentId
+            });
             if (!_.isEmpty(newParentTeam)) {
               updateRequired = true;
               logger.get('models').verbose('Updating new lookup data for ' + currentTeam.name);
@@ -281,11 +301,13 @@ var index = {
               // add current team as child of the parent team
               var childrenList = _.union(newParentTeam.children, [currentTeam._id], currentTeam.children);
               newParentTeam.children = childrenList;
-              
+
               // for all children of the current team, add new parent list as parents
               var pCount = 0;
               _.each(currentTeam.children, function(childId) {
-                var childTeam = _.findWhere(allTeams, {_id: childId});
+                var childTeam = _.findWhere(allTeams, {
+                  _id: childId
+                });
                 if (!_.isEmpty(childTeam)) {
                   childTeam.parents = _.union(childTeam.parents, parentList);
                   pCount += 1;
@@ -294,19 +316,21 @@ var index = {
               // for all parents of the parent team, add current team children as new children.
               var cCount = 0;
               _.each(newParentTeam.parents, function(parentId) {
-                var parentTeam = _.findWhere(allTeams, {_id: parentId});
+                var parentTeam = _.findWhere(allTeams, {
+                  _id: parentId
+                });
                 if (!_.isEmpty(parentTeam)) {
                   parentTeam.children = _.union(parentTeam.children, childrenList);
                   cCount += 1;
                 }
               });
-              logger.get('models').verbose('Done updating new lookup data for ' + currentTeam.name + 
+              logger.get('models').verbose('Done updating new lookup data for ' + currentTeam.name +
                 ".  Updated " + pCount + " relationship(s) from parent record(s).  Updated " + cCount + " relationship(s) from child record(s).");
-              
-            } 
+
+            }
           }
-          if (!_.isEqual(teamAssociation.doc_status, "delete") && _.isEmpty(currentTeam) 
-            && _.isEmpty(teamAssociation.newParentId) && _.isEmpty(teamAssociation.oldParentId)) {
+          if (!_.isEqual(teamAssociation.doc_status, "delete") && _.isEmpty(currentTeam) &&
+            _.isEmpty(teamAssociation.newParentId) && _.isEmpty(teamAssociation.oldParentId)) {
             // this is a new team 
             logger.get('models').verbose('Creating new lookup object for ' + teamAssociation.name);
             updateRequired = true;

@@ -39,88 +39,88 @@ var allTeams = iterationTestData.allTeams;
 var user = iterationTestData.user;
 var adminUser = userDetails.shortEmail;
 
-describe('Iteration API Test', function(){
+describe('Iteration API Test', function() {
   before(function(done) {
     this.timeout(50000);
     var teamName = 'testteamid_1';
     teamModel.getName(teamName)
-    .then(function(result) {
-      if (result.length === 0) {
-        teamModel.createTeam(teamDocValid, userDetails)
-        .then(function(body) {
-          expect(body).to.be.a('object');
-          expect(body).to.have.property('_id');
-          validId = body['_id'];
-          validTeamId = body['name'];
+      .then(function(result) {
+        if (result.length === 0) {
+          teamModel.createTeam(teamDocValid, userDetails)
+            .then(function(body) {
+              expect(body).to.be.a('object');
+              expect(body).to.have.property('_id');
+              validId = body['_id'];
+              validTeamId = body['name'];
+              userTeams[0]._id = validId;
+              // console.log('validId1:', validId);
+              agent.get('/api/login/masquerade/' + adminUser).send().end(function(err, res) {
+                if (err) throw err;
+                //call home page to initialize session data
+                agent.get('/').send().end(function(err, res) {
+                  agent.saveCookies(res);
+                  // console.log('\n back to homepage 1...\n');
+                  done();
+                });
+              });
+            }).catch(function(err) {});
+        } else {
+          validId = result[0].id;
           userTeams[0]._id = validId;
-          // console.log('validId1:', validId);
           agent.get('/api/login/masquerade/' + adminUser).send().end(function(err, res) {
             if (err) throw err;
-              //call home page to initialize session data
-              agent.get('/').send().end(function(err, res) {
-                agent.saveCookies(res);
-                // console.log('\n back to homepage 1...\n');
-                done();
-              });
-          });
-        }).catch(function(err) {});
-      } else {
-        validId = result[0].id;
-        userTeams[0]._id = validId;
-        agent.get('/api/login/masquerade/' + adminUser).send().end(function(err, res) {
-          if (err) throw err;
             //call home page to initialize session data
             agent.get('/').send().end(function(err, res) {
               agent.saveCookies(res);
               done();
             });
-        });
-      }
-    });
+          });
+        }
+      });
   });
 
   after(function(done) {
     var bulkDeleteIds = [];
-    if(validId) {
+    if (validId) {
       iterationModel.getByIterInfo(validId)
-      .then(function(result) {
-        // console.log('TOTAL validId:', validId);
-        // console.log('TOTAL ROWS1:', result.rows.length);
-        if (result && result.rows.length > 0) {
-          for(i=0; i < result.rows.length; i++) {
-            var id = result.rows[i].id;
-            bulkDeleteIds.push(id);
+        .then(function(result) {
+          // console.log('TOTAL validId:', validId);
+          // console.log('TOTAL ROWS1:', result.rows.length);
+          if (result && result.rows.length > 0) {
+            for (i = 0; i < result.rows.length; i++) {
+              var id = result.rows[i].id;
+              bulkDeleteIds.push(id);
+            }
+            util.BulkDelete(bulkDeleteIds)
+              .then(function(result) {
+                done();
+              })
+              .catch(function(err) {
+                done();
+              });
+            // done();
+          } else {
+            done();
           }
-          util.BulkDelete(bulkDeleteIds)
-          .then(function(result) {
-            done();
-          })
-          .catch(function(err){
-            done();
-          });
-          // done();
-        } else {
+        })
+        .catch(function(err) {
           done();
-        }
-      })
-      .catch(function(err){
-        done();
-      });
+        });
     } else {
       done();
     }
   });
 
-  describe('Iteration API Test [POST /api/iteration]: add team iteration document', function(){
+  describe('Iteration API Test [POST /api/iteration]: add team iteration document', function() {
     this.timeout(timeout);
-    it('It will successfully add new iteration document', function(done){
+    it('It will successfully add new iteration document', function(done) {
       var req = request(app).post('/api/iteration');
       agent.attachCookies(req);
       iterationDocValid._id = "testmyid-" + crypto.randomBytes(20).toString('hex');
       iterationDocValid.team_id = validId;
       iterationDocValid.iteration_name = "testiterationname-" + crypto.randomBytes(4).toString('hex');
       req.send(iterationDocValid);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           //console.log(err);
         } else {
@@ -148,7 +148,7 @@ describe('Iteration API Test', function(){
       var req = request(app).post('/api/iteration');
       agent.attachCookies(req);
       req.send(iterationDocValid);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           // console.log(err);
         } else {
@@ -163,13 +163,13 @@ describe('Iteration API Test', function(){
       });
     });
 
-    it('It will fail to add invalid iteration document', function(done){
-      var req =request(app).post('/api/iteration');
+    it('It will fail to add invalid iteration document', function(done) {
+      var req = request(app).post('/api/iteration');
       agent.attachCookies(req);
       iterationDocInvalid._id = "testmyid-" + crypto.randomBytes(20).toString('hex');
       iterationDocInvalid.team_id = validId;
       req.send(iterationDocInvalid);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           //console.log(err);
         } else {
@@ -180,10 +180,10 @@ describe('Iteration API Test', function(){
       });
     });
 
-    it('It will fail with empty document', function(done){
-      var req =request(app).post('/api/iteration');
+    it('It will fail with empty document', function(done) {
+      var req = request(app).post('/api/iteration');
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           //console.log(err);
         } else {
@@ -195,29 +195,29 @@ describe('Iteration API Test', function(){
     });
   });
 
-  describe('Iteration API Test [GET /api/iteration/]: get iteration doucments', function(){
+  describe('Iteration API Test [GET /api/iteration/]: get iteration doucments', function() {
     this.timeout(timeout);
     before(function(done) {
       var doc = _.clone(iterationDocValid);
       doc.team_id = validId;
       doc.iteration_name = "testiterationname-" + crypto.randomBytes(4).toString('hex');
       iterationModel.add(doc, user, allTeams, userTeams)
-      .then(function(result) {
-        iterationId = result.id;
-        iterationRev = result.rev;
-        expect(result).to.be.a('object');
-        expect(result).to.have.property('id');
-        expect(result.ok).to.be.equal(true);
-        done();
-      })
-      .catch(function(err) {
-        done();
-      });
+        .then(function(result) {
+          iterationId = result.id;
+          iterationRev = result.rev;
+          expect(result).to.be.a('object');
+          expect(result).to.have.property('id');
+          expect(result.ok).to.be.equal(true);
+          done();
+        })
+        .catch(function(err) {
+          done();
+        });
     });
-    it('Get all team iteration documents', function(done){
+    it('Get all team iteration documents', function(done) {
       var req = request(app).get('/api/iteration/');
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           //console.log(err);
         } else {
@@ -229,10 +229,10 @@ describe('Iteration API Test', function(){
       });
     });
 
-    it('Get team iteration docs by key', function(done){
+    it('Get team iteration docs by key', function(done) {
       var req = request(app).get('/api/iteration/' + validId);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           // console.log(err);
         } else {
@@ -248,11 +248,11 @@ describe('Iteration API Test', function(){
       });
     });
 
-    it('Get non-existing team iteration document', function(done){
+    it('Get non-existing team iteration document', function(done) {
       var invalidTeamId = '11111111';
       var req = request(app).get('/api/iteration/' + invalidTeamId);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           //console.log(err);
         } else {
@@ -265,14 +265,16 @@ describe('Iteration API Test', function(){
     });
   });
 
-  describe('Iteration API Test [GET /api/iteration/searchTeamIteration]: Search team iteration', function(){
+  describe('Iteration API Test [GET /api/iteration/searchTeamIteration]: Search team iteration', function() {
     this.timeout(timeout);
     it('Search by team id', function(done) {
       iterationDocValid.team_id = validId;
-      var query = querystring.stringify({'id':iterationDocValid._id});
+      var query = querystring.stringify({
+        'id': iterationDocValid._id
+      });
       var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           //console.log(err);
         } else {
@@ -286,10 +288,14 @@ describe('Iteration API Test', function(){
 
     it('Search by team id with startdate/enddate', function(done) {
       iterationDocValid.team_id = validId;
-      var query = querystring.stringify({'id':iterationDocValid._id, 'startdate': '20160701', 'enddate': '20160701'});
+      var query = querystring.stringify({
+        'id': iterationDocValid._id,
+        'startdate': '20160701',
+        'enddate': '20160701'
+      });
       var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           //console.log(err);
         } else {
@@ -303,10 +309,14 @@ describe('Iteration API Test', function(){
 
     it('Search by team id with startdate <= enddate', function(done) {
       iterationDocValid_sample3.team_id = validId;
-      var query = querystring.stringify({'id':iterationDocValid_sample3._id, 'startdate': '20160801', 'enddate': '20160814'});
+      var query = querystring.stringify({
+        'id': iterationDocValid_sample3._id,
+        'startdate': '20160801',
+        'enddate': '20160814'
+      });
       var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           //console.log(err);
         } else {
@@ -321,7 +331,7 @@ describe('Iteration API Test', function(){
     it('Missing TeamId', function(done) {
       var req = request(app).get('/api/iteration/searchTeamIteration');
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           // console.log(err);
         } else {
@@ -334,10 +344,13 @@ describe('Iteration API Test', function(){
 
     it('Cannot retrieve documents with invalid status', function(done) {
       iterationDocValid.team_id = validId;
-      var query = querystring.stringify({'id':iterationDocValid._id, 'status': 'X'});
+      var query = querystring.stringify({
+        'id': iterationDocValid._id,
+        'status': 'X'
+      });
       var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           // console.log(err);
         } else {
@@ -351,10 +364,13 @@ describe('Iteration API Test', function(){
 
     it('Successfully fetch documents with valid status', function(done) {
       iterationDocValid.team_id = validId;
-      var query = querystring.stringify({'id':iterationDocValid._id, 'status': 'Y'});
+      var query = querystring.stringify({
+        'id': iterationDocValid._id,
+        'status': 'Y'
+      });
       var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           // console.log(err);
         } else {
@@ -367,10 +383,13 @@ describe('Iteration API Test', function(){
 
     it('Successfully fetch documents with valid startdate', function(done) {
       iterationDocValid.team_id = validId;
-      var query = querystring.stringify({'id':iterationDocValid._id, 'startdate': '20160820'});
+      var query = querystring.stringify({
+        'id': iterationDocValid._id,
+        'startdate': '20160820'
+      });
       var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           // console.log(err);
         } else {
@@ -383,10 +402,13 @@ describe('Iteration API Test', function(){
 
     it('Cannot retrieve documents with invalid startdate', function(done) {
       iterationDocValid.team_id = validId;
-      var query = querystring.stringify({'id':iterationDocValid._id, 'startdate': '12345678'});
+      var query = querystring.stringify({
+        'id': iterationDocValid._id,
+        'startdate': '12345678'
+      });
       var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           // console.log(err);
         } else {
@@ -400,10 +422,13 @@ describe('Iteration API Test', function(){
 
     it('Successfully fetch documents with valid enddate', function(done) {
       iterationDocValid.team_id = validId;
-      var query = querystring.stringify({'id':iterationDocValid._id, 'enddate': '20160820'});
+      var query = querystring.stringify({
+        'id': iterationDocValid._id,
+        'enddate': '20160820'
+      });
       var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           // console.log(err);
         } else {
@@ -416,10 +441,13 @@ describe('Iteration API Test', function(){
 
     it('Cannot retrieve documents due to invalid enddate', function(done) {
       iterationDocValid.team_id = validId;
-      var query = querystring.stringify({'id':iterationDocValid._id, 'enddate': '12345678'});
+      var query = querystring.stringify({
+        'id': iterationDocValid._id,
+        'enddate': '12345678'
+      });
       var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           // console.log(err);
         } else {
@@ -432,7 +460,7 @@ describe('Iteration API Test', function(){
     });
   });
 
-  describe('Iteration API Test [GET /api/iteration/completed]: get completed iteration', function(){
+  describe('Iteration API Test [GET /api/iteration/completed]: get completed iteration', function() {
     this.timeout(timeout);
     before(function(done) {
       var doc = _.clone(iterationDocValid);
@@ -442,24 +470,26 @@ describe('Iteration API Test', function(){
       doc.iteration_end_dt = currentDate;
       doc.iteration_name = "testiterationname-" + crypto.randomBytes(4).toString('hex');
       iterationModel.add(doc, user, allTeams, userTeams)
-      .then(function(result) {
-        iterationId = result.id;
-        iterationRev = result.rev;
-        expect(result).to.be.a('object');
-        expect(result).to.have.property('id');
-        expect(result.ok).to.be.equal(true);
-        done();
-      })
-      .catch(function(err) {
-        done();
-      });
+        .then(function(result) {
+          iterationId = result.id;
+          iterationRev = result.rev;
+          expect(result).to.be.a('object');
+          expect(result).to.have.property('id');
+          expect(result.ok).to.be.equal(true);
+          done();
+        })
+        .catch(function(err) {
+          done();
+        });
     });
 
-    it('Get completed iteration documents', function(done){
-      var query = querystring.stringify({'startkey': '07/19/2016'});
+    it('Get completed iteration documents', function(done) {
+      var query = querystring.stringify({
+        'startkey': '07/19/2016'
+      });
       var req = request(app).get('/api/iteration/completed?' + query);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           //console.log(err);
         } else {
@@ -472,16 +502,16 @@ describe('Iteration API Test', function(){
     });
   });
 
-  describe('Iteration API Test [PUT /api/iteration/]: update iteration document', function(){
+  describe('Iteration API Test [PUT /api/iteration/]: update iteration document', function() {
     this.timeout(timeout);
-    it('It will successfully update iteration document', function(done){
+    it('It will successfully update iteration document', function(done) {
       var req = request(app).put('/api/iteration/' + iterationId);
       iterationDocValid_sample2._id = iterationId;
       iterationDocValid_sample2.team_id = validId;
       agent.attachCookies(req);
       req.send(iterationDocValid_sample2);
-      req.end(function(err, res){
-          //console.log(res.body);
+      req.end(function(err, res) {
+        //console.log(res.body);
         if (err) {
           //console.log(err);
         } else {
@@ -493,12 +523,12 @@ describe('Iteration API Test', function(){
       });
     });
 
-    it('It will fail to update without iterationId', function(done){
+    it('It will fail to update without iterationId', function(done) {
       var req = request(app).put('/api/iteration/');
       agent.attachCookies(req);
       iterationDocValid_sample2.team_id = validId;
       req.send(iterationDocValid_sample2);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           //console.log(err);
         } else {
@@ -510,12 +540,12 @@ describe('Iteration API Test', function(){
       });
     });
 
-    it('It will fail to update without document', function(done){
+    it('It will fail to update without document', function(done) {
       var req = request(app).put('/api/iteration/' + iterationId);
       var emptyDoc = '';
       agent.attachCookies(req);
       req.send(emptyDoc);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           //console.log(err);
         } else {
@@ -527,12 +557,12 @@ describe('Iteration API Test', function(){
       });
     });
 
-    it('It will fail to update without invalid document', function(done){
+    it('It will fail to update without invalid document', function(done) {
       var req = request(app).put('/api/iteration/' + iterationId);
       agent.attachCookies(req);
       iterationDocInvalid.team_id = validId;
       req.send(iterationDocInvalid);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           //console.log(err);
         } else {
@@ -546,10 +576,10 @@ describe('Iteration API Test', function(){
 
   describe('Iteration API Test [GET /api/iteration/current]: get iteration doc by id', function() {
     this.timeout(timeout);
-    it('It will successfully get iteration document', function(done){
+    it('It will successfully get iteration document', function(done) {
       var req = request(app).get('/api/iteration/current/' + iterationId);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           //console.log(err);
         } else {
@@ -561,10 +591,10 @@ describe('Iteration API Test', function(){
       });
     });
 
-    it('It will fail to get iteration document with invalid id', function(done){
+    it('It will fail to get iteration document with invalid id', function(done) {
       var req = request(app).get('/api/iteration/current/' + 'undefined');
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         if (err) {
           //console.log(err);
         } else {

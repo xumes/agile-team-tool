@@ -16,12 +16,12 @@ before(function(done) {
     })
 });
 
-describe('Util API Test [GET /api/util/systemstatus]: get system status', function(){
-  it('It will return system status successfully', function(done){
+describe('Util API Test [GET /api/util/systemstatus]: get system status', function() {
+  it('It will return system status successfully', function(done) {
     var req = request(app).get('/api/util/systemstatus/');
     agent.attachCookies(req);
     req.expect(200);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -33,12 +33,12 @@ describe('Util API Test [GET /api/util/systemstatus]: get system status', functi
   });
 });
 
-describe('Util API Test [GET /api/util/servertime]: get server time', function(){
-  it('It will return server time successfully', function(done){
+describe('Util API Test [GET /api/util/servertime]: get server time', function() {
+  it('It will return server time successfully', function(done) {
     var req = request(app).get('/api/util/servertime');
     agent.attachCookies(req);
     req.expect(200);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {

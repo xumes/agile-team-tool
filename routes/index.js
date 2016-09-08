@@ -1,7 +1,7 @@
 var fs = require('fs');
 var settings = require('../settings');
 var middleware = {
-  auth : require('../middleware/auth'),
+  auth: require('../middleware/auth'),
   cache: require('../middleware/cache')
 }
 

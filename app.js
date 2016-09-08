@@ -1,4 +1,4 @@
-var settings     = require('./settings');
+var settings = require('./settings');
 
 // Make sure New Relic is loaded first
 if (settings.newRelic == 'true') {
@@ -6,22 +6,22 @@ if (settings.newRelic == 'true') {
   console.log('New Relic enabled');
 }
 
-var express      = require('express');
-var session      = require('express-session');
-var path         = require('path');
-var favicon      = require('serve-favicon');
-var logger       = require('morgan');
+var express = require('express');
+var session = require('express-session');
+var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
 var cookieParser = require('cookie-parser');
-var bodyParser   = require('body-parser');
-var passport     = require('passport');
-var RedisStore   = require('connect-redis')(session);
-var favicon      = require('serve-favicon');
-var helmet       = require('helmet');
+var bodyParser = require('body-parser');
+var passport = require('passport');
+var RedisStore = require('connect-redis')(session);
+var favicon = require('serve-favicon');
+var helmet = require('helmet');
 var initCloudant = require('./cloudant/init');
-var loggers      = require('./middleware/logger')
+var loggers = require('./middleware/logger')
 
 /* istanbul ignore if */
-require('fs').readFile('./art', 'utf8', function (err,art) {
+require('fs').readFile('./art', 'utf8', function(err, art) {
   console.log(art);
   loggers.get('init').info("Configuration Settings:");
   console.log(settings);
@@ -53,10 +53,10 @@ app.use(helmet());
 // Force SSL
 /* istanbul ignore if */
 if (process.env.forceSSL == "true") {
-  app.use (function(req, res, next) {
+  app.use(function(req, res, next) {
     if (req.headers['x-forwarded-proto'] != 'https')
       return res.redirect(['https://', req.get('Host'), req.url].join(''));
-    return next()      
+    return next()
   });
 }
 
@@ -75,10 +75,10 @@ require('./middleware/login')(passport);
 require('./routes')(app, passport);
 
 /**
-* Error Handlers
-*/
+ * Error Handlers
+ */
 /* istanbul ignore next */
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', function(err) {
   console.error((new Date).toUTCString() + ' uncaughtException:', err.message)
   console.error(err.stack)
   process.exit(1)
