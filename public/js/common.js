@@ -1,6 +1,6 @@
 jQuery(function($) {
   $(document).ready(function() {
-    gDialogWindow.init();
+    //gDialogWindow.init();
   });
 });
 
