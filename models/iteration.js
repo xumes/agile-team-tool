@@ -26,10 +26,6 @@ var infoLogs = function(msg){
   return;
 };
 
-function jq( myid ) {
-    return myid.replace( /(:|\.|\[|\]|,|\/| )/g, "\\$1" );
-}
-
 var iteration = {
   getByIterInfo: function(teamId) {
     return new Promise(function(resolve, reject){
@@ -366,7 +362,7 @@ var iteration = {
     loggers.get('models').verbose('[iterationModel.searchTeamIteration] params: ', JSON.stringify(p,null,1));
     return new Promise(function(resolve, reject) {
       var iterationSearchAllDocRules = require('./validate_rules/iterationSearchAll.js');
-      var team_id = jq(p.id);
+      var team_id = util.specialCharsHandler(p.id);
       var status = p.status;
       var startdate = p.startdate;
       var enddate = p.enddate;

@@ -27,6 +27,18 @@ var infoLogs = function(msg){
 };
 
 var team = {
+  getSpecialChars: function() {
+    return new Promise(function(resolve, reject) {
+      get()
+        .then(function(result){
+          resolve(result);
+        })
+        .catch(function(err){
+          reject(err);
+        });
+    });
+  }
+
   getNonSquadTeams: function() {
     return new Promise(function(resolve, reject) {
       common.getByView('teams', 'lookupNonSquad')
@@ -304,7 +316,7 @@ var team = {
         updateOrDeleteTeamValidation.push(team.getTeam(teamId)); //res[0]
         infoLogs('Getting iterations associated to ' + teamId);
         updateOrDeleteTeamValidation.push(iterationModels.getByIterInfo(teamId)); //res[1]
-        infoLogs('Getting assessments associated to ' + teamId); 
+        infoLogs('Getting assessments associated to ' + teamId);
         updateOrDeleteTeamValidation.push(assessmentModels.getTeamAssessments(teamId)); //res[2]
         infoLogs('Getting existing team names that might match ' + updatedTeamDoc['name']);
         updateOrDeleteTeamValidation.push(team.getName(updatedTeamDoc['name'])); //res[3]
@@ -363,7 +375,7 @@ var team = {
                   }
                 }
                 associatedDocu = util.formatForBulkTransaction(associatedDocu, userEmail, 'update');
-                bulkDocu = {docs: _.union(bulkDocu.docs, associatedDocu.docs)};              
+                bulkDocu = {docs: _.union(bulkDocu.docs, associatedDocu.docs)};
               } else {
                 var lookupObj = teamIndex.createLookupObj(oldTeamDocu._id, oldTeamDocu.name, oldTeamDocu.squadteam, 'delete', '', oldTeamDocu.parent_team_id);
                 lookupObjArr.push(lookupObj);
@@ -819,7 +831,7 @@ var team = {
                 //   errorLists['error']['targetChild'] = ['Unable to add selected team as a child. Team may have been updated with another parent.'];
                 //   infoLogs(errorLists);
                 //   reject(errorLists);
-                // }else 
+                // }else
                 // we actually need to get the latest team docs to see if it has been associated already with another parent
                 if(associateObj['targetChild'].indexOf(associateObj['teamId']) > -1){
                   // not allowed to add self as a child
@@ -1070,7 +1082,7 @@ var team = {
       }
     });
   },
-  
+
   getUserTeams : function(userEmail){
     return new Promise(function(resolve, reject){
       var userTeamsList = [];

@@ -112,7 +112,7 @@ module.exports.BulkDelete = function(docIds) {
 
 /**
  * Reformat document to update/delete document structure for BULK operation
- * 
+ *
  * @param docs - array of documents
  * @param email - email address as last update user, ie logged in user
  * @param action - action to perfrom ie. update or delete
@@ -144,7 +144,7 @@ module.exports.formatForBulkTransaction = function(docs, email, action){
 
 /**
  * This will check if team/parent team is included in user teams
- * 
+ *
  * @param teamId - team id to search on
  * @param checkParent - checking of parent is necessary
  * @param allTeams - list of all teams
@@ -170,7 +170,7 @@ module.exports.formatForBulkTransaction = function(docs, email, action){
 
 /**
  * This will validate user access for create/update/delete operations
- * 
+ *
  * @param userId - user login id (email id)
  * @param teamId - team id to search on
  * @param checkParent - checking of parent is necessary
@@ -231,7 +231,7 @@ module.exports.returnObject = function(data) {
       returnData =  data.rows;
   } else if (data instanceof Array) {
     if (!_.isEmpty(data)) {
-      if (_.has(data[0], 'doc') && !_.isEmpty(data[0].doc)) 
+      if (_.has(data[0], 'doc') && !_.isEmpty(data[0].doc))
         returnData =  _.pluck(data, 'doc');
       else if (_.has(data[0], 'value') && !_.isEmpty(data[0].value))
         returnData =  _.pluck(data, 'value');
@@ -267,3 +267,7 @@ module.exports.queryLDAP = function(id) {
     })
   });
 };
+
+module.exports.specialCharsHandler = function(id) {
+  return id.replace( /(:|\.|\[|\]|,|\/| )/g, "\\$1" );
+}
