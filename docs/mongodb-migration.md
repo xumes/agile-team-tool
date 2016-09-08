@@ -11,7 +11,23 @@
 ### iterations
 | Fields        | Details           
 | ------------- |:-------------:
-|       |       
+|_id| objectId
+|name| Dank Memes
+|teamId| objectId of team
+|type| ?
+|status| 'completed' or 'in progress'
+|creationDate|epoc time
+|createdBy| ibm email
+|lastedUpdated| epoc time
+|startDate| epoc time
+|endDate| epoc time
+|committedStories| num
+|deliveredStories| num
+|locationScore| ( 'fte_cnt' .. used for pizza chart i think)
+|deployments|1
+|defects|2
+|clientSatisfaction| ?
+|teamSatisfaction| ?
 
 
 ### teams (top down tree structure)
@@ -41,7 +57,7 @@
 * Once a model has been rewritten, ensure migration scripts are written as well
 
 ## Structure
-* Top down. parent nodes have pointers to children.
+* Top down; parent nodes have pointers to children.
 
 
 ### Cloudant <-> MongoDB schema mapping
