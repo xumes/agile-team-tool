@@ -7,12 +7,11 @@ module.exports = function(app, includes) {
     failureRedirect: '/login'
   }));
 
-  app.get('/logout', function(req, res){
-    req.session.destroy(function (err) {
+  app.get('/logout', function(req, res) {
+    req.session.destroy(function(err) {
       if (settings.authType == 'saml') {
         res.redirect('/ssologout');
-      }
-      else {
+      } else {
         res.redirect('/login');
       }
     });
@@ -22,12 +21,11 @@ module.exports = function(app, includes) {
   app.get('/api/login/masquerade/:user', function(req, res) {
     var user = {
       'shortEmail': req.params.user,
-      'ldap':
-        {
-          'serialNumber': '123456PH1',
-          'hrFirstName': 'John',
-          'hrLastName': 'Doe'
-        }
+      'ldap': {
+        'serialNumber': '123456PH1',
+        'hrFirstName': 'John',
+        'hrLastName': 'Doe'
+      }
     };
     req.login(user, function(err) {
       /* istanbul ignore if  */

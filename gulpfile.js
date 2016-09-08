@@ -1,7 +1,7 @@
-var gulp     = require('gulp');
+var gulp = require('gulp');
 var istanbul = require('gulp-istanbul');
-var mocha    = require('gulp-mocha');
-var jshint   = require('gulp-jshint');
+var mocha = require('gulp-mocha');
+var jshint = require('gulp-jshint');
 
 
 gulp.task('jshint', function() {
@@ -9,7 +9,7 @@ gulp.task('jshint', function() {
     .pipe(jshint());
 });
 
-gulp.task('pre-test', function () {
+gulp.task('pre-test', function() {
   return gulp.src(['*.js', 'routes/*.js', 'routes/*/*.js', 'models/*.js'])
     // Covering files
     .pipe(istanbul())
@@ -17,7 +17,7 @@ gulp.task('pre-test', function () {
     .pipe(istanbul.hookRequire());
 });
 
-gulp.task('test', ['jshint', 'pre-test'], function () {
+gulp.task('test', ['jshint', 'pre-test'], function() {
   process.env.isGulpTest = true;
   return gulp.src(['test/*.js', 'test/*/*/*.js', 'test/*/*.js'])
     .pipe(mocha({
@@ -36,4 +36,4 @@ gulp.task('test', ['jshint', 'pre-test'], function () {
     .once('end', function() {
       process.exit();
     })
- });
+});

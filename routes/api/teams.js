@@ -4,120 +4,124 @@ var validate = require('validate.js');
 var _ = require('underscore');
 
 module.exports = function(app, includes) {
-  createTeam = function(req, res){
+  createTeam = function(req, res) {
     var teamDoc = req.body;
     teamModel.createTeam(teamDoc, req.session['user'])
-      .then(function(result){
+      .then(function(result) {
         teamModel.getUserTeams(req.session['email'])
-        .then(function (body){
-          var addResult = new Object();
-          addResult.team = result;
-          addResult.userTeams = body;
-          res.status(201).send(addResult);
-        });
+          .then(function(body) {
+            var addResult = new Object();
+            addResult.team = result;
+            addResult.userTeams = body;
+            res.status(201).send(addResult);
+          });
       })
-      .catch(function(err){
+      .catch(function(err) {
         res.status(400).send(err);
       })
   };
 
-  deleteTeam = function(req, res){
-    if(!(_.isEmpty(req.body['doc_status'])) &&  req.body['doc_status'] === 'delete'){
+  deleteTeam = function(req, res) {
+    if (!(_.isEmpty(req.body['doc_status'])) && req.body['doc_status'] === 'delete') {
       teamModel.updateOrDeleteTeam(req.body, req.session["user"], 'delete')
-        .then(function(result){
+        .then(function(result) {
           teamModel.getUserTeams(req.session['email'])
-          .then(function (body){
-            res.status(200).send(body);
-          });
+            .then(function(body) {
+              res.status(200).send(body);
+            });
         })
-        .catch(function(err){
+        .catch(function(err) {
           res.status(400).send(err);
         })
-    }else{
-      res.status(400).send({ error : 'Invalid request' });
+    } else {
+      res.status(400).send({
+        error: 'Invalid request'
+      });
     }
   }
 
-  updateTeam = function(req, res){
+  updateTeam = function(req, res) {
     teamModel.updateOrDeleteTeam(req.body, req.session["user"], 'update')
-      .then(function(result){
+      .then(function(result) {
         teamModel.getUserTeams(req.session['email'])
-        .then(function (body){
-          var updateResult = new Object();
-          updateResult.team = result;
-          updateResult.userTeams = body;
-          res.send(updateResult);
-        });
+          .then(function(body) {
+            var updateResult = new Object();
+            updateResult.team = result;
+            updateResult.userTeams = body;
+            res.send(updateResult);
+          });
       })
-      .catch(function(err){
+      .catch(function(err) {
         res.status(400).send(err);
       });
   };
 
-  associateTeam = function(req, res){
+  associateTeam = function(req, res) {
     var action = req.body.action;
     var valid = teamModel.associateActions(action);
-    if(typeof valid === 'object' || valid === false){
-      res.status(400).send({ error : 'Invalid action' });
-    }else{
-      teamModel.associateTeams(req.body, action, req.session["user"])
-      .then(function(result) {
-        var associateResult = new Object();
-        teamModel.getUserTeams(req.session['email'])
-        .then(function (body){
-          associateResult.team = result;
-          associateResult.userTeams = body;
-          res.send(associateResult);
-        });
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        // cannot simulate this error during testing
-        res.status(400).send(err);
+    if (typeof valid === 'object' || valid === false) {
+      res.status(400).send({
+        error: 'Invalid action'
       });
+    } else {
+      teamModel.associateTeams(req.body, action, req.session["user"])
+        .then(function(result) {
+          var associateResult = new Object();
+          teamModel.getUserTeams(req.session['email'])
+            .then(function(body) {
+              associateResult.team = result;
+              associateResult.userTeams = body;
+              res.send(associateResult);
+            });
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          // cannot simulate this error during testing
+          res.status(400).send(err);
+        });
     }
   };
 
-  getTeamRole = function(req, res){
+  getTeamRole = function(req, res) {
     teamModel.getRole()
-      .then(function(result){
+      .then(function(result) {
         res.send(result);
       })
-      .catch( /* istanbul ignore next */ function(err){
+      .catch( /* istanbul ignore next */ function(err) {
         // cannot simulate this error during testing
         res.status(400).send(err);
       });
   };
 
-  getTeamName = function(req, res){
+  getTeamName = function(req, res) {
     var teamName = req.params.teamName;
     teamModel.getName(teamName)
-      .then(function(result){
+      .then(function(result) {
         res.send(result);
       })
-      .catch( /* istanbul ignore next */ function(err){
+      .catch( /* istanbul ignore next */ function(err) {
         // cannot simulate this error during testing
         res.status(400).send(err);
       });
   };
 
-  getTeamByEmail = function(req,res){
+  getTeamByEmail = function(req, res) {
     var email = req.params.email;
     teamModel.getTeamByEmail(email)
-      .then(function(result){
+      .then(function(result) {
         res.send(result);
       })
-      .catch(function(err){
+      .catch(function(err) {
         res.status(400).send(err);
       })
   }
 
-  getTeamByUid = function(req,res){
+  getTeamByUid = function(req, res) {
     var uid = req.params.uid;
     teamModel.getTeamByUid(uid)
-      .then(function(result){
+      .then(function(result) {
         res.send(result);
       })
-      .catch( /* istanbul ignore next */ function(err){
+      .catch( /* istanbul ignore next */ function(err) {
         res.status(400).send(err);
       })
   }
@@ -126,10 +130,10 @@ module.exports = function(app, includes) {
     /* use query to get top level, children or parent team */
     if (!_.isEmpty(req.query)) {
       teamModel.getRootTeams(req.query)
-        .then(function(result){
+        .then(function(result) {
           res.status(200).send(result);
         })
-        .catch( /* istanbul ignore next */ function(err){
+        .catch( /* istanbul ignore next */ function(err) {
           res.status(400).send(err);
         });
     }
@@ -137,10 +141,10 @@ module.exports = function(app, includes) {
     else {
       var teamId = req.params.teamId;
       teamModel.getTeam(teamId)
-        .then(function(result){
+        .then(function(result) {
           res.send(result);
         })
-        .catch(function(err){
+        .catch(function(err) {
           res.status(400).send(err);
         });
     }
@@ -149,34 +153,34 @@ module.exports = function(app, includes) {
   initLookupIndex = function(req, res) {
     var teamId = req.params.teamId;
     teamIndex.initIndex()
-    .then(function(result) {
-      res.status(200).send(result);
-    })
-    .catch( /* istanbul ignore next */ function(err){
-      res.status(400).send(err);
-    });
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        res.status(400).send(err);
+      });
   };
 
   getSelectableParents = function(req, res) {
     var teamId = req.params.teamId;
     teamModel.getSelectableParents(teamId)
-    .then(function(result) {
-      res.status(200).send(result);
-    })
-    .catch( /* istanbul ignore next */ function(err){
-      res.status(400).send(err);
-    });
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        res.status(400).send(err);
+      });
   };
 
   getSelectableChildren = function(req, res) {
     var teamId = req.params.teamId;
     teamModel.getSelectableChildren(teamId)
-    .then(function(result) {
-      res.status(200).send(result);
-    })
-    .catch( /* istanbul ignore next */ function(err){
-      res.status(400).send(err);
-    });
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        res.status(400).send(err);
+      });
   };
 
   getLookupIndex = function(req, res) {
@@ -185,34 +189,34 @@ module.exports = function(app, includes) {
       var squadteam = req.query.squadteam || 'no';
       squadteam = squadteam.toUpperCase() == "YES" ? true : false;
       teamModel.getLookupTeamByType(id, squadteam)
-      .then(function(result) {
-        res.status(200).send(result);
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        res.status(400).send(err);
-      });
+        .then(function(result) {
+          res.status(200).send(result);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          res.status(400).send(err);
+        });
 
     } else {
       var teamId = req.params.teamId;
       teamModel.getLookupIndex(teamId)
-      .then(function(result) {
-        res.status(200).send(result);
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        res.status(400).send(err);
-      });
+        .then(function(result) {
+          res.status(200).send(result);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          res.status(400).send(err);
+        });
     }
   };
 
   getSquadsOfParent = function(req, res) {
     var teamId = req.params.teamId;
     teamModel.getSquadsOfParent(teamId)
-    .then(function(result) {
-      res.status(200).send(result);
-    })
-    .catch( /* istanbul ignore next */ function(err){
-      res.status(400).send(err);
-    });
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        res.status(400).send(err);
+      });
   };
 
   // delete team document

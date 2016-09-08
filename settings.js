@@ -20,12 +20,12 @@ module.exports = {
   },
   email: {
     smtpHost: process.env.smtpHost || "https://localhost:8080/mail",
-    smtpApplicationKey : process.env.smtpApplicationKey ||"key123"
+    smtpApplicationKey: process.env.smtpApplicationKey || "key123"
   },
   prefixes: {
-    team : 'ag_team_',
-    iteration : 'ag_iterationinfo_',
-    assessment : 'ag_mar_'
+    team: 'ag_team_',
+    iteration: 'ag_iterationinfo_',
+    assessment: 'ag_mar_'
   },
   environment: process.env.NODE_ENV || 'development',
   googleAnalyticsKey: process.env.googleAnalyticsKey || '',

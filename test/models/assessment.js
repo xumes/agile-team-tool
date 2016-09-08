@@ -11,7 +11,7 @@ var users = require('../../models/users');
 var common = require('../../models/cloudant-driver');
 var lodash = require('lodash');
 var testData = require('../data/assessment');
-var users  = require('../../models/users')
+var users = require('../../models/users')
 
 var noId = testData.noId;
 var teamData = testData.teamData;
@@ -30,152 +30,154 @@ var parentUser = testData.parentUser;
 var adminList;
 var assessmentIds = [];
 
-function createDraft1(){
+function createDraft1() {
   common.addRecord(draft_assessment)
-  .then(function(body){
-    if (!lodash.isEmpty(body))
-      draft_assessment._rev = body.rev;
-  })
-  .catch(function(err){
-    return assessmentModel.getAssessment(draft_assessment._id)
-  })
-  .then(function(body){
-    if (!lodash.isEmpty(body))
-      draft_assessment = body;
-  });
+    .then(function(body) {
+      if (!lodash.isEmpty(body))
+        draft_assessment._rev = body.rev;
+    })
+    .catch(function(err) {
+      return assessmentModel.getAssessment(draft_assessment._id)
+    })
+    .then(function(body) {
+      if (!lodash.isEmpty(body))
+        draft_assessment = body;
+    });
 };
 
-function createSubmit1(){
+function createSubmit1() {
   common.addRecord(sub_assessment)
-  .then(function(body){
-    if (!lodash.isEmpty(body))
-      sub_assessment._rev = body.rev;
-  })
-  .catch(function(err){
-    return assessmentModel.getAssessment(sub_assessment._id)
-  })
-  .then(function(body){
-    if (!lodash.isEmpty(body))
-      sub_assessment = body;
-  });
+    .then(function(body) {
+      if (!lodash.isEmpty(body))
+        sub_assessment._rev = body.rev;
+    })
+    .catch(function(err) {
+      return assessmentModel.getAssessment(sub_assessment._id)
+    })
+    .then(function(body) {
+      if (!lodash.isEmpty(body))
+        sub_assessment = body;
+    });
 };
 
-function createDelete1(){
+function createDelete1() {
   common.addRecord(del_assessment)
-  .then(function(body){
-    if (!lodash.isEmpty(body))
-      del_assessment._rev = body.rev;
-  })
-  .catch(function(err){
-    return assessmentModel.getAssessment(del_assessment._id)
-  })
-  .then(function(body){
-    if (!lodash.isEmpty(body))
-      del_assessment = body;
-  });
+    .then(function(body) {
+      if (!lodash.isEmpty(body))
+        del_assessment._rev = body.rev;
+    })
+    .catch(function(err) {
+      return assessmentModel.getAssessment(del_assessment._id)
+    })
+    .then(function(body) {
+      if (!lodash.isEmpty(body))
+        del_assessment = body;
+    });
 };
-function createTribe(){
+
+function createTribe() {
   parentTeamData = teamModel.defaultTeamDoc(parentTeamData, parentUser);
   parentTeamData._id = parentTeamId;
   parentTeamData.parent_team_id = '';
   parentTeamData.child_team_id = [childTeamId];
   common.addRecord(parentTeamData)
-  .then(function(body){
-    if (!lodash.isEmpty(body))
-      parentTeamData._rev = body.rev;
-  })
-  .catch(function(err){
-    return teamModel.getTeam(parentTeamData._id);
-  })
-  .then(function(body){
-    if (!lodash.isEmpty(body))
-      parentTeamData = body;
-  });
+    .then(function(body) {
+      if (!lodash.isEmpty(body))
+        parentTeamData._rev = body.rev;
+    })
+    .catch(function(err) {
+      return teamModel.getTeam(parentTeamData._id);
+    })
+    .then(function(body) {
+      if (!lodash.isEmpty(body))
+        parentTeamData = body;
+    });
 };
 
-function createSquad(){
+function createSquad() {
   teamData = teamModel.defaultTeamDoc(teamData, dummyData.user.details);
   teamData._id = childTeamId;
   teamData.parent_team_id = parentTeamId;
   teamData.child_team_id = [];
   common.addRecord(teamData)
-  .then(function(body){
-    if (!lodash.isEmpty(body))
-      teamData._rev = body.rev;
-  })
-  .catch(function(err){
-    return teamModel.getTeam(teamData._id);
-  })
-  .then(function(body){
-    if (!lodash.isEmpty(body))
-      teamData = body;
-  });
+    .then(function(body) {
+      if (!lodash.isEmpty(body))
+        teamData._rev = body.rev;
+    })
+    .catch(function(err) {
+      return teamModel.getTeam(teamData._id);
+    })
+    .then(function(body) {
+      if (!lodash.isEmpty(body))
+        teamData = body;
+    });
 };
 
-function cleanupAssessment(recId){
+function cleanupAssessment(recId) {
   assessmentModel.getAssessment(recId)
-   .then(function(body){
+    .then(function(body) {
       return common.deleteRecord(body._id, body._rev);
     });
 };
 
 describe('Assessment Model', function() {
-  before(function(done){
+  before(function(done) {
 
     users.getAdmins()
-      .then(function(body){
+      .then(function(body) {
         adminList = body.ACL_Full_Admin;
         return Promise.all([createTribe(), createSquad()]);
       })
-      .then(function(list){
+      .then(function(list) {
         return Promise.all([createDraft1(), createSubmit1(), createDelete1()]);
       })
-      .finally(function(){
+      .finally(function() {
         done();
       });
   });
 
-  after(function(done){
-    Promise.all([cleanupAssessment(draft_assessment._id),cleanupAssessment(sub_assessment._id),
-      cleanupAssessment(assessmentIds[0]), cleanupAssessment(assessmentIds[1])]);
+  after(function(done) {
+    Promise.all([cleanupAssessment(draft_assessment._id), cleanupAssessment(sub_assessment._id),
+      cleanupAssessment(assessmentIds[0]), cleanupAssessment(assessmentIds[1])
+    ]);
 
     teamModel.getTeam(teamData._id)
-    .then(function(body){
-      return common.deleteRecord(body._id, body._rev)
-    })
-    .then(function(body){
-      return teamModel.getTeam(parentTeamData._id)
-    })
-    .then(function(body){
-      return common.deleteRecord(body._id, body._rev)
-    })
-    .finally(function(){
-      done();
-    });
+      .then(function(body) {
+        return common.deleteRecord(body._id, body._rev)
+      })
+      .then(function(body) {
+        return teamModel.getTeam(parentTeamData._id)
+      })
+      .then(function(body) {
+        return common.deleteRecord(body._id, body._rev)
+      })
+      .finally(function() {
+        done();
+      });
   });
 
-  describe("assessment models [getAssessmentTemplate]", function(){
-    it("retrieve assessment template", function(done){
+  describe("assessment models [getAssessmentTemplate]", function() {
+    it("retrieve assessment template", function(done) {
       assessmentModel.getAssessmentTemplate()
-        .then(function(body){
+        .then(function(body) {
           expect(body).to.be.an('object');
           expect(body).to.have.property('rows');
           done();
         })
-        .catch(function(err){
+        .catch(function(err) {
           done(err);
         });
     });
   });
 
-  describe("assessment models [document validation]", function(){
-    it("draft assessment with no created date", function(done){
+  describe("assessment models [document validation]", function() {
+    it("draft assessment with no created date", function(done) {
       var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment.assessmt_status = 'Draft';
       valAssessment.assessmt_cmpnt_rslts[0].assessed_cmpnt_tbl[0].cur_mat_lvl_score = '';
       valAssessment.created_dt = '';
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
-        .catch(function(err){
+        .catch(function(err) {
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err).to.have.deep.property('error.created_dt[0]', 'Created date is required.');
@@ -183,43 +185,43 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("valid draft assessment from team member", function(done){
-      var valAssessment =lodash.cloneDeep(curr_assessment);
+    it("valid draft assessment from team member", function(done) {
+      var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment.assessmt_status = 'Draft';
       valAssessment.assessmt_cmpnt_rslts[0].assessed_cmpnt_tbl[0].cur_mat_lvl_score = '';
       valAssessment.created_dt = util.getServerTime();
       valAssessment.created_user = dummyData.user.details.shortEmail;
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
-        .then(function(body){
+        .then(function(body) {
           expect(body.ok).to.be.true;
           expect(body.id).to.be.equal(valAssessment._id);
           assessmentIds.push(body.id);
           done();
         })
-        .catch(function(err){
+        .catch(function(err) {
           done(err);
         });
     });
 
-    it("draft assessment for update (using parent team member)", function(done){
+    it("draft assessment for update (using parent team member)", function(done) {
       var draftForUpdate = lodash.cloneDeep(draft_assessment);
       draftForUpdate.last_updt_dt = util.getServerTime();
       assessmentModel.updateTeamAssessment(parentUser.shortEmail, draftForUpdate)
-        .then(function(body){
+        .then(function(body) {
           expect(body.ok).to.be.true;
           expect(body.id).to.be.equal(draftForUpdate._id);
           done();
         })
-        .catch(function(err){
+        .catch(function(err) {
           done(err);
         });
     });
 
-    it("new submitted assessment (unaswered question)", function(done){
+    it("new submitted assessment (unaswered question)", function(done) {
       var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment.assessmt_cmpnt_rslts[0].assessed_cmpnt_tbl[0].cur_mat_lvl_achieved = '';
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
-        .catch(function(err){
+        .catch(function(err) {
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err).to.have.deep.property('error.cur_mat_lvl_achieved[0]', 'All assessment maturity practices need to be answered.  See highlighted practices in yellow.');
@@ -227,45 +229,45 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("update assessment (unaswered question)", function(done){
+    it("update assessment (unaswered question)", function(done) {
       var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment.assessmt_cmpnt_rslts[0].assessed_cmpnt_tbl[0].cur_mat_lvl_achieved = '';
       assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
-        .catch(function(err){
+        .catch(function(err) {
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
-          expect(err).to.have.deep.property('error.cur_mat_lvl_achieved[0]','All assessment maturity practices need to be answered.  See highlighted practices in yellow.');
+          expect(err).to.have.deep.property('error.cur_mat_lvl_achieved[0]', 'All assessment maturity practices need to be answered.  See highlighted practices in yellow.');
           done();
         });
     });
 
 
-    it("new submitted assessment (invalid project type)", function(done){
+    it("new submitted assessment (invalid project type)", function(done) {
       var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment.team_proj_ops = 'General';
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
-        .catch(function(err){
+        .catch(function(err) {
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
-          expect(err).to.have.deep.property('error.team_proj_ops[0]','General is not included in the list');
+          expect(err).to.have.deep.property('error.team_proj_ops[0]', 'General is not included in the list');
           done();
         });
     });
 
-    it("new submitted assessment (no overall assessment score)", function(done){
-     var valAssessment = lodash.cloneDeep(curr_assessment);
+    it("new submitted assessment (no overall assessment score)", function(done) {
+      var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment.assessmt_cmpnt_rslts[0].ovraltar_assessmt_score = '';
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
-        .catch(function(err){
+        .catch(function(err) {
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
-          expect(err).to.have.deep.property('error.ovraltar_assessmt_score[0]','Overall target assessment score is required.');
+          expect(err).to.have.deep.property('error.ovraltar_assessmt_score[0]', 'Overall target assessment score is required.');
           done();
         });
     });
 
 
-    it("new submitted assessment (incomplete action plan field)", function(done){
+    it("new submitted assessment (incomplete action plan field)", function(done) {
       var valAssessment = lodash.cloneDeep(curr_assessment);
       var action = new Object();
       action.action_plan_entry_id = 0;
@@ -284,24 +286,24 @@ describe('Assessment Model', function() {
       action.action_item_status = 'Open';
       valAssessment.assessmt_action_plan_tbl[0] = action;
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
-        .catch(function(err){
+        .catch(function(err) {
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
-          expect(err).to.have.deep.property('error.principle_id[0]','Principle id is required.');
+          expect(err).to.have.deep.property('error.principle_id[0]', 'Principle id is required.');
           done();
         });
     });
 
   });
 
-  describe("assessment model [addTeamAssessment] ", function(){
+  describe("assessment model [addTeamAssessment] ", function() {
 
-    it("valid assessment with non-existing user", function(done){
-      var valAssessment =lodash.cloneDeep(curr_assessment);
+    it("valid assessment with non-existing user", function(done) {
+      var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment.created_dt = util.getServerTime();
       valAssessment.created_user = 'test.user@ph.ibm.com';
       assessmentModel.addTeamAssessment('test.user@ph.ibm.com', valAssessment)
-        .catch(function(err){
+        .catch(function(err) {
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err.error).to.equal('Unauthorized user.');
@@ -309,65 +311,65 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("add assessment [valid assessment data]", function(done){
+    it("add assessment [valid assessment data]", function(done) {
       var valAssessment = lodash.cloneDeep(curr_assessment);
       assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
-      .then(function(body){
-        expect(body).to.be.an('object');
-        expect(body.ok).to.be.true;
-        expect(body.id).to.be.equal(valAssessment._id);
-        assessmentIds.push(body.id);
-        done();
-      })
-      .catch(function(err){
-        done(err);
-      });
+        .then(function(body) {
+          expect(body).to.be.an('object');
+          expect(body.ok).to.be.true;
+          expect(body.id).to.be.equal(valAssessment._id);
+          assessmentIds.push(body.id);
+          done();
+        })
+        .catch(function(err) {
+          done(err);
+        });
     });
 
   });
 
-  describe("assessment models [getTeamAssessments]", function(){
-    it("retrieve team assessments [valid team id]", function(done){
+  describe("assessment models [getTeamAssessments]", function() {
+    it("retrieve team assessments [valid team id]", function(done) {
       assessmentModel.getTeamAssessments(sub_assessment.team_id)
-        .then(function(body){
+        .then(function(body) {
           expect(body).to.be.instanceof(Array);
           var idRecords = _.pluck(body, '_id');
           expect(idRecords).to.have.contain(sub_assessment._id);
           done();
         })
-        .catch(function(err){
+        .catch(function(err) {
           done(err);
         });
     });
 
-    it("retrieve team assessments [valid team id-all assessment information]", function(done){
+    it("retrieve team assessments [valid team id-all assessment information]", function(done) {
       assessmentModel.getTeamAssessments(sub_assessment.team_id, 'true')
-        .then(function(body){
+        .then(function(body) {
           expect(body).to.be.instanceof(Array);
           var idRecords = _.pluck(body, '_id');
           expect(idRecords).to.have.contain(sub_assessment._id);
           done();
         })
-        .catch(function(err){
+        .catch(function(err) {
           done(err);
         });
     });
 
-    it("retrieve team assessments [non-existing team id]", function(done){
+    it("retrieve team assessments [non-existing team id]", function(done) {
       assessmentModel.getTeamAssessments(invalidTeamId)
-        .then(function(body){
+        .then(function(body) {
           expect(body).to.be.instanceof(Array);
           expect(body).to.be.empty;
           done();
         })
-        .catch(function(err){
+        .catch(function(err) {
           done(err);
         });
     });
 
-    it("retrieve team assessments [empty team id]", function(done){
+    it("retrieve team assessments [empty team id]", function(done) {
       assessmentModel.getTeamAssessments('')
-        .catch(function(err){
+        .catch(function(err) {
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err.error).to.be.equal('No team id provided.');
@@ -376,11 +378,11 @@ describe('Assessment Model', function() {
     });
   });
 
-  describe("assessment model [getAssessment] ", function(){
+  describe("assessment model [getAssessment] ", function() {
 
-    it("retrieve assessment [non-existing assessment id]", function(done){
+    it("retrieve assessment [non-existing assessment id]", function(done) {
       assessmentModel.getAssessment(invalidAssessId)
-        .catch(function(err){
+        .catch(function(err) {
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err.error).to.be.equal('not_found');
@@ -388,9 +390,9 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("retrieve assessment [empty assessment id]", function(done){
+    it("retrieve assessment [empty assessment id]", function(done) {
       assessmentModel.getAssessment('')
-        .catch(function(err){
+        .catch(function(err) {
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err.error).to.be.equal('No assessment id provided.');
@@ -398,50 +400,50 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("retrieve assessment [valid assessment id]", function(done){
+    it("retrieve assessment [valid assessment id]", function(done) {
       assessmentModel.getAssessment(sub_assessment._id)
-        .then(function(body){
+        .then(function(body) {
           expect(body).to.be.an('object');
           expect(body._id).to.be.equal(sub_assessment._id);
           done();
         })
-        .catch(function(err){
+        .catch(function(err) {
           done(err);
         });
     });
 
   });
 
-  describe("assessment model [updateTeamAssessment] ", function(){
-    it("update assessment [no assessment id]", function(done){
+  describe("assessment model [updateTeamAssessment] ", function() {
+    it("update assessment [no assessment id]", function(done) {
       assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, noId)
-        .catch(function(err){
+        .catch(function(err) {
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
-          expect(err).to.have.deep.property('error._id[0]','Record id is required.');
+          expect(err).to.have.deep.property('error._id[0]', 'Record id is required.');
           done();
         });
     });
 
-    it("update assessment [empty assessment id]", function(done){
+    it("update assessment [empty assessment id]", function(done) {
       var tempData = lodash.cloneDeep(curr_assessment);
-      tempData._id='';
+      tempData._id = '';
       assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, tempData)
-        .catch(function(err){
+        .catch(function(err) {
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
-          expect(err).to.have.deep.property('error._id[0]','Record id is required.');
+          expect(err).to.have.deep.property('error._id[0]', 'Record id is required.');
           done();
         });
     });
 
-    it("update assessment [valid assessment data] with non-existing user", function(done){
+    it("update assessment [valid assessment data] with non-existing user", function(done) {
       //make sure to have latest document revision id
       var tempData = lodash.cloneDeep(sub_assessment);
       tempData.last_updt_user = 'test.user@ph.ibm.com';
       tempData.last_updt_dt = util.getServerTime();
       assessmentModel.updateTeamAssessment('test.user@ph.ibm.com', tempData)
-        .catch(function(err){
+        .catch(function(err) {
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err.error).to.equal('Unauthorized user.');
@@ -449,14 +451,14 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("update assessment [valid assessment data] invalid revision id", function(done){
+    it("update assessment [valid assessment data] invalid revision id", function(done) {
       //make sure to have latest document revision id
       var tempData = lodash.cloneDeep(sub_assessment);
       tempData.last_updt_user = dummyData.user.details.shortEmail;
       tempData.last_updt_dt = util.getServerTime();
       tempData._rev = invalidRevisionId;
       assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, tempData)
-        .catch(function(err){
+        .catch(function(err) {
           expect(err).to.be.an('object');
           expect(err).to.have.property('error');
           expect(err.error).to.be.equal('conflict');
@@ -464,55 +466,55 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("update assessment [valid assessment data]", function(done){
+    it("update assessment [valid assessment data]", function(done) {
       //make sure to have latest document revision id
       var tempData = lodash.cloneDeep(sub_assessment);
       tempData.last_updt_user = dummyData.user.details.shortEmail;
       tempData.last_updt_dt = util.getServerTime();
       assessmentModel.updateTeamAssessment(dummyData.user.details.shortEmail, tempData)
-        .then(function(body){
+        .then(function(body) {
           expect(body).to.be.an('object');
           expect(body.id).equal(tempData._id);
           expect(body.ok).to.be.true;
           done();
         })
-        .catch(function(err){
+        .catch(function(err) {
           done(err);
         });
     });
   });
 
-  describe("assessment model [deleteAssessment] ", function(){
-    it("delete assessment [non-existing assessment id]", function(done){
+  describe("assessment model [deleteAssessment] ", function() {
+    it("delete assessment [non-existing assessment id]", function(done) {
       assessmentModel.deleteAssessment(dummyData.user.details.shortEmail, invalidAssessId, del_assessment._rev)
-        .catch(function(err){
+        .catch(function(err) {
           expect(err).to.have.property('error');
           expect(err.error).to.be.equal('not_found');
           done();
         });
     });
 
-    it("delete assessment [empty assessment id]", function(done){
-      assessmentModel.deleteAssessment(dummyData.user.details.shortEmail,'', del_assessment._rev)
-        .catch(function(err){
+    it("delete assessment [empty assessment id]", function(done) {
+      assessmentModel.deleteAssessment(dummyData.user.details.shortEmail, '', del_assessment._rev)
+        .catch(function(err) {
           expect(err).to.have.property('error');
           expect(err.error).to.be.equal('No id/rev for record deletion.');
           done();
         });
     });
 
-    it("delete assessment [non-existing revision id]", function(done){
+    it("delete assessment [non-existing revision id]", function(done) {
       assessmentModel.deleteAssessment(dummyData.user.details.shortEmail, del_assessment._id, invalidRevisionId)
-        .catch(function(err){
+        .catch(function(err) {
           expect(err).to.have.property('error');
           expect(err.error).to.be.equal('conflict');
           done();
         });
     });
 
-    it("delete assessment [empty revision id]", function(done){
+    it("delete assessment [empty revision id]", function(done) {
       assessmentModel.deleteAssessment(dummyData.user.details.shortEmail, del_assessment._id, '')
-        .catch(function(err){
+        .catch(function(err) {
           expect(err).to.not.equal(null);
           expect(err).to.have.property('error');
           expect(err.error).to.be.equal('No id/rev for record deletion.');
@@ -520,24 +522,24 @@ describe('Assessment Model', function() {
         });
     });
 
-    it("delete assessment [invalid assessment id and revision id]", function(done){
+    it("delete assessment [invalid assessment id and revision id]", function(done) {
       assessmentModel.deleteAssessment(dummyData.user.details.shortEmail, invalidAssessId, invalidRevisionId)
-        .catch(function(err){
+        .catch(function(err) {
           expect(err).to.have.property('error');
           expect(err.error).to.be.equal('not_found');
           done();
         });
     });
 
-    it("delete assessment [valid assessment and revision id] using admin user", function(done){
+    it("delete assessment [valid assessment and revision id] using admin user", function(done) {
       //make sure to have latest document revision id
       assessmentModel.deleteAssessment(adminList[0], del_assessment._id, del_assessment._rev)
-        .then(function(body){
+        .then(function(body) {
           expect(body).to.be.a('object');
           expect(body.ok).to.be.true;
           done();
         })
-        .catch(function(err){
+        .catch(function(err) {
           done(err);
         });
     });

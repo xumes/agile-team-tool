@@ -4,24 +4,24 @@ var util = require('../../helpers/util');
 var timeout = 30000;
 var systemId = 'ag_ref_system_status_control';
 
-describe("Util models [getSystemStatus]: get system status", function(done){
+describe("Util models [getSystemStatus]: get system status", function(done) {
   this.timeout(timeout);
-  it("return system status", function(done){
+  it("return system status", function(done) {
     util.getSystemStatus(systemId)
-      .then(function(body){
+      .then(function(body) {
         expect(body).to.be.a('object');
         expect(body).to.have.property('agildash_system_status_values_tbl');
         done();
       })
-      .catch(function(err){
+      .catch(function(err) {
         done(err);
       });
   });
 });
 
-describe("Util models [getServerTime]: get server time", function(done){
+describe("Util models [getServerTime]: get server time", function(done) {
   this.timeout(timeout);
-  it("return server time", function(done){
+  it("return server time", function(done) {
     var sTime = util.getServerTime();
     expect(sTime).to.be.a('string');
     done();
