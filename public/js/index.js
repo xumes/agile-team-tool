@@ -417,54 +417,54 @@ function getSnapshot(teamId, teamName) {
   $('#spinnerContainer').show();
   var cUrl = "/api/snapshot/rollupsquadsbyteam/" + encodeURIComponent(teamId);
   var req = $.ajax({
-      type: "GET",
-      url: cUrl
-    }).done(function(data) {
-      if (data != undefined) {
+    type: "GET",
+    url: cUrl
+  }).done(function(data) {
+    if (data != undefined) {
         //console.log("data has rows " + _.has(data, 'rows'));
         //console.log("data has value " + _.has(data, 'value'));
-        if (_.has(data, "rows")) {
-          if (data.rows == null) {
+      if (_.has(data, "rows")) {
+        if (data.rows == null) {
             //console.log("data loaded failed");
-          } else if (data.rows.length <= 0) {
-            console.log("no iteation data for team: ", teamId);
-            $("#refreshDate").html("Waiting for updating");
-            iterationScoreCard(teamId, teamName, tempIterationData, tempSquadScore);
-          } else {
-            var nonsquadScore = data.rows[0].value.value;
-            var cUrl = "/api/snapshot/rollupdatabyteam/" + encodeURIComponent(teamId);
-            var innerReq = $.ajax({
-              type: "GET",
-              url: cUrl
-            }).done(function(data) {
-              if (data != undefined) {
-                console.log("data has rows " + _.has(data, 'rows'));
-                //console.log("data has value " + _.has(data, 'value'));
-                if (_.has(data, "rows")) {
-                  if (data.rows == null) {
-                    console.log("data loaded failed");
-                  } else if (data.rows.length <= 0) {
-                    console.log("no squad data for team: ", teamId);
-                    $("#refreshDate").html("Waiting for updating");
-                    iterationScoreCard(teamId, teamName, data.rows[0].value.value, tempSquadScore);
-                  } else {
-                    var iterationData = data.rows[0].value.value;
-                    setRefreshDate(data.rows[0].value.timestamp); //TODO
-                    iterationScoreCard(teamId, teamName, iterationData, nonsquadScore);
-                  }
-                } else {
-                  showLog("data loaded: " + JSON.stringify(data));
-                }
-              }
-            });
-            requests.push(innerReq);
-            // iterationScoreCard(teamId, teamName, iterationData);
-          }
+        } else if (data.rows.length <= 0) {
+          console.log("no iteation data for team: ", teamId);
+          $("#refreshDate").html("Waiting for updating");
+          iterationScoreCard(teamId, teamName, tempIterationData, tempSquadScore);
         } else {
-          showLog("data loaded: " + JSON.stringify(data));
+          var nonsquadScore = data.rows[0].value.value;
+          var cUrl = "/api/snapshot/rollupdatabyteam/" + encodeURIComponent(teamId);
+          var innerReq = $.ajax({
+            type: "GET",
+            url: cUrl
+          }).done(function(data) {
+            if (data != undefined) {
+              console.log("data has rows " + _.has(data, 'rows'));
+              //console.log("data has value " + _.has(data, 'value'));
+              if (_.has(data, "rows")) {
+                if (data.rows == null) {
+                  console.log("data loaded failed");
+                } else if (data.rows.length <= 0) {
+                  console.log("no squad data for team: ", teamId);
+                  $("#refreshDate").html("Waiting for updating");
+                  iterationScoreCard(teamId, teamName, data.rows[0].value.value, tempSquadScore);
+                } else {
+                  var iterationData = data.rows[0].value.value;
+                  setRefreshDate(data.rows[0].value.timestamp); //TODO
+                  iterationScoreCard(teamId, teamName, iterationData, nonsquadScore);
+                }
+              } else {
+                showLog("data loaded: " + JSON.stringify(data));
+              }
+            }
+          });
+          requests.push(innerReq);
+          // iterationScoreCard(teamId, teamName, iterationData);
         }
+      } else {
+        showLog("data loaded: " + JSON.stringify(data));
       }
-    })
+    }
+  })
     .fail(function(err) {
       $('#spinnerContainer').hide();
     })
@@ -477,14 +477,14 @@ function getParentName(team) {
   if (team['parent_team_id'] != "" && team['parent_team_id'] != undefined) {
     var cUrl = "/api/teams/lookup/team/" + encodeURIComponent(team['parent_team_id']);
     var req = $.ajax({
-        type: "GET",
-        url: cUrl
-      }).done(function(data) {
-        if (data != null && data.name != undefined) {
-          keyValue = "<p style=\"display:inline-block\" class=\"ibm-ind-link\"><a style=\"display:inline; padding-left: 0px;\" title=\"View parent team information\" alt=\"View parent team information\" id ='parentName' href='#' onclick=\"javascript:loadParentInAllTeams('" + team["_id"] + "');\">" + data.name + "</a>" + "<a title=\"View parent team information\" alt=\"View parent team information\" style=\"display:inline;top:-5px;left:5px;\" class=\"ibm-forward-link\" href='#' onclick=\"javascript:loadParentInAllTeams('" + team["_id"] + "');\"><span class='ibm-access'>Go to parent team</span></a></p>";
-        }
-        appendRowDetail(keyLabel, keyValue);
-      })
+      type: "GET",
+      url: cUrl
+    }).done(function(data) {
+      if (data != null && data.name != undefined) {
+        keyValue = "<p style=\"display:inline-block\" class=\"ibm-ind-link\"><a style=\"display:inline; padding-left: 0px;\" title=\"View parent team information\" alt=\"View parent team information\" id ='parentName' href='#' onclick=\"javascript:loadParentInAllTeams('" + team["_id"] + "');\">" + data.name + "</a>" + "<a title=\"View parent team information\" alt=\"View parent team information\" style=\"display:inline;top:-5px;left:5px;\" class=\"ibm-forward-link\" href='#' onclick=\"javascript:loadParentInAllTeams('" + team["_id"] + "');\"><span class='ibm-access'>Go to parent team</span></a></p>";
+      }
+      appendRowDetail(keyLabel, keyValue);
+    })
       .fail(function(err) {
         console.log(err);
         appendRowDetail(keyLabel, keyValue);

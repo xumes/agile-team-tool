@@ -781,22 +781,22 @@ function initAssessmentAnswersTemplate() {
     "last_updt_user": "",
     "doc_status": "",
     "assessmt_cmpnt_rslts": [{
-        "assessed_cmpnt_name": "",
-        "assessed_cmpnt_tbl": [{
-          "principle_id": "",
-          "principle_name": "",
-          "practice_id": "",
-          "practice_name": "",
-          "cur_mat_lvl_achieved": "",
-          "cur_mat_lvl_score": "",
-          "tar_mat_lvl_achieved": "",
-          "tar_mat_lvl_score": "",
-          "ind_mat_lvl_achieved": "",
-          "ind_target_mat_lvl_score": "",
-          "how_better_action_item": "",
-          "ind_assessor_cmnt": ""
-        }]
-      },
+      "assessed_cmpnt_name": "",
+      "assessed_cmpnt_tbl": [{
+        "principle_id": "",
+        "principle_name": "",
+        "practice_id": "",
+        "practice_name": "",
+        "cur_mat_lvl_achieved": "",
+        "cur_mat_lvl_score": "",
+        "tar_mat_lvl_achieved": "",
+        "tar_mat_lvl_score": "",
+        "ind_mat_lvl_achieved": "",
+        "ind_target_mat_lvl_score": "",
+        "how_better_action_item": "",
+        "ind_assessor_cmnt": ""
+      }]
+    },
       "ovralcur_assessmt_score",
       "ovraltar_assessmt_score"
     ],

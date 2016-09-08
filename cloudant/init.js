@@ -121,10 +121,10 @@ module.exports.init = function() {
 var getCloudantDocs = function() {
   return new Promise(function(resolve, reject) {
     db.list({
-        startkey: '_design',
-        endkey: "_design0",
-        include_docs: true
-      },
+      startkey: '_design',
+      endkey: "_design0",
+      include_docs: true
+    },
       function(err, body) {
         if (err)
           reject(err);

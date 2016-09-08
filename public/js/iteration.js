@@ -360,9 +360,9 @@ function loadAgileTeamIterationInfo(teamId, iterationId) {
   $("#iterationName").attr("disabled", "disabled");
   // retrieve and load latest iteration information for the team
   $.ajax({
-      type: "GET",
-      url: "/api/iteration/searchTeamIteration?id=" + encodeURIComponent(teamId) + "&limit=200"
-    })
+    type: "GET",
+    url: "/api/iteration/searchTeamIteration?id=" + encodeURIComponent(teamId) + "&limit=200"
+  })
     .fail(function(xhr, textStatus, errorThrown) {
       if (xhr.status === 400) {
         errorHandler(xhr, textStatus, errorThrown);
@@ -411,9 +411,9 @@ function loadSelectedAgileTeamIterationInfo() {
   var iterationId = $("#iterationSelectList option:selected").val();
   // retrieve and load latest iteration information for the team
   $.ajax({
-      type: "GET",
-      url: "/api/iteration/current/" + encodeURIComponent(iterationId)
-    })
+    type: "GET",
+    url: "/api/iteration/current/" + encodeURIComponent(iterationId)
+  })
     .fail(function(xhr, textStatus, errorThrown) {
       if (xhr.status === 400) {
         errorHandler(xhr, textStatus, errorThrown);
@@ -532,9 +532,9 @@ function updateIterationCache(iteration) {
   var iterInfo = [];
   // retrieve and load latest iteration information for the team
   $.ajax({
-      type: "GET",
-      url: "/api/iteration/searchTeamIteration?id=" + encodeURIComponent(teamId)
-    })
+    type: "GET",
+    url: "/api/iteration/searchTeamIteration?id=" + encodeURIComponent(teamId)
+  })
     .fail(function(xhr, textStatus, errorThrown) {
       if (xhr.status === 400) {
         errorHandler(xhr, textStatus, errorThrown);
@@ -640,11 +640,11 @@ function addIteration(action) {
           console.log('Updating ' + currentIteration._id + '. The current revision is ' + rev + '.');
           jsonData = updateIterationData(jsonData);
           $.ajax({
-              type: "PUT",
-              url: "/api/iteration/" + encodeURIComponent(currentIteration._id),
-              contentType: "application/json",
-              data: JSON.stringify(jsonData)
-            })
+            type: "PUT",
+            url: "/api/iteration/" + encodeURIComponent(currentIteration._id),
+            contentType: "application/json",
+            data: JSON.stringify(jsonData)
+          })
             .fail(function(xhr, textStatus, errorThrown) {
               if (xhr.status === 400) {
                 handleIterationErrors(xhr, textStatus, errorThrown);
@@ -667,11 +667,11 @@ function addIteration(action) {
         console.log(jsonData);
         console.log(JSON.stringify(jsonData));
         $.ajax({
-            type: "POST",
-            url: "/api/iteration",
-            contentType: "application/json",
-            data: JSON.stringify(jsonData)
-          })
+          type: "POST",
+          url: "/api/iteration",
+          contentType: "application/json",
+          data: JSON.stringify(jsonData)
+        })
           .fail(function(xhr, textStatus, errorThrown) {
             if (xhr.status === 400) {
               handleIterationErrors(xhr, textStatus, errorThrown);

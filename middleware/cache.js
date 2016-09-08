@@ -66,10 +66,10 @@ var userCache = {
         'systemStatus': []
       };
       Promise.all(
-          [
-            users.getAdmins(),
-            util.getSystemStatus('ag_ref_system_status_control')
-          ])
+        [
+          users.getAdmins(),
+          util.getSystemStatus('ag_ref_system_status_control')
+        ])
         .then(function(result) {
           allCache = {
             'systemAdmin': result[0],
@@ -107,12 +107,12 @@ var userCache = {
         'systemStatus': []
       };
       Promise.all(
-          [
-            teamModel.getName(null),
-            teamModel.getUserTeams(userEmail),
-            users.getAdmins(),
-            util.getSystemStatus('ag_ref_system_status_control')
-          ])
+        [
+          teamModel.getName(null),
+          teamModel.getUserTeams(userEmail),
+          users.getAdmins(),
+          util.getSystemStatus('ag_ref_system_status_control')
+        ])
         .then(function(result) {
           allCache = {
             'allTeamsLookup': result[0],
@@ -141,13 +141,13 @@ var userCache = {
         'memberRoles': []
       };
       Promise.all(
-          [
-            teamModel.getName(null),
-            teamModel.getUserTeams(userEmail),
-            users.getAdmins(),
-            util.getSystemStatus('ag_ref_system_status_control'),
-            teamModel.getRole()
-          ])
+        [
+          teamModel.getName(null),
+          teamModel.getUserTeams(userEmail),
+          users.getAdmins(),
+          util.getSystemStatus('ag_ref_system_status_control'),
+          teamModel.getRole()
+        ])
         .then(function(result) {
           allCache = {
             'allTeamsLookup': result[0],

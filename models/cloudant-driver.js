@@ -96,9 +96,9 @@ exports.getByView = function(_design, _view) {
 exports.getByViewKey = function(_design, _view, _key) {
   return new Promise(function(resolve, reject) {
     db.viewAsync(_design, _view, {
-        'include_docs': false,
-        key: _key
-      })
+      'include_docs': false,
+      key: _key
+    })
       .then(function(body) {
         resolve(body);
       })
@@ -111,9 +111,9 @@ exports.getByViewKey = function(_design, _view, _key) {
 exports.getByViewWithStartOrEndKey = function(_design, _view, _startkey, _endkey) {
   return new Promise(function(resolve, reject) {
     db.viewAsync(_design, _view, {
-        'startkey': _startkey,
-        'endkey': _endkey
-      })
+      'startkey': _startkey,
+      'endkey': _endkey
+    })
       .then(function(body) {
         body = _.isEmpty(body.rows) ? {} : body;
         resolve(body);

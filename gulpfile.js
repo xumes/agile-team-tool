@@ -1,13 +1,20 @@
 var gulp = require('gulp');
 var istanbul = require('gulp-istanbul');
 var mocha = require('gulp-mocha');
-var jshint = require('gulp-jshint');
+var eslint   = require('gulp-eslint');
 
-
-gulp.task('jshint', function() {
-  return gulp.src(['*.js'])
-    .pipe(jshint());
-});
+gulp.task('lint', function() {
+  return gulp.src(['**/*.js', '!node_modules/**'])
+    .pipe(eslint({
+      useEslintrc: false,
+      envs: ['node', 'mocha'],
+      rules: {
+        'indent': ['error', 2, { "SwitchCase": 1, "MemberExpression": 1, "VariableDeclarator": 1}]
+      }
+    }))
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
+})
 
 gulp.task('pre-test', function() {
   return gulp.src(['*.js', 'routes/*.js', 'routes/*/*.js', 'models/*.js'])
@@ -17,7 +24,7 @@ gulp.task('pre-test', function() {
     .pipe(istanbul.hookRequire());
 });
 
-gulp.task('test', ['jshint', 'pre-test'], function() {
+gulp.task('test', ['lint', 'pre-test'], function() {
   process.env.isGulpTest = true;
   return gulp.src(['test/*.js', 'test/*/*/*.js', 'test/*/*.js'])
     .pipe(mocha({

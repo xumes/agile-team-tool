@@ -424,13 +424,13 @@ var team = {
                     can be the same to existing docu but cannot be existing to DB when updated
                   */
                   _.each(util.returnObject(teamName), function(team) {
-                      if (team._id != updatedTeamDoc._id && team.name == updatedTeamDoc.name) {
-                        infoLogs('Team ' + team._id + ' has the same name with ' + updatedTeamDoc._id);
-                        return reject(formatErrMsg({
-                          name: ['This team name already exists. Please enter a different team name']
-                        }));
-                      }
-                    })
+                    if (team._id != updatedTeamDoc._id && team.name == updatedTeamDoc.name) {
+                      infoLogs('Team ' + team._id + ' has the same name with ' + updatedTeamDoc._id);
+                      return reject(formatErrMsg({
+                        name: ['This team name already exists. Please enter a different team name']
+                      }));
+                    }
+                  })
                     /*
                     squadteam
                         from Yes to No = only allowed if no iteration data exist

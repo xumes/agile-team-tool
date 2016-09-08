@@ -911,17 +911,16 @@ function loadChartPartialSeries(id, title, type, categories, yAxisLabel, xAxisLa
     },
 
     series: [{
-        showInLegend: false,
-        name: seriesObj1.name,
-        data: seriesObj1.data,
-        color: seriesObj1.color,
-        dashStyle: seriesObj1.dashStyle
-      }, {
-        showInLegend: false,
-        name: seriesObj2.name,
-        data: seriesObj2.data
-      }
-
+      showInLegend: false,
+      name: seriesObj1.name,
+      data: seriesObj1.data,
+      color: seriesObj1.color,
+      dashStyle: seriesObj1.dashStyle
+    }, {
+      showInLegend: false,
+      name: seriesObj2.name,
+      data: seriesObj2.data
+    }
     ]
   });
 }
@@ -1012,38 +1011,38 @@ function loadDeploymentsChartParent(id, title, type, categories, yAxisLabel, xAx
     },
 
     series: [{
-        showInLegend: false,
-        name: seriesObj1.name,
-        data: seriesObj1.data,
-        color: seriesObj1.color,
-        dashStyle: seriesObj1.dashStyle,
-        marker: {
-          symbol: 'circle'
-        }
-      }, {
-        showInLegend: true,
-        name: seriesObj2.name,
-        data: seriesObj2.data,
-        marker: {
-          symbol: 'circle'
-        }
-      }, {
-        showInLegend: false,
-        name: seriesObj3.name,
-        data: seriesObj3.data,
-        color: seriesObj3.color,
-        dashStyle: seriesObj3.dashStyle,
-        marker: {
-          symbol: 'triangle'
-        }
-      }, {
-        showInLegend: true,
-        name: seriesObj4.name,
-        data: seriesObj4.data,
-        marker: {
-          symbol: 'triangle'
-        }
+      showInLegend: false,
+      name: seriesObj1.name,
+      data: seriesObj1.data,
+      color: seriesObj1.color,
+      dashStyle: seriesObj1.dashStyle,
+      marker: {
+        symbol: 'circle'
       }
+    }, {
+      showInLegend: true,
+      name: seriesObj2.name,
+      data: seriesObj2.data,
+      marker: {
+        symbol: 'circle'
+      }
+    }, {
+      showInLegend: false,
+      name: seriesObj3.name,
+      data: seriesObj3.data,
+      color: seriesObj3.color,
+      dashStyle: seriesObj3.dashStyle,
+      marker: {
+        symbol: 'triangle'
+      }
+    }, {
+      showInLegend: true,
+      name: seriesObj4.name,
+      data: seriesObj4.data,
+      marker: {
+        symbol: 'triangle'
+      }
+    }
 
     ]
   });
@@ -1138,39 +1137,38 @@ function loadSatisfactionChartParent(id, title, type, categories, yAxisLabel, xA
     },
 
     series: [{
-        showInLegend: false,
-        name: seriesObj1.name,
-        data: seriesObj1.data,
-        color: seriesObj1.color,
-        dashStyle: seriesObj1.dashStyle,
-        marker: {
-          symbol: 'circle'
-        }
-      }, {
-        showInLegend: true,
-        name: seriesObj2.name,
-        data: seriesObj2.data,
-        marker: {
-          symbol: 'circle'
-        }
-      }, {
-        showInLegend: false,
-        name: seriesObj3.name,
-        data: seriesObj3.data,
-        color: seriesObj3.color,
-        dashStyle: seriesObj3.dashStyle,
-        marker: {
-          symbol: 'triangle'
-        }
-      }, {
-        showInLegend: true,
-        name: seriesObj4.name,
-        data: seriesObj4.data,
-        marker: {
-          symbol: 'triangle'
-        }
+      showInLegend: false,
+      name: seriesObj1.name,
+      data: seriesObj1.data,
+      color: seriesObj1.color,
+      dashStyle: seriesObj1.dashStyle,
+      marker: {
+        symbol: 'circle'
       }
-
+    }, {
+      showInLegend: true,
+      name: seriesObj2.name,
+      data: seriesObj2.data,
+      marker: {
+        symbol: 'circle'
+      }
+    }, {
+      showInLegend: false,
+      name: seriesObj3.name,
+      data: seriesObj3.data,
+      color: seriesObj3.color,
+      dashStyle: seriesObj3.dashStyle,
+      marker: {
+        symbol: 'triangle'
+      }
+    }, {
+      showInLegend: true,
+      name: seriesObj4.name,
+      data: seriesObj4.data,
+      marker: {
+        symbol: 'triangle'
+      }
+    }
     ]
   });
 }

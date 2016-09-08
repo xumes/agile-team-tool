@@ -5,14 +5,14 @@ module.exports = function(app, includes) {
   var middleware = includes.middleware;
 
   getTopLevelTeams = function(req, res) {
-      snapshotModel.getTopLevelTeams(req.params.email)
-        .then(function(result) {
-          res.status(200).send(result);
-        })
-        .catch( /* istanbul ignore next */ function(err) {
-          res.status(400).send(err);
-        });
-    },
+    snapshotModel.getTopLevelTeams(req.params.email)
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        res.status(400).send(err);
+      });
+  },
 
     updateRollUpSquads = function(req, res) {
       snapshotModel.updateRollUpSquads()

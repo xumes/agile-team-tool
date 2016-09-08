@@ -211,17 +211,17 @@ function plotAssessmentSeries(teamAssessments) {
       },
 
       series: [{
-          name: "Current",
-          data: chartData["currentScore"],
-          point: {
+        name: "Current",
+        data: chartData["currentScore"],
+        point: {
             // click event callback to render spider graph data of practices for the particular series point.
-            events: {
-              click: function() {
-                plotAssessment(this.index, chartData);
-              }
+          events: {
+            click: function() {
+              plotAssessment(this.index, chartData);
             }
           }
         }
+      }
         /*, {
         						name : "Target overall",
         						data : chartData["targetScore"],

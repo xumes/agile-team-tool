@@ -268,9 +268,9 @@ function loadSelectedAgileTeam() {
       $("#nonSquadChildPageSection, #nonSquadIterationPageSection, #nonSquadAssessmentPageSection").hide();
       // disable squad indicator if iteration data exist
       $.ajax({
-          type: "GET",
-          url: "/api/iteration/searchTeamIteration?id=" + encodeURIComponent(currentTeam._id)
-        })
+        type: "GET",
+        url: "/api/iteration/searchTeamIteration?id=" + encodeURIComponent(currentTeam._id)
+      })
         .fail(function(xhr, textStatus, errorThrown) {
           if (xhr.status === 400) {
             errorHandler(xhr, textStatus, errorThrown);
