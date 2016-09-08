@@ -11,6 +11,7 @@ module.exports = function(app, includes) {
       };
     render(req, res, 'home', json);
   };
-  
+
+  app.get('/cio/dashboard', function(req,res){res.redirect("/")});
   app.get('/', includes.middleware.auth.requireLoginWithRedirect, showHome);
 };
