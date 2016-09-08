@@ -54,15 +54,21 @@ var iterationSearchAllDocRules = {
   },
   "status": {
     presence: false,
-    inclusion : {
-      within: {'Y':'Y', 'N':'N'},
+    inclusion: {
+      within: {
+        'Y': 'Y',
+        'N': 'N'
+      },
       message: "^The value of status is not valid. It must be either Y or N"
     }
   },
   "includeDocs": {
     presence: false,
-    inclusion : {
-      within: {'true':'true', 'false':'false'},
+    inclusion: {
+      within: {
+        'true': 'true',
+        'false': 'false'
+      },
       message: "^The value of includeDocs is not valid. It must be either true or false"
     }
   },

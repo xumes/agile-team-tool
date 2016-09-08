@@ -40,33 +40,30 @@ describe('Team API Tests', function() {
       })
   });
 
-  after(function(done){
+  after(function(done) {
     deleteCreatedRecord(createdId);
     deleteCreatedRecord(targetParentId);
     deleteCreatedRecord(targetChildId);
     done();
   })
 
-  function deleteCreatedRecord(recordId){
+  function deleteCreatedRecord(recordId) {
     teamModel.getTeam(recordId)
-      .then(function(result){
+      .then(function(result) {
         if (result.doc_status == 'delete') {
           common.deleteRecord(result._id, result._rev)
-            .then(function(result){
-            })
-            .catch(function(err){
-            });
+            .then(function(result) {})
+            .catch(function(err) {});
         }
       })
-      .catch(function(err){
-      });
+      .catch(function(err) {});
   };
 
-  it('it will return 400 because team docment is not valid', function(done){
+  it('it will return 400 because team docment is not valid', function(done) {
     var req = request(app).post('/api/teams');
     agent.attachCookies(req);
     req.send(teamDocInvalid);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -79,11 +76,11 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 201 when you create a team successfully',function(done){
+  it('it will return 201 when you create a team successfully', function(done) {
     var req = request(app).post('/api/teams');
     agent.attachCookies(req);
     req.send(teamDocValid);
-    req.end(function(err,res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -95,11 +92,11 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 400 when you associate a team with wrong action',function(done){
+  it('it will return 400 when you associate a team with wrong action', function(done) {
     var req = request(app).put('/api/teams/associates');
     agent.attachCookies(req);
     req.send({});
-    req.end(function(err,res){
+    req.end(function(err, res) {
       if (err) {
         //console.log('err: ', err);
       } else {
@@ -111,12 +108,12 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 201 when you create a team successfully for team association endpoint to be a parent',function(done){
+  it('it will return 201 when you create a team successfully for team association endpoint to be a parent', function(done) {
     var req = request(app).post('/api/teams');
     agent.attachCookies(req);
     var teamAssoc = teamsData.associate.validDoc();
     req.send(teamAssoc);
-    req.end(function(err,res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -129,12 +126,12 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 201 when you create a team successfully for team association endpoint to be a child',function(done){
+  it('it will return 201 when you create a team successfully for team association endpoint to be a child', function(done) {
     var req = request(app).post('/api/teams');
     agent.attachCookies(req);
     var teamAssoc = teamsData.associate.validDoc();
     req.send(teamAssoc);
-    req.end(function(err,res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -147,16 +144,16 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 200 when associating a team',function(done){
+  it('it will return 200 when associating a team', function(done) {
     var req = request(app).put('/api/teams/associates');
     agent.attachCookies(req);
     var putBody = {
-      'action' : 'associateParent',
-      'teamId' : targetParentTeamId,
-      'targetParent' : targetParent
+      'action': 'associateParent',
+      'teamId': targetParentTeamId,
+      'targetParent': targetParent
     };
     req.send(putBody);
-    req.end(function(err,res){
+    req.end(function(err, res) {
       if (err) {
         //console.log('err: ', err);
       } else {
@@ -168,12 +165,14 @@ describe('Team API Tests', function() {
 
   // TODO: need additional test case for other team associate endpoint valid ACTION, ie. 'associateParent', 'associateChild', 'removeParent', 'removeChild'
 
-  it('it will return 400 because Team document ID is none existing', function(done){
-    var docu = { '_id' : 'none-existing-docu' + new Date().getTime() };
+  it('it will return 400 because Team document ID is none existing', function(done) {
+    var docu = {
+      '_id': 'none-existing-docu' + new Date().getTime()
+    };
     var req = request(app).put('/api/teams');
     agent.attachCookies(req);
     req.send(docu);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -185,12 +184,12 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 400 because update data is invalid', function(done){
-    teamDocUpdateInvalid['parent_team_id']=createdId;
+  it('it will return 400 because update data is invalid', function(done) {
+    teamDocUpdateInvalid['parent_team_id'] = createdId;
     var req = request(app).put('/api/teams');
     agent.attachCookies(req);
     req.send(teamDocUpdateInvalid);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -201,14 +200,14 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 200 after updating document', function(done){
+  it('it will return 200 after updating document', function(done) {
     teamDocUpdateValid = teamsData.teams.validUpdateDoc();
     teamDocUpdateValid['_id'] = createdId;
     delete teamDocUpdateValid['parent_team_id'];
     var req = request(app).put('/api/teams');
     agent.attachCookies(req);
     req.send(teamDocUpdateValid);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -221,10 +220,10 @@ describe('Team API Tests', function() {
   });
 
   // Get teams api tests
-  it('it will return 200 for retrieving all teams successfully', function(done){
+  it('it will return 200 for retrieving all teams successfully', function(done) {
     var req = request(app).get('/api/teams');
     agent.attachCookies(req);
-    req.end(function(err,res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -236,10 +235,10 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 400 and return empty because none existent team details', function(done){
-    var req = request(app).get('/api/teams/'+'none-existing-team');
+  it('it will return 400 and return empty because none existent team details', function(done) {
+    var req = request(app).get('/api/teams/' + 'none-existing-team');
     agent.attachCookies(req);
-    req.end(function(err,res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -251,10 +250,10 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 200 and team details', function(done){
+  it('it will return 200 and team details', function(done) {
     var req = request(app).get('/api/teams/' + createdId);
     agent.attachCookies(req);
-    req.end(function(err,res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -267,10 +266,10 @@ describe('Team API Tests', function() {
   });
 
   // Get team roles api test
-  it('it will return 200 and retrieve all team role types', function(done){
+  it('it will return 200 and retrieve all team role types', function(done) {
     var req = request(app).get('/api/teams/roles');
     agent.attachCookies(req);
-    req.end(function(err,res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -283,10 +282,10 @@ describe('Team API Tests', function() {
   });
 
   // Get by names api tests
-  it('it will return 200 and retrieve all team names', function(done){
+  it('it will return 200 and retrieve all team names', function(done) {
     var req = request(app).get('/api/teams/names');
     agent.attachCookies(req);
-    req.end(function(err,res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -298,10 +297,10 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 200 and return empty details for none existing team name', function(done){
+  it('it will return 200 and return empty details for none existing team name', function(done) {
     var req = request(app).get('/api/teams/names/' + 'none-existing-team-name');
     agent.attachCookies(req);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -312,10 +311,10 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 200 and details for team name', function(done){
+  it('it will return 200 and details for team name', function(done) {
     var req = request(app).get('/api/teams/names/' + teamDocUpdateValid['name']);
     agent.attachCookies(req);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -330,10 +329,10 @@ describe('Team API Tests', function() {
   });
 
   // Get by email api tests
-  it('it will return 400 because invalid email address', function(done){
+  it('it will return 400 because invalid email address', function(done) {
     var req = request(app).get('/api/teams/members/' + 'invalid-email-add');
     agent.attachCookies(req);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -345,10 +344,10 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 200 and empty team lists because email without team', function(done){
+  it('it will return 200 and empty team lists because email without team', function(done) {
     var req = request(app).get('/api/teams/members/' + 'emailWithoutTeam@email.com');
     agent.attachCookies(req);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -359,10 +358,10 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 200 and team lists for this email', function(done){
+  it('it will return 200 and team lists for this email', function(done) {
     var req = request(app).get('/api/teams/members/' + userValidEmail);
     agent.attachCookies(req);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -375,10 +374,10 @@ describe('Team API Tests', function() {
   });
 
   // Get by serial number/ uid api tests
-  it('it will return 200 and empty team lists because serial id/ uids without team', function(done){
+  it('it will return 200 and empty team lists because serial id/ uids without team', function(done) {
     var req = request(app).get('/api/teams/membersUid/' + 'uid-without-team');
     agent.attachCookies(req);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -389,10 +388,10 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 200 and team lists for this serial number/ uid', function(done){
+  it('it will return 200 and team lists for this serial number/ uid', function(done) {
     var req = request(app).get('/api/teams/membersUid/' + userUid);
     agent.attachCookies(req);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -405,13 +404,13 @@ describe('Team API Tests', function() {
   });
 
   // Delete api test
-  it('it will return 400 because delete status not equal to delete', function(done){
+  it('it will return 400 because delete status not equal to delete', function(done) {
     teamDocUpdateValid['doc_status'] = '';
     teamDocUpdateValid['_id'] = createdId;
     var req = request(app).delete('/api/teams');
     agent.attachCookies(req);
     req.send(teamDocUpdateValid);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -423,13 +422,13 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 400 because id is empty', function(done){
+  it('it will return 400 because id is empty', function(done) {
     teamDocUpdateValid['doc_status'] = 'delete';
     teamDocUpdateValid['_id'] = '';
     var req = request(app).delete('/api/teams');
     agent.attachCookies(req);
     req.send(teamDocUpdateValid);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -441,14 +440,14 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 200 after deleting associate document2', function(done){
+  it('it will return 200 after deleting associate document2', function(done) {
     var teamAssoc = teamsData.associate.validDoc();
     teamAssoc['doc_status'] = 'delete';
     teamAssoc['_id'] = targetChildId;
     var req = request(app).delete('/api/teams');
     agent.attachCookies(req);
     req.send(teamAssoc);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -458,15 +457,15 @@ describe('Team API Tests', function() {
       done();
     });
   });
-  
-  it('it will return 200 after deleting associate document1', function(done){
+
+  it('it will return 200 after deleting associate document1', function(done) {
     var teamAssoc = teamsData.associate.validDoc();
     teamAssoc['doc_status'] = 'delete';
     teamAssoc['_id'] = targetParentId;
     var req = request(app).delete('/api/teams');
     agent.attachCookies(req);
     req.send(teamAssoc);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -477,13 +476,13 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 200 after deleting document', function(done){
+  it('it will return 200 after deleting document', function(done) {
     teamDocUpdateValid['doc_status'] = 'delete';
     teamDocUpdateValid['_id'] = createdId;
     var req = request(app).delete('/api/teams');
     agent.attachCookies(req);
     req.send(teamDocUpdateValid);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -495,10 +494,10 @@ describe('Team API Tests', function() {
   });
 
 
-  it('it will return 200 to get top level teams', function(done){
+  it('it will return 200 to get top level teams', function(done) {
     var req = request(app).get('/api/teams?parent_team_id');
     agent.attachCookies(req);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -510,10 +509,10 @@ describe('Team API Tests', function() {
   });
 
   // initializes lookup to set relationship references
-  it('it will return 200 and recreates the team lookup document', function(done){
+  it('it will return 200 and recreates the team lookup document', function(done) {
     var req = request(app).get('/api/teams/lookup/initialize');
     agent.attachCookies(req);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -526,10 +525,10 @@ describe('Team API Tests', function() {
   });
 
   // lookup by team id
-  it('it will return 200 empty lookup object because of an invalid team id', function(done){
+  it('it will return 200 empty lookup object because of an invalid team id', function(done) {
     var req = request(app).get('/api/teams/lookup/team/' + 'none-existent-team');
     agent.attachCookies(req);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -541,10 +540,10 @@ describe('Team API Tests', function() {
   });
 
   // lookup by team id
-  it('it will return 200 and empty if there are no valid data on the lookup, array of objects if otherwise', function(done){
+  it('it will return 200 and empty if there are no valid data on the lookup, array of objects if otherwise', function(done) {
     var req = request(app).get('/api/teams/lookup/team');
     agent.attachCookies(req);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -567,10 +566,10 @@ describe('Team API Tests', function() {
   });
 
   // lookup non-squad teams
-  it('it will return 200 and empty if there are no valid data on the lookup, array of objects if otherwise', function(done){
+  it('it will return 200 and empty if there are no valid data on the lookup, array of objects if otherwise', function(done) {
     var req = request(app).get('/api/teams/lookup/team?squadteam=no');
     agent.attachCookies(req);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -587,10 +586,10 @@ describe('Team API Tests', function() {
   });
 
   // lookup squad teams
-  it('it will return 200 and empty if there are no valid data on the lookup, array of objects if otherwise', function(done){
+  it('it will return 200 and empty if there are no valid data on the lookup, array of objects if otherwise', function(done) {
     var req = request(app).get('/api/teams/lookup/team?squadteam=yes');
     agent.attachCookies(req);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -607,10 +606,10 @@ describe('Team API Tests', function() {
   });
 
   // lookup selectable children teams of a team
-  it('it will return 200 and empty array possible children because of an invalid team id', function(done){
+  it('it will return 200 and empty array possible children because of an invalid team id', function(done) {
     var req = request(app).get('/api/teams/lookup/children/' + 'none-existent-team');
     agent.attachCookies(req);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -622,10 +621,10 @@ describe('Team API Tests', function() {
     });
   });
 
-  it('it will return 200 and empty array possible children because no team id was indicated', function(done){
+  it('it will return 200 and empty array possible children because no team id was indicated', function(done) {
     var req = request(app).get('/api/teams/lookup/children/');
     agent.attachCookies(req);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -638,10 +637,10 @@ describe('Team API Tests', function() {
   });
 
   // lookup selectable children teams of a team
-  it('it will return 200 an array of objects as possible children lookup', function(done){
+  it('it will return 200 an array of objects as possible children lookup', function(done) {
     var req = request(app).get('/api/teams/lookup/children/' + lookupId);
     agent.attachCookies(req);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -659,10 +658,10 @@ describe('Team API Tests', function() {
   });
 
   // lookup selectable parent teams of a team
-  it('it will return 200 and empty array possible parents because of an invalid team id', function(done){
+  it('it will return 200 and empty array possible parents because of an invalid team id', function(done) {
     var req = request(app).get('/api/teams/lookup/parents/' + 'none-existent-team');
     agent.attachCookies(req);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -675,10 +674,10 @@ describe('Team API Tests', function() {
   });
 
   // lookup selectable parent teams of a team
-  it('it will return 200 an array of objects as possible parent lookup', function(done){
+  it('it will return 200 an array of objects as possible parent lookup', function(done) {
     var req = request(app).get('/api/teams/lookup/parents/' + lookupId);
     agent.attachCookies(req);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -696,10 +695,10 @@ describe('Team API Tests', function() {
   });
 
   // lookup squads teams of a team
-  it('it will return 200 and empty array of squad teams because of an invalid team id', function(done){
+  it('it will return 200 and empty array of squad teams because of an invalid team id', function(done) {
     var req = request(app).get('/api/teams/lookup/squads/' + 'none-existent-team');
     agent.attachCookies(req);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {
@@ -712,10 +711,10 @@ describe('Team API Tests', function() {
   });
 
   // lookup squads teams of a team
-  it('it will return 200 and empty if there are no valid data on the lookup, array of objects if otherwise', function(done){
+  it('it will return 200 and empty if there are no valid data on the lookup, array of objects if otherwise', function(done) {
     var req = request(app).get('/api/teams/lookup/squads/' + lookupId);
     agent.attachCookies(req);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {

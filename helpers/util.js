@@ -11,7 +11,9 @@ var msg;
 
 var formatErrMsg = function(msg) {
   loggers.get('models').error('util helper Error: ' + msg);
-  return { error : msg };
+  return {
+    error: msg
+  };
 };
 
 module.exports.trimData = function(postData) {
@@ -20,15 +22,15 @@ module.exports.trimData = function(postData) {
   _.each(postData, function(element, index, list) {
     if (typeof element === 'string') {
       element = element.trim();
-    }else if(typeof element === 'object' && forceArray.indexOf(index) === -1){
+    } else if (typeof element === 'object' && forceArray.indexOf(index) === -1) {
       var tempObj = {};
-      _.each(element, function(v,i,l){
+      _.each(element, function(v, i, l) {
         tempObj[i] = typeof v === 'string' ? v.trim() : v;
       })
       element = tempObj;
-    }else if(typeof element === 'array' || forceArray.indexOf(index) > -1){ // somehow, members array is being catch as OBJECT
+    } else if (typeof element === 'array' || forceArray.indexOf(index) > -1) { // somehow, members array is being catch as OBJECT
       var tempArr = [];
-      _.each(element, function(v,i,l){
+      _.each(element, function(v, i, l) {
         tempArr.push(typeof v === 'string' ? v.trim() : v);
       })
       element = tempArr;
@@ -39,9 +41,9 @@ module.exports.trimData = function(postData) {
 };
 
 // Get system status
-module.exports.getSystemStatus = function (accessId) {
+module.exports.getSystemStatus = function(accessId) {
   return new Promise(function(resolve, reject) {
-    if(!(_.isEmpty(accessId))) {
+    if (!(_.isEmpty(accessId))) {
       loggers.get('models').verbose('Getting system status');
       common.getRecord(accessId)
         .then(function(body) {
@@ -60,7 +62,7 @@ module.exports.getSystemStatus = function (accessId) {
 };
 
 // Get server time (in million sec)
-module.exports.getServerTime = function () {
+module.exports.getServerTime = function() {
   //use server time
   var timezone = jstz.determine().name();
   return momenttz.tz(timezone).format('YYYY-MM-DD HH:mm:ss z');
@@ -81,31 +83,31 @@ module.exports.BulkDelete = function(docIds) {
     var _rev;
     _.each(docIds, function(docId) {
       common.getRecord(docId)
-      .then(function(body) {
-        if (!_.isEmpty(body)) {
-          _id = body._id;
-          _rev = body._rev;
-          //console.log('Attempt to delete Document _id: ' + _id + ' _rev: ' + _rev);
-          common.deleteRecord(_id, _rev)
-          .then(function(body) {
-            // loggers.get('models').verbose('[otherModel.BulkDelete] Successfully deleted docId id: '+ _id);
-            deletedIds.push(_id);
-            var result = {
-              'Failed to delete docIds': failedIds,
-              'Successfully deleted docIds': deletedIds
-            }
-            resolve(result);
-          })
-          .catch(function(err) {
-            // loggers.get('models').error('[otherModel.BulkDelete] Failed to delete docId: '+ _id);
-            failedIds.push(_id);
-          });
-        }
-      })
-      .catch(function(err) {
-        // loggers.get('models').error('[otherModel.BulkDelete] Failed to delete docId: '+ docId);
-        failedIds.push(docId);
-      });
+        .then(function(body) {
+          if (!_.isEmpty(body)) {
+            _id = body._id;
+            _rev = body._rev;
+            //console.log('Attempt to delete Document _id: ' + _id + ' _rev: ' + _rev);
+            common.deleteRecord(_id, _rev)
+              .then(function(body) {
+                // loggers.get('models').verbose('[otherModel.BulkDelete] Successfully deleted docId id: '+ _id);
+                deletedIds.push(_id);
+                var result = {
+                  'Failed to delete docIds': failedIds,
+                  'Successfully deleted docIds': deletedIds
+                }
+                resolve(result);
+              })
+              .catch(function(err) {
+                // loggers.get('models').error('[otherModel.BulkDelete] Failed to delete docId: '+ _id);
+                failedIds.push(_id);
+              });
+          }
+        })
+        .catch(function(err) {
+          // loggers.get('models').error('[otherModel.BulkDelete] Failed to delete docId: '+ docId);
+          failedIds.push(docId);
+        });
     });
   });
 }
@@ -119,17 +121,17 @@ module.exports.BulkDelete = function(docIds) {
  * @returns - reformatted object that will be passed directly to updateBulk
  */
 
-module.exports.formatForBulkTransaction = function(docs, email, action){
+module.exports.formatForBulkTransaction = function(docs, email, action) {
   //can use lodash cloneDeep
   loggers.get('models').verbose('Start bulk documents formatting for ' + action + ' transaction');
   var reformatDocu = [];
-  _.each(docs, function(v, i, l){
+  _.each(docs, function(v, i, l) {
     var doc2 = v;
-    if( action === 'delete'){
+    if (action === 'delete') {
       doc2['last_updt_user'] = email;
       doc2['last_updt_dt'] = module.exports.getServerTime();
       doc2['doc_status'] = 'delete';
-    }else{
+    } else {
       doc2['last_updt_user'] = email;
       doc2['last_updt_dt'] = module.exports.getServerTime();
       doc2['doc_status'] = '';
@@ -138,7 +140,7 @@ module.exports.formatForBulkTransaction = function(docs, email, action){
   });
   loggers.get('models').verbose('Bulk documents reformatted for ' + action + ' transaction');
   return {
-    docs : reformatDocu
+    docs: reformatDocu
   };
 }
 
@@ -152,19 +154,19 @@ module.exports.formatForBulkTransaction = function(docs, email, action){
  * @returns - true if team or team's parent is found in user teams
  */
 
- function isTeamMember(userId, teamId) {
+function isTeamMember(userId, teamId) {
   var teamModel = require('../models/teams');
-  return new Promise(function(resolve, reject){
+  return new Promise(function(resolve, reject) {
     teamModel.getUserTeams(userId)
-    .then(function(body){
-      var hasAccess = false;
-      if (_.contains(body, teamId))
-        hasAccess = true;
-      resolve(hasAccess);
-    })
-    .catch(function(err){
-      reject(formatErrMsg(err.error));
-    });
+      .then(function(body) {
+        var hasAccess = false;
+        if (_.contains(body, teamId))
+          hasAccess = true;
+        resolve(hasAccess);
+      })
+      .catch(function(err) {
+        reject(formatErrMsg(err.error));
+      });
   });
 }
 
@@ -179,33 +181,31 @@ module.exports.formatForBulkTransaction = function(docs, email, action){
  * @returns - true if access allowed otherwise throws an error with unauthorized user message
  */
 
-module.exports.isUserAllowed = function(userId, teamId){
-  return new Promise(function(resolve, reject){
-    loggers.get('models').verbose('validating user '+userId+' for team '+teamId);
+module.exports.isUserAllowed = function(userId, teamId) {
+  return new Promise(function(resolve, reject) {
+    loggers.get('models').verbose('validating user ' + userId + ' for team ' + teamId);
     users.getAdmins()
-    .then(function(body){
-      return _.contains(body.ACL_Full_Admin, userId);
-    })
-    .then(function(isAdmin){
+      .then(function(body) {
+        return _.contains(body.ACL_Full_Admin, userId);
+      })
+      .then(function(isAdmin) {
 
-      if (!isAdmin){
-        return isTeamMember(userId, teamId);
-      }
-      else{
-        return isAdmin;
-      }
-    })
-    .then(function(allowedUser){
-      if (!allowedUser){
-        reject(formatErrMsg('Unauthorized user.'));
-      }
-      else{
-        return resolve(allowedUser);
-      }
-    })
-    .catch(function(err){
-      reject(formatErrMsg(err.error));
-    });
+        if (!isAdmin) {
+          return isTeamMember(userId, teamId);
+        } else {
+          return isAdmin;
+        }
+      })
+      .then(function(allowedUser) {
+        if (!allowedUser) {
+          reject(formatErrMsg('Unauthorized user.'));
+        } else {
+          return resolve(allowedUser);
+        }
+      })
+      .catch(function(err) {
+        reject(formatErrMsg(err.error));
+      });
   });
 }
 
@@ -219,34 +219,38 @@ module.exports.returnObject = function(data) {
       if (_.has(data.rows[0], 'doc'))
         returnData = _.pluck(data.rows, 'doc');
       else if (_.has(data.rows[0], 'value'))
-        returnData =  _.pluck(data.rows, 'value');
+        returnData = _.pluck(data.rows, 'value');
       else if (_.has(data.rows[0], 'fields')) {
         returnData = _.map(data.rows, function(val, key) {
           //add document id property into each fields result
-          var merged = _.extend(val.fields, {'_id':val.id});
-            return merged;
+          var merged = _.extend(val.fields, {
+            '_id': val.id
           });
+          return merged;
+        });
       }
     } else
-      returnData =  data.rows;
+      returnData = data.rows;
   } else if (data instanceof Array) {
     if (!_.isEmpty(data)) {
-      if (_.has(data[0], 'doc') && !_.isEmpty(data[0].doc)) 
-        returnData =  _.pluck(data, 'doc');
+      if (_.has(data[0], 'doc') && !_.isEmpty(data[0].doc))
+        returnData = _.pluck(data, 'doc');
       else if (_.has(data[0], 'value') && !_.isEmpty(data[0].value))
-        returnData =  _.pluck(data, 'value');
+        returnData = _.pluck(data, 'value');
       else if (_.has(data[0], 'fields') && !_.isEmpty(data[0].fields)) {
         returnData = _.map(data.rows, function(val, key) {
           //add document id property into each fields result
-          var merged = _.extend(val.fields, {'_id':val.id});
-            return merged;
+          var merged = _.extend(val.fields, {
+            '_id': val.id
           });
+          return merged;
+        });
       } else
         returnData = data;
     } else
-      returnData =  data;
+      returnData = data;
   } else
-    returnData =  data;
+    returnData = data;
 
   return returnData;
 };
@@ -260,8 +264,7 @@ module.exports.queryLDAP = function(id) {
     request.get(opts, function(err, res, body) {
       if (err) {
         reject(body);
-      }
-      else {
+      } else {
         resolve(body);
       }
     })

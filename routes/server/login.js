@@ -8,7 +8,7 @@ module.exports = function(app, includes) {
 
   showLogin = function(req, res) {
     authType = settings.authType;
-    if(authType === 'ldap-login') {
+    if (authType === 'ldap-login') {
       action = '/auth';
     }
     /* istanbul ignore next */
@@ -82,20 +82,17 @@ module.exports = function(app, includes) {
                 if (err) {
                   loggers.get('auth').error('Unable to authenticate email=%s, err=%s', user.nameID, err);
                   return res.send('Unable to login to the site');
-                }
-                else {
+                } else {
                   res.redirect('/');
                 }
 
               });
-            }
-            else {
+            } else {
               loggers.get('auth').error('Unable to authenticate email=%s, ldapObject=%s', email, ldapObject);
               return res.send('Unable to login to the site');
             }
           });
-      }
-      else {
+      } else {
         res.send('Unable to login to the site');
       }
 

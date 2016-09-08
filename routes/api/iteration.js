@@ -7,13 +7,15 @@ var validate = require('validate.js');
 var _ = require('underscore');
 var sprintf = require("sprintf-js").sprintf;
 
-var formatErrMsg = function(msg){
+var formatErrMsg = function(msg) {
   loggers.get('api').error('Error: ' + msg);
-  return { error : msg };
+  return {
+    error: msg
+  };
 };
 
 module.exports = function(app, includes) {
-  var middleware  = includes.middleware;
+  var middleware = includes.middleware;
 
   /**
    * Get iteration docs by keys(team_id) or get all iteration info docs
@@ -25,14 +27,14 @@ module.exports = function(app, includes) {
     var teamId = req.params.teamId || undefined;
     loggers.get('api').verbose('[iterationRoute.getIterinfo] teamId:', teamId);
     iterationModel.getByIterInfo(teamId)
-    .then(function(result) {
-      res.send(result);
-    })
-    .catch( /* istanbul ignore next */ function(err) {
-      /* cannot simulate Cloudant error during testing */
-      formatErrMsg('[iterationRoute.getIterinfo]:' + err);
-      return res.status(400).send(err);
-    });
+      .then(function(result) {
+        res.send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        /* cannot simulate Cloudant error during testing */
+        formatErrMsg('[iterationRoute.getIterinfo]:' + err);
+        return res.status(400).send(err);
+      });
   };
 
   /**
@@ -43,14 +45,14 @@ module.exports = function(app, includes) {
     var docId = req.params.id || undefined;
     loggers.get('api').verbose('[iterationRoute.getIterationDoc] docId:', docId);
     iterationModel.get(docId)
-    .then(function(result) {
-      res.send(result);
-    })
-    .catch( /* istanbul ignore next */ function(err) {
-      /* cannot simulate Cloudant error during testing */
-      formatErrMsg('[iterationRoute.getIterationDoc]:', JSON.stringify(err));
-      return res.status(400).send(err);
-    });
+      .then(function(result) {
+        res.send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        /* cannot simulate Cloudant error during testing */
+        formatErrMsg('[iterationRoute.getIterationDoc]:', JSON.stringify(err));
+        return res.status(400).send(err);
+      });
   };
 
   /**
@@ -63,14 +65,14 @@ module.exports = function(app, includes) {
     var endkey = req.query.endkey || undefined;
     loggers.get('api').verbose('[iterationRoute.getCompletedIterations] startkey:%s endkey:%s', startkey, endkey);
     iterationModel.getCompletedIterationsByKey(startkey, endkey)
-    .then(function(result) {
-      res.send(result);
-    })
-    .catch( /* istanbul ignore next */ function(err) {
-      /* cannot simulate Cloudant error during testing */
-      formatErrMsg('[getCompletedIterations]:' + err);
-      return res.status(400).send(err);
-    });
+      .then(function(result) {
+        res.send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        /* cannot simulate Cloudant error during testing */
+        formatErrMsg('[getCompletedIterations]:' + err);
+        return res.status(400).send(err);
+      });
   };
 
   /**
@@ -80,20 +82,22 @@ module.exports = function(app, includes) {
   var createIteration = function(req, res, next) {
     var data = req.body;
     if (_.isEmpty(data)) {
-      return res.status(400).send({ error: 'Iteration data is missing' });
+      return res.status(400).send({
+        error: 'Iteration data is missing'
+      });
     }
     // loggers.get('api').verbose('[createIteration] POST data:', data);
     // console.log('[createIteration] POST data:', data);
     iterationModel.add(data, req.session['user'])
-    .then(function(result) {
-      res.send(result);
-    })
-    .catch( /* istanbul ignore next */ function(err) {
-      /* cannot simulate Cloudant error during testing */
-      // console.log('[api] [createIteration]:', err);
-      loggers.get('api').error('[iterationRoute.createIteration]:', err);
-      res.status(400).send(err);
-    });
+      .then(function(result) {
+        res.send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        /* cannot simulate Cloudant error during testing */
+        // console.log('[api] [createIteration]:', err);
+        loggers.get('api').error('[iterationRoute.createIteration]:', err);
+        res.status(400).send(err);
+      });
   };
 
   /**
@@ -105,21 +109,25 @@ module.exports = function(app, includes) {
     var curIterationId = req.params.iterationId;
     var data = req.body;
     if (_.isEmpty(curIterationId)) {
-      return res.status(400).send({ error: 'iterationId is missing' });
+      return res.status(400).send({
+        error: 'iterationId is missing'
+      });
     }
     if (_.isEmpty(data)) {
-      return res.status(400).send({ error: 'Iteration data is missing' });
+      return res.status(400).send({
+        error: 'Iteration data is missing'
+      });
     }
     // loggers.get('api').verbose('[updateIteration] POST data:', JSON.stringify(data, null, 4));
     iterationModel.edit(curIterationId, data, req.session['user'])
-    .then(function(result) {
-      res.send(result);
-    })
-    .catch( /* istanbul ignore next */ function(err) {
-      /* cannot simulate Cloudant error during testing */
-      loggers.get('api').error('[iterationRoute.updateIteration]:', err);
-      res.status(400).send(err);
-    });
+      .then(function(result) {
+        res.send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        /* cannot simulate Cloudant error during testing */
+        loggers.get('api').error('[iterationRoute.updateIteration]:', err);
+        res.status(400).send(err);
+      });
   };
 
   /**
@@ -142,7 +150,9 @@ module.exports = function(app, includes) {
     var includeDocs = req.query.includeDocs;
 
     if (!team_id) {
-      return res.status(400).send({ error: 'TeamId is required' });
+      return res.status(400).send({
+        error: 'TeamId is required'
+      });
     }
     var params = {
       id: team_id,
@@ -154,14 +164,14 @@ module.exports = function(app, includes) {
     };
 
     iterationModel.searchTeamIteration(params)
-    .then(function(result) {
-      return res.status(200).send(result);
-    })
-    .catch( /* istanbul ignore next */ function(err) {
-      /* cannot simulate Cloudant error during testing */
-      formatErrMsg('[iterationRoute.searchTeamIteration]:', err);
-      return res.status(400).send(err);
-    });
+      .then(function(result) {
+        return res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        /* cannot simulate Cloudant error during testing */
+        formatErrMsg('[iterationRoute.searchTeamIteration]:', err);
+        return res.status(400).send(err);
+      });
   };
 
   app.get('/api/iteration/searchTeamIteration', [includes.middleware.auth.requireLogin], searchTeamIteration);

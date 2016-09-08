@@ -16,12 +16,12 @@ before(function(done) {
     })
 });
 
-describe('Users API Test [GET /api/users/admins]: get admins', function(){
-  it('It will return admins successfully', function(done){
+describe('Users API Test [GET /api/users/admins]: get admins', function() {
+  it('It will return admins successfully', function(done) {
     var req = request(app).get('/api/users/admins/');
     agent.attachCookies(req);
     req.expect(200);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       if (err) {
         //console.log(err);
       } else {

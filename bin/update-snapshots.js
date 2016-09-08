@@ -1,6 +1,6 @@
 var schedule = require('node-schedule');
 var snapshot = require('../models/snapshot');
-var workerLogger  = require('../middleware/logger').get('worker');
+var workerLogger = require('../middleware/logger').get('worker');
 
 schedule.scheduleJob('*/3 * * * *', function() {
   snapshot.updateRollUpData()

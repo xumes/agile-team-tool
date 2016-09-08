@@ -1,10 +1,10 @@
 var crypto = require('crypto');
 var iterations = {
   teamDocValid: {
-    name : 'testteamid_1',
-    desc : 'team document description',
-    squadteam : 'Yes',
-    testdata : 'Yes'
+    name: 'testteamid_1',
+    desc: 'team document description',
+    squadteam: 'Yes',
+    testdata: 'Yes'
   },
   iterationDocValid: {
     "_id": "testmyid-" + crypto.randomBytes(20).toString('hex'),
@@ -140,48 +140,42 @@ var iterations = {
     'shortEmail': 'john.doe@ph.ibm.com',
     'testdata': 'Yes'
   },
-  userDetails : {
+  userDetails: {
     testdata: 'Yes',
     shortEmail: 'john.doe@ph.ibm.com',
-    ldap:
-      {
-        serialNumber: '123456PH1',
-        hrFirstName: 'John',
-        hrLastName: 'Doe'
-      }
+    ldap: {
+      serialNumber: '123456PH1',
+      hrFirstName: 'John',
+      hrLastName: 'Doe'
+    }
   },
-  allTeams: [
-              {
-                _id: 'ag_team_CIOServicesEMEA-CGTest_1460465673227',
-                testdata: 'Yes',
-                name: 'CIO Services EMEA - CG Test',
-                squadteam: 'Yes',
-                parent_team_id: '',
-                child_team_id: [],
-                total_members: 7,
-                total_allocation: 7
-              },
-              {
-                _id: 'ag_team_zTESTTeamSquaderl_1457798006050',
-                testdata: 'Yes',
-                name: 'zTEST Team Squad erl',
-                squadteam: 'Yes',
-                parent_team_id: '',
-                child_team_id: [],
-                total_members: 7,
-                total_allocation: 7
-              }
-            ],
-  userTeams: [
-                {
-                  _id: 'testteamid_1',
-                  testdata: 'Yes',
-                  _rev: '1-826f7437fc89b1b4d7370c7dd5f8fc0b',
-                  name: 'testteamid_1',
-                  parent_team_id: '',
-                  child_team_id: [],
-                  squadteam: 'Yes'
-                }
-             ]
+  allTeams: [{
+    _id: 'ag_team_CIOServicesEMEA-CGTest_1460465673227',
+    testdata: 'Yes',
+    name: 'CIO Services EMEA - CG Test',
+    squadteam: 'Yes',
+    parent_team_id: '',
+    child_team_id: [],
+    total_members: 7,
+    total_allocation: 7
+  }, {
+    _id: 'ag_team_zTESTTeamSquaderl_1457798006050',
+    testdata: 'Yes',
+    name: 'zTEST Team Squad erl',
+    squadteam: 'Yes',
+    parent_team_id: '',
+    child_team_id: [],
+    total_members: 7,
+    total_allocation: 7
+  }],
+  userTeams: [{
+    _id: 'testteamid_1',
+    testdata: 'Yes',
+    _rev: '1-826f7437fc89b1b4d7370c7dd5f8fc0b',
+    name: 'testteamid_1',
+    parent_team_id: '',
+    child_team_id: [],
+    squadteam: 'Yes'
+  }]
 };
 module.exports = iterations;
