@@ -423,7 +423,7 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
 	display: inherit;
 	margin-left: 15px;
 	padding-left: 5px;
-	border-bottom: 1px dotted !important;
+	border-bottom: 1px solid #e0e0e0 !important;
 	cursor: pointer;
 }
 
