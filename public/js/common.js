@@ -294,9 +294,10 @@ function isAdmin() {
  * @param message
  */
 function showMessagePopup(message) {
-  gDialogWindow.setHtml(message);
-  if (!gDialogWindow.isOpen())
-    gDialogWindow.show();
+	alert(message);
+  // gDialogWindow.setHtml(message);
+  // if (!gDialogWindow.isOpen())
+  //   gDialogWindow.show();
 }
 
 /**
