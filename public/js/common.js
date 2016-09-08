@@ -1,9 +1,3 @@
-jQuery(function($) {
-  $(document).ready(function() {
-    //gDialogWindow.init();
-  });
-});
-
 var user, userInfo, allTeams, memberRoles, allTeamsLookup, userTeamList, systemAdmin, systemStatus, squadTeams, environment;
 
 function getPageVariables(page, _callback) {
