@@ -42,14 +42,13 @@ function getPageVariables(page, _callback) {
 
 function setSystemMessage(systemStatusControl, systemStatusMsg){
 	//set db system message on the top of the page banner - header.ejs id=systMsg
-  if (systemStatusControl == "AdminOnlyChange" || systemStatusControl == "AdminOnlyReadChange")
-	{
-	   $("#systMsg").html(systemStatusMsg);
-		 $("#warningBar").show();
-	}
-	else {
-		 $("#warningBar").hide();
-	}
+    if (systemStatusControl == 'AdminOnlyChange' || systemStatusControl == 'AdminOnlyReadChange'){
+      $('#systMsg').html(systemStatusMsg);
+      $('#warningBar').show();
+    }
+    else {
+      $('#warningBar').hide();
+    }
 }
 
 function updateUserInfo(personObj) {
