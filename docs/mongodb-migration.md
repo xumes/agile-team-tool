@@ -1,6 +1,6 @@
 # MongoDB Migration Work
 
-## database models
+## database models and mapping
 
 ### admins
 | Fields        | Details           
@@ -9,18 +9,18 @@
 | permission     | 'full' or 'read' or 'write'
 
 ### iterations
-| Fields        | Details           
-| ------------- |:-------------:
-|_id| objectId
-|name| Dank Memes
-|teamId| objectId of team
+| Fields        | Details       | cloudant field    
+| ------------- |:-------------:|-------------
+|_id| objectId| n/a
+|name| Dank Memes|iteration_name
+|teamId| objectId of team|
 |type| ?
 |status| 'completed' or 'in progress'
 |creationDate|epoc time
 |createdBy| ibm email
 |lastedUpdated| epoc time
-|startDate| epoc time
-|endDate| epoc time
+|startDate| epoc time|iteration_start_dt
+|endDate| epoc time|iteration_end_dt
 |committedStories| num
 |deliveredStories| num
 |locationScore| ( 'fte_cnt' .. used for pizza chart i think)
@@ -73,7 +73,3 @@ TODO
 
 [Modelling tree structures]: <https://docs.mongodb.com/manual/applications/data-models-tree-structures/>
 [using mongoose schema validation]: <http://mongoosejs.com/docs/validation.html>
-
-
-
-
