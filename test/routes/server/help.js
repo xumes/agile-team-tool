@@ -1,5 +1,5 @@
 var request = require('supertest');
-var app     = require('../../../app');
+var app = require('../../../app');
 var chai = require('chai');
 var expect = chai.expect;
 
@@ -13,16 +13,16 @@ before(function(done) {
       if (err) throw err;
       agent.saveCookies(res);
       done();
-    })
+    });
 });
 
 
 describe('GET /help', function() {
-  it("should return 200", function(done){
+  it('should return 200', function(done) {
     var req = request(app).get('/help');
     agent.attachCookies(req);
     req.expect(200);
-    req.end(function(err, res){
+    req.end(function(err, res) {
       done();
     });
   });

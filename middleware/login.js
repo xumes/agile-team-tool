@@ -1,10 +1,10 @@
 var LocalStrategy = require('passport-local').Strategy;
-var settings      = require('../settings');
-var request       = require('request');
-var Promise       = require('bluebird');
-var _             = require('underscore');
-var loggers       = require('../middleware/logger');
-var SamlStrategy  = require('passport-saml').Strategy;
+var settings = require('../settings');
+var request = require('request');
+var Promise = require('bluebird');
+var _ = require('underscore');
+var loggers = require('../middleware/logger');
+var SamlStrategy = require('passport-saml').Strategy;
 
 module.exports = function(passport) {
 
@@ -21,21 +21,20 @@ module.exports = function(passport) {
       request.post(opts, function(err, res, body) {
         if (err || res.statusCode == 401) {
           reject(body);
-        }
-        else
+        } else
           resolve(body);
-      })
+      });
 
     });
   };
 
   passport.serializeUser(function(user, done) {
-    if(typeof user === 'string')
+    if (typeof user === 'string')
       done(null, JSON.parse(user).shortEmail);
     else
       done(null, user['shortEmail']);
   });
-  
+
   passport.deserializeUser(function(user, done) {
     done(null, user);
   });
@@ -68,17 +67,16 @@ module.exports = function(passport) {
           loggers.get('auth').verbose('Successfully authenticated %s', email);
           loggers.get('auth').verbose('ldapObject: ', ldapObject);
           return done(null, ldapObject);
-        }
-        else {
+        } else {
           loggers.get('auth').error('Unable to authenticate email=%s, ldapObject=%s', email, ldapObject);
           return done(null, false);
         }
-          
+
       })
       .catch(function(err) {
         loggers.get('auth').error('Unable to authenticate email=%s, err=%s', email, err);
         return done(null, false);
-      })
+      });
   }));
 
 };

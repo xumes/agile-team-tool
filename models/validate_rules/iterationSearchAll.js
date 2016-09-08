@@ -1,7 +1,7 @@
 var validate = require('validate.js');
 var moment = require('moment');
 var _ = require('underscore');
-var dateFormat = "YYYYMMDD";
+var dateFormat = 'YYYYMMDD';
 
 validate.validators.compareDate = function(value, options, key, attrib) {
   var startdate = attrib['startdate'];
@@ -26,51 +26,57 @@ validate.validators.compareDate = function(value, options, key, attrib) {
 };
 
 var iterationSearchAllDocRules = {
-  "id": {
+  'id': {
     presence: {
       presence: true,
-      message: "^TeamId is required"
+      message: '^TeamId is required'
     }
   },
-  "startdate": {
+  'startdate': {
     presence: false,
     format: {
       pattern: /\d{4}\d{2}\d{2}/,
-      message: "^Start date must be in format YYYYMMDD"
+      message: '^Start date must be in format YYYYMMDD'
     },
     compareDate: {
-      field: "startdate",
+      field: 'startdate',
     }
   },
-  "enddate": {
+  'enddate': {
     presence: false,
     format: {
       pattern: /\d{4}\d{2}\d{2}/,
-      message: "^End date must be in format YYYYMMDD"
+      message: '^End date must be in format YYYYMMDD'
     },
     compareDate: {
-      field: "enddate",
+      field: 'enddate',
     }
   },
-  "status": {
+  'status': {
     presence: false,
-    inclusion : {
-      within: {'Y':'Y', 'N':'N'},
-      message: "^The value of status is not valid. It must be either Y or N"
+    inclusion: {
+      within: {
+        'Y': 'Y',
+        'N': 'N'
+      },
+      message: '^The value of status is not valid. It must be either Y or N'
     }
   },
-  "includeDocs": {
+  'includeDocs': {
     presence: false,
-    inclusion : {
-      within: {'true':'true', 'false':'false'},
-      message: "^The value of includeDocs is not valid. It must be either true or false"
+    inclusion: {
+      within: {
+        'true': 'true',
+        'false': 'false'
+      },
+      message: '^The value of includeDocs is not valid. It must be either true or false'
     }
   },
-  "limit": {
+  'limit': {
     presence: false,
     format: {
       pattern: /^\d+$/,
-      message: "^Limit must be a number"
+      message: '^Limit must be a number'
     }
   }
 };

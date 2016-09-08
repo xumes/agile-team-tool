@@ -3,7 +3,7 @@ var winston = require('winston');
 var logLevel = process.env.logLevel || 'verbose';
 var logColors = process.env.logColors == 'true';
 
-if (process.env.isGulpTest){
+if (process.env.isGulpTest) {
   var logLevel = process.env.logLevel || 'NONE';
   var logColors = true;
 }

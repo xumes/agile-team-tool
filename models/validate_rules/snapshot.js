@@ -3,7 +3,7 @@ var moment = require('moment');
 var _ = require('underscore');
 
 var snapshotValidationRules = {
-  nonSquadTeamRule : {
+  nonSquadTeamRule: {
     '_id': {
       presence: true
     },

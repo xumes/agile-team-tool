@@ -4,14 +4,15 @@ module.exports = function(app, includes) {
   var render = includes.render;
 
   showHome = function(req, res) {
-    var json = 
-      {
-        'pageTitle'          : 'Home',
-        'googleAnalyticsKey' : settings.googleAnalyticsKey
-      };
+    var json = {
+      'pageTitle': 'Home',
+      'googleAnalyticsKey': settings.googleAnalyticsKey
+    };
     render(req, res, 'home', json);
   };
 
-  app.get('/cio/dashboard', function(req,res){res.redirect("/")});
+  app.get('/cio/dashboard', function(req, res) {
+    res.redirect('/');
+  });
   app.get('/', includes.middleware.auth.requireLoginWithRedirect, showHome);
 };

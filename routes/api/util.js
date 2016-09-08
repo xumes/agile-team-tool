@@ -7,21 +7,21 @@ var systemId = 'ag_ref_system_status_control';
 
 
 module.exports = function(app, includes) {
-  var middleware  = includes.middleware;
+  var middleware = includes.middleware;
 
   getSystemStatus = function(req, res) {
     util.getSystemStatus(systemId)
-      .then(function(result){
+      .then(function(result) {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err){
+      .catch( /* istanbul ignore next */ function(err) {
         res.status(400).send(err);
       });
   };
 
   getServerTime = function(req, res) {
-     var result = util.getServerTime();
-     res.status(200).send(result);
+    var result = util.getServerTime();
+    res.status(200).send(result);
   };
 
 

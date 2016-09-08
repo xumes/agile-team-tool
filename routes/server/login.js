@@ -8,7 +8,7 @@ module.exports = function(app, includes) {
 
   showLogin = function(req, res) {
     authType = settings.authType;
-    if(authType === 'ldap-login') {
+    if (authType === 'ldap-login') {
       action = '/auth';
     }
     /* istanbul ignore next */
@@ -16,9 +16,9 @@ module.exports = function(app, includes) {
       return res.redirect('/auth/saml/ibm');
     }
     json = {
-      "pageTitle": "Login",
-      "action": action,
-      "authType": authType
+      'pageTitle': 'Login',
+      'action': action,
+      'authType': authType
     };
     render(req, res, 'login', json);
   };
@@ -39,7 +39,7 @@ module.exports = function(app, includes) {
     }
     doc = (new Dom).parseFromString(xml);
     if (!this.validateReferences(doc)) {
-      console.error("Reference validation fails! (Continuing to Signature Validation...)");
+      console.error('Reference validation fails! (Continuing to Signature Validation...)');
     }
     if (!this.validateSignatureValue()) {
       return false;
@@ -82,20 +82,17 @@ module.exports = function(app, includes) {
                 if (err) {
                   loggers.get('auth').error('Unable to authenticate email=%s, err=%s', user.nameID, err);
                   return res.send('Unable to login to the site');
-                }
-                else {
+                } else {
                   res.redirect('/');
                 }
 
               });
-            }
-            else {
+            } else {
               loggers.get('auth').error('Unable to authenticate email=%s, ldapObject=%s', email, ldapObject);
               return res.send('Unable to login to the site');
             }
           });
-      }
-      else {
+      } else {
         res.send('Unable to login to the site');
       }
 
@@ -103,7 +100,7 @@ module.exports = function(app, includes) {
     return passportAuth(req, res, next);
   };
 
-  app.get("/login", [includes.middleware.auth.requireLoggedOutWithRedirect], showLogin);
-  app.get("/auth/saml/ibm", includes.passport.authenticate('w3-saml', {}));
-  app.post("/auth/saml/ibm/callback", authSaml);
+  app.get('/login', [includes.middleware.auth.requireLoggedOutWithRedirect], showLogin);
+  app.get('/auth/saml/ibm', includes.passport.authenticate('w3-saml', {}));
+  app.post('/auth/saml/ibm/callback', authSaml);
 };

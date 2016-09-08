@@ -21,7 +21,7 @@ var adminUser = 'Yanliang.Gu1@ibm.com';
 
 var agent = request.agent(app);
 
-describe('Assessment API Test', function(){
+describe('Assessment API Test', function() {
   // do the login befre testing
   before(function(done) {
     agent
@@ -37,53 +37,51 @@ describe('Assessment API Test', function(){
             if (err) throw err;
             agent.saveCookies(res);
             done();
-          })
-      })
+          });
+      });
   });
 
   // prepare the team data
-  before(function(done){
+  before(function(done) {
     var teamId;
     var revDelete;
     teamModel.getName(teamData.name)
-    .then(function(body){
-      if (_.isEmpty(body)){
-        return teamModel.createTeam(teamData, dummyData.user.details);
-      }
-      else{
-        return body;
-      }
-    })
-    .then(function(body){
-      if (Array.isArray(body)){
-        teamId  = body[0].id;
-      }
-      else{
-        teamId = body._id;
-      }
-      //set current team id for assessment
-      curr_assessment.team_id = teamId;
-      curr_assessment._id = 'ag_mar_'+teamId+'_1469112933083';
-      noId.team_id = teamId;
-      return assessmentModel.getAssessment(curr_assessment._id);
-    })
-    .then(function(body){
-      return assessmentModel.deleteAssessment(body._id, body._rev);
-    })
-    .catch(function(err){
-      //console.log(err);
-    })
-    .finally(function(){
-      //console.log('team data preparation done. '+curr_assessment._id+' for team '+curr_assessment.team_id);
-      done();
-    });
+      .then(function(body) {
+        if (_.isEmpty(body)) {
+          return teamModel.createTeam(teamData, dummyData.user.details);
+        } else {
+          return body;
+        }
+      })
+      .then(function(body) {
+        if (Array.isArray(body)) {
+          teamId = body[0].id;
+        } else {
+          teamId = body._id;
+        }
+        //set current team id for assessment
+        curr_assessment.team_id = teamId;
+        curr_assessment._id = 'ag_mar_' + teamId + '_1469112933083';
+        noId.team_id = teamId;
+        return assessmentModel.getAssessment(curr_assessment._id);
+      })
+      .then(function(body) {
+        return assessmentModel.deleteAssessment(body._id, body._rev);
+      })
+      .catch(function(err) {
+        //console.log(err);
+      })
+      .finally(function() {
+        //console.log('team data preparation done. '+curr_assessment._id+' for team '+curr_assessment.team_id);
+        done();
+      });
   });
 
-  describe('Assesment API Test [GET /api/assessment/template]: get assessment template', function(){
-    it("retrieve assessment template", function(done){
+  describe('Assesment API Test [GET /api/assessment/template]: get assessment template', function() {
+    it('retrieve assessment template', function(done) {
       var req = request(app).get('/api/assessment/template');
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('rows');
@@ -92,12 +90,12 @@ describe('Assessment API Test', function(){
     });
   });
 
-  describe('Assesment API Test [POST /api/assessment]: add team assessment', function(){
-    it('add assessment with valid assessment data', function(done){
+  describe('Assesment API Test [POST /api/assessment]: add team assessment', function() {
+    it('add assessment with valid assessment data', function(done) {
       var req = request(app).post('/api/assessment/');
       agent.attachCookies(req);
       req.send(curr_assessment);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.be.a('object');
         expect(res.body.ok).to.be.true;
@@ -107,13 +105,13 @@ describe('Assessment API Test', function(){
       });
     });
 
-    it('add assessment with invalid assessment data', function(done){
-      var invalidAssessment =  lodash.cloneDeep(curr_assessment);
+    it('add assessment with invalid assessment data', function(done) {
+      var invalidAssessment = lodash.cloneDeep(curr_assessment);
       invalidAssessment.created_dt = '';
       var req = request(app).post('/api/assessment/');
       agent.attachCookies(req);
       req.send(invalidAssessment);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('error');
@@ -123,32 +121,34 @@ describe('Assessment API Test', function(){
     });
   });
 
-  describe('Assessment API Test [GET /api/assessment/view]: get team assessments', function(){
-    it('retrieve team assessments with non-existing team id', function(done){
+  describe('Assessment API Test [GET /api/assessment/view]: get team assessments', function() {
+    it('retrieve team assessments with non-existing team id', function(done) {
       var req = request(app).get('/api/assessment/view/' + 'teamId=' + invalidTeamId);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         expect(res.statusCode).to.be.equal(404);
         expect(res.body).to.be.empty;
         done();
       });
     });
 
-    it('retrieve team assessments with empty team id', function(done){
+    it('retrieve team assessments with empty team id', function(done) {
       var req = request(app).get('/api/assessment/view/' + 'teamId=' + '');
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         expect(res.statusCode).to.be.equal(404);
         expect(res.body).to.be.empty;
         done();
       });
     });
 
-    it('retrieve team assessments with valid id', function(done){
-      var query = querystring.stringify({'teamId': curr_assessment.team_id});
+    it('retrieve team assessments with valid id', function(done) {
+      var query = querystring.stringify({
+        'teamId': curr_assessment.team_id
+      });
       var req = request(app).get('/api/assessment/view?' + query);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.be.instanceof(Array);
         var idRecords = _.pluck(res.body, '_id');
@@ -159,30 +159,30 @@ describe('Assessment API Test', function(){
       });
     });
 
-    it('retrieve assessment with non-existing id', function(done){
+    it('retrieve assessment with non-existing id', function(done) {
       var req = request(app).get('/api/assessment/view/' + 'assessId=' + invalidAssessId);
       agent.attachCookies(req);
-      req.end(function(err, res){
-        expect(res.statusCode).to.be.equal(404);
-        expect(res.body).to.be.empty
-        done();
-      });
-    });
-
-    it('retrieve assessments with empty id', function(done){
-      var req = request(app).get('/api/assessment/view/' + 'assessId=' + '');
-      agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         expect(res.statusCode).to.be.equal(404);
         expect(res.body).to.be.empty;
         done();
       });
     });
 
-    it('retrieve assessments with none', function(done){
+    it('retrieve assessments with empty id', function(done) {
+      var req = request(app).get('/api/assessment/view/' + 'assessId=' + '');
+      agent.attachCookies(req);
+      req.end(function(err, res) {
+        expect(res.statusCode).to.be.equal(404);
+        expect(res.body).to.be.empty;
+        done();
+      });
+    });
+
+    it('retrieve assessments with none', function(done) {
       var req = request(app).get('/api/assessment/view/');
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.be.equal('No assessment id provided.');
@@ -190,11 +190,13 @@ describe('Assessment API Test', function(){
       });
     });
 
-    it('retrieve team assessments with valid id', function(done){
-      var query = querystring.stringify({'assessId': curr_assessment._id});
+    it('retrieve team assessments with valid id', function(done) {
+      var query = querystring.stringify({
+        'assessId': curr_assessment._id
+      });
       var req = request(app).get('/api/assessment/view?' + query);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('_id');
@@ -205,12 +207,12 @@ describe('Assessment API Test', function(){
     });
   });
 
-  describe('Assessment API Test [PUT /api/assessment/]: update team assessment', function(){
-    it('update assessment with no id', function(done){
+  describe('Assessment API Test [PUT /api/assessment/]: update team assessment', function() {
+    it('update assessment with no id', function(done) {
       var req = request(app).put('/api/assessment/');
       agent.attachCookies(req);
       req.send(noId);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.have.property('_id');
@@ -219,13 +221,13 @@ describe('Assessment API Test', function(){
       });
     });
 
-    it('update assessment with empty id', function(done){
+    it('update assessment with empty id', function(done) {
       var tempData = _.clone(curr_assessment);
-      tempData._id='';
+      tempData._id = '';
       var req = request(app).put('/api/assessment/');
       agent.attachCookies(req);
       req.send(tempData);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.have.property('_id');
@@ -234,14 +236,14 @@ describe('Assessment API Test', function(){
       });
     });
 
-    it('update assessment with valid data', function(done){
+    it('update assessment with valid data', function(done) {
       var tempData = _.clone(curr_assessment);
       tempData.last_updt_user = dummyData.user.details.shortEmail;
       tempData._rev = currRevisionId;
       var req = request(app).put('/api/assessment/');
       agent.attachCookies(req);
       req.send(tempData);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('id');
@@ -253,12 +255,15 @@ describe('Assessment API Test', function(){
     });
   });
 
-  describe('Assessment API Test [DELETE /api/assessment]: delete assessment', function(){
-    it('delete assessment with non-existing id', function(done){
-      var query = querystring.stringify({'docId': invalidAssessId, 'revId': currRevisionId});
+  describe('Assessment API Test [DELETE /api/assessment]: delete assessment', function() {
+    it('delete assessment with non-existing id', function(done) {
+      var query = querystring.stringify({
+        'docId': invalidAssessId,
+        'revId': currRevisionId
+      });
       var req = request(app).delete('/api/assessment?' + query);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('error');
@@ -267,11 +272,14 @@ describe('Assessment API Test', function(){
       });
     });
 
-    it('delete assessment with empty id', function(done){
-      var query = querystring.stringify({'docId': '', 'revId': currRevisionId});
+    it('delete assessment with empty id', function(done) {
+      var query = querystring.stringify({
+        'docId': '',
+        'revId': currRevisionId
+      });
       var req = request(app).delete('/api/assessment?' + query);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('error');
@@ -280,11 +288,14 @@ describe('Assessment API Test', function(){
       });
     });
 
-    it('delete assessment with non-existing rev id', function(done){
-      var query = querystring.stringify({'docId': curr_assessment._id, 'revId': invalidRevisionId});
+    it('delete assessment with non-existing rev id', function(done) {
+      var query = querystring.stringify({
+        'docId': curr_assessment._id,
+        'revId': invalidRevisionId
+      });
       var req = request(app).delete('/api/assessment?' + query);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('error');
@@ -293,11 +304,14 @@ describe('Assessment API Test', function(){
       });
     });
 
-    it('delete assessment with empty rev id', function(done){
-      var query = querystring.stringify({'docId': curr_assessment._id, 'revId': ''});
+    it('delete assessment with empty rev id', function(done) {
+      var query = querystring.stringify({
+        'docId': curr_assessment._id,
+        'revId': ''
+      });
       var req = request(app).delete('/api/assessment?' + query);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         expect(res.statusCode).to.be.equal(400);
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('error');
@@ -306,11 +320,14 @@ describe('Assessment API Test', function(){
       });
     });
 
-    it('delete assessment with valid id and rev id', function(done){
-      var query = querystring.stringify({'docId': curr_assessment._id, 'revId': currRevisionId});
+    it('delete assessment with valid id and rev id', function(done) {
+      var query = querystring.stringify({
+        'docId': curr_assessment._id,
+        'revId': currRevisionId
+      });
       var req = request(app).delete('/api/assessment?' + query);
       agent.attachCookies(req);
-      req.end(function(err, res){
+      req.end(function(err, res) {
         expect(res.statusCode).to.be.equal(200);
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('ok');
