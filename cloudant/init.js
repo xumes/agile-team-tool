@@ -31,7 +31,7 @@ module.exports.init = function() {
         if (_.isEmpty(cDoc)) {
           initLogger.warn(sDoc._id + ' NOT found in DB. Creating it now..');
 
-          db.insert(sDoc, function(err, body) {
+          db.insert(sDoc, function(err) {
             if (!err)
               initLogger.info('Create Success: ' + sDoc._id);
             else

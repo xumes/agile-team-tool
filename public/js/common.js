@@ -1,9 +1,3 @@
-jQuery(function($) {
-  $(document).ready(function() {
-    gDialogWindow.init();
-  });
-});
-
 var user, userInfo, allTeams, memberRoles, allTeamsLookup, userTeamList, systemAdmin, systemStatus, squadTeams, environment;
 
 function getPageVariables(page, _callback) {
@@ -300,9 +294,11 @@ function isAdmin() {
  * @param message
  */
 function showMessagePopup(message) {
-  gDialogWindow.setHtml(message);
-  if (!gDialogWindow.isOpen())
-    gDialogWindow.show();
+  alert(message);
+
+  // gDialogWindow.setHtml(message);
+  // if (!gDialogWindow.isOpen())
+  //   gDialogWindow.show();
 }
 
 /**
