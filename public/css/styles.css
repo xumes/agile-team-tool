@@ -235,6 +235,17 @@ a.logo-caption:hover {
   vertical-align: top;
 }
 
+.logo-warning {
+  font-size: 20px;
+  margin-bottom: 0px;
+  margin-top: 0px;
+  text-align: left;
+  background-color: #FFFFCC;
+  padding-bottom: 0px;
+  padding-top: 0px;
+  padding-left: 43px;
+  border: 0px solid #CDCDCD;
+}
 /* a tag
 ========================================================================================*/
 a:focus {

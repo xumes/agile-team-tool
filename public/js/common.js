@@ -29,12 +29,27 @@ function getPageVariables(page, _callback) {
       siteEnv();
       // LDAP employee name has different convetion from Faces API value
       getPersonFromFaces(userInfo.email, updateUserInfo, []);
+			//get system status from DB for display on the top banner
+			setSystemMessage(systemStatus.agildash_system_status_display, systemStatus.agildash_system_status_msgtext_display);
+
 
     }
     if (typeof _callback === 'function') {
       _callback.apply(this);
     }
   });
+}
+
+function setSystemMessage(systemStatusControl, systemStatusMsg){
+	//set db system message on the top of the page banner - header.ejs id=systMsg
+  if (systemStatusControl == "AdminOnlyChange" || systemStatusControl == "AdminOnlyReadChange")
+	{
+	   $("#systMsg").html(systemStatusMsg);
+		 $("#warningBar").show();
+	}
+	else {
+		 $("#warningBar").hide();
+	}
 }
 
 function updateUserInfo(personObj) {
