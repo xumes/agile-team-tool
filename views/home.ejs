@@ -43,8 +43,9 @@
                             <li id="allTeams" class="tab-ul--item" role="tab">All teams</li>
                         </ul>
                         <i style="position: absolute; font-size: 8pt; text-align: right; display: inline-block; float: right; left: 0px; width: 100%; top: 25px; padding-bottom: 0;"><i class="agile-team-squad">*</i> indicates squad team</i>
-                        <i style="position: absolute; font-size: 8pt; text-align: right; display: inline-block; float: left; left: 0px;top: 45px; padding-bottom: 0;">Search functionality will return soon</i>
-
+                        <form>
+                            <input class="agile-search-field" type="text" name="search" placeholder="Search..">
+                        </form>
                       </nav>
 
                       <!--
@@ -58,7 +59,7 @@
                       <p>
                         <input class="clearable" type="text" name="teamFilter" id="teamFilter" value="" placeholder="Enter team name to filter..." aria-label="Name filter for teams" style="width: 94%" />
                       </p>
-                      
+
                       <p class="agile-section-expand-collapse">
                         <a href="#" id="teamExpand">Expand all</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#" id="teamCollapse">Collapse all</a>
                       </p>

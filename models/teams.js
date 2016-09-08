@@ -34,7 +34,6 @@ var team = {
       var query = {};
       query['q'] = {};
       query['q'] = 'name:'+name;
-      console.log(query);
       common.Search('search', 'nameSearch', query)
         .then(function(result){
           resolve(result);
