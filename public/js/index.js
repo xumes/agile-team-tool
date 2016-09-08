@@ -162,6 +162,13 @@ jQuery(function($) {
       getRootTeams();
     }
   });
+
+	$('#nameSearchField').on('input', function() {
+		var inputText = $('#nameSearchField').val();
+		if (inputText != '' && inputText != ' ') {
+			
+		}
+	});
 });
 
 //this function will cancel ajax calls to prevent things from executing
