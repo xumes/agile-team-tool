@@ -225,6 +225,16 @@ a.logo-caption:hover {
   vertical-align: top;
 }
 
+.logo-message {
+  font-size: 14px;
+  color: #FF0000;
+  border-left: solid 1px #323c3c;
+  display: inline-block;
+  line-height: 45px;
+  padding: 0 0 0 14px;
+  vertical-align: top;
+}
+
 /* a tag
 ========================================================================================*/
 a:focus {
