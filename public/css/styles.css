@@ -236,14 +236,15 @@ a.logo-caption:hover {
 }
 
 .logo-warning {
-  font-size: 20px;
+  font-size: 14px;
   margin-bottom: 0px;
   margin-top: 0px;
   text-align: left;
   background-color: #FFFFCC;
-  padding-bottom: 0px;
-  padding-top: 0px;
+  padding-bottom: 10px;
+  padding-top: 10px;
   padding-left: 43px;
+  display:none;
   border: 0px solid #CDCDCD;
 }
 /* a tag
