@@ -10,6 +10,7 @@ var loggers = require('../middleware/logger');
 var validate = require('validate.js');
 var moment = require('moment');
 var sprintf = require('sprintf-js').sprintf;
+var generator = require('lucene-query-generator');
 
 var formatErrMsg = function(msg) {
   loggers.get('models').error('Error: ', msg);
@@ -372,6 +373,7 @@ var iteration = {
       var include_docs = p.includeDocs;
       var sortBy = '-end_dt';
       var lucene_query = '';
+      var operands = {};
       var validationErrors = validate(p, iterationSearchAllDocRules);
       validationErrors = iteration.isValidStartEndDate(startdate, enddate, 'YYYYMMDD', validationErrors);
 
@@ -379,22 +381,33 @@ var iteration = {
         reject(formatErrMsg(validationErrors));
       } else {
         // teamId
-        lucene_query = lucene_query + sprintf('team_id:%s', team_id);
+        // lucene_query = lucene_query + sprintf("team_id:%s", team_id);
+        operands = _.extend(operands, {team_id: team_id});
         // completed status
         if (status) {
-          lucene_query = lucene_query + sprintf(' AND completed:%s', status);
+          // lucene_query = lucene_query + sprintf(" AND completed:%s", status);
+          operands = _.extend(operands, {completed: status});
         }
         // earliest and latest end date
         if (startdate && enddate) {
-          lucene_query = lucene_query + sprintf(' AND end_dt:[%s TO %s]', startdate, enddate);
+          // lucene_query = lucene_query + sprintf(" AND end_dt:[%s TO %s]", startdate, enddate);
+          operands = _.extend(operands, {
+            end_dt: {$from: startdate, $to: enddate}
+          });
         } else {
           if (startdate) {
-            lucene_query = lucene_query + sprintf(' AND end_dt:%s', startdate);
+            // lucene_query = lucene_query + sprintf(" AND end_dt:%s", startdate);
+            operands = _.extend(operands, {end_dt: startdate});
           }
           if (enddate) {
-            lucene_query = lucene_query + sprintf(' AND end_dt:%s', enddate);
+            // lucene_query = lucene_query + sprintf(" AND end_dt:%s", enddate);
+            operands = _.extend(operands, {end_dt: enddate});
           }
         }
+
+        lucene_query = generator.convert({
+          $operands: [operands]
+        });
 
         var params = {
           'q': lucene_query,

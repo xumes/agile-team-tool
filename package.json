@@ -27,6 +27,7 @@
     "istanbul": "^0.4.4",
     "jstimezonedetect": "^1.0.6",
     "lodash": "^4.14.1",
+    "lucene-query-generator": "^0.2.0",
     "mocha": "^2.5.3",
     "moment": "^2.14.1",
     "moment-timezone": "^0.5.5",
