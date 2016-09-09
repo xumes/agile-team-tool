@@ -254,6 +254,7 @@ function searchTeams(keyword) {
     console.log(e);
     $('#spinnerContainer-search').hide();
   });
+  requests.push(req);
 }
 
 function getMyTeamsFromDb(initial, loadStandalone) {
@@ -398,6 +399,7 @@ function loadParentInAllTeams(teamId, fromSearch) {
       }
     }
   });
+  requests.push(req);
 }
 
 function getAllAgileTeamsByParentId(parentId, showLoading, initial, parentsTree) {
