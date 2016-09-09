@@ -247,9 +247,9 @@ function searchTeams(keyword) {
         _.each(sortedTeams, function(team){
           addTeamToSearchTree(team, twistyId);
         });
-        $('#spinnerContainer-search').hide();
       }
     }
+    $('#spinnerContainer-search').hide();
   }).fail(function(e){
     console.log(e);
     $('#spinnerContainer-search').hide();
