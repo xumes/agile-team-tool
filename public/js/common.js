@@ -40,8 +40,8 @@ function getPageVariables(page, _callback) {
 }
 
 function setSystemMessage(systemStatusControl, systemStatusMsg){
-	//set db system message on the top of the page banner - header.ejs id=systMsg
-  if (systemStatusControl == 'AdminOnlyChange' || systemStatusControl == 'AdminOnlyReadChange'){
+	//set db system message on the top of the page banner - header.ejs id=#warningBar
+  if (systemStatusControl == 'DynamicChange' || systemStatusControl == 'AdminOnlyChange' || systemStatusControl == 'AdminOnlyReadChange'){
     $('#warningBar').html(systemStatusMsg);
     $('#warningBar').show();
   } else {

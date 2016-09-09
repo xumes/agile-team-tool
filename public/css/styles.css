@@ -236,16 +236,16 @@ a.logo-caption:hover {
 }
 
 .logo-warning {
-  font-size: 14px;
+  font-size: 20px;
   margin-bottom: 0px;
   margin-top: 0px;
   text-align: left;
-  background-color: #FFFFCC;
-  padding-bottom: 10px;
-  padding-top: 10px;
+  background-color: #fde876;
+  padding-bottom: 30px;
+  padding-top: 30px;
   padding-left: 43px;
   display:none;
-  border: 0px solid #CDCDCD;
+  border: 1px solid black;
 }
 /* a tag
 ========================================================================================*/
