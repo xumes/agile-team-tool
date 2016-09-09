@@ -8,7 +8,8 @@
 | ------------- |:-------------:|-------------
 | userId | (UNIQUE ID) string. for IBM it's CNUM or perhaps shortEmail? | n/a
 | adminAccess | 'none' or 'full' or 'read' or 'write'| n/a
-| email | string | n/a
+| email | string, used for contact. for IBM it's pref. ID | n/a
+| name  | string |
 
 
 ### iterations
@@ -19,9 +20,9 @@
 |type | use: ??not sure | type  | "iterationinfo"
 |status| 'completed' or 'in progress' | iterationinfo_status |"Not complete", "Completed"
 |createDate|JS Date Object | created_dt | "2016-04-12 08:58:50 EDT"
-|createdBy| string of userId | created_user |
+|createdBy| string of name or email | created_user |
 |updateDate| JS Date Object | last_updt_dt | "2016-04-27 04:53:23 EDT"
-|updatedBy| string of userId | last_updt_user |
+|updatedBy| string of name or email | last_updt_user |
 |startDate| JS Date Object|iteration_start_dt | "01/15/2016"
 |endDate| JS Date Object|iteration_end_dt | "01/16/2016"
 |committedStories| integer | nbr_committed_stories |
@@ -41,11 +42,11 @@
 | ------------- |:-------------:|-------------|-------------|-------------
 | parent(mongoDB field)| ObjectId| |parent_team_id|
 | members       | array of objects| [{userId:'5G22944', name:'billy bob', allocation:'100', role:"Developer"}] | members | [{key,id,name,allocation,role}]
-| isSquad       | boolean       | true or false| squadteam     | "Yes" or "No"
+|type           | string | "", "squad", "domain", "tribe", "subDomain", "potato" | squadteam     | "Yes" or "No"
 |createDate     | JS Date Object | |created_dt | "2016-04-12 08:58:50 EDT"
-|createdBy      | string of userId | | created_user |
+|createdBy      | string of name or email | | created_user |
 |updateDate     | JS Date Object | |last_updt_dt | "2016-04-27 04:53:23 EDT"
-|updatedBy      | string of userId | |last_updt_user |
+|updatedBy      | string of name or email | |last_updt_user |
 
 ### assessments
 | Fields        | Details           
