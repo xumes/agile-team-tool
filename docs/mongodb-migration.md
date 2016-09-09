@@ -6,8 +6,10 @@
 ### users
 | Fields        | Details       | cloudant field
 | ------------- |:-------------:|-------------
-| userId      | ['cjscotta@us.ibm.com']              | n/a
+| userId | (UNIQUE ID) string. for IBM it's CNUM or perhaps shortEmail? | n/a
 | adminAccess | 'none' or 'full' or 'read' or 'write'| n/a
+| email | string | n/a
+
 
 ### iterations
 | Fields        | Details      | cloudant field | cloudant value ex (if not obv.)
@@ -25,23 +27,22 @@
 |committedStories| integer | nbr_committed_stories |
 |deliveredStories| integer | nbr_stories_dlvrd |
 |locationScore | ( ex 0.5 .. used for pizza chart i think) | fte_cnt | 0.0
-|deployments | 1 | nbr_dplymnts | ""
-|defects | 2 | nbr_defects | ""
-|clientSatisfaction| ? | client_sat | 1.0
-|teamSatisfaction| ? | team_sat | 4
+|deployments | integer | nbr_dplymnts | "" or 1
+|defects | integer | nbr_defects | "" or 2
+|clientSatisfaction| integer, use: ? | client_sat | 1.0
+|teamSatisfaction| integer, use: ? | team_sat | 4
 |comment| string | iteration_comments |
 |memberChanged| boolean, use: ?? | team_mbr_change | "No"
 
 
 ### teams (top down tree structure)
 
-
 | Fields        | Details           
 | ------------- |:-------------:
-| ??siblings      | []      
-| children      | []
-| members       | ['bill','bob']
-| squad          | true or false
+| ??siblings    | array of string[]      
+| children      | array of string[]
+| members       | array of string['bill','bob']
+| isSquad       | boolean
 
 
 ### assessments
@@ -63,14 +64,7 @@
 * Top down; parent nodes have pointers to children.
 
 
-### Cloudant <-> MongoDB schema mapping
-TODO
-
-
 ## References
-
-### Terminologies used in Trees.
-
 
  * [Modelling tree structures]
 
