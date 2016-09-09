@@ -41,21 +41,23 @@ do we need to know the diff. between tribes and domains/subdomains??
 do we need teams to know their siblings??
 
 
-| Fields        | Details       | ex 
-| ------------- |:-------------:|-------------
-| children(mongoDB field)| array of ObjectId|
-| members       | array of objects|[{userId:'5G22944', name:'billy bob'}]
-| isSquad       | boolean
+| Fields        | Details       | mongo ex| cloudant field | cloudant value ex
+| ------------- |:-------------:|-------------|-------------|-------------
+| children(mongoDB field)| array of ObjectId| squadteam | "Yes" or "No"
+| members       | array of objects|members|[{userId:'5G22944', name:'billy bob'}]| members | [{"key": "147869PH1","id": "HERANAML@ph.ibm.com","name": "Tal Herana","allocation": 0,"role": "Team Lead"}]
+| isSquad       | boolean|
 
 
 ### assessments
 | Fields        | Details           
 | ------------- |:-------------:
 |       |       
+
 ### snapshots (roll-up data)
 | Fields        | Details           
 | ------------- |:-------------:
 |       |       
+
 ## Proposed work
 * Use Mongoose
 * Have alternate versions of assessment.js, iteration.js, snapshot.js, teams.js and users.js in a new model directory
