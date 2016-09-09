@@ -8,8 +8,9 @@
 | ------------- |:-------------:|-------------
 | userId | (UNIQUE ID) string. for IBM it's CNUM or perhaps shortEmail? | n/a
 | adminAccess | 'none' or 'full' or 'read' or 'write'| n/a
-| email | string, used for contact. for IBM it's pref. ID | n/a
-| name  | string |
+| email | string; for IBM it's pref. ID | n/a
+| name  | string' first and last name of person | n/a
+| lastLogin | JS Date Object| n/a
 
 
 ### iterations
@@ -20,8 +21,10 @@
 |type | use: ??not sure | type  | "iterationinfo"
 |status| 'completed' or 'in progress' | iterationinfo_status |"Not complete", "Completed"
 |createDate|JS Date Object | created_dt | "2016-04-12 08:58:50 EDT"
+|createdById| string of userId | created_user |
 |createdBy| string of name or email | created_user |
 |updateDate| JS Date Object | last_updt_dt | "2016-04-27 04:53:23 EDT"
+|updatedById| string of userId | last_updt_user |
 |updatedBy| string of name or email | last_updt_user |
 |startDate| JS Date Object|iteration_start_dt | "01/15/2016"
 |endDate| JS Date Object|iteration_end_dt | "01/16/2016"
@@ -44,8 +47,10 @@
 | members       | array of objects| [{userId:'5G22944', name:'billy bob', allocation:'100', role:"Developer"}] | members | [{key,id,name,allocation,role}]
 |type           | string | "", "squad", "domain", "tribe", "subDomain", "potato" | squadteam     | "Yes" or "No"
 |createDate     | JS Date Object | |created_dt | "2016-04-12 08:58:50 EDT"
-|createdBy      | string of name or email | | created_user |
-|updateDate     | JS Date Object | |last_updt_dt | "2016-04-27 04:53:23 EDT"
+|createdById      | string of userId | | created_user |
+|createdBy        | string of name or email | | created_user |
+|updateDate       | JS Date Object | |last_updt_dt | "2016-04-27 04:53:23 EDT"
+|updatedById      | string of userId | |last_updt_user |
 |updatedBy      | string of name or email | |last_updt_user |
 
 ### assessments
