@@ -44,6 +44,22 @@
                         </ul>
                         <i style="position: absolute; font-size: 8pt; text-align: right; display: inline-block; float: right; left: 0px; width: 100%; top: 25px; padding-bottom: 0;"><i class="agile-team-squad">*</i> indicates squad team</i>
                         <input id="nameSearchField" class="agile-search-field" type="text" name="search" placeholder="Search..">
+                        <form class="search-box">
+                          <input type="search" class="search-box--input" id="search-input" placeholder="Search for a team">
+                          <label class="search-box--indicator" for="search-input">
+                            <div class="search-box--spinner">
+                              <div class="spinner" data-state="loop">
+                                <svg class="spinner--circle" viewBox="25 25 50 50">
+                                  <circle class="spinner--path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10">
+                                  </circle>
+                                </svg>
+                              </div>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="search-box--icon" data-sprite-id="search_16">
+                              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/build/svg/icon-store.svg#search_16"></use>
+                            </svg>
+                          </label>
+                        </form>
                       </nav>
 
                       <!--
@@ -65,6 +81,9 @@
                     </div>
 
                     <div class="agile-team-nav" data-widget="scrollable" data-height="600">
+                      <div id="searchTree" hidden=true></div>
+                      <table class="ibm-data-table" id="searchTable" summary="__REPLACE_ME__" hidden=true>
+                      </table>
                       <div id="teamTree"></div>
                       <table class="ibm-data-table" id="teamTable" summary="__REPLACE_ME__">
                       </table>

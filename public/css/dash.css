@@ -2,9 +2,19 @@
 	padding-top: 10px;
 }
 
+.search-box {
+	display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  width: 100%;
+}
+
 .agile-search-field {
 	height: 40px;
-  width: 130px;
+  width: 100%;
   box-sizing: border-box;
   border: 2px solid #ccc;
   border-radius: 4px;
@@ -15,10 +25,6 @@
   padding: 12px 20px 12px 40px;
   -webkit-transition: width 0.4s ease-in-out;
   transition: width 0.4s ease-in-out;
-}
-
-.agile-search-field:focus {
-    width: 100%;
 }
 
 .ibm-column-form span.select2 {
@@ -420,6 +426,10 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
 	color: #323232;
 }
 
+#searchTree ul.ibm-twisty > li a.agile-team-link {
+	color: #323232;
+}
+
 #teamTreeMain {
 	margin-right: 5px;
 	width: 98%;
@@ -439,6 +449,14 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
 }
 
 #teamTree a.agile-team-link {
+	display: inherit;
+	margin-left: 15px;
+	padding-left: 5px;
+	border-bottom: 1px solid #e0e0e0 !important;
+	cursor: pointer;
+}
+
+#searchTree a.agile-team-link {
 	display: inherit;
 	margin-left: 15px;
 	padding-left: 5px;
@@ -466,7 +484,19 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
 	padding-top: 1px;
 }
 
+#searchTree .ibm-twisty-body > p {
+	margin-left: 0px;
+	padding-bottom: 1px;
+	padding-top: 1px;
+}
+
 #teamTree li {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	line-height: 1.625rem
+}
+
+#searchTree li {
 	padding-top: 0px;
 	padding-bottom: 0px;
 	line-height: 1.625rem
@@ -480,7 +510,23 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
 	font-size: 	10.5pt;
 }
 
+#searchTree li > a {
+	margin-top: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 15px;
+	font-size: 	10.5pt;
+}
+
 #teamTree div > p > a {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	font-size: 	10.5pt;
+	color: #323232;
+	display: block;
+}
+
+#searchTree div > p > a {
 	padding-top: 0px;
 	padding-bottom: 0px;
 	font-size: 	10.5pt;
