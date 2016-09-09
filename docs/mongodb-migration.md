@@ -18,12 +18,12 @@
 |teamId | objectId of team | team_id |
 |type | use: ??not sure | type  | "iterationinfo"
 |status| 'completed' or 'in progress' | iterationinfo_status |"Not complete", "Completed"
-|creationDate|epoc time | created_dt | "2016-04-12 08:58:50 EDT"
+|creationDate|JS Date Object | created_dt | "2016-04-12 08:58:50 EDT"
 |createdBy| string of userId | created_user |
-|lastedUpdated| epoc time | last_updt_dt | "2016-04-27 04:53:23 EDT"
+|lastedUpdated| JS Date Object | last_updt_dt | "2016-04-27 04:53:23 EDT"
 |updatedBy| string of userId | last_updt_user |
-|startDate| epoc time|iteration_start_dt | "01/15/2016"
-|endDate| epoc time|iteration_end_dt | "01/16/2016"
+|startDate| JS Date Object|iteration_start_dt | "01/15/2016"
+|endDate| JS Date Object|iteration_end_dt | "01/16/2016"
 |committedStories| integer | nbr_committed_stories |
 |deliveredStories| integer | nbr_stories_dlvrd |
 |locationScore | ( ex 0.5 .. used for pizza chart i think) | fte_cnt | 0.0
