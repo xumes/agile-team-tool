@@ -2,6 +2,32 @@
 	padding-top: 10px;
 }
 
+input[type="search"] {
+    -webkit-appearance: none;
+}
+
+.agile-search-field {
+	height: 30px;
+  width: 100%;
+	padding-left: 0;
+  border-left: 0;
+  box-sizing: border-box;
+	padding: .75rem;
+  line-height: 1.75;
+  border: solid 1px #e0e0e0;
+  font-size: 10.5px;
+	font: inherit;
+  background-color: white;
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  -webkit-transition: background-color .2s ease-out,color .2s ease-out,border .2s ease-out,fill .2s ease-out,stroke .2s ease-out;
+  transition: background-color .2s ease-out,color .2s ease-out,border .2s ease-out,fill .2s ease-out,stroke .2s ease-out;
+}
+
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+
+}
+
 .ibm-column-form span.select2 {
 	width: 335px;
 }
@@ -17,7 +43,7 @@
     line-height: 1.75;
     color: #323232;
     background-color: #fff;
-    margin: 0 0 25px 0;
+    margin: 0 0 10px 0;
     padding: 0;
     box-sizing: inherit;
     position: relative;
@@ -401,6 +427,10 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
 	color: #323232;
 }
 
+#searchTree ul.ibm-twisty > li a.agile-team-link {
+	color: #323232;
+}
+
 #teamTreeMain {
 	margin-right: 5px;
 	width: 98%;
@@ -420,6 +450,14 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
 }
 
 #teamTree a.agile-team-link {
+	display: inherit;
+	margin-left: 15px;
+	padding-left: 5px;
+	border-bottom: 1px solid #e0e0e0 !important;
+	cursor: pointer;
+}
+
+#searchTree a.agile-team-link {
 	display: inherit;
 	margin-left: 15px;
 	padding-left: 5px;
@@ -447,7 +485,19 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
 	padding-top: 1px;
 }
 
+#searchTree .ibm-twisty-body > p {
+	margin-left: 0px;
+	padding-bottom: 1px;
+	padding-top: 1px;
+}
+
 #teamTree li {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	line-height: 1.625rem
+}
+
+#searchTree li {
 	padding-top: 0px;
 	padding-bottom: 0px;
 	line-height: 1.625rem
@@ -461,7 +511,23 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
 	font-size: 	10.5pt;
 }
 
+#searchTree li > a {
+	margin-top: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 15px;
+	font-size: 	10.5pt;
+}
+
 #teamTree div > p > a {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	font-size: 	10.5pt;
+	color: #323232;
+	display: block;
+}
+
+#searchTree div > p > a {
 	padding-top: 0px;
 	padding-bottom: 0px;
 	font-size: 	10.5pt;

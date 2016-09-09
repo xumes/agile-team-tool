@@ -4,6 +4,22 @@ var validate = require('validate.js');
 var _ = require('underscore');
 
 module.exports = function(app, includes) {
+  searchTeamWithName = function(req, res) {
+    var keyword = req.params.name;
+    if (keyword != '' && keyword != undefined) {
+      teamModel.searchTeamWithName(keyword)
+        .then(function(result){
+          res.status(200).send(result);
+        })
+        .catch(function(err){
+          res.status(400).send(err);
+        });
+    } else {
+      var err = 'keyword is missing';
+      res.status(400).send(err);
+    }
+  };
+
   createTeam = function(req, res) {
     var teamDoc = req.body;
     teamModel.createTeam(teamDoc, req.session['user'])
@@ -218,6 +234,8 @@ module.exports = function(app, includes) {
         res.status(400).send(err);
       });
   };
+  // search team with name
+  app.get('/api/teams/search/:name', [includes.middleware.auth.requireLogin], searchTeamWithName);
 
   // delete team document
   app.delete('/api/teams/', [includes.middleware.auth.requireLogin], deleteTeam);

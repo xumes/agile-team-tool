@@ -43,8 +43,14 @@
                             <li id="allTeams" class="tab-ul--item" role="tab">All teams</li>
                         </ul>
                         <i style="position: absolute; font-size: 8pt; text-align: right; display: inline-block; float: right; left: 0px; width: 100%; top: 25px; padding-bottom: 0;"><i class="agile-team-squad">*</i> indicates squad team</i>
-                        <i style="position: absolute; font-size: 8pt; text-align: right; display: inline-block; float: left; left: 0px;top: 45px; padding-bottom: 0;">Search functionality will return soon</i>
-
+                        <input id="nameSearchField" class="agile-search-field" type="search" name="search" placeholder="Search for a team">
+                        <div id="spinnerContainer-search" style="text-align: center" hidden=true>
+                          <div style="display: inline-block; margin-top:10em;" class="clear-loading loading-effect-1">
+                            <span style="padding: 0;"></span>
+                            <span style="padding: 0;"></span>
+                            <span style="padding: 0;"></span>
+                          </div>
+                        </div>
                       </nav>
 
                       <!--
@@ -66,6 +72,9 @@
                     </div>
 
                     <div class="agile-team-nav" data-widget="scrollable" data-height="600">
+                      <div id="searchTree" hidden=true></div>
+                      <table class="ibm-data-table" id="searchTable" summary="__REPLACE_ME__" hidden=true>
+                      </table>
                       <div id="teamTree"></div>
                       <table class="ibm-data-table" id="teamTable" summary="__REPLACE_ME__">
                       </table>

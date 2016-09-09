@@ -29,6 +29,21 @@ var infoLogs = function(msg) {
 };
 
 var team = {
+  searchTeamWithName: function(name) {
+    return new Promise(function(resolve, reject){
+      var query = {};
+      query['q'] = {};
+      query['q'] = 'name:'+name;
+      common.Search('search', 'nameSearch', query)
+        .then(function(result){
+          resolve(result);
+        })
+        .catch(function(err){
+          reject(err);
+        });
+    });
+  },
+
   getNonSquadTeams: function() {
     return new Promise(function(resolve, reject) {
       common.getByView('teams', 'lookupNonSquad')

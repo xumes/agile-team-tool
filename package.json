@@ -45,5 +45,9 @@
     "underscore": "^1.8.3",
     "validate.js": "^0.10.0",
     "winston": "^2.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.4.0",
+    "eslint-config-google": "^0.6.0"
   }
 }
