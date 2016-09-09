@@ -35,28 +35,24 @@
 |memberChanged| boolean, use: ?? | team_mbr_change | "No"
 
 
-### teams (top down tree structure)
+### teams (bottom up tree structure)
 
-do we need to know the diff. between tribes and domains/subdomains??
-do we need teams to know their siblings??
-
-
-| Fields        | Details       | mongo ex| cloudant field | cloudant value ex
+| Fields        | Details       | mongo ex    | cloudant field | cloudant value ex
 | ------------- |:-------------:|-------------|-------------|-------------
-| children(mongoDB field)| array of ObjectId| squadteam | "Yes" or "No"
-| members       | array of objects|members|[{userId:'5G22944', name:'billy bob'}]| members | [{"key": "147869PH1","id": "HERANAML@ph.ibm.com","name": "Tal Herana","allocation": 0,"role": "Team Lead"}]
-| isSquad       | boolean|
+| parent(mongoDB field)| ObjectId| |parent_team_id|
+| members       | array of objects| [{userId:'5G22944', name:'billy bob'}] | members | [{key,id,name,allocation,role}]
+| isSquad       | boolean       | true or false| squadteam     | "Yes" or "No"
 
 
 ### assessments
 | Fields        | Details           
 | ------------- |:-------------:
-|       |       
+|
 
 ### snapshots (roll-up data)
 | Fields        | Details           
 | ------------- |:-------------:
-|       |       
+|
 
 ## Proposed work
 * Use Mongoose
