@@ -30,16 +30,21 @@
 |endDate| JS Date Object|iteration_end_dt | "01/16/2016"
 |committedStories| integer | nbr_committed_stories |
 |deliveredStories| integer | nbr_stories_dlvrd |
-|locationScore | ( ex 0.5 .. used for pizza chart i think) | fte_cnt | 0.0
+|locationScore | used for pizza chart i think ?? | fte_cnt | 0.0 or 0.5 
 |deployments | integer | nbr_dplymnts | "" or 1
 |defects | integer | nbr_defects | "" or 2
-|clientSatisfaction| integer, use: ? | client_sat | 1.0
-|teamSatisfaction| integer, use: ? | team_sat | 4
+|clientSatisfaction| integer | client_sat | 1.0
+|teamSatisfaction| integer | team_sat | 4
 |comment| string | iteration_comments |
 |memberChanged| boolean, use: ?? | team_mbr_change | "No"
 
 
 ### teams (bottom up tree structure)
+Possible tree structure pattern to explore:
+* [Model Tree Structures with an Array of Ancestors]
+* [Model Tree Structures with Parent References]
+
+
 
 | Fields        | Details       | mongo ex    | cloudant field | cloudant value ex
 | ------------- |:-------------:|-------------|-------------|-------------
@@ -68,7 +73,10 @@
 * Have alternate versions of assessment.js, iteration.js, snapshot.js, teams.js and users.js in a new model directory
 * Move validation from validate.js -> [using mongoose schema validation]
 * Use mongoose default fields and remove the various default data spread throughout the project (e.x public/index.js ~L5->114)
-* Once a model has been rewritten, ensure migration scripts are written as well
+
+###Steps
+1. Migrate data
+2. Develop models 
 
 ## References
 
@@ -76,3 +84,5 @@
 
 [Modelling tree structures]: <https://docs.mongodb.com/manual/applications/data-models-tree-structures/>
 [using mongoose schema validation]: <http://mongoosejs.com/docs/validation.html>
+[Model Tree Structures with an Array of Ancestors]: <https://docs.mongodb.com/manual/tutorial/model-tree-structures-with-ancestors-array/>
+[Model Tree Structures with Parent References]: <https://docs.mongodb.com/manual/tutorial/model-tree-structures-with-parent-references/>
