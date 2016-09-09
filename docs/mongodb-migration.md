@@ -40,7 +40,7 @@
 | Fields        | Details       | mongo ex    | cloudant field | cloudant value ex
 | ------------- |:-------------:|-------------|-------------|-------------
 | parent(mongoDB field)| ObjectId| |parent_team_id|
-| members       | array of objects| [{userId:'5G22944', name:'billy bob'}] | members | [{key,id,name,allocation,role}]
+| members       | array of objects| [{userId:'5G22944', name:'billy bob', allocation:'100', role:"Developer"}] | members | [{key,id,name,allocation,role}]
 | isSquad       | boolean       | true or false| squadteam     | "Yes" or "No"
 |createDate     | JS Date Object | |created_dt | "2016-04-12 08:58:50 EDT"
 |createdBy      | string of userId | | created_user |
