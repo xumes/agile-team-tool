@@ -42,7 +42,10 @@
 | parent(mongoDB field)| ObjectId| |parent_team_id|
 | members       | array of objects| [{userId:'5G22944', name:'billy bob'}] | members | [{key,id,name,allocation,role}]
 | isSquad       | boolean       | true or false| squadteam     | "Yes" or "No"
-
+|createDate     | JS Date Object | |created_dt | "2016-04-12 08:58:50 EDT"
+|createdBy      | string of userId | | created_user |
+|updateDate     | JS Date Object | |last_updt_dt | "2016-04-27 04:53:23 EDT"
+|updatedBy      | string of userId | |last_updt_user |
 
 ### assessments
 | Fields        | Details           
@@ -60,11 +63,6 @@
 * Move validation from validate.js -> [using mongoose schema validation]
 * Use mongoose default fields and remove the various default data spread throughout the project (e.x public/index.js ~L5->114)
 * Once a model has been rewritten, ensure migration scripts are written as well
-
-## Team Structure
-* Top down; parent nodes have pointers to children.
-* roll up calculation will be done top down
-
 
 ## References
 
