@@ -1,5 +1,10 @@
 # MongoDB Migration Work
 
+## Things to consider:
+
+* build index based off common queries. writes will have bad performance if there are many indexes 
+
+
 ## database models and Cloudant <-> MongoDB schema mapping
 
 
@@ -44,6 +49,17 @@ Possible tree structure pattern to explore:
 * [Model Tree Structures with an Array of Ancestors]
 * [Model Tree Structures with Parent References]
 
+in cloudant it currently looks like each team has all it's ancestors. Also each team knows about all it's immediate children.
+This seems problematic when it comes to updating tree structure and removing subtrees.
+I was thinking it might be easier to map the data as is and worry about this later :)
+
+
+####list of tree operations ordered by use (most to least)
+my best guess, maybe can confirm somehow:
+1.Read
+2.Update
+3.Insert
+4.Delete
 
 
 | Fields        | Details       | mongo ex    | cloudant field | cloudant value ex
@@ -52,10 +68,10 @@ Possible tree structure pattern to explore:
 | members       | array of objects| [{userId:'5G22944', name:'billy bob', allocation:'100', role:"Developer"}] | members | [{key,id,name,allocation,role}]
 |type           | string | "", "squad", "domain", "tribe", "subDomain", "potato" | squadteam     | "Yes" or "No"
 |createDate     | JS Date Object | |created_dt | "2016-04-12 08:58:50 EDT"
-|createdById      | string of userId | | created_user |
-|createdBy        | string of name or email | | created_user |
-|updateDate       | JS Date Object | |last_updt_dt | "2016-04-27 04:53:23 EDT"
-|updatedById      | string of userId | |last_updt_user |
+|createdById    | string of userId | | created_user |
+|createdBy      | string of name or email | | created_user |
+|updateDate     | JS Date Object | |last_updt_dt | "2016-04-27 04:53:23 EDT"
+|updatedById    | string of userId | |last_updt_user |
 |updatedBy      | string of name or email | |last_updt_user |
 
 ### assessments
@@ -76,7 +92,9 @@ Possible tree structure pattern to explore:
 
 ###Steps
 1. Migrate data
-2. Develop models 
+  1. ```$ curl http://admin:pass@domain/dbName/_all_docs > docs.json  ``` get all docs
+  2. run scripts using a mongo driver over docs to save into compose
+2. Develop models with migrated data
 
 ## References
 
