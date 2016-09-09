@@ -18,7 +18,7 @@
 |teamId | objectId of team | team_id |
 |type | use: ??not sure | type  | "iterationinfo"
 |status| 'completed' or 'in progress' | iterationinfo_status |"Not complete", "Completed"
-|creationDate|JS Date Object | created_dt | "2016-04-12 08:58:50 EDT"
+|createDate|JS Date Object | created_dt | "2016-04-12 08:58:50 EDT"
 |createdBy| string of userId | created_user |
 |updateDate| JS Date Object | last_updt_dt | "2016-04-27 04:53:23 EDT"
 |updatedBy| string of userId | last_updt_user |
@@ -37,9 +37,13 @@
 
 ### teams (top down tree structure)
 
+do we need to know the diff. between tribes and domains/subdomains??
+do we need teams to know their siblings??
+
+
 | Fields        | Details       | ex 
 | ------------- |:-------------:|
-| children      | array of string| [""<mongo ObjectId>]
+| children(mongoDB field)| array of ObjectId|
 | members       | array of objects|[{userId:'5G22944', name:'billy bob'}]
 | isSquad       | boolean
 
