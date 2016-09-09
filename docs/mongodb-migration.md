@@ -10,28 +10,27 @@
 | adminAccess | 'none' or 'full' or 'read' or 'write'| n/a
 
 ### iterations
-| Fields        | Details       | cloudant field
-| ------------- |:-------------:|-------------
-|_id| objectId | n/a
-|name | memes | iteration_name
-|teamId | objectId of team | team_id 
-|type | ?? | type (ex:  "iterationinfo")
-|status| 'completed' or 'in progress'
-|creationDate|epoc time | created_dt
-|createdBy| string of userId | created_user
-|lastedUpdated| epoc time | last_updt_dt
-|updatedBy| string of userId | last_updt_user
-|startDate| epoc time|iteration_start_dt
-|endDate| epoc time|iteration_end_dt
-|committedStories| integer | nbr_committed_stories
-|deliveredStories| integer | nbr_stories_dlvrd
-|locationScore | ( ex 0.5 .. used for pizza chart i think) | fte_cnt
-|deployments | 1 | nbr_dplymnts
-|defects | 2 | nbr_defects
-|clientSatisfaction| ? | client_sat
-|teamSatisfaction| ? | team_sat
-|comment| string | iteration_comments
-|memberChanged| boolean | team_mbr_change ('Yes' or 'No')
+| Fields        | Details      | cloudant field | cloudant value ex (if not obv.)
+| ------------- |:-------------:|------------- | -------------
+|name | string | iteration_name |
+|teamId | objectId of team | team_id |
+|type | use: ??not sure | type  | "iterationinfo"
+|status| 'completed' or 'in progress' | iterationinfo_status |"Not complete", "Completed"
+|creationDate|epoc time | created_dt | "2016-04-12 08:58:50 EDT"
+|createdBy| string of userId | created_user |
+|lastedUpdated| epoc time | last_updt_dt | "2016-04-27 04:53:23 EDT"
+|updatedBy| string of userId | last_updt_user |
+|startDate| epoc time|iteration_start_dt | "01/15/2016"
+|endDate| epoc time|iteration_end_dt | "01/16/2016"
+|committedStories| integer | nbr_committed_stories |
+|deliveredStories| integer | nbr_stories_dlvrd |
+|locationScore | ( ex 0.5 .. used for pizza chart i think) | fte_cnt | 0.0
+|deployments | 1 | nbr_dplymnts | ""
+|defects | 2 | nbr_defects | ""
+|clientSatisfaction| ? | client_sat | 1.0
+|teamSatisfaction| ? | team_sat | 4
+|comment| string | iteration_comments |
+|memberChanged| boolean, use: ?? | team_mbr_change | "No"
 
 
 ### teams (top down tree structure)
