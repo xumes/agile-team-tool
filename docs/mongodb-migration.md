@@ -20,7 +20,7 @@
 |status| 'completed' or 'in progress' | iterationinfo_status |"Not complete", "Completed"
 |creationDate|JS Date Object | created_dt | "2016-04-12 08:58:50 EDT"
 |createdBy| string of userId | created_user |
-|lastedUpdated| JS Date Object | last_updt_dt | "2016-04-27 04:53:23 EDT"
+|updateDate| JS Date Object | last_updt_dt | "2016-04-27 04:53:23 EDT"
 |updatedBy| string of userId | last_updt_user |
 |startDate| JS Date Object|iteration_start_dt | "01/15/2016"
 |endDate| JS Date Object|iteration_end_dt | "01/16/2016"
@@ -37,11 +37,10 @@
 
 ### teams (top down tree structure)
 
-| Fields        | Details           
-| ------------- |:-------------:
-| ??siblings    | array of string[]      
-| children      | array of string[]
-| members       | array of string['bill','bob']
+| Fields        | Details       | ex 
+| ------------- |:-------------:|
+| children      | array of string| [""<mongo ObjectId>]
+| members       | array of objects|[{userId:'5G22944', name:'billy bob'}]
 | isSquad       | boolean
 
 
@@ -60,8 +59,9 @@
 * Use mongoose default fields and remove the various default data spread throughout the project (e.x public/index.js ~L5->114)
 * Once a model has been rewritten, ensure migration scripts are written as well
 
-## Structure
+## Team Structure
 * Top down; parent nodes have pointers to children.
+* roll up calculation will be done top down
 
 
 ## References
