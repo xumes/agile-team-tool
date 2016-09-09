@@ -1,33 +1,37 @@
 # MongoDB Migration Work
 
-## database models and mapping
+## database models and Cloudant <-> MongoDB schema mapping
 
-### admins
-| Fields        | Details           
-| ------------- |:-------------:
-| userId         | ['cjscotta@us.ibm.com']      
-| permission     | 'full' or 'read' or 'write'
+
+### users
+| Fields        | Details       | cloudant field
+| ------------- |:-------------:|-------------
+| userId      | ['cjscotta@us.ibm.com']              | n/a
+| adminAccess | 'none' or 'full' or 'read' or 'write'| n/a
 
 ### iterations
-| Fields        | Details       | cloudant field    
+| Fields        | Details       | cloudant field
 | ------------- |:-------------:|-------------
-|_id| objectId| n/a
-|name| Dank Memes|iteration_name
-|teamId| objectId of team|
-|type| ?
+|_id| objectId | n/a
+|name | memes | iteration_name
+|teamId | objectId of team | team_id 
+|type | ?? | type (ex:  "iterationinfo")
 |status| 'completed' or 'in progress'
-|creationDate|epoc time
-|createdBy| ibm email
-|lastedUpdated| epoc time
+|creationDate|epoc time | created_dt
+|createdBy| string of userId | created_user
+|lastedUpdated| epoc time | last_updt_dt
+|updatedBy| string of userId | last_updt_user
 |startDate| epoc time|iteration_start_dt
 |endDate| epoc time|iteration_end_dt
-|committedStories| num
-|deliveredStories| num
-|locationScore| ( 'fte_cnt' .. used for pizza chart i think)
-|deployments|1
-|defects|2
-|clientSatisfaction| ?
-|teamSatisfaction| ?
+|committedStories| integer | nbr_committed_stories
+|deliveredStories| integer | nbr_stories_dlvrd
+|locationScore | ( ex 0.5 .. used for pizza chart i think) | fte_cnt
+|deployments | 1 | nbr_dplymnts
+|defects | 2 | nbr_defects
+|clientSatisfaction| ? | client_sat
+|teamSatisfaction| ? | team_sat
+|comment| string | iteration_comments
+|memberChanged| boolean | team_mbr_change ('Yes' or 'No')
 
 
 ### teams (top down tree structure)
