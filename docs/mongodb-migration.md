@@ -42,7 +42,7 @@ do we need teams to know their siblings??
 
 
 | Fields        | Details       | ex 
-| ------------- |:-------------:|
+| ------------- |:-------------:|-------------
 | children(mongoDB field)| array of ObjectId|
 | members       | array of objects|[{userId:'5G22944', name:'billy bob'}]
 | isSquad       | boolean
