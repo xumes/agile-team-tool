@@ -24,7 +24,6 @@ describe('Page variables API Test [GET /api/uihelper/home]: get variables used f
     req.end(function(err, res) {
       expect(res.body).to.have.property('systemAdmin');
       expect(res.body).to.have.property('systemStatus');
-      expect(res.body).to.have.property('userTeamList');
       done();
     });
   });
