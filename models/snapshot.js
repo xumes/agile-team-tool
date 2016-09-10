@@ -549,49 +549,45 @@ var snapshot = {
   getTopLevelTeams: function(email) {
     return new Promise(function(resolve, reject) {
       teamModel.getTeamByEmail(email)
-        .then(function(teams) {
-          var teamIds = [];
-          _.each(teams, function(team) {
-            teamIds.push(team.id);
+        .then(function(teams){
+          var newTeams = [];
+          var requestKeys = [];
+          _.each(teams, function(team){
+            newTeams.push(team.value);
+            requestKeys.push(team.id);
+            //promiseArray.push(common.getByViewKey('teams', 'lookup', team.id));
           });
-          if (teamIds.length > 0) {
-            teamModel.getLookupIndex()
-              .then(function(lookUpTeams) {
-                var teamList = [];
-                var childrenList = [];
-                _.each(teamIds, function(teamId) {
-                  _.find(lookUpTeams, function(lookUpTeam) {
-                    if (lookUpTeam._id == teamId) {
-                      teamList.push(lookUpTeam);
-                      childrenList = _.flatten(_.pluck(teamList, 'children'));
-                    }
-                  });
-                });
-                var rootTeams = [];
-                _.each(teamList, function(team) {
-                  if (childrenList.indexOf(team._id) == -1) {
-                    team.parent_team_id = '';
-                    team.child_team_id = team.children;
-                    rootTeams.push(team);
-                  }
-                });
-                resolve(rootTeams);
-              })
-              .catch(function(err) {
-                var msg;
-                if (err.error) {
-                  msg = err.error;
-                } else {
-                  msg = err;
-                }
-                resolve(formatErrMsg(msg));
+          common.getByViewKeys('teams', 'lookup', requestKeys)
+            .then(function(docs){
+              var strTeams = [];
+              _.each(docs.rows, function(doc){
+                strTeams.push(doc.value);
               });
-          } else {
-            //no team data
-            resolve([]);
-          }
+              var childrenList = _.flatten(_.pluck(strTeams, 'children'));
+              var rootTeams = [];
+              _.each(newTeams, function(team) {
+                if (childrenList.indexOf(team._id) == -1) {
+                  team.parents = [];
+                  if (team.parent_team_id != '') {
+                    team.parents.push(team.parent_team_id);
+                  }
+                  team.children = team.child_team_id;
+                  rootTeams.push(team);
+                }
+              });
+              resolve(rootTeams);
+            })
+            .catch( /* istanbul ignore next */ function(err){
+              var msg;
+              if (err.error) {
+                msg = err.error;
+              } else {
+                msg = err;
+              }
+              reject(formatErrMsg(msg));
+            });
         })
-        .catch( /* istanbul ignore next */ function(err) {
+        .catch( /* istanbul ignore next */ function(err){
           var msg;
           if (err.error) {
             msg = err.error;
