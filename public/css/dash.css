@@ -25,7 +25,7 @@ input[type="search"] {
 }
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-
+	font-size: 12px;
 }
 
 .ibm-column-form span.select2 {
