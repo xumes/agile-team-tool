@@ -141,8 +141,6 @@ jQuery(function($) {
   $('#myTeams').click(function() {
     if ($(this).attr('data-state') != 'open') {
 
-      clearRequests();
-
       $($(this)).attr('data-state', 'open');
       $('#allTeams').attr('data-state', '');
 
@@ -153,8 +151,6 @@ jQuery(function($) {
 
   $('#allTeams').click(function() {
     if ($(this).attr('data-state') != 'open') {
-
-      clearRequests();
 
       $($(this)).attr('data-state', 'open');
       $('#myTeams').attr('data-state', '');
@@ -171,18 +167,27 @@ jQuery(function($) {
     }
   });
 
+  $('#nameSearchField').focusout(function(){
+    // if ($('#nameSearchField').val() != '') {
+    //   $('#teamTree').hide();
+    //   $('#searchTree').show();
+    // }
+    setTimeout(function(){
+      $('#teamTree').show();
+      $('#searchTree').hide();
+    }, 300);
+  });
+
   $('#nameSearchField').on('input', function() {
     var inputText = $('#nameSearchField').val();
     if (inputText == '') {
+      clearRequests();
+      $('#spinnerContainer-search').hide();
       $('#teamTree').show();
       $('#searchTree').empty();
       $('#searchTree').hide();
     }
     if (inputText != '' && inputText != ' ') {
-      $('#teamTree').hide();
-      $('#searchTree').empty();
-      $('#searchTree').show();
-      $('#searchTree').append(createMainTwistySection('searchTreeMain', ''));
       searchTeams(inputText);
     }
   });
@@ -200,7 +205,8 @@ function hideAllContentAreaDivs() {
   $('.nano').nanoScroller({
     destroy: true
   });
-  $('#searchTree').empty();
+  clearRequests();
+  //$('#searchTree').empty();
   $('#searchTree').hide();
   $('#mainContent').hide();
   $('#no-teams-highlightbox').hide();
@@ -231,7 +237,11 @@ function getRootTeams(parentsTree) {
 }
 
 function searchTeams(keyword) {
+  clearRequests();
   $('#spinnerContainer-search').show();
+  $('#teamTree').hide();
+  $('#searchTree').empty();
+  $('#searchTree').append(createMainTwistySection('searchTreeMain', ''));
   var cUrl = '/api/teams/search/' + encodeURIComponent(keyword);
   var req = $.ajax({
     type: 'GET',
@@ -250,9 +260,11 @@ function searchTeams(keyword) {
       }
     }
     $('#spinnerContainer-search').hide();
+    $('#searchTree').show();
   }).fail(function(e){
     console.log(e);
     $('#spinnerContainer-search').hide();
+    $('#teamTree').show();
   });
   requests.push(req);
 }
@@ -391,10 +403,17 @@ function loadParentInAllTeams(teamId, fromSearch) {
         data.parents.unshift(teamId);
       }
       if (data.parents != undefined && !_.isEmpty(data.parents)) {
-        clearRequests();
         $($('#allTeams')).attr('data-state', 'open');
         $('#myTeams').attr('data-state', '');
-        hideAllContentAreaDivs();
+        $('.nano').nanoScroller({
+          destroy: true
+        });
+        //$('#searchTree').empty();
+        $('#searchTree').hide();
+        $('#mainContent').hide();
+        $('#no-teams-highlightbox').hide();
+        $('#spinnerContainer').hide();
+        $('#spinnerContainer-search').hide();
         getRootTeams(data.parents);
       }
     }
