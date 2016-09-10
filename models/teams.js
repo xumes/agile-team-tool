@@ -1133,10 +1133,12 @@ var team = {
           .then(function(body) {
             var userTeams = util.returnObject(body);
             loggers.get('models').verbose('Found ' + userTeams.length + ' team(s) for ' + userEmail);
-            team.getLookupIndex()
-              .then(function(result) {
-                _.each(userTeams, function(team) {
-                  var lookupObj = _.findWhere(result, {
+            var requestKeys = _.pluck(userTeams, '_id');
+            common.getByViewKeys('teams', 'lookup', requestKeys)
+              .then(function(docs){
+                var strTeams = _.pluck(docs.rows, 'value');
+                _.each(userTeams, function(team){
+                  var lookupObj = _.findWhere(strTeams, {
                     _id: team._id
                   });
                   if (!_.isEmpty(lookupObj)) {
@@ -1149,9 +1151,30 @@ var team = {
                 loggers.get('models').info('Success: ' + userEmail + ' has ' + userTeamsList.length + ' accessible team(s) by relationship.');
                 resolve(userTeamsList);
               })
-              .catch( /* istanbul ignore next */ function(err) {
+              .catch( /* istanbul ignore next */ function(err){
                 reject(formatErrMsg(err.error));
               });
+            // team.getLookupIndex()
+            //   .then(function(result) {
+            //     _.each(userTeams, function(team) {
+            //       var lookupObj = _.findWhere(result, {
+            //         _id: team._id
+            //       });
+            //       //console.log(lookupObj);
+            //       if (!_.isEmpty(lookupObj)) {
+            //         userTeamsList = _.union([team._id], lookupObj.children, userTeamsList);
+            //       } else {
+            //         userTeamsList = _.union([team._id], team.child_team_id, userTeamsList);
+            //       }
+            //     });
+            //     userTeamsList = _.uniq(userTeamsList);
+            //     console.log(userTeamsList);
+            //     loggers.get('models').info('Success: ' + userEmail + ' has ' + userTeamsList.length + ' accessible team(s) by relationship.');
+            //     resolve(userTeamsList);
+            //   })
+            //   .catch( /* istanbul ignore next */ function(err) {
+            //     reject(formatErrMsg(err.error));
+            //   });
           })
           .catch( /* istanbul ignore next */ function(err) {
             // cannot simulate Cloudant error during testing

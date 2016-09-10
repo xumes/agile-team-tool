@@ -575,6 +575,7 @@ var snapshot = {
                   rootTeams.push(team);
                 }
               });
+              rootTeams = _.uniq(rootTeams);
               resolve(rootTeams);
             })
             .catch( /* istanbul ignore next */ function(err){
