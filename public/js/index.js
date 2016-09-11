@@ -434,7 +434,8 @@ function getAllAgileTeamsByParentId(parentId, showLoading, initial, parentsTree)
   }
   var req = $.ajax({
     type: 'GET',
-    url: cUrl
+    url: cUrl,
+    async: false
   }).done(function(data) {
     if (data != undefined) {
       console.log('data has rows ' + _.has(data, 'docs'));
@@ -504,6 +505,9 @@ function getAllAgileTeamsByParentId(parentId, showLoading, initial, parentsTree)
         showLog('data loaded: ' + JSON.stringify(data));
       }
     }
+  })
+  .fail(function(e){
+    console.log(e);
   });
   requests.push(req);
 }
@@ -561,9 +565,10 @@ function getSnapshot(teamId, teamName) {
       }
     }
   })
-    .fail(function(err) {
-      $('#spinnerContainer').hide();
-    });
+  .fail(function(err) {
+    console.log(err);
+    $('#spinnerContainer').hide();
+  });
   requests.push(req);
 };
 
@@ -581,10 +586,10 @@ function getParentName(team) {
       }
       appendRowDetail(keyLabel, keyValue);
     })
-      .fail(function(err) {
-        console.log(err);
-        appendRowDetail(keyLabel, keyValue);
-      });
+    .fail(function(err) {
+      console.log(err);
+      appendRowDetail(keyLabel, keyValue);
+    });
     requests.push(req);
   }
 };
@@ -829,8 +834,8 @@ function loadDetails(elementId, setScrollPosition) {
       var req = $.ajax({
         type: 'GET',
         url: '/api/teams/' + encodeURIComponent(teamId)
-      }).fail(function() {
-
+      }).fail(function(e) {
+        console.log(e);
       }).done(function(currentTeam) {
         team = currentTeam;
         if (team != undefined) {
