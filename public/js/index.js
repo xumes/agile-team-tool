@@ -597,7 +597,11 @@ function addTeamToSearchTree(team, twistyId) {
   if (team != null) {
     var subTwistyId = 'search_' + team.id;
     var label = team.fields.name;
-    $('#' + jq(twistyId)).append(createSubTwistySection(subTwistyId, label, 'agile-team-standalone' + '', team.id));
+    var isSquad = false;
+    if (team.fields.squad != undefined && team.fields.squad.toUpperCase() == 'YES') {
+      isSquad = true;
+    }
+    $('#' + jq(twistyId)).append(createSubTwistySection(subTwistyId, label, 'agile-team-standalone' + (isSquad ? ' agile-team-squad' : ''), team._id));
     var link = $('#' + jq(subTwistyId) + ' a.agile-team-link');
     var linkId = 'link_' + subTwistyId;
     link.attr('id', linkId);

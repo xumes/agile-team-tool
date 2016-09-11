@@ -478,7 +478,7 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
 	background-color: #5aaafa;
 }
 
-.agile-team-squad, #teamTree li.agile-team-squad a::after, #teamTree a.agile-team-squad::after,  #teamTable a.agile-team-squad::after{
+.agile-team-squad, #teamTree li.agile-team-squad a::after, #teamTree a.agile-team-squad::after,  #teamTable a.agile-team-squad::after, #searchTree a.agile-team-squad::after{
 	content: " * ";
 	color: red;
 }
