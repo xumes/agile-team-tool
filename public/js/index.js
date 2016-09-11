@@ -143,7 +143,7 @@ jQuery(function($) {
 
       $($(this)).attr('data-state', 'open');
       $('#allTeams').attr('data-state', '');
-
+      $('#nameSearchField').hide();
       hideAllContentAreaDivs();
       getMyTeams();
     }
@@ -154,7 +154,7 @@ jQuery(function($) {
 
       $($(this)).attr('data-state', 'open');
       $('#myTeams').attr('data-state', '');
-
+      $('#nameSearchField').show();
       hideAllContentAreaDivs();
       getRootTeams();
     }
@@ -409,6 +409,7 @@ function loadParentInAllTeams(teamId, fromSearch) {
           destroy: true
         });
         //$('#searchTree').empty();
+        $('#nameSearch').show();
         $('#searchTree').hide();
         $('#mainContent').hide();
         $('#no-teams-highlightbox').hide();
