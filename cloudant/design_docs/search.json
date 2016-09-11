@@ -1,6 +1,6 @@
 {
   "_id": "_design/search",
-  "varsion": 0.0,
+  "version": 0.3,
   "views": {},
   "language": "javascript",
   "indexes": {
@@ -10,7 +10,7 @@
         "default": "standard",
         "fields": {}
       },
-      "index": "function (doc) {\n  if ((doc.type == 'team') && (doc.doc_status === null || doc.doc_status != 'delete')) {\n     index(\"name\", doc.name, {\"store\": true});\n  }\n}"
+      "index": "function (doc) {\n  if ((doc.type == 'team') && (doc.doc_status === null || doc.doc_status != 'delete')) {\n     index(\"name\", doc.name, {\"store\": true});\n     index(\"squad\", doc.squadteam, {\"store\": true});\n  }\n}"
     }
   }
 }
