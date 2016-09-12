@@ -26,7 +26,7 @@
 | ------------- |:-------------:|------------- | -------------
 |name | string | iteration_name |
 |teamId | objectId of team | team_id |
-|status| 'completed' or 'in progress' | iterationinfo_status |"Not complete", "Completed"
+|status| copy as is? | iterationinfo_status |"Not complete", "Completed"
 |createDate|JS Date Object | created_dt | "2016-04-12 08:58:50 EDT"
 |createdById| string of userId | created_user |
 |createdBy| string of name or email | created_user |
@@ -35,16 +35,59 @@
 |updatedBy| string of name or email | last_updt_user |
 |startDate| JS Date Object|iteration_start_dt | "01/15/2016"
 |endDate| JS Date Object|iteration_end_dt | "01/16/2016"
+|memberCount| integer | team_mbr_cnt |
 |committedStories| integer | nbr_committed_stories |
 |deliveredStories| integer | nbr_stories_dlvrd |
+|commitedStoryPoints| integer | nbr_committed_story_pts |
+|storyPointsDelivered | integer | nbr_story_pts_dlvrd |
 |locationScore | used for pizza chart i think ?? | fte_cnt | 0.0 or 0.5 
 |deployments | integer | nbr_dplymnts | "" or 1
 |defects | integer | nbr_defects | "" or 2
 |clientSatisfaction| integer | client_sat | 1.0
 |teamSatisfaction| integer | team_sat | 4
 |comment| string | iteration_comments |
-|memberChanged| boolean, use: ?? | team_mbr_change | "No"
+|memberChanged| boolean, use: ?? | team_mbr_change | "No" or "Yes"
 
+dont port this field:
+doc_status ?
+
+example cloudant iteration doc:
+```
+{
+	"id": "ag_iterationinfo_ag_team_AA-Tools-Operations_1470775340042Q3Iteration4_1472221969959",
+	"key": "ag_iterationinfo_ag_team_AA-Tools-Operations_1470775340042Q3Iteration4_1472221969959",
+	"value": {
+		"rev": "4-12c99709f81848bf191b76a20aff4261"
+	},
+	"doc": {
+		"_id": "ag_iterationinfo_ag_team_AA-Tools-Operations_1470775340042Q3Iteration4_1472221969959",
+		"_rev": "4-12c99709f81848bf191b76a20aff4261",
+		"type": "iterationinfo",
+		"team_id": "ag_team_AA-Tools-Operations_1470775340042",
+		"iteration_name": "Q3 Iteration 4",
+		"iteration_start_dt": "08/03/2016",
+		"iteration_end_dt": "08/09/2016",
+		"iterationinfo_status": "Completed",
+		"team_mbr_cnt": "8",
+		"nbr_committed_stories": "23",
+		"nbr_stories_dlvrd": "18",
+		"nbr_committed_story_pts": "50",
+		"nbr_story_pts_dlvrd": "41",
+		"iteration_comments": "Committed users stories is derived by adding 25% of what we delivered.  Additionally, 2 resources were on vacation.",
+		"team_mbr_change": "No",
+		"last_updt_user": "slindber@us.ibm.com",
+		"fte_cnt": "7.0",
+		"nbr_dplymnts": "",
+		"nbr_defects": "",
+		"client_sat": "3.0",
+		"team_sat": "3.0",
+		"last_updt_dt": "2016-08-26 14:54:04 UTC",
+		"created_user": "slindber@us.ibm.com",
+		"created_dt": "2016-08-26 14:32:50 UTC",
+		"doc_status": ""
+	}
+}
+```
 
 ### teams (bottom up tree structure)
 Possible tree structure pattern to explore:
