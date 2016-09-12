@@ -5,6 +5,8 @@ branches:
   only:
   - develop
   - master
+before_install:
+- gem update --system 1.8.30
 install:
 - npm install
 - npm install -g gulp
