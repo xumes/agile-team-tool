@@ -29,7 +29,7 @@ I think these doc types are not needed
 
 | Fields        | Details      | cloudant field | cloudant value ex (if not obv.)
 | ------------- |:-------------:|------------- | -------------
-|cloudantId | | doc.id |
+|cloudantId | string | doc.id |
 |    |     |   doc_status  | "" , "delete"
 |name | string | iteration_name |
 |teamId | objectId of team | team_id |
@@ -111,7 +111,7 @@ and update to a team name might be expensive if its high up in the tree.
 
 | Fields        | Details       | mongo ex    | cloudant field | cloudant value ex
 | ------------- |:-------------:|-------------|-------------|-------------
-|cloudantId | string; "ag_mar_12323 | doc._id | ag_mar_12323
+|cloudantId | string |  "ag_mar_12323"| doc._id | ag_mar_12323
 | | | | doc_status | "" , "delete"
 |path | string | ",CIO,Agile Team," | * get the path from ag_ref_team_index * | under ag_ref_team_index.. parents: ["CIO", "Agile Team"]
 |members       | array of objects, copy over as is| 
@@ -176,7 +176,6 @@ doc.type : 'matassessmtrslt'
 |cloudantId | string; "ag_mar_12323 | doc._id | ag_mar_12323
 |type| | | team_proj_ops | "Operations" / "Project"
 |teamId | objectId of team |
-|
 |version | | | assessmt_version |
 | ? | | | team_proj_ops |
 | ? | boolean | | team_dlvr_software | "Yes" / "No"
@@ -197,8 +196,6 @@ doc.type : 'matassessmtrslt'
 
 dont think we need to include this:
 submitter_id
-
-
 
 nested mappings:
 
