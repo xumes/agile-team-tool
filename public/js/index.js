@@ -269,8 +269,13 @@ function searchTeams(keyword) {
     $('#searchTree').show();
   }).fail(function(e){
     console.log(e);
-    $('#spinnerContainer-search').hide();
-    $('#teamTree').show();
+    if (e.status == 404) {
+      $('#spinnerContainer-search').hide();
+      $('#searchTree').show();
+    } else {
+      $('#spinnerContainer-search').hide();
+      $('#teamTree').show();
+    }
   });
   requests.push(req);
 }

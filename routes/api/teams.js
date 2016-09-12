@@ -12,7 +12,7 @@ module.exports = function(app, includes) {
           res.status(200).send(result);
         })
         .catch(function(err){
-          res.status(400).send(err);
+          res.status(404).send(err);
         });
     } else {
       var err = 'keyword is missing';
