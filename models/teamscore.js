@@ -81,8 +81,8 @@ function getTimeZ(coordinate) {
         }
         //console.log(json);
         var time = json.rawOffset/3600+json.dstOffset/3600;
-        var result = {'Timezone':'UTC'+time};
-        resolve(JSON.stringify(result));
+        var result = 'UTC'+time;
+        resolve(result);
       }
     });
   });
@@ -102,6 +102,7 @@ var teamscore = {
       _.each(location, function(loc) {
         promiseArray.push(getGpsCoordinate(loc));
       });
+
       Promise.all(promiseArray)
         .then(function(coordinates){
           var promiseArray2 = [];
@@ -122,7 +123,7 @@ var teamscore = {
     });
   },
 
-  calculateScore : function(data) {
+  calculateScore: function(data) {
     return new Promise(function(resolve, reject){
       var validateResult = validate(data, teamDataConstrains);
       if (validateResult) {
@@ -157,6 +158,37 @@ var teamscore = {
         var percentResult = Math.floor(calResult * 100);
         resolve (percentResult);
       }
+    });
+  },
+
+  calculateScoreByTimezone: function(location) {
+    return new Promise(function(resolve, reject){
+      teamscore.getTimezone(location)
+        .then(function(timezones){
+          var calData = {
+            'mainSite' : {},
+            'sites' : []
+          };
+          for (var i = 0; i < timezones.length; i++) {
+            var site = {};
+            site[location[i]] = timezones[i];
+            if (i == 0) {
+              calData['mainSite'] = site;
+            } else {
+              calData['sites'].push(site);
+            }
+          }
+          teamscore.calculateScore(calData)
+            .then(function(results){
+              resolve(results);
+            })
+            .catch(function(err){
+              reject(err);
+            });
+        })
+        .catch(function(err){
+          reject(err);
+        });
     });
   }
 };

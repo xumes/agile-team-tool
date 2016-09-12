@@ -755,6 +755,7 @@ function facesPersonHandler(index, userEmail, facesPerson) {
     $('#location_ref_' + index).text(facesPerson.location);
     teamLocation.push(facesPerson.location);
   } else {
+    teamLocation.push('us');
     $('#location_ref_' + index).text('-unavailable-');
   }
 }
@@ -958,6 +959,7 @@ function loadDetails(elementId, setScrollPosition) {
 
           $('#membersList').empty();
           teamLocation = [];
+          managerIndex = 0;
           if (team.members != undefined && team.members.length > 0) {
             var members = sortTeamMembersByName(team.members);
             for (var j = 0; j < members.length; j++) {
@@ -968,10 +970,17 @@ function loadDetails(elementId, setScrollPosition) {
               row = row + '<td>' + member.role + '</td>';
               row = row + '</tr>';
               $('#membersList').append(row);
+              if (member.role == 'Manager') {
+                managerIndex = j;
+              }
               getPersonFromFaces(member.id, facesPersonHandler, [j, member.id]);
             }
           } else {
             $('#membersList').append('<tr class="odd"><td valign="top" colspan="4" class="dataTables_empty">No data available</td></tr>');
+          }
+          if (managerIndex != 0) {
+            var manager = teamLocation.splice(managerIndex, 1);
+            teamLocation.unshift(manager.toString());
           }
           teamLocationHandler(teamLocation);
         }
@@ -989,15 +998,24 @@ function loadDetails(elementId, setScrollPosition) {
 }
 
 function teamLocationHandler(data) {
-  console.log(data);
+  var requestData = {};
+  requestData.loc = data;
   var req = $.ajax({
-    type: 'GET',
-    url: '/api/teamscore/gettimezone/' + data
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(requestData),
+    url: '/api/teamscore/calculate/'
   }).fail(function(e) {
     console.log(e);
-  }).done(function(timezones) {
-    console.log(timezones);
+  }).done(function(score) {
+    console.log(score);
   });
+  requests.push(req);
+}
+
+function timezoneHandler(data) {
+  var requestsData = {};
+
 }
 
 function openSelectedTeamTree(setScrollPosition) {

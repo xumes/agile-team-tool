@@ -1,9 +1,9 @@
-var mapModel = require('../../models/teamscore');
+var teamscoreModel = require('../../models/teamscore');
 
 module.exports = function(app, includes) {
   getGpsCoordinate = function(req, res){
     var location = req.params.location;
-    mapModel.getGpsCoordinate(location)
+    teamscoreModel.getGpsCoordinate(location)
       .then(function(result){
         res.status(200).send(result);
       })
@@ -13,8 +13,8 @@ module.exports = function(app, includes) {
   };
 
   getTimezone = function(req, res){
-    var location = req.params.location;
-    mapModel.getTimezone(location)
+    var location = req.body.loc;
+    teamscoreModel.getTimezone(location)
       .then(function(result){
         res.status(200).send(result);
       })
@@ -24,7 +24,18 @@ module.exports = function(app, includes) {
   };
 
   calculateScore = function(req, res) {
-    scoreModel.calculateScore(req.body)
+    teamscoreModel.calculateScore(req.body)
+      .then(function(result){
+        // result is number, '' change it to string
+        res.status(200).send(''+result);
+      })
+      .catch(function(err){
+        res.status(err.statusCode).send(err.message);
+      });
+  };
+
+  calculateScoreByTimezone = function(req, res) {
+    teamscoreModel.calculateScoreByTimezone(req.body.loc)
       .then(function(result){
         // result is number, '' change it to string
         res.status(200).send(''+result);
@@ -39,5 +50,7 @@ module.exports = function(app, includes) {
   // Transfer location(city, state, country) info to gps coordinate api
   app.get('/api/teamscore/getgpscoordinate/:location', [includes.middleware.auth.requireLogin], getGpsCoordinate);
   // Transfer location info to time zone
-  app.get('/api/teamscore/gettimezone/:location', [includes.middleware.auth.requireLogin], getTimezone);
+  app.post('/api/teamscore/gettimezone/', [includes.middleware.auth.requireLogin], getTimezone);
+
+  app.post('/api/teamscore/calculate/', [includes.middleware.auth.requireLogin], calculateScoreByTimezone);
 };
