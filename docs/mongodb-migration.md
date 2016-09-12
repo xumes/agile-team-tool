@@ -97,10 +97,9 @@ Possible tree structure pattern to explore:
 
 in cloudant it currently looks like each team has all it's ancestors. Also each team knows about all it's immediate children.
 This seems problematic when it comes to updating tree structure and removing subtrees.
-I was thinking it might be easier to map the data as is and worry about this later :)
 
-
-use team name in path to make it readable. enforce no duplicate team name case insensitive
+use team name in string path to make the data readable. enforce no duplicate team name case insensitive, trim leading/trailing whitespace.
+and update to a team name might be expensive if its high up in the tree.
 
 
 "type": "team"
@@ -179,7 +178,7 @@ ex cloudant team doc:
 ###Steps
 1. Migrate data
   1. ```$ curl http://admin:pass@domain/dbName/_all_docs?include_docs=true > docs.json  ``` get all docs
-  2. run scripts using a mongo driver over docs to save into compose
+  2. run scripts using a mongo driver over docs differentiate the docs using  "type" field. save mapping into compose
 2. Develop models with migrated data
 
 ## References
