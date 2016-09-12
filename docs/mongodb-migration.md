@@ -3,7 +3,7 @@
 ## Things to consider:
 
 * build index based off common queries. writes will have bad performance if there are many indexes 
-* timestamps are in UTC and EST/EDT so need to convert them to JS Date Obj when we do the mapping
+* timestamps are in UTC and EST/EDT so need to convert them to JS Date Object UTC when we do the mapping
 
 I think these doc types are not needed
 * doc.type :'ref_matassessment'
@@ -20,7 +20,7 @@ I think these doc types are not needed
 | adminAccess | 'none' or 'full' or 'read' or 'write'| n/a
 | email | string; for IBM it's pref. ID | n/a
 | name  | string' first and last name of person | n/a
-| lastLogin | JS Date Obj| n/a
+| lastLogin | JS Date Object UTC| n/a
 
 
 ### iterations
@@ -32,14 +32,14 @@ I think these doc types are not needed
 |name | string | iteration_name |
 |teamId | objectId of team | team_id |
 |status| copy as is? | iterationinfo_status |"Not complete", "Completed"
-|createDate|JS Date Obj | created_dt | "2016-04-12 08:58:50 EDT"
+|createDate|JS Date Object UTC | created_dt | "2016-04-12 08:58:50 EDT"
 |createdById| string of userId | created_user |
 |createdBy| string of name or email | created_user |
-|updateDate| JS Date Obj | last_updt_dt | "2016-04-27 04:53:23 EDT"
+|updateDate| JS Date Object UTC | last_updt_dt | "2016-04-27 04:53:23 EDT"
 |updatedById| string of userId | last_updt_user |
 |updatedBy| string of name or email | last_updt_user |
-|startDate| JS Date Obj|iteration_start_dt | "01/15/2016"
-|endDate| JS Date Obj|iteration_end_dt | "01/16/2016"
+|startDate| JS Date Object UTC|iteration_start_dt | "01/15/2016"
+|endDate| JS Date Object UTC|iteration_end_dt | "01/16/2016"
 |memberCount| integer | team_mbr_cnt |
 |committedStories| integer | nbr_committed_stories |
 |deliveredStories| integer | nbr_stories_dlvrd |
@@ -116,10 +116,10 @@ and update to a team name might be expensive if its high up in the tree.
 |members       | array of objects, copy over as is| 
 |type           | string | "", "squad", "domain", "tribe", "subDomain", "potato" | squadteam     | "Yes" or "No"
 |description | string |  | desc |
-|createDate     | JS Date Obj | |created_dt | "2016-04-12 08:58:50 EDT"
+|createDate     | JS Date Object UTC | |created_dt | "2016-04-12 08:58:50 EDT"
 |createdById    | string of userId | | created_user |
 |createdBy      | string of name or email | | created_user |
-|updateDate     | JS Date Obj | |last_updt_dt | "2016-04-27 04:53:23 EDT"
+|updateDate     | JS Date Object UTC | |last_updt_dt | "2016-04-27 04:53:23 EDT"
 |updatedById    | string of userId | |last_updt_user |
 |updatedBy      | string of name or email | |last_updt_user |
 
@@ -172,50 +172,97 @@ doc.type : 'matassessmtrslt'
 
 | Fields        | Details       | mongo ex    | cloudant field | cloudant value ex
 | ------------- |:-------------:|-------------|-------------|-------------
-|_id | should we set this ? |ObjectId("ag_mar_12323")|doc._id| ag_mar_12323
+|cloudantId | string; "ag_mar_12323 | doc._id | ag_mar_12323
+|type| | | team_proj_ops | "Operations" / "Project"
 |teamId | objectId of team |
-|assessmentVersion | | | assessmt_version |
-|createdBy | | | submitter_id |
+|
+|version | | | assessmt_version |
 | ? | | | team_proj_ops |
 | ? | boolean | | team_dlvr_software | "Yes" / "No"
 |assessmentStatus | copy values as is | | assessmt_status | "Submitted" / "Draft"
-|?| ?| | self-assessmt_dt | 
-| | | | assessmt_cmpnt_rslts |
-|? | ? | ? | assessmt_action_plan_tbl |
-|createDate     | JS Date Obj | |created_dt | "2016-04-12 08:58:50 EDT"
+|?              | JS Date Object UTC| | self-assessmt_dt | 
+| see below | ? |  | assessmt_cmpnt_rslts | see below
+| see below | ? |  | assessmt_action_plan_tbl | see below
+|createDate     | JS Date Object UTC | |created_dt | "2016-04-12 08:58:50 EDT"
 |createdById    | string of userId | | created_user |
 |createdBy      | string of name or email | | created_user |
-|updateDate     | JS Date Obj | |last_updt_dt | "2016-04-27 04:53:23 EDT"
+|updateDate     | JS Date Object UTC | |last_updt_dt | "2016-04-27 04:53:23 EDT"
 |updatedById    | string of userId | |last_updt_user |
 |updatedBy      | string of name or email | |last_updt_user |
+
+
+nested mappings for:
+```
+assessmt_cmpnt_rslts: -> componentResults
+[{
+  assessed_cmpnt_name: -> componentName
+  ovralcur_assessmt_score": -> currentScore
+  ovraltar_assessmt_score": -> targetScore
+  assessed_cmpnt_tbl: ->
+    [{
+      principle_id: -> principleId
+      principle_name: -> principleName
+      practice_id: -> practiceId
+      practice_name: -> practiceName
+      cur_mat_lvl_achieved: -> currentMaturityLevel
+      cur_mat_lvl_score: -> currentScore
+      tar_mat_lvl_achieved:
+      tar_mat_lvl_score:
+      ind_mat_lvl_achieved:
+      ind_target_mat_lvl_score:
+      how_better_action_item:
+      ind_assessor_cmnt: 
+    }]
+}]
+```
+
+```
+assessmt_action_plan_tbl: -> actionPlans
+[{
+  action_plan_entry_id": -> id : integer
+  user_created": "Yes"/"No", -> isUserCreated : boolean
+  assessmt_cmpnt_name": -> assessmentComponentName
+  principle_id": -> principleId
+  principle_name": -> principleName
+  practice_id": -> practiceId
+  practice_name": -> practiceName
+  how_better_action_item": -> planDescription  (cloudant ex: "We use a SmartCloud and review RTC as our virtual wall.  ")
+  cur_mat_lvl_score": ->
+  tar_mat_lvl_score": ->
+  progress_summ": -> progressSum
+  key_metric": -> keyMetric
+  review_dt": -> reviewDate
+  action_item_status": -> status
+}]
+```
 
 ex cloudant assessment doc
 
 ```
 {
-	"id": "ag_mar_12323",
-	"key": "ag_mar_12323",
+	"id": "ag_mar_ag_team_IBMCertifiedPreOwnedEquipmt_1463886071579_1468607362513",
+	"key": "ag_mar_ag_team_IBMCertifiedPreOwnedEquipmt_1463886071579_1468607362513",
 	"value": {
-		"rev": "8-779488fad0974c102782b57acc7e778c"
+		"rev": "1-483be213f342e067a014ccd741e65c28"
 	},
 	"doc": {
-		"_id": "ag_mar_12323",
-		"_rev": "8-779488fad0974c102782b57acc7e778c",
+		"_id": "ag_mar_ag_team_IBMCertifiedPreOwnedEquipmt_1463886071579_1468607362513",
+		"_rev": "1-483be213f342e067a014ccd741e65c28",
 		"type": "matassessmtrslt",
-		"team_id": "ag_team_JM_002_1466170971836",
+		"team_id": "ag_team_IBMCertifiedPreOwnedEquipmt_1463886071579",
 		"assessmt_version": "ag_ref_atma_components_v06",
 		"team_proj_ops": "Project",
 		"team_dlvr_software": "Yes",
 		"assessmt_status": "Submitted",
-		"submitter_id": "mondigjd@ph.ibm.com",
-		"self-assessmt_dt": "2016-07-11 00:00:01 EDT",
+		"submitter_id": "spenc@us.ibm.com",
+		"self-assessmt_dt": "2016-07-15 00:00:01 EDT",
 		"ind_assessor_id": "",
 		"ind_assessmt_status": "",
 		"ind_assessmt_dt": "",
-		"created_dt": "2016-07-19 17:47:28 SGT",
-		"created_user": "mondigjd@ph.ibm.com",
-		"last_updt_dt": "2016-07-19 17:47:28 SGT",
-		"last_updt_user": "mondigjd@ph.ibm.com",
+		"created_dt": "2016-07-15 14:29:24 EDT",
+		"created_user": "spenc@us.ibm.com",
+		"last_updt_dt": "2016-07-15 14:29:24 EDT",
+		"last_updt_user": "spenc@us.ibm.com",
 		"doc_status": "",
 		"assessmt_cmpnt_rslts": [{
 			"assessed_cmpnt_name": "Team Agile Leadership and Collaboration - Projects",
@@ -224,147 +271,30 @@ ex cloudant assessment doc
 				"principle_name": "Collaboration and Teamwork",
 				"practice_id": "1",
 				"practice_name": "Standups",
-				"cur_mat_lvl_achieved": "Practicing",
-				"cur_mat_lvl_score": 3,
-				"tar_mat_lvl_achieved": "Transforming",
-				"tar_mat_lvl_score": 4,
-				"ind_mat_lvl_achieved": "",
-				"ind_target_mat_lvl_score": 0,
-				"how_better_action_item": "",
-				"ind_assessor_cmnt": ""
-			}, {
-				"principle_id": "1",
-				"principle_name": "Collaboration and Teamwork",
-				"practice_id": "2",
-				"practice_name": "Walls of Work",
-				"cur_mat_lvl_achieved": "Practicing",
-				"cur_mat_lvl_score": 2,
-				"tar_mat_lvl_achieved": "Transforming",
-				"tar_mat_lvl_score": 3,
-				"ind_mat_lvl_achieved": "",
-				"ind_target_mat_lvl_score": 0,
-				"how_better_action_item": "",
-				"ind_assessor_cmnt": ""
-			}, {
-				"principle_id": "2",
-				"principle_name": "Focus on the Customer and Business Value",
-				"practice_id": "3",
-				"practice_name": "Engaging the Product Owner",
 				"cur_mat_lvl_achieved": "Transforming",
 				"cur_mat_lvl_score": 3,
-				"tar_mat_lvl_achieved": "Scaling",
-				"tar_mat_lvl_score": 4,
-				"ind_mat_lvl_achieved": "",
-				"ind_target_mat_lvl_score": 0,
-				"how_better_action_item": "",
-				"ind_assessor_cmnt": ""
-			}, {
-				"principle_id": "2",
-				"principle_name": "Focus on the Customer and Business Value",
-				"practice_id": "4",
-				"practice_name": "Backlog Refinement",
-				"cur_mat_lvl_achieved": "Practicing",
-				"cur_mat_lvl_score": 2,
 				"tar_mat_lvl_achieved": "Transforming",
 				"tar_mat_lvl_score": 3,
 				"ind_mat_lvl_achieved": "",
 				"ind_target_mat_lvl_score": 0,
-				"how_better_action_item": "",
+				"how_better_action_item": "We use a SmartCloud and review RTC as our virtual wall.  ",
 				"ind_assessor_cmnt": ""
-			}, {
-				"principle_id": "3",
-				"principle_name": "Flexible, Adaptive and Continuously Improving",
-				"practice_id": "5",
-				"practice_name": "Release and Iteration Planning",
-				"cur_mat_lvl_achieved": "Transforming",
-				"cur_mat_lvl_score": 3,
-				"tar_mat_lvl_achieved": "Scaling",
-				"tar_mat_lvl_score": 4,
-				"ind_mat_lvl_achieved": "",
-				"ind_target_mat_lvl_score": 0,
-				"how_better_action_item": "",
-				"ind_assessor_cmnt": ""
-			}, {
-				"principle_id": "3",
-				"principle_name": "Flexible, Adaptive and Continuously Improving",
-				"practice_id": "6",
-				"practice_name": "Retrospectives",
-				"cur_mat_lvl_achieved": "Practicing",
-				"cur_mat_lvl_score": 2,
-				"tar_mat_lvl_achieved": "Transforming",
-				"tar_mat_lvl_score": 3,
-				"ind_mat_lvl_achieved": "",
-				"ind_target_mat_lvl_score": 0,
-				"how_better_action_item": "",
-				"ind_assessor_cmnt": ""
-			}, {
-				"principle_id": "3",
-				"principle_name": "Flexible, Adaptive and Continuously Improving",
-				"practice_id": "7",
-				"practice_name": "Work Estimation (Relative Estimates)",
-				"cur_mat_lvl_achieved": "Practicing",
-				"cur_mat_lvl_score": 2,
-				"tar_mat_lvl_achieved": "Transforming",
-				"tar_mat_lvl_score": 3,
-				"ind_mat_lvl_achieved": "",
-				"ind_target_mat_lvl_score": 0,
-				"how_better_action_item": "",
-				"ind_assessor_cmnt": ""
-			}, {
-				"principle_id": "4",
-				"principle_name": "Iterative and Fast",
-				"practice_id": "8",
-				"practice_name": "Story Cards",
-				"cur_mat_lvl_achieved": "Practicing",
-				"cur_mat_lvl_score": 2,
-				"tar_mat_lvl_achieved": "Transforming",
-				"tar_mat_lvl_score": 3,
-				"ind_mat_lvl_achieved": "",
-				"ind_target_mat_lvl_score": 0,
-				"how_better_action_item": "",
-				"ind_assessor_cmnt": ""
-			}, {
-				"principle_id": "5",
-				"principle_name": "Empowered and Self Directed Teams",
-				"practice_id": "9",
-				"practice_name": "Stable Cross-Functional Teams",
-				"cur_mat_lvl_achieved": "Transforming",
-				"cur_mat_lvl_score": 3,
-				"tar_mat_lvl_achieved": "Scaling",
-				"tar_mat_lvl_score": 4,
-				"ind_mat_lvl_achieved": "",
-				"ind_target_mat_lvl_score": 0,
-				"how_better_action_item": "",
-				"ind_assessor_cmnt": ""
-			}, {
-				"principle_id": "5",
-				"principle_name": "Empowered and Self Directed Teams",
-				"practice_id": "10",
-				"practice_name": "Social Contract",
-				"cur_mat_lvl_achieved": "Practicing",
-				"cur_mat_lvl_score": 2,
-				"tar_mat_lvl_achieved": "Transforming",
-				"tar_mat_lvl_score": 3,
-				"ind_mat_lvl_achieved": "",
-				"ind_target_mat_lvl_score": 0,
-				"how_better_action_item": "",
-				"ind_assessor_cmnt": ""
-			}, {
+			},{
 				"principle_id": "5",
 				"principle_name": "Empowered and Self Directed Teams",
 				"practice_id": "11",
 				"practice_name": "Risk and Issue Management",
-				"cur_mat_lvl_achieved": "Transforming",
-				"cur_mat_lvl_score": 3,
-				"tar_mat_lvl_achieved": "Scaling",
-				"tar_mat_lvl_score": 4,
+				"cur_mat_lvl_achieved": "Practicing",
+				"cur_mat_lvl_score": 2,
+				"tar_mat_lvl_achieved": "Transforming",
+				"tar_mat_lvl_score": 3,
 				"ind_mat_lvl_achieved": "",
 				"ind_target_mat_lvl_score": 0,
-				"how_better_action_item": "",
+				"how_better_action_item": "Squad discusses blockers in our daily standup, but sometimes reactive in addressing an issue or blocker instead of being proactive in forward risk thinking, and using collaborating tools (RTC and Slack).  ",
 				"ind_assessor_cmnt": ""
 			}],
 			"ovralcur_assessmt_score": "2.4",
-			"ovraltar_assessmt_score": "3.4"
+			"ovraltar_assessmt_score": "2.7"
 		}, {
 			"assessed_cmpnt_name": "Team Delivery",
 			"assessed_cmpnt_tbl": [{
@@ -374,108 +304,60 @@ ex cloudant assessment doc
 				"practice_name": "Automated builds & Continuous Integration",
 				"cur_mat_lvl_achieved": "Practicing",
 				"cur_mat_lvl_score": 2,
-				"tar_mat_lvl_achieved": "Transforming",
-				"tar_mat_lvl_score": 3,
-				"ind_mat_lvl_achieved": "",
-				"ind_target_mat_lvl_score": 0,
-				"how_better_action_item": "",
-				"ind_assessor_cmnt": ""
-			}, {
-				"principle_id": "1",
-				"principle_name": "Continuous Development",
-				"practice_id": "2",
-				"practice_name": "Managing Technical Debt",
-				"cur_mat_lvl_achieved": "Transforming",
-				"cur_mat_lvl_score": 3,
-				"tar_mat_lvl_achieved": "Scaling",
-				"tar_mat_lvl_score": 4,
-				"ind_mat_lvl_achieved": "",
-				"ind_target_mat_lvl_score": 0,
-				"how_better_action_item": "",
-				"ind_assessor_cmnt": ""
-			}, {
-				"principle_id": "1",
-				"principle_name": "Continuous Development",
-				"practice_id": "3",
-				"practice_name": "Dev & Ops Collaboration / Shared Understanding",
-				"cur_mat_lvl_achieved": "Transforming",
-				"cur_mat_lvl_score": 3,
-				"tar_mat_lvl_achieved": "Scaling",
-				"tar_mat_lvl_score": 4,
-				"ind_mat_lvl_achieved": "",
-				"ind_target_mat_lvl_score": 0,
-				"how_better_action_item": "",
-				"ind_assessor_cmnt": ""
-			}, {
-				"principle_id": "1",
-				"principle_name": "Continuous Development",
-				"practice_id": "4",
-				"practice_name": "Infrastructure Automation / Provisioning",
-				"cur_mat_lvl_achieved": "Initiating",
-				"cur_mat_lvl_score": 1,
 				"tar_mat_lvl_achieved": "Practicing",
 				"tar_mat_lvl_score": 2,
 				"ind_mat_lvl_achieved": "",
 				"ind_target_mat_lvl_score": 0,
-				"how_better_action_item": "",
+				"how_better_action_item": "Squad is creating automated test cases to help with regression testing, but relies upon manual function testing during a sprint.  Squad is addressing version control thru merge and checkin processes to avoid file conflicts.  Squad will need to take on more CoC efforts in relying heavily upon the tribe technical lead to complete build/deploy. ",
 				"ind_assessor_cmnt": ""
-			}, {
-				"principle_id": "2",
-				"principle_name": "Continuous Testing",
-				"practice_id": "5",
-				"practice_name": "Automated Testing",
-				"cur_mat_lvl_achieved": "Practicing",
-				"cur_mat_lvl_score": 2,
-				"tar_mat_lvl_achieved": "Transforming",
-				"tar_mat_lvl_score": 3,
-				"ind_mat_lvl_achieved": "",
-				"ind_target_mat_lvl_score": 0,
-				"how_better_action_item": "",
-				"ind_assessor_cmnt": ""
-			}, {
-				"principle_id": "3",
-				"principle_name": "Continuous Release & Deployment",
-				"practice_id": "6",
-				"practice_name": "Automated Deployments",
-				"cur_mat_lvl_achieved": "Practicing",
-				"cur_mat_lvl_score": 2,
-				"tar_mat_lvl_achieved": "Transforming",
-				"tar_mat_lvl_score": 3,
-				"ind_mat_lvl_achieved": "",
-				"ind_target_mat_lvl_score": 0,
-				"how_better_action_item": "",
-				"ind_assessor_cmnt": ""
-			}, {
-				"principle_id": "4",
-				"principle_name": "Continuous Feedback & Optimization",
-				"practice_id": "7",
-				"practice_name": "Customer Feedback",
-				"cur_mat_lvl_achieved": "Practicing",
-				"cur_mat_lvl_score": 2,
-				"tar_mat_lvl_achieved": "Transforming",
-				"tar_mat_lvl_score": 3,
-				"ind_mat_lvl_achieved": "",
-				"ind_target_mat_lvl_score": 0,
-				"how_better_action_item": "",
-				"ind_assessor_cmnt": ""
-			}, {
+			},{
 				"principle_id": "5",
 				"principle_name": "Continuous Monitoring",
 				"practice_id": "8",
 				"practice_name": "Monitoring of Environments",
-				"cur_mat_lvl_achieved": "Practicing",
-				"cur_mat_lvl_score": 2,
-				"tar_mat_lvl_achieved": "Transforming",
-				"tar_mat_lvl_score": 3,
+				"cur_mat_lvl_achieved": "Initiating",
+				"cur_mat_lvl_score": 1,
+				"tar_mat_lvl_achieved": "Initiating",
+				"tar_mat_lvl_score": 1,
 				"ind_mat_lvl_achieved": "",
 				"ind_target_mat_lvl_score": 0,
-				"how_better_action_item": "",
+				"how_better_action_item": "Need to initiate",
 				"ind_assessor_cmnt": ""
 			}],
-			"ovralcur_assessmt_score": "2.1",
-			"ovraltar_assessmt_score": "3.1"
+			"ovralcur_assessmt_score": "1.1",
+			"ovraltar_assessmt_score": "1.1"
 		}],
-		"assessmt_action_plan_tbl": []
+		"assessmt_action_plan_tbl": [{
+			"action_plan_entry_id": "0",
+			"user_created": "No",
+			"assessmt_cmpnt_name": "Team Agile Leadership and Collaboration - Projects",
+			"principle_id": "1",
+			"principle_name": "Collaboration and Teamwork",
+			"practice_id": "1",
+			"practice_name": "Standups",
+			"how_better_action_item": "We use a SmartCloud and review RTC as our virtual wall.  ",
+			"cur_mat_lvl_score": 3,
+			"tar_mat_lvl_score": 3,
+			"progress_summ": "",
+			"key_metric": "",
+			"review_dt": "",
+			"action_item_status": "Open"
+		}, {
+			"action_plan_entry_id": "1",
+			"user_created": "No",
+			"assessmt_cmpnt_name": "Team Agile Leadership and Collaboration - Projects",
+			"principle_id": "1",
+			"principle_name": "Collaboration and Teamwork",
+			"practice_id": "2",
+			"practice_name": "Walls of Work",
+			"how_better_action_item": "We have a mix of physical walls and rely upon RTC as our virtual wall for stories and work associated to a sprint.Our",
+			"cur_mat_lvl_score": 2,
+			"tar_mat_lvl_score": 2,
+			"progress_summ": "",
+			"key_metric": "",
+			"review_dt": "",
+			"action_item_status": "Open"
+		}]
 	}
 }
 ```
