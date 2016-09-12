@@ -23,7 +23,6 @@
 | ------------- |:-------------:|------------- | -------------
 |name | string | iteration_name |
 |teamId | objectId of team | team_id |
-|type | use: ??not sure | type  | "iterationinfo"
 |status| 'completed' or 'in progress' | iterationinfo_status |"Not complete", "Completed"
 |createDate|JS Date Object | created_dt | "2016-04-12 08:58:50 EDT"
 |createdById| string of userId | created_user |
