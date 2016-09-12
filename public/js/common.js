@@ -54,11 +54,11 @@ function setSystemMessage(systemStatusControl, systemStatusMsg){
 function setSystemEnvironment(environment){
 	//set label "Stage" on the top bar if it is "SIT" as environment variable in our manifest file. If it is production, this is blank
   if (!_.isEmpty(environment) && environment == 'SIT'){
-    console.log("Environment variable: "+ environment);
+    console.log('Environment variable: '+ environment);
     $('#systMsg').html('Stage');
     $('#systMsg').show();
   } else {
-    console.log("Environment variable: "+ environment);
+    console.log('Environment variable: '+ environment);
     $('#systMsg').hide();
   }
 }
