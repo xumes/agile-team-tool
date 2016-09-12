@@ -53,7 +53,7 @@ I think these doc types are not needed
 |clientSatisfaction| integer | client_sat | 1.0
 |teamSatisfaction| integer | team_sat | 4
 |comment| string | iteration_comments |
-|memberChanged| boolean, use: ?? | team_mbr_change | "No" or "Yes"
+|memberChanged| map to a boolean | team_mbr_change | "No" or "Yes"
 
 
 example cloudant iteration doc:
