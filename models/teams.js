@@ -32,8 +32,16 @@ var team = {
   searchTeamWithName: function(name) {
     return new Promise(function(resolve, reject){
       var query = {};
+      names = name.split('\ ');
       query['q'] = {};
-      query['q'] = 'name:'+name;
+      var s = '';
+      _.each(names, function(queryname){
+        s = s + 'name:' + queryname + ' AND ';
+      });
+      if (s.substring(s.length - 4, s.length) == 'AND ') {
+        s = s.substring(0, s.length - 5);
+      }
+      query['q'] = s + '\*';
       common.Search('search', 'nameSearch', query)
         .then(function(result){
           resolve(result);
