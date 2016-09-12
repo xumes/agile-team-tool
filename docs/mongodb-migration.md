@@ -61,9 +61,10 @@ use team name in path to make it readable. enforce no duplicate team name case i
 
 | Fields        | Details       | mongo ex    | cloudant field | cloudant value ex
 | ------------- |:-------------:|-------------|-------------|-------------
-| path | string | ",CIO,Agile Team," | parents  |  ["CIO", "Agile Team"]
-| members       | array of objects| [{userId:'5G22944', name:'billy bob', allocation:'100', role:"Developer"}] | members | [{key,id,name,allocation,role}]
+|path | string | ",CIO,Agile Team," | * get the path from ag_ref_team_index * | under ag_ref_team_index.. parents: ["CIO", "Agile Team"]
+|members       | array of objects, copy over as is| 
 |type           | string | "", "squad", "domain", "tribe", "subDomain", "potato" | squadteam     | "Yes" or "No"
+|description | string |  | desc |
 |createDate     | JS Date Object | |created_dt | "2016-04-12 08:58:50 EDT"
 |createdById    | string of userId | | created_user |
 |createdBy      | string of name or email | | created_user |
@@ -71,9 +72,12 @@ use team name in path to make it readable. enforce no duplicate team name case i
 |updatedById    | string of userId | |last_updt_user |
 |updatedBy      | string of name or email | |last_updt_user |
 
+don't port these fields:
+child_team_id
+parent_team_id
 
 
-ex cloudant doc:
+ex cloudant team doc:
 ```
 {
 	"id": "ag_team_AcquisitionCustomerMatching_1463146469675",
