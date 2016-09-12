@@ -203,7 +203,7 @@ submitter_id
 
 nested mappings:
 
-1. 
+(1.) 
 ```
 assessmt_cmpnt_rslts: -> componentResults
 [{
@@ -228,7 +228,7 @@ assessmt_cmpnt_rslts: -> componentResults
 }]
 ```
 
-2. 
+(2.) 
 ```
 assessmt_action_plan_tbl: -> actionPlans
 [{
