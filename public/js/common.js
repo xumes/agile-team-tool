@@ -31,6 +31,7 @@ function getPageVariables(page, _callback) {
       getPersonFromFaces(userInfo.email, updateUserInfo, []);
 			//get system status from DB for display on the top banner
       setSystemMessage(systemStatus.agildash_system_status_display, systemStatus.agildash_system_status_msgtext_display);
+      //set environment variable - if env='SIT', display 'Stage' on the systMsg on the top banner.
       setSystemEnvironment(environment);
 
     }
