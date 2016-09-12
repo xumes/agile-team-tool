@@ -113,10 +113,10 @@ and update to a team name might be expensive if its high up in the tree.
 | ------------- |:-------------:|-------------|-------------|-------------
 |cloudantId | string |  "ag_mar_12323"| doc._id | ag_mar_12323
 | | | | doc_status | "" , "delete"
-|path | string | ",CIO,Agile Team," | * get the path from ag_ref_team_index * | under ag_ref_team_index.. parents: ["CIO", "Agile Team"]
-|members       | array of objects, copy over as is| 
+|path | string  | ",CIO,Agile Team," | * get the path from ag_ref_team_index * | under ag_ref_team_index.. parents: ["CIO", "Agile Team"]
+|members        | array of objects, copy over as is| 
 |type           | string | "", "squad", "domain", "tribe", "subDomain", "potato" | squadteam     | "Yes" or "No"
-|description | string |  | desc |
+|description    | string |  | desc |
 |createDate     | JS Date Object UTC | |created_dt | "2016-04-12 08:58:50 EDT"
 |createdById    | string of userId | | created_user |
 |createdBy      | string of name or email | | created_user |
@@ -176,9 +176,9 @@ doc.type : 'matassessmtrslt'
 |cloudantId | string; "ag_mar_12323 | doc._id | ag_mar_12323
 |type| | | team_proj_ops | "Operations" / "Project"
 |teamId | objectId of team |
-|version | | | assessmt_version |
+|version | string | | assessmt_version |
 | ? | | | team_proj_ops |
-| ? | boolean | | team_dlvr_software | "Yes" / "No"
+| ? | map to a boolean | | team_dlvr_software | "Yes" / "No"
 |assessmentStatus | copy values as is | | assessmt_status | "Submitted" / "Draft"
 |?          | JS Date Object UTC| | self-assessmt_dt | 
 | | | | ind_assessor_id |
