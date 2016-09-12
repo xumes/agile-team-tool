@@ -3,6 +3,7 @@
 ## Things to consider:
 
 * build index based off common queries. writes will have bad performance if there are many indexes 
+* timestamps are in UTC and EST/EDT so need to convert them to unix timestamp when we do the mapping
 
 
 ## database models and Cloudant <-> MongoDB schema mapping
@@ -15,7 +16,7 @@
 | adminAccess | 'none' or 'full' or 'read' or 'write'| n/a
 | email | string; for IBM it's pref. ID | n/a
 | name  | string' first and last name of person | n/a
-| lastLogin | JS Date Object| n/a
+| lastLogin | unix timestamp; integer| n/a
 
 
 ### iterations
@@ -27,14 +28,14 @@
 |name | string | iteration_name |
 |teamId | objectId of team | team_id |
 |status| copy as is? | iterationinfo_status |"Not complete", "Completed"
-|createDate|JS Date Object | created_dt | "2016-04-12 08:58:50 EDT"
+|createDate|unix timestamp; integer | created_dt | "2016-04-12 08:58:50 EDT"
 |createdById| string of userId | created_user |
 |createdBy| string of name or email | created_user |
-|updateDate| JS Date Object | last_updt_dt | "2016-04-27 04:53:23 EDT"
+|updateDate| unix timestamp; integer | last_updt_dt | "2016-04-27 04:53:23 EDT"
 |updatedById| string of userId | last_updt_user |
 |updatedBy| string of name or email | last_updt_user |
-|startDate| JS Date Object|iteration_start_dt | "01/15/2016"
-|endDate| JS Date Object|iteration_end_dt | "01/16/2016"
+|startDate| unix timestamp; integer|iteration_start_dt | "01/15/2016"
+|endDate| unix timestamp; integer|iteration_end_dt | "01/16/2016"
 |memberCount| integer | team_mbr_cnt |
 |committedStories| integer | nbr_committed_stories |
 |deliveredStories| integer | nbr_stories_dlvrd |
@@ -110,10 +111,10 @@ and update to a team name might be expensive if its high up in the tree.
 |members       | array of objects, copy over as is| 
 |type           | string | "", "squad", "domain", "tribe", "subDomain", "potato" | squadteam     | "Yes" or "No"
 |description | string |  | desc |
-|createDate     | JS Date Object | |created_dt | "2016-04-12 08:58:50 EDT"
+|createDate     | unix timestamp; integer | |created_dt | "2016-04-12 08:58:50 EDT"
 |createdById    | string of userId | | created_user |
 |createdBy      | string of name or email | | created_user |
-|updateDate     | JS Date Object | |last_updt_dt | "2016-04-27 04:53:23 EDT"
+|updateDate     | unix timestamp; integer | |last_updt_dt | "2016-04-27 04:53:23 EDT"
 |updatedById    | string of userId | |last_updt_user |
 |updatedBy      | string of name or email | |last_updt_user |
 
