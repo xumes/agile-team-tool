@@ -29,6 +29,8 @@ I think these doc types are not needed
 
 | Fields        | Details      | cloudant field | cloudant value ex (if not obv.)
 | ------------- |:-------------:|------------- | -------------
+|cloudantId | | doc.id |
+|    |     |   doc_status  | "" , "delete"
 |name | string | iteration_name |
 |teamId | objectId of team | team_id |
 |status| copy as is? | iterationinfo_status |"Not complete", "Completed"
@@ -53,8 +55,6 @@ I think these doc types are not needed
 |comment| string | iteration_comments |
 |memberChanged| boolean, use: ?? | team_mbr_change | "No" or "Yes"
 
-dont port this field:
-doc_status ?
 
 example cloudant iteration doc:
 ```
@@ -111,7 +111,8 @@ and update to a team name might be expensive if its high up in the tree.
 
 | Fields        | Details       | mongo ex    | cloudant field | cloudant value ex
 | ------------- |:-------------:|-------------|-------------|-------------
-|_id | should we set this ? |ObjectId("ag_team_AcquisitionCustomerMatching_1463146469675")|doc._id| ag_team_AcquisitionCustomerMatching_1463146469675
+|cloudantId | string; "ag_mar_12323 | doc._id | ag_mar_12323
+| | | | doc_status | "" , "delete"
 |path | string | ",CIO,Agile Team," | * get the path from ag_ref_team_index * | under ag_ref_team_index.. parents: ["CIO", "Agile Team"]
 |members       | array of objects, copy over as is| 
 |type           | string | "", "squad", "domain", "tribe", "subDomain", "potato" | squadteam     | "Yes" or "No"
@@ -180,9 +181,13 @@ doc.type : 'matassessmtrslt'
 | ? | | | team_proj_ops |
 | ? | boolean | | team_dlvr_software | "Yes" / "No"
 |assessmentStatus | copy values as is | | assessmt_status | "Submitted" / "Draft"
-|?              | JS Date Object UTC| | self-assessmt_dt | 
-| see below | ? |  | assessmt_cmpnt_rslts | see below
-| see below | ? |  | assessmt_action_plan_tbl | see below
+|?          | JS Date Object UTC| | self-assessmt_dt | 
+| | | | ind_assessor_id |
+| | | | ind_assessmt_status |
+| | | | ind_assessmt_dt |
+| | | | doc_status | "" , "delete"
+| see below | nested struct |  | assessmt_cmpnt_rslts     | see below
+| see below | nested struct |  | assessmt_action_plan_tbl | see below
 |createDate     | JS Date Object UTC | |created_dt | "2016-04-12 08:58:50 EDT"
 |createdById    | string of userId | | created_user |
 |createdBy      | string of name or email | | created_user |
@@ -190,8 +195,14 @@ doc.type : 'matassessmtrslt'
 |updatedById    | string of userId | |last_updt_user |
 |updatedBy      | string of name or email | |last_updt_user |
 
+dont think we need to include this:
+submitter_id
 
-nested mappings for:
+
+
+nested mappings:
+
+1. 
 ```
 assessmt_cmpnt_rslts: -> componentResults
 [{
@@ -216,6 +227,7 @@ assessmt_cmpnt_rslts: -> componentResults
 }]
 ```
 
+2. 
 ```
 assessmt_action_plan_tbl: -> actionPlans
 [{
