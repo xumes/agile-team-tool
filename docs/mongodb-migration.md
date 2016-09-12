@@ -58,6 +58,7 @@ use team name in path to make it readable. enforce no duplicate team name case i
 
 
 "type": "team"
+
 | Fields        | Details       | mongo ex    | cloudant field | cloudant value ex
 | ------------- |:-------------:|-------------|-------------|-------------
 | path | string | ",CIO,Agile Team," | parents  |  ["CIO", "Agile Team"]
@@ -99,81 +100,9 @@ ex cloudant doc:
 			"allocation": 100,
 			"role": "Developer"
 		}, {
-			"key": "061442672",
-			"id": "girisbho@in.ibm.com",
-			"name": "GIRISH B (GIRISH) BHOLE",
-			"allocation": 100,
-			"role": "Developer"
-		}, {
-			"key": "038187672",
-			"id": "cecilia.ljunghill@se.ibm.com",
-			"name": "Cecilia Ljunghill",
-			"allocation": 100,
-			"role": "Developer"
-		}, {
-			"key": "1A54FSIN1",
-			"id": "cx1a54fs@in.ibm.com",
-			"name": "Subramanian *CONTRACTOR* V",
-			"allocation": 100,
-			"role": "Analyst"
-		}, {
-			"key": "L07478897",
-			"id": "william_seaward@us.ibm.com",
-			"name": "William W. Seaward",
-			"allocation": 100,
-			"role": "Architect"
-		}, {
-			"key": "2913FSIN1",
-			"id": "cx2913fs@in.ibm.com",
-			"name": "Dharmendra *CONTRACTOR* Sahani",
-			"allocation": 100,
-			"role": "Analyst"
-		}, {
-			"key": "4E91FSIN1",
-			"id": "cx4e91fs@in.ibm.com",
-			"name": "Hema *CONTRACTOR* R U",
-			"allocation": 100,
-			"role": "Analyst"
-		}, {
-			"key": "050761781",
-			"id": "michel.taront@fr.ibm.com",
-			"name": "Michel Taront",
-			"allocation": 100,
-			"role": "Analyst"
-		}, {
-			"key": "5D4735897",
-			"id": "iloutfi@us.ibm.com",
-			"name": "IMAD A. LOUTFI",
-			"allocation": 100,
-			"role": "Analyst"
-		}, {
-			"key": "1A53FSIN1",
-			"id": "cx1a53fs@in.ibm.com",
-			"name": "Tulasi Rao *CONTRACTOR* Kannuri",
-			"allocation": 100,
-			"role": "Analyst"
-		}, {
-			"key": "C-DNGN897",
-			"id": "kacerik@us.ibm.com",
-			"name": "Veronica *CONTRACTOR* Kacerik",
-			"allocation": 100,
-			"role": "Analyst"
-		}, {
-			"key": "C-5KCS897",
-			"id": "hossainm@us.ibm.com",
-			"name": "Mohammad *CONTRACTOR* Hossain",
-			"allocation": 100,
-			"role": "Consultant"
-		}, {
 			"key": "042424781",
 			"id": "KUTUKAKE@jp.ibm.com",
 			"name": "Masaki Kutsukake",
-			"allocation": 100,
-			"role": "Analyst"
-		}, {
-			"key": "C-D52S897",
-			"id": "cmugaas@us.ibm.com",
-			"name": "Carol *CONTRACTOR* Mugaas",
 			"allocation": 100,
 			"role": "Analyst"
 		}],
