@@ -156,7 +156,13 @@ jQuery(function($) {
       $('#myTeams').attr('data-state', '');
       $('#nameSearchField').show();
       hideAllContentAreaDivs();
-      getRootTeams();
+      if (defSelTeamId != '') {
+        $('#teamTree').hide();
+        $('#spinnerContainer-search').show();
+        loadParentInAllTeams(defSelTeamId, true);
+      } else {
+        getRootTeams();
+      }
     }
   });
 
@@ -315,13 +321,15 @@ function getMyTeamsFromDb(initial, loadStandalone) {
             if (defaultTeam == 'sub_ag_team_standalone') {
               defaultTeam = ($('#sub_ag_team_standalone li')[0]).id;
             }
-            loadDetails(defaultTeam);
-            $('.nano').nanoScroller();
           } else {
             var defaultTeam = ($('#teamTreeMain li')[0]).id;
-            loadDetails(defaultTeam);
-            $('.nano').nanoScroller();
           }
+          if ($('#sub_'+jq(defSelTeamId)).length > 0) {
+            loadDetails('sub_' + defSelTeamId);
+          } else {
+            loadDetails(defaultTeam);
+          }
+          $('.nano').nanoScroller();
         } else {
           if ($('#no-teams-highlightbox').css('display') == 'none')
             $('#mainContent').show();
@@ -963,6 +971,10 @@ function loadDetails(elementId, setScrollPosition) {
       openSelectedTeamTree(setScrollPosition);
     }
   } else {
+    $('#mainContent').show();
+    $('#spinnerContainer').hide();
+    $('#teamTree').show();
+    $('#spinnerContainer-search').hide();
     openSelectedTeamTree(setScrollPosition);
   }
 }
