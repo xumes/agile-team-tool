@@ -19,6 +19,9 @@
 
 
 ### iterations
+
+"type": "iterationinfo"
+
 | Fields        | Details      | cloudant field | cloudant value ex (if not obv.)
 | ------------- |:-------------:|------------- | -------------
 |name | string | iteration_name |
@@ -72,9 +75,7 @@ use team name in path to make it readable. enforce no duplicate team name case i
 |updatedById    | string of userId | |last_updt_user |
 |updatedBy      | string of name or email | |last_updt_user |
 
-don't port these fields:
-child_team_id
-parent_team_id
+don't port these fields: child_team_id, parent_team_id
 
 
 ex cloudant team doc:
