@@ -28,5 +28,7 @@ module.exports = {
     assessment: 'ag_mar_'
   },
   environment: process.env.deploy || 'SIT',
-  googleAnalyticsKey: process.env.googleAnalyticsKey || ''
+  googleAnalyticsKey: process.env.googleAnalyticsKey || '',
+  googleHost: 'maps.googleapis.com',
+  googleApiKey: 'AIzaSyCUZtDL57ZAjGRZtPVV2_eTIcH4MqsNLnY'
 };
