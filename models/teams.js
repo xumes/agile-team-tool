@@ -14,6 +14,10 @@ var teamDocRules = rules.teamDocRules;
 var isAllowedUser = false;
 var msg;
 
+var specialCharsHandler = function(id) {
+  return id.replace( /(\.|\[|\]|,|\/|\-|\"|\')/g, '\\$1' );
+};
+
 var formatErrMsg = function(msg) {
   tMsg = typeof msg === 'object' ? JSON.stringify(msg) : msg;
   loggers.get('models').error(tMsg);
@@ -36,12 +40,14 @@ var team = {
       query['q'] = {};
       var s = '';
       _.each(names, function(queryname){
-        s = s + 'name:' + queryname + ' AND ';
+        if (queryname != '' && queryname != ' ') {
+          s = s + 'name:' + queryname + ' AND ';
+        }
       });
       if (s.substring(s.length - 4, s.length) == 'AND ') {
         s = s.substring(0, s.length - 5);
       }
-      query['q'] = s + '\*';
+      query['q'] = specialCharsHandler(s + '\*');
       common.Search('search', 'nameSearch', query)
         .then(function(result){
           resolve(result);
