@@ -3,7 +3,7 @@
 ## Things to consider:
 
 * build index based off common queries. writes will have bad performance if there are many indexes 
-* timestamps are in UTC and EST/EDT so need to convert them to unix timestamp when we do the mapping
+* timestamps are in UTC and EST/EDT so need to convert them to JS Date Obj when we do the mapping
 
 I think these doc types are not needed
 * doc.type :'ref_matassessment'
@@ -20,7 +20,7 @@ I think these doc types are not needed
 | adminAccess | 'none' or 'full' or 'read' or 'write'| n/a
 | email | string; for IBM it's pref. ID | n/a
 | name  | string' first and last name of person | n/a
-| lastLogin | unix timestamp; integer| n/a
+| lastLogin | JS Date Obj; integer| n/a
 
 
 ### iterations
@@ -32,14 +32,14 @@ I think these doc types are not needed
 |name | string | iteration_name |
 |teamId | objectId of team | team_id |
 |status| copy as is? | iterationinfo_status |"Not complete", "Completed"
-|createDate|unix timestamp; integer | created_dt | "2016-04-12 08:58:50 EDT"
+|createDate|JS Date Obj; integer | created_dt | "2016-04-12 08:58:50 EDT"
 |createdById| string of userId | created_user |
 |createdBy| string of name or email | created_user |
-|updateDate| unix timestamp; integer | last_updt_dt | "2016-04-27 04:53:23 EDT"
+|updateDate| JS Date Obj; integer | last_updt_dt | "2016-04-27 04:53:23 EDT"
 |updatedById| string of userId | last_updt_user |
 |updatedBy| string of name or email | last_updt_user |
-|startDate| unix timestamp; integer|iteration_start_dt | "01/15/2016"
-|endDate| unix timestamp; integer|iteration_end_dt | "01/16/2016"
+|startDate| JS Date Obj; integer|iteration_start_dt | "01/15/2016"
+|endDate| JS Date Obj; integer|iteration_end_dt | "01/16/2016"
 |memberCount| integer | team_mbr_cnt |
 |committedStories| integer | nbr_committed_stories |
 |deliveredStories| integer | nbr_stories_dlvrd |
@@ -116,10 +116,10 @@ and update to a team name might be expensive if its high up in the tree.
 |members       | array of objects, copy over as is| 
 |type           | string | "", "squad", "domain", "tribe", "subDomain", "potato" | squadteam     | "Yes" or "No"
 |description | string |  | desc |
-|createDate     | unix timestamp; integer | |created_dt | "2016-04-12 08:58:50 EDT"
+|createDate     | JS Date Obj; integer | |created_dt | "2016-04-12 08:58:50 EDT"
 |createdById    | string of userId | | created_user |
 |createdBy      | string of name or email | | created_user |
-|updateDate     | unix timestamp; integer | |last_updt_dt | "2016-04-27 04:53:23 EDT"
+|updateDate     | JS Date Obj; integer | |last_updt_dt | "2016-04-27 04:53:23 EDT"
 |updatedById    | string of userId | |last_updt_user |
 |updatedBy      | string of name or email | |last_updt_user |
 
@@ -178,8 +178,16 @@ doc.type : 'matassessmtrslt'
 |createdBy | | | submitter_id |
 | ? | | | team_proj_ops |
 | ? | boolean | | team_dlvr_software | "Yes" / "No"
-|assessmentStatus | | | assessmt_status | "Submitted"
+|assessmentStatus | copy values as is | | assessmt_status | "Submitted" / "Draft"
 |?| ?| | self-assessmt_dt | 
+| | | | assessmt_cmpnt_rslts |
+|? | ? | ? | assessmt_action_plan_tbl |
+|createDate     | JS Date Obj; integer | |created_dt | "2016-04-12 08:58:50 EDT"
+|createdById    | string of userId | | created_user |
+|createdBy      | string of name or email | | created_user |
+|updateDate     | JS Date Obj; integer | |last_updt_dt | "2016-04-27 04:53:23 EDT"
+|updatedById    | string of userId | |last_updt_user |
+|updatedBy      | string of name or email | |last_updt_user |
 
 ex cloudant assessment doc
 
