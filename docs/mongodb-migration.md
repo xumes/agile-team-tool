@@ -179,7 +179,7 @@ doc.type : 'matassessmtrslt'
 | ------------- |:-------------:|-------------|-------------|-------------
 |cloudantId | string; "ag_mar_12323 | doc._id | ag_mar_12323
 |type| | | team_proj_ops | "Operations" / "Project"
-|teamId | objectId of team |
+|teamId | cloudantId of team doc (for first phase) |
 |version | string | | assessmt_version |
 | ? | | | team_proj_ops |
 | ? | map to a boolean | | team_dlvr_software | "Yes" / "No"
@@ -386,10 +386,21 @@ ex cloudant assessment doc
 * Use mongoose default fields and remove the various default data spread throughout the project (e.x public/index.js ~L5->114)
 
 ###Steps
+
+####First Phase
+
 1. Migrate data
   1. ```$ curl http://admin:pass@domain/dbName/_all_docs?include_docs=true > docs.json  ``` get all docs
   2. run scripts using a mongo driver over docs differentiate the docs using  "type" field. save mapping into compose
 2. Develop models with migrated data
+
+####Second Phase
+1. run scripts to convert cloudantIds to mongo's objectId
+
+
+* develop and test in a seperate app and branch. once we have working model & scripts, we turn off prod for maintenance for as long as it takes to port prod
+
+
 
 ## References
 
