@@ -56,6 +56,8 @@ I was thinking it might be easier to map the data as is and worry about this lat
 
 use team name in path to make it readable. enforce no duplicate team name case insensitive
 
+
+"type": "team"
 | Fields        | Details       | mongo ex    | cloudant field | cloudant value ex
 | ------------- |:-------------:|-------------|-------------|-------------
 | path | string | ",CIO,Agile Team," | parents  |  ["CIO", "Agile Team"]
@@ -67,6 +69,119 @@ use team name in path to make it readable. enforce no duplicate team name case i
 |updateDate     | JS Date Object | |last_updt_dt | "2016-04-27 04:53:23 EDT"
 |updatedById    | string of userId | |last_updt_user |
 |updatedBy      | string of name or email | |last_updt_user |
+
+
+
+ex cloudant doc:
+```
+{
+	"id": "ag_team_AcquisitionCustomerMatching_1463146469675",
+	"key": "ag_team_AcquisitionCustomerMatching_1463146469675",
+	"value": {
+		"rev": "2-eae4f4a22969d1a4f16fc054a4afbeb1"
+	},
+	"doc": {
+		"_id": "ag_team_AcquisitionCustomerMatching_1463146469675",
+		"_rev": "2-eae4f4a22969d1a4f16fc054a4afbeb1",
+		"type": "team",
+		"name": "Acquisition Customer Matching",
+		"desc": "",
+		"squadteam": "Yes",
+		"last_updt_dt": "2016-05-13 21:34:29 SGT",
+		"last_updt_user": "batch",
+		"created_dt": "2016-05-13 21:34:29 SGT",
+		"created_user": "batch",
+		"parent_team_id": "ag_team_Acquisitions",
+		"members": [{
+			"key": "024313672",
+			"id": "Syeda.IqanZahera.Naqvi@in.ibm.com",
+			"name": "SYEDA I (SYEDA) NAQVI",
+			"allocation": 100,
+			"role": "Developer"
+		}, {
+			"key": "061442672",
+			"id": "girisbho@in.ibm.com",
+			"name": "GIRISH B (GIRISH) BHOLE",
+			"allocation": 100,
+			"role": "Developer"
+		}, {
+			"key": "038187672",
+			"id": "cecilia.ljunghill@se.ibm.com",
+			"name": "Cecilia Ljunghill",
+			"allocation": 100,
+			"role": "Developer"
+		}, {
+			"key": "1A54FSIN1",
+			"id": "cx1a54fs@in.ibm.com",
+			"name": "Subramanian *CONTRACTOR* V",
+			"allocation": 100,
+			"role": "Analyst"
+		}, {
+			"key": "L07478897",
+			"id": "william_seaward@us.ibm.com",
+			"name": "William W. Seaward",
+			"allocation": 100,
+			"role": "Architect"
+		}, {
+			"key": "2913FSIN1",
+			"id": "cx2913fs@in.ibm.com",
+			"name": "Dharmendra *CONTRACTOR* Sahani",
+			"allocation": 100,
+			"role": "Analyst"
+		}, {
+			"key": "4E91FSIN1",
+			"id": "cx4e91fs@in.ibm.com",
+			"name": "Hema *CONTRACTOR* R U",
+			"allocation": 100,
+			"role": "Analyst"
+		}, {
+			"key": "050761781",
+			"id": "michel.taront@fr.ibm.com",
+			"name": "Michel Taront",
+			"allocation": 100,
+			"role": "Analyst"
+		}, {
+			"key": "5D4735897",
+			"id": "iloutfi@us.ibm.com",
+			"name": "IMAD A. LOUTFI",
+			"allocation": 100,
+			"role": "Analyst"
+		}, {
+			"key": "1A53FSIN1",
+			"id": "cx1a53fs@in.ibm.com",
+			"name": "Tulasi Rao *CONTRACTOR* Kannuri",
+			"allocation": 100,
+			"role": "Analyst"
+		}, {
+			"key": "C-DNGN897",
+			"id": "kacerik@us.ibm.com",
+			"name": "Veronica *CONTRACTOR* Kacerik",
+			"allocation": 100,
+			"role": "Analyst"
+		}, {
+			"key": "C-5KCS897",
+			"id": "hossainm@us.ibm.com",
+			"name": "Mohammad *CONTRACTOR* Hossain",
+			"allocation": 100,
+			"role": "Consultant"
+		}, {
+			"key": "042424781",
+			"id": "KUTUKAKE@jp.ibm.com",
+			"name": "Masaki Kutsukake",
+			"allocation": 100,
+			"role": "Analyst"
+		}, {
+			"key": "C-D52S897",
+			"id": "cmugaas@us.ibm.com",
+			"name": "Carol *CONTRACTOR* Mugaas",
+			"allocation": 100,
+			"role": "Analyst"
+		}],
+		"child_team_id": []
+	}
+},
+```
+
 
 ### assessments
 | Fields        | Details           
