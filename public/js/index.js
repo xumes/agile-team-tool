@@ -3,6 +3,7 @@ var defSelTeamId = '';
 var defSelIndex = '';
 var squadList = [];
 var loadedParentId = '';
+var teamLocation = [];
 var tempIterationData = [{
   'totalPoints': 0,
   'totalStories': 0,
@@ -752,6 +753,7 @@ function createSubTwistySection(twistyId, twistyLabel, extraClass, teamId) {
 function facesPersonHandler(index, userEmail, facesPerson) {
   if (facesPerson != null) {
     $('#location_ref_' + index).text(facesPerson.location);
+    teamLocation.push(facesPerson.location);
   } else {
     $('#location_ref_' + index).text('-unavailable-');
   }
@@ -955,6 +957,7 @@ function loadDetails(elementId, setScrollPosition) {
           }
 
           $('#membersList').empty();
+          teamLocation = [];
           if (team.members != undefined && team.members.length > 0) {
             var members = sortTeamMembersByName(team.members);
             for (var j = 0; j < members.length; j++) {
@@ -970,6 +973,7 @@ function loadDetails(elementId, setScrollPosition) {
           } else {
             $('#membersList').append('<tr class="odd"><td valign="top" colspan="4" class="dataTables_empty">No data available</td></tr>');
           }
+          teamLocationHandler(teamLocation);
         }
       });
       requests.push(req);
@@ -982,6 +986,18 @@ function loadDetails(elementId, setScrollPosition) {
     $('#spinnerContainer-search').hide();
     openSelectedTeamTree(setScrollPosition);
   }
+}
+
+function teamLocationHandler(data) {
+  console.log(data);
+  var req = $.ajax({
+    type: 'GET',
+    url: '/api/teamscore/gettimezone/' + data
+  }).fail(function(e) {
+    console.log(e);
+  }).done(function(timezones) {
+    console.log(timezones);
+  });
 }
 
 function openSelectedTeamTree(setScrollPosition) {

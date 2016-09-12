@@ -23,6 +23,19 @@ module.exports = function(app, includes) {
       });
   };
 
+  calculateScore = function(req, res) {
+    scoreModel.calculateScore(req.body)
+      .then(function(result){
+        // result is number, '' change it to string
+        res.status(200).send(''+result);
+      })
+      .catch(function(err){
+        res.status(err.statusCode).send(err.message);
+      });
+  };
+
+  app.post('/api/teamscore/calculatescore/', [includes.middleware.auth.requireLogin], calculateScore);
+
   // Transfer location(city, state, country) info to gps coordinate api
   app.get('/api/teamscore/getgpscoordinate/:location', [includes.middleware.auth.requireLogin], getGpsCoordinate);
   // Transfer location info to time zone
