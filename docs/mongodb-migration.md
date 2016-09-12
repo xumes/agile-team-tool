@@ -3,7 +3,7 @@
 ## Things to consider:
 
 * build index based off common queries. writes will have bad performance if there are many indexes 
-* timestamps are in UTC and EST/EDT so need to convert them to JS Date Object UTC when we do the mapping
+* timestamps are in <string> UTC and <string>EST/EDT so need to convert them to JS Date Object UTC when we do the mapping
 
 I think these doc types are not needed
 * doc.type :'ref_matassessment'
@@ -33,7 +33,7 @@ I think these doc types are not needed
 |    |     |   doc_status  | "" , "delete"
 |name | string | iteration_name |
 |teamId | objectId of team | team_id |
-|status| copy as is? | iterationinfo_status |"Not complete", "Completed"
+|status| copy as is | iterationinfo_status |"Not complete", "Completed"
 |createDate|JS Date Object UTC | created_dt | "2016-04-12 08:58:50 EDT"
 |createdById| string of userId | created_user |
 |createdBy| string of name or email | created_user |
@@ -47,7 +47,7 @@ I think these doc types are not needed
 |deliveredStories| integer | nbr_stories_dlvrd |
 |commitedStoryPoints| integer | nbr_committed_story_pts |
 |storyPointsDelivered | integer | nbr_story_pts_dlvrd |
-|locationScore | used for pizza chart i think ?? | fte_cnt | 0.0 or 0.5 
+|locationScore | used for pizza chart i think ? | fte_cnt | 0.0 or 0.5 
 |deployments | integer | nbr_dplymnts | "" or 1
 |defects | integer | nbr_defects | "" or 2
 |clientSatisfaction| integer | client_sat | 1.0
