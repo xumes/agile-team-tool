@@ -27,10 +27,13 @@ I think these doc types are not needed
 
 "type": "iterationinfo"
 
+* can probably combine status and docStatus
+
+
 | Fields        | Details      | cloudant field | cloudant value ex (if not obv.)
 | ------------- |:-------------:|------------- | -------------
 |cloudantId | string | doc.id |
-|    |     |   doc_status  | "" , "delete"
+| docStatus |     |   doc_status  | "" , "delete"
 |name | string | iteration_name |
 |teamId | objectId of team | team_id |
 |status| copy as is | iterationinfo_status |"Not complete", "Completed"
@@ -112,7 +115,7 @@ and update to a team name might be expensive if its high up in the tree.
 | Fields        | Details       | mongo ex    | cloudant field | cloudant value ex
 | ------------- |:-------------:|-------------|-------------|-------------
 |cloudantId | string |  "ag_mar_12323"| doc._id | ag_mar_12323
-| | | | doc_status | "" , "delete"
+| docStatus | | | doc_status | "" , "delete"
 |path | string  | ",CIO,Agile Team," | * get the path from ag_ref_team_index * | under ag_ref_team_index.. parents: ["CIO", "Agile Team"]
 |members        | array of objects, copy over as is| 
 |type           | string | "", "squad", "domain", "tribe", "subDomain", "potato" | squadteam     | "Yes" or "No"
@@ -170,6 +173,7 @@ ex cloudant team doc:
 
 doc.type : 'matassessmtrslt' 
 
+* can probably combine assessmentStatus and docStatus into a "status" field
 
 | Fields        | Details       | mongo ex    | cloudant field | cloudant value ex
 | ------------- |:-------------:|-------------|-------------|-------------
@@ -181,10 +185,10 @@ doc.type : 'matassessmtrslt'
 | ? | map to a boolean | | team_dlvr_software | "Yes" / "No"
 |assessmentStatus | copy values as is | | assessmt_status | "Submitted" / "Draft"
 |?          | JS Date Object UTC| | self-assessmt_dt | 
-| | | | ind_assessor_id |
-| | | | ind_assessmt_status |
-| | | | ind_assessmt_dt |
-| | | | doc_status | "" , "delete"
+| | ? | | ind_assessor_id |
+| | ? | | ind_assessmt_status |
+| | ? | | ind_assessmt_dt |
+| docStatus | | | doc_status | "" , "delete"
 | see below | nested struct |  | assessmt_cmpnt_rslts     | see below
 | see below | nested struct |  | assessmt_action_plan_tbl | see below
 |createDate     | JS Date Object UTC | |created_dt | "2016-04-12 08:58:50 EDT"
@@ -206,20 +210,20 @@ assessmt_cmpnt_rslts: -> componentResults
   assessed_cmpnt_name: -> componentName
   ovralcur_assessmt_score": -> currentScore
   ovraltar_assessmt_score": -> targetScore
-  assessed_cmpnt_tbl: ->
+  assessed_cmpnt_tbl: -> assessedComponents
     [{
       principle_id: -> principleId
       principle_name: -> principleName
       practice_id: -> practiceId
       practice_name: -> practiceName
-      cur_mat_lvl_achieved: -> currentMaturityLevel
+      cur_mat_lvl_achieved: -> 
       cur_mat_lvl_score: -> currentScore
-      tar_mat_lvl_achieved:
-      tar_mat_lvl_score:
-      ind_mat_lvl_achieved:
-      ind_target_mat_lvl_score:
-      how_better_action_item:
-      ind_assessor_cmnt: 
+      tar_mat_lvl_achieved: -> ??wat
+      tar_mat_lvl_score: -> targetScore
+      ind_mat_lvl_achieved: -> ??wat
+      ind_target_mat_lvl_score: -> ??wat
+      how_better_action_item: -> ??
+      ind_assessor_cmnt:  -> ??
     }]
 }]
 ```
@@ -236,8 +240,8 @@ assessmt_action_plan_tbl: -> actionPlans
   practice_id": -> practiceId
   practice_name": -> practiceName
   how_better_action_item": -> planDescription  (cloudant ex: "We use a SmartCloud and review RTC as our virtual wall.  ")
-  cur_mat_lvl_score": ->
-  tar_mat_lvl_score": ->
+  cur_mat_lvl_score": -> ??
+  tar_mat_lvl_score": -> ??
   progress_summ": -> progressSum
   key_metric": -> keyMetric
   review_dt": -> reviewDate
