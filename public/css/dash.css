@@ -2,6 +2,38 @@
 	padding-top: 10px;
 }
 
+#teamscore-header {
+	display:inline-block;
+	width:30%;
+	visibility: hidden;
+	text-align: right;
+}
+
+.switchTZButton {
+	width: 50%;
+	height: 30px;
+	margin-left: 25%;
+	/*text-align: center;*/
+	font-size: 10.5pt;
+	font-style: normal;
+	background-color: white;
+	text-align: center;
+  border: 1px solid;
+}
+
+.teamscore-div {
+	width: 5%;
+	padding: 5px 0;
+	height: 100%;
+	border-radius: 8px;
+	font-size: 10.5pt;
+	font-style: normal;
+	background-color: black;
+	text-align: center;
+	color: white;
+	display: inline-block;
+}
+
 .agile-search-field {
 	-webkit-appearance: none;
 	-moz-appearance: none;
@@ -938,4 +970,16 @@ li #myteams {
 li #allTeams {
   width: 100%;
   text-align: center;
+}
+
+#levelTable {
+	display: block;
+	float: left;
+	width: 100%;
+}
+
+#teamscore-piechart {
+	width: 100%;
+	height: 0px;
+	display: inline-block;
 }

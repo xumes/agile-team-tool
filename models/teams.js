@@ -36,11 +36,8 @@ var team = {
   searchTeamWithName: function(name) {
     return new Promise(function(resolve, reject){
       var query = {};
-      console.log(name);
-      kname = name.replace(/\"|\'/g,'');
-      console.log(kname);
-      names = kname.split('\ ');
-      console.log(names);
+      rename = name.replace(/\"|\'/g,'');
+      names = rename.split('\ ');
       query['q'] = {};
       var s = '';
       _.each(names, function(queryname){
