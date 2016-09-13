@@ -150,6 +150,7 @@ jQuery(function($) {
       $($(this)).attr('data-state', 'open');
       $('#allTeams').attr('data-state', '');
       $('#nameSearchField').hide();
+      $('#nameSearchField').val('');
       hideAllContentAreaDivs();
       getMyTeams();
     }

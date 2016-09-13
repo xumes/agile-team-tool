@@ -27,8 +27,8 @@ module.exports = {
     iteration: 'ag_iterationinfo_',
     assessment: 'ag_mar_'
   },
-  environment: process.env.deploy || 'SIT',
+  environment: process.env.NODE_ENV || 'development',
   googleAnalyticsKey: process.env.googleAnalyticsKey || '',
   googleHost: 'maps.googleapis.com',
-  googleApiKey: 'AIzaSyCUZtDL57ZAjGRZtPVV2_eTIcH4MqsNLnY'
+  googleApiKey: process.env.googleAPIKey || 'AIzaSyCUZtDL57ZAjGRZtPVV2_eTIcH4MqsNLnY'
 };

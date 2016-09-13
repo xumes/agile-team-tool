@@ -396,8 +396,9 @@ function showDateYYYYMMDDTS(formatDate) {
 
 function showDateUTC(formatDate) {
   if (formatDate == null || formatDate == '' || formatDate == 'NaN') return 'Not available';
-  var utcTime = moment(formatDate).format('MMMM DD, YYYY, H:mm');
-  return utcTime + ' (UTC)';
+  //var utcTime = moment(formatDate).format('MMMM DD, YYYY, H:mm')format('MMM DD, YYYY, HH:mm (z);
+  var utcTime = moment.utc(formatDate).format('MMM DD, YYYY, HH:mm (z)');
+  return utcTime;
 }
 
 function showDateDDMMMYYYYTS(formatDate) {
