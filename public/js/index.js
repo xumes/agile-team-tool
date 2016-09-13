@@ -1025,6 +1025,7 @@ function loadDetails(elementId, setScrollPosition) {
 function teamLocationHandler(data) {
   var requestData = {};
   requestData.loc = data;
+  console.log(requestData);
   var req = $.ajax({
     type: 'POST',
     contentType: 'application/json',
@@ -1033,6 +1034,7 @@ function teamLocationHandler(data) {
   }).fail(function(e) {
     console.log(e);
   }).done(function(score) {
+    console.log(score);
     if (score.score != null) {
       showScorePieChart();
       piechartData = {};

@@ -49,7 +49,6 @@ function getGpsCoordinate(location) {
             reject(msg);
           }
           if (json.status != 'OK') {
-            console.log(json);
             msg.statusCode = 406;
             msg.message = 'cannot find matching gps coordinate';
             reject(msg);
@@ -242,9 +241,15 @@ var teamscore = {
             var site = {};
             site[location[i]] = timezones[i];
             if (i == 0) {
-              calData['mainSite'] = site;
+              if (calData['mainSite'] == 'UTCNaN') {
+                calData['mainSite'] = 'UTC-4';
+              } else {
+                calData['mainSite'] = site;
+              }
             } else {
-              calData['sites'].push(site);
+              if (calData['sites'] != 'UTCNaN') {
+                calData['sites'].push(site);
+              }
             }
           }
           var promiseArray = [];
