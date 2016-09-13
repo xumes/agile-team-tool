@@ -192,7 +192,7 @@ doc.type : 'matassessmtrslt'
 |assessedDate     | date which an Independent Assessor submits/completes their assessment | | ind_assessmt_dt |
 |docStatus       | | | doc_status | "" , "delete"
 |see below       | nested struct |  | assessmt_cmpnt_rslts     | see below
-|see below     | nested struct |  | assessmt_action_plan_tbl | see below
+|see below       | nested struct |  | assessmt_action_plan_tbl | see below
 |createDate     | JS Date Object UTC | |created_dt | "2016-04-12 08:58:50 EDT"
 |createdById    | string of userId | | created_user |
 |createdBy      | string of name or email | | created_user |
@@ -218,14 +218,14 @@ assessmt_cmpnt_rslts: -> componentResults
       principle_name: -> principleName
       practice_id: -> practiceId
       practice_name: -> practiceName
-      cur_mat_lvl_achieved: -> 
+      cur_mat_lvl_achieved: -> currentLevel
       cur_mat_lvl_score: -> currentScore
-      tar_mat_lvl_achieved: -> ??wat
+      tar_mat_lvl_achieved: -> targetLevel
       tar_mat_lvl_score: -> targetScore
-      ind_mat_lvl_achieved: -> ??wat
-      ind_target_mat_lvl_score: -> ??wat
-      how_better_action_item: -> ??
-      ind_assessor_cmnt:  -> ??
+      ind_mat_lvl_achieved: -> assessorLevel
+      ind_target_mat_lvl_score: -> assessorTarget
+      how_better_action_item: -> improveDescription
+      ind_assessor_cmnt:  -> assessorComment
     }]
 }]
 ```
@@ -236,18 +236,18 @@ assessmt_action_plan_tbl: -> actionPlans
 [{
   action_plan_entry_id": -> id : integer
   user_created": "Yes"/"No", -> isUserCreated : boolean
-  assessmt_cmpnt_name": -> assessmentComponentName
+  assessmt_cmpnt_name": -> componentName
   principle_id": -> principleId
   principle_name": -> principleName
   practice_id": -> practiceId
   practice_name": -> practiceName
-  how_better_action_item": -> planDescription  (cloudant ex: "We use a SmartCloud and review RTC as our virtual wall.  ")
-  cur_mat_lvl_score": -> ??
-  tar_mat_lvl_score": -> ??
+  how_better_action_item": -> improveDescription  (cloudant ex: "We use a SmartCloud and review RTC as our virtual wall.  ")
+  cur_mat_lvl_score": -> currentLevel
+  tar_mat_lvl_score": -> targetLevel
   progress_summ": -> progressSum
   key_metric": -> keyMetric
   review_dt": -> reviewDate
-  action_item_status": -> status
+  action_item_status": -> actionStatus
 }]
 ```
 
