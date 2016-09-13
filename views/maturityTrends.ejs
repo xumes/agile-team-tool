@@ -44,7 +44,7 @@
 <script type="text/javascript" src="js/dashUtils.js?v=<%=Math.random()%>"></script>
 
 
-<script type="text/javascript">    
+<script type="text/javascript">
   IBMCore.common.util.config.set({
     //disable the ibm profile button
     "masthead" : {
@@ -56,10 +56,10 @@
       marketplaceLink: {
           enabled: false
       },
-      megamenu: { 
+      megamenu: {
           enabled: false
       },
-      mobilemenu: { 
+      mobilemenu: {
           enabled: false
       },
       notifications: {
@@ -102,29 +102,27 @@ jQuery(function($) {
     if (urlParameters != undefined && urlParameters.id != undefined) {
       $.ajax({
         type : "GET",
-        url : "/api/assessment/trend?teamId=" + encodeURIComponent(urlParameters.id),
+        url : "/api/assessment/trend?teamId=" + encodeURIComponent(urlParameters.id) + "&docs=true",
         async: false
-      }).done(function(teamAssessments) { 
-        if (_.has(teamAssessments, "rows")) {
-          if (_.has(teamAssessments.rows, "doc"))
-            teamAssessments = _.pluck(teamAssessments.rows, 'doc');
-          else 
-            teamAssessments = _.pluck(teamAssessments.rows, 'value');
-
-        } else if (teamAssessments.length > 0) {
-          if (!_.isEmpty(teamAssessments[0].doc)) 
-            teamAssessments = _.pluck(teamAssessments, 'doc')
-          else 
-            teamAssessments = _.pluck(teamAssessments, 'value');
-
-        }
+      }).done(function(teamAssessments) {
+        //if (_.has(teamAssessments, "rows")) {
+        //  if (_.has(teamAssessments.rows, "doc"))
+        //    teamAssessments = _.pluck(teamAssessments.rows, 'doc');
+        //  else
+        //    teamAssessments = _.pluck(teamAssessments.rows, 'value');
+        //} else if (teamAssessments.length > 0) {
+        //  if (!_.isEmpty(teamAssessments[0].doc))
+        //    teamAssessments = _.pluck(teamAssessments, 'doc')
+        //  else
+        //    teamAssessments = _.pluck(teamAssessments, 'value');
+        //}
         plotAssessmentSeries(sortAssessments(teamAssessments));
       });
     }
   });
 });
 
-function plotAssessmentSeries(teamAssessments) {  
+function plotAssessmentSeries(teamAssessments) {
   //get the 5 latest submitted results
   var assessmentsToPlot = [];
   for (var i=0; i<teamAssessments.length && assessmentsToPlot.length <= 5; i++) {
@@ -132,16 +130,16 @@ function plotAssessmentSeries(teamAssessments) {
       assessmentsToPlot.push(teamAssessments[i]);
     }
   }
-  
+
   chartSeries = [];
   var chartData = new Object();
-  
+
   if (assessmentsToPlot.length > 0)
     $("#assessmentCharts").empty();
 
   for (i=assessmentsToPlot.length-1; i>-1; i--) {
     var results = assessmentsToPlot[i]["assessmt_cmpnt_rslts"];
-        
+
     for (var j=0; j<results.length; j++) {
       var found = false;
       var identifier = "";
@@ -154,14 +152,14 @@ function plotAssessmentSeries(teamAssessments) {
       } else if (results[j]["assessed_cmpnt_name"].toLowerCase().indexOf("delivery") > -1) {
         identifier = "devops";
       }
-      
+
       $.each(chartSeries, function(index, obj) {
         if (obj["prefixId"] == identifier) {
           found = true;
           chartData = obj;
           // assessment name to be shown as graph title
           chartData["title"] = results[j]["assessed_cmpnt_name"];
-              
+
         }
       });
       if (!found) {
@@ -171,7 +169,7 @@ function plotAssessmentSeries(teamAssessments) {
         hrDiv.setAttribute("class", "ibm-rule ibm-alternate ibm-gray-30");
         hrDiv.appendChild(document.createElement("hr"));
         $("#assessmentCharts").append(hrDiv);
-        
+
         chartData = new Object();
         // page element id that will render the graph data
         chartData["prefixId"] = identifier;
@@ -194,7 +192,7 @@ function plotAssessmentSeries(teamAssessments) {
       chartData["targetScore"].push(isNaN(parseFloat(results[j]["ovraltar_assessmt_score"])) ? 0 : parseFloat(results[j]["ovraltar_assessmt_score"]));
       chartData["currentScore"].push(isNaN(parseFloat(results[j]["ovralcur_assessmt_score"])) ? 0 : parseFloat(results[j]["ovralcur_assessmt_score"]));
       chartData["assessmentResult"].push(results[j]["assessed_cmpnt_tbl"]);
-      
+
     }
   }
   // plot the line graph of selected maturity assessments
@@ -236,7 +234,7 @@ function plotAssessmentSeries(teamAssessments) {
         tickInterval: 1,
         allowDecimals : false
       },
-      
+
       tooltip : {
         shared : true,
         //pointFormat : '<span style="color:{series.color}">{series.name}: <b>{point.y:,.1f}</b><br/>'
@@ -253,19 +251,19 @@ function plotAssessmentSeries(teamAssessments) {
           "fontSize" : "11px"
         }
       },
-      
+
       legend : {
         align : 'center',
         verticalAlign : 'bottom',
         layout : 'horizontal'
       },
 
-      series : 
-        [ 
+      series :
+        [
           {
             name : "Current",
             data : chartData["currentScore"],
-            point : { 
+            point : {
               // click event callback to render spider graph data of practices for the particular series point.
               events : {
                 click : function() {
@@ -276,7 +274,7 @@ function plotAssessmentSeries(teamAssessments) {
           }/*, {
             name : "Target overall",
             data : chartData["targetScore"],
-            point : { 
+            point : {
               // click event callback to render spider graph data of  practices for the particular series point.
               events : {
                 click : function() {
@@ -289,7 +287,7 @@ function plotAssessmentSeries(teamAssessments) {
         ]
     });
   });
-  
+
   // plot the spider graph of the last assessment in the series.
   for (i=0; i<chartSeries.length; i++) {
     var lastResultIndex = chartSeries[i]["assessmentResult"].length - 1;
@@ -305,16 +303,16 @@ function plotAssessment(index, chartData) {
   spiderData["targetScore"] = [];
   spiderData["currentScore"] = [];
   var practices = chartData["assessmentResult"][index];
-  
+
   for (var i=0; i<practices.length; i++) {
     spiderData["categories"].push(practices[i]["practice_name"]);
     spiderData["targetScore"].push(isNaN(parseFloat(practices[i]["tar_mat_lvl_score"])) ? 0 : parseFloat(practices[i]["tar_mat_lvl_score"]));
     spiderData["currentScore"].push(isNaN(parseFloat(practices[i]["cur_mat_lvl_score"])) ? 0 : parseFloat(practices[i]["cur_mat_lvl_score"]));
   }
-  
+
   if ($("#"+spiderData["prefixId"] + "_SpiderChart").highcharts() != null)
     $("#"+spiderData["prefixId"] + "_SpiderChart").highcharts().destroy();
-  
+
   $("#"+spiderData["prefixId"] + "_SpiderChart").highcharts({
     chart : {
       polar : true,
@@ -396,16 +394,16 @@ function plotAssessment(index, chartData) {
 function createChartSection(prefixId) {
   var mainDiv = document.createElement("div");
   mainDiv.setAttribute("class", "ibm-columns");
-  
+
   var colDiv = document.createElement("div");
   colDiv.setAttribute("class", "ibm-col-2-1");
-  
+
   var div = document.createElement("div");
   div.setAttribute("id", prefixId+"_Chart");
   div.setAttribute("style", "min-width: 460px; min-height: 310px; margin: 0 auto");
   colDiv.appendChild(div);
   mainDiv.appendChild(colDiv);
-  
+
   colDiv = document.createElement("div");
   colDiv.setAttribute("class", "ibm-col-2-1");
   div = document.createElement("div");
@@ -413,7 +411,7 @@ function createChartSection(prefixId) {
   div.setAttribute("style", "min-width: 460px; min-height: 310px; margin: 0 auto");
   colDiv.appendChild(div);
   mainDiv.appendChild(colDiv);
-  
+
   return mainDiv;
 }
 
@@ -429,7 +427,7 @@ function createChartSection(prefixId) {
           <li id="ibm-language" role="presentation"><span class="ibm-active" role="button" aria-disabled="true">English</span> <a href="http://www.ibm.com/us/en/" lang="en-US" role="button">English</a></li>
         </ul>
       </div>
-      
+
       <div id="ibm-universal-nav">
         <nav role="navigation" aria-label="IBM">
           <div id="ibm-home">
@@ -439,16 +437,16 @@ function createChartSection(prefixId) {
             <li><a href="http://www.ibm.com/sitemap/us/en/">Site map</a></li>
           </ul>
         </nav>
-    
+
         <div id="ibm-search-module" role="search" aria-labelledby="ibm-masthead">
           <form id="ibm-search-form" action="http://www.ibm.com/Search/" method="get">
             <p>
-              <label for="q">IBM</label> 
-              <input type="text" maxlength="100" value="" placeholder="Search" name="q" id="q" aria-label="Search" /> 
-              <input type="hidden" value="18" name="v" /> 
-              <input type="hidden" value="utf" name="en" /> 
-              <input type="hidden" value="en" name="lang" /> 
-              <input type="hidden" value="us" name="cc" /> 
+              <label for="q">IBM</label>
+              <input type="text" maxlength="100" value="" placeholder="Search" name="q" id="q" aria-label="Search" />
+              <input type="hidden" value="18" name="v" />
+              <input type="hidden" value="utf" name="en" />
+              <input type="hidden" value="en" name="lang" />
+              <input type="hidden" value="us" name="cc" />
               <input type="submit" id="ibm-search" class="ibm-btn-search" value="Submit" />
             </p>
           </form>
@@ -456,7 +454,7 @@ function createChartSection(prefixId) {
       </div>
     </div>
     <!-- MASTHEAD_END -->
-    
+
     <div id="ibm-content-wrapper">
       <header role="banner" aria-labelledby="ibm-pagetitle-h1">
         <div id="ibm-leadspace-head" class="ibm-alternate" style="height: 40px;">
@@ -473,15 +471,15 @@ function createChartSection(prefixId) {
           </div>
         </div>
         <!-- LEADSPACE_END -->
-        
+
         <!-- CONTENT_NAV_BEGIN -->
         <nav role="navigation" aria-labelledby="ibm-pagetitle-h1">
           <div id="ibm-content-nav">
-            
+
           </div>
         </nav>
         <!-- CONTENT_NAV_END -->
-      </header>    
+      </header>
 
       <main role="main" aria-labelledby="Team maturity assessment">
         <div id="ibm-pcon">
@@ -491,12 +489,12 @@ function createChartSection(prefixId) {
                 <div class="ibm-columns">
                   <div id="assessmentCharts"><p>No assessments found to display</p></div>
                 </div>
-              </div>  
+              </div>
             </div>
           </div>
         </div>
       </main>
-  
+
       <div id="ibm-related-content">
         <div id="ibm-merchandising-module">
           <!-- MTE will generate this -->
@@ -506,7 +504,7 @@ function createChartSection(prefixId) {
       </div>
     </div>
     <%- include ./footer.ejs %>
-    
+
   </div>
 </body>
 </html>
