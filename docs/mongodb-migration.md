@@ -110,15 +110,19 @@ use team name in string path to make the data readable. enforce no duplicate tea
 and update to a team name might be expensive if its high up in the tree.
 
 
+* _id is going to be a transformation of team name ```str.toLowerCase().replace(/[^a-z1-9]/g, ‘')```
+
+
 "type": "team"
 
 | Fields        | Details       | mongo ex    | cloudant field | cloudant value ex
 | ------------- |:-------------:|-------------|-------------|-------------
+| _id | transformed team name | ObjectId("agileteamtool") | n/a | n/a
 |cloudantId | string |  "ag_mar_12323"| doc._id | ag_mar_12323
-| docStatus | | | doc_status | "" , "delete"
-|path | string  | ",CIO,Agile Team," | * get the path from ag_ref_team_index * | under ag_ref_team_index.. parents: ["CIO", "Agile Team"]
+|docStatus | | | doc_status | "" , "delete"
+|path | string  | ",cio,agileteamtool," | * get the path from ag_ref_team_index * | under ag_ref_team_index.. parents: ["CIO", "Agile Team"]
 |members        | array of objects, copy over as is| 
-|type           | string | "", "squad", "domain", "tribe", "subDomain", "potato" | squadteam     | "Yes" or "No"
+|type           | map to a diff. string | "", "squad", "domain", "tribe", "subDomain", "potato" | squadteam     | "Yes" or "No"
 |description    | string |  | desc |
 |createDate     | JS Date Object UTC | |created_dt | "2016-04-12 08:58:50 EDT"
 |createdById    | string of userId | | created_user |
@@ -181,13 +185,12 @@ doc.type : 'matassessmtrslt'
 |type| | | team_proj_ops | "Operations" / "Project"
 |teamId | cloudantId of team doc (for first phase) |
 |version | string | | assessmt_version |
-| ? | | | team_proj_ops |
 | ? | map to a boolean | | team_dlvr_software | "Yes" / "No"
 |assessmentStatus | copy values as is | | assessmt_status | "Submitted" / "Draft"
 |?          | JS Date Object UTC| | self-assessmt_dt | 
 | | ? | | ind_assessor_id |
 | | ? | | ind_assessmt_status |
-| | ? | | ind_assessmt_dt |
+| | date which an Independent Assessor submits/completes their assessment | | ind_assessmt_dt |
 | docStatus | | | doc_status | "" , "delete"
 | see below | nested struct |  | assessmt_cmpnt_rslts     | see below
 | see below | nested struct |  | assessmt_action_plan_tbl | see below
