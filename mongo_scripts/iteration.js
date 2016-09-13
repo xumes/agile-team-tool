@@ -1,43 +1,43 @@
 "use strict";
 var _          = require('underscore');
-var cloudantDb = require('./allProdDocs');
+var cloudantDb = require('./data');
 var moment     = require('moment');
+var MongoClient = require('mongodb').MongoClient
+var assert     = require('assert');
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 var cloudantIterations = _.filter(cloudantDb.rows, function(row){ return row.doc.type === 'iterationinfo'; });
 var cloudantIterations = _.pluck(cloudantIterations, 'doc');
 
-
 var stringToUtcFormat = function(string){
-  if(_.isEmpty(string))
+  if(_.isEmpty(string)||!moment(string).isValid())
     return undefined;
-
   if(string.indexOf('UTC') > 0)
-    return moment.utc(string).format();
+    return new Date(moment.utc(string).format());
   else if(string.indexOf('EST') > 0 || string.indexOf('EDT') > 0)
-    return moment(string).utc().format();
+    return new Date(moment(string).utc().format());
   else if(string.indexOf('adm') > 0) //convert to utc for this case
-    return moment(string).utc().format();
+    return new Date(moment(string).utc().format());
   else if(string.indexOf('UTC') < 0 && string.indexOf('EST') < 0 && string.indexOf('EDT') < 0) //homer said assume UTC
-    return moment.utc(string).format() === 'Invalid date' ? undefined : moment.utc(string).format()
-
+    return moment.utc(string).format() === 'Invalid date' ? undefined : new Date(moment.utc(string).format());
 }
 
 var mongoIterations = [];
 _.each(cloudantIterations, function(doc) {
-  
+    
   //set empty string values to be undefined
   doc = _.mapObject(doc, function(val){ return _.isEmpty(val) ? undefined : val; });
   
   var mongoDoc = {
     'cloudantId' : doc._id,
-    'createDate': new Date(stringToUtcFormat(doc.created_dt)),
+    'createDate': stringToUtcFormat(doc.created_dt),
     'createdById': doc.created_user,
     'createdBy': doc.created_user,
-    'updateDate': new Date(stringToUtcFormat(doc.last_updt_dt)),
+    'updateDate': stringToUtcFormat(doc.last_updt_dt),
     'updatedById': doc.last_updt_user,
     'updatedBy': doc.last_updt_user,
-    'startDate': new Date(stringToUtcFormat(doc.iteration_start_dt)),
-    'endDate': new Date(stringToUtcFormat(doc.iteration_end_dt)),
+    'startDate': stringToUtcFormat(doc.iteration_start_dt),
+    'endDate': stringToUtcFormat(doc.iteration_end_dt),
     'name' : doc.iteration_name,
     'teamId' : doc.team_id,
     'docStatus' : doc.doc_status,
@@ -59,3 +59,19 @@ _.each(cloudantIterations, function(doc) {
 });
 
 
+var creds = require('./creds')
+// Use connect method to connect to the server
+MongoClient.connect(creds.url, function(err, db) {
+  
+  assert.equal(null, err);
+  console.log("Connected successfully to server");
+  console.log(db)
+  
+  db.collection('iterations').insertMany(mongoIterations, function(err, r) {
+        assert.equal(null, err);
+        console.log(r)
+        db.close();
+        process.exit();
+  });
+  
+});

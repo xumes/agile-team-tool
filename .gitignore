@@ -1,4 +1,5 @@
 node_modules/
 coverage/
 .idea/
-mongo_scripts/allProdDocs.json
+mongo_scripts/data.json
+mongo_scripts/creds.json
