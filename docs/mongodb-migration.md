@@ -110,8 +110,7 @@ use team name in string path to make the data readable. enforce no duplicate tea
 and update to a team name might be expensive if its high up in the tree.
 
 
-* _id is going to be a transformation of team name ```str.toLowerCase().replace(/[^a-z1-9]/g, ‘')```
-
+* _id is going to be a transformation of team name ```str.toLowerCase().replace(/[^a-z1-9]/g, ‘')```. its going to be the value that is used in path 
 
 "type": "team"
 
@@ -181,19 +180,19 @@ doc.type : 'matassessmtrslt'
 
 | Fields        | Details       | mongo ex    | cloudant field | cloudant value ex
 | ------------- |:-------------:|-------------|-------------|-------------
-|cloudantId | string; "ag_mar_12323 | doc._id | ag_mar_12323
-|type| | | team_proj_ops | "Operations" / "Project"
-|teamId | cloudantId of team doc (for first phase) |
-|version | string | | assessmt_version |
-| ? | map to a boolean | | team_dlvr_software | "Yes" / "No"
+|cloudantId       | string; "ag_mar_12323 | doc._id | ag_mar_12323
+|teamId           | cloudantId of team doc (for first phase) |
+|type             | | | team_proj_ops | "Operations" / "Project"
+|version          | string | | assessmt_version |
+|deliversSoftware | map to a boolean | | team_dlvr_software | "Yes" / "No"
 |assessmentStatus | copy values as is | | assessmt_status | "Submitted" / "Draft"
-|?          | JS Date Object UTC| | self-assessmt_dt | 
-| | ? | | ind_assessor_id |
-| | ? | | ind_assessmt_status |
-| | date which an Independent Assessor submits/completes their assessment | | ind_assessmt_dt |
-| docStatus | | | doc_status | "" , "delete"
-| see below | nested struct |  | assessmt_cmpnt_rslts     | see below
-| see below | nested struct |  | assessmt_action_plan_tbl | see below
+|submittedDate    | JS Date Object UTC| | self-assessmt_dt | 
+|assessorId       | person who reviews the assessment | | ind_assessor_id |
+|assessorStatus   | ? | | ind_assessmt_status |
+|assessedDate     | date which an Independent Assessor submits/completes their assessment | | ind_assessmt_dt |
+|docStatus       | | | doc_status | "" , "delete"
+|see below       | nested struct |  | assessmt_cmpnt_rslts     | see below
+|see below     | nested struct |  | assessmt_action_plan_tbl | see below
 |createDate     | JS Date Object UTC | |created_dt | "2016-04-12 08:58:50 EDT"
 |createdById    | string of userId | | created_user |
 |createdBy      | string of name or email | | created_user |
