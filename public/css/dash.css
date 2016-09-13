@@ -2,6 +2,13 @@
 	padding-top: 10px;
 }
 
+#teamscore-header {
+	display:inline-block;
+	width:30%;
+	visibility: hidden;
+	text-align: right;
+}
+
 .switchTZButton {
 	width: 50%;
 	height: 30px;
@@ -10,7 +17,21 @@
 	font-size: 10.5pt;
 	font-style: normal;
 	background-color: white;
+	text-align: center;
   border: 1px solid;
+}
+
+.teamscore-div {
+	width: 5%;
+	padding: 5px 0;
+	height: 100%;
+	border-radius: 8px;
+	font-size: 10.5pt;
+	font-style: normal;
+	background-color: black;
+	text-align: center;
+	color: white;
+	display: inline-block;
 }
 
 .agile-search-field {

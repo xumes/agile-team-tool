@@ -4,6 +4,9 @@ var defSelIndex = '';
 var squadList = [];
 var loadedParentId = '';
 var teamLocation = [];
+var piechartData = {};
+var userAccess = ['Yanliang.Gu1@ibm.com','leip@us.ibm.com','hourihan@us.ibm.com','john.elden.revano@ibm.com'];
+var colorArray = ['#1F6394','#2A88CC','#3693D6','#2B8DD3','#7EDFD1','#30C0AB','#248F7F','#7EDFD1','#2985C7','#1F6394','#2A88CC','#3693D6','#2B8DD3','#7EDFD1','#30C0AB','#248F7F','#7EDFD1','#2985C7'];
 var tempIterationData = [{
   'totalPoints': 0,
   'totalStories': 0,
@@ -204,8 +207,14 @@ jQuery(function($) {
   $('#switchBtn').click(function(){
     if ($('#switchBtn').html() == 'Switch to Time Zone Analysis') {
       $('#switchBtn').html('Switch to Location Analysis');
+      google.charts.setOnLoadCallback(function(){
+        drawChart(piechartData, false);
+      });
     } else {
       $('#switchBtn').html('Switch to Time Zone Analysis');
+      google.charts.setOnLoadCallback(function(){
+        drawChart(piechartData, true);
+      });
     }
   });
 });
@@ -993,8 +1002,10 @@ function loadDetails(elementId, setScrollPosition) {
             var manager = teamLocation.splice(managerIndex, 1);
             teamLocation.unshift(manager.toString());
           }
-          if (isLeafTeam && userInfo.email == 'Yanliang.Gu1@ibm.com') {
-            teamLocationHandler(teamLocation);
+          if (isLeafTeam) {
+            if (findUserAccess(userInfo.email)) {
+              teamLocationHandler(teamLocation);
+            }
           }
         }
       });
@@ -1021,17 +1032,20 @@ function teamLocationHandler(data) {
   }).fail(function(e) {
     console.log(e);
   }).done(function(score) {
-    showScorePieChart();
-    console.log(score);
-    $('#teamscore-header').append(': ' + score.score + '/100');
-    google.charts.setOnLoadCallback(function(){
-      drawChart(score.analyze);
-    });
+    if (score.score != null) {
+      showScorePieChart();
+      piechartData = {};
+      piechartData = score.analyze;
+      $('#teamscoreDiv').html(score.score);
+      google.charts.setOnLoadCallback(function(){
+        drawChart(score.analyze, true);
+      });
+    }
   });
   requests.push(req);
 }
 
-function drawChart(data) {
+function drawChart(data, isTimezone) {
   var siteData = [['Site','#']];
   var sites = Object.keys(data.sites);
   var timeData = [['Timezone','#']];
@@ -1044,16 +1058,41 @@ function drawChart(data) {
   }
   var srdata = google.visualization.arrayToDataTable(siteData);
   var trdata = google.visualization.arrayToDataTable(timeData);
-  var leftmargin = $('#teamscore-piechart').width() * 0.1;
-  var topmargin = $('#teamscore-piechart').width() * 0.1;
+  var leftmargin = $('#teamscore-piechart').width() * 0.05;
+  var topmargin = $('#teamscore-piechart').width() * 0.05;
+  var sliceColor = [];
+  if (isTimezone) {
+    title = 'Time Zone Analysis';
+    for (var i = 0; i < siteData.length; i++) {
+      var color = {'color':null};
+      color['color'] = colorArray[i];
+      sliceColor.push(color);
+    }
+  } else {
+    title = 'Location Analysis';
+    for (var i = 0; i < timeData.length; i++) {
+      var color = {'color':null};
+      color['color'] = colorArray[i];
+      sliceColor.push(color);
+    }
+  }
   var options = {
+    title: title,
+    pieSliceText: 'none',
     height: 350,
     pieHole: 0.4,
-    chartArea: {left:leftmargin,top:topmargin,width:'80%',height:'70%'},
-    legend: 'none'
+    chartArea: {left:leftmargin,top:topmargin,width:'90%',height:'90%'},
+    legend: {
+      textStyle: {
+        fontName: 'normal',
+        fontSize: '10.5'
+      },
+      position: 'labeled'
+    },
+    slices: sliceColor
   };
 
-  if (isLocation) {
+  if (isTimezone) {
     var siteChart = new google.visualization.PieChart(document.getElementById('teamscore-piechart'));
     siteChart.draw(srdata, options);
   } else {
@@ -1066,17 +1105,32 @@ function drawChart(data) {
 }
 
 function showScorePieChart() {
+  $('#teamscoreDiv').show();
   $('#teamscore-header').css('visibility','visible');
   $('#levelTable').css('width','50%');
   $('#teamscore-piechart').css('height','70%');
   $('#teamscore-piechart').show();
+  $('#switchBtn').show();
 }
 
 function hideScorePieChart() {
+  $('#teamscoreDiv').hide();
   $('#teamscore-header').css('visibility','hidden');
+  $('#switchBtn').html('Switch to Time Zone Analysis');
   $('#levelTable').css('width','100%');
   $('#teamscore-piechart').css('height','0px');
   $('#teamscore-piechart').hide();
+  $('#switchBtn').hide();
+}
+
+function findUserAccess(email) {
+  var access = false;
+  _.find(userAccess, function(user){
+    if (user == email) {
+      access = true;
+    }
+  });
+  return access;
 }
 
 function openSelectedTeamTree(setScrollPosition) {

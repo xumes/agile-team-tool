@@ -215,7 +215,8 @@
                     </div>
                     <div>
                       <h2 class="ibm-bold ibm-h4" style="display:inline-block; width:50%; float:left">Team Information</h2>
-                      <h2 id="teamscore-header" class="ibm-bold ibm-h4" style="display:inline-block; width:50%; visibility: hidden; text-align: center">Team Colocation Score</h2>
+                      <h2 id="teamscore-header" class="ibm-bold ibm-h4">Team Colocation Score (?)</h2>
+                      <div class="teamscore-div" id="teamscoreDiv" hidden="true"></div>
                     </div>
                     <div class="ibm-rule ibm-alternate-1">
                       <hr>
@@ -232,26 +233,29 @@
                       </table>
                       <div style="display:inline-block; width: 50%">
                         <div id="teamscore-piechart" hidden=true></div>
-                        <button type='button' class='switchTZButton' id='switchBtn'>Switch to Time Zone Analysis</button>
+                        <button type='button' class='switchTZButton' id='switchBtn' hidden="true">Switch to Time Zone Analysis</button>
                       </div>
                     </div>
                     <br />
-                    <h2 class="ibm-bold ibm-h4">Team Members</h2>
-                    <div class="ibm-rule ibm-alternate-1">
-                      <hr>
+                    <div>
+                      <br />
+                      <h2 class="ibm-bold ibm-h4">Team Members</h2>
+                      <div class="ibm-rule ibm-alternate-1">
+                        <hr>
+                      </div>
+                      <table class="ibm-data-table" id="memberTable" summary="__REPLACE_ME__">
+                        <thead>
+                          <tr>
+                            <th scope="col" width="30%">Name</th>
+                            <th scope="col" width="10%">Allocation</th>
+                            <th scope="col" width="30%">Location</th>
+                            <th scope="col" width="30%">Role</th>
+                          </tr>
+                        </thead>
+                        <tbody id="membersList">
+                        </tbody>
+                      </table>
                     </div>
-                    <table class="ibm-data-table" id="memberTable" summary="__REPLACE_ME__">
-                      <thead>
-                        <tr>
-                          <th scope="col" width="30%">Name</th>
-                          <th scope="col" width="10%">Allocation</th>
-                          <th scope="col" width="30%">Location</th>
-                          <th scope="col" width="30%">Role</th>
-                        </tr>
-                      </thead>
-                      <tbody id="membersList">
-                      </tbody>
-                    </table>
                   </div>
                 </div>
               </div>
