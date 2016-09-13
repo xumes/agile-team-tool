@@ -330,6 +330,7 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj, unit
       verticalAlign: 'bottom',
       align: 'center',
       y: 12,
+      x: 32,
       style: {
         fontSize: '12px',
         color: '#FFA500',
@@ -903,6 +904,7 @@ function loadChartPartialSeries(id, title, type, categories, yAxisLabel, xAxisLa
       verticalAlign: 'bottom',
       align: 'center',
       y: 15,
+      x: 30,
       style: {
         fontSize: '12px',
         color: '#FFA500',
@@ -1003,6 +1005,7 @@ function loadDeploymentsChartParent(id, title, type, categories, yAxisLabel, xAx
       verticalAlign: 'bottom',
       align: 'center',
       y: 15,
+      x: 30,
       style: {
         fontSize: '12px',
         color: '#FFA500',
@@ -1129,6 +1132,7 @@ function loadSatisfactionChartParent(id, title, type, categories, yAxisLabel, xA
       verticalAlign: 'bottom',
       align: 'center',
       y: 15,
+      x: 30,
       style: {
         fontSize: '12px',
         color: '#FFA500',
