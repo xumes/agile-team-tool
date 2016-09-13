@@ -215,7 +215,7 @@
                     </div>
                     <div>
                       <h2 class="ibm-bold ibm-h4" style="display:inline-block; width:50%; float:left">Team Information</h2>
-                      <h2 id="teamscore-header" class="ibm-bold ibm-h4" style="display:inline-block; width:50%; visibility: hidden">Team Colocation Score</h2>
+                      <h2 id="teamscore-header" class="ibm-bold ibm-h4" style="display:inline-block; width:50%; visibility: hidden; text-align: center">Team Colocation Score</h2>
                     </div>
                     <div class="ibm-rule ibm-alternate-1">
                       <hr>
@@ -230,7 +230,10 @@
                         <tbody id="levelDetail">
                         </tbody>
                       </table>
-                      <div id="teamscore-piechart" hidden=true></div>
+                      <div style="display:inline-block; width: 50%">
+                        <div id="teamscore-piechart" hidden=true></div>
+                        <button type='button' class='switchTZButton' id='switchBtn'>Switch to Time Zone Analysis</button>
+                      </div>
                     </div>
                     <br />
                     <h2 class="ibm-bold ibm-h4">Team Members</h2>

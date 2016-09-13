@@ -200,6 +200,14 @@ jQuery(function($) {
       searchTeams(inputText);
     }
   });
+
+  $('#switchBtn').click(function(){
+    if ($('#switchBtn').html() == 'Switch to Time Zone Analysis') {
+      $('#switchBtn').html('Switch to Location Analysis');
+    } else {
+      $('#switchBtn').html('Switch to Time Zone Analysis');
+    }
+  });
 });
 
 //this function will cancel ajax calls to prevent things from executing
@@ -1015,6 +1023,7 @@ function teamLocationHandler(data) {
   }).done(function(score) {
     showScorePieChart();
     console.log(score);
+    $('#teamscore-header').append(': ' + score.score + '/100');
     google.charts.setOnLoadCallback(function(){
       drawChart(score.analyze);
     });
@@ -1035,19 +1044,22 @@ function drawChart(data) {
   }
   var srdata = google.visualization.arrayToDataTable(siteData);
   var trdata = google.visualization.arrayToDataTable(timeData);
-  var options1 = {
-    title: 'Site Analysis',
+  var leftmargin = $('#teamscore-piechart').width() * 0.1;
+  var topmargin = $('#teamscore-piechart').width() * 0.1;
+  var options = {
+    height: 350,
     pieHole: 0.4,
-    fontName: 'Ubuntu'
-  };
-  var options2 = {
-    title: 'Timezone Analysis',
-    pieHole: 0.4,
-    fontName: 'Ubuntu'
+    chartArea: {left:leftmargin,top:topmargin,width:'80%',height:'70%'},
+    legend: 'none'
   };
 
-  var siteChart = new google.visualization.PieChart(document.getElementById('teamscore-piechart'));
-  siteChart.draw(srdata, options1);
+  if (isLocation) {
+    var siteChart = new google.visualization.PieChart(document.getElementById('teamscore-piechart'));
+    siteChart.draw(srdata, options);
+  } else {
+    var siteChart = new google.visualization.PieChart(document.getElementById('teamscore-piechart'));
+    siteChart.draw(trdata, options);
+  }
 
   // var timeChart = new google.visualization.PieChart(document.getElementById('timezoneDonutchart'));
   // timeChart.draw(trdata, options2);
@@ -1056,7 +1068,7 @@ function drawChart(data) {
 function showScorePieChart() {
   $('#teamscore-header').css('visibility','visible');
   $('#levelTable').css('width','50%');
-  $('#teamscore-piechart').css('height','400px');
+  $('#teamscore-piechart').css('height','70%');
   $('#teamscore-piechart').show();
 }
 
