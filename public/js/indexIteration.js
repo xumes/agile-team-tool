@@ -902,7 +902,7 @@ function loadChartPartialSeries(id, title, type, categories, yAxisLabel, xAxisLa
       text: '---Partial month',
       verticalAlign: 'bottom',
       align: 'center',
-      y: 12,
+      y: 15,
       style: {
         fontSize: '12px',
         color: '#FFA500',
@@ -1002,7 +1002,7 @@ function loadDeploymentsChartParent(id, title, type, categories, yAxisLabel, xAx
       text: '---Partial month',
       verticalAlign: 'bottom',
       align: 'center',
-      y: 12,
+      y: 15,
       style: {
         fontSize: '12px',
         color: '#FFA500',
@@ -1128,7 +1128,7 @@ function loadSatisfactionChartParent(id, title, type, categories, yAxisLabel, xA
       text: '---Partial month',
       verticalAlign: 'bottom',
       align: 'center',
-      y: 12,
+      y: 15,
       style: {
         fontSize: '12px',
         color: '#FFA500',
