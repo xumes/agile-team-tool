@@ -1065,14 +1065,14 @@ function drawChart(data, isTimezone) {
   var topmargin = $('#teamscore-piechart').width() * 0.05;
   var sliceColor = [];
   if (isTimezone) {
-    title = 'Time Zone Analysis';
+    title = 'Location Analysis';
     for (var i = 0; i < siteData.length; i++) {
       var color = {'color':null};
       color['color'] = colorArray[i];
       sliceColor.push(color);
     }
   } else {
-    title = 'Location Analysis';
+    title = 'Time Zone Analysis';
     for (var i = 0; i < timeData.length; i++) {
       var color = {'color':null};
       color['color'] = colorArray[i];
