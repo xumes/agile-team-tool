@@ -367,27 +367,6 @@ function performChartRefresh(teamId, teamName) {
   getSnapshot(teamId, teamName);
 }
 
-/**
- * Redraw charts to handle sizing of graphs in collapsable section display.
- *
- * @param section - collapsable section id.
- */
-function redrawCharts(section) {
-	console.log('JEAN_HERE: 1');
-	$(Highcharts.charts).each(function(i,chart) {
-		console.log('JEAN_HERE: 2');
-		if (chart == null) return;
-
-		if ($("#" + section + " #" + $(chart.container).attr("id")).length > 0) {
-			var height = chart.renderTo.clientHeight;
-			console.log('JEAN_HERE: height: '+ height);
-	    var width = chart.renderTo.clientWidth;
-			console.log('JEAN_HERE: width: '+width);
-	    chart.setSize(width, height);
-		}
-  });
-}
-
 function removeHighlightParents(treeLinkId) {
   if (treeLinkId != null) {
     //console.log($("#"+jq(treeLinkId)).children("a.agile-team-link")[0]);
@@ -946,10 +925,6 @@ function loadDetails(elementId, setScrollPosition) {
             getTeamIterations(team['_id'], teamIterationListHander, [team['_id']]);
             getTeamAssessments(team['_id'], true, teamAssessmentListHander, [team['_id']]);
 
-            //realign the charts
-						console.log('JEAN_HERE');
-						redrawCharts("iterationSection");
-            redrawCharts("assessmentSection");
             //this is done to display back the 2 other chart groups as 1st batch of rollup will only show velocity and throughput
             //$("#chartgrp2").show();
             //$("#chartgrp3").show();
