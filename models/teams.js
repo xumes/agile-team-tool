@@ -8,9 +8,11 @@ var util = require('../helpers/util');
 var iterationModels = require('./iteration');
 var assessmentModels = require('./assessment');
 var rules = require('./validate_rules/teams');
+var memberRules = require('./validate_rules/teamMembers');
 var users = require('./users');
 var teamIndex = require('./index/teamIndex');
 var teamDocRules = rules.teamDocRules;
+var teamMemberRules = rules.teamMemberRules;
 var isAllowedUser = false;
 var msg;
 
@@ -1200,7 +1202,75 @@ var team = {
           });
       }
     });
+  },
+
+  modifyTeamMembers: function(teamId, userId, members) {
+    return new Promise(function(resolve, reject){
+      /**
+       * Reformat document to update/delete document structure for BULK operation
+       *
+       * @param teamId - team id to modify
+       * @param userId - user id of the one who is doing the action
+       * @param members - array of member user
+       * @returns - modified tem document
+       */
+      var errorLists = {};
+      errorLists['error'] = {};
+      if(_.isEmpty(teamId)){
+        errorLists['error']['teamId'] = ['Team ID is required'];
+        infoLogs(errorLists);
+        reject(errorLists);
+      }
+      if(_.isEmpty(userId)){
+        errorLists['error']['userId'] = ['User ID is required'];
+        infoLogs(errorLists);
+        reject(errorLists); 
+      }
+      if(_.isEmpty(members)){
+        errorLists['error']['members'] = ['Member lists is required'];
+        infoLogs(errorLists);
+        reject(errorLists); 
+      }else{
+        if(!_.isArray(members)){
+          errorLists['error']['members'] = ['Invalid member lists'];
+          infoLogs(errorLists);
+          reject(errorLists); 
+        }else{
+          _.each(members, function(v,i,l){
+            var mLists = validate(v, teamMemberRules);
+            if(mLists){
+              errorLists['error'] = mLists;
+              infoLogs(errorLists);
+              reject(errorLists);
+            }
+          });
+        }
+      }
+      // all passed, proceed with saving
+      team.getTeam(teamId)
+      .then(function(teamDetails){
+        var isMember = _.findWhere(teamDetails['members'], { id : userId });
+        if(_.isEmpty(isMember)){
+          errorLists['error']['members'] = ['User is not authorized to edit team members'];
+          infoLogs(errorLists);
+          reject(errorLists);
+        }
+      })
+      .then(function(teamDetails){
+        teamDetails['members'] = members;
+        teamDetails['last_updt_user'] = userId;
+        teamDetails['last_updt_dt'] = util.getServerTime();
+        return common.updateRecord(teamDetails);
+      })
+      .then(function(savingResult){
+        resolve(savingResult);
+      })
+      .catch(function(err){
+        reject(err);
+      })
+    });
   }
+
 };
 
 var formattedDocuments = function(doc, action) {
