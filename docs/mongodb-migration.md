@@ -45,16 +45,16 @@ I think these doc types are not needed
 |updatedBy| string of name or email | last_updt_user |
 |startDate| JS Date Object UTC|iteration_start_dt | "01/15/2016"
 |endDate| JS Date Object UTC|iteration_end_dt | "01/16/2016"
-|memberCount| integer | team_mbr_cnt |
-|committedStories| integer | nbr_committed_stories |
-|deliveredStories| integer | nbr_stories_dlvrd |
-|commitedStoryPoints| integer | nbr_committed_story_pts |
-|storyPointsDelivered | integer | nbr_story_pts_dlvrd |
+|memberCount| number | team_mbr_cnt |
+|committedStories| number | nbr_committed_stories |
+|deliveredStories| number | nbr_stories_dlvrd |
+|commitedStoryPoints| number | nbr_committed_story_pts |
+|storyPointsDelivered | number | nbr_story_pts_dlvrd |
 |locationScore | used for pizza chart i think ? | fte_cnt | 0.0 or 0.5 
-|deployments | integer | nbr_dplymnts | "" or 1
-|defects | integer | nbr_defects | "" or 2
-|clientSatisfaction| integer | client_sat | 1.0
-|teamSatisfaction| integer | team_sat | 4
+|deployments | number | nbr_dplymnts | "" or 1
+|defects | number | nbr_defects | "" or 2
+|clientSatisfaction| number | client_sat | 1.0
+|teamSatisfaction| number | team_sat | 4
 |comment| string | iteration_comments |
 |memberChanged| map to a boolean | team_mbr_change | "No" or "Yes"
 
@@ -234,7 +234,7 @@ assessmt_cmpnt_rslts: -> componentResults
 ```
 assessmt_action_plan_tbl: -> actionPlans
 [{
-  action_plan_entry_id": -> id : integer
+  action_plan_entry_id": -> id : number
   user_created": "Yes"/"No", -> isUserCreated : boolean
   assessmt_cmpnt_name": -> componentName
   principle_id": -> principleId
