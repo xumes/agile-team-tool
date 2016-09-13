@@ -7,6 +7,7 @@
 <script src="//code.highcharts.com/highcharts.js"></script>
 <script src="//code.highcharts.com/highcharts-more.js"></script>
 <script src="//code.highcharts.com/modules/no-data-to-display.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <script type="text/javascript" src="js/index.js?v=<%=Math.random()%>"></script>
 <script type="text/javascript" src="js/indexIteration.js?v=<%=Math.random()%>"></script>
@@ -212,30 +213,25 @@
                         <div id="assessmentCharts"></div>
                       </div>
                     </div>
-
-                    <h2 class="ibm-bold ibm-h4">Team Information</h2>
+                    <div>
+                      <h2 class="ibm-bold ibm-h4" style="display:inline-block; width:50%; float:left">Team Information</h2>
+                      <h2 id="teamscore-header" class="ibm-bold ibm-h4" style="display:inline-block; width:50%; visibility: hidden">Team Colocation Score</h2>
+                    </div>
                     <div class="ibm-rule ibm-alternate-1">
                       <hr>
                     </div>
-                    <table class="ibm-data-table" id="levelTable" summary="__REPLACE_ME__">
-                      <thead class="ibm-access">
-                        <tr>
-                          <th scope="col" colspan="2">Team Information</th>
-                        </tr>
-                      </thead>
-                      <tbody id="levelDetail">
-                      </tbody>
-                    </table>
-                    <table class="ibm-data-table" id="piechartTable" summary="__REPLACE_ME__">
-                      <thead class="ibm-access">
-                        <tr>
-                          <th scope="col" colspan="2">Team Information</th>
-                        </tr>
-                      </thead>
-                      <tbody id="piechartDetail">
-                        <h2>Pie Chart</h2>
-                      </tbody>
-                    </table>
+                    <div>
+                      <table class="ibm-data-table" id="levelTable" summary="__REPLACE_ME__">
+                        <thead class="ibm-access">
+                          <tr>
+                            <th scope="col" colspan="2">Team Information</th>
+                          </tr>
+                        </thead>
+                        <tbody id="levelDetail">
+                        </tbody>
+                      </table>
+                      <div id="teamscore-piechart" hidden=true></div>
+                    </div>
                     <br />
                     <h2 class="ibm-bold ibm-h4">Team Members</h2>
                     <div class="ibm-rule ibm-alternate-1">

@@ -118,6 +118,8 @@ var tempSquadScore = {
   'teamsLt5': 0
 };
 
+google.charts.load('current', {packages:['corechart']});
+
 jQuery.expr[':'].Contains = function(a, i, m) {
   return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
 };
@@ -960,6 +962,7 @@ function loadDetails(elementId, setScrollPosition) {
           $('#membersList').empty();
           teamLocation = [];
           managerIndex = 0;
+          hideScorePieChart();
           if (team.members != undefined && team.members.length > 0) {
             var members = sortTeamMembersByName(team.members);
             for (var j = 0; j < members.length; j++) {
@@ -982,7 +985,9 @@ function loadDetails(elementId, setScrollPosition) {
             var manager = teamLocation.splice(managerIndex, 1);
             teamLocation.unshift(manager.toString());
           }
-          teamLocationHandler(teamLocation);
+          if (isLeafTeam && userInfo.email == 'Yanliang.Gu1@ibm.com') {
+            teamLocationHandler(teamLocation);
+          }
         }
       });
       requests.push(req);
@@ -1008,14 +1013,58 @@ function teamLocationHandler(data) {
   }).fail(function(e) {
     console.log(e);
   }).done(function(score) {
+    showScorePieChart();
     console.log(score);
+    google.charts.setOnLoadCallback(function(){
+      drawChart(score.analyze);
+    });
   });
   requests.push(req);
 }
 
-function timezoneHandler(data) {
-  var requestsData = {};
+function drawChart(data) {
+  var siteData = [['Site','#']];
+  var sites = Object.keys(data.sites);
+  var timeData = [['Timezone','#']];
+  var time =  Object.keys(data.timezone);
+  for (var i = 0; i < sites.length; i++) {
+    siteData.push([sites[i],data.sites[sites[i]]]);
+  }
+  for (var i = 0; i < time.length; i++) {
+    timeData.push([time[i],data.timezone[time[i]]]);
+  }
+  var srdata = google.visualization.arrayToDataTable(siteData);
+  var trdata = google.visualization.arrayToDataTable(timeData);
+  var options1 = {
+    title: 'Site Analysis',
+    pieHole: 0.4,
+    fontName: 'Ubuntu'
+  };
+  var options2 = {
+    title: 'Timezone Analysis',
+    pieHole: 0.4,
+    fontName: 'Ubuntu'
+  };
 
+  var siteChart = new google.visualization.PieChart(document.getElementById('teamscore-piechart'));
+  siteChart.draw(srdata, options1);
+
+  // var timeChart = new google.visualization.PieChart(document.getElementById('timezoneDonutchart'));
+  // timeChart.draw(trdata, options2);
+}
+
+function showScorePieChart() {
+  $('#teamscore-header').css('visibility','visible');
+  $('#levelTable').css('width','50%');
+  $('#teamscore-piechart').css('height','400px');
+  $('#teamscore-piechart').show();
+}
+
+function hideScorePieChart() {
+  $('#teamscore-header').css('visibility','hidden');
+  $('#levelTable').css('width','100%');
+  $('#teamscore-piechart').css('height','0px');
+  $('#teamscore-piechart').hide();
 }
 
 function openSelectedTeamTree(setScrollPosition) {

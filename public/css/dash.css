@@ -940,8 +940,14 @@ li #allTeams {
   text-align: center;
 }
 
-#levelTable, #piechartTable {
+#levelTable {
 	display: block;
 	float: left;
-	width: 46%;
+	width: 100%;
+}
+
+#teamscore-piechart {
+	width: 50%;
+	height: 0px;
+	display: inline-block;
 }

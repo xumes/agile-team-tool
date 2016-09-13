@@ -88,12 +88,119 @@ function getTimeZ(coordinate) {
   });
 };
 
-var teamscore = {
+function calculateScore(data) {
+  return new Promise(function(resolve, reject){
+    var validateResult = validate(data, teamDataConstrains);
+    if (validateResult) {
+      msg.statusCode = 406;
+      msg.message = validateResult;
+      reject (msg);
+    } else {
+      var sitesCount = {};
+      var sitesTime = {};
+      var mainSiteKey = Object.keys(data.mainSite)[0];
+      var mainSiteValue = (data.mainSite[mainSiteKey]).substring(3,5);
+      for (var i = 0; i < data.sites.length; i++) {
+        var key = Object.keys(data.sites[i])[0];
+        var value = (data.sites[i])[key];
+        if (sitesCount[key]) {
+          sitesCount[key] = sitesCount[key] + 1;
+        } else {
+          sitesCount[key] = 1;
+        }
+        if (!(sitesTime[key])) {
+          sitesTime[key] = value.substring(3,5);
+        }
+      }
+      var sitesKey = Object.keys(sitesCount);
+      var calSum = 0.0;
+      var totalSites = 0;
+      for (var i = 0; i < sitesKey.length; i++) {
+        totalSites = totalSites + sitesCount[sitesKey[i]];
+        calSum = calSum + (1 - Math.abs(sitesTime[sitesKey[i]] - mainSiteValue) / timeZoneDiff * timeZonePenalty) * sitesCount[sitesKey[i]];
+      }
+      var calResult = (calSum - (sitesKey.length - 1) * locationPenalty)/ totalSites;
+      var percentResult = Math.floor(calResult * 100);
+      resolve (percentResult);
+    }
+  });
+};
 
-  // transfer location(city, state, country) info to gps coordinate
-  getGpsCoordinate: function(location) {
-    return getGpsCoordinate(location);
-  },
+
+function analysePiechart(data) {
+  //console.log(data);
+  return new Promise(function(resolve, reject){
+    var validateResult = validate(data, teamDataConstrains);
+    if (validateResult) {
+      msg.statusCode = 406;
+      msg.message = validateResult;
+      reject (msg);
+    } else {
+      var sitesCount = [];
+      var sitesTime = [];
+      for (var i = 0; i < data.sites.length; i++) {
+        var key = Object.keys(data.sites[i])[0];
+        var value = (data.sites[i])[key];
+        sitesCount.push(key);
+        sitesTime.push(value);
+      }
+      var sites = {};
+      var timezone = {};
+      for (var i = 0; i < sitesCount.length; i++) {
+        if (sites[sitesCount[i]]) {
+          sites[sitesCount[i]] = sites[sitesCount[i]] + 1;
+        } else {
+          sites[sitesCount[i]] = 1;
+        }
+        if (timezone[sitesTime[i]]) {
+          timezone[sitesTime[i]] = timezone[sitesTime[i]] + 1;
+        } else {
+          timezone[sitesTime[i]] = 1;
+        }
+      }
+      var result = {
+        sites: sites,
+        timezone: timezone
+      };
+      resolve (result);
+    }
+  });
+};
+
+function analyzeMapChart(data) {
+  return new Promise(function(resolve, reject){
+    var validateResult = validate(data, teamDataConstrains);
+    if (validateResult) {
+      msg.statusCode = 406;
+      msg.message = validateResult;
+      reject (msg);
+    } else {
+      var sitesCount = [];
+      //var sitesTime = [];
+      for (var i = 0; i < data.sites.length; i++) {
+        var key = Object.keys(data.sites[i])[0];
+        var value = (data.sites[i])[key];
+        sitesCount.push(key);
+        //sitesTime.push(value);
+      }
+      var sites = {};
+      //var timezone = {};
+      for (var i = 0; i < sitesCount.length; i++) {
+        if (sites[sitesCount[i]]) {
+          sites[sitesCount[i]] = sites[sitesCount[i]] + 1;
+        } else {
+          sites[sitesCount[i]] = 1;
+        }
+      }
+      var result = {
+        sites: sites
+      };
+      resolve (result);
+    }
+  });
+};
+
+var teamscore = {
 
   // transfer gps coordinate to time zone
   getTimezone: function(location) {
@@ -123,44 +230,6 @@ var teamscore = {
     });
   },
 
-  calculateScore: function(data) {
-    return new Promise(function(resolve, reject){
-      var validateResult = validate(data, teamDataConstrains);
-      if (validateResult) {
-        msg.statusCode = 406;
-        msg.message = validateResult;
-        reject (msg);
-      } else {
-        var sitesCount = {};
-        var sitesTime = {};
-        var mainSiteKey = Object.keys(data.mainSite)[0];
-        var mainSiteValue = (data.mainSite[mainSiteKey]).substring(3,5);
-        for (var i = 0; i < data.sites.length; i++) {
-          var key = Object.keys(data.sites[i])[0];
-          var value = (data.sites[i])[key];
-          if (sitesCount[key]) {
-            sitesCount[key] = sitesCount[key] + 1;
-          } else {
-            sitesCount[key] = 1;
-          }
-          if (!(sitesTime[key])) {
-            sitesTime[key] = value.substring(3,5);
-          }
-        }
-        var sitesKey = Object.keys(sitesCount);
-        var calSum = 0.0;
-        var totalSites = 0;
-        for (var i = 0; i < sitesKey.length; i++) {
-          totalSites = totalSites + sitesCount[sitesKey[i]];
-          calSum = calSum + (1 - Math.abs(sitesTime[sitesKey[i]] - mainSiteValue) / timeZoneDiff * timeZonePenalty) * sitesCount[sitesKey[i]];
-        }
-        var calResult = (calSum - (sitesKey.length - 1) * locationPenalty)/ totalSites;
-        var percentResult = Math.floor(calResult * 100);
-        resolve (percentResult);
-      }
-    });
-  },
-
   calculateScoreByTimezone: function(location) {
     return new Promise(function(resolve, reject){
       teamscore.getTimezone(location)
@@ -178,13 +247,30 @@ var teamscore = {
               calData['sites'].push(site);
             }
           }
-          teamscore.calculateScore(calData)
+          var promiseArray = [];
+          promiseArray.push(calculateScore(calData));
+          promiseArray.push(analysePiechart(calData));
+          //promiseArray.push(analyzeMapChart(calData));
+          Promise.all(promiseArray)
             .then(function(results){
-              resolve(results);
+              var returnObj = {
+                'score': 0,
+                'analyze': null
+              };
+              returnObj.score = results[0];
+              returnObj.analyze = results[1];
+              resolve(returnObj);
             })
             .catch(function(err){
               reject(err);
             });
+          // calculateScore(calData)
+          //   .then(function(results){
+          //     resolve(results);
+          //   })
+          //   .catch(function(err){
+          //     reject(err);
+          //   });
         })
         .catch(function(err){
           reject(err);
