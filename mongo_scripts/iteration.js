@@ -1,7 +1,6 @@
 "use strict";
 var _          = require('underscore');
 var cloudantDb = require('./data');
-var moment     = require('moment');
 var MongoClient = require('mongodb').MongoClient
 var assert     = require('assert');
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
@@ -9,18 +8,8 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 var cloudantIterations = _.filter(cloudantDb.rows, function(row){ return row.doc.type === 'iterationinfo'; });
 var cloudantIterations = _.pluck(cloudantIterations, 'doc');
 
-var stringToUtcFormat = function(string){
-  if(_.isEmpty(string)||!moment(string).isValid())
-    return undefined;
-  if(string.indexOf('UTC') > 0)
-    return new Date(moment.utc(string).format());
-  else if(string.indexOf('EST') > 0 || string.indexOf('EDT') > 0)
-    return new Date(moment(string).utc().format());
-  else if(string.indexOf('adm') > 0) //convert to utc for this case
-    return new Date(moment(string).utc().format());
-  else if(string.indexOf('UTC') < 0 && string.indexOf('EST') < 0 && string.indexOf('EDT') < 0) //homer said assume UTC
-    return moment.utc(string).format() === 'Invalid date' ? undefined : new Date(moment.utc(string).format());
-}
+var util = require("./util.js");
+
 
 var mongoIterations = [];
 _.each(cloudantIterations, function(doc) {
@@ -30,14 +19,14 @@ _.each(cloudantIterations, function(doc) {
   
   var mongoDoc = {
     'cloudantId' : doc._id,
-    'createDate': stringToUtcFormat(doc.created_dt),
+    'createDate': util.stringToUtcDate(doc.created_dt),
     'createdById': doc.created_user,
     'createdBy': doc.created_user,
-    'updateDate': stringToUtcFormat(doc.last_updt_dt),
+    'updateDate': util.stringToUtcDate(doc.last_updt_dt),
     'updatedById': doc.last_updt_user,
     'updatedBy': doc.last_updt_user,
-    'startDate': stringToUtcFormat(doc.iteration_start_dt),
-    'endDate': stringToUtcFormat(doc.iteration_end_dt),
+    'startDate': util.stringToUtcDate(doc.iteration_start_dt),
+    'endDate': util.stringToUtcDate(doc.iteration_end_dt),
     'name' : doc.iteration_name,
     'teamId' : doc.team_id,
     'docStatus' : doc.doc_status,
@@ -69,7 +58,7 @@ MongoClient.connect(creds.url, function(err, db) {
   
   db.collection('iterations').insertMany(mongoIterations, function(err, r) {
         assert.equal(null, err);
-        //console.log(r)
+        console.log(r)
         db.close();
         process.exit();
   });
