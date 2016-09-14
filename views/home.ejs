@@ -215,7 +215,8 @@
                     </div>
                     <div>
                       <h2 class="ibm-bold ibm-h4" style="display:inline-block; width:50%; float:left">Team Information</h2>
-                      <h2 id="teamscore-header" class="ibm-bold ibm-h4">Team Colocation Score (?)</h2>
+                      <h2 id="teamscore-header" class="ibm-bold ibm-h4">Team Colocation Score</h2>
+                      <div style="display:inline-block" id="teamscoreFormula">(?)</div>
                       <div class="teamscore-div" id="teamscoreDiv" hidden="true"></div>
                     </div>
                     <div class="ibm-rule ibm-alternate-1">
@@ -232,6 +233,7 @@
                         </tbody>
                       </table>
                       <div style="display:inline-block; width: 50%; margin-top: 40px">
+                        <div id="titleLabel" style="display: block; text-align: left" hidden="true">Location Analysis</div>
                         <div id="teamscore-piechart" hidden=true></div>
                         <button type='button' class='switchTZButton' id='switchBtn' hidden="true">Switch to Time Zone Analysis</button>
                       </div>
@@ -255,6 +257,12 @@
                         <tbody id="membersList">
                         </tbody>
                       </table>
+                      <!-- The Modal -->
+                      <div id="myModal" class="modal">
+                        <span id="closeBtn" class="close">×</span>
+                        <img class="modal-content" id="img01">
+                        <div id="caption"></div>
+                      </div>
                     </div>
                   </div>
                 </div>
