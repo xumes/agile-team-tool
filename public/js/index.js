@@ -1083,13 +1083,13 @@ function drawChart(data, isTimezone) {
   var options = {
     title: title,
     pieSliceText: 'none',
-    height: 350,
+    height: 300,
     pieHole: 0.4,
-    chartArea: {left:leftmargin,top:topmargin,width:'90%',height:'90%'},
+    chartArea: {left:leftmargin,top:0,width:'90%',height:'90%'},
     legend: {
       textStyle: {
         fontName: 'normal',
-        fontSize: '10.5'
+        fontSize: '9'
       },
       position: 'labeled'
     },
