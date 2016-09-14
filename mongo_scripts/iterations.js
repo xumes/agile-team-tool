@@ -59,7 +59,7 @@ MongoClient.connect(creds.url, function(err, db) {
   
   db.collection('iterations').insertMany(mongoIterations, function(err, r) {
         assert.equal(null, err);
-        console.log(r)
+        console.log("Done!  " + JSON.stringify(r.result));
         db.close();
         process.exit();
   });
