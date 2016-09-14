@@ -34,7 +34,6 @@ _.each(cloudantTeams, function(doc) {
   //set empty string values to be undefined
   doc = _.mapObject(doc, function(val){ return _.isEmpty(val) ? undefined : val; });
   
-  var path = ",";
   
   //get team parent info from it's indexed doc
   var indexedDoc = _.find(concatTeamIndex, function(obj){
@@ -43,12 +42,26 @@ _.each(cloudantTeams, function(doc) {
   if(_.isEmpty(indexedDoc))
     console.log("warning: " + doc._id + " was not found in the index");
   
+  var pathId = normalizeString(doc.name);
+  
+  //check if pathId is unique
+  _.each(mongoTeams, function(obj){
+    if(_.isEqual(obj.pathId, pathId)){
+      console.log('ERROR: ' + pathId + '  exists already.');
+      console.log('new mongo doc: ' + JSON.stringify(doc));
+      console.log('\n')
+      console.log('conflicting doc: ' + JSON.stringify(obj));
+      console.log('\n\n\n')
+    }
+  });
+  
+  var path = ",";
   
   var mongoDoc = {
     // cant do this '_id' : new ObjectID(normalizedName),
     'cloudantId' : doc._id,
     'name'       : doc.name,
-    'pathId'     : normalizeString(doc.name),
+    'pathId'     : pathId,
     'members'    : doc.members,
     'type'       : (doc.squadteam==='Yes'? 'squad' : undefined),
     'description': doc.desc,
@@ -63,5 +76,5 @@ _.each(cloudantTeams, function(doc) {
     'docStatus'  : doc.doc_status
   };
   
-  
+  mongoTeams.push(mongoDoc);
 });
