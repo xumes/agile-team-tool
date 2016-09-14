@@ -7,6 +7,7 @@
 <script src="//code.highcharts.com/highcharts.js"></script>
 <script src="//code.highcharts.com/highcharts-more.js"></script>
 <script src="//code.highcharts.com/modules/no-data-to-display.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <script type="text/javascript" src="js/index.js?v=<%=Math.random()%>"></script>
 <script type="text/javascript" src="js/indexIteration.js?v=<%=Math.random()%>"></script>
@@ -131,31 +132,31 @@
                         <div id="nsquad_team_scard" style="display: none;">
                           <div class="ibm-columns" style="margin-bottom: 3em;">
                             <div class="ibm-col-6-2">
-                              <div id="pvelocityChart" style="min-width: 460px; min-height: 280px;"></div>
+                              <div id="pvelocityChart" style="min-width: 410px; min-height: 280px;"></div>
                             </div>
 
                             <div class="ibm-col-6-2">
-                              <div id="pthroughputChart" style="min-width: 460px; min-height: 280px;"></div>
-                            </div>
-                          </div>
-
-                          <div class="ibm-columns" style="margin-bottom: 3em;">
-
-                            <div class="ibm-col-6-2">
-                              <div id="pdefectsChart" style="min-width: 460px; min-height: 280px;"></div>
-                            </div>
-                            <div class="ibm-col-6-2">
-                              <div id="pstatisfactionChart" style="min-width: 460px; min-height: 280px;"></div>
+                              <div id="pthroughputChart" style="min-width: 410px; min-height: 280px;"></div>
                             </div>
                           </div>
 
                           <div class="ibm-columns" style="margin-bottom: 3em;">
+
                             <div class="ibm-col-6-2">
-                              <div id="pPizzaChart" style="min-width: 460px; min-height: 280px;"></div>
+                              <div id="pdefectsChart" style="min-width: 410px; min-height: 280px;"></div>
+                            </div>
+                            <div class="ibm-col-6-2">
+                              <div id="pstatisfactionChart" style="min-width: 410px; min-height: 280px;"></div>
+                            </div>
+                          </div>
+
+                          <div class="ibm-columns" style="margin-bottom: 3em;">
+                            <div class="ibm-col-6-2">
+                              <div id="pPizzaChart" style="min-width: 410px; min-height: 280px;"></div>
                             </div>
 
                             <div class="ibm-col-6-2">
-                              <div id="piePizzaChart" style="min-width: 460px; min-height: 280px;"></div>
+                              <div id="piePizzaChart" style="min-width: 410px; min-height: 280px;"></div>
                             </div>
                           </div>
                         </div>
@@ -163,22 +164,22 @@
                         <div id="squad_team_scard" style="display: none">
                           <div style="margin-bottom: 3em;" class="ibm-columns">
                             <div class="ibm-col-6-2">
-                              <div id="velocityChart" style="min-width: 460px; min-height: 280px;"></div>
+                              <div id="velocityChart" style="min-width: 430px; min-height: 280px;"></div>
                             </div>
 
                             <div class="ibm-col-6-2">
-                              <div id="throughputChart" style="min-width: 460px; min-height: 280px;"></div>
+                              <div id="throughputChart" style="min-width: 430px; min-height: 280px;"></div>
                             </div>
                           </div>
 
                           <div id="chartgrp2">
                             <div style="margin-bottom: 3em;" class="ibm-columns">
                               <div class="ibm-col-6-2">
-                                <div id="defectsChart" style="min-width: 460px; min-height: 280px;"></div>
+                                <div id="defectsChart" style="min-width: 430px; min-height: 280px;"></div>
                               </div>
 
                               <div class="ibm-col-6-2">
-                                <div id="statisfactionChart" style="min-width: 460px; min-height: 280px;"></div>
+                                <div id="statisfactionChart" style="min-width: 430px; min-height: 280px;"></div>
                               </div>
                             </div>
                           </div>
@@ -186,10 +187,10 @@
                           <div id="chartgrp3">
                             <div style="margin-bottom: 3em;" class="ibm-columns">
                               <div class="ibm-col-6-2">
-                                <div id="pizzaChart" style="min-width: 460px; min-height: 280px;"></div>
+                                <div id="pizzaChart" style="min-width: 430px; min-height: 280px;"></div>
                               </div>
                               <div class="ibm-col-6-2">
-                                <div id="unitCostChart" style="min-width: 460px; min-height: 280px;"></div>
+                                <div id="unitCostChart" style="min-width: 430px; min-height: 280px;"></div>
                               </div>
                             </div>
                           </div>
@@ -212,24 +213,56 @@
                         <div id="assessmentCharts"></div>
                       </div>
                     </div>
-
-                    <h2 class="ibm-bold ibm-h4">Team Information</h2>
+                    <div>
+                      <h2 class="ibm-bold ibm-h4" style="display:inline-block; width:50%; float:left">Team Information</h2>
+                      <h2 id="teamscore-header" class="ibm-bold ibm-h4">Team Colocation Score</h2>
+                      <div style="display:inline-block" id="teamscoreFormula">(?)</div>
+                      <div class="teamscore-div" id="teamscoreDiv" hidden="true"></div>
+                    </div>
                     <div class="ibm-rule ibm-alternate-1">
                       <hr>
                     </div>
-                    <table class="ibm-data-table" id="levelTable" summary="__REPLACE_ME__">
-                      <thead class="ibm-access">
-                        <tr>
-                          <th scope="col" colspan="2">Team Information</th>
-                        </tr>
-                      </thead>
-                      <tbody id="levelDetail">
-                      </tbody>
-                    </table>
+                    <div>
+                      <table class="ibm-data-table" id="levelTable" summary="__REPLACE_ME__">
+                        <thead class="ibm-access">
+                          <tr>
+                            <th scope="col" colspan="2">Team Information</th>
+                          </tr>
+                        </thead>
+                        <tbody id="levelDetail">
+                        </tbody>
+                      </table>
+                      <div style="display:inline-block; width: 50%; margin-top: 40px">
+                        <div id="titleLabel" style="display: block; text-align: left" hidden="true">Location Analysis</div>
+                        <div id="teamscore-piechart" hidden=true></div>
+                        <button type='button' class='switchTZButton' id='switchBtn' hidden="true">Switch to Time Zone Analysis</button>
+                      </div>
+                    </div>
                     <br />
-                    <h2 class="ibm-bold ibm-h4">Team Members</h2>
-                    <div class="ibm-rule ibm-alternate-1">
-                      <hr>
+                    <div>
+                      <br />
+                      <h2 class="ibm-bold ibm-h4">Team Members</h2>
+                      <div class="ibm-rule ibm-alternate-1">
+                        <hr>
+                      </div>
+                      <table class="ibm-data-table" id="memberTable" summary="__REPLACE_ME__">
+                        <thead>
+                          <tr>
+                            <th scope="col" width="30%">Name</th>
+                            <th scope="col" width="10%">Allocation</th>
+                            <th scope="col" width="30%">Location</th>
+                            <th scope="col" width="30%">Role</th>
+                          </tr>
+                        </thead>
+                        <tbody id="membersList">
+                        </tbody>
+                      </table>
+                      <!-- The Modal -->
+                      <div id="myModal" class="modal">
+                        <span id="closeBtn" class="close">×</span>
+                        <img class="modal-content" id="img01">
+                        <div id="caption"></div>
+                      </div>
                     </div>
                     <table class="ibm-data-table" id="memberTable" summary="__REPLACE_ME__" style="font-size: 90%;">
                       <thead>

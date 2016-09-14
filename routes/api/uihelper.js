@@ -8,7 +8,7 @@ module.exports = function(app, includes) {
   getHomeVariables = function(req, res) {
     Promise.join(
         cache.setSystemInfoCache(),
-        //cache.setUserTeams(req.session['email']),
+        cache.setUserTeams(req.session['email']),
         function(systemCache, userTeamList) {
           var json = {
             'user': req.session['user'],

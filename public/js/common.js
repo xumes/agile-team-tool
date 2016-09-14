@@ -31,7 +31,7 @@ function getPageVariables(page, _callback) {
       getPersonFromFaces(userInfo.email, updateUserInfo, []);
 			//get system status from DB for display on the top banner
       setSystemMessage(systemStatus.agildash_system_status_display, systemStatus.agildash_system_status_msgtext_display);
-      //set environment variable - if env='SIT', display 'Stage' on the systMsg on the top banner.
+      //set node_env variable - if env='development', display 'Stage' on the systMsg on the top banner.
       setSystemEnvironment(environment);
 
     }
@@ -52,11 +52,12 @@ function setSystemMessage(systemStatusControl, systemStatusMsg){
 }
 
 function setSystemEnvironment(environment){
-	//set label "Stage" on the top bar if it is "SIT" as environment variable in our manifest file. If it is production, this is blank
-  if (environment == 'SIT'){
+	//set label "Stage" on the top bar if it is "development" as node_env variable in our manifest file. If it is production, this is blank
+  if (_.isEmpty(environment) || environment.toLowerCase() == 'development') {
     $('#systMsg').html('Stage');
     $('#systMsg').show();
   } else {
+    console.log('Environment variable: '+ environment);
     $('#systMsg').hide();
   }
 }
