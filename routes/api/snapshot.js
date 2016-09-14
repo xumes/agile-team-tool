@@ -68,7 +68,7 @@ module.exports = function(app, includes) {
       }
     },
 
-    app.get('/api/snapshot/getteams/:email', [includes.middleware.auth.requireLogin], getTopLevelTeams);
+  app.get('/api/snapshot/getteams/:email', [includes.middleware.auth.requireLogin], getTopLevelTeams);
   app.get('/api/snapshot/updaterollupsquads', [includes.middleware.auth.requireLogin], updateRollUpSquads);
   app.get('/api/snapshot/updaterollupdata/', [includes.middleware.auth.requireLogin], updateRollUpData);
   app.get('/api/snapshot/rollupdatabyteam/:teamId', [includes.middleware.auth.requireLogin], getRollUpDataByTeam);
