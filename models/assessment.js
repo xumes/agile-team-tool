@@ -163,17 +163,12 @@ var assessment = {
             reject(formatErrMsg(validateError));
           } else {
             infoLogs('Add assessment record to Cloudant.');
-            common.addRecord(data)
-              .then(function(body) {
-                successLogs('Assessment ' + data._id + ' record inserted.');
-                resolve(body);
-              })
-              .catch( /* istanbul ignore next */ function(err) {
-                /* can't simulate Cloudant error during testing */
-                msg = err.error;
-                reject(formatErrMsg(msg));
-              });
+            return common.addRecord(data);
           }
+        })
+        .then(function(body) {
+          successLogs('Assessment ' + body.id + ' record inserted.');
+          resolve(body);
         })
         .catch(function(err) {
           msg = err.error;
@@ -204,16 +199,12 @@ var assessment = {
             reject(formatErrMsg(validateError));
           } else {
             infoLogs('Update assessment ' + data._id + ' record ' + data._rev + ' to Cloudant.');
-            common.updateRecord(data)
-              .then(function(body) {
-                successLogs('Assessment ' + data._id + ' record updated.');
-                resolve(body);
-              })
-              .catch(function(err) {
-                msg = err.error;
-                reject(formatErrMsg(msg));
-              });
+            return common.updateRecord(data);
           }
+        })
+        .then(function(body) {
+          successLogs('Assessment ' + body.id + ' record updated.');
+          resolve(body);
         })
         .catch(function(err) {
           msg = err.error;
@@ -233,15 +224,11 @@ var assessment = {
           })
           .then(function(body) {
             infoLogs('Delete assessment ' + _id + ' record rev ' + _rev + ' to Cloudant.');
-            common.deleteRecord(_id, _rev)
-              .then(function(body) {
-                successLogs('Assessment ' + _id + ' record deleted.');
-                resolve(body);
-              })
-              .catch(function(err) {
-                msg = err.error;
-                reject(formatErrMsg(msg));
-              });
+            return common.deleteRecord(_id, _rev);
+          })
+          .then(function(body) {
+            successLogs('Assessment ' + _id + ' record deleted.');
+            resolve(body);
           })
           .catch(function(err) {
             msg = err.error;
