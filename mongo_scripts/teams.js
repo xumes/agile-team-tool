@@ -44,15 +44,13 @@ _.each(cloudantTeams, function(doc) {
     console.log("warning: " + doc._id + " was not found in the index");
   
   
-  
-  
   var mongoDoc = {
     // cant do this '_id' : new ObjectID(normalizedName),
     'cloudantId' : doc._id,
     'name'       : doc.name,
     'pathId'     : normalizeString(doc.name),
     'members'    : doc.members,
-    'type'       :(doc.squadteam==='Yes'? 'squad' : undefined),
+    'type'       : (doc.squadteam==='Yes'? 'squad' : undefined),
     'description': doc.desc,
     'createDate' : util.stringToUtcDate(doc.created_dt),
     'createdById': doc.created_user,

@@ -16,7 +16,7 @@ I think these doc types are not needed
 ### users
 | Fields        | Details       | cloudant field
 | ------------- |:-------------:|-------------
-| userId | (UNIQUE ID) string. for IBM it's CNUM or perhaps shortEmail? | n/a
+| _id | (UNIQUE ID) ObjectId. for IBM it's CNUM | n/a
 | adminAccess | 'none' or 'full' or 'read' or 'write'| n/a
 | email | string; for IBM it's pref. ID | n/a
 | name  | string' first and last name of person | n/a
@@ -131,6 +131,10 @@ and update to a team name might be expensive if its high up in the tree.
 |updatedBy      | string of name or email | |last_updt_user |
 
 don't port these fields: child_team_id, parent_team_id
+
+nested struct:
+members[*].key -> .cnum
+members[*].id -> .email
 
 
 ex cloudant team doc:
