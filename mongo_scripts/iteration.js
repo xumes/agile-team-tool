@@ -13,7 +13,8 @@ var util = require("./util.js");
 
 var mongoIterations = [];
 _.each(cloudantIterations, function(doc) {
-    
+  if(doc.doc_status==='delete')
+    return;
   //set empty string values to be undefined
   doc = _.mapObject(doc, function(val){ return _.isEmpty(val) ? undefined : val; });
   
