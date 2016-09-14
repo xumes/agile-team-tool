@@ -116,10 +116,11 @@ and update to a team name might be expensive if its high up in the tree.
 
 | Fields        | Details       | mongo ex    | cloudant field | cloudant value ex
 | ------------- |:-------------:|-------------|-------------|-------------
-| _id | transformed team name | ObjectId("agileteamtool") | n/a | n/a
 |cloudantId | string |  "ag_mar_12323"| doc._id | ag_mar_12323
+|pathId |  normalizeString(doc.name) | acquisitioncustomermatching | n/a | n/a
 |docStatus | | | doc_status | "" , "delete"
 |path | string  | ",cio,agileteamtool," | * get the path from ag_ref_team_index * | under ag_ref_team_index.. parents: ["CIO", "Agile Team"]
+|name | string  | | name |Acquisition Customer Matching |
 |members        | array of objects, copy over as is| 
 |type           | map to a diff. string | "", "squad", "domain", "tribe", "subDomain", "potato" | squadteam     | "Yes" or "No"
 |description    | string |  | desc |
@@ -135,7 +136,6 @@ don't port these fields: child_team_id, parent_team_id
 nested struct:
 members[*].key -> .cnum
 members[*].id -> .email
-
 
 ex cloudant team doc:
 ```
