@@ -3,6 +3,10 @@ var defSelTeamId = '';
 var defSelIndex = '';
 var squadList = [];
 var loadedParentId = '';
+var teamLocation = [];
+var piechartData = {};
+var userAccess = ['Yanliang.Gu1@ibm.com','leip@us.ibm.com','hourihan@us.ibm.com','john.elden.revano@ibm.com'];
+var colorArray = ['#1F6394','#2A88CC','#3693D6','#2B8DD3','#7EDFD1','#30C0AB','#248F7F','#7EDFD1','#2985C7','#1F6394','#2A88CC','#3693D6','#2B8DD3','#7EDFD1','#30C0AB','#248F7F','#7EDFD1','#2985C7'];
 var tempIterationData = [{
   'totalPoints': 0,
   'totalStories': 0,
@@ -117,6 +121,8 @@ var tempSquadScore = {
   'teamsLt5': 0
 };
 
+google.charts.load('current', {packages:['corechart']});
+
 jQuery.expr[':'].Contains = function(a, i, m) {
   return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
 };
@@ -197,6 +203,29 @@ jQuery(function($) {
     if (inputText != '' && inputText != ' ') {
       searchTeams(inputText);
     }
+  });
+
+  $('#switchBtn').click(function(){
+    if ($('#switchBtn').html() == 'Switch to Time Zone Analysis') {
+      $('#switchBtn').html('Switch to Location Analysis');
+      google.charts.setOnLoadCallback(function(){
+        drawChart(piechartData, false);
+      });
+    } else {
+      $('#switchBtn').html('Switch to Time Zone Analysis');
+      google.charts.setOnLoadCallback(function(){
+        drawChart(piechartData, true);
+      });
+    }
+  });
+
+  $('#teamscoreFormula').click(function(){
+    $('#myModal').css('display', 'block');
+    $('#img01').attr('src','./img/teamscore-formula.png');
+  });
+
+  $('#closeBtn').click(function(){
+    $('#myModal').css('display', 'none');
   });
 });
 
@@ -753,7 +782,9 @@ function createSubTwistySection(twistyId, twistyLabel, extraClass, teamId) {
 function facesPersonHandler(index, userEmail, facesPerson) {
   if (facesPerson != null) {
     $('#location_ref_' + index).text(facesPerson.location);
+    teamLocation.push(facesPerson.location);
   } else {
+    teamLocation.push('us');
     $('#location_ref_' + index).text('-unavailable-');
   }
 }
@@ -924,6 +955,7 @@ function loadDetails(elementId, setScrollPosition) {
           if (isLeafTeam) {
             getTeamIterations(team['_id'], teamIterationListHander, [team['_id']]);
             getTeamAssessments(team['_id'], true, teamAssessmentListHander, [team['_id']]);
+
             //this is done to display back the 2 other chart groups as 1st batch of rollup will only show velocity and throughput
             //$("#chartgrp2").show();
             //$("#chartgrp3").show();
@@ -956,6 +988,9 @@ function loadDetails(elementId, setScrollPosition) {
           }
 
           $('#membersList').empty();
+          teamLocation = [];
+          managerIndex = 0;
+          hideScorePieChart();
           if (team.members != undefined && team.members.length > 0) {
             var members = sortTeamMembersByName(team.members);
             for (var j = 0; j < members.length; j++) {
@@ -966,10 +1001,22 @@ function loadDetails(elementId, setScrollPosition) {
               row = row + '<td>' + member.role + '</td>';
               row = row + '</tr>';
               $('#membersList').append(row);
+              if (member.role == 'Manager') {
+                managerIndex = j;
+              }
               getPersonFromFaces(member.id, facesPersonHandler, [j, member.id]);
             }
           } else {
             $('#membersList').append('<tr class="odd"><td valign="top" colspan="4" class="dataTables_empty">No data available</td></tr>');
+          }
+          if (managerIndex != 0) {
+            var manager = teamLocation.splice(managerIndex, 1);
+            teamLocation.unshift(manager.toString());
+          }
+          if (isLeafTeam) {
+            if (findUserAccess(userInfo.email)) {
+              teamLocationHandler(teamLocation);
+            }
           }
         }
       });
@@ -983,6 +1030,122 @@ function loadDetails(elementId, setScrollPosition) {
     $('#spinnerContainer-search').hide();
     openSelectedTeamTree(setScrollPosition);
   }
+}
+
+function teamLocationHandler(data) {
+  var requestData = {};
+  requestData.loc = data;
+  var req = $.ajax({
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(requestData),
+    url: '/api/teamscore/calculate/'
+  }).fail(function(e) {
+    console.log(e);
+  }).done(function(score) {
+    if (score.score != null) {
+      showScorePieChart();
+      piechartData = {};
+      piechartData = score.analyze;
+      $('#teamscoreDiv').html(score.score);
+      google.charts.setOnLoadCallback(function(){
+        drawChart(score.analyze, true);
+      });
+    }
+  });
+  requests.push(req);
+}
+
+function drawChart(data, isTimezone) {
+  var siteData = [['Site','#']];
+  var sites = Object.keys(data.sites);
+  var timeData = [['Timezone','#']];
+  var time =  Object.keys(data.timezone);
+  for (var i = 0; i < sites.length; i++) {
+    siteData.push([sites[i],data.sites[sites[i]]]);
+  }
+  for (var i = 0; i < time.length; i++) {
+    timeData.push([time[i],data.timezone[time[i]]]);
+  }
+  var srdata = google.visualization.arrayToDataTable(siteData);
+  var trdata = google.visualization.arrayToDataTable(timeData);
+  var leftmargin = $('#teamscore-piechart').width() * 0.05;
+  var topmargin = $('#teamscore-piechart').width() * 0.05;
+  var sliceColor = [];
+  var title = '';
+  if (isTimezone) {
+    title = 'Location Analysis';
+    for (var i = 0; i < siteData.length; i++) {
+      var color = {'color':null};
+      color['color'] = colorArray[i];
+      sliceColor.push(color);
+    }
+  } else {
+    title = 'Time Zone Analysis';
+    for (var i = 0; i < timeData.length; i++) {
+      var color = {'color':null};
+      color['color'] = colorArray[i];
+      sliceColor.push(color);
+    }
+  }
+  var options = {
+    title: title,
+    titleTextStyle: {
+      fontName: 'normal',
+      fontSize: '10'
+    },
+    pieSliceText: 'none',
+    height: 300,
+    pieHole: 0.4,
+    chartArea: {left:0,top:0,width:'100%',height:'100%'},
+    legend: {
+      textStyle: {
+        fontName: 'normal',
+        fontSize: '10'
+      },
+      position: 'labeled'
+    },
+    slices: sliceColor
+  };
+  $('#titleLabel').html(title);
+  if (isTimezone) {
+    var siteChart = new google.visualization.PieChart(document.getElementById('teamscore-piechart'));
+    siteChart.draw(srdata, options);
+  } else {
+    var siteChart = new google.visualization.PieChart(document.getElementById('teamscore-piechart'));
+    siteChart.draw(trdata, options);
+  }
+}
+
+function showScorePieChart() {
+  $('#teamscoreDiv').show();
+  $('#teamscore-header').css('visibility','visible');
+  $('#levelTable').css('width','50%');
+  $('#teamscore-piechart').css('height','70%');
+  $('#teamscore-piechart').show();
+  $('#switchBtn').show();
+  $('#titleLabel').show();
+}
+
+function hideScorePieChart() {
+  $('#teamscoreDiv').hide();
+  $('#teamscore-header').css('visibility','hidden');
+  $('#switchBtn').html('Switch to Time Zone Analysis');
+  $('#levelTable').css('width','100%');
+  $('#teamscore-piechart').css('height','0px');
+  $('#teamscore-piechart').hide();
+  $('#switchBtn').hide();
+  $('#titleLabel').hide();
+}
+
+function findUserAccess(email) {
+  var access = false;
+  _.find(userAccess, function(user){
+    if (user == email) {
+      access = true;
+    }
+  });
+  return access;
 }
 
 function openSelectedTeamTree(setScrollPosition) {

@@ -38,11 +38,8 @@ var team = {
   searchTeamWithName: function(name) {
     return new Promise(function(resolve, reject){
       var query = {};
-      console.log(name);
-      kname = name.replace(/\"|\'/g,'');
-      console.log(kname);
-      names = kname.split('\ ');
-      console.log(names);
+      rename = name.replace(/\"|\'/g,'');
+      names = rename.split('\ ');
       query['q'] = {};
       var s = '';
       _.each(names, function(queryname){
@@ -894,7 +891,6 @@ var team = {
                     // we actually need to get the latest team docs to see if it has been associated already with another parent
                     if (associateObj['targetChild'].indexOf(associateObj['teamId']) > -1) {
                       // not allowed to add self as a child
-                      console.log('not allowed to add self as a child');
                       errorLists['error']['targetChild'] = ['Unable to add selected team as a child. Team may have been updated with another parent.'];
                       infoLogs(errorLists);
                       reject(errorLists);
@@ -1216,45 +1212,44 @@ var team = {
        */
       var errorLists = {};
       errorLists['error'] = {};
-      if(_.isEmpty(teamId)){
+      if (_.isEmpty(teamId)){
         errorLists['error']['teamId'] = ['Team ID is required'];
         infoLogs(errorLists);
-        reject(errorLists);
+        return reject(errorLists);
       }
-      if(_.isEmpty(userId)){
+      if (_.isEmpty(userId)){
         errorLists['error']['userId'] = ['User ID is required'];
         infoLogs(errorLists);
-        reject(errorLists); 
+        return reject(errorLists);
       }
-      if(_.isEmpty(members)){
+      if (_.isEmpty(members)){
         errorLists['error']['members'] = ['Member lists is required'];
         infoLogs(errorLists);
-        reject(errorLists); 
-      }else{
-        if(!_.isArray(members)){
+        return reject(errorLists);
+      } else {
+        if (!_.isArray(members)){
           errorLists['error']['members'] = ['Invalid member lists'];
           infoLogs(errorLists);
-          reject(errorLists); 
-        }else{
+          return reject(errorLists);
+        } else {
           _.each(members, function(v,i,l){
             var mLists = validate(v, teamMemberRules);
-            if(mLists){
+            if (mLists){
               errorLists['error'] = mLists;
               infoLogs(errorLists);
-              reject(errorLists);
+              return reject(errorLists);
             }
           });
         }
       }
-      // all passed, proceed with saving
-      team.getTeam(teamId)
-      .then(function(teamDetails){
-        var isMember = _.findWhere(teamDetails['members'], { id : userId });
-        if(_.isEmpty(isMember)){
-          errorLists['error']['members'] = ['User is not authorized to edit team members'];
-          infoLogs(errorLists);
-          reject(errorLists);
-        }
+      //check if user is allowed to edit team
+      util.isUserAllowed(userId, teamId)
+      .then(function(allowed){
+        infoLogs('User ' + userId + ' is allowed to edit team ' + teamId + '. Proceed with member modification');
+        return allowed;
+      })
+      .then(function(){
+        return team.getTeam(teamId);
       })
       .then(function(teamDetails){
         teamDetails['members'] = members;
@@ -1263,11 +1258,11 @@ var team = {
         return common.updateRecord(teamDetails);
       })
       .then(function(savingResult){
-        resolve(savingResult);
+        return resolve(savingResult);
       })
       .catch(function(err){
-        reject(err);
-      })
+        return reject(err);
+      });
     });
   }
 

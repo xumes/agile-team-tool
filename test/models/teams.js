@@ -11,6 +11,7 @@ var lookupNonsquadId = null;
 var validId = null;
 var validTeamName = null;
 var createdId = null;
+var teamMembersDummy = require('../data/teams');
 
 var teamDocUpdateInvalid = dummyData.teams.validDoc;
 
@@ -243,7 +244,6 @@ describe('Team models [updateOrDeleteTeam] : update existing team document', fun
         expect(body['_id']).to.be.equal(createdId);
       })
       .catch(function(err) {
-        console.log(err);
         expect(err.error).to.be.an('undefined');
       })
       .finally(function() {
@@ -1395,5 +1395,45 @@ describe('Team models [defaultTeamDoc]', function() {
     expect(body).to.be.a('object');
     expect(body).to.have.property('_id');
     done();
+  });
+});
+
+//modifyTeamMembers: function(teamId, userId, members) {
+describe('Team models [modifyTeamMembers]', function() {
+  var validTeamMembers = teamMembersDummy['teams'].validMembers();
+  it('it will return an error because teamId is required', function(done) {
+    teamModel.modifyTeamMembers(null, null, [])
+      .catch(function(body){
+        expect(body).to.be.a('object');
+        expect(body).to.have.property('error');
+        expect(body.error).to.have.property('teamId');
+        done();
+      });
+  });
+
+  it('it will return an error because userId is required', function(done) {
+    teamModel.modifyTeamMembers('temp-team-id', null, [])
+      .catch(function(body){
+        expect(body).to.be.a('object');
+        expect(body).to.have.property('error');
+        expect(body.error).to.have.property('userId');
+        done();
+      });
+  });
+
+  it('it will return an success in modifying team member', function(done) {
+    teamDocValid['name'] = 'name ' + Date.now();
+    teamModel.createTeam(teamDocValid, userDetails)
+      .then(function(body) {
+        var modifyTeamId = body['_id'];
+        removedId.push(body['_id']);
+        teamModel.modifyTeamMembers(modifyTeamId, userDetails['shortEmail'], validTeamMembers)
+          .then(function(body){
+            expect(body).to.be.a('object');
+            expect(body).to.have.property('ok');
+            expect(body['ok']).to.have.equal(true);
+            done();
+          });
+      });
   });
 });

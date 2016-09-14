@@ -29,6 +29,17 @@ var teamsData = {
         squadteam: 'No',
         created_user: teamsData.user.details['shortEmail']
       };
+    },
+    validMembers : function(){
+      return [
+        {
+          key: '678910PH1',
+          id: 'jane.doe@ph.ibm.com',
+          name: 'Jane Doe',
+          role: 'Developer',
+          allocation: 100
+        }
+      ];
     }
   },
   userDetails: {
