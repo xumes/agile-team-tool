@@ -2,8 +2,6 @@ var _          = require('underscore');
 var moment     = require('moment');
 var moment = require('moment-timezone');
 
-
-
 module.exports = {
    stringToUtcDate: function(string){
     if(_.isEmpty(string)||!moment(string).isValid()){
@@ -12,8 +10,10 @@ module.exports = {
     }
     else if(string.indexOf('UTC') > 0)
       return new Date(moment.utc(string).format());
-    else if(string.indexOf('EST') > 0 || string.indexOf('EDT') > 0)
+    else if(string.indexOf('EST') > 0 || string.indexOf('EDT') > 0){
+      //console.log(string + " -------- " + new Date(moment(string).utc().format()));
       return new Date(moment(string).utc().format());
+    }
     else if(string.indexOf('SGT') > 0){
       return new Date(moment.tz(string, "Asia/Singapore").utc().format());
       //console.log(string + " -------- " + new Date(newString))
