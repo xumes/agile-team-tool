@@ -1121,6 +1121,7 @@ function showScorePieChart() {
   $('#teamscore-piechart').css('height','70%');
   $('#teamscore-piechart').show();
   $('#switchBtn').show();
+  $('#teamscoreFormula').show();
   // $('#titleLabel').show();
 }
 
@@ -1132,6 +1133,7 @@ function hideScorePieChart() {
   $('#teamscore-piechart').css('height','0px');
   $('#teamscore-piechart').hide();
   $('#switchBtn').hide();
+  $('#teamscoreFormula').hide();
   // $('#titleLabel').hide();
 }
 
