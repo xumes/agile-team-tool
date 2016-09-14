@@ -12,6 +12,7 @@ I think these doc types are not needed
 
 ## database models and Cloudant <-> MongoDB schema mapping
 
+* not porting over docs with 'delete' docStatus
 
 ### users
 | Fields        | Details       | cloudant field
@@ -116,7 +117,7 @@ and update to a team name might be expensive if its high up in the tree.
 
 | Fields        | Details       | mongo ex    | cloudant field | cloudant value ex
 | ------------- |:-------------:|-------------|-------------|-------------
-|cloudantId | string |  "ag_mar_12323"| doc._id | ag_mar_12323
+|cloudantId | string |  "ag_team_AcquisitionCust ..."| doc._id | "ag_team_AcquisitionCust"
 |pathId |  normalizeString(doc.name) | acquisitioncustomermatching | n/a | n/a
 |docStatus | | | doc_status | "" , "delete"
 |path | string  | ",cio,agileteamtool," | * get the path from ag_ref_team_index * | under ag_ref_team_index.. parents: ["CIO", "Agile Team"]
