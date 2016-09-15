@@ -90,8 +90,6 @@ _.each(cloudantTeams, function(doc) {
     'updateDate' : util.stringToUtcDate(doc.last_updt_dt),
     'updatedByUserId' : util.getUserId(userMap, doc.last_updt_user),
     'updatedBy'       : util.lowerCase(doc.last_updt_user),
-    'startDate'  : util.stringToUtcDate(doc.iteration_start_dt),
-    'endDate'    : util.stringToUtcDate(doc.iteration_end_dt),
     'docStatus'  : doc.doc_status
   };
   
