@@ -123,7 +123,7 @@ and update to a team name might be expensive if its high up in the tree.
 |path | string  | ",cio,agileteamtool," | * get the path from ag_ref_team_index * | under ag_ref_team_index.. parents: ["CIO", "Agile Team"]
 |name | string  | | name |Acquisition Customer Matching |
 |members        | array of objects, copy over as is| 
-|type           | map to a diff. string | null, "squad", "nonSquad", "potato?!" | squadteam  | "Yes" or "No"
+|type           | map to a diff. string | "squad" or null | squadteam  | "Yes" or "No"
 |description    | string |  | desc |
 |createDate     | JS Date Object UTC | |created_dt | "2016-04-12 08:58:50 EDT"
 |createdById    | string of userId | | created_user |

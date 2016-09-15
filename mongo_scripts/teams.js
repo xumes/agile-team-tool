@@ -36,10 +36,13 @@ _.each(cloudantTeams, function(doc) {
   //set empty string values to be undefined
   doc = _.mapObject(doc, function(val){ return _.isEmpty(val) ? undefined : val; });
   
-  //rename members.key to members.cnum because 'key' is not descriptive
+  //rename members.key to members.userId because 'key' is not descriptive
   _.each(doc.members, function(member){
-    member['cnum'] = member['key'];
+    member['userId'] = member['key'];
     delete member['key'];
+    
+    member['email'] = member['id'];
+    delete member['id'];
   });
   
   
