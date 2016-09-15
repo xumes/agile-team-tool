@@ -40,10 +40,10 @@ I think these doc types are not needed
 |status| copy as is | iterationinfo_status |"Not complete", "Completed"
 |createDate|JS Date Object UTC | created_dt | "2016-04-12 08:58:50 EDT"
 |createdByUserId| string of userId | created_user |
-|createdBy| string of name or email | created_user |
+|createdBy| string of email | created_user |
 |updateDate| JS Date Object UTC | last_updt_dt | "2016-04-27 04:53:23 EDT"
 |updatedByUserId| string of userId | last_updt_user |
-|updatedBy| string of name or email | last_updt_user |
+|updatedBy| string of email | last_updt_user |
 |startDate| JS Date Object UTC|iteration_start_dt | "01/15/2016"
 |endDate| JS Date Object UTC|iteration_end_dt | "01/16/2016"
 |memberCount| number | team_mbr_cnt |
@@ -127,10 +127,10 @@ and update to a team name might be expensive if its high up in the tree.
 |description    | string |  | desc |
 |createDate     | JS Date Object UTC | |created_dt | "2016-04-12 08:58:50 EDT"
 |createdByUserId    | string of userId | | created_user |
-|createdBy      | string of name or email | | created_user |
+|createdBy      | string of email | | created_user |
 |updateDate     | JS Date Object UTC | |last_updt_dt | "2016-04-27 04:53:23 EDT"
 |updatedByUserId    | string of userId | |last_updt_user |
-|updatedBy      | string of name or email | |last_updt_user |
+|updatedBy      | string of email | |last_updt_user |
 
 don't port these fields: child_team_id, parent_team_id
 
@@ -200,10 +200,10 @@ doc.type : 'matassessmtrslt'
 |see below       | nested struct |  | assessmt_action_plan_tbl | see below
 |createDate     | JS Date Object UTC | |created_dt | "2016-04-12 08:58:50 EDT"
 |createdByUserId    | string of userId | | created_user |
-|createdBy      | string of name or email | | created_user |
+|createdBy      | string of email | | created_user |
 |updateDate     | JS Date Object UTC | |last_updt_dt | "2016-04-27 04:53:23 EDT"
 |updatedByUserId    | string of userId | |last_updt_user |
-|updatedBy      | string of name or email | |last_updt_user |
+|updatedBy      | string of email | |last_updt_user |
 
 dont think we need to include this:
 submitter_id
