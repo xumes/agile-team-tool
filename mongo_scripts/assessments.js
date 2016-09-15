@@ -76,7 +76,7 @@ _.each(cloudantAssessments, function(doc) {
       'improveDescription': actionPlan.how_better_action_item,
       'currentLevel'      : parseFloat(actionPlan.cur_mat_lvl_score),
       'targetLevel'       : parseFloat(actionPlan.tar_mat_lvl_score),
-      'progressSum'       : actionPlan.progress_summ,
+      'progressComment'   : actionPlan.progress_summ,
       'keyMetric'         : actionPlan.key_metric,
       'reviewDate'        : actionPlan.review_dt,
       'actionStatus'      : actionPlan.action_item_status
@@ -115,19 +115,19 @@ _.each(cloudantAssessments, function(doc) {
 });
 
 
-//insert into db
-var creds = require('./creds')
-// Use connect method to connect to the server
-MongoClient.connect(creds.url, function(err, db) {
-  
-  assert.equal(null, err);
-  console.log("Connected successfully to server");
-  //console.log(db)
-  
-  db.collection('assessments').insertMany(mongoAssessments, function(err, r) {
-        assert.equal(null, err);
-        console.log("Done!  " + JSON.stringify(r.result));
-        db.close();
-        process.exit();
-  });
-});
+// //insert into db
+// var creds = require('./creds')
+// // Use connect method to connect to the server
+// MongoClient.connect(creds.url, function(err, db) {
+//   
+//   assert.equal(null, err);
+//   console.log("Connected successfully to server");
+//   //console.log(db)
+//   
+//   db.collection('assessments').insertMany(mongoAssessments, function(err, r) {
+//         assert.equal(null, err);
+//         console.log("Done!  " + JSON.stringify(r.result));
+//         db.close();
+//         process.exit();
+//   });
+// });

@@ -252,7 +252,7 @@ assessmt_action_plan_tbl: -> actionPlans
   how_better_action_item": -> improveDescription  (cloudant ex: "We use a SmartCloud and review RTC as our virtual wall.  ")
   cur_mat_lvl_score": -> currentLevel
   tar_mat_lvl_score": -> targetLevel
-  progress_summ": -> progressSum
+  progress_summ": -> progressComment
   key_metric": -> keyMetric
   review_dt": -> reviewDate
   action_item_status": -> actionStatus
