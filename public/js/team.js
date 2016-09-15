@@ -1078,11 +1078,15 @@ function addTeamMember(person, oldAlloc, newAlloc, oldRole, newRole, action) {
       memberData.allocation = isNaN(parseInt(newAlloc)) ? 0 : newAlloc;
     }
 
+    var modifyMembers = {
+      teamId : currentTeam['_id'],
+      members : currentTeam['members']
+    };
     $.ajax({
       type: 'PUT',
-      url: '/api/teams/',
+      url: '/api/teams/members', // 'api/teams'
       contentType: 'application/json',
-      data: JSON.stringify(currentTeam)
+      data: JSON.stringify(modifyMembers)  // currentTeam
     }).fail(function(xhr, textStatus, errorThrown) {
       if (xhr.status == 400) {
         handleTeamValidationErrors(JSON.parse(xhr.responseText), action);
@@ -1092,10 +1096,9 @@ function addTeamMember(person, oldAlloc, newAlloc, oldRole, newRole, action) {
 
     }).done(function(data) {
       userTeamList = data.userTeams;
-      updateAgileTeamCache(data.team);
+      updateAgileTeamCache(data.teamDetails);
       loadSelectedAgileTeam();
       updateMemberInfo('clear');
-
       if (action == 'addTeamMember')
         showMessagePopup('You have successfully added a Team Member to team ' + currentTeam.name + '.');
       else
@@ -1128,11 +1131,16 @@ function deleteTeamMember() {
       currentTeam.members = members;
     });
 
+    var modifyMembers = {
+      teamId : currentTeam['_id'],
+      members : currentTeam['members']
+    };
+
     $.ajax({
       type: 'PUT',
-      url: '/api/teams/',
+      url: '/api/teams/members', //'/api/teams/',
       contentType: 'application/json',
-      data: JSON.stringify(currentTeam)
+      data: JSON.stringify(modifyMembers)
     }).fail(function(xhr, textStatus, errorThrown) {
       if (xhr.status == 400) {
         handleTeamValidationErrors(JSON.parse(xhr.responseText), 'deleteTeamMember');
@@ -1142,7 +1150,7 @@ function deleteTeamMember() {
 
     }).done(function(data) {
       userTeamList = data.userTeams;
-      updateAgileTeamCache(data.team);
+      updateAgileTeamCache(data.teamDetails);
       loadSelectedAgileTeam();
       updateMemberInfo('clear');
       showMessagePopup('You have successfully removed Team member(s).');

@@ -1252,13 +1252,25 @@ var team = {
         return team.getTeam(teamId);
       })
       .then(function(teamDetails){
+        teamDetails = teamDetails;
         teamDetails['members'] = members;
         teamDetails['last_updt_user'] = userId;
         teamDetails['last_updt_dt'] = util.getServerTime();
         return common.updateRecord(teamDetails);
       })
       .then(function(savingResult){
-        return resolve(savingResult);
+        return team.getUserTeams(userId);
+      })
+      .then(function(userTeams){
+        return team.getTeam(teamId)
+        .then(function(result){
+          return resolve(
+            {
+              userTeams : userTeams,
+              teamDetails : result
+            }
+          );
+        });
       })
       .catch(function(err){
         return reject(err);

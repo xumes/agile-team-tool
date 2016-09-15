@@ -1430,8 +1430,8 @@ describe('Team models [modifyTeamMembers]', function() {
         teamModel.modifyTeamMembers(modifyTeamId, userDetails['shortEmail'], validTeamMembers)
           .then(function(body){
             expect(body).to.be.a('object');
-            expect(body).to.have.property('ok');
-            expect(body['ok']).to.have.equal(true);
+            expect(body).to.have.property('userTeams');
+            expect(body).to.have.property('teamDetails');
             done();
           });
       });
