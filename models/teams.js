@@ -8,9 +8,11 @@ var util = require('../helpers/util');
 var iterationModels = require('./iteration');
 var assessmentModels = require('./assessment');
 var rules = require('./validate_rules/teams');
+var memberRules = require('./validate_rules/teamMembers');
 var users = require('./users');
 var teamIndex = require('./index/teamIndex');
 var teamDocRules = rules.teamDocRules;
+var teamMemberRules = rules.teamMemberRules;
 var isAllowedUser = false;
 var msg;
 
@@ -889,7 +891,6 @@ var team = {
                     // we actually need to get the latest team docs to see if it has been associated already with another parent
                     if (associateObj['targetChild'].indexOf(associateObj['teamId']) > -1) {
                       // not allowed to add self as a child
-                      console.log('not allowed to add self as a child');
                       errorLists['error']['targetChild'] = ['Unable to add selected team as a child. Team may have been updated with another parent.'];
                       infoLogs(errorLists);
                       reject(errorLists);
@@ -1197,7 +1198,86 @@ var team = {
           });
       }
     });
+  },
+
+  modifyTeamMembers: function(teamId, userId, members) {
+    return new Promise(function(resolve, reject){
+      /**
+       * Reformat document to update/delete document structure for BULK operation
+       *
+       * @param teamId - team id to modify
+       * @param userId - user id of the one who is doing the action
+       * @param members - array of member user
+       * @returns - modified tem document
+       */
+      var errorLists = {};
+      errorLists['error'] = {};
+      if (_.isEmpty(teamId)){
+        errorLists['error']['teamId'] = ['Team ID is required'];
+        infoLogs(errorLists);
+        return reject(errorLists);
+      }
+      if (_.isEmpty(userId)){
+        errorLists['error']['userId'] = ['User ID is required'];
+        infoLogs(errorLists);
+        return reject(errorLists);
+      }
+      if (_.isEmpty(members)){
+        errorLists['error']['members'] = ['Member lists is required'];
+        infoLogs(errorLists);
+        return reject(errorLists);
+      } else {
+        if (!_.isArray(members)){
+          errorLists['error']['members'] = ['Invalid member lists'];
+          infoLogs(errorLists);
+          return reject(errorLists);
+        } else {
+          _.each(members, function(v,i,l){
+            var mLists = validate(v, teamMemberRules);
+            if (mLists){
+              errorLists['error'] = mLists;
+              infoLogs(errorLists);
+              return reject(errorLists);
+            }
+          });
+        }
+      }
+      //check if user is allowed to edit team
+      util.isUserAllowed(userId, teamId)
+      .then(function(allowed){
+        infoLogs('User ' + userId + ' is allowed to edit team ' + teamId + '. Proceed with member modification');
+        return allowed;
+      })
+      .then(function(){
+        return team.getTeam(teamId);
+      })
+      .then(function(teamDetails){
+        teamDetails = teamDetails;
+        teamDetails['members'] = members;
+        teamDetails['last_updt_user'] = userId;
+        teamDetails['last_updt_dt'] = util.getServerTime();
+        return common.updateRecord(teamDetails);
+      })
+      .then(function(savingResult){
+        return team.getUserTeams(userId);
+      })
+      .then(function(userTeams){
+        return team.getTeam(teamId)
+        .then(function(result){
+          return resolve(
+            {
+              userTeams : userTeams,
+              teamDetails : result
+            }
+          );
+        });
+      })
+      .catch(function(err){
+        return reject(err);
+      });
+    });
   }
+
 };
 
 var formattedDocuments = function(doc, action) {

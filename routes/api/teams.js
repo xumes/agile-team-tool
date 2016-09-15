@@ -97,6 +97,20 @@ module.exports = function(app, includes) {
     }
   };
 
+  modifyTeamMembers = function(req, res) {
+    var members = req.body['members'];
+    var userId = req.session['email'];
+    var teamId = req.body['teamId'];
+    teamModel.modifyTeamMembers(teamId, userId, members)
+      .then(function(result){
+        res.send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        // cannot simulate this error during testing
+        res.status(400).send(err);
+      });
+  };
+
   getTeamRole = function(req, res) {
     teamModel.getRole()
       .then(function(result) {
@@ -248,6 +262,9 @@ module.exports = function(app, includes) {
 
   // associate team document
   app.put('/api/teams/associates', [includes.middleware.auth.requireLogin], associateTeam);
+
+  // modify  team members
+  app.put('/api/teams/members', [includes.middleware.auth.requireLogin], modifyTeamMembers);
 
   // get all applicable team roles
   app.get('/api/teams/roles', [includes.middleware.auth.requireLogin], getTeamRole);
