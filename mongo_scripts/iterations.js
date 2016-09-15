@@ -9,6 +9,7 @@ var cloudantIterations = _.filter(cloudantDb.rows, function(row){ return row.doc
 var cloudantIterations = _.pluck(cloudantIterations, 'doc');
 
 var util = require("./util.js");
+var userMap = util.getUserMap();
 
 
 var mongoIterations = [];
@@ -21,11 +22,11 @@ _.each(cloudantIterations, function(doc) {
   var mongoDoc = {
     'cloudantId' : doc._id,
     'createDate': util.stringToUtcDate(doc.created_dt),
-    'createdByUserId': doc.created_user,
-    'createdBy': doc.created_user,
+    'createdByUserId'   : util.getUserId(userMap, doc.created_user),
+    'createdBy'   : util.lowerCase(doc.created_user),
     'updateDate': util.stringToUtcDate(doc.last_updt_dt),
-    'updatedByUserId': doc.last_updt_user,
-    'updatedBy': doc.last_updt_user,
+    'updatedByUserId' : util.getUserId(userMap, doc.last_updt_user),
+    'updatedBy'       : util.lowerCase(doc.last_updt_user),
     'startDate': util.stringToUtcDate(doc.iteration_start_dt),
     'endDate': util.stringToUtcDate(doc.iteration_end_dt),
     'name' : doc.iteration_name,

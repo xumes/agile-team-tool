@@ -1,6 +1,9 @@
 var _          = require('underscore');
 var moment     = require('moment');
 var moment = require('moment-timezone');
+var allDocs = require('./data');
+var ObjectId    = require('mongodb').ObjectID;
+
 
 module.exports = {
    stringToUtcDate: function(string){
@@ -24,5 +27,58 @@ module.exports = {
       //console.log("warning: not UTC, ETC/EDT, SGT, adm: " + string +". will try to set to: " + new Date(moment.utc(string).format()));
       return moment.utc(string).format() === 'Invalid date' ? undefined : new Date(moment.utc(string).format());
     }
+  },
+  
+  getUserMap: function(){
+    
+    var map = {};
+    
+    var cloudantTeams = _.filter(allDocs.rows, function(row){ return row.doc.type === 'team'; });
+    var cloudantTeams = _.pluck(cloudantTeams, 'doc');
+
+    _.each(cloudantTeams, function(team) {
+      
+      _.each(team.members, function(person) {
+        
+        if(_.isEmpty(person.id))
+          return;
+        
+        if( _.isEmpty(map[(person.id).toLowerCase()]) ) {
+          var mapVal = {};
+          
+          mapVal['userId'] = (person.key).toUpperCase();
+          mapVal['name'] =  person.name;
+          mapVal['email'] = (person.id).toLowerCase();
+
+          map[(person.id).toLowerCase()] = mapVal;
+        }
+        else{
+        //  console.log(person.id + " already in the map ");
+        }
+      });
+    });
+    return map;
+  },
+  
+  getUserId: function(map, emailId){
+    
+    if(_.isEmpty(emailId))
+      return undefined;
+    
+    emailId = emailId.toLowerCase();
+    
+    if(_.isEmpty(map[emailId])){
+      console.log("user not found, will insert their email as a userId: " + emailId);
+      return emailId;
+    }
+    else{
+      if(_.isEmpty(map[emailId].userId)) console.log("userId in user map was empty:  "+emailId);
+      return (_.isEmpty(map[emailId].userId)) ? emailId : map[emailId].userId;
+    }
+  },
+  
+  lowerCase: function(string){
+    return (_.isEmpty(string)) ? undefined : string.toLowerCase();
   }
+  
 };

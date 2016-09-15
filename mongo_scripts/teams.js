@@ -7,6 +7,7 @@ var assert      = require('assert');
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 var util = require("./util.js");
+var userMap = util.getUserMap();
 
 
 var cloudantTeams = _.filter(cloudantDb.rows, function(row){ return row.doc.type === 'team'; });
@@ -84,11 +85,11 @@ _.each(cloudantTeams, function(doc) {
     'type'       : (doc.squadteam==='Yes'? 'squad' : undefined),
     'description': doc.desc,
     'createDate' : util.stringToUtcDate(doc.created_dt),
-    'createdByUserId': doc.created_user,
-    'createdBy'  : doc.created_user,
+    'createdByUserId' : util.getUserId(userMap, doc.created_user),
+    'createdBy'       : util.lowerCase(doc.created_user),
     'updateDate' : util.stringToUtcDate(doc.last_updt_dt),
-    'updatedByUserId': doc.last_updt_user,
-    'updatedBy'  : doc.last_updt_user,
+    'updatedByUserId' : util.getUserId(userMap, doc.last_updt_user),
+    'updatedBy'       : util.lowerCase(doc.last_updt_user),
     'startDate'  : util.stringToUtcDate(doc.iteration_start_dt),
     'endDate'    : util.stringToUtcDate(doc.iteration_end_dt),
     'docStatus'  : doc.doc_status

@@ -9,6 +9,8 @@ var cloudantAssessments = _.filter(cloudantDb.rows, function(row){ return row.do
 var cloudantAssessments = _.pluck(cloudantAssessments, 'doc');
 
 var util = require("./util.js");
+var userMap = util.getUserMap();
+
 
 var mongoAssessments = [];
 _.each(cloudantAssessments, function(doc) {
@@ -91,25 +93,28 @@ _.each(cloudantAssessments, function(doc) {
     'docStatus' : doc.doc_status,
     'type': doc.team_proj_ops,
     'deliversSoftware' : (doc.team_dlvr_software==='Yes') ? true:false,
+    
     'assessmentStatus' : doc.assessmt_status,
-    'assessorUserId' : doc.ind_assessor_id,
+    'assessorUserId' : util.getUserId(userMap, doc.ind_assessor_id),
+    'assessor' : util.lowerCase(doc.ind_assessor_id),
     'assessorStatus' : doc.ind_assessmt_status,
     'assessedDate' : util.stringToUtcDate(doc.ind_assessmt_dt),
     
-    'submittedBy'   : doc.submitter_id,
+    'submittedByUserId': util.getUserId(userMap, doc.submitter_id),
+    'submittedBy': util.lowerCase(doc.submitter_id),
     'submittedDate' : util.stringToUtcDate(doc['self-assessmt_dt']),
     
     'createDate' : util.stringToUtcDate(doc.created_dt),
-    'createdByUserId': doc.created_user,
-    'createdBy'  : doc.created_user,
-    'updateDate' : util.stringToUtcDate(doc.last_updt_dt),
-    'updatedByUserId': doc.last_updt_user,
-    'updatedBy'  : doc.last_updt_user,
+    'createdByUserId'   : util.getUserId(userMap, doc.created_user),
+    'createdBy'   : util.lowerCase(doc.created_user),
+    
+    'updateDate'        : util.stringToUtcDate(doc.last_updt_dt),
+    'updatedByUserId'   : util.getUserId(userMap, doc.last_updt_user),
+    'updatedBy'         : util.lowerCase(doc.last_updt_user),
     
     'componentResults' : (newAssessedComponentResults.length === 0) ? undefined : newAssessedComponentResults,
     'actionPlans' : (newActionPlanTable.length === 0) ? undefined : newActionPlanTable
   };
-
   
   mongoAssessments.push(mongoDoc);
 });

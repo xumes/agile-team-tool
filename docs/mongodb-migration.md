@@ -17,7 +17,7 @@ I think these doc types are not needed
 ### users
 | Fields        | Details       | cloudant field
 | ------------- |:-------------:|-------------
-| _id | (UNIQUE ID) ObjectId. for IBM it's CNUM | n/a
+| userId | (UNIQUE ID) for IBM it's CNUM | n/a
 | adminAccess | 'none' or 'full' or 'read' or 'write'| n/a
 | email | string; for IBM it's pref. ID | n/a
 | name  | string' first and last name of person | n/a
