@@ -53,16 +53,12 @@ _.each(cloudantIterations, function(doc) {
 var creds = require('./creds')
 // Use connect method to connect to the server
 MongoClient.connect(creds.url, function(err, db) {
-  
   assert.equal(null, err);
   console.log("Connected successfully to server");
-  //console.log(db)
-  
   db.collection('iterations').insertMany(mongoIterations, function(err, r) {
         assert.equal(null, err);
         console.log("Done!  " + JSON.stringify(r.result));
         db.close();
         process.exit();
   });
-  
 });

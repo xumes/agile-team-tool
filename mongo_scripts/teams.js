@@ -9,7 +9,6 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 var util = require("./util.js");
 var userMap = util.getUserMap();
 
-
 var cloudantTeams = _.filter(cloudantDb.rows, function(row){ return row.doc.type === 'team'; });
 var cloudantTeams = _.pluck(cloudantTeams, 'doc');
 var team_index = _.find(cloudantDb.rows, function(row){return row.id==='ag_ref_team_index'})
@@ -46,22 +45,20 @@ _.each(cloudantTeams, function(doc) {
     delete member['id'];
   });
   
-  
   //get team parent info from it's indexed doc
   var indexDoc = _.find(concatTeamIndex, function(obj){
     return obj._id === doc._id;
   });
   if(_.isEmpty(indexDoc))
     console.log("warning: " + doc._id + " was not found in the index");
-  var parents = indexDoc.parents;
-  
-  
+  var parents = indexDoc.parents;  
   var pathId = normalizeString(doc.name);
   
   //check if pathId is unique
   _.each(mongoTeams, function(obj){
     if(_.isEqual(obj.pathId, pathId)){
-      console.log('error conflicting path') //TODO need to clean up prod db and remove duplicate teams
+      console.log('error conflicting path') 
+      //TODO need to clean up prod db and remove duplicate teams
       // console.log('ERROR: ' + pathId + '  exists already.');
       // console.log('new mongo doc: ' + JSON.stringify(doc));
       // console.log('\n')
@@ -76,7 +73,6 @@ _.each(cloudantTeams, function(doc) {
   parentMap[doc._id] = parents;
   
   var mongoDoc = {
-    // cant do this '_id' : new ObjectID(normalizedName),
     'cloudantId' : doc._id,
     'name'       : doc.name,
     'pathId'     : pathId,
@@ -105,7 +101,6 @@ _.each(mongoTeams, function(mongoDoc) {
   }
   
   var path = '';
-  
   var parentsDesc = parentMap[mongoDoc.cloudantId].reverse();
   
   _.each(parentsDesc, function(parent){
@@ -119,9 +114,7 @@ _.each(mongoTeams, function(mongoDoc) {
     }
   });
   //append last comma
-  path = path.concat(',');
-  
-  //console.log(path);
+  path = path.concat(',');  
   mongoDoc['path'] = path;
 });
 
@@ -130,19 +123,12 @@ _.each(mongoTeams, function(mongoDoc) {
 var creds = require('./creds')
 // Use connect method to connect to the server
 MongoClient.connect(creds.url, function(err, db) {
-  
   assert.equal(null, err);
-  console.log("Connected successfully to server");
-  //console.log(db)
-  
+  console.log("Connected successfully to server");  
   db.collection('teams').insertMany(mongoTeams, function(err, r) {
         assert.equal(null, err);
         console.log("Done!  " + JSON.stringify(r.result));
         db.close();
         process.exit();
   });
-  
 });
-
-
-

@@ -115,20 +115,15 @@ _.each(cloudantAssessments, function(doc) {
     'componentResults' : (newAssessedComponentResults.length === 0) ? undefined : newAssessedComponentResults,
     'actionPlans' : (newActionPlanTable.length === 0) ? undefined : newActionPlanTable
   };
-  
   mongoAssessments.push(mongoDoc);
 });
-
 
 //insert into db
 var creds = require('./creds')
 // Use connect method to connect to the server
 MongoClient.connect(creds.url, function(err, db) {
-  
   assert.equal(null, err);
   console.log("Connected successfully to server");
-  //console.log(db)
-  
   db.collection('assessments').insertMany(mongoAssessments, function(err, r) {
         assert.equal(null, err);
         console.log("Done!  " + JSON.stringify(r.result));
