@@ -21,10 +21,10 @@ _.each(cloudantIterations, function(doc) {
   var mongoDoc = {
     'cloudantId' : doc._id,
     'createDate': util.stringToUtcDate(doc.created_dt),
-    'createdById': doc.created_user,
+    'createdByUserId': doc.created_user,
     'createdBy': doc.created_user,
     'updateDate': util.stringToUtcDate(doc.last_updt_dt),
-    'updatedById': doc.last_updt_user,
+    'updatedByUserId': doc.last_updt_user,
     'updatedBy': doc.last_updt_user,
     'startDate': util.stringToUtcDate(doc.iteration_start_dt),
     'endDate': util.stringToUtcDate(doc.iteration_end_dt),

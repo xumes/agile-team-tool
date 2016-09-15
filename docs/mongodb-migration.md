@@ -39,10 +39,10 @@ I think these doc types are not needed
 |teamId | objectId of team | team_id |
 |status| copy as is | iterationinfo_status |"Not complete", "Completed"
 |createDate|JS Date Object UTC | created_dt | "2016-04-12 08:58:50 EDT"
-|createdById| string of userId | created_user |
+|createdByUserId| string of userId | created_user |
 |createdBy| string of name or email | created_user |
 |updateDate| JS Date Object UTC | last_updt_dt | "2016-04-27 04:53:23 EDT"
-|updatedById| string of userId | last_updt_user |
+|updatedByUserId| string of userId | last_updt_user |
 |updatedBy| string of name or email | last_updt_user |
 |startDate| JS Date Object UTC|iteration_start_dt | "01/15/2016"
 |endDate| JS Date Object UTC|iteration_end_dt | "01/16/2016"
@@ -126,10 +126,10 @@ and update to a team name might be expensive if its high up in the tree.
 |type           | map to a diff. string | "squad" or null | squadteam  | "Yes" or "No"
 |description    | string |  | desc |
 |createDate     | JS Date Object UTC | |created_dt | "2016-04-12 08:58:50 EDT"
-|createdById    | string of userId | | created_user |
+|createdByUserId    | string of userId | | created_user |
 |createdBy      | string of name or email | | created_user |
 |updateDate     | JS Date Object UTC | |last_updt_dt | "2016-04-27 04:53:23 EDT"
-|updatedById    | string of userId | |last_updt_user |
+|updatedByUserId    | string of userId | |last_updt_user |
 |updatedBy      | string of name or email | |last_updt_user |
 
 don't port these fields: child_team_id, parent_team_id
@@ -192,17 +192,17 @@ doc.type : 'matassessmtrslt'
 |deliversSoftware | map to a boolean | | team_dlvr_software | "Yes" / "No"
 |assessmentStatus | copy values as is | | assessmt_status | "Submitted" / "Draft"
 |submittedDate    | JS Date Object UTC| | self-assessmt_dt | 
-|assessorId       | person who reviews the assessment | | ind_assessor_id |
+|assessorUserId       | person who reviews the assessment | | ind_assessor_id |
 |assessorStatus   | ? | | ind_assessmt_status |
 |assessedDate     | date which an Independent Assessor submits/completes their assessment | | ind_assessmt_dt |
 |docStatus       | | | doc_status | "" , "delete"
 |see below       | nested struct |  | assessmt_cmpnt_rslts     | see below
 |see below       | nested struct |  | assessmt_action_plan_tbl | see below
 |createDate     | JS Date Object UTC | |created_dt | "2016-04-12 08:58:50 EDT"
-|createdById    | string of userId | | created_user |
+|createdByUserId    | string of userId | | created_user |
 |createdBy      | string of name or email | | created_user |
 |updateDate     | JS Date Object UTC | |last_updt_dt | "2016-04-27 04:53:23 EDT"
-|updatedById    | string of userId | |last_updt_user |
+|updatedByUserId    | string of userId | |last_updt_user |
 |updatedBy      | string of name or email | |last_updt_user |
 
 dont think we need to include this:

@@ -92,7 +92,7 @@ _.each(cloudantAssessments, function(doc) {
     'type': doc.team_proj_ops,
     'deliversSoftware' : (doc.team_dlvr_software==='Yes') ? true:false,
     'assessmentStatus' : doc.assessmt_status,
-    'assessorId' : doc.ind_assessor_id,
+    'assessorUserId' : doc.ind_assessor_id,
     'assessorStatus' : doc.ind_assessmt_status,
     'assessedDate' : util.stringToUtcDate(doc.ind_assessmt_dt),
     
@@ -100,10 +100,10 @@ _.each(cloudantAssessments, function(doc) {
     'submittedDate' : util.stringToUtcDate(doc['self-assessmt_dt']),
     
     'createDate' : util.stringToUtcDate(doc.created_dt),
-    'createdById': doc.created_user,
+    'createdByUserId': doc.created_user,
     'createdBy'  : doc.created_user,
     'updateDate' : util.stringToUtcDate(doc.last_updt_dt),
-    'updatedById': doc.last_updt_user,
+    'updatedByUserId': doc.last_updt_user,
     'updatedBy'  : doc.last_updt_user,
     
     'componentResults' : (newAssessedComponentResults.length === 0) ? undefined : newAssessedComponentResults,
