@@ -770,6 +770,47 @@ var snapshot = {
           reject(formatErrMsg(msg));
         });
     });
+  },
+
+  completeIterations: function() {
+    return new Promise(function(resolve, reject) {
+      common.getByView('iterations', 'notCompleted')
+        .then(function(data) {
+          var iterations = util.returnObject(data);
+          var completedIterations = [];
+          /* istanbul ignore if */
+          if (!_.isEmpty(iterations)) {
+            _.each(iterations, function(iteration){
+              var status = iterationModel.calculateStatus(iteration);
+              if (!_.isEqual(iteration['iterationinfo_status'], status)) {
+                iteration['iterationinfo_status'] = status;
+                completedIterations.push(iteration);
+              }
+            });
+            completedIterations = util.formatForBulkTransaction(completedIterations, 'batch', 'update');
+          }
+          return completedIterations;
+        })
+        .then(function(data) {
+          /* istanbul ignore if */
+          if (!_.isEmpty(data))
+            data = common.bulkUpdate(data);
+
+          return (data);
+        })
+        .then(function(data) {
+          resolve(data);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          var msg;
+          if (err.error) {
+            msg = err.error;
+          } else {
+            msg = err;
+          }
+          reject(formatErrMsg(msg));
+        });
+    });
   }
 };
 

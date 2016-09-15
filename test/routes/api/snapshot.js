@@ -77,4 +77,15 @@ describe('Snapshot API Test [GET /api/snapshot/getrollupdata]: calculate and upd
     });
   });
 
+  it('Successfully complete iterations if past end date', function(done) {
+    var req = request(app).get('/api/snapshot/completeiterations');
+    agent.attachCookies(req);
+    req.end(function(err, res) {
+      if (err) {} else {
+        expect(res.statusCode).to.be.equal(200);
+      }
+      done();
+    });
+  });
+
 });
