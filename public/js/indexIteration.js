@@ -369,7 +369,6 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
       showInLegend: showLegend,
       name: seriesObj1.name,
       data: seriesObj1.data,
-      color: '#434348',
       point: {
         events: {
           click: function(e) {
@@ -382,7 +381,6 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
       showInLegend: showLegend,
       name: seriesObj2.name,
       data: seriesObj2.data,
-      color: '#7cb5ec',
       point: {
         events: {
           click: function(e) {
