@@ -18,3 +18,13 @@ schedule.scheduleJob('*/3 * * * *', function() {
       workerLogger.error('Unable to update rollup data err=', err);
     });
 });
+
+schedule.scheduleJob('1 0 * * *', function() {
+  snapshot.completeIterations()
+    .then(function() {
+      workerLogger.verbose('Successfully processed "Not Complete" iterations.');
+    })
+    .catch(function(err) {
+      workerLogger.error('Unable to process "Not Complete" iterations err=', err);
+    });
+});

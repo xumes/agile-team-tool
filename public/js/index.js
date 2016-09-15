@@ -6,7 +6,7 @@ var loadedParentId = '';
 var teamLocation = [];
 var piechartData = {};
 var userAccess = ['Yanliang.Gu1@ibm.com','leip@us.ibm.com','hourihan@us.ibm.com','john.elden.revano@ibm.com'];
-var colorArray = ['#1F6394','#2A88CC','#3693D6','#2B8DD3','#7EDFD1','#30C0AB','#248F7F','#7EDFD1','#2985C7','#1F6394','#2A88CC','#3693D6','#2B8DD3','#7EDFD1','#30C0AB','#248F7F','#7EDFD1','#2985C7'];
+var colorArray = ['#4178BE','#C0E6FF','#7CC7FF','#5AAAFA','#5596E6','#4178BE','#325C80','#264A60','#1D3649','#152935','#010205','#008571','#A7FAE6','#6EEDD8','#41D6C3','#00B4A0','#006D5D','#005448'];
 var tempIterationData = [{
   'totalPoints': 0,
   'totalStories': 0,
@@ -220,12 +220,8 @@ jQuery(function($) {
   });
 
   $('#teamscoreFormula').click(function(){
-    $('#myModal').css('display', 'block');
-    $('#img01').attr('src','./img/teamscore-formula.png');
-  });
-
-  $('#closeBtn').click(function(){
-    $('#myModal').css('display', 'none');
+    IBMCore.common.widget.overlay.show('overlayExampleLarge');
+    return false;
   });
 });
 
@@ -1088,26 +1084,27 @@ function drawChart(data, isTimezone) {
       sliceColor.push(color);
     }
   }
+  var leftmargin = $('#teamscore-piechart').width() * 0.1 ;
   var options = {
     title: title,
     titleTextStyle: {
       fontName: 'normal',
-      fontSize: '10'
+      fontSize: '14'
     },
     pieSliceText: 'none',
     height: 300,
     pieHole: 0.4,
-    chartArea: {left:0,top:0,width:'100%',height:'100%'},
+    chartArea: {left:leftmargin,top:'20px',width:'80%',height:'80%'},
     legend: {
       textStyle: {
         fontName: 'normal',
-        fontSize: '10'
+        fontSize: '12'
       },
       position: 'labeled'
     },
     slices: sliceColor
   };
-  $('#titleLabel').html(title);
+  // $('#titleLabel').html(title);
   if (isTimezone) {
     var siteChart = new google.visualization.PieChart(document.getElementById('teamscore-piechart'));
     siteChart.draw(srdata, options);
@@ -1124,7 +1121,8 @@ function showScorePieChart() {
   $('#teamscore-piechart').css('height','70%');
   $('#teamscore-piechart').show();
   $('#switchBtn').show();
-  $('#titleLabel').show();
+  $('#teamscoreFormula').show();
+  // $('#titleLabel').show();
 }
 
 function hideScorePieChart() {
@@ -1135,7 +1133,8 @@ function hideScorePieChart() {
   $('#teamscore-piechart').css('height','0px');
   $('#teamscore-piechart').hide();
   $('#switchBtn').hide();
-  $('#titleLabel').hide();
+  $('#teamscoreFormula').hide();
+  // $('#titleLabel').hide();
 }
 
 function findUserAccess(email) {
