@@ -515,12 +515,22 @@ function getAllAgileTeamsByParentId(parentId, showLoading, initial, parentsTree)
           });
           if (parentsTree != undefined) {
             if (!_.isEmpty(parentsTree)) {
-              var parentTeamId = parentsTree[parentsTree.length - 1];
-              $('#sub_' + jq(parentTeamId)).addClass('ibm-active');
-              $('#sub_' + jq(parentTeamId)).attr('hasChildren', 'Yes');
-              $('#sub_' + jq(parentTeamId) + (' a.ibm-twisty-body')).css('display', 'block');
-              loadedParentId = parentsTree.splice(parentsTree.length - 1, 1);
-              getAllAgileTeamsByParentId(parentTeamId, false, false, parentsTree);
+              var findVar = _.find(parentsTree, function(parentTeamId){
+                if ($('#sub_' + jq(parentTeamId)).length > 0) {
+                  loadedParentId = parentsTree.splice(parentsTree.indexOf(parentTeamId),1);
+                  $('#sub_' + jq(parentTeamId)).addClass('ibm-active');
+                  $('#sub_' + jq(parentTeamId)).attr('hasChildren', 'Yes');
+                  $('#sub_' + jq(parentTeamId) + (' a.ibm-twisty-body')).css('display', 'block');
+                  getAllAgileTeamsByParentId(parentTeamId, false, false, parentsTree);
+                  return parentTeamId;
+                }
+              });
+              // var parentTeamId = parentsTree[parentsTree.length - 1];
+              // $('#sub_' + jq(parentTeamId)).addClass('ibm-active');
+              // $('#sub_' + jq(parentTeamId)).attr('hasChildren', 'Yes');
+              // $('#sub_' + jq(parentTeamId) + (' a.ibm-twisty-body')).css('display', 'block');
+              // loadedParentId = parentsTree.splice(parentsTree.length - 1, 1);
+              // getAllAgileTeamsByParentId(parentTeamId, false, false, parentsTree);
             } else {
               if (loadedParentId != undefined && loadedParentId != '') {
                 var subTwistyId = 'sub_' + loadedParentId;
