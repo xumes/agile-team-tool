@@ -10,7 +10,6 @@ var iterationTestData = require('../../data/iteration.js');
 var util = require('../../../helpers/util');
 var app = require('../../../app');
 var validId;
-var validTeamId;
 var docId;
 var iterationId;
 
@@ -46,27 +45,12 @@ describe('Iteration API Test', function() {
     teamModel.getName(teamName)
       .then(function(result) {
         if (result.length === 0) {
-          teamModel.createTeam(teamDocValid, userDetails)
-            .then(function(body) {
-              expect(body).to.be.a('object');
-              expect(body).to.have.property('_id');
-              validId = body['_id'];
-              validTeamId = body['name'];
-              userTeams[0]._id = validId;
-              // console.log('validId1:', validId);
-              agent.get('/api/login/masquerade/' + adminUser).send().end(function(err, res) {
-                if (err) throw err;
-                //call home page to initialize session data
-                agent.get('/').send().end(function(err, res) {
-                  agent.saveCookies(res);
-                  // console.log('\n back to homepage 1...\n');
-                  done();
-                });
-              });
-            }).catch(function(err) {});
-        } else {
+          return teamModel.createTeam(teamDocValid, userDetails);
+        }
+        else {
           validId = result[0].id;
           userTeams[0]._id = validId;
+          // console.log('\nvalidId 2:', validId, '\n');
           agent.get('/api/login/masquerade/' + adminUser).send().end(function(err, res) {
             if (err) throw err;
             //call home page to initialize session data
@@ -76,32 +60,44 @@ describe('Iteration API Test', function() {
             });
           });
         }
+      })
+      .then(function(body) {
+        if (body && body['_id'] != undefined) {
+          validId = body['_id'];
+          userTeams[0]._id = validId;
+          // console.log('\nvalidId 1:', validId, '\n');
+          agent.get('/api/login/masquerade/' + adminUser).send().end(function(err, res) {
+            if (err) throw err;
+            //call home page to initialize session data
+            agent.get('/').send().end(function(err, res) {
+              agent.saveCookies(res);
+              // console.log('\n back to homepage 1...\n');
+              done();
+            });
+          });
+        }
+      })
+      .catch(function(err) {
+        done();
       });
   });
 
   after(function(done) {
     var bulkDeleteIds = [];
+    this.timeout(10000);
     if (validId) {
       iterationModel.getByIterInfo(validId)
         .then(function(result) {
-          // console.log('TOTAL validId:', validId);
-          // console.log('TOTAL ROWS1:', result.rows.length);
-          if (result && result.rows.length > 0) {
+          if (result && result.rows && result.rows.length > 0) {
             for (i = 0; i < result.rows.length; i++) {
               var id = result.rows[i].id;
               bulkDeleteIds.push(id);
             }
-            util.BulkDelete(bulkDeleteIds)
-              .then(function(result) {
-                done();
-              })
-              .catch(function(err) {
-                done();
-              });
-            // done();
-          } else {
-            done();
+            return util.BulkDelete(bulkDeleteIds);
           }
+        })
+        .then(function(result) {
+          done();
         })
         .catch(function(err) {
           done();
@@ -204,7 +200,6 @@ describe('Iteration API Test', function() {
       iterationModel.add(doc, user, allTeams, userTeams)
         .then(function(result) {
           iterationId = result.id;
-          iterationRev = result.rev;
           expect(result).to.be.a('object');
           expect(result).to.have.property('id');
           expect(result.ok).to.be.equal(true);
@@ -472,7 +467,6 @@ describe('Iteration API Test', function() {
       iterationModel.add(doc, user, allTeams, userTeams)
         .then(function(result) {
           iterationId = result.id;
-          iterationRev = result.rev;
           expect(result).to.be.a('object');
           expect(result).to.have.property('id');
           expect(result.ok).to.be.equal(true);

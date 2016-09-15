@@ -29,75 +29,73 @@ describe('Iteration Model', function() {
   before(function(done) {
     var teamName = 'testteamid_1';
     var bulkDeleteIds = [];
+    this.timeout(10000);
     teamModel.getName(teamName)
       .then(function(result) {
         if (result.length === 0) {
-          teamModel.createTeam(teamDocValid, userDetails)
-            .then(function(body) {
-              expect(body).to.be.a('object');
-              expect(body).to.have.property('_id');
-              validId = body['_id'];
-              validTeamId = body['name'];
-              // console.log('validId:', validId);
-              iterationModel.getByIterInfo(validId)
-                .then(function(result) {
-                  // console.log('TOTAL ROWS1:', result.rows.length);
-                  if (result && result.rows.length > 0) {
-                    for (i = 0; i < result.rows.length; i++) {
-                      var id = result.rows[i].id;
-                      bulkDeleteIds.push(id);
-                    }
-                    util.BulkDelete(bulkDeleteIds)
-                      .then(function(result) {
-                        done();
-                      });
-                  } else {
-                    done();
-                  }
-                });
-            });
-        } else {
-          validId = result[0].id;
-          // console.log('validId:', validId);
-          iterationModel.getByIterInfo(validId)
-            .then(function(result) {
-              // console.log('TOTAL ROWS2:', result.rows.length);
-              if (result && result.rows.length > 0) {
-                for (i = 0; i < result.rows.length; i++) {
-                  var id = result.rows[i].id;
-                  bulkDeleteIds.push(id);
-                }
-                util.BulkDelete(bulkDeleteIds)
-                  .then(function(result) {
-                    done();
-                  });
-              } else {
-                done();
-              }
-            });
+          return teamModel.createTeam(teamDocValid, userDetails); // (A)teamModel.createTeam
         }
+        else {
+          validId = result[0].id;
+          // console.log('\nvalidId 2:', validId, '\n');
+          return iterationModel.getByIterInfo(validId); // (B)iterationModel.getByIterInfo
+        }
+      })
+      .then(function(result) { // results coming from (B)iterationModel.getByIterInfo()
+        // console.log('\nresult 111:', result, '\n');
+        if (result && result.rows && result.rows.length > 0) {
+          // console.log('\nTOTAL ROWS 2:', result.rows.length, '\n');
+          for (i = 0; i < result.rows.length; i++) {
+            var id = result.rows[i].id;
+            bulkDeleteIds.push(id);
+          }
+          return util.BulkDelete(bulkDeleteIds); // (B)util.BulkDelete
+        }
+        else { // results coming from (A)teamModel.createTeam()
+          // console.log('\nresult 222:', result, '\n');
+          if (result && result['_id']) {
+            validId = result['_id'];
+            validTeamId = result['name'];
+            // console.log('\nvalidId 1:', validId, '\n');
+            return iterationModel.getByIterInfo(validId); // (A)iterationModel.getByIterInfo
+          }
+        }
+      })
+      .then(function(result) { // result coming from (A)iterationModel.getByIterInfo()
+        // console.log('\nresult 333:', result, '\n');
+        if (result && result.rows && result.rows.length > 0) {
+          // console.log('TOTAL ROWS 1:', result.rows.length, '\n');
+          for (i = 0; i < result.rows.length; i++) {
+            var id = result.rows[i].id;
+            bulkDeleteIds.push(id);
+          }
+          return util.BulkDelete(bulkDeleteIds); // (A)util.BulkDelete
+        }
+      })
+      .then(function(results) {
+        done();
       });
   });
 
   after(function(done) {
     var bulkDeleteIds = [];
+    this.timeout(10000);
     if (validId) {
+      // console.log('\nAFTER validId:', validId, '\n');
       iterationModel.getByIterInfo(validId)
         .then(function(result) {
-          if (result && result.rows.length > 0) {
+          if (result && result.rows && result.rows.length > 0) {
             for (i = 0; i < result.rows.length; i++) {
               var id = result.rows[i].id;
               bulkDeleteIds.push(id);
             }
             // Delete the created Team document 'testteamid_1' that is used for testing
             bulkDeleteIds.push(validId);
-            util.BulkDelete(bulkDeleteIds)
-              .then(function(result) {
-                done();
-              });
-          } else {
-            done();
+            return util.BulkDelete(bulkDeleteIds);
           }
+        })
+        .then(function(result) {
+          done();
         });
     } else {
       done();
@@ -108,26 +106,24 @@ describe('Iteration Model', function() {
     this.timeout(timeout);
     before(function(done) {
       var iterId = 'testmyid';
+      this.timeout(10000);
       iterationModel.get(iterId)
         .then(function(result) {
           iterationDoc_duplicateIterName.team_id = validId;
-          iterationModel.add(iterationDoc_duplicateIterName, user)
-            .then(function(result) {
-              done();
-            })
-            .catch(function(err) {
-              done();
-            });
+          return iterationModel.add(iterationDoc_duplicateIterName, user);
+        })
+        .then(function(result) {
+          done();
         })
         .catch(function(err) {
           iterationDoc_duplicateIterName.team_id = validId;
-          iterationModel.add(iterationDoc_duplicateIterName, user)
-            .then(function(result) {
-              done();
-            })
-            .catch(function(err) {
-              done();
-            });
+          return iterationModel.add(iterationDoc_duplicateIterName, user);
+        })
+        .then(function(result) {
+          done();
+        })
+        .catch(function(err) {
+          done();
         });
     });
 
@@ -330,27 +326,34 @@ describe('Iteration Model', function() {
   describe('[get]: Get specific iteration document', function() {
     this.timeout(timeout);
     before(function(done) {
+      this.timeout(10000);
       iterationModel.getByIterInfo(validId)
         .then(function(result) {
           if (result.rows.length == 0) {
             iterationDocValid.team_id = validId;
-            iterationModel.add(iterationDocValid, user)
-              .then(function(result) {
-                iterationId = result.id;
-                expect(result).to.be.a('object');
-                expect(result).to.have.property('id');
-                expect(result.ok).to.be.equal(true);
-              })
-              .catch(function(err) {
-                expect(err).to.not.equal(null);
-              })
-              .finally(function() {
-                done();
-              });
-          } else {
-            iterationId = result.rows[0].id;
+            return iterationModel.add(iterationDocValid, user);
+          }
+          else {
+            return result;
+          }
+        })
+        .then(function(result) {
+          if (result && result.id) {
+            iterationId = result.id;
+            // console.log('\nSpecific doc iterationId 1:',iterationId, '\n');
+            expect(result).to.be.a('object');
+            expect(result).to.have.property('id');
+            expect(result.ok).to.be.equal(true);
             done();
           }
+          else {
+            iterationId = result.rows[0].id;
+            // console.log('\nSpecific doc iterationId 2:',iterationId, '\n');
+            done();
+          }
+        })
+        .catch(function(err) {
+          expect(err).to.not.equal(null);
         });
     });
 
@@ -389,43 +392,49 @@ describe('Iteration Model', function() {
   describe('[edit]: Edit team iteration document', function() {
     this.timeout(timeout);
     before(function(done) {
+      this.timeout(10000);
       var teamName = 'testteamid_1';
       var iterId = 'testmyid';
       iterationModel.getByIterInfo(validId)
         .then(function(result) {
           if (result.rows.length == 0) {
             iterationDocValid.team_id = validId;
-            iterationModel.add(iterationDocValid, user)
-              .then(function(result) {
-                iterationId = result.id;
-                iterationName = result.iteration_name;
-                iterationRev = result.rev;
-                expect(result).to.be.a('object');
-                expect(result).to.have.property('id');
-                expect(result.ok).to.be.equal(true);
-              })
-              .catch(function(err) {
-                expect(err).to.not.equal(null);
-              })
-              .finally(function() {
-                // done();
-                iterationModel.get(iterId)
-                  .then(function(result) {})
-                  .catch(function(err) {
-                    iterationDoc_duplicateIterName.team_id = validId;
-                    iterationModel.add(iterationDoc_duplicateIterName, user)
-                      .then(function(result) {})
-                      .catch(function(err) {});
-                  })
-                  .finally(function() {
-                    done();
-                  });
-              });
-          } else {
+            return iterationModel.add(iterationDocValid, user);
+          }
+          else {
             iterationId = result.rows[0].id;
             iterationName = result.rows[0].value.iteration_name;
-            done();
+            // console.log('\nEdit team iteration doc id1:',iterationId, '\n');
           }
+        })
+        .then(function(result) {
+          if (result && result.id != undefined) {
+            iterationId = result.id;
+            // console.log('\nEdit team iteration doc id2:',iterationId, '\n');
+            iterationName = result.iteration_name;
+            expect(result).to.be.a('object');
+            expect(result).to.have.property('id');
+            expect(result.ok).to.be.equal(true);
+          }
+        })
+        .catch(function(err){
+          expect(err).to.not.equal(null);
+        })
+        .finally(function() {
+          return iterationModel.get(iterId);
+        })
+        .then(function(result) {
+        })
+        .catch(function(err) {
+          iterationDoc_duplicateIterName.team_id = validId;
+          return iterationModel.add(iterationDoc_duplicateIterName, user);
+        })
+        .then(function(result) {
+        })
+        .catch(function(err) {
+        })
+        .finally(function() {
+          done();
         });
     });
 
@@ -565,13 +574,13 @@ describe('Iteration Model', function() {
         .then(function(body) {
           var id = body._id;
           var rev = body._rev;
-          iterationModel.delete(id, rev)
-            .then(function(res) {
-              done();
-            })
-            .catch(function(err) {
-              done();
-            });
+          return iterationModel.delete(id, rev);
+        })
+        .then(function(res) {
+          done();
+        })
+        .catch(function(err) {
+          done();
         });
     });
 
