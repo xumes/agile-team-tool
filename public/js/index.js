@@ -9,7 +9,9 @@ var userAccess = ['Yanliang.Gu1@ibm.com','leip@us.ibm.com','hourihan@us.ibm.com'
 var colorArray = ['#4178BE','#C0E6FF','#7CC7FF','#5AAAFA','#5596E6','#4178BE','#325C80','#264A60','#1D3649','#152935','#010205','#008571','#A7FAE6','#6EEDD8','#41D6C3','#00B4A0','#006D5D','#005448'];
 var tempIterationData = [{
   'totalPoints': 0,
+  'totalCommPoints': 0,
   'totalStories': 0,
+  'totalCommStories': 0,
   'totalCompleted': 0,
   'totalDefects': 0,
   'totalDplymts': 0,
@@ -26,7 +28,9 @@ var tempIterationData = [{
 
 }, {
   'totalPoints': 0,
+  'totalCommPoints': 0,
   'totalStories': 0,
+  'totalCommStories': 0,
   'totalCompleted': 0,
   'totalDefects': 0,
   'totalDplymts': 0,
@@ -43,7 +47,9 @@ var tempIterationData = [{
 
 }, {
   'totalPoints': 0,
+  'totalCommPoints': 0,
   'totalStories': 0,
+  'totalCommStories': 0,
   'totalCompleted': 0,
   'totalDefects': 0,
   'totalDplymts': 0,
@@ -60,7 +66,9 @@ var tempIterationData = [{
 
 }, {
   'totalPoints': 0,
+  'totalCommPoints': 0,
   'totalStories': 0,
+  'totalCommStories': 0,
   'totalCompleted': 0,
   'totalDefects': 0,
   'totalDplymts': 0,
@@ -77,7 +85,9 @@ var tempIterationData = [{
 
 }, {
   'totalPoints': 0,
+  'totalCommPoints': 0,
   'totalStories': 0,
+  'totalCommStories': 0,
   'totalCompleted': 0,
   'totalDefects': 0,
   'totalDplymts': 0,
@@ -93,7 +103,9 @@ var tempIterationData = [{
   'partialMonth': false
 }, {
   'totalPoints': 0,
+  'totalCommPoints': 0,
   'totalStories': 0,
+  'totalCommStories': 0,
   'totalCompleted': 0,
   'totalDefects': 0,
   'totalDplymts': 0,
