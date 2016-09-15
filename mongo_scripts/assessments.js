@@ -115,19 +115,19 @@ _.each(cloudantAssessments, function(doc) {
 });
 
 
-// //insert into db
-// var creds = require('./creds')
-// // Use connect method to connect to the server
-// MongoClient.connect(creds.url, function(err, db) {
-//   
-//   assert.equal(null, err);
-//   console.log("Connected successfully to server");
-//   //console.log(db)
-//   
-//   db.collection('assessments').insertMany(mongoAssessments, function(err, r) {
-//         assert.equal(null, err);
-//         console.log("Done!  " + JSON.stringify(r.result));
-//         db.close();
-//         process.exit();
-//   });
-// });
+//insert into db
+var creds = require('./creds')
+// Use connect method to connect to the server
+MongoClient.connect(creds.url, function(err, db) {
+  
+  assert.equal(null, err);
+  console.log("Connected successfully to server");
+  //console.log(db)
+  
+  db.collection('assessments').insertMany(mongoAssessments, function(err, r) {
+        assert.equal(null, err);
+        console.log("Done!  " + JSON.stringify(r.result));
+        db.close();
+        process.exit();
+  });
+});
