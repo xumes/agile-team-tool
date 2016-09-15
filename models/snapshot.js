@@ -39,7 +39,9 @@ var infoLogs = /* istanbul ignore next */ function(msg) {
 function resetData() {
   return [{
     'totalPoints': 0,
+    'totalCommPoints': 0,
     'totalStories': 0,
+    'totalCommStories': 0,
     'totalCompleted': 0,
     'totalDefects': 0,
     'totalDplymts': 0,
@@ -56,7 +58,9 @@ function resetData() {
 
   }, {
     'totalPoints': 0,
+    'totalCommPoints': 0,
     'totalStories': 0,
+    'totalCommStories': 0,
     'totalCompleted': 0,
     'totalDefects': 0,
     'totalDplymts': 0,
@@ -73,7 +77,9 @@ function resetData() {
 
   }, {
     'totalPoints': 0,
+    'totalCommPoints': 0,
     'totalStories': 0,
+    'totalCommStories': 0,
     'totalCompleted': 0,
     'totalDefects': 0,
     'totalDplymts': 0,
@@ -90,7 +96,9 @@ function resetData() {
 
   }, {
     'totalPoints': 0,
+    'totalCommPoints': 0,
     'totalStories': 0,
+    'totalCommStories': 0,
     'totalCompleted': 0,
     'totalDefects': 0,
     'totalDplymts': 0,
@@ -107,7 +115,9 @@ function resetData() {
 
   }, {
     'totalPoints': 0,
+    'totalCommPoints': 0,
     'totalStories': 0,
+    'totalCommStories': 0,
     'totalCompleted': 0,
     'totalDefects': 0,
     'totalDplymts': 0,
@@ -123,7 +133,9 @@ function resetData() {
     'partialMonth': false
   }, {
     'totalPoints': 0,
+    'totalCommPoints': 0,
     'totalStories': 0,
+    'totalCommStories': 0,
     'totalCompleted': 0,
     'totalDefects': 0,
     'totalDplymts': 0,
@@ -242,7 +254,9 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
       } else {
         if (!isNaN(iterationDocIndex)) {
           var pts = iterationDoc['nbr_story_pts_dlvrd'];
+          var commPts = iterationDoc['nbr_committed_story_pts'];
           var stories = iterationDoc['nbr_stories_dlvrd'];
+          var commStories = iterationDoc['nbr_committed_stories'];
           var teamCnt = iterationDoc['team_mbr_cnt'];
           var defects = iterationDoc['nbr_defects'];
           var dplymnts = iterationDoc['nbr_dplymnts'];
@@ -251,8 +265,14 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
           if (pts != undefined && pts != '') {
             currData[iterationDocIndex].totalPoints = currData[iterationDocIndex].totalPoints + parseInt(pts);
           }
+          if (commPts != undefined && commPts != '') {
+            currData[iterationDocIndex].totalCommPoints = currData[iterationDocIndex].totalCommPoints + parseInt(commPts);
+          }
           if (stories != undefined && stories != '') {
             currData[iterationDocIndex].totalStories = currData[iterationDocIndex].totalStories + parseInt(stories);
+          }
+          if (commStories != undefined && commStories != '') {
+            currData[iterationDocIndex].totalCommStories = currData[iterationDocIndex].totalCommStories + parseInt(commStories);
           }
 
           if (defects != undefined && defects != '') {
@@ -316,7 +336,9 @@ function rollUpIterationsByNonSquad(squads, nonSquadTeamId, squadsCalResults, is
         if (!(_.isEmpty(squadsCalResults[squadDoc[i]])) && !(_.isUndefined(squadsCalResults[squadDoc[i]]))) {
           var squadIterationResult = squadsCalResults[squadDoc[i]];
           currData[j].totalPoints = currData[j].totalPoints + squadIterationResult[j].totalPoints;
+          currData[j].totalCommPoints = currData[j].totalPoints + squadIterationResult[j].totalCommPoints;
           currData[j].totalStories = currData[j].totalStories + squadIterationResult[j].totalStories;
+          currData[j].totalCommStories = currData[j].totalStories + squadIterationResult[j].totalCommStories;
           currData[j].totalDefects = currData[j].totalDefects + squadIterationResult[j].totalDefects;
           currData[j].totalDplymts = currData[j].totalDplymts + squadIterationResult[j].totalDplymts;
           currData[j].totTeamStat = currData[j].totTeamStat + squadIterationResult[j].totTeamStat;
