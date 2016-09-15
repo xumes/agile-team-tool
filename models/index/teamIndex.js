@@ -110,14 +110,14 @@ var index = {
           var lookupIndex = _.union(indexDocument.domains, indexDocument.tribes, indexDocument.squads);
           logger.get('models').verbose('Index size: ' + _.size(lookupIndex));
 
-          index.updateIndexDocument(lookupIndex)
-            .then(function(result) {
-              resolve(result);
-            })
-            .catch( /* istanbul ignore next */ function(err) {
-              logger.get('models').error('Error retrieving lookup document ' + err);
-              reject(err);
-            });
+          return index.updateIndexDocument(lookupIndex);
+        })
+        .then(function(result) {
+          resolve(result);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          logger.get('models').error('Error retrieving lookup document ' + err);
+          reject(err);
         });
     });
   },
@@ -149,47 +149,42 @@ var index = {
 
   updateIndexDocument: function(lookupIndex) {
     return new Promise(function(resolve, reject) {
+      var indexRetrieved = false;
       index.getIndexDocument()
         .then(function(indexDocument) {
           indexDocument.lookup = lookupIndex;
-          common.updateRecord(indexDocument)
-            .then(function(result) {
-              logger.get('models').debug('Document based team indexing updated.');
-              resolve(result);
-            })
-            .catch( /* istanbul ignore next */ function(err) {
-              logger.get('models').debug('Document based team indexing not created.');
-              // try to rebuild index again
-              index.initIndex()
-                .then(function(result) {
-                  resolve(result);
-                })
-                .catch( /* istanbul ignore next */ function(err) {
-                  reject(err);
-                });
-            });
+          indexRetrieved = true;
+          return common.updateRecord(indexDocument);
         })
         .catch( /* istanbul ignore next */ function(err) {
-          var indexDocument = new Object();
-          indexDocument._id = 'ag_ref_team_index';
-          indexDocument.lookup = lookupIndex;
-
-          common.addRecord(indexDocument)
-            .then(function(result) {
-              logger.get('models').verbose('Document based team indexing updated.');
-              resolve(result);
-            })
-            .catch( /* istanbul ignore next */ function(err) {
-              logger.get('models').verbose('Document based team indexing not created.');
-              // try to rebuild index again
-              index.initIndex()
-                .then(function(result) {
-                  resolve(result);
-                })
-                .catch( /* istanbul ignore next */ function(err) {
-                  reject(err);
-                });
-            });
+          if (indexRetrieved){
+            logger.get('models').debug('Document based team indexing not created.');
+            // try to rebuild index again
+            return index.initIndex();
+          }
+          else {
+            var indexDocument = new Object();
+            indexDocument._id = 'ag_ref_team_index';
+            indexDocument.lookup = lookupIndex;
+            return common.addRecord(indexDocument);
+          }
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          if (indexRetrieved){
+            reject(err);
+          }
+          else {
+            logger.get('models').debug('Document based team indexing not created.');
+            // try to rebuild index again
+            return index.initIndex();
+          }
+        })
+        .then(function(result) {
+          logger.get('models').verbose('Document based team indexing updated.');
+          resolve(result);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          reject(err);
         });
     });
   },
