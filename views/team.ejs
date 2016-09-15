@@ -6,6 +6,7 @@
 
 <link href="//ciolab.ibm.com/misc/typeahead/builds/facestypeahead-0.4.4.min.css" rel="stylesheet" />
 <script src="//ciolab.ibm.com/misc/typeahead/builds/facestypeahead-0.4.4.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.4.0/clipboard.min.js"></script>
 
 <script type="text/javascript" src="js/team.js?v=<%=Math.random()%>"></script>
 
@@ -235,7 +236,7 @@
                               <div class="ibm-rule ibm-alternate-1">
                                 <hr>
                               </div>
-                              <table class="ibm-data-table" data-tablerowselector="enable" id="childrenMemberTable" summary="__REPLACE_ME__">
+                              <table class="ibm-data-table" data-tablerowselector="enable" id="childrenMemberTable" summary="__REPLACE_ME__" style="font-size: 90%;">
                                 <caption>
                                   <em id="childrenNameTitle" class="ibm-bold">Childream teams</em>
                                   <p style="float: right;  width: 400px;">
@@ -269,7 +270,7 @@
                               <p>Non squad team does not manage iteration information.</p>
                             </div>
                             <div id="squadIterationPageSection" style="display: none;">
-                              <table class="ibm-data-table" id="iterationTable" summary="__REPLACE_ME__">
+                              <table class="ibm-data-table" id="iterationTable" summary="__REPLACE_ME__" style="font-size: 90%;">
                                 <caption>
                                   <em id="iterationTitle" class="ibm-bold">Iteration information</em>
                                   <p style="float: right" class="ibm-button-link">
@@ -306,7 +307,7 @@
                               <p>Non squad team does not manage assessment information.</p>
                             </div>
                             <div id="squadAssessmentPageSection" style="display: none; margin-top: 15px;">
-                              <table class="ibm-data-table" id="assessmentTable" summary="__REPLACE_ME__">
+                              <table class="ibm-data-table" id="assessmentTable" summary="__REPLACE_ME__" style="font-size: 90%;">
                                 <caption>
                                   <em id="assessmentTitle" class="ibm-bold">Assessment Information</em>
                                   <p style="float: right" class="ibm-button-link">
@@ -335,6 +336,14 @@
                                 </p>
                               </div>
                             </div>
+                            <p/><p/><p/><p/><p/><p/>
+                            <div id="maturityTrend" >
+                                <span for="maturityTrendLink" style="font-size: 10pt; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Link to maturity trend graph:
+                                </span>
+                                <span style="font-size: 10pt" id="maturityTrendLink"></span>&nbsp;
+                                <button class="button" id="copy-button" data-clipboard-target="#maturityTrendLink" style="font-size: 10pt; bold"  onclick="return false;">Copy Link</button>
+                            </div>
+                            <p/><p/><p/>
                           </div>
 
                           <h2 class="ibm-bold ibm-h4">Last update</h2>
