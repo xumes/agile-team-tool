@@ -210,7 +210,7 @@ submitter_id
 
 nested mappings:
 
-(1.) 
+(1.)
 ```
 assessmt_cmpnt_rslts: -> componentResults
 [{
@@ -223,17 +223,20 @@ assessmt_cmpnt_rslts: -> componentResults
       principle_name: -> principleName
       practice_id: -> practiceId
       practice_name: -> practiceName
-      cur_mat_lvl_achieved: -> currentLevel
+      cur_mat_lvl_achieved: -> currentLevelName
       cur_mat_lvl_score: -> currentScore
-      tar_mat_lvl_achieved: -> targetLevel
+      tar_mat_lvl_achieved: -> targetLevelName
       tar_mat_lvl_score: -> targetScore
-      ind_mat_lvl_achieved: -> assessorLevel
-      ind_target_mat_lvl_score: -> assessorTarget
+      ind_mat_lvl_achieved: -> assessorLevel  //delete
+      ind_target_mat_lvl_score: -> assessorTarget //delete
       how_better_action_item: -> improveDescription
       ind_assessor_cmnt:  -> assessorComment
     }]
 }]
 ```
+these two fields seem to be empty for every document in production, i don't think they are used so not going to set the fields in mongo.
+* assessmt_cmpnt_rslts.assessed_cmpnt_tbl.ind_mat_lvl_achieved
+* assessmt_cmpnt_rslts.assessed_cmpnt_tbl.ind_target_mat_lvl_score
 
 (2.) 
 ```
