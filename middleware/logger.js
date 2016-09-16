@@ -40,6 +40,14 @@ winston.loggers.add('models', {
   }
 });
 
+winston.loggers.add('model-teams', {
+  console: {
+    level: logLevel,
+    colorize: logColors,
+    label: 'model-teams'
+  }
+});
+
 winston.loggers.add('model-users', {
   console: {
     level: logLevel,

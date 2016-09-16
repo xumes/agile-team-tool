@@ -1,3 +1,4 @@
+'use strict';
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 
@@ -7,7 +8,7 @@ require('../../settings');
 module.exports.UserSchema = new Schema({
   userId: {
     type: String,
-    required: [true, 'UserId is required.']
+    required: [true, 'UserId is required.'],
   },
   name: {
     type: String,
