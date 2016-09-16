@@ -1,3 +1,7 @@
+var mongoose = require('mongoose');
+
+mongoose.Promise = require('bluebird');
+
 module.exports = {
   dbUrl: process.env.dbUrl || 'test.cloudant.com',
   ldapAuthURL: process.env.ldapAuthURL || 'http://ifundit-dp.tap.ibm.com:3004',
@@ -11,6 +15,7 @@ module.exports = {
     url: process.env.cloudantURL || 'https://user:pass@user.cloudant.com',
     dbName: process.env.cloudantDb || 'localDb'
   },
+  mongoURL: process.env.mongoURL || 'mongodb://localhost:27017/agiletool_stage',
   saml: {
     path: '/auth/saml/ibm/callback',
     identifierFormat: 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
@@ -32,3 +37,5 @@ module.exports = {
   googleHost: 'maps.googleapis.com',
   googleApiKey: process.env.googleAPIKey || 'AIzaSyAF2vwg6z-pH4xC7Ac1eMcpR9mVG-A2u7Y'
 };
+
+mongoose.connect(process.env.mongoURL || 'mongodb://localhost:27017/agiletool_stage');
