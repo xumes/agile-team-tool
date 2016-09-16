@@ -244,6 +244,8 @@ function plotAssessmentSeries(teamAssessments) {
     var lastResultIndex = chartSeries[i]['assessmentResult'].length - 1;
     plotAssessment(lastResultIndex, chartSeries[i]);
   }
+
+  redrawCharts('assessmentSection');
 }
 
 function plotAssessment(index, chartData) {
