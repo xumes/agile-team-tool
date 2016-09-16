@@ -1,4 +1,6 @@
 'use strict';
+var _ = require('underscore');
+var Promise = require('bluebird');
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 // var loggers = require('../middleware/logger');
@@ -99,14 +101,32 @@ module.exports.searchTeamWithName = function(string) {
 };
 
 module.exports.getNonSquadTeams = function() {
-  return Team.find().where('type').ne('squad');
+  return Team.find({type: {$ne:'squad'}});
 };
 
+module.exports.getSquadTeams = function() {
+  return Team.find({type: 'squad'});
+};
+
+//root teams are teams with no parent, non-squad with children
+module.exports.getRootTeams = function() {
+  return Promise.join(
+    Team.find({path: null, type:{$ne:'squad'}}),
+    Team.find({path: {$ne:null}}, {path:1}),
+  function(rootedTeams, subtreeTeams) {
+    var uniquePaths = _.uniq(_.pluck(subtreeTeams, 'path'));
+    uniquePaths = uniquePaths.join(',');
+    //indexOf is faster than match apparently
+    var res = [];
+    _.each(rootedTeams, function(rootedTeam){
+      if (uniquePaths.indexOf(rootedTeam.pathId) >= 0)
+        res.push(rootedTeam);
+    });
+    return res;
+  });
+};
 
 /*
   Schema setter methods
 */
-
-
-
 
