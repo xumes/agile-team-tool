@@ -791,7 +791,7 @@ function getIterationErrorPopup(errors) {
       if (frmElement) {
         setFieldErrorHighlight(frmElement);
       }
-      errorLists = errorLists + errors[mdlField][0] + '<br>';
+      errorLists = errorLists + errors[mdlField][0] + '\n';
     } else {
       if (frmElement) {
         clearFieldErrorHighlight(frmElement);
