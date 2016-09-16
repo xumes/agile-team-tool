@@ -557,6 +557,7 @@ function createCriteriaTable(practice, htmlLoc, practiceId) {
   textArea = document.createElement('textarea');
   textArea.setAttribute('style', 'width:1120px');
   textArea.setAttribute('id', practiceId + '_comment');
+  textArea.setAttribute('aria-label', practiceId + '_comment');
   td = document.createElement('td');
   td.setAttribute('id', practiceId + '_td_comment');
   td.setAttribute('colspan', '5');
