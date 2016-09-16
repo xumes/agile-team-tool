@@ -7,14 +7,15 @@ require('../../settings');
 module.exports.UserSchema = new Schema({
   userId: {
     type: String,
-    default: ''
+    required: [true, 'UserId is required.']
   },
   name: {
     type: String,
-    default: ''
+    required: [true, 'Name is required.']
   },
   email: {
-    type: String
+    type: String,
+    required: [true, 'Email is required.']
   },
   adminAccess: {
     type: String,
@@ -31,5 +32,3 @@ var User = mongoose.model('User', exports.UserSchema);
 module.exports.findUserByEmail = function(email) {
   return User.findOne({email: email});
 };
-
-
