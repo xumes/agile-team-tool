@@ -117,10 +117,10 @@ function plotAssessmentSeries(teamAssessments) {
       if (!found) {
         // create a section in the page for the particular assessment group
         $('#assessmentCharts').append(createChartSection(identifier));
-        var hrDiv = document.createElement('div');
-        hrDiv.setAttribute('class', 'ibm-rule ibm-alternate ibm-gray-30');
-        hrDiv.appendChild(document.createElement('hr'));
-        $('#assessmentCharts').append(hrDiv);
+        // var hrDiv = document.createElement('div');
+        // hrDiv.setAttribute('class', 'ibm-rule ibm-alternate ibm-gray-30');
+        // hrDiv.appendChild(document.createElement('hr'));
+        // $('#assessmentCharts').append(hrDiv);
 
         chartData = new Object();
         // page element id that will render the graph data
@@ -210,6 +210,10 @@ function plotAssessmentSeries(teamAssessments) {
         layout: 'horizontal'
       },
 
+      credits: {
+        enabled: false
+      },
+
       series: [{
         name: 'Current',
         data: chartData['currentScore'],
@@ -244,8 +248,6 @@ function plotAssessmentSeries(teamAssessments) {
     var lastResultIndex = chartSeries[i]['assessmentResult'].length - 1;
     plotAssessment(lastResultIndex, chartSeries[i]);
   }
-
-  redrawCharts('assessmentSection');
 }
 
 function plotAssessment(index, chartData) {
@@ -335,6 +337,10 @@ function plotAssessment(index, chartData) {
       layout: 'horizontal'
     },
 
+    credits: {
+      enabled: false
+    },
+
     series: [{
       name: 'Current',
       data: spiderData['currentScore'],
@@ -348,6 +354,7 @@ function plotAssessment(index, chartData) {
 function createChartSection(prefixId) {
   var mainDiv = document.createElement('div');
   mainDiv.setAttribute('class', 'ibm-columns');
+  mainDiv.setAttribute('style', 'margin-bottom: 3em;');
 
   var colDiv = document.createElement('div');
   colDiv.setAttribute('class', 'ibm-col-6-2');
