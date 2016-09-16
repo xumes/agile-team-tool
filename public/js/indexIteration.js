@@ -3,12 +3,20 @@ function teamIterationListHander(teamId, teamIterations) {
 
   var graphCategory = [];
   var velocitySeries = new Object();
-  velocitySeries.name = 'Iteration date';
+  velocitySeries.name = 'Delivered';
   velocitySeries.data = [];
 
+  var commVelocitySeries = new Object();
+  commVelocitySeries.name = 'Planned';
+  commVelocitySeries.data = [];
+
   var throughputSeries = new Object();
-  throughputSeries.name = 'Iteration date';
+  throughputSeries.name = 'Delivered';
   throughputSeries.data = [];
+
+  var commThroughputSeries = new Object();
+  commThroughputSeries.name = 'Planned';
+  commThroughputSeries.data = [];
 
   var teamMemSeries = new Object();
   teamMemSeries.name = 'Team Members';
@@ -91,7 +99,9 @@ function teamIterationListHander(teamId, teamIterations) {
   for (var i = p6Iterations.length - 1; i > -1; i--) {
     var graphCat;
     var vData = new Object();
+    var cvData = new Object();
     var tData = new Object();
+    var ctData = new Object();
     var tmData = new Object();
     var fteData = new Object();
     var defectData = new Object();
@@ -117,12 +127,26 @@ function teamIterationListHander(teamId, teamIterations) {
     vData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
     velocitySeries.data.push(vData);
 
+    cvData.name = p6Iterations[i].iteration_name;
+    cvData.y = isNaN(parseInt(p6Iterations[i].nbr_committed_story_pts)) ? 0 : parseInt(p6Iterations[i].nbr_committed_story_pts);
+    cvData.iterURL = iterationURL + p6Iterations[i]._id;
+    cvData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
+    cvData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+    commVelocitySeries.data.push(cvData);
+
     tData.name = p6Iterations[i].iteration_name;
     tData.y = isNaN(parseInt(p6Iterations[i].nbr_stories_dlvrd)) ? 0 : parseInt(p6Iterations[i].nbr_stories_dlvrd);
     tData.iterURL = iterationURL + p6Iterations[i]._id;
     tData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
     tData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
     throughputSeries.data.push(tData);
+
+    ctData.name = p6Iterations[i].iteration_name;
+    ctData.y = isNaN(parseInt(p6Iterations[i].nbr_committed_stories)) ? 0 : parseInt(p6Iterations[i].nbr_committed_stories);
+    ctData.iterURL = iterationURL + p6Iterations[i]._id;
+    ctData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
+    ctData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+    commThroughputSeries.data.push(ctData);
 
     tmData.name = p6Iterations[i].iteration_name;
     tmData.y = isNaN(parseInt(p6Iterations[i].team_mbr_cnt)) ? 0 : parseInt(p6Iterations[i].team_mbr_cnt);
@@ -210,8 +234,8 @@ function teamIterationListHander(teamId, teamIterations) {
 
   destroyIterationCharts();
 
-  loadScoreChart('velocityChart', 'Velocity', 'line', graphCategory, 'Story points', velocitySeries, 'Points', 'Iteration Dates', '* Indicates Team Change', false, true);
-  loadScoreChart('throughputChart', 'Throughput', 'line', graphCategory, 'Stories/tickets/cards', throughputSeries, 'Points', 'Iteration Dates', '* Indicates Team Change', false, true);
+  loadScoreChart('velocityChart', 'Velocity', 'line', graphCategory, 'Story points', commVelocitySeries,  velocitySeries, 'Points', 'Iteration Dates', '* Indicates Team Change', true, true);
+  loadScoreChart('throughputChart', 'Throughput', 'line', graphCategory, 'Stories/tickets/cards', commThroughputSeries, throughputSeries, 'Points', 'Iteration Dates', '* Indicates Team Change', true, true);
   loadPizzaChart('pizzaChart', '2 Pizza Rule (Team Members)', 'line', graphCategory, 'Count', yMax, teamMemSeries, fteSeries, targetSeries, 'Points');
   loadChartMulSeries('defectsChart', 'Deployments/Defects', 'line', graphCategory, 'Count', 'Iteration Dates', deploySeries, defectsSeries, 'Points', true);
   loadSatisfactionChart('statisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', teamSatSeries, clientSatSeries, 'Points', sMax);
@@ -246,7 +270,7 @@ function destroyIterationCharts() {
   });
 }
 
-function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj, unit, text, subtitle, showLegend, pointClickable) {
+function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, seriesObj2, unit, text, subtitle, showLegend, pointClickable) {
   new Highcharts.Chart({
     chart: {
       type: type,
@@ -272,7 +296,8 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj, unit
     xAxis: {
       title: {
         text: text,
-        align: 'middle'
+        align: 'middle',
+        x: -20
       },
       categories: categories,
       tickmarkPlacement: 'on',
@@ -304,21 +329,24 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj, unit
     },
 
     tooltip: {
-      //headerFormat : '<b>{point.key}</b><br>',
-      //pointFormat : yAxisLabel + ' : {point.y}<br>{point.startDate} - {point.endDate}'
+      shared: true,
       formatter: function() {
-        if (this.point.totalSquad != undefined) {
-          return yAxisLabel + ' : ' + this.point.y + '<br>' + 'Squad Teams : ' + this.point.totalSquad + '<br>' + 'Iterations: ' + this.point.totalCompleted;
-        } else {
-          return '<b>' + this.key + '</b><br>' + yAxisLabel + ' : ' + this.point.y + '<br>' + this.point.startDate + ' - ' + this.point.endDate;
+        var formatResult = '<b>' + this.points[0].key + '</b><br>';
+        for (var i = 0; i < this.points.length; i++) {
+          formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25CF</span>' + this.points[i].series.name + ' :<b>' + this.points[i].y + '</b><br/>';
         }
+        if (this.points[0].point.startDate != undefined) {
+          formatResult = formatResult + '<br>' + this.points[0].point.startDate + ' - ' + this.points[0].point.endDate;
+        }
+        return formatResult;
       }
     },
 
     legend: {
       align: 'center',
       verticalAlign: 'bottom',
-      layout: 'horizontal'
+      layout: 'horizontal',
+      itemMarginTop: -15
     },
 
     credits: {
@@ -329,8 +357,7 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj, unit
       text: subtitle,
       verticalAlign: 'bottom',
       align: 'center',
-      y: 12,
-      x: 32,
+      y: 8,
       style: {
         fontSize: '12px',
         color: '#FFA500',
@@ -340,8 +367,20 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj, unit
 
     series: [{
       showInLegend: showLegend,
-      name: seriesObj.name,
-      data: seriesObj.data,
+      name: seriesObj1.name,
+      data: seriesObj1.data,
+      point: {
+        events: {
+          click: function(e) {
+            if (pointClickable)
+              window.location = e.point.iterURL;
+          }
+        }
+      }
+    }, {
+      showInLegend: showLegend,
+      name: seriesObj2.name,
+      data: seriesObj2.data,
       point: {
         events: {
           click: function(e) {
@@ -396,7 +435,8 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
         }
       },
       title: {
-        text: 'Iteration Dates'
+        text: 'Iteration Dates',
+        x: -20
       },
       categories: categories,
       tickmarkPlacement: 'on'
@@ -435,7 +475,8 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
     legend: {
       align: 'center',
       verticalAlign: 'bottom',
-      layout: 'horizontal'
+      layout: 'horizontal',
+      itemMarginTop: -15
     },
 
     credits: {
@@ -610,7 +651,8 @@ function loadBarPizzaChart(id, title, type, categories, seriesObj1, seriesObj2, 
         }
       },
       title: {
-        text: 'Iteration results by month'
+        text: 'Iteration results by month',
+        x: -20
       },
       categories: categories
     },
@@ -761,7 +803,8 @@ function loadChartMulSeries(id, title, type, categories, yAxisLabel, xAxisLabel,
         }
       },
       title: {
-        text: xAxisLabel
+        text: xAxisLabel,
+        x: -20
       },
       categories: categories,
       tickmarkPlacement: 'on'
@@ -796,7 +839,8 @@ function loadChartMulSeries(id, title, type, categories, yAxisLabel, xAxisLabel,
     legend: {
       align: 'center',
       verticalAlign: 'bottom',
-      layout: 'horizontal'
+      layout: 'horizontal',
+      itemMarginTop: -15
     },
 
     credits: {
@@ -993,7 +1037,8 @@ function loadDeploymentsChartParent(id, title, type, categories, yAxisLabel, xAx
     legend: {
       align: 'center',
       verticalAlign: 'bottom',
-      layout: 'horizontal'
+      layout: 'horizontal',
+      itemMarginTop: -15
     },
 
     credits: {
@@ -1120,7 +1165,8 @@ function loadSatisfactionChartParent(id, title, type, categories, yAxisLabel, xA
     legend: {
       align: 'center',
       verticalAlign: 'bottom',
-      layout: 'horizontal'
+      layout: 'horizontal',
+      itemMarginTop: -15
     },
 
     credits: {
@@ -1246,7 +1292,8 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
     legend: {
       align: 'center',
       verticalAlign: 'bottom',
-      layout: 'horizontal'
+      layout: 'horizontal',
+      itemMarginTop: -15
     },
 
     credits: {
@@ -1785,8 +1832,8 @@ function iterationEmptyScoreCard(teamId, teamName) {
 
   destroyIterationCharts();
 
-  loadScoreChart('velocityChart', 'Velocity', 'line', graphCategory, 'Story points', velocitySeries, 'Points', 'Iteration results by month', null, false, false);
-  loadScoreChart('throughputChart', 'Throughput', 'line', graphCategory, 'Stories/tickets/cards', throughputSeries, 'Points', 'Iteration results by month', null, false, false);
+  loadScoreChart('velocityChart', 'Velocity', 'line', graphCategory, 'Story points', velocitySeries, velocitySeries, 'Points', 'Iteration results by month', null, false, false);
+  loadScoreChart('throughputChart', 'Throughput', 'line', graphCategory, 'Stories/tickets/cards', throughputSeries, throughputSeries, 'Points', 'Iteration results by month', null, false, false);
 }
 
 function completedIterationsHandler(teamId, teamName, squadList, iterationList) {

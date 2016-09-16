@@ -31,6 +31,7 @@
     "mocha": "^2.5.3",
     "moment": "^2.14.1",
     "moment-timezone": "^0.5.5",
+    "mongodb": "^2.2.9",
     "morgan": "~1.7.0",
     "newrelic": "^1.30.0",
     "node-schedule": "^1.1.1",

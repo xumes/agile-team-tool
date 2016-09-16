@@ -5,6 +5,10 @@ jQuery(function($) {
     getPageVariables('team', initPageAction);
   });
 
+  $(document).ready(function(){
+    new Clipboard('#copy-button');
+  });
+
   function initPageAction() {
     FacesTypeAhead.init(
       $('#teamMemberName')[0], {
@@ -245,6 +249,7 @@ function loadSelectedAgileTeam() {
     $('#lastUpdateUser').html(currentTeam.last_updt_user);
     $('#lastUpdateTimestamp').html(showDateUTC(currentTeam.last_updt_dt));
     $('#doc_id').html(currentTeam._id);
+    $('#maturityTrendLink').html(window.location.origin+'/maturityTrends?id='+currentTeam._id);
     clearFieldErrorHighlight('teamName');
     clearFieldErrorHighlight('teamMemberName');
     clearFieldErrorHighlight('memberAllocation');
