@@ -1,24 +1,23 @@
-"use strict";
+'use strict';
 var _          = require('underscore');
 var cloudantDb = require('./data');
-var MongoClient = require('mongodb').MongoClient
+var MongoClient = require('mongodb').MongoClient;
 var assert     = require('assert');
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 var cloudantIterations = _.filter(cloudantDb.rows, function(row){ return row.doc.type === 'iterationinfo'; });
 var cloudantIterations = _.pluck(cloudantIterations, 'doc');
 
-var util = require("./util.js");
+var util = require('./util.js');
 var userMap = util.getUserMap();
 
 
 var mongoIterations = [];
 _.each(cloudantIterations, function(doc) {
-  if(doc.doc_status==='delete')
+  if (doc.doc_status==='delete')
     return;
   //set empty string values to be undefined
   doc = _.mapObject(doc, function(val){ return _.isEmpty(val) ? undefined : val; });
-  
   var mongoDoc = {
     'cloudantId' : doc._id,
     'createDate': util.stringToUtcDate(doc.created_dt),
@@ -50,15 +49,15 @@ _.each(cloudantIterations, function(doc) {
 });
 
 
-var creds = require('./creds')
+var creds = require('./creds');
 // Use connect method to connect to the server
 MongoClient.connect(creds.url, function(err, db) {
   assert.equal(null, err);
-  console.log("Connected successfully to server");
+  console.log('Connected successfully to server');
   db.collection('iterations').insertMany(mongoIterations, function(err, r) {
-        assert.equal(null, err);
-        console.log("Done!  " + JSON.stringify(r.result));
-        db.close();
-        process.exit();
+    assert.equal(null, err);
+    console.log('Done!  ' + JSON.stringify(r.result));
+    db.close();
+    process.exit();
   });
 });
