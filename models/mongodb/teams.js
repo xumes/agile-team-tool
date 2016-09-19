@@ -15,7 +15,7 @@ require('../../settings');
 var memberSchema = {
   name: {
     type: String,
-    required: [true, 'Member name is required']
+    required: [true, 'Member name is required.']
   },
   allocation: {
     type: Number,
@@ -25,11 +25,11 @@ var memberSchema = {
   },
   userId: {
     type: String,
-    required: [true, 'Member userId is required']
+    required: [true, 'Member userId is required.']
   },
   email: {
     type: String,
-    required: [true, 'Member email is required']
+    required: [true, 'Member email is required.']
   }
 };
 

@@ -28,15 +28,15 @@ var iterationSchema = new Schema({
   },
   createDate: {
     type: Date,
-    required: [true, 'createDate is required.']
+    required: [true, 'Creation date is required.']
   },
   createdByUserId: {
     type: String,
-    required: [true, 'createdByUserId is required']
+    required: [true, 'UserId of creator is required.']
   },
   createdBy: {
     type: String,
-    required: [true, 'createdBy is required']
+    required: [true, 'Name of creator is required.']
   },
   updateDate: {
     type: Date,
@@ -56,23 +56,23 @@ var iterationSchema = new Schema({
   },
   startDate: {
     type: Date,
-    required: [true, 'iteration start date is required']
+    required: [true, 'Start date of iteration is required.']
   },
   endDate: {
     type: Date,
-    required: [true, 'iteration end date is required']
+    required: [true, 'End date of iteration is required.']
   },
   name: {
     type: String,
-    required: [true, 'iteration name is required']
+    required: [true, 'Name of iteration is required.']
   },
   teamId: {
     type: String,
-    required: [true, 'iteration team id is required']
+    required: [true, 'TeamId of iteration is required.']
   },
   memberCount: {
     type: Number,
-    required: [true, 'member # is required']
+    required: [true, 'Member count is required.']
   },
   status: {
     type: String,
