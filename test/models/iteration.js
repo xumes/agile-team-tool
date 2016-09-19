@@ -201,6 +201,8 @@ describe('Iteration Model', function() {
       doc.nbr_stories_dlvrd = '0';
       doc.nbr_dplymnts = '0';
       doc.nbr_defects = '0';
+      doc.nbr_cycletime_WIP = '';
+      doc.nbr_cycletime_in_backlog = '';
       doc.team_id = validId;
       iterationModel.add(doc, user)
         .then(function(result) {
