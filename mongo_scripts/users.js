@@ -22,10 +22,14 @@ var creds = require('./creds');
 MongoClient.connect(creds.url, function(err, db) {
   assert.equal(null, err);
   console.log('Connected successfully to server');
-  db.collection('users').insertMany(mongoUsers, function(err, r) {
-    assert.equal(null, err);
-    console.log('Done!  ' + JSON.stringify(r.result));
-    db.close();
-    process.exit();
-  });
+  db.collection('users')
+    .drop()
+    .then(function(){
+      db.collection('users').insertMany(mongoUsers, function(err, r) {
+        assert.equal(null, err);
+        console.log('Done!  ' + JSON.stringify(r.result));
+        db.close();
+        process.exit();
+      });
+    });
 });
