@@ -117,14 +117,15 @@ module.exports.getRootTeams = function() {
     var uniquePaths = _.uniq(_.pluck(subtreeTeams, 'path'));
     uniquePaths = uniquePaths.join(',');
     //indexOf is faster than match apparently
-    var res = [];
-    _.each(rootedTeams, function(rootedTeam){
-      if (uniquePaths.indexOf(rootedTeam.pathId) >= 0)
-        res.push(rootedTeam);
+    var res = _.filter(rootedTeams, function(team){
+      return uniquePaths.indexOf(team.pathId) >= 0;
     });
+    console.log(res);
     return res;
   });
 };
+
+exports.getRootTeams();
 
 /*
   Schema setter methods
