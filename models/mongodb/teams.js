@@ -120,7 +120,6 @@ module.exports.getRootTeams = function() {
     var res = _.filter(rootedTeams, function(team){
       return uniquePaths.indexOf(team.pathId) >= 0;
     });
-    console.log(res);
     return res;
   });
 };
