@@ -257,9 +257,8 @@ function teamIterationListHander(teamId, teamIterations) {
   }
 
   $('#spinnerContainer').hide();
-
   $('#mainContent').show();
-
+  redrawCharts('iterationSection');
 }
 
 function destroyIterationCharts() {
@@ -274,7 +273,9 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
   new Highcharts.Chart({
     chart: {
       type: type,
-      renderTo: id
+      renderTo: id,
+      marginLeft: 55,
+      marginRight: 0
     },
     lang: {
       noData: 'No results reported'
@@ -346,7 +347,7 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
       align: 'center',
       verticalAlign: 'bottom',
       layout: 'horizontal',
-      itemMarginTop: -15
+      itemMarginTop: -10
     },
 
     credits: {
@@ -409,7 +410,9 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
   new Highcharts.Chart({
     chart: {
       type: type,
-      renderTo: id
+      renderTo: id,
+      marginLeft: 55,
+      marginRight: 0
     },
     lang: {
       noData: 'No results reported'
@@ -476,7 +479,8 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
       align: 'center',
       verticalAlign: 'bottom',
       layout: 'horizontal',
-      itemMarginTop: -15
+      itemMarginTop: -10,
+      itemDistance: 5
     },
 
     credits: {
@@ -525,7 +529,9 @@ function loadStackedPizzaChart(id, title, type, categories, yAxisLabel, seriesOb
   new Highcharts.Chart({
     chart: {
       type: type,
-      renderTo: id
+      renderTo: id,
+      marginLeft: 55,
+      marginRight: 0
     },
     lang: {
       noData: 'No results reported'
@@ -619,7 +625,9 @@ function loadBarPizzaChart(id, title, type, categories, seriesObj1, seriesObj2, 
   new Highcharts.Chart({
     chart: {
       type: type,
-      renderTo: id
+      renderTo: id,
+      marginLeft: 55,
+      marginRight: 0
     },
     lang: {
       noData: 'No results reported'
@@ -704,7 +712,9 @@ function loadPiePizzaChart(id, title, type, seriesObj, subtitle) {
   new Highcharts.Chart({
     chart: {
       type: type,
-      renderTo: id
+      renderTo: id,
+      marginLeft: 55,
+      marginRight: 0
     },
     lang: {
       noData: 'No results reported'
@@ -777,7 +787,9 @@ function loadChartMulSeries(id, title, type, categories, yAxisLabel, xAxisLabel,
   new Highcharts.Chart({
     chart: {
       type: type,
-      renderTo: id
+      renderTo: id,
+      marginLeft: 55,
+      marginRight: 0
     },
     lang: {
       noData: 'No results reported'
@@ -840,7 +852,7 @@ function loadChartMulSeries(id, title, type, categories, yAxisLabel, xAxisLabel,
       align: 'center',
       verticalAlign: 'bottom',
       layout: 'horizontal',
-      itemMarginTop: -15
+      itemMarginTop: -10
     },
 
     credits: {
@@ -879,7 +891,9 @@ function loadChartPartialSeries(id, title, type, categories, yAxisLabel, xAxisLa
   new Highcharts.Chart({
     chart: {
       type: type,
-      renderTo: id
+      renderTo: id,
+      marginLeft: 55,
+      marginRight: 0
     },
     lang: {
       noData: 'No results reported'
@@ -975,7 +989,9 @@ function loadDeploymentsChartParent(id, title, type, categories, yAxisLabel, xAx
   new Highcharts.Chart({
     chart: {
       type: type,
-      renderTo: id
+      renderTo: id,
+      marginLeft: 55,
+      marginRight: 0
     },
     lang: {
       noData: 'No results reported'
@@ -1038,7 +1054,7 @@ function loadDeploymentsChartParent(id, title, type, categories, yAxisLabel, xAx
       align: 'center',
       verticalAlign: 'bottom',
       layout: 'horizontal',
-      itemMarginTop: -15
+      itemMarginTop: -10
     },
 
     credits: {
@@ -1100,7 +1116,9 @@ function loadSatisfactionChartParent(id, title, type, categories, yAxisLabel, xA
   new Highcharts.Chart({
     chart: {
       type: type,
-      renderTo: id
+      renderTo: id,
+      marginLeft: 55,
+      marginRight: 0
     },
     lang: {
       noData: 'No results reported'
@@ -1166,7 +1184,7 @@ function loadSatisfactionChartParent(id, title, type, categories, yAxisLabel, xA
       align: 'center',
       verticalAlign: 'bottom',
       layout: 'horizontal',
-      itemMarginTop: -15
+      itemMarginTop: -10
     },
 
     credits: {
@@ -1228,7 +1246,9 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
   new Highcharts.Chart({
     chart: {
       type: type,
-      renderTo: id
+      renderTo: id,
+      marginLeft: 55,
+      marginRight: 0
     },
     lang: {
       noData: 'No results reported'
@@ -1293,7 +1313,7 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
       align: 'center',
       verticalAlign: 'bottom',
       layout: 'horizontal',
-      itemMarginTop: -15
+      itemMarginTop: -10
     },
 
     credits: {
@@ -1804,19 +1824,16 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
     ctsYMax = null;
   }
   destroyIterationCharts();
-  //loadScoreChart('pvelocityChart', 'Velocity', 'line', graphCategory, 'Story points', velocitySeries, 'Points', 'Iteration results by month', null, false, false);
   loadChartPartialSeries('pvelocityChart', 'Velocity', 'line', graphCategory, 'Story points', 'Iteration results by month', velocityParSer, velocitySeries, 'Points', false);
-  //loadScoreChart('pthroughputChart', 'Throughput', 'line', graphCategory, 'Stories/tickets/cards', throughputSeries, 'Points', 'Iteration results by month', null, false, false);
   loadChartPartialSeries('pthroughputChart', 'Throughput', 'line', graphCategory, 'Stories/tickets/cards', 'Iteration results by month', throughputParSer, throughputSeries, 'Points', false);
-  //loadStackedPizzaChart('pPizzaChart', '2 Pizza Rule (Squad Team Size)', 'column', graphCategory, 'Team count',teamLt5Ser,team5to12Ser,teamGt12Ser);
   loadBarPizzaChart('pPizzaChart', '2 Pizza Rule (Squad Team Size)', 'column', graphCategory, team5to12Ser, partialSeries, pizYMax);
-  //loadChartMulSeries('pdefectsChart', 'Deployments/Defects', 'line', graphCategory, 'Count', 'Iteration Dates',deploySeries,defectsSeries, 'Points',false);
   loadDeploymentsChartParent('pdefectsChart', 'Deployments/Defects', 'line', graphCategory, 'Count', 'Iteration results by month', deployParSer, deploySeries, defectsParSer, defectsSeries, 'Points', false);
   loadSatisfactionChartParent('pstatisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', 'Iteration results by month', teamStatParSer, teamStatSeries, clientStatParSer, clientStatSeries, 'Points', false, ctsYMax);
   loadPiePizzaChart('piePizzaChart', '2 Pizza Rule (Squad Teams - Current)', 'pie', pData, cenTitle);
 
   $('#spinnerContainer').hide();
   $('#mainContent').show();
+  redrawCharts('iterationSection');
 }
 
 function iterationEmptyScoreCard(teamId, teamName) {

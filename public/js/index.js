@@ -156,6 +156,11 @@ jQuery(function($) {
     getMyTeams();
   }
 
+  $( window ).resize(function() {
+    redrawCharts('iterationSection');
+    redrawCharts('assessmentSection');
+  });
+
   $('#myTeams').click(function() {
     if ($(this).attr('data-state') != 'open') {
 
@@ -1211,4 +1216,21 @@ function openSelectedTeamTree(setScrollPosition) {
   // 		});
   // 	}
   // }
+}
+
+/**
+ * Redraw charts to handle sizing of graphs in collapsable section display.
+ *
+ * @param section - collapsable section id.
+ */
+function redrawCharts(section) {
+  $(Highcharts.charts).each(function(i,chart) {
+    if (chart == null) return;
+
+    if ($('#' + section + ' #' + $(chart.container).attr('id')).length > 0) {
+      var height = chart.renderTo.clientHeight;
+      var width = chart.renderTo.clientWidth;
+      chart.setSize(width, height);
+    }
+  });
 }

@@ -284,37 +284,25 @@ var team = {
         team.getName(teamDoc['name'])
           .then(function(body) {
             if (_.isEmpty(body) && _.isEmpty(validateTeam)) {
-
               common.addRecord(teamDoc)
-                .then(function(body) {
-                  teamIndex.getIndexDocument()
-                    .then(function(indexDocument) {
-                      var lookupObj = teamIndex.createLookupObj(teamDoc._id, teamDoc.name, teamDoc.squadteam, '', '', '');
-
-                      teamIndex.updateLookup(indexDocument, [lookupObj])
-                        .then(function(lookupIndex) {
-                          teamIndex.updateIndexDocument(lookupIndex)
-                            .then(function(result) {
-                              loggers.get('models').verbose('Success: New team record created');
-                              resolve(teamDoc);
-                            })
-                            .catch( /* istanbul ignore next */ function(err) {
-                              loggers.get('models').error('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
-                              setTimeout(teamIndex.initIndex, 2000);
-                              resolve(teamDoc);
-                            }); // updateIndexDocument
-                        }); // updateLookup
-                    })
-                    .catch( /* istanbul ignore next */ function(err) {
-                      loggers.get('models').error('Something went wrong while getting the lookup index. ' + err.error);
-                      resolve(teamDoc);
-                    }); // getIndexDocument
-                })
-                .catch( /* istanbul ignore next */ function(err) {
-                  // cannot simulate Cloudant error during testing
-                  reject(err);
-                }); // addRecord
-
+              .then(function(body) {
+                return teamIndex.getIndexDocument();
+              })
+              .then(function(indexDocument) {
+                var lookupObj = teamIndex.createLookupObj(teamDoc._id, teamDoc.name, teamDoc.squadteam, '', '', '');
+                return teamIndex.updateLookup(indexDocument, [lookupObj]);
+              })
+              .then(function(lookupIndex) {
+                teamIndex.updateIndexDocument(lookupIndex);
+              })
+              .then(function(result) {
+                loggers.get('models').verbose('Success: New team record created');
+                return resolve(teamDoc);
+              })
+              .catch( /* istanbul ignore next */  function(err) {
+                // cannot simulate Cloudant error during testing
+                reject(err);
+              });
             } else {
               msg = {
                 name: ['This team name already exists. Please enter a different team name']
@@ -408,41 +396,32 @@ var team = {
                     var lookupObj = teamIndex.createLookupObj(oldTeamDocu._id, oldTeamDocu.name, oldTeamDocu.squadteam, 'delete', '', oldTeamDocu.parent_team_id);
                     lookupObjArr.push(lookupObj);
                   }
-
                   infoLogs('Start team, assessment and iteration documents bulk delete');
                   common.bulkUpdate(bulkDocu)
-                    .then(function(results) {
-
-                      teamIndex.getIndexDocument()
-                        .then(function(indexDocument) {
-                          teamIndex.updateLookup(indexDocument, lookupObjArr)
-                            .then(function(lookupIndex) {
-                              teamIndex.updateIndexDocument(lookupIndex)
-                                .then(function(result) {
-                                  loggers.get('models').verbose('Success: Team, assessment and iteration documents bulk deleted');
-                                  resolve(results[0]);
-                                })
-                                .catch( /* istanbul ignore next */ function(err) {
-                                  loggers.get('models').error('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
-                                  setTimeout(teamIndex.initIndex, 2000);
-                                  resolve(results[0]);
-                                }); //updateIndexDocument
-                            }); // updateLookup
-                        })
-                        .catch( /* istanbul ignore next */ function(err) {
-                          loggers.get('models').error('Something went wrong while getting the lookup index. ' + err.error);
-                          resolve(results[0]);
-                        }); // getIndexDocument
-
-
-                      loggers.get('models').verbose('Success: Team, assessment and iteration documents bulk deleted');
-                      resolve(results[0]);
+                  .then(function(results) {
+                    teamIndex.getIndexDocument()
+                    .then(function(indexDocument) {
+                      return teamIndex.updateLookup(indexDocument, lookupObjArr);
                     })
-                    .catch( /* istanbul ignore next */ function(err) {
+                    .then(function(lookupIndex) {
+                      return teamIndex.updateIndexDocument(lookupIndex);
+                    })
+                    .then(function(result) {
+                      loggers.get('models').verbose('Success: Team, assessment and iteration documents bulk deleted');
+                      return resolve(results[0]);
+                    })
+                    .catch( /* istanbul ignore next */  function(err) {
                       // cannot simulate Cloudant error during testing
-                      infoLogs('Team, assessment and iteration documents bulk delete FAIL');
+                      loggers.get('models').error('Something went wrong while getting the lookup index. ' + err.error);
                       return reject(formatErrMsg(err.error));
                     });
+                    return resolve(results[0]);
+                  })
+                  .catch( /* istanbul ignore next */  function(err) {
+                    // cannot simulate Cloudant error during testing
+                    infoLogs('Team, assessment and iteration documents bulk delete FAIL');
+                    return reject(formatErrMsg(err.error));
+                  });
                 } else {
                   var errorLists = [];
                   // validating required fields
@@ -554,7 +533,6 @@ var team = {
                       }
                     }
                   }
-
                   // start saving
                   if (_.isEmpty(errorLists)) {
                     infoLogs('Updated document valid, begin save');
@@ -568,38 +546,29 @@ var team = {
                       else
                         finalTeamDoc[i] = updatedTeamDoc[i];
                     });
-
                     common.updateRecord(finalTeamDoc)
-                      .then(function(body) {
-                        teamIndex.getIndexDocument()
-                          .then(function(indexDocument) {
-                            var lookupObj = teamIndex.createLookupObj(finalTeamDoc._id, finalTeamDoc.name, finalTeamDoc.squadteam, '', finalTeamDoc.parent_team_id, '');
-                            teamIndex.updateLookup(indexDocument, [lookupObj])
-                              .then(function(lookupIndex) {
-                                teamIndex.updateIndexDocument(lookupIndex)
-                                  .then(function(result) {
-                                    loggers.get('models').verbose('Success: Team document ' + finalTeamDoc['_id'] + ' successfully updated');
-                                    resolve(finalTeamDoc);
-                                  })
-                                  .catch( /* istanbul ignore next */ function(err) {
-                                    loggers.get('models').error('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
-                                    setTimeout(teamIndex.initIndex, 2000);
-                                    resolve(finalTeamDoc);
-                                  }); //updateIndexDocument
-                              }); // updateLookup
-                          })
-                          .catch( /* istanbul ignore next */ function(err) {
-                            loggers.get('models').error('Something went wrong while getting the lookup index. ' + err.error);
-                            resolve(finalTeamDoc);
-                          }); // getIndexDocument
-
-                        //   loggers.get('models').verbose('Success: Team document ' + finalTeamDoc['_id'] + ' successfully updated');
-                        //   resolve(finalTeamDoc);
+                    .then(function(body) {
+                      teamIndex.getIndexDocument()
+                      .then(function(indexDocument) {
+                        var lookupObj = teamIndex.createLookupObj(finalTeamDoc._id, finalTeamDoc.name, finalTeamDoc.squadteam, '', finalTeamDoc.parent_team_id, '');
+                        return teamIndex.updateLookup(indexDocument, [lookupObj]);
+                      })
+                      .then(function(lookupIndex) {
+                        return teamIndex.updateIndexDocument(lookupIndex);
+                      })
+                      .then(function(result) {
+                        loggers.get('models').verbose('Success: Team document ' + finalTeamDoc['_id'] + ' successfully updated');
+                        return resolve(finalTeamDoc);
                       })
                       .catch( /* istanbul ignore next */ function(err) {
-                        // cannot simulate Cloudant error during testing
-                        return reject(formatErrMsg(err.error));
-                      }); // updateRecord
+                        loggers.get('models').error('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
+                        return resolve(finalTeamDoc);
+                      }); //updateIndexDocument
+                    })
+                    .catch( /* istanbul ignore next */ function(err) {
+                      // cannot simulate Cloudant error during testing
+                      return reject(formatErrMsg(err.error));
+                    }); // updateRecord
                   } else {
                     infoLogs('Error updating ' + oldTeamDocu['_id']);
                     return reject(formatErrMsg(errorLists));
@@ -823,34 +792,23 @@ var team = {
                                       formattedDocuments(result, action)
                                         .then(function(res) {
                                           var bulkDocu = util.formatForBulkTransaction(res, userEmail, 'update');
-
                                           common.bulkUpdate(bulkDocu)
                                             .then(function(body) {
-
                                               teamIndex.getIndexDocument()
-                                                .then(function(indexDocument) {
-                                                  teamIndex.updateLookup(indexDocument, [lookupObj])
-                                                    .then(function(lookupIndex) {
-                                                      teamIndex.updateIndexDocument(lookupIndex)
-                                                        .then(function(result) {
-                                                          loggers.get('models').verbose('Success: Team ' + associateObj['teamId'] + ' successfully associated to parent ' + associateObj['targetParent']);
-                                                          resolve(bulkDocu['docs']);
-                                                        })
-                                                        .catch( /* istanbul ignore next */ function(err) {
-                                                          loggers.get('models').error('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
-                                                          setTimeout(teamIndex.initIndex, 2000);
-                                                          resolve(bulkDocu['docs']);
-                                                        }); // updateIndexDocument
-                                                    }); // updateLookup
-                                                })
-                                                .catch( /* istanbul ignore next */ function(err) {
-                                                  loggers.get('models').error('Something went wrong while getting the lookup index. ' + err.error);
-                                                  resolve(bulkDocu['docs']);
-                                                }); // getIndexDocument
-
-                                              // loggers.get('models').verbose('Success: Team ' + associateObj['teamId'] + ' successfully associated to parent ' + associateObj['targetParent']);
-                                              // // return updated documents
-                                              // resolve(bulkDocu['docs']);
+                                              .then(function(indexDocument) {
+                                                return teamIndex.updateLookup(indexDocument, [lookupObj]);
+                                              })
+                                              .then(function(lookupIndex) {
+                                                return teamIndex.updateIndexDocument(lookupIndex);
+                                              })
+                                              .then(function(result) {
+                                                loggers.get('models').verbose('Success: Team ' + associateObj['teamId'] + ' successfully associated to parent ' + associateObj['targetParent']);
+                                                return resolve(bulkDocu['docs']);
+                                              })
+                                              .catch( /* istanbul ignore next */ function(err) {
+                                                loggers.get('models').error('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
+                                                return resolve(bulkDocu['docs']);
+                                              }); // updateIndexDocument
                                             })
                                             .catch( /* istanbul ignore next */ function(err) {
                                               // cannot simulate Cloudant error during testing
@@ -881,13 +839,6 @@ var team = {
                       infoLogs(errorLists);
                       reject(errorLists);
                     }
-                    // I dont think we need this check to check if its an object since we are passing an array of string as possible "child team id"
-                    // if(typeof associateObj['targetChild'] != 'object'){
-                    //   // target child must be array of team id
-                    //   errorLists['error']['targetChild'] = ['Unable to add selected team as a child. Team may have been updated with another parent.'];
-                    //   infoLogs(errorLists);
-                    //   reject(errorLists);
-                    // }else
                     // we actually need to get the latest team docs to see if it has been associated already with another parent
                     if (associateObj['targetChild'].indexOf(associateObj['teamId']) > -1) {
                       // not allowed to add self as a child
@@ -933,32 +884,20 @@ var team = {
 
                                   common.bulkUpdate(bulkDocu)
                                     .then(function(body) {
-
                                       teamIndex.getIndexDocument()
-                                        .then(function(indexDocument) {
-                                          teamIndex.updateLookup(indexDocument, lookupObjArr)
-                                            .then(function(lookupIndex) {
-                                              teamIndex.updateIndexDocument(lookupIndex)
-                                                .then(function(result) {
-                                                  loggers.get('models').verbose('Success: Team ' + associateObj['teamId'] + ' successfully associated to child ' + JSON.stringify(associateObj['targetChild']));
-                                                  resolve(bulkDocu['docs']);
-                                                })
-                                                .catch( /* istanbul ignore next */ function(err) {
-                                                  loggers.get('models').error('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
-                                                  setTimeout(teamIndex.initIndex, 2000);
-                                                  resolve(bulkDocu['docs']);
-                                                }); // updateIndexDocument
-                                            }); // updateLookup
-                                        })
-                                        .catch( /* istanbul ignore next */ function(err) {
-                                          loggers.get('models').error('Something went wrong while getting the lookup index. ' + err.error);
-                                          resolve(bulkDocu['docs']);
-                                        }); // getIndexDocument
-
-                                      // loggers.get('models').verbose('Success: Team ' + associateObj['teamId'] + ' successfully associated to child ' + JSON.stringify(associateObj['targetChild']));
-                                      // //resolve(body);
-                                      // // return updated documents
-                                      // resolve(bulkDocu['docs']);
+                                      .then(function(indexDocument) {
+                                        return teamIndex.updateLookup(indexDocument, lookupObjArr);
+                                      })
+                                      .then(function(lookupIndex) {
+                                        return teamIndex.updateIndexDocument(lookupIndex);
+                                      })
+                                      .then(function(result) {
+                                        loggers.get('models').verbose('Success: Team ' + associateObj['teamId'] + ' successfully associated to child ' + JSON.stringify(associateObj['targetChild']));
+                                        return resolve(bulkDocu['docs']);
+                                      })
+                                      .catch( /* istanbul ignore next */ function(err) {
+                                        return resolve(bulkDocu['docs']);
+                                      }); // updateIndexDocument
                                     });
                                 });
                             })
@@ -1007,35 +946,23 @@ var team = {
                             formattedDocuments(result, action)
                               .then(function(res) {
                                 var bulkDocu = util.formatForBulkTransaction(res, userEmail, 'update');
-
                                 common.bulkUpdate(bulkDocu)
                                   .then(function(body) {
-
                                     teamIndex.getIndexDocument()
-                                      .then(function(indexDocument) {
-                                        teamIndex.updateLookup(indexDocument, [lookupObj])
-                                          .then(function(lookupIndex) {
-                                            teamIndex.updateIndexDocument(lookupIndex)
-                                              .then(function(result) {
-                                                loggers.get('models').verbose('Success: Team ' + associateObj['teamId'] + ' successfully removed parent team ' + associateObj['targetParent']);
-                                                resolve(bulkDocu['docs']);
-                                              })
-                                              .catch( /* istanbul ignore next */ function(err) {
-                                                loggers.get('models').error('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
-                                                setTimeout(teamIndex.initIndex, 2000);
-                                                resolve(bulkDocu['docs']);
-                                              }); // updateIndexDocument
-                                          }); // updateLookup
-                                      })
-                                      .catch( /* istanbul ignore next */ function(err) {
-                                        loggers.get('models').error('Something went wrong while getting the lookup index. ' + err.error);
-                                        resolve(bulkDocu['docs']);
-                                      });
-
-                                    // loggers.get('models').verbose('Success: Team ' + associateObj['teamId'] + ' successfully removed parent team' + associateObj['targetParent']);
-                                    // //resolve(body);
-                                    // // return updated documents
-                                    // resolve(bulkDocu['docs']);
+                                    .then(function(indexDocument) {
+                                      return teamIndex.updateLookup(indexDocument, [lookupObj]);
+                                    })
+                                    .then(function(lookupIndex) {
+                                      return teamIndex.updateIndexDocument(lookupIndex);
+                                    })
+                                    .then(function(result) {
+                                      loggers.get('models').verbose('Success: Team ' + associateObj['teamId'] + ' successfully removed parent team ' + associateObj['targetParent']);
+                                      return resolve(bulkDocu['docs']);
+                                    })
+                                    .catch( /* istanbul ignore next */ function(err) {
+                                      loggers.get('models').error('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
+                                      return resolve(bulkDocu['docs']);
+                                    }); // updateIndexDocument
                                   })
                                   .catch( /* istanbul ignore next */ function(err) {
                                     // cannot simulate Cloudant error during testing
@@ -1083,38 +1010,26 @@ var team = {
                               lookupObjArr.push(lookupObj);
                             }
                           });
-
                           formattedDocuments(result, action)
                             .then(function(res) {
                               var bulkDocu = util.formatForBulkTransaction(res, userEmail, 'update');
-
                               common.bulkUpdate(bulkDocu)
                                 .then(function(body) {
-
                                   teamIndex.getIndexDocument()
-                                    .then(function(indexDocument) {
-                                      teamIndex.updateLookup(indexDocument, lookupObjArr)
-                                        .then(function(lookupIndex) {
-                                          teamIndex.updateIndexDocument(lookupIndex)
-                                            .then(function(result) {
-                                              loggers.get('models').verbose('Success: Team ' + associateObj['teamId'] + ' successfully removed child team ' + JSON.stringify(associateObj['targetChild']));
-                                              resolve(bulkDocu['docs']);
-                                            })
-                                            .catch( /* istanbul ignore next */ function(err) {
-                                              loggers.get('models').error('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
-                                              setTimeout(teamIndex.initIndex, 2000);
-                                              resolve(bulkDocu['docs']);
-                                            }); // updateIndexDocument
-                                        }); // updateLookup
-                                    })
-                                    .catch( /* istanbul ignore next */ function(err) {
-                                      loggers.get('models').error('Something went wrong while getting the lookup index. ' + err.error);
-                                      resolve(bulkDocu['docs']);
-                                    });
-                                  // loggers.get('models').verbose('Success: Team ' + associateObj['teamId'] + ' successfully removed child team' + JSON.stringify(associateObj['targetChild']));
-                                  // //resolve(body);
-                                  // // return updated documents
-                                  // resolve(bulkDocu['docs']);
+                                  .then(function(indexDocument) {
+                                    return teamIndex.updateLookup(indexDocument, lookupObjArr);
+                                  })
+                                  .then(function(lookupIndex) {
+                                    return teamIndex.updateIndexDocument(lookupIndex);
+                                  })
+                                  .then(function(result) {
+                                    loggers.get('models').verbose('Success: Team ' + associateObj['teamId'] + ' successfully removed child team ' + JSON.stringify(associateObj['targetChild']));
+                                    return resolve(bulkDocu['docs']);
+                                  })
+                                  .catch( /* istanbul ignore next */ function(err) {
+                                    loggers.get('models').error('Something went wrong with the lookup index update.  Index will be recreated. ' + err.error);
+                                    return resolve(bulkDocu['docs']);
+                                  }); // updateIndexDocument
                                 });
                             });
                         })
@@ -1170,27 +1085,6 @@ var team = {
               .catch( /* istanbul ignore next */ function(err){
                 reject(formatErrMsg(err.error));
               });
-            // team.getLookupIndex()
-            //   .then(function(result) {
-            //     _.each(userTeams, function(team) {
-            //       var lookupObj = _.findWhere(result, {
-            //         _id: team._id
-            //       });
-            //       //console.log(lookupObj);
-            //       if (!_.isEmpty(lookupObj)) {
-            //         userTeamsList = _.union([team._id], lookupObj.children, userTeamsList);
-            //       } else {
-            //         userTeamsList = _.union([team._id], team.child_team_id, userTeamsList);
-            //       }
-            //     });
-            //     userTeamsList = _.uniq(userTeamsList);
-            //     console.log(userTeamsList);
-            //     loggers.get('models').info('Success: ' + userEmail + ' has ' + userTeamsList.length + ' accessible team(s) by relationship.');
-            //     resolve(userTeamsList);
-            //   })
-            //   .catch( /* istanbul ignore next */ function(err) {
-            //     reject(formatErrMsg(err.error));
-            //   });
           })
           .catch( /* istanbul ignore next */ function(err) {
             // cannot simulate Cloudant error during testing
@@ -1396,34 +1290,3 @@ var formattedDocuments = function(doc, action) {
 };
 
 module.exports = team;
-
-// function getSelectedTeams(teamList, userTeams){
-//   return new Promise(function(resolve, reject){
-//       var data = new Object();
-//       data.type = 'team';
-//       data._id = new Object();
-//       data._id.$in = teamList;
-//       common.findBySelector(data)
-//         .then(function(body){
-//           var parentTeams = _.map(body.docs, function(val, key){
-//             if (!_.isEmpty(val.child_team_id)){
-//               userTeams.push(val._id);
-//               return val.child_team_id;
-//             }
-//             else{
-//               userTeams.push(val._id);
-//               return [];
-//             }
-//           });
-//           parentTeams = _.flatten(parentTeams);
-//           var parentTeams = _.difference(parentTeams, userTeams);
-//           if (_.size(parentTeams) > 0)
-//             getSelectedTeams(parentTeams, userTeams);
-//           loggers.get('models').verbose('Success: Selected team records obtained.');
-//           resolve(userTeams);
-//         })
-//         .catch( /* istanbul ignore next */ function(err){
-//           reject(formatErrMsg(err.error));
-//         });
-//       });
-// }
