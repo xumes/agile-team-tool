@@ -100,12 +100,12 @@ module.exports.searchTeamWithName = function(string) {
   return Team.findOne({name: string});
 };
 
-module.exports.getNonSquadTeams = function() {
-  return Team.find({type: {$ne:'squad'}});
+module.exports.getNonSquadTeams = function(optionalProjection) {
+  return Team.find({type: {$ne:'squad'}}, optionalProjection);
 };
 
-module.exports.getSquadTeams = function() {
-  return Team.find({type: 'squad'});
+module.exports.getSquadTeams = function(optionalProjection) {
+  return Team.find({type: 'squad'}, optionalProjection);
 };
 
 //root teams are teams with no parent, non-squad with children
@@ -123,6 +123,8 @@ module.exports.getRootTeams = function() {
     return res;
   });
 };
+
+
 
 /*
   Schema setter methods
