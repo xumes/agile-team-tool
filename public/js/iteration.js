@@ -71,7 +71,7 @@ jQuery(function($) {
         $('#memberCount').val(teamMemCount());
         $('#fteThisiteration').val(teamMemFTE());
         $('#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount').removeAttr('disabled');
-        $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').removeAttr('disabled');
+        $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#cycleTimeWIP,#cycleTimeInBacklog,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').removeAttr('disabled');
         $('#select2-teamChangeList-container,#commentIter').css('color', 'black');
         $('#refreshFTE').attr('onclick', 'refreshFTE()');
         if ($('#iterationSelectList').val() == 'new') {
@@ -114,7 +114,7 @@ jQuery(function($) {
       if (hasAccess($('#teamSelectList').val())) {
         $('#memberCount').val(teamMemCount());
         $('#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount').removeAttr('disabled');
-        $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').removeAttr('disabled');
+        $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#cycleTimeWIP,#cycleTimeInBacklog,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').removeAttr('disabled');
         $('#updateIterationBtn').attr('disabled', 'disabled');
         $('#addIterationBtn').removeAttr('disabled');
         $('#select2-teamChangeList-container,#commentIter').css('color', 'black');
@@ -395,7 +395,7 @@ function loadAgileTeamIterationInfo(teamId, iterationId) {
       } else {
         if (hasAcc) {
           $('#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount').removeAttr('disabled');
-          $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').removeAttr('disabled');
+          $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#cycleTimeWIP,#cycleTimeInBacklog,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').removeAttr('disabled');
           $('#updateIterationBtn').attr('disabled', 'disabled');
           $('#addIterationBtn').removeAttr('disabled');
           $('#select2-teamChangeList-container,#commentIter').css('color', 'black');
@@ -453,6 +453,8 @@ function loadSelectedAgileTeamIterationInfo() {
       }
       $('#DeploythisIteration').val(teamIterInfo.nbr_dplymnts);
       $('#defectsIteration').val(teamIterInfo.nbr_defects);
+      $('#cycleTimeWIP').val(teamIterInfo.nbr_cycletime_WIP);
+      $('#cycleTimeInBacklog').val(teamIterInfo.nbr_cycletime_in_backlog);
       $('#clientSatisfaction').val(teamIterInfo.client_sat);
       $('#teamSatisfaction').val(teamIterInfo.team_sat);
       var storiesFTE = $('#commStoriesDel').val() / $('#fteThisiteration').val();
@@ -489,13 +491,13 @@ function loadSelectedAgileTeamIterationInfo() {
 
       if (!hasAccess(teamIterInfo.team_id)) {
         $('#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount').attr('disabled', 'disabled');
-        $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').attr('disabled', 'disabled');
+        $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#cycleTimeWIP,#cycleTimeInBacklog,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').attr('disabled', 'disabled');
         $('#addIterationBtn,#updateIterationBtn').attr('disabled', 'disabled');
         $('#select2-teamChangeList-container,#commentIter').css('color', 'grey');
         $('#refreshFTE').removeAttr('onclick');
       } else {
         $('#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount').removeAttr('disabled');
-        $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').removeAttr('disabled');
+        $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#cycleTimeWIP,#cycleTimeInBacklog,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').removeAttr('disabled');
         $('#select2-teamChangeList-container,#commentIter').css('color', 'black');
         $('#refreshFTE').attr('onclick', 'refreshFTE()');
       }
@@ -712,6 +714,8 @@ function createIterationData(newIterationId) {
   jsonData.fte_cnt = $('#fteThisiteration').val();
   jsonData.nbr_dplymnts = $('#DeploythisIteration').val();
   jsonData.nbr_defects = $('#defectsIteration').val();
+  jsonData.nbr_cycletime_WIP = $('#cycleTimeWIP').val();
+  jsonData.nbr_cycletime_in_backlog = $('#cycleTimeInBacklog').val();
   jsonData.client_sat = $('#clientSatisfaction').val();
   jsonData.team_sat = $('#teamSatisfaction').val();
   jsonData = $.extend(true, {}, initIterationTemplate(), jsonData);
@@ -736,6 +740,8 @@ function updateIterationData(jsonData) {
   jsonData.fte_cnt = $('#fteThisiteration').val();
   jsonData.nbr_dplymnts = $('#DeploythisIteration').val();
   jsonData.nbr_defects = $('#defectsIteration').val();
+  jsonData.nbr_cycletime_WIP = $('#cycleTimeWIP').val();
+  jsonData.nbr_cycletime_in_backlog = $('#cycleTimeInBacklog').val();
   jsonData.client_sat = $('#clientSatisfaction').val();
   jsonData.team_sat = $('#teamSatisfaction').val();
   return jsonData;
@@ -780,6 +786,8 @@ function getIterationErrorPopup(errors) {
     'nbr_story_pts_dlvrd': 'commPointsDel',
     'nbr_dplymnts': 'DeploythisIteration',
     'nbr_defects': 'defectsIteration',
+    'nbr_cycletime_WIP': 'cycleTimeWIP',
+    'nbr_cycletime_in_backlog': 'cycleTimeInBacklog',
     'team_mbr_change': 'teamChangeList',
     'client_sat': 'clientSatisfaction',
     'team_sat': 'teamSatisfaction'
@@ -842,6 +850,8 @@ function updateIterationInfo(action) {
     $('#fteThisiteration').val('');
     $('#DeploythisIteration').val('');
     $('#defectsIteration').val('');
+    $('#cycleTimeWIP').val('');
+    $('#cycleTimeInBacklog').val('');
     $('#clientSatisfaction').val('');
     $('#teamSatisfaction').val('');
     $('#unitcostStoriesFTE').val('');
@@ -897,6 +907,8 @@ function clearHighlightedIterErrors() {
     'commPointsDel',
     'DeploythisIteration',
     'defectsIteration',
+    'cycleTimeWIP',
+    'cycleTimeInBacklog',
     'teamChangeList',
     'commentIter',
     'clientSatisfaction',

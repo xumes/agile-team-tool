@@ -792,7 +792,7 @@ span.customSpan{
 }
 
 .agile-read-only-status {
-	vertical-align: top;
+	vertical-align: top;;
 	min-width: 180px;
 	max-width: 550px;
 	margin-left: 625px;
@@ -801,6 +801,32 @@ span.customSpan{
 	max-height: 20px;
 	min-height: 20px;
 	font-size: 10.5pt;
+}
+
+.agile-static-helptip-backlog {
+	vertical-align: top;
+	min-width: 180px;
+	max-width: 550px;
+	margin-left: 625px;
+	margin-top: -50px;
+	margin-bottom: 30px;
+	max-height: 20px;
+	min-height: 20px;
+	font-size: 8pt;
+	color: grey;
+}
+
+.agile-static-helptip-WIP {
+	vertical-align: top;
+	min-width: 180px;
+	max-width: 550px;
+	margin-left: 625px;
+	margin-top: -57px;
+	margin-bottom: 30px;
+	max-height: 20px;
+	min-height: 20px;
+	font-size: 8pt;
+	color: grey;
 }
 
 .ibm-landing-page #ibm-pcon {
