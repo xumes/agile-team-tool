@@ -51,6 +51,27 @@ module.exports = function(app, includes) {
       });
   };
 
+  /**
+   * Get completed iterations by keys(startkey/endkey)
+   * @param {String}  startkey
+   * @param {String}  endkey
+   */
+  var getCompletedIterations = function(req, res, next) {
+    var startkey = req.query.startkey || undefined;
+    var endkey = req.query.endkey || undefined;
+    loggers.get('api').verbose('[iterationRoute.getCompletedIterations] startkey:%s endkey:%s', startkey, endkey);
+    iterationModel.getCompletedIterationsByKey(startkey, endkey)
+      .then(function(result) {
+        res.send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        /* cannot simulate Cloudant error during testing */
+        formatErrMsg('[getCompletedIterations]:' + err);
+        return res.status(400).send(err);
+      });
+  };
+
+  app.get('/api/mongodb/iteration/completed', [includes.middleware.auth.requireLogin], getCompletedIterations);
   app.get('/api/mongodb/iteration/current/:id', [includes.middleware.auth.requireLogin], getIterationDoc);
   app.get('/api/mongodb/iteration/:teamId?', [includes.middleware.auth.requireLogin], getIterinfo);
 };

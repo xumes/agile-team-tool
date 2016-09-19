@@ -2,6 +2,7 @@ var _ = require('underscore');
 var Promise = require('bluebird');
 var mongoose = require('mongoose');
 var loggers = require('../../middleware/logger');
+var moment = require('moment');
 var Schema   = mongoose.Schema;
 require('../../settings');
 
@@ -130,24 +131,24 @@ var iteration = {
   getByIterInfo: function(teamId) {
     return new Promise(function(resolve, reject) {
       if (teamId) {
-        iterationModel.find({'teamId':teamId}, function(err, results){
-          if (err) {
-            reject(formatErrMsg(err.message));
-          } else {
+        iterationModel.find({'teamId':teamId})
+          .then(function(results){
             successLogs('[iterationModel.getByIterInfo] Team iteration docs obtained');
             resolve(results);
-          }
-        });
+          })
+          .catch(function(err){
+            reject(formatErrMsg(err.message));
+          });
       } else {
         infoLogs('[getByIterInfo] Getting all team iterations docs');
-        iterationModel.find(function(err, results){
-          if (err) {
-            reject(formatErrMsg(err.message));
-          } else {
-            successLogs('[getByIterInfo] Team iteration docs obtained');
+        iterationModel.find()
+          .then(function(results){
+            successLogs('[iterationModel.getByIterInfo] Team iteration docs obtained');
             resolve(results);
-          }
-        });
+          })
+          .catch(function(err){
+            reject(formatErrMsg(err.message));
+          });
       }
     });
   },
@@ -164,7 +165,36 @@ var iteration = {
           reject(formatErrMsg(msg));
         });
     });
-  }
+  },
+
+  getCompletedIterationsByKey: function(startkey, endkey) {
+    return new Promise(function(resolve, reject) {
+      var dateFormat = 'YYYY-MM-DD HH:mm:ss';
+      var queryrequest = {
+        '$or': [
+          {'docStatus': null},
+          {'docStatus': {'$ne': 'delete'}}
+        ],
+        'status': 'Completed',
+        'startDate': {
+          '$gte': moment(new Date(startkey)).format(dateFormat)
+        },
+        'endDate': {
+          '$lte': moment(new Date(endkey)).format(dateFormat)
+        }
+      };
+      iterationModel.find(queryrequest)
+        .then(function(body) {
+          successLogs('[iterationModel.getCompletedIterationsByKey] Completed iteration docs obtained');
+          resolve(body);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          /* cannot simulate Cloudant error during testing */
+          var msg = err.message;
+          reject(formatErrMsg(msg));
+        });
+    });
+  },
 };
 
 module.exports = iteration;
