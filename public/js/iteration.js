@@ -744,6 +744,7 @@ function updateIterationData(jsonData) {
   jsonData.nbr_cycletime_in_backlog = $('#cycleTimeInBacklog').val();
   jsonData.client_sat = $('#clientSatisfaction').val();
   jsonData.team_sat = $('#teamSatisfaction').val();
+  jsonData = $.extend(true, {}, initIterationTemplate(), jsonData);
   return jsonData;
 }
 

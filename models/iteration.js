@@ -285,6 +285,8 @@ var iteration = {
     var client_sat = data['client_sat'];
     var dateFormat = 'MM/DD/YYYY';
     var status;
+    var nbr_cycletime_WIP = data['nbr_cycletime_WIP'];
+    var nbr_cycletime_in_backlog = data['nbr_cycletime_in_backlog'];
     var endDate = new Date(iteration_end_dt);
     var d1 = moment(endDate).format(dateFormat);
     var d2 = util.getServerTime();
@@ -303,7 +305,9 @@ var iteration = {
         nbr_dplymnts != 0 ||
         nbr_defects != 0 ||
         team_sat != 0 ||
-        client_sat != 0) {
+        client_sat != 0 ||
+        nbr_cycletime_WIP != 0 ||
+        nbr_cycletime_in_backlog !=0) {
         status = 'Completed';
       } else {
         status = 'Not complete';

@@ -767,6 +767,8 @@ function initIterationTemplate() {
     'fte_cnt': '',
     'nbr_dplymnts': '',
     'nbr_defects': '',
+    'nbr_cycletime_WIP': '',
+    'nbr_cycletime_in_backlog': '',
     'client_sat': '',
     'team_sat': '',
     'last_updt_dt': '',
