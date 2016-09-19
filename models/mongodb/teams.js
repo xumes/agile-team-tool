@@ -15,7 +15,7 @@ require('../../settings');
 var memberSchema = {
   name: {
     type: String,
-    required: [true, 'Member name is required']
+    required: [true, 'Member name is required.']
   },
   allocation: {
     type: Number,
@@ -25,11 +25,11 @@ var memberSchema = {
   },
   userId: {
     type: String,
-    required: [true, 'Member userId is required']
+    required: [true, 'Member userId is required.']
   },
   email: {
     type: String,
-    required: [true, 'Member email is required']
+    required: [true, 'Member email is required.']
   }
 };
 
@@ -117,10 +117,8 @@ module.exports.getRootTeams = function() {
     var uniquePaths = _.uniq(_.pluck(subtreeTeams, 'path'));
     uniquePaths = uniquePaths.join(',');
     //indexOf is faster than match apparently
-    var res = [];
-    _.each(rootedTeams, function(rootedTeam){
-      if (uniquePaths.indexOf(rootedTeam.pathId) >= 0)
-        res.push(rootedTeam);
+    var res = _.filter(rootedTeams, function(team){
+      return uniquePaths.indexOf(team.pathId) >= 0;
     });
     return res;
   });
