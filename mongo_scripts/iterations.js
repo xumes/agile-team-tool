@@ -54,10 +54,14 @@ var creds = require('./creds');
 MongoClient.connect(creds.url, function(err, db) {
   assert.equal(null, err);
   console.log('Connected successfully to server');
-  db.collection('iterations').insertMany(mongoIterations, function(err, r) {
-    assert.equal(null, err);
-    console.log('Done!  ' + JSON.stringify(r.result));
-    db.close();
-    process.exit();
-  });
+  db.collection('iterations')
+    .drop()
+    .then(function(){
+      db.collection('iterations').insertMany(mongoIterations, function(err, r) {
+        assert.equal(null, err);
+        console.log('Done!  ' + JSON.stringify(r.result));
+        db.close();
+        process.exit();
+      });
+    });
 });

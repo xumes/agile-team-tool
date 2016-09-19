@@ -140,7 +140,7 @@ module.exports.getSelectableParents = function(teamId) {
   return new Promise(function(resolve, reject){
     if (_.isEmpty(teamId)) return reject(Error('Id of team is required.'));
 
-    Team.findOne({cloudantId: teamId})
+    Team.findOne({_id: teamId})
     .then(function(team){
       if (_.isEmpty(team)) return reject(Error(teamId + ' is not a team.'));
 
