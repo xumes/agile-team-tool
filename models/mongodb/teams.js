@@ -124,8 +124,6 @@ module.exports.getRootTeams = function() {
   });
 };
 
-exports.getRootTeams();
-
 /*
   Schema setter methods
 */
