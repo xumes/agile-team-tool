@@ -33,5 +33,24 @@ module.exports = function(app, includes) {
       });
   };
 
+  /**
+   * Get single iteration doc by docId
+   * @param {String}  docId
+   */
+  var getIterationDoc = function(req, res, next) {
+    var docId = req.params.id || undefined;
+    loggers.get('api').verbose('[iterationRoute.getIterationDoc] docId:', docId);
+    iterationModel.get(docId)
+      .then(function(result) {
+        res.send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        /* cannot simulate Cloudant error during testing */
+        formatErrMsg('[iterationRoute.getIterationDoc]:', JSON.stringify(err));
+        return res.status(400).send(err);
+      });
+  };
+
+  app.get('/api/mongodb/iteration/current/:id', [includes.middleware.auth.requireLogin], getIterationDoc);
   app.get('/api/mongodb/iteration/:teamId?', [includes.middleware.auth.requireLogin], getIterinfo);
 };

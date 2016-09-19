@@ -132,7 +132,7 @@ var iteration = {
       if (teamId) {
         iterationModel.find({'teamId':teamId}, function(err, results){
           if (err) {
-            reject(formatErrMsg(err));
+            reject(formatErrMsg(err.message));
           } else {
             successLogs('[iterationModel.getByIterInfo] Team iteration docs obtained');
             resolve(results);
@@ -142,13 +142,27 @@ var iteration = {
         infoLogs('[getByIterInfo] Getting all team iterations docs');
         iterationModel.find(function(err, results){
           if (err) {
-            reject(formatErrMsg(err));
+            reject(formatErrMsg(err.message));
           } else {
             successLogs('[getByIterInfo] Team iteration docs obtained');
             resolve(results);
           }
         });
       }
+    });
+  },
+
+  get: function(docId) {
+    return new Promise(function(resolve, reject) {
+      iterationModel.find({'_id':docId})
+        .then(function(body) {
+          resolve(body);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          /* cannot simulate Cloudant error during testing */
+          var msg = err.message;
+          reject(formatErrMsg(msg));
+        });
     });
   }
 };
