@@ -117,6 +117,23 @@ describe('Iteration model [getCompletedIterationsByKey]', function() {
   });
 });
 
+describe('Iteration model [searchTeamIteration]', function() {
+  it('return successful for retriveing a iteration by query', function(done) {
+    var queryrequest = {
+      'id': validIterationDoc.teamId,
+      'status': 'Completed',
+      'startdate': moment(new Date('01-01-2016')).format(dateFormat),
+      'enddate': moment(new Date('09-15-2016')).format(dateFormat)
+    };
+    iterationModel.searchTeamIteration(queryrequest)
+      .then(function(result){
+        expect(result).to.be.a('array');
+        expect(result.length).not.to.equal(0);
+        done();
+      });
+  });
+});
+
 describe('Iteration model [edit]', function() {
   it('return successful for updating a iteration', function(done) {
     validIterationDoc.memberCount = 2;
