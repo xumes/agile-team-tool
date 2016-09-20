@@ -57,7 +57,7 @@ _.each(cloudantTeams, function(doc) {
   //check if pathId is unique
   _.each(mongoTeams, function(obj){
     if (_.isEqual(obj.pathId, pathId)){
-      console.log('error conflicting path');
+      console.log('error conflicting path: ' + pathId);
       //TODO need to clean up prod db and remove duplicate teams
       // console.log('ERROR: ' + pathId + '  exists already.');
       // console.log('new mongo doc: ' + JSON.stringify(doc));
@@ -125,10 +125,14 @@ var creds = require('./creds');
 MongoClient.connect(creds.url, function(err, db) {
   assert.equal(null, err);
   console.log('Connected successfully to server');
-  db.collection('teams').insertMany(mongoTeams, function(err, r) {
-    ssert.equal(null, err);
-    console.log('Done!  ' + JSON.stringify(r.result));
-    db.close();
-    process.exit();
-  });
+  db.collection('teams')
+    .drop()
+    .then(function(){
+      db.collection('teams').insertMany(mongoTeams, function(err, r) {
+        assert.equal(null, err);
+        console.log('Done!  ' + JSON.stringify(r.result));
+        db.close();
+        process.exit();
+      });
+    });
 });

@@ -68,7 +68,8 @@ module.exports = {
     emailId = emailId.toLowerCase();
 
     if (_.isEmpty(map[emailId])){
-      console.log('user not found, will insert their email as a userId: ' + emailId);
+      if (emailId!=='batch')
+        console.log('user not found, will insert their email as a userId: ' + emailId);
       return emailId;
     }
     else {

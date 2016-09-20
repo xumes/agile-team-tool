@@ -92,29 +92,40 @@ var TeamSchema = new Schema({
 var Team = mongoose.model('Team', TeamSchema);
 
 
+var getAllUniquePaths = function(){
+  return new Promise(function(resolve, reject){
+    Team.find({path: {$ne: null}}, {path: 1})
+    .then(function(paths) {
+      resolve(_.uniq(_.pluck(paths, 'path')));
+    })
+    .catch(function(err) {
+      reject(err);
+    });
+  });
+};
+
 /*
   Schema getter methods
 */
 
 module.exports.searchTeamWithName = function(string) {
-  return Team.findOne({name: string});
+  return Team.findOne({name: string}).exec();
 };
 
-module.exports.getNonSquadTeams = function() {
-  return Team.find({type: {$ne:'squad'}});
+module.exports.getNonSquadTeams = function(optionalProjection) {
+  return Team.find({type: {$ne:'squad'}}, optionalProjection).exec();
 };
 
-module.exports.getSquadTeams = function() {
-  return Team.find({type: 'squad'});
+module.exports.getSquadTeams = function(optionalProjection) {
+  return Team.find({type: 'squad'}, optionalProjection).exec();
 };
 
 //root teams are teams with no parent, non-squad with children
 module.exports.getRootTeams = function() {
   return Promise.join(
     Team.find({path: null, type:{$ne:'squad'}}),
-    Team.find({path: {$ne:null}}, {path:1}),
-  function(rootedTeams, subtreeTeams) {
-    var uniquePaths = _.uniq(_.pluck(subtreeTeams, 'path'));
+    getAllUniquePaths(),
+  function(rootedTeams, uniquePaths) {
     uniquePaths = uniquePaths.join(',');
     //indexOf is faster than match apparently
     var res = _.filter(rootedTeams, function(team){
@@ -122,6 +133,33 @@ module.exports.getRootTeams = function() {
     });
     return res;
   });
+};
+
+//list of NON-SQUAD teams that are not part of teamId's subtree
+module.exports.getSelectableParents = function(teamId) {
+  return new Promise(function(resolve, reject){
+    if (_.isEmpty(teamId)) return reject(Error('Id of team is required.'));
+
+    Team.findOne({_id: teamId})
+    .then(function(team){
+      if (_.isEmpty(team)) return reject(Error(teamId + ' is not a team.'));
+
+      var regEx = new RegExp('^((?!'+team.pathId+').)*$');
+      return Team.find({type:{$ne:'squad'}, path: regEx});
+    })
+    .then(function(result){
+      resolve(result);
+    })
+    .catch(function(err) {
+      reject(err);
+    });
+  });
+};
+
+//list of root teams(any team type; no parents) where teamId is not in their subtree.
+//if teamId is a squad team, return none
+module.exports.getSelectableChildren = function(teamId) {
+
 };
 
 /*
