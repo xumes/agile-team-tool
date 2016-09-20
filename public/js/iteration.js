@@ -173,7 +173,7 @@ jQuery(function($) {
     return true;
   });
 
-  $('#clientSatisfaction, #teamSatisfaction').blur(function() {
+  $('#clientSatisfaction, #teamSatisfaction, #cycleTimeInBacklog, #cycleTimeWIP').blur(function() {
     var value = parseFloat($(this).val());
     if (!isNaN(value)) {
       $(this).val(parseFloat(value).toFixed(1));
