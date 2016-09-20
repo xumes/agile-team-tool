@@ -2,7 +2,11 @@ var _ = require('underscore');
 var Promise = require('bluebird');
 var mongoose = require('mongoose');
 var loggers = require('../../middleware/logger');
+var userModel = require('./users.js');
 var moment = require('moment');
+var iteration_schema = require('./validate_rules/iteration.js');
+var util = require('../../helpers/util');
+var dateFormat = 'YYYY-MM-DD HH:mm:ss';
 var Schema   = mongoose.Schema;
 require('../../settings');
 
@@ -23,107 +27,17 @@ var infoLogs = function(msg) {
   return;
 };
 
-var iterationSchema = new Schema({
-  cloudantId: {
-    type: String
-  },
-  createDate: {
-    type: Date,
-    required: [true, 'Creation date is required.']
-  },
-  createdByUserId: {
-    type: String,
-    required: [true, 'UserId of creator is required.']
-  },
-  createdBy: {
-    type: String,
-    required: [true, 'Name of creator is required.']
-  },
-  updateDate: {
-    type: Date,
-    default: new Date()
-  },
-  updatedByUserId: {
-    type: String,
-    default: null
-  },
-  updatedBy: {
-    type: String,
-    default: null
-  },
-  docStatus: {
-    type: String,
-    default:null
-  },
-  startDate: {
-    type: Date,
-    required: [true, 'Start date of iteration is required.']
-  },
-  endDate: {
-    type: Date,
-    required: [true, 'End date of iteration is required.']
-  },
-  name: {
-    type: String,
-    required: [true, 'Name of iteration is required.']
-  },
-  teamId: {
-    type: String,
-    required: [true, 'TeamId of iteration is required.']
-  },
-  memberCount: {
-    type: Number,
-    required: [true, 'Member count is required.']
-  },
-  status: {
-    type: String,
-    default: 'Not complete'
-  },
-  committedStories: {
-    type: Number,
-    default: null
-  },
-  deliveredStories: {
-    type: Number,
-    default: null
-  },
-  commitedStoryPoints: {
-    type: Number,
-    default: null
-  },
-  storyPointsDelivered: {
-    type: Number,
-    default: null
-  },
-  locationScore: {
-    type: Number,
-    default: null
-  },
-  deployments: {
-    type: Number,
-    default: null
-  },
-  defects: {
-    type: Number,
-    default: null
-  },
-  clientSatisfaction: {
-    type: Number,
-    default: null
-  },
-  teamSatisfaction: {
-    type: Number,
-    default: null
-  },
-  comment: {
-    type: String,
-    default: null
-  },
-  memberChanged: {
-    type: Boolean,
-    default: false
-  },
-});
+function isIterationNumExist(iteration_name, iterData) {
+  var duplicate = false;
+  _.find(iterData, function(iter){
+    if (iter.name == iteration_name) {
+      duplicate = true;
+    }
+  });
+  return duplicate;
+};
+
+var iterationSchema = new Schema(iteration_schema.iterationSchema);
 
 var iterationModel = mongoose.model('iterations', iterationSchema);
 
@@ -169,7 +83,6 @@ var iteration = {
 
   getCompletedIterationsByKey: function(startkey, endkey) {
     return new Promise(function(resolve, reject) {
-      var dateFormat = 'YYYY-MM-DD HH:mm:ss';
       var queryrequest = {
         '$or': [
           {'docStatus': null},
@@ -195,6 +108,54 @@ var iteration = {
         });
     });
   },
+
+  add: function(data, user) {
+    return new Promise(function(resolve, reject) {
+      data['createDate'] = moment(new Date()).format(dateFormat);
+      data['updateDate'] = moment(new Date()).format(dateFormat);
+      userModel.findUserByEmail((user.shortEmail).toLowerCase())
+      .then(function(userInfo){
+        if (userInfo == null) {
+          var msg = 'This user is not in the database: ' + (user.shortEmail).toLowerCase();
+          reject(formatErrMsg(msg));
+        } else {
+          data['createdBy'] = userInfo.email;
+          data['createdByUserId'] = userInfo.userId;
+          data['updatedBy'] = userInfo.email;
+          data['updatedByUserId'] = userInfo.userId;
+          return util.isUserAllowed(userInfo.email, data['teamId']);
+        }
+      })
+      .then(function(validUser){
+        if (validUser) {
+          return iteration.getByIterInfo(data['teamId']);
+        } else {
+          var msg = 'This user is not allowed to add iteration: ' + (user.shortEmail).toLowerCase();
+          reject(formatErrMsg(msg));
+        }
+      })
+      .then(function(iterData){
+        if (iterData != undefined && iterData.length > 0) {
+          var duplicate = isIterationNumExist(data['name'], iterData);
+          if (duplicate) {
+            var msg = 'Iteration number/identifier: ' + data['name'] + ' already exists';
+            return reject(formatErrMsg(msg));
+          }
+        } else {
+          return iterationModel.create(data);
+        }
+      })
+      .then(function(result){
+        successLogs('[iterationModels.add] New iteration doc created');
+        resolve(body);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        loggers.get('models').error('[iterationModel.add] Err:', err);
+        var msg = err.message;
+        reject(formatErrMsg(msg));
+      });
+    });
+  }
 };
 
 module.exports = iteration;

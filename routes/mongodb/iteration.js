@@ -71,6 +71,30 @@ module.exports = function(app, includes) {
       });
   };
 
+  /**
+   * Add iteration doc
+   * @param {String}  request_body
+   */
+  var createIteration = function(req, res, next) {
+    var data = req.body;
+    if (_.isEmpty(data)) {
+      return res.status(400).send({
+        error: 'Iteration data is missing'
+      });
+    }
+    iterationModel.add(data, req.session['user'])
+      .then(function(result) {
+        res.send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        /* cannot simulate Cloudant error during testing */
+        // console.log('[api] [createIteration]:', err);
+        loggers.get('api').error('[iterationRoute.createIteration]:', err);
+        res.status(400).send(err);
+      });
+  };
+
+  app.post('/api/mongodb/iteration', [includes.middleware.auth.requireLogin], createIteration);
   app.get('/api/mongodb/iteration/completed', [includes.middleware.auth.requireLogin], getCompletedIterations);
   app.get('/api/mongodb/iteration/current/:id', [includes.middleware.auth.requireLogin], getIterationDoc);
   app.get('/api/mongodb/iteration/:teamId?', [includes.middleware.auth.requireLogin], getIterinfo);
