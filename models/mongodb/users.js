@@ -170,6 +170,32 @@ var users = {
     });
   },
 
+  isUserAllowed: function(userId, teamId) {
+    var hasAccess = false;
+    return new Promise(function(resolve, reject) {
+      var promiseArray = [];
+      promiseArray.push(users.findUserByEmail(userId.toLowerCase()));
+      promiseArray.push(users.isTeamMember(userId, teamId));
+      Promise.all(promiseArray)
+        .then(function(results){
+          if (results[0] && results[0] != undefined) {
+            if (results[0].adminAccess && results[0].adminAccess != undefined && results[0].adminAccess != 'none') {
+              hasAccess = true;
+              return resolve(hasAccess);
+            }
+          }
+          if (results[1] && results[1] != undefined) {
+            hasAccess = results[1];
+            return resolve(hasAccess);
+          }
+          return resolve(hasAccess);
+        })
+        .catch(function(err){
+          reject(formatErrMsg(err));
+        });
+    });
+  },
+
   add: function(user) {
     return new Promise(function(resolve, reject) {
       var newUser = {

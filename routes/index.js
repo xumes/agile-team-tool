@@ -25,7 +25,4 @@ module.exports = function(app, passport) {
   fs.readdirSync('./routes/api').forEach(function(file) {
     require('./api/' + file)(app, includes);
   });
-  fs.readdirSync('./routes/mongodb').forEach(function(file) {
-    require('./mongodb/' + file)(app, includes);
-  });
 };

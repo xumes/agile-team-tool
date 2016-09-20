@@ -112,27 +112,33 @@ var iterationSchema = {
 };
 
 var formatErrMsg = function(msg) {
-  loggers.get('models').error('Error: ', msg);
+  loggers.get('model-iteration').error('Error: ', msg);
   return {
     error: msg
   };
 };
 
 var successLogs = function(msg) {
-  loggers.get('models').verbose('Success: ' + msg);
+  loggers.get('model-iteration').info('Success: ' + msg);
   return;
 };
 
 var infoLogs = function(msg) {
-  loggers.get('models').verbose(msg);
+  loggers.get('model-iteration').info(msg);
   return;
 };
 
-function isIterationNumExist(iteration_name, iterData) {
+function isIterationNumExist(iteration_name, iterData, updateId) {
   var duplicate = false;
   _.find(iterData, function(iter){
     if (iter.name == iteration_name) {
-      duplicate = true;
+      if (updateId) {
+        if (!updateId.equals(iter._id)) {
+          duplicate = true;
+        }
+      } else {
+        duplicate = true;
+      }
     }
   });
   return duplicate;
@@ -149,7 +155,7 @@ var iteration = {
         var request = {
           'teamId': teamId
         };
-        iterationModel.find(request)
+        iterationModel.find(request).exec()
           .then(function(results){
             successLogs('[iterationModel.getByIterInfo] Team iteration docs obtained');
             resolve(results);
@@ -160,7 +166,7 @@ var iteration = {
       } else {
         infoLogs('[getByIterInfo] Getting all team iterations docs');
         if (limit) {
-          iterationModel.find().limit(limit)
+          iterationModel.find().limit(limit).exec()
             .then(function(results){
               successLogs('[iterationModel.getByIterInfo] Team iteration docs obtained by limit number');
               resolve(results);
@@ -169,8 +175,8 @@ var iteration = {
               reject(formatErrMsg(err.message));
             });
         } else {
-          iterationModel.find()
-            .then(function(results){
+          /* istanbul ignore next */ iterationModel.find().exec()
+            .then( /* istanbul ignore next */ function(results){
               successLogs('[iterationModel.getByIterInfo] Team iteration docs obtained');
               resolve(results);
             })
@@ -184,7 +190,7 @@ var iteration = {
 
   get: function(docId) {
     return new Promise(function(resolve, reject) {
-      iterationModel.findOne({'_id':docId})
+      iterationModel.findOne({'_id':docId}).exec()
         .then(function(result) {
           resolve(result);
         })
@@ -211,7 +217,7 @@ var iteration = {
           '$lte': moment(new Date(endkey)).format(dateFormat)
         }
       };
-      iterationModel.find(queryrequest)
+      iterationModel.find(queryrequest).exec()
         .then(function(body) {
           successLogs('[iterationModel.getCompletedIterationsByKey] Completed iteration docs obtained');
           resolve(body);
@@ -224,7 +230,7 @@ var iteration = {
     });
   },
 
-  add: function(data, user) {
+  add: function(data, user, updateId) {
     return new Promise(function(resolve, reject) {
       data['createDate'] = moment().format(dateFormat);
       data['updateDate'] = moment().format(dateFormat);
@@ -239,7 +245,7 @@ var iteration = {
           data['createdByUserId'] = userInfo.userId;
           data['updatedBy'] = userInfo.email;
           data['updatedByUserId'] = userInfo.userId;
-          return userModel.isTeamMember(user.shortEmail, data['teamId']);
+          return userModel.isUserAllowed(user.shortEmail, data['teamId']);
         }
       })
       .then(function(validUser){
@@ -252,24 +258,32 @@ var iteration = {
       })
       .then(function(iterData){
         if (iterData != undefined && iterData.length > 0) {
-          var duplicate = isIterationNumExist(data['name'], iterData);
+          var duplicate = isIterationNumExist(data['name'], iterData, updateId);
           if (duplicate) {
             var msg = 'Iteration number/identifier: ' + data['name'] + ' already exists';
             return Promise.reject(formatErrMsg(msg));
           }
         }
-        return iterationModel.create(data);
+        if (updateId) {
+          return iterationModel.where({'_id': updateId}).update({'$set':data});
+        } else {
+          return iterationModel.create(data);
+        }
       })
       .then(function(result){
-        successLogs('[iterationModels.add] New iteration doc created');
+        if (!updateId) {
+          successLogs('[iterationModels.add] New iteration doc created');
+        }
         return resolve(result);
       })
       .catch( /* istanbul ignore next */ function(err){
-        loggers.get('models').error('[iterationModel.add] Err:', err);
         if (err.message) {
           var msg = err.message;
         } else {
           var msg = err.error;
+        }
+        if (!updateId) {
+          loggers.get('models').error('[iterationModel.add] Err:', msg);
         }
         reject(formatErrMsg(msg));
       });
@@ -284,7 +298,7 @@ var iteration = {
         };
         reject(formatErrMsg(msg));
       } else {
-        iterationModel.findOneAndRemove({'_id': docId})
+        iterationModel.remove({'_id': docId})
           .then(function(body) {
             // console.log('iteration.delete RESULT:', body);
             //loggers.get('models').verbose('[iterationModel.delete] result:', body._id);
@@ -307,7 +321,7 @@ var iteration = {
         var msg = 'request is missing';
         reject(formatErrMsg(msg));
       } else {
-        iterationModel.findOneAndRemove(request)
+        iterationModel.findOneAndRemove(request).exec()
           .then(function(body) {
             // console.log('iteration.delete RESULT:', body);
             //loggers.get('models').verbose('[iterationModel.delete] result:', body._id);
@@ -321,6 +335,20 @@ var iteration = {
             reject(formatErrMsg(msg));
           });
       }
+    });
+  },
+
+  edit: function(docId, data, user) {
+    return new Promise(function(resolve, reject) {
+      iteration.add(data, user, docId)
+        .then(function(result){
+          successLogs('[iterationModels.edit] Iteration doc has been eidted');
+          return resolve(result);
+        })
+        .catch(function(err){
+          loggers.get('models').error('[iterationModel.edit] Err:', err);
+          reject(err);
+        });
     });
   },
 

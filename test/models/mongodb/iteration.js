@@ -30,7 +30,6 @@ describe('Iteration model [add]', function() {
 
     iterationModel.deleteByFields(request)
       .then(function(result){
-        console.log(result);
         done();
       })
       .catch(function(err){
@@ -118,12 +117,24 @@ describe('Iteration model [getCompletedIterationsByKey]', function() {
   });
 });
 
+describe('Iteration model [edit]', function() {
+  it('return successful for updating a iteration', function(done) {
+    validIterationDoc.memberCount = 2;
+    iterationModel.edit(newIterationId, validIterationDoc, validUser)
+      .then(function(result){
+        expect(result).to.be.a('object');
+        expect(result).to.have.property('ok');
+        done();
+      });
+  });
+});
+
 describe('Iteration model [delete]', function() {
   it('return successful for deleteing a iteration by id', function(done) {
     iterationModel.delete(newIterationId)
       .then(function(result){
         expect(result).to.be.a('object');
-        expect(result).to.have.property('_id');
+        expect(result).to.have.property('result');
         done();
       });
   });
