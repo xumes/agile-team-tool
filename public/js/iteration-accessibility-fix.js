@@ -11,14 +11,14 @@ $(document).ready(function() {
   // $('#select2-teamSelectList-container').attr('aria-labelledby', 'select2-teamSelectList-container');
 
   // An element with WAI-ARIA role listbox does not contain or own at least one child element with each of the following WAI-ARIA roles: option.
-  $('#select2-teamSelectList-container').append('<div role=\'option\' aria-labelledby=\'Select one\'></div>');
+  $('#select2-teamSelectList-container').append('<div role="option" aria-labelledby="Select one"></div>');
 
   // An element with WAI-ARIA role combobox does not contain or own at least one child element with each of the following WAI-ARIA roles: listbox
   $('#select2-teamSelectList-container').attr('role', 'listbox');
   $('#select2-teamSelectList-container').attr('aria-labelledby', 'select2-teamSelectList-container');
 
   // An element with WAI-ARIA role listbox does not contain or own at least one child element with each of the following WAI-ARIA roles: option.
-  $('#select2-teamSelectList-container').append('<div role=\'option\' aria-labelledby=\'Select one\'></div>');
+  $('#select2-teamSelectList-container').append('<div role="option" aria-labelledby="Select one"></div>');
 
   setInterval(function() {
     if ($.fn.datepicker) {
@@ -44,12 +44,13 @@ $(document).ready(function() {
 
     var imgprev = $('#ui-datepicker-div .ui-datepicker-header .ui-datepicker-prev').find('.imgprev');
     if (imgprev.length == 0) {
-      $('#ui-datepicker-div .ui-datepicker-header .ui-datepicker-prev').html('<img class="imgprev ui-icon ui-icon-circle-triangle-w" src="" title="" alt="" style="display: block; left: 50%; margin-left: -8px; margin-top: -8px; position: absolute; top: 50%;" >Prev');
+      $('#ui-datepicker-div .ui-datepicker-header .ui-datepicker-prev').html('<img class="imgprev ui-icon ui-icon-circle-triangle-w" src="" title="" alt="" style="display: block; left: 50%; margin-left: -8px; margin-top: -8px; position: absolute; top: 50%;">Prev');
     }
 
     var imgnext = $('#ui-datepicker-div .ui-datepicker-header .ui-datepicker-next').find('.imgnext');
     if (imgnext.length == 0) {
-      $('#ui-datepicker-div .ui-datepicker-header .ui-datepicker-next').html('<img class="imgnext ui-icon ui-icon-circle-triangle-e" src="" title="" alt="" style="display: block; left: 50%; margin-left: -8px; margin-top: -8px; position: absolute; top: 50%;" >Next');
+      $('#ui-datepicker-div .ui-datepicker-header .ui-datepicker-next').html('<img class="imgnext ui-icon ui-icon-circle-triangle-e" src="" title="" alt="" style="display: block; left: 50%; margin-left: -8px; margin-top: -8px; position: absolute; top: 50%;">Next');
     }
   }
 });
+
