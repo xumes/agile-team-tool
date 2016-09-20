@@ -859,7 +859,7 @@ function updateIterationInfo(action) {
     $('#unitcostStorypointsFTE').val('');
 
     $('#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPointsDel,#storyPullIn,#storyPtPullIn').attr('disabled', 'disabled');
-    $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#clientSatisfaction,#teamSatisfaction,#retroItems,#commPoints,#memberCount,#commStoriesDel,#retroItemsComplete,#commentIter,#teamChangeList').attr('disabled', 'disabled');
+    $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#cycleTimeWIP,#cycleTimeInBacklog,#clientSatisfaction,#teamSatisfaction,#retroItems,#commPoints,#memberCount,#commStoriesDel,#retroItemsComplete,#commentIter,#teamChangeList').attr('disabled', 'disabled');
     $('#addIterationBtn,#updateIterationBtn').attr('disabled', 'disabled');
     $('#select2-teamChangeList-container,#commentIter').css('color', 'grey');
     $('#refreshFTE').removeAttr('onclick');

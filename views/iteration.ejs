@@ -175,34 +175,41 @@
                         <span>
                           <input type="number" name="cycleTimeWIP" id="cycleTimeWIP" min="0"  step="0.1" size="21" value="" placeholder="0.0" onkeypress="return isNumber(event)" class="inputCustom"/>
                         </span>
+                        <div class="agile-static-helptip-WIP" id="helpWIP"><strong>How to calculate WIP</strong><br/>
+                          For each story delivered in this iteration, how long did it take to go from being worked on (planned for this iteration) to production delivery? Put the average number of days in this field.
+                        </div>
                       </p>
-                      <ul data-widget="twisty" class="ibm-twisty agile-static-helptip-WIP" id="helpWIP">
+<!--                  <ul data-widget="twisty" class="ibm-twisty agile-static-helptip-WIP" id="helpWIP">
                         <li>
                           <span class="ibm-twisty-head">
-                            <span style="font-size: 10pt; color: grey; vertical-align:bottom;">How to calculate WIP time</span>
+                            <span style="font-size: 10pt; color: grey; vertical-align:bottom;">How to calculate WIP</span>
                           </span>
                           <div class="ibm-twisty-body">
-                            For each story that was delivered during this iteration, how long did it take for it to go from being worked on to delivery? Put the average in this fields.
-                          </div>
+                            For each story delivered in this iteration, how long did it take to go from being worked on (planned for this iteration) to production delivery? Put the average number of days in this field.                          </div>
                           </li>
                         </ul>
+-->
                         <p>
                           <label for="cycleTimeInBacklog" style="width: 410px">Cycle time in backlog (days):<span class="ibm-required"></span></label>
                           <span>
                             <input type="number" name="cycleTimeInBacklog" id="cycleTimeInBacklog" min="0" step="0.1" size="21" value="" placeholder="0.0" onkeypress="return isNumber(event)" class="inputCustom"/>
                             <p/>
                           </span>
+                          <div class="agile-static-helptip-backlog" id="helpBacklog"><strong>How to calculate backlog time</strong><br/>
+                            For each story delivered in this iteration how long was it in your backlog before it was planned for this iteration? Put the average number of days in this field.
+                          </div>
                         </p>
-                        <ul data-widget="twisty" class="ibm-twisty agile-static-helptip-backlog" id="helpBacklog">
+<!--                    <ul data-widget="twisty" class="ibm-twisty agile-static-helptip-backlog" id="helpBacklog">
                           <li>
                             <span class="ibm-twisty-head">
                               <span style="font-size: 10pt; color: grey; vertical-align:bottom;">How to calculate backlog time</span>
                             </span>
                             <div class="ibm-twisty-body">
-                             For each story in your backlog, how long does it take between when it comes into your backlog until the team starts working on the story. Put the average in this field.
-                            </div>
+                             For each story delivered in this iteration how long was it in your backlog before it was planned for this iteration? Put the average number of days in this field.                            </div>
                           </li>
                         </ul>
+-->
+
                       <p>
                         <label for="teamChangeList" style="width: 410px">Was there a team change?
                           <a class="ibm-information-link" id="teamChangeListTT" style="position: relative; top: -5px; left:10px; display: inline;"></a>
