@@ -1,0 +1,205 @@
+swagger: '2.0'
+info:
+  title: Agile Team Tool API
+  description: Set of APIs to import data into the tool
+  version: "1.0.0"
+# the domain of the service
+host: agiletool.local.dev
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /v1
+produces:
+  - application/json
+  
+paths:
+  /teams:
+    get:
+      summary: Teams
+      description: |
+        The teams endpoint retrieves all of the teams associated by the user that created the API key
+      parameters:
+        - name: apiKey
+          in: header
+          description: Unique API key generated for the consumer of this API
+          required: true
+          type: string
+          format: string
+      tags:
+        - Team
+      responses:
+        200:
+          description: An array of teams
+          schema: 
+            type: array
+            items:
+              $ref: '#/definitions/Team'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /iterations:
+    get:
+      summary: Iterations
+      description: |
+        The iterations endpoint retrieves all of the iteration data for a particular team
+      parameters:
+        - name: apiKey
+          in: header
+          description: Unique API key generated for the consumer of this API
+          required: true
+          type: string
+          format: string
+      tags:
+        - Iteration
+      responses:
+        200:
+          description: An array of iterations
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Iteration'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: Iterations
+      description: |
+        This endpoint inserts new iteration data
+      parameters:
+        - name: apiKey
+          in: header
+          description: Unique API key generated for the consumer of this API
+          required: true
+          type: string
+          format: string
+      tags:
+        - Iteration
+      responses:
+        201:
+          description: Iteration data
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Iteration'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: Iterations
+      description: |
+        This endpoint updates existing iteration data
+      parameters:
+        - name: apiKey
+          in: header
+          description: Unique API key generated for the consumer of this API
+          required: true
+          type: string
+          format: string
+        - name: iterationId
+          in: query
+          description: Unique identifier for the iteration
+          required: true
+          type: string
+          format: string
+        - name: iteration
+          in: body
+          description: JSON body of the iteration data to be updated
+          required: true
+          schema:
+            type: string
+            example:
+              _id: xxxxxxx
+              teamId: xxxxxxx
+              status: xxxxxxx
+      tags:
+        - Iteration
+      responses:
+        200:
+          description: Iteration data
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Iteration'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Iterations
+      description: |
+        This endpoint deletes existing iteration data
+      parameters:
+        - name: apiKey
+          in: header
+          description: Unique API key generated for the consumer of this API
+          required: true
+          type: string
+          format: string
+        - name: iterationId
+          in: query
+          description: Unique identifier for the iteration
+          required: true
+          type: string
+          format: string
+      tags:
+        - Iteration
+      responses:
+        200:
+          description: Iteration data
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Iteration'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'  
+definitions:
+  Team:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: Unique database objectid
+      teamId:
+        type: string
+        description: Unique database identifier from Cloudant
+      name:
+        type: string
+        description: Name of the team
+  Iteration:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: Unique database objectid
+      teamId:
+        type: string
+        description: Unique identifier representing the team
+      status:
+        type: string
+        description: Status of the iteration
+      memberCount:
+        type: integer
+        description: Number of members in the team
+      committedStories:
+        type: integer
+        description: Number of committed stories
+      deliveredStoryPoints:
+        type: integer
+        description: Number of story points delivered
+      deployments:
+        type: integer
+        description: Number of deployments done
+      defects:
+        type: integer
+        description: Number of defects
+  Error:
+    type: object
+    properties:
+      message:
+        type: string
