@@ -40,11 +40,11 @@
 
                       <nav class="tab-nav">
                         <ul class="tab-ul" role="tablist" style="width: 100%;">
-                            <li id="myTeams" class="tab-ul--item" role="tab" data-state="open">My teams</li>
+                            <li id="myTeams" class="tab-ul--item" role="tab" data-state="open" tabindex="0">My teams</li>
                             <li id="allTeams" class="tab-ul--item" role="tab">All teams</li>
                         </ul>
                         <i style="position: absolute; font-size: 8pt; text-align: right; display: inline-block; float: right; left: 0px; width: 100%; top: 25px; padding-bottom: 0;"><i class="agile-team-squad">*</i> indicates squad team</i>
-                        <input id="nameSearchField" type="search" class="agile-search-field" name="search" placeholder="Enter team name to filter..." hidden=true>
+                        <input id="nameSearchField" type="search" class="agile-search-field" name="search" placeholder="Enter team name to filter..." hidden=true aria-label="nameSearchField">
                         <div id="spinnerContainer-search" style="text-align: center" hidden=true>
                           <div style="display: inline-block; margin-top:10em;" class="clear-loading loading-effect-1">
                             <span style="padding: 0;"></span>
@@ -117,8 +117,9 @@
 
                     <div data-widget="showhide" data-type="panel" class="ibm-show-hide" id="iterationSection">
                       <p class="ibm-ind-link" style="float: right;" id="snapshotPull">
-                        <a class="ibm-refresh-link" href="#" id="refreshData" style="float: right;"></a>
-                        Data as of:&nbsp;<label id="refreshDate"></label>&nbsp;&nbsp;
+                        Data as of:&nbsp;<label id="refreshDate">Date&nbsp;&nbsp;
+                          <a class="ibm-refresh-link" href="#" id="refreshData" style="float: right;"></a>
+                        </label>
                       </p>
                       <h2 class="agile-section-title" data-open="true" id="agile-section-title">Iteration trends</h2>
                       <div style="display:none" class="agile-section-nav">

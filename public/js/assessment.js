@@ -27,6 +27,8 @@ jQuery(function($) {
       dateFormat: 'ddMyy'
     });
     $('#assessmentDate').datepicker('option', 'dateFormat', 'ddMyy');
+    $('#ui-datepicker-div').attr('role', 'region');
+    $('#ui-datepicker-div').attr('aria-label', 'datepicker');
   }
 
   $('#teamSelectList').change(function() {
