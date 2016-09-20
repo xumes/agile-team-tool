@@ -43,6 +43,8 @@ _.each(cloudantTeams, function(doc) {
 
     member['email'] = member['id'];
     delete member['id'];
+
+    member['email'] = util.lowerCase(member['email']);
   });
 
   //get team parent info from it's indexed doc
