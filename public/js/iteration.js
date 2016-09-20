@@ -159,7 +159,7 @@ jQuery(function($) {
 
   });
 
-  $('#fteThisiteration, #clientSatisfaction, #teamSatisfaction').keypress(function(evt) {
+  $('#fteThisiteration, #clientSatisfaction, #teamSatisfaction, #cycleTimeWIP, #cycleTimeInBacklog').keypress(function(evt) {
     evt = (evt) ? evt : window.event;
     var charCode = (evt.which) ? evt.which : evt.keyCode;
     if (charCode == 8 || charCode == 37 || charCode == 39) {
@@ -173,7 +173,7 @@ jQuery(function($) {
     return true;
   });
 
-  $('#clientSatisfaction, #teamSatisfaction, #cycleTimeInBacklog, #cycleTimeWIP').blur(function() {
+  $('#clientSatisfaction, #teamSatisfaction').blur(function() {
     var value = parseFloat($(this).val());
     if (!isNaN(value)) {
       $(this).val(parseFloat(value).toFixed(1));
@@ -181,6 +181,13 @@ jQuery(function($) {
         // this should only clear out the error highlights once conditions are satisfied.
         clearFieldErrorHighlight($(this).attr('id'));
       }
+    }
+  });
+
+  $('#cycleTimeInBacklog, #cycleTimeWIP').blur(function() {
+    var value = parseFloat($(this).val());
+    if (!isNaN(value)) {
+      $(this).val(parseFloat(value).toFixed(1));
     }
   });
 
