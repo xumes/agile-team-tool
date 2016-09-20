@@ -107,7 +107,7 @@ function setSelectOptions(elementId, listOption, firstOption, lastOption, select
 function isNumber(evt) {
   evt = (evt) ? evt : window.event;
   var charCode = (evt.which) ? evt.which : evt.keyCode;
-  if (charCode == 8 || charCode == 46 || charCode == 37 || charCode == 39) {
+  if (charCode == 8 || charCode == 37 || charCode == 39) {
     return true;
   } else if (charCode > 31 && (charCode < 48 || charCode > 57)) {
     return false;
