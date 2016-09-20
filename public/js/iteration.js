@@ -169,6 +169,8 @@ jQuery(function($) {
 
     } else if (charCode > 31 && charCode != 46 && (charCode < 48 || charCode > 57)) {
       return false;
+    } else if (charCode == 222) {
+      return false;
     }
     return true;
   });
