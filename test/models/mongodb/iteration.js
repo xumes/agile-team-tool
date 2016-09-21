@@ -132,6 +132,32 @@ describe('Iteration model [searchTeamIteration]', function() {
         done();
       });
   });
+
+  it('return successful for retriveing a iteration by query (startdate only)', function(done) {
+    var queryrequest = {
+      'id': validIterationDoc.teamId,
+      'status': 'Completed',
+      'startdate': validIterationDoc.endDate
+    };
+    iterationModel.searchTeamIteration(queryrequest)
+      .then(function(result){
+        expect(result).to.be.a('array');
+        done();
+      });
+  });
+
+  it('return successful for retriveing a iteration by query (enddate only)', function(done) {
+    var queryrequest = {
+      'id': validIterationDoc.teamId,
+      'status': 'Completed',
+      'enddate': validIterationDoc.endDate
+    };
+    iterationModel.searchTeamIteration(queryrequest)
+      .then(function(result){
+        expect(result).to.be.a('array');
+        done();
+      });
+  });
 });
 
 describe('Iteration model [edit]', function() {
@@ -144,9 +170,47 @@ describe('Iteration model [edit]', function() {
         done();
       });
   });
+
+  it('return successful for updating a iteration (update deliveredStories)', function(done) {
+    validIterationDoc.deliveredStories = 1;
+    iterationModel.edit(newIterationId, validIterationDoc, validUser)
+      .then(function(result){
+        expect(result).to.be.a('object');
+        expect(result).to.have.property('ok');
+        done();
+      });
+  });
+
+  it('return successful for updating a iteration (update endDate)', function(done) {
+    validIterationDoc.endDate = '09-15-2016';
+    iterationModel.edit(newIterationId, validIterationDoc, validUser)
+      .then(function(result){
+        expect(result).to.be.a('object');
+        expect(result).to.have.property('ok');
+        done();
+      });
+  });
 });
 
 describe('Iteration model [delete]', function() {
+  it('return fail for deleteing a iteration by empty id', function(done) {
+    iterationModel.delete()
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err).to.have.property('error');
+        done();
+      });
+  });
+
+  it('return fail for deleteing a iteration by empty request', function(done) {
+    iterationModel.deleteByFields()
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err).to.have.property('error');
+        done();
+      });
+  });
+
   it('return successful for deleteing a iteration by id', function(done) {
     iterationModel.delete(newIterationId)
       .then(function(result){
