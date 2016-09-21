@@ -108,23 +108,6 @@ var teamSchema = {
   }
 };
 
-var formatErrMsg = function(msg) {
-  loggers.get('models').error('Error: ', msg);
-  return {
-    error: msg
-  };
-};
-
-var successLogs = function(msg) {
-  loggers.get('models').verbose('Success: ' + msg);
-  return;
-};
-
-var infoLogs = function(msg) {
-  loggers.get('models').verbose(msg);
-  return;
-};
-
 var UserSchema = new Schema(userSchema);
 var TeamSchema = new Schema(teamSchema);
 
@@ -139,7 +122,7 @@ var users = {
           resolve(useInfo);
         })
         .catch(function(err){
-          reject(formatErrMsg(err.message));
+          reject(err);
         });
     });
   },
@@ -164,8 +147,7 @@ var users = {
           resolve(hasAccess);
         })
         .catch(function(err) {
-          console.log(err);
-          reject(formatErrMsg(err.error));
+          reject(err);
         });
     });
   },
@@ -191,7 +173,7 @@ var users = {
           return resolve(hasAccess);
         })
         .catch(function(err){
-          reject(formatErrMsg(err));
+          reject(err);
         });
     });
   },
@@ -199,17 +181,18 @@ var users = {
   add: function(user) {
     return new Promise(function(resolve, reject) {
       var newUser = {
-        'userId': (user.ldap.ibmSerialNumber + user.ldap.employeeCountryCode).toUpperCase(),
-        'email': (user.shortEmail).toLowerCase(),
-        'name': user.ldap.hrFirstName + ' ' + user.ldap.hrLastName,
-        'adminAccess': 'none'
+        'userId': user.userId.toUpperCase(),
+        'email': user.email.toLowerCase(),
+        'name': user.name,
+        'adminAccess': user.adminAccess
       };
+
       userModel.create(newUser)
         .then(function(result){
           resolve(result);
         })
         .catch(function(err){
-          reject(formatErrMsg(err.message));
+          reject(err);
         });
     });
   }
