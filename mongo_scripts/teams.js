@@ -130,11 +130,24 @@ MongoClient.connect(creds.url, function(err, db) {
   db.collection('teams')
     .drop()
     .then(function(){
-      db.collection('teams').insertMany(mongoTeams, function(err, r) {
-        assert.equal(null, err);
-        console.log('Done!  ' + JSON.stringify(r.result));
-        db.close();
-        process.exit();
-      });
+      return db.collection('teams').createIndex({pathId:1}, {background: false, unique: true});
+    })
+    .then(function(){
+      return db.collection('teams').createIndex({name:1}, {background: false, unique: true});
+    })
+    .then(function(){
+      db.collection('teams').insertMany(
+        mongoTeams,
+        {ordered:false},
+        function(err, r) {
+          if (err)
+            _.each(err.writeErrors, function(e){
+              var err =  e.toJSON();
+              console.log('CloudantId:'+err.op.cloudantId+'   ...  '+err.errmsg);
+            });
+          console.log('Done!  ' + JSON.stringify(r.result));
+          db.close();
+          process.exit();
+        });
     });
 });
