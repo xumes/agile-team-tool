@@ -93,8 +93,10 @@ var TeamSchema = new Schema({
 var Team = mongoose.model('Team', TeamSchema);
 
 /*
-  custom uniqueness validators for better error messages
+  middleware
 */
+
+//validate hooks on path. might be better to use a pre hook if this causes issues
 TeamSchema.path('name').validate(function(value, done) {
   this.model('Team').count({name: value}, function(err, count) {
     if (err) return done(err);
@@ -113,7 +115,6 @@ TeamSchema.path('pathId').validate(function(value, done) {
 /*
   model helper functions
 */
-
 var getAllUniquePaths = function(){
   return new Promise(function(resolve, reject){
     Team.find({path: {$ne: null}}, {path: 1})
@@ -133,7 +134,6 @@ var createPathId = function(teamName) {
 /*
    exported model functions
 */
-
 module.exports.searchTeamWithName = function(string) {
   return Team.findOne({name: string}).exec();
 };
@@ -231,24 +231,33 @@ module.exports.getLookupIndex = function() {
 module.exports.getLookupTeamByType = function() {
 };
 
+//TODO fix front-end js so teamDoc comes through the api in a correct format
 module.exports.createTeam = function(teamDoc, creator) {
-  //TODO fix front-end js so teamDoc comes through the api in a correct format
-  //teamDoc = util.trimData(teamDoc);
-
-  var newTeamDoc = new Team(teamDoc);
-
-
-  return Team.create(teamDoc)
-  .then(function(result){
-    //console.log(result);
-  })
-  .catch(function(err){
-    //console.log(err);
+  return new Promise(function(resolve, reject){
+    if (_.isEmpty(teamDoc.name))
+      return reject(Error('Team name is required.'));
+    teamDoc['pathId'] = createPathId(teamDoc.name);
+    var newTeamDoc = new Team(teamDoc);
+    Team.create(newTeamDoc)
+    .then(function(result){
+      resolve(result);
+    })
+    .catch(function(err){
+      reject(err);
+    });
   });
 };
-
-
-
+// module.exports.createTeam({
+//   name: 'mongotest12',
+//   pathId: createPathId('mongotest12'),
+//   createdByUserId: '1234567',
+//   createdBy: 'cjscotta@us.ibm.com',
+//   members: [{name:'colby', userId:'1234567', email:'cjscotta@us.ibm.com'}]
+// }).catch(function(err){
+//
+//   console.log(err);
+//   console.log(err.message);
+// });
 
 module.exports.updateOrDeleteTeam = function() {
 };
