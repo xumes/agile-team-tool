@@ -2,24 +2,20 @@ var lodash = require('lodash');
 var Promise = require('bluebird');
 var mongoose = require('mongoose');
 var loggers = require('../../middleware/logger');
+var validate = require('validate.js');
 var rules = require('../../validate_rules/assessment');
 var Schema   = mongoose.Schema;
 require('../../settings');
 
+var lodash = require('lodash');
+var rules = require('./validate_rules/assessment');
+var settings = require('../settings');
+
 var recordConstraints = rules.recordConstraints;
 var assessmentConstraints = rules.assessmentConstraints;
-
-validate.validators.checkComponents = function(value, options, key, attrib) {
-  lodash.forEach(value, function(value, key) {
-    var result = validate.validate(value, cmpnt_rslts);
-    if (result) {
-      var index = lodash.findIndex(validationError, result);
-      if (index == -1) {
-        validationError.push(result);
-      }
-    }
-  });
-};
+var compTbl = rules.compTbl;
+var actionPlanTbl = rules.actionPlanTbl;
+var cmpnt_rslts = rules.cmpnt_rslts;
 
 validate.validators.checkComponentsTable = function(value, options, key, attrib) {
   lodash.forEach(value, function(value, key) {
@@ -31,35 +27,6 @@ validate.validators.checkComponentsTable = function(value, options, key, attrib)
       }
     }
   });
-};
-
-validate.validators.checkActionTable = function(value, options, key, attrib) {
-  lodash.forEach(value, function(value, key) {
-    var result = validate.validate(value, actionPlanTbl);
-    if (result) {
-      var index = lodash.findIndex(validationError, result);
-      if (index == -1) {
-        validationError.push(result);
-      }
-    }
-  });
-};
-
-var formatErrMsg = function(msg) {
-  loggers.get('models').error('Error: ' + msg);
-  return {
-    error: msg
-  };
-};
-
-var successLogs = function(msg) {
-  loggers.get('models').verbose('Success: ' + msg);
-  return;
-};
-
-var infoLogs = function(msg) {
-  loggers.get('models').verbose(msg);
-  return;
 };
 
 var assesmentSchema = new Schema({
@@ -135,10 +102,40 @@ var assesmentSchema = new Schema({
     type: String
   },
   componentResults: {
-    type: Array
+    type: Array,
+    validate: {
+      validator: function(value) {
+        return lodash.forEach(value, function(value, key) {
+          var result = validate.validate(value, cmpnt_rslts);
+          if (result) {
+            var index = lodash.findIndex(validationError, result);
+            if (index == -1) {
+              return false;
+            }
+          }
+        });
+      },
+      message: 'Invalid assessment component'
+    },
+    required: [true, 'Invalid assessment component']
   },
   actionPlans: {
-    type: Array
+    type: Array,
+    validate: {
+      validator: function(value) {
+        lodash.forEach(value, function(value, key) {
+          var result = validate.validate(value, actionPlanTbl);
+          if (result) {
+            var index = lodash.findIndex(validationError, result);
+            if (index == -1) {
+              validationError.push(result);
+            }
+          }
+        });
+      },
+      message: 'Invalid assessment action plan'
+    },
+    required: [true, 'Invalid assessment action plan']
   }
 });
 
@@ -150,7 +147,8 @@ module.exports.getTeamAssessments = function(teamId, docs){
       var msg = {
         message: 'Team ID is required'
       };
-      reject(formatErrMsg(msg.message));
+      loggers.get('models').error('Error: ' + msg.message);
+      return reject(msg);
     } else {
       var sort =  {assessorStatus: 1, assessedDate: -1};
       if (docs) {
@@ -180,8 +178,8 @@ module.exports.getTeamAssessments = function(teamId, docs){
         })
         .catch( /* istanbul ignore next */ function(err) {
           /* cannot simulate MongoDB error during testing */
-          var msg = err.message;
-          return reject(formatErrMsg(msg));
+          loggers.get('models').error('Error: ' + err.error);
+          return reject(err);
         });
       }
     }
@@ -197,8 +195,8 @@ module.exports.getAssessmentTemplate = function(){
       })
       .catch( /* istanbul ignore next */ function(err) {
         /* cannot simulate MongoDB error during testing */
-        var msg = err.message;
-        return reject(formatErrMsg(msg));
+        loggers.get('models').error('Error: ' + err.error);
+        return reject(err);
       });
   });
 };
@@ -212,26 +210,63 @@ module.exports.getAssessment = function(assessmentId){
       return assessmentModel
       .find({'_id' : assessmentId})
       .then(function(result) {
-        successLogs('Assessment ' + _id + ' record retrieved.');
+        loggers.get('models').verbose('Success: ' + 'Assessment ' + _id + ' record retrieved.');
         return resolve(result);
       })
-      .catch(function(err) {
-        msg = err.error;
-        return reject(formatErrMsg(msg));
+      .catch( /* istanbul ignore next */ function(err) {
+        /* cannot simulate MongoDB error during testing */
+        loggers.get('models').error('Error: ' + err.error);
+        return reject(err);
       });
     }
   });
 };
 
-module.exports.addTeamAssessment = function(){
-
+module.exports.addTeamAssessment = function(userId, data){
+  return new Promise(function(resolve, reject) {
+    loggers.get('models').verbose('addTeamAssessment user:' + userId + ' status: ' + data.assessmt_status);
+    var msg = '';
+    validationError = [];
+    util.isUserAllowed(userId, data.team_id)
+      .then(function(body) {
+        var validateError;
+        if (data.assessmt_status == 'Draft') {
+          validateError = validate(data, recordConstraints);
+        } else {
+          validateError = validate(data, assessmentConstraints);
+        }
+        if (validateError || lodash.size(validationError) > 0) {
+          if (!validateError)
+            validateError = new Object();
+          lodash.forEach(validationError, function(value, key) {
+            lodash.forEach(lodash.keysIn(value), function(val, k) {
+              validateError[val] = value[val];
+            });
+          });
+          reject(formatErrMsg(validateError));
+        } else {
+          loggers.get('models').verbose('Add assessment record to Cloudant.');
+          var assessmentDocu = new assessmentModel(data);
+          return assessmentDocu.save();
+        }
+      })
+      .then(function(body) {
+        loggers.get('models').verbose('Success: ' + 'Assessment record inserted.');
+        resolve(body);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        /* cannot simulate MongoDB error during testing */
+        loggers.get('models').error('Error: ' + err.error);
+        return reject(err);
+      });
+  });
 };
 
 module.exports.updateTeamAssessment = function(userId, data){
   return new Promise(function(resolve, reject) {
     var msg = '';
     validationError = [];
-    infoLogs('updateTeamAssessment ' + userId + ', team id: ' + data.team_id);
+    loggers.get('models').verbose('updateTeamAssessment ' + userId + ', team id: ' + data.team_id);
     util.isUserAllowed(userId, data.team_id)
       .then(function(body) {
         if (data.assessmt_status == 'Draft') {
@@ -249,7 +284,7 @@ module.exports.updateTeamAssessment = function(userId, data){
           });
           reject(formatErrMsg(validateError));
         } else {
-          infoLogs('Update assessment ' + data._id + ' record ' + data._rev + ' to Cloudant.');
+          loggers.get('models').verbose('Update assessment ' + data._id + ' record ' + data._rev + ' to Cloudant.');
           var thisId = data['_id'];
           delete data['_id'];
           delete data['_rev'];
@@ -257,19 +292,20 @@ module.exports.updateTeamAssessment = function(userId, data){
         }
       })
       .then(function(body) {
-        successLogs('Assessment ' + thisId + ' record updated.');
+        loggers.get('models').verbose('Success: ' + 'Assessment ' + thisId + ' record updated.');
         resolve(body);
       })
-      .catch(function(err) {
-        msg = err.error;
-        reject(formatErrMsg(msg));
+      .catch( /* istanbul ignore next */ function(err) {
+        /* cannot simulate MongoDB error during testing */
+        loggers.get('models').error('Error: ' + err.error);
+        return reject(err);
       });
   });
 };
 
 module.exports.deleteAssessment = function(userId, assessmentId){
   return new Promise(function(resolve, reject) {
-    infoLogs('Delete assessment ' + assessmentId + ' by ' + userId + ' to MongoDB.');
+    loggers.get('models').verbose('Delete assessment ' + assessmentId + ' by ' + userId + ' to MongoDB.');
     if (!lodash.isEmpty(assessmentId) && !lodash.isEmpty(userId)) {
       assessmentModel.getAssessment(assessmentId)
       .then(function(result) {
@@ -285,15 +321,16 @@ module.exports.deleteAssessment = function(userId, assessmentId){
         return assessmentModel.remove({'_id' : assessmentId});
       })
       .then(function() {
-        return resolve();
-      })
-      .catch(function(err) {
-        successLogs('Assessment ' + assessmentId + ' record deleted.');
+        loggers.get('models').verbose('Success: ' + 'Assessment ' + assessmentId + ' record deleted.');
         return resolve(true);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        /* cannot simulate MongoDB error during testing */
+        return reject(true);
       });
     } else {
-      msg = 'No id/user for record deletion.';
-      return reject(formatErrMsg(msg));
+      loggers.get('models').error('Error: ' + msg);
+      return reject(msg);
     }
   });
 };
