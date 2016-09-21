@@ -197,16 +197,16 @@ jQuery(function($) {
     }
   });
 
-  $('#nameSearchField').focusout(function(){
-    // if ($('#nameSearchField').val() != '') {
-    //   $('#teamTree').hide();
-    //   $('#searchTree').show();
-    // }
-    setTimeout(function(){
-      $('#teamTree').show();
-      $('#searchTree').hide();
-    }, 300);
-  });
+  // $('#nameSearchField').focusout(function(){
+  //   // if ($('#nameSearchField').val() != '') {
+  //   //   $('#teamTree').hide();
+  //   //   $('#searchTree').show();
+  //   // }
+  //   setTimeout(function(){
+  //     $('#teamTree').show();
+  //     $('#searchTree').hide();
+  //   }, 300);
+  // });
 
   $('#nameSearchField').on('input', function() {
     var inputText = $('#nameSearchField').val();
@@ -666,11 +666,11 @@ function jq(myid) {
 };
 
 function addTeamToSearchTree(team, twistyId) {
-  if (team != null) {
+  if (team != null && team.doc_status != 'delete') {
     var subTwistyId = 'search_' + team._id;
     var label = team.name;
     var isSquad = false;
-    if (team.teamsquad != undefined && team.teamsquad.toUpperCase() == 'YES') {
+    if (team.squadteam != undefined && team.squadteam.toUpperCase() == 'YES') {
       isSquad = true;
     }
     $('#' + jq(twistyId)).append(createSubTwistySection(subTwistyId, label, 'agile-team-standalone' + (isSquad ? ' agile-team-squad' : ''), team._id));

@@ -230,9 +230,6 @@ exports.searchBySelector = function(keywords) {
     });
     var data = new Object();
     data['type'] = 'team';
-    data['_id'] = {
-      '$gt': null
-    };
     data['name'] = {
       '$regex': regexKeyword
     };
@@ -240,6 +237,7 @@ exports.searchBySelector = function(keywords) {
       'selector': data,
       'fields': [
         '_id',
+        'doc_status',
         'name',
         'squadteam'
       ]
