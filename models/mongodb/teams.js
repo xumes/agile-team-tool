@@ -3,6 +3,7 @@ var _ = require('underscore');
 var Promise = require('bluebird');
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
+var util = require('../../helpers/util');
 // var loggers = require('../middleware/logger');
 
 // Just needed so that corresponding test could run
@@ -11,8 +12,7 @@ require('../../settings');
 /*
   Team Schema
 */
-
-var memberSchema = {
+var memberSchema = new Schema({
   name: {
     type: String,
     required: [true, 'Member name is required.']
@@ -31,7 +31,7 @@ var memberSchema = {
     type: String,
     required: [true, 'Member email is required.']
   }
-};
+});
 
 var TeamSchema = new Schema({
   cloudantId: {
@@ -39,12 +39,13 @@ var TeamSchema = new Schema({
   },
   name: {
     type: String,
-    required: [true, 'Name is required.']
+    required: [true, 'Name is required.'],
+    unique: true //declares unique index if collection is empty
   },
   pathId: {
     type: String,
-    unique: true, //declares unique index
-    required: [true, 'Email is required.']
+    unique: true, //declares unique index if collection is empty
+    required: true
   },
   path: {
     type: String,
@@ -91,6 +92,28 @@ var TeamSchema = new Schema({
 
 var Team = mongoose.model('Team', TeamSchema);
 
+/*
+  custom uniqueness validators for better error messages
+*/
+TeamSchema.path('name').validate(function(value, done) {
+  this.model('Team').count({name: value}, function(err, count) {
+    if (err) return done(err);
+    done(!count);
+  });
+}, 'This team name already exists. Please enter a different team name.');
+TeamSchema.path('pathId').validate(function(value, done) {
+  this.model('Team').count({pathId: value}, function(err, count) {
+    if (err) return done(err);
+    done(!count);
+  });
+}, 'This team name is too similar to another team. Please enter a different team name.');
+
+
+
+/*
+  model helper functions
+*/
+
 var getAllUniquePaths = function(){
   return new Promise(function(resolve, reject){
     Team.find({path: {$ne: null}}, {path: 1})
@@ -103,8 +126,12 @@ var getAllUniquePaths = function(){
   });
 };
 
+var createPathId = function(teamName) {
+  return teamName.toLowerCase().replace(/[^a-z1-9]/g, '');
+};
+
 /*
-  Schema getter methods
+   exported model functions
 */
 
 module.exports.searchTeamWithName = function(string) {
@@ -194,7 +221,90 @@ module.exports.getSelectableChildren = function(teamId) {
   });
 };
 
-/*
-  Schema setter methods
-*/
+module.exports.getSquadsOfParent = function(pathId) {
+  return Team.find({path:new RegExp(','+pathId+','), type:'squad'}).exec();
+};
+
+//I think we can refactor the clientside js to use other model functions
+module.exports.getLookupIndex = function() {
+};
+module.exports.getLookupTeamByType = function() {
+};
+
+module.exports.createTeam = function(teamDoc, creator) {
+  //TODO fix front-end js so teamDoc comes through the api in a correct format
+  //teamDoc = util.trimData(teamDoc);
+
+  var newTeamDoc = new Team(teamDoc);
+
+
+  return Team.create(teamDoc)
+  .then(function(result){
+    //console.log(result);
+  })
+  .catch(function(err){
+    //console.log(err);
+  });
+};
+
+
+
+
+module.exports.updateOrDeleteTeam = function() {
+};
+
+//TODO refactor into 2 seperate functions
+// module.exports.getTeam = function(id) {
+//   return Team.find({_id:id}).exec();
+// };
+// module.exports.getAllTeams = function() {
+//   return Team.find({}).exec();
+// };
+//TODO refactor getTeam(id)
+module.exports.getTeam = function(id) {
+  if (_.isEmpty(id))
+    return Team.find({}).exec();
+  else
+    return Team.find({_id:id}).exec();
+};
+
+module.exports.getRole = function() {
+  return Team.distinct('members.role').exec();
+};
+
+//TODO refactor into 2 seperate functions
+// module.exports.getByName = function(teamName) {
+//   return Team.find({name:teamName}).exec();
+// };
+// module.exports.getAllTeamNames = function() {
+//   return Team.find({},{name:1}).exec();
+// };
+//TODO refactor getByName(id)
+module.exports.getByName = function(teamName) {
+  if (_.isEmpty(teamName))
+    return Team.find({},{name:1}).exec();
+  else
+    return Team.find({name:teamName}).exec();
+};
+
+module.exports.getTeamsByEmail = function(memberEmail) {
+  return Team.find({members: {$elemMatch:{email:memberEmail}}}).exec();
+};
+
+module.exports.getTeamsByUid = function(uid) {
+  return Team.find({members: {$elemMatch:{userId:uid}}}).exec();
+};
+
+module.exports.associateActions = function() {
+};
+module.exports.associateTeams = function() {
+};
+module.exports.associateActions = function() {
+};
+module.exports.getUserTeams = function() {
+};
+module.exports.modifyTeamMembers = function() {
+};
+module.exports.associateActions = function() {
+};
 

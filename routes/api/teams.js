@@ -122,9 +122,9 @@ module.exports = function(app, includes) {
       });
   };
 
-  getTeamName = function(req, res) {
+  getByTeamName = function(req, res) {
     var teamName = req.params.teamName;
-    teamModel.getName(teamName)
+    teamModel.getByName(teamName)
       .then(function(result) {
         res.send(result);
       })
@@ -145,9 +145,9 @@ module.exports = function(app, includes) {
       });
   };
 
-  getTeamByUid = function(req, res) {
+  getTeamsByUid = function(req, res) {
     var uid = req.params.uid;
-    teamModel.getTeamByUid(uid)
+    teamModel.getTeamsByUid(uid)
       .then(function(result) {
         res.send(result);
       })
@@ -269,14 +269,14 @@ module.exports = function(app, includes) {
   // get all applicable team roles
   app.get('/api/teams/roles', [includes.middleware.auth.requireLogin], getTeamRole);
 
-  // get team document by name
-  app.get('/api/teams/names/:teamName?', [includes.middleware.auth.requireLogin], getTeamName);
+  // get team doc by team name
+  app.get('/api/teams/names/:teamName?', [includes.middleware.auth.requireLogin], getByTeamName);
 
-  // get all team by email
+  // get all teams by email
   app.get('/api/teams/members/:email', [includes.middleware.auth.requireLogin], getTeamByEmail);
 
-  // get all team by serial number/ uid
-  app.get('/api/teams/membersUid/:uid', [includes.middleware.auth.requireLogin], getTeamByUid);
+  // get all teams by userId
+  app.get('/api/teams/membersUid/:uid', [includes.middleware.auth.requireLogin], getTeamsByUid);
 
   // get all team or team details if teamId exists
   app.get('/api/teams/:teamId?', [includes.middleware.auth.requireLogin], getTeam);

@@ -4,6 +4,7 @@ var loggers = require('../../middleware/logger');
 var moment = require('moment');
 var _ = require('underscore');
 var Schema = mongoose.Schema;
+var Team = require('teams');
 
 // Just needed so that corresponding test could run
 require('../../settings');
@@ -31,93 +32,13 @@ var userSchema = {
   }
 };
 
-var memberSchema = {
-  name: {
-    type: String,
-    required: [true, 'Member name is required.']
-  },
-  allocation: {
-    type: Number,
-    default: 0,
-    min: [0, 'Allocation must be between 0 and 100.'],
-    max: [100, 'Allocation must be between 0 and 100.']
-  },
-  userId: {
-    type: String,
-    required: [true, 'Member userId is required.']
-  },
-  email: {
-    type: String,
-    required: [true, 'Member email is required.']
-  }
-};
-
-var teamSchema = {
-  cloudantId: {
-    type: String
-  },
-  name: {
-    type: String,
-    required: [true, 'Name is required.']
-  },
-  pathId: {
-    type: String,
-    unique: true, //declares unique index
-    required: [true, 'Email is required.']
-  },
-  path: {
-    type: String,
-    default: null
-  },
-  members: [memberSchema],
-  type: {
-    type: String,
-    default: null
-  },
-  description: {
-    type: String,
-    default: null
-  },
-  createdDate: {
-    type: Date,
-    default: new Date()
-  },
-  createdByUserId: {
-    type: String,
-    required: [true, 'UserId of creator required.']
-  },
-  createdBy: {
-    type: String,
-    required: [true, 'Name of creator required.']
-  },
-  updateDate: {
-    type: Date,
-    default: new Date()
-  },
-  updateByUserId: {
-    type: String,
-    default: null
-  },
-  updateBy: {
-    type: String,
-    default: null
-  },
-  docStatus: {
-    type: String,
-    default:null
-  }
-};
-
 var UserSchema = new Schema(userSchema);
-var TeamSchema = new Schema(teamSchema);
-
-var userModel = mongoose.model('users', UserSchema);
-var teamModel = mongoose.model('teams', TeamSchema);
+var User = mongoose.model('users', UserSchema);
 
 var users = {
   findUserByEmail: function(email) {
     return new Promise(function(resolve, reject) {
-      userModel.findOne({email: email})
+      User.findOne({email: email})
         .then(function(useInfo){
           resolve(useInfo);
         })
@@ -127,16 +48,10 @@ var users = {
     });
   },
 
-  isTeamMember: function(userId, teamId) {
+
+  isTeamMember: function(userEmail, teamId) {
     return new Promise(function(resolve, reject) {
-      var request = {
-        'members': {
-          '$elemMatch': {
-            'email': userId
-          }
-        }
-      };
-      teamModel.find(request)
+      Team.getTeamsByEmail(userEmail)
         .then(function(teams) {
           var hasAccess = false;
           _.each(teams, function(team){
@@ -187,7 +102,7 @@ var users = {
         'adminAccess': user.adminAccess
       };
 
-      userModel.create(newUser)
+      User.create(newUser)
         .then(function(result){
           resolve(result);
         })
