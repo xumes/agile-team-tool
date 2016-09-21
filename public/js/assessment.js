@@ -704,123 +704,115 @@ function assessmentAction(obj) {
     gTeamAssessment['team_dlvr_software'] = $('#softwareYesNo option:selected').val();
 
     /*var leadershipID = "";
-		// look for projects section if presented and store prefix id of children elements
-		$("#assessmentContainer > ul > li > a").each(function() {
-			if (($(this).html().toLowerCase().indexOf("leadership") > -1 &&
-					$(this).html().toLowerCase().indexOf("ops") == -1) &&
-					($(this).html().toLowerCase().indexOf("leadership") > -1 &&
-					$(this).html().toLowerCase().indexOf("operations") == -1)) {
-				leadershipID = $(this).parent().attr("id");
-			}
-		});
-
-		var deliveryID = "";
-		var includeDelivery = $("#softwareYesNo option:selected").val().toLowerCase() == "yes";
-		// look for delivery section if presented and store prefix id of children elements
-		$("#assessmentContainer > ul > li > a").each(function() {
-			if ($(this).html().toLowerCase().indexOf("delivery") > -1) {
-				deliveryID = $(this).parent().attr("id");
-			}
-		});
-
-		var isOperations = false;
-		var operationsID = "";
-		var opsExist = false;
-		// look for operations section if presented in the template
-		$("#assessmentContainer > ul > li > a").each(function() {
-			if (($(this).html().toLowerCase().indexOf("ops") > -1) || ($(this).html().toLowerCase().indexOf("operations") > -1)) {
-				opsExist = true;
-			}
-		});
-		if (opsExist) {
-			isOperations = $("#teamTypeSelectList option:selected").val().toLowerCase() == "operations";
-			// look for operations section if presented and store prefix id of children elements
-			$("#assessmentContainer > ul > li > a").each(function() {
-				if (($(this).html().toLowerCase().indexOf("leadership") > -1 &&
-						$(this).html().toLowerCase().indexOf("ops") > -1) ||
-						($(this).html().toLowerCase().indexOf("leadership") > -1 &&
-						$(this).html().toLowerCase().indexOf("operations") > -1)) {
-					operationsID = $(this).parent().attr("id");
-				}
-			});
-  	}
-
-		var isComplete = true;
-		var errorMsg = "";
-		if (getAssessmentStatus(gTeamAssessment).toLowerCase() == "draft") {
-			$("#assessmentContainer li[id*='_prac']").each(function() {
-				var answers = this.id;
-				// query for section unanswered practices
-				var thisSectionComplete = true;
-				if ($("[name*='"+answers+"_curr']:checked").length == 0 || $("[name*='"+answers+"_targ']:checked").length == 0) {
-					if (opsExist) {
-						if (answers.indexOf(leadershipID) > -1 && isOperations) {
-							thisSectionComplete = true;
-						} else if (answers.indexOf(operationsID) > -1 && !isOperations) {
-							thisSectionComplete = true;
-						} else if (answers.indexOf(deliveryID) > -1 && !includeDelivery) {
-							thisSectionComplete = true;
-						} else {
-							thisSectionComplete = false;
-						}
-					} else {
-						if (answers.indexOf(deliveryID) > -1 && !includeDelivery) {
-							thisSectionComplete = true;
-						} else {
-							thisSectionComplete = false;
-						}
-					}
-					if (!thisSectionComplete) {
-						$("#"+answers+" > a").attr("style", "background: yellow");
-						isComplete = false;
-					}
-				}
-			});
-
-			errorMsg = "All assessment maturity practices need to be answered.  See highlighted practices in yellow.";
-
-		} else if (getAssessmentStatus(gTeamAssessment).toLowerCase() == "independent review") {
-			$("#assessmentContainer li[id*='_prac']").each(function() {
-				var answers = this.id;
-				// query for section unanswered practices
-				var thisSectionComplete = true;
-				if ($("[name*='"+answers+"_ind']:checked").length == 0) {
-					if (opsExist) {
-						if (answers.indexOf(leadershipID) > -1 && isOperations) {
-							thisSectionComplete = true;
-						} else if (answers.indexOf(operationsID) > -1 && !isOperations) {
-							thisSectionComplete = true;
-						} else if (answers.indexOf(deliveryID) > -1 && !includeDelivery) {
-							thisSectionComplete = true;
-						} else {
-							thisSectionComplete = false;
-						}
-						if (!thisSectionComplete) {
-							$("#"+answers+" > a").attr("style", "background: yellow");
-							isComplete = false;
-						}
-					} else {
-						if (answers.indexOf(deliveryID) > -1 && !includeDelivery) {
-							thisSectionComplete = true;
-						} else {
-							thisSectionComplete = false;
-						}
-					}
-				}
-			});
-
-			errorMsg = "All assessment maturity practices need to be answered.  See highlighted practices in yellow.";
-
-		}
-
-		if (!isComplete) {
-			showMessagePopup(errorMsg);
-			$("input[type='button']").each(function () {
-				$(this).removeAttr("disabled");
-			});
-			return false;
-		}
-		*/
+    // look for projects section if presented and store prefix id of children elements
+    $("#assessmentContainer > ul > li > a").each(function() {
+      if (($(this).html().toLowerCase().indexOf("leadership") > -1 &&
+          $(this).html().toLowerCase().indexOf("ops") == -1) &&
+          ($(this).html().toLowerCase().indexOf("leadership") > -1 &&
+          $(this).html().toLowerCase().indexOf("operations") == -1)) {
+        leadershipID = $(this).parent().attr("id");
+      }
+    });
+    var deliveryID = "";
+    var includeDelivery = $("#softwareYesNo option:selected").val().toLowerCase() == "yes";
+    // look for delivery section if presented and store prefix id of children elements
+    $("#assessmentContainer > ul > li > a").each(function() {
+      if ($(this).html().toLowerCase().indexOf("delivery") > -1) {
+        deliveryID = $(this).parent().attr("id");
+      }
+    });
+    var isOperations = false;
+    var operationsID = "";
+    var opsExist = false;
+    // look for operations section if presented in the template
+    $("#assessmentContainer > ul > li > a").each(function() {
+      if (($(this).html().toLowerCase().indexOf("ops") > -1) || ($(this).html().toLowerCase().indexOf("operations") > -1)) {
+        opsExist = true;
+      }
+    });
+    if (opsExist) {
+      isOperations = $("#teamTypeSelectList option:selected").val().toLowerCase() == "operations";
+      // look for operations section if presented and store prefix id of children elements
+      $("#assessmentContainer > ul > li > a").each(function() {
+        if (($(this).html().toLowerCase().indexOf("leadership") > -1 &&
+            $(this).html().toLowerCase().indexOf("ops") > -1) ||
+            ($(this).html().toLowerCase().indexOf("leadership") > -1 &&
+            $(this).html().toLowerCase().indexOf("operations") > -1)) {
+          operationsID = $(this).parent().attr("id");
+        }
+      });
+    }
+    var isComplete = true;
+    var errorMsg = "";
+    if (getAssessmentStatus(gTeamAssessment).toLowerCase() == "draft") {
+      $("#assessmentContainer li[id*='_prac']").each(function() {
+        var answers = this.id;
+        // query for section unanswered practices
+        var thisSectionComplete = true;
+        if ($("[name*='"+answers+"_curr']:checked").length == 0 || $("[name*='"+answers+"_targ']:checked").length == 0) {
+          if (opsExist) {
+            if (answers.indexOf(leadershipID) > -1 && isOperations) {
+              thisSectionComplete = true;
+            } else if (answers.indexOf(operationsID) > -1 && !isOperations) {
+              thisSectionComplete = true;
+            } else if (answers.indexOf(deliveryID) > -1 && !includeDelivery) {
+              thisSectionComplete = true;
+            } else {
+              thisSectionComplete = false;
+            }
+          } else {
+            if (answers.indexOf(deliveryID) > -1 && !includeDelivery) {
+              thisSectionComplete = true;
+            } else {
+              thisSectionComplete = false;
+            }
+          }
+          if (!thisSectionComplete) {
+            $("#"+answers+" > a").attr("style", "background: yellow");
+            isComplete = false;
+          }
+        }
+      });
+      errorMsg = "All assessment maturity practices need to be answered.  See highlighted practices in yellow.";
+    } else if (getAssessmentStatus(gTeamAssessment).toLowerCase() == "independent review") {
+      $("#assessmentContainer li[id*='_prac']").each(function() {
+        var answers = this.id;
+        // query for section unanswered practices
+        var thisSectionComplete = true;
+        if ($("[name*='"+answers+"_ind']:checked").length == 0) {
+          if (opsExist) {
+            if (answers.indexOf(leadershipID) > -1 && isOperations) {
+              thisSectionComplete = true;
+            } else if (answers.indexOf(operationsID) > -1 && !isOperations) {
+              thisSectionComplete = true;
+            } else if (answers.indexOf(deliveryID) > -1 && !includeDelivery) {
+              thisSectionComplete = true;
+            } else {
+              thisSectionComplete = false;
+            }
+            if (!thisSectionComplete) {
+              $("#"+answers+" > a").attr("style", "background: yellow");
+              isComplete = false;
+            }
+          } else {
+            if (answers.indexOf(deliveryID) > -1 && !includeDelivery) {
+              thisSectionComplete = true;
+            } else {
+              thisSectionComplete = false;
+            }
+          }
+        }
+      });
+      errorMsg = "All assessment maturity practices need to be answered.  See highlighted practices in yellow.";
+    }
+    if (!isComplete) {
+      showMessagePopup(errorMsg);
+      $("input[type='button']").each(function () {
+        $(this).removeAttr("disabled");
+      });
+      return false;
+    }
+    */
     updateAgileTeamAssessment(action);
     return true;
 
@@ -1475,7 +1467,7 @@ function setScreenControls() {
 
       if (allowAccess) {
         //if (isInactiveTemplate(gTeamAssessment["assessmt_version"]))
-        //	showMessagePopup("This draft assessment was created using questionnaires from a template that was already deactivated.  You need to delete or submit this assessment before a new assessment can be initiated using the latest questionnaire.");
+        //  showMessagePopup("This draft assessment was created using questionnaires from a template that was already deactivated.  You need to delete or submit this assessment before a new assessment can be initiated using the latest questionnaire.");
         $('#softwareYesNo').removeAttr('disabled');
         $('#teamTypeSelectList').removeAttr('disabled');
         $('#assessmentDate').removeAttr('disabled');
