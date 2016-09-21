@@ -711,4 +711,4 @@ function checkParentChildLink(teamList) {
   console.log(count + ' teams have correct parent/child links.');
   console.log(invalid + ' teams have invalid parent/child links.');
   console.log(notFound + ' teams not found.');
-}
+};

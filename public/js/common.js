@@ -842,4 +842,4 @@ function initAssessmentAnswersTemplate() {
   assessmentAnswersTemplate['assessmt_cmpnt_rslts'] = [];
   assessmentAnswersTemplate['assessmt_action_plan_tbl'] = [];
   return assessmentAnswersTemplate;
-}
+};
