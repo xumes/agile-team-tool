@@ -86,7 +86,7 @@ jQuery(function($) {
   });
 
   $('#fteThisiteration').change(function() {
-    if ($('#fteThisiteration').val().trim() != '') {
+    if ($('#fteThisiteration').val().trim() != '' && $('#fteThisiteration').val().trim() != '0.0') {
       var storiesFTE = $('#commStoriesDel').val() / $('#fteThisiteration').val();
       $('#unitcostStoriesFTE').val(storiesFTE.toFixed(1));
       var strPointsFTE = $('#commPointsDel').val() / $('#fteThisiteration').val();
@@ -95,14 +95,14 @@ jQuery(function($) {
   });
 
   $('#commStoriesDel').change(function() {
-    if ($('#commStoriesDel').val().trim() != '') {
+    if ($('#commStoriesDel').val().trim() != '' && $('#fteThisiteration').val().trim() != '0.0') {
       var storiesFTE = $('#commStoriesDel').val() / $('#fteThisiteration').val();
       $('#unitcostStoriesFTE').val(storiesFTE.toFixed(1));
     }
   });
 
   $('#commPointsDel').change(function() {
-    if ($('#commPointsDel').val().trim() != '') {
+    if ($('#commPointsDel').val().trim() != '' && $('#fteThisiteration').val().trim() != '0.0') {
       var strPointsFTE = $('#commPointsDel').val() / $('#fteThisiteration').val();
       $('#unitcostStorypointsFTE').val(strPointsFTE.toFixed(1));
     }
@@ -464,10 +464,12 @@ function loadSelectedAgileTeamIterationInfo() {
       $('#cycleTimeInBacklog').val(teamIterInfo.nbr_cycletime_in_backlog);
       $('#clientSatisfaction').val(teamIterInfo.client_sat);
       $('#teamSatisfaction').val(teamIterInfo.team_sat);
-      var storiesFTE = $('#commStoriesDel').val() / $('#fteThisiteration').val();
-      $('#unitcostStoriesFTE').val(storiesFTE.toFixed(1));
-      var strPointsFTE = $('#commPointsDel').val() / $('#fteThisiteration').val();
-      $('#unitcostStorypointsFTE').val(strPointsFTE.toFixed(1));
+      if ($('#fteThisiteration').val().trim() != '0.0') {
+        var storiesFTE = $('#commStoriesDel').val() / $('#fteThisiteration').val();
+        $('#unitcostStoriesFTE').val(storiesFTE.toFixed(1));
+        var strPointsFTE = $('#commPointsDel').val() / $('#fteThisiteration').val();
+        $('#unitcostStorypointsFTE').val(strPointsFTE.toFixed(1));
+      }
 
       var temp = 0;
       if (teamIterInfo.nbr_committed_stories != 0) {
