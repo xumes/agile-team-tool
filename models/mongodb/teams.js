@@ -91,7 +91,6 @@ var TeamSchema = new Schema({
 
 var Team = mongoose.model('Team', TeamSchema);
 
-
 var getAllUniquePaths = function(){
   return new Promise(function(resolve, reject){
     Team.find({path: {$ne: null}}, {path: 1})
@@ -156,10 +155,43 @@ module.exports.getSelectableParents = function(teamId) {
   });
 };
 
-//list of root teams(any team type; no parents) where teamId is not in their subtree.
+//list of root teams (any team type; no parents) where teamId is not in their subtree.
 //if teamId is a squad team, return none
 module.exports.getSelectableChildren = function(teamId) {
+  return new Promise(function(resolve, reject){
+    if (_.isEmpty(teamId)) return reject(Error('Id of team is required.'));
 
+    Team.findOne({_id: teamId}).exec()
+    .then(function(team){
+      if (_.isEmpty(team)) return reject(Error(teamId + ' is not a team.'));
+      if (team.type==='squad') return resolve([]);
+      return team.pathId;
+    })
+    .then(function(pathId){
+      //this might be expensive if theres a boat load of teams
+      return Promise.join(
+        Team.find({path:null}), //root teams of any type
+        getAllUniquePaths(),
+      function(rootedTeams, uniquePaths) {
+        uniquePaths = _.filter(uniquePaths, function(path){return path.indexOf(pathId)<0;});
+        var rootedPathIds = [];
+        _.each(uniquePaths, function(path){
+          var pId = path.substring(1, path.indexOf(',',1));
+          if (!_.contains(rootedPathIds, pId))
+            rootedPathIds.push(pId);
+        });
+        var res = [];
+        _.each(rootedTeams, function(team){
+          if (_.contains(rootedPathIds, team.pathId))
+            res.push(team);
+        });
+        return resolve(res);
+      });
+    })
+    .catch(function(err) {
+      reject(err);
+    });
+  });
 };
 
 /*
