@@ -93,7 +93,7 @@ var users = {
     });
   },
 
-  add: function(user) {
+  create: function(user) {
     return new Promise(function(resolve, reject) {
       var newUser = {
         'userId': user.userId.toUpperCase(),
