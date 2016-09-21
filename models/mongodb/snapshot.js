@@ -89,7 +89,7 @@ var pointsSchema = {
 
 var snapshotSchema = {
   teamId: {
-    type: Schema.Types.ObhjecId,
+    type: Schema.Types.ObjectId,
     required: [true, 'team id is required.']
   },
   lastUpdate: {
@@ -283,12 +283,17 @@ function getAllSquads() {
         var nonSquadTeams = results[0];
         var squadTeams = results[1];
         _.each(nonSquadTeams, function(nonSquadTeam) {
-          if (!(_.isUndefined(nonSquadTeam.value._id)) && !(_.isEmpty(nonSquadTeam.value._id))) {
-            var id = nonSquadTeam.value._id;
+          if (!(_.isUndefined(nonSquadTeam.pathId)) && !(_.isEmpty(nonSquadTeam.pathId))) {
+            var id = nonSquadTeam.pathId;
             squadsByParent[id] = [];
           }
         });
-        _.each(squadTeams.rows, function(squadTeam) {
+        // _.each(squadTeams, function(squadTeam) {
+        //   if (squad) {
+        //
+        //   }
+        // });
+        _.each(squadTeams, function(squadTeam) {
           if (squadTeam.value.squadteam == 'Yes') {
             _.each(squadTeam.value.parents, function(parent) {
               if (!_.isUndefined(squadsByParent[parent])) {
@@ -297,7 +302,7 @@ function getAllSquads() {
             });
           }
         });
-        resolve(squadsByParent);
+        return resolve(squadsByParent);
       })
       .catch( /* istanbul ignore next */ function(err){
         var msg;
@@ -306,7 +311,7 @@ function getAllSquads() {
         } else {
           msg = err;
         }
-        reject(formatErrMsg(msg));
+        return reject(formatErrMsg(msg));
       });
   });
 };
@@ -351,6 +356,19 @@ var snapshot = {
         var year = time.substring(time.length - 4, time.length);
         monthArray[i] = month + '-' + year;
       }
+      var promiseArray = [];
+      var squadIterationDocs = {};
+      var oldRollUpDataRevs = {};
+      var squadsByParent = {};
+      promiseArray.push(getIterationDocs(startTime, endTime));
+      promiseArray.push(getAllSquads());
+      Promise.all(promiseArray)
+        .then(function(results){
+          resolve(results[0]);
+        })
+        .catch(function(err){
+          reject(err);
+        });
     });
   },
 };
