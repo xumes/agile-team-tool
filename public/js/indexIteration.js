@@ -262,10 +262,17 @@ function teamIterationListHander(teamId, teamIterations) {
 }
 
 function destroyIterationCharts() {
-  var chartIds = ['velocityChart', 'throughputChart', 'pizzaChart', 'defectsChart', 'statisfactionChart', 'unitCostChart', 'pvelocityChart', 'pthroughputChart', 'pPizzaChart', 'pdefectsChart', 'piePizzaChart'];
-  $.each(chartIds, function(index, id) {
-    if ($('#' + id).highcharts() != null)
-      $('#' + id).highcharts().destroy();
+  // var chartIds = ['velocityChart', 'throughputChart', 'pizzaChart', 'defectsChart', 'statisfactionChart', 'unitCostChart', 'pvelocityChart', 'pthroughputChart', 'pPizzaChart', 'pdefectsChart', 'piePizzaChart'];
+  // $.each(chartIds, function(index, id) {
+  //   if ($('#' + id).highcharts() != null)
+  //     $('#' + id).highcharts().destroy();
+  // });
+  $(Highcharts.charts).each(function(i, chart) {
+    if (chart == null) return;
+
+    if ($('#iterationSection #' + $(chart.container).attr('id')).length > 0) {
+      chart.destroy();
+    }
   });
 }
 
@@ -275,7 +282,7 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
       type: type,
       renderTo: id,
       marginLeft: 55,
-      marginRight: 0
+      marginRight: 0, width: 380
     },
     lang: {
       noData: 'No results reported'
@@ -412,7 +419,7 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
       type: type,
       renderTo: id,
       marginLeft: 55,
-      marginRight: 0
+      marginRight: 0, width: 380
     },
     lang: {
       noData: 'No results reported'
@@ -531,7 +538,7 @@ function loadStackedPizzaChart(id, title, type, categories, yAxisLabel, seriesOb
       type: type,
       renderTo: id,
       marginLeft: 55,
-      marginRight: 0
+      marginRight: 0, width: 380
     },
     lang: {
       noData: 'No results reported'
@@ -627,7 +634,7 @@ function loadBarPizzaChart(id, title, type, categories, seriesObj1, seriesObj2, 
       type: type,
       renderTo: id,
       marginLeft: 55,
-      marginRight: 0
+      marginRight: 0, width: 380
     },
     lang: {
       noData: 'No results reported'
@@ -714,7 +721,7 @@ function loadPiePizzaChart(id, title, type, seriesObj, subtitle) {
       type: type,
       renderTo: id,
       marginLeft: 55,
-      marginRight: 0
+      marginRight: 0, width: 380
     },
     lang: {
       noData: 'No results reported'
@@ -789,7 +796,7 @@ function loadChartMulSeries(id, title, type, categories, yAxisLabel, xAxisLabel,
       type: type,
       renderTo: id,
       marginLeft: 55,
-      marginRight: 0
+      marginRight: 0, width: 380
     },
     lang: {
       noData: 'No results reported'
@@ -893,7 +900,7 @@ function loadChartPartialSeries(id, title, type, categories, yAxisLabel, xAxisLa
       type: type,
       renderTo: id,
       marginLeft: 55,
-      marginRight: 0
+      marginRight: 0, width: 380
     },
     lang: {
       noData: 'No results reported'
@@ -991,7 +998,7 @@ function loadDeploymentsChartParent(id, title, type, categories, yAxisLabel, xAx
       type: type,
       renderTo: id,
       marginLeft: 55,
-      marginRight: 0
+      marginRight: 0, width: 380
     },
     lang: {
       noData: 'No results reported'
@@ -1118,7 +1125,7 @@ function loadSatisfactionChartParent(id, title, type, categories, yAxisLabel, xA
       type: type,
       renderTo: id,
       marginLeft: 55,
-      marginRight: 0
+      marginRight: 0, width: 380
     },
     lang: {
       noData: 'No results reported'
@@ -1248,7 +1255,7 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
       type: type,
       renderTo: id,
       marginLeft: 55,
-      marginRight: 0
+      marginRight: 0, width: 380
     },
     lang: {
       noData: 'No results reported'

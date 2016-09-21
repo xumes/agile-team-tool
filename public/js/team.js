@@ -360,7 +360,7 @@ function manageIteration() {
 }
 
 function manageAssessment() {
-  window.location = 'assessment?id=' + encodeURIComponent($('#teamSelectList option:selected').val()) + '&iter=new';
+  window.location = 'assessment?id=' + encodeURIComponent($('#teamSelectList option:selected').val()) + '&assessId=new';
 }
 
 function loadIterationInformation(iterationList, more) {

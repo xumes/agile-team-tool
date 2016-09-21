@@ -35,27 +35,43 @@ var infoLogs = function(msg) {
 };
 
 var team = {
+  // searchTeamWithName: function(name) {
+  //   return new Promise(function(resolve, reject){
+  //     var query = {};
+  //     rename = name.replace(/\"|\'/g,'');
+  //     names = rename.split('\ ');
+  //     query['q'] = {};
+  //     var s = '';
+  //     _.each(names, function(queryname){
+  //       if (queryname != '' && queryname != ' ') {
+  //         s = s + 'name:' + queryname + ' AND ';
+  //       }
+  //     });
+  //     if (s.substring(s.length - 4, s.length) == 'AND ') {
+  //       s = s.substring(0, s.length - 5);
+  //     }
+  //     query['q'] = specialCharsHandler(s + '\*');
+  //     common.Search('search', 'nameSearch', query)
+  //       .then(function(result){
+  //         resolve(result);
+  //       })
+  //       .catch(function(err){
+  //         reject(err);
+  //       });
+  //   });
+  // },
   searchTeamWithName: function(name) {
     return new Promise(function(resolve, reject){
-      var query = {};
       rename = name.replace(/\"|\'/g,'');
-      names = rename.split('\ ');
-      query['q'] = {};
-      var s = '';
-      _.each(names, function(queryname){
-        if (queryname != '' && queryname != ' ') {
-          s = s + 'name:' + queryname + ' AND ';
-        }
-      });
-      if (s.substring(s.length - 4, s.length) == 'AND ') {
-        s = s.substring(0, s.length - 5);
+      if (rename=='') {
+        resolve({'docs':[]});
       }
-      query['q'] = specialCharsHandler(s + '\*');
-      common.Search('search', 'nameSearch', query)
-        .then(function(result){
+      names = rename.split('\ ');
+      common.searchBySelector(names)
+        .then(function(result) {
           resolve(result);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err) {
           reject(err);
         });
     });

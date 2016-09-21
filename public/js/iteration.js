@@ -86,7 +86,7 @@ jQuery(function($) {
   });
 
   $('#fteThisiteration').change(function() {
-    if ($('#fteThisiteration').val().trim() != '') {
+    if ($('#fteThisiteration').val().trim() != '' && $('#fteThisiteration').val().trim() != '0.0') {
       var storiesFTE = $('#commStoriesDel').val() / $('#fteThisiteration').val();
       $('#unitcostStoriesFTE').val(storiesFTE.toFixed(1));
       var strPointsFTE = $('#commPointsDel').val() / $('#fteThisiteration').val();
@@ -95,14 +95,14 @@ jQuery(function($) {
   });
 
   $('#commStoriesDel').change(function() {
-    if ($('#commStoriesDel').val().trim() != '') {
+    if ($('#commStoriesDel').val().trim() != '' && $('#fteThisiteration').val().trim() != '0.0') {
       var storiesFTE = $('#commStoriesDel').val() / $('#fteThisiteration').val();
       $('#unitcostStoriesFTE').val(storiesFTE.toFixed(1));
     }
   });
 
   $('#commPointsDel').change(function() {
-    if ($('#commPointsDel').val().trim() != '') {
+    if ($('#commPointsDel').val().trim() != '' && $('#fteThisiteration').val().trim() != '0.0') {
       var strPointsFTE = $('#commPointsDel').val() / $('#fteThisiteration').val();
       $('#unitcostStorypointsFTE').val(strPointsFTE.toFixed(1));
     }
@@ -159,15 +159,14 @@ jQuery(function($) {
 
   });
 
-  $('#fteThisiteration, #clientSatisfaction, #teamSatisfaction').keypress(function(evt) {
+  $('#fteThisiteration, #clientSatisfaction, #teamSatisfaction, #cycleTimeWIP, #cycleTimeInBacklog').keypress(function(evt) {
     evt = (evt) ? evt : window.event;
     var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode == 8 || charCode == 46 || charCode == 37 || charCode == 39) {
+    if (charCode == 8 || charCode == 37) {
       return true;
     } else if (charCode == 46 && $(this).val().indexOf('.') != -1) {
       return false;
-
-    } else if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+    } else if (charCode > 31 && charCode != 46 && (charCode < 48 || charCode > 57)) {
       return false;
     }
     return true;
@@ -181,6 +180,13 @@ jQuery(function($) {
         // this should only clear out the error highlights once conditions are satisfied.
         clearFieldErrorHighlight($(this).attr('id'));
       }
+    }
+  });
+
+  $('#cycleTimeInBacklog, #cycleTimeWIP').blur(function() {
+    var value = parseFloat($(this).val());
+    if (!isNaN(value)) {
+      $(this).val(parseFloat(value).toFixed(1));
     }
   });
 
@@ -201,6 +207,7 @@ jQuery(function($) {
       $(this).val(parseFloat(value).toFixed(1));
     }
   });
+
 });
 
 function setToolTips() {
@@ -457,10 +464,12 @@ function loadSelectedAgileTeamIterationInfo() {
       $('#cycleTimeInBacklog').val(teamIterInfo.nbr_cycletime_in_backlog);
       $('#clientSatisfaction').val(teamIterInfo.client_sat);
       $('#teamSatisfaction').val(teamIterInfo.team_sat);
-      var storiesFTE = $('#commStoriesDel').val() / $('#fteThisiteration').val();
-      $('#unitcostStoriesFTE').val(storiesFTE.toFixed(1));
-      var strPointsFTE = $('#commPointsDel').val() / $('#fteThisiteration').val();
-      $('#unitcostStorypointsFTE').val(strPointsFTE.toFixed(1));
+      if ($('#fteThisiteration').val().trim() != '0.0') {
+        var storiesFTE = $('#commStoriesDel').val() / $('#fteThisiteration').val();
+        $('#unitcostStoriesFTE').val(storiesFTE.toFixed(1));
+        var strPointsFTE = $('#commPointsDel').val() / $('#fteThisiteration').val();
+        $('#unitcostStorypointsFTE').val(strPointsFTE.toFixed(1));
+      }
 
       var temp = 0;
       if (teamIterInfo.nbr_committed_stories != 0) {
@@ -859,7 +868,7 @@ function updateIterationInfo(action) {
     $('#unitcostStorypointsFTE').val('');
 
     $('#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPointsDel,#storyPullIn,#storyPtPullIn').attr('disabled', 'disabled');
-    $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#clientSatisfaction,#teamSatisfaction,#retroItems,#commPoints,#memberCount,#commStoriesDel,#retroItemsComplete,#commentIter,#teamChangeList').attr('disabled', 'disabled');
+    $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#cycleTimeWIP,#cycleTimeInBacklog,#clientSatisfaction,#teamSatisfaction,#retroItems,#commPoints,#memberCount,#commStoriesDel,#retroItemsComplete,#commentIter,#teamChangeList').attr('disabled', 'disabled');
     $('#addIterationBtn,#updateIterationBtn').attr('disabled', 'disabled');
     $('#select2-teamChangeList-container,#commentIter').css('color', 'grey');
     $('#refreshFTE').removeAttr('onclick');

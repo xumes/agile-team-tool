@@ -806,26 +806,26 @@ span.customSpan{
 .agile-static-helptip-backlog {
 	vertical-align: top;
 	min-width: 180px;
-	max-width: 550px;
+	max-width: 580px;
 	margin-left: 625px;
-	margin-top: -50px;
-	margin-bottom: 30px;
+	margin-top: -56px;
+	margin-bottom: 25px;
 	max-height: 20px;
 	min-height: 20px;
-	font-size: 8pt;
+	font-size: 9.5pt;
 	color: grey;
 }
 
 .agile-static-helptip-WIP {
 	vertical-align: top;
 	min-width: 180px;
-	max-width: 550px;
+	max-width: 580px;
 	margin-left: 625px;
-	margin-top: -57px;
-	margin-bottom: 30px;
+	margin-top: -60px;
+	margin-bottom: 32px;
 	max-height: 20px;
 	min-height: 20px;
-	font-size: 8pt;
+	font-size: 9.5pt;
 	color: grey;
 }
 

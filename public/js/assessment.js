@@ -4,15 +4,10 @@ jQuery(function($) {
     getPageVariables('assessment', initPageAction);
   });
 
-  function initPageAction() {
-    getAssessmentQuestionnaire(assessmentQuestionnaireHandler, [null]);
-    var urlParameters = getJsonParametersFromUrl();
-    if (urlParameters != undefined && urlParameters.testUser != undefined) {
-      setTestUser(urlParameters.testUser);
-      alert('here TestUser is: ' + urlParameters.testUser);
-    }
+  function initialAssessmentLoad(urlParameters, teamAssessment, templateList){
+    assessmentQuestionnaireHandler(teamAssessment, templateList);
     if (urlParameters != undefined && urlParameters.id != undefined && urlParameters.id != '') {
-      if (urlParameters.assessId != undefined && urlParameters.assessId != '') {
+      if (urlParameters.assessId != undefined && urlParameters.assessId != '' && urlParameters.assessId != 'new') {
         agileTeamListHandler('teamSelectList', urlParameters.id, urlParameters.assessId, null, null, squadTeams);
       } else {
         agileTeamListHandler('teamSelectList', urlParameters.id, 'new', null, null, squadTeams);
@@ -20,7 +15,16 @@ jQuery(function($) {
     } else {
       agileTeamListHandler('teamSelectList', null, null, null, null, squadTeams);
     }
+  }
 
+  function initPageAction() {
+    //getAssessmentQuestionnaire(assessmentQuestionnaireHandler, [null]);
+    var urlParameters = getJsonParametersFromUrl();
+    if (urlParameters != undefined && urlParameters.testUser != undefined) {
+      setTestUser(urlParameters.testUser);
+      alert('here TestUser is: ' + urlParameters.testUser);
+    }
+    getAssessmentQuestionnaire(initialAssessmentLoad, [urlParameters, null]);
     setToolTips();
     $('#assessmentDate').datepicker({
       maxDate: 0,

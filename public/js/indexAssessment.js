@@ -48,6 +48,7 @@ function teamAssessmentListHander(teamId, teamAssessments) {
 
   plotAssessmentSeries(teamAssessments);
 
+  // redrawCharts('assessmentSection');
 }
 
 function destroyAssessmentCharts() {
@@ -147,11 +148,12 @@ function plotAssessmentSeries(teamAssessments) {
 
     }
   }
+  // alert('sections done');
   // plot the line graph of selected maturity assessments
   $.each(chartSeries, function(index, chartData) {
     $('#' + chartData['prefixId'] + '_Chart').highcharts({
       chart: {
-        type: 'line'
+        type: 'line', width: 380
       },
 
       title: {
@@ -271,7 +273,7 @@ function plotAssessment(index, chartData) {
   $('#' + spiderData['prefixId'] + '_SpiderChart').highcharts({
     chart: {
       polar: true,
-      type: 'line',
+      type: 'line', width: 380,
       events: {
         load: function() {
           var text = this.renderer.text('Select an overall score on the adjacent graph to view practice results.', 30, 295)
@@ -361,7 +363,7 @@ function createChartSection(prefixId) {
 
   var div = document.createElement('div');
   div.setAttribute('id', prefixId + '_Chart');
-  div.setAttribute('style', 'min-width: 460px; min-height: 310px; margin: 0 auto');
+  div.setAttribute('style', 'width: 100%; min-height: 310px;');
   colDiv.appendChild(div);
   mainDiv.appendChild(colDiv);
 
@@ -369,7 +371,7 @@ function createChartSection(prefixId) {
   colDiv.setAttribute('class', 'ibm-col-6-2');
   div = document.createElement('div');
   div.setAttribute('id', prefixId + '_SpiderChart');
-  div.setAttribute('style', 'min-width: 460px; min-height: 310px; margin: 0 auto');
+  div.setAttribute('style', 'width: 100%; min-height: 310px;');
   colDiv.appendChild(div);
   mainDiv.appendChild(colDiv);
 
