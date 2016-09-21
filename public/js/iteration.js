@@ -465,10 +465,10 @@ function loadSelectedAgileTeamIterationInfo() {
       $('#clientSatisfaction').val(teamIterInfo.client_sat);
       $('#teamSatisfaction').val(teamIterInfo.team_sat);
       if ($('#fteThisiteration').val().trim() != '0.0') {
-       var storiesFTE = $('#commStoriesDel').val() / $('#fteThisiteration').val();
-       $('#unitcostStoriesFTE').val(storiesFTE.toFixed(1));
-       var strPointsFTE = $('#commPointsDel').val() / $('#fteThisiteration').val();
-       $('#unitcostStorypointsFTE').val(strPointsFTE.toFixed(1));
+        var storiesFTE = $('#commStoriesDel').val() / $('#fteThisiteration').val();
+        $('#unitcostStoriesFTE').val(storiesFTE.toFixed(1));
+        var strPointsFTE = $('#commPointsDel').val() / $('#fteThisiteration').val();
+        $('#unitcostStorypointsFTE').val(strPointsFTE.toFixed(1));
       }
 
       var temp = 0;
