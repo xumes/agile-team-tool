@@ -102,6 +102,7 @@ function setSelectOptions(elementId, listOption, firstOption, lastOption, select
   //alert("defaulting value to : " + selectedText);
   $('#select2-' + elementId + '-container').text(selectedText);
   $('#select2-' + elementId + '-container').attr('title', selectedText);
+  $('#' + elementId).attr('aria-label',elementId);
 }
 
 function isNumber(evt) {
@@ -462,10 +463,10 @@ function getJsonParametersFromUrl() {
 }
 
 function siteEnv() {
-  // 	if (environment != null) {
-  // 		if (environment.toLowerCase() != 'prod') {
-  // 			$("#environment").text(environment);
-  // 		}
+  //  if (environment != null) {
+  //    if (environment.toLowerCase() != 'prod') {
+  //      $("#environment").text(environment);
+  //    }
   if (_.isEmpty(environment) || environment.toLowerCase() == 'development') {
     $('#debugSection').show();
   } else {
@@ -569,13 +570,13 @@ function loadResultChart(id, title, type, categories, yAxisLabel, series, unit, 
 /**
  * This will create regular expression for monthly range in a year
  * -it will generate based from minimum from passed
- * 	date until the end of the year
+ *  date until the end of the year
  *  -e.g selected date is 06/25/2016 then regular expression
- *  	resulted is [1-6]/[0-3][0-9]/2016
- *  	--this will be used to fetch January to June of 2016
- *  	selected date is 10/25/2016 then regular expression
- *  	resulted is 1[0-2]/[0-3][0-9]/2016
- *  	--this will be used to fetch October to December of 2016
+ *    resulted is [1-6]/[0-3][0-9]/2016
+ *    --this will be used to fetch January to June of 2016
+ *    selected date is 10/25/2016 then regular expression
+ *    resulted is 1[0-2]/[0-3][0-9]/2016
+ *    --this will be used to fetch October to December of 2016
  * @param selectedDate
  * @returns {String}
  */

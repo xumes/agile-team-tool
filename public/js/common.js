@@ -29,7 +29,7 @@ function getPageVariables(page, _callback) {
       siteEnv();
       // LDAP employee name has different convetion from Faces API value
       getPersonFromFaces(userInfo.email, updateUserInfo, []);
-			//get system status from DB for display on the top banner
+      //get system status from DB for display on the top banner
       setSystemMessage(systemStatus.agildash_system_status_display, systemStatus.agildash_system_status_msgtext_display);
       //set node_env variable - if env='development', display 'Stage' on the systMsg on the top banner.
       setSystemEnvironment(environment);
@@ -42,7 +42,7 @@ function getPageVariables(page, _callback) {
 }
 
 function setSystemMessage(systemStatusControl, systemStatusMsg){
-	//set db system message on the top of the page banner - header.ejs id=#warningBar
+  //set db system message on the top of the page banner - header.ejs id=#warningBar
   if (systemStatusControl == 'DynamicChange' || systemStatusControl == 'AdminOnlyChange' || systemStatusControl == 'AdminOnlyReadChange'){
     $('#warningBar').html(systemStatusMsg);
     $('#warningBar').show();
@@ -52,7 +52,7 @@ function setSystemMessage(systemStatusControl, systemStatusMsg){
 }
 
 function setSystemEnvironment(environment){
-	//set label "Stage" on the top bar if it is "development" as node_env variable in our manifest file. If it is production, this is blank
+  //set label "Stage" on the top bar if it is "development" as node_env variable in our manifest file. If it is production, this is blank
   if (_.isEmpty(environment) || environment.toLowerCase() == 'development') {
     $('#systMsg').html('Stage');
     $('#systMsg').show();
