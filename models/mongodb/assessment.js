@@ -116,8 +116,7 @@ var assesmentSchema = new Schema({
         });
       },
       message: 'Invalid assessment component'
-    },
-    required: [true, 'Invalid assessment component']
+    }
   },
   actionPlans: {
     type: Array,
@@ -134,8 +133,7 @@ var assesmentSchema = new Schema({
         });
       },
       message: 'Invalid assessment action plan'
-    },
-    required: [true, 'Invalid assessment action plan']
+    }
   }
 });
 
