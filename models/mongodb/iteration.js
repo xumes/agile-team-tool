@@ -144,9 +144,9 @@ function isIterationNumExist(iteration_name, iterData, updateId) {
   return duplicate;
 };
 
-var iterationSchema = new Schema(iterationSchema);
+var iteration_schema = new Schema(iterationSchema);
 
-var iterationModel = mongoose.model('iterations', iterationSchema);
+var iterationModel = mongoose.model('iterations', iteration_schema);
 
 var iteration = {
   getByIterInfo: function(teamId, limit) {
@@ -210,10 +210,8 @@ var iteration = {
           {'docStatus': {'$ne': 'delete'}}
         ],
         'status': 'Completed',
-        'startDate': {
-          '$gte': moment(new Date(startkey)).format(dateFormat)
-        },
         'endDate': {
+          '$gte': moment(new Date(startkey)).format(dateFormat),
           '$lte': moment(new Date(endkey)).format(dateFormat)
         }
       };

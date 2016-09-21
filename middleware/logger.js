@@ -64,6 +64,14 @@ winston.loggers.add('model-iteration', {
   }
 });
 
+winston.loggers.add('model-sanpshot', {
+  console: {
+    level: logLevel,
+    colorize: logColors,
+    label: 'model-sanpshot'
+  }
+});
+
 winston.loggers.add('cache', {
   console: {
     level: logLevel,
