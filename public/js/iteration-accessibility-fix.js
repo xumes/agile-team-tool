@@ -20,6 +20,9 @@ $(document).ready(function() {
   // An element with WAI-ARIA role listbox does not contain or own at least one child element with each of the following WAI-ARIA roles: option.
   $('#select2-teamSelectList-container').append('<div role="option" aria-labelledby="Select one"></div>');
 
+  // An element with WAI-ARIA role dialog is missing the following required WAI-ARIA properties: aria-labelledby
+  $('#ibm-overlaywidget-sendFeedback').attr('aria-labelledby', 'ibm-overlaywidget-sendFeedback-content');
+
   setInterval(function() {
     if ($.fn.datepicker) {
       datepicker();
