@@ -42,7 +42,7 @@ describe('Iteration API Test', function() {
   before(function(done) {
     this.timeout(50000);
     var teamName = 'testteamid_1';
-    teamModel.getName(teamName)
+    teamModel.getByName(teamName)
       .then(function(result) {
         if (result.length === 0) {
           return teamModel.createTeam(teamDocValid, userDetails);

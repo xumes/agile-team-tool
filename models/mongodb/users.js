@@ -4,7 +4,7 @@ var loggers = require('../../middleware/logger');
 var moment = require('moment');
 var _ = require('underscore');
 var Schema = mongoose.Schema;
-var Team = require('teams');
+var Team = require('./teams');
 
 // Just needed so that corresponding test could run
 require('../../settings');

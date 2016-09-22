@@ -821,7 +821,7 @@ describe('Team models [getRole]: get team role type', function(done) {
   });
 });
 
-describe('Team models [getName]: get all team names or team details if name is given', function() {
+describe('Team models [getByName]: get all team names or team details if name is given', function() {
   // before(function(done) {
   //   cache.setHomeCache(userDetails['shortEmail'])
   //   .then(function(body){
@@ -831,7 +831,7 @@ describe('Team models [getName]: get all team names or team details if name is g
   //   })
   // })
   it('retrieve all team names', function(done) {
-    teamModel.getName(null)
+    teamModel.getByName(null)
       .then(function(body) {
         expect(body).to.be.a('object');
         expect(body).to.have.property('rows');
@@ -845,7 +845,7 @@ describe('Team models [getName]: get all team names or team details if name is g
   });
 
   it('return empty details for none existing team name', function(done) {
-    teamModel.getName('none-existing-team-name')
+    teamModel.getByName('none-existing-team-name')
       .then(function(body) {
         expect(body).to.be.empty;
       })
@@ -858,7 +858,7 @@ describe('Team models [getName]: get all team names or team details if name is g
   });
 
   it('return details for team name', function(done) {
-    teamModel.getName(validTeamName)
+    teamModel.getByName(validTeamName)
       .then(function(body) {
         expect(body[0]['key']).to.be.equal(validTeamName);
       })
@@ -919,7 +919,7 @@ describe('Team models [getTeamByEmail]: get all team lists for a given email add
 
 });
 
-describe('Team models [getTeamByUid]: get all team lists for a given serial number/ uid', function() {
+describe('Team models [getTeamsByUid]: get all team lists for a given serial number/ uid', function() {
   // before(function(done) {
   //   cache.setHomeCache(userDetails['shortEmail'])
   //   .then(function(body){
@@ -930,7 +930,7 @@ describe('Team models [getTeamByUid]: get all team lists for a given serial numb
   // })
 
   it('return error because serial number/ uid is empty', function(done) {
-    teamModel.getTeamByUid(null)
+    teamModel.getTeamsByUid(null)
       .catch(function(err) {
         expect(err).to.not.equal(null);
         expect(err).to.have.property('error');
@@ -942,7 +942,7 @@ describe('Team models [getTeamByUid]: get all team lists for a given serial numb
   });
 
   it('return empty team lists serial number/ uid without team', function(done) {
-    teamModel.getTeamByUid('invalid-uid')
+    teamModel.getTeamsByUid('invalid-uid')
       .then(function(body) {
         expect(body).to.be.empty;
       })
@@ -952,7 +952,7 @@ describe('Team models [getTeamByUid]: get all team lists for a given serial numb
   });
 
   it('return team lists for this serial number/ uid', function(done) {
-    teamModel.getTeamByUid(userDetails['ldap']['serialNumber'])
+    teamModel.getTeamsByUid(userDetails['ldap']['serialNumber'])
       .then(function(body) {
         expect(body[0]['key']).to.be.equal(userDetails['ldap']['serialNumber']);
       })

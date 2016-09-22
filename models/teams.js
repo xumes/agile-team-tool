@@ -281,7 +281,7 @@ var team = {
       teamDoc = util.trimData(teamDoc);
       var validateTeam = validate(teamDoc, teamDocRules);
       if (_.isEmpty(validateTeam)) {
-        team.getName(teamDoc['name'])
+        team.getByName(teamDoc['name'])
           .then(function(body) {
             if (_.isEmpty(body) && _.isEmpty(validateTeam)) {
               common.addRecord(teamDoc)
@@ -331,7 +331,7 @@ var team = {
         infoLogs('Getting assessments associated to ' + teamId);
         updateOrDeleteTeamValidation.push(assessmentModels.getTeamAssessments(teamId)); //res[2]
         infoLogs('Getting existing team names that might match ' + updatedTeamDoc['name']);
-        updateOrDeleteTeamValidation.push(team.getName(updatedTeamDoc['name'])); //res[3]
+        updateOrDeleteTeamValidation.push(team.getByName(updatedTeamDoc['name'])); //res[3]
         infoLogs('Getting teams associated to ' + teamId);
         _.each(updatedTeamDoc['child_team_id'], function(id) {
           updateOrDeleteTeamValidation.push(team.getTeam(id));
@@ -630,7 +630,7 @@ var team = {
         });
     });
   },
-  getName: function(teamName) {
+  getByName: function(teamName) {
     if (_.isEmpty(teamName)) {
       infoLogs('Getting all team name records from Cloudant');
       return new Promise(function(resolve, reject) {
@@ -690,7 +690,7 @@ var team = {
       }
     });
   },
-  getTeamByUid: function(uid) {
+  getTeamsByUid: function(uid) {
     return new Promise(function(resolve, reject) {
       if (_.isEmpty(uid)) {
         var err = {

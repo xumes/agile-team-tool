@@ -30,7 +30,7 @@ describe('Iteration Model', function() {
     var teamName = 'testteamid_1';
     var bulkDeleteIds = [];
     this.timeout(10000);
-    teamModel.getName(teamName)
+    teamModel.getByName(teamName)
       .then(function(result) {
         if (result.length === 0) {
           return teamModel.createTeam(teamDocValid, userDetails); // (A)teamModel.createTeam
