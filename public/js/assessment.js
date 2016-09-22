@@ -1663,4 +1663,5 @@ function highlightFields() {
       }
     });
   }
+
 };
