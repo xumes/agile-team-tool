@@ -17,7 +17,7 @@ var monthArray = [];
 
 require('../../settings');
 
-var pointsSchema = new Schema({
+var pointsSchema = {
   totalPoints: {
     type: Number,
     default: 0
@@ -86,7 +86,7 @@ var pointsSchema = new Schema({
     type: Boolean,
     default: false
   }
-});
+};
 
 var snapshotSchema = {
   teamId: {
@@ -510,30 +510,33 @@ var snapshot = {
           return Promise.all(promiseArray3);
         })
         .then(function(nonSquadCalResults){
-          var query = {'teamId': Schema.Types.ObjectId};
-          var update = {
-            '$set': {
-              'lastUpdate': moment().format(dateFormat),
-              'value': [],
-              'pathId': ''
-            }
-          };
-          var options = {
-            'setDefaultsOnInsert': true,
-            'upsert': true
-          };
-          var promiseArray4 = [];
-          _.each(nonSquadCalResults, function(nonSquadCalResult){
-            query.teamId = nonSquadCalResult.teamId;
-            update['$set'].lastUpdate = nonSquadCalResult.lastUpdate;
-            update['$set'].value = nonSquadCalResult.value;
-            update['$set'].pathId = nonSquadCalResult.pathId;
-            promiseArray4.push(snapshotModel.update(query, update, options));
-          });
-          return Promise.all(promiseArray4);
+          // var query = {'teamId': Schema.Types.ObjectId};
+          // var update = {
+          //   '$set': {
+          //     'lastUpdate': moment().format(dateFormat),
+          //     'value': [],
+          //     'pathId': ''
+          //   }
+          // };
+          // var options = {
+          //   'setDefaultsOnInsert': true,
+          //   'upsert': true
+          // };
+          // var promiseArray4 = [];
+          // _.each(nonSquadCalResults, function(nonSquadCalResult){
+          //   query.teamId = nonSquadCalResult.teamId;
+          //   update['$set'].lastUpdate = nonSquadCalResult.lastUpdate;
+          //   update['$set'].value = nonSquadCalResult.value;
+          //   update['$set'].pathId = nonSquadCalResult.pathId;
+          //   promiseArray4.push(snapshotModel.update(query, update, options));
+          // });
+          return snapshotModel.collection.insert(nonSquadCalResults);
+          //return Promise.all(promiseArray4);
         })
         .then(function(results){
-          resolve(results);
+          if (results) {
+            resolve('update snapshot successfully');
+          }
         })
         .catch(function(err){
           reject(err);
@@ -541,17 +544,17 @@ var snapshot = {
     });
   },
 
-  // nameSearchTest: function(keyword) {
-  //   return new Promise(function(resolve, reject){
-  //     snapshotModel.find({'pathId': {'$regex': keyword, '$options': 'i'}})
-  //       .then(function(results){
-  //         resolve(results);
-  //       })
-  //       .catch(function(err){
-  //         reject(err);
-  //       });
-  //   });
-  // }
+  nameSearchTest: function(keyword) {
+    return new Promise(function(resolve, reject){
+      snapshotModel.find({'pathId': {'$regex': keyword, '$options': 'i'}})
+        .then(function(results){
+          resolve(results);
+        })
+        .catch(function(err){
+          reject(err);
+        });
+    });
+  }
 };
 
 module.exports = snapshot;
