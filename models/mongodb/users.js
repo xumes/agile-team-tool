@@ -12,7 +12,8 @@ require('../../settings');
 var userSchema = {
   userId: {
     type: String,
-    required: [true, 'UserId is required.']
+    required: [true, 'UserId is required.'],
+    unique: true
   },
   name: {
     type: String,

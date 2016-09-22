@@ -25,11 +25,23 @@ MongoClient.connect(creds.url, function(err, db) {
   db.collection('users')
     .drop()
     .then(function(){
-      db.collection('users').insertMany(mongoUsers, function(err, r) {
-        assert.equal(null, err);
-        console.log('Done!  ' + JSON.stringify(r.result));
-        db.close();
-        process.exit();
-      });
+      return db.collection('users').createIndex({userId:1}, {background: false, unique: true});
+    })
+    .then(function(){
+      db.collection('users').insertMany(
+        mongoUsers,
+        {ordered:false},
+        function(err, r) {
+          if (err){
+            _.each(err.writeErrors, function(e){
+              var err =  e.toJSON();
+              console.log('CloudantId:'+err.op.userId+'   ...  '+err.errmsg);
+            });
+          }}
+      );
+      console.log('Done!  ' + JSON.stringify(r.result));
+      db.close();
+      process.exit();
     });
 });
+
