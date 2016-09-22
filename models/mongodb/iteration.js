@@ -243,7 +243,7 @@ var iteration = {
           data['createdByUserId'] = userInfo.userId;
           data['updatedBy'] = userInfo.email;
           data['updatedByUserId'] = userInfo.userId;
-          return userModel.isUserAllowed(user.shortEmail, data['teamId']);
+          return userModel.isUserAllowed(userInfo.email, data['teamId']);
         }
       })
       .then(function(validUser){

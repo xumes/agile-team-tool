@@ -78,5 +78,27 @@ module.exports = function(app, includes) {
       });
   },
 
+  checkSnapshotCollectioExist = function(req, res) {
+    snapshotModel.checkSnapshotCollectioExist()
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        res.status(400).send(err);
+      });
+  },
+
+  // nameSearchTest = function(req, res) {
+  //   snapshotModel.nameSearchTest(req.params.keyword)
+  //   .then(function(result) {
+  //     res.status(200).send(result);
+  //   })
+  //   .catch( /* istanbul ignore next */ function(err) {
+  //     res.status(400).send(err);
+  //   });
+  // },
+
+  // app.get('/api/mongodb/snapshot/test/:keyword', [includes.middleware.auth.requireLogin], nameSearchTest);
+  app.get('/api/mongodb/snapshot/checkexist/', [includes.middleware.auth.requireLogin], checkSnapshotCollectioExist);
   app.get('/api/mongodb/snapshot/updaterollupdata/', [includes.middleware.auth.requireLogin], updateRollUpData);
 };
