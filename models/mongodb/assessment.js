@@ -271,7 +271,15 @@ module.exports.updateTeamAssessment = function(userId, data){
           var thisId = data['_id'];
           delete data['_id'];
           delete data['_rev'];
-          return Assessment.findOneAndUpdate({'_id' :  thisId}, data);
+          Assessment.findOneAndUpdate({'_id' :  thisId}, data)
+          .then(function(result) {
+            return resolve(result);
+          })
+          .catch( /* istanbul ignore next */ function(err) {
+            /* cannot simulate MongoDB error during testing */
+            loggers.get('models').error('Error: ' + err.error);
+            return reject(err);
+          });
         }
       })
       .then(function(body) {
