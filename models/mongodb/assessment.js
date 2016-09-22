@@ -3,13 +3,13 @@ var Promise = require('bluebird');
 var mongoose = require('mongoose');
 var loggers = require('../../middleware/logger');
 var validate = require('validate.js');
-var rules = require('../../validate_rules/assessment');
+var rules = require('../validate_rules/assessment');
+var util = require('../../helpers/util');
 var Schema   = mongoose.Schema;
 require('../../settings');
 
 var lodash = require('lodash');
-var rules = require('./validate_rules/assessment');
-var settings = require('../settings');
+//var settings = require('../settings');
 
 var recordConstraints = rules.recordConstraints;
 var assessmentConstraints = rules.assessmentConstraints;
@@ -137,88 +137,7 @@ var assesmentSchema = new Schema({
   }
 });
 
-var assessmentModel = mongoose.model('assesment', assesmentSchema);
-
-module.exports.getTeamAssessments = function(teamId, docs){
-  return new Promise(function(resolve, reject) {
-    if (lodash.isEmpty(teamId)) {
-      var msg = {
-        message: 'Team ID is required'
-      };
-      loggers.get('models').error('Error: ' + msg.message);
-      return reject(msg);
-    } else {
-      var sort =  {assessorStatus: 1, assessedDate: -1};
-      if (docs) {
-        return assessmentModel
-        .find({'teamId' : teamId})
-        .sort(sort)
-        .then(function(result){
-          return resolve(result);
-        })
-        .catch( /* istanbul ignore next */ function(err) {
-          /* cannot simulate MongoDB error during testing */
-          var msg = err.message;
-          return reject(formatErrMsg(msg));
-        });
-      } else {
-        return assessmentModel
-        .find({'teamId' : teamId})
-        .select({
-          team_id: 1,
-          assessmt_status: 1,
-          created_dt: 1,
-          last_updt_user: 1
-        })
-        .sort(sort)
-        .then(function(result){
-          return resolve(result);
-        })
-        .catch( /* istanbul ignore next */ function(err) {
-          /* cannot simulate MongoDB error during testing */
-          loggers.get('models').error('Error: ' + err.error);
-          return reject(err);
-        });
-      }
-    }
-  });
-};
-
-module.exports.getAssessmentTemplate = function(){
-  return new Promise(function(resolve, reject){
-    return assessmentModel
-      .find({'type' : 'ref_matassessment'})
-      .then(function(result){
-        return resolve(result);
-      })
-      .catch( /* istanbul ignore next */ function(err) {
-        /* cannot simulate MongoDB error during testing */
-        loggers.get('models').error('Error: ' + err.error);
-        return reject(err);
-      });
-  });
-};
-
-module.exports.getAssessment = function(assessmentId){
-  return new Promise(function(resolve, reject) {
-    if (lodash.isEmpty(assesmentId)){
-      msg = 'No assessment id provided.';
-      reject(formatErrMsg(msg));
-    } else {
-      return assessmentModel
-      .find({'_id' : assessmentId})
-      .then(function(result) {
-        loggers.get('models').verbose('Success: ' + 'Assessment ' + _id + ' record retrieved.');
-        return resolve(result);
-      })
-      .catch( /* istanbul ignore next */ function(err) {
-        /* cannot simulate MongoDB error during testing */
-        loggers.get('models').error('Error: ' + err.error);
-        return reject(err);
-      });
-    }
-  });
-};
+var Assessment = mongoose.model('assesment', assesmentSchema);
 
 module.exports.addTeamAssessment = function(userId, data){
   return new Promise(function(resolve, reject) {
@@ -244,7 +163,7 @@ module.exports.addTeamAssessment = function(userId, data){
           reject(formatErrMsg(validateError));
         } else {
           loggers.get('models').verbose('Add assessment record to Cloudant.');
-          var assessmentDocu = new assessmentModel(data);
+          var assessmentDocu = new Assessment(data);
           return assessmentDocu.save();
         }
       })
@@ -257,6 +176,72 @@ module.exports.addTeamAssessment = function(userId, data){
         loggers.get('models').error('Error: ' + err.error);
         return reject(err);
       });
+  });
+};
+
+module.exports.getTeamAssessments = function(teamId, docs){
+  return new Promise(function(resolve, reject) {
+    if (lodash.isEmpty(teamId)) {
+      var msg = {
+        message: 'Team ID is required'
+      };
+      loggers.get('models').error('Error: ' + msg.message);
+      return reject(msg);
+    } else {
+      var sort =  {assessorStatus: 1, assessedDate: -1};
+      if (docs) {
+        return Assessment
+        .find({'teamId' : teamId})
+        .sort(sort)
+        .then(function(result){
+          return resolve(result);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          /* cannot simulate MongoDB error during testing */
+          var msg = err.message;
+          return reject(formatErrMsg(msg));
+        });
+      } else {
+        return Assessment
+        .find({'teamId' : teamId})
+        .select({
+          team_id: 1,
+          assessmt_status: 1,
+          created_dt: 1,
+          last_updt_user: 1
+        })
+        .sort(sort)
+        .then(function(result){
+          return resolve(result);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          /* cannot simulate MongoDB error during testing */
+          loggers.get('models').error('Error: ' + err.error);
+          return reject(err);
+        });
+      }
+    }
+  });
+};
+
+module.exports.getAssessment = function(assessmentId){
+  return new Promise(function(resolve, reject) {
+    if (lodash.isEmpty(assesmentId)){
+      msg = 'No assessment id provided.';
+      reject(formatErrMsg(msg));
+    } else {
+      return Assessment
+      .find({'_id' : assessmentId})
+      .then(function(result) {
+        loggers.get('models').verbose('Success: ' + 'Assessment ' + _id + ' record retrieved.');
+        return resolve(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        /* cannot simulate MongoDB error during testing */
+        loggers.get('models').error('Error: ' + err.error);
+        return reject(err);
+      });
+    }
   });
 };
 
@@ -286,7 +271,7 @@ module.exports.updateTeamAssessment = function(userId, data){
           var thisId = data['_id'];
           delete data['_id'];
           delete data['_rev'];
-          return assessmentModel.findOneAndUpdate({'_id' :  thisId}, data);
+          return Assessment.findOneAndUpdate({'_id' :  thisId}, data);
         }
       })
       .then(function(body) {
@@ -305,7 +290,7 @@ module.exports.deleteAssessment = function(userId, assessmentId){
   return new Promise(function(resolve, reject) {
     loggers.get('models').verbose('Delete assessment ' + assessmentId + ' by ' + userId + ' to MongoDB.');
     if (!lodash.isEmpty(assessmentId) && !lodash.isEmpty(userId)) {
-      assessmentModel.getAssessment(assessmentId)
+      Assessment.getAssessment(assessmentId)
       .then(function(result) {
         if (!lodash.isEmpty(result)) {
           var teamId = result.team_id;
@@ -316,7 +301,7 @@ module.exports.deleteAssessment = function(userId, assessmentId){
         }
       })
       .then(function() {
-        return assessmentModel.remove({'_id' : assessmentId});
+        return Assessment.remove({'_id' : assessmentId});
       })
       .then(function() {
         loggers.get('models').verbose('Success: ' + 'Assessment ' + assessmentId + ' record deleted.');
@@ -330,5 +315,20 @@ module.exports.deleteAssessment = function(userId, assessmentId){
       loggers.get('models').error('Error: ' + msg);
       return reject(msg);
     }
+  });
+};
+
+module.exports.getAssessmentTemplate = function(){
+  return new Promise(function(resolve, reject){
+    return Assessment
+      .find({'type' : 'ref_matassessment'})
+      .then(function(result){
+        return resolve(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        /* cannot simulate MongoDB error during testing */
+        loggers.get('models').error('Error: ' + err.error);
+        return reject(err);
+      });
   });
 };

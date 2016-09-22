@@ -60,7 +60,7 @@ _.each(templates, function(doc){
 
 var creds = require('./creds');
 // Use connect method to connect to the server
-MongoClient.connect(creds.url, function(err, db) {
+/*MongoClient.connect(creds.url, function(err, db) {
   assert.equal(null, err);
   console.log('Connected successfully to server');
   db.collection('assessmentTemplates')
@@ -75,5 +75,17 @@ MongoClient.connect(creds.url, function(err, db) {
         process.exit();
       });
     });
+});*/
+MongoClient.connect(creds.url, function(err, db) {
+  assert.equal(null, err);
+  console.log('Connected successfully to server');
+  db.collection('assessmentTemplates').insertMany(mongoTemplates, function(err, r) {
+    if (err)
+      console.log(err);
+    assert.equal(null, err);
+    console.log('Done!  ' + JSON.stringify(r.result));
+    db.close();
+    process.exit();
+  });
 });
 
