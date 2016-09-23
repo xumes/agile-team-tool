@@ -156,6 +156,36 @@ validatePracticesLevels = function(levels) {
   return lodash.isEmpty(err) ? true : false;
 };
 
+checkComponents = function(components) {
+  return new Promise(function(resolve, reject) {
+    var components = typeof templateData['components'] != 'undefined' ? templateData['components'] : null;
+    if (lodash.isEmpty(components)) {
+      var msg = 'Assessment template components is required';
+      loggers.get('models').error('Error: ' + msg);
+      return reject(msg);
+    } else {
+      if (validateComponents(components)) {
+        var msg = 'Assessment template components is invalid';
+        loggers.get('models').error('Error: ' + msg);
+        return reject(msg);
+      } else if (validateComponentsPrinciples(components['principles'])) {
+        var msg = 'Assessment template components principles is invalid';
+        loggers.get('models').error('Error: ' + msg);
+        return reject(msg);
+      } else if (validatePrinciplesPractices(components['principles']['practices'])) {
+        var msg = 'Assessment template components principles practices is invalid';
+        loggers.get('models').error('Error: ' + msg);
+        return reject(msg);
+      } else if (validatePracticesLevels(components['principles']['practices']['levels'])) {
+        var msg = 'Assessment template components principles practices levels is invalid';
+        loggers.get('models').error('Error: ' + msg);
+        return reject(msg);
+      } else {
+        return resolve(true);
+      }
+    }
+  });
+};
 // end assessmentTemplates helper
 
 var assesmentTemplatesSchema = new Schema({
@@ -184,33 +214,15 @@ var AssesmentTemplates = mongoose.model('assesmentTemplates', assesmentTemplates
 
 module.exports.create = function(templateData){
   return new Promise(function(resolve, reject) {
-    var components = templateData['components'];
-    if (lodash.isEmpty(components)) {
-      var msg = 'Assessment template components is required';
-      loggers.get('models').error('Error: ' + msg);
-      return reject(msg);
-    } else {
-      if (validateComponents(components)) {
-        var msg = 'Assessment template components is invalid';
-        loggers.get('models').error('Error: ' + msg);
-        return reject(msg);
-      } else if (validateComponentsPrinciples(components['principles'])) {
-        var msg = 'Assessment template components principles is invalid';
-        loggers.get('models').error('Error: ' + msg);
-        return reject(msg);
-      } else if (validatePrinciplesPractices(components['principles']['practices'])) {
-        var msg = 'Assessment template components principles practices is invalid';
-        loggers.get('models').error('Error: ' + msg);
-        return reject(msg);
-      } else if (validatePracticesLevels(components['principles']['practices']['levels'])) {
-        var msg = 'Assessment template components principles practices levels is invalid';
-        loggers.get('models').error('Error: ' + msg);
-        return reject(msg);
-      } else {
-        var templateData = new AssesmentTemplates(templateData);
-        return resolve(templateData.save());
-      }
-    }
+    var components = typeof templateData['components'] != 'undefined' ? templateData['components'] : null;
+    checkComponents(components)
+    .then(function(){
+      var templateData = new AssesmentTemplates(templateData);
+      return resolve(templateData.save());
+    })
+    .catch(function(err) {
+      return reject(err);
+    });
   });
 };
 
@@ -253,31 +265,14 @@ module.exports.update = function(templateId, templateData) {
       return reject(msg);
     } else {
       var components = templateData['components'];
-      if (lodash.isEmpty(components)) {
-        var msg = 'Assessment template components is required';
-        loggers.get('models').error('Error: ' + msg);
-        return reject(msg);
-      } else {
-        if (validateComponents(components)) {
-          var msg = 'Assessment template components is invalid';
-          loggers.get('models').error('Error: ' + msg);
-          return reject(msg);
-        } else if (validateComponentsPrinciples(components['principles'])) {
-          var msg = 'Assessment template components principles is invalid';
-          loggers.get('models').error('Error: ' + msg);
-          return reject(msg);
-        } else {
-          Assessment.findOneAndUpdate({'_id' :  templateId}, templateData)
-          .then(function(result) {
-            return resolve(result);
-          })
-          .catch( /* istanbul ignore next */ function(err) {
-            /* cannot simulate MongoDB error during testing */
-            loggers.get('models').error('Error: ' + err.error);
-            return reject(err);
-          });
-        }
-      }
+      var components = typeof templateData['components'] != 'undefined' ? templateData['components'] : null;
+      checkComponents(components)
+      .then(function(){
+        return Assessment.findOneAndUpdate({'_id' :  templateId}, templateData);
+      })
+      .catch(function(err) {
+        return reject(err);
+      });
     }
   });
 };
