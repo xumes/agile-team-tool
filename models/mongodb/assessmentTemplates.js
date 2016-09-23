@@ -10,13 +10,152 @@ var lodash = require('lodash');
 // will validate via validate.js, same approach to assement document `componentResults` and `actionPlans`
 var validate = require('validate.js');
 
-validateComponents = function(components, componentsConstraint){
-  return null;
+validate.validators.isValidArray = function(value, options, key, attributes){
+  return validate.isArray(value) ? null : true;
 };
 
-validateComponentsPrinciples = function(principles, componentsPrincipleConstraint){
-  return null;
+validateComponents = function(components){
+  var constraint = {
+    name: {
+      presence: {
+        presence: true,
+        message: '^Component name is required.'
+      },
+      length: {
+        min: 2
+      }
+    },
+    principles: {
+      presence: {
+        presence: true,
+        message: '^Component principle is required.'
+      },
+      isValidArray: 'Check if array'
+    }
+  };
+  var err = [];
+  lodash.each(components, function(v){
+    if (validate(v, constraint)) {
+      err.push(v);
+    }
+  });
+  return lodash.isEmpty(err) ? true : false;
 };
+
+validateComponentsPrinciples = function(principles){
+  var constraint = {
+    id: {
+      presence: {
+        presence: true,
+        message: '^Principle ID is required.'
+      },
+      numericality: true
+    },
+    name: {
+      presence: {
+        presence: true,
+        message: '^Principle name is required.'
+      },
+      length: {
+        min: 2
+      }
+    },
+    practices: {
+      presence: {
+        presence: true,
+        message: '^Principle practices is required.'
+      },
+      isValidArray: 'Check if array'
+    }
+  };
+  var err = [];
+  lodash.each(principles, function(v){
+    if (validate(v, constraint)) {
+      err.push(v);
+    }
+  });
+  return lodash.isEmpty(err) ? true : false;
+};
+
+validatePrinciplesPractices = function(practices) {
+  var constraint = {
+    id: {
+      presence: {
+        presence: true,
+        message: '^Practices ID is required.'
+      },
+      numericality: true
+    },
+    name: {
+      presence: {
+        presence: true,
+        message: '^Practices name is required.'
+      },
+      length: {
+        min: 2
+      }
+    },
+    description: {
+      presence: {
+        presence: true,
+        message: '^Practices description is required.'
+      },
+      length: {
+        min: 2
+      }
+    },
+    levels: {
+      presence: {
+        presence: true,
+        message: '^Practices levels is required.'
+      },
+      isValidArray: 'Check if array'
+    }
+  };
+  var err = [];
+  lodash.each(practices, function(v){
+    if (validate(v, constraint)) {
+      err.push(v);
+    }
+  });
+  return lodash.isEmpty(err) ? true : false;
+};
+
+validatePracticesLevels = function(levels) {
+  var constraint = {
+    name: {
+      presence: {
+        presence: true,
+        message: '^Levels name is required.'
+      },
+      length: {
+        min: 2
+      }
+    },
+    score: {
+      presence: {
+        presence: true,
+        message: '^Levels score is required.'
+      },
+      numericality: true
+    },
+    criteria: {
+      presence: {
+        presence: true,
+        message: '^Levels criteria is required.'
+      },
+      isValidArray: 'Check if array'
+    }
+  };
+  var err = [];
+  lodash.each(levels, function(v){
+    if (validate(v, constraint)) {
+      err.push(v);
+    }
+  });
+  return lodash.isEmpty(err) ? true : false;
+};
+
 // end assessmentTemplates helper
 
 var assesmentTemplatesSchema = new Schema({
@@ -57,6 +196,14 @@ module.exports.create = function(templateData){
         return reject(msg);
       } else if (validateComponentsPrinciples(components['principles'])) {
         var msg = 'Assessment template components principles is invalid';
+        loggers.get('models').error('Error: ' + msg);
+        return reject(msg);
+      } else if (validatePrinciplesPractices(components['principles']['practices'])) {
+        var msg = 'Assessment template components principles practices is invalid';
+        loggers.get('models').error('Error: ' + msg);
+        return reject(msg);
+      } else if (validatePracticesLevels(components['principles']['practices']['levels'])) {
+        var msg = 'Assessment template components principles practices levels is invalid';
         loggers.get('models').error('Error: ' + msg);
         return reject(msg);
       } else {
