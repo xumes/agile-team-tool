@@ -8,7 +8,7 @@ var moment = require('moment');
 var dateFormat = 'YYYY-MM-DD HH:mm:ss';
 var validIterationDoc = {
   'name': 'test-01',
-  'teamId': '57e060593e3e6351c39e1b3f',
+  'teamId': '57e2fb0c2cd96fb99768c50f',
   'memberCount': 1,
   'startDate': moment(new Date('08-01-2016')).format(dateFormat),
   'endDate': moment().format(dateFormat)

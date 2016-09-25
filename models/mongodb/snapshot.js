@@ -572,23 +572,23 @@ var snapshot = {
    * Check if the snapshot collection exists
    * @return error info if the collection is missing, collection info if it exists.
    */
-  checkSnapshotCollectioExist: function() {
-    return new Promise(function(resolve, reject){
-      mongoose.connection.db.listCollections({name:'snapshot'})
-        .next(function(err, collinfo){
-          if (err) {
-            reject(err);
-          } else {
-            if (collinfo) {
-              resolve(collinfo);
-            } else {
-              var msg = {'error':'snapshot collection is missing'};
-              reject(msg);
-            }
-          }
-        });
-    });
-  },
+  // checkSnapshotCollectioExist: function() {
+  //   return new Promise(function(resolve, reject){
+  //     mongoose.connection.db.listCollections({name:'snapshot'})
+  //       .next(function(err, collinfo){
+  //         if (err) {
+  //           reject(err);
+  //         } else {
+  //           if (collinfo) {
+  //             resolve(collinfo);
+  //           } else {
+  //             var msg = {'error':'snapshot collection is missing'};
+  //             reject(msg);
+  //           }
+  //         }
+  //       });
+  //   });
+  // },
 
   /**
    * Roll up data to the non-squads.
@@ -666,23 +666,57 @@ var snapshot = {
             resolve('update snapshot successfully');
           }
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err){
           reject(err);
         });
     });
   },
 
-  nameSearchTest: function(keyword) {
-    return new Promise(function(resolve, reject){
-      snapshotModel.find({'pathId': {'$regex': keyword, '$options': 'i'}})
-        .then(function(results){
-          resolve(results);
+  /**
+   * Get non-squad's roll up data using team id.
+   * @param String teamId
+   * @param Object rollUpData
+   */
+  getRollUpDataByTeamId: function(teamId) {
+    return new Promise(function(resolve, reject) {
+      snapshotModel.findOne({'teamId': teamId})
+        .then(function(rollUpData) {
+          resolve(rollUpData);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err) {
           reject(err);
         });
     });
-  }
+  },
+
+  /**
+   * Get non-squad's roll up data using team id.
+   * @param String pathId
+   * @param Object rollUpData
+   */
+  getRollUpDataByPathId: function(pathId) {
+    return new Promise(function(resolve, reject) {
+      snapshotModel.findOne({'pathId': pathId})
+        .then(function(rollUpData) {
+          resolve(rollUpData);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          reject(err);
+        });
+    });
+  },
+
+  // nameSearchTest: function(keyword) {
+  //   return new Promise(function(resolve, reject){
+  //     snapshotModel.find({'pathId': {'$regex': keyword, '$options': 'i'}})
+  //       .then(function(results){
+  //         resolve(results);
+  //       })
+  //       .catch(function(err){
+  //         reject(err);
+  //       });
+  //   });
+  // }
 };
 
 module.exports = snapshot;

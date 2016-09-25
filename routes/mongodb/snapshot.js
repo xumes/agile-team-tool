@@ -36,7 +36,7 @@ module.exports = function(app, includes) {
 
   getRollUpDataByTeam = function(req, res) {
     if (!_.isEmpty(req.params.teamId) && (req.params.teamId != undefined)) {
-      snapshotModel.getRollUpDataByTeam(req.params.teamId)
+      snapshotModel.getRollUpDataByTeamId(req.params.teamId)
         .then(function(result) {
           res.status(200).send(result);
         })
@@ -97,7 +97,7 @@ module.exports = function(app, includes) {
   //     res.status(400).send(err);
   //   });
   // },
-
+  app.get('/api/mongodb/snapshot/get/:teamId', [includes.middleware.auth.requireLogin], getRollUpDataByTeam);
   // app.get('/api/mongodb/snapshot/test/:keyword', [includes.middleware.auth.requireLogin], nameSearchTest);
   app.get('/api/mongodb/snapshot/checkexist/', [includes.middleware.auth.requireLogin], checkSnapshotCollectioExist);
   app.get('/api/mongodb/snapshot/updaterollupdata/', [includes.middleware.auth.requireLogin], updateRollUpData);
