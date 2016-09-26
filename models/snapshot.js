@@ -483,7 +483,7 @@ function getSquadsData() {
           reject(formatErrMsg(msg));
         } else {
           _.each(teams, function(team) {
-            if ((team.value.squadteam != undefined) && (team.value.squadteam == 'Yes')) {
+            if ((team.value.squadteam != undefined) && ((team.value.squadteam).toLowerCase() == 'yes')) {
               squadTeams[team.value._id] = team.value;
             }
           });
@@ -522,24 +522,29 @@ function rollUpSquadsData(squadsList, squadTeams) {
 
   _.each(squadsList, function(squadId) {
     squad = squadTeams[squadId];
-    var teamCnt = squad['total_members'] != null ? squad['total_members'] : 0;
-    var teamFTE = squad['total_allocation'] != null ? squad['total_allocation'] : 0;
-    if (teamCnt != undefined && teamCnt != '') {
-      teamCnt = parseInt(teamCnt);
-      if (teamCnt < 5) {
-        teamsLt5 = teamsLt5 + 1;
-        fteLt5 = fteLt5 + teamFTE;
-        tcLt5 = tcLt5 + teamCnt;
-      } else if (teamCnt > 12) {
-        teamsGt12 = teamsGt12 + 1;
-        fteGt12 = fteGt12 + teamFTE;
-        tcGt12 = tcGt12 + teamCnt;
+    // var teamCnt = squad['total_members'] != null ? squad['total_members'] : 0;
+    // var teamFTE = squad['total_allocation'] != null ? squad['total_allocation'] : 0;
+    var teamCnt = 0;
+    if (!_.isNaN(squad['total_members'])) {
+      var teamCnt = squad['total_members'];
+    }
+    var teamFTE = 0;
+    if (!_.isNaN(squad['total_allocation'])) {
+      var teamFTE = squad['total_allocation'];
+    }
+    if (teamCnt < 5) {
+      teamsLt5 = teamsLt5 + 1;
+      fteLt5 = fteLt5 + teamFTE;
+      tcLt5 = tcLt5 + teamCnt;
+    } else if (teamCnt > 12) {
+      teamsGt12 = teamsGt12 + 1;
+      fteGt12 = fteGt12 + teamFTE;
+      tcGt12 = tcGt12 + teamCnt;
 
-      } else {
-        teams5to12 = teams5to12 + 1;
-        fte5to12 = fte5to12 + teamFTE;
-        tc5to12 = tc5to12 + teamCnt;
-      }
+    } else {
+      teams5to12 = teams5to12 + 1;
+      fte5to12 = fte5to12 + teamFTE;
+      tc5to12 = tc5to12 + teamCnt;
     }
   });
 
