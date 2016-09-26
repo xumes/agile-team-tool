@@ -316,4 +316,14 @@ module.exports.modifyTeamMembers = function() {
 };
 module.exports.associateActions = function() {
 };
-
+module.exports.deleteTeamByName = function(name) {
+  return new Promise(function(resolve, reject){
+    Team.remove({'name': name})
+      .then(function(result){
+        resolve(result);
+      })
+      .catch(function(err){
+        reject(err);
+      });
+  });
+};

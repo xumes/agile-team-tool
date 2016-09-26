@@ -56,7 +56,7 @@ var users = {
         .then(function(teams) {
           var hasAccess = false;
           _.each(teams, function(team){
-            if (team._id == teamId) {
+            if ((team._id).equals(teamId)) {
               hasAccess = true;
             }
           });
@@ -104,6 +104,22 @@ var users = {
       };
 
       User.create(newUser)
+        .then(function(result){
+          resolve(result);
+        })
+        .catch(function(err){
+          reject(err);
+        });
+    });
+  },
+
+  delete: function(email) {
+    return new Promise(function(resolve, reject) {
+      var deleteUser = {
+        'email': email
+      };
+
+      User.remove(deleteUser)
         .then(function(result){
           resolve(result);
         })

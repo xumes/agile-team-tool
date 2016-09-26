@@ -1,21 +1,41 @@
 var chai = require('chai');
 var expect = chai.expect;
 var iterationModel = require('../../../models/mongodb/iteration');
+var userModel = require('../../../models/mongodb/users');
+var teamModel = require('../../../models/mongodb/teams');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var _ = require('underscore');
 var moment = require('moment');
 var dateFormat = 'YYYY-MM-DD HH:mm:ss';
+var iterStatus = '';
+var testUser = {
+  'userId': 'TEST1234567',
+  'name': 'test user',
+  'email': 'testuser@test.com',
+  'adminAccess': 'none'
+};
 var validIterationDoc = {
-  'name': 'test-01',
-  'teamId': '57e2fb0c2cd96fb99768c50f',
+  'name': 'mongodb-test-iteration-01',
   'memberCount': 1,
+  'teamId': Schema.Types.ObjectId,
   'startDate': moment(new Date('08-01-2016')).format(dateFormat),
   'endDate': moment().format(dateFormat)
 };
+var testTeam = {
+  'name': 'mongodb-test-team-01',
+  'members': {
+    'name': 'test user',
+    'userId': 'TEST1234567',
+    'email': 'testuser@test.com'
+  },
+  'createdByUserId': 'TEST1234567',
+  'createdBy': 'testuser@test.com'
+};
 var newIterationId = Schema.Types.ObjectId;
+var newTeamId = Schema.Types.ObjectId;
 var validUser = new Object();
-validUser['shortEmail'] = 'Yanliang.Gu1@ibm.com';
+validUser['shortEmail'] = 'testuser@test.com';
 var notExistingUser = new Object();
 notExistingUser['shortEmail'] = 'notexisting';
 var inValidUser = new Object();
@@ -23,9 +43,27 @@ inValidUser['shortEmail'] = 'lenka.treflikova@sk.ibm.com';
 
 describe('Iteration model [add]', function() {
   before(function(done){
+    var promiseArray = [];
+    promiseArray.push(userModel.delete(testUser.email));
+    promiseArray.push(teamModel.deleteTeamByName(testTeam.name));
+    Promise.all(promiseArray)
+      .then(function(results){
+        return userModel.create(testUser);
+      })
+      .then(function(result){
+        return teamModel.createTeam(testTeam);
+      })
+      .then(function(result){
+        newTeamId = result._id;
+        done();
+      })
+      .catch(function(err){
+        done();
+      });
+  });
+  before(function(done){
     var request = {
       'name': validIterationDoc.name,
-      'teamId': validIterationDoc.teamId
     };
 
     iterationModel.deleteByFields(request)
@@ -38,11 +76,13 @@ describe('Iteration model [add]', function() {
   });
 
   it('return successful for adding an iteration', function(done) {
+    validIterationDoc['teamId'] = newTeamId;
     iterationModel.add(validIterationDoc, validUser)
       .then(function(result){
         expect(result).to.be.a('object');
         expect(result).to.have.property('_id');
         newIterationId = result._id;
+        iterStatus = result.status;
         done();
       });
   });
@@ -121,9 +161,9 @@ describe('Iteration model [searchTeamIteration]', function() {
   it('return successful for retriveing a iteration by query', function(done) {
     var queryrequest = {
       'id': validIterationDoc.teamId,
-      'status': 'Completed',
+      'status': iterStatus,
       'startdate': moment(new Date('01-01-2016')).format(dateFormat),
-      'enddate': moment(new Date('09-15-2016')).format(dateFormat)
+      'enddate': moment(new Date()).format(dateFormat)
     };
     iterationModel.searchTeamIteration(queryrequest)
       .then(function(result){
@@ -136,7 +176,7 @@ describe('Iteration model [searchTeamIteration]', function() {
   it('return successful for retriveing a iteration by query (startdate only)', function(done) {
     var queryrequest = {
       'id': validIterationDoc.teamId,
-      'status': 'Completed',
+      'status': iterStatus,
       'startdate': validIterationDoc.endDate
     };
     iterationModel.searchTeamIteration(queryrequest)
@@ -149,7 +189,7 @@ describe('Iteration model [searchTeamIteration]', function() {
   it('return successful for retriveing a iteration by query (enddate only)', function(done) {
     var queryrequest = {
       'id': validIterationDoc.teamId,
-      'status': 'Completed',
+      'status': iterStatus,
       'enddate': validIterationDoc.endDate
     };
     iterationModel.searchTeamIteration(queryrequest)
@@ -216,6 +256,19 @@ describe('Iteration model [delete]', function() {
       .then(function(result){
         expect(result).to.be.a('object');
         expect(result).to.have.property('result');
+        done();
+      });
+  });
+
+  after(function(done){
+    var promiseArray = [];
+    promiseArray.push(userModel.delete(testUser.email));
+    promiseArray.push(teamModel.deleteTeamByName(testTeam.name));
+    Promise.all(promiseArray)
+      .then(function(results){
+        done();
+      })
+      .catch(function(err){
         done();
       });
   });
