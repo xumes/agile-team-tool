@@ -39,10 +39,10 @@ validateComponents = function(components){
       err.push(v);
     }
   });
-  return lodash.isEmpty(err) ? true : false;
+  return lodash.isEmpty(err) ? null : true;
 };
 
-validateComponentsPrinciples = function(principles){
+validateComponentsPrinciples = function(components){
   var constraint = {
     id: {
       presence: {
@@ -69,12 +69,15 @@ validateComponentsPrinciples = function(principles){
     }
   };
   var err = [];
-  lodash.each(principles, function(v){
-    if (validate(v, constraint)) {
-      err.push(v);
-    }
+  lodash.each(components, function(v){
+    lodash.each(v, function(p){
+      console.log('p: ', validate(p, constraint));
+      if (validate(p, constraint)) {
+        err.push(p);
+      }
+    });
   });
-  return lodash.isEmpty(err) ? true : false;
+  return lodash.isEmpty(err) ? null : true;
 };
 
 validatePrinciplesPractices = function(practices) {
@@ -118,7 +121,7 @@ validatePrinciplesPractices = function(practices) {
       err.push(v);
     }
   });
-  return lodash.isEmpty(err) ? true : false;
+  return lodash.isEmpty(err) ? null : true;
 };
 
 validatePracticesLevels = function(levels) {
@@ -153,10 +156,10 @@ validatePracticesLevels = function(levels) {
       err.push(v);
     }
   });
-  return lodash.isEmpty(err) ? true : false;
+  return lodash.isEmpty(err) ? null : true;
 };
 
-checkComponents = function(components) {
+checkComponents = function(templateData) {
   return new Promise(function(resolve, reject) {
     var components = typeof templateData['components'] != 'undefined' ? templateData['components'] : null;
     if (lodash.isEmpty(components)) {
@@ -164,19 +167,24 @@ checkComponents = function(components) {
       loggers.get('models').error('Error: ' + msg);
       return reject(msg);
     } else {
+      //console.log(JSON.stringify(components, null, 4));
       if (validateComponents(components)) {
+        console.log('line 172');
         var msg = 'Assessment template components is invalid';
         loggers.get('models').error('Error: ' + msg);
         return reject(msg);
-      } else if (validateComponentsPrinciples(components['principles'])) {
+      } else if (validateComponentsPrinciples(components['components'])) {
+        console.log('line 177');
         var msg = 'Assessment template components principles is invalid';
         loggers.get('models').error('Error: ' + msg);
         return reject(msg);
-      } else if (validatePrinciplesPractices(components['principles']['practices'])) {
+      } else if (validatePrinciplesPractices(components['components'])) {
+        console.log('line 182');
         var msg = 'Assessment template components principles practices is invalid';
         loggers.get('models').error('Error: ' + msg);
         return reject(msg);
-      } else if (validatePracticesLevels(components['principles']['practices']['levels'])) {
+      } else if (validatePracticesLevels(components['components'])) {
+        console.log('line 187');
         var msg = 'Assessment template components principles practices levels is invalid';
         loggers.get('models').error('Error: ' + msg);
         return reject(msg);
@@ -214,15 +222,21 @@ var AssesmentTemplates = mongoose.model('assesmentTemplates', assesmentTemplates
 
 module.exports.create = function(templateData){
   return new Promise(function(resolve, reject) {
-    var components = typeof templateData['components'] != 'undefined' ? templateData['components'] : null;
-    checkComponents(components)
-    .then(function(){
-      var templateData = new AssesmentTemplates(templateData);
-      return resolve(templateData.save());
-    })
-    .catch(function(err) {
-      return reject(err);
-    });
+    if (lodash.isEmpty(templateData)) {
+      var msg = 'Assessment template data is required';
+      loggers.get('models').error('Error: ' + msg);
+      return reject(msg);
+    } else {
+      var components = typeof templateData['components'] != 'undefined' ? templateData['components'] : null;
+      return checkComponents(templateData)
+      .then(function(){
+        var templateData = new AssesmentTemplates(templateData);
+        return resolve(templateData.save());
+      })
+      .catch(function(err) {
+        return reject(err);
+      });
+    }
   });
 };
 
@@ -266,13 +280,32 @@ module.exports.update = function(templateId, templateData) {
     } else {
       var components = templateData['components'];
       var components = typeof templateData['components'] != 'undefined' ? templateData['components'] : null;
-      checkComponents(components)
+      checkComponents(templateData)
       .then(function(){
-        return Assessment.findOneAndUpdate({'_id' :  templateId}, templateData);
+        return AssessmentTemplates.findOneAndUpdate({'_id' :  templateId}, templateData);
       })
       .catch(function(err) {
         return reject(err);
       });
+    }
+  });
+};
+
+module.exports.delete = function(templateId) {
+  return new Promise(function(resolve, reject) {
+    if (lodash.isEmpty(templateId)) {
+      var msg = 'Template ID is required';
+      return reject(formatErrMsg(msg));
+    } else {
+      AssessmentTemplates.remove({'_id': templateId})
+        .then(function(body) {
+          return resolve(body);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          /* cannot simulate MongoDB error during testing */
+          var msg = err.message;
+          return reject(formatErrMsg(msg));
+        });
     }
   });
 };
