@@ -54,19 +54,19 @@ var getUserFromFaces = function(email) {
       var facesFun = 'find/?limit=100&q=email:' + encodeURIComponent('"' + escape(email) + '"');
       var url = facesURL + facesFun;
       request.get(url, function(err, res, body){
-        if (res.statusCode != 200) {
+        /* istanbul ignore next */ if (res.statusCode != 200) {
           var msg = {'error': 'can not get response'};
           resolve(msg);
         } else {
           try {
             json = JSON.parse(body);
-          } catch (err) {
+          } /* istanbul ignore next */ catch (err) {
             var msg = {'error': 'json error'};
             resolve(msg);
           }
           if (json.length > 0) {
             resolve(json[0]);
-          } else {
+          } /* istanbul ignore next */ else {
             var msg = {'error': 'can not find match result'};
             resolve(msg);
           }
@@ -86,7 +86,7 @@ var users = {
         .then(function(useInfo){
           resolve(useInfo);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err){
           reject(err);
         });
     });
@@ -105,7 +105,7 @@ var users = {
           });
           resolve(hasAccess);
         })
-        .catch(function(err) {
+        .catch( /* istanbul ignore next */ function(err) {
           reject(err);
         });
     });
@@ -131,7 +131,7 @@ var users = {
           }
           return resolve(hasAccess);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err){
           reject(err);
         });
     });
@@ -161,7 +161,7 @@ var users = {
         .then(function(result){
           resolve(result);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err){
           reject(err);
         });
     });
@@ -177,7 +177,7 @@ var users = {
         .then(function(result){
           resolve(result);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err){
           reject(err);
         });
     });
