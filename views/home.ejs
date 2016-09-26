@@ -119,7 +119,7 @@
 
                     <div data-widget="showhide" data-type="panel" class="ibm-show-hide" id="iterationSection">
                       <p class="ibm-ind-link" style="float: right;" id="snapshotPull">
-                        <a class="ibm-refresh-link" href="#" id="refreshData" style="float: right;">
+                        <a class="ibm-refresh-link" href="#" id="refreshData" style="float: right;" title="refreshData">
                         <label style="float: right;font-size:0pt;">Refresh</label>
                         </a>
                         Data as of:&nbsp;<label id="refreshDate">Last update date</label>&nbsp;&nbsp;
@@ -261,8 +261,9 @@
                         <tbody id="membersList">
                         </tbody>
                       </table>
+                      <div id="teamscore-area"></div>
                       <div class="ibm-common-overlay ibm-overlay-alt-two" data-widget="overlay" id="overlayExampleLarge">
-                        <img id="img01" src="./img/teamscore-formula.png">
+                        <img id="img01" src="./img/teamscore-formula.png" alt="Team score formula">
                       </div>
                     </div>
                   </div>
@@ -283,5 +284,6 @@
     </div>
     <%- include ./footer.ejs %>
   </div>
+<script type="text/javascript" src="js/home-accessibility-fix.js?v=<%=Math.random()%>"></script>
 </body>
 </html>
