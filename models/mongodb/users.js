@@ -5,6 +5,9 @@ var moment = require('moment');
 var _ = require('underscore');
 var Schema = mongoose.Schema;
 var Team = require('./teams');
+var https = require('https');
+var request = require('request');
+var settings = require('../../settings');
 
 // Just needed so that corresponding test could run
 require('../../settings');
@@ -30,7 +33,47 @@ var userSchema = {
   lastLogin: {
     type: Date,
     default: null
+  },
+  location: {
+    site: {
+      type: String,
+      default: null
+    },
+    timezone: {
+      type: String,
+      default: null
+    }
   }
+};
+
+var getUserFromFaces = function(email) {
+  return new Promise(function(resolve, reject){
+    if (email != null && email != '') {
+      var json;
+      var facesURL = settings.facesURL;
+      var facesFun = 'find/?limit=100&q=email:' + encodeURIComponent('"' + escape(email) + '"');
+      var url = facesURL + facesFun;
+      request.get(url, function(err, res, body){
+        if (res.statusCode != 200) {
+          var msg = {'error': 'can not get response'};
+          resolve(msg);
+        } else {
+          try {
+            json = JSON.parse(body);
+          } catch (err) {
+            var msg = {'error': 'json error'};
+            resolve(msg);
+          }
+          if (json.length > 0) {
+            resolve(json[0]);
+          } else {
+            var msg = {'error': 'can not find match result'};
+            resolve(msg);
+          }
+        }
+      });
+    }
+  });
 };
 
 var UserSchema = new Schema(userSchema);
@@ -100,10 +143,21 @@ var users = {
         'userId': user.userId.toUpperCase(),
         'email': user.email.toLowerCase(),
         'name': user.name,
-        'adminAccess': user.adminAccess
+        'adminAccess': user.adminAccess,
+        'location': {
+          'site': null,
+          'timezone': null
+        }
       };
-
-      User.create(newUser)
+      getUserFromFaces(newUser.email)
+        .then(function(facesInfo){
+          if (!facesInfo.error) {
+            if (facesInfo.location) {
+              newUser.location.site = facesInfo.location;
+            }
+          }
+          return User.create(newUser);
+        })
         .then(function(result){
           resolve(result);
         })

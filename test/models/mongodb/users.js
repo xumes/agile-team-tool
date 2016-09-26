@@ -11,3 +11,19 @@ describe('Users model [findUserByEmail]', function() {
       });
   });
 });
+
+describe('Users model [create]', function() {
+  it('return null for non existing user', function(done) {
+    var newUser = {
+      'userId': '4G2831897',
+      'email': 'Yanliang.Gu1@ibm.com',
+      'name': 'Yanliang Gu',
+      'adminAccess': 'none',
+    };
+    users.create(newUser)
+      .then(function(result) {
+        //expect(result).to.be.a('array');
+        done();
+      });
+  });
+});
