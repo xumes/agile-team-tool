@@ -281,7 +281,7 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
     chart: {
       type: type,
       renderTo: id,
-      marginLeft: 55,
+      marginLeft: 60,
       marginRight: 0, width: 380
     },
     lang: {
@@ -418,7 +418,7 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
     chart: {
       type: type,
       renderTo: id,
-      marginLeft: 55,
+      marginLeft: 60,
       marginRight: 0, width: 380
     },
     lang: {
@@ -537,7 +537,7 @@ function loadStackedPizzaChart(id, title, type, categories, yAxisLabel, seriesOb
     chart: {
       type: type,
       renderTo: id,
-      marginLeft: 55,
+      marginLeft: 60,
       marginRight: 0, width: 380
     },
     lang: {
@@ -633,7 +633,7 @@ function loadBarPizzaChart(id, title, type, categories, seriesObj1, seriesObj2, 
     chart: {
       type: type,
       renderTo: id,
-      marginLeft: 55,
+      marginLeft: 60,
       marginRight: 0, width: 380
     },
     lang: {
@@ -720,7 +720,7 @@ function loadPiePizzaChart(id, title, type, seriesObj, subtitle) {
     chart: {
       type: type,
       renderTo: id,
-      marginLeft: 55,
+      marginLeft: 60,
       marginRight: 0, width: 380
     },
     lang: {
@@ -772,6 +772,7 @@ function loadPiePizzaChart(id, title, type, seriesObj, subtitle) {
       verticalAlign: 'bottom',
       align: 'center',
       y: -135,
+      x: 30,
       style: {
         fontSize: '10px',
         //color : '#FFA500',
@@ -795,7 +796,7 @@ function loadChartMulSeries(id, title, type, categories, yAxisLabel, xAxisLabel,
     chart: {
       type: type,
       renderTo: id,
-      marginLeft: 55,
+      marginLeft: 60,
       marginRight: 0, width: 380
     },
     lang: {
@@ -899,7 +900,7 @@ function loadChartPartialSeries(id, title, type, categories, yAxisLabel, xAxisLa
     chart: {
       type: type,
       renderTo: id,
-      marginLeft: 55,
+      marginLeft: 60,
       marginRight: 0, width: 380
     },
     lang: {
@@ -997,7 +998,7 @@ function loadDeploymentsChartParent(id, title, type, categories, yAxisLabel, xAx
     chart: {
       type: type,
       renderTo: id,
-      marginLeft: 55,
+      marginLeft: 60,
       marginRight: 0, width: 380
     },
     lang: {
@@ -1124,7 +1125,7 @@ function loadSatisfactionChartParent(id, title, type, categories, yAxisLabel, xA
     chart: {
       type: type,
       renderTo: id,
-      marginLeft: 55,
+      marginLeft: 60,
       marginRight: 0, width: 380
     },
     lang: {
@@ -1254,7 +1255,7 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
     chart: {
       type: type,
       renderTo: id,
-      marginLeft: 55,
+      marginLeft: 60,
       marginRight: 0, width: 380
     },
     lang: {
