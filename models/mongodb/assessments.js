@@ -139,6 +139,10 @@ var assesmentSchema = new Schema({
 
 var Assessment = mongoose.model('assesment', assesmentSchema);
 
+module.exports.getModel = function(){
+  return Assessment;
+};
+
 module.exports.addTeamAssessment = function(userId, data){
   return new Promise(function(resolve, reject) {
     loggers.get('models').verbose('addTeamAssessment user:' + userId + ' status: ' + data.assessmt_status);
@@ -160,7 +164,7 @@ module.exports.addTeamAssessment = function(userId, data){
               validateError[val] = value[val];
             });
           });
-          reject(formatErrMsg(validateError));
+          reject(Error(validateError));
         } else {
           loggers.get('models').verbose('Add assessment record to Cloudant.');
           var assessmentDocu = new Assessment(data);
@@ -174,7 +178,7 @@ module.exports.addTeamAssessment = function(userId, data){
       .catch( /* istanbul ignore next */ function(err) {
         /* cannot simulate MongoDB error during testing */
         loggers.get('models').error('Error: ' + err.error);
-        return reject(err);
+        return reject(Error(err));
       });
   });
 };
@@ -198,8 +202,7 @@ module.exports.getTeamAssessments = function(teamId, docs){
         })
         .catch( /* istanbul ignore next */ function(err) {
           /* cannot simulate MongoDB error during testing */
-          var msg = err.message;
-          return reject(formatErrMsg(msg));
+          return reject(Error(err.message));
         });
       } else {
         return Assessment
@@ -217,7 +220,7 @@ module.exports.getTeamAssessments = function(teamId, docs){
         .catch( /* istanbul ignore next */ function(err) {
           /* cannot simulate MongoDB error during testing */
           loggers.get('models').error('Error: ' + err.error);
-          return reject(err);
+          return reject(Error(err));
         });
       }
     }
@@ -239,7 +242,7 @@ module.exports.getAssessment = function(assessmentId){
       .catch( /* istanbul ignore next */ function(err) {
         /* cannot simulate MongoDB error during testing */
         loggers.get('models').error('Error: ' + err.error);
-        return reject(err);
+        return reject(Error(err));
       });
     }
   });
@@ -278,7 +281,7 @@ module.exports.updateTeamAssessment = function(userId, data){
           .catch( /* istanbul ignore next */ function(err) {
             /* cannot simulate MongoDB error during testing */
             loggers.get('models').error('Error: ' + err.error);
-            return reject(err);
+            return reject(Error(err));
           });
         }
       })
@@ -289,7 +292,7 @@ module.exports.updateTeamAssessment = function(userId, data){
       .catch( /* istanbul ignore next */ function(err) {
         /* cannot simulate MongoDB error during testing */
         loggers.get('models').error('Error: ' + err.error);
-        return reject(err);
+        return reject(Error(err));
       });
   });
 };
@@ -304,8 +307,7 @@ module.exports.deleteAssessment = function(userId, assessmentId){
           var teamId = result.team_id;
           return util.isUserAllowed(userId, teamId);
         } else {
-          msg = 'No record to delete.';
-          return reject(formatErrMsg(msg));
+          return reject(Error('No record to delete.'));
         }
       })
       .then(function() {
@@ -313,15 +315,15 @@ module.exports.deleteAssessment = function(userId, assessmentId){
       })
       .then(function() {
         loggers.get('models').verbose('Success: ' + 'Assessment ' + assessmentId + ' record deleted.');
-        return resolve(true);
+        return resolve('Success: ' + 'Assessment ' + assessmentId + ' record deleted.');
       })
       .catch( /* istanbul ignore next */ function(err) {
         /* cannot simulate MongoDB error during testing */
-        return reject(true);
+        return reject(Error(err));
       });
     } else {
       loggers.get('models').error('Error: ' + msg);
-      return reject(msg);
+      return reject(Error(msg));
     }
   });
 };
@@ -336,7 +338,7 @@ module.exports.getAssessmentTemplate = function(){
       .catch( /* istanbul ignore next */ function(err) {
         /* cannot simulate MongoDB error during testing */
         loggers.get('models').error('Error: ' + err.error);
-        return reject(err);
+        return reject(Error(err));
       });
   });
 };
