@@ -170,6 +170,10 @@ var iteration_schema = new Schema(iterationSchema);
 var iterationModel = mongoose.model('iterations', iteration_schema);
 
 var iteration = {
+  getModel: function() {
+    return iterationModel;
+  },
+
   getByIterInfo: function(teamId, limit) {
     return new Promise(function(resolve, reject) {
       if (teamId) {

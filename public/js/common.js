@@ -717,28 +717,27 @@ function updateAgileTeamCache(team) {
  */
 function initTeamTemplate() {
   var teamTemplate = {
-    '_id': '',
-    //"_rev": "",
-    'type': '',
     'name': '',
-    'desc': '',
-    'squadteam': '',
-    'parent_team_id': '',
-    'last_updt_dt': '',
-    'last_updt_user': '',
-    'created_user': '',
-    'created_dt': '',
-    'doc_status': '',
+    'pathId': '',
+    'path': '',
+    'type': '',
+    'description': '',
+    'createDate': '',
+    'createdByUserId': '',
+    'createdBy': '',
+    'updateDate': '',
+    'updatedByUserId': '',
+    'updatedBy': '',
+    'docStatus': '',
     'members': [{
-      'key': '',
-      'id': '',
       'name': '',
-      'allocation': 0,
-      'role': ''
-    }],
-    'child_team_id': []
+      'allocation': '',
+      'role': '',
+      'userId': 0,
+      'email': ''
+    }]
   };
-  teamTemplate['members'] = [];
+  teamTemplate['members'] = []; // ? wat
   return teamTemplate;
 }
 

@@ -7,6 +7,7 @@ var util = require('../../helpers/util');
 var Users = require('./users');
 var Iterations = require('./iterations');
 var Assessments = require('./assessments');
+var loggers = require('../../middleware/logger');
 
 // var loggers = require('../middleware/logger');
 
@@ -38,9 +39,6 @@ var memberSchema = new Schema({
 });
 
 var TeamSchema = new Schema({
-  cloudantId: {
-    type: String
-  },
   name: {
     type: String,
     required: [true, 'Name is required.'],
@@ -251,29 +249,6 @@ var getChildren = function(pathId) {
   else return Team.find({path:new RegExp(','+pathId+',')}).exec();
 };
 
-module.exports.updateOrDeleteTeam = function(teamDoc, user, action) {
-  return new Promise(function(resolve, reject){
-    var userEmail = user['shortEmail'];
-    var teamId = updatedTeamDoc['_id'];
-
-    Promise.join(
-      module.exports.getTeam(teamId),
-      Iterations.getByIterInfo(teamId),
-      Assessments.getTeamAssessments(teamId),
-      module.exports.getTeam(teamDoc.name),
-      getChildren(teamDoc.pathId),
-      function(oldTeamDoc, iterations, assessments, teamDocByName, children){
-        if (oldTeamDoc.docStatus === 'delete') return reject('Invalid action');
-        User.isUserAllowed(userEmail, teamId)
-        .then(function(isAllowed){
-          if (!isAllowed) return reject('Not allowed');
-        });
-      }
-    );
-
-  });
-};
-
 //TODO refactor into 2 seperate functions
 // module.exports.getTeam = function(id) {
 //   return Team.find({_id:id}).exec();
@@ -309,6 +284,7 @@ module.exports.getByName = function(teamName) {
 };
 
 module.exports.getTeamsByEmail = function(memberEmail) {
+  console.log('getting teams by email: ' + memberEmail);
   return Team.find({members: {$elemMatch:{email:memberEmail}}}).exec();
 };
 
@@ -419,6 +395,75 @@ module.exports.deleteTeamByName = function(name) {
       });
   });
 };
+
+/*
+A->B-C->D->E
+
+if C gets deleted, team docStatus will be "delete".. all related iterations and assessments of C will also have docStatus of "delete"
+
+surviving structure would be
+
+A->B
+D->E
+
+so in effect, all affected team that had a path relation to C, will have to be updated..
+*/
+module.exports.updateOrDeleteTeam = function(teamId, userEmail, userId, action) {
+  return new Promise(function(resolve, reject){
+    //var teamId = updatedTeamDoc['_id'];
+    Promise.join(
+      module.exports.getTeam(teamId),
+      Iterations.getByIterInfo(teamId),
+      Assessments.getTeamAssessments(teamId),
+      //module.exports.getTeam('hi'),
+      //getChildren(teamDoc.pathId),
+      function(oldTeamDoc, iterations, assessments){
+        Users.isUserAllowed(userEmail, teamId)
+        .then(function(isAllowed){
+          if (!isAllowed) return Promise.reject(Error('User not allowed to preform action.')); //for some reason have to use static reject here o.w next thens() get called
+          else return;
+        })
+        //use is allowed to update or delete
+        .then(function(){
+          if (action==='delete') {
+            var iterationIds = _.pluck(iterations, '_id');
+            var assessmentIds = _.pluck(assessments, '_id');
+            //delete team, iterations, and assessment docs by setting docStatus: delete
+            //logger will say 0 deleted if they were already deleted (mongodb doesnt update docs if theres no change)
+            loggers.get('model-teams').info('Deleting the following team: ' +teamId);
+            Team.update({_id : teamId}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:util.getServerTime()}}).exec()
+            .then(function(res){
+              loggers.get('model-teams').verbose('Deleted '+res.nModified+ ' team; docStatus: delete');
+              loggers.get('model-teams').info('Deleting the following assessment docs: ' +assessmentIds);
+              return Assessments.getModel().update({_id : {'$in':assessmentIds}}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:util.getServerTime()}}, {multi: true}).exec();
+            })
+            .then(function(res){
+              loggers.get('model-teams').verbose('Set '+res.nModified+ ' assessment documents docStatus: delete');
+              loggers.get('model-teams').info('Deleting the following iteration docs: ' +iterationIds);
+              return Iterations.getModel().update({_id : {'$in':iterationIds}}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:util.getServerTime()}}, {multi: true}).exec();
+            })
+            .then(function(res){
+              loggers.get('model-teams').verbose('Set '+res.nModified+ ' iteration documents docStatus: delete');
+              return resolve('Successfully deleted Team and its associated iterations and assessments.');
+            })
+            .catch(function(e){
+              return reject(e);
+            });
+          }
+        })
+        .catch(function(e){
+          return reject(e);
+        });
+      }
+    );
+  });
+};
+
+// module.exports.updateOrDeleteTeam('57e96709f271c51985ab38d5','cjscotta@us.ibm.com','jeff smith', 'delete').then(function(res) {
+//   console.log(res);
+// }).catch(function(e){
+//   console.log(e);
+// });
 
 //I think we can refactor the clientside js to use other model functions
 module.exports.getLookupIndex = function() {
