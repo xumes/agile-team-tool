@@ -433,17 +433,17 @@ module.exports.updateOrDeleteTeam = function(teamId, userEmail, userId, action) 
             loggers.get('model-teams').info('Deleting the following team: ' +teamId);
             Team.update({_id : teamId}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:util.getServerTime()}}).exec()
             .then(function(res){
-              loggers.get('model-teams').info('Deleted '+res.nModified+ ' team; docStatus: delete');
+              loggers.get('model-teams').verbose('Deleted '+res.nModified+ ' team; docStatus: delete');
               loggers.get('model-teams').info('Deleting the following assessment docs: ' +assessmentIds);
               return Assessments.getModel().update({_id : {'$in':assessmentIds}}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:util.getServerTime()}}, {multi: true}).exec();
             })
             .then(function(res){
-              loggers.get('model-teams').info('Set '+res.nModified+ ' assessment documents docStatus: delete');
+              loggers.get('model-teams').verbose('Set '+res.nModified+ ' assessment documents docStatus: delete');
               loggers.get('model-teams').info('Deleting the following iteration docs: ' +iterationIds);
               return Iterations.getModel().update({_id : {'$in':iterationIds}}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:util.getServerTime()}}, {multi: true}).exec();
             })
             .then(function(res){
-              loggers.get('model-teams').info('Set '+res.nModified+ ' iteration documents docStatus: delete');
+              loggers.get('model-teams').verbose('Set '+res.nModified+ ' iteration documents docStatus: delete');
               return resolve('Successfully deleted Team and its associated iterations and assessments.');
             })
             .catch(function(e){
