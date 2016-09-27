@@ -26,6 +26,16 @@ paths:
           required: true
           type: string
           format: string
+        - name: docs
+          in: query
+          description: Flag to check if all team related information will be returned
+          required: false
+          type: boolean
+        - name: all
+          in: query
+          description: Flag to check if all child teams by ACL will be returned
+          required: false
+          type: boolean
       tags:
         - Team
       responses:
@@ -51,6 +61,17 @@ paths:
           required: true
           type: string
           format: string
+        - name: teamId
+          in: query
+          description: Unique team ID
+          required: false
+          type: string
+          format: string
+        - name: docs
+          in: query
+          description: Flag to check if all iteration related information will be returned
+          required: false
+          type: boolean
       tags:
         - Iteration
       responses:
@@ -75,6 +96,54 @@ paths:
           required: true
           type: string
           format: string
+        - name: iteration
+          in: body
+          description: JSON body of the iteration data to be updated
+          required: true
+          schema:
+            type: object
+            required:
+              - teamId
+              - iterationName
+              - startDate
+              - endDate
+            properties:
+              teamId:
+                type: string
+              iterationName:
+                type: string
+              startDate:
+                type: string
+              endDate:
+                type: string
+              memberCount:
+                type: integer
+              committedStories:
+                type: integer
+              deliveredStories:
+                type: integer
+              commitedStoryPoints:
+                type: integer
+              storyPointsDelivered:
+                type: integer
+              comment:
+                type: string
+              memberFTECount:
+                type: number
+              deployments:
+                type: integer
+              defects:
+                type: integer
+              cycleTimeWIP:
+                type: number
+              cycleTimeInBacklog:
+                type: number
+              clientSatisfaction:
+                type: number
+                maximum: 4
+              teamSatisfaction:
+                type: number
+                maximum: 4
       tags:
         - Iteration
       responses:
@@ -99,18 +168,51 @@ paths:
           required: true
           type: string
           format: string
-        - name: iterationId
-          in: query
-          description: Unique identifier for the iteration
-          required: true
-          type: string
-          format: string
         - name: iteration
           in: body
           description: JSON body of the iteration data to be updated
           required: true
           schema:
-            type: string
+            type: object
+            required:
+              - _id
+            properties:
+              _id:
+                type: string
+              iterationName:
+                type: string
+              startDate:
+                type: string
+              endDate:
+                type: string
+              memberCount:
+                type: integer
+              committedStories:
+                type: integer
+              deliveredStories:
+                type: integer
+              commitedStoryPoints:
+                type: integer
+              storyPointsDelivered:
+                type: integer
+              comment:
+                type: string
+              memberFTECount:
+                type: number
+              deployments:
+                type: integer
+              defects:
+                type: integer
+              cycleTimeWIP:
+                type: number
+              cycleTimeInBacklog:
+                type: number
+              clientSatisfaction:
+                type: number
+                maximum: 4
+              teamSatisfaction:
+                type: number
+                maximum: 4
             example:
               _id: xxxxxxx
               teamId: xxxxxxx
@@ -180,24 +282,54 @@ definitions:
       teamId:
         type: string
         description: Unique identifier representing the team
-      status:
+      iterationName:
         type: string
-        description: Status of the iteration
+        description: Unique iteration name
+      startDate:
+        type: string
+        description: Iteration start date in mm/dd/yyyy format
+      endDate:
+        type: string
+        description: Iteration end date in mm/dd/yyyy format
       memberCount:
         type: integer
         description: Number of members in the team
+      memberFTECount:
+        type: number
+        description: Full time equivalent of team member allocation
       committedStories:
         type: integer
         description: Number of committed stories
-      deliveredStoryPoints:
+      deliveredStories:
         type: integer
-        description: Number of story points delivered
+        description: Number of delivered stories
+      commitedStoryPoints:
+        type: integer
+        description: Number of committed story points
+      storyPointsDelivered:
+        type: integer
+        description: Number of delivered story points
+      cycleTimeWIP:
+        type: number
+        description: Cycle time WIP
+      cycleTimeInBacklog:
+        type: number
+        description: Cycle time Backlog
       deployments:
         type: integer
         description: Number of deployments done
       defects:
         type: integer
         description: Number of defects
+      clientSatisfaction:
+        type: number
+        description: Client satisfaction score
+      teamSatisfaction:
+        type: number
+        description: Team satisfaction score
+      comment:
+        type: string
+        description: Iteration comments
   Error:
     type: object
     properties:

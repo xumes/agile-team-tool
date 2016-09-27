@@ -690,7 +690,72 @@ var team = {
       }
     });
   },
-  getTeamByUid: function(uid) {
+
+
+  /**
+   * Returns an array teams information
+   *
+   * @param teamIds array of team id
+   */
+  getAllTeams: function(teamIds, includeDocs) {
+    return new Promise(function(resolve, reject) {
+      loggers.get('models').verbose('Finding ' + teamIds + ' teams ' );
+      common.getByViewKeys('teams', 'teams', teamIds, includeDocs)
+      .then(function(result) {
+        loggers.get('models').verbose('Found ' + result.length + ' teams ' );
+        result = util.returnObject(result);
+        result = !_.isEmpty(result) ? result : [];
+        resolve(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        reject(formatErrMsg(err.error));
+      });
+    });
+  },
+
+  getUserTeamIdsByUid: function(uid) {
+    return new Promise(function(resolve, reject) {
+      var userTeams = [];
+      var userTeamIds = [];
+      if (_.isEmpty(uid)) {
+        infoLogs('No user teams found!');
+        resolve(userTeamIds);
+      } else {
+        team.getTeamByUid(uid)
+          .then(function(body) {
+            userTeams = util.returnObject(body);
+            loggers.get('models').verbose('Found ' + userTeams.length + ' team(s) for ' + uid);
+            var requestKeys = _.pluck(userTeams, '_id');
+            return requestKeys;
+          })
+          .then(function(requestKeys) {
+            var docs = common.getByViewKeys('teams', 'lookup', requestKeys);
+            return docs;
+          })
+          .then(function(docs){
+            var strTeams = _.pluck(docs.rows, 'value');
+            _.each(userTeams, function(team){
+              var lookupObj = _.findWhere(strTeams, {
+                _id: team._id
+              });
+              if (!_.isEmpty(lookupObj)) {
+                userTeamIds = _.union([team._id], lookupObj.children, userTeamIds);
+              } else {
+                userTeamIds = _.union([team._id], team.child_team_id, userTeamIds);
+              }
+            });
+            userTeamIds = _.uniq(userTeamIds);
+            loggers.get('models').info('Success: ' + uid + ' has ' + userTeamIds.length + ' accessible team(s) by relationship.');
+            return resolve(userTeamIds);
+          })
+          .catch( /* istanbul ignore next */ function(err){
+            return reject(formatErrMsg(err));
+          });
+      }
+    });
+  },
+
+  getTeamByUid: function(uid, includeDocs) {
     return new Promise(function(resolve, reject) {
       if (_.isEmpty(uid)) {
         var err = {
@@ -698,7 +763,7 @@ var team = {
         };
         return reject(formatErrMsg(err));
       } else {
-        common.getByViewKey('teams', 'teamsByUid', uid)
+        common.getByViewKey('teams', 'teamsByUid', uid, includeDocs)
           .then(function(body) {
             if (_.isEmpty(body.rows))
               loggers.get('models').verbose('No team for serial number ' + uid);
@@ -713,6 +778,7 @@ var team = {
       }
     });
   },
+
   associateActions: function(action) {
     var validActions = ['associateParent', 'associateChild', 'removeParent', 'removeChild'];
     if (_.isEmpty(action))

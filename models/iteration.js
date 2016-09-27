@@ -30,11 +30,11 @@ var infoLogs = function(msg) {
 };
 
 var iteration = {
-  getByIterInfo: function(teamId) {
+  getByIterInfo: function(teamId, includeDocs) {
     return new Promise(function(resolve, reject) {
       if (teamId) {
         infoLogs('[getByIterInfo] Getting team iteration for ' + teamId);
-        common.getByViewKey('iterations', 'teamIteration', teamId)
+        common.getByViewKey('iterations', 'teamIteration', teamId, includeDocs)
           .then(function(body) {
             successLogs('[iterationModel.getByIterInfo] Team iteration docs obtained');
             resolve(body);
@@ -46,7 +46,7 @@ var iteration = {
           });
       } else {
         infoLogs('[getByIterInfo] Getting all team iterations docs');
-        common.getByView('iterations', 'teamIteration')
+        common.getByView('iterations', 'teamIteration', includeDocs)
           .then(function(body) {
             successLogs('[getByIterInfo] Team iteration docs obtained');
             resolve(body);
@@ -230,13 +230,11 @@ var iteration = {
             }
           } else { // here we get the results coming from common.updateRecord()
             successLogs('Team iteration doc updated');
-            // console.log('EDIT result1:', results);
             return resolve(results);
           }
         })
         .then(function(results) {
           successLogs('Team iteration doc updated');
-          // console.log('EDIT result2:', results);
           return resolve(results);
         })
         .catch( /* istanbul ignore next */ function(err) {
@@ -411,6 +409,122 @@ var iteration = {
     }
 
     return validationErrors;
+  },
+
+  setApiIterationAction: function(apiData, user, action) {
+    return new Promise(function(resolve, reject) {
+      //TODO: adjust for mongo db implementation
+      var userObj = {
+        'shortEmail' : user.email
+      };
+      var data = new Object();
+      data.type = 'iterationinfo';
+      data._id = apiData._id;
+      data.team_id = apiData.teamId;
+      data.iteration_name = apiData.iterationName;
+      data.iteration_start_dt = apiData.startDate;
+      data.iteration_end_dt = apiData.endDate;
+      data.iterationinfo_status = '';
+      data.team_mbr_cnt = apiData.memberCount;
+      data.nbr_committed_stories = apiData.committedStories;
+      data.nbr_stories_dlvrd = apiData.deliveredStories;
+      data.nbr_committed_story_pts = apiData.commitedStoryPoints;
+      data.nbr_story_pts_dlvrd = apiData.storyPointsDelivered;
+      data.iteration_comments = apiData.comment;
+      data.team_mbr_change = apiData.memberChanged;
+      data.fte_cnt = apiData.memberFTECount;
+      data.nbr_dplymnts = apiData.deployments;
+      data.nbr_defects = apiData.defects;
+      data.nbr_cycletime_WIP = apiData.cycleTimeWIP;
+      data.nbr_cycletime_in_backlog = apiData.cycleTimeInBacklog;
+      data.client_sat = apiData.clientSatisfaction;
+      data.team_sat = apiData.teamSatisfaction;
+      data.doc_status = apiData.docStatus;
+
+      if (_.isEqual(action, 'add')) {
+        var updatedData = {};
+        _.each(data, function(v, i, l) {
+          if (_.isUndefined(data[i]))
+            updatedData[i] = '';
+          else
+            updatedData[i] = data[i];
+        });
+        iteration.add(data, userObj)
+          .then(function(data) {
+            updatedData._id = data.id;
+            resolve(updatedData);
+          })
+          .catch( /* istanbul ignore next */ function(err) {
+            loggers.get('models').error('[iterationModel.setApiIterationAction]:', err);
+            var msg = err.error;
+            reject(formatErrMsg(msg));
+          });
+
+      } else if (_.isEqual(action, 'edit')) {
+        loggers.get('models').verbose('[iterationModel.setApiIterationAction]: retrieving: ' + apiData._id);
+        iteration.get(apiData._id)
+          .then(function(oldData) {
+            var updatedData = {};
+            _.each(oldData, function(v, i, l) {
+              if (_.isUndefined(data[i]))
+                updatedData[i] = oldData[i];
+              else
+                updatedData[i] = data[i];
+            });
+            return updatedData;
+          })
+          .then(function(updatedData) {
+            iteration.edit(apiData._id, updatedData, userObj)
+              .then(function(data) {
+                resolve(updatedData);
+              });
+          })
+          .catch( /* istanbul ignore next */ function(err) {
+            loggers.get('models').error('[iterationModel.setApiIterationAction]:', err);
+            var msg = err.error;
+            reject(formatErrMsg(msg));
+          });
+
+      } else if (_.isEqual(action, 'delete')) {
+        data.doc_status = 'delete';
+        iteration.edit(apiData._id, data, userObj)
+          .then(function(data) {
+            resolve(iteration.setApiIterationObject(data));
+          })
+          .catch( /* istanbul ignore next */ function(err) {
+            loggers.get('models').error('[iterationModel.setApiIterationAction]:', err);
+            var msg = err.error;
+            reject(formatErrMsg(msg));
+          });
+
+      }
+    });
+  },
+
+  setApiIterationObject: function(data) {
+    var apiData = new Object();
+    apiData._id = data._id;
+    apiData.teamId = data.team_id;
+    apiData.iterationName = data.iteration_name;
+    apiData.startDate = data.iteration_start_dt;
+    apiData.endDate = data.iteration_end_dt;
+    apiData.status = data.iterationinfo_status;
+    apiData.memberCount = data.team_mbr_cnt;
+    apiData.memberFTECount = data.fte_cnt;
+    apiData.memberChanged = data.team_mbr_change;
+    apiData.committedStories = data.nbr_committed_stories;
+    apiData.deliveredStories = data.nbr_stories_dlvrd;
+    apiData.commitedStoryPoints = data.nbr_committed_story_pts;
+    apiData.storyPointsDelivered = data.nbr_story_pts_dlvrd;
+    apiData.deployments = data.nbr_dplymnts;
+    apiData.defects = data.nbr_defects;
+    apiData.cycleTimeWIP = data.nbr_cycletime_WIP;
+    apiData.cycleTimeInBacklog = data.nbr_cycletime_in_backlog;
+    apiData.clientSatisfaction = data.client_sat;
+    apiData.teamSatisfaction = data.team_sat;
+    apiData.comment = data.iteration_comments;
+    apiData.docStatus = data.doc_status;
+    return apiData;
   }
 };
 
