@@ -292,11 +292,10 @@ module.exports.getTeamsByUid = function(uid) {
   return Team.find({members: {$elemMatch:{userId:uid}}}).exec();
 };
 
-module.exports.associateActions = function() {
+
+associateActions = function() {
 };
 module.exports.associateTeams = function() {
-};
-module.exports.associateActions = function() {
 };
 
 //returns an array of team ids where the user is a member of the team + the team's subtree
@@ -306,7 +305,9 @@ module.exports.getUserTeams = function(memberEmail) {
     Team.find({members: {$elemMatch:{email:memberEmail}}}, {pathId:1})
       .then(function(teams){
         var pathIds = _.pluck(teams, 'pathId');
-        console.log(pathIds);
+
+        //build a query string to match all, ex: a|b|c to query for all docs with
+        //paths a or b or c
         var q = '';
         _.each(pathIds, function(pId){
           q += pId + '|';
