@@ -165,16 +165,16 @@ function getIterationDocs(startTime, endTime) {
     iterationModel.getCompletedIterationsByKey(startTime, endTime)
       .then(function(completedIterations) {
         _.each(completedIterations.rows, function(doc) {
-          var validationErrors = validate(doc.value, iterationDocRules);
-          if (!validationErrors) {
-            if (doc.value.team_id != '') {
-              var teamId = doc.value.team_id;
-              if (_.isEmpty(squadIterationDocs[teamId])) {
-                squadIterationDocs[teamId] = [];
-              }
-              squadIterationDocs[teamId].push(doc.value);
+          // var validationErrors = validate(doc.value, iterationDocRules);
+          // if (!validationErrors) {
+          if (doc.value.team_id != '') {
+            var teamId = doc.value.team_id;
+            if (_.isEmpty(squadIterationDocs[teamId])) {
+              squadIterationDocs[teamId] = [];
             }
+            squadIterationDocs[teamId].push(doc.value);
           }
+          // }
         });
         return resolve(squadIterationDocs);
       })
@@ -283,10 +283,16 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
           }
 
           if (teamStat != undefined && teamStat != '' && (parseInt(teamStat) != 0)) {
+            // if (parseInt(teamStat) > 0 && (parseInt(teamStat) < 1)) {
+            //   console.log(teamStat);
+            // }
             currData[iterationDocIndex].totTeamStat = currData[iterationDocIndex].totTeamStat + parseInt(teamStat);
             currData[iterationDocIndex].totTeamStatIter = currData[iterationDocIndex].totTeamStatIter + 1;
           }
           if (clientStat != undefined && clientStat != '' && (parseInt(clientStat) != 0)) {
+            // if (parseInt(clientStat) > 0 && (parseInt(clientStat) < 1)) {
+            //   console.log(clientStat);
+            // }
             currData[iterationDocIndex].totClientStat = currData[iterationDocIndex].totClientStat + parseInt(clientStat);
             currData[iterationDocIndex].totClientStatIter = currData[iterationDocIndex].totClientStatIter + 1;
           }
