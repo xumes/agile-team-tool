@@ -407,7 +407,10 @@ D->E
 X->Y->Z
 All affected team that had a path relation to C, will have to be updated.
 */
-module.exports.updateOrDeleteTeam = function(teamId, userEmail, userId, action) {
+
+//TODO should split this into 2 functions to make it cleaner.
+module.exports.updateOrDeleteTeam = function(newDoc, userEmail, userId, action) {
+  var teamId = newDoc._id;
   return new Promise(function(resolve, reject){
     Promise.join(
       module.exports.getTeam(teamId),
@@ -479,7 +482,14 @@ module.exports.updateOrDeleteTeam = function(teamId, userEmail, userId, action) 
           }
           //else update the team  ... no delete
           else {
-
+            if (oldTeamDoc.pathId !== newDoc.pathId || oldTeamDoc.path !== newDoc.path)
+              return Promise.reject(Error('Changing pathId or path is not supported currently'));
+            else {
+              newDoc.updatedByUserId = userId;
+              newDoc.updatedBy = userEmail;
+              newDoc.updateDate = util.getServerTime();
+              return Team.update({_id : teamId}, newDoc, {runValidators: true}).exec();
+            }
           }
         })
         .catch(function(e){
