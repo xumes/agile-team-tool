@@ -111,12 +111,12 @@ var users = {
     });
   },
 
-  isUserAllowed: function(userId, teamId) {
+  isUserAllowed: function(userEmail, teamId) {
     var hasAccess = false;
     return new Promise(function(resolve, reject) {
       var promiseArray = [];
-      promiseArray.push(users.findUserByEmail(userId.toLowerCase()));
-      promiseArray.push(users.isTeamMember(userId, teamId));
+      promiseArray.push(users.findUserByEmail(userEmail.toLowerCase()));
+      promiseArray.push(users.isTeamMember(userEmail, teamId));
       Promise.all(promiseArray)
         .then(function(results){
           if (results[0] && results[0] != undefined) {

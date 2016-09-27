@@ -4,6 +4,7 @@ var Promise = require('bluebird');
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 var util = require('../../helpers/util');
+var Users = require('./users');
 // var loggers = require('../middleware/logger');
 
 // Just needed so that corresponding test could run
@@ -109,8 +110,6 @@ TeamSchema.path('pathId').validate(function(value, done) {
     done(!count);
   });
 }, 'This team name is too similar to another team. Please enter a different team name.');
-
-
 
 /*
   model helper functions
@@ -247,17 +246,6 @@ module.exports.createTeam = function(teamDoc, creator) {
     });
   });
 };
-// module.exports.createTeam({
-//   name: 'mongotest12',
-//   pathId: createPathId('mongotest12'),
-//   createdByUserId: '1234567',
-//   createdBy: 'cjscotta@us.ibm.com',
-//   members: [{name:'colby', userId:'1234567', email:'cjscotta@us.ibm.com'}]
-// }).catch(function(err){
-//
-//   console.log(err);
-//   console.log(err.message);
-// });
 
 module.exports.updateOrDeleteTeam = function() {
 };
@@ -310,10 +298,98 @@ module.exports.associateTeams = function() {
 };
 module.exports.associateActions = function() {
 };
-module.exports.getUserTeams = function() {
+
+//returns an array of team ids where the user is a member of the team + the team's subtree
+//this uses user email
+module.exports.getUserTeams = function(memberEmail) {
+  return new Promise(function(resolve, reject){
+    Team.find({members: {$elemMatch:{email:memberEmail}}}, {pathId:1})
+      .then(function(teams){
+        var pathIds = _.pluck(teams, 'pathId');
+        console.log(pathIds);
+        var q = '';
+        _.each(pathIds, function(pId){
+          q += pId + '|';
+        });
+        q = q.slice(0, -1); //remove last |
+        return q;
+      })
+      .then(function(q){
+        if (q==='') resolve([]);//prevent matching on ''
+        return Team.distinct('_id', {path:new RegExp(q)}).exec();
+      })
+      .then(function(result){
+        resolve(result);
+      })
+      .catch(function(err){
+        reject(err);
+      });
+  });
 };
-module.exports.modifyTeamMembers = function() {
+
+/**
+ * Reformat document to update/delete document structure for BULK operation
+ *
+ * @param teamId - team id to modify
+ * @param userId - user id of the one who is doing the action
+ * @param members - array of member user
+ * @returns - modified tem document
+ */
+module.exports.modifyTeamMembers = function(teamId, userEmail, userId, newMembers) { //TODO this should use userId
+  return new Promise(function(resolve, reject){
+    if (_.isEmpty(teamId)){
+      return reject('Team ID is required');
+    }
+    if (_.isEmpty(userId)){
+      return reject('User ID is required');
+    }
+    if (_.isEmpty(members)){
+      return reject('Member lists is required');
+    }
+    if (!_.isArray(members)){
+      return reject('Invalid member lists');
+    }
+    //check if user is allowed to edit team
+    Users.isUserAllowed(userEmail, teamId)//TODO this should use userId
+    .then(function(isAllowed){
+      if (!isAllowed)
+        return reject('Not allowed to modify team members');
+      else
+        return true;
+    })
+    .then(function(){
+      Team.update({_id: teamId},{
+        $set:
+        {
+          members: newMembers,
+          updatedBy: userEmail,
+          updatedByUserId: userId,
+          updateDate: util.getServerTime()
+        }
+      }).exec();
+    })
+    //TODO no idea why we are doing these extra queries in an update.
+    //left them here to refactor after the mongo migration
+    .then(function(savingResult){
+      return Team.getUserTeams(userEmail);
+    })
+    .then(function(userTeams){
+      return Team.getTeam(teamId)
+      .then(function(result){
+        return resolve(
+          {
+            userTeams : userTeams,
+            teamDetails : result
+          }
+        );
+      });
+    })
+    .catch(function(err){
+      return reject(err);
+    });
+  });
 };
+
 module.exports.associateActions = function() {
 };
 module.exports.deleteTeamByName = function(name) {

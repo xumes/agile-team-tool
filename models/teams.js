@@ -1094,16 +1094,16 @@ var team = {
     });
   },
 
+  /**
+   * Reformat document to update/delete document structure for BULK operation
+   *
+   * @param teamId - team id to modify
+   * @param userId - user id of the one who is doing the action
+   * @param members - array of member user
+   * @returns - modified tem document
+   */
   modifyTeamMembers: function(teamId, userId, members) {
     return new Promise(function(resolve, reject){
-      /**
-       * Reformat document to update/delete document structure for BULK operation
-       *
-       * @param teamId - team id to modify
-       * @param userId - user id of the one who is doing the action
-       * @param members - array of member user
-       * @returns - modified tem document
-       */
       var errorLists = {};
       errorLists['error'] = {};
       if (_.isEmpty(teamId)){

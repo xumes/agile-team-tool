@@ -1,6 +1,6 @@
-var teamModel = require('../../models/teams');
-var teamIndex = require('../../models/index/teamIndex');
-var validate = require('validate.js');
+var teamModel = require('../../models/mongodb/teams');
+// var teamIndex = require('../../models/index/teamIndex');
+// var validate = require('validate.js');
 var _ = require('underscore');
 
 module.exports = function(app, includes) {
@@ -99,9 +99,15 @@ module.exports = function(app, includes) {
 
   modifyTeamMembers = function(req, res) {
     var members = req.body['members'];
-    var userId = req.session['email'];
+    var userId = req.session['userId'];
+    var userEmail = req.session['email'];
     var teamId = req.body['teamId'];
-    teamModel.modifyTeamMembers(teamId, userId, members)
+
+    //TODO add userId (cnum) to session obj
+    if (_.isEmpty(userId))
+      res.status(400).send('Could not get userId from session.');
+
+    teamModel.modifyTeamMembers(teamId, userEmail, userId, members)
       .then(function(result){
         res.send(result);
       })
