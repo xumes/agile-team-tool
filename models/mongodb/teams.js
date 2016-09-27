@@ -8,8 +8,7 @@ var Users = require('./users');
 var Iterations = require('./iterations');
 var Assessments = require('./assessments');
 var loggers = require('../../middleware/logger');
-
-// var loggers = require('../middleware/logger');
+var async = require('async');
 
 // Just needed so that corresponding test could run
 require('../../settings');
@@ -261,7 +260,7 @@ module.exports.getTeam = function(id) {
   if (_.isEmpty(id))
     return Team.find({}).exec();
   else
-    return Team.find({_id:id}).exec();
+    return Team.findOne({_id:id}).exec();
 };
 
 module.exports.getRole = function() {
@@ -397,16 +396,16 @@ module.exports.deleteTeamByName = function(name) {
 };
 
 /*
+How tree structure changes when a team is deleted:
 A->B-C->D->E
-
+A->B-C->X->Y->Z
+*X and D are child teams of C
 if C gets deleted, team docStatus will be "delete".. all related iterations and assessments of C will also have docStatus of "delete"
-
 surviving structure would be
-
 A->B
 D->E
-
-so in effect, all affected team that had a path relation to C, will have to be updated..
+X->Y->Z
+All affected team that had a path relation to C, will have to be updated.
 */
 module.exports.updateOrDeleteTeam = function(teamId, userEmail, userId, action) {
   return new Promise(function(resolve, reject){
@@ -431,9 +430,42 @@ module.exports.updateOrDeleteTeam = function(teamId, userEmail, userId, action) 
             //delete team, iterations, and assessment docs by setting docStatus: delete
             //logger will say 0 deleted if they were already deleted (mongodb doesnt update docs if theres no change)
             loggers.get('model-teams').info('Deleting the following team: ' +teamId);
-            Team.update({_id : teamId}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:util.getServerTime()}}).exec()
+            return Team.update({_id : teamId}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:util.getServerTime()}}).exec()
+            //update paths
             .then(function(res){
               loggers.get('model-teams').verbose('Deleted '+res.nModified+ ' team; docStatus: delete');
+              loggers.get('model-teams').info('Removing '+oldTeamDoc.pathId+' from team paths');
+              return Team.find({path: new RegExp(','+oldTeamDoc.pathId+',')}).exec();
+            })
+            .then(function(teams){
+              console.log(teams);
+              if (_.isEmpty(teams)) return;
+              else {
+                //now we have the teams that have paths we need to update.
+                //I couldn't find a way to dynamically update multi docs in mongoose so using async library
+                //this takes almost a minute if it has to update ~2k paths
+                async.each(teams, function(team, callback) {
+                  var newPath = team.path.split(','+oldTeamDoc.pathId).pop();
+                  newPath = (newPath===',') ? undefined : newPath;
+                  return Team.update({_id : team._id}, {$set: {path:newPath}}).exec()
+                  .then(function(r){
+                    loggers.get('model-teams').verbose('updated a team path. oldPath: '+team.path+', new path: '+newPath );
+                    return callback();
+                  })
+                  .catch(function(e){
+                    return callback(e);
+                  });
+                },function(err) {
+                  if ( err ) {
+                    loggers.get('model-teams').error(Error(err));
+                  }
+                  else
+                    loggers.get('model-teams').info(teams.length+' team paths were updated.');
+                });
+              }
+            })
+            .then(function(){
+              loggers.get('model-teams').verbose('Done modifying team paths');
               loggers.get('model-teams').info('Deleting the following assessment docs: ' +assessmentIds);
               return Assessments.getModel().update({_id : {'$in':assessmentIds}}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:util.getServerTime()}}, {multi: true}).exec();
             })
@@ -444,11 +476,15 @@ module.exports.updateOrDeleteTeam = function(teamId, userEmail, userId, action) 
             })
             .then(function(res){
               loggers.get('model-teams').verbose('Set '+res.nModified+ ' iteration documents docStatus: delete');
-              return resolve('Successfully deleted Team and its associated iterations and assessments.');
+              return resolve('Successfully deleted the team: '+oldTeamDoc.name+' updated children paths, deleted associated iteration and assessment docs.');
             })
             .catch(function(e){
               return reject(e);
             });
+          }
+          //else update the team  ... no delete
+          else {
+
           }
         })
         .catch(function(e){
@@ -459,7 +495,7 @@ module.exports.updateOrDeleteTeam = function(teamId, userEmail, userId, action) 
   });
 };
 
-// module.exports.updateOrDeleteTeam('57e96709f271c51985ab38d5','cjscotta@us.ibm.com','jeff smith', 'delete').then(function(res) {
+// module.exports.updateOrDeleteTeam('57ead48d027c6a5a884c7ec4','jeffsmit@us.ibm.com','jeff smith', 'delete').then(function(res) {
 //   console.log(res);
 // }).catch(function(e){
 //   console.log(e);
