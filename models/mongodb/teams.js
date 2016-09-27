@@ -5,6 +5,9 @@ var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 var util = require('../../helpers/util');
 var Users = require('./users');
+var Iterations = require('./iterations');
+var Assessments = require('./assessments');
+
 // var loggers = require('../middleware/logger');
 
 // Just needed so that corresponding test could run
@@ -221,13 +224,8 @@ module.exports.getSelectableChildren = function(teamId) {
 };
 
 module.exports.getSquadsOfParent = function(pathId) {
-  return Team.find({path:new RegExp(','+pathId+','), type:'squad'}).exec();
-};
-
-//I think we can refactor the clientside js to use other model functions
-module.exports.getLookupIndex = function() {
-};
-module.exports.getLookupTeamByType = function() {
+  if (_.isEmpty(pathId)) return [];
+  else return Team.find({path:new RegExp(','+pathId+','), type:'squad'}).exec();
 };
 
 //TODO fix front-end js so teamDoc comes through the api in a correct format
@@ -247,7 +245,33 @@ module.exports.createTeam = function(teamDoc, creator) {
   });
 };
 
-module.exports.updateOrDeleteTeam = function() {
+
+var getChildren = function(pathId) {
+  if (_.isEmpty(pathId)) return [];
+  else return Team.find({path:new RegExp(','+pathId+',')}).exec();
+};
+
+module.exports.updateOrDeleteTeam = function(teamDoc, user, action) {
+  return new Promise(function(resolve, reject){
+    var userEmail = user['shortEmail'];
+    var teamId = updatedTeamDoc['_id'];
+
+    Promise.join(
+      module.exports.getTeam(teamId),
+      Iterations.getByIterInfo(teamId),
+      Assessments.getTeamAssessments(teamId),
+      module.exports.getTeam(teamDoc.name),
+      getChildren(teamDoc.pathId),
+      function(oldTeamDoc, iterations, assessments, teamDocByName, children){
+        if (oldTeamDoc.docStatus === 'delete') return reject('Invalid action');
+        User.isUserAllowed(userEmail, teamId)
+        .then(function(isAllowed){
+          if (!isAllowed) return reject('Not allowed');
+        });
+      }
+    );
+
+  });
 };
 
 //TODO refactor into 2 seperate functions
@@ -291,13 +315,6 @@ module.exports.getTeamsByEmail = function(memberEmail) {
 module.exports.getTeamsByUid = function(uid) {
   return Team.find({members: {$elemMatch:{userId:uid}}}).exec();
 };
-
-
-// associateActions = function() {
-// };
-module.exports.associateTeams = function() {
-};
-
 //returns an array of team ids where the user is a member of the team + the team's subtree
 //this uses user email
 module.exports.getUserTeams = function(memberEmail) {
@@ -391,8 +408,6 @@ module.exports.modifyTeamMembers = function(teamId, userEmail, userId, newMember
   });
 };
 
-module.exports.associateActions = function() {
-};
 module.exports.deleteTeamByName = function(name) {
   return new Promise(function(resolve, reject){
     Team.remove({'name': name})
@@ -403,4 +418,15 @@ module.exports.deleteTeamByName = function(name) {
         reject(err);
       });
   });
+};
+
+//I think we can refactor the clientside js to use other model functions
+module.exports.getLookupIndex = function() {
+};
+module.exports.getLookupTeamByType = function() {
+};
+
+var associateActions = function() {
+};
+module.exports.associateTeams = function() {
 };
