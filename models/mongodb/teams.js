@@ -409,13 +409,10 @@ All affected team that had a path relation to C, will have to be updated.
 */
 module.exports.updateOrDeleteTeam = function(teamId, userEmail, userId, action) {
   return new Promise(function(resolve, reject){
-    //var teamId = updatedTeamDoc['_id'];
     Promise.join(
       module.exports.getTeam(teamId),
       Iterations.getByIterInfo(teamId),
       Assessments.getTeamAssessments(teamId),
-      //module.exports.getTeam('hi'),
-      //getChildren(teamDoc.pathId),
       function(oldTeamDoc, iterations, assessments){
         Users.isUserAllowed(userEmail, teamId)
         .then(function(isAllowed){
@@ -431,14 +428,12 @@ module.exports.updateOrDeleteTeam = function(teamId, userEmail, userId, action) 
             //logger will say 0 deleted if they were already deleted (mongodb doesnt update docs if theres no change)
             loggers.get('model-teams').info('Deleting the following team: ' +teamId);
             return Team.update({_id : teamId}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:util.getServerTime()}}).exec()
-            //update paths
             .then(function(res){
               loggers.get('model-teams').verbose('Deleted '+res.nModified+ ' team; docStatus: delete');
               loggers.get('model-teams').info('Removing '+oldTeamDoc.pathId+' from team paths');
               return Team.find({path: new RegExp(','+oldTeamDoc.pathId+',')}).exec();
             })
             .then(function(teams){
-              console.log(teams);
               if (_.isEmpty(teams)) return;
               else {
                 //now we have the teams that have paths we need to update.
