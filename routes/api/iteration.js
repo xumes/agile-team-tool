@@ -6,7 +6,7 @@ var validate = require('validate.js');
 var _ = require('underscore');
 var sprintf = require('sprintf-js').sprintf;
 var setting = require('../../settings.js');
-var iterationModel = require('../../models/mongodb/iteration');
+var iterationModel = require('../../models/mongodb/iterations');
 
 var formatErrMsg = function(msg) {
   loggers.get('api').error('Error: ' + msg);
@@ -164,7 +164,6 @@ module.exports = function(app, includes) {
       includeDocs: includeDocs,
       limit: limit
     };
-
     iterationModel.searchTeamIteration(params)
       .then(function(result) {
         return res.status(200).send(result);

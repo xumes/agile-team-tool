@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var Promise = require('bluebird');
 var mongoose = require('mongoose');
+var ObjectId = require('mongodb').ObjectID;
 var loggers = require('../../middleware/logger');
 var userModel = require('./users.js');
 var moment = require('moment');
@@ -133,7 +134,7 @@ function isIterationNumExist(iteration_name, iterData, updateId) {
   _.find(iterData, function(iter){
     if (iter.name == iteration_name) {
       if (updateId) {
-        if (!updateId.equals(iter._id)) {
+        if (updateId.toString() != (iter._id).toString()) {
           duplicate = true;
         }
       } else {
@@ -144,6 +145,26 @@ function isIterationNumExist(iteration_name, iterData, updateId) {
   return duplicate;
 };
 
+function validObjectId(docId) {
+  var objId = mongoose.Types.ObjectId;
+  if (docId) {
+    if (mongoose.Types.ObjectId.isValid(docId)) {
+      return docId;
+    } else {
+      try {
+        objId = mongoose.Types.ObjectId(docId);
+      } catch (e) {
+        if (e) {
+          return {'error': e.message};
+        }
+      }
+      return objId;
+    }
+  } else {
+    return {'error': 'missing doc id'};
+  }
+}
+
 var iteration_schema = new Schema(iterationSchema);
 
 var iterationModel = mongoose.model('iterations', iteration_schema);
@@ -152,11 +173,9 @@ var iteration = {
   getByIterInfo: function(teamId, limit) {
     return new Promise(function(resolve, reject) {
       if (teamId) {
-        var objTeamId = Schema.Types.ObjectId;
-        if (mongoose.Types.ObjectId.isValid(teamId)) {
-          objTeamId = teamId;
-        } else {
-          objTeamId = mongoose.Types.ObjectId(teamId);
+        var objTeamId = validObjectId(teamId);
+        if (objTeamId.error) {
+          reject(objTeamId);
         }
         var request = {
           'teamId': objTeamId
@@ -196,7 +215,11 @@ var iteration = {
 
   get: function(docId) {
     return new Promise(function(resolve, reject) {
-      iterationModel.findOne({'_id':docId}).exec()
+      var objId = validObjectId(docId);
+      if (objId.error) {
+        reject(objId);
+      }
+      iterationModel.findOne({'_id':objId}).exec()
         .then(function(result) {
           resolve(result);
         })
@@ -215,12 +238,22 @@ var iteration = {
           {'docStatus': null},
           {'docStatus': {'$ne': 'delete'}}
         ],
-        'status': 'Completed',
-        'endDate': {
+        'status': 'Completed'
+      };
+      if (startkey && endkey) {
+        queryrequest['endDate'] = {
           '$gte': moment(new Date(startkey)).format(dateFormat),
           '$lte': moment(new Date(endkey)).format(dateFormat)
-        }
-      };
+        };
+      } else if (startkey) {
+        queryrequest['endDate'] = {
+          '$gte': moment(new Date(startkey)).format(dateFormat)
+        };
+      } else if (endkey) {
+        queryrequest['endDate'] = {
+          '$lte': moment(new Date(endkey)).format(dateFormat)
+        };
+      }
       iterationModel.find(queryrequest).exec()
         .then(function(body) {
           successLogs('[iterationModel.getCompletedIterationsByKey] Completed iteration docs obtained');
@@ -344,7 +377,11 @@ var iteration = {
 
   edit: function(docId, data, user) {
     return new Promise(function(resolve, reject) {
-      iteration.add(data, user, docId)
+      var updateId = validObjectId(docId);
+      if (updateId.error) {
+        reject(updateId);
+      }
+      iteration.add(data, user, updateId)
         .then(function(result){
           successLogs('[iterationModels.edit] Iteration doc has been eidted');
           return resolve(result);
@@ -359,13 +396,9 @@ var iteration = {
   searchTeamIteration: function(p) {
     return new Promise(function(resolve, reject) {
       var queryrequest = new Object();
-      if (p.id) {
-        var objTeamId = Schema.Types.ObjectId;
-        if (mongoose.Types.ObjectId.isValid(p.id)) {
-          queryrequest['teamId'] = p.id;
-        } else {
-          queryrequest['teamId'] = mongoose.Types.ObjectId(p.id);
-        }
+      queryrequest['teamId'] = validObjectId(p.id);
+      if (queryrequest['teamId'].error) {
+        reject(queryrequest['teamId']);
       }
       if (p.status) {
         queryrequest['status'] = p.status;
@@ -378,9 +411,13 @@ var iteration = {
           '$lte': moment(new Date(enddate)).format(dateFormat)
         };
       } else if (startdate) {
-        queryrequest['endDate'] = moment(new Date(startdate)).format(dateFormat);
+        queryrequest['endDate'] = {
+          '$gte': moment(new Date(startdate)).format(dateFormat)
+        };
       } else if (enddate) {
-        queryrequest['endDate'] = moment(new Date(enddate)).format(dateFormat);
+        queryrequest['endDate'] = {
+          '$lte': moment(new Date(enddate)).format(dateFormat)
+        };
       }
       iterationModel.find(queryrequest).sort('-endDate').exec()
         .then(function(body) {

@@ -99,7 +99,7 @@ var users = {
         .then(function(teams) {
           var hasAccess = false;
           _.each(teams, function(team){
-            if ((team._id).equals(teamId)) {
+            if ((team._id).toString() == teamId.toString()) {
               hasAccess = true;
             }
           });
