@@ -1,6 +1,6 @@
 var chai = require('chai');
 var expect = chai.expect;
-var iterationModel = require('../../../models/mongodb/iteration');
+var iterationModel = require('../../../models/mongodb/iterations');
 var userModel = require('../../../models/mongodb/users');
 var teamModel = require('../../../models/mongodb/teams');
 var mongoose = require('mongoose');
