@@ -706,6 +706,35 @@ var snapshot = {
     });
   },
 
+  completeIterations: function() {
+    return new Promise(function(resolve, reject){
+      iterationModel.getNotCompletedIterations()
+        .then(function(iterations){
+          var completedIterations = [];
+          if (!_.isEmpty(iterations)) {
+            _.each(iterations, function(iteration){
+              var status = iterationModel.calculateStatus(iteration);
+              if (!_.isEqual(iteration['status'], status)) {
+                var updateIteration = {
+                  '_id': iteration._id,
+                  'set': {
+                    'status': status
+                  }
+                };
+                completedIterations.push(updateIteration);
+              }
+            });
+          }
+          return iterationModel.bulkUpdateIterations(completedIterations);
+        })
+        .then(function(result){
+          resolve(result);
+        })
+        .catch(function(err){
+          reject(err);
+        });
+    });
+  }
   // nameSearchTest: function(keyword) {
   //   return new Promise(function(resolve, reject){
   //     snapshotModel.find({'pathId': {'$regex': keyword, '$options': 'i'}})

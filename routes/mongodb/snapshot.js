@@ -97,6 +97,7 @@ module.exports = function(app, includes) {
   //     res.status(400).send(err);
   //   });
   // },
+  app.get('/api/mongodb/snapshot/completeiterations', [includes.middleware.auth.requireLogin], completeIterations);
   app.get('/api/mongodb/snapshot/get/:teamId', [includes.middleware.auth.requireLogin], getRollUpDataByTeam);
   // app.get('/api/mongodb/snapshot/test/:keyword', [includes.middleware.auth.requireLogin], nameSearchTest);
   app.get('/api/mongodb/snapshot/checkexist/', [includes.middleware.auth.requireLogin], checkSnapshotCollectioExist);

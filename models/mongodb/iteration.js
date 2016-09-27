@@ -428,6 +428,45 @@ var iteration = {
     return status;
   },
 
+  getNotCompletedIterations: function() {
+    return new Promise(function(resolve, reject) {
+      var request = {
+        'status': 'Not complete',
+        'docStatus': {
+          '$ne': 'delete'
+        }
+      };
+      iterationModel.find(request).exec()
+        .then(function(results){
+          resolve(results);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject(err);
+        });
+    });
+  },
+
+  bulkUpdateIterations: function(iterations) {
+    return new Promise(function(resolve, reject) {
+      var bulk = iterationModel.collection.initializeUnorderedBulkOp();
+      var i = 0;
+      if (_.isEmpty(iterations)) {
+        resolve([]);
+      } else {
+        _.each(iterations, function(iteration){
+          bulk.find({'_id':iteration._id}).update({'$set':iteration.set});
+        });
+        bulk.execute(function(error, result){
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        });
+      }
+    });
+  },
+
   // isValidStartEndDate: function(startdate, enddate, dateFormat, validationErrors) {
   //   var isvalid_startdate = moment(startdate, dateFormat, true).isValid();
   //   var isvalid_enddate = moment(enddate, dateFormat, true).isValid();
