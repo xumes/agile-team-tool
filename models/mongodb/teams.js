@@ -459,11 +459,11 @@ module.exports.updateOrDeleteTeam = function(teamId, userEmail, userId, action) 
   });
 };
 
-module.exports.updateOrDeleteTeam('57e96709f271c51985ab38d5','cjscotta@us.ibm.com','jeff smith', 'delete').then(function(res) {
-  console.log(res);
-}).catch(function(e){
-  console.log(e);
-});
+// module.exports.updateOrDeleteTeam('57e96709f271c51985ab38d5','cjscotta@us.ibm.com','jeff smith', 'delete').then(function(res) {
+//   console.log(res);
+// }).catch(function(e){
+//   console.log(e);
+// });
 
 //I think we can refactor the clientside js to use other model functions
 module.exports.getLookupIndex = function() {
