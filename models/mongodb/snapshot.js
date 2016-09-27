@@ -730,7 +730,7 @@ var snapshot = {
         .then(function(result){
           resolve(result);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err){
           reject(err);
         });
     });

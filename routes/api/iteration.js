@@ -1,11 +1,12 @@
 'use strict';
-
-var iterationModel = require('../../models/iteration');
+//var iterationModel = require('../../models/iteration');
 var util = require('../../helpers/util');
 var loggers = require('../../middleware/logger');
 var validate = require('validate.js');
 var _ = require('underscore');
 var sprintf = require('sprintf-js').sprintf;
+var setting = require('../../settings.js');
+var iterationModel = require('../../models/mongodb/iteration');
 
 var formatErrMsg = function(msg) {
   loggers.get('api').error('Error: ' + msg);
@@ -28,7 +29,7 @@ module.exports = function(app, includes) {
     loggers.get('api').verbose('[iterationRoute.getIterinfo] teamId:', teamId);
     iterationModel.getByIterInfo(teamId)
       .then(function(result) {
-        res.send(result);
+        res.status(200).send(result);
       })
       .catch( /* istanbul ignore next */ function(err) {
         /* cannot simulate Cloudant error during testing */
@@ -40,13 +41,14 @@ module.exports = function(app, includes) {
   /**
    * Get single iteration doc by docId
    * @param {String}  docId
+   * @return mongodb will return null if no match id
    */
   var getIterationDoc = function(req, res, next) {
     var docId = req.params.id || undefined;
     loggers.get('api').verbose('[iterationRoute.getIterationDoc] docId:', docId);
     iterationModel.get(docId)
       .then(function(result) {
-        res.send(result);
+        res.status(200).send(result);
       })
       .catch( /* istanbul ignore next */ function(err) {
         /* cannot simulate Cloudant error during testing */
@@ -66,7 +68,7 @@ module.exports = function(app, includes) {
     loggers.get('api').verbose('[iterationRoute.getCompletedIterations] startkey:%s endkey:%s', startkey, endkey);
     iterationModel.getCompletedIterationsByKey(startkey, endkey)
       .then(function(result) {
-        res.send(result);
+        res.status(200).send(result);
       })
       .catch( /* istanbul ignore next */ function(err) {
         /* cannot simulate Cloudant error during testing */
@@ -121,7 +123,7 @@ module.exports = function(app, includes) {
     // loggers.get('api').verbose('[updateIteration] POST data:', JSON.stringify(data, null, 4));
     iterationModel.edit(curIterationId, data, req.session['user'])
       .then(function(result) {
-        res.send(result);
+        res.status(200).send(result);
       })
       .catch( /* istanbul ignore next */ function(err) {
         /* cannot simulate Cloudant error during testing */
@@ -178,7 +180,6 @@ module.exports = function(app, includes) {
   app.get('/api/iteration/completed', [includes.middleware.auth.requireLogin], getCompletedIterations);
   app.get('/api/iteration/:teamId?', [includes.middleware.auth.requireLogin], getIterinfo);
   app.get('/api/iteration/current/:id', [includes.middleware.auth.requireLogin], getIterationDoc);
-
   app.post('/api/iteration', [includes.middleware.auth.requireLogin], createIteration);
   app.put('/api/iteration/:iterationId?', [includes.middleware.auth.requireLogin], updateIteration);
 };

@@ -15,4 +15,13 @@ describe('Snapshot Model Test', function(){
         });
     });
   });
+
+  describe('Snapshot model [completeIterations]', function(){
+    it('return successful for updating iterations', function(done) {
+      snapshotModel.completeIterations()
+        .then(function(result){
+          done();
+        });
+    });
+  });
 });

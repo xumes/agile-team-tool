@@ -152,8 +152,14 @@ var iteration = {
   getByIterInfo: function(teamId, limit) {
     return new Promise(function(resolve, reject) {
       if (teamId) {
+        var objTeamId = Schema.Types.ObjectId;
+        if (mongoose.Types.ObjectId.isValid(teamId)) {
+          objTeamId = teamId;
+        } else {
+          objTeamId = mongoose.Types.ObjectId(teamId);
+        }
         var request = {
-          'teamId': teamId
+          'teamId': objTeamId
         };
         iterationModel.find(request).exec()
           .then(function(results){
@@ -352,19 +358,20 @@ var iteration = {
 
   searchTeamIteration: function(p) {
     return new Promise(function(resolve, reject) {
-      var teamId = p.id;
-      var status = p.status;
+      var queryrequest = new Object();
+      if (p.id) {
+        var objTeamId = Schema.Types.ObjectId;
+        if (mongoose.Types.ObjectId.isValid(p.id)) {
+          queryrequest['teamId'] = p.id;
+        } else {
+          queryrequest['teamId'] = mongoose.Types.ObjectId(p.id);
+        }
+      }
+      if (p.status) {
+        queryrequest['status'] = p.status;
+      }
       var startdate = p.startdate;
       var enddate = p.enddate;
-      var validationErrors = [];
-      // validationErrors = iteration.isValidStartEndDate(startdate, enddate, dateFormat, validationErrors);
-      // if (!_.isEmpty(validationErrors)) {
-      //   reject(formatErrMsg(validationErrors));
-      // } else {
-      var queryrequest = {
-        'teamId': teamId,
-        'status': status,
-      };
       if (startdate && enddate) {
         queryrequest['endDate'] = {
           '$gte': moment(new Date(startdate)).format(dateFormat),
@@ -449,7 +456,6 @@ var iteration = {
   bulkUpdateIterations: function(iterations) {
     return new Promise(function(resolve, reject) {
       var bulk = iterationModel.collection.initializeUnorderedBulkOp();
-      var i = 0;
       if (_.isEmpty(iterations)) {
         resolve([]);
       } else {
@@ -458,6 +464,7 @@ var iteration = {
         });
         bulk.execute(function(error, result){
           if (error) {
+            /* istanbul ignore next */
             reject(error);
           } else {
             resolve(result);
