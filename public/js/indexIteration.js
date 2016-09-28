@@ -677,7 +677,7 @@ function loadBarPizzaChart(id, title, type, categories, seriesObj1, seriesObj2, 
       max: yMax,
       tickInterval: 25,
       title: {
-        text: '% of teams with 5-12 members'
+        text: 'Iteration % with 5-12 members'
       }
     },
 
@@ -690,7 +690,7 @@ function loadBarPizzaChart(id, title, type, categories, seriesObj1, seriesObj2, 
     tooltip: {
       headerFormat: '',
       pointFormat: '<b>Percentage: {point.y}%</b>' +
-        '<br/><b>Squad Teams: {point.squadTeams}</b>' +
+        //'<br/><b>Squad Teams: {point.squadTeams}</b>' +
         '<br/><b>Iterations: {point.totalCompleted}</b>'
     },
 
@@ -1779,7 +1779,7 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
     var percen = parseFloat(((i5to12 / totIter) * 100).toFixed(1));
     t5to12Data.y = percen;
     t5to12Data.totalCompleted = totIter;
-    t5to12Data.squadTeams = i5to12;
+    // t5to12Data.squadTeams = i5to12;
     t5to12Data.percentage = percen;
     if (monthList[i].partialMonth == true) {
       t5to12Data.color = 'orange';
