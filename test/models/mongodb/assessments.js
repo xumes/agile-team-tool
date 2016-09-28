@@ -10,7 +10,7 @@ var testData = require('../../data/assessment');
 var curr_assessment = testData.currentAssessment;
 
 describe('Assessment Model', function() {
-  describe('assessment model [addTeamAssessment] ', function() {
+  xdescribe('assessment model [addTeamAssessment] ', function() {
     it('valid assessment with non-existing user', function(done) {
       var valAssessment = lodash.cloneDeep(curr_assessment);
       valAssessment.created_dt = util.getServerTime();
@@ -41,7 +41,7 @@ describe('Assessment Model', function() {
     });
   });
 
-  describe('assessment models [getTeamAssessments]', function() {
+  xdescribe('assessment models [getTeamAssessments]', function() {
     it('retrieve team assessments [valid team id]');
 
     it('retrieve team assessments [valid team id-all assessment information]');
@@ -51,7 +51,7 @@ describe('Assessment Model', function() {
     it('retrieve team assessments [empty team id]');
   });
 
-  describe('assessment model [getAssessment] ', function() {
+  xdescribe('assessment model [getAssessment] ', function() {
 
     it('retrieve assessment [non-existing assessment id]');
 
@@ -61,7 +61,7 @@ describe('Assessment Model', function() {
 
   });
 
-  describe('assessment model [updateTeamAssessment] ', function() {
+  xdescribe('assessment model [updateTeamAssessment] ', function() {
     it('update assessment [no assessment id]');
 
     it('update assessment [empty assessment id]');
@@ -74,7 +74,7 @@ describe('Assessment Model', function() {
 
   });
 
-  describe('assessment model [deleteAssessment] ', function() {
+  xdescribe('assessment model [deleteAssessment] ', function() {
     it('delete assessment [non-existing assessment id]');
 
     it('delete assessment [empty assessment id]');
