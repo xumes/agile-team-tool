@@ -689,9 +689,9 @@ function loadBarPizzaChart(id, title, type, categories, seriesObj1, seriesObj2, 
 
     tooltip: {
       headerFormat: '',
-      pointFormat: '<b>Percentage: {point.y}%</b>' +
+      pointFormat: '<b>% iterations: {point.y}%</b>' +
         //'<br/><b>Squad Teams: {point.squadTeams}</b>' +
-        '<br/><b>Iterations: {point.totalCompleted}</b>'
+        '<br/><b># iterations: {point.totalCompleted}</b>'
     },
 
     credits: {
@@ -1834,7 +1834,7 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
   destroyIterationCharts();
   loadChartPartialSeries('pvelocityChart', 'Velocity', 'line', graphCategory, 'Story points', 'Iteration results by month', velocityParSer, velocitySeries, 'Points', false);
   loadChartPartialSeries('pthroughputChart', 'Throughput', 'line', graphCategory, 'Stories/tickets/cards', 'Iteration results by month', throughputParSer, throughputSeries, 'Points', false);
-  loadBarPizzaChart('pPizzaChart', '2 Pizza Rule (Squad Team Size)', 'column', graphCategory, team5to12Ser, partialSeries, pizYMax);
+  loadBarPizzaChart('pPizzaChart', 'Squad Team Size Per Iteration', 'column', graphCategory, team5to12Ser, partialSeries, pizYMax);
   loadDeploymentsChartParent('pdefectsChart', 'Deployments/Defects', 'line', graphCategory, 'Count', 'Iteration results by month', deployParSer, deploySeries, defectsParSer, defectsSeries, 'Points', false);
   loadSatisfactionChartParent('pstatisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', 'Iteration results by month', teamStatParSer, teamStatSeries, clientStatParSer, clientStatSeries, 'Points', false, ctsYMax);
   loadPiePizzaChart('piePizzaChart', '2 Pizza Rule (Squad Teams - Current)', 'pie', pData, cenTitle);
