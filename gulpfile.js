@@ -4,7 +4,7 @@ var mocha = require('gulp-mocha');
 var eslint   = require('gulp-eslint');
 
 gulp.task('lint', function() {
-  return gulp.src(['**/*.js', '!node_modules/**'])
+  return gulp.src(['**/*.js', '!node_modules/**', '!test/models/mongodb/testData/*.js'])
     .pipe(eslint({
       useEslintrc: true,
       envs: ['node', 'mocha']
@@ -14,7 +14,9 @@ gulp.task('lint', function() {
 });
 
 gulp.task('pre-test', function() {
-  return gulp.src(['*.js', 'routes/*.js', 'routes/*/*.js', 'models/*.js', 'models/mongodb/*.js'])
+  return gulp.src(['models/mongodb/assessmentTemplates.js'])
+  //return gulp.src(['models/mongodb/assessment.js'])
+  //return gulp.src(['*.js', 'routes/*.js', 'routes/*/*.js', 'models/*.js', 'models/mongodb/*.js'])
     // Covering files
     .pipe(istanbul())
     // Force `require` to return covered files
@@ -23,7 +25,9 @@ gulp.task('pre-test', function() {
 
 gulp.task('test', ['lint', 'pre-test'], function() {
   process.env.isGulpTest = true;
-  return gulp.src(['test/*.js', 'test/*/*/*.js', 'test/*/*.js'])
+  return gulp.src(['test/models/mongodb/assessmentTemplates.js'])
+  //return gulp.src(['test/models/mongodb/assessment.js'])
+  //return gulp.src(['test/*.js', 'test/*/*/*.js', 'test/*/*.js'])
     .pipe(mocha({
       reporter: process.env.REPORTER || 'spec',
       timeout: 60000,

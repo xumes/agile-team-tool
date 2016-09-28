@@ -1,6 +1,7 @@
 var lodash = require('lodash');
 var Promise = require('bluebird');
 var mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 var loggers = require('../../middleware/logger');
 var validate = require('validate.js');
 var rules = require('../validate_rules/assessment');
