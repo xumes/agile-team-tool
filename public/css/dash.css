@@ -1029,3 +1029,12 @@ li #allTeams {
 	color: black;
 	cursor: pointer;
 }
+
+#overlayExampleLarge > h {
+	font-size: 10pt;
+	font-weight: bold;
+}
+
+#overlayExampleLarge > p {
+	font-size: 10pt;
+}

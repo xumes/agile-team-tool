@@ -1,0 +1,10 @@
+{
+  "header": [
+    "Team Colocation Score?",
+    "How is it calculated?"
+  ],
+  "content": [
+    "A team works closely together to achieve their collective goals. Close collaboration is a key for fast and efficient problem solving. It creates a dynamic where the performance of a team as a whole is more than just the sum of its team members. Taking a series of components we have been able to measure this physical colocation and provide it as a number between 1 to 100.  100 being a perfect colocation score.",
+    "As you can see from the equation below there are many variables .  However it begins with the manager’s site and their timezone (tz). Then each team members tz is brought into the equation.  The difference is found between each member’s time zone and the manager’s time zone which is then divided in the real worlds maximum time zone difference (25). This multiplied by timezone penalty (0.75) will be the time zone score. Last we put all the members’ score together, minus the location score  (Location penalty 0.5) then divided by the number of members."
+  ]
+}

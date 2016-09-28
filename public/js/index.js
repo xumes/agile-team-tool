@@ -247,6 +247,16 @@ jQuery(function($) {
   });
 
   $('#teamscoreFormula').click(function(){
+    $.getJSON('./docs/teamscore.json', function(data) {
+      $('#overlayExampleLarge').html('');
+      var items = '<h>';
+      items = items + (data.header)[0] + '</h><p>';
+      items = items + (data.content)[0] + '</p><br><h>';
+      items = items + (data.header)[1] + '</h><p>';
+      items = items + (data.content)[1] + '</p><br>';
+      items = items + '<img id=\'teamscoreImg\' src=\'\.\/img\/teamscore-formula\.png\' alt=\'Team score formula\'>';
+      $('#overlayExampleLarge').html(items);
+    });
     IBMCore.common.widget.overlay.show('overlayExampleLarge');
     return false;
   });
@@ -1129,7 +1139,7 @@ function drawChart(data, isTimezone) {
       sliceColor.push(color);
     }
   }
-  var leftmargin = $('#teamscore-piechart').width() * 0.1 ;
+  //var leftmargin = $('#teamscore-piechart').width() * 0.1 ;
   var options = {
     title: title,
     titleTextStyle: {
@@ -1139,7 +1149,7 @@ function drawChart(data, isTimezone) {
     pieSliceText: 'none',
     height: 300,
     pieHole: 0.4,
-    chartArea: {left:leftmargin,top:'20px',width:'80%',height:'80%'},
+    chartArea: {left:leftmargin,top:'20px',width:'90%',height:'80%'},
     legend: {
       textStyle: {
         fontName: 'normal',
