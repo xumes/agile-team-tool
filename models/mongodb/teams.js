@@ -200,7 +200,7 @@ module.exports.getRootTeams = function(userEmail) {
 
 /**
  * If email is empty, get all standalone teams. Otherwise, get all user's standalone teams.
- * standalone teams are non-squad teams without chiilren and parent and squad team without parent.
+ * standalone teams are non-squad teams without chiilren and parent, and squad team without parent.
  * @param user email
  * @return array of standalone teams
  */
@@ -227,7 +227,7 @@ module.exports.getStandalone = function(userEmail) {
     });
   } else {
     return Promise.join(
-      Team.find({path: null}).exec(),
+      Team.find({path: null}),
       getAllUniquePaths(),
     function(rootedTeams, uniquePaths) {
       uniquePaths = uniquePaths.join(',');
@@ -326,6 +326,16 @@ module.exports.createTeam = function(teamDoc, creator) {
 var getChildren = function(pathId) {
   if (_.isEmpty(pathId)) return [];
   else return Team.find({path:new RegExp(','+pathId+',')}).exec();
+};
+
+/**
+ * Get first level children using parent's pathId.
+ * @param parent's pathId
+ * @return list of chilren teams
+ */
+module.exports.getChildrenByPathId = function(pathId) {
+  if (_.isEmpty(pathId)) return [];
+  else return Team.find({path:new RegExp(','+pathId+',$')}).exec();
 };
 
 //TODO refactor into 2 seperate functions

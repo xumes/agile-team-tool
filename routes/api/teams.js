@@ -274,6 +274,16 @@ module.exports = function(app, includes) {
         res.status(400).send(err);
       });
   };
+
+  getChildrenByPathId = function(req, res) {
+    teamModel.getChildrenByPathId(req.params.pathId)
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
+  };
   // search team with name
   app.get('/api/teams/search/:name', [includes.middleware.auth.requireLogin], searchTeamWithName);
 
@@ -327,5 +337,8 @@ module.exports = function(app, includes) {
 
   // get all standalone teams
   app.get('/api/teams/lookup/standalone/:userEmail?', [includes.middleware.auth.requireLogin], getStandaloneTeams);
+
+  // get first level children teams by parent's pathId
+  app.get('/api/teams/children/:pathId', [includes.middleware.auth.requireLogin], getChildrenByPathId);
 
 };
