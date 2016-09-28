@@ -315,7 +315,7 @@ function getAllSquads() {
         });
         _.each(squadTeams, function(squadTeam) {
           if (squadTeam.path != null) {
-            // remove the first comma and the last comma, then reparate them into array
+            // remove the first comma and the last comma, then separate them into array
             var parentsList = squadTeam.path.substring(1,squadTeam.path.length-1).split(',');
             _.each(parentsList, function(parent){
               if (!_.isUndefined(squadsByParent[parent])) {

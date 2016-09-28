@@ -133,31 +133,111 @@ var createPathId = function(teamName) {
 /*
    exported model functions
 */
+//using for search filter in home page, regular expression for team name
 module.exports.searchTeamWithName = function(string) {
-  return Team.findOne({name: string}).exec();
+  var searchQuery = {
+    'name': {
+      '$regex': new RegExp('.*' + string.toLowerCase() + '.*', 'i')
+    }
+  };
+  return Team.find(searchQuery).exec();
 };
 
+//using for snapshot roll up data, get all non squads
 module.exports.getNonSquadTeams = function(optionalProjection) {
   return Team.find({type: {$ne:'squad'}}, optionalProjection).exec();
 };
 
+//using for snapshot roll up data, get all squads
 module.exports.getSquadTeams = function(optionalProjection) {
   return Team.find({type: 'squad'}, optionalProjection).exec();
 };
 
-//root teams are teams with no parent, non-squad with children
-module.exports.getRootTeams = function() {
-  return Promise.join(
-    Team.find({path: null, type:{$ne:'squad'}}),
-    getAllUniquePaths(),
-  function(rootedTeams, uniquePaths) {
-    uniquePaths = uniquePaths.join(',');
-    //indexOf is faster than match apparently
-    var res = _.filter(rootedTeams, function(team){
-      return uniquePaths.indexOf(team.pathId) >= 0;
+/**
+ * If email is empty, get all root teams. Otherwise, get all user's root teams.
+ * root teams are teams with no parent, non-squad with children.
+ * @param user email
+ * @return array of root teams
+ */
+module.exports.getRootTeams = function(userEmail) {
+  if (userEmail) {
+    var query = {
+      'path': null,
+      'members': {
+        '$elemMatch': {
+          'email': userEmail.toLowerCase()
+        }
+      },
+      'type': {
+        '$ne': 'squad'
+      }
+    };
+    return Promise.join(
+      Team.find(query),
+      getAllUniquePaths(),
+    function(rootedTeams, uniquePaths) {
+      uniquePaths = uniquePaths.join(',');
+      //indexOf is faster than match apparently
+      var res = _.filter(rootedTeams, function(team){
+        return uniquePaths.indexOf(team.pathId) >= 0;
+      });
+      return res;
     });
-    return res;
-  });
+  } else {
+    return Promise.join(
+      Team.find({path: null, type:{$ne:'squad'}}),
+      getAllUniquePaths(),
+    function(rootedTeams, uniquePaths) {
+      uniquePaths = uniquePaths.join(',');
+      //indexOf is faster than match apparently
+      var res = _.filter(rootedTeams, function(team){
+        return uniquePaths.indexOf(team.pathId) >= 0;
+      });
+      return res;
+    });
+  }
+};
+
+/**
+ * If email is empty, get all standalone teams. Otherwise, get all user's standalone teams.
+ * standalone teams are non-squad teams without chiilren and parent and squad team without parent.
+ * @param user email
+ * @return array of standalone teams
+ */
+module.exports.getStandalone = function(userEmail) {
+  if (userEmail) {
+    var query = {
+      'path': null,
+      'members': {
+        '$elemMatch': {
+          'email': userEmail.toLowerCase()
+        }
+      }
+    };
+    return Promise.join(
+      Team.find(query),
+      getAllUniquePaths(),
+    function(rootedTeams, uniquePaths) {
+      uniquePaths = uniquePaths.join(',');
+      //indexOf is faster than match apparently
+      var res = _.filter(rootedTeams, function(team){
+        return uniquePaths.indexOf(team.pathId) < 0;
+      });
+      return res;
+    });
+  } else {
+    return Promise.join(
+      Team.find({path: null}).exec(),
+      getAllUniquePaths(),
+    function(rootedTeams, uniquePaths) {
+      uniquePaths = uniquePaths.join(',');
+      //indexOf is faster than match apparently
+      var res = _.filter(rootedTeams, function(team){
+        return uniquePaths.indexOf(team.pathId) < 0;
+      });
+      return res;
+    });
+  }
 };
 
 //list of NON-SQUAD teams that are not part of teamId's subtree

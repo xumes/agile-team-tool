@@ -254,6 +254,26 @@ module.exports = function(app, includes) {
         res.status(400).send(err);
       });
   };
+
+  getAllRootTeams = function(req, res) {
+    teamModel.getRootTeams(req.params.userEmail)
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        res.status(400).send(err);
+      });
+  };
+
+  getStandaloneTeams = function(req, res) {
+    teamModel.getStandalone(req.params.userEmail)
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
+  };
   // search team with name
   app.get('/api/teams/search/:name', [includes.middleware.auth.requireLogin], searchTeamWithName);
 
@@ -301,5 +321,11 @@ module.exports = function(app, includes) {
 
   // list of parent and child team ids associated with the team
   app.get('/api/teams/lookup/team/:teamId?', [includes.middleware.auth.requireLogin], getLookupIndex);
+
+  // get all root teams
+  app.get('/api/teams/lookup/rootteams/:userEmail?', [includes.middleware.auth.requireLogin], getAllRootTeams);
+
+  // get all standalone teams
+  app.get('/api/teams/lookup/standalone/:userEmail?', [includes.middleware.auth.requireLogin], getStandaloneTeams);
 
 };
