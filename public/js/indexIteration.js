@@ -689,7 +689,7 @@ function loadBarPizzaChart(id, title, type, categories, seriesObj1, seriesObj2, 
 
     tooltip: {
       headerFormat: '',
-      pointFormat: '<b>% iterations: {point.y}%</b>' +
+      pointFormat: '<b>% iterations: {point.y}</b>' +
         //'<br/><b>Squad Teams: {point.squadTeams}</b>' +
         '<br/><b># iterations: {point.totalCompleted}</b>'
     },
