@@ -98,7 +98,7 @@
                               <label aria-label="teamMemberName">Team member<span class="ibm-required">*</span></label>
                               <span>
                                 <input type="text" placeholder="Ex: Name or Email Adress" value="" size="50"
-                                id="teamMemberName" name="teamMemberName" style="width: 400px;" aria-label="team member">
+                                id="teamMemberName" name="teamMemberName" style="width: 400px;" aria-label="team member" role="combobox">
                               </span>
                             </p>
 
@@ -143,7 +143,7 @@
                               <hr>
                             </div>
                             <table class="ibm-data-table" data-tablerowselector="enable" id="teamMemberTable" summary="__REPLACE_ME__" style="font-size: 90%;">
-                              <caption>
+                              <div style="float:left; font-size:14px; width:100%;" class="tcaption">
                                 <em id="teamNameTitle" class="ibm-bold">Team members</em>
                                 <p style="float: right; width: 400px;">
                                   <span id="spin" style="display: none" class="ibm-spinner"></span>
@@ -156,7 +156,7 @@
                                   </select>
                                   </span>
                                 </p>
-                              </caption>
+                              </div>
                               <thead>
                                 <tr>
                                   <th scope="col"></th>
@@ -236,7 +236,7 @@
                                 <hr>
                               </div>
                               <table class="ibm-data-table" data-tablerowselector="enable" id="childrenMemberTable" summary="__REPLACE_ME__" style="font-size: 90%;">
-                                <caption>
+                                <div style="float:left; font-size:14px; width:100%;" class="tcaption">
                                   <em id="childrenNameTitle" class="ibm-bold">Childream teams</em>
                                   <p style="float: right;  width: 400px;">
                                     <span id="spinner" style="display: none" class="ibm-spinner"></span>
@@ -248,7 +248,7 @@
                                     </select>
                                     </span>
                                   </p>
-                                </caption>
+                                </div>
                                 <thead>
                                   <tr>
                                     <th scope="col" width="1%"></th>
@@ -270,12 +270,12 @@
                             </div>
                             <div id="squadIterationPageSection" style="display: none;">
                               <table class="ibm-data-table" id="iterationTable" summary="__REPLACE_ME__" style="font-size: 90%;">
-                                <caption>
+                                <div style="float:left; font-size:14px; width:100%;" class="tcaption">
                                   <em id="iterationTitle" class="ibm-bold">Iteration information</em>
                                   <p style="float: right" class="ibm-button-link">
                                     <input type="button" class="ibm-btn-pri ibm-btn-small" id="iterTeamBtn" value="Create iteration" onclick="manageIteration();" />
                                   </p>
-                                </caption>
+                                </div>
                                 <thead>
                                   <tr>
                                     <th scope="col" width="1%"></th>
@@ -307,12 +307,12 @@
                             </div>
                             <div id="squadAssessmentPageSection" style="display: none; margin-top: 15px;">
                               <table class="ibm-data-table" id="assessmentTable" summary="__REPLACE_ME__" style="font-size: 90%;">
-                                <caption>
+                                <div style="float:left; font-size:14px; width:100%;" class="tcaption">
                                   <em id="assessmentTitle" class="ibm-bold">Assessment Information</em>
                                   <p style="float: right" class="ibm-button-link">
                                     <input type="button" class="ibm-btn-pri ibm-btn-small" id="assessBtn" value="Create assessment" onclick="manageAssessment();" disabled="disabled"/>
                                   </p>
-                                </caption>
+                                </div>
                                 <thead>
                                   <tr>
                                     <th scope="col" width="1%"></th>
