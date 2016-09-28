@@ -130,6 +130,11 @@ var createPathId = function(teamName) {
   return teamName.toLowerCase().replace(/[^a-z1-9]/g, '');
 };
 
+var getChildren = function(pathId) {
+  if (_.isEmpty(pathId)) return [];
+  else return Team.find({path:new RegExp(','+pathId+',')}).exec();
+};
+
 /*
    exported model functions
 */
@@ -322,16 +327,8 @@ module.exports.createTeam = function(teamDoc, creator) {
   });
 };
 
-
-var getChildren = function(pathId) {
-  if (_.isEmpty(pathId)) return [];
-  else return Team.find({path:new RegExp(','+pathId+',')}).exec();
-};
-
 /**
  * Get first level children using parent's pathId.
- * @param parent's pathId
- * @return list of chilren teams
  */
 module.exports.getChildrenByPathId = function(pathId) {
   if (_.isEmpty(pathId)) return [];
@@ -373,7 +370,6 @@ module.exports.getByName = function(teamName) {
 };
 
 module.exports.getTeamsByEmail = function(memberEmail) {
-  console.log('getting teams by email: ' + memberEmail);
   return Team.find({members: {$elemMatch:{email:memberEmail}}}).exec();
 };
 
@@ -410,14 +406,6 @@ module.exports.getUserTeams = function(memberEmail) {
   });
 };
 
-/**
- * Reformat document to update/delete document structure for BULK operation
- *
- * @param teamId - team id to modify
- * @param userId - user id of the one who is doing the action
- * @param members - array of member user
- * @returns - modified tem document
- */
 module.exports.modifyTeamMembers = function(teamId, userEmail, userId, newMembers) { //TODO this should use userId
   return new Promise(function(resolve, reject){
     if (_.isEmpty(teamId)){
