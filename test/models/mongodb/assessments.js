@@ -1,44 +1,14 @@
 var chai = require('chai');
 var expect = chai.expect;
 var Promise = require('bluebird');
-var assessmentModel = require('../../../models/mongodb/assessments');
-var teams = require('../../../models/mongodb/teams');
-var util = require('../../../helpers/util');
-var lodash = require('lodash');
-var dummyData = require('../../data/dummy-data.js');
-var testData = require('../../data/assessment');
-var curr_assessment = testData.currentAssessment;
+//var validAssessments = require('./testData/validAssessments');
+var Assessments = require('../../../models/mongodb/assessments');
 
 describe('Assessment Model', function() {
   xdescribe('assessment model [addTeamAssessment] ', function() {
-    it('valid assessment with non-existing user', function(done) {
-      var valAssessment = lodash.cloneDeep(curr_assessment);
-      valAssessment.created_dt = util.getServerTime();
-      valAssessment.created_user = 'test.user@ph.ibm.com';
-      assessmentModel.addTeamAssessment('test.user@ph.ibm.com', valAssessment)
-        .catch(function(err) {
-          expect(err).to.be.an('object');
-          expect(err).to.have.property('error');
-          expect(err.error).to.equal('Unauthorized user.');
-          done();
-        });
-    });
+    it('valid assessment with non-existing user');
 
-    xit('add assessment [valid assessment data]', function(done) {
-      var valAssessment = lodash.cloneDeep(curr_assessment);
-      //console.log('valAssessment: ', valAssessment);
-      assessmentModel.addTeamAssessment(dummyData.user.details.shortEmail, valAssessment)
-        .then(function(body) {
-          expect(body).to.be.an('object');
-          expect(body.ok).to.be.true;
-          expect(body.id).to.be.equal(valAssessment._id);
-          assessmentIds.push(body.id);
-          done();
-        })
-        .catch(function(err) {
-          done(err);
-        });
-    });
+    xit('add assessment [valid assessment data]');
   });
 
   xdescribe('assessment models [getTeamAssessments]', function() {
@@ -88,45 +58,3 @@ describe('Assessment Model', function() {
     it('delete assessment [valid assessment and revision id] using admin user');
   });
 });
-/*describe('assessment models [getAssessmentTemplate]', function() {
-    it('retrieve assessment template', function() {
-      //
-    });
-  });
-
-  describe('assessment models [document validation]', function() {
-    it('draft assessment with no created date', function() {
-      //
-    });
-
-    it('valid draft assessment from team member', function() {
-      //
-    });
-
-    it('draft assessment for update (using parent team member)', function() {
-      //
-    });
-
-    it('new submitted assessment (unaswered question)', function() {
-      //
-    });
-
-    it('update assessment (unaswered question)', function() {
-      //
-    });
-
-
-    it('new submitted assessment (invalid project type)', function() {
-      //
-    });
-
-    it('new submitted assessment (no overall assessment score)', function() {
-      //
-    });
-
-
-    it('new submitted assessment (incomplete action plan field)', function() {
-      //
-    });
-
-  });*/

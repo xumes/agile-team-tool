@@ -8,8 +8,6 @@ var loggers = require('../../middleware/logger');
 var Schema   = mongoose.Schema;
 var lodash = require('lodash');
 
-var checkForHexRegExp = new RegExp('^[0-9a-fA-F]{24}$');
-
 var componentsPrinciplesPracticesLevelsSchema = new Schema({
   name: {
     type: String,
