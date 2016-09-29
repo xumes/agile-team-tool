@@ -145,7 +145,7 @@ var assessmentsSchema = new Schema({
   },
   createDate: {
     type: Date,
-    required: [true, 'createDate is required.']
+    default: new Date()
   },
   createdByUserId: {
     type: String,
@@ -179,35 +179,41 @@ module.exports.addTeamAssessment = function(userEmail, data){
       loggers.get('models').error('Error: ' + err);
       reject(err);
     } else {
-      var teamId = data['teamId'];
-      Users.isUserAllowed(userEmail, teamId)
-      .then(function(isAllowed){
-        if (!isAllowed) {
-          var err = {'error': 'Not allowed to add assessment for this team'};
-          loggers.get('models').error('Error: ' + err);
-          reject(err);
-        } else {
-          return true;
-        }
-      })
-      .then(function() {
-        var newAssessmentData = new Assessment(data);
-        var error = newAssessmentData.validateSync();
-        if (error) {
-          loggers.get('models').error('Error: ' + error);
-          return reject(error);
-        } else {
-          newAssessmentData.save()
-          .then(function(result) {
-            return resolve(result);
-          })
-          .catch( /* istanbul ignore next */ function(err) {
-            /* cannot simulate MongoDB error during testing */
-            loggers.get('models').error('Error: ' + err.error);
-            return reject(err);
-          });
-        }
-      });
+      if (lodash.isEmpty(data['teamId'])) {
+        var err = {'error': 'Assessment team id is required'};
+        loggers.get('models').error('Error: ' + err);
+        reject(err);
+      } else {
+        var teamId = data['teamId'];
+        Users.isUserAllowed(userEmail, teamId)
+        .then(function(isAllowed){
+          if (!isAllowed) {
+            var err = {'error': 'Not allowed to add assessment for this team'};
+            loggers.get('models').error('Error: ' + err);
+            reject(err);
+          } else {
+            return true;
+          }
+        })
+        .then(function() {
+          var newAssessmentData = new Assessment(data);
+          var error = newAssessmentData.validateSync();
+          if (error) {
+            loggers.get('models').error('Error: ' + error);
+            return reject(error);
+          } else {
+            newAssessmentData.save()
+            .then(function(result) {
+              return resolve(result);
+            })
+            .catch( /* istanbul ignore next */ function(err) {
+              /* cannot simulate MongoDB error during testing */
+              loggers.get('models').error('Error: ' + err.error);
+              return reject(err);
+            });
+          }
+        });
+      }
     }
   });
 };
