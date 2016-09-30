@@ -30,8 +30,6 @@ module.exports = function(app, includes) {
   deleteApiKey = function(req, res) {
     users.deleteApikey(req.session['user'])
       .then(function(result) {
-        console.log('---------------- delete route success');
-        console.log(result);
         res.status(200).send(result);
       })
       .catch(function(err){
