@@ -524,6 +524,8 @@ var iteration = {
     apiData.teamSatisfaction = data.team_sat;
     apiData.comment = data.iteration_comments;
     apiData.docStatus = data.doc_status;
+    apiData.updateDate = data.last_updt_dt;
+    apiData.updatedBy = data.last_updt_user;
     return apiData;
   }
 };

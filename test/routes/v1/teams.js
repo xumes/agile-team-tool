@@ -27,7 +27,6 @@ describe('API Teams', function(done) {
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('key');
         testApiKey = res.body.key;
-        console.log(res.body);
       }
       done();
     });
