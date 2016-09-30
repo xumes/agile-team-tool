@@ -300,7 +300,7 @@ function loadSelectedAgileTeam() {
       }).done(function(data) {
         if (!_.isEmpty(data)) {
           //var list = _.pluck(data.rows, "value");
-          //teamAssessments = list;
+          teamAssessments = data;
           //loadAssessmentInformation(sortAssessments(data), false);
           loadAssessmentInformation(data, false);
         }
@@ -360,7 +360,7 @@ function manageIteration() {
 }
 
 function manageAssessment() {
-  window.location = 'assessment?id=' + encodeURIComponent($('#teamSelectList option:selected').val()) + '&iter=new';
+  window.location = 'assessment?id=' + encodeURIComponent($('#teamSelectList option:selected').val()) + '&assessId=new';
 }
 
 function loadIterationInformation(iterationList, more) {

@@ -5,6 +5,8 @@ var squadList = [];
 var loadedParentId = '';
 var teamLocation = [];
 var piechartData = {};
+var isFirefox = typeof InstallTrigger !== 'undefined';
+var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
 var userAccess = ['Yanliang.Gu1@ibm.com','leip@us.ibm.com','hourihan@us.ibm.com','john.elden.revano@ibm.com'];
 var colorArray = ['#4178BE','#C0E6FF','#7CC7FF','#5AAAFA','#5596E6','#4178BE','#325C80','#264A60','#1D3649','#152935','#010205','#008571','#A7FAE6','#6EEDD8','#41D6C3','#00B4A0','#006D5D','#005448'];
 var tempIterationData = [{
@@ -168,6 +170,9 @@ jQuery(function($) {
       $('#allTeams').attr('data-state', '');
       $('#nameSearchField').hide();
       $('#nameSearchField').val('');
+      // if (isFirefox) {
+      $('#searchCancel').hide();
+      // }
       hideAllContentAreaDivs();
       getMyTeams();
     }
@@ -179,6 +184,9 @@ jQuery(function($) {
       $($(this)).attr('data-state', 'open');
       $('#myTeams').attr('data-state', '');
       $('#nameSearchField').show();
+      // if (isFirefox) {
+      // $('#searchCancel').css('display','inline-block');
+      // }
       hideAllContentAreaDivs();
       if (defSelTeamId != '') {
         $('#teamTree').hide();
@@ -197,16 +205,16 @@ jQuery(function($) {
     }
   });
 
-  $('#nameSearchField').focusout(function(){
-    // if ($('#nameSearchField').val() != '') {
-    //   $('#teamTree').hide();
-    //   $('#searchTree').show();
-    // }
-    setTimeout(function(){
-      $('#teamTree').show();
-      $('#searchTree').hide();
-    }, 300);
-  });
+  // $('#nameSearchField').focusout(function(){
+  //   // if ($('#nameSearchField').val() != '') {
+  //   //   $('#teamTree').hide();
+  //   //   $('#searchTree').show();
+  //   // }
+  //   setTimeout(function(){
+  //     $('#teamTree').show();
+  //     $('#searchTree').hide();
+  //   }, 300);
+  // });
 
   $('#nameSearchField').on('input', function() {
     var inputText = $('#nameSearchField').val();
@@ -216,8 +224,10 @@ jQuery(function($) {
       $('#teamTree').show();
       $('#searchTree').empty();
       $('#searchTree').hide();
+      $('#searchCancel').hide();
     }
     if (inputText != '' && inputText != ' ') {
+      $('#searchCancel').show();
       searchTeams(inputText);
     }
   });
@@ -237,8 +247,25 @@ jQuery(function($) {
   });
 
   $('#teamscoreFormula').click(function(){
+    $.getJSON('./docs/teamscore.json', function(data) {
+      $('#overlayExampleLarge').html('');
+      var items = '<h>';
+      items = items + (data.header)[0] + '</h><p>';
+      items = items + (data.content)[0] + '</p><br><h>';
+      items = items + (data.header)[1] + '</h><p>';
+      items = items + (data.content)[1] + '</p><br>';
+      items = items + '<img id=\'teamscoreImg\' src=\'\.\/img\/teamscore-formula\.png\' alt=\'Team score formula\'>';
+      $('#overlayExampleLarge').html(items);
+    });
     IBMCore.common.widget.overlay.show('overlayExampleLarge');
     return false;
+  });
+
+  $('#searchCancel').click(function(){
+    $('#nameSearchField').val('');
+    $('#teamTree').show();
+    $('#searchTree').hide();
+    $('#searchCancel').hide();
   });
 });
 
@@ -261,6 +288,7 @@ function hideAllContentAreaDivs() {
   $('#no-teams-highlightbox').hide();
   $('#spinnerContainer').hide();
   $('#spinnerContainer-search').hide();
+  $('#nameSearchField').val('');
 }
 
 function getMyTeams() {
@@ -1290,7 +1318,7 @@ function drawChart(data, isTimezone) {
       sliceColor.push(color);
     }
   }
-  var leftmargin = $('#teamscore-piechart').width() * 0.1 ;
+  //var leftmargin = $('#teamscore-piechart').width() * 0.1 ;
   var options = {
     title: title,
     titleTextStyle: {
@@ -1300,7 +1328,7 @@ function drawChart(data, isTimezone) {
     pieSliceText: 'none',
     height: 300,
     pieHole: 0.4,
-    chartArea: {left:leftmargin,top:'20px',width:'80%',height:'80%'},
+    chartArea: {left:leftmargin,top:'20px',width:'90%',height:'80%'},
     legend: {
       textStyle: {
         fontName: 'normal',

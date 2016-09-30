@@ -24,7 +24,9 @@ var initCloudant = require('./cloudant/init');
 require('fs').readFile('./art', 'utf8', function(err, art) {
   console.log(art);
   loggers.get('init').info('Configuration Settings:');
-  console.log(settings);
+  if (process.env.TRAVIS != 'true') {
+    console.log(settings);
+  }
   console.log('\n');
   initCloudant.init();
 });

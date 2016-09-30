@@ -221,3 +221,33 @@ exports.findRevBySelector = function(id) {
       });
   });
 };
+
+exports.searchBySelector = function(keywords) {
+  return new Promise(function(resolve, reject) {
+    var regexKeyword = '(?i)';
+    _.each(keywords, function(keyword){
+      regexKeyword = regexKeyword + '(.*)' + keyword + '(.*)';
+    });
+    var data = new Object();
+    data['type'] = 'team';
+    data['name'] = {
+      '$regex': regexKeyword
+    };
+    var selector = {
+      'selector': data,
+      'fields': [
+        '_id',
+        'doc_status',
+        'name',
+        'squadteam'
+      ]
+    };
+    db.findAsync(selector)
+      .then(function(body) {
+        resolve(body);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        reject(err);
+      });
+  });
+};

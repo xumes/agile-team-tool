@@ -40,17 +40,20 @@
 
                       <nav class="tab-nav">
                         <ul class="tab-ul" role="tablist" style="width: 100%;">
-                            <li id="myTeams" class="tab-ul--item" role="tab" data-state="open">My teams</li>
+                            <li id="myTeams" class="tab-ul--item" role="tab" data-state="open" tabindex="0">My teams</li>
                             <li id="allTeams" class="tab-ul--item" role="tab">All teams</li>
                         </ul>
                         <i style="position: absolute; font-size: 8pt; text-align: right; display: inline-block; float: right; left: 0px; width: 100%; top: 25px; padding-bottom: 0;"><i class="agile-team-squad">*</i> indicates squad team</i>
-                        <input id="nameSearchField" type="search" class="agile-search-field" name="search" placeholder="Enter team name to filter..." hidden=true>
+                        <div style="position: relative">
+                          <input id="nameSearchField" type="search" class="agile-search-field" name="search" placeholder="Enter team name to filter..." hidden=true aria-label="nameSearchField">
+                          <input type="image" src="../img/ibm_icon/close_128.png" id="searchCancel" class="agile-search-field-cancel"></input>
+                        </div>
                         <div id="spinnerContainer-search" style="text-align: center" hidden=true>
                           <div style="display: inline-block; margin-top:10em;" class="clear-loading loading-effect-1">
-                            <span style="padding: 0;"></span>
-                            <span style="padding: 0;"></span>
-                            <span style="padding: 0;"></span>
-                          </div>
+                            <span style="padding: 0;"></span>
+                            <span style="padding: 0;"></span>
+                            <span style="padding: 0;"></span>
+                          </div>
                         </div>
                       </nav>
 
@@ -65,7 +68,6 @@
                       <p>
                         <input class="clearable" type="text" name="teamFilter" id="teamFilter" value="" placeholder="Enter team name to filter..." aria-label="Name filter for teams" style="width: 94%" />
                       </p>
-
                       <p class="agile-section-expand-collapse">
                         <a href="#" id="teamExpand">Expand all</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#" id="teamCollapse">Collapse all</a>
                       </p>
@@ -85,10 +87,10 @@
 
                   <div id="spinnerContainer" style="text-align: center" class="ibm-col-6-4">
                     <div style="display: inline-block; margin-top:10em;" class="clear-loading loading-effect-1">
-                      <span style="padding: 0;"></span>
-                      <span style="padding: 0;"></span>
-                      <span style="padding: 0;"></span>
-                    </div>
+                      <span style="padding: 0;"></span>
+                      <span style="padding: 0;"></span>
+                      <span style="padding: 0;"></span>
+                    </div>
                   </div>
 
 
@@ -117,13 +119,15 @@
 
                     <div data-widget="showhide" data-type="panel" class="ibm-show-hide" id="iterationSection">
                       <p class="ibm-ind-link" style="float: right;" id="snapshotPull">
-                        <a class="ibm-refresh-link" href="#" id="refreshData" style="float: right;"></a>
-                        Data as of:&nbsp;<label id="refreshDate"></label>&nbsp;&nbsp;
+                        <a class="ibm-refresh-link" href="#" id="refreshData" style="float: right;" title="refreshData">
+                        <label style="float: right;font-size:0pt;">Refresh</label>
+                        </a>
+                        Data as of:&nbsp;<label id="refreshDate">Last update date</label>&nbsp;&nbsp;
                       </p>
                       <h2 class="agile-section-title" data-open="true" id="agile-section-title">Iteration trends</h2>
                       <div style="display:none" class="agile-section-nav">
-                        <label for="gotoIterationList">Go to iteration:</label>
-                        <select id="gotoIterationList"><option value="" selected="selected">Select one</option></select>
+                        <label aria-label="gotoIterationList">Go to iteration:</label>
+                        <select id="gotoIterationList" aria-labelledby="agile-section-title"><option value="" selected="selected">Select one</option></select>
                         <input style="padding: 3px; border: 1px solid #323232;" type="button" class="ibm-btn-sec ibm-btn-small" id="GoIterationBtn" value="Go" />
                         <input style="padding: 3px; border: 1px solid #323232;width:130px" type="button" class="ibm-btn-sec ibm-btn-small" id="CreateIterationBtn" value="Create iteration" />
                       </div>
@@ -199,10 +203,10 @@
                     </div>
 
                     <div data-widget="showhide" data-type="panel" class="ibm-show-hide" id="assessmentSection">
-                      <h2 class="agile-section-title">Maturity assessment trends</h2>
+                      <h2 class="agile-section-title" id="agile-assessment-section-title">Maturity assessment trends</h2>
                       <div style="display:none" class="agile-section-nav">
-                        <label for="gotoAssesmentList">Go to assessment:</label>
-                        <select id="gotoAssesmentList"><option value="" selected="selected">Select one</option></select>
+                        <label aria-label="gotoAssesmentList">Go to assessment:</label>
+                        <select id="gotoAssesmentList" aria-labelledby="agile-assessment-section-title"><option value="" selected="selected">Select one</option></select>
                         <input style="padding: 3px; border: 1px solid #323232;" type="button" class="ibm-btn-sec ibm-btn-small" id="GoAssesmentBtn" value="Go" />
                         <input style="padding: 3px; border: 1px solid #323232;width:130px;" type="button" class="ibm-btn-sec ibm-btn-small" id="CreateAssesmentBtn" value="Create assessment" />
                       </div>
@@ -257,8 +261,8 @@
                         <tbody id="membersList">
                         </tbody>
                       </table>
+                      <div id="teamscore-area"></div>
                       <div class="ibm-common-overlay ibm-overlay-alt-two" data-widget="overlay" id="overlayExampleLarge">
-                        <img id="img01" src="./img/teamscore-formula.png">
                       </div>
                     </div>
                   </div>
@@ -279,5 +283,6 @@
     </div>
     <%- include ./footer.ejs %>
   </div>
+<script type="text/javascript" src="js/home-accessibility-fix.js?v=<%=Math.random()%>"></script>
 </body>
 </html>

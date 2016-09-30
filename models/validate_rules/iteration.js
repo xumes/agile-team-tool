@@ -167,6 +167,20 @@ var iterationDocRules = {
       message: '^Defects must be a number'
     }
   },
+  'nbr_cycletime_WIP': {
+    presence: false,
+    format: {
+      pattern: /^\d{0,2}(\.\d{0,2}){0,1}$/,
+      message: 'Cycletime WIP must be a number'
+    }
+  },
+  'nbr_cycletime_in_backlog': {
+    presence: false,
+    format: {
+      pattern: /^\d{0,2}(\.\d{0,2}){0,1}$/,
+      message: 'Cycletime in backlog must be a number'
+    }
+  },
   'client_sat': {
     presence: false,
     checkSatisfaction: {
