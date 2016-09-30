@@ -5,8 +5,6 @@ var loggers = require('../middleware/logger');
 var validate = require('validate.js');
 var settings = require('../settings');
 var util = require('../helpers/util');
-var iterationModels = require('./iteration');
-var assessmentModels = require('./assessment');
 var rules = require('./validate_rules/teams');
 var memberRules = require('./validate_rules/teamMembers');
 var users = require('./users');
@@ -343,8 +341,10 @@ var team = {
         infoLogs('Getting team document latest records');
         updateOrDeleteTeamValidation.push(team.getTeam(teamId)); //res[0]
         infoLogs('Getting iterations associated to ' + teamId);
+        var iterationModels = require('./iteration');
         updateOrDeleteTeamValidation.push(iterationModels.getByIterInfo(teamId)); //res[1]
         infoLogs('Getting assessments associated to ' + teamId);
+        var assessmentModels = require('./assessment');
         updateOrDeleteTeamValidation.push(assessmentModels.getTeamAssessments(teamId)); //res[2]
         infoLogs('Getting existing team names that might match ' + updatedTeamDoc['name']);
         updateOrDeleteTeamValidation.push(team.getName(updatedTeamDoc['name'])); //res[3]
