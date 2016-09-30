@@ -284,6 +284,26 @@ module.exports = function(app, includes) {
         res.status(400).send(err);
       });
   };
+
+  getTeamAndChildInfo = function(req, res) {
+    teamModel.getTeamAndChildInfo(req.params.teamId)
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
+  };
+
+  getTeamByPathId = function(req, res) {
+    teamModel.getTeamByPathId(req.params.pathId)
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
+  };
   // search team with name
   app.get('/api/teams/search/:name', [includes.middleware.auth.requireLogin], searchTeamWithName);
 
@@ -341,4 +361,9 @@ module.exports = function(app, includes) {
   // get first level children teams by parent's pathId
   app.get('/api/teams/children/:pathId', [includes.middleware.auth.requireLogin], getChildrenByPathId);
 
+  // get team info and if it has a child
+  app.get('/api/teams/haschildren/:teamId', [includes.middleware.auth.requireLogin], getTeamAndChildInfo);
+
+  // get team info by pathId
+  app.get('/api/teams/pathId/:pathId', [includes.middleware.auth.requireLogin], getTeamByPathId);
 };

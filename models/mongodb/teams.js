@@ -434,6 +434,56 @@ module.exports.getTeam = function(id) {
     return Team.findOne({_id:id}).exec();
 };
 
+/**
+ * Get team by pathId
+ */
+module.exports.getTeamByPathId = function(pathId) {
+  if (_.isEmpty(pathId))
+    return Team.find({}).exec();
+  else
+    return Team.findOne({pathId:pathId}).exec();
+};
+/**
+ * Using in home page, getting the team info and if it has a child team
+ * @param team's objectId
+ * @return team's info and child info
+ */
+module.exports.getTeamAndChildInfo = function(id) {
+  return new Promise(function(resolve, reject){
+    var promiseArray = [];
+    promiseArray.push(Team.findOne({_id:id}).exec());
+    promiseArray.push(getAllUniquePaths());
+    Promise.all(promiseArray)
+      .then(function(results){
+        var team = results[0];
+        var uniquePaths = results[1];
+        uniquePaths = uniquePaths.join(',');
+        if (team == null || team.docStatus == 'delete') {
+          resolve(null);
+        } else {
+          var newTeam = {
+            '_id': team._id,
+            'type': team.type,
+            'name': team.name,
+            'path': team.path,
+            'pathId': team.pathId,
+            'hasChild': null,
+            'docStatus': team.docStatus
+          };
+          if (uniquePaths.indexOf(team.pathId) >= 0) {
+            newTeam.hasChild = true;
+          } else {
+            newTeam.hasChild = false;
+          }
+          resolve(newTeam);
+        }
+      })
+      .catch(function(err){
+        reject(err);
+      });
+  });
+};
+
 module.exports.getRole = function() {
   return Team.distinct('members.role').exec();
 };
