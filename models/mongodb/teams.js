@@ -140,7 +140,7 @@ module.exports.searchTeamWithName = function(string) {
       '$regex': new RegExp('.*' + string.toLowerCase() + '.*', 'i')
     }
   };
-  return Team.find(searchQuery).exec();
+  return Team.find(searchQuery).sort('pathId').exec();
 };
 
 //using for snapshot roll up data, get all non squads
@@ -160,42 +160,88 @@ module.exports.getSquadTeams = function(optionalProjection) {
  * @return array of root teams
  */
 module.exports.getRootTeams = function(userEmail) {
-  if (userEmail) {
-    var query = {
-      'path': null,
-      'members': {
-        '$elemMatch': {
-          'email': userEmail.toLowerCase()
+  return new Promise(function(resolve, reject){
+    if (userEmail) {
+      var query = {
+        'members': {
+          '$elemMatch': {
+            'email': userEmail.toLowerCase()
+          }
         }
-      },
-      'type': {
-        '$ne': 'squad'
-      }
-    };
-    return Promise.join(
-      Team.find(query),
-      getAllUniquePaths(),
-    function(rootedTeams, uniquePaths) {
-      uniquePaths = uniquePaths.join(',');
-      //indexOf is faster than match apparently
-      var res = _.filter(rootedTeams, function(team){
-        return uniquePaths.indexOf(team.pathId) >= 0;
+      };
+      var promiseArray = [];
+      promiseArray.push(Team.find(query).sort('pathId').exec());
+      promiseArray.push(getAllUniquePaths());
+      Promise.all(promiseArray)
+        .then(function(results){
+          var rootedTeams = results[0];
+          var uniquePaths = results[1];
+          uniquePaths = uniquePaths.join(',');
+          var tempTeams = [];
+          _.each(rootedTeams, function(team){
+            _.find(rootedTeams, function(compareTeam){
+              if (team.path == null) {
+                if (team.type == 'squad') {
+                  return tempTeams.push(team.pathId);
+                } else {
+                  if (uniquePaths.indexOf(team.pathId) < 0) {
+                    return tempTeams.push(team.pathId);
+                  }
+                }
+              } else {
+                if (team.path != compareTeam.path) {
+                  var comparePath = '';
+                  if (compareTeam.path == null) {
+                    comparePath = ',' + compareTeam.pathId + ',';
+                  } else {
+                    comparePath = compareTeam.path;
+                  }
+                  if (team.path.indexOf(comparePath) >= 0) {
+                    return tempTeams.push(team.pathId);
+                  }
+                }
+              }
+            });
+          });
+          var returnTeams = [];
+          _.each(rootedTeams, function(team){
+            if (!_.contains(tempTeams, team.pathId)) {
+              var newTeam = {
+                '_id': team._id,
+                'type': team.type,
+                'name': team.name,
+                'path': team.path,
+                'pathId': team.pathId,
+                'hasChild': null,
+                'docStatus': team.docStatus
+              };
+              if (uniquePaths.indexOf(team.pathId) >= 0) {
+                newTeam.hasChild = true;
+              } else {
+                newTeam.hasChild = false;
+              }
+              returnTeams.push(newTeam);
+            }
+          });
+          resolve(returnTeams);
+        })
+        .catch(function(err){
+          reject(err);
+        });
+    } else {
+      return Promise.join(
+        Team.find({path: null, type:{$ne:'squad'}}).sort('pathId').exec(),
+        getAllUniquePaths(),
+      function(rootedTeams, uniquePaths) {
+        uniquePaths = uniquePaths.join(',');
+        //indexOf is faster than match apparently
+        var res = _.filter(rootedTeams, function(team){
+          return uniquePaths.indexOf(team.pathId) >= 0;
+        });
+        resolve(res);
       });
-      return res;
-    });
-  } else {
-    return Promise.join(
-      Team.find({path: null, type:{$ne:'squad'}}),
-      getAllUniquePaths(),
-    function(rootedTeams, uniquePaths) {
-      uniquePaths = uniquePaths.join(',');
-      //indexOf is faster than match apparently
-      var res = _.filter(rootedTeams, function(team){
-        return uniquePaths.indexOf(team.pathId) >= 0;
-      });
-      return res;
-    });
-  }
+    }
+  });
 };
 
 /**
@@ -215,7 +261,7 @@ module.exports.getStandalone = function(userEmail) {
       }
     };
     return Promise.join(
-      Team.find(query),
+      Team.find(query).sort('pathId').exec(),
       getAllUniquePaths(),
     function(rootedTeams, uniquePaths) {
       uniquePaths = uniquePaths.join(',');
@@ -227,7 +273,7 @@ module.exports.getStandalone = function(userEmail) {
     });
   } else {
     return Promise.join(
-      Team.find({path: null}),
+      Team.find({path: null}).sort('pathId').exec(),
       getAllUniquePaths(),
     function(rootedTeams, uniquePaths) {
       uniquePaths = uniquePaths.join(',');
@@ -334,8 +380,46 @@ var getChildren = function(pathId) {
  * @return list of chilren teams
  */
 module.exports.getChildrenByPathId = function(pathId) {
-  if (_.isEmpty(pathId)) return [];
-  else return Team.find({path:new RegExp(','+pathId+',$')}).exec();
+  return new Promise(function(resolve, reject){
+    if (_.isEmpty(pathId)) {
+      resolve([]);
+    }
+    else {
+      var promiseArray = [];
+      promiseArray.push(Team.find({path:new RegExp(','+pathId+',$')}).sort('pathId').exec());
+      promiseArray.push(getAllUniquePaths());
+      Promise.all(promiseArray)
+        .then(function(results){
+          var childrenTeams = results[0];
+          var uniquePaths = results[1];
+          uniquePaths = uniquePaths.join(',');
+          var returnTeams = [];
+          _.each(childrenTeams, function(team){
+            var newTeam = {
+              '_id': team._id,
+              'type': team.type,
+              'name': team.name,
+              'path': team.path,
+              'pathId': team.pathId,
+              'hasChild': null,
+              'docStatus': team.docStatus
+            };
+            if (uniquePaths.indexOf(team.pathId) >= 0) {
+              newTeam.hasChild = true;
+            } else {
+              newTeam.hasChild = false;
+            }
+            returnTeams.push(newTeam);
+          });
+          resolve(returnTeams);
+        })
+        .catch(function(err){
+          reject(err);
+        });
+    }
+  });
+  // if (_.isEmpty(pathId)) return [];
+  // else return Team.find({path:new RegExp(','+pathId+',$')}).sort('pathId').exec();
 };
 
 //TODO refactor into 2 seperate functions
@@ -376,7 +460,9 @@ module.exports.getTeamsByEmail = function(memberEmail) {
   console.log('getting teams by email: ' + memberEmail);
   return Team.find({members: {$elemMatch:{email:memberEmail}}}).exec();
 };
-
+//look at all the first pathId in all the paths
+//query all those pathIds
+//[_id, _id]
 module.exports.getTeamsByUid = function(uid) {
   return Team.find({members: {$elemMatch:{userId:uid}}}).exec();
 };
