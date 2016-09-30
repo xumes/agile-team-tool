@@ -5,7 +5,7 @@ module.exports = function(app, includes) {
   var middleware = includes.middleware;
 
   getApiKey = function(req, res) {
-    usersModel.createApiKey(req.session['user'])
+    usersModel.createApikey(req.session['user'])
       .then(function(result){
         console.log(result);
         res.status(200).json({

@@ -52,7 +52,7 @@ var auth = {
         message: 'Unauthorized'
       });
     } else {
-      userModel.getUserWithApikey(req.headers.apikey)
+      userModel.getUserApikeyByApikey(req.headers.apikey)
       .then(function(apiuser) {
         if (_.isEmpty(apiuser)) {
           res.status(401).send({

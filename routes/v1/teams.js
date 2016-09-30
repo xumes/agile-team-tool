@@ -10,7 +10,6 @@ module.exports = function(app, includes) {
     if (all) {
       teamModel.getUserTeamIdsByUid(req.apiuser.userId)
         .then(function(teamIds) {
-          console.log('i am here ' + teamIds);
           return teamModel.getAllTeams(teamIds, includeDocs);
         })
         .then(function(teams) {

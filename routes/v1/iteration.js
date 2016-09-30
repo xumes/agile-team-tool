@@ -16,6 +16,7 @@ module.exports = function(app, includes) {
     }
     teamModel.getUserTeamIdsByUid(req.apiuser.userId)
       .then(function(teamIds) {
+        /* istanbul ignore else */
         if (_.isEmpty(teamIds) || teamIds.indexOf(teamId) == -1) {
           res.status(400).send({
             status: 400,
@@ -64,6 +65,7 @@ module.exports = function(app, includes) {
     var teamId = data.teamId || '';
     teamModel.getUserTeamIdsByUid(req.apiuser.userId)
       .then(function(teamIds) {
+        /* istanbul ignore else */
         if (_.isEmpty(teamIds) || teamIds.indexOf(teamId) == -1) {
           res.status(400).send({
             status: 400,
