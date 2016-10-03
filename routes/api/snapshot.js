@@ -1,4 +1,4 @@
-var snapshotModel = require('../../models/snapshot');
+var snapshotModel = require('../../models/mongodb/snapshot');
 var _ = require('underscore');
 
 module.exports = function(app, includes) {
@@ -36,7 +36,7 @@ module.exports = function(app, includes) {
 
   getRollUpDataByTeam = function(req, res) {
     if (!_.isEmpty(req.params.teamId) && (req.params.teamId != undefined)) {
-      snapshotModel.getRollUpDataByTeam(req.params.teamId)
+      snapshotModel.getRollUpDataByTeamId(req.params.teamId)
         .then(function(result) {
           res.status(200).send(result);
         })
@@ -78,10 +78,28 @@ module.exports = function(app, includes) {
       });
   },
 
-  app.get('/api/snapshot/getteams/:email', [includes.middleware.auth.requireLogin], getTopLevelTeams);
-  app.get('/api/snapshot/updaterollupsquads', [includes.middleware.auth.requireLogin], updateRollUpSquads);
-  app.get('/api/snapshot/updaterollupdata/', [includes.middleware.auth.requireLogin], updateRollUpData);
-  app.get('/api/snapshot/rollupdatabyteam/:teamId', [includes.middleware.auth.requireLogin], getRollUpDataByTeam);
-  app.get('/api/snapshot/rollupsquadsbyteam/:teamId', [includes.middleware.auth.requireLogin], getRollUpSquadsByTeam);
-  app.get('/api/snapshot/completeiterations', [includes.middleware.auth.requireLogin], completeIterations);
+  checkSnapshotCollectioExist = function(req, res) {
+    snapshotModel.checkSnapshotCollectioExist()
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        res.status(400).send(err);
+      });
+  },
+
+  // nameSearchTest = function(req, res) {
+  //   snapshotModel.nameSearchTest(req.params.keyword)
+  //   .then(function(result) {
+  //     res.status(200).send(result);
+  //   })
+  //   .catch( /* istanbul ignore next */ function(err) {
+  //     res.status(400).send(err);
+  //   });
+  // },
+  app.get('/api/mongodb/snapshot/completeiterations', [includes.middleware.auth.requireLogin], completeIterations);
+  app.get('/api/mongodb/snapshot/get/:teamId', [includes.middleware.auth.requireLogin], getRollUpDataByTeam);
+  // app.get('/api/mongodb/snapshot/test/:keyword', [includes.middleware.auth.requireLogin], nameSearchTest);
+  app.get('/api/mongodb/snapshot/checkexist/', [includes.middleware.auth.requireLogin], checkSnapshotCollectioExist);
+  app.get('/api/mongodb/snapshot/updaterollupdata/', [includes.middleware.auth.requireLogin], updateRollUpData);
 };

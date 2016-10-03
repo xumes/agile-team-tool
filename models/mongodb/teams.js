@@ -189,7 +189,7 @@ module.exports.getRootTeams = function(userEmail) {
                 if (team.type == 'squad') {
                   return tempTeams.push(team.pathId);
                 } else {
-                  if (uniquePaths.indexOf(team.pathId) < 0) {
+                  if (uniquePaths.indexOf(','+team.pathId+',') < 0) {
                     return tempTeams.push(team.pathId);
                   }
                 }
@@ -220,7 +220,7 @@ module.exports.getRootTeams = function(userEmail) {
                 'hasChild': null,
                 'docStatus': team.docStatus
               };
-              if (uniquePaths.indexOf(team.pathId) >= 0) {
+              if (uniquePaths.indexOf(','+team.pathId+',') >= 0) {
                 newTeam.hasChild = true;
               } else {
                 newTeam.hasChild = false;
@@ -241,7 +241,7 @@ module.exports.getRootTeams = function(userEmail) {
         uniquePaths = uniquePaths.join(',');
         //indexOf is faster than match apparently
         var res = _.filter(rootedTeams, function(team){
-          return uniquePaths.indexOf(team.pathId) >= 0;
+          return uniquePaths.indexOf(','+team.pathId+',') >= 0;
         });
         resolve(res);
       });
@@ -272,7 +272,7 @@ module.exports.getStandalone = function(userEmail) {
       uniquePaths = uniquePaths.join(',');
       //indexOf is faster than match apparently
       var res = _.filter(rootedTeams, function(team){
-        return uniquePaths.indexOf(team.pathId) < 0;
+        return uniquePaths.indexOf(','+team.pathId+',') < 0;
       });
       return res;
     });
@@ -284,7 +284,7 @@ module.exports.getStandalone = function(userEmail) {
       uniquePaths = uniquePaths.join(',');
       //indexOf is faster than match apparently
       var res = _.filter(rootedTeams, function(team){
-        return uniquePaths.indexOf(team.pathId) < 0;
+        return uniquePaths.indexOf(','+team.pathId+',') < 0;
       });
       return res;
     });
@@ -401,7 +401,7 @@ module.exports.getChildrenByPathId = function(pathId) {
               'hasChild': null,
               'docStatus': team.docStatus
             };
-            if (uniquePaths.indexOf(team.pathId) >= 0) {
+            if (uniquePaths.indexOf(','+team.pathId+',') >= 0) {
               newTeam.hasChild = true;
             } else {
               newTeam.hasChild = false;
@@ -451,7 +451,11 @@ module.exports.getTeamByPathId = function(pathId) {
 module.exports.getTeamAndChildInfo = function(id) {
   return new Promise(function(resolve, reject){
     var promiseArray = [];
-    promiseArray.push(Team.findOne({_id:id}).exec());
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      promiseArray.push(Team.findOne({_id:id}).exec());
+    } else {
+      promiseArray.push(Team.findOne({pathId:id}).exec());
+    }
     promiseArray.push(getAllUniquePaths());
     Promise.all(promiseArray)
       .then(function(results){
@@ -470,7 +474,7 @@ module.exports.getTeamAndChildInfo = function(id) {
             'hasChild': null,
             'docStatus': team.docStatus
           };
-          if (uniquePaths.indexOf(team.pathId) >= 0) {
+          if (uniquePaths.indexOf(','+team.pathId+',') >= 0) {
             newTeam.hasChild = true;
           } else {
             newTeam.hasChild = false;
