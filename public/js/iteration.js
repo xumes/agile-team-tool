@@ -167,7 +167,7 @@ jQuery(function($) {
     {
       return false;
     }
-  }).on("paste",function(e){
+  }).on('paste',function(e){
     e.preventDefault();
   });
 
@@ -179,7 +179,7 @@ jQuery(function($) {
     {
       return false;
     }
-  }).on("paste",function(e){
+  }).on('paste',function(e){
     e.preventDefault();
   });
 
