@@ -60,6 +60,7 @@ module.exports = function(passport) {
       .then(function(ldapObject) {
         ldapObject = typeof ldapObject === 'string' ? JSON.parse(ldapObject) : ldapObject;
         if (!(_.isEmpty(ldapObject['ldap']))) {
+          req.session['userId'] = ldapObject['ldap']['uid']; //this value will be unique for any user data lookup
           req.session['email'] = ldapObject['ldap']['preferredIdentity']; //ldapObject['shortEmail'];
           ldapObject.shortEmail = ldapObject['ldap']['preferredIdentity']; // Normalize shortEmail with preferredIdentity
           req.session['user'] = ldapObject;

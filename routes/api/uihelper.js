@@ -55,6 +55,9 @@ module.exports = function(app, includes) {
         cache.setActiveSquadTeams(),
         cache.setUserTeams(req.session['email']),
         function(systemCache, squadTeams, userTeamList) {
+          // console.log('\n\nsystemCache ' +JSON.stringify(systemCache))
+          // console.log('\n\nsquadTeams ' +JSON.stringify(squadTeams))
+          // console.log('\n\nuserTeamList ' +JSON.stringify(userTeamList))
           var json = {
             'user': req.session['user'],
             'systemAdmin': systemCache.systemAdmin,
@@ -123,7 +126,7 @@ module.exports = function(app, includes) {
 
   app.get('/api/uihelper/team', [includes.middleware.auth.requireLogin], getTeamManagementVariables);
 
-  app.get('/api/uihelper/iteration', [includes.middleware.auth.requireLogin], getIterationManagementVariables);
+  // app.get('/api/uihelper/iteration', [includes.middleware.auth.requireLogin], getIterationManagementVariables);
 
   app.get('/api/uihelper/assessment', [includes.middleware.auth.requireLogin], getAssessmentManagementVariables);
 

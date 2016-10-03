@@ -706,7 +706,7 @@ var team = {
       }
     });
   },
-  getTeamsByUid: function(uid) {
+  getTeamsByUserId: function(uid) {
     return new Promise(function(resolve, reject) {
       if (_.isEmpty(uid)) {
         var err = {
