@@ -29,7 +29,8 @@ describe('Users model [api key]: user api key handlers', function(done) {
     users.createApikey(user)
       .then(function(body) {
         expect(body).to.be.a('object');
-        // expect(body).to.have.property('key');
+        expect(body).to.have.property('key');
+        testApiKey = body.key;
         done();
       })
       .catch(function(err) {
@@ -37,12 +38,12 @@ describe('Users model [api key]: user api key handlers', function(done) {
       });
   });
 
-  it('returns user and key by uid search', function(done) {
-    users.getUserApikeyByUid(user.ldap.uid)
+  it('return user existing api key', function(done) {
+    users.createApikey(user)
       .then(function(body) {
         expect(body).to.be.a('object');
         expect(body).to.have.property('key');
-        testApiKey = body.key;
+        expect(body.key).to.be.equal(testApiKey);
         done();
       })
       .catch(function(err) {
@@ -56,6 +57,19 @@ describe('Users model [api key]: user api key handlers', function(done) {
         expect(body).to.be.a('object');
         expect(body).to.have.property('key');
         expect(body.email).to.be.equal(user.shortEmail);
+        done();
+      })
+      .catch(function(err) {
+        done(err);
+      });
+  });
+
+  it('returns user and key by uid search', function(done) {
+    users.getUserApikeyByUid(user.ldap.uid)
+      .then(function(body) {
+        expect(body).to.be.a('object');
+        expect(body).to.have.property('key');
+        expect(body.key).to.be.equal(testApiKey);
         done();
       })
       .catch(function(err) {
