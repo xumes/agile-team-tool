@@ -1,14 +1,16 @@
-    module.exports = function(app, includes) {
-      var middleware = includes.middleware;
-      var render = includes.render;
+var cors = require('cors');
 
-      showTrends = function(req, res) {
-        json = {
-          'pageTitle': 'Maturity Assessment Trends',
-          'user': req.session['user']
-        };
-        render(req, res, 'maturityTrends', json);
-      };
+module.exports = function(app, includes) {
+  var middleware = includes.middleware;
+  var render = includes.render;
 
-      app.get('/maturityTrends', showTrends);
+  showTrends = function(req, res) {
+    json = {
+      'pageTitle': 'Maturity Assessment Trends',
+      'user': req.session['user']
     };
+    render(req, res, 'maturityTrends', json);
+  };
+
+  app.get('/maturityTrends', cors(), showTrends);
+};
