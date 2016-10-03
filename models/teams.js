@@ -1,5 +1,7 @@
 var Promise = require('bluebird');
 var common = require('./cloudant-driver');
+var iterationModels = require('./iteration');
+var assessmentModels = require('./assessment');
 var _ = require('underscore');
 var loggers = require('../middleware/logger');
 var validate = require('validate.js');
@@ -341,10 +343,10 @@ var team = {
         infoLogs('Getting team document latest records');
         updateOrDeleteTeamValidation.push(team.getTeam(teamId)); //res[0]
         infoLogs('Getting iterations associated to ' + teamId);
-        var iterationModels = require('./iteration');
+        // var iterationModels = require('./iteration');
         updateOrDeleteTeamValidation.push(iterationModels.getByIterInfo(teamId)); //res[1]
         infoLogs('Getting assessments associated to ' + teamId);
-        var assessmentModels = require('./assessment');
+        // var assessmentModels = require('./assessment');
         updateOrDeleteTeamValidation.push(assessmentModels.getTeamAssessments(teamId)); //res[2]
         infoLogs('Getting existing team names that might match ' + updatedTeamDoc['name']);
         updateOrDeleteTeamValidation.push(team.getName(updatedTeamDoc['name'])); //res[3]
