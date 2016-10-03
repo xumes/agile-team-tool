@@ -1,5 +1,4 @@
 'use strict';
-//var iterationModel = require('../../models/iteration');
 var util = require('../../helpers/util');
 var loggers = require('../../middleware/logger');
 var validate = require('validate.js');
@@ -19,10 +18,10 @@ module.exports = function(app, includes) {
   var middleware = includes.middleware;
 
   /**
-   * Get iteration docs by keys(team_id) or get all iteration info docs
+   * Get iteration docs by keys(teamId) or get all iteration info docs
    * Cloudant view1: _design/teams/_view/iterinfo?keys=["ag_team_sample_team1_1469007856095"]
    * Cloudant view2: _design/teams/_view/iterinfo
-   * @param {String}   team_id(optional)
+   * @param {String}   teamId(optional)
    */
   var getIterinfo = function(req, res, next) {
     var teamId = req.params.teamId || undefined;
@@ -144,32 +143,25 @@ module.exports = function(app, includes) {
    * @param {Boolean}   includeDocs (true or false) (optional)
    */
   var searchTeamIteration = function(req, res, next) {
-    var team_id = req.query.id;
-    var status = req.query.status;
-    var startdate = req.query.startdate;
-    var enddate = req.query.enddate;
-    var limit = req.query.limit;
-    var includeDocs = req.query.includeDocs;
-
-    if (!team_id) {
+    var teamId = req.query.id;
+    if (!teamId) {
       return res.status(400).send({
         error: 'TeamId is required'
       });
     }
     var params = {
-      id: team_id,
-      status: status,
-      startdate: startdate,
-      enddate: enddate,
-      includeDocs: includeDocs,
-      limit: limit
+      id: teamId,
+      status: req.query.status,
+      startDate: req.query.startdate,
+      endDate: req.query.enddate,
+      includeDocs:  req.query.includeDocs,
+      limit: req.query.limit
     };
     iterationModel.searchTeamIteration(params)
       .then(function(result) {
         return res.status(200).send(result);
       })
       .catch( /* istanbul ignore next */ function(err) {
-        /* cannot simulate Cloudant error during testing */
         formatErrMsg('[iterationRoute.searchTeamIteration]:', err);
         return res.status(400).send(err);
       });
