@@ -352,72 +352,67 @@ function searchTeams(keyword) {
 }
 
 function getMyTeamsFromDb(initial, loadStandalone) {
-  return new Promise(function(resolve, reject){
-    var rootTeamUrl = '/api/teams/lookup/rootteams/' + encodeURIComponent((userInfo.email).toLowerCase());
-    var standaloneUrl = '/api/teams/lookup/standalone/' + encodeURIComponent((userInfo.email).toLowerCase());
-    var req = $.when(
-      $.ajax({
-        type: 'GET',
-        url: rootTeamUrl
-      }),
-      $.ajax({
-        type: 'GET',
-        url: standaloneUrl
-      })
-    ).done(function(data1, data2){
-      var rootTeams = data1[0];
-      var standaloneTeams = data2[0];
-      var twistyId = 'teamTreeMain';
-      var standaloneTeam = {
-        '_id': 'agteamstandalone',
-        'type': null,
-        'pathId': 'agteamstandalone',
-        'name': 'Standalone Teams',
-        'hasChild': true
-      };
-      if (rootTeams.length <= 0 && standaloneTeams.length <= 0) {
-        $('#spinnerContainer').hide();
-        $('#no-teams-highlightbox').show();
-        showLog('data loaded: ' + JSON.stringify(data));
-        reject({'error': 'no team found'});
-      } else {
-        if (standaloneTeams.length > 0) {
-          rootTeams.push(standaloneTeam);
-        }
-        _.each(rootTeams, function(team) {
-          if (team.docStatus != 'delete') {
-            addTeamToTree(team, twistyId, true);
-          }
-        });
-        if (standaloneTeams.length > 0) {
-          twistyId = 'main_sub_agteamstandalone';
-          $('#bodysub_agteamstandalone').append(createMainTwistySection(twistyId, ''));
-          _.each(standaloneTeams, function(team) {
-            addTeamToTree(team, twistyId, true);
-          });
-          $('#sub_' + jq('agteamstandalone')).addClass('ibm-active');
-          $('#sub_' + jq('agteamstandalone')).attr('hasChildren', 'Yes');
-          $('#sub_' + jq('agteamstandalone') + (' a.ibm-twisty-body')).css('display', 'block');
-          var defaultTeam = ($('#teamTreeMain li')[0]).id;
-          if (defaultTeam == 'sub_agteamstandalone') {
-            defaultTeam = ($('#sub_agteamstandalone li')[0]).id;
-          }
-        } else {
-          var defaultTeam = ($('#teamTreeMain li')[0]).id;
-        }
-        if ($('#sub_'+jq(defSelTeamId)).length > 0) {
-          loadDetails('sub_' + defSelTeamId);
-        } else {
-          loadDetails(defaultTeam);
-        }
-        $('.nano').nanoScroller();
-        resolve();
-      }
-    }).fail(function(err){
-      console.log(err);
-      reject(err);
+  var rootTeamUrl = '/api/teams/lookup/rootteams/' + encodeURIComponent((userInfo.email).toLowerCase());
+  var standaloneUrl = '/api/teams/lookup/standalone/' + encodeURIComponent((userInfo.email).toLowerCase());
+  var req = $.when(
+    $.ajax({
+      type: 'GET',
+      url: rootTeamUrl
+    }),
+    $.ajax({
+      type: 'GET',
+      url: standaloneUrl
+    })
+  ).done(function(data1, data2){
+    var rootTeams = data1[0];
+    var standaloneTeams = data2[0];
+    var twistyId = 'teamTreeMain';
+    var standaloneTeam = {
+      '_id': 'agteamstandalone',
+      'type': null,
+      'pathId': 'agteamstandalone',
+      'name': 'Standalone Teams',
+      'hasChild': true
+    };
+    if (rootTeams.length <= 0 && standaloneTeams.length <= 0) {
       $('#spinnerContainer').hide();
-    });
+      $('#no-teams-highlightbox').show();
+      showLog('data loaded: ' + JSON.stringify(data));
+    } else {
+      if (standaloneTeams.length > 0) {
+        rootTeams.push(standaloneTeam);
+      }
+      _.each(rootTeams, function(team) {
+        if (team.docStatus != 'delete') {
+          addTeamToTree(team, twistyId, true);
+        }
+      });
+      if (standaloneTeams.length > 0) {
+        twistyId = 'main_sub_agteamstandalone';
+        $('#bodysub_agteamstandalone').append(createMainTwistySection(twistyId, ''));
+        _.each(standaloneTeams, function(team) {
+          addTeamToTree(team, twistyId, true);
+        });
+        $('#sub_' + jq('agteamstandalone')).addClass('ibm-active');
+        $('#sub_' + jq('agteamstandalone')).attr('hasChildren', 'Yes');
+        $('#sub_' + jq('agteamstandalone') + (' a.ibm-twisty-body')).css('display', 'block');
+        var defaultTeam = ($('#teamTreeMain li')[0]).id;
+        if (defaultTeam == 'sub_agteamstandalone') {
+          defaultTeam = ($('#sub_agteamstandalone li')[0]).id;
+        }
+      } else {
+        var defaultTeam = ($('#teamTreeMain li')[0]).id;
+      }
+      if ($('#sub_'+jq(defSelTeamId)).length > 0) {
+        loadDetails('sub_' + defSelTeamId);
+      } else {
+        loadDetails(defaultTeam);
+      }
+      $('.nano').nanoScroller();
+    }
+  }).fail(function(err){
+    console.log(err);
+    $('#spinnerContainer').hide();
   });
 }
 
@@ -425,7 +420,7 @@ function getMyTeamsFromDb(initial, loadStandalone) {
 function setRefreshDate(timestamp) {
   //var myDate = new Date(timestamp*1000); // creates a date that represents the number of milliseconds after midnight GMT on Januray 1st 1970.
   //$("#refreshDate").html(moment(myDate).format("DD-MMM-YYYY, hh:mm"));
-  $('#refreshDate').html(moment.utc(timestamp * 1000).format('MMM DD, YYYY, HH:mm (z)'));
+  $('#refreshDate').html(moment.utc(timestamp).format('MMM DD, YYYY, HH:mm (z)'));
 }
 
 //refresh button on the screen to refresh snapshot from workers
@@ -470,43 +465,37 @@ function expandParentTeam(treeLinkId, parentsTree) {
 }
 
 function getChildrenTeams(id) {
-  return new Promise(function(resolve, reject){
-    var url = '/api/teams/children/' + id;
-    if ($('#myTeams').attr('data-state') == 'open') {
-      if (id == 'agteamstandalone') {
-        url = '/api/teams/lookup/standalone/' + encodeURIComponent((userInfo.email).toLowerCase());
-      }
-    } else {
-      if (id == 'agteamstandalone') {
-        url = '/api/teams/lookup/standalone/';
-      }
+  var url = '/api/teams/children/' + id;
+  if ($('#myTeams').attr('data-state') == 'open') {
+    if (id == 'agteamstandalone') {
+      url = '/api/teams/lookup/standalone/' + encodeURIComponent((userInfo.email).toLowerCase());
     }
-    var req = $.ajax({
-      type: 'GET',
-      url: url
-    }).done(function(data) {
-      console.time('aaa');
-      if (data.length > 0) {
-        var teams = data;
-        var twistyId = 'bodysub_' + id;
-        var mainTwistyId = 'main_sub_' + id;
-        $('#' + jq(twistyId)).append(createMainTwistySection(mainTwistyId, ''));
-        _.each(teams, function(team) {
-          if (team.docStatus != 'delete') {
-            addTeamToTree(team, mainTwistyId);
-          }
-        });
-        resolve();
-        console.timeEnd('aaa');
-      } else {
-        //TODO no team
-      }
-    }).fail(function(err){
-      console.log(e);
-      reject(e);
-    });
-    requests.push(req);
+  } else {
+    if (id == 'agteamstandalone') {
+      url = '/api/teams/lookup/standalone/';
+    }
+  }
+  var req = $.ajax({
+    type: 'GET',
+    url: url
+  }).done(function(data) {
+    if (data.length > 0) {
+      var teams = data;
+      var twistyId = 'bodysub_' + id;
+      var mainTwistyId = 'main_sub_' + id;
+      $('#' + jq(twistyId)).append(createMainTwistySection(mainTwistyId, ''));
+      _.each(teams, function(team) {
+        if (team.docStatus != 'delete') {
+          addTeamToTree(team, mainTwistyId);
+        }
+      });
+    } else {
+      //TODO no team
+    }
+  }).fail(function(err){
+    console.log(e);
   });
+  requests.push(req);
 }
 
 function loadParentInAllTeams(teamId, fromSearch) {
@@ -557,127 +546,196 @@ function loadParentInAllTeams(teamId, fromSearch) {
 }
 
 function getAllTeams(parents) {
-  return new Promise(function(resolve, reject){
-    var url = '/api/teams/lookup/rootteams/';
-    var req = $.ajax({
-      type: 'GET',
-      url: url,
-      async: false
-    }).done(function(data) {
-      if (data.length > 0) {
-        var teams = data;
-        var twistyId = 'teamTreeMain';
-        $('#teamTree').append(createMainTwistySection('teamTreeMain', ''));
-        $('#teamTreeMain').twisty();
-        var standaloneTeam = {
-          '_id': 'agteamstandalone',
-          'type': null,
-          'pathId': 'agteamstandalone',
-          'name': 'Standalone Teams',
-        };
-        teams.push(standaloneTeam);
-        var mainTwistyId = 'main_sub_';
-        $('#' + jq(twistyId)).append(createMainTwistySection(mainTwistyId, ''));
-        _.each(teams, function(team) {
-          if (team.docStatus != 'delete') {
-            addTeamToTree(team, mainTwistyId, false);
-          }
-        });
-      } else {
-        var teams = [];
-        teams.push(standaloneTeam);
-        $('#' + jq(twistyId)).append(createMainTwistySection(mainTwistyId, ''));
-        _.each(teams, function(team) {
-          if (team.docStatus != 'delete') {
-            addTeamToTree(team, mainTwistyId, false);
-          }
-        });
-      }
-      if (parents.length > 0) {
-        loopFindChildren(parents);
-      }
-      resolve();
-    }).fail(function(err){
-      console.log(e);
-      reject(e);
-    });
-    requests.push(req);
+  var url = '/api/teams/lookup/rootteams/';
+  var req = $.ajax({
+    type: 'GET',
+    url: url,
+    async: false
+  }).done(function(data) {
+    if (data.length > 0) {
+      var teams = data;
+      var twistyId = 'teamTreeMain';
+      $('#teamTree').append(createMainTwistySection('teamTreeMain', ''));
+      $('#teamTreeMain').twisty();
+      var standaloneTeam = {
+        '_id': 'agteamstandalone',
+        'type': null,
+        'pathId': 'agteamstandalone',
+        'name': 'Standalone Teams',
+      };
+      teams.push(standaloneTeam);
+      var mainTwistyId = 'main_sub_';
+      $('#' + jq(twistyId)).append(createMainTwistySection(mainTwistyId, ''));
+      _.each(teams, function(team) {
+        if (team.docStatus != 'delete') {
+          addTeamToTree(team, mainTwistyId, false);
+        }
+      });
+    } else {
+      var teams = [];
+      teams.push(standaloneTeam);
+      $('#' + jq(twistyId)).append(createMainTwistySection(mainTwistyId, ''));
+      _.each(teams, function(team) {
+        if (team.docStatus != 'delete') {
+          addTeamToTree(team, mainTwistyId, false);
+        }
+      });
+    }
+    if (parents.length > 0) {
+      loopFindChildren(parents);
+    }
+  }).fail(function(err){
+    console.log(e);
   });
+  requests.push(req);
 }
 
 function loopFindChildren(path) {
   $('#spinnerContainer-search').show();
   $('#teamTree').hide();
-  if (_.isEmpty(path)) {
-    //$('#spinnerContainer-search').hide();
-    $('#spinnerContainer-search').hide();
-    $('#teamTree').show();
-    $('.nano').nanoScroller();
-  } else {
-    var id = path.shift();
-    if ($('#sub_' + jq(id)).length > 0) {
-      $('#sub_' + jq(id)).addClass('ibm-active');
-      $('#sub_' + jq(id)).attr('hasChildren', 'Yes');
-      $('#sub_' + jq(id) + (' a.ibm-twisty-body')).css('display', 'block');
-      var url = '/api/teams/children/' + id;
-      if ($('#myTeams').attr('data-state') == 'open') {
-        if (id == 'agteamstandalone') {
-          url = '/api/teams/lookup/standalone/' + encodeURIComponent((userInfo.email).toLowerCase());
-        }
-      } else {
-        if (id == 'agteamstandalone') {
-          url = '/api/teams/lookup/standalone/';
-        }
+  if (path[0] == 'agteamstandalone') {
+    var url = '/api/teams/lookup/standalone/';
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data) {
+      if ($('#sub_' + jq('agteamstandalone')).length > 0) {
+        $('#sub_' + jq('agteamstandalone')).addClass('ibm-active');
+        $('#sub_' + jq('agteamstandalone')).attr('hasChildren', 'Yes');
+        $('#sub_' + jq('agteamstandalone') + (' a.ibm-twisty-body')).css('display', 'block');
       }
-      var req = $.ajax({
-        type: 'GET',
-        url: url
-      }).done(function(data) {
-        if (data.length > 0) {
-          var teams = data;
+      var twistyId = 'bodysub_' + 'agteamstandalone';
+      var mainTwistyId = 'main_sub_' + 'agteamstandalone';
+      $('#' + jq(twistyId)).append(createMainTwistySection(mainTwistyId, ''));
+      _.each(data, function(team) {
+        if (team.docStatus != 'delete') {
+          addTeamToTree(team, mainTwistyId);
+        }
+      });
+      $('#spinnerContainer-search').hide();
+      $('#teamTree').show();
+      loadDetails('sub_'+path[1], true);
+    }).fail(function(err){
+      console.log(err);
+    });
+    requests.push(req);
+  } else {
+    var postData = {
+      'path': path
+    };
+    var url = '/api/teams/children';
+    var req = $.ajax({
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(postData),
+      url: url
+    }).done(function(data) {
+      var id = '';
+      _.each(data, function(teamArray){
+        id = path[data.indexOf(teamArray)];
+        if (teamArray.length == 0) {
+          $('#spinnerContainer-search').hide();
+          $('#teamTree').show();
+          loadDetails('sub_'+id, true);
+          return;
+        } else {
+          if ($('#sub_' + jq(id)).length > 0) {
+            $('#sub_' + jq(id)).addClass('ibm-active');
+            $('#sub_' + jq(id)).attr('hasChildren', 'Yes');
+            $('#sub_' + jq(id) + (' a.ibm-twisty-body')).css('display', 'block');
+          }
           var twistyId = 'bodysub_' + id;
           var mainTwistyId = 'main_sub_' + id;
           $('#' + jq(twistyId)).append(createMainTwistySection(mainTwistyId, ''));
-          _.each(teams, function(team) {
+          _.each(teamArray, function(team) {
             if (team.docStatus != 'delete') {
               addTeamToTree(team, mainTwistyId);
             }
           });
-          if (_.isEmpty(path)) {
-            loadDetails('sub_'+id, true);
-            $('#spinnerContainer-search').hide();
-            $('#teamTree').show();
-            $('.nano').nanoScroller();
-          } else {
-            loopFindChildren(path);
-          }
-        } else {
-          //TODO no team
-          //$('#spinnerContainer-search').hide();
-          loadDetails('sub_'+id, true);
-          $('#spinnerContainer-search').hide();
-          $('#teamTree').show();
         }
-      }).fail(function(err){
-        console.log(err);
-        $('#spinnerContainer-search').hide();
-        $('#teamTree').show();
-        $('.nano').nanoScroller();
       });
-      requests.push(req);
-    } else {
-      console.log('cannot find this team');
       $('#spinnerContainer-search').hide();
       $('#teamTree').show();
-      $('.nano').nanoScroller();
-    }
+      loadDetails('sub_'+id, true);
+    }).fail(function(err){
+      console.log(err);
+    });
+    requests.push(req);
   }
 }
+
+// function loopFindChildren(path) {
+//   $('#spinnerContainer-search').show();
+//   $('#teamTree').hide();
+//   if (_.isEmpty(path)) {
+//     //$('#spinnerContainer-search').hide();
+//     $('#spinnerContainer-search').hide();
+//     $('#teamTree').show();
+//     $('.nano').nanoScroller();
+//   } else {
+//     var id = path.shift();
+//     if ($('#sub_' + jq(id)).length > 0) {
+//       $('#sub_' + jq(id)).addClass('ibm-active');
+//       $('#sub_' + jq(id)).attr('hasChildren', 'Yes');
+//       $('#sub_' + jq(id) + (' a.ibm-twisty-body')).css('display', 'block');
+//       var url = '/api/teams/children/' + id;
+//       if ($('#myTeams').attr('data-state') == 'open') {
+//         if (id == 'agteamstandalone') {
+//           url = '/api/teams/lookup/standalone/' + encodeURIComponent((userInfo.email).toLowerCase());
+//         }
+//       } else {
+//         if (id == 'agteamstandalone') {
+//           url = '/api/teams/lookup/standalone/';
+//         }
+//       }
+//       var req = $.ajax({
+//         type: 'GET',
+//         url: url
+//       }).done(function(data) {
+//         if (data.length > 0) {
+//           var teams = data;
+//           var twistyId = 'bodysub_' + id;
+//           var mainTwistyId = 'main_sub_' + id;
+//           $('#' + jq(twistyId)).append(createMainTwistySection(mainTwistyId, ''));
+//           _.each(teams, function(team) {
+//             if (team.docStatus != 'delete') {
+//               addTeamToTree(team, mainTwistyId);
+//             }
+//           });
+//           if (_.isEmpty(path)) {
+//             loadDetails('sub_'+id, true);
+//             $('#spinnerContainer-search').hide();
+//             $('#teamTree').show();
+//             $('.nano').nanoScroller();
+//           } else {
+//             loopFindChildren(path);
+//           }
+//         } else {
+//           //TODO no team
+//           //$('#spinnerContainer-search').hide();
+//           loadDetails('sub_'+id, true);
+//           $('#spinnerContainer-search').hide();
+//           $('#teamTree').show();
+//         }
+//       }).fail(function(err){
+//         console.log(err);
+//         $('#spinnerContainer-search').hide();
+//         $('#teamTree').show();
+//         $('.nano').nanoScroller();
+//       });
+//       requests.push(req);
+//     } else {
+//       console.log('cannot find this team');
+//       $('#spinnerContainer-search').hide();
+//       $('#teamTree').show();
+//       $('.nano').nanoScroller();
+//     }
+//   }
+// }
 
 function getSnapshot(teamId, teamName) {
   $('#mainContent').hide();
   $('#spinnerContainer').show();
-  console.log(teamId, teamName);
   var cUrl = '/api/snapshot/get/' + encodeURIComponent(teamId);
   var req = $.ajax({
     type: 'GET',
@@ -1010,7 +1068,6 @@ function loadDetails(elementId, setScrollPosition) {
           keyValue = '(No parent team infomation)';
           var parentLinkId = $('#link_sub_' + jq(parent_team_id));
           if (parentLinkId) {
-            console.log('l:',parentLinkId);
             var parentName;
             if (parentLinkId.html() != undefined) {
               parentName = parentLinkId.html();
@@ -1028,7 +1085,6 @@ function loadDetails(elementId, setScrollPosition) {
 
         /* draw iteration and assessment charts */
         if (isLeafTeam) {
-          console.log(team['_id']);
           // getTeamIterations(team['_id'], teamIterationListHander, [team['_id']]);
           getSquadIterations(team['_id']);
           getTeamAssessments(team['_id'], true, teamAssessmentListHander, [team['_id']]);

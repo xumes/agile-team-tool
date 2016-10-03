@@ -1,4 +1,4 @@
-var assessmentModel = require('../../models/assessment');
+var assessmentModel = require('../../models/mongodb/assessments');
 var _ = require('underscore');
 
 module.exports = function(app, includes) {
@@ -11,6 +11,7 @@ module.exports = function(app, includes) {
     if (!_.isUndefined(teamId)) {
       assessmentModel.getTeamAssessments(teamId, docs)
         .then(function(result) {
+          console.log(result);
           res.send(result);
         })
         .catch( /* istanbul ignore next */ function(err) {

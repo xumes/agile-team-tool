@@ -304,6 +304,17 @@ module.exports = function(app, includes) {
         res.status(400).send(err);
       });
   };
+
+  getAllChildrenOnPath = function(req, res) {
+    console.log(req.body.path);
+    teamModel.getAllChildrenOnPath(req.body.path)
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
+  };
   // search team with name
   app.get('/api/teams/search/:name', [includes.middleware.auth.requireLogin], searchTeamWithName);
 
@@ -366,4 +377,6 @@ module.exports = function(app, includes) {
 
   // get team info by pathId
   app.get('/api/teams/pathId/:pathId', [includes.middleware.auth.requireLogin], getTeamByPathId);
+
+  app.post('/api/teams/children/', [includes.middleware.auth.requireLogin], getAllChildrenOnPath);
 };
