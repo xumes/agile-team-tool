@@ -63,7 +63,7 @@
                           <select id="teamSelectList" name="teamSelectList" style="width: 360px;">
                             <option value="new" selected="selected">Select one</option>
                             <% for(var i=0; i<squadTeams.length; i++) {%>
-                               <option><%= squadTeams[i].name %></option>
+                               <option value=<%= squadTeams[i]._id %> ><%= squadTeams[i].name %></option>
                             <% } %>
                           </select>
                         </span>

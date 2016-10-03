@@ -1,3 +1,4 @@
+'use strict';
 var _ = require('underscore');
 var Promise = require('bluebird');
 var mongoose = require('mongoose');
@@ -237,7 +238,7 @@ var iteration = {
 
   getCompletedIterationsByKey: function(startkey, endkey) {
     return new Promise(function(resolve, reject) {
-      var queryrequest = {
+      var qReq = {
         '$or': [
           {'docStatus': null},
           {'docStatus': {'$ne': 'delete'}}
@@ -245,20 +246,20 @@ var iteration = {
         'status': 'Completed'
       };
       if (startkey && endkey) {
-        queryrequest['endDate'] = {
+        qReq['endDate'] = {
           '$gte': moment(new Date(startkey)).format(dateFormat),
           '$lte': moment(new Date(endkey)).format(dateFormat)
         };
       } else if (startkey) {
-        queryrequest['endDate'] = {
+        qReq['endDate'] = {
           '$gte': moment(new Date(startkey)).format(dateFormat)
         };
       } else if (endkey) {
-        queryrequest['endDate'] = {
+        qReq['endDate'] = {
           '$lte': moment(new Date(endkey)).format(dateFormat)
         };
       }
-      iterationModel.find(queryrequest).exec()
+      iterationModel.find(qReq).exec()
         .then(function(body) {
           successLogs('[iterationModel.getCompletedIterationsByKey] Completed iteration docs obtained');
           resolve(body);
@@ -398,43 +399,35 @@ var iteration = {
   },
 
   searchTeamIteration: function(p) {
-    return new Promise(function(resolve, reject) {
-      var queryrequest = new Object();
-      queryrequest['teamId'] = validObjectId(p.id);
-      if (queryrequest['teamId'].error) {
-        reject(queryrequest['teamId']);
-      }
-      if (p.status) {
-        queryrequest['status'] = p.status;
-      }
-      var startdate = p.startdate;
-      var enddate = p.enddate;
-      if (startdate && enddate) {
-        queryrequest['endDate'] = {
-          '$gte': moment(new Date(startdate)).format(dateFormat),
-          '$lte': moment(new Date(enddate)).format(dateFormat)
-        };
-      } else if (startdate) {
-        queryrequest['endDate'] = {
-          '$gte': moment(new Date(startdate)).format(dateFormat)
-        };
-      } else if (enddate) {
-        queryrequest['endDate'] = {
-          '$lte': moment(new Date(enddate)).format(dateFormat)
+    var qReq = {};
+    if (!_.isEmpty(p.id))
+      qReq['teamId'] = new ObjectId(p.id);
+
+    if (!_.isEmpty(p.status))
+      qReq['status'] = p.status;
+
+    if (!_.isEmpty(p.startDate) || !_.isEmpty(p.endDate)){
+      var startDate = p.startDate;
+      var endDate = p.endDate;
+      if (startDate && endDate) {
+        qReq['endDate'] = {
+          '$gte': moment(new Date(startDate)).format(dateFormat),
+          '$lte': moment(new Date(endDate)).format(dateFormat)
         };
       }
-      iterationModel.find(queryrequest).sort('-endDate').exec()
-        .then(function(body) {
-          successLogs('[iterationModel.searchTeamIteration] Completed iteration docs obtained');
-          resolve(body);
-        })
-        .catch( /* istanbul ignore next */ function(err) {
-          /* cannot simulate Cloudant error during testing */
-          var msg = err.message;
-          reject(formatErrMsg(msg));
-        });
-      // }
-    });
+      else if (startDate) {
+        qReq['endDate'] = {
+          '$gte': moment(new Date(startDate)).format(dateFormat)
+        };
+      }
+      else if (enddate) {
+        qReq['endDate'] = {
+          '$lte': moment(new Date(endDate)).format(dateFormat)
+        };
+      }
+    }
+    loggers.get('model-iteration').verbose('Querying iterations:' + JSON.stringify(qReq));
+    return iterationModel.find(qReq).sort('-endDate').exec();
   },
 
   calculateStatus: function(data) {
