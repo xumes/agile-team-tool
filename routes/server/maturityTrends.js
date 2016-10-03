@@ -1,5 +1,3 @@
-var cors = require('cors');
-
 module.exports = function(app, includes) {
   var middleware = includes.middleware;
   var render = includes.render;
@@ -12,5 +10,5 @@ module.exports = function(app, includes) {
     render(req, res, 'maturityTrends', json);
   };
 
-  app.get('/maturityTrends', cors(), showTrends);
+  app.get('/maturityTrends', showTrends);
 };
