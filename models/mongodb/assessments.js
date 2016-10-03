@@ -260,7 +260,7 @@ module.exports.getAssessment = function(assessmentId){
 
 module.exports.updateTeamAssessment = function(userEmail, data){
   return new Promise(function(resolve, reject) {
-    if (lodash.isEmpty(assessmentId) || lodash.isEmpty(userEmail)) {
+    if (lodash.isEmpty(data) || lodash.isEmpty(userEmail)) {
       var msg = 'Assessment ID and user email is required';
       msg={'error':msg};
       loggers.get('models').error('Error: ' + msg);
