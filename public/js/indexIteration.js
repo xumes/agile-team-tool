@@ -69,13 +69,13 @@ function teamIterationListHander(teamId, teamIterations) {
 
   var iterIndx = 0;
   if (teamIterations != null) {
-    teamIterations = sortIterations(teamIterations);
+    // server can sort iterations
+    // teamIterations = sortIterations(teamIterations);
 
     $.each(teamIterations, function(index, value) {
-
-      if (value.iterationinfo_status == 'Completed') {
+      if (value.status == 'Completed') {
         if (iterIndx < 6) {
-          var option = [value._id, value.iteration_name];
+          var option = [value._id, value.name];
           listOption.push(option);
           p6Iterations.push(value);
         }
@@ -86,7 +86,7 @@ function teamIterationListHander(teamId, teamIterations) {
         }
         iterIndx++;
       } else {
-        var option = [value._id, value.iteration_name];
+        var option = [value._id, value.name];
         listOption.push(option);
       }
     });
@@ -111,107 +111,108 @@ function teamIterationListHander(teamId, teamIterations) {
     var storiesFTEData = new Object();
     var storyPointFTEData = new Object();
 
-    if (p6Iterations[i].team_mbr_change == 'Yes') {
-      graphCat = '*' + showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+
+    if (p6Iterations[i].memberChanged == true) {
+      graphCat = '*' + fmDate(p6Iterations[i].endDate);
       vData.color = '#FFA500';
       tData.color = '#FFA500';
     } else {
-      graphCat = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+      graphCat = fmDate(p6Iterations[i].endDate);
     }
     graphCategory.push(graphCat);
 
-    vData.name = p6Iterations[i].iteration_name;
-    vData.y = isNaN(parseInt(p6Iterations[i].nbr_story_pts_dlvrd)) ? 0 : parseInt(p6Iterations[i].nbr_story_pts_dlvrd);
+    vData.name = p6Iterations[i].name;
+    vData.y = isNaN(parseInt(p6Iterations[i].storyPointsDelivered)) ? 0 : parseInt(p6Iterations[i].storyPointsDelivered);
     vData.iterURL = iterationURL + p6Iterations[i]._id;
-    vData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
-    vData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+    vData.startDate = fmDate(p6Iterations[i].startDate);
+    vData.endDate = fmDate(p6Iterations[i].endDate);
     velocitySeries.data.push(vData);
 
-    cvData.name = p6Iterations[i].iteration_name;
-    cvData.y = isNaN(parseInt(p6Iterations[i].nbr_committed_story_pts)) ? 0 : parseInt(p6Iterations[i].nbr_committed_story_pts);
+    cvData.name = p6Iterations[i].name;
+    cvData.y = isNaN(parseInt(p6Iterations[i].commitedStoryPoints)) ? 0 : parseInt(p6Iterations[i].commitedStoryPoints);
     cvData.iterURL = iterationURL + p6Iterations[i]._id;
-    cvData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
-    cvData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+    cvData.startDate = fmDate(p6Iterations[i].startDate);
+    cvData.endDate = fmDate(p6Iterations[i].endDate);
     commVelocitySeries.data.push(cvData);
 
-    tData.name = p6Iterations[i].iteration_name;
-    tData.y = isNaN(parseInt(p6Iterations[i].nbr_stories_dlvrd)) ? 0 : parseInt(p6Iterations[i].nbr_stories_dlvrd);
+    tData.name = p6Iterations[i].name;
+    tData.y = isNaN(parseInt(p6Iterations[i].deliveredStories)) ? 0 : parseInt(p6Iterations[i].deliveredStories);
     tData.iterURL = iterationURL + p6Iterations[i]._id;
-    tData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
-    tData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+    tData.startDate = fmDate(p6Iterations[i].startDate);
+    tData.endDate = fmDate(p6Iterations[i].endDate);
     throughputSeries.data.push(tData);
 
-    ctData.name = p6Iterations[i].iteration_name;
-    ctData.y = isNaN(parseInt(p6Iterations[i].nbr_committed_stories)) ? 0 : parseInt(p6Iterations[i].nbr_committed_stories);
+    ctData.name = p6Iterations[i].name;
+    ctData.y = isNaN(parseInt(p6Iterations[i].committedStories)) ? 0 : parseInt(p6Iterations[i].committedStories);
     ctData.iterURL = iterationURL + p6Iterations[i]._id;
-    ctData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
-    ctData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+    ctData.startDate = fmDate(p6Iterations[i].startDate);
+    ctData.endDate = fmDate(p6Iterations[i].endDate);
     commThroughputSeries.data.push(ctData);
 
-    tmData.name = p6Iterations[i].iteration_name;
-    tmData.y = isNaN(parseInt(p6Iterations[i].team_mbr_cnt)) ? 0 : parseInt(p6Iterations[i].team_mbr_cnt);
+    tmData.name = p6Iterations[i].name;
+    tmData.y = isNaN(parseInt(p6Iterations[i].memberCount)) ? 0 : parseInt(p6Iterations[i].memberCount);
     tmData.iterURL = iterationURL + p6Iterations[i]._id;
-    tmData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
-    tmData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+    tmData.startDate = fmDate(p6Iterations[i].startDate);
+    tmData.endDate = fmDate(p6Iterations[i].endDate);
     teamMemSeries.data.push(tmData);
     teamMemCountArr.push(tmData.y);
 
-    fteData.name = p6Iterations[i].iteration_name;
-    fteData.y = isNaN(parseInt(p6Iterations[i].fte_cnt)) ? 0 : parseFloat(p6Iterations[i].fte_cnt);
+    fteData.name = p6Iterations[i].name;
+    fteData.y = isNaN(parseInt(p6Iterations[i].locationScore)) ? 0 : parseFloat(p6Iterations[i].locationScore);
     fteData.iterURL = iterationURL + p6Iterations[i]._id;
-    fteData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
-    fteData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+    fteData.startDate = fmDate(p6Iterations[i].startDate);
+    fteData.endDate = fmDate(p6Iterations[i].endDate);
     fteSeries.data.push(fteData);
     fteCountArr.push(fteData.y);
 
     targetSeries.data.push(-1);
 
-    defectData.name = p6Iterations[i].iteration_name;
-    defectData.y = isNaN(parseInt(p6Iterations[i].nbr_defects)) ? 0 : parseInt(p6Iterations[i].nbr_defects);
+    defectData.name = p6Iterations[i].name;
+    defectData.y = isNaN(parseInt(p6Iterations[i].defects)) ? 0 : parseInt(p6Iterations[i].defects);
     defectData.iterURL = iterationURL + p6Iterations[i]._id;
-    defectData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
-    defectData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+    defectData.startDate = fmDate(p6Iterations[i].startDate);
+    defectData.endDate = fmDate(p6Iterations[i].endDate);
     defectsSeries.data.push(defectData);
 
-    deployData.name = p6Iterations[i].iteration_name;
-    deployData.y = isNaN(parseInt(p6Iterations[i].nbr_dplymnts)) ? 0 : parseInt(p6Iterations[i].nbr_dplymnts);
+    deployData.name = p6Iterations[i].name;
+    deployData.y = isNaN(parseInt(p6Iterations[i].deployments)) ? 0 : parseInt(p6Iterations[i].deployments);
     deployData.iterURL = iterationURL + p6Iterations[i]._id;
-    deployData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
-    deployData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+    deployData.startDate = fmDate(p6Iterations[i].startDate);
+    deployData.endDate = fmDate(p6Iterations[i].endDate);
     deploySeries.data.push(deployData);
 
-    teamSatData.name = p6Iterations[i].iteration_name;
-    teamSatData.y = isNaN(parseInt(p6Iterations[i].team_sat)) ? 0 : parseFloat(p6Iterations[i].team_sat);
+    teamSatData.name = p6Iterations[i].name;
+    teamSatData.y = isNaN(parseInt(p6Iterations[i].teamSatisfaction)) ? 0 : parseFloat(p6Iterations[i].teamSatisfaction);
     teamSatData.iterURL = iterationURL + p6Iterations[i]._id;
-    teamSatData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
-    teamSatData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+    teamSatData.startDate = fmDate(p6Iterations[i].startDate);
+    teamSatData.endDate = fmDate(p6Iterations[i].endDate);
     teamSatSeries.data.push(teamSatData);
 
-    clientSatData.name = p6Iterations[i].iteration_name;
-    clientSatData.y = isNaN(parseInt(p6Iterations[i].client_sat)) ? 0 : parseFloat(p6Iterations[i].client_sat);
+    clientSatData.name = p6Iterations[i].name;
+    clientSatData.y = isNaN(parseInt(p6Iterations[i].clientSatisfaction)) ? 0 : parseFloat(p6Iterations[i].clientSatisfaction);
     clientSatData.iterURL = iterationURL + p6Iterations[i]._id;
-    clientSatData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
-    clientSatData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+    clientSatData.startDate = fmDate(p6Iterations[i].startDate);
+    clientSatData.endDate = fmDate(p6Iterations[i].endDate);
     clientSatSeries.data.push(clientSatData);
 
-    var StoriesDel = isNaN(parseInt(p6Iterations[i].nbr_stories_dlvrd)) ? 0 : parseInt(p6Iterations[i].nbr_stories_dlvrd);
-    var StoryPointDel = isNaN(parseInt(p6Iterations[i].nbr_story_pts_dlvrd)) ? 0 : parseInt(p6Iterations[i].nbr_story_pts_dlvrd);
-    var fte = isNaN(parseInt(p6Iterations[i].fte_cnt)) ? 0 : parseFloat(p6Iterations[i].fte_cnt);
+    var StoriesDel = isNaN(parseInt(p6Iterations[i].deliveredStories)) ? 0 : parseInt(p6Iterations[i].deliveredStories);
+    var StoryPointDel = isNaN(parseInt(p6Iterations[i].storyPointsDelivered)) ? 0 : parseInt(p6Iterations[i].storyPointsDelivered);
+    var fte = isNaN(parseInt(p6Iterations[i].locationScore)) ? 0 : parseFloat(p6Iterations[i].locationScore);
     var storiesFTE = isNaN(parseInt((StoriesDel / fte).toFixed(1))) ? 0 : parseFloat((StoriesDel / fte).toFixed(1));
     var strPointsFTE = isNaN(parseInt((StoryPointDel / fte).toFixed(1))) ? 0 : parseFloat((StoryPointDel / fte).toFixed(1));
 
-    storiesFTEData.name = p6Iterations[i].iteration_name;
+    storiesFTEData.name = p6Iterations[i].name;
     storiesFTEData.y = storiesFTE;
     storiesFTEData.iterURL = iterationURL + p6Iterations[i]._id;
-    storiesFTEData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
-    storiesFTEData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+    storiesFTEData.startDate = fmDate(p6Iterations[i].startDate);
+    storiesFTEData.endDate = fmDate(p6Iterations[i].endDate);
     storyFTESeries.data.push(storiesFTEData);
 
-    storyPointFTEData.name = p6Iterations[i].iteration_name;
+    storyPointFTEData.name = p6Iterations[i].name;
     storyPointFTEData.y = strPointsFTE;
     storyPointFTEData.iterURL = iterationURL + p6Iterations[i]._id;
-    storyPointFTEData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
-    storyPointFTEData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+    storyPointFTEData.startDate = fmDate(p6Iterations[i].startDate);
+    storyPointFTEData.endDate = fmDate(p6Iterations[i].endDate);
     storyPointFTESeries.data.push(storyPointFTEData);
 
   }
@@ -249,16 +250,38 @@ function teamIterationListHander(teamId, teamIterations) {
   $('#gotoIterationList').removeAttr('disabled');
 
   $('#CreateIterationBtn').attr('disabled', 'disabled');
-  if (hasAccess(teamId)) {
-    $('#CreateIterationBtn').removeAttr('disabled');
-    $('#CreateIterationBtn').click(function(e) {
-      window.location = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=new';
-    });
-  }
+  // if (hasAccess(teamId)) {
+  //   $('#CreateIterationBtn').removeAttr('disabled');
+  //   $('#CreateIterationBtn').click(function(e) {
+  //     window.location = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=new';
+  //   });
+  // }
+  hasAccessToIter(teamId);
 
   $('#spinnerContainer').hide();
   $('#mainContent').show();
   redrawCharts('iterationSection');
+}
+
+function fmDate(date) {
+  return moment(date).format('DDMMMYYYY');
+};
+
+function hasAccessToIter(teamId) {
+  var url = '/api/users/isuserallowed?' + 'email=' + encodeURIComponent((userInfo.email).toLowerCase()) + '&teamId=' + encodeURIComponent(teamId);
+  var req = $.ajax({
+    type: 'GET',
+    url: url
+  }).done(function(data) {
+    if (data == true) {
+      $('#CreateIterationBtn').removeAttr('disabled');
+      $('#CreateIterationBtn').click(function(e) {
+        window.location = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=new';
+      });
+    }
+  }).fail(function(err){
+    console.log(err);
+  });
 }
 
 function destroyIterationCharts() {
@@ -1371,16 +1394,16 @@ function retrieveIterations(teamIds, startDate, endDate, _callback, args) {
 
   var condition2 = new Object();
   condition2.$regex = start + ' || ' + end;
-  selector.iteration_end_dt = condition2;
+  selector.endDate = condition2;
 
   var condition3 = new Object();
   condition3.$eq = 'Completed';
-  selector.iterationinfo_status = condition3;
+  selector.status = condition3;
 
 
   iterQuery.selector = selector;
   var sort = new Object();
-  sort.iteration_end_dt = 'asc';
+  sort.endDate = 'asc';
 
   iterQuery.sort.push(sort);
   iterations = selectorQuery(iterQuery, _callback, args);
@@ -1448,7 +1471,7 @@ function monthlyIterations(teamIterations) {
   if (teamIterations != undefined) {
     for (var i = 0; i < teamIterations.length; i++) {
 
-      var currDate = new Date(teamIterations[i]['iteration_end_dt']);
+      var currDate = new Date(teamIterations[i]['endDate']);
       //var currMonth = currDate.getUTCMonth() + 1;
       var currMonth = currDate.getMonth() + 1;
       var totalPoints = 0;
@@ -1465,7 +1488,7 @@ function monthlyIterations(teamIterations) {
       var teamsGt12 = 0;
       var exist = false;
       for (var y = 0; y < monthly.length; y++) {
-        if (monthly[y].month == showDateMMMYYYY(currDate)) {
+        if (monthly[y].month == fmDate(currDate)) {
           exist = true;
           break;
         }
@@ -1474,29 +1497,29 @@ function monthlyIterations(teamIterations) {
         var teams = [];
         var entry = new Object();
         for (var x = 0; x < teamIterations.length; x++) {
-          var tempDate = new Date(teamIterations[x]['iteration_end_dt']);
+          var tempDate = new Date(teamIterations[x]['endDate']);
           //if (tempDate.getUTCMonth()+1 == currMonth){
           if (tempDate.getMonth() + 1 == currMonth) {
-            var pts = teamIterations[x]['nbr_story_pts_dlvrd'];
-            var stories = teamIterations[x]['nbr_stories_dlvrd'];
-            var teamCnt = teamIterations[x]['team_mbr_cnt'];
-            var defects = teamIterations[x]['nbr_defects'];
-            var dplymnts = teamIterations[x]['nbr_dplymnts'];
-            var teamStat = teamIterations[x]['team_sat'];
-            var clientStat = teamIterations[x]['client_sat'];
+            var pts = teamIterations[x]['storyPointsDelivered'];
+            var stories = teamIterations[x]['deliveredStories'];
+            var teamCnt = teamIterations[x]['memberCount'];
+            var defects = teamIterations[x]['defects'];
+            var dplymnts = teamIterations[x]['deployments'];
+            var teamStat = teamIterations[x]['teamSatisfaction'];
+            var clientStat = teamIterations[x]['clientSatisfaction'];
 
             if (pts != undefined && pts != '') {
-              totalPoints = totalPoints + parseInt(teamIterations[x]['nbr_story_pts_dlvrd']);
+              totalPoints = totalPoints + parseInt(teamIterations[x]['storyPointsDelivered']);
             }
             if (stories != undefined && stories != '') {
-              totalStories = totalStories + parseInt(teamIterations[x]['nbr_stories_dlvrd']);
+              totalStories = totalStories + parseInt(teamIterations[x]['deliveredStories']);
             }
 
             if (defects != undefined && defects != '') {
-              totalDefects = totalDefects + parseInt(teamIterations[x]['nbr_defects']);
+              totalDefects = totalDefects + parseInt(teamIterations[x]['defects']);
             }
             if (dplymnts != undefined && dplymnts != '') {
-              totalDplymts = totalDplymts + parseInt(teamIterations[x]['nbr_dplymnts']);
+              totalDplymts = totalDplymts + parseInt(teamIterations[x]['deployments']);
             }
 
             if (teamStat != undefined && teamStat != '' && (parseInt(teamStat) != 0)) {
@@ -1509,7 +1532,7 @@ function monthlyIterations(teamIterations) {
             }
 
             if (teamCnt != undefined && teamCnt != '') {
-              teamCnt = parseInt(teamIterations[x]['team_mbr_cnt']);
+              teamCnt = parseInt(teamIterations[x]['memberCount']);
               if (teamCnt < 5) {
                 teamsLt5 = teamsLt5 + 1;
               } else if (teamCnt > 12) {

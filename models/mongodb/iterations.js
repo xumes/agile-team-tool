@@ -184,7 +184,7 @@ var iteration = {
         var request = {
           'teamId': objTeamId
         };
-        iterationModel.find(request).exec()
+        iterationModel.find(request).sort('endDate').exec()
           .then(function(results){
             successLogs('[iterationModel.getByIterInfo] Team iteration docs obtained');
             resolve(results);

@@ -353,8 +353,8 @@ function searchTeams(keyword) {
 
 function getMyTeamsFromDb(initial, loadStandalone) {
   return new Promise(function(resolve, reject){
-    var rootTeamUrl = '/api/teams/lookup/rootteams/' + encodeURIComponent(('amy_travis@us.ibm.com').toLowerCase());
-    var standaloneUrl = '/api/teams/lookup/standalone/' + encodeURIComponent(('amy_travis@us.ibm.com').toLowerCase());
+    var rootTeamUrl = '/api/teams/lookup/rootteams/' + encodeURIComponent((userInfo.email).toLowerCase());
+    var standaloneUrl = '/api/teams/lookup/standalone/' + encodeURIComponent((userInfo.email).toLowerCase());
     var req = $.when(
       $.ajax({
         type: 'GET',
@@ -485,6 +485,7 @@ function getChildrenTeams(id) {
       type: 'GET',
       url: url
     }).done(function(data) {
+      console.time('aaa');
       if (data.length > 0) {
         var teams = data;
         var twistyId = 'bodysub_' + id;
@@ -496,6 +497,7 @@ function getChildrenTeams(id) {
           }
         });
         resolve();
+        console.timeEnd('aaa');
       } else {
         //TODO no team
       }
@@ -540,11 +542,11 @@ function loadParentInAllTeams(teamId, fromSearch) {
         $('#spinnerContainer').hide();
         $('#spinnerContainer-search').hide();
 
-        selectedElement = '';
-        $('#mainContent').hide();
-        $('#spinnerContainer').show();
-        $('#teamTree').empty();
-        $('#teamTree').show();
+        // selectedElement = '';
+        // $('#mainContent').hide();
+        // $('#spinnerContainer').show();
+        // $('#teamTree').empty();
+        // $('#teamTree').show();
         getRootTeams(path);
       }
     } else {
@@ -604,65 +606,78 @@ function getAllTeams(parents) {
 }
 
 function loopFindChildren(path) {
-  return new Promise(function(resolve, reject){
-    if (_.isEmpty(path)) {
-      return resolve();
-    } else {
-      var id = path.shift();
-      if ($('#sub_' + jq(id)).length > 0) {
-        $('#sub_' + jq(id)).addClass('ibm-active');
-        $('#sub_' + jq(id)).attr('hasChildren', 'Yes');
-        $('#sub_' + jq(id) + (' a.ibm-twisty-body')).css('display', 'block');
-        var url = '/api/teams/children/' + id;
-        if ($('#myTeams').attr('data-state') == 'open') {
-          if (id == 'agteamstandalone') {
-            url = '/api/teams/lookup/standalone/' + encodeURIComponent((userInfo.email).toLowerCase());
+  $('#spinnerContainer-search').show();
+  $('#teamTree').hide();
+  if (_.isEmpty(path)) {
+    //$('#spinnerContainer-search').hide();
+    $('#spinnerContainer-search').hide();
+    $('#teamTree').show();
+    $('.nano').nanoScroller();
+  } else {
+    var id = path.shift();
+    if ($('#sub_' + jq(id)).length > 0) {
+      $('#sub_' + jq(id)).addClass('ibm-active');
+      $('#sub_' + jq(id)).attr('hasChildren', 'Yes');
+      $('#sub_' + jq(id) + (' a.ibm-twisty-body')).css('display', 'block');
+      var url = '/api/teams/children/' + id;
+      if ($('#myTeams').attr('data-state') == 'open') {
+        if (id == 'agteamstandalone') {
+          url = '/api/teams/lookup/standalone/' + encodeURIComponent((userInfo.email).toLowerCase());
+        }
+      } else {
+        if (id == 'agteamstandalone') {
+          url = '/api/teams/lookup/standalone/';
+        }
+      }
+      var req = $.ajax({
+        type: 'GET',
+        url: url
+      }).done(function(data) {
+        if (data.length > 0) {
+          var teams = data;
+          var twistyId = 'bodysub_' + id;
+          var mainTwistyId = 'main_sub_' + id;
+          $('#' + jq(twistyId)).append(createMainTwistySection(mainTwistyId, ''));
+          _.each(teams, function(team) {
+            if (team.docStatus != 'delete') {
+              addTeamToTree(team, mainTwistyId);
+            }
+          });
+          if (_.isEmpty(path)) {
+            loadDetails('sub_'+id, true);
+            $('#spinnerContainer-search').hide();
+            $('#teamTree').show();
+            $('.nano').nanoScroller();
+          } else {
+            loopFindChildren(path);
           }
         } else {
-          if (id == 'agteamstandalone') {
-            url = '/api/teams/lookup/standalone/';
-          }
+          //TODO no team
+          //$('#spinnerContainer-search').hide();
+          loadDetails('sub_'+id, true);
+          $('#spinnerContainer-search').hide();
+          $('#teamTree').show();
         }
-        var req = $.ajax({
-          type: 'GET',
-          url: url
-        }).done(function(data) {
-          if (data.length > 0) {
-            var teams = data;
-            var twistyId = 'bodysub_' + id;
-            var mainTwistyId = 'main_sub_' + id;
-            $('#' + jq(twistyId)).append(createMainTwistySection(mainTwistyId, ''));
-            _.each(teams, function(team) {
-              if (team.docStatus != 'delete') {
-                addTeamToTree(team, mainTwistyId);
-              }
-            });
-            if (_.isEmpty(path)) {
-              loadDetails('sub_'+id, true);
-              return resolve();
-            } else {
-              return loopFindChildren(path);
-            }
-          } else {
-            //TODO no team
-            loadDetails('sub_'+id, true);
-            return resolve();
-          }
-        }).fail(function(err){
-          console.log(err);
-          reject(err);
-        });
-        requests.push(req);
-      } else {
-        return reject('cannot find this team');
-      }
+      }).fail(function(err){
+        console.log(err);
+        $('#spinnerContainer-search').hide();
+        $('#teamTree').show();
+        $('.nano').nanoScroller();
+      });
+      requests.push(req);
+    } else {
+      console.log('cannot find this team');
+      $('#spinnerContainer-search').hide();
+      $('#teamTree').show();
+      $('.nano').nanoScroller();
     }
-  });
+  }
 }
 
 function getSnapshot(teamId, teamName) {
   $('#mainContent').hide();
   $('#spinnerContainer').show();
+  console.log(teamId, teamName);
   var cUrl = '/api/snapshot/get/' + encodeURIComponent(teamId);
   var req = $.ajax({
     type: 'GET',
@@ -675,7 +690,7 @@ function getSnapshot(teamId, teamName) {
         iterationScoreCard(teamId, teamName, tempIterationData, tempSquadScore);
       } else {
         setRefreshDate(data.lastUpdate);
-        iterationScoreCard(teamId, teamName, data.iterationData, data.teamMemberData);
+        iterationScoreCard(teamId, teamName, data.iterationData, (data.teamMemberData)[0]);
       }
     }
   })
@@ -742,7 +757,6 @@ function addTeamToTree(team, twistyId, isMyTeams) {
     var label = team.name;
     var subTwistyId = 'sub_' + team.pathId;
     if (isMyTeams) {
-      console.log(team);
       if (team.hasChild) {
         $('#' + jq(twistyId)).append(createSubTwistySection(subTwistyId, label, (isSquad ? 'agile-team-standalone' : ''), team.pathId, team._id));
       } else {
@@ -921,177 +935,191 @@ function loadDetails(elementId, setScrollPosition) {
     }
     selectedElement = elementId;
   }
-
   //$("#search_"+elementId).addClass("agile-team-selected");
   $('#' + 'link_' + jq(elementId)).addClass('agile-team-selected');
 
   var teamId = elementId.substring(4, elementId.length);
   var objectId = $('#'+jq(elementId)).attr('objectId');
   var isLeafTeam = false;
-  if (defSelTeamId != teamId) {
-    $('#mainContent').hide();
-    $('#spinnerContainer').show();
+  // if (defSelTeamId != teamId) {
+  // $('#mainContent').hide();
+  // $('#spinnerContainer').show();
 
-    if (teamId == teamId) {
-      removeHighlightParents();
-      // $.({message: ""});
-      defSelTeamId = teamId;
-      // make sure team data is always the latest data to show
-      var req = $.ajax({
-        type: 'GET',
-        url: '/api/teams/' + encodeURIComponent(objectId)
-      }).fail(function(e) {
-        console.log(e);
-      }).done(function(currentTeam) {
-        team = currentTeam;
-        if (team != undefined) {
-          $('#levelDetail').empty();
-          var keyLabel = '';
-          var keyValue = '';
-          if (team['pathId'] != undefined) {
-            keyLabel = 'Team Id';
-            keyValue = team['pathId'];
-          }
-
-          if (team['name'] != undefined) {
-            keyLabel = 'Team Name';
-            var tn = team['name'];
-            if (tn.trim() == '')
-              tn = '&nbsp;';
-            $('#teamName').html(tn);
-            keyValue = "<a href='team?id=" + encodeURIComponent(team['pathId']) + "' title='Manage team information'>" + tn + '</a>';
-            appendRowDetail(keyLabel, keyValue);
-          }
-
-          if (team['type'] != undefined) {
-            keyLabel = 'Squad Team?';
-            keyValue = team['type'];
-            if (keyValue == 'squad') {
-              isLeafTeam = true;
-            }
-          }
-
-          if (team['description'] != undefined) {
-            keyLabel = 'Team Description';
-            keyValue = team['description'];
-            appendRowDetail(keyLabel, keyValue);
-          }
-
-          if (team['members'] != undefined) {
-            keyLabel = 'Team Member Count';
-            keyValue = teamMemCount(team['members']);
-            appendRowDetail(keyLabel, keyValue);
-          }
-
-          if (team['members'] != undefined) {
-            keyLabel = 'FTE';
-            keyValue = teamMemFTE(team['members']);
-            appendRowDetail(keyLabel, keyValue);
-          }
-
-          /* Get parent name and link */
-          if (team['path'] != undefined && team['path'] != null) {
-            var parentIds = (team['path'].substring(1, team['path'].length-1)).split(',');
-            var parent_team_id = parentIds[parentIds.length-1];
-            keyLabel = 'Parent Team Name';
-            keyValue = '(No parent team infomation)';
-            var parentLinkId = $('#link_sub_' + jq(parent_team_id));
-            if (parentLinkId) {
-              var parentName;
-              if (parentLinkId.html() != undefined) {
-                parentName = parentLinkId.html();
-                keyValue = "<p style=\"display:inline-block\" class=\"ibm-ind-link\"><a style=\"display:inline; padding-left: 0px;\" title=\"View parent team information\" alt=\"View parent team information\" id ='parentName' href='#' onclick=\"javascript:displaySelected('" + parent_team_id + "', true);\">" + parentName + '</a>' + "<a title=\"View parent team information\" alt=\"View parent team information\" style=\"display:inline;top:-5px;left:5px;\" class=\"ibm-forward-link\" href='#' onclick=\"javascript:displaySelected('" + parent_team_id + "', true);\"><span class='ibm-access'>Go to parent team</span></a></p>";
-                appendRowDetail(keyLabel, keyValue);
-              } else {
-                getParentName(parent_team_id);
-              }
-            }
-          } else {
-            keyLabel = 'Parent Team Name';
-            keyValue = '(No parent team infomation)';
-            appendRowDetail(keyLabel, keyValue);
-          }
-
-          /* draw iteration and assessment charts */
-          if (isLeafTeam) {
-            console.log(team['_id']);
-            getTeamIterations(team['_id'], teamIterationListHander, [team['_id']]);
-            getTeamAssessments(team['_id'], true, teamAssessmentListHander, [team['_id']]);
-
-            //this is done to display back the 2 other chart groups as 1st batch of rollup will only show velocity and throughput
-            //$("#chartgrp2").show();
-            //$("#chartgrp3").show();
-            $('#snapshotPull').hide(); //hiding the refresh snapshot date
-            $('#teamType').html('Squad:&nbsp;');
-            $('#nsquad_team_scard').hide();
-            $('#squad_team_scard').show();
-            $('#iterationSection .agile-section-nav').show();
-            $('#assessmentSection .agile-section-nav').show();
-
-            $('assessmentSection .agile-section-title').addClass('ibm-showing');
-            $('#assessmentSection a').addClass('ibm-show-active');
-            $('#assessmentSection .ibm-container-body').css('display', 'block');
-
-          } else {
-            destroyIterationCharts();
-            destroyAssessmentCharts();
-
-            getSnapshot(team['_id'], team['name']);
-            $('#snapshotPull').show(); //show the refresh snapshot date
-            $('#teamType').html('Team:&nbsp;');
-            $('#nsquad_team_scard').show();
-            $('#squad_team_scard').hide();
-            $('#iterationSection .agile-section-nav').hide();
-            $('#assessmentSection .agile-section-nav').hide();
-            $('#refreshData').attr('onclick', "performChartRefresh('" + team._id + "','" + team.name + "')");
-            $('assessmentSection .agile-section-title').removeClass('ibm-showing');
-            $('#assessmentSection a').removeClass('ibm-show-active');
-            $('#assessmentSection .ibm-container-body').css('display', 'none');
-          }
-
-          $('#membersList').empty();
-          teamLocation = [];
-          managerIndex = 0;
-          hideScorePieChart();
-          if (team.members != undefined && team.members.length > 0) {
-            var members = sortTeamMembersByName(team.members);
-            for (var j = 0; j < members.length; j++) {
-              var member = members[j];
-              var row = "<tr><td id='name_" + j + "'>" + member.name + '</td>';
-              row = row + '<td>' + member.allocation + '</td>';
-              row = row + "<td id='location_ref_" + j + "'><div class='ibm-spinner'></div></td>";
-              row = row + '<td>' + member.role + '</td>';
-              row = row + '</tr>';
-              $('#membersList').append(row);
-              if (member.role == 'Manager') {
-                managerIndex = j;
-              }
-              getPersonFromFaces(member.email, facesPersonHandler, [j, member.email]);
-            }
-          } else {
-            $('#membersList').append('<tr class="odd"><td valign="top" colspan="4" class="dataTables_empty">No data available</td></tr>');
-          }
-          if (managerIndex != 0) {
-            var manager = teamLocation.splice(managerIndex, 1);
-            teamLocation.unshift(manager.toString());
-          }
-          // if (isLeafTeam) {
-          //   if (findUserAccess(userInfo.email)) {
-          //     teamLocationHandler(teamLocation);
-          //   }
-          // }
+  if (teamId == teamId) {
+    removeHighlightParents();
+    // $.({message: ""});
+    defSelTeamId = teamId;
+    // make sure team data is always the latest data to show
+    var req = $.ajax({
+      type: 'GET',
+      url: '/api/teams/' + encodeURIComponent(objectId)
+    }).fail(function(e) {
+      console.log(e);
+    }).done(function(currentTeam) {
+      team = currentTeam;
+      if (team != undefined) {
+        $('#levelDetail').empty();
+        var keyLabel = '';
+        var keyValue = '';
+        if (team['pathId'] != undefined) {
+          keyLabel = 'Team Id';
+          keyValue = team['pathId'];
         }
-      });
-      requests.push(req);
-      openSelectedTeamTree(setScrollPosition);
-    }
-  } else {
-    $('#mainContent').show();
-    $('#spinnerContainer').hide();
-    $('#teamTree').show();
-    $('#spinnerContainer-search').hide();
+
+        if (team['name'] != undefined) {
+          keyLabel = 'Team Name';
+          var tn = team['name'];
+          if (tn.trim() == '')
+            tn = '&nbsp;';
+          $('#teamName').html(tn);
+          keyValue = "<a href='team?id=" + encodeURIComponent(team['pathId']) + "' title='Manage team information'>" + tn + '</a>';
+          appendRowDetail(keyLabel, keyValue);
+        }
+
+        if (team['type'] != undefined) {
+          keyLabel = 'Squad Team?';
+          keyValue = team['type'];
+          if (keyValue == 'squad') {
+            isLeafTeam = true;
+          }
+        }
+
+        if (team['description'] != undefined) {
+          keyLabel = 'Team Description';
+          keyValue = team['description'];
+          appendRowDetail(keyLabel, keyValue);
+        }
+
+        if (team['members'] != undefined) {
+          keyLabel = 'Team Member Count';
+          keyValue = teamMemCount(team['members']);
+          appendRowDetail(keyLabel, keyValue);
+        }
+
+        if (team['members'] != undefined) {
+          keyLabel = 'FTE';
+          keyValue = teamMemFTE(team['members']);
+          appendRowDetail(keyLabel, keyValue);
+        }
+
+        /* Get parent name and link */
+        if (team['path'] != undefined && team['path'] != null) {
+          var parentIds = (team['path'].substring(1, team['path'].length-1)).split(',');
+          var parent_team_id = parentIds[parentIds.length-1];
+          keyLabel = 'Parent Team Name';
+          keyValue = '(No parent team infomation)';
+          var parentLinkId = $('#link_sub_' + jq(parent_team_id));
+          if (parentLinkId) {
+            console.log('l:',parentLinkId);
+            var parentName;
+            if (parentLinkId.html() != undefined) {
+              parentName = parentLinkId.html();
+              keyValue = "<p style=\"display:inline-block\" class=\"ibm-ind-link\"><a style=\"display:inline; padding-left: 0px;\" title=\"View parent team information\" alt=\"View parent team information\" id ='parentName' href='#' onclick=\"javascript:displaySelected('" + parent_team_id + "', true);\">" + parentName + '</a>' + "<a title=\"View parent team information\" alt=\"View parent team information\" style=\"display:inline;top:-5px;left:5px;\" class=\"ibm-forward-link\" href='#' onclick=\"javascript:displaySelected('" + parent_team_id + "', true);\"><span class='ibm-access'>Go to parent team</span></a></p>";
+              appendRowDetail(keyLabel, keyValue);
+            } else {
+              getParentName(parent_team_id);
+            }
+          }
+        } else {
+          keyLabel = 'Parent Team Name';
+          keyValue = '(No parent team infomation)';
+          appendRowDetail(keyLabel, keyValue);
+        }
+
+        /* draw iteration and assessment charts */
+        if (isLeafTeam) {
+          console.log(team['_id']);
+          // getTeamIterations(team['_id'], teamIterationListHander, [team['_id']]);
+          getSquadIterations(team['_id']);
+          getTeamAssessments(team['_id'], true, teamAssessmentListHander, [team['_id']]);
+
+          //this is done to display back the 2 other chart groups as 1st batch of rollup will only show velocity and throughput
+          //$("#chartgrp2").show();
+          //$("#chartgrp3").show();
+          $('#snapshotPull').hide(); //hiding the refresh snapshot date
+          $('#teamType').html('Squad:&nbsp;');
+          $('#nsquad_team_scard').hide();
+          $('#squad_team_scard').show();
+          $('#iterationSection .agile-section-nav').show();
+          $('#assessmentSection .agile-section-nav').show();
+
+          $('assessmentSection .agile-section-title').addClass('ibm-showing');
+          $('#assessmentSection a').addClass('ibm-show-active');
+          $('#assessmentSection .ibm-container-body').css('display', 'block');
+
+        } else {
+          destroyIterationCharts();
+          destroyAssessmentCharts();
+
+          getSnapshot(team['_id'], team['name']);
+          $('#snapshotPull').show(); //show the refresh snapshot date
+          $('#teamType').html('Team:&nbsp;');
+          $('#nsquad_team_scard').show();
+          $('#squad_team_scard').hide();
+          $('#iterationSection .agile-section-nav').hide();
+          $('#assessmentSection .agile-section-nav').hide();
+          $('#refreshData').attr('onclick', "performChartRefresh('" + team._id + "','" + team.name + "')");
+          $('assessmentSection .agile-section-title').removeClass('ibm-showing');
+          $('#assessmentSection a').removeClass('ibm-show-active');
+          $('#assessmentSection .ibm-container-body').css('display', 'none');
+        }
+
+        $('#membersList').empty();
+        teamLocation = [];
+        managerIndex = 0;
+        hideScorePieChart();
+        if (team.members != undefined && team.members.length > 0) {
+          var members = sortTeamMembersByName(team.members);
+          for (var j = 0; j < members.length; j++) {
+            var member = members[j];
+            var row = "<tr><td id='name_" + j + "'>" + member.name + '</td>';
+            row = row + '<td>' + member.allocation + '</td>';
+            row = row + "<td id='location_ref_" + j + "'><div class='ibm-spinner'></div></td>";
+            row = row + '<td>' + member.role + '</td>';
+            row = row + '</tr>';
+            $('#membersList').append(row);
+            if (member.role == 'Manager') {
+              managerIndex = j;
+            }
+            getPersonFromFaces(member.email, facesPersonHandler, [j, member.email]);
+          }
+        } else {
+          $('#membersList').append('<tr class="odd"><td valign="top" colspan="4" class="dataTables_empty">No data available</td></tr>');
+        }
+        if (managerIndex != 0) {
+          var manager = teamLocation.splice(managerIndex, 1);
+          teamLocation.unshift(manager.toString());
+        }
+        // if (isLeafTeam) {
+        //   if (findUserAccess(userInfo.email)) {
+        //     teamLocationHandler(teamLocation);
+        //   }
+        // }
+      }
+    });
+    requests.push(req);
     openSelectedTeamTree(setScrollPosition);
   }
+  // } else {
+  //   $('#mainContent').show();
+  //   $('#spinnerContainer').hide();
+  //   $('#teamTree').show();
+  //   $('#spinnerContainer-search').hide();
+  //   openSelectedTeamTree(setScrollPosition);
+  // }
+};
+
+function getSquadIterations(teamId) {
+  var url = '/api/iteration/searchTeamIteration?id=' + encodeURIComponent(teamId);
+  var req = $.ajax({
+    type: 'GET',
+    url: url
+  }).fail(function(e){
+    console.log(e);
+  }).done(function(iters){
+    teamIterationListHander(teamId, iters);
+  });
+  requests.push(req);
 }
 
 function teamLocationHandler(data) {

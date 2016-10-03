@@ -76,13 +76,33 @@ var getUserFromFaces = function(email) {
   });
 };
 
+function validObjectId(docId) {
+  var objId = mongoose.Types.ObjectId;
+  if (docId) {
+    if (mongoose.Types.ObjectId.isValid(docId)) {
+      return docId;
+    } else {
+      try {
+        objId = mongoose.Types.ObjectId(docId);
+      } catch (e) {
+        if (e) {
+          return {'error': e.message};
+        }
+      }
+      return objId;
+    }
+  } else {
+    return {'error': 'missing doc id'};
+  }
+}
+
 var UserSchema = new Schema(userSchema);
 var User = mongoose.model('users', UserSchema);
 
 var users = {
   findUserByEmail: function(email) {
     return new Promise(function(resolve, reject) {
-      User.findOne({email: email})
+      User.findOne({email: email}).exec()
         .then(function(useInfo){
           resolve(useInfo);
         })
@@ -92,6 +112,22 @@ var users = {
     });
   },
 
+  getAdmins: function() {
+    return new Promise(function(resolve, reject) {
+      var query = {
+        'adminAccess': {
+          '$ne': 'none'
+        }
+      };
+      User.find(query).exec()
+        .then(function(users){
+          resolve(users);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject(err);
+        });
+    });
+  },
 
   isTeamMember: function(userEmail, teamId) {
     return new Promise(function(resolve, reject) {
@@ -132,6 +168,7 @@ var users = {
           return resolve(hasAccess);
         })
         .catch( /* istanbul ignore next */ function(err){
+          console.log(err);
           reject(err);
         });
     });

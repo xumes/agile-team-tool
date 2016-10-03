@@ -326,10 +326,10 @@ function getSquadDropdownList(teams) {
 function sortIterations(iterations) {
   if (iterations != null && iterations.length > 1) {
     iterations.sort(function(a, b) {
-      if (new Date(b.iteration_end_dt).getTime() == new Date(a.iteration_end_dt).getTime()) {
+      if (new Date(b.endDate).getTime() == new Date(a.endDate).getTime()) {
         return 0;
       } else {
-        return (new Date(b.iteration_end_dt).getTime() > new Date(a.iteration_end_dt).getTime()) ? 1 : -1;
+        return (new Date(b.endDate).getTime() > new Date(a.endDate).getTime()) ? 1 : -1;
       }
     });
   }
