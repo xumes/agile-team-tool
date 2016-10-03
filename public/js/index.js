@@ -1087,7 +1087,8 @@ function loadDetails(elementId, setScrollPosition) {
         if (isLeafTeam) {
           // getTeamIterations(team['_id'], teamIterationListHander, [team['_id']]);
           getSquadIterations(team['_id']);
-          getTeamAssessments(team['_id'], true, teamAssessmentListHander, [team['_id']]);
+          getSquadAssessments(team['_id']);
+          // getTeamAssessments(team['_id'], true, teamAssessmentListHander, [team['_id']]);
 
           //this is done to display back the 2 other chart groups as 1st batch of rollup will only show velocity and throughput
           //$("#chartgrp2").show();
@@ -1174,6 +1175,20 @@ function getSquadIterations(teamId) {
     console.log(e);
   }).done(function(iters){
     teamIterationListHander(teamId, iters);
+  });
+  requests.push(req);
+}
+
+function getSquadAssessments(teamId, docs) {
+  var url = '/api/assessment/view?teamId=' + encodeURIComponent(teamId) + '&docs=' + docs;
+  var req = $.ajax({
+    type: 'GET',
+    url: url
+  }).fail(function(e){
+    console.log(e);
+  }).done(function(assessments){
+    console.log(assessments);
+    teamAssessmentListHander(teamId, assessments);
   });
   requests.push(req);
 }

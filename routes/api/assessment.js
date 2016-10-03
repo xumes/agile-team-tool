@@ -11,7 +11,6 @@ module.exports = function(app, includes) {
     if (!_.isUndefined(teamId)) {
       assessmentModel.getTeamAssessments(teamId, docs)
         .then(function(result) {
-          console.log(result);
           res.send(result);
         })
         .catch( /* istanbul ignore next */ function(err) {
