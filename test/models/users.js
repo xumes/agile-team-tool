@@ -29,18 +29,6 @@ describe('Users model [api key]: user api key handlers', function(done) {
     users.createApikey(user)
       .then(function(body) {
         expect(body).to.be.a('object');
-        // expect(body).to.have.property('key');
-        done();
-      })
-      .catch(function(err) {
-        done(err);
-      });
-  });
-
-  it('returns user and key by uid search', function(done) {
-    users.getUserApikeyByUid(user.ldap.uid)
-      .then(function(body) {
-        expect(body).to.be.a('object');
         expect(body).to.have.property('key');
         testApiKey = body.key;
         done();
@@ -50,18 +38,44 @@ describe('Users model [api key]: user api key handlers', function(done) {
       });
   });
 
-  it('return user and key by api key search', function(done) {
-    users.getUserApikeyByApikey(testApiKey)
-      .then(function(body) {
-        expect(body).to.be.a('object');
-        expect(body).to.have.property('key');
-        expect(body.email).to.be.equal(user.shortEmail);
-        done();
-      })
-      .catch(function(err) {
-        done(err);
-      });
-  });
+  // it('return user existing api key', function(done) {
+  //   users.createApikey(user)
+  //     .then(function(body) {
+  //       expect(body).to.be.a('object');
+  //       expect(body).to.have.property('key');
+  //       expect(body.key).to.be.equal(testApiKey);
+  //       done();
+  //     })
+  //     .catch(function(err) {
+  //       done(err);
+  //     });
+  // });
+
+  // it('return user and key by api key search', function(done) {
+  //   users.getUserApikeyByApikey(testApiKey)
+  //     .then(function(body) {
+  //       expect(body).to.be.a('object');
+  //       expect(body).to.have.property('key');
+  //       expect(body.email).to.be.equal(user.shortEmail);
+  //       done();
+  //     })
+  //     .catch(function(err) {
+  //       done(err);
+  //     });
+  // });
+
+  // it('returns user and key by uid search', function(done) {
+  //   users.getUserApikeyByUid(user.ldap.uid)
+  //     .then(function(body) {
+  //       expect(body).to.be.a('object');
+  //       expect(body).to.have.property('key');
+  //       expect(body.key).to.be.equal(testApiKey);
+  //       done();
+  //     })
+  //     .catch(function(err) {
+  //       done(err);
+  //     });
+  // });
 
   it('deletes user api key', function(done) {
     users.deleteApikey(user)
