@@ -116,49 +116,279 @@ describe('Assessment model [addTeamAssessment] ', function() {
   });
 });
 
-xdescribe('assessment models [getTeamAssessments]', function() {
-  it('retrieve team assessments [valid team id]');
+describe('Assessment model [getTeamAssessments] ', function() {
+  it('fail because Assessment ID is required', function(done) {
+    Assessments.getTeamAssessments(null)
+      .catch(function(err) {
+        expect(err.error).to.be.equal('Team ID is required');
+        done();
+      });
+  });
 
-  it('retrieve team assessments [valid team id-all assessment information]');
+  it('return empty Assessment details because Team ID is not existing', function(done) {
+    Assessments.getTeamAssessments('123456789abc')
+      .then(function(result) {
+        expect(result).to.deep.equal([]);
+        done();
+      });
+  });
 
-  it('retrieve team assessments [non-existing team id]');
-
-  it('retrieve team assessments [empty team id]');
+  it('return success in getting team Assessment', function(done) {
+    var createdTeam = {};
+    var assessmentData = {};
+    var assessmentId = null;
+    Teams.createTeam(validTeams, testData.validUserEmail())
+      .then(function(result) {
+        createdTeam = result;
+        assessmentData = validAssessments;
+        assessmentData['teamId'] = result['_id'];
+        assessmentData['version'] = 1;
+        assessmentData['createdByUserId'] = validUsers.userId;
+        assessmentData['createdBy'] = validUsers.email;
+        assessmentData['assessorUserId'] = validUsers.userId;
+        delete assessmentData['componentResults'];
+        delete assessmentData['actionPlans'];
+        return Assessments.addTeamAssessment(testData.validUserEmail(), assessmentData);
+      })
+      .then(function(result) {
+        assessmentId = result['_id'].toString();
+        return Assessments.getTeamAssessments(createdTeam['_id']);
+      })
+      .then(function(result) {
+        expect(result[0]['teamId'].toString()).to.be.equal(createdTeam['_id'].toString());
+        expect(result[0]['_id'].toString()).to.be.equal(assessmentId);
+        return Assessments.deleteAssessment(testData.validUserEmail(), assessmentId);
+      })
+      .then(function() {
+        return Teams.deleteTeamByName(createdTeam['name']);
+      })
+      .then(function(result) {
+        done();
+      });
+  });
 });
 
-xdescribe('assessment model [getAssessment] ', function() {
+describe('Assessment model [getAssessment] ', function() {
 
-  it('retrieve assessment [non-existing assessment id]');
+  it('fail because Assessment ID is required', function(done) {
+    Assessments.getAssessment(null)
+      .catch(function(err) {
+        expect(err.error).to.be.equal('Assessment ID is required');
+        done();
+      });
+  });
 
-  it('retrieve assessment [empty assessment id]');
+  it('return empty Assessment details because Assessment ID is not existing', function(done) {
+    Assessments.getAssessment('123456789abc')
+      .then(function(result) {
+        expect(result).to.deep.equal([]);
+        done();
+      });
+  });
 
-  it('retrieve assessment [valid assessment id]');
-
+  it('return success in getting Assessment by Assessment ID', function(done) {
+    var createdTeam = {};
+    var assessmentData = {};
+    var assessmentId = null;
+    Teams.createTeam(validTeams, testData.validUserEmail())
+      .then(function(result) {
+        createdTeam = result;
+        assessmentData = validAssessments;
+        assessmentData['teamId'] = result['_id'];
+        assessmentData['version'] = 1;
+        assessmentData['createdByUserId'] = validUsers.userId;
+        assessmentData['createdBy'] = validUsers.email;
+        assessmentData['assessorUserId'] = validUsers.userId;
+        delete assessmentData['componentResults'];
+        delete assessmentData['actionPlans'];
+        return Assessments.addTeamAssessment(testData.validUserEmail(), assessmentData);
+      })
+      .then(function(result) {
+        assessmentId = result['_id'].toString();
+        return Assessments.getAssessment(assessmentId);
+      })
+      .then(function(result) {
+        expect(result[0]['_id'].toString()).to.be.equal(assessmentId);
+        return Assessments.deleteAssessment(testData.validUserEmail(), assessmentId);
+      })
+      .then(function() {
+        return Teams.deleteTeamByName(createdTeam['name']);
+      })
+      .then(function(result) {
+        done();
+      });
+  });
 });
 
-xdescribe('assessment model [updateTeamAssessment] ', function() {
-  it('update assessment [no assessment id]');
+describe('Assessment model [updateTeamAssessment] ', function() {
+  it('return fail because Assessment ID and User ID/email is required', function(done) {
+    Assessments.updateTeamAssessment(null, null)
+      .catch(function(err) {
+        expect(err.error).to.be.equal('Assessment ID and user email is required');
+        done();
+      });
+  });
 
-  it('update assessment [empty assessment id]');
+  it('return fail because Assessment Team ID is required', function(done) {
+    Assessments.updateTeamAssessment(testData.validUserEmail(), validAssessments)
+      .catch(function(err) {
+        expect(err.error).to.be.equal('Invalid assessment or team id');
+        done();
+      });
+  });
 
-  it('update assessment [valid assessment data] with non-existing user');
+  it('return fail because user is not allowed to edit Assessment', function(done) {
+    var createdTeam = {};
+    var assessmentData = {};
+    var assessmentId = null;
+    Teams.createTeam(validTeams, testData.validUserEmail())
+      .then(function(result) {
+        createdTeam = result;
+        assessmentData = validAssessments;
+        assessmentData['teamId'] = result['_id'];
+        assessmentData['version'] = 1;
+        assessmentData['createdByUserId'] = validUsers.userId;
+        assessmentData['createdBy'] = validUsers.email;
+        assessmentData['assessorUserId'] = validUsers.userId;
+        delete assessmentData['componentResults'];
+        delete assessmentData['actionPlans'];
+        return Assessments.addTeamAssessment(testData.validUserEmail(), assessmentData);
+      })
+      .then(function(result) {
+        assessmentId = result['_id'].toString();
+        var data = {
+          '_id': result['_id'],
+          'teamId': assessmentData['teamId'],
+          'version': 'New assessment version'
+        };
+        return Assessments.updateTeamAssessment(testData.invalidUserEmail(), data);
+      })
+      .catch(function(err) {
+        expect(err.error).to.be.equal('Not allowed to update assessment');
+      })
+      .then(function() {
+        return Teams.deleteTeamByName(createdTeam['name']);
+      })
+      .then(function(result) {
+        done();
+      });
+  });
 
-  it('update assessment [valid assessment data] invalid revision id');
-
-  it('update assessment [valid assessment data]');
-
+  it('return success in updating Assessment data', function(done) {
+    var createdTeam = {};
+    var assessmentData = {};
+    var assessmentId = null;
+    Teams.createTeam(validTeams, testData.validUserEmail())
+      .then(function(result) {
+        createdTeam = result;
+        assessmentData = validAssessments;
+        assessmentData['teamId'] = result['_id'];
+        assessmentData['version'] = 1;
+        assessmentData['createdByUserId'] = validUsers.userId;
+        assessmentData['createdBy'] = validUsers.email;
+        assessmentData['assessorUserId'] = validUsers.userId;
+        delete assessmentData['componentResults'];
+        delete assessmentData['actionPlans'];
+        return Assessments.addTeamAssessment(testData.validUserEmail(), assessmentData);
+      })
+      .then(function(result) {
+        assessmentId = result['_id'].toString();
+        var data = {
+          '_id': result['_id'],
+          'teamId': assessmentData['teamId'],
+          'version': 'New assessment version'
+        };
+        return Assessments.updateTeamAssessment(testData.validUserEmail(), data);
+      })
+      .then(function(result) {
+        expect(result['version']).to.be.equal('New assessment version');
+      })
+      .then(function() {
+        return Teams.deleteTeamByName(createdTeam['name']);
+      })
+      .then(function(result) {
+        done();
+      });
+  });
 });
 
-xdescribe('assessment model [deleteAssessment] ', function() {
-  it('delete assessment [non-existing assessment id]');
+describe('Assessment model [deleteAssessment] ', function() {
+  it('return fail because Assessment ID and User ID/email is required', function(done) {
+    Assessments.deleteAssessment(null, null)
+      .catch(function(err) {
+        expect(err.error).to.be.equal('Assessment ID and user email is required');
+        done();
+      });
+  });
 
-  it('delete assessment [empty assessment id]');
+  it('return fail because user is not allowed to delete Assessment', function(done) {
+    var createdTeam = {};
+    var assessmentData = {};
+    var assessmentId = null;
+    Teams.createTeam(validTeams, testData.validUserEmail())
+      .then(function(result) {
+        createdTeam = result;
+        assessmentData = validAssessments;
+        assessmentData['teamId'] = result['_id'];
+        assessmentData['version'] = 1;
+        assessmentData['createdByUserId'] = validUsers.userId;
+        assessmentData['createdBy'] = validUsers.email;
+        assessmentData['assessorUserId'] = validUsers.userId;
+        delete assessmentData['componentResults'];
+        delete assessmentData['actionPlans'];
+        return Assessments.addTeamAssessment(testData.validUserEmail(), assessmentData);
+      })
+      .then(function(result) {
+        assessmentId = result['_id'].toString();
+        var data = {
+          '_id': result['_id'],
+          'teamId': assessmentData['teamId'],
+          'version': 'New assessment version'
+        };
+        return Assessments.deleteAssessment(testData.invalidUserEmail(), data);
+      })
+      .catch(function(err) {
+        expect(err.error).to.be.equal('Not allowed to delete assessment');
+      })
+      .then(function() {
+        return Teams.deleteTeamByName(createdTeam['name']);
+      })
+      .then(function(result) {
+        done();
+      });
+  });
 
-  it('delete assessment [non-existing revision id]');
-
-  it('delete assessment [empty revision id]');
-
-  it('delete assessment [invalid assessment id and revision id]');
-
-  it('delete assessment [valid assessment and revision id] using admin user');
+  it('return success in deleting Assessment data', function(done) {
+    var createdTeam = {};
+    var assessmentData = {};
+    var assessmentId = null;
+    Teams.createTeam(validTeams, testData.validUserEmail())
+      .then(function(result) {
+        createdTeam = result;
+        assessmentData = validAssessments;
+        assessmentData['teamId'] = result['_id'];
+        assessmentData['version'] = 1;
+        assessmentData['createdByUserId'] = validUsers.userId;
+        assessmentData['createdBy'] = validUsers.email;
+        assessmentData['assessorUserId'] = validUsers.userId;
+        delete assessmentData['componentResults'];
+        delete assessmentData['actionPlans'];
+        return Assessments.addTeamAssessment(testData.validUserEmail(), assessmentData);
+      })
+      .then(function(result) {
+        assessmentId = result['_id'].toString();
+        return Assessments.deleteAssessment(testData.validUserEmail(), assessmentId);
+      })
+      .then(function(result) {
+        expect(result.result.ok).to.be.equal(1);
+        expect(result.result.n).to.be.equal(1);
+        return true;
+      })
+      .then(function() {
+        return Teams.deleteTeamByName(createdTeam['name']);
+      })
+      .then(function(result) {
+        done();
+      });
+  });
 });
