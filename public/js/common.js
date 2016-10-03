@@ -248,22 +248,7 @@ function setGlobalTeamList(teamList) {
  * @returns {Boolean}
  */
 function hasAccess(teamId) {
-  var flag = false;
-
-  // valid admin status for Admin user related updates only.
-  if (!_.isEmpty(systemStatus.agildash_system_status_display) &&
-    (systemStatus.agildash_system_status_display.toUpperCase() == 'AdminOnlyChange'.toUpperCase() ||
-      systemStatus.agildash_system_status_display == 'AdminOnlyReadChange'.toUpperCase())) {
-    if (isAdmin()) {
-      flag = true;
-    } else {
-      flag = false;
-    }
-  } else {
-    flag = isAdmin() || isUserMemberOfTeam(teamId);
-
-  }
-  return flag;
+  return isAdmin() || isUserMemberOfTeam(teamId);
 }
 
 /**

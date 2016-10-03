@@ -7,26 +7,27 @@ var global_currentAction = undefined;
 
 jQuery(function($) {
   $(document).ready(function() {
-    getPageVariables('iteration', initPageAction);
+    // getPageVariables('iteration', initPageAction);
+    initPageAction();
   });
 
   function initPageAction() {
-    var urlParameters = getJsonParametersFromUrl();
-    if (urlParameters != undefined && urlParameters.testUser != undefined) {
-      setTestUser(urlParameters.testUser);
-      alert('here TestUser is: ' + urlParameters.testUser);
-    }
-
-    if (urlParameters != undefined && urlParameters.id != undefined) {
-      getTeam(urlParameters.id, updateAgileTeamCache, []);
-      if (urlParameters != undefined && urlParameters.iter != undefined && urlParameters.iter != '')
-        loadAgileTeams(urlParameters.id, urlParameters.iter);
-      else
-        loadAgileTeams(urlParameters.id, 'new');
-    } else {
-      loadAgileTeams('new', '');
-      updateIterationInfo('clearIteration');
-    }
+    // var urlParameters = getJsonParametersFromUrl();
+    // if (urlParameters != undefined && urlParameters.testUser != undefined) {
+    //   setTestUser(urlParameters.testUser);
+    //   alert('here TestUser is: ' + urlParameters.testUser);
+    // }
+    // 
+    // if (urlParameters != undefined && urlParameters.id != undefined) {
+    //   getTeam(urlParameters.id, updateAgileTeamCache, []);
+    //   if (urlParameters != undefined && urlParameters.iter != undefined && urlParameters.iter != '')
+    //     loadAgileTeams(urlParameters.id, urlParameters.iter);
+    //   else
+    //     loadAgileTeams(urlParameters.id, 'new');
+    // } else {
+    //   loadAgileTeams('new', '');
+    //   updateIterationInfo('clearIteration');
+    // }
 
     $('input[type="number"]').on('contextmenu', function(e) {
       return false;

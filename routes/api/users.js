@@ -13,4 +13,5 @@ module.exports = function(app, includes) {
       });
   };
   app.get('/api/users/admins', [includes.middleware.auth.requireLogin], getAdmins);
+
 };

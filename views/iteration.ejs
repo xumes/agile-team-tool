@@ -49,24 +49,22 @@
         <div id="ibm-pcon">
           <div id="ibm-content">
             <div id="ibm-content-body">
-
               <div id="ibm-content-main">
-
                 <div class="ibm-columns">
-
                   <form id="iterationForm" class="ibm-column-form">
                     <div class="ibm-col-1-1">
-
                       <h2 class="ibm-bold ibm-h3">Iteration Information</h2>
                       <div class="ibm-rule ibm-alternate-1">
                         <hr>
                       </div>
-
                       <p>
                         <label style="line-height: 20px;" for="teamSelectList">Select an existing squad team:<span class="ibm-required">*</span></label>
                         <span>
                           <select id="teamSelectList" name="teamSelectList" style="width: 360px;">
                             <option value="new" selected="selected">Select one</option>
+                            <% for(var i=0; i<squadTeams.length; i++) {%>
+                               <option><%= squadTeams[i].name %></option>
+                            <% } %>
                           </select>
                         </span>
                       </p>

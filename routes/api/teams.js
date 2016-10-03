@@ -151,9 +151,9 @@ module.exports = function(app, includes) {
       });
   };
 
-  getTeamsByUid = function(req, res) {
+  getTeamsByUserId = function(req, res) {
     var uid = req.params.uid;
-    teamModel.getTeamsByUid(uid)
+    teamModel.getTeamsByUserId(uid)
       .then(function(result) {
         res.send(result);
       })
@@ -332,7 +332,7 @@ module.exports = function(app, includes) {
   app.get('/api/teams/members/:email', [includes.middleware.auth.requireLogin], getTeamByEmail);
 
   // get all teams by userId
-  app.get('/api/teams/membersUid/:uid', [includes.middleware.auth.requireLogin], getTeamsByUid);
+  app.get('/api/teams/membersUid/:uid', [includes.middleware.auth.requireLogin], getTeamsByUserId);
 
   // get all team or team details if teamId exists
   app.get('/api/teams/:teamId?', [includes.middleware.auth.requireLogin], getTeam);

@@ -80,18 +80,13 @@ var UserSchema = new Schema(userSchema);
 var User = mongoose.model('users', UserSchema);
 
 var users = {
-  findUserByEmail: function(email) {
-    return new Promise(function(resolve, reject) {
-      User.findOne({email: email})
-        .then(function(useInfo){
-          resolve(useInfo);
-        })
-        .catch( /* istanbul ignore next */ function(err){
-          reject(err);
-        });
-    });
+  findUserByUserId: function(uid) {
+    return User.findOne({userId: uid}).exec();
   },
 
+  findUserByEmail: function(email) {
+    return User.findOne({email: email}).exec();
+  },
 
   isTeamMember: function(userEmail, teamId) {
     return new Promise(function(resolve, reject) {

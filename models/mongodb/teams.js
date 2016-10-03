@@ -149,13 +149,13 @@ module.exports.searchTeamWithName = function(string) {
 };
 
 //using for snapshot roll up data, get all non squads
-module.exports.getNonSquadTeams = function(optionalProjection) {
-  return Team.find({type: {$ne:'squad'}}, optionalProjection).exec();
+module.exports.getNonSquadTeams = function(proj) {
+  return Team.find({type: {$ne:'squad'}}).select(proj).exec();
 };
 
 //using for snapshot roll up data, get all squads
-module.exports.getSquadTeams = function(optionalProjection) {
-  return Team.find({type: 'squad'}, optionalProjection).exec();
+module.exports.getSquadTeams = function(proj) {
+  return Team.find({type: 'squad'}).select(proj).exec();
 };
 
 /**
@@ -503,14 +503,14 @@ module.exports.getByName = function(teamName) {
     return Team.find({name:teamName}).exec();
 };
 
-module.exports.getTeamsByEmail = function(memberEmail) {
-  return Team.find({members: {$elemMatch:{email:memberEmail}}}).exec();
+module.exports.getTeamsByEmail = function(memberEmail, proj) {
+  return Team.find({members: {$elemMatch:{email:memberEmail}}, docStatus:{$ne:'delete'}}).select(proj).exec();
 };
 //look at all the first pathId in all the paths
 //query all those pathIds
 //[_id, _id]
-module.exports.getTeamsByUid = function(uid) {
-  return Team.find({members: {$elemMatch:{userId:uid}}}).exec();
+module.exports.getTeamsByUserId = function(uid, proj) {
+  return Team.find({members: {$elemMatch:{userId:uid}}, docStatus:{$ne:'delete'}}).select(proj).exec();
 };
 //returns an array of team ids where the user is a member of the team + the team's subtree
 //this uses user email
