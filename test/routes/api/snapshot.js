@@ -38,46 +38,95 @@ describe('Snapshot API Test', function(){
         done();
       });
   });
-  describe('Snapshot API Test [GET /api/snapshot/updaterollupdata/]', function(){
-    this.timeout(60000);
+  describe('Snapshot model [updateRollUpData]', function(){
     it('return successful for updating roll up data', function(done) {
-      var req = request(app).post('/api/snapshot/updaterollupdata');
-      agent.attachCookies(req);
-      req.end(function(err, res) {
-        if (err) {
-          //console.log(err);
-        } else {
-          expect(res.statusCode).to.be.equal(200);
-          expect(res.body).to.be.a('string');
-        }
-        done();
-      });
+      snapshotModel.updateRollUpData()
+        .then(function(result){
+          expect(result).to.be.a('string');
+          done();
+        });
     });
   });
-  describe('Snapshot API Test [GET /api/snapshot/completeiterations]', function(){
-    it('return successful for updating iterations', function(done) {
-      var req = request(app).post('/api/snapshot/completeiterations');
-      agent.attachCookies(req);
-      req.end(function(err, res) {
-        if (err) {
-          //console.log(err);
-        } else {
-          expect(res.statusCode).to.be.equal(200);
-          expect(res.body).to.be.a('object');
-        }
+});
+
+describe('Snapshot API Test [GET /api/snapshot/getrollupdata]: calculate and update non squad teams iteartions', function() {
+  this.timeout(60000);
+  // do the login befre testing
+  before(function(done) {
+    agent
+      .get('/api/login/masquerade/' + userEmail)
+      .send()
+      .end(function(err, res) {
+        if (err) throw err;
+        agent.saveCookies(res);
         done();
       });
+  });
+
+  it('Successfully roll up data', function(done) {
+    var req = request(app).get('/api/snapshot/updaterollupdata');
+    agent.attachCookies(req);
+    req.end(function(err, res) {
+      if (err) {} else {
+        expect(res.statusCode).to.be.equal(200);
+      }
+      done();
     });
   });
-  after(function(done){
-    var promiseArray = [];
-    promiseArray.push(userModel.delete(testUser.email));
-    Promise.all(promiseArray)
-      .then(function(results){
-        done();
-      })
-      .catch(function(err){
-        done();
-      });
+
+  it('Successfully return top level team', function(done) {
+    var req = request(app).get('/api/snapshot/getteams/' + userEmail);
+    agent.attachCookies(req);
+    req.end(function(err, res) {
+      if (err) {} else {
+        expect(res.statusCode).to.be.equal(200);
+      }
+      done();
+    });
   });
+
+  it('Successfully roll up squads', function(done) {
+    var req = request(app).get('/api/snapshot/updaterollupsquads');
+    agent.attachCookies(req);
+    req.end(function(err, res) {
+      if (err) {} else {
+        expect(res.statusCode).to.be.equal(200);
+      }
+      done();
+    });
+  });
+
+  it('Successfully return roll up data for team', function(done) {
+    var req = request(app).get('/api/snapshot/rollupdatabyteam/' + 'ag_team_CIO');
+    agent.attachCookies(req);
+    req.end(function(err, res) {
+      if (err) {} else {
+        expect(res.statusCode).to.be.equal(200);
+      }
+      done();
+    });
+  });
+
+  it('Successfully return roll up squads for team', function(done) {
+    var req = request(app).get('/api/snapshot/rollupsquadsbyteam/' + 'ag_team_CIO');
+    agent.attachCookies(req);
+    req.end(function(err, res) {
+      if (err) {} else {
+        expect(res.statusCode).to.be.equal(200);
+      }
+      done();
+    });
+  });
+
+  it('Successfully complete iterations if past end date', function(done) {
+    var req = request(app).get('/api/snapshot/completeiterations');
+    agent.attachCookies(req);
+    req.end(function(err, res) {
+      if (err) {} else {
+        expect(res.statusCode).to.be.equal(200);
+      }
+      done();
+    });
+  });
+
 });

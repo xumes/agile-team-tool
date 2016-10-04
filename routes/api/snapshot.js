@@ -41,7 +41,18 @@ module.exports = function(app, includes) {
       });
   },
 
+  checkSnapshotCollectioExist = function(req, res) {
+    snapshotModel.checkSnapshotCollectioExist()
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        res.status(400).send(err);
+      });
+  },
+
   app.get('/api/snapshot/completeiterations', [includes.middleware.auth.requireLogin], completeIterations);
   app.get('/api/snapshot/get/:teamId', [includes.middleware.auth.requireLogin], getRollUpDataByTeam);
+  app.get('/api/snapshot/checkexist/', [includes.middleware.auth.requireLogin], checkSnapshotCollectioExist);
   app.get('/api/snapshot/updaterollupdata/', [includes.middleware.auth.requireLogin], updateRollUpData);
 };
