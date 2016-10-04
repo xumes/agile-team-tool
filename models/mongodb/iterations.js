@@ -409,22 +409,19 @@ var iteration = {
     if (!_.isEmpty(p.startDate) || !_.isEmpty(p.endDate)){
       var startDate = p.startDate;
       var endDate = p.endDate;
-      if (startDate && endDate) {
+      if (startDate && endDate)
         qReq['endDate'] = {
           '$gte': moment(new Date(startDate)).format(dateFormat),
           '$lte': moment(new Date(endDate)).format(dateFormat)
         };
-      }
-      else if (startDate) {
+      else if (startDate)
         qReq['endDate'] = {
           '$gte': moment(new Date(startDate)).format(dateFormat)
         };
-      }
-      else if (enddate) {
+      else if (enddate)
         qReq['endDate'] = {
           '$lte': moment(new Date(endDate)).format(dateFormat)
         };
-      }
     }
     loggers.get('model-iteration').verbose('Querying iterations:' + JSON.stringify(qReq));
     return iterationModel.find(qReq).sort('-endDate').exec();

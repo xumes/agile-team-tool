@@ -77,6 +77,23 @@ module.exports = {
       return (_.isEmpty(map[emailId].userId)) ? emailId : map[emailId].userId;
     }
   },
+  getUserName: function(map, emailId){
+
+    if (_.isEmpty(emailId))
+      return undefined;
+
+    emailId = emailId.toLowerCase();
+
+    if (_.isEmpty(map[emailId])){
+      if (emailId!=='batch')
+        console.log('user not found, will insert their email as a userId: ' + emailId);
+      return emailId;
+    }
+    else {
+      if (_.isEmpty(map[emailId].name)) console.log('name in user map was empty:  '+emailId);
+      return (_.isEmpty(map[emailId].name)) ? emailId : map[emailId].name;
+    }
+  },
 
   lowerCase: function(string){
     return (_.isEmpty(string)) ? undefined : string.toLowerCase();

@@ -37,7 +37,8 @@ MongoClient.connect(creds.url, function(err, db) {
               var err =  e.toJSON();
               console.log('CloudantId:'+err.op.userId+'   ...  '+err.errmsg);
             });
-          }}
+          }
+        }
       );
       console.log('Done!  ' + JSON.stringify(r.result));
       db.close();
