@@ -1,15 +1,13 @@
 var fs = require('fs');
 var settings = require('../settings');
 var middleware = {
-  auth: require('../middleware/auth'),
-  cache: require('../middleware/cache')
+  auth: require('../middleware/auth')
 };
 
 render = function(req, res, file, json) {
   //can add stuff to json here if needed
   json['siteTitle'] = 'Agile Team Tool';
   json['userEmail'] = req.user;
-  json['prefixIteration'] = settings.prefixes['iteration'];
   return res.render(file, json);
 };
 
@@ -25,7 +23,7 @@ module.exports = function(app, passport) {
   fs.readdirSync('./routes/api').forEach(function(file) {
     require('./api/' + file)(app, includes);
   });
-  fs.readdirSync('./routes/mongodb').forEach(function(file) {
-    require('./mongodb/' + file)(app, includes);
+  fs.readdirSync('./routes/v1').forEach(function(file) {
+    require('./v1/' + file)(app, includes);
   });
 };

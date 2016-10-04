@@ -23,6 +23,7 @@ module.exports = function(app, includes) {
       'shortEmail': req.params.user,
       'ldap': {
         'serialNumber': '123456PH1',
+        'uid': '123456PH1',
         'hrFirstName': 'John',
         'hrLastName': 'Doe'
       }

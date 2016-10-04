@@ -419,6 +419,55 @@ module.exports.getChildrenByPathId = function(pathId) {
   // else return Team.find({path:new RegExp(','+pathId+',$')}).sort('pathId').exec();
 };
 
+module.exports.getAllChildrenOnPath = function(path) {
+  return new Promise(function(resolve, reject){
+    var promiseArray = [];
+    var pathString = ',';
+    _.each(path, function(p) {
+      pathString = pathString + p + ',';
+      var query = {
+        'path' : {
+          '$regex' : pathString + '$'
+        }
+      };
+      promiseArray.push(Team.find(query).sort('pathId').exec());
+    });
+    promiseArray.push(getAllUniquePaths());
+    Promise.all(promiseArray)
+      .then(function(results){
+        var uniquePaths = results[results.length-1];
+        uniquePaths = uniquePaths.join(',');
+        results.pop();
+        var returnArray = [];
+        _.each(results, function(teams){
+          var returnTeams = [];
+          _.each(teams, function(team){
+            var newTeam = {
+              '_id': team._id,
+              'type': team.type,
+              'name': team.name,
+              'path': team.path,
+              'pathId': team.pathId,
+              'hasChild': null,
+              'docStatus': team.docStatus
+            };
+            if (uniquePaths.indexOf(','+team.pathId+',') >= 0) {
+              newTeam.hasChild = true;
+            } else {
+              newTeam.hasChild = false;
+            }
+            returnTeams.push(newTeam);
+          });
+          returnArray.push(returnTeams);
+        });
+        resolve(returnArray);
+      })
+      .catch(function(err){
+        reject(err);
+      });
+  });
+};
+
 //TODO refactor into 2 seperate functions
 // module.exports.getTeam = function(id) {
 //   return Team.find({_id:id}).exec();

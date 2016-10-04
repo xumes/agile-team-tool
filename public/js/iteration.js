@@ -161,17 +161,28 @@ jQuery(function($) {
 
   });
 
-  $('#fteThisiteration, #clientSatisfaction, #teamSatisfaction, #cycleTimeWIP, #cycleTimeInBacklog').keypress(function(evt) {
-    evt = (evt) ? evt : window.event;
-    var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode == 8 || charCode == 37) {
-      return true;
-    } else if (charCode == 46 && $(this).val().indexOf('.') != -1) {
-      return false;
-    } else if (charCode > 31 && charCode != 46 && (charCode < 48 || charCode > 57)) {
+  $('#commStories, #commPoints, #memberCount, #commStoriesDel, #commPointsDel, #DeploythisIteration, #defectsIteration').keypress(function(e) {
+    var e = e || window.event;
+    var charCode = (e.which) ? e.which : e.keyCode;
+    var pattern = /^\d*$/;
+    if (e.charCode >= 32 && e.charCode < 127 &&  !pattern.test(this.value + '' + String.fromCharCode(e.charCode)))
+    {
       return false;
     }
-    return true;
+  }).on('paste',function(e){
+    e.preventDefault();
+  });
+
+  $('#fteThisiteration, #clientSatisfaction, #teamSatisfaction, #cycleTimeWIP, #cycleTimeInBacklog').keypress(function(e) {
+    var e = e || window.event;
+    var charCode = (e.which) ? e.which : e.keyCode;
+    var pattern = /^\d*[.]?\d*$/;
+    if (e.charCode >= 32 && e.charCode < 127 &&  !pattern.test(this.value + '' + String.fromCharCode(e.charCode)))
+    {
+      return false;
+    }
+  }).on('paste',function(e){
+    e.preventDefault();
   });
 
   $('#clientSatisfaction, #teamSatisfaction').blur(function() {

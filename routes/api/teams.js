@@ -24,7 +24,7 @@ module.exports = function(app, includes) {
     var teamDoc = req.body;
     teamModel.createTeam(teamDoc, req.session['user'])
       .then(function(result) {
-        teamModel.getUserTeams(req.session['email'])
+        teamModel.getUserTeams(req.session['user']['shortEmail'])
           .then(function(body) {
             var addResult = new Object();
             addResult.team = result;
@@ -41,7 +41,7 @@ module.exports = function(app, includes) {
     if (!(_.isEmpty(req.body['doc_status'])) && req.body['doc_status'] === 'delete') {
       teamModel.updateOrDeleteTeam(req.body, req.session['user'], 'delete')
         .then(function(result) {
-          teamModel.getUserTeams(req.session['email'])
+          teamModel.getUserTeams(req.session['user']['shortEmail'])
             .then(function(body) {
               res.status(200).send(body);
             });
@@ -59,7 +59,7 @@ module.exports = function(app, includes) {
   updateTeam = function(req, res) {
     teamModel.updateOrDeleteTeam(req.body, req.session['user'], 'update')
       .then(function(result) {
-        teamModel.getUserTeams(req.session['email'])
+        teamModel.getUserTeams(req.session['user']['shortEmail'])
           .then(function(body) {
             var updateResult = new Object();
             updateResult.team = result;
@@ -83,7 +83,7 @@ module.exports = function(app, includes) {
       teamModel.associateTeams(req.body, action, req.session['user'])
         .then(function(result) {
           var associateResult = new Object();
-          teamModel.getUserTeams(req.session['email'])
+          teamModel.getUserTeams(req.session['user']['shortEmail'])
             .then(function(body) {
               associateResult.team = result;
               associateResult.userTeams = body;
@@ -304,6 +304,17 @@ module.exports = function(app, includes) {
         res.status(400).send(err);
       });
   };
+
+  getAllChildrenOnPath = function(req, res) {
+    console.log(req.body.path);
+    teamModel.getAllChildrenOnPath(req.body.path)
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
+  };
   // search team with name
   app.get('/api/teams/search/:name', [includes.middleware.auth.requireLogin], searchTeamWithName);
 
@@ -366,4 +377,6 @@ module.exports = function(app, includes) {
 
   // get team info by pathId
   app.get('/api/teams/pathId/:pathId', [includes.middleware.auth.requireLogin], getTeamByPathId);
+
+  app.post('/api/teams/children/', [includes.middleware.auth.requireLogin], getAllChildrenOnPath);
 };
