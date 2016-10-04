@@ -131,7 +131,7 @@ var iterationDocRules = {
     presence: false
   },
   'team_mbr_change': {
-    presence: true,
+    presence: false,
     inclusion: {
       within: {
         'Yes': 'Yes',

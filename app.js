@@ -50,7 +50,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //security (mostly header stuff)
-app.use(helmet());
+// app.use(helmet());
+app.use(helmet({
+  frameguard: false
+}));
 
 // Force SSL
 /* istanbul ignore if */
