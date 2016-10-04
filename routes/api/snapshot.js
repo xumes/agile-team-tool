@@ -97,9 +97,9 @@ module.exports = function(app, includes) {
   //     res.status(400).send(err);
   //   });
   // },
-  app.get('/api/mongodb/snapshot/completeiterations', [includes.middleware.auth.requireLogin], completeIterations);
-  app.get('/api/mongodb/snapshot/get/:teamId', [includes.middleware.auth.requireLogin], getRollUpDataByTeam);
+  app.get('/api/snapshot/completeiterations', [includes.middleware.auth.requireLogin], completeIterations);
+  app.get('/api/snapshot/get/:teamId', [includes.middleware.auth.requireLogin], getRollUpDataByTeam);
   // app.get('/api/mongodb/snapshot/test/:keyword', [includes.middleware.auth.requireLogin], nameSearchTest);
-  app.get('/api/mongodb/snapshot/checkexist/', [includes.middleware.auth.requireLogin], checkSnapshotCollectioExist);
-  app.get('/api/mongodb/snapshot/updaterollupdata/', [includes.middleware.auth.requireLogin], updateRollUpData);
+  app.get('/api/snapshot/checkexist/', [includes.middleware.auth.requireLogin], checkSnapshotCollectioExist);
+  app.get('/api/snapshot/updaterollupdata/', [includes.middleware.auth.requireLogin], updateRollUpData);
 };
