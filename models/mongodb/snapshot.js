@@ -6,7 +6,10 @@ var userModel = require('./users.js');
 var teamModel = require('./teams.js');
 var iterationModel = require('./iterations.js');
 var moment = require('moment');
+var https = require('https');
+var request = Promise.promisifyAll(require('request'));
 var util = require('../../helpers/util');
+var async = require('async');
 var dateFormat = 'YYYY-MM-DD HH:mm:ss';
 var Schema   = mongoose.Schema;
 
@@ -15,7 +18,7 @@ var lastUpdate = moment().format(dateFormat);
 var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 var monthArray = [];
 
-require('../../settings');
+var settings = require('../../settings');
 
 var pointsSchema = {
   totalPoints: {
@@ -734,18 +737,56 @@ var snapshot = {
           reject(err);
         });
     });
+  },
+
+  updateUsersLocation: function() {
+    return new Promise(function(resolve, reject){
+      userModel.findUserByEmail()
+        .then(function(users){
+          var urlList = [];
+          var facesURL = settings.facesURL;
+          _.each(users, function(user){
+            if (_.isEmpty(user.location.site) || _.isUndefined(user.location.site)) {
+              if (user.email) {
+                var facesFun = 'find/?limit=100&q=email:' + encodeURIComponent('"' + escape(user.email) + '"');
+                var url = facesURL + facesFun;
+                urlList.push(url);
+              }
+            }
+          });
+          Promise.each(urlList, function(url){
+            faceRequest(url)
+              .then(function(result){
+
+              })
+              .catch(function(err){
+
+              });
+          });
+        })
+        .catch(function(err){
+          reject(err);
+        });
+    });
   }
-  // nameSearchTest: function(keyword) {
-  //   return new Promise(function(resolve, reject){
-  //     snapshotModel.find({'pathId': {'$regex': keyword, '$options': 'i'}})
-  //       .then(function(results){
-  //         resolve(results);
-  //       })
-  //       .catch(function(err){
-  //         reject(err);
-  //       });
-  //   });
-  // }
+};
+
+var faceRequest = function(url) {
+  return new Promise(function(resolve, reject){
+    // var facesURL = settings.facesURL;
+    // var facesFun = 'find/?limit=100&q=email:' + encodeURIComponent('"' + escape(email) + '"');
+    // var url = facesURL + facesFun;
+    request(url, function(error, res, body){
+      if (!error && res.statusCode == 200) {
+        var body = JSON.parse(body);
+        // do any further processing of the data here
+        resolve(body);
+      } else {
+        console.log(error || res.statusCode);
+        reject(error || res.statusCode);
+      }
+    });
+  });
 };
 
 module.exports = snapshot;

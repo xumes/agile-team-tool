@@ -1079,11 +1079,11 @@ function loadDetails(elementId, setScrollPosition) {
           var manager = teamLocation.splice(managerIndex, 1);
           teamLocation.unshift(manager.toString());
         }
-        // if (isLeafTeam) {
-        //   if (findUserAccess(userInfo.email)) {
-        //     teamLocationHandler(teamLocation);
-        //   }
-        // }
+        if (isLeafTeam) {
+          if (findUserAccess(userInfo.email)) {
+            teamLocationHandler(teamLocation);
+          }
+        }
       }
     });
     requests.push(req);

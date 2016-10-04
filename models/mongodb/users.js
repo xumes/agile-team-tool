@@ -118,11 +118,19 @@ var users = {
   },
 
   findUserByUserId: function(uid) {
-    return User.findOne({userId: uid}).exec();
+    if (_.isEmpty(uid)) {
+      return User.find().exec();
+    } else {
+      return User.findOne({userId: uid}).exec();
+    }
   },
 
   findUserByEmail: function(email) {
-    return User.findOne({email: email}).exec();
+    if (_.isEmpty(email)) {
+      return User.find().exec();
+    } else {
+      return User.findOne({email: email}).exec();
+    }
   },
 
   isTeamMember: function(userEmail, teamId) {
