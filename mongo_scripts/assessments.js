@@ -16,17 +16,18 @@ var mongoAssessments = [];
 _.each(cloudantAssessments, function(doc) {
   if (doc.doc_status==='delete')
     return;
-
   //set empty string values to be undefined
-  doc = _.mapObject(doc, function(val){ return _.isEmpty(val) ? undefined : val; });
+  doc = _.mapObject(doc, function(val){ return _.isEmpty(val) ? null : val; });
   doc = JSON.stringify(doc);
 
   var mappedDoc = JSON.parse(doc, function(k, v) {
+    //I probably should have used a switch statement here :^)
     if (k === '_rev' || k==='type' || k==='review_dt'){
       //console.log('skipping: ' + k);
     }
-    else if (k === '_id')
+    else if (k === '_id'){
       this.cloudantId = v;
+    }
     else if (k === 'team_id')
       this.teamId = v;
     else if (k === 'assessmnt_version' || k==='assessmt_version')
@@ -39,14 +40,16 @@ _.each(cloudantAssessments, function(doc) {
       this.type = v;
     else if (k === 'team_dlvr_software')
       this.deliversSoftware = (v==='Yes')?true:false;
-    else if (k === 'assessmt_status')
+    else if (k === 'assessmt_status'){
       this.assessmentStatus = v;
-    else if (k === 'ind_assessor_id')
+    }
+    else if (k === 'ind_assessor_id'){
       this.assessorUserId = util.getUserId(userMap, v);
-    else if (k === 'ind_assessor_id')
-      this.assessor = util.lowerCase(v);
-    else if (k === 'ind_assessmt_status')
+      this.assessor = util.getUserName(userMap, v);
+    }
+    else if (k === 'ind_assessmt_status'){
       this.assessorStatus = v;
+    }
     else if (k === 'ind_assessmt_dt')
       this.assessedDate = util.stringToUtcDate(v);
     else if (k === 'submitter_id'){
@@ -69,43 +72,44 @@ _.each(cloudantAssessments, function(doc) {
     }
     //nested objs
     else if (k === 'assessmt_cmpnt_rslts')
-      this.componentResults = (_.isEmpty(v))?undefined:v;
+      this.componentResults = v;
     else if (k === 'assessed_cmpnt_name')
       this.componentName = v;
     else if (k === 'user_created')
       this.isUserCreated = (v==='No' || _.isEmpty(v))? false : true;
     else if (k === 'assessmt_cmpnt_name')
       this.componentName = v;
-    else if (k === 'ovralcur_assessmt_score')
-      this.currentScore = (_.isEmpty(v))?undefined:parseFloat(v);
+    else if (k === 'ovralcur_assessmt_score'){
+      this.currentScore = (typeof v === 'string')? parseFloat(v) : v;
+    }
     else if (k === 'ovraltar_assessmt_score')
-      this.targetScore = (_.isEmpty(v))?undefined:parseFloat(v);
+      this.targetScore = (typeof v === 'string')? parseFloat(v) : v;
     else if (k === 'assessed_cmpnt_tbl')
-      this.assessedComponents = (_.isEmpty(v))?undefined:v;
+      this.assessedComponents = v;
     else if (k === 'principle_id')
-      this.principleId = (_.isEmpty(v))?undefined:parseInt(v);
+      this.principleId = (typeof v === 'string')? parseInt(v) : v;
     else if (k === 'principle_name')
       this.principleName = v;
     else if (k === 'practice_id')
-      this.practiceId = (_.isEmpty(v))?undefined:parseInt(v);
+      this.practiceId = (typeof v === 'string')? parseInt(v) : v;
     else if (k === 'practice_name')
       this.practiceName = v;
     else if (k === 'cur_mat_lvl_achieved')
       this.currentLevelName = v;
     else if (k === 'cur_mat_lvl_score')
-      this.currentScore = (_.isEmpty(v))?undefined:parseInt(v);
+      this.currentScore = (typeof v === 'string')? parseInt(v) : v;
     else if (k === 'tar_mat_lvl_achieved')
       this.targetLevelName = v;
     else if (k === 'tar_mat_lvl_score')
-      this.targetScore = (_.isEmpty(v))?undefined:parseInt(v);
+      this.targetScore = (typeof v === 'string')? parseInt(v) : v;
     else if (k === 'how_better_action_item')
       this.improveDescription = v;
     else if (k === 'ind_assessor_cmnt')
       this.assessorComment = v;
     else if (k === 'assessmt_action_plan_tbl')
-      this.actionPlans = (_.isEmpty(v))?undefined:v;
+      this.actionPlans = v;
     else if (k === 'action_plan_entry_id')
-      this.actionPlanId = (_.isEmpty(v))?undefined:parseInt(v);
+      this.actionPlanId = (typeof v === 'string')? parseInt(v) : v;
     else if (k === 'key_metric')
       this.keyMetric = v;
     else if (k === 'ind_target_mat_lvl_score')
@@ -113,7 +117,7 @@ _.each(cloudantAssessments, function(doc) {
     else if (k === 'ind_mat_lvl_achieved')
       this.assessorLevel = v;
     else if (k === 'progress_summ')
-      this.progressSummary = (_.isEmpty(v))?undefined: v;
+      this.progressSummary = v;
     else {
       //console.log('WARN: ' + k + ' was never mapped w/ value = ' + v);
       return v;

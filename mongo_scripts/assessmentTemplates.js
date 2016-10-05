@@ -12,7 +12,7 @@ var util = require('./util.js');
 
 var mongoTemplates = [];
 _.each(templates, function(doc){
-  doc = _.mapObject(doc, function(val){ return _.isEmpty(val) ? undefined : val; });
+  doc = _.mapObject(doc, function(val){ return _.isEmpty(val) ? null : val; });
   doc = JSON.stringify(doc);
   var mappedDoc = JSON.parse(doc, function(k, v) {
     if (k === '_rev' || k === 'type'){
