@@ -5,6 +5,7 @@ var loggers = require('../../middleware/logger');
 var userModel = require('./users.js');
 var teamModel = require('./teams.js');
 var iterationModel = require('./iterations.js');
+var teamScoreModel = require('../teamscore.js');
 var moment = require('moment');
 var https = require('https');
 var request = Promise.promisifyAll(require('request'));
@@ -741,74 +742,10 @@ var snapshot = {
 
   updateUsersLocation: function() {
     return new Promise(function(resolve, reject){
-      teamModel.getSquadsByPathId('cio')
-        .then(function(teams){
-          resolve(_.flatten(_.pluck(teams, 'members')));
-        })
-        .catch(function(err){
-          reject(err);
-        });
-      // userModel.findUserByEmail()
-      //   .then(function(users){
-      //     var urlList = [];
-      //     var facesURL = 'http://ifundit-dp.tap.ibm.com:3004/';
-      //     _.each(users, function(user){
-      //       if (_.isEmpty(user.location.site) || _.isUndefined(user.location.site)) {
-      //         if (user.email) {
-      //           var facesFun = 'id/' + encodeURIComponent(user.email) + '/email';
-      //           var url = facesURL + facesFun;
-      //           urlList.push(faceRequest(url));
-      //
-      //
-      //
-      //         }
-      //       }
-      //     });
-      //
-      //     resolve(urlList);
-      //     /*
-      //     Promise.each(urlList, function(url){
-      //       faceRequest(url)
-      //         .then(function(result){
-      //           console.log(result);
-      //         })
-      //         .catch(function(err){
-      //           console.log(err);
-      //         });
-      //     });
-      //     */
-      //   })
-      //   .then(function(urlList) {
-      //     return Promise.each(urlList, function(result) {
-      //
-      //     });
-      //   })
-      //   .then(function(result){
-      //     resolve(result);
-      //   })
-      //   .catch(function(err){
-      //     reject(err);
-      //   });
+      _.each(userLocations, function(location){
+      });
     });
   }
-};
-
-var faceRequest = function(url) {
-  return new Promise(function(resolve, reject){
-    // var facesURL = settings.facesURL;
-    // var facesFun = 'find/?limit=100&q=email:' + encodeURIComponent('"' + escape(email) + '"');
-    // var url = facesURL + facesFun;
-    request(url, function(error, res, body){
-      if (!error && res.statusCode == 200) {
-        var body = JSON.parse(body);
-        // do any further processing of the data here
-        resolve(body);
-      } else {
-        console.log(error || res.statusCode);
-        reject(error || res.statusCode);
-      }
-    });
-  });
 };
 
 module.exports = snapshot;

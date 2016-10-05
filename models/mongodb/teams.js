@@ -539,7 +539,6 @@ module.exports.getTeamAndChildInfo = function(id) {
 
 module.exports.getSquadsByPathId = function(pathId) {
   return new Promise(function(resolve, reject){
-    console.log(pathId);
     Team.findOne({pathId: pathId}).exec()
       .then(function(team){
         if (team.path) {
@@ -557,7 +556,6 @@ module.exports.getSquadsByPathId = function(pathId) {
             }
           };
         }
-        console.log(query);
         return Team.find(query).exec();
       })
       .then(function(teams){

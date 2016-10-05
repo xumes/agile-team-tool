@@ -674,7 +674,7 @@ function getSnapshot(teamId, teamName) {
     url: cUrl
   }).done(function(data) {
     if (data != undefined) {
-      if (data == null) {
+      if (!data) {
         console.log('no iteation data for team: ', teamId);
         $('#refreshDate').html('Waiting for updating');
         iterationScoreCard(teamId, teamName, tempIterationData, tempSquadScore);
@@ -1079,11 +1079,11 @@ function loadDetails(elementId, setScrollPosition) {
           var manager = teamLocation.splice(managerIndex, 1);
           teamLocation.unshift(manager.toString());
         }
-        if (isLeafTeam) {
-          if (findUserAccess(userInfo.email)) {
-            teamLocationHandler(teamLocation);
-          }
-        }
+        // if (isLeafTeam) {
+        //   if (findUserAccess(userInfo.email)) {
+        //     teamLocationHandler(teamLocation);
+        //   }
+        // }
       }
     });
     requests.push(req);
