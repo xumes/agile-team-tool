@@ -1,15 +1,17 @@
 var assessmentModel = require('../../models/mongodb/assessments');
+var assessmentTemplateModel = require('../../models/mongodb/assessmentTemplates');
+var teamModel = require('../../models/mongodb/teams');
+
 var _ = require('underscore');
 
 module.exports = function(app, includes) {
   var middleware = includes.middleware;
 
   getAssessment = function(req, res) {
-    var teamId = req.query.teamId;
-    var assessId = req.query.assessId;
-    var docs = req.query.docs;
+    var teamId = req.query.teamId; // this will be document id
+    var assessmentId = req.query.assessId;
     if (!_.isUndefined(teamId)) {
-      assessmentModel.getTeamAssessments(teamId, docs)
+      assessmentModel.getTeamAssessments(teamId)
         .then(function(result) {
           res.send(result);
         })
@@ -18,7 +20,7 @@ module.exports = function(app, includes) {
           res.status(400).send(err);
         });
     } else {
-      assessmentModel.getAssessment(assessId)
+      assessmentModel.getAssessment(assessmentId)
         .then(function(result) {
           res.send(result);
         })
@@ -29,7 +31,7 @@ module.exports = function(app, includes) {
   };
 
   getAssessmentTemplate = function(req, res) {
-    assessmentModel.getAssessmentTemplate()
+    assessmentTemplateModel.get()
       .then(function(result) {
         res.send(result);
       })

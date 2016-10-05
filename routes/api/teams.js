@@ -315,6 +315,18 @@ module.exports = function(app, includes) {
         res.status(400).send(err);
       });
   };
+
+  getSquadTeams = function(req, res) {
+    var filter = req.query.filter;
+    filter = _.isEmpty(filter) ? null : JSON.parse(decodeURI(filter));
+    teamModel.getSquadTeams(null, filter)
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
+  };
   // search team with name
   app.get('/api/teams/search/:name', [includes.middleware.auth.requireLogin], searchTeamWithName);
 
@@ -335,6 +347,9 @@ module.exports = function(app, includes) {
 
   // get all applicable team roles
   app.get('/api/teams/roles', [includes.middleware.auth.requireLogin], getTeamRole);
+
+  // get all squad team
+  app.get('/api/teams/squads', [includes.middleware.auth.requireLogin], getSquadTeams);  
 
   // get team doc by team name
   app.get('/api/teams/names/:teamName?', [includes.middleware.auth.requireLogin], getByTeamName);

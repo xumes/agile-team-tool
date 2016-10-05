@@ -218,14 +218,14 @@ module.exports.addTeamAssessment = function(userEmail, data){
   });
 };
 
-module.exports.getTeamAssessments = function(teamId, docs){
+module.exports.getTeamAssessments = function(teamId){
   return new Promise(function(resolve, reject) {
     if (lodash.isEmpty(teamId)) {
       var err = {'error': 'Team ID is required'};
       loggers.get('models').error('Error: ' + err);
       reject(err);
     } else {
-      Assessment.find({'teamId': teamId})
+      Assessment.find({'teamId': teamId })
       .then(function(result) {
         resolve(result);
       })
@@ -245,7 +245,7 @@ module.exports.getAssessment = function(assessmentId){
       loggers.get('models').error('Error: ' + err);
       reject(err);
     } else {
-      Assessment.find({'_id': assessmentId})
+      Assessment.findOne({'_id': assessmentId})
       .then(function(result) {
         resolve(result);
       })
@@ -284,6 +284,8 @@ module.exports.updateTeamAssessment = function(userEmail, data){
           }
         })
         .then(function() {
+          delete data['updateDate']; // use server time
+          console.log('line 288: ', data);
           return Assessment.findOneAndUpdate({'_id' :  data['_id']}, data, {'new':true});
         })
         .then(function(result) {

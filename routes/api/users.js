@@ -54,6 +54,14 @@ module.exports = function(app, includes) {
         res.status(404).send(err);
       });
   };
+
+  getActiveUser = function(req, res) {
+    // return active user session
+    res.send(req.session['user']);
+  };
+
+  app.get('/api/users/active', [includes.middleware.auth.requireLogin], getActiveUser);
+
   app.get('/api/users/isuserallowed', [includes.middleware.auth.requireLogin], isUserAllowed);
 
   app.get('/api/users/admins', [includes.middleware.auth.requireLogin], getAdmins);

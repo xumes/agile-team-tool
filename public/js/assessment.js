@@ -2,19 +2,83 @@
 jQuery(function($) {
   $(document).ready(function() {
     getPageVariables('assessment', initPageAction);
+    initPageAction();
   });
 
+  function resetUserInfo(user) {
+    return userInfo = {
+        //id: not defined in ldap object,
+        'uid': user.ldap.uid,
+        'building': user.ldap.buildingName,
+        //is-employee: not defined in ldap object,
+        'bio': user.ldap.jobresponsibilities,
+        //location: not defined in ldap object,
+        'email': user.ldap.preferredIdentity,
+        'name': user.ldap.hrFirstName + ' ' + user.ldap.hrLastName,
+        'office-phone': user.ldap.telephoneNumber,
+        //org-title: not defined in ldap object,
+        'notes-id': user.ldap.notesId
+      };
+  }
+
+  function getSquadTeam(filter, callback){
+    // do we need this endpoint?
+    var filter = typeof filter != 'undefined' ? encodeURI(JSON.stringify(filter)) : '';
+    $.ajax({
+      type: 'GET',
+      url: '/api/teams/squads?filter=' + filter,
+      async: false
+    }).done(function(data) {
+      callback(data);
+    });
+  }
+
+  function getUserTeam(callback){
+    $.ajax({
+      type: 'GET',
+      url: '/api/teams/membersUid/' + user.ldap.uid,
+      async: false
+    }).done(function(data) {
+      callback(data);
+    });
+  }
+
+  function getActiveUser(callback){
+    $.ajax({
+      type: 'GET',
+      url: '/api/users/active/',
+      async: false
+    }).done(function(data) {
+      callback(data);
+    });
+  }
+
   function initialAssessmentLoad(urlParameters, teamAssessment, templateList){
-    assessmentQuestionnaireHandler(teamAssessment, templateList);
-    if (urlParameters != undefined && urlParameters.id != undefined && urlParameters.id != '') {
-      if (urlParameters.assessId != undefined && urlParameters.assessId != '' && urlParameters.assessId != 'new') {
-        agileTeamListHandler('teamSelectList', urlParameters.id, urlParameters.assessId, null, null, squadTeams);
-      } else {
-        agileTeamListHandler('teamSelectList', urlParameters.id, 'new', null, null, squadTeams);
-      }
-    } else {
-      agileTeamListHandler('teamSelectList', null, null, null, null, squadTeams);
-    }
+    getActiveUser(function(result) {
+      user = result;
+      userInfo = resetUserInfo(user);
+      getUserTeam(function(result) {
+        var newResult = [];
+        _.each(result, function(v,i) {
+          newResult.push(v['_id']);
+        });
+        userTeamList = newResult;
+        getSquadTeam({name: 1}, function(result) {
+          squadTeams = result;
+          assessmentQuestionnaireHandler(teamAssessment, templateList);
+            if (urlParameters != undefined && urlParameters.id != undefined && urlParameters.id != '') {
+              if (urlParameters.assessId != undefined && urlParameters.assessId != '' && urlParameters.assessId != 'new') {
+                agileTeamListHandler('teamSelectList', urlParameters.id, urlParameters.assessId, null, null, squadTeams);
+              } else {
+                agileTeamListHandler('teamSelectList', urlParameters.id, 'new', null, null, squadTeams);
+              }
+            } else {
+              agileTeamListHandler('teamSelectList', null, null, null, null, squadTeams);
+            }
+          });
+
+        });
+    });
   }
 
   function initPageAction() {
@@ -189,7 +253,7 @@ function assessmentQuestionnaireHandler(teamAssessment, assessmentTemplateList) 
 
   if (teamAssessment != null) {
     var result = _.find(gAssessmentTemplateList, function(value) {
-      if (value.atma_version == teamAssessment.assessmt_version ||
+      if (value.version == teamAssessment.assessmt_version ||
         value._id == teamAssessment.assessmt_version) {
         return value;
       }
@@ -313,8 +377,6 @@ function updateAgileTeamAssessmentsCache(teamAssessment) {
 }
 
 function createAssessmentTable(assessmentTemplate) {
-  $('#assessmentContainer').empty();
-
   if (assessmentTemplate == null) {
     var p = document.createElement('p');
     p.appendChild(document.createTextNode('No maturity assessment template found.'));
@@ -322,13 +384,13 @@ function createAssessmentTable(assessmentTemplate) {
     return;
   }
 
-  var assessments = assessmentTemplate['atma_cmpnt_tbl'];
-  var versionId = 'atma_ver_' + assessmentTemplate['atma_version'];
+  var assessments = assessmentTemplate['components'];
+  var versionId = 'atma_ver_' + assessmentTemplate['version'];
   var html = createMainTwistySection(versionId, 'agile-assessment');
   $('#assessmentContainer').append(html);
   for (var i = 0; i < assessments.length; i++) {
     var atmaId = versionId + '_' + i;
-    label = assessments[i]['atma_name'];
+    label = assessments[i]['name'];
     html = createSubTwistySection(atmaId, label, '', false);
     $('#' + versionId).append(html);
 
@@ -336,10 +398,10 @@ function createAssessmentTable(assessmentTemplate) {
     html = createMainTwistySection(mainPrincipleId, 'agile-principle');
     $('#body' + atmaId).append(html);
 
-    var principles = assessments[i]['principle_tbl'];
+    var principles = assessments[i]['principles'];
     for (var j = 0; j < principles.length; j++) {
-      var principleId = mainPrincipleId + '_' + principles[j]['principle_id'];
-      label = principles[j]['principle_name'];
+      var principleId = mainPrincipleId + '_' + principles[j]['id'];
+      label = principles[j]['name'];
       html = createSubTwistySection(principleId, label, '', false);
       $('#' + mainPrincipleId).append(html);
 
@@ -347,11 +409,11 @@ function createAssessmentTable(assessmentTemplate) {
       html = createMainTwistySection(mainPracticeId, 'agile-practice');
       $('#body' + principleId).append(html);
 
-      var practices = principles[j]['practice_tbl'];
+      var practices = principles[j]['practices'];
       for (var k = 0; k < practices.length; k++) {
-        label = practices[k]['practice_name'];
+        label = practices[k]['name'];
 
-        var practiceId = mainPracticeId + '_' + practices[k]['practice_id'];
+        var practiceId = mainPracticeId + '_' + practices[k]['id'];
         html = createSubTwistySection(practiceId, label, '', false);
         $('#' + mainPracticeId).append(html);
 
@@ -481,20 +543,20 @@ function createCriteriaTable(practice, htmlLoc, practiceId) {
   table.appendChild(thead);
 
   var tbody = document.createElement('tbody');
-  var criteria = practice['mat_criteria_tbl'];
+  var criteria = practice['levels'];
   for (var i = 0; i < criteria.length; i++) {
     tr = document.createElement('tr');
     tr.setAttribute('id', practiceId + '_tbtr_' + i);
 
     var td = document.createElement('td');
-    td.appendChild(document.createTextNode(criteria[i]['mat_lvl_name']));
+    td.appendChild(document.createTextNode(criteria[i]['name']));
     tr.appendChild(td);
 
     td = document.createElement('td');
     var ul = document.createElement('ul');
-    for (var j = 0; j < criteria[i]['mat_lvl_criteria'].length; j++) {
+    for (var j = 0; j < criteria[i]['criteria'].length; j++) {
       var li = document.createElement('li');
-      li.appendChild(document.createTextNode(criteria[i]['mat_lvl_criteria'][j]));
+      li.appendChild(document.createTextNode(criteria[i]['criteria'][j]));
       ul.appendChild(li);
     }
     td.appendChild(ul);
@@ -503,8 +565,8 @@ function createCriteriaTable(practice, htmlLoc, practiceId) {
     var radio = document.createElement('input');
     radio.setAttribute('type', 'radio');
     radio.setAttribute('name', practiceId + '_curr');
-    radio.setAttribute('value', criteria[i]['mat_lvl_name']);
-    radio.setAttribute('aria-label', criteria[i]['mat_lvl_name']);
+    radio.setAttribute('value', criteria[i]['name']);
+    radio.setAttribute('aria-label', criteria[i]['name']);
     td = document.createElement('td');
     td.setAttribute('id', practiceId + '_td_curr_' + i);
     td.setAttribute('class', 'agile-question-opt ibm-background-cool-gray-20');
@@ -515,8 +577,8 @@ function createCriteriaTable(practice, htmlLoc, practiceId) {
     radio = document.createElement('input');
     radio.setAttribute('type', 'radio');
     radio.setAttribute('name', practiceId + '_targ');
-    radio.setAttribute('value', criteria[i]['mat_lvl_name']);
-    radio.setAttribute('aria-label', criteria[i]['mat_lvl_name']);
+    radio.setAttribute('value', criteria[i]['name']);
+    radio.setAttribute('aria-label', criteria[i]['name']);
     td = document.createElement('td');
     td.setAttribute('id', practiceId + '_td_targ_' + i);
     td.setAttribute('class', 'agile-question-opt ibm-background-cool-gray-10');
@@ -527,8 +589,8 @@ function createCriteriaTable(practice, htmlLoc, practiceId) {
     radio = document.createElement('input');
     radio.setAttribute('type', 'radio');
     radio.setAttribute('name', practiceId + '_ind');
-    radio.setAttribute('value', criteria[i]['mat_lvl_name']);
-    radio.setAttribute('aria-label', criteria[i]['mat_lvl_name']);
+    radio.setAttribute('value', criteria[i]['name']);
+    radio.setAttribute('aria-label', criteria[i]['name']);
     td = document.createElement('td');
     td.setAttribute('id', practiceId + '_td_ind_' + i);
     td.setAttribute('class', 'agile-question-opt ibm-background-cool-gray-20');
@@ -832,8 +894,8 @@ function updateAgileTeamAssessment(action) {
     screenAnswers['assessmt_status'] = 'Draft';
     screenAnswers['created_dt'] = serverDateTime;
     screenAnswers['created_user'] = userInfo.email;
-    screenAnswers['last_updt_dt'] = serverDateTime;
-    screenAnswers['last_updt_user'] = userInfo.email;
+    screenAnswers['updateDate'] = serverDateTime;
+    screenAnswers['updatedBy'] = userInfo.email;
 
     if (action == 'save as draft') {
       screenAnswers['assessmt_status'] = 'Draft';
@@ -856,7 +918,6 @@ function updateAgileTeamAssessment(action) {
     $('#lastUpdateTimestamp').html(showDateUTC(serverDateTime));
 
     gTeamAssessment = screenAnswers;
-    showLog(screenAnswers);
     $.ajax({
       type: 'POST',
       url: '/api/assessment',
@@ -874,100 +935,139 @@ function updateAgileTeamAssessment(action) {
     });
 
   } else {
-    $.ajax({
-      type: 'GET',
-      url: '/api/assessment/view?assessId=' + encodeURIComponent($('#assessmentSelectList').val()),
-      async: false
-    }).done(function(data) {
-
-      var jsonData = data;
-      if (action == 'delete draft') {
-        showLog(JSON.stringify(jsonData));
-        $.ajax({
-          type: 'DELETE',
-          url: '/api/assessment' + '?docId=' + encodeURIComponent(jsonData['_id']) + '&revId=' + jsonData['_rev']
-        }).done(function(data) {
-          showMessagePopup('Draft assessment has been deleted.');
-          getTeamAssessments(jsonData['team_id'], false, teamAssessmentListHander, ['assessmentSelectList', jsonData['team_id'], 'new']);
-        }).fail(function(jqXHR, textStatus, errorThrown) {
-          if (jqXHR.status == 400) {
-            if (jqXHR.responseJSON.error != null)
-              validationHandler(jqXHR.responseJSON.error);
-          }
-        });
-
-      } else {
-        var screenAnswers = getScreenAnswers();
-        var serverDateTime = getServerDateTime();
-        jsonData['team_proj_ops'] = screenAnswers['team_proj_ops'];
-        jsonData['team_dlvr_software'] = screenAnswers['team_dlvr_software'];
-        jsonData['assessmt_cmpnt_rslts'] = screenAnswers['assessmt_cmpnt_rslts'];
-        jsonData['self-assessmt_dt'] = screenAnswers['self-assessmt_dt'];
-        jsonData['last_updt_dt'] = serverDateTime;
-        jsonData['last_updt_user'] = userInfo.email;
-
-        if (action == 'save as draft' && getAssessmentStatus(jsonData).toLowerCase() == 'draft') {
-          jsonData['assessmt_status'] = 'Draft';
-          jsonData['assessmt_action_plan_tbl'] = [];
-          msg = 'Maturity assessment has been saved as draft.';
-
-        } else if (action == 'submit' && getAssessmentStatus(jsonData).toLowerCase() == 'draft') {
-          jsonData['assessmt_status'] = 'Submitted';
-          jsonData['submitter_id'] = userInfo.email;
-          //jsonData["self-assessmt_dt"] = serverDateTime;
-          if (screenAnswers['self-assessmt_dt'] != undefined && screenAnswers['self-assessmt_dt'].length > 0) {
-            jsonData['self-assessmt_dt'] = screenAnswers['self-assessmt_dt'];
-          } else {
-            if (jsonData['self-assessmt_dt'] == undefined || jsonData['self-assessmt_dt'].length == 0) {
-              jsonData['self-assessmt_dt'] = serverDateTime;
-            }
-          }
-          jsonData['assessmt_action_plan_tbl'] = screenAnswers['assessmt_action_plan_tbl'];
-          msg = 'Maturity assessment has been submitted.';
-
-        } else if (action == 'save as draft' && getAssessmentStatus(jsonData).toLowerCase() == 'independent review') {
-          jsonData['assessmt_status'] = 'Submitted';
-          jsonData['ind_assessmt_status'] = 'Draft';
-          jsonData['ind_assessor_id'] = userInfo.email;
-          jsonData['assessmt_action_plan_tbl'] = mergeActionItems(jsonData['assessmt_action_plan_tbl'], screenAnswers['assessmt_action_plan_tbl']);
-          msg = 'Independent review for the maturity assessment has been saved as draft.';
-
-        } else if (action == 'submit' && getAssessmentStatus(jsonData).toLowerCase() == 'independent review') {
-          jsonData['ind_assessmt_status'] = 'Submitted';
-          jsonData['ind_assessor_id'] = userInfo.email;
-          jsonData['ind_assessmt_dt'] = serverDateTime;
-          jsonData['assessmt_action_plan_tbl'] = mergeActionItems(jsonData['assessmt_action_plan_tbl'], screenAnswers['assessmt_action_plan_tbl']);
-          msg = 'Independent review for the maturity assessment has been submitted.';
-
+    if (action == 'delete draft') {
+      console.log('line 939: ', screenAnswers);
+      $.ajax({
+        type: 'DELETE',
+        url: '/api/assessment' + '?docId=' + encodeURIComponent(jsonData['_id']) + '&revId=' + jsonData['_rev']
+      }).done(function(data) {
+        showMessagePopup('Draft assessment has been deleted.');
+        getTeamAssessments(jsonData['team_id'], false, teamAssessmentListHander, ['assessmentSelectList', jsonData['team_id'], 'new']);
+      }).fail(function(jqXHR, textStatus, errorThrown) {
+        if (jqXHR.status == 400) {
+          if (jqXHR.responseJSON.error != null)
+            validationHandler(jqXHR.responseJSON.error);
         }
+      });
 
-        $('#lastUpdateUser').html(userInfo.email);
-        $('#lastUpdateTimestamp').html(showDateUTC(serverDateTime));
-        $('#doc_id').html(jsonData['_id']);
+    } else {
+      var screenAnswers = getScreenAnswers();
+      var serverDateTime = getServerDateTime();
+      jsonData = screenAnswers;
+      jsonData['componentResults'] = screenAnswers['componentResults'];
+      jsonData['self-assessmt_dt'] = screenAnswers['self-assessmt_dt'];
+      jsonData['updateDate'] = serverDateTime;
+      jsonData['updatedBy'] = userInfo.email;
 
-        // copy object to persist to follow hierarchy of columns in the template
-        jsonData = $.extend(true, {}, screenAnswers, jsonData);
-        $.ajax({
-          type: 'PUT',
-          url: '/api/assessment/',
-          contentType: 'application/json',
-          data: JSON.stringify(jsonData)
-        }).done(function(data) {
-          gTeamAssessment = jsonData;
-          gTeamAssessment['_rev'] = data['rev'];
-          updateAgileTeamAssessmentsCache(gTeamAssessment);
-          assessmentQuestionnaireHandler(gTeamAssessment, gAssessmentTemplateList);
-          setScreenControls();
-          showMessagePopup(msg);
-        }).fail(function(jqXHR, textStatus, errorThrown) {
-          if (jqXHR.status == 400) {
-            if (jqXHR.responseJSON.error != null)
-              validationHandler(jqXHR.responseJSON.error);
+      if (action == 'save as draft' && getAssessmentStatus(jsonData).toLowerCase() == 'draft') {
+        jsonData['assessmt_status'] = 'Draft';
+        jsonData['assessmt_action_plan_tbl'] = [];
+        msg = 'Maturity assessment has been saved as draft.';
+
+      } else if (action == 'submit' && getAssessmentStatus(jsonData).toLowerCase() == 'draft') {
+        jsonData['assessmt_status'] = 'Submitted';
+        jsonData['submitter_id'] = userInfo.email;
+        //jsonData["self-assessmt_dt"] = serverDateTime;
+        if (screenAnswers['self-assessmt_dt'] != undefined && screenAnswers['self-assessmt_dt'].length > 0) {
+          jsonData['self-assessmt_dt'] = screenAnswers['self-assessmt_dt'];
+        } else {
+          if (jsonData['self-assessmt_dt'] == undefined || jsonData['self-assessmt_dt'].length == 0) {
+            jsonData['self-assessmt_dt'] = serverDateTime;
           }
-        });
+        }
+        jsonData['assessmt_action_plan_tbl'] = screenAnswers['assessmt_action_plan_tbl'];
+        msg = 'Maturity assessment has been submitted.';
+
+      } else if (action == 'save as draft' && getAssessmentStatus(jsonData).toLowerCase() == 'independent review') {
+        jsonData['assessmt_status'] = 'Submitted';
+        jsonData['ind_assessmt_status'] = 'Draft';
+        jsonData['ind_assessor_id'] = userInfo.email;
+        jsonData['assessmt_action_plan_tbl'] = mergeActionItems(jsonData['assessmt_action_plan_tbl'], screenAnswers['assessmt_action_plan_tbl']);
+        msg = 'Independent review for the maturity assessment has been saved as draft.';
+
+      } else if (action == 'submit' && getAssessmentStatus(jsonData).toLowerCase() == 'independent review') {
+        jsonData['ind_assessmt_status'] = 'Submitted';
+        jsonData['ind_assessor_id'] = userInfo.email;
+        jsonData['ind_assessmt_dt'] = serverDateTime;
+        jsonData['assessmt_action_plan_tbl'] = mergeActionItems(jsonData['assessmt_action_plan_tbl'], screenAnswers['assessmt_action_plan_tbl']);
+        msg = 'Independent review for the maturity assessment has been submitted.';
+
       }
-    });
+
+      $('#lastUpdateUser').html(userInfo.email);
+      $('#lastUpdateTimestamp').html(showDateUTC(serverDateTime));
+      $('#doc_id').html(jsonData['_id']);
+
+      jsonData = reformatDocument(jsonData);
+      jsonData['_id'] = $('#assessmentSelectList option:selected').val();
+      jsonData['teamId'] = $('#teamSelectList option:selected').val();
+      $.ajax({
+        type: 'PUT',
+        url: '/api/assessment/',
+        contentType: 'application/json',
+        data: JSON.stringify(jsonData)
+      }).done(function(data) {
+        gTeamAssessment = jsonData;
+        gTeamAssessment['_rev'] = data['rev'];
+        updateAgileTeamAssessmentsCache(gTeamAssessment);
+        assessmentQuestionnaireHandler(gTeamAssessment, gAssessmentTemplateList);
+        setScreenControls();
+        showMessagePopup(msg);
+      }).fail(function(jqXHR, textStatus, errorThrown) {
+        if (jqXHR.status == 400) {
+          if (jqXHR.responseJSON.error != null)
+            validationHandler(jqXHR.responseJSON.error);
+        }
+      });
+    }
   }
+}
+
+function reformatDocument(obj){
+  var newObj = {};
+  _.each(obj, function(v, i) {
+    switch(i){
+      case 'team_proj_ops':
+        newObj['type'] = v;
+        break;
+      case 'assessmt_version':
+        newObj['version'] = v;
+        break;
+      case 'team_dlvr_software':
+        newObj['deliversSoftware'] = v === 'Yes' ? true : false;
+        break;
+      case 'assessmt_status':   
+        newObj['assessmentStatus'] = v;
+        break;
+      case 'self-assessmt_dt':
+        console.log('line 1043: ', v);
+        newObj['submittedDate'] = new Date(v).toISOString();
+        break;
+      case 'ind_assessor_id':
+        newObj['assessorUserId'] = v;
+        break;
+      case 'ind_assessmt_status':
+        newObj['assessorStatus'] = v;
+        break;
+      case 'ind_assessmt_dt':
+        newObj['assessedDate'] = v;
+        break;
+      case 'doc_status':
+        newObj['docStatus'] = v;
+        break;
+      case 'last_updt_user':
+        newObj['updatedByUserId'] = userInfo.uid;
+        break;
+      case 'componentResults':
+        newObj['componentResults'] = v;
+        break;
+      case 'actionPlans':
+        newObj['actionPlans'] = v;
+        break;
+    }
+  });
+  newObj['updatedBy'] = userInfo.email;
+  return newObj;
 }
 
 function mergeActionItems(oldAnswers, newAnswers) {
@@ -975,10 +1075,10 @@ function mergeActionItems(oldAnswers, newAnswers) {
   for (var i = 0; i < newAnswers.length; i++) {
     var found = false;
     for (var j = 0; j < oldAnswers.length; j++) {
-      if ((newAnswers[i]['principle_id'] == oldAnswers[j]['principle_id'] ||
-          newAnswers[i]['principle_name'] == oldAnswers[j]['principle_name']) &&
-        (newAnswers[i]['practice_id'] == oldAnswers[j]['practice_id'] ||
-          newAnswers[i]['practice_name'] == oldAnswers[j]['practice_name'])) {
+      if ((newAnswers[i]['id'] == oldAnswers[j]['id'] ||
+          newAnswers[i]['name'] == oldAnswers[j]['name']) &&
+        (newAnswers[i]['id'] == oldAnswers[j]['id'] ||
+          newAnswers[i]['name'] == oldAnswers[j]['name'])) {
 
         newAnswers[i]['progress_summ'] = oldAnswers[j]['progress_summ'];
         newAnswers[i]['key_metric'] = oldAnswers[j]['key_metric'];
@@ -1000,48 +1100,48 @@ function setScreenAnswers(teamAssessment) {
   }
   var found = true;
   var msg = '';
-  var eleVersionId = 'atma_ver_' + gAssessmentTemplate['atma_version'];
-  var assessments = gAssessmentTemplate['atma_cmpnt_tbl'];
+  var eleVersionId = 'atma_ver_' + gAssessmentTemplate['version'];
+  var assessments = gAssessmentTemplate['components'];
   for (var i = 0; i < assessments.length; i++) {
     var eleAtmaId = eleVersionId + '_' + i;
     var eleMainPrincipleId = eleAtmaId + '_prin';
 
-    var result = teamAssessment['assessmt_cmpnt_rslts'];
+    var result = teamAssessment['componentResults'];
     if (result == null) break;
 
     var processAnswers = null;
     for (var a = 0; a < result.length; a++) {
-      if (result[a]['assessed_cmpnt_name'] != null && assessments[i]['atma_name'] != null &&
-        (result[a]['assessed_cmpnt_name'].toLowerCase() == assessments[i]['atma_name'].toLowerCase())) {
-        processAnswers = result[a]['assessed_cmpnt_tbl'];
+      if (result[a]['componentName'] != null && assessments[i]['name'] != null &&
+        (result[a]['componentName'].toLowerCase() == assessments[i]['name'].toLowerCase())) {
+        processAnswers = result[a]['assessedComponents'];
       }
     }
     if (processAnswers == null) continue;
 
-    var principles = assessments[i]['principle_tbl'];
+    var principles = assessments[i]['principles'];
     for (var j = 0; j < principles.length; j++) {
-      var principleName = principles[j]['principle_name'];
-      var principleId = principles[j]['principle_id'];
-      var elePrincipleId = eleMainPrincipleId + '_' + principles[j]['principle_id'];
+      var principleName = principles[j]['name'];
+      var principleId = principles[j]['id'];
+      var elePrincipleId = eleMainPrincipleId + '_' + principles[j]['id'];
 
-      var practices = principles[j]['practice_tbl'];
+      var practices = principles[j]['practices'];
       for (var k = 0; k < practices.length; k++) {
         var eleMainPracticeId = elePrincipleId + '_prac';
-        var elePracticeId = eleMainPracticeId + '_' + practices[k]['practice_id'];
+        var elePracticeId = eleMainPracticeId + '_' + practices[k]['id'];
 
-        var practiceName = practices[k]['practice_name'];
-        var practiceId = practices[k]['practice_id'];
+        var practiceName = practices[k]['name'];
+        var practiceId = practices[k]['id'];
         for (var b = 0; b < processAnswers.length; b++) {
           var answer = processAnswers[b];
-          if ((answer['principle_name'] == null || answer['principle_name'] == '') &&
-            (answer['practice_name'] == null || answer['practice_name'] == ''))
+          if ((answer['name'] == null || answer['name'] == '') &&
+            (answer['name'] == null || answer['name'] == ''))
             continue;
 
-          if ((answer['principle_name'].toLowerCase() == principleName.toLowerCase() || answer['principle_id'] == principleId) &&
-            (answer['practice_name'].toLowerCase() == practiceName.toLowerCase() || answer['practice_id'] == practiceId)) {
-            var current = answer['cur_mat_lvl_achieved'];
-            var target = answer['tar_mat_lvl_achieved'];
-            var independent = answer['ind_mat_lvl_achieved'];
+          if ((answer['name'].toLowerCase() == principleName.toLowerCase() || answer['id'] == principleId) &&
+            (answer['name'].toLowerCase() == practiceName.toLowerCase() || answer['id'] == practiceId)) {
+            var current = answer['currentLevelName'];
+            var target = answer['targetLevelName'];
+            var independent = answer['assessorLevel  '];
             //console.log(elePracticeId + " " + current + "/" + target + "/" + independent);
             $("[name='" + elePracticeId + "_curr']").each(function(index, obj) {
               if ($(obj).attr('value') == current)
@@ -1057,8 +1157,8 @@ function setScreenAnswers(teamAssessment) {
               }
             });
 
-            $('#' + elePracticeId + '_action').val(answer['how_better_action_item']);
-            $('#' + elePracticeId + '_comment').val(answer['ind_assessor_cmnt']);
+            $('#' + elePracticeId + '_action').val(answer['improveDescription']);
+            $('#' + elePracticeId + '_comment').val(answer['assessorComment']);
           } else {
             found = true;
 
@@ -1070,8 +1170,8 @@ function setScreenAnswers(teamAssessment) {
     }
   }
 
-  $('#lastUpdateUser').html(teamAssessment['last_updt_user']);
-  $('#lastUpdateTimestamp').html(showDateUTC(teamAssessment['last_updt_dt']));
+  $('#lastUpdateUser').html(teamAssessment['updatedBy']);
+  $('#lastUpdateTimestamp').html(showDateUTC(teamAssessment['updateDate']));
   $('#doc_id').html(teamAssessment['_id']);
 
   if (!found)
@@ -1107,8 +1207,8 @@ function setScreenAnswers(teamAssessment) {
 function setProgressIndicator() {
   // TODO: on hold as per Ed!!!
   if (gAssessmentTemplate != null && gTeamAssessment != null) {
-    var eleVersionId = 'atma_ver_' + gAssessmentTemplate['atma_version'];
-    var assessments = gAssessmentTemplate['atma_cmpnt_tbl'];
+    var eleVersionId = 'atma_ver_' + gAssessmentTemplate['version'];
+    var assessments = gAssessmentTemplate['components'];
     for (var i = 0; i < assessments.length; i++) {
       var eleAtmaId = eleVersionId + '_' + i;
     }
@@ -1140,15 +1240,15 @@ function setProgressLink(teamId, assessId) {
 }
 
 function getScreenAnswers() {
-  var assessments = gAssessmentTemplate['atma_cmpnt_tbl'];
-  var eleVersionId = 'atma_ver_' + gAssessmentTemplate['atma_version'];
+  var assessments = gAssessmentTemplate['components'];
+  var eleVersionId = 'atma_ver_' + gAssessmentTemplate['version'];
   var screenAnswers = initAssessmentAnswersTemplate();
   screenAnswers['assessmt_version'] = gAssessmentTemplate['_id'];
   screenAnswers['team_id'] = $('#teamSelectList').val();
   screenAnswers['team_proj_ops'] = $('#teamTypeSelectList').val();
   screenAnswers['team_dlvr_software'] = $('#softwareYesNo').val();
   screenAnswers['self-assessmt_dt'] = showDateYYYYMMDDTS($('#assessmentDate').val());
-  screenAnswers['assessmt_cmpnt_rslts'] = [];
+  screenAnswers['componentResults'] = [];
 
   var opsExist = false;
   $('#assessmentContainer > ul > li > a').each(function() {
@@ -1162,52 +1262,52 @@ function getScreenAnswers() {
     var eleAtmaId = eleVersionId + '_' + i;
     var eleMainPrincipleId = eleAtmaId + '_prin';
 
-    console.log(assessments[i]['atma_name']);
+    console.log(assessments[i]['name']);
 
-    if (assessments[i]['atma_name'] != null && assessments[i]['atma_name'].toLowerCase().indexOf('leadership') > -1) {
+    if (assessments[i]['name'] != null && assessments[i]['name'].toLowerCase().indexOf('leadership') > -1) {
       if (opsExist) {
         if ($('#teamTypeSelectList option:selected').val().toLowerCase() == 'operations') {
-          if ((assessments[i]['atma_name'].toLowerCase().indexOf('leadership') > -1 && assessments[i]['atma_name'].toLowerCase().indexOf('ops') == -1) &&
-            (assessments[i]['atma_name'].toLowerCase().indexOf('leadership') > -1 && assessments[i]['atma_name'].toLowerCase().indexOf('operations') == -1)) {
-            //alert("skip: " +assessments[i]["atma_name"]);
+          if ((assessments[i]['name'].toLowerCase().indexOf('leadership') > -1 && assessments[i]['name'].toLowerCase().indexOf('ops') == -1) &&
+            (assessments[i]['name'].toLowerCase().indexOf('leadership') > -1 && assessments[i]['name'].toLowerCase().indexOf('operations') == -1)) {
+            //alert("skip: " +assessments[i]["name"]);
             continue;
           }
-        } else if ((assessments[i]['atma_name'].toLowerCase().indexOf('ops') > -1) || (assessments[i]['atma_name'].toLowerCase().indexOf('operations') > -1)) {
-          //alert("skip: " +assessments[i]["atma_name"]);
+        } else if ((assessments[i]['name'].toLowerCase().indexOf('ops') > -1) || (assessments[i]['name'].toLowerCase().indexOf('operations') > -1)) {
+          //alert("skip: " +assessments[i]["name"]);
           continue;
         }
       }
     }
 
 
-    if (assessments[i]['atma_name'] != null && assessments[i]['atma_name'].toLowerCase().indexOf('delivery') > -1) {
+    if (assessments[i]['name'] != null && assessments[i]['name'].toLowerCase().indexOf('delivery') > -1) {
       if ($('#softwareYesNo option:selected').val().toLowerCase() == 'no') {
-        //alert("skip: " +assessments[i]["atma_name"]);
+        //alert("skip: " +assessments[i]["name"]);
         continue;
       }
     }
 
     var assessmentName = new Object();
-    assessmentName['assessed_cmpnt_name'] = assessments[i]['atma_name'];
-    assessmentName['assessed_cmpnt_tbl'] = [];
+    assessmentName['componentName'] = assessments[i]['name'];
+    assessmentName['assessedComponents'] = [];
 
-    var principles = assessments[i]['principle_tbl'];
+    var principles = assessments[i]['principles'];
     var totalCurrentScore = 0;
     var totalTargetScore = 0;
     var totalPractices = 0;
     for (var j = 0; j < principles.length; j++) {
-      var principleName = principles[j]['principle_name'];
-      var principleId = principles[j]['principle_id'];
-      var elePrincipleId = eleMainPrincipleId + '_' + principles[j]['principle_id'];
+      var principleName = principles[j]['name'];
+      var principleId = principles[j]['id'];
+      var elePrincipleId = eleMainPrincipleId + '_' + principles[j]['id'];
 
-      var practices = principles[j]['practice_tbl'];
+      var practices = principles[j]['practices'];
       for (var k = 0; k < practices.length; k++) {
         totalPractices += 1;
         var eleMainPracticeId = elePrincipleId + '_prac';
-        var elePracticeId = eleMainPracticeId + '_' + practices[k]['practice_id'];
+        var elePracticeId = eleMainPracticeId + '_' + practices[k]['id'];
 
-        var practiceName = practices[k]['practice_name'];
-        var practiceId = practices[k]['practice_id'];
+        var practiceName = practices[k]['name'];
+        var practiceId = practices[k]['id'];
 
         var current = '';
         var target = '';
@@ -1222,43 +1322,43 @@ function getScreenAnswers() {
         var currentScore = 0;
         var targetScore = 0;
         var independentScore = 0;
-        var criteria = practices[k]['mat_criteria_tbl'];
+        var criteria = practices[k]['levels'];
         for (var x = 0; x < criteria.length; x++) {
-          if (criteria[x]['mat_lvl_name'].toLowerCase() == current.toLowerCase())
+          if (criteria[x]['name'].toLowerCase() == current.toLowerCase())
             currentScore = isNaN(parseInt(criteria[x]['mat_lvl_score'])) ? 0 : parseInt(criteria[x]['mat_lvl_score']);
-          if (criteria[x]['mat_lvl_name'].toLowerCase() == target.toLowerCase())
+          if (criteria[x]['name'].toLowerCase() == target.toLowerCase())
             targetScore = isNaN(parseInt(criteria[x]['mat_lvl_score'])) ? 0 : parseInt(criteria[x]['mat_lvl_score']);
-          if (criteria[x]['mat_lvl_name'].toLowerCase() == independent.toLowerCase())
+          if (criteria[x]['name'].toLowerCase() == independent.toLowerCase())
             independentScore = isNaN(parseInt(criteria[x]['mat_lvl_score'])) ? 0 : parseInt(criteria[x]['mat_lvl_score']);
         }
         totalCurrentScore += currentScore;
         totalTargetScore += targetScore;
 
         var practiceAnswers = new Object();
-        practiceAnswers['principle_id'] = principleId;
-        practiceAnswers['principle_name'] = principleName;
-        practiceAnswers['practice_id'] = practiceId;
-        practiceAnswers['practice_name'] = practiceName;
-        practiceAnswers['cur_mat_lvl_achieved'] = current;
+        practiceAnswers['id'] = principleId;
+        practiceAnswers['name'] = principleName;
+        practiceAnswers['id'] = practiceId;
+        practiceAnswers['name'] = practiceName;
+        practiceAnswers['currentLevelName'] = current;
         practiceAnswers['cur_mat_lvl_score'] = currentScore;
-        practiceAnswers['tar_mat_lvl_achieved'] = target;
+        practiceAnswers['targetLevelName'] = target;
         practiceAnswers['tar_mat_lvl_score'] = targetScore;
-        practiceAnswers['ind_mat_lvl_achieved'] = independent;
+        practiceAnswers['assessorLevel  '] = independent;
         practiceAnswers['ind_target_mat_lvl_score'] = independentScore;
-        practiceAnswers['how_better_action_item'] = $('#' + elePracticeId + '_action').val();
-        practiceAnswers['ind_assessor_cmnt'] = $('#' + elePracticeId + '_comment').val();
-        assessmentName['assessed_cmpnt_tbl'].push(practiceAnswers);
+        practiceAnswers['improveDescription'] = $('#' + elePracticeId + '_action').val();
+        practiceAnswers['assessorComment'] = $('#' + elePracticeId + '_comment').val();
+        assessmentName['assessedComponents'].push(practiceAnswers);
 
         if ($('#' + elePracticeId + '_action').val() != null && $('#' + elePracticeId + '_action').val() != '') {
           var actionItems = new Object();
           actionItems['action_plan_entry_id'] = (actionItemsList.length).toString();
           actionItems['user_created'] = 'No';
-          actionItems['assessmt_cmpnt_name'] = assessments[i]['atma_name'];
-          actionItems['principle_id'] = principleId;
-          actionItems['principle_name'] = principleName;
-          actionItems['practice_id'] = practiceId;
-          actionItems['practice_name'] = practiceName;
-          actionItems['how_better_action_item'] = $('#' + elePracticeId + '_action').val();
+          actionItems['assessmt_cmpnt_name'] = assessments[i]['name'];
+          actionItems['id'] = principleId;
+          actionItems['name'] = principleName;
+          actionItems['id'] = practiceId;
+          actionItems['name'] = practiceName;
+          actionItems['improveDescription'] = $('#' + elePracticeId + '_action').val();
           actionItems['cur_mat_lvl_score'] = currentScore;
           actionItems['tar_mat_lvl_score'] = targetScore;
           // these fields get populated on progress screen
@@ -1281,9 +1381,10 @@ function getScreenAnswers() {
       assessmentName['ovraltar_assessmt_score'] = 0;
     }
 
-    screenAnswers['assessmt_cmpnt_rslts'].push(assessmentName);
+    screenAnswers['componentResults'].push(assessmentName);
 
   }
+  console.log('line 1385555: ', actionItemsList);
   screenAnswers['assessmt_action_plan_tbl'] = actionItemsList;
 
   return screenAnswers;
@@ -1320,7 +1421,7 @@ function isInactiveTemplate(version) {
   if (gAssessmentTemplateList != null) {
     for (var i = 0; i < gAssessmentTemplateList.length; i++) {
       var template = gAssessmentTemplateList[i];
-      if (template['atma_version'] == version || template['_id'] == version)
+      if (template['version'] == version || template['_id'] == version)
         inactive = (template['atma_status'] != null && template['atma_status'].toLowerCase() == 'inactive');
     }
   }
