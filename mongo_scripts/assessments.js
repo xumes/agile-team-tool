@@ -45,7 +45,7 @@ _.each(cloudantAssessments, function(doc) {
     }
     else if (k === 'ind_assessor_id'){
       this.assessorUserId = util.getUserId(userMap, v);
-      this.assessor = util.lowerCase(v);
+      this.assessor = util.getUserName(userMap, v);
     }
     else if (k === 'ind_assessmt_status'){
       this.assessorStatus = v;
