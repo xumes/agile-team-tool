@@ -537,6 +537,38 @@ module.exports.getTeamAndChildInfo = function(id) {
   });
 };
 
+module.exports.getSquadsByPathId = function(pathId) {
+  return new Promise(function(resolve, reject){
+    console.log(pathId);
+    Team.findOne({pathId: pathId}).exec()
+      .then(function(team){
+        if (team.path) {
+          var query = {
+            type: 'squad',
+            path: {
+              $regex: team.path + team.pathId + ',.*'
+            }
+          };
+        } else {
+          var query = {
+            type: 'squad',
+            path: {
+              $regex: '^,' + team.pathId + ',.*'
+            }
+          };
+        }
+        console.log(query);
+        return Team.find(query).exec();
+      })
+      .then(function(teams){
+        resolve(teams);
+      })
+      .catch(function(err){
+        reject(err);
+      });
+  });
+};
+
 module.exports.getRole = function() {
   return Team.distinct('members.role').exec();
 };

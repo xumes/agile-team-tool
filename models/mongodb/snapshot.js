@@ -741,32 +741,54 @@ var snapshot = {
 
   updateUsersLocation: function() {
     return new Promise(function(resolve, reject){
-      userModel.findUserByEmail()
-        .then(function(users){
-          var urlList = [];
-          var facesURL = settings.facesURL;
-          _.each(users, function(user){
-            if (_.isEmpty(user.location.site) || _.isUndefined(user.location.site)) {
-              if (user.email) {
-                var facesFun = 'find/?limit=100&q=email:' + encodeURIComponent('"' + escape(user.email) + '"');
-                var url = facesURL + facesFun;
-                urlList.push(url);
-              }
-            }
-          });
-          Promise.each(urlList, function(url){
-            faceRequest(url)
-              .then(function(result){
-
-              })
-              .catch(function(err){
-
-              });
-          });
+      teamModel.getSquadsByPathId('cio')
+        .then(function(teams){
+          resolve(_.flatten(_.pluck(teams, 'members')));
         })
         .catch(function(err){
           reject(err);
         });
+      // userModel.findUserByEmail()
+      //   .then(function(users){
+      //     var urlList = [];
+      //     var facesURL = 'http://ifundit-dp.tap.ibm.com:3004/';
+      //     _.each(users, function(user){
+      //       if (_.isEmpty(user.location.site) || _.isUndefined(user.location.site)) {
+      //         if (user.email) {
+      //           var facesFun = 'id/' + encodeURIComponent(user.email) + '/email';
+      //           var url = facesURL + facesFun;
+      //           urlList.push(faceRequest(url));
+      //
+      //
+      //
+      //         }
+      //       }
+      //     });
+      //
+      //     resolve(urlList);
+      //     /*
+      //     Promise.each(urlList, function(url){
+      //       faceRequest(url)
+      //         .then(function(result){
+      //           console.log(result);
+      //         })
+      //         .catch(function(err){
+      //           console.log(err);
+      //         });
+      //     });
+      //     */
+      //   })
+      //   .then(function(urlList) {
+      //     return Promise.each(urlList, function(result) {
+      //
+      //     });
+      //   })
+      //   .then(function(result){
+      //     resolve(result);
+      //   })
+      //   .catch(function(err){
+      //     reject(err);
+      //   });
     });
   }
 };
