@@ -809,6 +809,7 @@ var team = {
       }
     }
   },
+
   associateTeams: function(associateObj, action, user) {
     var userEmail = user['shortEmail'];
     var errorLists = {};
@@ -1144,34 +1145,31 @@ var team = {
         infoLogs('No user teams found!');
         resolve(userTeamsList);
       } else {
+        var userTeams = [];
         team.getTeamByEmail(userEmail)
           .then(function(body) {
-            var userTeams = util.returnObject(body);
+            userTeams = util.returnObject(body);
             loggers.get('models').verbose('Found ' + userTeams.length + ' team(s) for ' + userEmail);
             var requestKeys = _.pluck(userTeams, '_id');
-            common.getByViewKeys('teams', 'lookup', requestKeys)
-              .then(function(docs){
-                var strTeams = _.pluck(docs.rows, 'value');
-                _.each(userTeams, function(team){
-                  var lookupObj = _.findWhere(strTeams, {
-                    _id: team._id
-                  });
-                  if (!_.isEmpty(lookupObj)) {
-                    userTeamsList = _.union([team._id], lookupObj.children, userTeamsList);
-                  } else {
-                    userTeamsList = _.union([team._id], team.child_team_id, userTeamsList);
-                  }
-                });
-                userTeamsList = _.uniq(userTeamsList);
-                loggers.get('models').info('Success: ' + userEmail + ' has ' + userTeamsList.length + ' accessible team(s) by relationship.');
-                resolve(userTeamsList);
-              })
-              .catch( /* istanbul ignore next */ function(err){
-                reject(formatErrMsg(err.error));
-              });
+            return common.getByViewKeys('teams', 'lookup', requestKeys);
           })
-          .catch( /* istanbul ignore next */ function(err) {
-            // cannot simulate Cloudant error during testing
+          .then(function(docs){
+            var strTeams = _.pluck(docs.rows, 'value');
+            _.each(userTeams, function(team){
+              var lookupObj = _.findWhere(strTeams, {
+                _id: team._id
+              });
+              if (!_.isEmpty(lookupObj)) {
+                userTeamsList = _.union([team._id], lookupObj.children, userTeamsList);
+              } else {
+                userTeamsList = _.union([team._id], team.child_team_id, userTeamsList);
+              }
+            });
+            userTeamsList = _.uniq(userTeamsList);
+            loggers.get('models').info('Success: ' + userEmail + ' has ' + userTeamsList.length + ' accessible team(s) by relationship.');
+            resolve(userTeamsList);
+          })
+          .catch( /* istanbul ignore next */ function(err){
             reject(formatErrMsg(err.error));
           });
       }
