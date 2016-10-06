@@ -160,11 +160,32 @@ var iterationDocRules = {
       message: '^Deployments must be a number'
     }
   },
+  'nbr_defects_start_bal': {
+    presence: false,
+    format: {
+      pattern: /^\d+$/,
+      message: '^Opening balance defects must be a number'
+    }
+  },
   'nbr_defects': {
     presence: false,
     format: {
       pattern: /^\d+$/,
-      message: '^Defects must be a number'
+      message: '^New defects found this iteration must be a number'
+    }
+  },
+  'nbr_defects_closed': {
+    presence: false,
+    format: {
+      pattern: /^\d+$/,
+      message: '^Resolved defects this iteration must be a number'
+    }
+  },
+  'nbr_defects_end_bal': {
+    presence: false,
+    format: {
+      pattern: /^\d+$/,
+      message: '^Closing balance defects must be a number'
     }
   },
   'nbr_cycletime_WIP': {
