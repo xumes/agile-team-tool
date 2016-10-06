@@ -6,6 +6,8 @@ var userModel = require('./users.js');
 var teamModel = require('./teams.js');
 var iterationModel = require('./iterations.js');
 var teamScoreModel = require('../teamscore.js');
+var userLocations = require('./data/userLocations.js');
+var userTimezone = require('./data/uniqueUserTimezone.js');
 var moment = require('moment');
 var https = require('https');
 var request = Promise.promisifyAll(require('request'));
@@ -742,8 +744,80 @@ var snapshot = {
 
   updateUsersLocation: function() {
     return new Promise(function(resolve, reject){
-      _.each(userLocations, function(location){
+      var ulocation = {};
+      _.each(userTimezone, function(tz){
+        ulocation[tz.location] = tz.timezone;
       });
+      var updateUsers = [];
+      _.each(userLocations, function(location){
+        var updateUser = {
+          'email': location.email,
+          'set': {
+            'location': {
+              'site': location.location.toLowerCase(),
+              'timezone': ulocation[location.location.toLowerCase()]
+            }
+          }
+        };
+        updateUsers.push(updateUser);
+      });
+      userModel.bulkUpdateUsers(updateUsers)
+        .then(function(result){
+          resolve(result);
+        })
+        .catch(function(err){
+          reject(err);
+        });
+      // var returnTimezone = [];
+      // var uniquelocations = _.uniq((_.pluck(userLocations.locations, 'location')));
+      // Promise.mapSeries(uniquelocations, function(item, index, length) {
+      //   return new Promise(function(resolve, reject){
+      //     teamScoreModel.getTimezone([item])
+      //       .then(function(result){
+      //         var obj = {
+      //           'location': item,
+      //           'timezone': result
+      //         };
+      //         returnTimezone.push(obj);
+      //         return resolve(obj);
+      //       })
+      //       .catch(function(err){
+      //         var obj = {
+      //           'location': item,
+      //           'timezone': null
+      //         };
+      //         returnTimezone.push(obj);
+      //         return resolve(obj);
+      //       });
+      //   });
+      // })
+      // .then(function() {
+      //   resolve(returnTimezone);
+      // })
+      // .catch(function(err){
+      //   reject(err);
+      // });
+      // var timezone = _.sortBy(userTimezone.timezone, function(tz){
+      //   return tz.location.toLowerCase();
+      // });
+      // _.each(timezone, function(tz){
+      //   tz.location = tz.location.toLowerCase();
+      // });
+      // var uniqTz = _.uniq(_.pluck(timezone, 'location'));
+      // var returnObj = [];
+      // _.each(uniqTz, function(utz){
+      //   var obj = {
+      //     'location': utz,
+      //     'timezone': null
+      //   };
+      //   _.find(timezone, function(tz){
+      //     if (tz.location == utz) {
+      //       obj.timezone = tz.timezone;
+      //       return returnObj.push(obj);
+      //     }
+      //   });
+      // });
+      // resolve(returnObj);
     });
   }
 };

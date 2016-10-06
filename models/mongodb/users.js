@@ -208,6 +208,27 @@ var users = {
     });
   },
 
+  bulkUpdateUsers: function(updateUsers) {
+    return new Promise(function(resolve, reject) {
+      var bulk = User.collection.initializeUnorderedBulkOp();
+      if (_.isEmpty(updateUsers)) {
+        resolve([]);
+      } else {
+        _.each(updateUsers, function(updateUser){
+          bulk.find({'email':updateUser.email}).update({'$set':updateUser.set});
+        });
+        bulk.execute(function(error, result){
+          if (error) {
+            /* istanbul ignore next */
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        });
+      }
+    });
+  },
+
   delete: function(email) {
     return new Promise(function(resolve, reject) {
       var deleteUser = {
