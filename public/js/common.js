@@ -576,7 +576,7 @@ function getTeamAssessments(teamId, docs, _callback, args) {
     _callback.apply(this, args);
     return null;
   }
-  var teamUrl = '/api/assessment/view?teamId=' + encodeURIComponent(teamId) + '&docs=' + docs;
+  var teamUrl = '/api/assessment/view?teamId=' + encodeURIComponent(teamId);
   return getRemoteData(teamUrl, _callback, args);
 }
 

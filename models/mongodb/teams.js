@@ -154,8 +154,8 @@ module.exports.getNonSquadTeams = function(proj) {
 };
 
 //using for snapshot roll up data, get all squads
-module.exports.getSquadTeams = function(proj) {
-  return Team.find({type: 'squad'}).select(proj).exec();
+module.exports.getSquadTeams = function(proj, filter) {
+  return Team.find({type: 'squad'}, filter).select(proj).exec();
 };
 
 /**
