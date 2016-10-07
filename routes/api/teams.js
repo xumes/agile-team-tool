@@ -349,7 +349,7 @@ module.exports = function(app, includes) {
   app.get('/api/teams/roles', [includes.middleware.auth.requireLogin], getTeamRole);
 
   // get all squad team
-  app.get('/api/teams/squads', [includes.middleware.auth.requireLogin], getSquadTeams);  
+  app.get('/api/teams/squads', [includes.middleware.auth.requireLogin], getSquadTeams);
 
   // get team doc by team name
   app.get('/api/teams/names/:teamName?', [includes.middleware.auth.requireLogin], getByTeamName);
