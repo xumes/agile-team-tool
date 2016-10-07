@@ -8,7 +8,7 @@ module.exports = function(app, includes) {
   getHomeVariables = function(req, res) {
     Promise.join(
         cache.setSystemInfoCache(),
-        cache.setUserTeams(req.session['email']),
+        cache.setUserTeams(req.session['user']['shortEmail']),
         function(systemCache, userTeamList) {
           var json = {
             'user': req.session['user'],
@@ -29,7 +29,7 @@ module.exports = function(app, includes) {
 
   getTeamManagementVariables = function(req, res) {
     Promise.join(
-        cache.setTeamCache(req.session['email']),
+        cache.setTeamCache(req.session['user']['shortEmail']),
         function(allCache) {
           var json = {
             'user': req.session['user'],
@@ -53,7 +53,7 @@ module.exports = function(app, includes) {
     Promise.join(
         cache.setSystemInfoCache(),
         cache.setActiveSquadTeams(),
-        cache.setUserTeams(req.session['email']),
+        cache.setUserTeams(req.session['user']['shortEmail']),
         function(systemCache, squadTeams, userTeamList) {
           var json = {
             'user': req.session['user'],
@@ -77,7 +77,7 @@ module.exports = function(app, includes) {
     Promise.join(
         cache.setSystemInfoCache(),
         cache.setActiveSquadTeams(),
-        cache.setUserTeams(req.session['email']),
+        cache.setUserTeams(req.session['user']['shortEmail']),
         function(systemCache, squadTeams, userTeamList) {
           var json = {
             'user': req.session['user'],
@@ -101,7 +101,7 @@ module.exports = function(app, includes) {
     Promise.join(
         cache.setSystemInfoCache(),
         cache.setAllTeams(),
-        cache.setUserTeams(req.session['email']),
+        cache.setUserTeams(req.session['user']['shortEmail']),
         function(systemCache, allTeams, userTeamList) {
           var json = {
             'user': req.session['user'],
