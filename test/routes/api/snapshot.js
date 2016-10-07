@@ -91,7 +91,7 @@ describe('Snapshot API Test [GET /api/snapshot/getrollupdata]: calculate and upd
 });
 
 describe('Snapshot API Test [assessment rollup]', function() {
-  this.timeout(600000);
+  this.timeout(60000);
   // do the login before testing
   before(function(done) {
     agent
