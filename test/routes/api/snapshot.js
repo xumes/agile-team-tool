@@ -116,7 +116,7 @@ describe('Snapshot API Test [assessment rollup]', function() {
   });
 
   it('Successfully return assessment roll up data by team', function(done) {
-    var req = request(app).get('/api/snapshot/rollupassessmentbyteam/' + 'ag_team_JMGParent1_1475830400490');
+    var req = request(app).get('/api/snapshot/rollupassessmentbyteam/' + 'ag_team_CIO');
     agent.attachCookies(req);
     req.end(function(err, res) {
       if (err) {} else {
