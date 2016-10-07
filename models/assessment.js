@@ -4,7 +4,6 @@ var _ = require('underscore');
 var loggers = require('../middleware/logger');
 var validate = require('validate.js');
 var util = require('../helpers/util');
-var teams = require('./teams');
 var lodash = require('lodash');
 var rules = require('./validate_rules/assessment');
 var settings = require('../settings');
@@ -238,6 +237,19 @@ var assessment = {
         msg = 'No id/rev for record deletion.';
         reject(formatErrMsg(msg));
       }
+    });
+  },
+  getSubmittedAssessments: function(startDate, endDate) {
+    return new Promise(function(resolve, reject) {
+      infoLogs('Getting all submitted assessments record from Cloudant.');
+      common.getByView('assessments', 'submitted')
+        .then(function(body) {
+          successLogs('Submitted assessments record retrieved.');
+          resolve(body);
+        })
+        .catch(function(err) {
+          reject(formatErrMsg(err.error));
+        });
     });
   }
 };

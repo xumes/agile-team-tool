@@ -5,6 +5,7 @@ var loggers = require('../middleware/logger');
 var util = require('../helpers/util');
 var iterationModel = require('./iteration');
 var teamModel = require('./teams');
+var assessmentModel = require('./assessment');
 var moment = require('moment');
 var validate = require('validate.js');
 
@@ -18,6 +19,10 @@ var nonSquadTeamRule = snapshotValidationRules.nonSquadTeamRule;
 var squadTeamRule = snapshotValidationRules.squadTeamRule;
 var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 var monthArray = [];
+var ASSESSMENT_MAX_DAYS_SUBMISSION = 120;
+var ASSESSMENT_PERIOD = 5;
+var ASSESSMENT_ROLLUP_PREFIX = 'ag_mar_data_';
+var assessmentMonths = [];
 
 var formatErrMsg = /* istanbul ignore next */ function(msg) {
   loggers.get('models').error('Error: ', msg);
@@ -569,6 +574,209 @@ function rollUpSquadsData(squadsList, squadTeams) {
   return entry;
 };
 
+function getSubmittedAssessments() {
+  var squadAssessments = {};
+  return new Promise(function(resolve, reject) {
+    assessmentModel.getSubmittedAssessments()
+      .then(function(assessments) {
+        _.each(assessments.rows, function(doc) {
+          var teamId =  doc.value.team_id;
+          if ( teamId != '') {
+            if (_.isEmpty(squadAssessments[teamId])) {
+              squadAssessments[teamId] = [];
+            }
+            squadAssessments[teamId].push(doc.value);
+          }
+        });
+        return resolve(squadAssessments);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        var msg;
+        if (err.error) {
+          msg = err.error;
+        } else {
+          msg = err;
+        }
+        reject(formatErrMsg(msg));
+      });
+  });
+};
+
+function getAssessmentRollUpDataHistory() {
+  return new Promise(function(resolve, reject) {
+    common.getByView('assessments', 'rollUpData')
+      .then(function(oldRollUpData) {
+        var rollUpDataRevs = {};
+        _.each(oldRollUpData.rows, function(data) {
+          rollUpDataRevs[data.value._id] = data.value._rev;
+        });
+        resolve(rollUpDataRevs);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        var msg;
+        if (err.error) {
+          msg = err.error;
+        } else {
+          msg = err;
+        }
+        reject(formatErrMsg(msg));
+      });
+  });
+};
+
+function rollUpAssessmentsBySquad(assessments, teamId) {
+  return new Promise(function(resolve, reject) {
+    var currData = resetAssessmentData();
+    var rollUpAssessmentData = {};
+    rollUpAssessmentData[teamId] = currData;
+
+    _.each(assessments, function(assessment ) {
+      var assessmentDate = new Date(assessment['self-assessmt_dt']);
+      for (var i = 0; i <= ASSESSMENT_PERIOD; i++) {
+        var period = assessmentMonths[i];
+        var month = monthNames.indexOf(period.substring(0, period.indexOf(' ')));
+
+        var year = period.substring(period.indexOf(' '), period.length);
+        var date;
+        var nowTime = new Date();
+        if (month == nowTime.getMonth()){
+          date = nowTime.getDate();
+        }
+        else {
+          date = daysInMonth(month + 1, year);
+        }
+
+        var targetDate = new Date(year, month, date);
+        if ((assessmentDate.getFullYear() == year && assessmentDate.getMonth() <= month) ||
+          assessmentDate.getFullYear() < year){
+          var days = daysDiff(targetDate, assessmentDate);
+          if (days <= ASSESSMENT_MAX_DAYS_SUBMISSION){
+            currData[i].less_120_days += 1;
+          }
+          else {
+            currData[i].gt_120_days += 1;
+          }
+        }
+        else {
+          continue;
+        }
+      }
+    });
+
+    _.each(currData, function(period) {
+      if (period.less_120_days >= 1){
+        period.less_120_days = 1;
+      }
+      else if (period.gt_120_days >= 1){
+        period.gt_120_days = 1;
+      }
+      else {
+        period.no_submission = 1;
+      }
+    });
+    resolve(rollUpAssessmentData);
+  });
+};
+
+function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsCalResults, isUpdate, oldRollUpDataRev) {
+  return new Promise(function(resolve, reject) {
+    var squadDoc = squads;
+    var currData = resetAssessmentData();
+    var nonSquadCalResult = {
+      '_id': ASSESSMENT_ROLLUP_PREFIX + nonSquadTeamId,
+      'value': currData,
+      'team_id': nonSquadTeamId,
+      'timestamp': timestamp,
+      'type': 'assessment_roll_up_data'
+    };
+
+    for (var i = 0; i <= ASSESSMENT_PERIOD; i++) {
+      currData[i].totalSquad = squadDoc.length;
+      currData[i].month = assessmentMonths[i];
+    }
+
+    for (var i = 0; i < squadDoc.length; i++) {
+      for (var j = 0; j <= ASSESSMENT_PERIOD; j++) {
+        var squadAssessmentResult = squadsCalResults[squadDoc[i]];
+        if (!(_.isEmpty(squadAssessmentResult)) && !(_.isUndefined(squadAssessmentResult))) {
+          currData[j].less_120_days += squadAssessmentResult[j].less_120_days;
+          currData[j].gt_120_days += squadAssessmentResult[j].gt_120_days;
+          currData[j].no_submission += squadAssessmentResult[j].no_submission;
+        }
+        else {
+          currData[j].no_submission += 1;
+        }
+      }
+    }
+    var newDate = new Date();
+    var days = daysInMonth(newDate.getMonth() + 1, newDate.getFullYear());
+    if (newDate.getDate() < days) {
+      currData[ASSESSMENT_PERIOD].partialMonth = true;
+    }
+
+    if (isUpdate) {
+      if (!(_.isEmpty(oldRollUpDataRev)) && !(_.isUndefined(oldRollUpDataRev))) {
+        nonSquadCalResult._rev = oldRollUpDataRev;
+      }
+    }
+    resolve(nonSquadCalResult);
+  });
+};
+
+function daysDiff(date1, date2) {
+  var dateFormat = 'YYYY-MM-DD';
+  var d1 = moment(date1, dateFormat);
+  var d2 = moment(date2, dateFormat);
+  var days = moment(d1).diff(d2, 'days');
+  return days;
+};
+
+function resetAssessmentData() {
+  return [{
+    'less_120_days': 0,
+    'gt_120_days': 0,
+    'no_submission': 0,
+    'totalSquad': 0,
+    'month': '',
+    'partialMonth': false
+  }, {
+    'less_120_days': 0,
+    'gt_120_days': 0,
+    'no_submission': 0,
+    'totalSquad': 0,
+    'month': '',
+    'partialMonth': false
+  }, {
+    'less_120_days': 0,
+    'gt_120_days': 0,
+    'no_submission': 0,
+    'totalSquad': 0,
+    'month': '',
+    'partialMonth': false
+  }, {
+    'less_120_days': 0,
+    'gt_120_days': 0,
+    'no_submission': 0,
+    'totalSquad': 0,
+    'month': '',
+    'partialMonth': false
+  }, {
+    'less_120_days': 0,
+    'gt_120_days': 0,
+    'no_submission': 0,
+    'totalSquad': 0,
+    'month': '',
+    'partialMonth': false
+  }, {
+    'less_120_days': 0,
+    'gt_120_days': 0,
+    'no_submission': 0,
+    'totalSquad': 0,
+    'month': '',
+    'partialMonth': false
+  }];
+};
+
 var snapshot = {
 
   /**
@@ -833,6 +1041,90 @@ var snapshot = {
         })
         .then(function(data) {
           resolve(data);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          var msg;
+          if (err.error) {
+            msg = err.error;
+          } else {
+            msg = err;
+          }
+          reject(formatErrMsg(msg));
+        });
+    });
+  },
+  updateAssessmentRollUpData: function() {
+    return new Promise(function(resolve, reject) {
+      var nowTime = new Date();
+      var options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      };
+
+      for (var i = 0; i <= ASSESSMENT_PERIOD; i++) {
+        var time = (addMonths(nowTime, -(ASSESSMENT_PERIOD - i))).toLocaleDateString('en-US', options);
+        var month = monthNames[parseInt(time.substring(0, 2)) - 1];
+        var year = time.substring(time.length - 4, time.length);
+        assessmentMonths[i] = month + ' ' + year;
+      }
+
+      var promiseArray = [];
+      var squadAssessments = {};
+      var oldRollUpDataRevs = {};
+      var squadsByParent = {};
+      promiseArray.push(getSubmittedAssessments());
+      promiseArray.push(getAllSquads());
+      promiseArray.push(getAssessmentRollUpDataHistory());
+      Promise.all(promiseArray)
+        .then(function(promiseResults) {
+          squadAssessments = promiseResults[0];
+          squadsByParent = promiseResults[1];
+          oldRollUpDataRevs = promiseResults[2];
+          var promiseArray2 = [];
+          _.each(Object.keys(squadAssessments), function(squadTeamId) {
+            promiseArray2.push(rollUpAssessmentsBySquad(squadAssessments[squadTeamId], squadTeamId));
+          });
+          return Promise.all(promiseArray2);
+        })
+        .then(function(squadsCalResultsArray){
+          var squadsCalResults = {};
+          _.each(squadsCalResultsArray, function(squadsCalResult) {
+            squadsCalResults[Object.keys(squadsCalResult)[0]] = squadsCalResult[Object.keys(squadsCalResult)[0]];
+          });
+          var promiseArray3 = [];
+          _.each(Object.keys(squadsByParent), function(nonSquadTeamId) {
+            promiseArray3.push(rollUpAssessmentsByNonSquad(squadsByParent[nonSquadTeamId], nonSquadTeamId, squadsCalResults, true, oldRollUpDataRevs[ASSESSMENT_ROLLUP_PREFIX + nonSquadTeamId]));
+          });
+          return Promise.all(promiseArray3);
+        })
+        .then(function(nonSquadCalResults){
+          var updateRequest = {
+            'docs': nonSquadCalResults
+          };
+          return common.bulkUpdate(updateRequest);
+        })
+        .then(function(results){
+          resolve(results);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          var msg;
+          if (err.error) {
+            msg = err.error;
+          } else {
+            msg = err;
+          }
+          reject(formatErrMsg(msg));
+        });
+    });
+  },
+
+  getAssessmentRollUpByTeam: function(teamId) {
+    return new Promise(function(resolve, reject) {
+      var rollUpDataId = ASSESSMENT_ROLLUP_PREFIX + teamId;
+      common.getByViewKey('assessments', 'rollUpData', rollUpDataId)
+        .then(function(rollUpData) {
+          resolve(rollUpData);
         })
         .catch( /* istanbul ignore next */ function(err) {
           var msg;
