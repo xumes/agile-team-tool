@@ -751,7 +751,7 @@ var snapshot = {
       var updateUsers = [];
       _.each(userLocations, function(location){
         var updateUser = {
-          'email': location.email,
+          'email': location.email.toLowerCase(),
           'set': {
             'location': {
               'site': location.location.toLowerCase(),
