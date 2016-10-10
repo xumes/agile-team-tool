@@ -208,6 +208,21 @@ module.exports = function(app, includes) {
       });
   };
 
+  getParent = function(req, res) {
+    var teamId = req.params.teamId;
+    teamModel.getParentByTeamId(teamId)
+      .then(function(result) {
+        if (_.isEmpty(result)) {
+          res.status(404).json({message: 'No parent info available'});
+        }
+        else
+          res.status(200).json(result);
+      })
+      .catch(/* istanbul ignore next */ function(err) {
+        res.status(400).send(err);
+      })
+  };
+
   getSelectableChildren = function(req, res) {
     var teamId = req.params.teamId;
     teamModel.getSelectableChildren(teamId)
@@ -368,6 +383,9 @@ module.exports = function(app, includes) {
 
   // selectable parent teams of a team
   app.get('/api/teams/lookup/parents/:teamId?', [includes.middleware.auth.requireLogin], getSelectableParents);
+
+  // return parent of a team
+  app.get('/api/teams/lookup/parent/:teamId?', [includes.middleware.auth.requireLogin], getParent);
 
   // selectable child teams of a team
   app.get('/api/teams/lookup/children/:teamId?', [includes.middleware.auth.requireLogin], getSelectableChildren);
