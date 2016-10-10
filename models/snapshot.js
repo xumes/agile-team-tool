@@ -293,7 +293,7 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
           var teamStat = iterationDoc['team_sat'];
           var clientStat = iterationDoc['client_sat'];
           var cycleTimeFunnel = iterationDoc['nbr_cycletime_in_backlog'];
-          var cycleTimeWIP = iterationDoc[x]['nbr_cycletime_WIP'];
+          var cycleTimeWIP = iterationDoc['nbr_cycletime_WIP'];
 
           if (pts != undefined && pts != '') {
             currData[iterationDocIndex].totalPoints = currData[iterationDocIndex].totalPoints + parseInt(pts);
