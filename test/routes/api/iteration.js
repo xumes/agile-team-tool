@@ -395,26 +395,6 @@ describe('Iteration API Test', function() {
       });
     });
 
-    it('Cannot retrieve documents with invalid startdate', function(done) {
-      iterationDocValid.team_id = validId;
-      var query = querystring.stringify({
-        'id': iterationDocValid._id,
-        'startdate': '12345678'
-      });
-      var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
-      agent.attachCookies(req);
-      req.end(function(err, res) {
-        if (err) {
-          // console.log(err);
-        } else {
-          expect(res.statusCode).to.be.equal(400);
-          expect(res.body).to.have.property('error');
-          expect(res.body.error).to.have.property('startdate');
-        }
-        done();
-      });
-    });
-
     it('Successfully fetch documents with valid enddate', function(done) {
       iterationDocValid.team_id = validId;
       var query = querystring.stringify({
@@ -429,26 +409,6 @@ describe('Iteration API Test', function() {
         } else {
           expect(res.statusCode).to.be.equal(200);
           expect(res.body).to.have.property('rows');
-        }
-        done();
-      });
-    });
-
-    it('Cannot retrieve documents due to invalid enddate', function(done) {
-      iterationDocValid.team_id = validId;
-      var query = querystring.stringify({
-        'id': iterationDocValid._id,
-        'enddate': '12345678'
-      });
-      var req = request(app).get('/api/iteration/searchTeamIteration?' + query);
-      agent.attachCookies(req);
-      req.end(function(err, res) {
-        if (err) {
-          // console.log(err);
-        } else {
-          expect(res.statusCode).to.be.equal(400);
-          expect(res.body).to.have.property('error');
-          expect(res.body.error).to.have.property('enddate');
         }
         done();
       });
