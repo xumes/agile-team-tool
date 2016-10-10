@@ -157,7 +157,7 @@ function resetData() {
     'month': '',
     'partialMonth': false
   }, {
-    'totalPoints': 0, 
+    'totalPoints': 0,
     'totalCommPoints': 0,
     'totalStories': 0,
     'totalCommStories': 0,
