@@ -58,9 +58,9 @@ function teamIterationListHander(teamId, teamIterations) {
   storyPointFTESeries.name = 'Story points/FTE';
   storyPointFTESeries.data = [];
 
-  var cycleTimeFunnelSeries = new Object();
-  cycleTimeFunnelSeries.name = 'Cycle time in funnel';
-  cycleTimeFunnelSeries.data = [];
+  var cycleTimeBacklogSeries = new Object();
+  cycleTimeBacklogSeries.name = 'Cycle time in backlog';
+  cycleTimeBacklogSeries.data = [];
 
   var cycleTimeWIPSeries = new Object();
   cycleTimeWIPSeries.name = 'Cycle time in WIP';
@@ -118,7 +118,7 @@ function teamIterationListHander(teamId, teamIterations) {
     var clientSatData = new Object();
     var storiesFTEData = new Object();
     var storyPointFTEData = new Object();
-    var cycleTimeFunnelData = new Object();
+    var cycleTimeBacklogData = new Object();
     var cycleTimeWIPData = new Object();
 
     if (p6Iterations[i].team_mbr_change == 'Yes') {
@@ -224,12 +224,12 @@ function teamIterationListHander(teamId, teamIterations) {
     storyPointFTEData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
     storyPointFTESeries.data.push(storyPointFTEData);
 
-    cycleTimeFunnelData.name = p6Iterations[i].iteration_name;
-    cycleTimeFunnelData.y = isNaN(parseInt(p6Iterations[i].nbr_cycletime_in_backlog)) ? 0 : parseFloat(p6Iterations[i].nbr_cycletime_in_backlog);
-    cycleTimeFunnelData.iterURL = iterationURL + p6Iterations[i]._id;
-    cycleTimeFunnelData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
-    cycleTimeFunnelData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
-    cycleTimeFunnelSeries.data.push(cycleTimeFunnelData);
+    cycleTimeBacklogData.name = p6Iterations[i].iteration_name;
+    cycleTimeBacklogData.y = isNaN(parseInt(p6Iterations[i].nbr_cycletime_in_backlog)) ? 0 : parseFloat(p6Iterations[i].nbr_cycletime_in_backlog);
+    cycleTimeBacklogData.iterURL = iterationURL + p6Iterations[i]._id;
+    cycleTimeBacklogData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
+    cycleTimeBacklogData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+    cycleTimeBacklogSeries.data.push(cycleTimeBacklogData);
 
     cycleTimeWIPData.name = p6Iterations[i].iteration_name;
     cycleTimeWIPData.y = isNaN(parseInt(p6Iterations[i].nbr_cycletime_WIP)) ? 0 : parseFloat(p6Iterations[i].nbr_cycletime_WIP);
@@ -264,7 +264,7 @@ function teamIterationListHander(teamId, teamIterations) {
   loadChartMulSeries('defectsChart', 'Deployments/Defects', 'line', graphCategory, 'Count', 'Iteration Dates', deploySeries, defectsSeries, 'Points', true);
   loadSatisfactionChart('statisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', teamSatSeries, clientSatSeries, 'Points', sMax);
   loadChartMulSeries('unitCostChart', 'Unit cost per FTE', 'line', graphCategory, 'Count', 'Iteration Dates', storyFTESeries, storyPointFTESeries, 'Points', true);
-  loadWipBacklogChart('wipBacklogChart', 'Cycle time in funnel and cycle time in WIP (in days)', 'line', graphCategory, 'Average days per story', 'Iteration Dates', cycleTimeFunnelSeries, cycleTimeWIPSeries, 'Points', true);
+  loadWipBacklogChart('wipBacklogChart', 'Cycle time in backlog and cycle time in WIP (in days)', 'line', graphCategory, 'Average days per story', 'Iteration Dates', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', true);
 
   $('#GoIterationBtn').click(function() {
     var iterID = encodeURIComponent($('#gotoIterationList option:selected').val());
@@ -1714,11 +1714,11 @@ function monthlyIterations(teamIterations) {
       var totalDplymts = 0;
       var totTeamStat = 0;
       var totClientStat = 0;
-      var totCycleTimeFunnel = 0;
+      var totCycleTimeBacklog = 0;
       var totCycleTimeWIP = 0;
       var totTeamStatIter = 0;
       var totClientStatIter = 0;
-      var totCycleTimeFunnelIter = 0;
+      var totCycleTimeBacklogIter = 0;
       var totCycleTimeWIPIter = 0;
       var teamsLt5 = 0;
       var teams5to12 = 0;
@@ -1744,7 +1744,7 @@ function monthlyIterations(teamIterations) {
             var dplymnts = teamIterations[x]['nbr_dplymnts'];
             var teamStat = teamIterations[x]['team_sat'];
             var clientStat = teamIterations[x]['client_sat'];
-            var cycleTimeFunnel = teamIteration[x]['nbr_cycletime_in_backlog'];
+            var cycleTimeBacklog = teamIteration[x]['nbr_cycletime_in_backlog'];
             var cycleTimeWIP = teamIteration[x]['nbr_cycletime_WIP'];
 
             if (pts != undefined && pts != '') {
@@ -1761,23 +1761,23 @@ function monthlyIterations(teamIterations) {
               totalDplymts = totalDplymts + parseInt(teamIterations[x]['nbr_dplymnts']);
             }
 
-            if (teamStat != undefined && teamStat != '' && (parseInt(teamStat) != 0)) {
-              totTeamStat = totTeamStat + parseInt(teamStat);
+            if (teamStat != undefined && teamStat != '' && (parseFloat(teamStat) != 0)) {
+              totTeamStat = totTeamStat + parseFloat(teamStat);
               totTeamStatIter = totTeamStatIter + 1;
             }
 
-            if (clientStat != undefined && clientStat != '' && (parseInt(clientStat) != 0)) {
-              totClientStat = totClientStat + parseInt(clientStat);
+            if (clientStat != undefined && clientStat != '' && (parseFloat(clientStat) != 0)) {
+              totClientStat = totClientStat + parseFloat(clientStat);
               totClientStatIter = totClientStatIter + 1;
             }
 
-            if (cycleTimeFunnel != undefined && cycleTimeFunnel != '' && (parseInt(cycleTimeFunnel) != 0)) {
-              totCycleTimeFunnel = totCycleTimeFunnel + parseInt(cycleTimeFunnel);
-              totCycleTimeFunnelIter = totCycleTimeFunnelIter + 1;
+            if (cycleTimeBacklog != undefined && cycleTimeBacklog != '' && (parseFloat(cycleTimeBacklog) != 0)) {
+              totCycleTimeBacklog = totCycleTimeBacklog + parseFloat(cycleTimeBacklog);
+              totCycleTimeBacklogIter = totCycleTimeBacklogIter + 1;
             }
 
-            if (cycleTimeWIP!= undefined && cycleTimeWIP != '' && (parseInt(cycleTimeWIP) != 0)) {
-              totCycleTimeWIP = totCycleTimeWIP + parseInt(cycleTimeWIP);
+            if (cycleTimeWIP!= undefined && cycleTimeWIP != '' && (parseFloat(cycleTimeWIP) != 0)) {
+              totCycleTimeWIP = totCycleTimeWIP + parseFloat(cycleTimeWIP);
               totCycleTimeWIPIter = totCycleTimeWIPIter + 1;
             }
 
@@ -1812,8 +1812,8 @@ function monthlyIterations(teamIterations) {
         if (totClientStatIter > 0) {
           entry.totClientStat = totClientStat / totClientStatIter;
         }
-        if (totCycleTimeFunnelIter > 0) {
-          entry.totCycleTimeFunnel = totCycleTimeFunnel / totCycleTimeFunnelIter;
+        if (totCycleTimeBacklogIter > 0) {
+          entry.totCycleTimeBacklog = totCycleTimeBacklog / totCycleTimeBacklogIter;
         }
         if (totCycleTimeWIPIter > 0) {
           entry.totCycleTimeWIP = totCycleTimeWIP / totCycleTimeWIPIter;
@@ -1911,15 +1911,15 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
   teamStatParSer.dashStyle = 'dash';
   teamStatParSer.color = 'orange';
 
-  var cycleTimeFunnelSeries = new Object();
-  cycleTimeFunnelSeries.name = 'Cycle time in funnel';
-  cycleTimeFunnelSeries.data = [];
+  var cycleTimeBacklogSeries = new Object();
+  cycleTimeBacklogSeries.name = 'Cycle time in backlog';
+  cycleTimeBacklogSeries.data = [];
 
-  var cycleTimeFunnelParSer = new Object();
-  cycleTimeFunnelParSer.name = 'Cycle time in funnel';
-  cycleTimeFunnelParSer.data = [];
-  cycleTimeFunnelParSer.dashStyle = 'dash';
-  cycleTimeFunnelParSer.color = 'orange';
+  var cycleTimeBacklogParSer = new Object();
+  cycleTimeBacklogParSer.name = 'Cycle time in backlog';
+  cycleTimeBacklogParSer.data = [];
+  cycleTimeBacklogParSer.dashStyle = 'dash';
+  cycleTimeBacklogParSer.color = 'orange';
 
   var cycleTimeWIPSeries = new Object();
   cycleTimeWIPSeries.name = 'Cycle time in WIP';
@@ -2034,14 +2034,14 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
       var ctfPData = new Object();
       ctfPData.name = monthList[i].month;
       ctfPData.x = graphCategory.indexOf(monthList[i].month);
-      ctfPData.y = isNaN(parseInt(monthList[i].totCycleTimeFunnel)) ? null : parseFloat(monthList[i].totCycleTimeFunnel.toFixed(1));
-      cycleTimeFunnelParSer.data.push(ctfPData);
+      ctfPData.y = isNaN(parseInt(monthList[i].totCycleTimeBacklog)) ? null : parseFloat(monthList[i].totCycleTimeBacklog.toFixed(1));
+      cycleTimeBacklogParSer.data.push(ctfPData);
 
       var ctfPData = new Object();
       ctfPData.name = monthList[i + 1].month;
       ctfPData.x = graphCategory.indexOf(monthList[i + 1].month);
-      ctfPData.y = isNaN(parseInt(monthList[i + 1].totCycleTimeFunnel)) ? null : parseFloat(monthList[i + 1].totCycleTimeFunnel.toFixed(1));
-      cycleTimeFunnelParSer.data.push(ctfPData);
+      ctfPData.y = isNaN(parseInt(monthList[i + 1].totCycleTimeBacklog)) ? null : parseFloat(monthList[i + 1].totCycleTimeBacklog.toFixed(1));
+      cycleTimeBacklogParSer.data.push(ctfPData);
 
       var ctwPData = new Object();
       ctwPData.name = monthList[i].month;
@@ -2092,8 +2092,8 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
 
       var ctfData = new Object();
       ctfData.name = monthList[i].month;
-      ctfData.y = isNaN(parseInt(monthList[i].totCycleTimeFunnel)) ? null : parseFloat(monthList[i].totCycleTimeFunnel.toFixed(1));
-      cycleTimeFunnelSeries.data.push(ctfData);
+      ctfData.y = isNaN(parseInt(monthList[i].totCycleTimeBacklog)) ? null : parseFloat(monthList[i].totCycleTimeBacklog.toFixed(1));
+      cycleTimeBacklogSeries.data.push(ctfData);
 
       var ctwData = new Object();
       ctwData.name = monthList[i].month;
@@ -2171,7 +2171,7 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
   loadDeploymentsChartParent('pdefectsChart', 'Deployments/Defects', 'line', graphCategory, 'Count', 'Iteration results by month', deployParSer, deploySeries, defectsParSer, defectsSeries, 'Points', false);
   loadSatisfactionChartParent('pstatisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', 'Iteration results by month', teamStatParSer, teamStatSeries, clientStatParSer, clientStatSeries, 'Points', false, ctsYMax);
   loadPiePizzaChart('piePizzaChart', '2 Pizza Rule (Squad Teams - Current)', 'pie', pData, cenTitle);
-  loadWipBackoutChartParent('pwipBacklogChart', 'Cycle time in funnel and cycle time in WIP (in days)', 'line', graphCategory, 'Average days per story', 'Iteration results by month', cycleTimeFunnelParSer, cycleTimeFunnelSeries, cycleTimeWIPParSer, cycleTimeWIPSeries, 'Points', false);
+  loadWipBackoutChartParent('pwipBacklogChart', 'Cycle time in backlog and cycle time in WIP (in days)', 'line', graphCategory, 'Average days per story', 'Iteration results by month', cycleTimeBacklogParSer, cycleTimeBacklogSeries, cycleTimeWIPParSer, cycleTimeWIPSeries, 'Points', false);
   $('#spinnerContainer').hide();
   $('#mainContent').show();
   redrawCharts('iterationSection');
