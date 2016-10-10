@@ -747,11 +747,7 @@ var team = {
             userTeams = util.returnObject(body);
             loggers.get('models').verbose('Found ' + userTeams.length + ' team(s) for ' + uid);
             var requestKeys = _.pluck(userTeams, '_id');
-            return requestKeys;
-          })
-          .then(function(requestKeys) {
-            var docs = common.getByViewKeys('teams', 'lookup', requestKeys);
-            return docs;
+            return common.getByViewKeys('teams', 'lookup', requestKeys);
           })
           .then(function(docs){
             var strTeams = _.pluck(docs.rows, 'value');
