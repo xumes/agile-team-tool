@@ -276,8 +276,8 @@ function teamIterationListHander(teamId, teamIterations) {
   // loadChartMulSeries('defectsChart', 'Deployments/Defects', 'line', graphCategory, 'Count', 'Iteration Dates', deploySeries, defectsSeries, 'Points', true);
   loadDefectDeployChart('defectsChart', graphCategory, defectsSeries, defectsStartSeries, deploySeries);
   loadSatisfactionChart('statisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', teamSatSeries, clientSatSeries, 'Points', sMax);
-  loadChartMulSeries('unitCostChart', 'Unit cost per FTE', 'line', graphCategory, 'Count', 'Iteration Dates', storyFTESeries, storyPointFTESeries, 'Points', true);
-  loadWipBacklogChart('wipBacklogChart', 'Cycle time in backlog and cycle time in WIP (in days)', 'line', graphCategory, 'Average days per story', 'Iteration Dates', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', true);
+  loadChartMulSeries('unitCostChart', 'Unit Cost per FTE', 'line', graphCategory, 'Count', 'Iteration Dates', storyFTESeries, storyPointFTESeries, 'Points', true);
+  loadWipBacklogChart('wipBacklogChart', 'Cycle Time in Backlog and Cycle Time in WIP (in days)', 'line', graphCategory, 'Average days per story', 'Iteration Dates', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', true);
 
   $('#GoIterationBtn').click(function() {
     var iterID = encodeURIComponent($('#gotoIterationList option:selected').val());
@@ -2251,7 +2251,7 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
   loadDefectsChartParent('pdefectsChart', graphCategory, defectsSeries, defectsParSer, defectsStartSeries, defectsParStartSer, deploySeries, deployParSer);
   loadSatisfactionChartParent('pstatisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', 'Iteration results by month', teamStatParSer, teamStatSeries, clientStatParSer, clientStatSeries, 'Points', false, ctsYMax);
   loadPiePizzaChart('piePizzaChart', '2 Pizza Rule (Squad Teams - Current)', 'pie', pData, cenTitle);
-  loadWipBackoutChartParent('pwipBacklogChart', 'Cycle time in backlog and cycle time in WIP (in days)', 'line', graphCategory, 'Average days per story', 'Iteration results by month', cycleTimeBacklogParSer, cycleTimeBacklogSeries, cycleTimeWIPParSer, cycleTimeWIPSeries, 'Points', false);
+  loadWipBackoutChartParent('pwipBacklogChart', 'Cycle Time in Backlog and Cycle Time in WIP (in days)', 'line', graphCategory, 'Average days per story', 'Iteration results by month', cycleTimeBacklogParSer, cycleTimeBacklogSeries, cycleTimeWIPParSer, cycleTimeWIPSeries, 'Points', false);
   $('#spinnerContainer').hide();
   $('#mainContent').show();
   redrawCharts('iterationSection');
