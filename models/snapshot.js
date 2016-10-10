@@ -54,6 +54,10 @@ function resetData() {
     'totClientStat': 0,
     'totTeamStatIter': 0,
     'totClientStatIter': 0,
+    'totCycleTimeFunnel': 0,
+    'totCycleTimeWIP': 0,
+    'totCycleTimeFunnelIter': 0,
+    'totCycleTimeWIPIter': 0,
     'teamsLt5': 0,
     'teams5to12': 0,
     'teamsGt12': 0,
@@ -73,6 +77,10 @@ function resetData() {
     'totClientStat': 0,
     'totTeamStatIter': 0,
     'totClientStatIter': 0,
+    'totCycleTimeFunnel': 0,
+    'totCycleTimeWIP': 0,
+    'totCycleTimeFunnelIter': 0,
+    'totCycleTimeWIPIter': 0,
     'teamsLt5': 0,
     'teams5to12': 0,
     'teamsGt12': 0,
@@ -92,6 +100,10 @@ function resetData() {
     'totClientStat': 0,
     'totTeamStatIter': 0,
     'totClientStatIter': 0,
+    'totCycleTimeFunnel': 0,
+    'totCycleTimeWIP': 0,
+    'totCycleTimeFunnelIter': 0,
+    'totCycleTimeWIPIter': 0,
     'teamsLt5': 0,
     'teams5to12': 0,
     'teamsGt12': 0,
@@ -111,6 +123,10 @@ function resetData() {
     'totClientStat': 0,
     'totTeamStatIter': 0,
     'totClientStatIter': 0,
+    'totCycleTimeFunnel': 0,
+    'totCycleTimeWIP': 0,
+    'totCycleTimeFunnelIter': 0,
+    'totCycleTimeWIPIter': 0,
     'teamsLt5': 0,
     'teams5to12': 0,
     'teamsGt12': 0,
@@ -130,6 +146,10 @@ function resetData() {
     'totClientStat': 0,
     'totTeamStatIter': 0,
     'totClientStatIter': 0,
+    'totCycleTimeFunnel': 0,
+    'totCycleTimeWIP': 0,
+    'totCycleTimeFunnelIter': 0,
+    'totCycleTimeWIPIter': 0,
     'teamsLt5': 0,
     'teams5to12': 0,
     'teamsGt12': 0,
@@ -148,6 +168,10 @@ function resetData() {
     'totClientStat': 0,
     'totTeamStatIter': 0,
     'totClientStatIter': 0,
+    'totCycleTimeFunnel': 0,
+    'totCycleTimeWIP': 0,
+    'totCycleTimeFunnelIter': 0,
+    'totCycleTimeWIPIter': 0,
     'teamsLt5': 0,
     'teams5to12': 0,
     'teamsGt12': 0,
@@ -268,6 +292,9 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
           var dplymnts = iterationDoc['nbr_dplymnts'];
           var teamStat = iterationDoc['team_sat'];
           var clientStat = iterationDoc['client_sat'];
+          var cycleTimeFunnel = iterationDoc['nbr_cycletime_in_backlog'];
+          var cycleTimeWIP = iterationDoc['nbr_cycletime_WIP'];
+
           if (pts != undefined && pts != '') {
             currData[iterationDocIndex].totalPoints = currData[iterationDocIndex].totalPoints + parseInt(pts);
           }
@@ -301,6 +328,14 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
             // }
             currData[iterationDocIndex].totClientStat = currData[iterationDocIndex].totClientStat + parseInt(clientStat);
             currData[iterationDocIndex].totClientStatIter = currData[iterationDocIndex].totClientStatIter + 1;
+          }
+          if (cycleTimeFunnel != undefined && cycleTimeFunnel != '' && (parseInt(cycleTimeFunnel) != 0)) {
+            currData[iterationDocIndex].totCycleTimeFunnel = currData[iterationDocIndex].totCycleTimeFunnel + parseInt(cycleTimeFunnel);
+            currData[iterationDocIndex].totCycleTimeFunnelIter = currData[iterationDocIndex].totCycleTimeFunnelIter + 1;
+          }
+          if (cycleTimeWIP != undefined && cycleTimeWIP != '' && (parseInt(cycleTimeWIP) != 0)) {
+            currData[iterationDocIndex].totCycleTimeWIP = currData[iterationDocIndex].totCycleTimeWIP + parseInt(cycleTimeWIP);
+            currData[iterationDocIndex].totCycleTimeWIPIter = currData[iterationDocIndex].totCycleTimeWIPIter + 1;
           }
 
           if (teamCnt != undefined && teamCnt != '') {
@@ -357,6 +392,10 @@ function rollUpIterationsByNonSquad(squads, nonSquadTeamId, squadsCalResults, is
           currData[j].totTeamStatIter = currData[j].totTeamStatIter + squadIterationResult[j].totTeamStatIter;
           currData[j].totClientStat = currData[j].totClientStat + squadIterationResult[j].totClientStat;
           currData[j].totClientStatIter = currData[j].totClientStatIter + squadIterationResult[j].totClientStatIter;
+          currData[j].totCycleTimeFunnel = currData[j].totCycleTimeFunnel + squadIterationResult[j].totCycleTimeFunnel;
+          currData[j].totCycleTimeFunnelIter = currData[j].totCycleTimeFunnelIter + squadIterationResult[j].totCycleTimeFunnelIter;
+          currData[j].totCycleTimeWIP = currData[j].totCycleTimeWIP + squadIterationResult[j].totCycleTimeWIP;
+          currData[j].totCycleTimeWIPIter = currData[j].totCycleTimeWIPIter + squadIterationResult[j].totCycleTimeWIPIter;
           currData[j].teamsLt5 = currData[j].teamsLt5 + squadIterationResult[j].teamsLt5;
           currData[j].teamsGt12 = currData[j].teamsGt12 + squadIterationResult[j].teamsGt12;
           currData[j].teams5to12 = currData[j].teams5to12 + squadIterationResult[j].teams5to12;
@@ -380,6 +419,12 @@ function rollUpIterationsByNonSquad(squads, nonSquadTeamId, squadsCalResults, is
       }
       if (currData[i].totClientStatIter > 0) {
         currData[i].totClientStat = currData[i].totClientStat / currData[i].totClientStatIter;
+      }
+      if (currData[i].totCycleTimeFunnelIter > 0) {
+        currData[i].totCycleTimeFunnel = currData[i].totCycleTimeFunnel / currData[i].totCycleTimeFunnelIter;
+      }
+      if (currData[i].totCycleTimeWIPIter > 0) {
+        currData[i].totCycleTimeWIP = currData[i].totCycleTimeWIP / currData[i].totCycleTimeWIPIter;
       }
     }
 
