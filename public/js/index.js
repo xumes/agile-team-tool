@@ -653,7 +653,7 @@ function getAllAgileTeamsByParentId(parentId, showLoading, initial, parentsTree)
 
 function getTeamSnapshots(teamId, teamName){
   getSnapshot(teamId, teamName);
-  //getAssessmentSnapshot(teamId);
+  getAssessmentSnapshot(teamId);
 }
 
 function getAssessmentSnapshot(teamId) {
@@ -1109,8 +1109,8 @@ function loadDetails(elementId, setScrollPosition) {
             $('#teamType').html('Team:&nbsp;');
             $('#nsquad_team_scard').show();
             $('#squad_team_scard').hide();
-            $('#nsquad_assessment_card').hide();
-            $('#squad_assessment_card').show();
+            $('#nsquad_assessment_card').show();
+            $('#squad_assessment_card').hide();
             $('#iterationSection .agile-section-nav').hide();
             $('#assessmentSection .agile-section-nav').hide();
             $('#refreshData').attr('onclick', "performChartRefresh('" + team._id + "','" + team.name + "')");

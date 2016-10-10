@@ -383,17 +383,17 @@ function assessmentEvaluation(assessmentData){
   var teamNoAssessment = new Object();
   teamNoAssessment.name = 'Squads that have not taken the assessment';
   teamNoAssessment.data = [];
-  teamNoAssessment.color = '#a72926';
+  teamNoAssessment.color = '#808080';
 
   var teamGt120Days = new Object();
   teamGt120Days.name = 'Squads that have not taken the assessment in more than 120 days';
   teamGt120Days.data = [];
-  teamGt120Days.color = '#808080';
+  teamGt120Days.color = '#CCCCCC';
 
   var teamLt120Days = new Object();
   teamLt120Days.name = 'Squads that have taken the assessment in the past 120 days';
   teamLt120Days.data = [];
-  teamLt120Days.color = '#7ab4ee';
+  teamLt120Days.color = '#8fff8e';
 
   for (var i = 0; i < assessmentData.length; i++) {
     var graphCat;
@@ -401,6 +401,7 @@ function assessmentEvaluation(assessmentData){
     var tNoData = new Object();
     var tGt120Data = new Object();
     var tLt120Data = new Object();
+    var totalSquad = isNaN(parseInt(assessmentData[i].totalSquad)) ? 0 : parseInt(assessmentData[i].totalSquad);
 
     graphCat = assessmentData[i].month;
     graphCategory.push(graphCat);
@@ -408,16 +409,20 @@ function assessmentEvaluation(assessmentData){
     tLt120Data.name = assessmentData[i].month;
     var l120days = isNaN(parseInt(assessmentData[i].less_120_days)) ? null : parseInt(assessmentData[i].less_120_days) == 0 ? null : parseInt(assessmentData[i].less_120_days);
     tLt120Data.y = l120days;
+    tLt120Data.squads = l120days;
     teamLt120Days.data.push(tLt120Data);
 
     tGt120Data.name = assessmentData[i].month;
     var g120days = isNaN(parseInt(assessmentData[i].gt_120_days)) ? null : parseInt(assessmentData[i].gt_120_days) == 0 ? null : parseInt(assessmentData[i].gt_120_days);
     tGt120Data.y = g120days;
+    tGt120Data.squads = g120days;
     teamGt120Days.data.push(tGt120Data);
 
     tNoData.name = assessmentData[i].month;
     var noData = isNaN(parseInt(assessmentData[i].no_submission)) ? null : parseInt(assessmentData[i].no_submission) == 0 ? null : parseInt(assessmentData[i].no_submission);
+    
     tNoData.y = noData;
+    tNoData.squads = noData;
     teamNoAssessment.data.push(tNoData);
   }
   var max = 100;
@@ -435,7 +440,7 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
       type: type,
       renderTo: id,
       marginLeft: 60,
-      width:380
+      width:390
     },
     lang: {
       noData: 'No results reported'
@@ -456,7 +461,8 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
     legend: {
       symbolRadius: 0,
       itemStyle: {
-        fontSize: '9px'
+        fontSize: '12px',
+        width: 300
       }
     },
     xAxis: {
@@ -476,7 +482,7 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
       max: yMax,
       tickInterval: 10,
       title: {
-        text: 'Number of squads'
+        text: '% of squads within the team'
       }
     },
     plotOptions: {
@@ -485,41 +491,23 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
       }
     },
     tooltip: {
-      enabled: false
+      formatter: function () {
+        return '# of squads: ' + this.y+
+        '<br/>% of teams: ' + this.percentage.toFixed(1);
+      }
     },
     series: [{
       name: seriesObj3.name,
       data: seriesObj3.data,
-      color: seriesObj3.color,
-      dataLabels: {
-        enabled: true,
-        color: 'white',
-        style: {
-          textShadow: false
-        }
-      }
+      color: seriesObj3.color
     }, {
       name: seriesObj2.name,
       data: seriesObj2.data,
-      color: seriesObj2.color,
-      dataLabels: {
-        enabled: true,
-        color: 'white',
-        style: {
-          textShadow: false
-        }
-      }
+      color: seriesObj2.color
     }, {
       name: seriesObj1.name,
       data: seriesObj1.data,
-      color: seriesObj1.color,
-      dataLabels: {
-        enabled: true,
-        color: 'black',
-        style: {
-          textShadow: false
-        }
-      }
+      color: seriesObj1.color
     }],
     credits: {
       enabled: false
