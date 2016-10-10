@@ -401,7 +401,6 @@ function assessmentEvaluation(assessmentData){
     var tNoData = new Object();
     var tGt120Data = new Object();
     var tLt120Data = new Object();
-    var totalSquad = isNaN(parseInt(assessmentData[i].totalSquad)) ? 0 : parseInt(assessmentData[i].totalSquad);
 
     graphCat = assessmentData[i].month;
     graphCategory.push(graphCat);
@@ -409,20 +408,17 @@ function assessmentEvaluation(assessmentData){
     tLt120Data.name = assessmentData[i].month;
     var l120days = isNaN(parseInt(assessmentData[i].less_120_days)) ? null : parseInt(assessmentData[i].less_120_days) == 0 ? null : parseInt(assessmentData[i].less_120_days);
     tLt120Data.y = l120days;
-    tLt120Data.squads = l120days;
     teamLt120Days.data.push(tLt120Data);
 
     tGt120Data.name = assessmentData[i].month;
     var g120days = isNaN(parseInt(assessmentData[i].gt_120_days)) ? null : parseInt(assessmentData[i].gt_120_days) == 0 ? null : parseInt(assessmentData[i].gt_120_days);
     tGt120Data.y = g120days;
-    tGt120Data.squads = g120days;
     teamGt120Days.data.push(tGt120Data);
 
     tNoData.name = assessmentData[i].month;
     var noData = isNaN(parseInt(assessmentData[i].no_submission)) ? null : parseInt(assessmentData[i].no_submission) == 0 ? null : parseInt(assessmentData[i].no_submission);
     
     tNoData.y = noData;
-    tNoData.squads = noData;
     teamNoAssessment.data.push(tNoData);
   }
   var max = 100;
