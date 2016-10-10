@@ -417,7 +417,6 @@ function assessmentEvaluation(assessmentData){
 
     tNoData.name = assessmentData[i].month;
     var noData = isNaN(parseInt(assessmentData[i].no_submission)) ? null : parseInt(assessmentData[i].no_submission) == 0 ? null : parseInt(assessmentData[i].no_submission);
-    
     tNoData.y = noData;
     teamNoAssessment.data.push(tNoData);
   }
