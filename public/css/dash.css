@@ -1061,3 +1061,17 @@ li #allTeams {
 #overlayExampleLarge > p {
 	font-size: 10pt;
 }
+
+/*=BEGIN Important links */
+#importantLinks .imptlink {
+  margin-left:30px; margin-bottom:10px; border:0px solid red; width: 650px;
+}
+
+#importantLinks .removelink {
+  float:right; line-height: 2.2em;
+}
+
+#importantLinks .urlwrapper{
+  margin-left: 20px; position: absolute; margin-top: -1px;
+}
+/*=END Important links */

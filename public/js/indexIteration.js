@@ -34,8 +34,12 @@ function teamIterationListHander(teamId, teamIterations) {
   targetSeries.data = [];
   targetSeries.color = '#93FF93';
 
+  var defectsStartSeries = new Object();
+  defectsStartSeries.name = 'Existing Defects';
+  defectsStartSeries.data = [];
+
   var defectsSeries = new Object();
-  defectsSeries.name = 'Defects';
+  defectsSeries.name = 'New Defects';
   defectsSeries.data = [];
 
   var deploySeries = new Object();
@@ -57,6 +61,14 @@ function teamIterationListHander(teamId, teamIterations) {
   var storyPointFTESeries = new Object();
   storyPointFTESeries.name = 'Story points/FTE';
   storyPointFTESeries.data = [];
+
+  var cycleTimeBacklogSeries = new Object();
+  cycleTimeBacklogSeries.name = 'Cycle time in backlog';
+  cycleTimeBacklogSeries.data = [];
+
+  var cycleTimeWIPSeries = new Object();
+  cycleTimeWIPSeries.name = 'Cycle time in WIP';
+  cycleTimeWIPSeries.data = [];
 
   var series = [];
   var iterationURL = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=';
@@ -104,12 +116,15 @@ function teamIterationListHander(teamId, teamIterations) {
     var ctData = new Object();
     var tmData = new Object();
     var fteData = new Object();
+    var defectStartData = new Object();
     var defectData = new Object();
     var deployData = new Object();
     var teamSatData = new Object();
     var clientSatData = new Object();
     var storiesFTEData = new Object();
     var storyPointFTEData = new Object();
+    var cycleTimeBacklogData = new Object();
+    var cycleTimeWIPData = new Object();
 
     if (p6Iterations[i].team_mbr_change == 'Yes') {
       graphCat = '*' + showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
@@ -166,6 +181,13 @@ function teamIterationListHander(teamId, teamIterations) {
 
     targetSeries.data.push(-1);
 
+    defectStartData.name = p6Iterations[i].iteration_name;
+    defectStartData.y = isNaN(parseInt(p6Iterations[i].nbr_defects_start_bal)) ? 0 : parseInt(p6Iterations[i].nbr_defects_start_bal);
+    defectStartData.iterURL = iterationURL + p6Iterations[i]._id;
+    defectStartData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
+    defectStartData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+    defectsStartSeries.data.push(defectStartData);
+
     defectData.name = p6Iterations[i].iteration_name;
     defectData.y = isNaN(parseInt(p6Iterations[i].nbr_defects)) ? 0 : parseInt(p6Iterations[i].nbr_defects);
     defectData.iterURL = iterationURL + p6Iterations[i]._id;
@@ -214,6 +236,20 @@ function teamIterationListHander(teamId, teamIterations) {
     storyPointFTEData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
     storyPointFTESeries.data.push(storyPointFTEData);
 
+    cycleTimeBacklogData.name = p6Iterations[i].iteration_name;
+    cycleTimeBacklogData.y = isNaN(parseInt(p6Iterations[i].nbr_cycletime_in_backlog)) ? 0 : parseFloat(p6Iterations[i].nbr_cycletime_in_backlog);
+    cycleTimeBacklogData.iterURL = iterationURL + p6Iterations[i]._id;
+    cycleTimeBacklogData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
+    cycleTimeBacklogData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+    cycleTimeBacklogSeries.data.push(cycleTimeBacklogData);
+
+    cycleTimeWIPData.name = p6Iterations[i].iteration_name;
+    cycleTimeWIPData.y = isNaN(parseInt(p6Iterations[i].nbr_cycletime_WIP)) ? 0 : parseFloat(p6Iterations[i].nbr_cycletime_WIP);
+    cycleTimeWIPData.iterURL = iterationURL + p6Iterations[i]._id;
+    cycleTimeWIPData.startDate = showDateDDMMMYYYY(p6Iterations[i].iteration_start_dt);
+    cycleTimeWIPData.endDate = showDateDDMMMYYYY(p6Iterations[i].iteration_end_dt);
+    cycleTimeWIPSeries.data.push(cycleTimeWIPData);
+
   }
 
   var teamMemMax = getMax(teamMemCountArr);
@@ -237,9 +273,11 @@ function teamIterationListHander(teamId, teamIterations) {
   loadScoreChart('velocityChart', 'Velocity', 'line', graphCategory, 'Story points', commVelocitySeries,  velocitySeries, 'Points', 'Iteration Dates', '* Indicates Team Change', true, true);
   loadScoreChart('throughputChart', 'Throughput', 'line', graphCategory, 'Stories/tickets/cards', commThroughputSeries, throughputSeries, 'Points', 'Iteration Dates', '* Indicates Team Change', true, true);
   loadPizzaChart('pizzaChart', '2 Pizza Rule (Team Members)', 'line', graphCategory, 'Count', yMax, teamMemSeries, fteSeries, targetSeries, 'Points');
-  loadChartMulSeries('defectsChart', 'Deployments/Defects', 'line', graphCategory, 'Count', 'Iteration Dates', deploySeries, defectsSeries, 'Points', true);
+  // loadChartMulSeries('defectsChart', 'Deployments/Defects', 'line', graphCategory, 'Count', 'Iteration Dates', deploySeries, defectsSeries, 'Points', true);
+  loadDefectDeployChart('defectsChart', graphCategory, defectsSeries, defectsStartSeries, deploySeries);
   loadSatisfactionChart('statisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', teamSatSeries, clientSatSeries, 'Points', sMax);
   loadChartMulSeries('unitCostChart', 'Unit cost per FTE', 'line', graphCategory, 'Count', 'Iteration Dates', storyFTESeries, storyPointFTESeries, 'Points', true);
+  loadWipBacklogChart('wipBacklogChart', 'Cycle time in backlog and cycle time in WIP (in days)', 'line', graphCategory, 'Average days per story', 'Iteration Dates', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', true);
 
   $('#GoIterationBtn').click(function() {
     var iterID = encodeURIComponent($('#gotoIterationList option:selected').val());
@@ -683,6 +721,7 @@ function loadBarPizzaChart(id, title, type, categories, seriesObj1, seriesObj2, 
 
     plotOptions: {
       series: {
+        stacking: 'normal',
         allowPointSelect: true
       }
     },
@@ -895,6 +934,257 @@ function loadChartMulSeries(id, title, type, categories, yAxisLabel, xAxisLabel,
   });
 }
 
+function loadDefectDeployChart(id, categories, columnSeries1, columnSeries2, lineSeries) {
+  new Highcharts.Chart({
+    chart: {
+      type: 'column',
+      renderTo: id,
+      marginLeft: 60,
+      marginRight: 0, width: 380
+    },
+    lang: {
+      noData: 'No results reported'
+    },
+    noData: {
+      style: {
+        fontWeight: 'bold',
+        fontSize: '12px',
+        color: '#303030'
+      }
+    },
+    title: {
+      style: {
+        'fontSize': '15px'
+      },
+      text: 'Deployments and Defects'
+    },
+
+    xAxis: {
+      labels: {
+        style: {
+          'fontSize': '9px'
+        }
+      },
+      title: {
+        text: 'Iteration Dates',
+        x: -20
+      },
+      categories: categories,
+      tickmarkPlacement: 'on'
+    },
+
+    yAxis: {
+      title: {
+        text: 'Count'
+      }
+    },
+
+    plotOptions: {
+      column: {
+        stacking: 'normal',
+        pointPlacement: 'on'
+      }
+    },
+
+    tooltip: {
+      shared: true,
+      formatter: function() {
+        var formatResult = '<b>' + this.points[0].key + '</b><br>';
+        for (var i = 0; i < this.points.length; i++) {
+          formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25CF</span>' + this.points[i].series.name + ' :<b>' + this.points[i].y + '</b><br/>';
+        }
+        if (this.points[0].point.startDate != undefined) {
+          formatResult = formatResult + '<br>' + this.points[0].point.startDate + ' - ' + this.points[0].point.endDate;
+        }
+        return formatResult;
+      }
+    },
+
+    legend: {
+      align: 'center',
+      verticalAlign: 'bottom',
+      layout: 'horizontal',
+      itemMarginTop: -10,
+      itemDistance: 5,
+      symbolRadius: 0
+      // itemStyle: {"fontWeight": "normal" }
+    },
+
+    credits: {
+      enabled: false
+    },
+
+    // Stripe patterns
+    // defs: {
+    //   patterns: [{
+    //     id: 'start-defects',
+    //     path: {
+    //       d: 'M 0 10 L 10 0 M -1 1 L 1 -1 M 9 11 L 11 9',
+    //       stroke: '#7ab4ee',
+    //       strokeWidth: 5
+    //     }
+    //   }, {
+    //     id: 'new-defects',
+    //     path: {
+    //       d: 'M 3 0 L 3 10 M 8 0 L 8 10',
+    //       stroke: '#434348',
+    //       strokeWidth: 3
+    //     }
+    //   }]
+    // },
+
+    series: [{
+      showInLegend: true,
+      name: columnSeries1.name,
+      data: columnSeries1.data,
+      // borderColor: '#7ab4ee',
+      // color: 'url(#start-defects)',
+      color: '#808080',
+      point: {
+        events: {
+          click: function(e) {
+            window.location = e.point.iterURL;
+          }
+        }
+      }
+    }, {
+      showInLegend: true,
+      name: columnSeries2.name,
+      data: columnSeries2.data,
+      // borderColor: '#434348',
+      // color: 'url(#new-defects)',
+      color: '#7ab4ee',
+      point: {
+        events: {
+          click: function(e) {
+            window.location = e.point.iterURL;
+          }
+        }
+      }
+    }, {
+      type: 'line',
+      showInLegend: true,
+      name: lineSeries.name,
+      data: lineSeries.data,
+      color: '#434348',
+      marker: {
+        symbol: 'triangle'
+      },
+      point: {
+        events: {
+          click: function(e) {
+            window.location = e.point.iterURL;
+          }
+        }
+      }
+    }]
+  });
+}
+
+function loadWipBacklogChart(id, title, type, categories, yAxisLabel, xAxisLabel, seriesObj1, seriesObj2, unit, pointClickable) {
+  new Highcharts.Chart({
+    chart: {
+      type: type,
+      renderTo: id,
+      marginLeft: 60,
+      marginRight: 0, width: 380
+    },
+    lang: {
+      noData: 'No results reported'
+    },
+    noData: {
+      style: {
+        fontWeight: 'bold',
+        fontSize: '12px',
+        color: '#303030'
+      }
+    },
+    title: {
+      style: {
+        'fontSize': '15px'
+      },
+      text: title
+    },
+
+    xAxis: {
+      labels: {
+        style: {
+          'fontSize': '9px'
+        }
+      },
+      title: {
+        text: xAxisLabel,
+        x: -20
+      },
+      categories: categories,
+      tickmarkPlacement: 'on'
+    },
+
+    yAxis: {
+      title: {
+        text: yAxisLabel
+      }
+    },
+
+    plotOptions: {
+      column: {
+        pointPlacement: 'on'
+      }
+    },
+
+    tooltip: {
+      shared: true,
+      formatter: function() {
+        var formatResult = '<b>' + this.points[0].key + '</b><br>';
+        for (var i = 0; i < this.points.length; i++) {
+          formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25CF</span>' + this.points[i].series.name + ' :<b>' + this.points[i].y + '</b><br/>';
+        }
+        if (this.points[0].point.startDate != undefined) {
+          formatResult = formatResult + '<br>' + this.points[0].point.startDate + ' - ' + this.points[0].point.endDate;
+        }
+        return formatResult;
+      }
+    },
+
+    legend: {
+      align: 'center',
+      verticalAlign: 'bottom',
+      layout: 'horizontal',
+      itemMarginTop: -10
+    },
+
+    credits: {
+      enabled: false
+    },
+
+    series: [{
+      showInLegend: true,
+      name: seriesObj1.name,
+      data: seriesObj1.data,
+      point: {
+        events: {
+          click: function(e) {
+            if (pointClickable)
+              window.location = e.point.iterURL;
+          }
+        }
+      }
+    }, {
+      showInLegend: true,
+      name: seriesObj2.name,
+      data: seriesObj2.data,
+      point: {
+        events: {
+          click: function(e) {
+            if (pointClickable)
+              window.location = e.point.iterURL;
+          }
+        }
+      }
+    }]
+  });
+}
+
 function loadChartPartialSeries(id, title, type, categories, yAxisLabel, xAxisLabel, seriesObj1, seriesObj2, unit, pointClickable) {
   new Highcharts.Chart({
     chart: {
@@ -993,7 +1283,170 @@ function loadChartPartialSeries(id, title, type, categories, yAxisLabel, xAxisLa
   });
 }
 
-function loadDeploymentsChartParent(id, title, type, categories, yAxisLabel, xAxisLabel, seriesObj1, seriesObj2, seriesObj3, seriesObj4, unit, pointClickable) {
+function loadDefectsChartParent(id, categories, columnSeries1, partialColumnSeries1, columnSeries2, partialColumnSeries2 , lineSeries, partialLineSeries) {
+  new Highcharts.Chart({
+    chart: {
+      type: 'column',
+      renderTo: id,
+      marginLeft: 60,
+      marginRight: 0, width: 380
+    },
+    lang: {
+      noData: 'No results reported'
+    },
+    noData: {
+      style: {
+        fontWeight: 'bold',
+        fontSize: '12px',
+        color: '#303030'
+      }
+    },
+    title: {
+      style: {
+        'fontSize': '15px'
+      },
+      text: 'Deployment and Defects'
+    },
+
+    xAxis: {
+      labels: {
+        style: {
+          'fontSize': '9px'
+        }
+      },
+      title: {
+        text: 'Iteration results by month'
+      },
+      categories: categories,
+      tickmarkPlacement: 'on'
+    },
+
+    yAxis: {
+      title: {
+        text: 'Count'
+      }
+    },
+
+    plotOptions: {
+      column: {
+        stacking: 'normal',
+        pointPlacement: 'on'
+      }
+    },
+
+    tooltip: {
+      shared: true,
+      formatter: function() {
+        var formatResult = '<b>' + this.points[0].key + '</b><br>';
+        var serName = '';
+        for (var i = 0; i < this.points.length; i++) {
+          if (serName != this.points[i].series.name) {
+            formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25CF</span>' + this.points[i].series.name + ' :<b>' + this.points[i].y + '</b><br/>';
+          }
+          serName = this.points[i].series.name;
+        }
+        return formatResult;
+      }
+    },
+
+    legend: {
+      align: 'center',
+      verticalAlign: 'bottom',
+      layout: 'horizontal',
+      itemMarginTop: -10,
+      itemDistance: 8,
+      symbolRadius: 0
+      // itemStyle: {"fontWeight": "normal" }
+    },
+
+    credits: {
+      enabled: false
+    },
+
+    subtitle: {
+      text: '---Partial month',
+      verticalAlign: 'bottom',
+      align: 'center',
+      y: 15,
+      x: 30,
+      style: {
+        fontSize: '12px',
+        color: '#FFA500',
+        fontWeight: 'bold'
+      }
+    },
+
+    defs: {
+      patterns: [{
+      //   id: 'start-defects',
+      //   path: {
+      //     d: 'M 0 10 L 10 0 M -1 1 L 1 -1 M 9 11 L 11 9',
+      //     stroke: '#data',
+      //     strokeWidth: 5
+      //   }
+      // }, {
+        id: 'partial',
+        path: {
+          d: 'M 0 3 L 5 3 L 5 0 M 5 10 L 5 7 L 10 7',
+          stroke: 'orange',
+          strokeWidth: 4
+        }
+      }]
+    },
+
+    series: [{
+    //   showInLegend: false,
+    //   name: partialColumnSeries1.name,
+    //   data: partialColumnSeries1.data,
+    //   color: '808080',
+    //   zoneAxis: 'x',
+    //   zones: [{ value: 2}, { color: 'orange' }]
+    // }, {
+      showInLegend: true,
+      name: columnSeries1.name,
+      data: columnSeries1.data,
+      color: '#808080',
+      zoneAxis: 'x',
+      zones: [{value: 5}, {dashStyle: 'dash', color: 'orange'}]
+    }, {
+    //   showInLegend: false,
+    //   name: partialColumnSeries2.name,
+    //   data: partialColumnSeries2.data,
+    //   color: '7ab4ee',
+    //   zoneAxis: 'x',
+    //   zones: [{ value: 2}, { color: 'orange' }]
+    // }, {
+      showInLegend: true,
+      name: columnSeries2.name,
+      data: columnSeries2.data,
+      color: '#7ab4ee',
+      zoneAxis: 'x',
+      zones: [{value: 5}, {dashStyle: 'dash', color: 'orange'}]
+    }, {
+      type: 'line',
+      showInLegend: false,
+      name: partialLineSeries.name,
+      data: partialLineSeries.data,
+      color: 'orange',
+      dashStyle: 'dash',
+      marker: {
+        symbol: 'triangle'
+      }
+    }, {
+      type: 'line',
+      showInLegend: true,
+      name: lineSeries.name,
+      data: lineSeries.data,
+      color: '#434348',
+      marker: {
+        symbol: 'triangle'
+      }
+    }]
+  });
+}
+
+
+function loadWipBackoutChartParent(id, title, type, categories, yAxisLabel, xAxisLabel, seriesObj1, seriesObj2, seriesObj3, seriesObj4, unit, pointClickable) {
   new Highcharts.Chart({
     chart: {
       type: type,
@@ -1441,118 +1894,6 @@ function currentTeamStats() {
   return entry;
 }
 
-function monthlyIterations(teamIterations) {
-  var monthly = [];
-  var today = new Date();
-  //var today = getServerDateTime();
-  if (teamIterations != undefined) {
-    for (var i = 0; i < teamIterations.length; i++) {
-
-      var currDate = new Date(teamIterations[i]['iteration_end_dt']);
-      //var currMonth = currDate.getUTCMonth() + 1;
-      var currMonth = currDate.getMonth() + 1;
-      var totalPoints = 0;
-      var totalStories = 0;
-      var totalCompleted = 0;
-      var totalDefects = 0;
-      var totalDplymts = 0;
-      var totTeamStat = 0;
-      var totClientStat = 0;
-      var totTeamStatIter = 0;
-      var totClientStatIter = 0;
-      var teamsLt5 = 0;
-      var teams5to12 = 0;
-      var teamsGt12 = 0;
-      var exist = false;
-      for (var y = 0; y < monthly.length; y++) {
-        if (monthly[y].month == showDateMMMYYYY(currDate)) {
-          exist = true;
-          break;
-        }
-      }
-      if (!exist) {
-        var teams = [];
-        var entry = new Object();
-        for (var x = 0; x < teamIterations.length; x++) {
-          var tempDate = new Date(teamIterations[x]['iteration_end_dt']);
-          //if (tempDate.getUTCMonth()+1 == currMonth){
-          if (tempDate.getMonth() + 1 == currMonth) {
-            var pts = teamIterations[x]['nbr_story_pts_dlvrd'];
-            var stories = teamIterations[x]['nbr_stories_dlvrd'];
-            var teamCnt = teamIterations[x]['team_mbr_cnt'];
-            var defects = teamIterations[x]['nbr_defects'];
-            var dplymnts = teamIterations[x]['nbr_dplymnts'];
-            var teamStat = teamIterations[x]['team_sat'];
-            var clientStat = teamIterations[x]['client_sat'];
-
-            if (pts != undefined && pts != '') {
-              totalPoints = totalPoints + parseInt(teamIterations[x]['nbr_story_pts_dlvrd']);
-            }
-            if (stories != undefined && stories != '') {
-              totalStories = totalStories + parseInt(teamIterations[x]['nbr_stories_dlvrd']);
-            }
-
-            if (defects != undefined && defects != '') {
-              totalDefects = totalDefects + parseInt(teamIterations[x]['nbr_defects']);
-            }
-            if (dplymnts != undefined && dplymnts != '') {
-              totalDplymts = totalDplymts + parseInt(teamIterations[x]['nbr_dplymnts']);
-            }
-
-            if (teamStat != undefined && teamStat != '' && (parseInt(teamStat) != 0)) {
-              totTeamStat = totTeamStat + parseInt(teamStat);
-              totTeamStatIter = totTeamStatIter + 1;
-            }
-            if (clientStat != undefined && clientStat != '' && (parseInt(clientStat) != 0)) {
-              totClientStat = totClientStat + parseInt(clientStat);
-              totClientStatIter = totClientStatIter + 1;
-            }
-
-            if (teamCnt != undefined && teamCnt != '') {
-              teamCnt = parseInt(teamIterations[x]['team_mbr_cnt']);
-              if (teamCnt < 5) {
-                teamsLt5 = teamsLt5 + 1;
-              } else if (teamCnt > 12) {
-                teamsGt12 = teamsGt12 + 1;
-              } else {
-                teams5to12 = teams5to12 + 1;
-              }
-            }
-            totalCompleted = totalCompleted + 1;
-            if (teams.indexOf(teamIterations[x].team_id) < 0)
-              teams.push(teamIterations[x].team_id);
-          }
-        }
-        entry.month = showDateMMMYYYY(currDate);
-        entry.totalPoints = totalPoints;
-        entry.totalStories = totalStories;
-        entry.totalCompleted = totalCompleted;
-        entry.totalSquad = teams.length;
-        entry.totalDefects = totalDefects;
-        entry.totalDplymts = totalDplymts;
-        entry.teamsLt5 = teamsLt5;
-        entry.teams5to12 = teams5to12;
-        entry.teamsGt12 = teamsGt12;
-        if (totTeamStatIter > 0) {
-          entry.totTeamStat = totTeamStat / totTeamStatIter;
-        }
-        if (totClientStatIter > 0) {
-          entry.totClientStat = totClientStat / totClientStatIter;
-        }
-
-        //if(today.getMonth()+1 == currMonth){
-        if (today.getUTCMonth() + 1 == currMonth) {
-          entry.partialMonth = true;
-        } else {
-          entry.partialMonth = false;
-        }
-        monthly.push(entry);
-      }
-    }
-  }
-  return monthly;
-}
-
 function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
   var graphCategory = [];
 
@@ -1591,15 +1932,23 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
   teamGt12Ser.data = [];
   teamGt12Ser.color = '#808080';
 
+  var defectsStartSeries = new Object();
+  defectsStartSeries.name = 'Existing Defects';
+  defectsStartSeries.data = [];
+
+  var defectsParStartSer = new Object();
+  defectsParStartSer.name = 'Existing Defects';
+  defectsParStartSer.data = [];
+
   var defectsSeries = new Object();
-  defectsSeries.name = 'Defects';
+  defectsSeries.name = 'New Defects';
   defectsSeries.data = [];
 
   var defectsParSer = new Object();
-  defectsParSer.name = 'Defects';
+  defectsParSer.name = 'New Defects';
   defectsParSer.data = [];
-  defectsParSer.dashStyle = 'dash';
-  defectsParSer.color = 'orange';
+  // defectsParSer.dashStyle = 'dash';
+  // defectsParSer.color = 'orange';
 
   var deploySeries = new Object();
   deploySeries.name = 'Deployments';
@@ -1632,12 +1981,32 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
   teamStatParSer.dashStyle = 'dash';
   teamStatParSer.color = 'orange';
 
+  var cycleTimeBacklogSeries = new Object();
+  cycleTimeBacklogSeries.name = 'Cycle time in backlog';
+  cycleTimeBacklogSeries.data = [];
+
+  var cycleTimeBacklogParSer = new Object();
+  cycleTimeBacklogParSer.name = 'Cycle time in backlog';
+  cycleTimeBacklogParSer.data = [];
+  cycleTimeBacklogParSer.dashStyle = 'dash';
+  cycleTimeBacklogParSer.color = 'orange';
+
+  var cycleTimeWIPSeries = new Object();
+  cycleTimeWIPSeries.name = 'Cycle time in WIP';
+  cycleTimeWIPSeries.data = [];
+
+  var cycleTimeWIPParSer = new Object();
+  cycleTimeWIPParSer.name = 'Cycle time in WIP';
+  cycleTimeWIPParSer.data = [];
+  cycleTimeWIPParSer.dashStyle = 'dash';
+  cycleTimeWIPParSer.color = 'orange';
+
   var partialSeries = new Object();
   partialSeries.name = 'Partial month';
   partialSeries.data = [];
   partialSeries.color = 'orange';
 
-  var monthList = teamIterations; //monthlyIterations(teamIterations);
+  var monthList = teamIterations;
   monthList = sortMMMYYYY(monthList);
   var curTeamstat = nonsquadScore; //currentTeamStats();
 
@@ -1687,8 +2056,22 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
       var defPData = new Object();
       defPData.name = monthList[i].month;
       defPData.x = graphCategory.indexOf(monthList[i].month);
+      defPData.y = isNaN(parseInt(monthList[i].totalDefectsStartBal)) ? 0 : parseInt(monthList[i].totalDefectsStartBal);
+      defectsParStartSer.data.push(defPData);
+      defectsStartSeries.data.push(defPData);
+
+      var defPData = new Object();
+      defPData.name = monthList[i + 1].month;
+      defPData.x = graphCategory.indexOf(monthList[i + 1].month);
+      defPData.y = isNaN(parseInt(monthList[i + 1].totalDefectsStartBal)) ? 0 : parseInt(monthList[i + 1].totalDefectsStartBal);
+      defectsParStartSer.data.push(defPData);
+
+      var defPData = new Object();
+      defPData.name = monthList[i].month;
+      defPData.x = graphCategory.indexOf(monthList[i].month);
       defPData.y = isNaN(parseInt(monthList[i].totalDefects)) ? 0 : parseInt(monthList[i].totalDefects);
       defectsParSer.data.push(defPData);
+      defectsSeries.data.push(defPData);
 
       var defPData = new Object();
       defPData.name = monthList[i + 1].month;
@@ -1732,6 +2115,30 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
       csPData.y = isNaN(parseInt(monthList[i + 1].totClientStat)) ? null : parseFloat(monthList[i + 1].totClientStat.toFixed(1));
       clientStatParSer.data.push(csPData);
 
+      var ctfPData = new Object();
+      ctfPData.name = monthList[i].month;
+      ctfPData.x = graphCategory.indexOf(monthList[i].month);
+      ctfPData.y = isNaN(parseInt(monthList[i].totCycleTimeBacklog)) ? null : parseFloat(monthList[i].totCycleTimeBacklog.toFixed(1));
+      cycleTimeBacklogParSer.data.push(ctfPData);
+
+      var ctfPData = new Object();
+      ctfPData.name = monthList[i + 1].month;
+      ctfPData.x = graphCategory.indexOf(monthList[i + 1].month);
+      ctfPData.y = isNaN(parseInt(monthList[i + 1].totCycleTimeBacklog)) ? null : parseFloat(monthList[i + 1].totCycleTimeBacklog.toFixed(1));
+      cycleTimeBacklogParSer.data.push(ctfPData);
+
+      var ctwPData = new Object();
+      ctwPData.name = monthList[i].month;
+      ctwPData.x = graphCategory.indexOf(monthList[i].month);
+      ctwPData.y = isNaN(parseInt(monthList[i].totCycleTimeWIP)) ? null : parseFloat(monthList[i].totCycleTimeWIP.toFixed(1));
+      cycleTimeWIPParSer.data.push(ctwPData);
+
+      var ctwPData = new Object();
+      ctwPData.name = monthList[i + 1].month;
+      ctwPData.x = graphCategory.indexOf(monthList[i + 1].month);
+      ctwPData.y = isNaN(parseInt(monthList[i + 1].totCycleTimeWIP)) ? null : parseFloat(monthList[i + 1].totCycleTimeWIP.toFixed(1));
+      cycleTimeWIPParSer.data.push(ctwPData);
+
     } else {
       var vData = new Object();
       vData.name = monthList[i].month;
@@ -1748,6 +2155,11 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
       throughputSeries.data.push(tData);
 
       var defData = new Object();
+      defData.name = monthList[i].month;
+      defData.y = isNaN(parseInt(monthList[i].totalDefectsStartBal)) ? 0 : parseInt(monthList[i].totalDefectsStartBal);
+      defectsStartSeries.data.push(defData);
+
+      defData = new Object();
       defData.name = monthList[i].month;
       defData.y = isNaN(parseInt(monthList[i].totalDefects)) ? 0 : parseInt(monthList[i].totalDefects);
       defectsSeries.data.push(defData);
@@ -1835,10 +2247,11 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
   loadChartPartialSeries('pvelocityChart', 'Velocity', 'line', graphCategory, 'Story points', 'Iteration results by month', velocityParSer, velocitySeries, 'Points', false);
   loadChartPartialSeries('pthroughputChart', 'Throughput', 'line', graphCategory, 'Stories/tickets/cards', 'Iteration results by month', throughputParSer, throughputSeries, 'Points', false);
   loadBarPizzaChart('pPizzaChart', 'Squad Team Size Per Iteration', 'column', graphCategory, team5to12Ser, partialSeries, pizYMax);
-  loadDeploymentsChartParent('pdefectsChart', 'Deployments/Defects', 'line', graphCategory, 'Count', 'Iteration results by month', deployParSer, deploySeries, defectsParSer, defectsSeries, 'Points', false);
+  // loadDeploymentsChartParent('pdefectsChart', 'Deployments/Defects', 'line', graphCategory, 'Count', 'Iteration results by month', deployParSer, deploySeries, defectsParSer, defectsSeries, 'Points', false);
+  loadDefectsChartParent('pdefectsChart', graphCategory, defectsSeries, defectsParSer, defectsStartSeries, defectsParStartSer, deploySeries, deployParSer);
   loadSatisfactionChartParent('pstatisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', 'Iteration results by month', teamStatParSer, teamStatSeries, clientStatParSer, clientStatSeries, 'Points', false, ctsYMax);
   loadPiePizzaChart('piePizzaChart', '2 Pizza Rule (Squad Teams - Current)', 'pie', pData, cenTitle);
-
+  loadWipBackoutChartParent('pwipBacklogChart', 'Cycle time in backlog and cycle time in WIP (in days)', 'line', graphCategory, 'Average days per story', 'Iteration results by month', cycleTimeBacklogParSer, cycleTimeBacklogSeries, cycleTimeWIPParSer, cycleTimeWIPSeries, 'Points', false);
   $('#spinnerContainer').hide();
   $('#mainContent').show();
   redrawCharts('iterationSection');

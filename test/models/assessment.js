@@ -544,4 +544,19 @@ describe('Assessment Model', function() {
         });
     });
   });
+
+  describe('assessment model [getSubmittedAssessments]', function() {
+    it('retrieve assessment submitted', function(done) {
+      assessmentModel.getSubmittedAssessments(null, null)
+        .then(function(body) {
+          expect(body).to.be.an('object');
+          expect(body).to.have.property('rows');
+          expect(body.rows).to.be.instanceof(Array);
+          done();
+        })
+        .catch(function(err) {
+          done(err);
+        });
+    });
+  });
 });
