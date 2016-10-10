@@ -60,6 +60,17 @@ function destroyAssessmentCharts() {
       chart.destroy();
     }
   });
+
+  $('#assessmentCharts').empty();
+ 
+  var p = document.createElement('p');
+  p.appendChild(document.createTextNode('No assessment results to display.'));
+  $('#assessmentCharts').append(p);
+
+  var hrDiv = document.createElement('div');
+  hrDiv.setAttribute('class', 'ibm-rule ibm-alternate ibm-gray-30');
+  hrDiv.appendChild(document.createElement('hr'));
+  $('#assessmentCharts').append(hrDiv);
 }
 
 function plotAssessmentSeries(teamAssessments) {

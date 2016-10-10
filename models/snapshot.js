@@ -663,12 +663,16 @@ function rollUpAssessmentsBySquad(assessments, teamId) {
       }
     });
 
-    _.each(currData, function(period) {
+    _.each(currData, function(period, index) {
       if (period.less_120_days >= 1){
         period.less_120_days = 1;
+        period.gt_120_days = 0;
+        period.no_submission = 0;
       }
-      else if (period.gt_120_days >= 1){
+      else if (period.gt_120_days >= 1 &&
+        currData[index].less_120_days == 0){
         period.gt_120_days = 1;
+        period.no_submission = 0;
       }
       else {
         period.no_submission = 1;
