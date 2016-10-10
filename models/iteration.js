@@ -411,7 +411,7 @@ var iteration = {
     return validationErrors;
   },
 
-  setApiIterationAction: function(apiData, user, action) {
+  setApiIterationAction:  /* istanbul ignore next */ function(apiData, user, action) {
     return new Promise(function(resolve, reject) {
       //TODO: adjust for mongo db implementation
       var userObj = {
@@ -501,7 +501,7 @@ var iteration = {
     });
   },
 
-  setApiIterationObject: function(data) {
+  setApiIterationObject:  /* istanbul ignore next */ function(data) {
     var apiData = new Object();
     apiData._id = data._id;
     apiData.teamId = data.team_id;

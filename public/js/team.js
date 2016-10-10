@@ -3,6 +3,12 @@ var taPerson;
 jQuery(function($) {
   $(document).ready(function() {
     getPageVariables('team', initPageAction);
+    /* Custom link label close-link listener */
+    $('#ibm-overlaywidget-customLinkLabel .ibm-close-link').on('click', function(){
+      cancelLinkLabel();
+    });
+    /* show or hide the Link group */
+    showHideLinkDiv();
   });
 
   $(document).ready(function(){
@@ -333,6 +339,7 @@ function loadSelectedAgileTeam() {
   $('#teamMemberTable').fadeIn();
 
   loadTeamMembers($('#teamSelectList option:selected').val());
+  loadLinks($('#teamSelectList option:selected').val());
   $('#memberListAction').val('');
   $('#select2-memberListAction-container').text('Actions...');
   $('#select2-memberListAction-container').attr('title', 'Actions...');
@@ -701,6 +708,254 @@ function loadTeamChildren(currentId) {
   }
 }
 
+var curLinkLabelID = '';
+function popupCustomLabel(elem){
+  curLinkLabelID = elem.id;
+  if (elem.value == 'Other') {
+    IBMCore.common.widget.overlay.show('customLinkLabel');
+  }
+}
+
+var selectdata = [];
+function addLink() {
+  $('.updateLinkWrapper').show();
+  $('#saveLinkBtn').removeAttr('disabled');
+  var ctr = new Date().getTime();
+
+  selectdata = [
+    {id: '-1', text: 'Select label'},
+    {id: 'Wall of work', text: 'Wall of work'},
+    {id: 'Backlog', text: 'Backlog'},
+    {id: 'Retrospectives', text: 'Retrospectives'},
+    {id: 'Defects', text: 'Defects'},
+    {id: 'Standup schedule', text: 'Standup schedule'},
+    {id: 'Other', text: 'Other...'}
+  ];
+
+  var html =  "<div id='link_" + ctr +"' data-counter='" + ctr + "' class='imptlink'> \
+                  <select id='linklabel_" + ctr + "' data-counter='" + ctr + "' name='linklabel_[]' onchange='popupCustomLabel(this)' class='implabel' style='width: 200px'> \
+                  </select> \
+                  <span class='urlwrapper'> \
+                  <input type='text' name='url_[]' id='url_" + ctr + "' data-counter='" + ctr + "' size='20' value='' placeholder='URL' aria-label='URL' class='implink' style='width: 400px;'> \
+                  </span> \
+                  <a href='javascript:void(0)' id='removelink_" + ctr + "' class='removelink' onclick=removetmpLink('" + ctr + "')><img src='img/delete-ico.png'/></a> \
+                </div>";
+  $('#importantLinkWrapper').append(html);
+  $('#linklabel_'+ctr).select2({
+    data: selectdata
+  });
+
+  showHideLinkDiv();
+}
+
+function removetmpLink(id){
+  $('#link_'+id).remove();
+}
+/*
+ * Add new link label coming from modal(popup)
+ */
+function addnewLinkLabel(){
+  var newlabel = $.trim($('#newlabel').val());
+  if (newlabel !== ''){
+    selectdata.push({id: newlabel, text: newlabel});
+    $('#'+curLinkLabelID).select2({data: selectdata});
+    IBMCore.common.widget.overlay.hide('customLinkLabel');
+    $('#newlabel').val('');
+
+    $('#'+curLinkLabelID).val(newlabel);
+    $('#select2-' + curLinkLabelID + '-container').text(newlabel);
+  } else {
+    alert('Please enter a label name');
+  }
+}
+
+function cancelLinkLabel(){
+  $('#customLinkLabel').css('cursor', 'default');
+  IBMCore.common.widget.overlay.hide('customLinkLabel');
+  $('#select2-' + curLinkLabelID + '-container').text('Select label');
+  $('#select2-' + curLinkLabelID + '-container').attr('title', 'Select label');
+  $('#'+curLinkLabelID).val('-1');
+}
+
+function loadLinks(teamId){
+  if (teamId != undefined) {
+    var currentTeam = getAgileTeamCache(teamId);
+    if (!_.isEmpty(currentTeam)) {
+      $('#importantLinkWrapper').empty();
+      var links = currentTeam.links;
+      if (links && links.length > 0){
+        $('.updateLinkWrapper').show();
+        var numLinks = links.length;
+        var selectdata = [
+          {id: '-1', text: 'Select label'},
+          {id: 'Wall of work', text: 'Wall of work'},
+          {id: 'Backlog', text: 'Backlog'},
+          {id: 'Retrospectives', text: 'Retrospectives'},
+          {id: 'Defects', text: 'Defects'},
+          {id: 'Standup schedule', text: 'Standup schedule'},
+          {id: 'Other', text: 'Other...'}
+        ];
+        var linkIds1 = _.pluck(links, 'linkLabel');
+        var linkIds2 = _.pluck(selectdata, 'id');
+        var diffLinks = _.difference(linkIds1, linkIds2);
+        if (diffLinks.length > 0) {
+          _.each(diffLinks, function(tmp){
+            selectdata.push({id: tmp, text: tmp});
+          });
+        }
+        var html = '';
+        if (numLinks > 0) {
+          for (var ctr = 0; ctr < numLinks; ctr++) {
+            var opts = '';
+            var selectedVal = '';
+            var id = links[ctr].id;
+            for (var k=0; k < selectdata.length; k++) {
+              if (links[ctr].linkLabel === selectdata[k].id) {
+                opts = opts + '<option value="" selected=selected >' + selectdata[k].text + '</option>';
+                selectedVal = selectdata[k].text;
+              } else {
+                opts = opts + '<option value="' + selectdata[k].id + '" >' + selectdata[k].text + '</option>';
+              }
+            }
+
+            html =  html + "<div id='link_" + ctr +"' data-counter='" + ctr + "' class='imptlink'> \
+                              <select id='linklabel_" + ctr + "' data-id='" + id + "' data-counter='" + ctr + "' name='linklabel_[]' onchange='popupCustomLabel(this)' class='implabel' style='width: 200px'> \
+                              " + opts+ " \
+                              </select> \
+                              <span class='urlwrapper'> \
+                              <input type='text' name='url_[]' id='url_" + ctr + "' data-counter='" + ctr + "' size='20' value='" + links[ctr].linkUrl + "' placeholder='URL' aria-label='URL' class='implink' style='width: 400px;'> \
+                              </span> \
+                              <a href='javascript:void(0)' id='removelink_" + ctr + "' style='display:none;' class='removelink' onclick=removeLink('" + id + "')><img src='img/delete-ico.png' /></a> \
+                            </div>";
+            $('#linklabel_' + ctr).val(selectedVal);
+          }
+          $('#importantLinkWrapper').append(html);
+          $('.implabel').select2();
+        }
+      }
+    }
+  }
+  showHideLinkDiv();
+}
+
+/* Delete a specific link */
+function removeLink(linkId){
+  var teamId = $('#teamSelectList option:selected').val();
+  var currentTeam = getAgileTeamCache(teamId);
+  var action = 'deleteLinks';
+  if ((linkId != undefined) && !_.isEmpty(currentTeam)){
+    var linkData = [];
+    linkData.push({id: linkId});
+
+    currentTeam.links = linkData;
+    var updateData = {
+      teamId: currentTeam['_id'],
+      links: currentTeam['links']
+    };
+
+    $.ajax({
+      type: 'DELETE',
+      url: '/api/teams/links',
+      contentType: 'application/json',
+      data: JSON.stringify(updateData)
+    }).fail(function(xhr, textStatus, errorThrown) {
+      if (xhr.status == 400) {
+        handleTeamValidationErrors(JSON.parse(xhr.responseText), action);
+      } else {
+        errorHandler(xhr, textStatus, errorThrown);
+      }
+    }).done(function(data) {
+      userTeamList = data.userTeams;
+      clearLinkFieldErrorHighlight('url_');
+      clearSelectLinkFieldErrorHighlight('linklabel_');
+      $('#saveLinkBtn').removeAttr('disabled');
+      updateAgileTeamCache(data.teamDetails);
+      // agileTeamListHandler(data.team._id, allTeams);
+      loadLinks($('#teamSelectList option:selected').val());
+      showMessagePopup('You have successfully deleted a link.');
+    });
+  }
+}
+
+/* Save links to db */
+function updateLink(){
+  $('#saveLinkBtn').attr('disabled', 'disabled');
+  var teamId = $('#teamSelectList option:selected').val();
+  var currentTeam = getAgileTeamCache(teamId);
+  var action = 'updateLinks';
+  var linkData = getLinkData();
+  console.log('linkData:', JSON.stringify(linkData));
+  currentTeam.links = linkData;
+
+  var updateData = {
+    teamId: currentTeam['_id'],
+    links: currentTeam['links']
+  };
+
+  $.ajax({
+    type: 'PUT',
+    url: '/api/teams/links',
+    contentType: 'application/json',
+    data: JSON.stringify(updateData)
+  }).fail(function(xhr, textStatus, errorThrown) {
+    if (xhr.status == 400) {
+      handleTeamValidationErrors(JSON.parse(xhr.responseText), action);
+    } else {
+      errorHandler(xhr, textStatus, errorThrown);
+    }
+
+  }).done(function(data) {
+    userTeamList = data.userTeams;
+    clearLinkFieldErrorHighlight('url_');
+    clearSelectLinkFieldErrorHighlight('linklabel_');
+    $('#saveLinkBtn').removeAttr('disabled');
+    updateAgileTeamCache(data.teamDetails);
+    // agileTeamListHandler(data.team._id, allTeams);
+    loadLinks($('#teamSelectList option:selected').val());
+    showMessagePopup('You have successfully saved a links.');
+  });
+}
+
+/* Get important link data from selectbox/textfield elements */
+function getLinkData(){
+  var labelArray = [];
+  $('.implabel option:selected').each(function(){
+    labelArray.push($(this).text());
+  });
+
+  var labelId = [];
+  $('.implabel').each(function(){
+    var labelID = $(this).attr('data-id');
+    labelId.push(labelID);
+  });
+
+  var urlsArray = [];
+  $('.implink').each(function(){
+    urlsArray.push($(this).val());
+  });
+
+  var linkData = [];
+  for (i=0; i<labelArray.length; i++){
+    var obj = {};
+    obj.id = labelId[i];
+    obj.linkLabel = labelArray[i];
+    obj.linkUrl = urlsArray[i];
+    linkData.push(obj);
+  }
+
+  return linkData;
+}
+
+function showHideLinkDiv(){
+  $('#importantLinkWrapper div.imptlink').on('mouseover', function(){
+    var ctr = $(this).attr('data-counter');
+    $('#removelink_'+ctr).show();
+  });
+  $('#importantLinkWrapper div.imptlink').on('mouseout', function(){
+    $('.removelink').hide();
+  });
+}
+
 function getTeamDetailHandler(index, team) {
   if (team != null) {
     $('#ref_desc_' + index).text(team.desc);
@@ -817,11 +1072,12 @@ function handleTeamValidationErrors(errors, action) {
     'parent_team_id': 'parentSelectList',
     'targetparent': 'parentSelectList',
     'child_team_id': 'childSelectList',
-    'targetChild': 'childSelectList'
+    'targetChild': 'childSelectList',
+    'links': 'url_'
   };
-
   var msgs = '';
   var err = _.reduce(errors);
+
   Object.keys(fields).forEach(function(key, index) {
     var frmElement = fields[key];
     if (err[key]) {
@@ -830,10 +1086,13 @@ function handleTeamValidationErrors(errors, action) {
           setFieldErrorHighlight('otherRoleDesc');
         else
           setFieldErrorHighlight('memberRoleSelectList');
+      } else if (frmElement == 'url_') {
+        var errmsg = handleLinkValidation(frmElement, err);
+        err[key][0] = errmsg;
       } else if (frmElement) {
         setFieldErrorHighlight(frmElement);
       }
-      msgs = msgs + err[key][0] + '<br>';
+      msgs = msgs + err[key][0] + '\n';
     } else {
       if (frmElement == 'member.role') {
         if ($('#memberRoleSelectList option:selected').val() == 'other')
@@ -848,8 +1107,9 @@ function handleTeamValidationErrors(errors, action) {
   if (_.isEmpty(msgs)) {
     msgs = errors.error;
   }
-  console.log(msgs);
+  console.log('msg:', msgs);
   showMessagePopup(msgs);
+  $('#saveLinkBtn').removeAttr('disabled');
 
   // enable necessary controls
   if (action == 'add')
@@ -868,6 +1128,65 @@ function handleTeamValidationErrors(errors, action) {
     $('#updateMemberBtn').removeAttr('disabled');
 }
 
+function handleLinkValidation(frmElement, err){
+  var errmsg = '';
+  var ctr;
+  var isValidUrl = true;
+  var link, lbl, tmp, tmpErr;
+  clearLinkFieldErrorHighlight('url_');
+  clearSelectLinkFieldErrorHighlight('linklabel_');
+  err.links.forEach(function(klinkStr, iddx) {
+    if (klinkStr['linkUrl'] == undefined && klinkStr['linkLabel'] == undefined){
+      tmpErr = klinkStr;
+    }
+    // check linkUrl value e.g. abcd is not a valid url.
+    if (klinkStr['linkUrl']) {
+      tmpErr = klinkStr['linkUrl'];
+      tmp = $.trim(tmpErr.split('is not a valid url').shift());
+      $('#importantLinkWrapper .implink').each(function(idx) {
+        link = $.trim($(this).val());
+        ctr = $(this).attr('data-counter');
+        // check if the link is empty then highlight field error
+        if (link == '') {
+          setFieldErrorHighlight(frmElement + ctr);
+        }
+        // check if the url is not valid
+        if (link === tmp) {
+          setFieldErrorHighlight(frmElement + ctr);
+          isValidUrl = false;
+        }
+      });
+    }
+    // check if the linkId is valid e.g. Wall of work, Defects
+    if (klinkStr['linkLabel']){
+      tmpErr = klinkStr['linkLabel'];
+      $('#importantLinkWrapper .implabel').each(function(idx) {
+        ctr = $(this).attr('data-counter');
+        lbl = $('#select2-linklabel_'+ctr+'-container').text();
+        if (lbl === 'Select label') {
+          setFieldErrorHighlight('linklabel_' + ctr);
+        }
+      });
+    }
+    errmsg = errmsg + tmpErr + '\n';
+  });
+  if (isValidUrl==false) errmsg = errmsg + 'URL must start with either http:// or https://';
+  return errmsg;
+}
+
+function clearLinkFieldErrorHighlight(frmElement) {
+  $('#importantLinkWrapper .implink').each(function(idx) {
+    var ctr = $(this).attr('data-counter');
+    clearFieldErrorHighlight(frmElement + ctr);
+  });
+}
+
+function clearSelectLinkFieldErrorHighlight(frmElement) {
+  $('#importantLinkWrapper .implabel').each(function(idx) {
+    var ctr = $(this).attr('data-counter');
+    clearFieldErrorHighlight(frmElement + ctr);
+  });
+}
 
 function setAssociation(obj, action, msg) {
   $.ajax({

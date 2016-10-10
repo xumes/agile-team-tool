@@ -172,6 +172,21 @@
                             </table>
                           </div>
 
+                          <!--<h2 class="ibm-bold ibm-h4">Important Links</h2>
+                          <div class="ibm-container-body" id="importantLinks" style="margin-bottom: 10px;">
+                            <div id="importantLinkWrapper">
+                            </div>
+                            <div style="margin-left:30px;">
+                              <a href="javascript:void(0)" onclick="addLink()" ><img src="img/plus-ico.png" />&nbsp;Add a link...</a>
+                            </div>
+
+                            <div style="margin-left: 560px; display:none;" class="updateLinkWrapper">
+                              <span class="ibm-btn-row">
+                                <input type="button" class="ibm-btn-pri ibm-btn-small" id="saveLinkBtn" value="Save link" onclick="updateLink();" />
+                              </span>
+                            </div>
+                          </div>-->
+
                           <h2 class="ibm-bold ibm-h4">Parent team association</h2>
                           <div class="ibm-container-body" id="assocParentPageSection">
                             <p>
@@ -366,6 +381,25 @@
           </div>
         </div>
       </main>
+
+      <div id="customLinkLabelContainer">
+          <div id="customLinkLabel" class="ibm-common-overlay" data-widget="overlay" style="border:0px solid red; width: 300px; overflow:auto;">
+            <form id="customLinkLabelForm" class="ibm-row-form" method="post">
+              <h2 class="ibm-bold ibm-h3">New Label</h2>
+              <p>
+                <label for="newlabel">Please enter a new label name:</label>
+                <span>
+                  <input type="text" name="newlabel" id="newlabel" size="10" aria-label='URL' style='width: 250px;' required />
+                </span>
+              </p><br /><br />
+              <span class="ibm-btn-row">
+                <input type="button" class="ibm-btn-pri ibm-btn-small" id="addnewLinkLabelBtn" value="Create" onclick="addnewLinkLabel();" />
+                <input type="button" class="ibm-btn-pri ibm-btn-small" id="cancelLinkLabelBtn" value="Cancel" onclick="cancelLinkLabel();" />
+              </span>
+            </form>
+          </div>
+      </div>
+
 
       <div id="ibm-related-content">
         <div id="ibm-merchandising-module">

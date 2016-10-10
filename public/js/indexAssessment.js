@@ -61,16 +61,16 @@ function destroyAssessmentCharts() {
     }
   });
 
-  $('#assessmentCharts').empty();
+  $('#assessmentCharts,#assessmentEval').empty();
 
   var p = document.createElement('p');
   p.appendChild(document.createTextNode('No assessment results to display.'));
-  $('#assessmentCharts').append(p);
+  $('#assessmentCharts,#assessmentEval').append(p);
 
   var hrDiv = document.createElement('div');
   hrDiv.setAttribute('class', 'ibm-rule ibm-alternate ibm-gray-30');
   hrDiv.appendChild(document.createElement('hr'));
-  $('#assessmentCharts').append(hrDiv);
+  $('#assessmentCharts,#assessmentEval').append(hrDiv);
 }
 
 function plotAssessmentSeries(teamAssessments) {
@@ -476,7 +476,7 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
       max: yMax,
       tickInterval: 10,
       title: {
-        text: '% squads within the team'
+        text: 'Number of squads'
       }
     },
     plotOptions: {
