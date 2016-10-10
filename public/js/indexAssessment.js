@@ -62,7 +62,7 @@ function destroyAssessmentCharts() {
   });
 
   $('#assessmentCharts').empty();
- 
+
   var p = document.createElement('p');
   p.appendChild(document.createTextNode('No assessment results to display.'));
   $('#assessmentCharts').append(p);
