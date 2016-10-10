@@ -427,36 +427,36 @@ function loadSelectedAgileTeamIterationInfo() {
       $('#iterationSelectList').val(teamIterInfo._id);
       $('#select2-iterationSelectList-container').text($('#iterationSelectList option:selected').text());
       $('#select2-iterationSelectList-container').attr('title', $('#iterationSelectList option:selected').text());
-      $('#iterationName').val(teamIterInfo.iteration_name);
-      $('#iterationStartDate').val(showDateDDMMMYYYY(teamIterInfo.iteration_start_dt));
-      $('#iterationEndDate').val(showDateDDMMMYYYY(teamIterInfo.iteration_end_dt));
-      $('#iterationinfoStatus').val(teamIterInfo.iterationinfo_status);
-      $('#commStories').val(teamIterInfo.nbr_committed_stories);
-      $('#commPoints').val(teamIterInfo.nbr_committed_story_pts);
-      $('#memberCount').val(teamIterInfo.team_mbr_cnt);
-      $('#commStoriesDel').val(teamIterInfo.nbr_stories_dlvrd);
-      $('#commPointsDel').val(teamIterInfo.nbr_story_pts_dlvrd);
-      $('#storyPullIn').val(teamIterInfo.nbr_stories_pulled_in);
-      $('#storyPtPullIn').val(teamIterInfo.nbr_story_pts_pulled_in);
-      $('#retroItems').val(teamIterInfo.retro_action_items);
+      $('#iterationName').val(teamIterInfo.name);
+      $('#iterationStartDate').val(showDateDDMMMYYYY(teamIterInfo.startDate));
+      $('#iterationEndDate').val(showDateDDMMMYYYY(teamIterInfo.endDate));
+      $('#iterationinfoStatus').val(teamIterInfo.status);
+      $('#commStories').val(teamIterInfo.committedStories);
+      $('#commPoints').val(teamIterInfo.commitedStoryPoints);
+      $('#memberCount').val(teamIterInfo.memberCount);
+      $('#commStoriesDel').val(teamIterInfo.deliveredStories);
+      $('#commPointsDel').val(teamIterInfo.storyPointsDelivered);
+      $('#storyPullIn').val(teamIterInfo.nbr_stories_pulled_in); //TODO
+      $('#storyPtPullIn').val(teamIterInfo.nbr_story_pts_pulled_in);//TODO
+      $('#retroItems').val(teamIterInfo.retro_action_items); //TODO
       $('#retroItemsComplete').val(teamIterInfo.retro_action_items_complete);
-      $('#teamChangeList').val(teamIterInfo.team_mbr_change);
+      $('#teamChangeList').val((teamIterInfo.memberChanged)?'Yes':'No');
       $('#select2-teamChangeList-container').text($('#teamChangeList option:selected').text());
       $('#select2-teamChangeList-container').attr('title', $('#teamChangeList option:selected').text());
-      $('#lastUpdateUser').html(teamIterInfo.last_updt_user);
-      $('#lastUpdateTimestamp').html(showDateUTC(teamIterInfo.last_updt_dt));
-      $('#commentIter').val(teamIterInfo.iteration_comments);
+      $('#lastUpdateUser').html(teamIterInfo.updatedBy);
+      $('#lastUpdateTimestamp').html(showDateUTC(teamIterInfo.updateDate));
+      $('#commentIter').val(teamIterInfo.comment);
       $('#doc_id').html(teamIterInfo._id);
-      if (teamIterInfo.fte_cnt != '') {
-        var alloc = parseFloat(teamIterInfo.fte_cnt).toFixed(1);
+      if (teamIterInfo.locationScore != '') {
+        var alloc = parseFloat(teamIterInfo.locationScore).toFixed(1);
         $('#fteThisiteration').val(alloc);
       }
-      $('#DeploythisIteration').val(teamIterInfo.nbr_dplymnts);
-      $('#defectsIteration').val(teamIterInfo.nbr_defects);
-      $('#cycleTimeWIP').val(teamIterInfo.nbr_cycletime_WIP);
-      $('#cycleTimeInBacklog').val(teamIterInfo.nbr_cycletime_in_backlog);
-      $('#clientSatisfaction').val(teamIterInfo.client_sat);
-      $('#teamSatisfaction').val(teamIterInfo.team_sat);
+      $('#DeploythisIteration').val(teamIterInfo.deployments);
+      $('#defectsIteration').val(teamIterInfo.defects);
+      $('#cycleTimeWIP').val(teamIterInfo.nbr_cycletime_WIP); //TODO
+      $('#cycleTimeInBacklog').val(teamIterInfo.nbr_cycletime_in_backlog); //TODO
+      $('#clientSatisfaction').val(teamIterInfo.clientSatisfaction);
+      $('#teamSatisfaction').val(teamIterInfo.teamSatisfaction);
       if ($('#fteThisiteration').val().trim() != '0.0') {
         var storiesFTE = $('#commStoriesDel').val() / $('#fteThisiteration').val();
         $('#unitcostStoriesFTE').val(storiesFTE.toFixed(1));
@@ -465,8 +465,8 @@ function loadSelectedAgileTeamIterationInfo() {
       }
 
       var temp = 0;
-      if (teamIterInfo.nbr_committed_stories != 0) {
-        temp = (teamIterInfo.nbr_stories_dlvrd / teamIterInfo.nbr_committed_stories) * 100;
+      if (teamIterInfo.committedStories != 0) {
+        temp = (teamIterInfo.deliveredStories / teamIterInfo.committedStories) * 100;
         $('#percStoriesDel').val(parseFloat(temp).toFixed(0) + '%');
       } else {
         temp = 'N/A';
@@ -474,15 +474,15 @@ function loadSelectedAgileTeamIterationInfo() {
       }
 
       temp = 0;
-      if (teamIterInfo.nbr_committed_story_pts != 0) {
-        temp = (teamIterInfo.nbr_story_pts_dlvrd / teamIterInfo.nbr_committed_story_pts) * 100;
+      if (teamIterInfo.commitedStoryPoints != 0) {
+        temp = (teamIterInfo.storyPointsDelivered / teamIterInfo.commitedStoryPoints) * 100;
         $('#percPointsDel').val(parseFloat(temp).toFixed(0) + '%');
       } else {
         temp = 'N/A';
         $('#percPointsDel').val(temp);
       }
 
-      if (teamIterInfo.team_mbr_cnt < 10)
+      if (teamIterInfo.memberCount < 10)
         temp = '<10';
       else
         temp = '>=10';
@@ -491,7 +491,8 @@ function loadSelectedAgileTeamIterationInfo() {
       $('#addIterationBtn').attr('disabled', 'disabled');
       $('#updateIterationBtn').removeAttr('disabled');
 
-      if (!hasAccess(teamIterInfo.team_id)) {
+      //TODO
+      if (!hasAccess(teamIterInfo.teamId)) {
         $('#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount').attr('disabled', 'disabled');
         $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#cycleTimeWIP,#cycleTimeInBacklog,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').attr('disabled', 'disabled');
         $('#addIterationBtn,#updateIterationBtn').attr('disabled', 'disabled');
