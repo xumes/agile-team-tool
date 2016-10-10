@@ -133,45 +133,49 @@ var users = {
     }
   },
 
-  isTeamMember: function(userEmail, teamId) {
+  isTeamMember: function(userId, teamId) {
     return new Promise(function(resolve, reject) {
-      Team.getTeamsByEmail(userEmail)
+      Team.getTeamsByUserId(userId, {_id:1})
         .then(function(teams) {
-          var hasAccess = false;
+          var isMember = false;
           _.each(teams, function(team){
-            if ((team._id).toString() == teamId.toString()) {
-              hasAccess = true;
-            }
+            if (_.isEqual((team._id).toString(), teamId.toString()))
+              isMember = true;
           });
-          resolve(hasAccess);
+          return resolve(isMember);
         })
         .catch( /* istanbul ignore next */ function(err) {
-          reject(err);
+          return reject(err);
         });
     });
   },
 
-  isUserAllowed: function(userEmail, teamId) {
+  isUserAllowed: function(userId, teamId) {
     var hasAccess = false;
     return new Promise(function(resolve, reject) {
       var promiseArray = [];
-      promiseArray.push(users.findUserByEmail(userEmail.toLowerCase()));
-      promiseArray.push(users.isTeamMember(userEmail, teamId));
+      promiseArray.push(users.findUserByUserId(userId.toUpperCase()));
+      promiseArray.push(users.isTeamMember(userId, teamId));
       Promise.all(promiseArray)
         .then(function(results){
           if (results[0] && results[0] != undefined) {
             if (results[0].adminAccess && results[0].adminAccess != undefined && results[0].adminAccess != 'none') {
               hasAccess = true;
+              console.log('resolving ' + hasAccess)
               return resolve(hasAccess);
             }
           }
           if (results[1] && results[1] != undefined) {
             hasAccess = results[1];
+            console.log('resolving ' + hasAccess)
             return resolve(hasAccess);
           }
+          console.log('resolving ' + hasAccess)
           return resolve(hasAccess);
         })
         .catch( /* istanbul ignore next */ function(err){
+          console.log('errrrror')
+
           console.log(err);
           reject(err);
         });

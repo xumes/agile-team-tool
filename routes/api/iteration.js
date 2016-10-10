@@ -5,7 +5,9 @@ var validate = require('validate.js');
 var _ = require('underscore');
 var sprintf = require('sprintf-js').sprintf;
 var setting = require('../../settings.js');
-var iterationModel = require('../../models/mongodb/iterations');
+var Iterations = require('../../models/mongodb/iterations');
+var Users = require('../../models/mongodb/users');
+
 
 var formatErrMsg = function(msg) {
   loggers.get('api').error('Error: ' + msg);
@@ -26,7 +28,7 @@ module.exports = function(app, includes) {
   var getIterinfo = function(req, res, next) {
     var teamId = req.params.teamId || undefined;
     loggers.get('api').verbose('[iterationRoute.getIterinfo] teamId:', teamId);
-    iterationModel.getByIterInfo(teamId)
+    Iterations.getByIterInfo(teamId)
       .then(function(result) {
         res.status(200).send(result);
       })
@@ -45,7 +47,7 @@ module.exports = function(app, includes) {
   var getIterationDoc = function(req, res, next) {
     var docId = req.params.id || undefined;
     loggers.get('api').verbose('[iterationRoute.getIterationDoc] docId:', docId);
-    iterationModel.get(docId)
+    Iterations.get(docId)
       .then(function(result) {
         res.status(200).send(result);
       })
@@ -65,7 +67,7 @@ module.exports = function(app, includes) {
     var startkey = req.query.startkey || undefined;
     var endkey = req.query.endkey || undefined;
     loggers.get('api').verbose('[iterationRoute.getCompletedIterations] startkey:%s endkey:%s', startkey, endkey);
-    iterationModel.getCompletedIterationsByKey(startkey, endkey)
+    Iterations.getCompletedIterationsByKey(startkey, endkey)
       .then(function(result) {
         res.status(200).send(result);
       })
@@ -89,7 +91,7 @@ module.exports = function(app, includes) {
     }
     // loggers.get('api').verbose('[createIteration] POST data:', data);
     // console.log('[createIteration] POST data:', data);
-    iterationModel.add(data, req.session['user'])
+    Iterations.add(data, req.session['user'])
       .then(function(result) {
         res.send(result);
       })
@@ -120,7 +122,7 @@ module.exports = function(app, includes) {
       });
     }
     // loggers.get('api').verbose('[updateIteration] POST data:', JSON.stringify(data, null, 4));
-    iterationModel.edit(curIterationId, data, req.session['user'])
+    Iterations.edit(curIterationId, data, req.session['user'])
       .then(function(result) {
         res.status(200).send(result);
       })
@@ -157,13 +159,19 @@ module.exports = function(app, includes) {
       includeDocs:  req.query.includeDocs,
       limit: req.query.limit
     };
-    iterationModel.searchTeamIteration(params)
-      .then(function(result) {
-        return res.status(200).send(result);
+    Users.isUserAllowed(req.session.userId, teamId)
+      .then(function(isAllowed){
+        if (!isAllowed){
+          res.status(401);
+          return {error: 'Not authorized to search teams iterations.'};
+        }
+        else {
+          res.status(200);
+          return Iterations.searchTeamIteration(params);
+        }
       })
-      .catch( /* istanbul ignore next */ function(err) {
-        formatErrMsg('[iterationRoute.searchTeamIteration]:', err);
-        return res.status(400).send(err);
+      .then(function(result){
+        res.send(result);
       });
   };
 

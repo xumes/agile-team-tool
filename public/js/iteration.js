@@ -364,14 +364,8 @@ function loadAgileTeams(selected, iteration) {
 }
 
 function loadAgileTeamIterationInfo(teamId, iterationId) {
-  var hasAcc = hasAccess(teamId);
-  console.log('loadAgileTeamIterationInfo: ' + teamId + ' / ' + iterationId);
   if (teamId == null || teamId == '') {
     loadAgileTeams('new', '');;
-    if (hasAcc)
-      addOptions('iterationSelectList', null, ['new', 'Create new...'], null, 'new');
-    else
-      addOptions('iterationSelectList', null, ['', 'Select one'], null, '');
     displayEditStatus(false);
     return;
   }
@@ -387,40 +381,26 @@ function loadAgileTeamIterationInfo(teamId, iterationId) {
       if (xhr.status === 400) {
         errorHandler(xhr, textStatus, errorThrown);
       }
-    })
-    .done(function(data) {
-      var list = [];
-      if (data != undefined) {
-        list = _.pluck(data.rows, 'fields');
-      }
-      teamIterInfo = list;
-      var iterInfo = [];
-      for (var i = 0; i < teamIterInfo.length; i++) {
-        var iteration = new Object();
-        iteration._id = teamIterInfo[i].id;
-        iteration.name = teamIterInfo[i].name;
-        iterInfo.push(iteration);
-      }
-
-      if (hasAcc) {
-        addOptions('iterationSelectList', iterInfo, ['new', 'Create new...'], null, iterationId);
-        displayEditStatus(false);
-      } else {
-        addOptions('iterationSelectList', iterInfo, ['', 'Select one'], null, iterationId);
+      if (xhr.status === 401){
+        addOptions('iterationSelectList', null, ['new', 'Create new...'], null, 'new');
         displayEditStatus(true);
       }
+    })
+    .done(function(data) {
+      addOptions('iterationSelectList', null, ['', 'Select one'], null, '');
+      addOptions('iterationSelectList', data, ['new', 'Create new...'], null, iterationId);
+      displayEditStatus(false);
 
       if (iterationId != undefined && iterationId != 'new') {
         loadSelectedAgileTeamIterationInfo();
-      } else {
-        if (hasAcc) {
-          $('#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount').removeAttr('disabled');
-          $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#cycleTimeWIP,#cycleTimeInBacklog,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').removeAttr('disabled');
-          $('#updateIterationBtn').attr('disabled', 'disabled');
-          $('#addIterationBtn').removeAttr('disabled');
-          $('#select2-teamChangeList-container,#commentIter').css('color', 'black');
-          $('#refreshFTE').attr('onclick', 'refreshFTE()');
-        }
+      }
+      else {
+        $('#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount').removeAttr('disabled');
+        $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#cycleTimeWIP,#cycleTimeInBacklog,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').removeAttr('disabled');
+        $('#updateIterationBtn').attr('disabled', 'disabled');
+        $('#addIterationBtn').removeAttr('disabled');
+        $('#select2-teamChangeList-container,#commentIter').css('color', 'black');
+        $('#refreshFTE').attr('onclick', 'refreshFTE()');
       }
       $('#iterationSelectList').removeAttr('disabled');
       $('#select2-iterationSelectList-container').css('color', 'black');
