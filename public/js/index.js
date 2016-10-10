@@ -159,6 +159,50 @@ var tempSquadScore = {
   'teamsLt5': 0
 };
 
+var assessmentTempData = [{
+  'less_120_days': 0,
+  'gt_120_days': 0,
+  'no_submission': 0,
+  'totalSquad': 0,
+  'month': '',
+  'partialMonth': false
+}, {
+  'less_120_days': 0,
+  'gt_120_days': 0,
+  'no_submission': 0,
+  'totalSquad': 0,
+  'month': '',
+  'partialMonth': false
+}, {
+  'less_120_days': 0,
+  'gt_120_days': 0,
+  'no_submission': 0,
+  'totalSquad': 0,
+  'month': '',
+  'partialMonth': false
+}, {
+  'less_120_days': 0,
+  'gt_120_days': 0,
+  'no_submission': 0,
+  'totalSquad': 0,
+  'month': '',
+  'partialMonth': false
+}, {
+  'less_120_days': 0,
+  'gt_120_days': 0,
+  'no_submission': 0,
+  'totalSquad': 0,
+  'month': '',
+  'partialMonth': false
+}, {
+  'less_120_days': 0,
+  'gt_120_days': 0,
+  'no_submission': 0,
+  'totalSquad': 0,
+  'month': '',
+  'partialMonth': false
+}];
+
 google.charts.load('current', {packages:['corechart']});
 
 jQuery.expr[':'].Contains = function(a, i, m) {
@@ -631,6 +675,42 @@ function getAllAgileTeamsByParentId(parentId, showLoading, initial, parentsTree)
   requests.push(req);
 }
 
+function getTeamSnapshots(teamId, teamName){
+  getSnapshot(teamId, teamName);
+  getAssessmentSnapshot(teamId);
+}
+
+function getAssessmentSnapshot(teamId) {
+  $('#squad_assessment_card').hide();
+  $('#nsquad_assessment_card').show();
+  var cUrl = '/api/snapshot/rollupassessmentbyteam/' + encodeURIComponent(teamId);
+  var req = $.ajax({
+    type: 'GET',
+    url: cUrl
+  }).done(function(data) {
+    if (data != undefined) {
+      if (_.has(data, 'rows')) {
+        if (data.rows == null) {
+            //console.log("data loaded failed");
+        } else if (data.rows.length <= 0) {
+          console.log('no assessment data for team: ', teamId);
+          //$('#refreshDate').html('Waiting for updating');
+          assessmentEvaluation(assessmentTempData);
+        } else {
+          assessmentEvaluation(data.rows[0].value.value);
+        }
+      } else {
+        showLog('data loaded: ' + JSON.stringify(data));
+      }
+    }
+  })
+  .fail(function(err) {
+    console.log(err);
+    $('#spinnerContainer').hide();
+  });
+  requests.push(req);
+}
+
 function getSnapshot(teamId, teamName) {
   $('#mainContent').hide();
   $('#spinnerContainer').show();
@@ -1040,26 +1120,24 @@ function loadDetails(elementId, setScrollPosition) {
             $('#squad_team_scard').show();
             $('#iterationSection .agile-section-nav').show();
             $('#assessmentSection .agile-section-nav').show();
-
-            $('assessmentSection .agile-section-title').addClass('ibm-showing');
-            $('#assessmentSection a').addClass('ibm-show-active');
-            $('#assessmentSection .ibm-container-body').css('display', 'block');
+            $('#nsquad_assessment_card').hide();
+            $('#squad_assessment_card').show();
 
           } else {
             destroyIterationCharts();
             destroyAssessmentCharts();
 
-            getSnapshot(team['_id'], team['name']);
+            //getSnapshot(team['_id'], team['name']);
+            getTeamSnapshots(team['_id'], team['name']);
             $('#snapshotPull').show(); //show the refresh snapshot date
             $('#teamType').html('Team:&nbsp;');
             $('#nsquad_team_scard').show();
             $('#squad_team_scard').hide();
+            $('#nsquad_assessment_card').show();
+            $('#squad_assessment_card').hide();
             $('#iterationSection .agile-section-nav').hide();
             $('#assessmentSection .agile-section-nav').hide();
             $('#refreshData').attr('onclick', "performChartRefresh('" + team._id + "','" + team.name + "')");
-            $('assessmentSection .agile-section-title').removeClass('ibm-showing');
-            $('#assessmentSection a').removeClass('ibm-show-active');
-            $('#assessmentSection .ibm-container-body').css('display', 'none');
           }
 
           $('#membersList').empty();
@@ -1248,25 +1326,25 @@ function openSelectedTeamTree(setScrollPosition) {
   // var positionFound = false;
   // var parentFound = false;
   // while(!positionFound) {
-  // 	if (!$("#"+scrollLink).is(":visible")) {
-  // 		if ($("#"+scrollLink).parents("li").length > 0) {
-  // 			scrollLink = "link_"+$($("#"+scrollLink).parents("li")).id
-  // 		} else {
-  // 			break;
-  // 		}
-  // 	} else {
-  // 		positionFound = true;
-  // 	}
+  //  if (!$("#"+scrollLink).is(":visible")) {
+  //    if ($("#"+scrollLink).parents("li").length > 0) {
+  //      scrollLink = "link_"+$($("#"+scrollLink).parents("li")).id
+  //    } else {
+  //      break;
+  //    }
+  //  } else {
+  //    positionFound = true;
+  //  }
   // }
 
   // if (!IBMCore.common.util.scrolledintoview($("#"+jq(selectedElement)))) {
-  // 	document.getElementById("ibm-content-main").scrollIntoView();
-  // 	if (positionFound) {
-  // 		$(".nano").nanoScroller();
-  // 		$(".nano").nanoScroller({
-  // 			scrollTo : $("#" + jq(scrollLink))
-  // 		});
-  // 	}
+  //  document.getElementById("ibm-content-main").scrollIntoView();
+  //  if (positionFound) {
+  //    $(".nano").nanoScroller();
+  //    $(".nano").nanoScroller({
+  //      scrollTo : $("#" + jq(scrollLink))
+  //    });
+  //  }
   // }
 }
 
