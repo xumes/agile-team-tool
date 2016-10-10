@@ -254,8 +254,9 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
       var iterationDocDate = new Date(iterationDoc['iteration_end_dt']);
       var iterationDocIndex = 5 - monthDiff(iterationDocDate, currDate);
       if (iterationDocIndex < 0 || iterationDocIndex > iterationMonth) {
-        var msg = 'iteationDoc: ' + iterationDocData._id + ' end date is not correct';
-        reject(formatErrMsg(msg));
+        var msg = 'iteationDoc: ' + iterationDoc._id + ' end date is not correct';
+        console.log(msg);
+        //reject(formatErrMsg(msg));
       } else {
         if (!isNaN(iterationDocIndex)) {
           var pts = iterationDoc['nbr_story_pts_dlvrd'];
