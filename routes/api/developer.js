@@ -4,7 +4,7 @@ var usersModel = require('../../models/users');
 module.exports = function(app, includes) {
   var middleware = includes.middleware;
 
-  getApiKey = function(req, res) {
+  getApiKey = /* instabul ingore next */ function(req, res) {
     usersModel.createApikey(req.session['user'])
       .then(function(result){
         console.log(result);
@@ -19,5 +19,6 @@ module.exports = function(app, includes) {
   };
 
   // try to get data from here
+  /* instabul ingore next */
   app.get('/api/developer/apiKey', [includes.middleware.auth.requireLogin], getApiKey);
 };
