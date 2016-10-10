@@ -444,7 +444,7 @@ var iteration = {
     return validationErrors;
   },
 
-  setApiIterationAction: function(apiData, user, action) {
+  setApiIterationAction:  /* istanbul ignore next */ function(apiData, user, action) {
     return new Promise(function(resolve, reject) {
       //TODO: adjust for mongo db implementation
       var userObj = {
