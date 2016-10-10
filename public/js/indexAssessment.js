@@ -383,17 +383,17 @@ function assessmentEvaluation(assessmentData){
   var teamNoAssessment = new Object();
   teamNoAssessment.name = 'Squads that have not taken the assessment';
   teamNoAssessment.data = [];
-  teamNoAssessment.color = '#a72926';
+  teamNoAssessment.color = '#808080';
 
   var teamGt120Days = new Object();
   teamGt120Days.name = 'Squads that have not taken the assessment in more than 120 days';
   teamGt120Days.data = [];
-  teamGt120Days.color = '#808080';
+  teamGt120Days.color = '#CCCCCC';
 
   var teamLt120Days = new Object();
   teamLt120Days.name = 'Squads that have taken the assessment in the past 120 days';
   teamLt120Days.data = [];
-  teamLt120Days.color = '#7ab4ee';
+  teamLt120Days.color = '#8fff8e';
 
   for (var i = 0; i < assessmentData.length; i++) {
     var graphCat;
@@ -435,7 +435,7 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
       type: type,
       renderTo: id,
       marginLeft: 60,
-      width:380
+      width:390
     },
     lang: {
       noData: 'No results reported'
@@ -456,7 +456,8 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
     legend: {
       symbolRadius: 0,
       itemStyle: {
-        fontSize: '9px'
+        fontSize: '12px',
+        width: 300
       }
     },
     xAxis: {
@@ -476,7 +477,7 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
       max: yMax,
       tickInterval: 10,
       title: {
-        text: '% squads within the team'
+        text: '% of squads within the team'
       }
     },
     plotOptions: {
@@ -485,41 +486,23 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
       }
     },
     tooltip: {
-      enabled: false
+      formatter: function () {
+        return '# of squads: ' + this.y+
+        '<br/>% of teams: ' + this.percentage.toFixed(1);
+      }
     },
     series: [{
       name: seriesObj3.name,
       data: seriesObj3.data,
-      color: seriesObj3.color,
-      dataLabels: {
-        enabled: true,
-        color: 'white',
-        style: {
-          textShadow: false
-        }
-      }
+      color: seriesObj3.color
     }, {
       name: seriesObj2.name,
       data: seriesObj2.data,
-      color: seriesObj2.color,
-      dataLabels: {
-        enabled: true,
-        color: 'white',
-        style: {
-          textShadow: false
-        }
-      }
+      color: seriesObj2.color
     }, {
       name: seriesObj1.name,
       data: seriesObj1.data,
-      color: seriesObj1.color,
-      dataLabels: {
-        enabled: true,
-        color: 'black',
-        style: {
-          textShadow: false
-        }
-      }
+      color: seriesObj1.color
     }],
     credits: {
       enabled: false
