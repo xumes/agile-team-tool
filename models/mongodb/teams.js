@@ -692,6 +692,34 @@ module.exports.deleteTeamByName = function(name) {
   });
 };
 
+module.exports.getParentByTeamId = function(teamId) {
+  return new Promise(function(resolve, reject) {
+    Team.findOne({_id: teamId}).lean().exec()
+      .then(function(team) {
+        if (_.isEmpty(team)) {
+          return reject(new Error('Cannot find parent info'));
+        }
+        if (!_.isEmpty(team.path)) {
+          var paths = team.path.split(',');
+          return paths[_.findLastIndex(paths)];
+        }
+        else {
+          return resolve();
+        }
+      })
+      .then(function(parentPathId) {
+        return Team.findOne({pathId: parentPathId}).exec()
+      })
+      .then(function(parentTeam) {
+        resolve(parentTeam);
+      })
+      .catch(function(err) {
+        reject(err);
+      });
+  });
+};
+
+
 /*
 How tree structure changes when a team is deleted:
 A->B-C->D->E
