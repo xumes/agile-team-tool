@@ -117,7 +117,7 @@ var iteration = {
     return new Promise(function(resolve, reject) {
       var validationErrors = validate(cleanData, iterationDocRules);
       if (validationErrors) {
-        reject(formatErrMsg(validationErrors));
+        return reject(formatErrMsg(validationErrors));
       } else {
         util.isUserAllowed(user_id, team_id)
         .then(function(validUser) {
@@ -178,7 +178,7 @@ var iteration = {
     return new Promise(function(resolve, reject) {
       var validationErrors = validate(cleanData, iterationDocRules);
       if (validationErrors) {
-        reject(formatErrMsg(validationErrors));
+        return reject(formatErrMsg(validationErrors));
       } else {
         util.isUserAllowed(user_id, team_id)
         .then(function(validUser) { // results from util.isUserAllowed
@@ -537,7 +537,7 @@ var iteration = {
     });
   },
 
-  setApiIterationObject: function(data) {
+  setApiIterationObject:  /* istanbul ignore next */ function(data) {
     var apiData = new Object();
     apiData._id = data._id;
     apiData.teamId = data.team_id;

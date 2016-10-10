@@ -266,10 +266,10 @@ function refreshDefectsStartBalance(iterations) {
 
   if (iterations == undefined)
     getDefectsStartBalance($('#teamSelectList option:selected').val(), formatMMDDYYYY($('#iterationStartDate').val()), refreshDefectsStartBalance, []);
-  else if (iterations != undefined && !_.isUndefined(iterations[0].nbr_defects_end_bal) & !isNaN(parseInt(iterations[0].nbr_defects_end_bal)))
+  else if (!_.isEmpty(iterations) && !_.isUndefined(iterations[0].nbr_defects_end_bal) & !isNaN(parseInt(iterations[0].nbr_defects_end_bal)))
     newStartBalance = iterations[0].nbr_defects_end_bal;
 
-  if (!_.isEmpty(currentStartBalance)) {
+  if (_.isEmpty(currentStartBalance) || currentStartBalance != newStartBalance) {
     confirmAction("You are about to overwrite the defect opening balance from '" + currentStartBalance + "' to '" + newStartBalance + "'.  Do you want to continue?", 'Yes', 'No', defectStartBalanceHandler, [iterations]);
   }
 }
