@@ -32,7 +32,7 @@ function teamIterationListHander(teamId, teamIterations) {
   var targetSeries = new Object();
   targetSeries.name = 'Member goal (5 - 12)';
   targetSeries.data = [];
-  targetSeries.color = '#93FF93';
+  targetSeries.color = '#B4E051';
 
   var defectsStartSeries = new Object();
   defectsStartSeries.name = 'Existing Defects';
@@ -444,7 +444,7 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
 
   if (seriesObj1.data.length > 0 || seriesObj2.data.length > 0 || seriesObj3.data.length > 0) {
     plotBandOptions = [{
-      color: '#93FF93',
+      color: '#B4E051',
       from: 5,
       to: 12,
       id: 'plotband-2',
@@ -1925,7 +1925,7 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
   var team5to12Ser = new Object();
   team5to12Ser.name = 'Teams 5-12 mbrs';
   team5to12Ser.data = [];
-  team5to12Ser.color = '#93FF93';
+  team5to12Ser.color = '#B4E051';
 
   var teamGt12Ser = new Object();
   teamGt12Ser.name = 'Teams >12 mbrs';
@@ -2219,7 +2219,7 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
   pDataObj.y = curTeamstat.teams5to12 == 0 ? null : curTeamstat.teams5to12;
   pDataObj.tc = curTeamstat.tc5to12;
   pDataObj.fte = curTeamstat.fte5to12.toFixed(1);
-  pDataObj.color = '#93FF93';
+  pDataObj.color = '#B4E051';
   pData.push(pDataObj);
 
   pDataObj = new Object();

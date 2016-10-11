@@ -393,7 +393,7 @@ function assessmentEvaluation(assessmentData){
   var teamLt120Days = new Object();
   teamLt120Days.name = 'Squads that have taken the assessment in the past 120 days';
   teamLt120Days.data = [];
-  teamLt120Days.color = '#8fff8e';
+  teamLt120Days.color = '#B4E051';
 
   for (var i = 0; i < assessmentData.length; i++) {
     var graphCat;
