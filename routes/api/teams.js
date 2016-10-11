@@ -32,7 +32,7 @@ module.exports = function(app, includes) {
             res.status(201).send(addResult);
           });
       })
-      .catch(function(err) {
+      .catch( /* istanbul ignore next */ function(err) {
         res.status(400).send(err);
       });
   };
@@ -46,7 +46,7 @@ module.exports = function(app, includes) {
               res.status(200).send(body);
             });
         })
-        .catch(function(err) {
+        .catch( /* istanbul ignore next */ function(err) {
           res.status(400).send(err);
         });
     } else {
@@ -67,14 +67,14 @@ module.exports = function(app, includes) {
             res.send(updateResult);
           });
       })
-      .catch(function(err) {
+      .catch( /* istanbul ignore next */ function(err) {
         res.status(400).send(err);
       });
   };
 
   updateLink = function(req, res) {
     var links = req.body['links'];
-    var userId = req.session['email'];
+    var userId = req.session['user']['shortEmail'];
     var teamId = req.body['teamId'];
 
     teamModel.modifyImportantLinks(teamId, userId, links)
@@ -89,7 +89,7 @@ module.exports = function(app, includes) {
 
   deleteLink = function(req, res) {
     var links = req.body['links'];
-    var userId = req.session['email'];
+    var userId = req.session['user']['shortEmail'];
     var teamId = req.body['teamId'];
 
     teamModel.deleteImportantLinks(teamId, userId, links)
@@ -170,7 +170,7 @@ module.exports = function(app, includes) {
       .then(function(result) {
         res.send(result);
       })
-      .catch(function(err) {
+      .catch( /* istanbul ignore next */ function(err) {
         res.status(400).send(err);
       });
   };
@@ -204,7 +204,7 @@ module.exports = function(app, includes) {
         .then(function(result) {
           res.send(result);
         })
-        .catch(function(err) {
+        .catch( /* istanbul ignore next */ function(err) {
           res.status(400).send(err);
         });
     }

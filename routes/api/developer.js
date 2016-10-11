@@ -13,7 +13,7 @@ module.exports = function(app, includes) {
           'shortEmail': result.email
         });
       })
-      .catch(function(err){
+      .catch( /* instabul ingore next */ function(err){
         res.status(404).send(err);
       });
   };

@@ -731,5 +731,41 @@ describe('Team API Tests', function() {
     });
   });
 
+  it('it return 200 and successfully updated a links', function(done) {
+    var req = request(app).put('/api/teams/links');
+    agent.attachCookies(req);
+    var links = [{id:'12345', linkLabel:'Defects', linkUrl:'http://site1.com'}];
+    var putBody = {
+      'links': links,
+      'teamId': targetParentTeamId
+    };
+    req.send(putBody);
+    req.end(function(err, res) {
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+      }
+      done();
+    });
+  });
 
+  it('it return 200 and successfully delete a links', function(done) {
+    var req = request(app).delete('/api/teams/links');
+    agent.attachCookies(req);
+    var links = [{id:'12345', linkLabel:'Defects', linkUrl:'http://site1.com'}];
+    var putBody = {
+      'links': links,
+      'teamId': targetParentTeamId
+    };
+    req.send(putBody);
+    req.end(function(err, res) {
+      if (err) {
+        //console.log(err);
+      } else {
+        expect(res.statusCode).to.be.equal(200);
+      }
+      done();
+    });
+  });
 });
