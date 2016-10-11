@@ -1327,8 +1327,8 @@ var team = {
           var obj = {};
           obj.id = (data.id !== undefined) ? data.id : hashId;
           var url = data.linkUrl;
-          if(!pattern.test(url)) {
-            url = "http://" + url;
+          if (!pattern.test(url)) {
+            url = 'http://' + url;
           }
           obj.linkLabel = data.linkLabel;
           obj.linkUrl = url;
