@@ -1,11 +1,11 @@
-var users = require('../../models/mongodb/users');
+var Users = require('../../models/mongodb/users');
 // Get admins and supports api call
 var _ = require('underscore');
 module.exports = function(app, includes) {
   var middleware = includes.middleware;
 
   getAdmins = function(req, res) {
-    users.getAdmins()
+    Users.getAdmins()
       .then(function(result) {
         res.status(200).send(result);
       })
@@ -15,13 +15,11 @@ module.exports = function(app, includes) {
   };
 
   isUserAllowed = function(req, res) {
-    if (_.isUndefined(req.query.email) || _.isEmpty(req.query.email)) {
-      res.status(400).send({'error': 'userId is empty'});
-    }
-    else if (_.isUndefined(req.query.teamId) || _.isEmpty(req.query.teamId)) {
+    if (_.isUndefined(req.query.teamId) || _.isEmpty(req.query.teamId)) {
       res.status(400).send({'error': 'teamId is empty'});
-    } else {
-      users.isUserAllowed(req.query.userId, req.query.teamId)
+    }
+    else {
+      Users.isUserAllowed(req.session.userId, req.query.teamId)
         .then(function(result) {
           res.status(200).send(result);
         })
@@ -32,7 +30,7 @@ module.exports = function(app, includes) {
   };
 
   getApiKey = function(req, res) {
-    users.createApikey(req.session['user'])
+    Users.createApikey(req.session['user'])
       .then(function(result) {
         res.status(200).send({
           'key': result.key,
@@ -46,7 +44,7 @@ module.exports = function(app, includes) {
   };
 
   deleteApiKey = function(req, res) {
-    users.deleteApikey(req.session['user'])
+    Users.deleteApikey(req.session['user'])
       .then(function(result) {
         res.status(200).send(result);
       })
