@@ -91,7 +91,7 @@ module.exports = function(app, includes) {
     }
     // loggers.get('api').verbose('[createIteration] POST data:', data);
     // console.log('[createIteration] POST data:', data);
-    Iterations.add(data, req.session['user'])
+    Iterations.add(data, req.session.userId)
       .then(function(result) {
         res.send(result);
       })
@@ -109,9 +109,9 @@ module.exports = function(app, includes) {
    * @param {String}  request_body
    */
   var updateIteration = function(req, res, next) {
-    var curIterationId = req.params.iterationId;
+    var iterationId = req.params.iterationId;
     var data = req.body;
-    if (_.isEmpty(curIterationId)) {
+    if (_.isEmpty(iterationId)) {
       return res.status(400).send({
         error: 'iterationId is missing'
       });
@@ -122,7 +122,7 @@ module.exports = function(app, includes) {
       });
     }
     // loggers.get('api').verbose('[updateIteration] POST data:', JSON.stringify(data, null, 4));
-    Iterations.edit(curIterationId, data, req.session['user'])
+    Iterations.edit(iterationId, data, req.session.userId)
       .then(function(result) {
         res.status(200).send(result);
       })
@@ -134,8 +134,7 @@ module.exports = function(app, includes) {
   };
 
   /**
-   * Search index function for Iteration docs
-   * Cloudant views: _design/iterations/_search/searchAll?q=teamId AND completed:Y AND end_date:[20160401 TO 20160723]&include_docs=true&sort="-end_date"
+   * Search for Iteration docs
    * Accepts querystring parameters such as:
    * @param {String}    id (teamId) (required)
    * @param {String}    status (Y or N) (optional)
@@ -146,11 +145,9 @@ module.exports = function(app, includes) {
    */
   var searchTeamIteration = function(req, res, next) {
     var teamId = req.query.id;
-    if (!teamId) {
-      return res.status(400).send({
-        error: 'TeamId is required'
-      });
-    }
+    if (!teamId)
+      return res.status(400).send({error: 'TeamId is required'});
+
     var params = {
       id: teamId,
       status: req.query.status,

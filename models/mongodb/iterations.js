@@ -4,14 +4,14 @@ var Promise = require('bluebird');
 var mongoose = require('mongoose');
 var ObjectId = require('mongodb').ObjectID;
 var loggers = require('../../middleware/logger');
-var userModel = require('./users.js');
+var Users = require('./users.js');
 var moment = require('moment');
 var util = require('../../helpers/util');
 var dateFormat = 'YYYY-MM-DD HH:mm:ss';
 var Schema   = mongoose.Schema;
 require('../../settings');
 
-var iterationSchema = {
+var IterationSchema = {
   cloudantId: {
     type: String
   },
@@ -45,19 +45,19 @@ var iterationSchema = {
   },
   startDate: {
     type: Date,
-    required: [true, 'Start date of iteration is required.']
+    required: [true, 'Start date of Iteration is required.']
   },
   endDate: {
     type: Date,
-    required: [true, 'End date of iteration is required.']
+    required: [true, 'End date of Iteration is required.']
   },
   name: {
     type: String,
-    required: [true, 'Name of iteration is required.']
+    required: [true, 'Name of Iteration is required.']
   },
   teamId: {
     type: Schema.Types.ObjectId,
-    required: [true, 'TeamId of iteration is required.']
+    required: [true, 'TeamId of Iteration is required.']
   },
   memberCount: {
     type: Number,
@@ -113,27 +113,10 @@ var iterationSchema = {
   },
 };
 
-var formatErrMsg = function(msg) {
-  loggers.get('model-iteration').error('Error: ', msg);
-  return {
-    error: msg
-  };
-};
-
-var successLogs = function(msg) {
-  loggers.get('model-iteration').info('Success: ' + msg);
-  return;
-};
-
-var infoLogs = function(msg) {
-  loggers.get('model-iteration').info(msg);
-  return;
-};
-
-function isIterationNumExist(iteration_name, iterData, updateId) {
+function isIterationNumExist(Iteration_name, iterData, updateId) {
   var duplicate = false;
   _.find(iterData, function(iter){
-    if (iter.name == iteration_name) {
+    if (iter.name == Iteration_name) {
       if (updateId) {
         if (updateId.toString() != (iter._id).toString()) {
           duplicate = true;
@@ -146,72 +129,47 @@ function isIterationNumExist(iteration_name, iterData, updateId) {
   return duplicate;
 };
 
-function validObjectId(docId) {
-  var objId = mongoose.Types.ObjectId;
-  if (docId) {
-    if (mongoose.Types.ObjectId.isValid(docId)) {
-      return docId;
-    } else {
-      try {
-        objId = mongoose.Types.ObjectId(docId);
-      } catch (e) {
-        if (e) {
-          return {'error': e.message};
-        }
-      }
-      return objId;
-    }
-  } else {
-    return {'error': 'missing doc id'};
-  }
-}
+var Iteration_schema = new Schema(IterationSchema);
 
-var iteration_schema = new Schema(iterationSchema);
+var Iteration = mongoose.model('iterations', Iteration_schema);
 
-var iterationModel = mongoose.model('iterations', iteration_schema);
-
-var iteration = {
+var IterationExport = {
   getModel: function() {
-    return iterationModel;
+    return Iteration;
   },
 
   getByIterInfo: function(teamId, limit) {
     return new Promise(function(resolve, reject) {
       if (teamId) {
-        var objTeamId = validObjectId(teamId);
-        if (objTeamId.error) {
-          reject(objTeamId);
-        }
-        var request = {
-          'teamId': objTeamId
-        };
-        iterationModel.find(request).sort('endDate').exec()
+        Iteration.find({'teamId': teamId}).sort('endDate').exec()
           .then(function(results){
-            successLogs('[iterationModel.getByIterInfo] Team iteration docs obtained');
+            loggers.get('model-iteration').verbose('getByIterInfo() - Team Iteration docs obtained. teamId: ' + teamId);
             resolve(results);
           })
           .catch( /* istanbul ignore next */ function(err){
-            reject(formatErrMsg(err.message));
+            reject(Error(err));
           });
-      } else {
-        infoLogs('[getByIterInfo] Getting all team iterations docs');
+      }
+      else {
+        infoLogs('getByIterInfo() - no teamId, Getting all team Iteration docs');
         if (limit) {
-          iterationModel.find().limit(limit).exec()
+          Iteration.find().limit(limit).exec()
             .then(function(results){
-              successLogs('[iterationModel.getByIterInfo] Team iteration docs obtained by limit number');
+              loggers.get('model-iteration').verbose('getByIterInfo() - Team Iteration docs obtained with limit: ' + limit);
               resolve(results);
             })
             .catch( /* istanbul ignore next */ function(err){
-              reject(formatErrMsg(err.message));
+              reject(Error(err));
             });
-        } else {
-          /* istanbul ignore next */ iterationModel.find().exec()
+        }
+        else {
+          /* istanbul ignore next */ Iteration.find().exec()
             .then( /* istanbul ignore next */ function(results){
-              successLogs('[iterationModel.getByIterInfo] Team iteration docs obtained');
+              loggers.get('model-iteration').verbose('getByIterInfo() - All team iteration docs obtained');
               resolve(results);
             })
             .catch( /* istanbul ignore next */ function(err){
-              reject(formatErrMsg(err.message));
+              reject(Error(err));
             });
         }
       }
@@ -219,24 +177,10 @@ var iteration = {
   },
 
   get: function(docId) {
-    return new Promise(function(resolve, reject) {
-      var objId = validObjectId(docId);
-      if (objId.error) {
-        reject(objId);
-      }
-      iterationModel.findOne({'_id':objId}).exec()
-        .then(function(result) {
-          resolve(result);
-        })
-        .catch( /* istanbul ignore next */ function(err) {
-          /* cannot simulate Cloudant error during testing */
-          var msg = err.message;
-          reject(formatErrMsg(msg));
-        });
-    });
+    return Iteration.findOne({'_id':docId}).exec();
   },
 
-  getCompletedIterationsByKey: function(startkey, endkey) {
+  getCompletedIterationByKey: function(startkey, endkey) {
     return new Promise(function(resolve, reject) {
       var qReq = {
         '$or': [
@@ -259,142 +203,126 @@ var iteration = {
           '$lte': moment(new Date(endkey)).format(dateFormat)
         };
       }
-      iterationModel.find(qReq).exec()
+      Iteration.find(qReq).exec()
         .then(function(body) {
-          successLogs('[iterationModel.getCompletedIterationsByKey] Completed iteration docs obtained');
+          loggers.get('model-iteration').verbose('getCompletedIterationByKey() - '+body.length+' Completed Iteration docs obtained');
           resolve(body);
         })
         .catch( /* istanbul ignore next */ function(err) {
           /* cannot simulate Cloudant error during testing */
-          var msg = err.message;
-          reject(formatErrMsg(msg));
+          reject(Error(err));
         });
     });
   },
 
-  add: function(data, user, updateId) {
+  add: function(data, userId) {
     return new Promise(function(resolve, reject) {
       data['createDate'] = moment().format(dateFormat);
       data['updateDate'] = moment().format(dateFormat);
-      data['status'] = iteration.calculateStatus(data);
-      userModel.findUserByEmail((user.shortEmail).toLowerCase())
+      data['status'] = Iteration.calculateStatus(data);
+      Users.findUserByUserId(userId.toUpperCase())
       .then(function(userInfo){
         if (userInfo == null) {
           var msg = 'This user is not in the database: ' + (user.shortEmail).toLowerCase();
-          return Promise.reject(formatErrMsg(msg));
-        } else {
+          loggers.get('model-iteration').error(msg);
+          return Promise.reject(Error(msg));
+        }
+        else {
           data['createdBy'] = userInfo.email;
           data['createdByUserId'] = userInfo.userId;
           data['updatedBy'] = userInfo.email;
           data['updatedByUserId'] = userInfo.userId;
-          return userModel.isUserAllowed(userInfo.email, data['teamId']);
+          return Users.isUserAllowed(userInfo.email, data['teamId']);
         }
       })
       .then(function(validUser){
         if (validUser) {
-          return iteration.getByIterInfo(data['teamId']);
+          return Iteration.getByIterInfo(data['teamId']);
         } else {
-          var msg = 'This user is not allowed to add iteration: ' + (user.shortEmail).toLowerCase();
-          return Promise.reject(formatErrMsg(msg));
+          var msg = 'This user is not allowed to add Iteration: ' + (user.shortEmail).toLowerCase();
+          loggers.get('model-iteration').error(msg);
+          return Promise.reject(msg);
         }
       })
       .then(function(iterData){
         if (iterData != undefined && iterData.length > 0) {
-          var duplicate = isIterationNumExist(data['name'], iterData, updateId);
+          var duplicate = isIterationNumExist(data['name'], iterData);
           if (duplicate) {
             var msg = 'Iteration number/identifier: ' + data['name'] + ' already exists';
-            return Promise.reject(formatErrMsg(msg));
+            loggers.get('model-iteration').error(msg);
+            return Promise.reject(Error(msg));
           }
-        }
-        if (updateId) {
-          return iterationModel.where({'_id': updateId}).update({'$set':data});
-        } else {
-          return iterationModel.create(data);
         }
       })
       .then(function(result){
-        if (!updateId) {
-          successLogs('[iterationModels.add] New iteration doc created');
-        }
+        loggers.get('model-iteration').verbose('Iteration added ' + result);
         return resolve(result);
       })
       .catch( /* istanbul ignore next */ function(err){
-        if (err.message) {
-          var msg = err.message;
-        } else {
-          var msg = err.error;
-        }
-        if (!updateId) {
-          loggers.get('models').error('[iterationModel.add] Err:', msg);
-        }
-        reject(formatErrMsg(msg));
+        loggers.get('model-iteration').error('Iteration add error: ' + err);
+        reject(Error(err));
       });
     });
   },
 
-  delete: function(docId) {
-    return new Promise(function(resolve, reject) {
-      if (!docId) {
-        var msg = {
-          _id: ['_id/_rev is missing']
-        };
-        reject(formatErrMsg(msg));
-      } else {
-        iterationModel.remove({'_id': docId})
-          .then(function(body) {
-            // console.log('iteration.delete RESULT:', body);
-            //loggers.get('models').verbose('[iterationModel.delete] result:', body._id);
-            resolve(body);
-          })
-          .catch( /* istanbul ignore next */ function(err) {
-          /* cannot simulate Cloudant error during testing */
-            var msg = err.message;
-            // console.log('iteration.delete err:', err);
-            //loggers.get('models').error('[iterationModel.delete]:', err);
-            reject(formatErrMsg(msg));
-          });
-      }
-    });
-  },
 
-  deleteByFields: function(request) {
-    return new Promise(function(resolve, reject) {
-      if (!request) {
-        var msg = 'request is missing';
-        reject(formatErrMsg(msg));
-      } else {
-        iterationModel.findOneAndRemove(request).exec()
-          .then(function(body) {
-            // console.log('iteration.delete RESULT:', body);
-            //loggers.get('models').verbose('[iterationModel.delete] result:', body._id);
-            resolve(body);
-          })
-          .catch( /* istanbul ignore next */ function(err) {
-          /* cannot simulate Cloudant error during testing */
-            var msg = err.message;
-            // console.log('iteration.delete err:', err);
-            //loggers.get('models').error('[iterationModel.delete]:', err);
-            reject(formatErrMsg(msg));
-          });
-      }
-    });
-  },
+  // TODO I couldnt find these functions being used.
+  // delete: function(docId, userId) {
+  //   return new Promise(function(resolve, reject) {
+  //     if (!docId) {
+  //       var msg = {
+  //         _id: ['_id/_rev is missing']
+  //       };
+  //       reject(formatErrMsg(msg));
+  //     } else {
+  //       Iteration.remove({'_id': docId})
+  //         .then(function(body) {
+  //           resolve(body);
+  //         })
+  //         .catch( /* istanbul ignore next */ function(err) {
+  //         /* cannot simulate Cloudant error during testing */
+  //           var msg = err.message;
+  //           reject(formatErrMsg(msg));
+  //         });
+  //     }
+  //   });
+  // },
+  //
+  // deleteByFields: function(request) {
+  //   return new Promise(function(resolve, reject) {
+  //     if (!request) {
+  //       var msg = 'request is missing';
+  //       reject(formatErrMsg(msg));
+  //     } else {
+  //       Iteration.findOneAndRemove(request).exec()
+  //         .then(function(body) {
+  //           resolve(body);
+  //         })
+  //         .catch( /* istanbul ignore next */ function(err) {
+  //         /* cannot simulate Cloudant error during testing */
+  //           var msg = err.message;
+  //           reject(formatErrMsg(msg));
+  //         });
+  //     }
+  //   });
+  // },
 
-  edit: function(docId, data, user) {
+  edit: function(docId, data, userId) {
     return new Promise(function(resolve, reject) {
-      var updateId = validObjectId(docId);
-      if (updateId.error) {
-        reject(updateId);
-      }
-      iteration.add(data, user, updateId)
-        .then(function(result){
-          successLogs('[iterationModels.edit] Iteration doc has been eidted');
-          return resolve(result);
-        })
-        .catch( /* istanbul ignore next */ function(err){
-          loggers.get('models').error('[iterationModel.edit] Err:', err);
-          reject(err);
-        });
+      Users.isUserAllowed(userId, data['teamId'])
+      .then(function(isAllowed){
+        if (isAllowed)
+          return Iteration.add(data, user, updateId).exec();
+        else
+          return 'Not allowed';
+      })
+      .then(function(result){
+        return resolve(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        loggers.get('model-iteration').error('Iteration edit error: ' + err);
+        return reject(err);
+      });
     });
   },
 
@@ -423,12 +351,12 @@ var iteration = {
           '$lte': moment(new Date(endDate)).format(dateFormat)
         };
     }
-    loggers.get('model-iteration').verbose('Querying iterations:' + JSON.stringify(qReq));
-    return iterationModel.find(qReq).sort('-endDate').exec();
+    loggers.get('model-Iteration').verbose('Querying Iteration:' + JSON.stringify(qReq));
+    return Iteration.find(qReq).sort('-endDate').exec();
   },
 
   calculateStatus: function(data) {
-    var iteration_end_dt = data['endDate'];
+    var Iteration_end_dt = data['endDate'];
     var nbr_stories_dlvrd = data['deliveredStories'] || 0;
     var nbr_story_pts_dlvrd = data['storyPointsDelivered'] || 0;
     var nbr_dplymnts = data['deployments'] || 0;
@@ -436,7 +364,7 @@ var iteration = {
     var team_sat = data['teamSatisfaction'] || 0;
     var client_sat = data['clientSatisfaction'] || 0;
     var status;
-    var endDate = new Date(iteration_end_dt);
+    var endDate = new Date(Iteration_end_dt);
     var d1 = moment(endDate).format(dateFormat);
     //var d2 = util.getServerTime();
     var d2 = moment().format(dateFormat);
@@ -445,7 +373,7 @@ var iteration = {
     if (d1 <= d2) {
       // console.log('endDate is <= than serDate');
       var diffDays = d2.diff(d1, 'days');
-      // updating status for only having more than 3 days from iteration end date
+      // updating status for only having more than 3 days from Iteration end date
       if (diffDays > 3) {
         // console.log("diffDays > 3");
         status = 'Completed';
@@ -466,32 +394,18 @@ var iteration = {
     return status;
   },
 
-  getNotCompletedIterations: function() {
-    return new Promise(function(resolve, reject) {
-      var request = {
-        'status': 'Not complete',
-        'docStatus': {
-          '$ne': 'delete'
-        }
-      };
-      iterationModel.find(request).exec()
-        .then(function(results){
-          resolve(results);
-        })
-        .catch( /* istanbul ignore next */ function(err){
-          reject(err);
-        });
-    });
+  getNotCompletedIteration: function() {
+    return Iteration.find({'status': 'Not complete', 'docStatus': {'$ne': 'delete'}}).exec();
   },
 
-  bulkUpdateIterations: function(iterations) {
+  bulkUpdateIteration: function(Iteration) {
     return new Promise(function(resolve, reject) {
-      var bulk = iterationModel.collection.initializeUnorderedBulkOp();
-      if (_.isEmpty(iterations)) {
+      var bulk = Iteration.collection.initializeUnorderedBulkOp();
+      if (_.isEmpty(Iteration)) {
         resolve([]);
       } else {
-        _.each(iterations, function(iteration){
-          bulk.find({'_id':iteration._id}).update({'$set':iteration.set});
+        _.each(Iteration, function(Iteration){
+          bulk.find({'_id':Iteration._id}).update({'$set':Iteration.set});
         });
         bulk.execute(function(error, result){
           if (error) {
@@ -504,31 +418,6 @@ var iteration = {
       }
     });
   },
-
-  // isValidStartEndDate: function(startdate, enddate, dateFormat, validationErrors) {
-  //   var isvalid_startdate = moment(startdate, dateFormat, true).isValid();
-  //   var isvalid_enddate = moment(enddate, dateFormat, true).isValid();
-  //   if (startdate && !isvalid_startdate) {
-  //     if (validationErrors === undefined) {
-  //       validationErrors = new Object();
-  //     }
-  //     if (validationErrors && !validationErrors['startdate']) {
-  //       validationErrors['startdate'] = [];
-  //     }
-  //     validationErrors['startdate'].push('Start date is not a valid date');
-  //   }
-  //   if (enddate && !isvalid_enddate) {
-  //     if (validationErrors === undefined) {
-  //       validationErrors = new Object();
-  //     }
-  //     if (validationErrors && !validationErrors['startdate']) {
-  //       validationErrors['enddate'] = [];
-  //     }
-  //     validationErrors['enddate'].push('End date is not a valid date');
-  //   }
-  //
-  //   return validationErrors;
-  // }
 };
 
-module.exports = iteration;
+module.exports = IterationExport;
