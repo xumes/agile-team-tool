@@ -16,12 +16,12 @@ module.exports = function(app, includes) {
 
   isUserAllowed = function(req, res) {
     if (_.isUndefined(req.query.email) || _.isEmpty(req.query.email)) {
-      res.status(400).send({'error': 'email is empty'});
+      res.status(400).send({'error': 'userId is empty'});
     }
     else if (_.isUndefined(req.query.teamId) || _.isEmpty(req.query.teamId)) {
-      res.status(400).send({'error': 'team id is empty'});
+      res.status(400).send({'error': 'teamId is empty'});
     } else {
-      users.isUserAllowed(req.query.email, req.query.teamId)
+      users.isUserAllowed(req.query.userId, req.query.teamId)
         .then(function(result) {
           res.status(200).send(result);
         })

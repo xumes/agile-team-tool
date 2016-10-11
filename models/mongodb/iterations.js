@@ -265,48 +265,6 @@ var IterationExport = {
     });
   },
 
-
-  // TODO I couldnt find these functions being used.
-  // delete: function(docId, userId) {
-  //   return new Promise(function(resolve, reject) {
-  //     if (!docId) {
-  //       var msg = {
-  //         _id: ['_id/_rev is missing']
-  //       };
-  //       reject(formatErrMsg(msg));
-  //     } else {
-  //       Iteration.remove({'_id': docId})
-  //         .then(function(body) {
-  //           resolve(body);
-  //         })
-  //         .catch( /* istanbul ignore next */ function(err) {
-  //         /* cannot simulate Cloudant error during testing */
-  //           var msg = err.message;
-  //           reject(formatErrMsg(msg));
-  //         });
-  //     }
-  //   });
-  // },
-  //
-  // deleteByFields: function(request) {
-  //   return new Promise(function(resolve, reject) {
-  //     if (!request) {
-  //       var msg = 'request is missing';
-  //       reject(formatErrMsg(msg));
-  //     } else {
-  //       Iteration.findOneAndRemove(request).exec()
-  //         .then(function(body) {
-  //           resolve(body);
-  //         })
-  //         .catch( /* istanbul ignore next */ function(err) {
-  //         /* cannot simulate Cloudant error during testing */
-  //           var msg = err.message;
-  //           reject(formatErrMsg(msg));
-  //         });
-  //     }
-  //   });
-  // },
-
   edit: function(docId, data, userId) {
     return new Promise(function(resolve, reject) {
       Users.isUserAllowed(userId, data['teamId'])
@@ -418,6 +376,45 @@ var IterationExport = {
       }
     });
   },
+  // used in tests
+  delete: function(docId, userId) {
+    return new Promise(function(resolve, reject) {
+      if (!docId) {
+        var msg = {
+          _id: ['_id/_rev is missing']
+        };
+        reject(formatErrMsg(msg));
+      } else {
+        Iteration.remove({'_id': docId})
+          .then(function(body) {
+            resolve(body);
+          })
+          .catch( /* istanbul ignore next */ function(err) {
+          /* cannot simulate Cloudant error during testing */
+            var msg = err.message;
+            reject(formatErrMsg(msg));
+          });
+      }
+    });
+  },
+  deleteByFields: function(request) {
+    return new Promise(function(resolve, reject) {
+      if (!request) {
+        var msg = 'request is missing';
+        reject(formatErrMsg(msg));
+      } else {
+        Iteration.findOneAndRemove(request).exec()
+          .then(function(body) {
+            resolve(body);
+          })
+          .catch( /* istanbul ignore next */ function(err) {
+          /* cannot simulate Cloudant error during testing */
+            var msg = err.message;
+            reject(formatErrMsg(msg));
+          });
+      }
+    });
+  }
 };
 
 module.exports = IterationExport;
