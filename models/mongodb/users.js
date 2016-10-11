@@ -161,21 +161,16 @@ var users = {
           if (results[0] && results[0] != undefined) {
             if (results[0].adminAccess && results[0].adminAccess != undefined && results[0].adminAccess != 'none') {
               hasAccess = true;
-              console.log('resolving ' + hasAccess)
               return resolve(hasAccess);
             }
           }
           if (results[1] && results[1] != undefined) {
             hasAccess = results[1];
-            console.log('resolving ' + hasAccess)
             return resolve(hasAccess);
           }
-          console.log('resolving ' + hasAccess)
           return resolve(hasAccess);
         })
         .catch( /* istanbul ignore next */ function(err){
-          console.log('errrrror')
-
           console.log(err);
           reject(err);
         });
