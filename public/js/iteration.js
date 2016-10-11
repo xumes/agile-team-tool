@@ -271,7 +271,7 @@ function refreshDefectsStartBalance(iterations) {
     newStartBalance = parseInt(iterations[0].nbr_defects_end_bal);
 
   if (isNaN(parseInt(currentStartBalance)) || currentStartBalance == 0 || _.isEqual(currentStartBalance, newStartBalance)) {
-    defectStartBalanceHandler(iterations)
+    defectStartBalanceHandler(iterations);
   } else {
     confirmAction("You are about to overwrite the defect opening balance from '" + currentStartBalance + "' to '" + newStartBalance + "'.  Do you want to continue?", 'Yes', 'No', defectStartBalanceHandler, [iterations]);
   }
