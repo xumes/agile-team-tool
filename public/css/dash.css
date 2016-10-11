@@ -1064,11 +1064,11 @@ li #allTeams {
 
 /*=BEGIN Important links */
 #importantLinks .imptlink {
-  margin-left:30px; margin-bottom:10px; border:0px solid red; width: 650px;
+  margin-left:30px; margin-bottom:10px; border:0px solid red; width: 690px;
 }
 
 #importantLinks .removelink {
-  float:right; line-height: 2.2em;
+  float:right; line-height: 2.2em; margin-right: 10px;
 }
 
 #importantLinks .urlwrapper{
