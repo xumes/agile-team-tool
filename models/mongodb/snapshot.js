@@ -355,7 +355,8 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
       var monthDiff = Math.floor(moment(nowTime).diff(moment(iterDate), 'months', true));
       if (monthDiff < 0 || monthDiff > iterationMonth || _.isNaN(monthDiff)) {
         var msg = 'iteationDoc: ' + iterationDoc._id + ' end date is not correct';
-        return reject(Error(msg));
+        console.log(msg);
+        //return reject(Error(msg));
       } else {
         var monthIndex = 5 - monthDiff;
         var pts = iterationDoc['storyPointsDelivered'];
