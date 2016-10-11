@@ -442,21 +442,21 @@ function createCriteriaTable(practice, htmlLoc, practiceId) {
 
   th = document.createElement('th');
   th.setAttribute('scope', 'col');
-  th.setAttribute('width', '8%');
+  th.setAttribute('width', '10%');
   th.setAttribute('id', practiceId + '_th_curr');
-  th.setAttribute('style', 'text-align: center; display: none');
+  th.setAttribute('style', 'left: -1%; text-align: center; display: none; position: relative;');
   th.appendChild(document.createTextNode('Current'));
 
   a.setAttribute('class', 'ibm-information-link');
   a.setAttribute('id', practiceId + '_currentTT');
   a.setAttribute('data-widget', 'tooltip');
-  a.setAttribute('style', 'cursor: default; position: relative; left: 5px; top :0px; display: inline;');
+  a.setAttribute('style', 'cursor: default; position: relative; left: 5%; top: 0%; display: inline;');
   th.appendChild(a);
   tr.appendChild(th);
 
   th = document.createElement('th');
   th.setAttribute('scope', 'col');
-  th.setAttribute('width', '8%');
+  th.setAttribute('width', '10%');
   th.setAttribute('id', practiceId + '_th_targ');
   th.setAttribute('style', 'text-align: center; display: none');
   th.appendChild(document.createTextNode('Target'));
@@ -465,13 +465,13 @@ function createCriteriaTable(practice, htmlLoc, practiceId) {
   a.setAttribute('class', 'ibm-information-link');
   a.setAttribute('id', practiceId + '_targetTT');
   a.setAttribute('data-widget', 'tooltip');
-  a.setAttribute('style', 'cursor: default; position: relative; left: 5px; top :0px; display: inline;');
+  a.setAttribute('style', 'cursor: default; position: relative; left: 5%; top: 0%; display: inline;');
   th.appendChild(a);
   tr.appendChild(th);
 
   th = document.createElement('th');
   th.setAttribute('scope', 'col');
-  th.setAttribute('width', '8%');
+  th.setAttribute('width', '10%');
   th.setAttribute('id', practiceId + '_th_ind');
   th.appendChild(document.createTextNode('Independent'));
   th.setAttribute('style', 'text-align: center; display: none');
