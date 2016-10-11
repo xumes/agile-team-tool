@@ -965,8 +965,8 @@ function showHideLinkDiv(){
 
 function setPrefixHttp(url){
   var pattern = /^((http|https):\/\/)/;
-  if(!pattern.test(url)) {
-    url = "http://" + url;
+  if (!pattern.test(url)) {
+    url = 'http://' + url;
   }
   return url;
 }
