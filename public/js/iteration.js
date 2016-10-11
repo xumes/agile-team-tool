@@ -261,15 +261,18 @@ function refFTECount(tmc, fte) {
 }
 
 function refreshDefectsStartBalance(iterations) {
-  var currentStartBalance = $('#defectsStartBal').val();
+  var currentStartBalance = parseInt($('#defectsStartBal').val());
   var newStartBalance = 0;
 
-  if (iterations == undefined)
+  if (iterations == undefined) {
     getDefectsStartBalance($('#teamSelectList option:selected').val(), formatMMDDYYYY($('#iterationStartDate').val()), refreshDefectsStartBalance, []);
-  else if (!_.isEmpty(iterations) && !_.isUndefined(iterations[0].nbr_defects_end_bal) & !isNaN(parseInt(iterations[0].nbr_defects_end_bal)))
-    newStartBalance = iterations[0].nbr_defects_end_bal;
+    return;
+  } else if (!_.isEmpty(iterations) && !_.isUndefined(iterations[0].nbr_defects_end_bal) & !isNaN(parseInt(iterations[0].nbr_defects_end_bal)))
+    newStartBalance = parseInt(iterations[0].nbr_defects_end_bal);
 
-  if (_.isEmpty(currentStartBalance) || currentStartBalance != newStartBalance) {
+  if (isNaN(parseInt(currentStartBalance)) || currentStartBalance == 0 || _.isEqual(currentStartBalance, newStartBalance)) {
+    defectStartBalanceHandler(iterations)
+  } else {
     confirmAction("You are about to overwrite the defect opening balance from '" + currentStartBalance + "' to '" + newStartBalance + "'.  Do you want to continue?", 'Yes', 'No', defectStartBalanceHandler, [iterations]);
   }
 }
