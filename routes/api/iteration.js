@@ -159,19 +159,12 @@ module.exports = function(app, includes) {
       includeDocs:  req.query.includeDocs,
       limit: req.query.limit
     };
-    Users.isUserAllowed(req.session.userId, teamId)
-      .then(function(isAllowed){
-        if (!isAllowed){
-          res.status(401);
-          return {error: 'Not authorized to search teams iterations.'};
-        }
-        else {
-          res.status(200);
-          return Iterations.searchTeamIteration(params);
-        }
+    Iterations.searchTeamIteration(params)
+      .then(function(result) {
+        res.status(200).send(result);
       })
-      .then(function(result){
-        res.send(result);
+      .catch(function(err){
+        res.status(400).send(err);
       });
   };
 

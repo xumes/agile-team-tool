@@ -164,13 +164,13 @@ module.exports.getSquadTeams = function(proj, filter) {
  * @param user email
  * @return array of root teams
  */
-module.exports.getRootTeams = function(userEmail) {
+module.exports.getRootTeams = function(uid) {
   return new Promise(function(resolve, reject){
-    if (userEmail) {
+    if (uid) {
       var query = {
         'members': {
           '$elemMatch': {
-            'email': userEmail.toLowerCase()
+            'userId': uid.toUpperCase()
           }
         }
       };
@@ -255,13 +255,13 @@ module.exports.getRootTeams = function(userEmail) {
  * @param user email
  * @return array of standalone teams
  */
-module.exports.getStandalone = function(userEmail) {
-  if (userEmail) {
+module.exports.getStandalone = function(uid) {
+  if (uid) {
     var query = {
       'path': null,
       'members': {
         '$elemMatch': {
-          'email': userEmail.toLowerCase()
+          'userId': uid.toUpperCase()
         }
       }
     };

@@ -352,8 +352,8 @@ function searchTeams(keyword) {
 }
 
 function getMyTeamsFromDb(initial, loadStandalone) {
-  var rootTeamUrl = '/api/teams/lookup/rootteams/' + encodeURIComponent((userInfo.email).toLowerCase());
-  var standaloneUrl = '/api/teams/lookup/standalone/' + encodeURIComponent((userInfo.email).toLowerCase());
+  var rootTeamUrl = '/api/teams/lookup/rootteams/' + encodeURIComponent((userInfo.uid).toLowerCase());
+  var standaloneUrl = '/api/teams/lookup/standalone/' + encodeURIComponent((userInfo.uid).toLowerCase());
   var req = $.when(
     $.ajax({
       type: 'GET',
@@ -468,7 +468,7 @@ function getChildrenTeams(id) {
   var url = '/api/teams/children/' + id;
   if ($('#myTeams').attr('data-state') == 'open') {
     if (id == 'agteamstandalone') {
-      url = '/api/teams/lookup/standalone/' + encodeURIComponent((userInfo.email).toLowerCase());
+      url = '/api/teams/lookup/standalone/' + encodeURIComponent((userInfo.uid).toLowerCase());
     }
   } else {
     if (id == 'agteamstandalone') {
