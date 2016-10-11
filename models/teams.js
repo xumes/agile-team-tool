@@ -1320,13 +1320,18 @@ var team = {
       .then(function(teamDetails){
         teamDetails = teamDetails;
         var tmpLinks = [];
+        var pattern = /^((http|https):\/\/)/;
         _.each(links, function(data,idx,ls) {
           var str = data.linkUrl + process.hrtime().toString();
           var hashId = crypto.createHash('md5').update(str).digest('hex');
           var obj = {};
           obj.id = (data.id !== undefined) ? data.id : hashId;
+          var url = data.linkUrl;
+          if(!pattern.test(url)) {
+            url = "http://" + url;
+          }
           obj.linkLabel = data.linkLabel;
-          obj.linkUrl = data.linkUrl;
+          obj.linkUrl = url;
           tmpLinks.push(obj);
         });
         teamDetails['links'] = tmpLinks;

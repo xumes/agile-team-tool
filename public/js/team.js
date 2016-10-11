@@ -9,6 +9,8 @@ jQuery(function($) {
     });
     /* show or hide the Link group */
     showHideLinkDiv();
+    /* auto prefix http in start of the url */
+    autoAddHttp();
   });
 
   $(document).ready(function(){
@@ -718,7 +720,7 @@ function popupCustomLabel(elem){
 
 var selectdata = [];
 function addLink() {
-  $('.updateLinkWrapper').show();
+  // $('.updateLinkWrapper').show();
   $('#saveLinkBtn').removeAttr('disabled');
   var ctr = new Date().getTime();
 
@@ -736,9 +738,10 @@ function addLink() {
                   <select id='linklabel_" + ctr + "' data-counter='" + ctr + "' name='linklabel_[]' onchange='popupCustomLabel(this)' class='implabel' style='width: 200px'> \
                   </select> \
                   <span class='urlwrapper'> \
-                  <input type='text' name='url_[]' id='url_" + ctr + "' data-counter='" + ctr + "' size='20' value='' placeholder='URL' aria-label='URL' class='implink' style='width: 400px;'> \
+                  <input type='text' name='url_[]' id='url_" + ctr + "' data-counter='" + ctr + "' size='20' value='' placeholder='Url' aria-label='URL' class='implink' style='width: 400px;'> \
                   </span> \
-                  <a href='javascript:void(0)' id='removelink_" + ctr + "' class='removelink' onclick=removetmpLink('" + ctr + "')><img src='img/delete-ico.png'/></a> \
+                  <a href='javascript:void(0)' alt='Delete the link' title='Delete the link' id='removelink_" + ctr + "' class='removelink' onclick=removetmpLink('" + ctr + "')><img src='img/delete-ico.png'/></a> \
+                  <a href='javascript:void(0)' alt='Save link' title='Save link' id='savelink_" + ctr + "' class='removelink' onclick='updateLink()'><img src='img/accept-ico.png'/></a> \
                 </div>";
   $('#importantLinkWrapper').append(html);
   $('#linklabel_'+ctr).select2({
@@ -746,6 +749,7 @@ function addLink() {
   });
 
   showHideLinkDiv();
+  autoAddHttp();
 }
 
 function removetmpLink(id){
@@ -784,7 +788,7 @@ function loadLinks(teamId){
       $('#importantLinkWrapper').empty();
       var links = currentTeam.links;
       if (links && links.length > 0){
-        $('.updateLinkWrapper').show();
+        // $('.updateLinkWrapper').show();
         var numLinks = links.length;
         var selectdata = [
           {id: '-1', text: 'Select label'},
@@ -823,9 +827,9 @@ function loadLinks(teamId){
                               " + opts+ " \
                               </select> \
                               <span class='urlwrapper'> \
-                              <input type='text' name='url_[]' id='url_" + ctr + "' data-counter='" + ctr + "' size='20' value='" + links[ctr].linkUrl + "' placeholder='URL' aria-label='URL' class='implink' style='width: 400px;'> \
+                              <input type='text' name='url_[]' id='url_" + ctr + "' data-counter='" + ctr + "' size='20' value='" + links[ctr].linkUrl + "' placeholder='Url' aria-label='URL' class='implink' style='width: 400px;'> \
                               </span> \
-                              <a href='javascript:void(0)' id='removelink_" + ctr + "' style='display:none;' class='removelink' onclick=removeLink('" + id + "')><img src='img/delete-ico.png' /></a> \
+                              <a href='javascript:void(0)' alt='Delete the link' title='Delete the link' id='removelink_" + ctr + "' style='display:none;' class='removelink' onclick=removeLink('" + id + "')><img src='img/delete-ico.png' /></a> \
                             </div>";
             $('#linklabel_' + ctr).val(selectedVal);
           }
@@ -836,6 +840,7 @@ function loadLinks(teamId){
     }
   }
   showHideLinkDiv();
+  autoAddHttp();
 }
 
 /* Delete a specific link */
@@ -872,7 +877,7 @@ function removeLink(linkId){
       updateAgileTeamCache(data.teamDetails);
       // agileTeamListHandler(data.team._id, allTeams);
       loadLinks($('#teamSelectList option:selected').val());
-      showMessagePopup('You have successfully deleted a link.');
+      // showMessagePopup('You have successfully deleted a link.');
     });
   }
 }
@@ -912,7 +917,7 @@ function updateLink(){
     updateAgileTeamCache(data.teamDetails);
     // agileTeamListHandler(data.team._id, allTeams);
     loadLinks($('#teamSelectList option:selected').val());
-    showMessagePopup('You have successfully saved a links.');
+    // showMessagePopup('You have successfully saved a links.');
   });
 }
 
@@ -931,7 +936,8 @@ function getLinkData(){
 
   var urlsArray = [];
   $('.implink').each(function(){
-    urlsArray.push($(this).val());
+    url = setPrefixHttp($(this).val().trim());
+    urlsArray.push(url);
   });
 
   var linkData = [];
@@ -950,9 +956,25 @@ function showHideLinkDiv(){
   $('#importantLinkWrapper div.imptlink').on('mouseover', function(){
     var ctr = $(this).attr('data-counter');
     $('#removelink_'+ctr).show();
+    $('#savelink_'+ctr).show();
   });
   $('#importantLinkWrapper div.imptlink').on('mouseout', function(){
     $('.removelink').hide();
+  });
+}
+
+function setPrefixHttp(url){
+  var pattern = /^((http|https):\/\/)/;
+  if(!pattern.test(url)) {
+    url = "http://" + url;
+  }
+  return url;
+}
+
+function autoAddHttp(){
+  $('#importantLinkWrapper .implink').on('blur mouseout', function(){
+    url = setPrefixHttp($(this).val().trim());
+    $(this).val(url);
   });
 }
 
@@ -1143,8 +1165,12 @@ function handleLinkValidation(frmElement, err){
     if (klinkStr['linkUrl']) {
       tmpErr = klinkStr['linkUrl'];
       tmp = $.trim(tmpErr.split('is not a valid url').shift());
+      // var exp = tmpErr.split(/^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/);
+      // tmp = exp[4];
+      // tmp = $.trim(tmp.split('is not a valid url').shift());
       $('#importantLinkWrapper .implink').each(function(idx) {
         link = $.trim($(this).val());
+        console.log('link:', link, '| tmp:', tmp);
         ctr = $(this).attr('data-counter');
         // check if the link is empty then highlight field error
         if (link == '') {
@@ -1170,7 +1196,7 @@ function handleLinkValidation(frmElement, err){
     }
     errmsg = errmsg + tmpErr + '\n';
   });
-  if (isValidUrl==false) errmsg = errmsg + 'URL must start with either http:// or https://';
+  // if (isValidUrl==false) errmsg = errmsg + 'URL must start with either http:// or https://';
   return errmsg;
 }
 
