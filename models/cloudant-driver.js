@@ -31,7 +31,7 @@ exports.addRecord = function(data) {
       .then(function(body) {
         resolve(body);
       })
-      .catch(function(err) {
+      .catch( /* istanbul ignore next */ function(err) {
         reject(err);
       });
   });
@@ -43,7 +43,7 @@ exports.getRecord = function(data) {
       .then(function(body) {
         resolve(body);
       })
-      .catch(function(err) {
+      .catch( /* istanbul ignore next */ function(err) {
         reject(err);
       });
   });
@@ -56,7 +56,7 @@ exports.updateRecord = function(data) {
       .then(function(body) {
         resolve(body);
       })
-      .catch(function(err) {
+      .catch( /* istanbul ignore next */ function(err) {
         reject(err);
       });
   });
@@ -71,7 +71,7 @@ exports.deleteRecord = function(_id, _rev) {
           loggers.get('models').verbose('Success: Record ' + _id + ' rev: ' + _rev + ' has been deleted successfully.');
           resolve(body);
         })
-        .catch(function(err) {
+        .catch( /* istanbul ignore next */ function(err) {
           reject(err);
         });
     } else { /* istanbul ignore next */

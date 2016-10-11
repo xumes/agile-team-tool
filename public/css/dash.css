@@ -889,6 +889,29 @@ span.customSpan{
 	width: 200px;
 }
 
+.defectsSection {
+  display: flex;                  /* establish flex container */
+  flex-direction: row;            /* default value; can be omitted */
+  flex-wrap: nowrap;              /* default value; can be omitted */
+  justify-content: space-between; /* switched from default (flex-start, see below) */
+  padding-top: 10px;
+  padding-bottom: 5px;
+}
+
+.defectsSection [class*="-link"]::before {
+  cursor: pointer !important;
+  position: relative !important;
+}
+
+.defectsSection::after {
+  content: '';
+}
+
+.defectsSection div > label {
+  font-size: 14px;
+  padding-top: 5px;
+}
+
 #createTeamForm p > span, #createTeamForm p.ibm-btn-row > span {
 	min-width: 600px;
 }
@@ -1038,3 +1061,17 @@ li #allTeams {
 #overlayExampleLarge > p {
 	font-size: 10pt;
 }
+
+/*=BEGIN Important links */
+#importantLinks .imptlink {
+  margin-left:30px; margin-bottom:10px; border:0px solid red; width: 690px;
+}
+
+#importantLinks .removelink {
+  float:right; line-height: 2.2em; margin-right: 10px;
+}
+
+#importantLinks .urlwrapper{
+  margin-left: 20px; position: absolute; margin-top: -1px;
+}
+/*=END Important links */

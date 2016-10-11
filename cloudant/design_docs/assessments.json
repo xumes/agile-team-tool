@@ -1,12 +1,18 @@
 {
   "_id": "_design/assessments",
-  "version": 0.3,
+  "version": 0.4,
   "views": {
     "template": {
       "map": "function (doc) {\r\n  if (doc.type == 'ref_matassessment')\r\n      emit(doc.atma_status, doc);\r\n}"
     },
     "teamMaturity": {
       "map": "function (doc) {\n  if (doc.type == 'matassessmtrslt'  && (doc.doc_status === null || doc.doc_status != 'delete'))\n    emit(doc.team_id, doc);\n}"
+    },
+    "rollUpData": {
+      "map": "function (doc) {\n  if ((doc.type == \"assessment_roll_up_data\")) {\n    emit(doc._id, doc);\n  }\n}"
+    },
+    "submitted": {
+      "map": "function (doc) {\n  if (doc.type == \"matassessmtrslt\" && (doc.doc_status === null || doc.doc_status != 'delete')) {\n    if (doc.assessmt_status == \"Submitted\") {\n          emit(doc[\"self-assessmt_dt\"], doc);\n    }\n  }\n} "
     }
   },
   "language": "javascript",

@@ -3,6 +3,7 @@ var settings = require('../../settings');
 module.exports = function(app, includes) {
   var render = includes.render;
 
+  /* instabul ingore next */
   showHome = function(req, res) {
     var json = {
       'pageTitle': 'Home',
@@ -11,6 +12,7 @@ module.exports = function(app, includes) {
     render(req, res, 'home', json);
   };
 
+  /* instabul ingore next */
   showSSOLogoutPage = function(req, res) {
     var json = {
       'pageTitle': 'Logout',

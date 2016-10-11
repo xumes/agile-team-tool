@@ -625,6 +625,14 @@ function getTeamIterations(teamId, _callback, args) {
   return getRemoteData(teamUrl, _callback, args);
 }
 
+function getDefectsStartBalance(teamId, startDate, _callback, args) {
+  if (_.isEmpty(startDate)) return;
+
+  startDate = startDate.split('/');
+  startDate = parseInt(startDate[2]+startDate[0]+startDate[1]);
+  var teamUrl = '/api/iteration/searchTeamIteration?id=' + encodeURIComponent(teamId) + '&startdate=0&enddate=' + startDate + '&limit=1&includeDocs=true';
+  return getRemoteData(teamUrl, _callback, args);
+}
 
 function getCompletedIterations(startDate, endDate, _callback, args) {
   if (_.isEmpty(startDate) || _.isEmpty(endDate)) {
@@ -665,13 +673,13 @@ function compactTeam(team) {
     }
     teamAlloc = teamAlloc / 100;
     compactedTeam['_id'] = team._id,
-      compactedTeam['name'] = team.name,
-      compactedTeam['squadteam'] = team.squadteam,
-      compactedTeam['parent_team_id'] = team.parent_team_id,
-      compactedTeam['child_team_id'] = team.child_team_id,
-      compactedTeam['doc_status'] = team.doc_status;
+    compactedTeam['name'] = team.name,
+    compactedTeam['squadteam'] = team.squadteam,
+    compactedTeam['parent_team_id'] = team.parent_team_id,
+    compactedTeam['child_team_id'] = team.child_team_id,
+    compactedTeam['doc_status'] = team.doc_status;
     compactedTeam['total_members'] = teamCount,
-      compactedTeam['total_allocation'] = teamAlloc;
+    compactedTeam['total_allocation'] = teamAlloc;
     compactedTeam['doc'] = team;
   }
   return compactedTeam;
@@ -766,7 +774,10 @@ function initIterationTemplate() {
     'last_updt_user': '',
     'fte_cnt': '',
     'nbr_dplymnts': '',
+    'nbr_defects_start_bal': '',
     'nbr_defects': '',
+    'nbr_defects_closed': '',
+    'nbr_defects_end_bal': '',
     'nbr_cycletime_WIP': '',
     'nbr_cycletime_in_backlog': '',
     'client_sat': '',

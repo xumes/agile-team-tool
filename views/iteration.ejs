@@ -83,23 +83,22 @@
                       </p>
                       <p id="newIterationNameSection">
                         <label for="iterationName">&nbsp;<span class="ibm-access">Iteration number/identifier</span></label>
-                        <span> <input type="text" name="iterationName" id="iterationName" size="44" value="" placeholder="Iteration number/identifier" style="width: 380px">
+                        <span> 
+                          <input type="text" name="iterationName" id="iterationName" size="44" value="" placeholder="Iteration number/identifier" style="width: 380px" />
                         </span>
                       </p>
 
                       <p>
                         <label for="iterationStartDate">Iteration start date:<span class="ibm-required">*</span></label>
                         <span>
-                          <input type="text" class="ibm-date-picker"
-                          name="iterationStartDate" id="iterationStartDate" size="44" value="" readonly="readonly" placeholder="Iteration start date" style="width: 380px">
+                          <input type="text" class="ibm-date-picker" name="iterationStartDate" id="iterationStartDate" size="44" value="" readonly="readonly" placeholder="Iteration start date" style="width: 380px" />
                         </span>
                       <p>
 
                       <p>
                         <label for="iterationEndDate">Iteration end date:<span class="ibm-required">*</span></label>
                         <span>
-                          <input type="text" class="ibm-date-picker" name="iterationEndDate"
-                          id="iterationEndDate" size="44" value="" placeholder="Iteration end date" readonly="readonly" style="width: 380px">
+                          <input type="text" class="ibm-date-picker" name="iterationEndDate" id="iterationEndDate" size="44" value="" placeholder="Iteration end date" readonly="readonly" style="width: 380px" />
                         </span>
                       </p>
 
@@ -110,14 +109,16 @@
                       <h2 class="ibm-bold ibm-h4">Iteration commitments</h2>
 
                       <p>
-                        <label for="commStories" style="width: 410px">Committed stories:<span class="ibm-required"></span></label> <span> <input type="text" name="commStories"
-                          id="commStories" size="8" value="" placeholder="0" min="0" class="inputCustom">
+                        <label for="commStories" style="width: 410px">Committed stories:<span class="ibm-required"></span></label>
+                        <span> 
+                          <input type="text" name="commStories" id="commStories" value="" placeholder="0" class="inputCustom wholeNumber" />
                         </span>
                       </p>
 
                       <p>
-                        <label for="commPoints" style="width: 410px">Committed story points:<span class="ibm-required"></span></label> <span> <input type="text" name="commPoints"
-                          id="commPoints" size="8" value="" placeholder="0" min="0.0" class="inputCustom">
+                        <label for="commPoints" style="width: 410px">Committed story points:<span class="ibm-required"></span></label>
+                        <span>
+                          <input type="text" name="commPoints" id="commPoints" value="" placeholder="0" class="inputCustom wholeNumber" />
                         </span>
                       </p>
 
@@ -126,7 +127,7 @@
                           <a class="ibm-information-link" id="memberCountTT" style="position: relative; top: -5%; left: 2%; display: inline;"></a>
                         </label>
                         <span>
-                          <input type="text" name="memberCount" id="memberCount" size="8" value="" placeholder="0" min="0" class="inputCustom">
+                          <input type="text" name="memberCount" id="memberCount" value="" placeholder="0" class="inputCustom wholeNumber" />
                           <a id="refreshFTE" class="ibm-refresh-link" style="position: relative; top: -5px; left:10px; display: inline; cursor: pointer;" onclick="refreshFTE()" role="button"></a>
                         </span>
                       </p>
@@ -136,7 +137,7 @@
                           <a class="ibm-information-link" id="fteThisiterationTT" style="position: relative; top: -5%; left: 2%; display: inline;"></a>
                         </label>
                         <span>
-                          <input type="text" name="fteThisiteration" id="fteThisiteration" min="0" step="0.1" size="21" value="" placeholder="0.0" class="inputCustom" />
+                          <input type="text" name="fteThisiteration" id="fteThisiteration" value="" placeholder="0.0" class="inputCustom decimalNumber" />
                         </span>
                       </p>
 
@@ -147,49 +148,80 @@
 
                       <p>
                         <label for="commStoriesDel" style="width: 410px">Throughput - Stories/tickets/cards delivered:<span class="ibm-required"></span></label> <span> <input type="text"
-                          name="commStoriesDel" id="commStoriesDel" size="8" value="" placeholder="0" min="0" class="inputCustom">
+                          name="commStoriesDel" id="commStoriesDel" value="" placeholder="0" class="inputCustom wholeNumber" />
                         </span>
                       </p>
 
                       <p>
                         <label for="commPointsDel" style="width: 410px">Velocity - Story points delivered:<span class="ibm-required"></span></label> <span> <input type="text"
-                          name="commPointsDel" id="commPointsDel" size="8" value="" placeholder="0" min="0" class="inputCustom">
+                          name="commPointsDel" id="commPointsDel" value="" placeholder="0" class="inputCustom wholeNumber" />
                         </span>
                       </p>
 
                       <p>
                         <label for="DeploythisIteration" style="width: 410px">Deployments this iteration:</label>
                         <span>
-                          <input type="text" name="DeploythisIteration" id="DeploythisIteration" size="8" value="" placeholder="0" min="0" class="inputCustom">
+                          <input type="text" name="DeploythisIteration" id="DeploythisIteration" value="" placeholder="0" class="inputCustom wholeNumber" />
                         </span>
                       </p>
 
+                      <div class="ibm-rule ibm-gray-80">
+                        <hr>
+                      </div>
+                      <h2 class="ibm-bold ibm-h4">Defects</h2>
+                      <span id="defectHelp" style="color: grey">
+                        Capture the defects that are added and resolved in your production environment during this iteration. The opening and closing balance values are calculated, but you can change the opening balance if you need to. Once you make changes to that field, the data will not be recalculated unless you explicitly click to recalculate it.
+                      </span>
+                      <div class="defectsSection">
+                        <div>
+                          <label for="defectsStartBal">Opening balance:</label>
+                          <input type="text" name="defectsStartBal" id="defectsStartBal" value="" placeHolder="0" size="6" class="wholeNumber" />
+                          <a id="refreshDefectsStartBal" class="ibm-refresh-link" role="button"></a>
+                        </div>
+                        <div>
+                          <label for="defectsIteration">New this iteration:</label>
+                          <input type="text" name="defectsIteration" id="defectsIteration" value="" placeHolder="0" size="6" class="wholeNumber" />                      
+                        </div>
+                        <div>
+                          <label for="defectsClosed">Resolved this iteration:</label>
+                          <input type="text" name="defectsClosed" id="defectsClosed" value="" placeHolder="0" size="6" class="wholeNumber" />                      
+                        </div>
+                        <div>
+                          <label for="defectsEndBal">Closing balance:</label>
+                          <input type="text" name="defectsEndBal" id="defectsEndBal" value="" placeHolder="0" size="6" class="wholeNumber" disabled />
+                        </div>
+                      </div>
+                      <!--
                       <p>
                         <label for="defectsIteration" style="width: 410px">Defects this iteration:<span class="ibm-required"></span></label>
                         <span>
-                          <input type="text" name="defectsIteration" id="defectsIteration" size="8" value="" placeholder="0" min="0" class="inputCustom">
+                          <input type="text" name="defectsIteration" id="defectsIteration" value="" placeholder="0" class="inputCustom" />
                         </span>
+                      </p>
+                      -->
+                      <div class="ibm-rule ibm-gray-80">
+                        <hr>
+                      </div>
+                      <p>
+                        <label for="cycleTimeInBacklog" style="width: 410px">Cycle time in backlog (days):<span class="ibm-required"></span></label>
+                        <span>
+                         <input type="text" name="cycleTimeInBacklog" id="cycleTimeInBacklog" value="" placeholder="0.0" class="inputCustom decimalNumber " />
+                        </span>
+                        <div class="agile-static-helptip-backlog" id="helpBacklog" alt="How to calculate backlog time: For each story delivered in this iteration how long was it in your backlog before it was planned for this iteration? Put the average number of days in this field.">
+                          <strong>How to calculate backlog time</strong><br/>
+                          For each story delivered in this iteration how long was it in your backlog before it was planned for this iteration? Put the average number of days in this field.
+                        </div>
                       </p>
                       <p>
                         <label for="cycleTimeWIP" style="width: 410px">Cycle time in WIP (days):<span class="ibm-required"></span></label>
                         <span>
-                          <input type="text" name="cycleTimeWIP" id="cycleTimeWIP" min="0" step="0.1" size="21" value="" placeholder="0.0" class="inputCustom" />
+                          <input type="text" name="cycleTimeWIP" id="cycleTimeWIP" value="" placeholder="0.0" class="inputCustom decimalNumber" />
                         </span>
                         <div class="agile-static-helptip-WIP" id="helpWIP" alt="How to calculate WIP: For each story delivered in this iteration, how long did it take to go from being worked on (planned for this iteration) to production delivery? Put the average number of days in this field.">
                           <strong>How to calculate WIP</strong><br/>
                           For each story delivered in this iteration, how long did it take to go from being worked on (planned for this iteration) to production delivery? Put the average number of days in this field.
                         </div>
                       </p>
-                        <p>
-                          <label for="cycleTimeInBacklog" style="width: 410px">Cycle time in backlog (days):<span class="ibm-required"></span></label>
-                          <span>
-                           <input type="text" name="cycleTimeInBacklog" id="cycleTimeInBacklog" min="0" step="0.1" size="21" value="" placeholder="0.0" class="inputCustom" />
-                          </span>
-                          <div class="agile-static-helptip-backlog" id="helpBacklog" alt="How to calculate backlog time: For each story delivered in this iteration how long was it in your backlog before it was planned for this iteration? Put the average number of days in this field.">
-                            <strong>How to calculate backlog time</strong><br/>
-                            For each story delivered in this iteration how long was it in your backlog before it was planned for this iteration? Put the average number of days in this field.
-                          </div>
-                        </p>
                       <p>
                         <label for="teamChangeList" style="width: 410px">Was there a team change?
                           <a class="ibm-information-link" id="teamChangeListTT" style="position: relative; top: -5%; left: 2%; display: inline;"></a>
@@ -207,7 +239,7 @@
                           <a class="ibm-information-link" id="clientSatisfactionTT" style="position: relative; top: -5%; left: 2%; display: inline;"></a>
                         </label>
                         <span>
-                          <input type="text" name="clientSatisfaction" id="clientSatisfaction" min="0" max="4.0" step="0.1" size="21" value="" placeholder="0.0" class="inputCustom" />
+                          <input type="text" name="clientSatisfaction" id="clientSatisfaction" value="" placeholder="0.0" class="inputCustom decimalNumber" />
                         </span>
                       </p>
 
@@ -216,7 +248,7 @@
                           <a class="ibm-information-link" id="teamSatisfactionTT" style="position: relative; top: -5%; left: 2%; display: inline;"></a>
                         </label>
                         <span>
-                          <input type="text" name="teamSatisfaction" id="teamSatisfaction" min="0" max="4.0" step="0.1" size="21" value="" placeholder="0.0" class="inputCustom" />
+                          <input type="text" name="teamSatisfaction" id="teamSatisfaction" value="" placeholder="0.0" class="inputCustom decimalNumber" />
                         </span>
                       </p>
 
@@ -235,14 +267,14 @@
                       <p>
                         <label for="unitcostStoriesFTE" style="width: 410px">Unit cost - Stories per FTE:<span class="ibm-required"></span></label>
                         <span>
-                          <input type="text" name="unitcostpercStories" id="unitcostStoriesFTE" size="21" min="0" value="" placeholder="0.0" disabled class="inputCustom" step=0.1>
+                          <input type="text" name="unitcostpercStories" id="unitcostStoriesFTE" placeholder="0.0" disabled class="inputCustom" />
                         </span>
                       </p>
 
                       <p>
                         <label for="unitcostStorypointsFTE" style="width: 410px">Unit cost - Story points per FTE:<span class="ibm-required"></span></label>
                         <span>
-                          <input type="text" name="unitcostpercStorypoints" id="unitcostStorypointsFTE" size="21" min="0" value="" placeholder="0.0" disabled class="inputCustom" step=0.1>
+                          <input type="text" name="unitcostpercStorypoints" id="unitcostStorypointsFTE" placeholder="0.0" disabled class="inputCustom" />
                         </span>
                       </p>
 

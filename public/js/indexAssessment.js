@@ -56,21 +56,21 @@ function destroyAssessmentCharts() {
   $(Highcharts.charts).each(function(i, chart) {
     if (chart == null) return;
 
-    if ($('#assessmentCharts #' + $(chart.container).attr('id')).length > 0) {
+    if ($('#assessmentSection #' + $(chart.container).attr('id')).length > 0) {
       chart.destroy();
     }
   });
 
-  $('#assessmentCharts').empty();
+  $('#assessmentCharts,#assessmentEval').empty();
 
   var p = document.createElement('p');
   p.appendChild(document.createTextNode('No assessment results to display.'));
-  $('#assessmentCharts').append(p);
+  $('#assessmentCharts,#assessmentEval').append(p);
 
   var hrDiv = document.createElement('div');
   hrDiv.setAttribute('class', 'ibm-rule ibm-alternate ibm-gray-30');
   hrDiv.appendChild(document.createElement('hr'));
-  $('#assessmentCharts').append(hrDiv);
+  $('#assessmentCharts,#assessmentEval').append(hrDiv);
 }
 
 function plotAssessmentSeries(teamAssessments) {
@@ -376,4 +376,136 @@ function createChartSection(prefixId) {
   mainDiv.appendChild(colDiv);
 
   return mainDiv;
+}
+
+function assessmentEvaluation(assessmentData){
+  var graphCategory = [];
+  var teamNoAssessment = new Object();
+  teamNoAssessment.name = 'Squads that have not taken the assessment';
+  teamNoAssessment.data = [];
+  teamNoAssessment.color = '#808080';
+
+  var teamGt120Days = new Object();
+  teamGt120Days.name = 'Squads that have not taken the assessment in more than 120 days';
+  teamGt120Days.data = [];
+  teamGt120Days.color = '#CCCCCC';
+
+  var teamLt120Days = new Object();
+  teamLt120Days.name = 'Squads that have taken the assessment in the past 120 days';
+  teamLt120Days.data = [];
+  teamLt120Days.color = '#B4E051';
+
+  for (var i = 0; i < assessmentData.length; i++) {
+    var graphCat;
+
+    var tNoData = new Object();
+    var tGt120Data = new Object();
+    var tLt120Data = new Object();
+
+    graphCat = assessmentData[i].month;
+    graphCategory.push(graphCat);
+
+    tLt120Data.name = assessmentData[i].month;
+    var l120days = isNaN(parseInt(assessmentData[i].less_120_days)) ? null : parseInt(assessmentData[i].less_120_days) == 0 ? null : parseInt(assessmentData[i].less_120_days);
+    tLt120Data.y = l120days;
+    teamLt120Days.data.push(tLt120Data);
+
+    tGt120Data.name = assessmentData[i].month;
+    var g120days = isNaN(parseInt(assessmentData[i].gt_120_days)) ? null : parseInt(assessmentData[i].gt_120_days) == 0 ? null : parseInt(assessmentData[i].gt_120_days);
+    tGt120Data.y = g120days;
+    teamGt120Days.data.push(tGt120Data);
+
+    tNoData.name = assessmentData[i].month;
+    var noData = isNaN(parseInt(assessmentData[i].no_submission)) ? null : parseInt(assessmentData[i].no_submission) == 0 ? null : parseInt(assessmentData[i].no_submission);
+    tNoData.y = noData;
+    teamNoAssessment.data.push(tNoData);
+  }
+  var max = 100;
+  if (teamLt120Days.data.length > 0 || teamGt120Days.data.length > 0 || teamNoAssessment.data.length > 0) {
+    max = null;
+  }
+
+  loadBarAssessmentEvaluation('assessmentEval', 'Frequency of Maturity Assessment Evaluations','column', graphCategory, teamLt120Days, teamGt120Days, teamNoAssessment, 100);
+}
+
+function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, seriesObj2, seriesObj3, yMax) {
+
+  new Highcharts.Chart({
+    chart: {
+      type: type,
+      renderTo: id,
+      marginLeft: 60,
+      width:390
+    },
+    lang: {
+      noData: 'No results reported'
+    },
+    noData: {
+      style: {
+        fontWeight: 'bold',
+        fontSize: '12px',
+        color: '#303030'
+      }
+    },
+    title: {
+      style: {
+        'fontSize': '15px'
+      },
+      text: title
+    },
+    legend: {
+      symbolRadius: 0,
+      itemStyle: {
+        fontSize: '12px',
+        width: 300
+      }
+    },
+    xAxis: {
+      labels: {
+        style: {
+          'fontSize': '9px'
+        }
+      },
+      title: {
+        text: 'Months',
+        x: -20
+      },
+      categories: categories
+    },
+    yAxis: {
+      min: 0,
+      max: yMax,
+      tickInterval: 10,
+      title: {
+        text: '% of squads within the team'
+      }
+    },
+    plotOptions: {
+      column: {
+        stacking: 'percent'
+      }
+    },
+    tooltip: {
+      formatter: function () {
+        return '# of squads: ' + this.y+
+        '<br/>% of teams: ' + this.percentage.toFixed(1);
+      }
+    },
+    series: [{
+      name: seriesObj3.name,
+      data: seriesObj3.data,
+      color: seriesObj3.color
+    }, {
+      name: seriesObj2.name,
+      data: seriesObj2.data,
+      color: seriesObj2.color
+    }, {
+      name: seriesObj1.name,
+      data: seriesObj1.data,
+      color: seriesObj1.color
+    }],
+    credits: {
+      enabled: false
+    }
+  });
 }

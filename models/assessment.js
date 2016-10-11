@@ -238,6 +238,19 @@ var assessment = {
         reject(formatErrMsg(msg));
       }
     });
+  },
+  getSubmittedAssessments: function(startDate, endDate) {
+    return new Promise(function(resolve, reject) {
+      infoLogs('Getting all submitted assessments record from Cloudant.');
+      common.getByView('assessments', 'submitted')
+        .then(function(body) {
+          successLogs('Submitted assessments record retrieved.');
+          resolve(body);
+        })
+        .catch(function(err) {
+          reject(formatErrMsg(err.error));
+        });
+    });
   }
 };
 
