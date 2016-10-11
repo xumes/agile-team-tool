@@ -1398,7 +1398,6 @@ describe('Team models [defaultTeamDoc]', function() {
   });
 });
 
-//modifyTeamMembers: function(teamId, userId, members) {
 describe('Team models [modifyTeamMembers]', function() {
   var validTeamMembers = teamMembersDummy['teams'].validMembers();
   it('it will return an error because teamId is required', function(done) {
@@ -1422,12 +1421,153 @@ describe('Team models [modifyTeamMembers]', function() {
   });
 
   it('it will return an success in modifying team member', function(done) {
+    this.timeout(20000);
     teamDocValid['name'] = 'name ' + Date.now();
     teamModel.createTeam(teamDocValid, userDetails)
       .then(function(body) {
         var modifyTeamId = body['_id'];
         removedId.push(body['_id']);
         teamModel.modifyTeamMembers(modifyTeamId, userDetails['shortEmail'], validTeamMembers)
+          .then(function(body){
+            expect(body).to.be.a('object');
+            expect(body).to.have.property('userTeams');
+            expect(body).to.have.property('teamDetails');
+            done();
+          });
+      });
+  });
+});
+
+describe('Team models [modifyImportantLinks]', function(){
+  this.timeout(20000);
+  it('it will return an error message: Team ID is required', function(done){
+    var validLinks = [{id:'12345', linkLabel:'Defects', linkUrl:'http://site1.com'}];
+    var teamId = '';
+    teamModel.modifyImportantLinks(teamId, userDetails['shortEmail'], validLinks)
+      .catch(function(err){
+        expect(err.error['teamId'][0]).to.be.equal('Team ID is required');
+        done();
+      });
+  });
+
+  it('it will return an error message: User ID is required', function(done){
+    var validLinks = [{id:'12345', linkLabel:'Defects', linkUrl:'http://site1.com'}];
+    var teamId = '123456';
+    teamModel.modifyImportantLinks(teamId, '', validLinks)
+      .catch(function(err){
+        expect(err.error['userId'][0]).to.be.equal('User ID is required');
+        done();
+      });
+  });
+
+  it('it will return an error message: Link url is required', function(done){
+    teamModel.modifyImportantLinks('123456', userDetails['shortEmail'])
+      .catch(function(err){
+        expect(err.error['links'][0]).to.be.equal('Link url is required');
+        done();
+      });
+  });
+
+  it('it will return an error message: Invalid links', function(done){
+    teamModel.modifyImportantLinks('123456', userDetails['shortEmail'], 'xxx')
+      .catch(function(err){
+        expect(err.error['links'][0]).to.be.equal('Invalid links');
+        done();
+      });
+  });
+
+  it('it will return an error message: URL is not valid', function(done){
+    var invalidLinks = [{id:'12345', linkLabel:'Defects', linkUrl:'zxascdwqe'}];
+    teamModel.modifyImportantLinks('123456', userDetails['shortEmail'], invalidLinks)
+      .catch(function(err){
+        expect(err.error['links'][0]['linkUrl']).to.contain('not');
+        done();
+      });
+  });
+
+  it('it will return an error message: Link label is required', function(done){
+    var invalidLinks = [{id:'12345', linkLabel:'Select label', linkUrl:'http://site1.com'}];
+    teamModel.modifyImportantLinks('123456', userDetails['shortEmail'], invalidLinks)
+      .catch(function(err){
+        expect(err.error['links'][0]['linkLabel']).to.be.equal('Link label is required');
+        done();
+      });
+  });
+
+  it('it will return success in modifying links', function(done) {
+    teamDocValid['name'] = 'name ' + Date.now();
+    teamModel.createTeam(teamDocValid, userDetails)
+      .then(function(body) {
+        var modifyTeamId = body['_id'];
+        removedId.push(body['_id']);
+        var validLinks = [{id:'12345', linkLabel:'Defects', linkUrl:'http://site1.com'}];
+        teamModel.modifyImportantLinks(modifyTeamId, userDetails['shortEmail'], validLinks)
+          .then(function(body){
+            expect(body).to.be.a('object');
+            expect(body).to.have.property('userTeams');
+            expect(body).to.have.property('teamDetails');
+            done();
+          });
+      });
+  });
+});
+
+describe('Team models [deleteImportantLinks]', function(){
+  this.timeout(20000);
+  it('it will return an error message: Team ID is required', function(done){
+    var validLinks = [{id:'12345', linkLabel:'Defects', linkUrl:'http://site1.com'}];
+    var teamId = '';
+    teamModel.deleteImportantLinks(teamId, userDetails['shortEmail'], validLinks)
+      .catch(function(err){
+        expect(err.error['teamId'][0]).to.be.equal('Team ID is required');
+        done();
+      });
+  });
+
+  it('it will return an error message: User ID is required', function(done){
+    var validLinks = [{id:'12345', linkLabel:'Defects', linkUrl:'http://site1.com'}];
+    var teamId = '123456';
+    teamModel.deleteImportantLinks(teamId, '', validLinks)
+      .catch(function(err){
+        expect(err.error['userId'][0]).to.be.equal('User ID is required');
+        done();
+      });
+  });
+
+  it('it will return an error message: Link url is required', function(done){
+    var invalidLinks = [{id:'12345', linkLabel:'Defects'}];
+    teamModel.deleteImportantLinks('123456', userDetails['shortEmail'], invalidLinks)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        done();
+      });
+  });
+
+  it('it will return an error message: Invalid links', function(done){
+    teamModel.deleteImportantLinks('123456', userDetails['shortEmail'], 'xxx')
+      .catch(function(err){
+        expect(err.error['links'][0]).to.be.equal('Invalid links');
+        done();
+      });
+  });
+
+  it('it will return an error message: URL is not valid', function(done){
+    var invalidLinks = [{id:'12345', linkLabel:'Defects', linkUrl:'zxascdwqe'}];
+    teamModel.deleteImportantLinks('123456', userDetails['shortEmail'], invalidLinks)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        done();
+      });
+  });
+
+  it('it will return success in deleting a links', function(done) {
+    teamDocValid['name'] = 'name ' + Date.now();
+    teamModel.createTeam(teamDocValid, userDetails)
+      .then(function(body) {
+        var modifyTeamId = body['_id'];
+        removedId.push(body['_id']);
+        var validLinks = [{id:'12345', linkLabel:'Defects', linkUrl:'http://site1.com'}];
+        teamModel.deleteImportantLinks(modifyTeamId, userDetails['shortEmail'], validLinks)
           .then(function(body){
             expect(body).to.be.a('object');
             expect(body).to.have.property('userTeams');
