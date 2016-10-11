@@ -113,10 +113,10 @@ var IterationSchema = {
   },
 };
 
-function isIterationNumExist(Iteration_name, iterData, updateId) {
+function isIterationNumExist(iterationName, iterData, updateId) {
   var duplicate = false;
   _.find(iterData, function(iter){
-    if (iter.name == Iteration_name) {
+    if (iter.name == iterationName) {
       if (updateId) {
         if (updateId.toString() != (iter._id).toString()) {
           duplicate = true;
@@ -129,9 +129,9 @@ function isIterationNumExist(Iteration_name, iterData, updateId) {
   return duplicate;
 };
 
-var Iteration_schema = new Schema(IterationSchema);
+var iterationSchema = new Schema(IterationSchema);
 
-var Iteration = mongoose.model('iterations', Iteration_schema);
+var Iteration = mongoose.model('iterations', iterationSchema);
 
 var IterationExport = {
   getModel: function() {
@@ -151,7 +151,7 @@ var IterationExport = {
           });
       }
       else {
-        infoLogs('getByIterInfo() - no teamId, Getting all team Iteration docs');
+        loggers.get('model-iteration').verbose('getByIterInfo() - no teamId, Getting all team Iteration docs');
         if (limit) {
           Iteration.find().limit(limit).exec()
             .then(function(results){
