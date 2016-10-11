@@ -444,7 +444,7 @@ function createCriteriaTable(practice, htmlLoc, practiceId) {
   th.setAttribute('scope', 'col');
   th.setAttribute('width', '10%');
   th.setAttribute('id', practiceId + '_th_curr');
-  th.setAttribute('style', 'left: -5%; text-align: center; display: none');
+  th.setAttribute('style', 'left: -1%; text-align: center; display: none; position: relative;');
   th.appendChild(document.createTextNode('Current'));
 
   a.setAttribute('class', 'ibm-information-link');
