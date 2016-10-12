@@ -16,10 +16,11 @@ module.exports = function(app, includes) {
 
   isUserAllowed = function(req, res) {
     if (_.isUndefined(req.query.teamId) || _.isEmpty(req.query.teamId)) {
-      res.status(400).send({'error': 'teamId is empty'});
-    }
-    else {
-      Users.isUserAllowed(req.session.userId, req.query.teamId)
+      res.status(400).send({
+        'error': 'teamId is empty'
+      });
+    } else {
+      Users.isUserAllowed(req.session.user.ldap.uid, req.query.teamId)
         .then(function(result) {
           res.status(200).send(result);
         })
@@ -38,7 +39,7 @@ module.exports = function(app, includes) {
           'shortEmail': result.email
         });
       })
-      .catch(function(err){
+      .catch(function(err) {
         res.status(404).send(err);
       });
   };
@@ -48,7 +49,7 @@ module.exports = function(app, includes) {
       .then(function(result) {
         res.status(200).send(result);
       })
-      .catch(function(err){
+      .catch(function(err) {
         res.status(404).send(err);
       });
   };
@@ -61,21 +62,33 @@ module.exports = function(app, includes) {
 
   //TODO: Refactor this and store in the database
   getRoles = function(req, res) {
-    var roles = [
-      { name: 'Analyst' },
-      { name: 'Architect' },
-      { name: 'Consultant' },
-      { name: 'DBA' },
-      { name: 'Designer' },
-      { name: 'Developer' },
-      { name: 'Infrastructure' },
-      { name: 'Iteration Manager' },
-      { name: 'Manager' },
-      { name: 'Operations and Support' },
-      { name: 'Product Owner' },
-      { name: 'Program & Project Mgmt' },
-      { name: 'Tester' }
-    ];
+    var roles = [{
+      name: 'Analyst'
+    }, {
+      name: 'Architect'
+    }, {
+      name: 'Consultant'
+    }, {
+      name: 'DBA'
+    }, {
+      name: 'Designer'
+    }, {
+      name: 'Developer'
+    }, {
+      name: 'Infrastructure'
+    }, {
+      name: 'Iteration Manager'
+    }, {
+      name: 'Manager'
+    }, {
+      name: 'Operations and Support'
+    }, {
+      name: 'Product Owner'
+    }, {
+      name: 'Program & Project Mgmt'
+    }, {
+      name: 'Tester'
+    }];
     res.json(roles);
   };
 

@@ -708,7 +708,7 @@ module.exports.getParentByTeamId = function(teamId) {
         }
       })
       .then(function(parentPathId) {
-        return Team.findOne({pathId: parentPathId}).exec()
+        return Team.findOne({pathId: parentPathId}).exec();
       })
       .then(function(parentTeam) {
         resolve(parentTeam);
