@@ -65,12 +65,12 @@ function destroyAssessmentCharts() {
 
   var p = document.createElement('p');
   p.appendChild(document.createTextNode('No assessment results to display.'));
-  $('#assessmentCharts,#assessmentEval').append(p);
+  $('#assessmentCharts').append(p);
 
   var hrDiv = document.createElement('div');
   hrDiv.setAttribute('class', 'ibm-rule ibm-alternate ibm-gray-30');
   hrDiv.appendChild(document.createElement('hr'));
-  $('#assessmentCharts,#assessmentEval').append(hrDiv);
+  $('#assessmentCharts').append(hrDiv);
 }
 
 function plotAssessmentSeries(teamAssessments) {
@@ -381,17 +381,17 @@ function createChartSection(prefixId) {
 function assessmentEvaluation(assessmentData){
   var graphCategory = [];
   var teamNoAssessment = new Object();
-  teamNoAssessment.name = 'Squads that have not taken the assessment';
+  teamNoAssessment.name = 'Squads with no assessment';
   teamNoAssessment.data = [];
   teamNoAssessment.color = '#808080';
 
   var teamGt120Days = new Object();
-  teamGt120Days.name = 'Squads that have not taken the assessment in more than 120 days';
+  teamGt120Days.name = 'Squads > 120 days since last assessment';
   teamGt120Days.data = [];
   teamGt120Days.color = '#CCCCCC';
 
   var teamLt120Days = new Object();
-  teamLt120Days.name = 'Squads that have taken the assessment in the past 120 days';
+  teamLt120Days.name = 'Squads with assessment in last 120 days';
   teamLt120Days.data = [];
   teamLt120Days.color = '#B4E051';
 
@@ -456,8 +456,7 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
     legend: {
       symbolRadius: 0,
       itemStyle: {
-        fontSize: '12px',
-        width: 300
+        fontSize: '12px'
       }
     },
     xAxis: {
@@ -487,22 +486,43 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
     },
     tooltip: {
       formatter: function () {
-        return '# of squads: ' + this.y+
+        return '# of squads: ' + this.y +
         '<br/>% of teams: ' + this.percentage.toFixed(1);
       }
     },
     series: [{
       name: seriesObj3.name,
       data: seriesObj3.data,
-      color: seriesObj3.color
+      color: seriesObj3.color,
+      dataLabels: {
+        enabled: true,
+        style:{
+          textShadow: false,
+          color: 'white'
+        }
+      }
     }, {
       name: seriesObj2.name,
       data: seriesObj2.data,
-      color: seriesObj2.color
+      color: seriesObj2.color,
+      dataLabels: {
+        enabled: true,
+        style:{
+          textShadow: false,
+          color: 'black'
+        }
+      }
     }, {
       name: seriesObj1.name,
       data: seriesObj1.data,
-      color: seriesObj1.color
+      color: seriesObj1.color,
+      dataLabels: {
+        enabled: true,
+        style:{
+          textShadow: false,
+          color: 'black'
+        }
+      }
     }],
     credits: {
       enabled: false
