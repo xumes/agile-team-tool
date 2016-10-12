@@ -113,10 +113,10 @@ var IterationSchema = {
   },
 };
 
-function isIterationNumExist(Iteration_name, iterData, updateId) {
+function isIterationNumExist(iterationName, iterData, updateId) {
   var duplicate = false;
   _.find(iterData, function(iter){
-    if (iter.name == Iteration_name) {
+    if (iter.name == iterationName) {
       if (updateId) {
         if (updateId.toString() != (iter._id).toString()) {
           duplicate = true;
@@ -129,9 +129,9 @@ function isIterationNumExist(Iteration_name, iterData, updateId) {
   return duplicate;
 };
 
-var Iteration_schema = new Schema(IterationSchema);
+var iterationSchema = new Schema(IterationSchema);
 
-var Iteration = mongoose.model('iterations', Iteration_schema);
+var Iteration = mongoose.model('iterations', iterationSchema);
 
 var IterationExport = {
   getModel: function() {
@@ -151,7 +151,7 @@ var IterationExport = {
           });
       }
       else {
-        infoLogs('getByIterInfo() - no teamId, Getting all team Iteration docs');
+        loggers.get('model-iteration').verbose('getByIterInfo() - no teamId, Getting all team Iteration docs');
         if (limit) {
           Iteration.find().limit(limit).exec()
             .then(function(results){
@@ -309,7 +309,7 @@ var IterationExport = {
           '$lte': moment(new Date(endDate)).format(dateFormat)
         };
     }
-    loggers.get('model-Iteration').verbose('Querying Iteration:' + JSON.stringify(qReq));
+    loggers.get('model-iteration').verbose('Querying Iteration:' + JSON.stringify(qReq));
     return Iteration.find(qReq).sort('-endDate').exec();
   },
 
@@ -383,7 +383,8 @@ var IterationExport = {
         var msg = {
           _id: ['_id/_rev is missing']
         };
-        reject(formatErrMsg(msg));
+        loggers.get('model-iteration').error('delete() ' + err);
+        reject(Error(err));
       } else {
         Iteration.remove({'_id': docId})
           .then(function(body) {
@@ -391,8 +392,8 @@ var IterationExport = {
           })
           .catch( /* istanbul ignore next */ function(err) {
           /* cannot simulate Cloudant error during testing */
-            var msg = err.message;
-            reject(formatErrMsg(msg));
+            loggers.get('model-iteration').error('delete() ' + err);
+            reject(Error(err));
           });
       }
     });
@@ -401,16 +402,18 @@ var IterationExport = {
     return new Promise(function(resolve, reject) {
       if (!request) {
         var msg = 'request is missing';
-        reject(formatErrMsg(msg));
-      } else {
+        loggers.get('model-iteration').error('delete() ' + msg);
+        reject(Error(msg));
+      }
+      else {
         Iteration.findOneAndRemove(request).exec()
           .then(function(body) {
             resolve(body);
           })
           .catch( /* istanbul ignore next */ function(err) {
           /* cannot simulate Cloudant error during testing */
-            var msg = err.message;
-            reject(formatErrMsg(msg));
+            loggers.get('model-iteration').error('deleteByFields() ' + err);
+            reject(Error(err));
           });
       }
     });

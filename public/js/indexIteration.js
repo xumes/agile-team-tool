@@ -268,7 +268,7 @@ function fmDate(date) {
 };
 
 function hasAccessToIter(teamId) {
-  var url = '/api/users/isuserallowed?' + 'email=' + encodeURIComponent((userInfo.email).toLowerCase()) + '&teamId=' + encodeURIComponent(teamId);
+  var url = '/api/users/isuserallowed?' + '?teamId=' + encodeURIComponent(teamId);
   var req = $.ajax({
     type: 'GET',
     url: url
