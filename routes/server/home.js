@@ -6,7 +6,8 @@ module.exports = function(app, includes) {
   showHome = function(req, res) {
     var json = {
       'pageTitle': 'Home',
-      'googleAnalyticsKey': settings.googleAnalyticsKey
+      'googleAnalyticsKey': settings.googleAnalyticsKey,
+      'ibmNPSKey': settings.ibmNPSKey
     };
     render(req, res, 'home', json);
   };
