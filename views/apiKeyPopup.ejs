@@ -1,0 +1,28 @@
+<div class="ibm-common-overlay ibm-overlay-alt-two" data-widget="overlay" id="generateApiKey" style="overflow:auto;">
+	<h2 style="padding-bottom: 0px; font-size: 22px; " class="ibm-bold">Generate API Key</h2>
+  <p  style="padding-top: 5px;padding-bottom: 0px;">The API key is used for APIs that write data directly to the Agile Team Tool from another system.</p>
+
+    <br>
+		<span class="ibm-btn-row">
+			<input type="button" class="ibm-btn-sec ibm-btn-small" id="apiKeyButton" value="Generate API key" onclick="getApiKey();" />
+		</span>
+		<div id="apiKeySection"  style="display: none;" >
+		<span style="font-size: 9pt; font-weight: bold" >Keys:&nbsp;</span><span style="font-size: 9pt" id="apiKey"></span>&nbsp;&nbsp;
+		<button class="button" id="copy-button_apiKey" data-clipboard-target="#apiKey" style="font-size: 10pt; font-weight: bold;"  onclick="return false;">Copy to Clipboard</button>
+    </div>
+
+		<div class="ibm-rule ibm-alternate-1" style="margin-top: 0px;">
+			<hr>
+		</div>
+
+		<p>
+			<span	style="text-align: right; float: right; display: table-row-group;"	class="ibm-btn-row">
+				<input type="button"
+				class="ibm-btn-sec ibm-btn-small" id="apiKey_cancel"
+				value="Cancel" onclick="closeApiKey();" />
+			</span>
+		</p>
+    <p>&nbsp;</p>
+		<p>&nbsp;</p>
+	</form>
+</div>
