@@ -89,10 +89,11 @@ function plotAssessmentSeries(teamAssessments) {
   chartSeries = [];
   var chartData = new Object();
 
-  if (assessmentsToPlot.length > 0)
+  if (assessmentsToPlot.length > 0){
     $('#assessmentCharts').empty();
+  }
   else {
-     noAssessmentRecord();
+    noAssessmentRecord();
   }
 
   for (i = assessmentsToPlot.length - 1; i > -1; i--) {
