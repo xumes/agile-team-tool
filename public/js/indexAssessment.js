@@ -630,7 +630,8 @@ function loadLineMaturityTrend(id, title, type, categories, seriesObj1, seriesOb
     },
     tooltip: {
       formatter: function () {
-        return '# of squads: ' + this.point.squads;
+        return 'Maturity: ' + this.y +
+        '<br/># of squads: ' + this.point.squads;
       }
     },
     series: [{
