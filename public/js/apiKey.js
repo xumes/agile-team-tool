@@ -3,7 +3,7 @@ var valCount = 0;
 var hasError = false;
 jQuery(function($) {
   $(document).ready(function(){
-    new Clipboard('#copy-button_apiKey');
+    new Clipboard('#copy-button');
   });
 });
 
@@ -35,6 +35,7 @@ function getApiKey() {
     if (data != undefined) {
       uuidKey = data.apiKey;
       $('#apiKey').html(uuidKey);
+      $('#copy-button').attr('data-clipboard-text', uuidKey);
       $('#apiKeySection').show();
     }
   });
@@ -53,6 +54,7 @@ function getApiKeyByUser() {
     if (data != undefined) {
       uuidKey = data.apiKey;
       $('#apiKey').html(uuidKey);
+      $('#copy-button').attr('data-clipboard-text', uuidKey);
       $('#apiKeySection').show();
       //document.getElementById('apiKeyButton').disabled = true;
     }
