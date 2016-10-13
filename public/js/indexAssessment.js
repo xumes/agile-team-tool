@@ -60,7 +60,9 @@ function destroyAssessmentCharts() {
       chart.destroy();
     }
   });
+}
 
+function noAssessmentRecord(){
   $('#assessmentCharts').empty();
 
   var p = document.createElement('p');
@@ -87,8 +89,12 @@ function plotAssessmentSeries(teamAssessments) {
   chartSeries = [];
   var chartData = new Object();
 
-  if (assessmentsToPlot.length > 0)
+  if (assessmentsToPlot.length > 0){
     $('#assessmentCharts').empty();
+  }
+  else {
+    noAssessmentRecord();
+  }
 
   for (i = assessmentsToPlot.length - 1; i > -1; i--) {
     var results = assessmentsToPlot[i]['assessmt_cmpnt_rslts'];
@@ -610,8 +616,7 @@ function loadLineMaturityTrend(id, title, type, categories, seriesObj1, seriesOb
         }
       },
       title: {
-        text: 'Months',
-        x: -20
+        text: 'Months'
       },
       categories: categories,
       tickmarkPlacement: 'on'

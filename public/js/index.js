@@ -507,7 +507,7 @@ function setRefreshDate(timestamp) {
 //refresh button on the screen to refresh snapshot from workers
 function performChartRefresh(teamId, teamName) {
   destroyIterationCharts();
-  destroyAssessmentCharts();
+  //destroyAssessmentCharts();
   getSnapshot(teamId, teamName);
 }
 
@@ -1008,7 +1008,7 @@ var selectedElement = '';
 
 function performSnapshotPull(teamId, teamName) {
   destroyIterationCharts();
-  destroyAssessmentCharts();
+  //destroyAssessmentCharts();
   getSnapshot(teamId, teamName);
 }
 
