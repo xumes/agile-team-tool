@@ -1,2 +1,2 @@
 
-require('../public/js/v2Index.jsx');
+require('../public/js/v2Home.jsx');
