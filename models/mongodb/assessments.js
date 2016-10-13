@@ -225,7 +225,7 @@ module.exports.getTeamAssessments = function(teamId){
       loggers.get('models').error('Error: ' + err);
       reject(err);
     } else {
-      Assessment.find({'teamId': teamId })
+      Assessment.find({'teamId': teamId})
       .then(function(result) {
         resolve(result);
       })
