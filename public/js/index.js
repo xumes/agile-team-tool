@@ -701,9 +701,9 @@ function getAssessmentSnapshot(teamId) {
         } else if (data.rows.length <= 0) {
           console.log('no assessment data for team: ', teamId);
           //$('#refreshDate').html('Waiting for updating');
-          assessmentEvaluation(assessmentTempData);
+          assessmentParentRollup(assessmentTempData);
         } else {
-          assessmentEvaluation(data.rows[0].value.value);
+          assessmentParentRollup(data.rows[0].value.value);
         }
       } else {
         showLog('data loaded: ' + JSON.stringify(data));

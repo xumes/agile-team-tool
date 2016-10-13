@@ -695,6 +695,7 @@ function rollUpAssessmentsBySquad(assessments, teamId) {
 
     _.each(assessments, function(assessment ) {
       var assessmentDate = new Date(assessment['self-assessmt_dt']);
+
       for (var i = 0; i <= ASSESSMENT_PERIOD; i++) {
         var period = assessmentMonths[i];
         var month = monthNames.indexOf(period.substring(0, period.indexOf(' ')));
@@ -719,6 +720,18 @@ function rollUpAssessmentsBySquad(assessments, teamId) {
           else {
             currData[i].gt_120_days += 1;
           }
+
+          //process team average scores
+          if (currData[i].mar_date != undefined){
+            var time = timeDiff(currData[i].mar_date,assessmentDate);
+            // get latest assessment data
+            if (time < 0){
+              setMaturityData(assessment, currData[i], assessmentDate);
+            }
+          }
+          else {
+            setMaturityData(assessment, currData[i], assessmentDate);
+          }
         }
         else {
           continue;
@@ -740,6 +753,7 @@ function rollUpAssessmentsBySquad(assessments, teamId) {
       else {
         period.no_submission = 1;
       }
+      delete period.mar_date;
     });
     resolve(rollUpAssessmentData);
   });
@@ -769,12 +783,32 @@ function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsCalResults, i
           currData[j].less_120_days += squadAssessmentResult[j].less_120_days;
           currData[j].gt_120_days += squadAssessmentResult[j].gt_120_days;
           currData[j].no_submission += squadAssessmentResult[j].no_submission;
+
+          currData[j].prj_foundation_score += squadAssessmentResult[j].prj_foundation_score;
+          currData[j].operation_score += squadAssessmentResult[j].operation_score;
+          currData[j].prj_devops_score += squadAssessmentResult[j].prj_devops_score;
+
+          currData[j].total_prj_foundation += squadAssessmentResult[j].total_prj_foundation;
+          currData[j].total_prj_devops += squadAssessmentResult[j].total_prj_devops;
+          currData[j].total_operation += squadAssessmentResult[j].total_operation;
         }
         else {
           currData[j].no_submission += 1;
         }
       }
     }
+    _.each(currData, function(period, index) {
+      if (period.total_prj_foundation > 1){
+        period.prj_foundation_score = (period.prj_foundation_score/period.total_prj_foundation).toFixed(1);
+      }
+      else if (period.total_operation > 1){
+        period.operation_score = (period.operation_score/period.total_operation).toFixed(1);
+      }
+      if (period.total_prj_devops > 1) {
+        period.prj_devops_score = (period.prj_devops_score/period.total_prj_devops).toFixed(1);
+      }
+    });
+
     var newDate = new Date();
     var days = daysInMonth(newDate.getMonth() + 1, newDate.getFullYear());
     if (newDate.getDate() < days) {
@@ -798,11 +832,25 @@ function daysDiff(date1, date2) {
   return days;
 };
 
+function timeDiff(date1, date2) {
+  var dateFormat = 'YYYY-MM-DD HH:mm:ss';
+  var d1 = moment(date1, dateFormat);
+  var d2 = moment(date2, dateFormat);
+  var time = moment(d1).diff(d2);
+  return time;
+};
+
 function resetAssessmentData() {
   return [{
     'less_120_days': 0,
     'gt_120_days': 0,
     'no_submission': 0,
+    'prj_foundation_score': 0,
+    'prj_devops_score': 0,
+    'operation_score': 0,
+    'total_prj_foundation': 0,
+    'total_prj_devops': 0,
+    'total_operation': 0,
     'totalSquad': 0,
     'month': '',
     'partialMonth': false
@@ -810,6 +858,12 @@ function resetAssessmentData() {
     'less_120_days': 0,
     'gt_120_days': 0,
     'no_submission': 0,
+    'prj_foundation_score': 0,
+    'prj_devops_score': 0,
+    'operation_score': 0,
+    'total_prj_foundation': 0,
+    'total_prj_devops': 0,
+    'total_operation': 0,
     'totalSquad': 0,
     'month': '',
     'partialMonth': false
@@ -817,6 +871,12 @@ function resetAssessmentData() {
     'less_120_days': 0,
     'gt_120_days': 0,
     'no_submission': 0,
+    'prj_foundation_score': 0,
+    'prj_devops_score': 0,
+    'operation_score': 0,
+    'total_prj_foundation': 0,
+    'total_prj_devops': 0,
+    'total_operation': 0,
     'totalSquad': 0,
     'month': '',
     'partialMonth': false
@@ -824,6 +884,12 @@ function resetAssessmentData() {
     'less_120_days': 0,
     'gt_120_days': 0,
     'no_submission': 0,
+    'prj_foundation_score': 0,
+    'prj_devops_score': 0,
+    'operation_score': 0,
+    'total_prj_foundation': 0,
+    'total_prj_devops': 0,
+    'total_operation': 0,
     'totalSquad': 0,
     'month': '',
     'partialMonth': false
@@ -831,6 +897,12 @@ function resetAssessmentData() {
     'less_120_days': 0,
     'gt_120_days': 0,
     'no_submission': 0,
+    'prj_foundation_score': 0,
+    'prj_devops_score': 0,
+    'operation_score': 0,
+    'total_prj_foundation': 0,
+    'total_prj_devops': 0,
+    'total_operation': 0,
     'totalSquad': 0,
     'month': '',
     'partialMonth': false
@@ -838,11 +910,48 @@ function resetAssessmentData() {
     'less_120_days': 0,
     'gt_120_days': 0,
     'no_submission': 0,
+    'prj_foundation_score': 0,
+    'prj_devops_score': 0,
+    'operation_score': 0,
+    'total_prj_foundation': 0,
+    'total_prj_devops': 0,
+    'total_operation': 0,
     'totalSquad': 0,
     'month': '',
     'partialMonth': false
   }];
 };
+
+function getAssessmentAveScore(data, type){
+  var ave_score = 0;
+  if (data != null && !_.isEmpty(data)){
+    if (type == 'Project'){
+      ave_score = getFloatValue(data.assessmt_cmpnt_rslts[0].ovralcur_assessmt_score);
+    }
+    else if (type == 'Delivery'){
+      ave_score = getFloatValue(data.assessmt_cmpnt_rslts[1].ovralcur_assessmt_score);
+    }
+  }
+  return ave_score;
+}
+
+function setMaturityData(assessment, mat_data, assessmentDate){
+  mat_data.mar_date = assessmentDate;
+  if (assessment.team_proj_ops == 'Project'){
+    mat_data.prj_foundation_score = getAssessmentAveScore(assessment, 'Project');
+    mat_data.total_prj_foundation = 1;
+  }
+  else {
+    //operation project average score
+    mat_data.operation_score = getAssessmentAveScore(assessment, 'Project');
+    mat_data.total_operation = 1;
+  }
+  if (assessment.team_dlvr_software == 'Yes'){
+    mat_data.prj_devops_score = getAssessmentAveScore(assessment, 'Delivery');
+    mat_data.total_prj_devops = 1;
+  }
+  return mat_data;
+}
 
 var snapshot = {
 
