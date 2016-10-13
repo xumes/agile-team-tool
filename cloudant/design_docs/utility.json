@@ -1,6 +1,6 @@
 {
   "_id": "_design/utility",
-  "version": 0.3,
+  "version": 0.4,
   "views": {
     "teamMemberRoles": {
       "map": "function (doc) {\n  if (doc._id == 'ag_ref_team_type_role') \n    for (var n in doc.team_type_role_tbl)\n      emit(doc.team_type_role_tbl[n].name, doc.team_type_role_tbl[n]);\n}"
@@ -18,10 +18,10 @@
       "map": "function (doc) {\n    if (doc.type == 'team')\n        emit(doc._id, doc);\n}"
     },
     "cleanupassessment": {
-      "map": "function (doc) {\n    if (doc.type == 'matassessmtrslt')\n        emit(doc._id, doc);\n}"
+      "map": "function (doc) {\n    if (doc.type == 'matassessmtrslt')\n        emit(doc.team_id, doc);\n}"
     },
     "cleanupiteration": {
-      "map": "function (doc) {\n    if (doc.type == 'iterationinfo')\n        emit(doc._id, doc);\n}"
+      "map": "function (doc) {\n    if (doc.type == 'iterationinfo')\n        emit(doc.team_id, doc);\n}"
     }
   },
   "language": "javascript"
