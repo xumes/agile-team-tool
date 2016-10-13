@@ -60,8 +60,10 @@ function destroyAssessmentCharts() {
       chart.destroy();
     }
   });
+}
 
-  $('#assessmentCharts,#assessmentEval').empty();
+function noAssessmentRecord(){
+  $('#assessmentCharts').empty();
 
   var p = document.createElement('p');
   p.appendChild(document.createTextNode('No assessment results to display.'));
@@ -89,6 +91,9 @@ function plotAssessmentSeries(teamAssessments) {
 
   if (assessmentsToPlot.length > 0)
     $('#assessmentCharts').empty();
+  else {
+     noAssessmentRecord();
+  }
 
   for (i = assessmentsToPlot.length - 1; i > -1; i--) {
     var results = assessmentsToPlot[i]['assessmt_cmpnt_rslts'];
@@ -378,7 +383,10 @@ function createChartSection(prefixId) {
   return mainDiv;
 }
 
-function assessmentEvaluation(assessmentData){
+function assessmentParentRollup(assessmentData){
+  //set div min height
+  $('#assessmentTrend').attr('style','min-height: 380px;');
+  $('#assessmentEval').attr('style','min-height: 380px;');
   var graphCategory = [];
   var teamNoAssessment = new Object();
   teamNoAssessment.name = 'Squads with no assessment';
@@ -420,10 +428,6 @@ function assessmentEvaluation(assessmentData){
     tNoData.y = noData;
     teamNoAssessment.data.push(tNoData);
   }
-  var max = 100;
-  if (teamLt120Days.data.length > 0 || teamGt120Days.data.length > 0 || teamNoAssessment.data.length > 0) {
-    max = null;
-  }
 
   loadBarAssessmentEvaluation('assessmentEval', 'Frequency of Maturity Assessment Evaluations','column', graphCategory, teamLt120Days, teamGt120Days, teamNoAssessment, 100);
 }
@@ -451,7 +455,8 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
       style: {
         'fontSize': '15px'
       },
-      text: title
+      text: title,
+      x: 23
     },
     legend: {
       symbolRadius: 0,
@@ -466,15 +471,14 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
         }
       },
       title: {
-        text: 'Months',
-        x: -20
+        text: 'Months'
       },
       categories: categories
     },
     yAxis: {
       min: 0,
       max: yMax,
-      tickInterval: 10,
+      tickInterval: 20,
       title: {
         text: '% of squads within the team'
       }
