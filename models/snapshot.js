@@ -763,6 +763,7 @@ function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsCalResults, i
   return new Promise(function(resolve, reject) {
     var squadDoc = squads;
     var currData = resetAssessmentData();
+    timestamp = Math.floor(Date.now() / 1000);
     var nonSquadCalResult = {
       '_id': ASSESSMENT_ROLLUP_PREFIX + nonSquadTeamId,
       'value': currData,
