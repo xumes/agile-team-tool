@@ -1278,6 +1278,41 @@ var snapshot = {
         reject(err);
       });
     });
+  },
+
+  batchCleanUpDb: function(teamIds) {
+    return new Promise(function(resolve, reject) {
+      var results = [];
+      Promise.mapSeries(teamIds, function(id, index, length) {
+        return new Promise(function(resolve, reject){
+          loggers.get('model-sanpshot').verbose('deleting team: ' + id);
+          snapshot.cleanUpDb(id)
+          .then(function(result){
+            var obj = {
+              'teamId': id,
+              'result': result
+            };
+            results.push(obj);
+            loggers.get('model-sanpshot').verbose('successfully delete team: ' + id);
+            return resolve(obj);
+          })
+          .catch(function(err){
+            var obj = {
+              'teamId': id,
+              'result': err
+            };
+            results.push(obj);
+            return resolve(obj);
+          });
+        });
+      })
+      .then(function(){
+        resolve(results);
+      })
+      .catch(function(err){
+        reject(err);
+      });
+    });
   }
 };
 

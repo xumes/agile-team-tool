@@ -120,6 +120,20 @@ module.exports = function(app, includes) {
     }
   },
 
+  batchCleanUpDb = function(req, res) {
+    if (!req.body.id) {
+      res.status(400).send({'error': 'id is empty'});
+    } else {
+      snapshotModel.batchCleanUpDb(req.body.id)
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        res.status(400).send(err);
+      });
+    }
+  },
+
   app.get('/api/snapshot/getteams/:email', [includes.middleware.auth.requireLogin], getTopLevelTeams);
   app.get('/api/snapshot/updaterollupsquads', [includes.middleware.auth.requireLogin], updateRollUpSquads);
   app.get('/api/snapshot/updaterollupdata/', [includes.middleware.auth.requireLogin], updateRollUpData);
@@ -128,5 +142,6 @@ module.exports = function(app, includes) {
   app.get('/api/snapshot/completeiterations', [includes.middleware.auth.requireLogin], completeIterations);
   app.get('/api/snapshot/updateAssessmentRollUpData', [includes.middleware.auth.requireLogin], updateAssessmentRollUpData);
   app.get('/api/snapshot/rollupassessmentbyteam/:teamId', [includes.middleware.auth.requireLogin], getAssessmentRollUpByTeam);
-  app.get('/api/snapshot/cleanup/:teamId', [includes.middleware.auth.requireLogin], cleanUpDb);
+  app.get('/api/snapshot/cleanup/:teamId', cleanUpDb);
+  app.delete('/api/snapshot/batchcleanup', batchCleanUpDb);
 };
