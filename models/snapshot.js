@@ -44,7 +44,7 @@ var infoLogs = /* istanbul ignore next */ function(msg) {
 function resetData() {
   var rollupDataList = [];
   for (var i=0; i<=iterationMonth; i++) {
-     rollupDataList.push({
+    rollupDataList.push({
       'totalPoints': 0,
       'totalCommPoints': 0,
       'totalStories': 0,
@@ -661,7 +661,6 @@ function daysDiff(date1, date2) {
 function resetAssessmentData() {
   var rollupDataList = [];
   for (var i=0; i<=iterationMonth; i++) {
-    var rollupData = new Object();
     rollupDataList.push({
       'less_120_days': 0,
       'gt_120_days': 0,
