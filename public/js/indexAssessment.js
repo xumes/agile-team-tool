@@ -644,7 +644,6 @@ function loadLineMaturityTrend(id, title, type, categories, seriesObj1, seriesOb
     tooltip: {
       shared: true,
       formatter: function() {
-        
         var formatResult = '<b>' + this.points[0].key + '</b><br>';
         var serName = '';
         for (var i = 0; i < this.points.length; i++) {
@@ -652,21 +651,21 @@ function loadLineMaturityTrend(id, title, type, categories, seriesObj1, seriesOb
             var symbol = '';
             if ( this.points[i].series.symbol ) {
               switch ( this.points[i].series.symbol ) {
-                  case 'circle':
-                      symbol = '\u25CF';
-                      break;
-                  case 'diamond':
-                      symbol = '\u25C6';
-                      break;
-                  case 'square':
-                      symbol = '\u25A0';
-                      break;
-                  case 'triangle':
-                      symbol = '\u25B2';
-                      break;
-                  case 'triangle-down':
-                      symbol = '\u25BC';
-                      break;
+                case 'circle':
+                  symbol = '\u25CF';
+                  break;
+                case 'diamond':
+                  symbol = '\u25C6';
+                  break;
+                case 'square':
+                  symbol = '\u25A0';
+                  break;
+                case 'triangle':
+                  symbol = '\u25B2';
+                  break;
+                case 'triangle-down':
+                  symbol = '\u25BC';
+                  break;
               }
             }
             formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">'+symbol+'</span>'+ 'Maturity: ' + this.points[i].y + ' ('+ this.points[i].point.squads+' squads)<br/>';
