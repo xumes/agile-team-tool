@@ -18,7 +18,6 @@ function initApiKey(userEmail) {
 }
 
 function launchApiKey(userEmail) {
-
   IBMCore.common.widget.overlay.show('generateApiKey');
   //$('#feeback_submit').attr('disabled', 'disabled');
   initApiKey(userEmail);
