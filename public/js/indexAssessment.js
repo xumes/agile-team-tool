@@ -410,16 +410,19 @@ function assessmentParentRollup(assessmentData){
   teamFoundational.name = 'Project teams (Foundational practices)';
   teamFoundational.data = [];
   teamFoundational.color = '#7ab4ee';
+  teamFoundational.type = 'Foundational';
 
   var teamDevOps = new Object();
   teamDevOps.name = 'Project teams (DevOps practices)';
   teamDevOps.data = [];
   teamDevOps.color = '#434348';
+  teamDevOps.type = 'DevOps';
 
   var teamOperations = new Object();
   teamOperations.name = 'Operations teams';
   teamOperations.data = [];
   teamOperations.color = '#808080';
+  teamOperations.type = 'Operations';
 
   for (var i = 0; i < assessmentData.length; i++) {
     var graphCat;
@@ -474,6 +477,11 @@ function assessmentParentRollup(assessmentData){
 }
 
 function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, seriesObj2, seriesObj3, yMax) {
+  Highcharts.setOptions({
+    lang: {
+      thousandsSep: ''
+    }
+  });
 
   new Highcharts.Chart({
     chart: {
@@ -527,16 +535,26 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
     plotOptions: {
       column: {
         stacking: 'percent'
+      },
+      series: {
+        pointWidth: 35,
+        dataLabels: {
+          enabled: true,
+          style: {
+            textShadow: false,
+            fontWeight: 'normal'
+          }
+        }
       }
     },
     tooltip: {
       shared: true,
       formatter: function() {
-        var formatResult = '<b>' + this.points[0].key + '</b><br>';
+        var formatResult = '<b>' + this.points[0].key + ' Squads</b><br>';
         var serName = '';
         for (var i = 0; i < this.points.length; i++) {
           if (serName != this.points[i].series.name) {
-            formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25A0</span>' + '# of squads: ' + this.points[i].y + ' ('+ this.points[i].percentage.toFixed(1)+' % of teams)<br/>';
+            formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25A0</span>' +  this.points[i].y + ' ('+ this.points[i].percentage.toFixed(1)+' % of teams)<br/>';
           }
           serName = this.points[i].series.name;
         }
@@ -550,7 +568,6 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
       dataLabels: {
         enabled: true,
         style:{
-          textShadow: false,
           color: 'white'
         }
       }
@@ -559,9 +576,7 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
       data: seriesObj2.data,
       color: seriesObj2.color,
       dataLabels: {
-        enabled: true,
         style:{
-          textShadow: false,
           color: 'black'
         }
       }
@@ -644,7 +659,7 @@ function loadLineMaturityTrend(id, title, type, categories, seriesObj1, seriesOb
     tooltip: {
       shared: true,
       formatter: function() {
-        var formatResult = '<b>' + this.points[0].key + '</b><br>';
+        var formatResult = '<b>' + this.points[0].key + ' Maturity Levels</b><br>';
         var serName = '';
         for (var i = 0; i < this.points.length; i++) {
           if (serName != this.points[i].series.name) {
@@ -668,7 +683,7 @@ function loadLineMaturityTrend(id, title, type, categories, seriesObj1, seriesOb
                   break;
               }
             }
-            formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">'+symbol+'</span>'+ 'Maturity: ' + this.points[i].y + ' ('+ this.points[i].point.squads+' squads)<br/>';
+            formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">'+symbol+'</span>'+ this.points[i].y + ' ('+ this.points[i].point.squads+' squads)<br/>';
           }
           serName = this.points[i].series.name;
         }
