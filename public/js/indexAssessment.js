@@ -410,19 +410,16 @@ function assessmentParentRollup(assessmentData){
   teamFoundational.name = 'Project teams (Foundational practices)';
   teamFoundational.data = [];
   teamFoundational.color = '#7ab4ee';
-  teamFoundational.type = 'Foundational';
 
   var teamDevOps = new Object();
   teamDevOps.name = 'Project teams (DevOps practices)';
   teamDevOps.data = [];
   teamDevOps.color = '#434348';
-  teamDevOps.type = 'DevOps';
 
   var teamOperations = new Object();
   teamOperations.name = 'Operations teams';
   teamOperations.data = [];
   teamOperations.color = '#808080';
-  teamOperations.type = 'Operations';
 
   for (var i = 0; i < assessmentData.length; i++) {
     var graphCat;
@@ -566,7 +563,6 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
       data: seriesObj3.data,
       color: seriesObj3.color,
       dataLabels: {
-        enabled: true,
         style:{
           color: 'white'
         }
@@ -585,9 +581,7 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
       data: seriesObj1.data,
       color: seriesObj1.color,
       dataLabels: {
-        enabled: true,
         style:{
-          textShadow: false,
           color: 'black'
         }
       }
