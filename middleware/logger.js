@@ -56,4 +56,12 @@ winston.loggers.add('cache', {
   }
 });
 
+winston.loggers.add('model-sanpshot', {
+  console: {
+    level: logLevel,
+    colorize: logColors,
+    label: 'model-sanpshot'
+  }
+});
+
 module.exports = winston.loggers;
