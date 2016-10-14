@@ -637,6 +637,10 @@ function rollUpSquadsData(squadsList, squadTeams) {
   return entry;
 };
 
+/**
+ * Retrieve all submitted assessments records
+ * @return assessments
+ */
 function getSubmittedAssessments() {
   var squadAssessments = {};
   return new Promise(function(resolve, reject) {
@@ -665,6 +669,10 @@ function getSubmittedAssessments() {
   });
 };
 
+/**
+ * Retrieve assessment rollup data document revision id
+ * @return revision id
+ */
 function getAssessmentRollUpDataHistory() {
   return new Promise(function(resolve, reject) {
     common.getByView('assessments', 'rollUpData')
@@ -687,6 +695,12 @@ function getAssessmentRollUpDataHistory() {
   });
 };
 
+/**
+ * Process assessment rollup data in squad level
+ * @param assessments - squad assessment data
+ * @param teamId - squad record id
+ * @return squad rollup data
+ */
 function rollUpAssessmentsBySquad(assessments, teamId) {
   return new Promise(function(resolve, reject) {
     var currData = resetAssessmentData();
@@ -714,6 +728,7 @@ function rollUpAssessmentsBySquad(assessments, teamId) {
         if ((assessmentDate.getFullYear() == year && assessmentDate.getMonth() <= month) ||
           assessmentDate.getFullYear() < year){
           var days = daysDiff(targetDate, assessmentDate);
+
           if (days <= ASSESSMENT_MAX_DAYS_SUBMISSION){
             currData[i].less_120_days += 1;
           }
@@ -759,6 +774,15 @@ function rollUpAssessmentsBySquad(assessments, teamId) {
   });
 };
 
+/**
+ * Process assessment rollup data in tribe/non squad level
+ * @param squads - list of squads under specific tribe
+ * @param nonSquadTeamId - tribe record id
+ * @param squadsCalResults - squad assessment data
+ * @param isUpdate - is document to be updated
+ * @param oldRollUpDataRev - last document revision number
+ * @return tribe rollup data
+ */
 function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsCalResults, isUpdate, oldRollUpDataRev) {
   return new Promise(function(resolve, reject) {
     var squadDoc = squads;
@@ -825,14 +849,26 @@ function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsCalResults, i
   });
 };
 
+/**
+ * Get difference of dates in days
+ * @param date1
+ * @param date2
+ * @return days difference
+ */
 function daysDiff(date1, date2) {
   var dateFormat = 'YYYY-MM-DD';
-  var d1 = moment(date1, dateFormat);
-  var d2 = moment(date2, dateFormat);
-  var days = moment(d1).diff(d2, 'days');
+  var d1 = moment(date1, dateFormat).startOf('day');
+  var d2 = moment(date2, dateFormat).startOf('day');
+  var days = moment(d1).diff(d2, 'days', true);
   return days;
 };
 
+/**
+ * Get difference of dates in time format
+ * @param date1
+ * @param date2
+ * @return time difference
+ */
 function timeDiff(date1, date2) {
   var dateFormat = 'YYYY-MM-DD HH:mm:ss';
   var d1 = moment(date1, dateFormat);
@@ -841,6 +877,10 @@ function timeDiff(date1, date2) {
   return time;
 };
 
+/**
+ * Set to default assessment rollup data values
+ * @return default data
+ */
 function resetAssessmentData() {
   return [{
     'less_120_days': 0,
@@ -923,6 +963,12 @@ function resetAssessmentData() {
   }];
 };
 
+/**
+ * Retrieve assessment average score per type
+ * @param data - raw assessment data
+ * @param type - team type
+ * @return average score
+ */
 function getAssessmentAveScore(data, type){
   var ave_score = 0;
   if (data != null && !_.isEmpty(data)){
@@ -936,6 +982,13 @@ function getAssessmentAveScore(data, type){
   return ave_score;
 }
 
+/**
+ * Set assessment maturity data used for rollup
+ * @param assessment - raw assessment data
+ * @param mat_data - maturity data
+ * @param assessmentDate - date of assessment
+ * @return updated data
+ */
 function setMaturityData(assessment, mat_data, assessmentDate){
   mat_data.mar_date = assessmentDate;
   if (assessment.team_proj_ops == 'Project'){
@@ -1231,6 +1284,10 @@ var snapshot = {
     });
   },
 
+  /**
+   * Update/create assessment rollup data document
+   * @return update result
+   */
   updateAssessmentRollUpData: function() {
     return new Promise(function(resolve, reject) {
       var nowTime = new Date();
@@ -1297,6 +1354,11 @@ var snapshot = {
     });
   },
 
+  /**
+   * Retrieve assessment rollup data by team
+   * @param teamId - team record id
+   * @return team rollup data
+   */
   getAssessmentRollUpByTeam: function(teamId) {
     return new Promise(function(resolve, reject) {
       var rollUpDataId = ASSESSMENT_ROLLUP_PREFIX + teamId;

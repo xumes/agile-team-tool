@@ -530,9 +530,17 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
       }
     },
     tooltip: {
-      formatter: function () {
-        return '# of squads: ' + this.y +
-        '<br/>% of teams: ' + this.percentage.toFixed(1);
+      shared: true,
+      formatter: function() {
+        var formatResult = '<b>' + this.points[0].key + '</b><br>';
+        var serName = '';
+        for (var i = 0; i < this.points.length; i++) {
+          if (serName != this.points[i].series.name) {
+            formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25A0</span>' + '# of squads: ' + this.points[i].y + ' ('+ this.points[i].percentage.toFixed(1)+' % of teams)<br/>';
+          }
+          serName = this.points[i].series.name;
+        }
+        return formatResult;
       }
     },
     series: [{
@@ -634,9 +642,38 @@ function loadLineMaturityTrend(id, title, type, categories, seriesObj1, seriesOb
       }
     },
     tooltip: {
-      formatter: function () {
-        return 'Maturity: ' + this.y +
-        '<br/># of squads: ' + this.point.squads;
+      shared: true,
+      formatter: function() {
+        
+        var formatResult = '<b>' + this.points[0].key + '</b><br>';
+        var serName = '';
+        for (var i = 0; i < this.points.length; i++) {
+          if (serName != this.points[i].series.name) {
+            var symbol = '';
+            if ( this.points[i].series.symbol ) {
+              switch ( this.points[i].series.symbol ) {
+                  case 'circle':
+                      symbol = '\u25CF';
+                      break;
+                  case 'diamond':
+                      symbol = '\u25C6';
+                      break;
+                  case 'square':
+                      symbol = '\u25A0';
+                      break;
+                  case 'triangle':
+                      symbol = '\u25B2';
+                      break;
+                  case 'triangle-down':
+                      symbol = '\u25BC';
+                      break;
+              }
+            }
+            formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">'+symbol+'</span>'+ 'Maturity: ' + this.points[i].y + ' ('+ this.points[i].point.squads+' squads)<br/>';
+          }
+          serName = this.points[i].series.name;
+        }
+        return formatResult;
       }
     },
     series: [{
