@@ -143,8 +143,17 @@ var iteration = {
           return iteration.getDefectsOpenBalance(cleanData.team_id, cleanData.iteration_end_dt);
         })
         .then(function(openBalance) {
-          if (!_.isUndefined(cleanData['nbf_defects_start_bal']) || !isNaN(cleanData['nbf_defects_start_bal']))
-            cleanData['nbf_defects_start_bal'] = openBalance;
+          if (!_.isUndefined(cleanData['nbr_defects_start_bal']) || _.isEmpty(cleanData['nbr_defects_start_bal'])) {
+            cleanData['nbr_defects_start_bal'] = openBalance + '';
+          }
+          var newDefects = util.getIntegerValue(cleanData['nbr_defects']);
+          var closedDefects = util.getIntegerValue(cleanData['nbr_defects_closed']);
+          var endBalance = openBalance + newDefects - closedDefects;
+          if (_.isUndefined(cleanData['nbr_defects']) || !_.isEmpty(cleanData['nbr_defects']))
+            cleanData['nbr_defects'] = newDefects + '';
+          if (_.isUndefined(cleanData['nbr_defects_closed']) || !_.isEmpty(cleanData['nbr_defects_closed']))
+            cleanData['nbr_defects_closed'] = closedDefects + '';
+          cleanData['nbr_defects_end_bal'] = endBalance + '';
           successLogs('[iterationModels.add] Defect open balance: ' + openBalance);
           return common.addRecord(cleanData);
         })
@@ -167,6 +176,19 @@ var iteration = {
     data['last_updt_dt'] = util.getServerTime();
     data['last_updt_user'] = user['shortEmail'];
     data['iterationinfo_status'] = iteration.calculateStatus(data);
+    var startDefects = util.getIntegerValue(cleanData['nbr_defects_start_bal']);
+    var newDefects = util.getIntegerValue(cleanData['nbr_defects']);
+    var closedDefects = util.getIntegerValue(cleanData['nbr_defects_closed']);
+    var endBalance = startDefects + newDefects - closedDefects;
+    // if defect fields where previously empty, let it remain empty
+    if (!_.isUndefined(cleanData['nbr_defects_start_bal']) || !_.isEmpty(cleanData['nbr_defects_start_bal']))
+      cleanData['nbr_defects_start_bal'] = startDefects + '';
+    if (!_.isUndefined(cleanData['nbr_defects']) || !_.isEmpty(cleanData['nbr_defects']))
+      cleanData['nbr_defects'] = newDefects + '';
+    if (!_.isUndefined(cleanData['nbr_defects_closed']) || !_.isEmpty(cleanData['nbr_defects_closed']))
+      cleanData['nbr_defects_closed'] = closedDefects + '';
+    if (!_.isUndefined(cleanData['nbr_defects_closed']) || !_.isEmpty(cleanData['nbr_defects_closed']))
+      cleanData['nbr_defects_end_bal'] = endBalance + '';
     cleanData = util.trimData(data);
     // console.log('EDIT iterationId:', iterationId);
     // console.log('EDIT cleanData:', cleanData);
@@ -297,7 +319,6 @@ var iteration = {
       } else if (nbr_stories_dlvrd != 0 ||
         nbr_story_pts_dlvrd != 0 ||
         nbr_dplymnts != 0 ||
-        nbr_defects != 0 ||
         team_sat != 0 ||
         client_sat != 0 ||
         nbr_cycletime_WIP != 0 ||
