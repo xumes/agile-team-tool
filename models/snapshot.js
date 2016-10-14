@@ -772,10 +772,10 @@ function getAssessmentAveScore(data, type){
   var ave_score = 0;
   if (data != null && !_.isEmpty(data)){
     if (type == 'Project'){
-      ave_score = getFloatValue(data.assessmt_cmpnt_rslts[0].ovralcur_assessmt_score);
+      ave_score = util.getFloatValue(data.assessmt_cmpnt_rslts[0].ovralcur_assessmt_score);
     }
     else if (type == 'Delivery'){
-      ave_score = getFloatValue(data.assessmt_cmpnt_rslts[1].ovralcur_assessmt_score);
+      ave_score = util.getFloatValue(data.assessmt_cmpnt_rslts[1].ovralcur_assessmt_score);
     }
   }
   return ave_score;
