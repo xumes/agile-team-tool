@@ -1074,4 +1074,33 @@ li #allTeams {
 #importantLinks .urlwrapper{
   margin-left: 20px; position: absolute; margin-top: -1px;
 }
+
+.no-data { font-size: 14px; }
+.wlink:link, .wlink:active, .wlink:visited, .wlink:hover {
+  color:#389BD2; text-decoration: none;
+}
+
+#levelTable tr:hover{
+  background-color: inherit;
+}
+
+#levelTable tr:hover a {
+  color: #389BD2;
+}
+
+#levelTable tr {
+  border: none;
+}
+
+#levelTable td p, #levelTable td table {
+  padding: 0px;
+}
+
+.tImportantlink td {
+  padding: 2px 25px 2px 0 !important;
+}
+
+.tImportantlink{
+  font-size:14px; width:100%;
+}
 /*=END Important links */

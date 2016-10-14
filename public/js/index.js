@@ -63,6 +63,12 @@ var tempIterationData = function() {
       'less_120_days': 0,
       'gt_120_days': 0,
       'no_submission': 0,
+      'prj_foundation_score': 0,
+      'prj_devops_score': 0,
+      'operation_score': 0,
+      'total_prj_foundation': 0,
+      'total_prj_devops': 0,
+      'total_operation': 0,
       'totalSquad': 0,
       'month': '',
       'partialMonth': false
@@ -818,10 +824,16 @@ function facesPersonHandler(index, userEmail, facesPerson) {
  * @param keyLabel - team information label.
  * @param keyValue - team information value.
  */
-function appendRowDetail(keyLabel, keyValue) {
+function appendRowDetail(keyLabel, keyValue, noParagraph) {
+
   var row = '<tr>';
-  row = row + '<td><p>' + keyLabel + '</p></td>';
-  row = row + '<td><p>' + keyValue + '</p></td>';
+  if (noParagraph) {
+    row = row + '<td><p>' + keyLabel + '</p></td>';
+    row = row + '<td>' + keyValue + '</td>';
+  } else {
+    row = row + '<td><p>' + keyLabel + '</p></td>';
+    row = row + '<td><p>' + keyValue + '</p></td>';
+  }
   row = row + '</tr>';
   $('#levelDetail').append(row);
 }
@@ -874,6 +886,35 @@ function performSnapshotPull(teamId, teamName) {
   getSnapshot(teamId, teamName);
 }
 
+/**
+ * Ajax-call to retrieve the hierarchy of a team
+ */
+function getHierarchyTeam(teamId, callback) {
+  var strHierarchy = '';
+  $.ajax({
+    type: 'GET',
+    url: '/api/teams/hierarchy/team/' + encodeURIComponent(teamId)
+  }).fail(function(e) {
+    console.log(e);
+  }).done(function(res) {
+    var separator = '&nbsp;>&nbsp;';
+    for (var n = res.length-1; n >= 0; n--){
+      var pos = res[n].ordering;
+      var name = res[n].name;
+      var id = res[n].teamId;
+      var nItems = (res.length-1)-n;
+      if (pos === nItems) {
+        if (n === 0) {
+          strHierarchy = strHierarchy + name;
+        } else {
+          strHierarchy = strHierarchy + createHierarchylink(id, name) + separator;
+        }
+      }
+    }
+    callback(strHierarchy);
+  });
+}
+
 function loadDetails(elementId, setScrollPosition) {
   if (selectedElement == elementId || $('#' + jq(elementId)).html() == 'Standalone teams') {
     return;
@@ -922,7 +963,7 @@ function loadDetails(elementId, setScrollPosition) {
             if (tn.trim() == '')
               tn = '&nbsp;';
             $('#teamName').html(tn);
-            keyValue = "<a href='team?id=" + encodeURIComponent(team['_id']) + "' title='Manage team information'>" + tn + '</a>';
+            keyValue = "<a class='wlink' href='team?id=" + encodeURIComponent(team['_id']) + "' title='Manage team information'>" + tn + '</a>';
             appendRowDetail(keyLabel, keyValue);
           }
 
@@ -935,44 +976,68 @@ function loadDetails(elementId, setScrollPosition) {
           }
 
           if (team['desc'] != undefined) {
-            keyLabel = 'Team Description';
+            keyLabel = 'Description';
             keyValue = team['desc'];
             appendRowDetail(keyLabel, keyValue);
           }
 
-          if (team['members'] != undefined) {
-            keyLabel = 'Team Member Count';
-            keyValue = teamMemCount(team['members']);
+          getHierarchyTeam(teamId, function(keyValue){
+            var keyLabel = 'Hierarchy';
             appendRowDetail(keyLabel, keyValue);
-          }
 
-          if (team['members'] != undefined) {
-            keyLabel = 'FTE';
-            keyValue = teamMemFTE(team['members']);
-            appendRowDetail(keyLabel, keyValue);
-          }
-
-          /* Get parent name and link */
-          if (team['parent_team_id'] != undefined && team['parent_team_id'] != '') {
-            var parent_team_id = team['parent_team_id'];
-            keyLabel = 'Parent Team Name';
-            keyValue = '(No parent team infomation)';
-            var parentLinkId = $('#link_sub_' + jq(parent_team_id));
-            if (parentLinkId) {
-              var parentName;
-              if (parentLinkId.html() != undefined) {
-                parentName = parentLinkId.html();
-                keyValue = "<p style=\"display:inline-block\" class=\"ibm-ind-link\"><a style=\"display:inline; padding-left: 0px;\" title=\"View parent team information\" alt=\"View parent team information\" id ='parentName' href='#' onclick=\"javascript:displaySelected('" + parent_team_id + "', true);\">" + parentName + '</a>' + "<a title=\"View parent team information\" alt=\"View parent team information\" style=\"display:inline;top:-5px;left:5px;\" class=\"ibm-forward-link\" href='#' onclick=\"javascript:displaySelected('" + parent_team_id + "', true);\"><span class='ibm-access'>Go to parent team</span></a></p>";
-                appendRowDetail(keyLabel, keyValue);
-              } else {
-                getParentName(team);
+            if (team['links'] != undefined) {
+              keyLabel = 'Important links';
+              var links = team['links'];
+              var tr = '';
+              if (links.length > 0) {
+                _.each(links, function(value, key, list){
+                  tr = tr + '<tr>';
+                  tr = tr + '<td>' + value.linkLabel + '</td>';
+                  tr = tr + '<td><a href="'+value.linkUrl+'" target="_blank" class="wlink" >'+value.linkUrl+'</a></td>';
+                  tr = tr + '</tr>';
+                });
+                var html = '<table class=\'tImportantlink\'>';
+                html = html + tr;
+                html = html + '</table>';
+                keyValue = html;
+                appendRowDetail(keyLabel, keyValue, true);
               }
             }
-          } else {
-            keyLabel = 'Parent Team Name';
-            keyValue = '(No parent team infomation)';
-            appendRowDetail(keyLabel, keyValue);
-          }
+
+            if (team['members'] != undefined) {
+              keyLabel = 'Number of members';
+              keyValue = teamMemCount(team['members']);
+              appendRowDetail(keyLabel, keyValue);
+            }
+
+            if (team['members'] != undefined) {
+              keyLabel = 'FTE';
+              keyValue = teamMemFTE(team['members']);
+              appendRowDetail(keyLabel, keyValue);
+            }
+          });
+
+          /* Get parent name and link */
+          // if (team['parent_team_id'] != undefined && team['parent_team_id'] != '') {
+          //   var parent_team_id = team['parent_team_id'];
+          //   keyLabel = 'Parent Team Name';
+          //   keyValue = '(No parent team infomation)';
+          //   var parentLinkId = $('#link_sub_' + jq(parent_team_id));
+          //   if (parentLinkId) {
+          //     var parentName;
+          //     if (parentLinkId.html() != undefined) {
+          //       parentName = parentLinkId.html();
+          //       keyValue = "<p style=\"display:inline-block\" class=\"ibm-ind-link\"><a style=\"display:inline; padding-left: 0px;\" title=\"View parent team information\" alt=\"View parent team information\" id ='parentName' href='#' onclick=\"javascript:displaySelected('" + parent_team_id + "', true);\">" + parentName + '</a>' + "<a title=\"View parent team information\" alt=\"View parent team information\" style=\"display:inline;top:-5px;left:5px;\" class=\"ibm-forward-link\" href='#' onclick=\"javascript:displaySelected('" + parent_team_id + "', true);\"><span class='ibm-access'>Go to parent team</span></a></p>";
+          //       appendRowDetail(keyLabel, keyValue);
+          //     } else {
+          //       getParentName(team);
+          //     }
+          //   }
+          // } else {
+          //   keyLabel = 'Parent Team Name';
+          //   keyValue = '(No parent team infomation)';
+          //   appendRowDetail(keyLabel, keyValue);
+          // }
 
           /* draw iteration and assessment charts */
           if (isLeafTeam) {
@@ -1051,6 +1116,10 @@ function loadDetails(elementId, setScrollPosition) {
     $('#spinnerContainer-search').hide();
     openSelectedTeamTree(setScrollPosition);
   }
+}
+
+function createHierarchylink(id, name){
+  return '<a href="team?id=' + encodeURIComponent(id) + '" title="' + name + '"  target="_blank" class="wlink">' + name + '</a>';
 }
 
 function teamLocationHandler(data) {

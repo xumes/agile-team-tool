@@ -497,6 +497,10 @@ function rollUpSquadsData(squadsList, squadTeams) {
   return entry;
 };
 
+/**
+ * Retrieve all submitted assessments records
+ * @return assessments
+ */
 function getSubmittedAssessments() {
   var squadAssessments = {};
   return new Promise(function(resolve, reject) {
@@ -525,6 +529,10 @@ function getSubmittedAssessments() {
   });
 };
 
+/**
+ * Retrieve assessment rollup data document revision id
+ * @return revision id
+ */
 function getAssessmentRollUpDataHistory() {
   return new Promise(function(resolve, reject) {
     common.getByView('assessments', 'rollUpData')
@@ -547,6 +555,12 @@ function getAssessmentRollUpDataHistory() {
   });
 };
 
+/**
+ * Process assessment rollup data in squad level
+ * @param assessments - squad assessment data
+ * @param teamId - squad record id
+ * @return squad rollup data
+ */
 function rollUpAssessmentsBySquad(assessments, teamId) {
   return new Promise(function(resolve, reject) {
     var currData = resetAssessmentData();
@@ -555,6 +569,7 @@ function rollUpAssessmentsBySquad(assessments, teamId) {
 
     _.each(assessments, function(assessment ) {
       var assessmentDate = new Date(assessment['self-assessmt_dt']);
+
       for (var i = 0; i <= ASSESSMENT_PERIOD; i++) {
         var period = assessmentMonths[i];
         var month = monthNames.indexOf(period.substring(0, period.indexOf(' ')));
@@ -573,11 +588,24 @@ function rollUpAssessmentsBySquad(assessments, teamId) {
         if ((assessmentDate.getFullYear() == year && assessmentDate.getMonth() <= month) ||
           assessmentDate.getFullYear() < year){
           var days = daysDiff(targetDate, assessmentDate);
+
           if (days <= ASSESSMENT_MAX_DAYS_SUBMISSION){
             currData[i].less_120_days += 1;
           }
           else {
             currData[i].gt_120_days += 1;
+          }
+
+          //process team average scores
+          if (currData[i].mar_date != undefined){
+            var time = timeDiff(currData[i].mar_date,assessmentDate);
+            // get latest assessment data
+            if (time < 0){
+              setMaturityData(assessment, currData[i], assessmentDate);
+            }
+          }
+          else {
+            setMaturityData(assessment, currData[i], assessmentDate);
           }
         }
         else {
@@ -600,15 +628,26 @@ function rollUpAssessmentsBySquad(assessments, teamId) {
       else {
         period.no_submission = 1;
       }
+      delete period.mar_date;
     });
     resolve(rollUpAssessmentData);
   });
 };
 
+/**
+ * Process assessment rollup data in tribe/non squad level
+ * @param squads - list of squads under specific tribe
+ * @param nonSquadTeamId - tribe record id
+ * @param squadsCalResults - squad assessment data
+ * @param isUpdate - is document to be updated
+ * @param oldRollUpDataRev - last document revision number
+ * @return tribe rollup data
+ */
 function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsCalResults, isUpdate, oldRollUpDataRev) {
   return new Promise(function(resolve, reject) {
     var squadDoc = squads;
     var currData = resetAssessmentData();
+    timestamp = Math.floor(Date.now() / 1000);
     var nonSquadCalResult = {
       '_id': ASSESSMENT_ROLLUP_PREFIX + nonSquadTeamId,
       'value': currData,
@@ -629,12 +668,32 @@ function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsCalResults, i
           currData[j].less_120_days += squadAssessmentResult[j].less_120_days;
           currData[j].gt_120_days += squadAssessmentResult[j].gt_120_days;
           currData[j].no_submission += squadAssessmentResult[j].no_submission;
+
+          currData[j].prj_foundation_score += squadAssessmentResult[j].prj_foundation_score;
+          currData[j].operation_score += squadAssessmentResult[j].operation_score;
+          currData[j].prj_devops_score += squadAssessmentResult[j].prj_devops_score;
+
+          currData[j].total_prj_foundation += squadAssessmentResult[j].total_prj_foundation;
+          currData[j].total_prj_devops += squadAssessmentResult[j].total_prj_devops;
+          currData[j].total_operation += squadAssessmentResult[j].total_operation;
         }
         else {
           currData[j].no_submission += 1;
         }
       }
     }
+    _.each(currData, function(period, index) {
+      if (period.total_prj_foundation > 1){
+        period.prj_foundation_score = (period.prj_foundation_score/period.total_prj_foundation).toFixed(1);
+      }
+      else if (period.total_operation > 1){
+        period.operation_score = (period.operation_score/period.total_operation).toFixed(1);
+      }
+      if (period.total_prj_devops > 1) {
+        period.prj_devops_score = (period.prj_devops_score/period.total_prj_devops).toFixed(1);
+      }
+    });
+
     var newDate = new Date();
     var days = daysInMonth(newDate.getMonth() + 1, newDate.getFullYear());
     if (newDate.getDate() < days) {
@@ -650,6 +709,12 @@ function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsCalResults, i
   });
 };
 
+/**
+ * Get difference of dates in days
+ * @param date1
+ * @param date2
+ * @return days difference
+ */
 function daysDiff(date1, date2) {
   var dateFormat = 'YYYY-MM-DD';
   var d1 = moment(date1, dateFormat);
@@ -658,6 +723,24 @@ function daysDiff(date1, date2) {
   return days;
 };
 
+/**
+ * Get difference of dates in time format
+ * @param date1
+ * @param date2
+ * @return time difference
+ */
+function timeDiff(date1, date2) {
+  var dateFormat = 'YYYY-MM-DD HH:mm:ss';
+  var d1 = moment(date1, dateFormat);
+  var d2 = moment(date2, dateFormat);
+  var time = moment(d1).diff(d2);
+  return time;
+};
+
+/**
+ * Set to default assessment rollup data values
+ * @return default data
+ */
 function resetAssessmentData() {
   var rollupDataList = [];
   for (var i=0; i<=iterationMonth; i++) {
@@ -665,6 +748,12 @@ function resetAssessmentData() {
       'less_120_days': 0,
       'gt_120_days': 0,
       'no_submission': 0,
+      'prj_foundation_score': 0,
+      'prj_devops_score': 0,
+      'operation_score': 0,
+      'total_prj_foundation': 0,
+      'total_prj_devops': 0,
+      'total_operation': 0,
       'totalSquad': 0,
       'month': '',
       'partialMonth': false
@@ -672,6 +761,50 @@ function resetAssessmentData() {
   }
   return rollupDataList;
 };
+
+/**
+ * Retrieve assessment average score per type
+ * @param data - raw assessment data
+ * @param type - team type
+ * @return average score
+ */
+function getAssessmentAveScore(data, type){
+  var ave_score = 0;
+  if (data != null && !_.isEmpty(data)){
+    if (type == 'Project'){
+      ave_score = getFloatValue(data.assessmt_cmpnt_rslts[0].ovralcur_assessmt_score);
+    }
+    else if (type == 'Delivery'){
+      ave_score = getFloatValue(data.assessmt_cmpnt_rslts[1].ovralcur_assessmt_score);
+    }
+  }
+  return ave_score;
+}
+
+/**
+ * Set assessment maturity data used for rollup
+ * @param assessment - raw assessment data
+ * @param mat_data - maturity data
+ * @param assessmentDate - date of assessment
+ * @return updated data
+ */
+function setMaturityData(assessment, mat_data, assessmentDate){
+  mat_data.mar_date = assessmentDate;
+  if (assessment.team_proj_ops == 'Project'){
+    mat_data.prj_foundation_score = getAssessmentAveScore(assessment, 'Project');
+    mat_data.total_prj_foundation = 1;
+  }
+  else {
+    //operation project average score
+    mat_data.operation_score = getAssessmentAveScore(assessment, 'Project');
+    mat_data.total_operation = 1;
+  }
+  if (assessment.team_dlvr_software == 'Yes'){
+    mat_data.prj_devops_score = getAssessmentAveScore(assessment, 'Delivery');
+    mat_data.total_prj_devops = 1;
+  }
+  return mat_data;
+}
 
 var snapshot = {
 
@@ -949,6 +1082,10 @@ var snapshot = {
     });
   },
 
+  /**
+   * Update/create assessment rollup data document
+   * @return update result
+   */
   updateAssessmentRollUpData: function() {
     return new Promise(function(resolve, reject) {
       var nowTime = new Date();
@@ -1015,6 +1152,11 @@ var snapshot = {
     });
   },
 
+  /**
+   * Retrieve assessment rollup data by team
+   * @param teamId - team record id
+   * @return team rollup data
+   */
   getAssessmentRollUpByTeam: function(teamId) {
     return new Promise(function(resolve, reject) {
       var rollUpDataId = ASSESSMENT_ROLLUP_PREFIX + teamId;
@@ -1100,6 +1242,41 @@ var snapshot = {
         return common.bulkUpdate(request);
       })
       .then(function(results){
+        resolve(results);
+      })
+      .catch(function(err){
+        reject(err);
+      });
+    });
+  },
+
+  batchCleanUpDb: function(teamIds) {
+    return new Promise(function(resolve, reject) {
+      var results = [];
+      Promise.mapSeries(teamIds, function(id, index, length) {
+        return new Promise(function(resolve, reject){
+          loggers.get('model-sanpshot').verbose('deleting team: ' + id);
+          snapshot.cleanUpDb(id)
+          .then(function(result){
+            var obj = {
+              'teamId': id,
+              'result': result
+            };
+            results.push(obj);
+            loggers.get('model-sanpshot').verbose('successfully delete team: ' + id);
+            return resolve(obj);
+          })
+          .catch(function(err){
+            var obj = {
+              'teamId': id,
+              'result': err
+            };
+            results.push(obj);
+            return resolve(obj);
+          });
+        });
+      })
+      .then(function(){
         resolve(results);
       })
       .catch(function(err){
