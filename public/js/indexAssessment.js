@@ -60,17 +60,19 @@ function destroyAssessmentCharts() {
       chart.destroy();
     }
   });
+}
 
-  $('#assessmentCharts,#assessmentEval').empty();
+function noAssessmentRecord(){
+  $('#assessmentCharts').empty();
 
   var p = document.createElement('p');
   p.appendChild(document.createTextNode('No assessment results to display.'));
-  $('#assessmentCharts,#assessmentEval').append(p);
+  $('#assessmentCharts').append(p);
 
   var hrDiv = document.createElement('div');
   hrDiv.setAttribute('class', 'ibm-rule ibm-alternate ibm-gray-30');
   hrDiv.appendChild(document.createElement('hr'));
-  $('#assessmentCharts,#assessmentEval').append(hrDiv);
+  $('#assessmentCharts').append(hrDiv);
 }
 
 function plotAssessmentSeries(teamAssessments) {
@@ -87,8 +89,12 @@ function plotAssessmentSeries(teamAssessments) {
   chartSeries = [];
   var chartData = new Object();
 
-  if (assessmentsToPlot.length > 0)
+  if (assessmentsToPlot.length > 0){
     $('#assessmentCharts').empty();
+  }
+  else {
+    noAssessmentRecord();
+  }
 
   for (i = assessmentsToPlot.length - 1; i > -1; i--) {
     var results = assessmentsToPlot[i]['assessmt_cmpnt_rslts'];
@@ -378,20 +384,23 @@ function createChartSection(prefixId) {
   return mainDiv;
 }
 
-function assessmentEvaluation(assessmentData){
+function assessmentParentRollup(assessmentData){
+  //set div min height
+  $('#assessmentTrend').attr('style','min-height: 380px;');
+  $('#assessmentEval').attr('style','min-height: 380px;');
   var graphCategory = [];
   var teamNoAssessment = new Object();
-  teamNoAssessment.name = 'Squads that have not taken the assessment';
+  teamNoAssessment.name = 'Squads with no assessment';
   teamNoAssessment.data = [];
   teamNoAssessment.color = '#808080';
 
   var teamGt120Days = new Object();
-  teamGt120Days.name = 'Squads that have not taken the assessment in more than 120 days';
+  teamGt120Days.name = 'Squads > 120 days since last assessment';
   teamGt120Days.data = [];
   teamGt120Days.color = '#CCCCCC';
 
   var teamLt120Days = new Object();
-  teamLt120Days.name = 'Squads that have taken the assessment in the past 120 days';
+  teamLt120Days.name = 'Squads with assessment in last 120 days';
   teamLt120Days.data = [];
   teamLt120Days.color = '#B4E051';
 
@@ -420,10 +429,6 @@ function assessmentEvaluation(assessmentData){
     tNoData.y = noData;
     teamNoAssessment.data.push(tNoData);
   }
-  var max = 100;
-  if (teamLt120Days.data.length > 0 || teamGt120Days.data.length > 0 || teamNoAssessment.data.length > 0) {
-    max = null;
-  }
 
   loadBarAssessmentEvaluation('assessmentEval', 'Frequency of Maturity Assessment Evaluations','column', graphCategory, teamLt120Days, teamGt120Days, teamNoAssessment, 100);
 }
@@ -451,13 +456,13 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
       style: {
         'fontSize': '15px'
       },
-      text: title
+      text: title,
+      x: 23
     },
     legend: {
       symbolRadius: 0,
       itemStyle: {
-        fontSize: '12px',
-        width: 300
+        fontSize: '12px'
       }
     },
     xAxis: {
@@ -467,15 +472,14 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
         }
       },
       title: {
-        text: 'Months',
-        x: -20
+        text: 'Months'
       },
       categories: categories
     },
     yAxis: {
       min: 0,
       max: yMax,
-      tickInterval: 10,
+      tickInterval: 20,
       title: {
         text: '% of squads within the team'
       }
@@ -486,23 +490,52 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
       }
     },
     tooltip: {
-      formatter: function () {
-        return '# of squads: ' + this.y+
-        '<br/>% of teams: ' + this.percentage.toFixed(1);
+      shared: true,
+      formatter: function() {
+        var formatResult = '<b>' + this.points[0].key + '</b><br>';
+        var serName = '';
+        for (var i = 0; i < this.points.length; i++) {
+          if (serName != this.points[i].series.name) {
+            formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25A0</span>' + '# of squads: ' + this.points[i].y + ' ('+ this.points[i].percentage.toFixed(1)+' % of teams)<br/>';
+          }
+          serName = this.points[i].series.name;
+        }
+        return formatResult;
       }
     },
     series: [{
       name: seriesObj3.name,
       data: seriesObj3.data,
-      color: seriesObj3.color
+      color: seriesObj3.color,
+      dataLabels: {
+        enabled: true,
+        style:{
+          textShadow: false,
+          color: 'white'
+        }
+      }
     }, {
       name: seriesObj2.name,
       data: seriesObj2.data,
-      color: seriesObj2.color
+      color: seriesObj2.color,
+      dataLabels: {
+        enabled: true,
+        style:{
+          textShadow: false,
+          color: 'black'
+        }
+      }
     }, {
       name: seriesObj1.name,
       data: seriesObj1.data,
-      color: seriesObj1.color
+      color: seriesObj1.color,
+      dataLabels: {
+        enabled: true,
+        style:{
+          textShadow: false,
+          color: 'black'
+        }
+      }
     }],
     credits: {
       enabled: false
