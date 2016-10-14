@@ -9,149 +9,40 @@ var isFirefox = typeof InstallTrigger !== 'undefined';
 var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
 var userAccess = ['Yanliang.Gu1@ibm.com','leip@us.ibm.com','hourihan@us.ibm.com','john.elden.revano@ibm.com','amy_travis@us.ibm.com'];
 var colorArray = ['#4178BE','#C0E6FF','#7CC7FF','#5AAAFA','#5596E6','#4178BE','#325C80','#264A60','#1D3649','#152935','#010205','#008571','#A7FAE6','#6EEDD8','#41D6C3','#00B4A0','#006D5D','#005448'];
-var tempIterationData = [{
-  'totalPoints': 0,
-  'totalCommPoints': 0,
-  'totalStories': 0,
-  'totalCommStories': 0,
-  'totalCompleted': 0,
-  'totalDefectsStartBal' : 0,
-  'totalDefects': 0,
-  'totalDplymts': 0,
-  'totTeamStat': 0,
-  'totClientStat': 0,
-  'totTeamStatIter': 0,
-  'totClientStatIter': 0,
-  'totCycleTimeBacklog': 0,
-  'totCycleTimeWIP': 0,
-  'totCycleTimeBacklogIter': 0,
-  'totCycleTimeWIPIter': 0,
-  'teamsLt5': 0,
-  'teams5to12': 0,
-  'teamsGt12': 0,
-  'totalSquad': 0,
-  'month': '',
-  'partialMonth': false
-
-}, {
-  'totalPoints': 0,
-  'totalCommPoints': 0,
-  'totalStories': 0,
-  'totalCommStories': 0,
-  'totalCompleted': 0,
-  'totalDefectsStartBal' : 0,
-  'totalDefects': 0,
-  'totalDplymts': 0,
-  'totTeamStat': 0,
-  'totClientStat': 0,
-  'totTeamStatIter': 0,
-  'totClientStatIter': 0,
-  'totCycleTimeBacklog': 0,
-  'totCycleTimeWIP': 0,
-  'totCycleTimeBacklogIter': 0,
-  'totCycleTimeWIPIter': 0,
-  'teamsLt5': 0,
-  'teams5to12': 0,
-  'teamsGt12': 0,
-  'totalSquad': 0,
-  'month': '',
-  'partialMonth': false
-
-}, {
-  'totalPoints': 0,
-  'totalCommPoints': 0,
-  'totalStories': 0,
-  'totalCommStories': 0,
-  'totalCompleted': 0,
-  'totalDefectsStartBal' : 0,
-  'totalDefects': 0,
-  'totalDplymts': 0,
-  'totTeamStat': 0,
-  'totClientStat': 0,
-  'totTeamStatIter': 0,
-  'totClientStatIter': 0,
-  'totCycleTimeBacklog': 0,
-  'totCycleTimeWIP': 0,
-  'totCycleTimeBacklogIter': 0,
-  'totCycleTimeWIPIter': 0,
-  'teamsLt5': 0,
-  'teams5to12': 0,
-  'teamsGt12': 0,
-  'totalSquad': 0,
-  'month': '',
-  'partialMonth': false
-
-}, {
-  'totalPoints': 0,
-  'totalCommPoints': 0,
-  'totalStories': 0,
-  'totalCommStories': 0,
-  'totalCompleted': 0,
-  'totalDefectsStartBal' : 0,
-  'totalDefects': 0,
-  'totalDplymts': 0,
-  'totTeamStat': 0,
-  'totClientStat': 0,
-  'totTeamStatIter': 0,
-  'totClientStatIter': 0,
-  'totCycleTimeBacklog': 0,
-  'totCycleTimeWIP': 0,
-  'totCycleTimeBacklogIter': 0,
-  'totCycleTimeWIPIter': 0,
-  'teamsLt5': 0,
-  'teams5to12': 0,
-  'teamsGt12': 0,
-  'totalSquad': 0,
-  'month': '',
-  'partialMonth': false
-
-}, {
-  'totalPoints': 0,
-  'totalCommPoints': 0,
-  'totalStories': 0,
-  'totalCommStories': 0,
-  'totalCompleted': 0,
-  'totalDefectsStartBal' : 0,
-  'totalDefects': 0,
-  'totalDplymts': 0,
-  'totTeamStat': 0,
-  'totClientStat': 0,
-  'totTeamStatIter': 0,
-  'totClientStatIter': 0,
-  'totCycleTimeBacklog': 0,
-  'totCycleTimeWIP': 0,
-  'totCycleTimeBacklogIter': 0,
-  'totCycleTimeWIPIter': 0,
-  'teamsLt5': 0,
-  'teams5to12': 0,
-  'teamsGt12': 0,
-  'totalSquad': 0,
-  'month': '',
-  'partialMonth': false
-}, {
-  'totalPoints': 0,
-  'totalCommPoints': 0,
-  'totalStories': 0,
-  'totalCommStories': 0,
-  'totalCompleted': 0,
-  'totalDefectsStartBal' : 0,
-  'totalDefects': 0,
-  'totalDplymts': 0,
-  'totTeamStat': 0,
-  'totClientStat': 0,
-  'totTeamStatIter': 0,
-  'totClientStatIter': 0,
-  'totCycleTimeBacklog': 0,
-  'totCycleTimeWIP': 0,
-  'totCycleTimeBacklogIter': 0,
-  'totCycleTimeWIPIter': 0,
-  'teamsLt5': 0,
-  'teams5to12': 0,
-  'teamsGt12': 0,
-  'totalSquad': 0,
-  'month': '',
-  'partialMonth': false
-}];
+var tempIterationData = function() {
+  var iterationMonth = 5;
+  var rollupDataList = [];
+  for (var i=0; i<=iterationMonth; i++) {
+    var rollupData = {
+      'totalPoints': 0,
+      'totalCommPoints': 0,
+      'totalStories': 0,
+      'totalCommStories': 0,
+      'totalCompleted': 0,
+      'totalDefectsStartBal': 0,
+      'totalDefects': 0,
+      'totalDefectsClosed': 0,
+      'totalDefectsEndBal': 0,
+      'totalDplymts': 0,
+      'totTeamStat': 0,
+      'totClientStat': 0,
+      'totTeamStatIter': 0,
+      'totClientStatIter': 0,
+      'totCycleTimeBacklog': 0,
+      'totCycleTimeWIP': 0,
+      'totCycleTimeBacklogIter': 0,
+      'totCycleTimeWIPIter': 0,
+      'teamsLt5': 0,
+      'teams5to12': 0,
+      'teamsGt12': 0,
+      'totalSquad': 0,
+      'month': '',
+      'partialMonth': false
+    };
+    rollupDataList.push(rollUpData);
+  }
+  return rollupDataList;
+};
 
 var tempSquadScore = {
   'fte5to12': 0,
@@ -165,49 +56,22 @@ var tempSquadScore = {
   'teamsLt5': 0
 };
 
-var assessmentTempData = [{
-  'less_120_days': 0,
-  'gt_120_days': 0,
-  'no_submission': 0,
-  'totalSquad': 0,
-  'month': '',
-  'partialMonth': false
-}, {
-  'less_120_days': 0,
-  'gt_120_days': 0,
-  'no_submission': 0,
-  'totalSquad': 0,
-  'month': '',
-  'partialMonth': false
-}, {
-  'less_120_days': 0,
-  'gt_120_days': 0,
-  'no_submission': 0,
-  'totalSquad': 0,
-  'month': '',
-  'partialMonth': false
-}, {
-  'less_120_days': 0,
-  'gt_120_days': 0,
-  'no_submission': 0,
-  'totalSquad': 0,
-  'month': '',
-  'partialMonth': false
-}, {
-  'less_120_days': 0,
-  'gt_120_days': 0,
-  'no_submission': 0,
-  'totalSquad': 0,
-  'month': '',
-  'partialMonth': false
-}, {
-  'less_120_days': 0,
-  'gt_120_days': 0,
-  'no_submission': 0,
-  'totalSquad': 0,
-  'month': '',
-  'partialMonth': false
-}];
+var tempIterationData = function() {
+  var iterationMonth = 5;
+  var rollupDataList = [];
+  for (var i=0; i<=iterationMonth; i++) {
+    var rollupData = {
+      'less_120_days': 0,
+      'gt_120_days': 0,
+      'no_submission': 0,
+      'totalSquad': 0,
+      'month': '',
+      'partialMonth': false
+    };
+    rollupDataList.push(rollUpData);
+  }
+  return rollupDataList;
+};
 
 google.charts.load('current', {packages:['corechart']});
 
@@ -701,7 +565,7 @@ function getAssessmentSnapshot(teamId) {
         } else if (data.rows.length <= 0) {
           console.log('no assessment data for team: ', teamId);
           //$('#refreshDate').html('Waiting for updating');
-          assessmentEvaluation(assessmentTempData);
+          assessmentEvaluation(assessmentTempData());
         } else {
           assessmentEvaluation(data.rows[0].value.value);
         }
@@ -734,7 +598,7 @@ function getSnapshot(teamId, teamName) {
         } else if (data.rows.length <= 0) {
           console.log('no iteation data for team: ', teamId);
           $('#refreshDate').html('Waiting for updating');
-          iterationScoreCard(teamId, teamName, tempIterationData, tempSquadScore);
+          iterationScoreCard(teamId, teamName, tempIterationData(), tempSquadScore);
         } else {
           var nonsquadScore = data.rows[0].value.value;
           var cUrl = '/api/snapshot/rollupdatabyteam/' + encodeURIComponent(teamId);
