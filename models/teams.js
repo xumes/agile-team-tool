@@ -1443,7 +1443,7 @@ var team = {
     });
   },
 
-  prepareTeamAry: function(teamAry, nitems, parentsAry) {
+  prepareTeamAry: /* istanbul ignore next */ function(teamAry, nitems, parentsAry) {
     return new Promise(function(resolve, reject){
       for (idx=0; idx < nitems; idx++) {
         var id = parentsAry[idx];
@@ -1474,7 +1474,7 @@ var team = {
    * Get the hierarchy of a team from his current level upto the topmost level
    * A > B > C > D
    */
-  getTeamHierarchy: function(teamId) {
+  getTeamHierarchy: /* istanbul ignore next */ function(teamId) {
     return new Promise(function(resolve, reject){
       team.getLookupIndex(teamId)
         .then(function(result) {
