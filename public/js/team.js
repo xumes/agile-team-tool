@@ -354,14 +354,29 @@ function loadSelectedAgileTeam() {
   $('#select2-childrenListAction-container').attr('title', 'Actions...');
 
   if (!hasAccess($('#teamSelectList option:selected').val())) {
-    $('#addTeamBtn,#updateTeamBtn,#deleteTeamBtn,#updateChildBtn,#addMemberBtn,#updateParentBtn,#cancelMemberBtn').attr('disabled', 'disabled');
-    $('#teamName,#teamDesc,#teamMemberName,#memberAllocation').attr('disabled', 'disabled');
-    $('#teamSquadYesNo,#memberRoleSelectList,#memberListAction,#parentSelectList,#childSelectList,#childrenListAction,#iterTeamBtn,#assessBtn').attr('disabled', 'disabled');
-    $('#teamDesc,#select2-teamSquadYesNo-container,#select2-memberRoleSelectList-container,#select2-memberListAction-container,#select2-parentSelectList-container').css('color', 'grey');
+    disabledFormElements();
     displayEditStatus(true);
   } else {
     displayEditStatus(false);
+    enableImptLinkFormElements();
   }
+}
+
+function disabledFormElements() {
+  $('#addTeamBtn,#updateTeamBtn,#deleteTeamBtn,#updateChildBtn,#addMemberBtn,#updateParentBtn,#cancelMemberBtn').attr('disabled', 'disabled');
+  $('#teamName,#teamDesc,#teamMemberName,#memberAllocation').attr('disabled', 'disabled');
+  $('#teamSquadYesNo,#memberRoleSelectList,#memberListAction,#parentSelectList,#childSelectList,#childrenListAction,#iterTeamBtn,#assessBtn').attr('disabled', 'disabled');
+  $('#teamDesc,#select2-teamSquadYesNo-container,#select2-memberRoleSelectList-container,#select2-memberListAction-container,#select2-parentSelectList-container').css('color', 'grey');
+  $('.implabel').attr('disabled', 'disabled');
+  $('.implink').attr('disabled', 'disabled');
+  $('.removelink').remove();
+  $('.add_link').hide();
+}
+
+function enableImptLinkFormElements(){
+  $('.implabel').removeAttr('disabled');
+  $('.implink').removeAttr('disabled');
+  $('.add_link').show();
 }
 
 function manageIteration() {
@@ -836,6 +851,10 @@ function loadLinks(teamId){
           $('#importantLinkWrapper').append(html);
           $('.implabel').select2();
         }
+      } else {
+        if (!hasAccess(teamId)) {
+          $('#importantLinkWrapper').html('<span class="no-data">No data available</span>');
+        }
       }
     }
   }
@@ -971,6 +990,7 @@ function setPrefixHttp(url){
   return url;
 }
 
+/* On blur/mouseout event check the textfield if theres http if not then lets add it */
 function autoAddHttp(){
   $('#importantLinkWrapper .implink').on('blur mouseout', function(){
     url = setPrefixHttp($(this).val().trim());
@@ -1127,9 +1147,13 @@ function handleTeamValidationErrors(errors, action) {
     }
   });
   if (_.isEmpty(msgs)) {
-    msgs = errors.error;
+    if (errors.message){
+      msgs = errors.message;
+    } else if (errors.error !== undefined && errors.error.error !== '') {
+      msgs = errors.error.error;
+    }
   }
-  console.log('msg:', msgs);
+
   showMessagePopup(msgs);
   $('#saveLinkBtn').removeAttr('disabled');
 
@@ -1170,7 +1194,6 @@ function handleLinkValidation(frmElement, err){
       // tmp = $.trim(tmp.split('is not a valid url').shift());
       $('#importantLinkWrapper .implink').each(function(idx) {
         link = $.trim($(this).val());
-        console.log('link:', link, '| tmp:', tmp);
         ctr = $(this).attr('data-counter');
         // check if the link is empty then highlight field error
         if (link == '') {
@@ -1183,7 +1206,7 @@ function handleLinkValidation(frmElement, err){
         }
       });
     }
-    // check if the linkId is valid e.g. Wall of work, Defects
+    // check if the link label is valid e.g. Wall of work, Defects
     if (klinkStr['linkLabel']){
       tmpErr = klinkStr['linkLabel'];
       $('#importantLinkWrapper .implabel').each(function(idx) {
