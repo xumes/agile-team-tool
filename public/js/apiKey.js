@@ -13,7 +13,7 @@ function closeApiKey() {
 }
 
 function highlightApiKey() {
- $('#apiKey').attr('style', 'background-color: #C2DFFF');
+  $('#apiKey').attr('style', 'background-color: #C2DFFF');
 }
 
 function initApiKey(userEmail) {
