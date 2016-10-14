@@ -1314,6 +1314,80 @@ var snapshot = {
           reject(formatErrMsg(msg));
         });
     });
+  },
+
+  cleanUpDb: function(teamId) {
+    return new Promise(function(resolve, reject) {
+      var deleteItems = [];
+      var currentTeam = new Object();
+      common.getByViewKey('utility','cleanupteam',teamId, true)
+      .then(function(team){
+        if (!_.isEmpty(team.rows)) {
+          currentTeam = team.rows[0].value;
+          var deleteTeam = team.rows[0].value;
+          deleteTeam.doc_status = 'delete';
+          deleteItems.push(deleteTeam);
+          if (!_.isEmpty(currentTeam.child_team_id)) {
+            return common.getByViewKeys('utility','cleanupteam',currentTeam.child_team_id, true);
+          } else {
+            return {'rows' : []};
+          }
+        } else {
+          return Promise.reject({'error': 'cannot find team: ' + teamId});
+        }
+      })
+      .then(function(childTeams){
+        if (!_.isEmpty(childTeams.rows)) {
+          _.each(childTeams.rows, function(childTeam){
+            var updateChild = childTeam.value;
+            if (updateChild.parent_team_id == currentTeam._id) {
+              updateChild.parent_team_id = '';
+              deleteItems.push(updateChild);
+            }
+          });
+        }
+        if (currentTeam.parent_team_id == '' || currentTeam.parent_team_id == undefined) {
+          return {'rows': []};
+        } else {
+          return common.getByViewKey('utility','cleanupteam',currentTeam.parent_team_id, true);
+        }
+      })
+      .then(function(parentTeam){
+        if (!_.isEmpty(parentTeam.rows)) {
+          var updateParent = parentTeam.rows[0].value;
+          updateParent.child_team_id.splice(_.indexOf(updateParent.child_team_id, currentTeam._id), 1);
+          deleteItems.push(updateParent);
+        }
+        return common.getByViewKey('utility', 'cleanupassessment', currentTeam._id);
+      })
+      .then(function(assessments){
+        if (!_.isEmpty(assessments.rows)) {
+          _.each(assessments.rows, function(assessment){
+            var updateAssessment = assessment.value;
+            updateAssessment.doc_status = 'delete';
+            deleteItems.push(updateAssessment);
+          });
+        }
+        return common.getByViewKey('utility', 'cleanupiteration', currentTeam._id);
+      })
+      .then(function(iterations){
+        if (!_.isEmpty(iterations.rows)) {
+          _.each(iterations.rows, function(iteration){
+            var updateIteration = iteration.value;
+            updateIteration.doc_status = 'delete';
+            deleteItems.push(updateIteration);
+          });
+        }
+        var request = {'docs' : deleteItems};
+        return common.bulkUpdate(request);
+      })
+      .then(function(results){
+        resolve(results);
+      })
+      .catch(function(err){
+        reject(err);
+      });
+    });
   }
 };
 
