@@ -490,9 +490,17 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
       }
     },
     tooltip: {
-      formatter: function () {
-        return '# of squads: ' + this.y +
-        '<br/>% of teams: ' + this.percentage.toFixed(1);
+      shared: true,
+      formatter: function() {
+        var formatResult = '<b>' + this.points[0].key + '</b><br>';
+        var serName = '';
+        for (var i = 0; i < this.points.length; i++) {
+          if (serName != this.points[i].series.name) {
+            formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25CF</span>' + '# of squads: <b>' + this.points[i].y + '</b>, % of teams: <b>'+ this.points[i].percentage.toFixed(1)+'</b><br/>';
+          }
+          serName = this.points[i].series.name;
+        }
+        return formatResult;
       }
     },
     series: [{
