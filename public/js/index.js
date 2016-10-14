@@ -13,7 +13,7 @@ var tempIterationData = function() {
   var iterationMonth = 5;
   var rollupDataList = [];
   for (var i=0; i<=iterationMonth; i++) {
-    var rollupData = {
+    rollupDataList.push({
       'totalPoints': 0,
       'totalCommPoints': 0,
       'totalStories': 0,
@@ -38,8 +38,7 @@ var tempIterationData = function() {
       'totalSquad': 0,
       'month': '',
       'partialMonth': false
-    };
-    rollupDataList.push(rollUpData);
+    });
   }
   return rollupDataList;
 };
@@ -60,15 +59,14 @@ var tempIterationData = function() {
   var iterationMonth = 5;
   var rollupDataList = [];
   for (var i=0; i<=iterationMonth; i++) {
-    var rollupData = {
+    rollupDataList.push({
       'less_120_days': 0,
       'gt_120_days': 0,
       'no_submission': 0,
       'totalSquad': 0,
       'month': '',
       'partialMonth': false
-    };
-    rollupDataList.push(rollUpData);
+    });
   }
   return rollupDataList;
 };
