@@ -596,12 +596,12 @@ var team = {
                   }
                 }
               })
-              .catch(function(err) {
+              .catch( /* istanbul ignore next */ function(err) {
                 msg = 'User not authorized to do action';
                 return reject(formatErrMsg(msg));
               });
           })
-          .catch(function(err) {
+          .catch( /* istanbul ignore next */ function(err) {
             reject(err);
           });
       }
@@ -1251,7 +1251,7 @@ var team = {
           );
         });
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         return reject(err);
       });
     });
@@ -1353,7 +1353,7 @@ var team = {
           );
         });
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         return reject(err);
       });
     });
@@ -1437,12 +1437,89 @@ var team = {
           );
         });
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         return reject(err);
       });
     });
-  }
+  },
 
+  prepareTeamAry: function(teamAry, nitems, parentsAry) {
+    return new Promise(function(resolve, reject){
+      for (idx=0; idx < nitems; idx++) {
+        var id = parentsAry[idx];
+        team.getTeam(id)
+          .then(function(result) {
+            var parentId = result.parent_team_id;
+            var name = result.name;
+            var _id = result._id;
+            for (jctr=0; jctr < teamAry.length; jctr++) {
+              var id = parentsAry[jctr];
+              var parentId = teamAry[jctr].parentId;
+              if (_id === id){
+                teamAry.push({ordering: ((nitems-jctr)-1), teamId: id, parentId: parentId, name: name});
+              }
+            }
+            if (teamAry.length == nitems+1) {
+              return resolve(teamAry);
+            }
+          })
+          .catch( /* istanbul ignore next */ function(err){
+            return reject(err);
+          });
+      }
+    });
+  },
+
+  /*
+   * Get the hierarchy of a team from his current level upto the topmost level
+   * A > B > C > D
+   */
+  getTeamHierarchy: function(teamId) {
+    return new Promise(function(resolve, reject){
+      team.getLookupIndex(teamId)
+        .then(function(result) {
+          if (result && (result.parents !== undefined) && (!_.isEmpty(result.parents))) {
+            var parentsAry = [];
+            var nitems = result.parents.length;
+            var teamAry = [];
+            _.each(result.parents, function(value, key, list){
+              parentsAry.push(value);
+            });
+            team.getTeam(teamId)
+              .then(function(res) {
+                var parentId = res.parent_team_id;
+                var name = res.name;
+                if (parentId && parentId !== ''){
+                  teamAry.push({ordering: nitems, teamId: teamId, parentId: parentId, name: name});
+                  team.prepareTeamAry(teamAry, nitems, parentsAry)
+                    .then(function(res){
+                      loggers.get('models').info('[teamModel.getTeamHierarchy] result:', JSON.stringify(res));
+                      resolve(res);
+                    });
+                }
+              })
+              .catch( /* istanbul ignore next */ function(err){
+                return reject(err);
+              });
+          } else {
+            team.getTeam(teamId)
+              .then(function(result){
+                var parentId = result.parent_team_id;
+                var name = result.name;
+                var teamAry = [];
+                teamAry.push({ordering: 0, teamId: teamId, parentId: parentId, name: '(No parent team information)'});
+                resolve(teamAry);
+              })
+              .catch( /* istanbul ignore next */ function(err){
+                return reject(err);
+              });
+          }
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          return reject(err);
+        });
+    });
+  }
 };
 
 var formattedDocuments = function(doc, action) {
