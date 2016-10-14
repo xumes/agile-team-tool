@@ -857,8 +857,8 @@ function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsCalResults, i
  */
 function daysDiff(date1, date2) {
   var dateFormat = 'YYYY-MM-DD';
-  var d1 = moment(date1, dateFormat).startOf('day');
-  var d2 = moment(date2, dateFormat).startOf('day');
+  var d1 = moment(date1, dateFormat);
+  var d2 = moment(date2, dateFormat);
   var days = moment(d1).diff(d2, 'days', true);
   return days;
 };
