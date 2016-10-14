@@ -507,7 +507,7 @@ function setRefreshDate(timestamp) {
 //refresh button on the screen to refresh snapshot from workers
 function performChartRefresh(teamId, teamName) {
   destroyIterationCharts();
-  destroyAssessmentCharts();
+  //destroyAssessmentCharts();
   getSnapshot(teamId, teamName);
 }
 
@@ -683,7 +683,7 @@ function getAllAgileTeamsByParentId(parentId, showLoading, initial, parentsTree)
 
 function getTeamSnapshots(teamId, teamName){
   getSnapshot(teamId, teamName);
-  //getAssessmentSnapshot(teamId);
+  getAssessmentSnapshot(teamId);
 }
 
 function getAssessmentSnapshot(teamId) {
@@ -701,9 +701,9 @@ function getAssessmentSnapshot(teamId) {
         } else if (data.rows.length <= 0) {
           console.log('no assessment data for team: ', teamId);
           //$('#refreshDate').html('Waiting for updating');
-          assessmentEvaluation(assessmentTempData);
+          assessmentParentRollup(assessmentTempData);
         } else {
-          assessmentEvaluation(data.rows[0].value.value);
+          assessmentParentRollup(data.rows[0].value.value);
         }
       } else {
         showLog('data loaded: ' + JSON.stringify(data));
@@ -1008,7 +1008,7 @@ var selectedElement = '';
 
 function performSnapshotPull(teamId, teamName) {
   destroyIterationCharts();
-  destroyAssessmentCharts();
+  //destroyAssessmentCharts();
   getSnapshot(teamId, teamName);
 }
 
@@ -1139,8 +1139,8 @@ function loadDetails(elementId, setScrollPosition) {
             $('#teamType').html('Team:&nbsp;');
             $('#nsquad_team_scard').show();
             $('#squad_team_scard').hide();
-            $('#nsquad_assessment_card').hide();
-            $('#squad_assessment_card').show();
+            $('#nsquad_assessment_card').show();
+            $('#squad_assessment_card').hide();
             $('#iterationSection .agile-section-nav').hide();
             $('#assessmentSection .agile-section-nav').hide();
             $('#refreshData').attr('onclick', "performChartRefresh('" + team._id + "','" + team.name + "')");
