@@ -12,6 +12,10 @@ function closeApiKey() {
   IBMCore.common.widget.overlay.hide('generateApiKey');
 }
 
+function highlightApiKey() {
+  $('#apiKey').attr('style', 'background-color: #C2DFFF');
+}
+
 function initApiKey(userEmail) {
   //check if user already has an API key base on the userEmail
   getApiKeyByUser();
@@ -36,10 +40,9 @@ function getApiKey() {
       $('#apiKey').html(uuidKey);
       $('#copy-button').attr('data-clipboard-text', uuidKey);
       $('#apiKeySection').show();
+      document.getElementById('apiKeyButton').disabled = true;
     }
   });
-
-  //document.getElementById('apiKeyButton').disabled = true;
 }
 
 function getApiKeyByUser() {
@@ -55,10 +58,11 @@ function getApiKeyByUser() {
       $('#apiKey').html(uuidKey);
       $('#copy-button').attr('data-clipboard-text', uuidKey);
       $('#apiKeySection').show();
-      //document.getElementById('apiKeyButton').disabled = true;
+      document.getElementById('apiKeyButton').disabled = true;
     }
     else {
       $('#apiKeySection').hide();
+      document.getElementById('apiKeyButton').removeAttr('disabled');
     }
   });
 
