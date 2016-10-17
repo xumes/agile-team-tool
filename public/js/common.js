@@ -180,6 +180,76 @@ function getPersonFromFaces(userEmail, _callback, args) {
   return person;
 }
 
+function getPersonByCnumFromFaces(uid, _callback, args) {
+  var person = null;
+  if (uid != '') {
+    var done = false;
+    gFacesCache = JSON.parse(localStorage.getItem('facesUidCache'));
+    if (gFacesCache != null) {
+      gFacesCache.forEach(function(personCache) {
+        if (!done && personCache != undefined && personCache.uid.toUpperCase() == uid.toUpperCase()) {
+          person = personCache;
+          if (typeof _callback === 'function') {
+            if (typeof args != 'undefined')
+              args.push(person);
+
+            showLog('Person cache, callback function: ' + getFnName(_callback));
+            _callback.apply(this, args);
+          }
+          done = true;
+        }
+      });
+      if (done) {
+        showLog('Person cache found using uid: ' + uid);
+        return person;
+      }
+    } else
+      gFacesCache = [];
+
+    var svcRoot = 'https://faces.tap.ibm.com/api/';
+    var svcFunc = 'find/?limit=100&q=uid:' + encodeURIComponent('"' + escape(uid) + '"');
+    var svcURL = svcRoot + svcFunc;
+    $.ajax({
+      url: svcURL,
+      timeout: 5000,
+      dataType: 'jsonp'
+    }).always(function(data) {
+      if (data != null && data.length > 0) {
+        person = null;
+        for (var i in data) {
+          if (data[i].uid.toUpperCase() == uid.toUpperCase())
+            person = data[i];
+        }
+        var cached = false;
+        if (gFacesCache != null) {
+          gFacesCache.forEach(function(personCache) {
+            if (!cached && personCache != null && person != null && personCache.uid.toUpperCase() == person.uid.toUpperCase()) {
+              cached = true;
+            }
+          });
+        }
+        if (!cached) {
+          gFacesCache.push(person);
+          localStorage.setItem('facesUidCache', JSON.stringify(gFacesCache));
+        }
+
+        if (typeof args != 'undefined')
+          args.push(person);
+      } else {
+        if (typeof args != 'undefined')
+          args.push(null);
+      }
+      if (typeof _callback === 'function') {
+        showLog('success callback function: ' + getFnName(_callback));
+        _callback.apply(this, args);
+      }
+      return person;
+    });
+  }
+
+  return person;
+}
+
 /**
  * Gets the server date and time.
  */

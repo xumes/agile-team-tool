@@ -607,7 +607,12 @@ function loadTeamMembers(teamId) {
         row = row + "<td id='role_ref_" + j + "'>" + member.role + '</td>';
         row = row + '</tr>';
         $('#memberList').append(row);
-        getPersonFromFaces(member.id, facesPersonHandler, [j, member.id]);
+        if (member.id != undefined){
+          getPersonFromFaces(member.id, facesPersonHandler, [j, member.id]);
+        }
+        else {
+          getPersonByCnumFromFaces(member.key, facesPersonHandler, [j, member.id]);
+        }
       }
     }
     $('#teamMemberName').removeAttr('disabled');

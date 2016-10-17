@@ -568,7 +568,6 @@ function getAssessmentSnapshot(teamId) {
         if (data.rows == null) {
             //console.log("data loaded failed");
         } else if (data.rows.length <= 0) {
-          console.log('no assessment data for team: ', teamId);
           timestamp = getServerDateTime();
           timestamp =  getDate(timestamp, false);
           assessmentParentRollup(assessmentTempData(), timestamp);
@@ -1080,7 +1079,12 @@ function loadDetails(elementId, setScrollPosition) {
               if (member.role == 'Manager') {
                 managerIndex = j;
               }
-              getPersonFromFaces(member.id, facesPersonHandler, [j, member.id]);
+              if (member.id != undefined){
+                getPersonFromFaces(member.id, facesPersonHandler, [j, member.id]);
+              }
+              else {
+                getPersonByCnumFromFaces(member.key, facesPersonHandler, [j, member.id]);
+              }
             }
           } else {
             $('#membersList').append('<tr class="odd"><td valign="top" colspan="4" class="dataTables_empty">No data available</td></tr>');
