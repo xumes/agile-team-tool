@@ -893,7 +893,7 @@ function performSnapshotPull(teamId, teamName) {
 /**
  * Ajax-call to retrieve the hierarchy of a team
  */
-function getHierarchyTeam(teamId, callback) {
+function getHierarchyTeam(teamId, team, callback) {
   var strHierarchy = '';
   $.ajax({
     type: 'GET',
@@ -902,19 +902,27 @@ function getHierarchyTeam(teamId, callback) {
     console.log(e);
   }).done(function(res) {
     var separator = '&nbsp;>&nbsp;';
-    for (var n = res.length-1; n >= 0; n--){
-      var pos = res[n].ordering;
-      var name = res[n].name;
-      var id = res[n].teamId;
-      var nItems = (res.length-1)-n;
-      if (pos === nItems) {
-        if (n === 0) {
-          strHierarchy = strHierarchy + name;
-        } else {
-          strHierarchy = strHierarchy + createHierarchylink(id, name) + separator;
+    console.log('result:', JSON.stringify(res,null,1));
+    var ntotal = res.length-1;
+    console.log('ntotal:',ntotal);
+    var hierarchyAry = [];
+    for (ictr=0; ictr<=ntotal; ictr++){
+      _.each(res, function(value, idx, list){
+        if (value['ordering'] === ictr){
+          hierarchyAry.push(value);
         }
+      });
+    }
+    for (ictr=0; ictr<=ntotal; ictr++){
+      var id = hierarchyAry[ictr].teamId;
+      var name = hierarchyAry[ictr].name;
+      if (ictr === ntotal) {
+        strHierarchy = strHierarchy + name;
+      } else {
+        strHierarchy = strHierarchy + createHierarchylink(id, name, team) + separator;
       }
     }
+    console.log('hierarchyAry:', JSON.stringify(hierarchyAry,null,1));
     callback(strHierarchy);
   });
 }
@@ -979,7 +987,11 @@ function loadDetails(elementId, setScrollPosition) {
       }).done(function(currentTeam) {
         team = currentTeam;
         if (team != undefined) {
+          getHierarchyTeam(teamId, team, function(keyValue){
+            $('#hierarchy_block').html(keyValue);
+          });
           $('#levelDetail').empty();
+
           var keyLabel = '';
           var keyValue = '';
           if (team['_id'] != undefined) {
@@ -1028,12 +1040,6 @@ function loadDetails(elementId, setScrollPosition) {
 
           if (team['parent_team_id'] != undefined && team['parent_team_id'] != '') {
           }
-
-          // getHierarchyTeam(teamId, function(keyValue){
-          //   var keyLabel = 'Hierarchy';
-          //   appendRowDetail(keyLabel, keyValue);
-            
-          // });
 
           if (team['links'] != undefined) {
             keyLabel = 'Important links';
@@ -1147,8 +1153,18 @@ function loadDetails(elementId, setScrollPosition) {
   }
 }
 
-function createHierarchylink(id, name){
-  return '<a href="team?id=' + encodeURIComponent(id) + '" title="' + name + '"  target="_blank" class="wlink">' + name + '</a>';
+function createHierarchylink(id, name, team){
+  if (team['parent_team_id'] != undefined && team['parent_team_id'] != '') {
+    var parent_team_id = team['parent_team_id'];
+    var parentLinkId = $('#link_sub_' + jq(parent_team_id));
+    if (parentLinkId) {
+      if (parentLinkId.html() != undefined) {
+        return '<a href="#" title="' + name + '" class="wlink" onclick="displaySelected(\'' +id+ '\',true)" >' + name + '</a>';
+      } else {
+        return '<a href="#" title="' + name + '" class="wlink" onclick="loadParentInAllTeams(\'' +id+ '\',true)" >' + name + '</a>';
+      }
+    }
+  }
 }
 
 function teamLocationHandler(data) {

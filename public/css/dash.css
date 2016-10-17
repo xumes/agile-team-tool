@@ -1100,6 +1100,10 @@ li #allTeams {
   padding: 2px 25px 2px 0 !important;
 }
 
+#hierarchy_block{
+  font-size: 14px;
+}
+
 .tImportantlink{
   font-size:14px; width:100%;
 }
