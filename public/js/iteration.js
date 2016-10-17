@@ -50,7 +50,7 @@ jQuery(function($) {
   });
 
   $('#iterationName').blur(function() {
-    if ($('#iterationName').val().trim() != '') {
+    if ($('#iterationName').val().trim() != '' && $('#iterationSelectList').val() == 'new') {
       if (hasAccess($('#teamSelectList').val())) {
         $('#memberCount').val(teamMemCount());
         $('#fteThisiteration').val(teamMemFTE());
@@ -72,7 +72,6 @@ jQuery(function($) {
         enableIterationFields(true);
       }
     } else {
-      $('#fteThisiteration').val(teamMemFTE());
       loadSelectedAgileTeamIterationInfo();
     }
   });
