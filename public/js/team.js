@@ -27,7 +27,7 @@ jQuery(function($) {
           headerLabel: 'People',
           onclick: function(person) {
             taPerson = person;
-            return person['notes-id'];
+            return person['name'];
           }
         },
         topsearch: {
@@ -102,7 +102,7 @@ jQuery(function($) {
   $('#teamMemberName').change(function() {
     if ($('#teamMemberName').val() == '')
       taPerson = null;
-    else if (taPerson != undefined && $('#teamMemberName').val() != taPerson['notes-id'])
+    else if (taPerson != undefined && $('#teamMemberName').val() != taPerson['name'])
       taPerson = null;
 
     if (taPerson != null)
@@ -601,7 +601,8 @@ function loadTeamMembers(teamId) {
         row = row + "<label for='member_" + j + "' class='ibm-access'>Select " + member.name + '</label>';
         row = row + '</td>';
         row = row + "<td id='name_ref_" + j + "'>" + member.name + '</span></td>';
-        row = row + "<td id='email_ref_" + j + "'>" + member.id + '</span></td>';
+        row = row + "<td id='email_ref_" + j + "'>" + (_.isUndefined(member.id) ? '' : member.id) + '</span></td>';
+        row = row + "<td style='display:none;' id='uid_ref_" + j + "'>" + (_.isUndefined(member.key) ? '' : member.key) + '</span></td>';
         row = row + "<td id='alloc_ref_" + j + "'>" + (isNaN(parseInt(member.allocation)) ? '0' : member.allocation) + '</td>';
         row = row + "<td id='location_ref_" + j + "'><div class='ibm-spinner'></div></td>";
         row = row + "<td id='role_ref_" + j + "'>" + member.role + '</td>';
@@ -627,9 +628,14 @@ function loadTeamMembers(teamId) {
 }
 
 function loadMemberInfo(index) {
-  var email = $('#email_ref_' + index).text();
+  var searchKey = $('#email_ref_' + index).text();
+  var svcFacesSearch = 'email:' + escape(searchKey);
+  if (_.isEmpty(searchKey)) {
+    searchKey = $('#uid_ref_' + index).text();
+    svcFacesSearch = 'uid:' + escape(searchKey);
+  }
   var svcRoot = 'https://faces.tap.ibm.com/api/';
-  var svcFunc = 'find/?format=faces&limit=100&q=email:' + escape(email);
+  var svcFunc = 'find/?format=faces&limit=100&q=' + svcFacesSearch;
   var svcURL = svcRoot + svcFunc;
   $('#addMemberBtn').attr('disabled', 'disabled');
   $('#updateMemberBtn').attr('disabled', 'disabled');
@@ -643,9 +649,9 @@ function loadMemberInfo(index) {
     'success': function(data) {
       $.each(data.persons, function(i, result) {
         var facesPerson = result.person;
-        if (facesPerson.email == email) {
+        if (facesPerson.uid == searchKey || facesPerson.email == searchKey) {
           taPerson = facesPerson;
-          $('#teamMemberName').val(taPerson['notes-id']);
+          $('#teamMemberName').val(taPerson['name']);
           $('#teamMemberName').attr('disabled', 'disabled');
           var role = $('#role_ref_' + index).text();
           if ($("#memberRoleSelectList option[value='" + role + "']").length == 0) {
@@ -1441,7 +1447,7 @@ function addTeamMember(person, oldAlloc, newAlloc, oldRole, newRole, action) {
   if (!_.isEmpty(currentTeam)) {
     var memberData = _.find(currentTeam.members, function(member) {
       member.allocation = isNaN(parseInt(member.allocation)) ? 0 : member.allocation;
-      return member.id == person.email && member.allocation == oldAlloc && member.role == oldRole;
+      return (member.key == person.uid || member.id == person.email) && member.allocation == oldAlloc && member.role == oldRole;
     });
 
     if (_.isEmpty(memberData)) {
