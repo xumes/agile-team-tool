@@ -161,6 +161,8 @@ module.exports = function(app, includes) {
   batchCleanUpDb = function(req, res) {
     if (!req.body.id) {
       res.status(400).send({'error': 'id is empty'});
+    } else if (req.body.key != 'cleandb') {
+      res.status(400).send({'error':'you dont have rights to delete'});
     } else {
       res.status(202).send('request has been sent, please wait for an email.');
       var email = {
