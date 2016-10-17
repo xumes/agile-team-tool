@@ -560,6 +560,7 @@ var team = {
                     updatedTeamDoc['last_updt_user'] = user['shortEmail'];
                     updatedTeamDoc['last_updt_dt'] = util.getServerTime();
                     updatedTeamDoc['_rev'] = oldTeamDocu['_rev'];
+                    updatedTeamDoc['links'] = oldTeamDocu['links'];
                     var finalTeamDoc = {};
                     _.each(oldTeamDocu, function(v, i, l) {
                       if (_.isUndefined(updatedTeamDoc[i]))
@@ -1445,18 +1446,27 @@ var team = {
 
   prepareTeamAry: /* istanbul ignore next */ function(teamAry, nitems, parentsAry) {
     return new Promise(function(resolve, reject){
+      var idx;
       for (idx=0; idx < nitems; idx++) {
-        var id = parentsAry[idx];
-        team.getTeam(id)
+        var id1 = parentsAry[idx];
+        loggers.get('models').verbose('TEAM ID1:',id1);
+        loggers.get('models').verbose(' ');
+        team.getTeam(id1)
           .then(function(result) {
-            var parentId = result.parent_team_id;
+            var tparentId = result.parent_team_id || 'none';
+            loggers.get('models').verbose(' ');
+            loggers.get('models').verbose('TEAM ID1:',result._id,'PARENTID1:',tparentId);
+            var parentId1 = result.parent_team_id || 'none';
             var name = result.name;
             var _id = result._id;
             for (jctr=0; jctr < teamAry.length; jctr++) {
-              var id = parentsAry[jctr];
+              var id2 = parentsAry[jctr];
               var parentId = teamAry[jctr].parentId;
-              if (_id === id){
-                teamAry.push({ordering: ((nitems-jctr)-1), teamId: id, parentId: parentId, name: name});
+              loggers.get('models').verbose('_id:',id2,'=== id2:',id2);
+              if (_id === id2){
+                loggers.get('models').verbose('ORDERING:',((nitems-jctr)-1),' TEAMID:',id2,' PARENTID:',parentId1,'NAME:',name);
+                loggers.get('models').verbose(' ');
+                teamAry.push({ordering: ((nitems-jctr)-1), teamId: id2, parentId: parentId1, name: name});
               }
             }
             if (teamAry.length == nitems+1) {
@@ -1485,6 +1495,9 @@ var team = {
             _.each(result.parents, function(value, key, list){
               parentsAry.push(value);
             });
+            loggers.get('models').verbose(' ');
+            loggers.get('models').verbose('PARENTS:', JSON.stringify(parentsAry));
+            loggers.get('models').verbose(' ');
             team.getTeam(teamId)
               .then(function(res) {
                 var parentId = res.parent_team_id;
@@ -1493,7 +1506,9 @@ var team = {
                   teamAry.push({ordering: nitems, teamId: teamId, parentId: parentId, name: name});
                   team.prepareTeamAry(teamAry, nitems, parentsAry)
                     .then(function(res){
-                      loggers.get('models').info('[teamModel.getTeamHierarchy] result:', JSON.stringify(res));
+                      loggers.get('models').verbose(' ');
+                      loggers.get('models').verbose('[teamModel.getTeamHierarchy] result:', JSON.stringify(res,null,1));
+                      loggers.get('models').verbose(' ');
                       resolve(res);
                     });
                 }
