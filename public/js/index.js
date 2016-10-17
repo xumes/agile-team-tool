@@ -829,7 +829,7 @@ function facesPersonHandler(index, userEmail, facesPerson) {
  * @param keyValue - team information value.
  */
 function appendRowDetail(keyLabel, keyValue, noParagraph) {
-  var rowId = jq(keyLabel)
+  var rowId = jq(keyLabel);
   var row = '<tr id="'+rowId+'">';
   if (noParagraph) {
     row = row + '<td><p>' + keyLabel + '</p></td>';
@@ -890,43 +890,6 @@ function performSnapshotPull(teamId, teamName) {
   getSnapshot(teamId, teamName);
 }
 
-/**
- * Ajax-call to retrieve the hierarchy of a team
- */
-function getHierarchyTeam(teamId, team, callback) {
-  var strHierarchy = '';
-  $.ajax({
-    type: 'GET',
-    url: '/api/teams/hierarchy/team/' + encodeURIComponent(teamId)
-  }).fail(function(e) {
-    console.log(e);
-  }).done(function(res) {
-    var separator = '&nbsp;>&nbsp;';
-    console.log('result:', JSON.stringify(res,null,1));
-    var ntotal = res.length-1;
-    console.log('ntotal:',ntotal);
-    var hierarchyAry = [];
-    for (ictr=0; ictr<=ntotal; ictr++){
-      _.each(res, function(value, idx, list){
-        if (value['ordering'] === ictr){
-          hierarchyAry.push(value);
-        }
-      });
-    }
-    for (ictr=0; ictr<=ntotal; ictr++){
-      var id = hierarchyAry[ictr].teamId;
-      var name = hierarchyAry[ictr].name;
-      if (ictr === ntotal) {
-        strHierarchy = strHierarchy + name;
-      } else {
-        strHierarchy = strHierarchy + createHierarchylink(id, name, team) + separator;
-      }
-    }
-    console.log('hierarchyAry:', JSON.stringify(hierarchyAry,null,1));
-    callback(strHierarchy);
-  });
-}
-
 function hierarchyTeamHandler(linkedTeams, team) {
   if (team != null)
     linkedTeams.push(team);
@@ -942,9 +905,9 @@ function hierarchyTeamHandler(linkedTeams, team) {
       var elementId = jq(teamId);
       var teamIdLink = $('#link_sub_' + elementId);
       if (teamIdLink && teamIdLink.html() != undefined) {
-        strHierarchy = strHierarchy + "<a style=\"display:inline; padding-left: 0px;\" title=\"View parent team information\" alt=\"View parent team information\" id='plink_'"+elementId+" href='#' onclick=\"javascript:displaySelected('" + linkedTeams[i]['_id'] + "', true);\">" + linkedTeams[i]['name'] + '</a>' + separator;
+        strHierarchy = strHierarchy + "<a class=\"wlink\" style=\"display:inline; padding-left: 0px;\" title=\"View parent team information\" alt=\"View parent team information\" id='plink_'"+elementId+" href='#' onclick=\"javascript:displaySelected('" + linkedTeams[i]['_id'] + "', true);\">" + linkedTeams[i]['name'] + '</a>' + separator;
       } else {
-        strHierarchy = strHierarchy + "<a style=\"display:inline; padding-left: 0px;\" title=\"View parent team information\" alt=\"View parent team information\" id='plink_'"+elementId+" href='#' onclick=\"javascript:loadParentInAllTeams('" + linkedTeams[i-1]['_id'] + "');\">" + linkedTeams[i]['name'] + '</a>' + separator;
+        strHierarchy = strHierarchy + "<a class=\"wlink\" style=\"display:inline; padding-left: 0px;\" title=\"View parent team information\" alt=\"View parent team information\" id='plink_'"+elementId+" href='#' onclick=\"javascript:loadParentInAllTeams('" + linkedTeams[i-1]['_id'] + "');\">" + linkedTeams[i]['name'] + '</a>' + separator;
       }
     } else {
       strHierarchy = strHierarchy + linkedTeams[i]['name'];
@@ -987,9 +950,6 @@ function loadDetails(elementId, setScrollPosition) {
       }).done(function(currentTeam) {
         team = currentTeam;
         if (team != undefined) {
-          getHierarchyTeam(teamId, team, function(keyValue){
-            $('#hierarchy_block').html(keyValue);
-          });
           $('#levelDetail').empty();
 
           var keyLabel = '';
@@ -1071,8 +1031,6 @@ function loadDetails(elementId, setScrollPosition) {
             keyValue = teamMemFTE(team['members']);
             appendRowDetail(keyLabel, keyValue);
           }
-
-          
 
           /* draw iteration and assessment charts */
           if (isLeafTeam) {

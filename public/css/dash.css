@@ -1077,7 +1077,7 @@ li #allTeams {
 
 .no-data { font-size: 14px; }
 .wlink:link, .wlink:active, .wlink:visited, .wlink:hover {
-  color:#389BD2; text-decoration: none;
+  color:#389BD2; text-decoration: none; font-size: 14px;
 }
 
 #levelTable tr:hover{
@@ -1090,6 +1090,10 @@ li #allTeams {
 
 #levelTable tr {
   border: none;
+}
+
+#levelTable td {
+  font-size: 14px;
 }
 
 #levelTable td p, #levelTable td table {
