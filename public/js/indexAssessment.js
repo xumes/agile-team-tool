@@ -384,7 +384,7 @@ function createChartSection(prefixId) {
   return mainDiv;
 }
 
-function assessmentParentRollup(assessmentData){
+function assessmentParentRollup(assessmentData, date){
   //set div min height
   $('#assessmentTrend').attr('style','min-height: 380px;');
   $('#assessmentEval').attr('style','min-height: 380px;');
@@ -469,7 +469,7 @@ function assessmentParentRollup(assessmentData){
     teamOperations.data.push(tOperationsData);
   }
 
-  loadBarAssessmentEvaluation('assessmentEval', 'Frequency of Maturity Assessment Evaluations','column', graphCategory, teamLt120Days, teamGt120Days, teamNoAssessment, 100);
+  loadBarAssessmentEvaluation('assessmentEval', 'Frequency of Maturity Assessment Evaluations as of '+date,'column', graphCategory, teamLt120Days, teamGt120Days, teamNoAssessment, 100);
   loadLineMaturityTrend('assessmentTrend', 'Maturity Assessment Trends Per Month','line', graphCategory, teamFoundational, teamDevOps, teamOperations, 4);
 }
 

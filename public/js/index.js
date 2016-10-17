@@ -564,14 +564,18 @@ function getAssessmentSnapshot(teamId) {
   }).done(function(data) {
     if (data != undefined) {
       if (_.has(data, 'rows')) {
+        var timestamp;
         if (data.rows == null) {
             //console.log("data loaded failed");
         } else if (data.rows.length <= 0) {
           console.log('no assessment data for team: ', teamId);
-          //$('#refreshDate').html('Waiting for updating');
-          assessmentParentRollup(assessmentTempData());
+          timestamp = getServerDateTime();
+          timestamp =  getDate(timestamp, false);
+          assessmentParentRollup(assessmentTempData(), timestamp);
         } else {
-          assessmentParentRollup(data.rows[0].value.value);
+          timestamp = data.rows[0].value.timestamp;
+          timestamp =  getDate(timestamp, true);
+          assessmentParentRollup(data.rows[0].value.value, timestamp);
         }
       } else {
         showLog('data loaded: ' + JSON.stringify(data));
