@@ -916,6 +916,32 @@ function hierarchyTeamHandler(linkedTeams, team) {
   $('#Hierarchy td')[1].innerHTML = strHierarchy;
 }
 
+function hierarchyTeamHandler(linkedTeams, team) {
+  if (team != null)
+    linkedTeams.push(team);
+  if (team['parent_team_id'] != undefined && team['parent_team_id'] != '') {
+    getTeam(team['parent_team_id'], hierarchyTeamHandler, [linkedTeams]);
+  }
+
+  var strHierarchy = '';
+  var separator = '&nbsp;&gt;&nbsp;';
+  for (var i=linkedTeams.length-1; i>=0; i--) {
+    if (i!=0) {
+      var teamId = linkedTeams[i]['_id'];
+      var elementId = jq(teamId);
+      var teamIdLink = $('#link_sub_' + elementId);
+      if (teamIdLink && teamIdLink.html() != undefined) {
+        strHierarchy = strHierarchy + "<a style=\"display:inline; padding-left: 0px;\" title=\"View parent team information\" alt=\"View parent team information\" id='plink_'"+elementId+" href='#' onclick=\"javascript:displaySelected('" + linkedTeams[i]['_id'] + "', true);\">" + linkedTeams[i]['name'] + '</a>' + separator;
+      } else {
+        strHierarchy = strHierarchy + "<a style=\"display:inline; padding-left: 0px;\" title=\"View parent team information\" alt=\"View parent team information\" id='plink_'"+elementId+" href='#' onclick=\"javascript:loadParentInAllTeams('" + linkedTeams[i-1]['_id'] + "');\">" + linkedTeams[i]['name'] + '</a>' + separator;
+      }
+    } else {
+      strHierarchy = strHierarchy + linkedTeams[i]['name'];
+    }
+  }
+  $('#Hierarchy td')[1].innerHTML = strHierarchy;
+}
+
 function loadDetails(elementId, setScrollPosition) {
   if (selectedElement == elementId || $('#' + jq(elementId)).html() == 'Standalone teams') {
     return;
@@ -997,6 +1023,12 @@ function loadDetails(elementId, setScrollPosition) {
           //   keyValue = '(No parent team infomation)';
           //   appendRowDetail(keyLabel, keyValue);
           // }
+
+          // getHierarchyTeam(teamId, function(keyValue){
+          //   var keyLabel = 'Hierarchy';
+          //   appendRowDetail(keyLabel, keyValue);
+            
+          // });
 
           // if (team['links'] != undefined) {
           //   keyLabel = 'Important links';
