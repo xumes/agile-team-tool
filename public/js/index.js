@@ -55,7 +55,7 @@ var tempSquadScore = {
   'teamsLt5': 0
 };
 
-var tempIterationData = function() {
+var assessmentTempData = function() {
   var iterationMonth = 5;
   var rollupDataList = [];
   for (var i=0; i<=iterationMonth; i++) {
@@ -569,7 +569,7 @@ function getAssessmentSnapshot(teamId) {
         } else if (data.rows.length <= 0) {
           console.log('no assessment data for team: ', teamId);
           //$('#refreshDate').html('Waiting for updating');
-          assessmentParentRollup(assessmentTempData);
+          assessmentParentRollup(assessmentTempData());
         } else {
           assessmentParentRollup(data.rows[0].value.value);
         }
@@ -602,7 +602,7 @@ function getSnapshot(teamId, teamName) {
         } else if (data.rows.length <= 0) {
           console.log('no iteation data for team: ', teamId);
           $('#refreshDate').html('Waiting for updating');
-          iterationScoreCard(teamId, teamName, tempIterationData, tempSquadScore);
+          iterationScoreCard(teamId, teamName, tempIterationData(), tempSquadScore);
         } else {
           var nonsquadScore = data.rows[0].value.value;
           var cUrl = '/api/snapshot/rollupdatabyteam/' + encodeURIComponent(teamId);
