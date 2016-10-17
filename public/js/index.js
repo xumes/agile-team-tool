@@ -984,41 +984,38 @@ function loadDetails(elementId, setScrollPosition) {
           }
 
           /* Get parent name and link */
-          if (team['parent_team_id'] != undefined && team['parent_team_id'] != '') {
-            var parent_team_id = team['parent_team_id'];
-            keyLabel = 'Hierarchy';
-            keyValue = '<div class="ibm-spinner"></div>';
-            appendRowDetail(keyLabel, keyValue);
-            var linkedTeams = [];
-            linkedTeams.push(team);
-            getTeam(team['parent_team_id'], hierarchyTeamHandler, [linkedTeams]);
-          } else {
-            keyLabel = 'Hierarchy';
-            keyValue = '(No parent team infomation)';
-            appendRowDetail(keyLabel, keyValue);
-          }
+          // if (team['parent_team_id'] != undefined && team['parent_team_id'] != '') {
+          //   var parent_team_id = team['parent_team_id'];
+          //   keyLabel = 'Hierarchy';
+          //   keyValue = '<div class="ibm-spinner"></div>';
+          //   appendRowDetail(keyLabel, keyValue);
+          //   var linkedTeams = [];
+          //   linkedTeams.push(team);
+          //   getTeam(team['parent_team_id'], hierarchyTeamHandler, [linkedTeams]);
+          // } else {
+          //   keyLabel = 'Hierarchy';
+          //   keyValue = '(No parent team infomation)';
+          //   appendRowDetail(keyLabel, keyValue);
+          // }
 
-          if (team['parent_team_id'] != undefined && team['parent_team_id'] != '') {
-          }
-
-          if (team['links'] != undefined) {
-            keyLabel = 'Important links';
-            var links = team['links'];
-            var tr = '';
-            if (links.length > 0) {
-              _.each(links, function(value, key, list){
-                tr = tr + '<tr>';
-                tr = tr + '<td>' + value.linkLabel + '</td>';
-                tr = tr + '<td><a href="'+value.linkUrl+'" target="_blank" class="wlink" >'+value.linkUrl+'</a></td>';
-                tr = tr + '</tr>';
-              });
-              var html = '<table class=\'tImportantlink\'>';
-              html = html + tr;
-              html = html + '</table>';
-              keyValue = html;
-              appendRowDetail(keyLabel, keyValue, true);
-            }
-          }
+          // if (team['links'] != undefined) {
+          //   keyLabel = 'Important links';
+          //   var links = team['links'];
+          //   var tr = '';
+          //   if (links.length > 0) {
+          //     _.each(links, function(value, key, list){
+          //       tr = tr + '<tr>';
+          //       tr = tr + '<td>' + value.linkLabel + '</td>';
+          //       tr = tr + '<td><a href="'+value.linkUrl+'" target="_blank" class="wlink" >'+value.linkUrl+'</a></td>';
+          //       tr = tr + '</tr>';
+          //     });
+          //     var html = '<table class=\'tImportantlink\'>';
+          //     html = html + tr;
+          //     html = html + '</table>';
+          //     keyValue = html;
+          //     appendRowDetail(keyLabel, keyValue, true);
+          //   }
+          // }
 
           if (team['members'] != undefined) {
             keyLabel = 'Number of members';
