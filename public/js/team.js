@@ -730,6 +730,9 @@ function popupCustomLabel(elem){
   curLinkLabelID = elem.id;
   if (elem.value == 'Other') {
     IBMCore.common.widget.overlay.show('customLinkLabel');
+    setInterval(function() {
+      $('#ibm-overlaywidget-customLinkLabel-content #newlabel').focus();
+    }, 2);
   }
 }
 
@@ -753,7 +756,7 @@ function addLink() {
                   <select id='linklabel_" + ctr + "' data-counter='" + ctr + "' name='linklabel_[]' onchange='popupCustomLabel(this)' class='implabel' style='width: 200px'> \
                   </select> \
                   <span class='urlwrapper'> \
-                  <input type='text' name='url_[]' id='url_" + ctr + "' data-counter='" + ctr + "' size='20' value='' placeholder='Url' aria-label='URL' class='implink' style='width: 400px;'> \
+                  <input type='text' name='url_[]' id='url_" + ctr + "' data-counter='" + ctr + "' size='20' value='' placeholder='URL' aria-label='URL' class='implink' style='width: 400px;'> \
                   </span> \
                   <a href='javascript:void(0)' alt='Delete the link' title='Delete the link' id='removelink_" + ctr + "' class='removelink' onclick=removetmpLink('" + ctr + "')><img src='img/delete-ico.png'/></a> \
                   <a href='javascript:void(0)' alt='Save link' title='Save link' id='savelink_" + ctr + "' class='removelink' onclick='updateLink()'><img src='img/accept-ico.png'/></a> \
@@ -842,7 +845,7 @@ function loadLinks(teamId){
                               " + opts+ " \
                               </select> \
                               <span class='urlwrapper'> \
-                              <input type='text' name='url_[]' id='url_" + ctr + "' data-counter='" + ctr + "' size='20' value='" + links[ctr].linkUrl + "' placeholder='Url' aria-label='URL' class='implink' style='width: 400px;'> \
+                              <input type='text' name='url_[]' id='url_" + ctr + "' data-counter='" + ctr + "' size='20' value='" + links[ctr].linkUrl + "' placeholder='URL' aria-label='URL' class='implink' style='width: 400px;'> \
                               </span> \
                               <a href='javascript:void(0)' alt='Delete the link' title='Delete the link' id='removelink_" + ctr + "' style='display:none;' class='removelink' onclick=removeLink('" + id + "')><img src='img/delete-ico.png' /></a> \
                             </div>";
