@@ -1029,6 +1029,28 @@ function loadDetails(elementId, setScrollPosition) {
             appendRowDetail(keyLabel, keyValue);
           }
 
+          /* Get parent name and link */
+          if (team['parent_team_id'] != undefined && team['parent_team_id'] != '') {
+            var parent_team_id = team['parent_team_id'];
+            keyLabel = 'Parent Team Name';
+            keyValue = '(No parent team infomation)';
+            var parentLinkId = $('#link_sub_' + jq(parent_team_id));
+            if (parentLinkId) {
+              var parentName;
+              if (parentLinkId.html() != undefined) {
+                parentName = parentLinkId.html();
+                keyValue = "<p style=\"display:inline-block\" class=\"ibm-ind-link\"><a style=\"display:inline; padding-left: 0px;\" title=\"View parent team information\" alt=\"View parent team information\" id ='parentName' href='#' onclick=\"javascript:displaySelected('" + parent_team_id + "', true);\">" + parentName + '</a>' + "<a title=\"View parent team information\" alt=\"View parent team information\" style=\"display:inline;top:-5px;left:5px;\" class=\"ibm-forward-link\" href='#' onclick=\"javascript:displaySelected('" + parent_team_id + "', true);\"><span class='ibm-access'>Go to parent team</span></a></p>";
+                appendRowDetail(keyLabel, keyValue);
+              } else {
+                getParentName(team);
+              }
+            }
+          } else {
+            keyLabel = 'Parent Team Name';
+            keyValue = '(No parent team infomation)';
+            appendRowDetail(keyLabel, keyValue);
+          }
+
           /* draw iteration and assessment charts */
           if (isLeafTeam) {
             getTeamIterations(team['_id'], teamIterationListHander, [team['_id']]);
