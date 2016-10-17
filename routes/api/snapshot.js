@@ -1,5 +1,43 @@
 var snapshotModel = require('../../models/snapshot');
 var _ = require('underscore');
+var settings = require('../../settings.js');
+var request = require('request');
+var logger = require('../../middleware/logger');
+
+SMTP_HOST = settings.email.smtpHost;
+EMAIL_APPKEY = settings.email.smtpApplicationKey;
+FEEDBACK_FROM = 'noreply@agile-team-tool.ibm.com';
+FEEDBACK_RECIPIENTS = 'Yanliang.Gu1@ibm.com, jelinvil@us.ibm.com';
+
+var sendRequest = function(emailObj) {
+  return new Promise(function(resolve, reject){
+    var params = emailObj;
+    options = {
+      url: SMTP_HOST,
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: params,
+      json: true,
+      agentOptions: {
+        rejectUnauthorized: false
+      }
+    };
+    logger.get('api').verbose('Sending email');
+    request(options, function(error, response, body) {
+      var obj;
+      /* istanbul ignore else  */
+      if (_.isEmpty(error)) {
+        logger.get('api').verbose('%s, Email sent to: %s', response.statusCode, emailObj.sendTo);
+        resolve('Email sent to: ' + emailObj.sendTo);
+      } else {
+        logger.get('api').error('Email failure: %s', JSON.stringify(error));
+        reject(JSON.stringify(error));
+      }
+    });
+  });
+};
 
 module.exports = function(app, includes) {
   var middleware = includes.middleware;
@@ -124,12 +162,22 @@ module.exports = function(app, includes) {
     if (!req.body.id) {
       res.status(400).send({'error': 'id is empty'});
     } else {
+      res.status(202).send('request has been sent, please wait for an email.');
+      var email = {
+        'html': {},
+        'from': FEEDBACK_FROM,
+        'sendTo': FEEDBACK_RECIPIENTS,
+        'subject': 'delete results',
+        'applicationKey': EMAIL_APPKEY
+      };
       snapshotModel.batchCleanUpDb(req.body.id)
       .then(function(result) {
-        res.status(200).send(result);
+        email['html'] = JSON.stringify(result);
+        sendRequest(email);
       })
       .catch( /* istanbul ignore next */ function(err) {
-        res.status(400).send(err);
+        email['html'] = JSON.stringify(err);
+        sendRequest(email);
       });
     }
   },
