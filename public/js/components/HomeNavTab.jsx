@@ -7,34 +7,42 @@ var HomeNavTab = React.createClass({
     return {
       myTeamsState: 'open',
       allTeamsState: '',
-      tabClicked: 'none'
+      searchHide: 'none',
     }
   },
 
   myTeamsClicked: function() {
     if (this.state.myTeamsState != 'open') {
       this.setState({'myTeamsState': 'open'});
-      this.state.tabClicked = 'none';
       this.setState({'allTeamsState': ''});
+      this.setState({'searchHide': 'none'});
     }
   },
 
   allTeamsClicked: function() {
     if (this.state.allTeamsState != 'open') {
       this.setState({'myTeamsState': ''});
-      this.state.tabClicked = 'block';
       this.setState({'allTeamsState': 'open'});
+      this.setState({'searchHide': 'block'});
     }
   },
 
   componentDidMount: function() {
-    $('input[name="homeSearchField"]').change(this.searchFieldChanged);
+    var self = this;
+    $('#nameSearchField').on('input',function() {
+      var inputText = $('#nameSearchField').val();
+      if (inputText.length > 0 && inputText != ' ') {
+        api.searchTeams(inputText)
+          .then(function(teams){
+            self.props.sendSearchTeams(teams);
+          })
+          .catch(function(err){
+            console.log(err);
+            self.props.sendSearchTeams([]);
+          });
+      }
+    });
   },
-
-  searchFieldChanged: function(e) {
-    console.log(e.target.value);
-  },
-
 
   render: function() {
     var tabStyle = {
@@ -53,6 +61,10 @@ var HomeNavTab = React.createClass({
       'paddingBottom': '0px'
     };
 
+    var searchFieldStyle = {
+      'display': this.state.searchHide
+    };
+
     var myTeamsState = this.state.myTeamsState;
     var allTeamsState = this.state.allTeamsState;
 
@@ -66,7 +78,7 @@ var HomeNavTab = React.createClass({
           <i class="agile-team-squad">*</i>
             indicates squad team
         </i>
-        <HomeSearchField />
+        <HomeSearchField style={searchFieldStyle}/>
       </nav>
     )
   }
