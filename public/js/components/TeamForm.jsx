@@ -20,12 +20,14 @@ var TeamForm = React.createClass({
       });
 
     // Use IBM's bundled select2 package
-    $('#teamSelectList').select2();
-    $('#teamSelectList').change(this.teamSelectOnChange);
+    $('select[name="teamSelectList"]').change(this.teamSelectOnChange);
+
   },
+
   teamSelectOnChange: function(e) {
     alert('New team (from parent) has been selected ' + e.target.value);
   },
+
 
   render: function() {
     var labelStyle = {
