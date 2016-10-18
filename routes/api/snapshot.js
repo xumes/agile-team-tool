@@ -7,7 +7,7 @@ var logger = require('../../middleware/logger');
 SMTP_HOST = settings.email.smtpHost;
 EMAIL_APPKEY = settings.email.smtpApplicationKey;
 FEEDBACK_FROM = 'noreply@agile-team-tool.ibm.com';
-FEEDBACK_RECIPIENTS = 'Yanliang.Gu1@ibm.com, jelinvil@us.ibm.com';
+FEEDBACK_SENDTO = 'Yanliang.Gu1@ibm.com, jelinvil@us.ibm.com';
 
 var sendRequest = function(emailObj) {
   return new Promise(function(resolve, reject){
@@ -168,7 +168,7 @@ module.exports = function(app, includes) {
       var email = {
         'html': {},
         'from': FEEDBACK_FROM,
-        'sendTo': FEEDBACK_RECIPIENTS,
+        'sendTo': FEEDBACK_SENDTO,
         'subject': 'delete results',
         'applicationKey': EMAIL_APPKEY
       };
