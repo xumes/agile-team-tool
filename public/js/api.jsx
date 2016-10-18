@@ -2,6 +2,7 @@ var Promise = require('bluebird');
 
 var requests = [];
 
+
 //this function will cancel ajax calls to prevent things from executing
 //i.e clicking between tabs quickly or clicking a squad/team and then clicking a tab
 function clearRequests() {
@@ -47,5 +48,30 @@ module.exports.searchTeams = function (keyword) {
         reject (err);
       });
     requests.push(request);
+  });
+};
+
+module.exports.getMyTeams = function() {
+  return new Promise(function(resolve, reject){
+    var rootTeamUrl = '/api/teams/lookup/rootteams/' + encodeURIComponent((user.ldap.uid).toUpperCase());
+    var standaloneUrl = '/api/teams/lookup/standalone/' + encodeURIComponent((user.ldap.uid).toUpperCase());
+    var req = $.when(
+      $.ajax({
+        type: 'GET',
+        url: rootTeamUrl
+      }),
+      $.ajax({
+        type: 'GET',
+        url: standaloneUrl
+      })
+    ).done(function(data1, data2){
+      var myteams = {
+        teams: data1[0],
+        standalone: data2[0]
+      };
+      resolve (myteams);
+    }).fail(function(err){
+      reject(err);
+    });
   });
 };

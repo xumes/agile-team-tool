@@ -18,7 +18,8 @@ module.exports = function(app, includes) {
   app.get('/_v2_home', includes.middleware.auth.requireLoginWithRedirect, function(req, res) {
     var json = {
       'pageTitle': 'Home',
-      'googleAnalyticsKey': settings.googleAnalyticsKey
+      'googleAnalyticsKey': settings.googleAnalyticsKey,
+      'user': req.session.user
     };
     render(req, res, 'v2_home', json);
   });

@@ -29,7 +29,7 @@ var HomeSearchField = React.createClass({
 
   render: function() {
     var searchFieldStyle = {
-      'display': this.props.style.display,
+      'display': this.props.searchHide,
       'position': 'relative'
     };
     var cancelBtnStyle = {

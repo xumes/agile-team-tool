@@ -7,14 +7,11 @@ var HomeSearchTree = React.createClass({
     }
   },
 
-  teamOnClick: function(oid) {
-    console.log(oid);
-  }.bind(this),
-
   render: function() {
     var treeStyle = {
       'display': this.props.searchTreeHide
     };
+    var self = this;
 
     var populateTeams = this.props.searchTeams.map(function(team) {
       var subTwistyId = 'search_' + team.pathId;
@@ -27,13 +24,12 @@ var HomeSearchTree = React.createClass({
       } else {
         isSquad = 'agile-team-link agile-team-standalone'
       }
-      var boundClick = this.teamOnClick.bind(this, objectId);
       return (
         <li key={objectId} data-open='false' class='agile-team-standalone' id={subTwistyId}>
           <a class='ibm-twisty-trigger' href='#toggle'>
             <span class='ibm-access'>{label}</span>
           </a>
-          <a class={isSquad} id={linkId} onClick={boundClick} key={objectId}>{label}</a>
+          <a class={isSquad} id={linkId} onClick={()=>self.props.clickedTeam(objectId)}>{label}</a>
           <span class='ibm-access'>{team.pathId}</span>
         </li>
       )
