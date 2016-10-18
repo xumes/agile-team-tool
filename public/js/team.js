@@ -8,7 +8,7 @@ jQuery(function($) {
       cancelLinkLabel();
     });
     /* show or hide the Link group */
-    showHideLinkDiv();
+    showHideLinkDivOnAdd();
     /* auto prefix http in start of the url */
     autoAddHttp();
   });
@@ -726,9 +726,15 @@ function loadTeamChildren(currentId) {
 }
 
 var curLinkLabelID = '';
-function popupCustomLabel(elem){
+function popupCustomLabel(elem, currentLabel, currentUrl, ctr, id){
+  var selected = elem.value;
   curLinkLabelID = elem.id;
-  if (elem.value == 'Other') {
+  if (currentLabel !== undefined) {
+    if (currentLabel !== selected) {
+      onEditmodeLink(currentLabel, currentUrl, ctr, id);
+    }
+  }
+  if (selected == 'Other') {
     IBMCore.common.widget.overlay.show('customLinkLabel');
     setInterval(function() {
       $('#ibm-overlaywidget-customLinkLabel-content #newlabel').focus();
@@ -758,15 +764,15 @@ function addLink() {
                   <span class='urlwrapper'> \
                   <input type='text' name='url_[]' id='url_" + ctr + "' data-counter='" + ctr + "' size='20' value='' placeholder='URL' aria-label='URL' class='implink' style='width: 400px;'> \
                   </span> \
-                  <a href='javascript:void(0)' alt='Delete the link' title='Delete the link' id='removelink_" + ctr + "' class='removelink' onclick=removetmpLink('" + ctr + "')><img src='img/delete-ico.png'/></a> \
-                  <a href='javascript:void(0)' alt='Save link' title='Save link' id='savelink_" + ctr + "' class='removelink' onclick='updateLink()'><img src='img/accept-ico.png'/></a> \
+                  <a href='javascript:void(0)' alt='Cancel' title='Cancel' id='removelink_" + ctr + "' class='newlink' onclick=removetmpLink('" + ctr + "')><img src='img/delete-ico.png'/></a> \
+                  <a href='javascript:void(0)' alt='Save link' title='Save link' id='savelink_" + ctr + "' class='newlink' onclick='updateLink()'><img src='img/accept-ico.png'/></a> \
                 </div>";
   $('#importantLinkWrapper').append(html);
   $('#linklabel_'+ctr).select2({
     data: selectdata
   });
 
-  showHideLinkDiv();
+  showHideLinkDivOnAdd();
   autoAddHttp();
 }
 
@@ -833,22 +839,25 @@ function loadLinks(teamId){
             var id = links[ctr].id;
             for (var k=0; k < selectdata.length; k++) {
               if (links[ctr].linkLabel === selectdata[k].id) {
-                opts = opts + '<option value="" selected=selected >' + selectdata[k].text + '</option>';
+                opts = opts + '<option value="' + selectdata[k].id + '" selected=selected >' + selectdata[k].text + '</option>';
                 selectedVal = selectdata[k].text;
               } else {
                 opts = opts + '<option value="' + selectdata[k].id + '" >' + selectdata[k].text + '</option>';
               }
             }
 
-            html =  html + "<div id='link_" + ctr +"' data-counter='" + ctr + "' class='imptlink'> \
-                              <select id='linklabel_" + ctr + "' data-id='" + id + "' data-counter='" + ctr + "' name='linklabel_[]' onchange='popupCustomLabel(this)' class='implabel' style='width: 200px'> \
-                              " + opts+ " \
-                              </select> \
-                              <span class='urlwrapper'> \
-                              <input type='text' name='url_[]' id='url_" + ctr + "' data-counter='" + ctr + "' size='20' value='" + links[ctr].linkUrl + "' placeholder='URL' aria-label='URL' class='implink' style='width: 400px;'> \
-                              </span> \
-                              <a href='javascript:void(0)' alt='Delete the link' title='Delete the link' id='removelink_" + ctr + "' style='display:none;' class='removelink' onclick=removeLink('" + id + "')><img src='img/delete-ico.png' /></a> \
-                            </div>";
+            html =  html + '<div id="link_' + ctr + '" data-counter="' + ctr + '" class="imptlink">';
+            html =  html + '<select id="linklabel_' + ctr + '" data-id="' + id + '" data-counter="' + ctr + '" name="linklabel_[]" onchange="popupCustomLabel(this, \'' +selectedVal+ '\', \'' +links[ctr].linkUrl+ '\', '+ctr+ ', \'' +id+ '\')" class="implabel" style="width: 200px">';
+            html =  html + opts;
+            html =  html + '</select>';
+            html =  html + '<span class="urlwrapper">';
+            html =  html + '<input type="text" name="url_[]" id="url_' + ctr + '" data-counter="' + ctr + '" size=20 value=' + links[ctr].linkUrl + ' placeholder="URL" aria-label="URL" class="implink" onkeypress="onEditmodeLink(\'' + selectedVal + '\',\'' + links[ctr].linkUrl + '\',\'' + ctr + '\',\'' + id + '\')" style="width: 400px;">';
+            html =  html + '</span>';
+            html =  html + '<div class="wrap2">';
+            html =  html + '<a href="javascript:void(0)" alt="Delete the link" title="Delete the link" id="removelink_' + ctr +  '" style="display:none;margin-right:20px;" class="removelink" onclick="removeLink(\'' + id + '\')"><img src="img/trash-ico.png" /></a>';
+            html =  html + '</div>';
+            html =  html + '</div>';
+
             $('#linklabel_' + ctr).val(selectedVal);
           }
           $('#importantLinkWrapper').append(html);
@@ -861,8 +870,26 @@ function loadLinks(teamId){
       }
     }
   }
-  showHideLinkDiv();
+  showHideLinkDivOnCancel();
   autoAddHttp();
+}
+
+function cancelLink(currentLabel, currentUrl, ctr, id) {
+  $('#url_'+ctr).val(currentUrl);
+  $('#linklabel_'+ctr).val(currentLabel);
+  $('#select2-linklabel_' + ctr + '-container').text(currentLabel);
+  clearLinkAndSelectFieldErrorHighlight('linklabel_', 'url_', ctr);
+  $('#importantLinks #link_'+ctr+' .wrap2').html('');
+  $('#importantLinks #link_'+ctr+ ' .wrap2').append('<a href="javascript:void(0)" title="Delete the link" alt="Delete the link" id="removelink_'+ctr+'" onclick="removeLink(\''+id+'\')" style="display:none;margin-right:20px;"><img src="img/trash-ico.png" /></a>');
+  showHideLinkDivOnCancel();
+}
+
+function onEditmodeLink(currentLabel, currentUrl, ctr, id) {
+  var html = '<a href="javascript:void(0)" alt="Cancel" title="Cancel" id="tcancellink_' + ctr + '"  class="cancellink existlink" onclick=\"cancelLink(\'' + currentLabel + '\',\'' + currentUrl + '\',\'' + ctr + '\',\'' + id + '\')\"><img src="img/delete-ico.png" /></a>';
+  html = html + '<a href="javascript:void(0)" alt="Update link" title="Update link" id="tsavelink_' + ctr + '"  class="updatelink existlink" onclick="updateLink()" ><img src="img/accept-ico.png" /></a>';
+  $('#importantLinks #link_'+ctr+' .wrap2').html('');
+  $('#importantLinks #link_'+ctr+' .wrap2').append(html);
+  showHideLinkDivOnEdit();
 }
 
 /* Delete a specific link */
@@ -933,8 +960,7 @@ function updateLink(){
 
   }).done(function(data) {
     userTeamList = data.userTeams;
-    clearLinkFieldErrorHighlight('url_');
-    clearSelectLinkFieldErrorHighlight('linklabel_');
+    clearLinkAndSelectFieldErrorHighlight('linklabel_', 'url_');
     $('#saveLinkBtn').removeAttr('disabled');
     updateAgileTeamCache(data.teamDetails);
     // agileTeamListHandler(data.team._id, allTeams);
@@ -974,14 +1000,36 @@ function getLinkData(){
   return linkData;
 }
 
-function showHideLinkDiv(){
+function showHideLinkDivOnEdit(){
+  $('#importantLinkWrapper div.imptlink').on('mouseover', function(){
+    var ctr = $(this).attr('data-counter');
+    $('#tsavelink_'+ctr).show();
+    $('#tcancellink_'+ctr).show();
+  });
+  $('#importantLinkWrapper div.imptlink').on('mouseout', function(){
+    $('.existlink').hide();
+  });
+}
+
+function showHideLinkDivOnCancel(){
+  $('#importantLinkWrapper div.imptlink').on('mouseover', function(){
+    var ctr = $(this).attr('data-counter');
+    $('#removelink_'+ctr).show();
+  });
+  $('#importantLinkWrapper div.imptlink').on('mouseout', function(){
+    var ctr = $(this).attr('data-counter');
+    $('#removelink_'+ctr).hide();
+  });
+}
+
+function showHideLinkDivOnAdd(){
   $('#importantLinkWrapper div.imptlink').on('mouseover', function(){
     var ctr = $(this).attr('data-counter');
     $('#removelink_'+ctr).show();
     $('#savelink_'+ctr).show();
   });
   $('#importantLinkWrapper div.imptlink').on('mouseout', function(){
-    $('.removelink').hide();
+    $('.newlink').hide();
   });
 }
 
@@ -1224,6 +1272,23 @@ function handleLinkValidation(frmElement, err){
   });
   // if (isValidUrl==false) errmsg = errmsg + 'URL must start with either http:// or https://';
   return errmsg;
+}
+
+function clearLinkAndSelectFieldErrorHighlight(label, url, cur_ctr) {
+  var urlElem = url + cur_ctr;
+  $('#importantLinkWrapper .implink').each(function(idx) {
+    var ctr = $(this).attr('data-counter');
+    if (ctr === cur_ctr){
+      clearFieldErrorHighlight(urlElem);
+    }
+  });
+  var labelElem = label + cur_ctr;
+  $('#importantLinkWrapper .implabel').each(function(idx) {
+    var ctr = $(this).attr('data-counter');
+    if (ctr === cur_ctr){
+      clearFieldErrorHighlight(labelElem);
+    }
+  });
 }
 
 function clearLinkFieldErrorHighlight(frmElement) {
