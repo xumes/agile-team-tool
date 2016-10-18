@@ -32,6 +32,7 @@ var HomeNavTab = React.createClass({
     $('#nameSearchField').on('input',function() {
       var inputText = $('#nameSearchField').val();
       if (inputText.length > 0 && inputText != ' ') {
+        self.props.searchStart();
         api.searchTeams(inputText)
           .then(function(teams){
             self.props.sendSearchTeams(teams);

@@ -23,6 +23,8 @@ var HomeSearchField = React.createClass({
   cancelBtnOnClick: function() {
     $('#nameSearchField').val('');
     this.setState({'cancelBtnHide': 'none'});
+    $('#searchTree').empty();
+    $('#searchTree').hide();
   },
 
   render: function() {
