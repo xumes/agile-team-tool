@@ -983,38 +983,38 @@ function loadDetails(elementId, setScrollPosition) {
           }
 
           /* Get parent name and link */
-          // if (team['parent_team_id'] != undefined && team['parent_team_id'] != '') {
-          //   var parent_team_id = team['parent_team_id'];
-          //   keyLabel = 'Hierarchy';
-          //   keyValue = '<div class="ibm-spinner"></div>';
-          //   appendRowDetail(keyLabel, keyValue);
-          //   var linkedTeams = [];
-          //   linkedTeams.push(team);
-          //   getTeam(team['parent_team_id'], hierarchyTeamHandler, [linkedTeams]);
-          // } else {
-          //   keyLabel = 'Hierarchy';
-          //   keyValue = '(No parent team infomation)';
-          //   appendRowDetail(keyLabel, keyValue);
-          // }
+          if (team['parent_team_id'] != undefined && team['parent_team_id'] != '') {
+            var parent_team_id = team['parent_team_id'];
+            keyLabel = 'Hierarchy';
+            keyValue = '<div class="ibm-spinner"></div>';
+            appendRowDetail(keyLabel, keyValue);
+            var linkedTeams = [];
+            linkedTeams.push(team);
+            getTeam(team['parent_team_id'], hierarchyTeamHandler, [linkedTeams]);
+          } else {
+            keyLabel = 'Hierarchy';
+            keyValue = '(No parent team infomation)';
+            appendRowDetail(keyLabel, keyValue);
+          }
 
-          // if (team['links'] != undefined) {
-          //   keyLabel = 'Important links';
-          //   var links = team['links'];
-          //   var tr = '';
-          //   if (links.length > 0) {
-          //     _.each(links, function(value, key, list){
-          //       tr = tr + '<tr>';
-          //       tr = tr + '<td>' + value.linkLabel + '</td>';
-          //       tr = tr + '<td><a href="'+value.linkUrl+'" target="_blank" class="wlink" >'+value.linkUrl+'</a></td>';
-          //       tr = tr + '</tr>';
-          //     });
-          //     var html = '<table class=\'tImportantlink\'>';
-          //     html = html + tr;
-          //     html = html + '</table>';
-          //     keyValue = html;
-          //     appendRowDetail(keyLabel, keyValue, true);
-          //   }
-          // }
+          if (team['links'] != undefined) {
+            keyLabel = 'Important links';
+            var links = team['links'];
+            var tr = '';
+            if (links.length > 0) {
+              _.each(links, function(value, key, list){
+                tr = tr + '<tr>';
+                tr = tr + '<td>' + value.linkLabel + '</td>';
+                tr = tr + '<td><a href="'+value.linkUrl+'" target="_blank" class="wlink" >'+value.linkUrl+'</a></td>';
+                tr = tr + '</tr>';
+              });
+              var html = '<table class=\'tImportantlink\'>';
+              html = html + tr;
+              html = html + '</table>';
+              keyValue = html;
+              appendRowDetail(keyLabel, keyValue, true);
+            }
+          }
 
           if (team['members'] != undefined) {
             keyLabel = 'Number of members';
@@ -1029,26 +1029,26 @@ function loadDetails(elementId, setScrollPosition) {
           }
 
           /* Get parent name and link */
-          if (team['parent_team_id'] != undefined && team['parent_team_id'] != '') {
-            var parent_team_id = team['parent_team_id'];
-            keyLabel = 'Parent Team Name';
-            keyValue = '(No parent team infomation)';
-            var parentLinkId = $('#link_sub_' + jq(parent_team_id));
-            if (parentLinkId) {
-              var parentName;
-              if (parentLinkId.html() != undefined) {
-                parentName = parentLinkId.html();
-                keyValue = "<p style=\"display:inline-block\" class=\"ibm-ind-link\"><a style=\"display:inline; padding-left: 0px;\" title=\"View parent team information\" alt=\"View parent team information\" id ='parentName' href='#' onclick=\"javascript:displaySelected('" + parent_team_id + "', true);\">" + parentName + '</a>' + "<a title=\"View parent team information\" alt=\"View parent team information\" style=\"display:inline;top:-5px;left:5px;\" class=\"ibm-forward-link\" href='#' onclick=\"javascript:displaySelected('" + parent_team_id + "', true);\"><span class='ibm-access'>Go to parent team</span></a></p>";
-                appendRowDetail(keyLabel, keyValue);
-              } else {
-                getParentName(team);
-              }
-            }
-          } else {
-            keyLabel = 'Parent Team Name';
-            keyValue = '(No parent team infomation)';
-            appendRowDetail(keyLabel, keyValue);
-          }
+          // if (team['parent_team_id'] != undefined && team['parent_team_id'] != '') {
+          //   var parent_team_id = team['parent_team_id'];
+          //   keyLabel = 'Parent Team Name';
+          //   keyValue = '(No parent team infomation)';
+          //   var parentLinkId = $('#link_sub_' + jq(parent_team_id));
+          //   if (parentLinkId) {
+          //     var parentName;
+          //     if (parentLinkId.html() != undefined) {
+          //       parentName = parentLinkId.html();
+          //       keyValue = "<p style=\"display:inline-block\" class=\"ibm-ind-link\"><a style=\"display:inline; padding-left: 0px;\" title=\"View parent team information\" alt=\"View parent team information\" id ='parentName' href='#' onclick=\"javascript:displaySelected('" + parent_team_id + "', true);\">" + parentName + '</a>' + "<a title=\"View parent team information\" alt=\"View parent team information\" style=\"display:inline;top:-5px;left:5px;\" class=\"ibm-forward-link\" href='#' onclick=\"javascript:displaySelected('" + parent_team_id + "', true);\"><span class='ibm-access'>Go to parent team</span></a></p>";
+          //       appendRowDetail(keyLabel, keyValue);
+          //     } else {
+          //       getParentName(team);
+          //     }
+          //   }
+          // } else {
+          //   keyLabel = 'Parent Team Name';
+          //   keyValue = '(No parent team infomation)';
+          //   appendRowDetail(keyLabel, keyValue);
+          // }
 
           /* draw iteration and assessment charts */
           if (isLeafTeam) {
