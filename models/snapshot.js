@@ -686,7 +686,7 @@ function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsCalResults, i
       if (period.total_prj_foundation > 1){
         period.prj_foundation_score = (period.prj_foundation_score/period.total_prj_foundation).toFixed(1);
       }
-      else if (period.total_operation > 1){
+      if (period.total_operation > 1){
         period.operation_score = (period.operation_score/period.total_operation).toFixed(1);
       }
       if (period.total_prj_devops > 1) {
@@ -1178,7 +1178,6 @@ var snapshot = {
 
   cleanUpDb: function(teamId) {
     return new Promise(function(resolve, reject) {
-      loggers.get('model-sanpshot').verbose('deleting team: ' + teamId);
       var deleteItems = [];
       var currentTeam = new Object();
       common.getByViewKey('utility','cleanupteam',teamId, true)
@@ -1243,11 +1242,9 @@ var snapshot = {
         return common.bulkUpdate(request);
       })
       .then(function(results){
-        loggers.get('model-sanpshot').verbose('successfully delete team: ' + teamId);
         resolve(results);
       })
       .catch(function(err){
-        loggers.get('model-sanpshot').verbose('error delete team: ' + teamId);
         reject(err);
       });
     });
@@ -1258,6 +1255,7 @@ var snapshot = {
       var results = [];
       Promise.mapSeries(teamIds, function(id, index, length) {
         return new Promise(function(resolve, reject){
+          loggers.get('model-sanpshot').verbose('deleting team: ' + id);
           snapshot.cleanUpDb(id)
           .then(function(result){
             var obj = {
@@ -1265,6 +1263,7 @@ var snapshot = {
               'result': result
             };
             results.push(obj);
+            loggers.get('model-sanpshot').verbose('successfully delete team: ' + id);
             return resolve(obj);
           })
           .catch(function(err){
