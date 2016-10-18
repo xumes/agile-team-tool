@@ -74,12 +74,9 @@ var assessment = {
       if (!_.isEmpty(teamId)) {
         teamId = util.specialCharsHandler(teamId);
         infoLogs('Getting all team assessment records from Cloudant.');
-        var includeDocs = false;
-        if (!lodash.isEmpty(docs))
-          includeDocs = docs;
         var params = {
           'q': 'team_id:' + teamId,
-          'include_docs': includeDocs,
+          'include_docs': docs || false,
           'sort': ['assessmt_status<string>', '-sort_dt<number>'],
           'limit': 200
         };
