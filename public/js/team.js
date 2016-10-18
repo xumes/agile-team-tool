@@ -1503,11 +1503,12 @@ function deleteTeamMember() {
       var members = [];
       var index = this.value;
       var email = $('#email_ref_' + index).text();
+      var uid = $('#uid_ref_' + index).text();
       var alloc = $('#alloc_ref_' + index).text();
       var role = $('#role_ref_' + index).text();
       for (var i = 0; i < currentTeam.members.length; i++) {
         var tempAlloc = isNaN(parseInt(currentTeam.members[i].allocation)) ? 0 : currentTeam.members[i].allocation;
-        if (currentTeam.members[i].id == email && tempAlloc == alloc && currentTeam.members[i].role == role) {
+        if ((currentTeam.members[i].key == uid || currentTeam.members[i].id == email) && tempAlloc == alloc && currentTeam.members[i].role == role) {
           removeMember.push(currentTeam.members[i]);
 
         } else {
