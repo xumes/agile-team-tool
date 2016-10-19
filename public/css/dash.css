@@ -1064,19 +1064,23 @@ li #allTeams {
 
 /*=BEGIN Important links */
 #importantLinks .imptlink {
-  margin-left:30px; margin-bottom:10px; border:0px solid red; width: 680px;
+  margin-left:30px; margin-bottom:10px; border:0px solid red; width: 76%;
 }
 
 #importantLinks .removelink, #importantLinks .newlink, #importantLinks .updatelink, #importantLinks .cancellink {
-  float:right; line-height: 2.2em;
+  float:right;
 }
 
 #importantLinks .updatelink, #importantLinks .cancellink {
-  margin-left: 8px;
+  margin-left: 10px;
+}
+
+.removelink_ctr {
+  margin-right:27px;
 }
 
 #importantLinks .removelink, #importantLinks .newlink {
-  margin-left: 5px;
+  margin-left: 10px;
 }
 
 #importantLinks .wrap1 {
@@ -1084,11 +1088,11 @@ li #allTeams {
 }
 
 #importantLinks .wrap2 {
-  float: right;
+  float: right; margin-top: 6px;
 }
 
 #importantLinks .urlwrapper{
-  margin-left: 20px; position: absolute; margin-top: -1px;
+  margin-left: 20px; position: absolute; margin-top: -1px; width: 50%;
 }
 
 .no-data { font-size: 14px; }

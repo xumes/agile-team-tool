@@ -773,10 +773,12 @@ function addLink() {
                   <select id='linklabel_" + ctr + "' data-counter='" + ctr + "' name='linklabel_[]' onchange='popupCustomLabel(this)' class='implabel' style='width: 200px'> \
                   </select> \
                   <span class='urlwrapper'> \
-                  <input type='text' name='url_[]' id='url_" + ctr + "' data-counter='" + ctr + "' size='20' value='' placeholder='URL' aria-label='URL' class='implink' style='width: 400px;'> \
+                  <input type='text' name='url_[]' id='url_" + ctr + "' data-counter='" + ctr + "' size='20' value='' placeholder='URL' aria-label='URL' class='implink' style='width: 100%;'> \
                   </span> \
+                  <div class='wrap2'> \
                   <a href='javascript:void(0)' alt='Cancel' title='Cancel' id='removelink_" + ctr + "' class='newlink' onclick=removetmpLink('" + ctr + "')><img src='img/delete-ico.png'/></a> \
                   <a href='javascript:void(0)' alt='Save link' title='Save link' id='savelink_" + ctr + "' class='newlink' onclick='updateLink()'><img src='img/accept-ico.png'/></a> \
+                  <div> \
                 </div>";
   $('#importantLinkWrapper').append(html);
   $('#linklabel_'+ctr).select2({
@@ -862,10 +864,10 @@ function loadLinks(teamId){
             html =  html + opts;
             html =  html + '</select>';
             html =  html + '<span class="urlwrapper">';
-            html =  html + '<input type="text" name="url_[]" id="url_' + ctr + '" data-counter="' + ctr + '" size=20 value=' + links[ctr].linkUrl + ' placeholder="URL" aria-label="URL" class="implink" onkeypress="onEditmodeLink(\'' + selectedVal + '\',\'' + links[ctr].linkUrl + '\',\'' + ctr + '\',\'' + id + '\')" style="width: 400px;">';
+            html =  html + '<input type="text" name="url_[]" id="url_' + ctr + '" data-counter="' + ctr + '" size=20 value=' + links[ctr].linkUrl + ' placeholder="URL" aria-label="URL" class="implink" onkeypress="onEditmodeLink(\'' + selectedVal + '\',\'' + links[ctr].linkUrl + '\',\'' + ctr + '\',\'' + id + '\')" style="width: 100%;">';
             html =  html + '</span>';
             html =  html + '<div class="wrap2">';
-            html =  html + '<a href="javascript:void(0)" alt="Delete the link" title="Delete the link" id="removelink_' + ctr +  '" style="display:none;margin-right:20px;" class="removelink" onclick="removeLink(\'' + id + '\')"><img src="img/trash-ico.png" /></a>';
+            html =  html + '<a href="javascript:void(0)" alt="Delete the link" title="Delete the link" id="removelink_' + ctr +  '" style="display:none;" class="removelink removelink_ctr" onclick="removeLink(\'' + id + '\')"><img src="img/trash-ico.svg" style="width:25px; height:25px;" /></a>';
             html =  html + '</div>';
             html =  html + '</div>';
 
@@ -891,7 +893,7 @@ function cancelLink(currentLabel, currentUrl, ctr, id) {
   $('#select2-linklabel_' + ctr + '-container').text(currentLabel);
   clearLinkAndSelectFieldErrorHighlight('linklabel_', 'url_', ctr);
   $('#importantLinks #link_'+ctr+' .wrap2').html('');
-  $('#importantLinks #link_'+ctr+ ' .wrap2').append('<a href="javascript:void(0)" title="Delete the link" alt="Delete the link" id="removelink_'+ctr+'" onclick="removeLink(\''+id+'\')" style="display:none;margin-right:20px;"><img src="img/trash-ico.png" /></a>');
+  $('#importantLinks #link_'+ctr+ ' .wrap2').append('<a href="javascript:void(0)" title="Delete the link" alt="Delete the link" id="removelink_'+ctr+'" onclick="removeLink(\''+id+'\')" class="removelink_ctr" style="display:none;"><img src="img/trash-ico.svg" style="width:25px; height:25px;" /></a>');
   showHideLinkDivOnCancel();
 }
 
