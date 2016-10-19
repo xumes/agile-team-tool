@@ -773,7 +773,7 @@ function addLink() {
                   <select id='linklabel_" + ctr + "' data-counter='" + ctr + "' name='linklabel_[]' onchange='popupCustomLabel(this)' class='implabel' style='width: 200px'> \
                   </select> \
                   <span class='urlwrapper'> \
-                  <input type='text' name='url_[]' id='url_" + ctr + "' data-counter='" + ctr + "' size='20' value='' placeholder='URL' aria-label='URL' class='implink' style='width: 100%;'> \
+                  <input type='text' name='url_[]' id='url_" + ctr + "' data-counter='" + ctr + "' size='20' value='' placeholder='URL' aria-label='URL' class='implink' style='width:90%;'> \
                   </span> \
                   <div class='wrap2'> \
                   <a href='javascript:void(0)' alt='Cancel' title='Cancel' id='removelink_" + ctr + "' class='newlink' onclick=removetmpLink('" + ctr + "')><img src='img/delete-ico.png'/></a> \
@@ -864,7 +864,7 @@ function loadLinks(teamId){
             html =  html + opts;
             html =  html + '</select>';
             html =  html + '<span class="urlwrapper">';
-            html =  html + '<input type="text" name="url_[]" id="url_' + ctr + '" data-counter="' + ctr + '" size=20 value=' + links[ctr].linkUrl + ' placeholder="URL" aria-label="URL" class="implink" onkeypress="onEditmodeLink(\'' + selectedVal + '\',\'' + links[ctr].linkUrl + '\',\'' + ctr + '\',\'' + id + '\')" style="width: 100%;">';
+            html =  html + '<input type="text" name="url_[]" id="url_' + ctr + '" data-counter="' + ctr + '" size=20 value=' + links[ctr].linkUrl + ' placeholder="URL" aria-label="URL" class="implink" onkeypress="onEditmodeLink(\'' + selectedVal + '\',\'' + links[ctr].linkUrl + '\',\'' + ctr + '\',\'' + id + '\')" style="width: 90%;">';
             html =  html + '</span>';
             html =  html + '<div class="wrap2">';
             html =  html + '<a href="javascript:void(0)" alt="Delete the link" title="Delete the link" id="removelink_' + ctr +  '" style="display:none;" class="removelink removelink_ctr" onclick="removeLink(\'' + id + '\')"><img src="img/trash-ico.svg" style="width:25px; height:25px;" /></a>';
