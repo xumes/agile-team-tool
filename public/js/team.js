@@ -883,7 +883,6 @@ function loadLinks(teamId){
             // html =  html + '<a href="javascript:void(0)" alt="Delete the link" title="Delete the link" id="removelink_' + ctr +  '" style="display:none;" class="removelink" onclick="removeLink(\'' + id + '\')"><img src="img/trash-ico.svg" style="width:25px; height:25px;" /></a>';
             // html =  html + '</div>';
             // html =  html + '</div>';
-            
             html =  html + '<div id="link_' + ctr + '" data-counter="' + ctr + '" class="importantLinksSection">';
             html =  html + '<div><select id="linklabel_' + ctr + '" data-id="' + id + '" data-counter="' + ctr + '" name="linklabel_[]" onchange="popupCustomLabel(this, \'' +selectedVal+ '\', \'' +links[ctr].linkUrl+ '\', '+ctr+ ', \'' +id+ '\')" class="implabel" style="width: 200px">';
             html =  html + opts;
@@ -1053,7 +1052,7 @@ function showHideLinkDivOnEdit(){
 
 function showHideLinkDivOnCancel(){
   // $('#importantLinkWrapper div.imptlink').on('mouseover', function(){
-    $('#importantLinkWrapper div.importantLinksSection').on('mouseover', function(){
+  $('#importantLinkWrapper div.importantLinksSection').on('mouseover', function(){
     var ctr = $(this).attr('data-counter');
     $('#removelink_'+ctr).show();
   });
@@ -1066,7 +1065,7 @@ function showHideLinkDivOnCancel(){
 
 function showHideLinkDivOnAdd(){
   // $('#importantLinkWrapper div.imptlink').on('mouseover', function(){
-    $('#importantLinkWrapper div.importantLinksSection').on('mouseover', function(){
+  $('#importantLinkWrapper div.importantLinksSection').on('mouseover', function(){
     var ctr = $(this).attr('data-counter');
     $('#removelink_'+ctr).show();
     $('#savelink_'+ctr).show();
