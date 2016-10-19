@@ -93,10 +93,11 @@ exports.getByView = function(_design, _view) {
   });
 };
 
-exports.getByViewKey = function(_design, _view, _key) {
+exports.getByViewKey = function(_design, _view, _key, _include_docs) {
   return new Promise(function(resolve, reject) {
+    _include_docs =  _include_docs || false;
     db.viewAsync(_design, _view, {
-      'include_docs': false,
+      'include_docs': _include_docs,
       key: _key
     })
       .then(function(body) {
@@ -108,10 +109,11 @@ exports.getByViewKey = function(_design, _view, _key) {
   });
 };
 
-exports.getByViewKeys = function(_design, _view, _key) {
+exports.getByViewKeys = function(_design, _view, _key, _include_docs) {
   return new Promise(function(resolve, reject) {
+    _include_docs =  _include_docs || false;
     db.viewAsync(_design, _view, {
-      'include_docs': false,
+      'include_docs': _include_docs,
       keys: _key
     })
       .then(function(body) {
@@ -123,9 +125,11 @@ exports.getByViewKeys = function(_design, _view, _key) {
   });
 };
 
-exports.getByViewWithStartOrEndKey = function(_design, _view, _startkey, _endkey) {
+exports.getByViewWithStartOrEndKey = function(_design, _view, _startkey, _endkey, _include_docs) {
   return new Promise(function(resolve, reject) {
+    _include_docs =  _include_docs || false;
     db.viewAsync(_design, _view, {
+      'include_docs': _include_docs,
       'startkey': _startkey,
       'endkey': _endkey
     })
@@ -210,6 +214,36 @@ exports.findRevBySelector = function(id) {
       'fields': [
         '_id',
         '_rev'
+      ]
+    };
+    db.findAsync(selector)
+      .then(function(body) {
+        resolve(body);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        reject(err);
+      });
+  });
+};
+
+exports.searchBySelector = function(keywords) {
+  return new Promise(function(resolve, reject) {
+    var regexKeyword = '(?i)';
+    _.each(keywords, function(keyword){
+      regexKeyword = regexKeyword + '(.*)' + keyword + '(.*)';
+    });
+    var data = new Object();
+    data['type'] = 'team';
+    data['name'] = {
+      '$regex': regexKeyword
+    };
+    var selector = {
+      'selector': data,
+      'fields': [
+        '_id',
+        'doc_status',
+        'name',
+        'squadteam'
       ]
     };
     db.findAsync(selector)

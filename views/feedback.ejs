@@ -7,16 +7,16 @@
   <p class="ibm-bold">Contact information:</p>
   <p style="margin-top: -5px;">Your email: <span id="userEmail"></span></p>
   <br>
-	<form id="createTeamForm" class="ibm-row-form" action="mailerFeedback" method="post">
+	<form id="feedbackForm" class="ibm-row-form" action="mailerFeedback" method="post">
     <input type="hidden" name="feedback_sender" id="feedback_sender"/>
     <input type="hidden" name="feedback_senderName" id="feedback_senderName"/>
     <input type="hidden" name="feedback_recipient" id="feedback_recipient"/>
     <input type="hidden" name="feedback_cc" id="feedback_cc"/>
     <p class="ibm-bold">Feedback:</p>
     <p class="ibm-form-elem-grp" style="margin-top: -5px; padding-bottom:10px;">
-      <label for="feedback_page">Specify the page, if applicable:</label>
+      <label aria-label="feedback_page">Specify the page, if applicable:</label>
       <span>
-        <select id="feedback_page" style="min-width: 360px">
+        <select id="feedback_page" style="min-width: 360px" aria-label="feedback_page">
           <option value="Home">Home</option>
           <option value="Team management">Team management</option>
           <option value="Iteration manangement">Iteration management</option>
@@ -27,15 +27,15 @@
       </span>
     </p>
     <p style="padding-bottom:15px;">
-      <label for="feedback_teamName">Team name:</label>
+      <label aria-label="feedback_teamName">Team name:</label>
       <span>
-        <select id="feedback_teamName" name="feedback_teamName" style="min-width: 360px"> </select>
+        <select id="feedback_teamName" name="feedback_teamName" style="min-width: 360px" aria-label="feedback_teamName"> </select>
       </span>
     </p>
     <p>
-      <label for="feedback"><span class="ibm-required">*</span>Write your feedback below:</label> 
+      <label aria-label="feedback"><span class="ibm-required">*</span>Write your feedback below:</label> 
       <span> 
-        <textarea name="feedback" id="feedback" rows="4" cols="40" style="resize: none; min-width: 370px" maxlength="2000" placeholder="Please provide a detailed description of your idea, suggestion, or problem"></textarea>
+        <textarea name="feedback" id="feedback" rows="4" cols="40" style="resize: none; min-width: 370px" maxlength="2000" placeholder="Please provide a detailed description of your idea, suggestion, or problem" aria-label="feedback"></textarea>
       </span>
     </p>
     <br>

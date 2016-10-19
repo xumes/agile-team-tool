@@ -165,16 +165,16 @@ function getIterationDocs(startTime, endTime) {
     iterationModel.getCompletedIterationsByKey(startTime, endTime)
       .then(function(completedIterations) {
         _.each(completedIterations.rows, function(doc) {
-          var validationErrors = validate(doc.value, iterationDocRules);
-          if (!validationErrors) {
-            if (doc.value.team_id != '') {
-              var teamId = doc.value.team_id;
-              if (_.isEmpty(squadIterationDocs[teamId])) {
-                squadIterationDocs[teamId] = [];
-              }
-              squadIterationDocs[teamId].push(doc.value);
+          // var validationErrors = validate(doc.value, iterationDocRules);
+          // if (!validationErrors) {
+          if (doc.value.team_id != '') {
+            var teamId = doc.value.team_id;
+            if (_.isEmpty(squadIterationDocs[teamId])) {
+              squadIterationDocs[teamId] = [];
             }
+            squadIterationDocs[teamId].push(doc.value);
           }
+          // }
         });
         return resolve(squadIterationDocs);
       })
@@ -283,10 +283,16 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
           }
 
           if (teamStat != undefined && teamStat != '' && (parseInt(teamStat) != 0)) {
+            // if (parseInt(teamStat) > 0 && (parseInt(teamStat) < 1)) {
+            //   console.log(teamStat);
+            // }
             currData[iterationDocIndex].totTeamStat = currData[iterationDocIndex].totTeamStat + parseInt(teamStat);
             currData[iterationDocIndex].totTeamStatIter = currData[iterationDocIndex].totTeamStatIter + 1;
           }
           if (clientStat != undefined && clientStat != '' && (parseInt(clientStat) != 0)) {
+            // if (parseInt(clientStat) > 0 && (parseInt(clientStat) < 1)) {
+            //   console.log(clientStat);
+            // }
             currData[iterationDocIndex].totClientStat = currData[iterationDocIndex].totClientStat + parseInt(clientStat);
             currData[iterationDocIndex].totClientStatIter = currData[iterationDocIndex].totClientStatIter + 1;
           }
@@ -483,7 +489,7 @@ function getSquadsData() {
           reject(formatErrMsg(msg));
         } else {
           _.each(teams, function(team) {
-            if ((team.value.squadteam != undefined) && (team.value.squadteam == 'Yes')) {
+            if ((team.value.squadteam != undefined) && ((team.value.squadteam).toLowerCase() == 'yes')) {
               squadTeams[team.value._id] = team.value;
             }
           });
@@ -522,24 +528,29 @@ function rollUpSquadsData(squadsList, squadTeams) {
 
   _.each(squadsList, function(squadId) {
     squad = squadTeams[squadId];
-    var teamCnt = squad['total_members'] != null ? squad['total_members'] : 0;
-    var teamFTE = squad['total_allocation'] != null ? squad['total_allocation'] : 0;
-    if (teamCnt != undefined && teamCnt != '') {
-      teamCnt = parseInt(teamCnt);
-      if (teamCnt < 5) {
-        teamsLt5 = teamsLt5 + 1;
-        fteLt5 = fteLt5 + teamFTE;
-        tcLt5 = tcLt5 + teamCnt;
-      } else if (teamCnt > 12) {
-        teamsGt12 = teamsGt12 + 1;
-        fteGt12 = fteGt12 + teamFTE;
-        tcGt12 = tcGt12 + teamCnt;
+    // var teamCnt = squad['total_members'] != null ? squad['total_members'] : 0;
+    // var teamFTE = squad['total_allocation'] != null ? squad['total_allocation'] : 0;
+    var teamCnt = 0;
+    if (!_.isNaN(squad['total_members'])) {
+      var teamCnt = squad['total_members'];
+    }
+    var teamFTE = 0;
+    if (!_.isNaN(squad['total_allocation'])) {
+      var teamFTE = squad['total_allocation'];
+    }
+    if (teamCnt < 5) {
+      teamsLt5 = teamsLt5 + 1;
+      fteLt5 = fteLt5 + teamFTE;
+      tcLt5 = tcLt5 + teamCnt;
+    } else if (teamCnt > 12) {
+      teamsGt12 = teamsGt12 + 1;
+      fteGt12 = fteGt12 + teamFTE;
+      tcGt12 = tcGt12 + teamCnt;
 
-      } else {
-        teams5to12 = teams5to12 + 1;
-        fte5to12 = fte5to12 + teamFTE;
-        tc5to12 = tc5to12 + teamCnt;
-      }
+    } else {
+      teams5to12 = teams5to12 + 1;
+      fte5to12 = fte5to12 + teamFTE;
+      tc5to12 = tc5to12 + teamCnt;
     }
   });
 

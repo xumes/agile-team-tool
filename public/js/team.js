@@ -300,7 +300,7 @@ function loadSelectedAgileTeam() {
       }).done(function(data) {
         if (!_.isEmpty(data)) {
           //var list = _.pluck(data.rows, "value");
-          //teamAssessments = list;
+          teamAssessments = data;
           //loadAssessmentInformation(sortAssessments(data), false);
           loadAssessmentInformation(data, false);
         }
@@ -360,7 +360,7 @@ function manageIteration() {
 }
 
 function manageAssessment() {
-  window.location = 'assessment?id=' + encodeURIComponent($('#teamSelectList option:selected').val()) + '&iter=new';
+  window.location = 'assessment?id=' + encodeURIComponent($('#teamSelectList option:selected').val()) + '&assessId=new';
 }
 
 function loadIterationInformation(iterationList, more) {
@@ -1418,23 +1418,20 @@ function selectChild(elmnt) {
   }
 }
 
+function getApiKey() {
+  // call server side to get a JSON with uuid
+  var uuidKey;
 
-$(function() {
-  ta1 = FacesTypeAhead.init(
-    $('#teamMemberName')[0], {
-      key: 'ciodashboard;agileteamtool@us.ibm.com',
-      resultsAlign: 'left',
-      showMoreResults: false,
-      faces: {
-        headerLabel: 'People',
-        onclick: function(person) {
-          taPerson = person;
-          return person['notes-id'];
-        }
-      },
-      topsearch: {
-        headerLabel: 'w3 Results',
-        enabled: true
-      }
-    });
-});
+  $.ajax({
+    type: 'GET',
+    url: '/api/developer/apiKey'
+  }).done(function(data) {
+    if (data != undefined) {
+      uuidKey = data.apiKey;
+      //console("user id: "+ req.session['user'].shortEmail+"|| apiKey: "+uuidKey);
+
+      $('#apiKey').html(uuidKey);
+      $('#apiKeySection').show();
+    }
+  });
+}

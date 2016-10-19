@@ -3,7 +3,7 @@ function teamAssessmentListHander(teamId, teamAssessments) {
 
   var allowAccess = hasAccess(teamId);
   //var listOption = getAssessmentDropdownList(sortAssessments(teamAssessments));
-  var listOption = getAssessmentDropdownList(teamAssessments);
+  var listOption = assessmentDropdownList(teamAssessments);
 
   var draftExist = false;
   for (var i = 0; i < listOption.length; i++) {
@@ -48,7 +48,43 @@ function teamAssessmentListHander(teamId, teamAssessments) {
 
   plotAssessmentSeries(teamAssessments);
 
+  // redrawCharts('assessmentSection');
 }
+
+function hasAccessToAssessment(teamId) {
+  var url = '/api/users/isuserallowed' + '?teamId=' + encodeURIComponent(teamId);
+  var req = $.ajax({
+    type: 'GET',
+    url: url
+  }).done(function(data) {
+    if (data == true) {
+    }
+  }).fail(function(err){
+    console.log(err);
+  });
+}
+
+function assessmentDropdownList(assessments) {
+  var listOption = [];
+
+  if (assessments == undefined || assessments == null) return listOption;
+
+  for (var i = 0; i < assessments.length; i++) {
+    var option = [];
+    option.push(assessments[i]._id);
+    if (assessments[i]['assessmentStatus'] != '' && assessments[i]['assessmentStatus'].toLowerCase() == 'submitted')
+      option.push(fmDate(assessments[i]['submittedDate']));
+    else
+      option.push('Created: ' + fmDate(assessments[i]['createDate']) + ' (' + assessments[i]['assessmentStatus'] + ')');
+
+    listOption.push(option);
+  }
+  return listOption;
+}
+
+function fmDate(date) {
+  return moment(date).format('DDMMMYYYY');
+};
 
 function destroyAssessmentCharts() {
   // destroy existing charts in the main container
@@ -78,7 +114,7 @@ function plotAssessmentSeries(teamAssessments) {
   //get the 5 latest submitted results
   var assessmentsToPlot = [];
   for (var i = 0; i < teamAssessments.length && assessmentsToPlot.length <= 5; i++) {
-    if (teamAssessments[i]['assessmt_status'] != null && teamAssessments[i]['assessmt_status'].toLowerCase() == 'submitted') {
+    if (teamAssessments[i]['assessmentStatus'] != null && teamAssessments[i]['assessmentStatus'].toLowerCase() == 'submitted') {
       assessmentsToPlot.push(teamAssessments[i]);
     }
   }
@@ -90,18 +126,17 @@ function plotAssessmentSeries(teamAssessments) {
     $('#assessmentCharts').empty();
 
   for (i = assessmentsToPlot.length - 1; i > -1; i--) {
-    var results = assessmentsToPlot[i]['assessmt_cmpnt_rslts'];
-
+    var results = assessmentsToPlot[i]['componentResults'];
     for (var j = 0; j < results.length; j++) {
       var found = false;
       var identifier = '';
-      if ((results[j]['assessed_cmpnt_name'].toLowerCase().indexOf('leadership') > -1 && results[j]['assessed_cmpnt_name'].toLowerCase().indexOf('ops') == -1) &&
-        (results[j]['assessed_cmpnt_name'].toLowerCase().indexOf('leadership') > -1 && results[j]['assessed_cmpnt_name'].toLowerCase().indexOf('operations') == -1)) {
+      if ((results[j]['componentName'].toLowerCase().indexOf('leadership') > -1 && results[j]['componentName'].toLowerCase().indexOf('ops') == -1) &&
+        (results[j]['componentName'].toLowerCase().indexOf('leadership') > -1 && results[j]['componentName'].toLowerCase().indexOf('operations') == -1)) {
         identifier = 'prj';
-      } else if ((results[j]['assessed_cmpnt_name'].toLowerCase().indexOf('leadership') > -1 && results[j]['assessed_cmpnt_name'].toLowerCase().indexOf('ops') > -1) ||
-        (results[j]['assessed_cmpnt_name'].toLowerCase().indexOf('leadership') > -1 && results[j]['assessed_cmpnt_name'].toLowerCase().indexOf('operations') > -1)) {
+      } else if ((results[j]['componentName'].toLowerCase().indexOf('leadership') > -1 && results[j]['componentName'].toLowerCase().indexOf('ops') > -1) ||
+        (results[j]['componentName'].toLowerCase().indexOf('leadership') > -1 && results[j]['componentName'].toLowerCase().indexOf('operations') > -1)) {
         identifier = 'ops';
-      } else if (results[j]['assessed_cmpnt_name'].toLowerCase().indexOf('delivery') > -1) {
+      } else if (results[j]['componentName'].toLowerCase().indexOf('delivery') > -1) {
         identifier = 'devops';
       }
 
@@ -110,7 +145,7 @@ function plotAssessmentSeries(teamAssessments) {
           found = true;
           chartData = obj;
           // assessment name to be shown as graph title
-          chartData['title'] = results[j]['assessed_cmpnt_name'];
+          chartData['title'] = results[j]['componentName'];
 
         }
       });
@@ -126,7 +161,7 @@ function plotAssessmentSeries(teamAssessments) {
         // page element id that will render the graph data
         chartData['prefixId'] = identifier;
         // assessment name to be shown as graph title
-        chartData['title'] = results[j]['assessed_cmpnt_name'];
+        chartData['title'] = results[j]['componentName'];
         // x-axis graph labels
         chartData['categories'] = [];
         // data series to plot
@@ -139,19 +174,20 @@ function plotAssessmentSeries(teamAssessments) {
 
       }
 
-      var submitDate = showDateDDMMMYYYY(assessmentsToPlot[i]['self-assessmt_dt'].split(' ')[0]);
+      var submitDate = fmDate(assessmentsToPlot[i]['submittedDate']);
       chartData['categories'].push(submitDate);
-      chartData['targetScore'].push(isNaN(parseFloat(results[j]['ovraltar_assessmt_score'])) ? 0 : parseFloat(results[j]['ovraltar_assessmt_score']));
-      chartData['currentScore'].push(isNaN(parseFloat(results[j]['ovralcur_assessmt_score'])) ? 0 : parseFloat(results[j]['ovralcur_assessmt_score']));
-      chartData['assessmentResult'].push(results[j]['assessed_cmpnt_tbl']);
+      chartData['targetScore'].push(isNaN(parseFloat(results[j]['targetScore'])) ? 0 : parseFloat(results[j]['targetScore']));
+      chartData['currentScore'].push(isNaN(parseFloat(results[j]['currentScore'])) ? 0 : parseFloat(results[j]['currentScore']));
+      chartData['assessmentResult'].push(results[j]['assessedComponents']);
 
     }
   }
+  // alert('sections done');
   // plot the line graph of selected maturity assessments
   $.each(chartSeries, function(index, chartData) {
     $('#' + chartData['prefixId'] + '_Chart').highcharts({
       chart: {
-        type: 'line'
+        type: 'line', width: 380
       },
 
       title: {
@@ -258,11 +294,10 @@ function plotAssessment(index, chartData) {
   spiderData['targetScore'] = [];
   spiderData['currentScore'] = [];
   var practices = chartData['assessmentResult'][index];
-
   for (var i = 0; i < practices.length; i++) {
-    spiderData['categories'].push(practices[i]['practice_name']);
-    spiderData['targetScore'].push(isNaN(parseFloat(practices[i]['tar_mat_lvl_score'])) ? 0 : parseFloat(practices[i]['tar_mat_lvl_score']));
-    spiderData['currentScore'].push(isNaN(parseFloat(practices[i]['cur_mat_lvl_score'])) ? 0 : parseFloat(practices[i]['cur_mat_lvl_score']));
+    spiderData['categories'].push(practices[i]['practiceName']);
+    spiderData['targetScore'].push(isNaN(parseFloat(practices[i]['targetScore'])) ? 0 : parseFloat(practices[i]['targetScore']));
+    spiderData['currentScore'].push(isNaN(parseFloat(practices[i]['currentScore'])) ? 0 : parseFloat(practices[i]['currentScore']));
   }
 
   if ($('#' + spiderData['prefixId'] + '_SpiderChart').highcharts() != null)
@@ -271,7 +306,7 @@ function plotAssessment(index, chartData) {
   $('#' + spiderData['prefixId'] + '_SpiderChart').highcharts({
     chart: {
       polar: true,
-      type: 'line',
+      type: 'line', width: 380,
       events: {
         load: function() {
           var text = this.renderer.text('Select an overall score on the adjacent graph to view practice results.', 30, 295)
@@ -361,7 +396,7 @@ function createChartSection(prefixId) {
 
   var div = document.createElement('div');
   div.setAttribute('id', prefixId + '_Chart');
-  div.setAttribute('style', 'min-width: 460px; min-height: 310px; margin: 0 auto');
+  div.setAttribute('style', 'width: 100%; min-height: 310px;');
   colDiv.appendChild(div);
   mainDiv.appendChild(colDiv);
 
@@ -369,7 +404,7 @@ function createChartSection(prefixId) {
   colDiv.setAttribute('class', 'ibm-col-6-2');
   div = document.createElement('div');
   div.setAttribute('id', prefixId + '_SpiderChart');
-  div.setAttribute('style', 'min-width: 460px; min-height: 310px; margin: 0 auto');
+  div.setAttribute('style', 'width: 100%; min-height: 310px;');
   colDiv.appendChild(div);
   mainDiv.appendChild(colDiv);
 

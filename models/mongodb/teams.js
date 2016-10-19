@@ -4,7 +4,11 @@ var Promise = require('bluebird');
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 var util = require('../../helpers/util');
-// var loggers = require('../middleware/logger');
+var Users = require('./users');
+var Iterations = require('./iterations');
+var Assessments = require('./assessments');
+var loggers = require('../../middleware/logger');
+var async = require('async');
 
 // Just needed so that corresponding test could run
 require('../../settings');
@@ -34,9 +38,6 @@ var memberSchema = new Schema({
 });
 
 var TeamSchema = new Schema({
-  cloudantId: {
-    type: String
-  },
   name: {
     type: String,
     required: [true, 'Name is required.'],
@@ -110,8 +111,6 @@ TeamSchema.path('pathId').validate(function(value, done) {
   });
 }, 'This team name is too similar to another team. Please enter a different team name.');
 
-
-
 /*
   model helper functions
 */
@@ -131,34 +130,165 @@ var createPathId = function(teamName) {
   return teamName.toLowerCase().replace(/[^a-z1-9]/g, '');
 };
 
+var getChildren = function(pathId) {
+  if (_.isEmpty(pathId)) return [];
+  else return Team.find({path:new RegExp(','+pathId+',')}).exec();
+};
+
 /*
    exported model functions
 */
+//using for search filter in home page, regular expression for team name
 module.exports.searchTeamWithName = function(string) {
-  return Team.findOne({name: string}).exec();
+  var searchQuery = {
+    'name': {
+      '$regex': new RegExp('.*' + string.toLowerCase() + '.*', 'i')
+    }
+  };
+  return Team.find(searchQuery).sort('pathId').exec();
 };
 
-module.exports.getNonSquadTeams = function(optionalProjection) {
-  return Team.find({type: {$ne:'squad'}}, optionalProjection).exec();
+//using for snapshot roll up data, get all non squads
+module.exports.getNonSquadTeams = function(proj) {
+  return Team.find({type: {$ne:'squad'}}).select(proj).exec();
 };
 
-module.exports.getSquadTeams = function(optionalProjection) {
-  return Team.find({type: 'squad'}, optionalProjection).exec();
+//using for snapshot roll up data, get all squads
+module.exports.getSquadTeams = function(proj, filter) {
+  return Team.find({type: 'squad'}, filter).select(proj).exec();
 };
 
-//root teams are teams with no parent, non-squad with children
-module.exports.getRootTeams = function() {
-  return Promise.join(
-    Team.find({path: null, type:{$ne:'squad'}}),
-    getAllUniquePaths(),
-  function(rootedTeams, uniquePaths) {
-    uniquePaths = uniquePaths.join(',');
-    //indexOf is faster than match apparently
-    var res = _.filter(rootedTeams, function(team){
-      return uniquePaths.indexOf(team.pathId) >= 0;
-    });
-    return res;
+/**
+ * If email is empty, get all root teams. Otherwise, get all user's root teams.
+ * root teams are teams with no parent, non-squad with children.
+ * @param user email
+ * @return array of root teams
+ */
+module.exports.getRootTeams = function(uid) {
+  return new Promise(function(resolve, reject){
+    if (uid) {
+      var query = {
+        'members': {
+          '$elemMatch': {
+            'userId': uid.toUpperCase()
+          }
+        }
+      };
+      var promiseArray = [];
+      promiseArray.push(Team.find(query).sort('pathId').exec());
+      promiseArray.push(getAllUniquePaths());
+      Promise.all(promiseArray)
+        .then(function(results){
+          var rootedTeams = results[0];
+          var uniquePaths = results[1];
+          uniquePaths = uniquePaths.join(',');
+          var tempTeams = [];
+          _.each(rootedTeams, function(team){
+            _.find(rootedTeams, function(compareTeam){
+              if (team.path == null) {
+                if (team.type == 'squad') {
+                  return tempTeams.push(team.pathId);
+                } else {
+                  if (uniquePaths.indexOf(','+team.pathId+',') < 0) {
+                    return tempTeams.push(team.pathId);
+                  }
+                }
+              } else {
+                if (team.path != compareTeam.path) {
+                  var comparePath = '';
+                  if (compareTeam.path == null) {
+                    comparePath = ',' + compareTeam.pathId + ',';
+                  } else {
+                    comparePath = compareTeam.path;
+                  }
+                  if (team.path.indexOf(comparePath) >= 0) {
+                    return tempTeams.push(team.pathId);
+                  }
+                }
+              }
+            });
+          });
+          var returnTeams = [];
+          _.each(rootedTeams, function(team){
+            if (!_.contains(tempTeams, team.pathId)) {
+              var newTeam = {
+                '_id': team._id,
+                'type': team.type,
+                'name': team.name,
+                'path': team.path,
+                'pathId': team.pathId,
+                'hasChild': null,
+                'docStatus': team.docStatus
+              };
+              if (uniquePaths.indexOf(','+team.pathId+',') >= 0) {
+                newTeam.hasChild = true;
+              } else {
+                newTeam.hasChild = false;
+              }
+              returnTeams.push(newTeam);
+            }
+          });
+          resolve(returnTeams);
+        })
+        .catch(function(err){
+          reject(err);
+        });
+    } else {
+      return Promise.join(
+        Team.find({path: null, type:{$ne:'squad'}}).sort('pathId').exec(),
+        getAllUniquePaths(),
+      function(rootedTeams, uniquePaths) {
+        uniquePaths = uniquePaths.join(',');
+        //indexOf is faster than match apparently
+        var res = _.filter(rootedTeams, function(team){
+          return uniquePaths.indexOf(','+team.pathId+',') >= 0;
+        });
+        resolve(res);
+      });
+    }
   });
+};
+
+/**
+ * If email is empty, get all standalone teams. Otherwise, get all user's standalone teams.
+ * standalone teams are non-squad teams without chiilren and parent, and squad team without parent.
+ * @param user email
+ * @return array of standalone teams
+ */
+module.exports.getStandalone = function(uid) {
+  if (uid) {
+    var query = {
+      'path': null,
+      'members': {
+        '$elemMatch': {
+          'userId': uid.toUpperCase()
+        }
+      }
+    };
+    return Promise.join(
+      Team.find(query).sort('pathId').exec(),
+      getAllUniquePaths(),
+    function(rootedTeams, uniquePaths) {
+      uniquePaths = uniquePaths.join(',');
+      //indexOf is faster than match apparently
+      var res = _.filter(rootedTeams, function(team){
+        return uniquePaths.indexOf(','+team.pathId+',') < 0;
+      });
+      return res;
+    });
+  } else {
+    return Promise.join(
+      Team.find({path: null}).sort('pathId').exec(),
+      getAllUniquePaths(),
+    function(rootedTeams, uniquePaths) {
+      uniquePaths = uniquePaths.join(',');
+      //indexOf is faster than match apparently
+      var res = _.filter(rootedTeams, function(team){
+        return uniquePaths.indexOf(','+team.pathId+',') < 0;
+      });
+      return res;
+    });
+  }
 };
 
 //list of NON-SQUAD teams that are not part of teamId's subtree
@@ -222,13 +352,8 @@ module.exports.getSelectableChildren = function(teamId) {
 };
 
 module.exports.getSquadsOfParent = function(pathId) {
-  return Team.find({path:new RegExp(','+pathId+','), type:'squad'}).exec();
-};
-
-//I think we can refactor the clientside js to use other model functions
-module.exports.getLookupIndex = function() {
-};
-module.exports.getLookupTeamByType = function() {
+  if (_.isEmpty(pathId)) return [];
+  else return Team.find({path:new RegExp(','+pathId+','), type:'squad'}).exec();
 };
 
 //TODO fix front-end js so teamDoc comes through the api in a correct format
@@ -247,19 +372,100 @@ module.exports.createTeam = function(teamDoc, creator) {
     });
   });
 };
-// module.exports.createTeam({
-//   name: 'mongotest12',
-//   pathId: createPathId('mongotest12'),
-//   createdByUserId: '1234567',
-//   createdBy: 'cjscotta@us.ibm.com',
-//   members: [{name:'colby', userId:'1234567', email:'cjscotta@us.ibm.com'}]
-// }).catch(function(err){
-//
-//   console.log(err);
-//   console.log(err.message);
-// });
 
-module.exports.updateOrDeleteTeam = function() {
+/**
+ * Get first level children using parent's pathId.
+ */
+module.exports.getChildrenByPathId = function(pathId) {
+  return new Promise(function(resolve, reject){
+    if (_.isEmpty(pathId)) {
+      resolve([]);
+    }
+    else {
+      var promiseArray = [];
+      promiseArray.push(Team.find({path:new RegExp(','+pathId+',$')}).sort('pathId').exec());
+      promiseArray.push(getAllUniquePaths());
+      Promise.all(promiseArray)
+        .then(function(results){
+          var childrenTeams = results[0];
+          var uniquePaths = results[1];
+          uniquePaths = uniquePaths.join(',');
+          var returnTeams = [];
+          _.each(childrenTeams, function(team){
+            var newTeam = {
+              '_id': team._id,
+              'type': team.type,
+              'name': team.name,
+              'path': team.path,
+              'pathId': team.pathId,
+              'hasChild': null,
+              'docStatus': team.docStatus
+            };
+            if (uniquePaths.indexOf(','+team.pathId+',') >= 0) {
+              newTeam.hasChild = true;
+            } else {
+              newTeam.hasChild = false;
+            }
+            returnTeams.push(newTeam);
+          });
+          resolve(returnTeams);
+        })
+        .catch(function(err){
+          reject(err);
+        });
+    }
+  });
+  // if (_.isEmpty(pathId)) return [];
+  // else return Team.find({path:new RegExp(','+pathId+',$')}).sort('pathId').exec();
+};
+
+module.exports.getAllChildrenOnPath = function(path) {
+  return new Promise(function(resolve, reject){
+    var promiseArray = [];
+    var pathString = ',';
+    _.each(path, function(p) {
+      pathString = pathString + p + ',';
+      var query = {
+        'path' : {
+          '$regex' : pathString + '$'
+        }
+      };
+      promiseArray.push(Team.find(query).sort('pathId').exec());
+    });
+    promiseArray.push(getAllUniquePaths());
+    Promise.all(promiseArray)
+      .then(function(results){
+        var uniquePaths = results[results.length-1];
+        uniquePaths = uniquePaths.join(',');
+        results.pop();
+        var returnArray = [];
+        _.each(results, function(teams){
+          var returnTeams = [];
+          _.each(teams, function(team){
+            var newTeam = {
+              '_id': team._id,
+              'type': team.type,
+              'name': team.name,
+              'path': team.path,
+              'pathId': team.pathId,
+              'hasChild': null,
+              'docStatus': team.docStatus
+            };
+            if (uniquePaths.indexOf(','+team.pathId+',') >= 0) {
+              newTeam.hasChild = true;
+            } else {
+              newTeam.hasChild = false;
+            }
+            returnTeams.push(newTeam);
+          });
+          returnArray.push(returnTeams);
+        });
+        resolve(returnArray);
+      })
+      .catch(function(err){
+        reject(err);
+      });
+  });
 };
 
 //TODO refactor into 2 seperate functions
@@ -274,7 +480,91 @@ module.exports.getTeam = function(id) {
   if (_.isEmpty(id))
     return Team.find({}).exec();
   else
-    return Team.find({_id:id}).exec();
+    return Team.findOne({_id:id}).exec();
+};
+
+/**
+ * Get team by pathId
+ */
+module.exports.getTeamByPathId = function(pathId) {
+  if (_.isEmpty(pathId))
+    return Team.find({}).exec();
+  else
+    return Team.findOne({pathId:pathId}).exec();
+};
+/**
+ * Using in home page, getting the team info and if it has a child team
+ * @param team's objectId
+ * @return team's info and child info
+ */
+module.exports.getTeamAndChildInfo = function(id) {
+  return new Promise(function(resolve, reject){
+    var promiseArray = [];
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      promiseArray.push(Team.findOne({_id:id}).exec());
+    } else {
+      promiseArray.push(Team.findOne({pathId:id}).exec());
+    }
+    promiseArray.push(getAllUniquePaths());
+    Promise.all(promiseArray)
+      .then(function(results){
+        var team = results[0];
+        var uniquePaths = results[1];
+        uniquePaths = uniquePaths.join(',');
+        if (team == null || team.docStatus == 'delete') {
+          resolve(null);
+        } else {
+          var newTeam = {
+            '_id': team._id,
+            'type': team.type,
+            'name': team.name,
+            'path': team.path,
+            'pathId': team.pathId,
+            'hasChild': null,
+            'docStatus': team.docStatus
+          };
+          if (uniquePaths.indexOf(','+team.pathId+',') >= 0) {
+            newTeam.hasChild = true;
+          } else {
+            newTeam.hasChild = false;
+          }
+          resolve(newTeam);
+        }
+      })
+      .catch(function(err){
+        reject(err);
+      });
+  });
+};
+
+module.exports.getSquadsByPathId = function(pathId) {
+  return new Promise(function(resolve, reject){
+    Team.findOne({pathId: pathId}).exec()
+      .then(function(team){
+        if (team.path) {
+          var query = {
+            type: 'squad',
+            path: {
+              $regex: team.path + team.pathId + ',.*'
+            }
+          };
+        } else {
+          var query = {
+            type: 'squad',
+            path: {
+              $regex: '^,' + team.pathId + ',.*'
+            }
+          };
+        }
+        return Team.find(query).exec();
+      })
+      .then(function(teams){
+        resolve(teams);
+      })
+      .catch(function(err){
+        reject(err);
+      });
+  });
 };
 
 module.exports.getRole = function() {
@@ -296,24 +586,258 @@ module.exports.getByName = function(teamName) {
     return Team.find({name:teamName}).exec();
 };
 
-module.exports.getTeamsByEmail = function(memberEmail) {
-  return Team.find({members: {$elemMatch:{email:memberEmail}}}).exec();
+module.exports.getTeamsByEmail = function(memberEmail, proj) {
+  return Team.find({members: {$elemMatch:{email:memberEmail}}, docStatus:{$ne:'delete'}}).select(proj).exec();
+};
+//look at all the first pathId in all the paths
+//query all those pathIds
+//[_id, _id]
+module.exports.getTeamsByUserId = function(uid, proj) {
+  return Team.find({members: {$elemMatch:{userId:uid}}, docStatus:{$ne:'delete'}}).select(proj).exec();
+};
+//returns an array of team ids where the user is a member of the team + the team's subtree
+//this uses user email
+module.exports.getUserTeams = function(memberEmail) {
+  return new Promise(function(resolve, reject){
+    Team.find({members: {$elemMatch:{email:memberEmail}}}, {pathId:1})
+      .then(function(teams){
+        var pathIds = _.pluck(teams, 'pathId');
+
+        //build a query string to match all, ex: a|b|c to query for all docs with
+        //paths a or b or c
+        var q = '';
+        _.each(pathIds, function(pId){
+          q += pId + '|';
+        });
+        q = q.slice(0, -1); //remove last |
+        return q;
+      })
+      .then(function(q){
+        if (q==='') resolve([]);//prevent matching on ''
+        return Team.distinct('_id', {path:new RegExp(q)}).exec();
+      })
+      .then(function(result){
+        resolve(result);
+      })
+      .catch(function(err){
+        reject(err);
+      });
+  });
 };
 
-module.exports.getTeamsByUid = function(uid) {
-  return Team.find({members: {$elemMatch:{userId:uid}}}).exec();
+module.exports.modifyTeamMembers = function(teamId, userEmail, userId, newMembers) { //TODO this should use userId
+  return new Promise(function(resolve, reject){
+    if (_.isEmpty(teamId)){
+      return reject('Team ID is required');
+    }
+    if (_.isEmpty(userId)){
+      return reject('User ID is required');
+    }
+    if (_.isEmpty(members)){
+      return reject('Member lists is required');
+    }
+    if (!_.isArray(members)){
+      return reject('Invalid member lists');
+    }
+    //check if user is allowed to edit team
+    Users.isUserAllowed(userEmail, teamId)//TODO this should use userId
+    .then(function(isAllowed){
+      if (!isAllowed)
+        return reject('Not allowed to modify team members');
+      else
+        return true;
+    })
+    .then(function(){
+      Team.update({_id: teamId},{
+        $set:
+        {
+          members: newMembers,
+          updatedBy: userEmail,
+          updatedByUserId: userId,
+          updateDate: util.getServerTime()
+        }
+      }).exec();
+    })
+    //TODO no idea why we are doing these extra queries in an update.
+    //left them here to refactor after the mongo migration
+    .then(function(savingResult){
+      return Team.getUserTeams(userEmail);
+    })
+    .then(function(userTeams){
+      return Team.getTeam(teamId)
+      .then(function(result){
+        return resolve(
+          {
+            userTeams : userTeams,
+            teamDetails : result
+          }
+        );
+      });
+    })
+    .catch(function(err){
+      return reject(err);
+    });
+  });
 };
 
-module.exports.associateActions = function() {
+module.exports.deleteTeamByName = function(name) {
+  return new Promise(function(resolve, reject){
+    Team.remove({'name': name})
+      .then(function(result){
+        resolve(result);
+      })
+      .catch(function(err){
+        reject(err);
+      });
+  });
+};
+
+module.exports.getParentByTeamId = function(teamId) {
+  return new Promise(function(resolve, reject) {
+    Team.findOne({_id: teamId}).lean().exec()
+      .then(function(team) {
+        if (_.isEmpty(team)) {
+          return reject(new Error('Cannot find parent info'));
+        }
+        if (!_.isEmpty(team.path)) {
+          var paths = team.path.split(',');
+          return paths[_.findLastIndex(paths)];
+        }
+        else {
+          return resolve();
+        }
+      })
+      .then(function(parentPathId) {
+        return Team.findOne({pathId: parentPathId}).exec();
+      })
+      .then(function(parentTeam) {
+        resolve(parentTeam);
+      })
+      .catch(function(err) {
+        reject(err);
+      });
+  });
+};
+
+
+/*
+How tree structure changes when a team is deleted:
+A->B-C->D->E
+A->B-C->X->Y->Z
+*X and D are child teams of C
+if C gets deleted, team docStatus will be "delete".. all related iterations and assessments of C will also have docStatus of "delete"
+surviving structure would be
+A->B
+D->E
+X->Y->Z
+All affected team that had a path relation to C, will have to be updated.
+*/
+
+//TODO should split this into 2 functions to make it cleaner.
+module.exports.updateOrDeleteTeam = function(newDoc, userEmail, userId, action) {
+  var teamId = newDoc._id;
+  return new Promise(function(resolve, reject){
+    Promise.join(
+      module.exports.getTeam(teamId),
+      Iterations.getByIterInfo(teamId),
+      Assessments.getTeamAssessments(teamId),
+      function(oldTeamDoc, iterations, assessments){
+        Users.isUserAllowed(userEmail, teamId)
+        .then(function(isAllowed){
+          if (!isAllowed) return Promise.reject(Error('User not allowed to preform action.')); //for some reason have to use static reject here o.w next thens() get called
+          else return;
+        })
+        //use is allowed to update or delete
+        .then(function(){
+          if (action==='delete') {
+            var iterationIds = _.pluck(iterations, '_id');
+            var assessmentIds = _.pluck(assessments, '_id');
+            //delete team, iterations, and assessment docs by setting docStatus: delete
+            //logger will say 0 deleted if they were already deleted (mongodb doesnt update docs if theres no change)
+            loggers.get('model-teams').info('Deleting the following team: ' +teamId);
+            return Team.update({_id : teamId}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:util.getServerTime()}}).exec()
+            .then(function(res){
+              loggers.get('model-teams').verbose('Deleted '+res.nModified+ ' team; docStatus: delete');
+              loggers.get('model-teams').info('Removing '+oldTeamDoc.pathId+' from team paths');
+              return Team.find({path: new RegExp(','+oldTeamDoc.pathId+',')}).exec();
+            })
+            .then(function(teams){
+              if (_.isEmpty(teams)) return;
+              else {
+                //now we have the teams that have paths we need to update.
+                //I couldn't find a way to dynamically update multi docs in mongoose so using async library
+                //this takes almost a minute if it has to update ~2k paths
+                async.each(teams, function(team, callback) {
+                  var newPath = team.path.split(','+oldTeamDoc.pathId).pop();
+                  newPath = (newPath===',') ? undefined : newPath;
+                  return Team.update({_id : team._id}, {$set: {path:newPath}}).exec()
+                  .then(function(r){
+                    loggers.get('model-teams').verbose('updated a team path. oldPath: '+team.path+', new path: '+newPath );
+                    return callback();
+                  })
+                  .catch(function(e){
+                    return callback(e);
+                  });
+                },function(err) {
+                  if ( err ) {
+                    loggers.get('model-teams').error(Error(err));
+                  }
+                  else
+                    loggers.get('model-teams').info(teams.length+' team paths were updated.');
+                });
+              }
+            })
+            .then(function(){
+              loggers.get('model-teams').verbose('Done modifying team paths');
+              loggers.get('model-teams').info('Deleting the following assessment docs: ' +assessmentIds);
+              return Assessments.getModel().update({_id : {'$in':assessmentIds}}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:util.getServerTime()}}, {multi: true}).exec();
+            })
+            .then(function(res){
+              loggers.get('model-teams').verbose('Set '+res.nModified+ ' assessment documents docStatus: delete');
+              loggers.get('model-teams').info('Deleting the following iteration docs: ' +iterationIds);
+              return Iterations.getModel().update({_id : {'$in':iterationIds}}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:util.getServerTime()}}, {multi: true}).exec();
+            })
+            .then(function(res){
+              loggers.get('model-teams').verbose('Set '+res.nModified+ ' iteration documents docStatus: delete');
+              return resolve('Successfully deleted the team: '+oldTeamDoc.name+' updated children paths, deleted associated iteration and assessment docs.');
+            })
+            .catch(function(e){
+              return reject(e);
+            });
+          }
+          //else update the team  ... no delete
+          else {
+            if (oldTeamDoc.pathId !== newDoc.pathId || oldTeamDoc.path !== newDoc.path)
+              return Promise.reject(Error('Changing pathId or path is not supported currently'));
+            else {
+              newDoc.updatedByUserId = userId;
+              newDoc.updatedBy = userEmail;
+              newDoc.updateDate = util.getServerTime();
+              return Team.update({_id : teamId}, newDoc, {runValidators: true}).exec();
+            }
+          }
+        })
+        .catch(function(e){
+          return reject(e);
+        });
+      }
+    );
+  });
+};
+
+// module.exports.updateOrDeleteTeam('57ead48d027c6a5a884c7ec4','jeffsmit@us.ibm.com','jeff smith', 'delete').then(function(res) {
+//   console.log(res);
+// }).catch(function(e){
+//   console.log(e);
+// });
+
+//I think we can refactor the clientside js to use other model functions
+module.exports.getLookupIndex = function() {
+};
+module.exports.getLookupTeamByType = function() {
+};
+
+var associateActions = function() {
 };
 module.exports.associateTeams = function() {
 };
-module.exports.associateActions = function() {
-};
-module.exports.getUserTeams = function() {
-};
-module.exports.modifyTeamMembers = function() {
-};
-module.exports.associateActions = function() {
-};
-

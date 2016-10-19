@@ -13,4 +13,13 @@ module.exports = function(app, includes) {
   };
 
   app.get('/team', includes.middleware.auth.requireLoginWithRedirect, showTeamManagement);
+
+  app.get('/_v2_team', includes.middleware.auth.requireLoginWithRedirect, function(req, res) {
+    var json = {
+      'pageTitle': 'Team Management',
+      'googleAnalyticsKey': settings.googleAnalyticsKey
+    };
+    render(req, res, 'v2_team', json);
+  });
+
 };

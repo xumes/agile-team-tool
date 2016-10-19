@@ -24,7 +24,9 @@ var initCloudant = require('./cloudant/init');
 require('fs').readFile('./art', 'utf8', function(err, art) {
   console.log(art);
   loggers.get('init').info('Configuration Settings:');
-  console.log(settings);
+  if (process.env.TRAVIS != 'true') {
+    console.log(settings);
+  }
   console.log('\n');
   initCloudant.init();
 });
@@ -48,7 +50,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //security (mostly header stuff)
-app.use(helmet());
+// app.use(helmet());
+app.use(helmet({
+  frameguard: false
+}));
 
 // Force SSL
 /* istanbul ignore if */
@@ -73,6 +78,26 @@ require('./middleware/login')(passport);
 
 //Routes/Controllers for the views
 require('./routes')(app, passport);
+
+// Webpack for React
+var webpack = require('webpack');
+var webpackDevMiddleware = require('webpack-dev-middleware');
+var webpackHotMiddleware = require('webpack-hot-middleware');
+var webpackConfig = require('./webpack.dev.config');
+var compiler = webpack(webpackConfig);
+
+app.use(webpackDevMiddleware(compiler, {
+  hot: true,
+  publicPath: webpackConfig.output.publicPath,
+  stats: {colors: true},
+  historyApiFallback: true
+}));
+
+app.use(webpackHotMiddleware(compiler, {
+  log: console.log,
+  path: '/__webpack_hmr',
+  heartbeat: 10 * 1000
+}));
 
 /**
  * Error Handlers

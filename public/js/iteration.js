@@ -7,7 +7,8 @@ var global_currentAction = undefined;
 
 jQuery(function($) {
   $(document).ready(function() {
-    getPageVariables('iteration', initPageAction);
+    // getPageVariables('iteration', initPageAction);
+    initPageAction();
   });
 
   function initPageAction() {
@@ -17,14 +18,15 @@ jQuery(function($) {
       alert('here TestUser is: ' + urlParameters.testUser);
     }
 
-    if (urlParameters != undefined && urlParameters.id != undefined) {
-      getTeam(urlParameters.id, updateAgileTeamCache, []);
-      if (urlParameters != undefined && urlParameters.iter != undefined && urlParameters.iter != '')
+    if (!_.isEmpty(urlParameters) && !_.isEmpty(urlParameters.id)) {
+      //getTeam(urlParameters.id, updateAgileTeamCache, []);
+      if (!_.isEmpty(urlParameters.iter))
         loadAgileTeams(urlParameters.id, urlParameters.iter);
       else
         loadAgileTeams(urlParameters.id, 'new');
-    } else {
-      loadAgileTeams('new', '');
+    }
+    else {
+      //loadAgileTeams('new', '');
       updateIterationInfo('clearIteration');
     }
 
@@ -71,7 +73,7 @@ jQuery(function($) {
         $('#memberCount').val(teamMemCount());
         $('#fteThisiteration').val(teamMemFTE());
         $('#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount').removeAttr('disabled');
-        $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').removeAttr('disabled');
+        $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#cycleTimeWIP,#cycleTimeInBacklog,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').removeAttr('disabled');
         $('#select2-teamChangeList-container,#commentIter').css('color', 'black');
         $('#refreshFTE').attr('onclick', 'refreshFTE()');
         if ($('#iterationSelectList').val() == 'new') {
@@ -86,7 +88,7 @@ jQuery(function($) {
   });
 
   $('#fteThisiteration').change(function() {
-    if ($('#fteThisiteration').val().trim() != '') {
+    if ($('#fteThisiteration').val().trim() != '' && $('#fteThisiteration').val().trim() != '0.0') {
       var storiesFTE = $('#commStoriesDel').val() / $('#fteThisiteration').val();
       $('#unitcostStoriesFTE').val(storiesFTE.toFixed(1));
       var strPointsFTE = $('#commPointsDel').val() / $('#fteThisiteration').val();
@@ -95,14 +97,14 @@ jQuery(function($) {
   });
 
   $('#commStoriesDel').change(function() {
-    if ($('#commStoriesDel').val().trim() != '') {
+    if ($('#commStoriesDel').val().trim() != '' && $('#fteThisiteration').val().trim() != '0.0') {
       var storiesFTE = $('#commStoriesDel').val() / $('#fteThisiteration').val();
       $('#unitcostStoriesFTE').val(storiesFTE.toFixed(1));
     }
   });
 
   $('#commPointsDel').change(function() {
-    if ($('#commPointsDel').val().trim() != '') {
+    if ($('#commPointsDel').val().trim() != '' && $('#fteThisiteration').val().trim() != '0.0') {
       var strPointsFTE = $('#commPointsDel').val() / $('#fteThisiteration').val();
       $('#unitcostStorypointsFTE').val(strPointsFTE.toFixed(1));
     }
@@ -114,7 +116,7 @@ jQuery(function($) {
       if (hasAccess($('#teamSelectList').val())) {
         $('#memberCount').val(teamMemCount());
         $('#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount').removeAttr('disabled');
-        $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').removeAttr('disabled');
+        $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#cycleTimeWIP,#cycleTimeInBacklog,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').removeAttr('disabled');
         $('#updateIterationBtn').attr('disabled', 'disabled');
         $('#addIterationBtn').removeAttr('disabled');
         $('#select2-teamChangeList-container,#commentIter').css('color', 'black');
@@ -159,18 +161,28 @@ jQuery(function($) {
 
   });
 
-  $('#fteThisiteration, #clientSatisfaction, #teamSatisfaction').keypress(function(evt) {
-    evt = (evt) ? evt : window.event;
-    var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode == 8 || charCode == 46 || charCode == 37 || charCode == 39) {
-      return true;
-    } else if (charCode == 46 && $(this).val().indexOf('.') != -1) {
-      return false;
-
-    } else if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+  $('#commStories, #commPoints, #memberCount, #commStoriesDel, #commPointsDel, #DeploythisIteration, #defectsIteration').keypress(function(e) {
+    var e = e || window.event;
+    var charCode = (e.which) ? e.which : e.keyCode;
+    var pattern = /^\d*$/;
+    if (e.charCode >= 32 && e.charCode < 127 &&  !pattern.test(this.value + '' + String.fromCharCode(e.charCode)))
+    {
       return false;
     }
-    return true;
+  }).on('paste',function(e){
+    e.preventDefault();
+  });
+
+  $('#fteThisiteration, #clientSatisfaction, #teamSatisfaction, #cycleTimeWIP, #cycleTimeInBacklog').keypress(function(e) {
+    var e = e || window.event;
+    var charCode = (e.which) ? e.which : e.keyCode;
+    var pattern = /^\d*[.]?\d*$/;
+    if (e.charCode >= 32 && e.charCode < 127 &&  !pattern.test(this.value + '' + String.fromCharCode(e.charCode)))
+    {
+      return false;
+    }
+  }).on('paste',function(e){
+    e.preventDefault();
   });
 
   $('#clientSatisfaction, #teamSatisfaction').blur(function() {
@@ -181,6 +193,13 @@ jQuery(function($) {
         // this should only clear out the error highlights once conditions are satisfied.
         clearFieldErrorHighlight($(this).attr('id'));
       }
+    }
+  });
+
+  $('#cycleTimeInBacklog, #cycleTimeWIP').blur(function() {
+    var value = parseFloat($(this).val());
+    if (!isNaN(value)) {
+      $(this).val(parseFloat(value).toFixed(1));
     }
   });
 
@@ -201,6 +220,7 @@ jQuery(function($) {
       $(this).val(parseFloat(value).toFixed(1));
     }
   });
+
 });
 
 function setToolTips() {
@@ -344,14 +364,8 @@ function loadAgileTeams(selected, iteration) {
 }
 
 function loadAgileTeamIterationInfo(teamId, iterationId) {
-  var hasAcc = hasAccess(teamId);
-  console.log('loadAgileTeamIterationInfo: ' + teamId + ' / ' + iterationId);
   if (teamId == null || teamId == '') {
     loadAgileTeams('new', '');;
-    if (hasAcc)
-      addOptions('iterationSelectList', null, ['new', 'Create new...'], null, 'new');
-    else
-      addOptions('iterationSelectList', null, ['', 'Select one'], null, '');
     displayEditStatus(false);
     return;
   }
@@ -367,40 +381,26 @@ function loadAgileTeamIterationInfo(teamId, iterationId) {
       if (xhr.status === 400) {
         errorHandler(xhr, textStatus, errorThrown);
       }
-    })
-    .done(function(data) {
-      var list = [];
-      if (data != undefined) {
-        list = _.pluck(data.rows, 'fields');
-      }
-      teamIterInfo = list;
-      var iterInfo = [];
-      for (var i = 0; i < teamIterInfo.length; i++) {
-        var iteration = new Object();
-        iteration._id = teamIterInfo[i].id;
-        iteration.name = teamIterInfo[i].name;
-        iterInfo.push(iteration);
-      }
-
-      if (hasAcc) {
-        addOptions('iterationSelectList', iterInfo, ['new', 'Create new...'], null, iterationId);
-        displayEditStatus(false);
-      } else {
-        addOptions('iterationSelectList', iterInfo, ['', 'Select one'], null, iterationId);
+      if (xhr.status === 401){
+        addOptions('iterationSelectList', null, ['new', 'Create new...'], null, 'new');
         displayEditStatus(true);
       }
+    })
+    .done(function(data) {
+      addOptions('iterationSelectList', null, ['', 'Select one'], null, '');
+      addOptions('iterationSelectList', data, ['new', 'Create new...'], null, iterationId);
+      displayEditStatus(false);
 
       if (iterationId != undefined && iterationId != 'new') {
         loadSelectedAgileTeamIterationInfo();
-      } else {
-        if (hasAcc) {
-          $('#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount').removeAttr('disabled');
-          $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').removeAttr('disabled');
-          $('#updateIterationBtn').attr('disabled', 'disabled');
-          $('#addIterationBtn').removeAttr('disabled');
-          $('#select2-teamChangeList-container,#commentIter').css('color', 'black');
-          $('#refreshFTE').attr('onclick', 'refreshFTE()');
-        }
+      }
+      else {
+        $('#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount').removeAttr('disabled');
+        $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#cycleTimeWIP,#cycleTimeInBacklog,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').removeAttr('disabled');
+        $('#updateIterationBtn').attr('disabled', 'disabled');
+        $('#addIterationBtn').removeAttr('disabled');
+        $('#select2-teamChangeList-container,#commentIter').css('color', 'black');
+        $('#refreshFTE').attr('onclick', 'refreshFTE()');
       }
       $('#iterationSelectList').removeAttr('disabled');
       $('#select2-iterationSelectList-container').css('color', 'black');
@@ -427,42 +427,46 @@ function loadSelectedAgileTeamIterationInfo() {
       $('#iterationSelectList').val(teamIterInfo._id);
       $('#select2-iterationSelectList-container').text($('#iterationSelectList option:selected').text());
       $('#select2-iterationSelectList-container').attr('title', $('#iterationSelectList option:selected').text());
-      $('#iterationName').val(teamIterInfo.iteration_name);
-      $('#iterationStartDate').val(showDateDDMMMYYYY(teamIterInfo.iteration_start_dt));
-      $('#iterationEndDate').val(showDateDDMMMYYYY(teamIterInfo.iteration_end_dt));
-      $('#iterationinfoStatus').val(teamIterInfo.iterationinfo_status);
-      $('#commStories').val(teamIterInfo.nbr_committed_stories);
-      $('#commPoints').val(teamIterInfo.nbr_committed_story_pts);
-      $('#memberCount').val(teamIterInfo.team_mbr_cnt);
-      $('#commStoriesDel').val(teamIterInfo.nbr_stories_dlvrd);
-      $('#commPointsDel').val(teamIterInfo.nbr_story_pts_dlvrd);
-      $('#storyPullIn').val(teamIterInfo.nbr_stories_pulled_in);
-      $('#storyPtPullIn').val(teamIterInfo.nbr_story_pts_pulled_in);
-      $('#retroItems').val(teamIterInfo.retro_action_items);
+      $('#iterationName').val(teamIterInfo.name);
+      $('#iterationStartDate').val(showDateDDMMMYYYY(teamIterInfo.startDate));
+      $('#iterationEndDate').val(showDateDDMMMYYYY(teamIterInfo.endDate));
+      $('#iterationinfoStatus').val(teamIterInfo.status);
+      $('#commStories').val(teamIterInfo.committedStories);
+      $('#commPoints').val(teamIterInfo.commitedStoryPoints);
+      $('#memberCount').val(teamIterInfo.memberCount);
+      $('#commStoriesDel').val(teamIterInfo.deliveredStories);
+      $('#commPointsDel').val(teamIterInfo.storyPointsDelivered);
+      $('#storyPullIn').val(teamIterInfo.nbr_stories_pulled_in); //TODO
+      $('#storyPtPullIn').val(teamIterInfo.nbr_story_pts_pulled_in);//TODO
+      $('#retroItems').val(teamIterInfo.retro_action_items); //TODO
       $('#retroItemsComplete').val(teamIterInfo.retro_action_items_complete);
-      $('#teamChangeList').val(teamIterInfo.team_mbr_change);
+      $('#teamChangeList').val((teamIterInfo.memberChanged)?'Yes':'No');
       $('#select2-teamChangeList-container').text($('#teamChangeList option:selected').text());
       $('#select2-teamChangeList-container').attr('title', $('#teamChangeList option:selected').text());
-      $('#lastUpdateUser').html(teamIterInfo.last_updt_user);
-      $('#lastUpdateTimestamp').html(showDateUTC(teamIterInfo.last_updt_dt));
-      $('#commentIter').val(teamIterInfo.iteration_comments);
+      $('#lastUpdateUser').html(teamIterInfo.updatedBy);
+      $('#lastUpdateTimestamp').html(showDateUTC(teamIterInfo.updateDate));
+      $('#commentIter').val(teamIterInfo.comment);
       $('#doc_id').html(teamIterInfo._id);
-      if (teamIterInfo.fte_cnt != '') {
-        var alloc = parseFloat(teamIterInfo.fte_cnt).toFixed(1);
+      if (teamIterInfo.locationScore != '') {
+        var alloc = parseFloat(teamIterInfo.locationScore).toFixed(1);
         $('#fteThisiteration').val(alloc);
       }
-      $('#DeploythisIteration').val(teamIterInfo.nbr_dplymnts);
-      $('#defectsIteration').val(teamIterInfo.nbr_defects);
-      $('#clientSatisfaction').val(teamIterInfo.client_sat);
-      $('#teamSatisfaction').val(teamIterInfo.team_sat);
-      var storiesFTE = $('#commStoriesDel').val() / $('#fteThisiteration').val();
-      $('#unitcostStoriesFTE').val(storiesFTE.toFixed(1));
-      var strPointsFTE = $('#commPointsDel').val() / $('#fteThisiteration').val();
-      $('#unitcostStorypointsFTE').val(strPointsFTE.toFixed(1));
+      $('#DeploythisIteration').val(teamIterInfo.deployments);
+      $('#defectsIteration').val(teamIterInfo.defects);
+      $('#cycleTimeWIP').val(teamIterInfo.nbr_cycletime_WIP); //TODO
+      $('#cycleTimeInBacklog').val(teamIterInfo.nbr_cycletime_in_backlog); //TODO
+      $('#clientSatisfaction').val(teamIterInfo.clientSatisfaction);
+      $('#teamSatisfaction').val(teamIterInfo.teamSatisfaction);
+      if ($('#fteThisiteration').val().trim() != '0.0') {
+        var storiesFTE = $('#commStoriesDel').val() / $('#fteThisiteration').val();
+        $('#unitcostStoriesFTE').val(storiesFTE.toFixed(1));
+        var strPointsFTE = $('#commPointsDel').val() / $('#fteThisiteration').val();
+        $('#unitcostStorypointsFTE').val(strPointsFTE.toFixed(1));
+      }
 
       var temp = 0;
-      if (teamIterInfo.nbr_committed_stories != 0) {
-        temp = (teamIterInfo.nbr_stories_dlvrd / teamIterInfo.nbr_committed_stories) * 100;
+      if (teamIterInfo.committedStories != 0) {
+        temp = (teamIterInfo.deliveredStories / teamIterInfo.committedStories) * 100;
         $('#percStoriesDel').val(parseFloat(temp).toFixed(0) + '%');
       } else {
         temp = 'N/A';
@@ -470,15 +474,15 @@ function loadSelectedAgileTeamIterationInfo() {
       }
 
       temp = 0;
-      if (teamIterInfo.nbr_committed_story_pts != 0) {
-        temp = (teamIterInfo.nbr_story_pts_dlvrd / teamIterInfo.nbr_committed_story_pts) * 100;
+      if (teamIterInfo.commitedStoryPoints != 0) {
+        temp = (teamIterInfo.storyPointsDelivered / teamIterInfo.commitedStoryPoints) * 100;
         $('#percPointsDel').val(parseFloat(temp).toFixed(0) + '%');
       } else {
         temp = 'N/A';
         $('#percPointsDel').val(temp);
       }
 
-      if (teamIterInfo.team_mbr_cnt < 10)
+      if (teamIterInfo.memberCount < 10)
         temp = '<10';
       else
         temp = '>=10';
@@ -487,15 +491,16 @@ function loadSelectedAgileTeamIterationInfo() {
       $('#addIterationBtn').attr('disabled', 'disabled');
       $('#updateIterationBtn').removeAttr('disabled');
 
-      if (!hasAccess(teamIterInfo.team_id)) {
+      //TODO
+      if (!hasAccess(teamIterInfo.teamId)) {
         $('#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount').attr('disabled', 'disabled');
-        $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').attr('disabled', 'disabled');
+        $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#cycleTimeWIP,#cycleTimeInBacklog,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').attr('disabled', 'disabled');
         $('#addIterationBtn,#updateIterationBtn').attr('disabled', 'disabled');
         $('#select2-teamChangeList-container,#commentIter').css('color', 'grey');
         $('#refreshFTE').removeAttr('onclick');
       } else {
         $('#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPoints,#memberCount').removeAttr('disabled');
-        $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').removeAttr('disabled');
+        $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#cycleTimeWIP,#cycleTimeInBacklog,#clientSatisfaction,#teamSatisfaction,#commStoriesDel,#commPointsDel,#storyPullIn,#storyPtPullIn,#retroItems,#retroItemsComplete,#teamChangeList,#commentIter').removeAttr('disabled');
         $('#select2-teamChangeList-container,#commentIter').css('color', 'black');
         $('#refreshFTE').attr('onclick', 'refreshFTE()');
       }
@@ -712,6 +717,8 @@ function createIterationData(newIterationId) {
   jsonData.fte_cnt = $('#fteThisiteration').val();
   jsonData.nbr_dplymnts = $('#DeploythisIteration').val();
   jsonData.nbr_defects = $('#defectsIteration').val();
+  jsonData.nbr_cycletime_WIP = $('#cycleTimeWIP').val();
+  jsonData.nbr_cycletime_in_backlog = $('#cycleTimeInBacklog').val();
   jsonData.client_sat = $('#clientSatisfaction').val();
   jsonData.team_sat = $('#teamSatisfaction').val();
   jsonData = $.extend(true, {}, initIterationTemplate(), jsonData);
@@ -736,8 +743,11 @@ function updateIterationData(jsonData) {
   jsonData.fte_cnt = $('#fteThisiteration').val();
   jsonData.nbr_dplymnts = $('#DeploythisIteration').val();
   jsonData.nbr_defects = $('#defectsIteration').val();
+  jsonData.nbr_cycletime_WIP = $('#cycleTimeWIP').val();
+  jsonData.nbr_cycletime_in_backlog = $('#cycleTimeInBacklog').val();
   jsonData.client_sat = $('#clientSatisfaction').val();
   jsonData.team_sat = $('#teamSatisfaction').val();
+  jsonData = $.extend(true, {}, initIterationTemplate(), jsonData);
   return jsonData;
 }
 
@@ -780,6 +790,8 @@ function getIterationErrorPopup(errors) {
     'nbr_story_pts_dlvrd': 'commPointsDel',
     'nbr_dplymnts': 'DeploythisIteration',
     'nbr_defects': 'defectsIteration',
+    'nbr_cycletime_WIP': 'cycleTimeWIP',
+    'nbr_cycletime_in_backlog': 'cycleTimeInBacklog',
     'team_mbr_change': 'teamChangeList',
     'client_sat': 'clientSatisfaction',
     'team_sat': 'teamSatisfaction'
@@ -842,13 +854,15 @@ function updateIterationInfo(action) {
     $('#fteThisiteration').val('');
     $('#DeploythisIteration').val('');
     $('#defectsIteration').val('');
+    $('#cycleTimeWIP').val('');
+    $('#cycleTimeInBacklog').val('');
     $('#clientSatisfaction').val('');
     $('#teamSatisfaction').val('');
     $('#unitcostStoriesFTE').val('');
     $('#unitcostStorypointsFTE').val('');
 
     $('#iterationName,#iterationStartDate,#iterationEndDate,#commStories,#commPointsDel,#storyPullIn,#storyPtPullIn').attr('disabled', 'disabled');
-    $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#clientSatisfaction,#teamSatisfaction,#retroItems,#commPoints,#memberCount,#commStoriesDel,#retroItemsComplete,#commentIter,#teamChangeList').attr('disabled', 'disabled');
+    $('#fteThisiteration,#DeploythisIteration,#defectsIteration,#cycleTimeWIP,#cycleTimeInBacklog,#clientSatisfaction,#teamSatisfaction,#retroItems,#commPoints,#memberCount,#commStoriesDel,#retroItemsComplete,#commentIter,#teamChangeList').attr('disabled', 'disabled');
     $('#addIterationBtn,#updateIterationBtn').attr('disabled', 'disabled');
     $('#select2-teamChangeList-container,#commentIter').css('color', 'grey');
     $('#refreshFTE').removeAttr('onclick');
@@ -897,6 +911,8 @@ function clearHighlightedIterErrors() {
     'commPointsDel',
     'DeploythisIteration',
     'defectsIteration',
+    'cycleTimeWIP',
+    'cycleTimeInBacklog',
     'teamChangeList',
     'commentIter',
     'clientSatisfaction',

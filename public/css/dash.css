@@ -36,10 +36,11 @@
 }
 
 .agile-search-field {
-	-webkit-appearance: none;
-	-moz-appearance: none;
+	/*display: inline-block;*/
 	font-size: 10.5pt;
 	width: 100%;
+	min-height: 30px;
+	-webkit-appearance: none;
 	appearance: none;
 	border: 1px solid #959f9f;
 	border-radius: 0;
@@ -47,13 +48,17 @@
 	box-shadow: 0 0 0 1px transparent inset;
 	font-style: normal;
 	height: 30px;
-	line-height: 2.5em;
+	/*line-height: 2.5em;*/
 	padding: 0 0 2px;
 	margin-top: 7px;
 	margin-bottom: 5px;
 	max-width: 100%;
 	text-indent: 10px;
 	transition: .3s border-color,.3s background,.3s box-shadow;
+}
+
+.agile-search-field::-webkit-search-cancel-button {
+	display: none;
 }
 
 .agile-search-field:focus {
@@ -63,6 +68,15 @@
 
 .agile-search-field:hover {
 	border-color: #000;
+}
+
+.agile-search-field-cancel {
+	display: none;
+	z-index: 99;
+	position: absolute;;
+	right: 1%;
+	top: 25%;
+	width: 6%;
 }
 
 .ibm-column-form span.select2 {
@@ -792,7 +806,7 @@ span.customSpan{
 }
 
 .agile-read-only-status {
-	vertical-align: top;
+	vertical-align: top;;
 	min-width: 180px;
 	max-width: 550px;
 	margin-left: 625px;
@@ -801,6 +815,28 @@ span.customSpan{
 	max-height: 20px;
 	min-height: 20px;
 	font-size: 10.5pt;
+}
+
+.agile-static-helptip-backlog {
+	vertical-align: top;
+	min-width: 30%;
+	max-width: 50%;
+	margin-left: 625px;
+	margin-top: -4%;
+	margin-bottom: 0.1%;
+	font-size: 9.5pt;
+	color: grey;
+}
+
+.agile-static-helptip-WIP {
+	vertical-align: top;
+	min-width: 30%;
+	max-width: 50%;
+	margin-left: 625px;
+	margin-top: -4%;
+	margin-bottom: 0.2%;
+	font-size: 9.5pt;
+	color: grey;
 }
 
 .ibm-landing-page #ibm-pcon {
@@ -992,4 +1028,13 @@ li #allTeams {
 #teamscoreFormula:hover {
 	color: black;
 	cursor: pointer;
+}
+
+#overlayExampleLarge > h {
+	font-size: 10pt;
+	font-weight: bold;
+}
+
+#overlayExampleLarge > p {
+	font-size: 10pt;
 }

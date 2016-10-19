@@ -4,7 +4,6 @@ var _ = require('underscore');
 var loggers = require('../middleware/logger');
 var validate = require('validate.js');
 var util = require('../helpers/util');
-var teams = require('./teams');
 var lodash = require('lodash');
 var rules = require('./validate_rules/assessment');
 var settings = require('../settings');

@@ -12,7 +12,7 @@ var util = require('./util.js');
 
 var mongoTemplates = [];
 _.each(templates, function(doc){
-  doc = _.mapObject(doc, function(val){ return _.isEmpty(val) ? undefined : val; });
+  doc = _.mapObject(doc, function(val){ return _.isEmpty(val) ? null : val; });
   doc = JSON.stringify(doc);
   var mappedDoc = JSON.parse(doc, function(k, v) {
     if (k === '_rev' || k === 'type'){
@@ -59,16 +59,18 @@ _.each(templates, function(doc){
 });
 
 var creds = require('./creds');
+// Use connect method to connect to the server
 MongoClient.connect(creds.url, function(err, db) {
   assert.equal(null, err);
   console.log('Connected successfully to server');
-  db.collection('assessmentTemplates').insertMany(mongoTemplates, function(err, r) {
-    if (err)
-      console.log(err);
-    assert.equal(null, err);
-    console.log('Done!  ' + JSON.stringify(r.result));
-    db.close();
-    process.exit();
-  });
+  db.collection('assessmentTemplates')
+    .drop()
+    .then(function(){
+      db.collection('assessmentTemplates').insertMany(mongoTemplates, function(err, r) {
+        assert.equal(null, err);
+        console.log('Done!  ' + JSON.stringify(r.result));
+        db.close();
+        process.exit();
+      });
+    });
 });
-

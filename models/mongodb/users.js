@@ -5,6 +5,9 @@ var moment = require('moment');
 var _ = require('underscore');
 var Schema = mongoose.Schema;
 var Team = require('./teams');
+var https = require('https');
+var request = require('request');
+var settings = require('../../settings');
 
 // Just needed so that corresponding test could run
 require('../../settings');
@@ -30,40 +33,119 @@ var userSchema = {
   lastLogin: {
     type: Date,
     default: null
+  },
+  location: {
+    site: {
+      type: String,
+      default: null
+    },
+    timezone: {
+      type: String,
+      default: null
+    }
   }
 };
+
+var getUserFromFaces = function(email) {
+  return new Promise(function(resolve, reject){
+    if (email != null && email != '') {
+      var json;
+      var facesURL = settings.facesURL;
+      var facesFun = 'find/?limit=100&q=email:' + encodeURIComponent('"' + escape(email) + '"');
+      var url = facesURL + facesFun;
+      request.get(url, function(err, res, body){
+        /* istanbul ignore next */ if (res.statusCode != 200) {
+          var msg = {'error': 'can not get response'};
+          resolve(msg);
+        } else {
+          try {
+            json = JSON.parse(body);
+          } /* istanbul ignore next */ catch (err) {
+            var msg = {'error': 'json error'};
+            resolve(msg);
+          }
+          if (json.length > 0) {
+            resolve(json[0]);
+          } /* istanbul ignore next */ else {
+            var msg = {'error': 'can not find match result'};
+            resolve(msg);
+          }
+        }
+      });
+    }
+  });
+};
+
+function validObjectId(docId) {
+  var objId = mongoose.Types.ObjectId;
+  if (docId) {
+    if (mongoose.Types.ObjectId.isValid(docId)) {
+      return docId;
+    } else {
+      try {
+        objId = mongoose.Types.ObjectId(docId);
+      } catch (e) {
+        if (e) {
+          return {'error': e.message};
+        }
+      }
+      return objId;
+    }
+  } else {
+    return {'error': 'missing doc id'};
+  }
+}
 
 var UserSchema = new Schema(userSchema);
 var User = mongoose.model('users', UserSchema);
 
 var users = {
-  findUserByEmail: function(email) {
+  getAdmins: function() {
     return new Promise(function(resolve, reject) {
-      User.findOne({email: email})
-        .then(function(useInfo){
-          resolve(useInfo);
+      var query = {
+        'adminAccess': {
+          '$ne': 'none'
+        }
+      };
+      User.find(query).exec()
+        .then(function(users){
+          resolve(users);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err){
           reject(err);
         });
     });
   },
 
+  findUserByUserId: function(uid) {
+    if (_.isEmpty(uid)) {
+      return User.find().exec();
+    } else {
+      return User.findOne({userId: uid}).exec();
+    }
+  },
 
-  isTeamMember: function(userEmail, teamId) {
+  findUserByEmail: function(email) {
+    if (_.isEmpty(email)) {
+      return User.find().exec();
+    } else {
+      return User.findOne({email: email}).exec();
+    }
+  },
+
+  isTeamMember: function(userId, teamId) {
     return new Promise(function(resolve, reject) {
-      Team.getTeamsByEmail(userEmail)
+      Team.getTeamsByUserId(userId, {_id:1})
         .then(function(teams) {
-          var hasAccess = false;
+          var isMember = false;
           _.each(teams, function(team){
-            if (team._id == teamId) {
-              hasAccess = true;
-            }
+            if (_.isEqual((team._id).toString(), teamId.toString()))
+              isMember = true;
           });
-          resolve(hasAccess);
+          return resolve(isMember);
         })
-        .catch(function(err) {
-          reject(err);
+        .catch( /* istanbul ignore next */ function(err) {
+          return reject(err);
         });
     });
   },
@@ -72,7 +154,7 @@ var users = {
     var hasAccess = false;
     return new Promise(function(resolve, reject) {
       var promiseArray = [];
-      promiseArray.push(users.findUserByEmail(userId.toLowerCase()));
+      promiseArray.push(users.findUserByUserId(userId.toUpperCase()));
       promiseArray.push(users.isTeamMember(userId, teamId));
       Promise.all(promiseArray)
         .then(function(results){
@@ -88,7 +170,8 @@ var users = {
           }
           return resolve(hasAccess);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err){
+          console.log(err);
           reject(err);
         });
     });
@@ -100,14 +183,62 @@ var users = {
         'userId': user.userId.toUpperCase(),
         'email': user.email.toLowerCase(),
         'name': user.name,
-        'adminAccess': user.adminAccess
+        'adminAccess': user.adminAccess,
+        'location': {
+          'site': null,
+          'timezone': null
+        }
       };
-
-      User.create(newUser)
+      getUserFromFaces(newUser.email)
+        .then(function(facesInfo){
+          if (!facesInfo.error) {
+            if (facesInfo.location) {
+              newUser.location.site = facesInfo.location;
+            }
+          }
+          return User.create(newUser);
+        })
         .then(function(result){
           resolve(result);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err){
+          reject(err);
+        });
+    });
+  },
+
+  bulkUpdateUsers: function(updateUsers) {
+    return new Promise(function(resolve, reject) {
+      var bulk = User.collection.initializeUnorderedBulkOp();
+      if (_.isEmpty(updateUsers)) {
+        resolve([]);
+      } else {
+        _.each(updateUsers, function(updateUser){
+          bulk.find({'email':updateUser.email}).update({'$set':updateUser.set});
+        });
+        bulk.execute(function(error, result){
+          if (error) {
+            /* istanbul ignore next */
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        });
+      }
+    });
+  },
+
+  delete: function(email) {
+    return new Promise(function(resolve, reject) {
+      var deleteUser = {
+        'email': email
+      };
+
+      User.remove(deleteUser)
+        .then(function(result){
+          resolve(result);
+        })
+        .catch( /* istanbul ignore next */ function(err){
           reject(err);
         });
     });

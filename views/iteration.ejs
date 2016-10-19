@@ -49,24 +49,22 @@
         <div id="ibm-pcon">
           <div id="ibm-content">
             <div id="ibm-content-body">
-
               <div id="ibm-content-main">
-
                 <div class="ibm-columns">
-
                   <form id="iterationForm" class="ibm-column-form">
                     <div class="ibm-col-1-1">
-
                       <h2 class="ibm-bold ibm-h3">Iteration Information</h2>
                       <div class="ibm-rule ibm-alternate-1">
                         <hr>
                       </div>
-
                       <p>
                         <label style="line-height: 20px;" for="teamSelectList">Select an existing squad team:<span class="ibm-required">*</span></label>
                         <span>
                           <select id="teamSelectList" name="teamSelectList" style="width: 360px;">
                             <option value="new" selected="selected">Select one</option>
+                            <% for(var i=0; i<squadTeams.length; i++) {%>
+                               <option value=<%= squadTeams[i]._id %> ><%= squadTeams[i].name %></option>
+                            <% } %>
                           </select>
                         </span>
                       </p>
@@ -110,14 +108,14 @@
                       <h2 class="ibm-bold ibm-h4">Iteration commitments</h2>
 
                       <p>
-                        <label for="commStories" style="width: 410px">Committed stories:<span class="ibm-required"></span></label> <span> <input type="number" name="commStories"
-                          id="commStories" size="8" value="" placeholder="0" min="0" onkeypress="return isNumber(event)" class="inputCustom">
+                        <label for="commStories" style="width: 410px">Committed stories:<span class="ibm-required"></span></label> <span> <input type="text" name="commStories"
+                          id="commStories" size="8" value="" placeholder="0" min="0" class="inputCustom">
                         </span>
                       </p>
 
                       <p>
-                        <label for="commPoints" style="width: 410px">Committed story points:<span class="ibm-required"></span></label> <span> <input type="number" name="commPoints"
-                          id="commPoints" size="8" value="" placeholder="0" min="0.0" onkeypress="return isNumber(event)" class="inputCustom">
+                        <label for="commPoints" style="width: 410px">Committed story points:<span class="ibm-required"></span></label> <span> <input type="text" name="commPoints"
+                          id="commPoints" size="8" value="" placeholder="0" min="0.0" class="inputCustom">
                         </span>
                       </p>
 
@@ -126,7 +124,7 @@
                           <a class="ibm-information-link" id="memberCountTT" style="position: relative; top: -5px; left:10px; display: inline;"></a>
                         </label>
                         <span>
-                          <input type="number" name="memberCount" id="memberCount" size="8" value="" placeholder="0" min="0" onkeypress="return isNumber(event)" class="inputCustom">
+                          <input type="text" name="memberCount" id="memberCount" size="8" value="" placeholder="0" min="0" class="inputCustom">
                           <a id="refreshFTE" class="ibm-refresh-link" style="position: relative; top: -5px; left:10px; display: inline; cursor: pointer;" onclick="refreshFTE()" role="button"></a>
                         </span>
                       </p>
@@ -136,7 +134,7 @@
                           <a class="ibm-information-link" id="fteThisiterationTT" style="position: relative; top: -5px; left:10px; display: inline;"></a>
                         </label>
                         <span>
-                          <input type="number" name="fteThisiteration" id="fteThisiteration" min="0" step="0.1" size="21" value="" placeholder="0.0" class="inputCustom"/>
+                          <input type="text" name="fteThisiteration" id="fteThisiteration" min="0" step="0.1" size="21" value="" placeholder="0.0" class="inputCustom" />
                         </span>
                       </p>
 
@@ -146,32 +144,50 @@
                       <h2 class="ibm-bold ibm-h4">Iteration results</h2>
 
                       <p>
-                        <label for="commStoriesDel" style="width: 410px">Throughput - Stories/tickets/cards delivered:<span class="ibm-required"></span></label> <span> <input type="number"
-                          name="commStoriesDel" id="commStoriesDel" size="8" value="" placeholder="0" min="0" onkeypress="return isNumber(event)" class="inputCustom">
+                        <label for="commStoriesDel" style="width: 410px">Throughput - Stories/tickets/cards delivered:<span class="ibm-required"></span></label> <span> <input type="text"
+                          name="commStoriesDel" id="commStoriesDel" size="8" value="" placeholder="0" min="0" class="inputCustom">
                         </span>
                       </p>
 
                       <p>
-                        <label for="commPointsDel" style="width: 410px">Velocity - Story points delivered:<span class="ibm-required"></span></label> <span> <input type="number"
-                          name="commPointsDel" id="commPointsDel" size="8" value="" placeholder="0" min="0" onkeypress="return isNumber(event)" class="inputCustom">
+                        <label for="commPointsDel" style="width: 410px">Velocity - Story points delivered:<span class="ibm-required"></span></label> <span> <input type="text"
+                          name="commPointsDel" id="commPointsDel" size="8" value="" placeholder="0" min="0" class="inputCustom">
                         </span>
                       </p>
-
 
                       <p>
                         <label for="DeploythisIteration" style="width: 410px">Deployments this iteration:</label>
                         <span>
-                          <input type="number" name="DeploythisIteration" id="DeploythisIteration" size="8" value="" placeholder="0" min="0" class="inputCustom" onkeypress="return isNumber(event)">
+                          <input type="text" name="DeploythisIteration" id="DeploythisIteration" size="8" value="" placeholder="0" min="0" class="inputCustom">
                         </span>
                       </p>
 
                       <p>
                         <label for="defectsIteration" style="width: 410px">Defects this iteration:<span class="ibm-required"></span></label>
                         <span>
-                          <input type="number" name="defectsIteration" id="defectsIteration" size="8" value="" placeholder="0" min="0" onkeypress="return isNumber(event)" class="inputCustom">
+                          <input type="text" name="defectsIteration" id="defectsIteration" size="8" value="" placeholder="0" min="0" class="inputCustom">
                         </span>
                       </p>
-
+                      <p>
+                        <label for="cycleTimeWIP" style="width: 410px">Cycle time in WIP (days):<span class="ibm-required"></span></label>
+                        <span>
+                          <input type="text" name="cycleTimeWIP" id="cycleTimeWIP" min="0" step="0.1" size="21" value="" placeholder="0.0" class="inputCustom" />
+                        </span>
+                        <div class="agile-static-helptip-WIP" id="helpWIP" alt="How to calculate WIP: For each story delivered in this iteration, how long did it take to go from being worked on (planned for this iteration) to production delivery? Put the average number of days in this field.">
+                          <strong>How to calculate WIP</strong><br/>
+                          For each story delivered in this iteration, how long did it take to go from being worked on (planned for this iteration) to production delivery? Put the average number of days in this field.
+                        </div>
+                      </p>
+                        <p>
+                          <label for="cycleTimeInBacklog" style="width: 410px">Cycle time in backlog (days):<span class="ibm-required"></span></label>
+                          <span>
+                           <input type="text" name="cycleTimeInBacklog" id="cycleTimeInBacklog" min="0" step="0.1" size="21" value="" placeholder="0.0" class="inputCustom" />
+                          </span>
+                          <div class="agile-static-helptip-backlog" id="helpBacklog" alt="How to calculate backlog time: For each story delivered in this iteration how long was it in your backlog before it was planned for this iteration? Put the average number of days in this field.">
+                            <strong>How to calculate backlog time</strong><br/>
+                            For each story delivered in this iteration how long was it in your backlog before it was planned for this iteration? Put the average number of days in this field.
+                          </div>
+                        </p>
                       <p>
                         <label for="teamChangeList" style="width: 410px">Was there a team change?
                           <a class="ibm-information-link" id="teamChangeListTT" style="position: relative; top: -5px; left:10px; display: inline;"></a>
@@ -189,7 +205,7 @@
                           <a class="ibm-information-link" id="clientSatisfactionTT" style="position: relative; top: -5px; left:10px; display: inline;"></a>
                         </label>
                         <span>
-                          <input type="number" name="clientSatisfaction" id="clientSatisfaction" min="0" max="4.0" step="0.1" size="21" value="" placeholder="0.0" class="inputCustom"/>
+                          <input type="text" name="clientSatisfaction" id="clientSatisfaction" min="0" max="4.0" step="0.1" size="21" value="" placeholder="0.0" class="inputCustom" />
                         </span>
                       </p>
 
@@ -198,14 +214,14 @@
                           <a class="ibm-information-link" id="teamSatisfactionTT" style="position: relative; top: -5px; left:10px; display: inline;"></a>
                         </label>
                         <span>
-                          <input type="number" name="teamSatisfaction" id="teamSatisfaction" min="0" max="4.0" step="0.1" size="21" value="" placeholder="0.0" class="inputCustom"/>
+                          <input type="text" name="teamSatisfaction" id="teamSatisfaction" min="0" max="4.0" step="0.1" size="21" value="" placeholder="0.0" class="inputCustom" />
                         </span>
                       </p>
 
                       <p style="width: 900px;">
-                        <label for="commentIter" style="width: 410px">Comment about this iteration:<span class="ibm-required"></span></label> <span> <textarea rows="4" cols="53" name="commentIter"
+                        <label for="commentIter" style="width: 410px">Comment about this iteration:<span class="ibm-required"></span></label>
+                        <span> <textarea rows="4" cols="53" name="commentIter"
                             id="commentIter"></textarea>
-
                         </span>
                       </p>
 
@@ -217,14 +233,14 @@
                       <p>
                         <label for="unitcostStoriesFTE" style="width: 410px">Unit cost - Stories per FTE:<span class="ibm-required"></span></label>
                         <span>
-                          <input type="number" name="unitcostpercStories" id="unitcostStoriesFTE" size="21" min="0" value="" placeholder="0.0" disabled class="inputCustom" step=0.1>
+                          <input type="text" name="unitcostpercStories" id="unitcostStoriesFTE" size="21" min="0" value="" placeholder="0.0" disabled class="inputCustom" step=0.1>
                         </span>
                       </p>
 
                       <p>
                         <label for="unitcostStorypointsFTE" style="width: 410px">Unit cost - Story points per FTE:<span class="ibm-required"></span></label>
                         <span>
-                          <input type="number" name="unitcostpercStorypoints" id="unitcostStorypointsFTE" size="21" min="0" value="" placeholder="0.0" disabled class="inputCustom" step=0.1>
+                          <input type="text" name="unitcostpercStorypoints" id="unitcostStorypointsFTE" size="21" min="0" value="" placeholder="0.0" disabled class="inputCustom" step=0.1>
                         </span>
                       </p>
 
@@ -278,5 +294,6 @@
     <%- include ./footer.ejs %>
 
   </div>
+<script type="text/javascript" src="js/iteration-accessibility-fix.js?v=<%=Math.random()%>"></script>
 </body>
 </html>

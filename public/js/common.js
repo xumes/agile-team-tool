@@ -29,7 +29,7 @@ function getPageVariables(page, _callback) {
       siteEnv();
       // LDAP employee name has different convetion from Faces API value
       getPersonFromFaces(userInfo.email, updateUserInfo, []);
-			//get system status from DB for display on the top banner
+      //get system status from DB for display on the top banner
       setSystemMessage(systemStatus.agildash_system_status_display, systemStatus.agildash_system_status_msgtext_display);
       //set node_env variable - if env='development', display 'Stage' on the systMsg on the top banner.
       setSystemEnvironment(environment);
@@ -42,7 +42,7 @@ function getPageVariables(page, _callback) {
 }
 
 function setSystemMessage(systemStatusControl, systemStatusMsg){
-	//set db system message on the top of the page banner - header.ejs id=#warningBar
+  //set db system message on the top of the page banner - header.ejs id=#warningBar
   if (systemStatusControl == 'DynamicChange' || systemStatusControl == 'AdminOnlyChange' || systemStatusControl == 'AdminOnlyReadChange'){
     $('#warningBar').html(systemStatusMsg);
     $('#warningBar').show();
@@ -52,7 +52,7 @@ function setSystemMessage(systemStatusControl, systemStatusMsg){
 }
 
 function setSystemEnvironment(environment){
-	//set label "Stage" on the top bar if it is "development" as node_env variable in our manifest file. If it is production, this is blank
+  //set label "Stage" on the top bar if it is "development" as node_env variable in our manifest file. If it is production, this is blank
   if (_.isEmpty(environment) || environment.toLowerCase() == 'development') {
     $('#systMsg').html('Stage');
     $('#systMsg').show();
@@ -248,22 +248,7 @@ function setGlobalTeamList(teamList) {
  * @returns {Boolean}
  */
 function hasAccess(teamId) {
-  var flag = false;
-
-  // valid admin status for Admin user related updates only.
-  if (!_.isEmpty(systemStatus.agildash_system_status_display) &&
-    (systemStatus.agildash_system_status_display.toUpperCase() == 'AdminOnlyChange'.toUpperCase() ||
-      systemStatus.agildash_system_status_display == 'AdminOnlyReadChange'.toUpperCase())) {
-    if (isAdmin()) {
-      flag = true;
-    } else {
-      flag = false;
-    }
-  } else {
-    flag = isAdmin() || isUserMemberOfTeam(teamId);
-
-  }
-  return flag;
+  return isAdmin() || isUserMemberOfTeam(teamId);
 }
 
 /**
@@ -591,7 +576,7 @@ function getTeamAssessments(teamId, docs, _callback, args) {
     _callback.apply(this, args);
     return null;
   }
-  var teamUrl = '/api/assessment/view?teamId=' + encodeURIComponent(teamId) + '&docs=' + docs;
+  var teamUrl = '/api/assessment/view?teamId=' + encodeURIComponent(teamId);
   return getRemoteData(teamUrl, _callback, args);
 }
 
@@ -717,28 +702,27 @@ function updateAgileTeamCache(team) {
  */
 function initTeamTemplate() {
   var teamTemplate = {
-    '_id': '',
-    //"_rev": "",
-    'type': '',
     'name': '',
-    'desc': '',
-    'squadteam': '',
-    'parent_team_id': '',
-    'last_updt_dt': '',
-    'last_updt_user': '',
-    'created_user': '',
-    'created_dt': '',
-    'doc_status': '',
+    'pathId': '',
+    'path': '',
+    'type': '',
+    'description': '',
+    'createDate': '',
+    'createdByUserId': '',
+    'createdBy': '',
+    'updateDate': '',
+    'updatedByUserId': '',
+    'updatedBy': '',
+    'docStatus': '',
     'members': [{
-      'key': '',
-      'id': '',
       'name': '',
-      'allocation': 0,
-      'role': ''
-    }],
-    'child_team_id': []
+      'allocation': '',
+      'role': '',
+      'userId': 0,
+      'email': ''
+    }]
   };
-  teamTemplate['members'] = [];
+  teamTemplate['members'] = []; // ? wat
   return teamTemplate;
 }
 
@@ -767,6 +751,8 @@ function initIterationTemplate() {
     'fte_cnt': '',
     'nbr_dplymnts': '',
     'nbr_defects': '',
+    'nbr_cycletime_WIP': '',
+    'nbr_cycletime_in_backlog': '',
     'client_sat': '',
     'team_sat': '',
     'last_updt_dt': '',
@@ -840,4 +826,4 @@ function initAssessmentAnswersTemplate() {
   assessmentAnswersTemplate['assessmt_cmpnt_rslts'] = [];
   assessmentAnswersTemplate['assessmt_action_plan_tbl'] = [];
   return assessmentAnswersTemplate;
-}
+};

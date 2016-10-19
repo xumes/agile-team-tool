@@ -1,12 +1,12 @@
 var Promise = require('bluebird');
 var common = require('./cloudant-driver');
+var iterationModels = require('./iteration');
+var assessmentModels = require('./assessment');
 var _ = require('underscore');
 var loggers = require('../middleware/logger');
 var validate = require('validate.js');
 var settings = require('../settings');
 var util = require('../helpers/util');
-var iterationModels = require('./iteration');
-var assessmentModels = require('./assessment');
 var rules = require('./validate_rules/teams');
 var memberRules = require('./validate_rules/teamMembers');
 var users = require('./users');
@@ -35,27 +35,43 @@ var infoLogs = function(msg) {
 };
 
 var team = {
+  // searchTeamWithName: function(name) {
+  //   return new Promise(function(resolve, reject){
+  //     var query = {};
+  //     rename = name.replace(/\"|\'/g,'');
+  //     names = rename.split('\ ');
+  //     query['q'] = {};
+  //     var s = '';
+  //     _.each(names, function(queryname){
+  //       if (queryname != '' && queryname != ' ') {
+  //         s = s + 'name:' + queryname + ' AND ';
+  //       }
+  //     });
+  //     if (s.substring(s.length - 4, s.length) == 'AND ') {
+  //       s = s.substring(0, s.length - 5);
+  //     }
+  //     query['q'] = specialCharsHandler(s + '\*');
+  //     common.Search('search', 'nameSearch', query)
+  //       .then(function(result){
+  //         resolve(result);
+  //       })
+  //       .catch(function(err){
+  //         reject(err);
+  //       });
+  //   });
+  // },
   searchTeamWithName: function(name) {
     return new Promise(function(resolve, reject){
-      var query = {};
       rename = name.replace(/\"|\'/g,'');
-      names = rename.split('\ ');
-      query['q'] = {};
-      var s = '';
-      _.each(names, function(queryname){
-        if (queryname != '' && queryname != ' ') {
-          s = s + 'name:' + queryname + ' AND ';
-        }
-      });
-      if (s.substring(s.length - 4, s.length) == 'AND ') {
-        s = s.substring(0, s.length - 5);
+      if (rename=='') {
+        resolve({'docs':[]});
       }
-      query['q'] = specialCharsHandler(s + '\*');
-      common.Search('search', 'nameSearch', query)
-        .then(function(result){
+      names = rename.split('\ ');
+      common.searchBySelector(names)
+        .then(function(result) {
           resolve(result);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err) {
           reject(err);
         });
     });
@@ -327,8 +343,10 @@ var team = {
         infoLogs('Getting team document latest records');
         updateOrDeleteTeamValidation.push(team.getTeam(teamId)); //res[0]
         infoLogs('Getting iterations associated to ' + teamId);
+        // var iterationModels = require('./iteration');
         updateOrDeleteTeamValidation.push(iterationModels.getByIterInfo(teamId)); //res[1]
         infoLogs('Getting assessments associated to ' + teamId);
+        // var assessmentModels = require('./assessment');
         updateOrDeleteTeamValidation.push(assessmentModels.getTeamAssessments(teamId)); //res[2]
         infoLogs('Getting existing team names that might match ' + updatedTeamDoc['name']);
         updateOrDeleteTeamValidation.push(team.getByName(updatedTeamDoc['name'])); //res[3]
@@ -690,7 +708,72 @@ var team = {
       }
     });
   },
-  getTeamsByUid: function(uid) {
+
+
+  /**
+   * Returns an array teams information
+   *
+   * @param teamIds array of team id
+   */
+  getAllTeams: function(teamIds, includeDocs) {
+    return new Promise(function(resolve, reject) {
+      loggers.get('models').verbose('Finding ' + teamIds + ' teams ' );
+      common.getByViewKeys('teams', 'teams', teamIds, includeDocs)
+      .then(function(result) {
+        loggers.get('models').verbose('Found ' + result.length + ' teams ' );
+        result = util.returnObject(result);
+        result = !_.isEmpty(result) ? result : [];
+        resolve(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        reject(formatErrMsg(err.error));
+      });
+    });
+  },
+
+  getUserTeamIdsByUid: function(uid) {
+    return new Promise(function(resolve, reject) {
+      var userTeams = [];
+      var userTeamIds = [];
+      if (_.isEmpty(uid)) {
+        infoLogs('No user teams found!');
+        resolve(userTeamIds);
+      } else {
+        team.getTeamByUid(uid)
+          .then(function(body) {
+            userTeams = util.returnObject(body);
+            loggers.get('models').verbose('Found ' + userTeams.length + ' team(s) for ' + uid);
+            var requestKeys = _.pluck(userTeams, '_id');
+            return requestKeys;
+          })
+          .then(function(requestKeys) {
+            var docs = common.getByViewKeys('teams', 'lookup', requestKeys);
+            return docs;
+          })
+          .then(function(docs){
+            var strTeams = _.pluck(docs.rows, 'value');
+            _.each(userTeams, function(team){
+              var lookupObj = _.findWhere(strTeams, {
+                _id: team._id
+              });
+              if (!_.isEmpty(lookupObj)) {
+                userTeamIds = _.union([team._id], lookupObj.children, userTeamIds);
+              } else {
+                userTeamIds = _.union([team._id], team.child_team_id, userTeamIds);
+              }
+            });
+            userTeamIds = _.uniq(userTeamIds);
+            loggers.get('models').info('Success: ' + uid + ' has ' + userTeamIds.length + ' accessible team(s) by relationship.');
+            return resolve(userTeamIds);
+          })
+          .catch( /* istanbul ignore next */ function(err){
+            return reject(formatErrMsg(err));
+          });
+      }
+    });
+  },
+
+  getTeamByUid: function(uid, includeDocs) {
     return new Promise(function(resolve, reject) {
       if (_.isEmpty(uid)) {
         var err = {
@@ -698,7 +781,7 @@ var team = {
         };
         return reject(formatErrMsg(err));
       } else {
-        common.getByViewKey('teams', 'teamsByUid', uid)
+        common.getByViewKey('teams', 'teamsByUid', uid, includeDocs)
           .then(function(body) {
             if (_.isEmpty(body.rows))
               loggers.get('models').verbose('No team for serial number ' + uid);
@@ -713,6 +796,7 @@ var team = {
       }
     });
   },
+
   associateActions: function(action) {
     var validActions = ['associateParent', 'associateChild', 'removeParent', 'removeChild'];
     if (_.isEmpty(action))
@@ -1094,16 +1178,16 @@ var team = {
     });
   },
 
+  /**
+   * Reformat document to update/delete document structure for BULK operation
+   *
+   * @param teamId - team id to modify
+   * @param userId - user id of the one who is doing the action
+   * @param members - array of member user
+   * @returns - modified tem document
+   */
   modifyTeamMembers: function(teamId, userId, members) {
     return new Promise(function(resolve, reject){
-      /**
-       * Reformat document to update/delete document structure for BULK operation
-       *
-       * @param teamId - team id to modify
-       * @param userId - user id of the one who is doing the action
-       * @param members - array of member user
-       * @returns - modified tem document
-       */
       var errorLists = {};
       errorLists['error'] = {};
       if (_.isEmpty(teamId)){

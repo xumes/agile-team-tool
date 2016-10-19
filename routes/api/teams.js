@@ -1,6 +1,6 @@
-var teamModel = require('../../models/teams');
-var teamIndex = require('../../models/index/teamIndex');
-var validate = require('validate.js');
+var teamModel = require('../../models/mongodb/teams');
+// var teamIndex = require('../../models/index/teamIndex');
+// var validate = require('validate.js');
 var _ = require('underscore');
 
 module.exports = function(app, includes) {
@@ -24,7 +24,7 @@ module.exports = function(app, includes) {
     var teamDoc = req.body;
     teamModel.createTeam(teamDoc, req.session['user'])
       .then(function(result) {
-        teamModel.getUserTeams(req.session['email'])
+        teamModel.getUserTeams(req.session['user']['shortEmail'])
           .then(function(body) {
             var addResult = new Object();
             addResult.team = result;
@@ -41,7 +41,7 @@ module.exports = function(app, includes) {
     if (!(_.isEmpty(req.body['doc_status'])) && req.body['doc_status'] === 'delete') {
       teamModel.updateOrDeleteTeam(req.body, req.session['user'], 'delete')
         .then(function(result) {
-          teamModel.getUserTeams(req.session['email'])
+          teamModel.getUserTeams(req.session['user']['shortEmail'])
             .then(function(body) {
               res.status(200).send(body);
             });
@@ -59,7 +59,7 @@ module.exports = function(app, includes) {
   updateTeam = function(req, res) {
     teamModel.updateOrDeleteTeam(req.body, req.session['user'], 'update')
       .then(function(result) {
-        teamModel.getUserTeams(req.session['email'])
+        teamModel.getUserTeams(req.session['user']['shortEmail'])
           .then(function(body) {
             var updateResult = new Object();
             updateResult.team = result;
@@ -83,7 +83,7 @@ module.exports = function(app, includes) {
       teamModel.associateTeams(req.body, action, req.session['user'])
         .then(function(result) {
           var associateResult = new Object();
-          teamModel.getUserTeams(req.session['email'])
+          teamModel.getUserTeams(req.session['user']['shortEmail'])
             .then(function(body) {
               associateResult.team = result;
               associateResult.userTeams = body;
@@ -99,9 +99,15 @@ module.exports = function(app, includes) {
 
   modifyTeamMembers = function(req, res) {
     var members = req.body['members'];
-    var userId = req.session['email'];
+    var userId = req.session['userId'];
+    var userEmail = req.session['email'];
     var teamId = req.body['teamId'];
-    teamModel.modifyTeamMembers(teamId, userId, members)
+
+    //TODO add userId (cnum) to session obj
+    if (_.isEmpty(userId))
+      res.status(400).send('Could not get userId from session.');
+
+    teamModel.modifyTeamMembers(teamId, userEmail, userId, members)
       .then(function(result){
         res.send(result);
       })
@@ -145,9 +151,9 @@ module.exports = function(app, includes) {
       });
   };
 
-  getTeamsByUid = function(req, res) {
+  getTeamsByUserId = function(req, res) {
     var uid = req.params.uid;
-    teamModel.getTeamsByUid(uid)
+    teamModel.getTeamsByUserId(uid)
       .then(function(result) {
         res.send(result);
       })
@@ -202,6 +208,21 @@ module.exports = function(app, includes) {
       });
   };
 
+  getParent = function(req, res) {
+    var teamId = req.params.teamId;
+    teamModel.getParentByTeamId(teamId)
+      .then(function(result) {
+        if (_.isEmpty(result)) {
+          res.status(404).json({message: 'No parent info available'});
+        }
+        else
+          res.status(200).json(result);
+      })
+      .catch(/* istanbul ignore next */ function(err) {
+        res.status(400).send(err);
+      })
+  };
+
   getSelectableChildren = function(req, res) {
     var teamId = req.params.teamId;
     teamModel.getSelectableChildren(teamId)
@@ -248,6 +269,79 @@ module.exports = function(app, includes) {
         res.status(400).send(err);
       });
   };
+
+  getAllRootTeams = function(req, res) {
+    teamModel.getRootTeams(req.params.userEmail)
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        res.status(400).send(err);
+      });
+  };
+
+  getStandaloneTeams = function(req, res) {
+    teamModel.getStandalone(req.params.userEmail)
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
+  };
+
+  getChildrenByPathId = function(req, res) {
+    teamModel.getChildrenByPathId(req.params.pathId)
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
+  };
+
+  getTeamAndChildInfo = function(req, res) {
+    teamModel.getTeamAndChildInfo(req.params.teamId)
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
+  };
+
+  getTeamByPathId = function(req, res) {
+    teamModel.getTeamByPathId(req.params.pathId)
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
+  };
+
+  getAllChildrenOnPath = function(req, res) {
+    console.log(req.body.path);
+    teamModel.getAllChildrenOnPath(req.body.path)
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
+  };
+
+  getSquadTeams = function(req, res) {
+    var filter = req.query.filter;
+    filter = _.isEmpty(filter) ? null : JSON.parse(decodeURI(filter));
+    teamModel.getSquadTeams(null, filter)
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
+  };
   // search team with name
   app.get('/api/teams/search/:name', [includes.middleware.auth.requireLogin], searchTeamWithName);
 
@@ -269,6 +363,9 @@ module.exports = function(app, includes) {
   // get all applicable team roles
   app.get('/api/teams/roles', [includes.middleware.auth.requireLogin], getTeamRole);
 
+  // get all squad team
+  app.get('/api/teams/squads', [includes.middleware.auth.requireLogin], getSquadTeams);
+
   // get team doc by team name
   app.get('/api/teams/names/:teamName?', [includes.middleware.auth.requireLogin], getByTeamName);
 
@@ -276,7 +373,7 @@ module.exports = function(app, includes) {
   app.get('/api/teams/members/:email', [includes.middleware.auth.requireLogin], getTeamByEmail);
 
   // get all teams by userId
-  app.get('/api/teams/membersUid/:uid', [includes.middleware.auth.requireLogin], getTeamsByUid);
+  app.get('/api/teams/membersUid/:uid', [includes.middleware.auth.requireLogin], getTeamsByUserId);
 
   // get all team or team details if teamId exists
   app.get('/api/teams/:teamId?', [includes.middleware.auth.requireLogin], getTeam);
@@ -287,6 +384,9 @@ module.exports = function(app, includes) {
   // selectable parent teams of a team
   app.get('/api/teams/lookup/parents/:teamId?', [includes.middleware.auth.requireLogin], getSelectableParents);
 
+  // return parent of a team
+  app.get('/api/teams/lookup/parent/:teamId?', [includes.middleware.auth.requireLogin], getParent);
+
   // selectable child teams of a team
   app.get('/api/teams/lookup/children/:teamId?', [includes.middleware.auth.requireLogin], getSelectableChildren);
 
@@ -296,4 +396,20 @@ module.exports = function(app, includes) {
   // list of parent and child team ids associated with the team
   app.get('/api/teams/lookup/team/:teamId?', [includes.middleware.auth.requireLogin], getLookupIndex);
 
+  // get all root teams
+  app.get('/api/teams/lookup/rootteams/:userEmail?', [includes.middleware.auth.requireLogin], getAllRootTeams);
+
+  // get all standalone teams
+  app.get('/api/teams/lookup/standalone/:userEmail?', [includes.middleware.auth.requireLogin], getStandaloneTeams);
+
+  // get first level children teams by parent's pathId
+  app.get('/api/teams/children/:pathId', [includes.middleware.auth.requireLogin], getChildrenByPathId);
+
+  // get team info and if it has a child
+  app.get('/api/teams/haschildren/:teamId', [includes.middleware.auth.requireLogin], getTeamAndChildInfo);
+
+  // get team info by pathId
+  app.get('/api/teams/pathId/:pathId', [includes.middleware.auth.requireLogin], getTeamByPathId);
+
+  app.post('/api/teams/children/', [includes.middleware.auth.requireLogin], getAllChildrenOnPath);
 };

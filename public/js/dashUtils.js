@@ -102,12 +102,13 @@ function setSelectOptions(elementId, listOption, firstOption, lastOption, select
   //alert("defaulting value to : " + selectedText);
   $('#select2-' + elementId + '-container').text(selectedText);
   $('#select2-' + elementId + '-container').attr('title', selectedText);
+  $('#' + elementId).attr('aria-label',elementId);
 }
 
 function isNumber(evt) {
   evt = (evt) ? evt : window.event;
   var charCode = (evt.which) ? evt.which : evt.keyCode;
-  if (charCode == 8 || charCode == 46 || charCode == 37 || charCode == 39) {
+  if (charCode == 8 || charCode == 37 || charCode == 39) {
     return true;
   } else if (charCode > 31 && (charCode < 48 || charCode > 57)) {
     return false;
@@ -160,16 +161,17 @@ function sortTeamMembersByName(members) {
  */
 function sortAssessmentTemplate(templates) {
   templates = templates.sort(function(a, b) {
-    var aDate = a['atma_eff_dt'].split(' ')[0].replace(/-/g, '/') + ' ' + a['atma_eff_dt'].split(' ')[1];
-    var bDate = b['atma_eff_dt'].split(' ')[0].replace(/-/g, '/') + ' ' + b['atma_eff_dt'].split(' ')[1];
-    if (a['atma_status'].toLowerCase() == 'active' && b['atma_status'].toLowerCase() == 'active') {
+    //var aDate = a['atma_eff_dt'].split(' ')[0].replace(/-/g, '/') + ' ' + a['atma_eff_dt'].split(' ')[1];
+    var aDate = a['effectiveDate'].split(' ')[0].replace(/-/g, '/') + ' ' + a['effectiveDate'].split(' ')[1];
+    var bDate = b['effectiveDate'].split(' ')[0].replace(/-/g, '/') + ' ' + b['effectiveDate'].split(' ')[1];
+    if (a['status'].toLowerCase() == 'active' && b['status'].toLowerCase() == 'active') {
       if (new Date(bDate).getTime() == new Date(aDate).getTime()) {
         return 0;
       } else {
         return (new Date(bDate).getTime() > new Date(aDate).getTime()) ? 1 : -1;
       }
     } else {
-      if (b['atma_status'].toLowerCase() == 'inactive')
+      if (b['status'].toLowerCase() == 'inactive')
         return -1;
       else
         return 1;
@@ -188,25 +190,25 @@ function sortAssessmentTemplate(templates) {
 function sortAssessments(assessments) {
   if (assessments != null && assessments.length > 1) {
     assessments.sort(function(a, b) {
-      if (a['assessmt_status'].toLowerCase() == 'draft' && b['assessmt_status'].toLowerCase() == 'draft') {
-        var aCreateDate = a['created_dt'].split(' ')[0].replace(/-/g, '/') + ' ' + a['created_dt'].split(' ')[1];
-        var bCreateDate = b['created_dt'].split(' ')[0].replace(/-/g, '/') + ' ' + b['created_dt'].split(' ')[1];
+      if (a['assessmentStatus'].toLowerCase() == 'draft' && b['assessmentStatus'].toLowerCase() == 'draft') {
+        var aCreateDate = a['createDate'].split(' ')[0].replace(/-/g, '/') + ' ' + a['createDate'].split(' ')[1];
+        var bCreateDate = b['createDate'].split(' ')[0].replace(/-/g, '/') + ' ' + b['createDate'].split(' ')[1];
         if (new Date(bCreateDate).getTime() == new Date(aCreateDate).getTime()) {
           return 0;
         } else {
           return (new Date(bCreateDate).getTime() > new Date(aCreateDate).getTime()) ? 1 : -1;
         }
 
-      } else if (a['assessmt_status'].toLowerCase() == 'submitted' && b['assessmt_status'].toLowerCase() == 'submitted') {
-        var aSubmitDate = a['self-assessmt_dt'].split(' ')[0].replace(/-/g, '/') + ' ' + a['self-assessmt_dt'].split(' ')[1];
-        var bSubmitDate = b['self-assessmt_dt'].split(' ')[0].replace(/-/g, '/') + ' ' + b['self-assessmt_dt'].split(' ')[1];
+      } else if (a['assessmentStatus'].toLowerCase() == 'submitted' && b['assessmentStatus'].toLowerCase() == 'submitted') {
+        var aSubmitDate = a['submittedDate'].split(' ')[0].replace(/-/g, '/') + ' ' + a['submittedDate'].split(' ')[1];
+        var bSubmitDate = b['submittedDate'].split(' ')[0].replace(/-/g, '/') + ' ' + b['submittedDate'].split(' ')[1];
         if (new Date(bSubmitDate).getTime() == new Date(aSubmitDate).getTime()) {
           return 1;
         } else {
           return (new Date(bSubmitDate).getTime() > new Date(aSubmitDate).getTime()) ? 1 : -1;
         }
       } else {
-        if (b['assessmt_status'].toLowerCase() == 'submitted')
+        if (b['assessmentStatus'].toLowerCase() == 'submitted')
           return -1;
         else
           return 1;
@@ -231,10 +233,10 @@ function getAssessmentDropdownList(assessments) {
   for (var i = 0; i < assessments.length; i++) {
     var option = [];
     option.push(assessments[i]._id);
-    if (assessments[i]['assessmt_status'] != '' && assessments[i]['assessmt_status'].toLowerCase() == 'submitted')
-      option.push(showDateDDMMMYYYY(assessments[i]['self-assessmt_dt'].split(' ')[0]));
+    if (assessments[i]['assessmentStatus'] != '' && assessments[i]['assessmentStatus'].toLowerCase() == 'submitted')
+      option.push(showDateDDMMMYYYY(assessments[i]['submittedDate'].split(' ')[0]));
     else
-      option.push('Created: ' + showDateDDMMMYYYY(assessments[i]['created_dt'].split(' ')[0]) + ' (' + assessments[i]['assessmt_status'] + ')');
+      option.push('Created: ' + showDateDDMMMYYYY(assessments[i]['createDate'].split(' ')[0]) + ' (' + assessments[i]['assessmentStatus'] + ')');
 
     listOption.push(option);
   }
@@ -325,10 +327,10 @@ function getSquadDropdownList(teams) {
 function sortIterations(iterations) {
   if (iterations != null && iterations.length > 1) {
     iterations.sort(function(a, b) {
-      if (new Date(b.iteration_end_dt).getTime() == new Date(a.iteration_end_dt).getTime()) {
+      if (new Date(b.endDate).getTime() == new Date(a.endDate).getTime()) {
         return 0;
       } else {
-        return (new Date(b.iteration_end_dt).getTime() > new Date(a.iteration_end_dt).getTime()) ? 1 : -1;
+        return (new Date(b.endDate).getTime() > new Date(a.endDate).getTime()) ? 1 : -1;
       }
     });
   }
@@ -373,7 +375,7 @@ function showDateDDMMMYYYY(formatDate) {
   if (formatDate == null || formatDate == '') return '';
   var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-  var date = new Date(formatDate.replace(/-/g, '/'));
+  var date = new Date(formatDate);
   var day = date.getDate();
   day = day.toString().length < 2 ? '0' + day.toString() : day.toString();
   var monthIndex = date.getMonth();
@@ -462,10 +464,10 @@ function getJsonParametersFromUrl() {
 }
 
 function siteEnv() {
-  // 	if (environment != null) {
-  // 		if (environment.toLowerCase() != 'prod') {
-  // 			$("#environment").text(environment);
-  // 		}
+  //  if (environment != null) {
+  //    if (environment.toLowerCase() != 'prod') {
+  //      $("#environment").text(environment);
+  //    }
   if (_.isEmpty(environment) || environment.toLowerCase() == 'development') {
     $('#debugSection').show();
   } else {
@@ -569,13 +571,13 @@ function loadResultChart(id, title, type, categories, yAxisLabel, series, unit, 
 /**
  * This will create regular expression for monthly range in a year
  * -it will generate based from minimum from passed
- * 	date until the end of the year
+ *  date until the end of the year
  *  -e.g selected date is 06/25/2016 then regular expression
- *  	resulted is [1-6]/[0-3][0-9]/2016
- *  	--this will be used to fetch January to June of 2016
- *  	selected date is 10/25/2016 then regular expression
- *  	resulted is 1[0-2]/[0-3][0-9]/2016
- *  	--this will be used to fetch October to December of 2016
+ *    resulted is [1-6]/[0-3][0-9]/2016
+ *    --this will be used to fetch January to June of 2016
+ *    selected date is 10/25/2016 then regular expression
+ *    resulted is 1[0-2]/[0-3][0-9]/2016
+ *    --this will be used to fetch October to December of 2016
  * @param selectedDate
  * @returns {String}
  */
@@ -710,4 +712,4 @@ function checkParentChildLink(teamList) {
   console.log(count + ' teams have correct parent/child links.');
   console.log(invalid + ' teams have invalid parent/child links.');
   console.log(notFound + ' teams not found.');
-}
+};
