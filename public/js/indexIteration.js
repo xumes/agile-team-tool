@@ -65,11 +65,11 @@ function teamIterationListHander(teamId, teamIterations) {
   clientSatSeries.data = [];
 
   var storyFTESeries = new Object();
-  storyFTESeries.name = 'Stories/FTE';
+  storyFTESeries.name = 'Stories/Tickets';
   storyFTESeries.data = [];
 
   var storyPointFTESeries = new Object();
-  storyPointFTESeries.name = 'Story points/FTE';
+  storyPointFTESeries.name = 'Story points';
   storyPointFTESeries.data = [];
 
   var cycleTimeBacklogSeries = new Object();
@@ -305,7 +305,7 @@ function teamIterationListHander(teamId, teamIterations) {
   loadPizzaChart('pizzaChart', '2 Pizza Rule (Team Members)', 'line', graphCategory, 'Count', yMax, teamMemSeries, fteSeries, targetSeries, 'Points');
   loadMultiDefectDeployChart('defectsChart', graphCategory, defectsStartSeries, defectsSeries, defectsClosedSeries, defectsEndSeries, deploySeries);
   loadSatisfactionChart('statisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', teamSatSeries, clientSatSeries, 'Points', sMax);
-  loadChartMulSeries('unitCostChart', 'Unit Cost per FTE', 'line', graphCategory, 'Count', 'Iteration Dates', storyFTESeries, storyPointFTESeries, 'Points', true);
+  loadChartMulSeries('unitCostChart', 'Stories / Story Points per FTE', 'line', graphCategory, 'Count', 'Iteration Dates', storyFTESeries, storyPointFTESeries, 'Points', true);
   loadWipBacklogChart('wipBacklogChart', 'Cycle Time in Backlog and Cycle Time in WIP (in days)', 'line', graphCategory, 'Average days per story', 'Iteration Dates', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', true);
 
   $('#GoIterationBtn').click(function() {
