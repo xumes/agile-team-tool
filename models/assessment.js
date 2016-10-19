@@ -83,6 +83,7 @@ var assessment = {
         common.Search('assessments', 'teamSearch', params)
           .then(function(body) {
             var result = util.returnObject(body);
+            result = lodash.filter(result, ['team_id', teamId]);
             successLogs('Team ' + teamId + ' assessment records retrieved.');
             resolve(result);
           })
