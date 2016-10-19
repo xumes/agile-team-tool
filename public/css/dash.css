@@ -1068,19 +1068,15 @@ li #allTeams {
 }
 
 #importantLinks .removelink, #importantLinks .newlink, #importantLinks .updatelink, #importantLinks .cancellink {
-  float:right;
+  float:right; line-height: 2.2em;
 }
 
 #importantLinks .updatelink, #importantLinks .cancellink {
-  margin-left: 10px;
-}
-
-.removelink_ctr {
-  margin-right:27px;
+  margin-right: 10px;
 }
 
 #importantLinks .removelink, #importantLinks .newlink {
-  margin-left: 10px;
+  margin-right: 10px;
 }
 
 #importantLinks .wrap1 {
@@ -1088,11 +1084,24 @@ li #allTeams {
 }
 
 #importantLinks .wrap2 {
-  float: right; margin-top: 6px;
+  float: right;
 }
 
 #importantLinks .urlwrapper{
-  margin-left: 20px; position: absolute; margin-top: -1px; width: 40%;
+  margin-left: 20px; position: absolute; margin-top: -1px;
+}
+
+.importantLinksSection {
+  display: flex;                  /* establish flex container */
+  flex-direction: row;            /* default value; can be omitted */
+  flex-wrap: nowrap;              /* default value; can be omitted */
+  justify-content: flex-start; /* switched from default (flex-start, see below) */
+  padding-top: 5px;
+  margin-left: 30px;
+}
+
+.importantLinksSection div {
+  padding-right: 10px;
 }
 
 .no-data { font-size: 14px; }

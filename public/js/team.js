@@ -746,7 +746,7 @@ function popupCustomLabel(elem, currentLabel, currentUrl, ctr, id){
     }
   }
   if (selected == 'Other') {
-    IBMCore.common.widget.overlay.show('customLinkLabel');
+    IBMCore.common.widget.overlay.show('overlayExampleSmall');
     setInterval(function() {
       $('#ibm-overlaywidget-customLinkLabel-content #newlabel').focus();
     }, 2);
@@ -769,17 +769,30 @@ function addLink() {
     {id: 'Other', text: 'Other...'}
   ];
 
-  var html =  "<div id='link_" + ctr +"' data-counter='" + ctr + "' class='imptlink'> \
+  // var html =  "<div id='link_" + ctr +"' data-counter='" + ctr + "' class='imptlink'> \
+  //                 <select id='linklabel_" + ctr + "' data-counter='" + ctr + "' name='linklabel_[]' onchange='popupCustomLabel(this)' class='implabel' style='width: 200px'> \
+  //                 </select> \
+  //                 <span class='urlwrapper'> \
+  //                 <input type='text' name='url_[]' id='url_" + ctr + "' data-counter='" + ctr + "' size='20' value='' placeholder='URL' aria-label='URL' class='implink' style='width:90%;'> \
+  //                 </span> \
+  //                 <div class='wrap2'> \
+  //                 <a href='javascript:void(0)' alt='Cancel' title='Cancel' id='removelink_" + ctr + "' class='newlink' onclick=removetmpLink('" + ctr + "')><img src='img/delete-ico.png'/></a> \
+  //                 <a href='javascript:void(0)' alt='Save link' title='Save link' id='savelink_" + ctr + "' class='newlink' onclick='updateLink()'><img src='img/accept-ico.png'/></a> \
+  //                 <div> \
+  //               </div>";
+  var html =  "<div id='link_" + ctr +"' data-counter='" + ctr + "' class='importantLinksSection'> \
+                <div> \
                   <select id='linklabel_" + ctr + "' data-counter='" + ctr + "' name='linklabel_[]' onchange='popupCustomLabel(this)' class='implabel' style='width: 200px'> \
                   </select> \
-                  <span class='urlwrapper'> \
-                  <input type='text' name='url_[]' id='url_" + ctr + "' data-counter='" + ctr + "' size='20' value='' placeholder='URL' aria-label='URL' class='implink' style='width:90%;'> \
-                  </span> \
-                  <div class='wrap2'> \
+                </div> \
+                <div> \
+                  <input type='text' name='url_[]' id='url_" + ctr + "' data-counter='" + ctr + "' size='60' value='' placeholder='URL' aria-label='URL'> \
+                </div> \
+                <div> \
                   <a href='javascript:void(0)' alt='Cancel' title='Cancel' id='removelink_" + ctr + "' class='newlink' onclick=removetmpLink('" + ctr + "')><img src='img/delete-ico.png'/></a> \
                   <a href='javascript:void(0)' alt='Save link' title='Save link' id='savelink_" + ctr + "' class='newlink' onclick='updateLink()'><img src='img/accept-ico.png'/></a> \
-                  <div> \
-                </div>";
+                </div> \
+              </div>";
   $('#importantLinkWrapper').append(html);
   $('#linklabel_'+ctr).select2({
     data: selectdata
@@ -859,17 +872,26 @@ function loadLinks(teamId){
               }
             }
 
-            html =  html + '<div id="link_' + ctr + '" data-counter="' + ctr + '" class="imptlink">';
-            html =  html + '<select id="linklabel_' + ctr + '" data-id="' + id + '" data-counter="' + ctr + '" name="linklabel_[]" onchange="popupCustomLabel(this, \'' +selectedVal+ '\', \'' +links[ctr].linkUrl+ '\', '+ctr+ ', \'' +id+ '\')" class="implabel" style="width: 200px">';
+            // html =  html + '<div id="link_' + ctr + '" data-counter="' + ctr + '" class="imptlink">';
+            // html =  html + '<select id="linklabel_' + ctr + '" data-id="' + id + '" data-counter="' + ctr + '" name="linklabel_[]" onchange="popupCustomLabel(this, \'' +selectedVal+ '\', \'' +links[ctr].linkUrl+ '\', '+ctr+ ', \'' +id+ '\')" class="implabel" style="width: 200px">';
+            // html =  html + opts;
+            // html =  html + '</select>';
+            // html =  html + '<span class="urlwrapper">';
+            // html =  html + '<input type="text" name="url_[]" id="url_' + ctr + '" data-counter="' + ctr + '" size=20 value=' + links[ctr].linkUrl + ' placeholder="URL" aria-label="URL" class="implink" onkeypress="onEditmodeLink(\'' + selectedVal + '\',\'' + links[ctr].linkUrl + '\',\'' + ctr + '\',\'' + id + '\')" style="width: 90%;">';
+            // html =  html + '</span>';
+            // html =  html + '<div class="wrap2">';
+            // html =  html + '<a href="javascript:void(0)" alt="Delete the link" title="Delete the link" id="removelink_' + ctr +  '" style="display:none;" class="removelink" onclick="removeLink(\'' + id + '\')"><img src="img/trash-ico.svg" style="width:25px; height:25px;" /></a>';
+            // html =  html + '</div>';
+            // html =  html + '</div>';
+            
+            html =  html + '<div id="link_' + ctr + '" data-counter="' + ctr + '" class="importantLinksSection">';
+            html =  html + '<div><select id="linklabel_' + ctr + '" data-id="' + id + '" data-counter="' + ctr + '" name="linklabel_[]" onchange="popupCustomLabel(this, \'' +selectedVal+ '\', \'' +links[ctr].linkUrl+ '\', '+ctr+ ', \'' +id+ '\')" class="implabel" style="width: 200px">';
             html =  html + opts;
-            html =  html + '</select>';
-            html =  html + '<span class="urlwrapper">';
-            html =  html + '<input type="text" name="url_[]" id="url_' + ctr + '" data-counter="' + ctr + '" size=20 value=' + links[ctr].linkUrl + ' placeholder="URL" aria-label="URL" class="implink" onkeypress="onEditmodeLink(\'' + selectedVal + '\',\'' + links[ctr].linkUrl + '\',\'' + ctr + '\',\'' + id + '\')" style="width: 90%;">';
-            html =  html + '</span>';
-            html =  html + '<div class="wrap2">';
-            html =  html + '<a href="javascript:void(0)" alt="Delete the link" title="Delete the link" id="removelink_' + ctr +  '" style="display:none;" class="removelink removelink_ctr" onclick="removeLink(\'' + id + '\')"><img src="img/trash-ico.svg" style="width:25px; height:25px;" /></a>';
-            html =  html + '</div>';
-            html =  html + '</div>';
+            html =  html + '</select></div>';
+            html =  html + '<div><input type="text" name="url_[]" id="url_' + ctr + '" data-counter="' + ctr + '" size=60 value=' + links[ctr].linkUrl + ' placeholder="URL" aria-label="URL" class="implink" onkeypress="onEditmodeLink(\'' + selectedVal + '\',\'' + links[ctr].linkUrl + '\',\'' + ctr + '\',\'' + id + '\')"></div>';
+            html =  html + '<div>';
+            html =  html + '<a href="javascript:void(0)" alt="Delete the link" title="Delete the link" id="removelink_' + ctr +  '" style="display:none;" class="removelink" onclick="removeLink(\'' + id + '\')"><img src="img/trash-ico.svg" style="width:25px; height:25px;" /></a>';
+            html =  html + '</div></div>';
 
             $('#linklabel_' + ctr).val(selectedVal);
           }
@@ -892,16 +914,18 @@ function cancelLink(currentLabel, currentUrl, ctr, id) {
   $('#linklabel_'+ctr).val(currentLabel);
   $('#select2-linklabel_' + ctr + '-container').text(currentLabel);
   clearLinkAndSelectFieldErrorHighlight('linklabel_', 'url_', ctr);
-  $('#importantLinks #link_'+ctr+' .wrap2').html('');
-  $('#importantLinks #link_'+ctr+ ' .wrap2').append('<a href="javascript:void(0)" title="Delete the link" alt="Delete the link" id="removelink_'+ctr+'" onclick="removeLink(\''+id+'\')" class="removelink_ctr" style="display:none;"><img src="img/trash-ico.svg" style="width:25px; height:25px;" /></a>');
+  // $('#importantLinks #link_'+ctr+' .wrap2').html('');
+  // $('#importantLinks #link_'+ctr+ ' .wrap2').append('<a href="javascript:void(0)" title="Delete the link" alt="Delete the link" id="removelink_'+ctr+'" onclick="removeLink(\''+id+'\')" class="removelink_ctr" style="display:none;"><img src="img/trash-ico.svg" style="width:25px; height:25px;" /></a>');
+  $('#importantLinks #link_'+ctr+' div')[2].innerHTML = '<a href="javascript:void(0)" title="Delete the link" alt="Delete the link" id="removelink_'+ctr+'" onclick="removeLink(\''+id+'\')" class="removelink" style="display:none;"><img src="img/trash-ico.svg" style="width:25px; height:25px;" /></a>';
   showHideLinkDivOnCancel();
 }
 
 function onEditmodeLink(currentLabel, currentUrl, ctr, id) {
   var html = '<a href="javascript:void(0)" alt="Cancel" title="Cancel" id="tcancellink_' + ctr + '"  class="cancellink existlink" onclick=\"cancelLink(\'' + currentLabel + '\',\'' + currentUrl + '\',\'' + ctr + '\',\'' + id + '\')\"><img src="img/delete-ico.png" /></a>';
   html = html + '<a href="javascript:void(0)" alt="Update link" title="Update link" id="tsavelink_' + ctr + '"  class="updatelink existlink" onclick="updateLink()" ><img src="img/accept-ico.png" /></a>';
-  $('#importantLinks #link_'+ctr+' .wrap2').html('');
-  $('#importantLinks #link_'+ctr+' .wrap2').append(html);
+  // $('#importantLinks #link_'+ctr+' .wrap2').html('');
+  // $('#importantLinks #link_'+ctr+' .wrap2').append(html);
+  $('#importantLinks #link_'+ctr+' div')[2].innerHTML = html;
   showHideLinkDivOnEdit();
 }
 
@@ -985,7 +1009,8 @@ function updateLink(){
 /* Get important link data from selectbox/textfield elements */
 function getLinkData(){
   var labelArray = [];
-  $('.implabel option:selected').each(function(){
+  // $('.implabel option:selected').each(function(){
+  $('.importantLinksSection option:selected').each(function(){
     labelArray.push($(this).text());
   });
 
@@ -996,7 +1021,7 @@ function getLinkData(){
   });
 
   var urlsArray = [];
-  $('.implink').each(function(){
+  $('.importantLinksSection input[type="text"]').each(function(){
     url = setPrefixHttp($(this).val().trim());
     urlsArray.push(url);
   });
@@ -1014,34 +1039,40 @@ function getLinkData(){
 }
 
 function showHideLinkDivOnEdit(){
-  $('#importantLinkWrapper div.imptlink').on('mouseover', function(){
+  // $('#importantLinkWrapper div.imptlink').on('mouseover', function(){
+  $('#importantLinkWrapper div.importantLinksSection').on('mouseover', function(){
     var ctr = $(this).attr('data-counter');
     $('#tsavelink_'+ctr).show();
     $('#tcancellink_'+ctr).show();
   });
-  $('#importantLinkWrapper div.imptlink').on('mouseout', function(){
+  // $('#importantLinkWrapper div.imptlink').on('mouseout', function(){
+  $('#importantLinkWrapper div.importantLinksSection').on('mouseout', function(){
     $('.existlink').hide();
   });
 }
 
 function showHideLinkDivOnCancel(){
-  $('#importantLinkWrapper div.imptlink').on('mouseover', function(){
+  // $('#importantLinkWrapper div.imptlink').on('mouseover', function(){
+    $('#importantLinkWrapper div.importantLinksSection').on('mouseover', function(){
     var ctr = $(this).attr('data-counter');
     $('#removelink_'+ctr).show();
   });
-  $('#importantLinkWrapper div.imptlink').on('mouseout', function(){
+  // $('#importantLinkWrapper div.imptlink').on('mouseout', function(){
+  $('#importantLinkWrapper div.importantLinksSection').on('mouseout', function(){
     var ctr = $(this).attr('data-counter');
     $('#removelink_'+ctr).hide();
   });
 }
 
 function showHideLinkDivOnAdd(){
-  $('#importantLinkWrapper div.imptlink').on('mouseover', function(){
+  // $('#importantLinkWrapper div.imptlink').on('mouseover', function(){
+    $('#importantLinkWrapper div.importantLinksSection').on('mouseover', function(){
     var ctr = $(this).attr('data-counter');
     $('#removelink_'+ctr).show();
     $('#savelink_'+ctr).show();
   });
-  $('#importantLinkWrapper div.imptlink').on('mouseout', function(){
+  // $('#importantLinkWrapper div.imptlink').on('mouseout', function(){
+  $('#importantLinkWrapper div.importantLinksSection').on('mouseout', function(){
     $('.newlink').hide();
   });
 }
