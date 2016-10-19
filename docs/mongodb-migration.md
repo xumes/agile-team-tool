@@ -2,7 +2,7 @@
 
 ## Things to consider:
 
-* build index based off common queries. writes will have bad performance if there are many indexes 
+* build index based off common queries. writes will have bad performance if there are many indexes
 * timestamps are in <string> UTC and <string>EST/EDT so need to convert them to JS Date Object UTC when we do the mapping
 
 I think these doc types are not needed
@@ -50,13 +50,18 @@ I think these doc types are not needed
 |deliveredStories| number | nbr_stories_dlvrd |
 |commitedStoryPoints| number | nbr_committed_story_pts |
 |storyPointsDelivered | number | nbr_story_pts_dlvrd |
-|locationScore | used for pizza chart i think ? | fte_cnt | 0.0 or 0.5 
+|locationScore | used for pizza chart i think ? | fte_cnt | 0.0 or 0.5
 |deployments | number | nbr_dplymnts | "" or 1
 |defects | number | nbr_defects | "" or 2
 |clientSatisfaction| number | client_sat | 1.0
 |teamSatisfaction| number | team_sat | 4
 |comment| string | iteration_comments |
 |memberChanged| map to a boolean | team_mbr_change | "No" or "Yes"
+|defectsStartBal | number | nbr_defects_start_bal |
+|defectsEndBal | number | nbr_defects_end_bal |
+|defectsClosed | number | nbr_defects_closed |
+|cycleTimeWIP | number | nbr_cycletime_WIP |
+|cycleTimeInBacklog | number | nbr_cycletime_in_backlog |
 
 
 example cloudant iteration doc:
@@ -65,34 +70,39 @@ example cloudant iteration doc:
 	"id": "ag_iterationinfo_ag_team_AA-Tools-Operations_1470775340042Q3Iteration4_1472221969959",
 	"key": "ag_iterationinfo_ag_team_AA-Tools-Operations_1470775340042Q3Iteration4_1472221969959",
 	"value": {
-		"rev": "4-12c99709f81848bf191b76a20aff4261"
+		"_rev": "5-f94599d9b630a2ee7dd89d154c15741a",
 	},
 	"doc": {
 		"_id": "ag_iterationinfo_ag_team_AA-Tools-Operations_1470775340042Q3Iteration4_1472221969959",
-		"_rev": "4-12c99709f81848bf191b76a20aff4261",
-		"type": "iterationinfo",
-		"team_id": "ag_team_AA-Tools-Operations_1470775340042",
-		"iteration_name": "Q3 Iteration 4",
-		"iteration_start_dt": "08/03/2016",
-		"iteration_end_dt": "08/09/2016",
-		"iterationinfo_status": "Completed",
-		"team_mbr_cnt": "8",
-		"nbr_committed_stories": "23",
-		"nbr_stories_dlvrd": "18",
-		"nbr_committed_story_pts": "50",
-		"nbr_story_pts_dlvrd": "41",
-		"iteration_comments": "Committed users stories is derived by adding 25% of what we delivered.  Additionally, 2 resources were on vacation.",
-		"team_mbr_change": "No",
-		"last_updt_user": "slindber@us.ibm.com",
-		"fte_cnt": "7.0",
-		"nbr_dplymnts": "",
-		"nbr_defects": "",
-		"client_sat": "3.0",
-		"team_sat": "3.0",
-		"last_updt_dt": "2016-08-26 14:54:04 UTC",
-		"created_user": "slindber@us.ibm.com",
-		"created_dt": "2016-08-26 14:32:50 UTC",
-		"doc_status": ""
+  	"_rev": "5-f94599d9b630a2ee7dd89d154c15741a",
+  	"type": "iterationinfo",
+  	"team_id": "ag_team_AA-Tools-Operations_1470775340042",
+  	"iteration_name": "Q3 Iteration 4",
+  	"iteration_start_dt": "08/03/2016",
+  	"iteration_end_dt": "08/09/2016",
+  	"iterationinfo_status": "Completed",
+  	"team_mbr_cnt": "8",
+  	"nbr_committed_stories": "23",
+  	"nbr_stories_dlvrd": "18",
+  	"nbr_committed_story_pts": "50",
+  	"nbr_story_pts_dlvrd": "41",
+  	"iteration_comments": "Committed users stories is derived by adding 25% of what we delivered.  Additionally, 2 resources were on vacation.",
+  	"team_mbr_change": "No",
+  	"last_updt_user": "jeanlam@us.ibm.com",
+  	"fte_cnt": "7.0",
+  	"nbr_dplymnts": "",
+  	"nbr_defects_start_bal": "",
+  	"nbr_defects": "",
+  	"nbr_defects_closed": "",
+  	"nbr_defects_end_bal": "",
+  	"nbr_cycletime_WIP": "",
+  	"nbr_cycletime_in_backlog": "",
+  	"client_sat": "3.0",
+  	"team_sat": "3.0",
+  	"last_updt_dt": "2016-10-18 17:27:40 UTC",
+  	"created_user": "slindber@us.ibm.com",
+  	"created_dt": "2016-08-26 14:32:50 UTC",
+  	"doc_status": ""
 	}
 }
 ```
@@ -110,7 +120,7 @@ use team name in string path to make the data readable. enforce no duplicate tea
 and update to a team name might be expensive if its high up in the tree.
 
 
-* _id is going to be a transformation of team name ```str.toLowerCase().replace(/[^a-z1-9]/g, ‘')```. its going to be the value that is used in path 
+* _id is going to be a transformation of team name ```str.toLowerCase().replace(/[^a-z1-9]/g, ‘')```. its going to be the value that is used in path
 
 "type": "team"
 
@@ -121,7 +131,7 @@ and update to a team name might be expensive if its high up in the tree.
 |docStatus | | | doc_status | "" , "delete"
 |path | string  | ",cio,agileteamtool," | * get the path from ag_ref_team_index * | under ag_ref_team_index.. parents: ["CIO", "Agile Team"]
 |name | string  | | name |Acquisition Customer Matching |
-|members        | array of objects, copy over as is| 
+|members        | array of objects, copy over as is|
 |type           | map to a diff. string | "squad" or null | squadteam  | "Yes" or "No"
 |description    | string |  | desc |
 |createDate     | JS Date Object UTC | |created_dt | "2016-04-12 08:58:50 EDT"
@@ -178,7 +188,7 @@ ex cloudant team doc:
 
 ### assessments
 
-doc.type : 'matassessmtrslt' 
+doc.type : 'matassessmtrslt'
 
 * can probably combine assessmentStatus and docStatus into a "status" field
 
@@ -236,7 +246,7 @@ these two fields seem to be empty for every document in production, i don't thin
 * assessmt_cmpnt_rslts.assessed_cmpnt_tbl.ind_mat_lvl_achieved
 * assessmt_cmpnt_rslts.assessed_cmpnt_tbl.ind_target_mat_lvl_score
 
-(2.) 
+(2.)
 ```
 assessmt_action_plan_tbl: -> actionPlans
 [{
@@ -386,7 +396,7 @@ ex cloudant assessment doc
 
 ### assessment templates
 
-doc.type : 'ref_matassessment' 
+doc.type : 'ref_matassessment'
 
 * note: this table is a flattened view of the mapping
 
@@ -400,7 +410,7 @@ doc.type : 'ref_matassessment'
 |name            | atma_name
 |principles      | principle_tbl
 |id              | principle_id
-|name            | principle_name 
+|name            | principle_name
 |practices       | practice_tbl
 |id              | practice_id
 |name            | practice_name

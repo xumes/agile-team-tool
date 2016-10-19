@@ -43,7 +43,12 @@ _.each(cloudantIterations, function(doc) {
     'clientSatisfaction': parseFloat(doc.client_sat),
     'teamSatisfaction': parseFloat(doc.team_sat),
     'comment': doc.iteration_comments,
-    'memberChanged': (doc.team_mbr_change==='No')? false : true
+    'memberChanged': (doc.team_mbr_change==='No')? false : true,
+    'defectsStartBal': parseInt(doc.nbr_defects_start_bal),
+    'defectsEndBal': parseInt(doc.nbr_defects_end_bal),
+    'defectsClosed': parseInt(doc.nbr_defects_closed),
+    'cycleTimeWIP': parseFloat(doc.nbr_cycletime_WIP),
+    'cycleTimeInBacklog'; parseFloat(doc.nbr_cycletime_in_backlog)
   };
   mongoIterations.push(mongoDoc);
 });

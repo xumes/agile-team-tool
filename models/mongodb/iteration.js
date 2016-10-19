@@ -109,6 +109,26 @@ var iterationSchema = {
     type: Boolean,
     default: false
   },
+  defectsStartBal: {
+    type: Number,
+    default: null
+  },
+  defectsEndBal: {
+    type: Number,
+    default: null
+  },
+  defectsClosed: {
+    type: Number,
+    default: null
+  },
+  cycleTimeWIP: {
+    type: Number,
+    default: null
+  },
+  cycleTimeInBacklog: {
+    type: Number,
+    default: null
+  },
 };
 
 var formatErrMsg = function(msg) {
