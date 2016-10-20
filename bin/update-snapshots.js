@@ -1,5 +1,5 @@
 var schedule = require('node-schedule');
-var snapshot = require('../models/snapshot');
+var snapshot = require('../models/mongodb/snapshot');
 var workerLogger = require('../middleware/logger').get('worker');
 
 schedule.scheduleJob('*/3 * * * *', function() {
@@ -26,6 +26,18 @@ schedule.scheduleJob('1 0 * * *', function() {
     })
     .catch(function(err) {
       workerLogger.error('Unable to process "Not Complete" iterations err=', err.error);
+      return null;
+    });
+});
+
+schedule.scheduleJob('*/3 * * * *', function() {
+  snapshot.updateAssessmentRollUpData()
+    .then(function() {
+      workerLogger.verbose('Successfully updated team assessments rollup data.');
+      return null;
+    })
+    .catch(function(err) {
+      workerLogger.error('Unable to update assessment rollup data err=', err.error);
       return null;
     });
 });
