@@ -1291,18 +1291,14 @@ var snapshot = {
   updateAssessmentRollUpData: function() {
     return new Promise(function(resolve, reject) {
       var nowTime = new Date();
-      var options = {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
-      };
 
       for (var i = 0; i <= ASSESSMENT_PERIOD; i++) {
-        var time = (addMonths(nowTime, -(ASSESSMENT_PERIOD - i))).toLocaleDateString('en-US', options);
-        var month = monthNames[parseInt(time.substring(0, 2)) - 1];
-        var year = time.substring(time.length - 4, time.length);
+        var time = moment().subtract(i, 'months');
+        var month = monthNames[time.month()];
+        var year = time.year();
         assessmentMonths[i] = month + ' ' + year;
       }
+      assessmentMonths.reverse();
 
       var promiseArray = [];
       var squadAssessments = {};
