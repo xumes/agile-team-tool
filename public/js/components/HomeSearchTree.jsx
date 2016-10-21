@@ -7,6 +7,11 @@ var HomeSearchTree = React.createClass({
     }
   },
 
+  componentDidUpdate: function() {
+    $(".nano").nanoScroller({ destroy: true });
+    $(".nano").nanoScroller();
+  },
+
   render: function() {
     var treeStyle = {
       'display': this.props.searchTreeHide

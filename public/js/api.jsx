@@ -53,8 +53,8 @@ module.exports.searchTeams = function (keyword) {
 
 module.exports.getMyTeams = function() {
   return new Promise(function(resolve, reject){
-    var rootTeamUrl = '/api/teams/lookup/rootteams/' + encodeURIComponent((user.ldap.uid).toUpperCase());
-    var standaloneUrl = '/api/teams/lookup/standalone/' + encodeURIComponent((user.ldap.uid).toUpperCase());
+    var rootTeamUrl = '/api/teams/lookup/rootteams/' + encodeURIComponent(('114702631').toUpperCase());
+    var standaloneUrl = '/api/teams/lookup/standalone/' + encodeURIComponent(('114702631').toUpperCase());
     var req = $.when(
       $.ajax({
         type: 'GET',
@@ -69,7 +69,21 @@ module.exports.getMyTeams = function() {
         teams: data1[0],
         standalone: data2[0]
       };
-      resolve (myteams);
+      resolve(myteams);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.getAllTeams = function() {
+  return new Promise(function(resolve, reject){
+    var url = '/api/teams/lookup/rootteams/';
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
     }).fail(function(err){
       reject(err);
     });

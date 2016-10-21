@@ -12,8 +12,8 @@ var HomeNav = React.createClass({
       spinnerHide: 'none',
       searchTreeHide: 'none',
       teamTreeHide: 'block',
-      searchTeams: [],
       searchHide: 'none',
+      searchTeams: [],
       tabClicked: 'mytab',
       newTeams: new Object()
     }
@@ -59,7 +59,14 @@ var HomeNav = React.createClass({
       })
     } else {
       self.setState({'searchHide': 'block'});
-      self.setState({'tabClicked': 'alltab'});
+      //self.setState({'tabClicked': 'alltab'});
+      api.getAllTeams()
+      .then(function(data){
+        self.setState({'newTeams':data});
+      })
+      .catch(function(err){
+        console.log(err);
+      });
     }
   },
 
@@ -91,14 +98,28 @@ var HomeNav = React.createClass({
   },
 
   render: function() {
+    var nanoPaneStyle = {
+      'display': 'block',
+      'opacity': 1,
+      'visibility': 'visible'
+    };
+    var nanoSliderStyle = {
+      'height': '182px',
+      'transform': 'translate(0px, 0px)'
+    };
+    var agileTeamNavStyle = {
+      'height': '600px'
+    }
     return (
       <div>
         <HomeNavTab sendSearchTeams={this.searchChangeHandler} searchStart={this.searchStartHandler} tabClicked={this.tabClickedHandler}/>
         <HomeSearchField searchHide={this.state.searchHide}/>
         <HomeSpinner spinnerHide={this.state.spinnerHide}/>
-        <div class="agile-team-nav" data-widget="scrollable" data-height="600">
-          <HomeSearchTree searchTeams={this.state.searchTeams} searchTreeHide={this.state.searchTreeHide} clickedTeam={this.searchTeamClickedHandler}/>
-          <HomeTeamTree newTeams={this.state.newTeams}/>
+        <div class='agile-team-nav nano' data-widget='scrollable' data-height='600' style={agileTeamNavStyle}>
+          <div class="nano-content">
+            <HomeSearchTree searchTeams={this.state.searchTeams} searchTreeHide={this.state.searchTreeHide} clickedTeam={this.searchTeamClickedHandler}/>
+            <HomeTeamTree newTeams={this.state.newTeams} teamTreeHide={this.state.teamTreeHide}/>
+          </div>
         </div>
       </div>
     )
