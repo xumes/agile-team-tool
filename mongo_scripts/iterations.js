@@ -48,7 +48,7 @@ _.each(cloudantIterations, function(doc) {
     'defectsEndBal': parseInt(doc.nbr_defects_end_bal),
     'defectsClosed': parseInt(doc.nbr_defects_closed),
     'cycleTimeWIP': parseFloat(doc.nbr_cycletime_WIP),
-    'cycleTimeInBacklog'; parseFloat(doc.nbr_cycletime_in_backlog)
+    'cycleTimeInBacklog': parseFloat(doc.nbr_cycletime_in_backlog)
   };
   mongoIterations.push(mongoDoc);
 });
