@@ -1064,14 +1064,80 @@ li #allTeams {
 
 /*=BEGIN Important links */
 #importantLinks .imptlink {
-  margin-left:30px; margin-bottom:10px; border:0px solid red; width: 690px;
+  margin-left:30px; margin-bottom:10px; border:0px solid red; width: 66%;
 }
 
-#importantLinks .removelink {
-  float:right; line-height: 2.2em; margin-right: 10px;
+#importantLinks .removelink, #importantLinks .newlink, #importantLinks .updatelink, #importantLinks .cancellink {
+  float:right; line-height: 2.2em;
+}
+
+#importantLinks .updatelink, #importantLinks .cancellink {
+  margin-right: 10px;
+}
+
+#importantLinks .removelink, #importantLinks .newlink {
+  margin-right: 10px;
+}
+
+#importantLinks .wrap1 {
+  float: left;
+}
+
+#importantLinks .wrap2 {
+  float: right;
 }
 
 #importantLinks .urlwrapper{
   margin-left: 20px; position: absolute; margin-top: -1px;
+}
+
+.importantLinksSection {
+  display: flex;                  /* establish flex container */
+  flex-direction: row;            /* default value; can be omitted */
+  flex-wrap: nowrap;              /* default value; can be omitted */
+  justify-content: flex-start; /* switched from default (flex-start, see below) */
+  padding-top: 5px;
+  margin-left: 30px;
+}
+
+.importantLinksSection div {
+  padding-right: 10px;
+}
+
+.no-data { font-size: 14px; }
+.wlink:link, .wlink:active, .wlink:visited, .wlink:hover {
+  color:#389BD2; text-decoration: none; font-size: 14px;
+}
+
+#levelTable tr:hover{
+  background-color: inherit;
+}
+
+#levelTable tr:hover a {
+  color: #389BD2;
+}
+
+#levelTable tr {
+  border: none;
+}
+
+#levelTable td {
+  font-size: 14px;
+}
+
+#levelTable td p, #levelTable td table {
+  padding: 0px;
+}
+
+.tImportantlink td {
+  padding: 2px 25px 2px 0 !important;
+}
+
+#hierarchy_block{
+  font-size: 14px;
+}
+
+.tImportantlink{
+  font-size:14px; width:100%;
 }
 /*=END Important links */

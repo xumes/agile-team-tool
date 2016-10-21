@@ -347,10 +347,10 @@ var team = {
         updateOrDeleteTeamValidation.push(team.getTeam(teamId)); //res[0]
         infoLogs('Getting iterations associated to ' + teamId);
         // var iterationModels = require('./iteration');
-        updateOrDeleteTeamValidation.push(iterationModels.getByIterInfo(teamId)); //res[1]
+        updateOrDeleteTeamValidation.push(iterationModels.getByIterInfo(teamId, _.isEqual(action, 'delete') ? true : false)); //res[1]
         infoLogs('Getting assessments associated to ' + teamId);
         // var assessmentModels = require('./assessment');
-        updateOrDeleteTeamValidation.push(assessmentModels.getTeamAssessments(teamId)); //res[2]
+        updateOrDeleteTeamValidation.push(assessmentModels.getTeamAssessments(teamId, _.isEqual(action, 'delete') ? true : false)); //res[2]
         infoLogs('Getting existing team names that might match ' + updatedTeamDoc['name']);
         updateOrDeleteTeamValidation.push(team.getName(updatedTeamDoc['name'])); //res[3]
         infoLogs('Getting teams associated to ' + teamId);
@@ -364,8 +364,8 @@ var team = {
         Promise.all(updateOrDeleteTeamValidation)
           .then(function(res) {
             var oldTeamDocu = res[0];
-            var teamIterations = res[1];
-            var teamAssesments = res[2];
+            var teamIterations = util.returnObject(res[1]);
+            var teamAssesments = util.returnObject(res[2]);
             var teamName = res[3];
             var userEmail = user['shortEmail'];
             if (oldTeamDocu['doc_status'] === 'delete') {
@@ -382,7 +382,7 @@ var team = {
                   var bulkDocu = [];
                   oldTeamDocu['doc_status'] = 'delete';
                   bulkDocu.push(oldTeamDocu);
-                  bulkDocu.push(teamIterations.rows);
+                  bulkDocu.push(teamIterations);
                   bulkDocu.push(teamAssesments);
                   bulkDocu = _.flatten(bulkDocu);
                   // reformat into delete docu
@@ -469,7 +469,7 @@ var team = {
                         from No to Yes = only allowed if no child teams are associated
                     */
                   infoLogs('Validating squadteam');
-                  if (updatedTeamDoc['squadteam'] === 'No' && !(_.isEmpty(teamIterations.rows))) {
+                  if (updatedTeamDoc['squadteam'] === 'No' && !(_.isEmpty(teamIterations))) {
                     return reject(formatErrMsg({
                       squadteam: ['Cannot change this team into a non squad team. Iteration information has been entered for this team.']
                     }));
@@ -560,6 +560,7 @@ var team = {
                     updatedTeamDoc['last_updt_user'] = user['shortEmail'];
                     updatedTeamDoc['last_updt_dt'] = util.getServerTime();
                     updatedTeamDoc['_rev'] = oldTeamDocu['_rev'];
+                    updatedTeamDoc['links'] = oldTeamDocu['links'];
                     var finalTeamDoc = {};
                     _.each(oldTeamDocu, function(v, i, l) {
                       if (_.isUndefined(updatedTeamDoc[i]))
@@ -596,12 +597,12 @@ var team = {
                   }
                 }
               })
-              .catch(function(err) {
+              .catch( /* istanbul ignore next */ function(err) {
                 msg = 'User not authorized to do action';
                 return reject(formatErrMsg(msg));
               });
           })
-          .catch(function(err) {
+          .catch( /* istanbul ignore next */ function(err) {
             reject(err);
           });
       }
@@ -1251,7 +1252,7 @@ var team = {
           );
         });
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         return reject(err);
       });
     });
@@ -1353,7 +1354,7 @@ var team = {
           );
         });
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         return reject(err);
       });
     });
@@ -1437,12 +1438,11 @@ var team = {
           );
         });
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         return reject(err);
       });
     });
   }
-
 };
 
 var formattedDocuments = function(doc, action) {

@@ -268,6 +268,17 @@ module.exports = function(app, includes) {
     }
   };
 
+  getTeamHierarchy = function(req, res){
+    var teamId = req.params.teamId;
+    teamModel.getTeamHierarchy(teamId)
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        res.status(400).send(err);
+      });
+  };
+
   getSquadsOfParent = function(req, res) {
     var teamId = req.params.teamId;
     teamModel.getSquadsOfParent(teamId)
@@ -332,4 +343,6 @@ module.exports = function(app, includes) {
   // list of parent and child team ids associated with the team
   app.get('/api/teams/lookup/team/:teamId?', [includes.middleware.auth.requireLogin], getLookupIndex);
 
+  // return hierarchy of a team
+  app.get('/api/teams/hierarchy/team/:teamId?', [includes.middleware.auth.requireLogin], getTeamHierarchy);
 };

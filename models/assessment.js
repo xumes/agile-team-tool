@@ -74,18 +74,16 @@ var assessment = {
       if (!_.isEmpty(teamId)) {
         teamId = util.specialCharsHandler(teamId);
         infoLogs('Getting all team assessment records from Cloudant.');
-        var includeDocs = false;
-        if (!lodash.isEmpty(docs))
-          includeDocs = docs;
         var params = {
           'q': 'team_id:' + teamId,
-          'include_docs': includeDocs,
+          'include_docs': docs || false,
           'sort': ['assessmt_status<string>', '-sort_dt<number>'],
           'limit': 200
         };
         common.Search('assessments', 'teamSearch', params)
           .then(function(body) {
             var result = util.returnObject(body);
+            result = lodash.filter(result, ['team_id', teamId]);
             successLogs('Team ' + teamId + ' assessment records retrieved.');
             resolve(result);
           })

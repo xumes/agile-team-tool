@@ -143,9 +143,21 @@ var iteration = {
           return iteration.getDefectsOpenBalance(cleanData.team_id, cleanData.iteration_end_dt);
         })
         .then(function(openBalance) {
-          if (!_.isUndefined(cleanData['nbf_defects_start_bal']) || !isNaN(cleanData['nbf_defects_start_bal']))
-            cleanData['nbf_defects_start_bal'] = openBalance;
-          successLogs('[iterationModels.add] Defect open balance: ' + openBalance);
+          if (!_.isUndefined(cleanData['nbr_defects_start_bal']) || _.isEmpty(cleanData['nbr_defects_start_bal'])) {
+            cleanData['nbr_defects_start_bal'] = openBalance + '';
+          }
+          successLogs('[iterationModels.add] Defect start balance: ' + openBalance);
+          var newDefects = util.getIntegerValue(cleanData['nbr_defects']);
+          successLogs('[iterationModels.add] Defect new defects: ' + newDefects);
+          var closedDefects = util.getIntegerValue(cleanData['nbr_defects_closed']);
+          successLogs('[iterationModels.add] Defect resolved defects: ' + closedDefects);
+          var endBalance = openBalance + newDefects - closedDefects;
+          successLogs('[iterationModels.add] Defect end balance: ' + endBalance);
+          if (_.isUndefined(cleanData['nbr_defects']) || !_.isEmpty(cleanData['nbr_defects']))
+            cleanData['nbr_defects'] = newDefects + '';
+          if (_.isUndefined(cleanData['nbr_defects_closed']) || !_.isEmpty(cleanData['nbr_defects_closed']))
+            cleanData['nbr_defects_closed'] = closedDefects + '';
+          cleanData['nbr_defects_end_bal'] = endBalance + '';
           return common.addRecord(cleanData);
         })
         .then(function(body) { // get results from common.addRecord()
@@ -167,6 +179,19 @@ var iteration = {
     data['last_updt_dt'] = util.getServerTime();
     data['last_updt_user'] = user['shortEmail'];
     data['iterationinfo_status'] = iteration.calculateStatus(data);
+    var startDefects = util.getIntegerValue(cleanData['nbr_defects_start_bal']);
+    var newDefects = util.getIntegerValue(cleanData['nbr_defects']);
+    var closedDefects = util.getIntegerValue(cleanData['nbr_defects_closed']);
+    var endBalance = startDefects + newDefects - closedDefects;
+    // if defect fields where previously empty, let it remain empty
+    if (!_.isUndefined(cleanData['nbr_defects_start_bal']) || !_.isEmpty(cleanData['nbr_defects_start_bal']))
+      cleanData['nbr_defects_start_bal'] = startDefects + '';
+    if (!_.isUndefined(cleanData['nbr_defects']) || !_.isEmpty(cleanData['nbr_defects']))
+      cleanData['nbr_defects'] = newDefects + '';
+    if (!_.isUndefined(cleanData['nbr_defects_closed']) || !_.isEmpty(cleanData['nbr_defects_closed']))
+      cleanData['nbr_defects_closed'] = closedDefects + '';
+    if (!_.isUndefined(cleanData['nbr_defects_end_bal']) || !_.isEmpty(cleanData['nbr_defects_end_bal']))
+      cleanData['nbr_defects_end_bal'] = endBalance + '';
     cleanData = util.trimData(data);
     // console.log('EDIT iterationId:', iterationId);
     // console.log('EDIT cleanData:', cleanData);
@@ -297,7 +322,6 @@ var iteration = {
       } else if (nbr_stories_dlvrd != 0 ||
         nbr_story_pts_dlvrd != 0 ||
         nbr_dplymnts != 0 ||
-        nbr_defects != 0 ||
         team_sat != 0 ||
         client_sat != 0 ||
         nbr_cycletime_WIP != 0 ||
@@ -334,7 +358,7 @@ var iteration = {
         var iteration = util.returnObject(body);
         if (!_.isEmpty(iteration)) {
           if (!_.isUndefined(iteration[0].nbr_defects_end_bal) & !isNaN(iteration[0].nbr_defects_end_bal))
-            return iteration[0].nbr_defects_end_bal;
+            return util.getIntegerValue(iteration[0].nbr_defects_end_bal);
         }
         return 0;
       })
@@ -452,42 +476,45 @@ var iteration = {
       };
       var data = new Object();
       data.type = 'iterationinfo';
-      data._id = apiData._id || '';
-      data.team_id = apiData.teamId || '';
-      data.iteration_name = apiData.iterationName || '';
-      data.iteration_start_dt = apiData.startDate || '';
-      data.iteration_end_dt = apiData.endDate || '';
-      data.iterationinfo_status = '';
-      data.team_mbr_cnt = apiData.memberCount || '';
-      data.nbr_committed_stories = apiData.committedStories || '';
-      data.nbr_stories_dlvrd = apiData.deliveredStories || '';
-      data.nbr_committed_story_pts = apiData.commitedStoryPoints || '';
-      data.nbr_story_pts_dlvrd = apiData.storyPointsDelivered || '';
-      data.iteration_comments = apiData.comment || '';
-      data.team_mbr_change = apiData.memberChanged || '';
-      data.fte_cnt = apiData.memberFTECount || '';
-      data.nbr_dplymnts = apiData.deployments || '';
-      data.nbr_defects_start_bal = apiData.defectsStartBal || '';
-      data.nbr_defects = apiData.defects || '';
-      data.nbr_defects_closed = apiData.defectsClosed || '';
-      data.nbr_defects_end_bal = apiData.defectsEndBal || '';
-      data.nbr_cycletime_WIP = apiData.cycleTimeWIP || '';
-      data.nbr_cycletime_in_backlog = apiData.cycleTimeInBacklog || '';
-      data.client_sat = apiData.clientSatisfaction || '';
-      data.team_sat = apiData.teamSatisfaction || '';
-      data.doc_status = apiData.docStatus || '';
 
       if (_.isEqual(action, 'add')) {
-        var updatedData = {};
-        _.each(data, function(v, i, l) {
-          if (_.isUndefined(data[i]))
-            updatedData[i] = '';
-          else
-            updatedData[i] = data[i];
-        });
+        data._id = '';
+        data.team_id = apiData.teamId || '';
+        data.iteration_name = apiData.iterationName || '';
+        data.iteration_start_dt = apiData.startDate || '';
+        data.iteration_end_dt = apiData.endDate || '';
+        data.iterationinfo_status = '';
+        data.team_mbr_cnt = apiData.memberCount || '';
+        data.nbr_committed_stories = apiData.committedStories || '';
+        data.nbr_stories_dlvrd = apiData.deliveredStories || '';
+        data.nbr_committed_story_pts = apiData.commitedStoryPoints || '';
+        data.nbr_story_pts_dlvrd = apiData.storyPointsDelivered || '';
+        data.iteration_comments = apiData.comment || '';
+        data.team_mbr_change = apiData.memberChanged || '';
+        data.fte_cnt = apiData.memberFTECount || '';
+        data.nbr_dplymnts = apiData.deployments || '';
+        data.nbr_defects_start_bal = apiData.defectsStartBal || '';
+        data.nbr_defects = apiData.defects || '';
+        data.nbr_defects_closed = apiData.defectsClosed || '';
+        data.nbr_defects_end_bal = apiData.defectsEndBal || '';
+        data.nbr_cycletime_WIP = apiData.cycleTimeWIP || '';
+        data.nbr_cycletime_in_backlog = apiData.cycleTimeInBacklog || '';
+        data.client_sat = apiData.clientSatisfaction || '';
+        data.team_sat = apiData.teamSatisfaction || '';
+        data.doc_status = apiData.docStatus || '';
+
         iteration.add(data, userObj)
           .then(function(data) {
-            updatedData._id = data.id;
+            return iteration.get(data.id);
+          })
+          .then(function(data) {
+            var updatedData = {};
+            _.each(data, function(v, i, l) {
+              if (_.isUndefined(data[i]))
+                updatedData[i] = data[i];
+              else
+                updatedData[i] = data[i];
+            });
             resolve(updatedData);
           })
           .catch( /* istanbul ignore next */ function(err) {
@@ -497,6 +524,31 @@ var iteration = {
           });
 
       } else if (_.isEqual(action, 'edit')) {
+        data._id = apiData._id;
+        data.team_id = apiData.teamId;
+        data.iteration_name = apiData.iterationName;
+        data.iteration_start_dt = apiData.startDate;
+        data.iteration_end_dt = apiData.endDate;
+        data.iterationinfo_status = '';
+        data.team_mbr_cnt = apiData.memberCount;
+        data.nbr_committed_stories = apiData.committedStories;
+        data.nbr_stories_dlvrd = apiData.deliveredStories;
+        data.nbr_committed_story_pts = apiData.commitedStoryPoints;
+        data.nbr_story_pts_dlvrd = apiData.storyPointsDelivered;
+        data.iteration_comments = apiData.comment;
+        data.team_mbr_change = apiData.memberChanged;
+        data.fte_cnt = apiData.memberFTECount;
+        data.nbr_dplymnts = apiData.deployments;
+        data.nbr_defects_start_bal = apiData.defectsStartBal;
+        data.nbr_defects = apiData.defects;
+        data.nbr_defects_closed = apiData.defectsClosed;
+        data.nbr_defects_end_bal = apiData.defectsEndBal;
+        data.nbr_cycletime_WIP = apiData.cycleTimeWIP;
+        data.nbr_cycletime_in_backlog = apiData.cycleTimeInBacklog;
+        data.client_sat = apiData.clientSatisfaction;
+        data.team_sat = apiData.teamSatisfaction;
+        data.doc_status = apiData.docStatus;
+
         loggers.get('models').verbose('[iterationModel.setApiIterationAction]: retrieving: ' + apiData._id);
         iteration.get(apiData._id)
           .then(function(oldData) {

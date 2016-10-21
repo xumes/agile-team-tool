@@ -91,6 +91,25 @@ var users = {
     });
   },
 
+  getUserApikeyByUser: function(user) {
+    return new Promise(function(resolve, reject) {
+      loggers.get('model-users').verbose('Getting user api key with user objects ID ' + user['ldap']['uid']);
+      users.getUserApikeyByUid(user['ldap']['uid'])
+        .then(function(result) {
+          if (!_.isEmpty(result)) {
+//            result = util.returnObject(result);
+//            result = !_.isEmpty(result) ? result[0] : new Object();
+            resolve(result);
+          }
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          loggers.get('model-users').error('ERROR: ' + err);
+          msg = err.error;
+          reject(msg);
+        });
+    });
+  },
+
   getUserApikeyByApikey: function(apiKey) {
     return new Promise(function(resolve, reject) {
       loggers.get('model-users').verbose('Getting user api key with API ' + apiKey);
