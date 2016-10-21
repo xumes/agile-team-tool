@@ -673,13 +673,12 @@ function getTeamSnapshots(teamId, teamName){
 function getAssessmentSnapshot(teamId) {
   $('#squad_assessment_card').hide();
   $('#nsquad_assessment_card').show();
-  var cUrl = '/api/snapshot/rollupassessmentbyteam/' + encodeURIComponent(teamId);
+  var cUrl = '/api/snapshot/get/' + encodeURIComponent(teamId);
   var req = $.ajax({
     type: 'GET',
     url: cUrl
   }).done(function(data) {
     if (data != undefined) {
-      console.log('assessment rollup:'+JSON.stringify(data));
       if (_.has(data, 'assessmentData')) {
         var timestamp;
         if (data.assessmentData == null) {
