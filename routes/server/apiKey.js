@@ -8,7 +8,9 @@ module.exports = function(app, includes) {
   showApiKey = function(req, res) {
     var json = {
       'pageTitle': 'API Key',
-      'googleAnalyticsKey': settings.googleAnalyticsKey
+      'googleAnalyticsKey': settings.googleAnalyticsKey,
+      'ibmNPSKey': settings.ibmNPSKey,
+      'environment': settings.environment
     };
     render(req, res, 'apiKey', json);
   };

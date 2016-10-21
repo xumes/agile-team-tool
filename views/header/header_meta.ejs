@@ -15,14 +15,16 @@
 </script>
 <% } %>
 
+
 <% if (ibmNPSKey != '') { %>
 <script>
   window.ibmNps = {
     offeringId: '<%= ibmNPSKey %>',
-    userId: '<%- userEmail %>',
-    test: true,
-    disableHashing: true
+    userId: '<%- userEmail %>'
   };
+  <% if (environment != 'production') { %>
+    window.ibmNps.test = true;
+  <% } %>
 </script>
 <script id="ibmNpsSurveyScript" async src="//nps.mybluemix.net/survey/nps-survey.js"></script>
 <% } %>
