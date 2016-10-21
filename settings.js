@@ -30,5 +30,6 @@ module.exports = {
   environment: process.env.NODE_ENV || 'development',
   googleAnalyticsKey: process.env.googleAnalyticsKey || '',
   googleHost: 'maps.googleapis.com',
-  googleApiKey: process.env.googleAPIKey || 'AIzaSyAF2vwg6z-pH4xC7Ac1eMcpR9mVG-A2u7Y'
+  googleApiKey: process.env.googleAPIKey || 'AIzaSyAF2vwg6z-pH4xC7Ac1eMcpR9mVG-A2u7Y',
+  ibmNPSKey: process.env.ibmNPSKey || ''
 };
