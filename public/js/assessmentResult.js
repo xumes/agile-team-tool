@@ -406,14 +406,14 @@ function displayActionPlan(data) {
     if (data[index] != undefined && data[index] != '') {
       if (userCreated != undefined && userCreated.toLowerCase() == 'yes') {
         row = row + '<td>' + "<input name='	" + index + "' aria-label='Select action' id='select_item_" + index + "' type='checkbox' onclick='deleteBtnControl()' " + allowEdit + '/> </td>';
-        row = row + "<td id='td_practice_" + index + "' >" + "<span> <select aria-label='Practice list' id='practice_" + index + "' name='practice_" + index + "'  style='width: 120px; font-size: 11px;' onchange='prepopulate(" + index + ")' " + allowEdit + '> ' +
+        row = row + "<td id='td_practice_" + index + "' >" + "<span> <select aria-label='Practice list' id='practice_" + index + "' name='practice_" + index + "'  style='width: 100px; font-size: 11px;' onchange='prepopulate(" + index + ")' " + allowEdit + '> ' +
           '</select></span></td>';
       } else {
         row = row + "<td style='min-width: 15px;'>" + '&nbsp;' + '</td>';
-        row = row + "<td id='td_practice_" + index + "' style='width: 120px;'>" + replaceEmpty(data[index].practice_name) + '</td>';
+        row = row + "<td id='td_practice_" + index + "' style='width: 100px;'>" + replaceEmpty(data[index].practice_name) + '</td>';
       }
 
-      row = row + "<td id='td_principle_" + index + "' style='min-width: 120px;'>" + replaceEmpty(data[index].principle_name) + '</td>';
+      row = row + "<td id='td_principle_" + index + "' style='min-width: 100px;'>" + replaceEmpty(data[index].principle_name) + '</td>';
       row = row + "<td id='td_curScore_" + index + "'>" + replaceEmpty(data[index].cur_mat_lvl_score) + '</td>';
       row = row + "<td id='td_tarScore_" + index + "'>" + replaceEmpty(data[index].tar_mat_lvl_score) + '</td>';
       if (userCreated != undefined && userCreated.toLowerCase() == 'yes') {
@@ -423,7 +423,7 @@ function displayActionPlan(data) {
       }
       row = row + '<td>' + "<span><textarea aria-label='Progress summary' id='summary_" + index + "' maxlength = '350' type='text' name='summary_" + index + "' cols='28' style='resize: none; font-size: 11px;' " + allowEdit + '>' + replaceEmpty(data[index].progress_summ) + '</textarea></span> </td>';
       row = row + '<td>' + "<span><textarea aria-label='Key metric' id='metric_" + index + "' maxlength = '350' type='text' name='metric_" + index + "' cols='28' style='resize: none; font-size: 11px;' " + allowEdit + '>' + replaceEmpty(data[index].key_metric) + '</textarea></span> </td>';
-      row = row + '<td>' + "<span><input aria-label='Review date' id='revDate_" + index + "' class='ibm-date-picker' style='width: 80px; font-size: 11px;' type='text' value='" + replaceEmpty(data[index].review_dt) + "' name=''revDate_" + index + "' " + allowEdit + '> </span>' + '</td>';
+      row = row + '<td>' + "<span style='position: relative; top: 12px;'><input aria-label='Review date' id='revDate_" + index + "' style='width: 60px; font-size: 11px;' type='text' value='" + replaceEmpty(data[index].review_dt) + "' name=''revDate_" + index + "' " + allowEdit + '> </span>' + '</td>';
       row = row + "<td id='td_status_" + index + "'>" + "<span> <select aria-label='Action status' id='status_" + index + "' name='status_" + index + "' " + allowEdit + " style='font-size: 11px; width: 80px;'> " +
         '</select></span></td>';
     }
@@ -471,16 +471,16 @@ function addEmptyRow(index) {
   var index = $('#actionPlan > tr').length;
   var row = "<tr id = 'td_action_" + index + "'>";
   row = row + "<td style='max-width: 15px;'>" + "<input name='select_item_" + index + "' aria-label='Select action' id='select_item_" + index + "' type='checkbox' onclick='deleteBtnControl()' /> </td>";
-  row = row + "<td id='td_practice_" + index + "' >" + "<span> <select aria-label='Practice list' id='practice_" + index + "' name='practice_" + index + "'  style='width: 120px; font-size: 11px;' onchange='prepopulate(" + index + ")'> " +
+  row = row + "<td id='td_practice_" + index + "' >" + "<span> <select aria-label='Practice list' id='practice_" + index + "' name='practice_" + index + "'  style='width: 100px; font-size: 11px;' onchange='prepopulate(" + index + ")'> " +
     "<option value='' selected='selected'></option>" +
     '</select></span></td>';
-  row = row + "<td id='td_principle_" + index + "' style='min-width: 120px;'>" + '' + '</td>';
+  row = row + "<td id='td_principle_" + index + "' style='min-width: 100px;'>" + '' + '</td>';
   row = row + "<td id='td_curScore_" + index + "'>" + '' + '</td>';
   row = row + "<td id='td_tarScore_" + index + "'>" + '' + '</td>';
   row = row + '<td>' + "<span><textarea aria-label='Action item' id='action_item_" + index + "' maxlength = '350' cols='28' style='resize: none; font-size: 11px;' type='text' name='action_item_" + index + "' disabled/></span> </td>";
   row = row + '<td>' + "<span><textarea aria-label='Progress summary' id='summary_" + index + "' maxlength = '350' type='text' cols='28' name='summary_" + index + "' style='resize: none; font-size: 11px;' disabled/></span> </td>";
   row = row + '<td>' + "<span><textarea aria-label='Key metric' id='metric_" + index + "' maxlength = '350' type='text' cols='28' name='metric_" + index + "' style='resize: none; font-size: 11px;' disabled/></span> </td>";
-  row = row + '<td>' + "<span><input aria-label='Review date' id='revDate_" + index + "' class='ibm-date-picker' style='width: 80px; font-size: 11px;' type='text' value='" + '' + "' name='revDate_" + index + "' disabled> </span>" + '</td>';
+  row = row + '<td>' + "<span style='position: relative; top: 12px;'><input aria-label='Review date' id='revDate_" + index + "' style='width: 60px; font-size: 11px;' type='text' value='" + '' + "' name='revDate_" + index + "' disabled> </span>" + '</td>';
   row = row + "<td id='td_status_" + index + "'>" + "<span> <select aria-label='Action list' id='status_" + index + "' name='status_" + index + "' disabled style='font-size: 11px;'> " +
     '</select></span></td>';
   row = row + '</tr>';
