@@ -6,6 +6,7 @@ var userModel = require('./users.js');
 var teamModel = require('./teams.js');
 var iterationModel = require('./iterations.js');
 var teamScoreModel = require('../teamscore.js');
+var assessmentModel = require('./assessments.js');
 var userLocations = require('./data/userLocations.js');
 var userTimezone = require('./data/uniqueUserTimezone.js');
 var moment = require('moment');
@@ -20,6 +21,10 @@ var iterationMonth = 5;
 var lastUpdate = moment().format(dateFormat);
 var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 var monthArray = [];
+
+var ASSESSMENT_MAX_DAYS_SUBMISSION = 120;
+var ASSESSMENT_PERIOD = 5;
+var assessmentMonths = [];
 
 var settings = require('../../settings');
 
@@ -188,6 +193,75 @@ var snapshotSchema = {
 
 var snapshot_schema = new Schema(snapshotSchema);
 var snapshotModel = mongoose.model('snapshot', snapshot_schema);
+
+var assessmentSchema = {
+  less_120_days: {
+    type: Number,
+    default: 0
+  },
+  gt_120_days: {
+    type: Number,
+    default: 0
+  },
+  no_submission: {
+    type: Number,
+    default: 0
+  },
+  prj_foundation_score: {
+    type: Number,
+    default: 0
+  },
+  prj_devops_score: {
+    type: Number,
+    default: 0
+  },
+  operation_score: {
+    type: Number,
+    default: 0
+  },
+  total_prj_foundation: {
+    type: Number,
+    default: 0
+  },
+  total_prj_devops: {
+    type: Number,
+    default: 0
+  },
+  total_operation: {
+    type: Number,
+    default: 0
+  },
+  totalSquad: {
+    type: Number,
+    default: 0
+  },
+  month: {
+    type: String,
+    default: ''
+  },
+  partialMonth: {
+    type: Boolean,
+    default: false
+  }
+};
+
+var assessmentsRollupSchema = {
+  teamId: {
+    type: Schema.Types.ObjectId,
+    required: [true, 'team id is required.']
+  },
+  lastUpdate: {
+    type: Date,
+    default: moment().format(dateFormat)
+  },
+  pathId: {
+    type: String,
+    default: ''
+  },
+  assessmentData: [assessmentSchema]
+};
+var marRollup_schema = new Schema(assessmentsRollupSchema, {collection: 'assessmentRollup'});
+var marRollupModel = mongoose.model('assessmentRollup', marRollup_schema);
 
 function resetData() {
   return [{
@@ -554,6 +628,42 @@ function rollUpIterationsByNonSquad(squads, nonSquadTeamId, squadsCalResults, no
     resolve(nonSquadCalResult);
   });
 };
+/**
+ * Calculate month different
+ * @param date d1 (start time)
+ * @param date d2 (end time)
+ * @return int months
+ */
+function monthDiff(d1, d2) {
+  var months;
+  months = (d2.getFullYear() - d1.getFullYear()) * 12;
+  months -= d1.getMonth();
+  months += d2.getMonth();
+  return months;
+};
+
+/**
+ * Get a dateobject (Six months previous) from another date object
+ * @param date date
+ * @param int months
+ * @return date newDate
+ */
+function addMonths(date, months) {
+  var newDate = new Date();
+  newDate.setDate(1);
+  newDate.setMonth(date.getMonth() + months);
+  return new Date(newDate);
+};
+
+/**
+ * Get how many days in the month
+ * @param int month
+ * @param int year
+ * @return int days
+ */
+function daysInMonth(month, year) {
+  return new Date(year, month, 0).getDate();
+}
 
 /**
  * Get suqad team data
@@ -651,6 +761,281 @@ function rollUpTeamMemberData(squadsList, squadTeams) {
 
   return entry;
 };
+
+/**
+ * Retrieve all submitted assessments records
+ * @return assessments
+ */
+function getSubmittedAssessments() {
+  var squadAssessments = {};
+  return new Promise(function(resolve, reject) {
+    assessmentModel.getSubmittedAssessments()
+      .then(function(assessments) {
+        _.each(assessments, function(doc) {
+          var teamId =  doc.teamId;
+          if ( teamId != '') {
+            if (_.isEmpty(squadAssessments[teamId])) {
+              squadAssessments[teamId] = [];
+            }
+            squadAssessments[teamId].push(doc);
+          }
+        });
+        return resolve(squadAssessments);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        var msg;
+        if (err.error) {
+          msg = err.error;
+        } else {
+          msg = err;
+        }
+        reject(formatErrMsg(msg));
+      });
+  });
+};
+
+/**
+ * Process assessment rollup data in squad level
+ * @param assessments - squad assessment data
+ * @param teamId - squad record id
+ * @return squad rollup data
+ */
+function rollUpAssessmentsBySquad(assessments, teamId) {
+  return new Promise(function(resolve, reject) {
+    var currData = resetAssessmentData();
+    var rollUpAssessmentData = {};
+    rollUpAssessmentData[teamId] = currData;
+
+    _.each(assessments, function(assessment ) {
+      var assessmentDate = new Date(assessment['submittedDate']);
+
+      for (var i = 0; i <= ASSESSMENT_PERIOD; i++) {
+        var period = assessmentMonths[i];
+        var month = monthNames.indexOf(period.substring(0, period.indexOf(' ')));
+
+        var year = period.substring(period.indexOf(' '), period.length);
+        var date;
+        var nowTime = new Date();
+        if (month == nowTime.getMonth()){
+          date = nowTime.getDate();
+        }
+        else {
+          date = daysInMonth(month + 1, year);
+        }
+
+        var targetDate = new Date(year, month, date);
+        if ((assessmentDate.getFullYear() == year && assessmentDate.getMonth() <= month) ||
+          assessmentDate.getFullYear() < year){
+          var days = daysDiff(targetDate, assessmentDate);
+
+          if (days <= ASSESSMENT_MAX_DAYS_SUBMISSION){
+            currData[i].less_120_days += 1;
+          }
+          else {
+            currData[i].gt_120_days += 1;
+          }
+
+          //process team average scores
+          if (currData[i].mar_date != undefined){
+            var time = timeDiff(currData[i].mar_date,assessmentDate);
+            // get latest assessment data
+            if (time < 0){
+              setMaturityData(assessment, currData[i], assessmentDate);
+            }
+          }
+          else {
+            setMaturityData(assessment, currData[i], assessmentDate);
+          }
+        }
+        else {
+          continue;
+        }
+      }
+    });
+
+    _.each(currData, function(period, index) {
+      if (period.less_120_days >= 1){
+        period.less_120_days = 1;
+        period.gt_120_days = 0;
+        period.no_submission = 0;
+      }
+      else if (period.gt_120_days >= 1 &&
+        currData[index].less_120_days == 0){
+        period.gt_120_days = 1;
+        period.no_submission = 0;
+      }
+      else {
+        period.no_submission = 1;
+      }
+      delete period.mar_date;
+    });
+    resolve(rollUpAssessmentData);
+  });
+};
+
+/**
+ * Process assessment rollup data in tribe/non squad level
+ * @param squads - list of squads under specific tribe
+ * @param nonSquadTeamId - tribe record id
+ * @param squadsCalResults - squad assessment data
+ * @param isUpdate - is document to be updated
+ * @param oldRollUpDataRev - last document revision number
+ * @return tribe rollup data
+ */
+function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsCalResults, nonSquadTeamPathId) {
+  return new Promise(function(resolve, reject) {
+    var squadDoc = squads;
+    var currData = resetAssessmentData();
+    var nonSquadCalResult = {
+      'assessmentData': currData,
+      'teamId': nonSquadTeamId,
+      'lastUpdate': moment().format(dateFormat),
+      'pathId': nonSquadTeamPathId
+    };
+
+    for (var i = 0; i <= ASSESSMENT_PERIOD; i++) {
+      currData[i].totalSquad = squadDoc.length;
+      currData[i].month = assessmentMonths[i];
+    }
+
+    for (var i = 0; i < squadDoc.length; i++) {
+      for (var j = 0; j <= ASSESSMENT_PERIOD; j++) {
+        var squadAssessmentResult = squadsCalResults[squadDoc[i]];
+        if (!(_.isEmpty(squadAssessmentResult)) && !(_.isUndefined(squadAssessmentResult))) {
+          currData[j].less_120_days += squadAssessmentResult[j].less_120_days;
+          currData[j].gt_120_days += squadAssessmentResult[j].gt_120_days;
+          currData[j].no_submission += squadAssessmentResult[j].no_submission;
+
+          currData[j].prj_foundation_score += squadAssessmentResult[j].prj_foundation_score;
+          currData[j].operation_score += squadAssessmentResult[j].operation_score;
+          currData[j].prj_devops_score += squadAssessmentResult[j].prj_devops_score;
+
+          currData[j].total_prj_foundation += squadAssessmentResult[j].total_prj_foundation;
+          currData[j].total_prj_devops += squadAssessmentResult[j].total_prj_devops;
+          currData[j].total_operation += squadAssessmentResult[j].total_operation;
+        }
+        else {
+          currData[j].no_submission += 1;
+        }
+      }
+    }
+    _.each(currData, function(period, index) {
+      if (period.total_prj_foundation > 1){
+        period.prj_foundation_score = (period.prj_foundation_score/period.total_prj_foundation).toFixed(1);
+      }
+      if (period.total_operation > 1){
+        period.operation_score = (period.operation_score/period.total_operation).toFixed(1);
+      }
+      if (period.total_prj_devops > 1) {
+        period.prj_devops_score = (period.prj_devops_score/period.total_prj_devops).toFixed(1);
+      }
+    });
+
+    var newDate = new Date();
+    var days = daysInMonth(newDate.getMonth() + 1, newDate.getFullYear());
+    if (newDate.getDate() < days) {
+      currData[ASSESSMENT_PERIOD].partialMonth = true;
+    }
+    resolve(nonSquadCalResult);
+  });
+};
+
+/**
+ * Get difference of dates in days
+ * @param date1
+ * @param date2
+ * @return days difference
+ */
+function daysDiff(date1, date2) {
+  var dateFormat = 'YYYY-MM-DD';
+  var d1 = moment(date1, dateFormat);
+  var d2 = moment(date2, dateFormat);
+  var days = moment(d1).diff(d2, 'days', true);
+  return days;
+};
+
+/**
+ * Get difference of dates in time format
+ * @param date1
+ * @param date2
+ * @return time difference
+ */
+function timeDiff(date1, date2) {
+  var dateFormat = 'YYYY-MM-DD HH:mm:ss';
+  var d1 = moment(date1, dateFormat);
+  var d2 = moment(date2, dateFormat);
+  var time = moment(d1).diff(d2);
+  return time;
+};
+
+/**
+ * Set to default assessment rollup data values
+ * @return default data
+ */
+function resetAssessmentData() {
+  var rollupDataList = [];
+  for (var i=0; i<=iterationMonth; i++) {
+    rollupDataList.push({
+      'less_120_days': 0,
+      'gt_120_days': 0,
+      'no_submission': 0,
+      'prj_foundation_score': 0,
+      'prj_devops_score': 0,
+      'operation_score': 0,
+      'total_prj_foundation': 0,
+      'total_prj_devops': 0,
+      'total_operation': 0,
+      'totalSquad': 0,
+      'month': '',
+      'partialMonth': false
+    });
+  }
+  return rollupDataList;
+};
+
+/**
+ * Retrieve assessment average score per type
+ * @param data - raw assessment data
+ * @param type - team type
+ * @return average score
+ */
+function getAssessmentAveScore(data, type){
+  var ave_score = 0;
+  if (data != null && !_.isEmpty(data)){
+    if (type == 'Project'){
+      ave_score = data.componentResults[0].currentScore;
+    }
+    else if (type == 'Delivery'){
+      ave_score = data.componentResults[1].currentScore;
+    }
+  }
+  return ave_score;
+}
+
+/**
+ * Set assessment maturity data used for rollup
+ * @param assessment - raw assessment data
+ * @param mat_data - maturity data
+ * @param assessmentDate - date of assessment
+ * @return updated data
+ */
+function setMaturityData(assessment, mat_data, assessmentDate){
+  mat_data.mar_date = assessmentDate;
+  if (assessment.type == 'Project'){
+    mat_data.prj_foundation_score = getAssessmentAveScore(assessment, 'Project');
+    mat_data.total_prj_foundation = 1;
+  }
+  else {
+    //operation project average score
+    mat_data.operation_score = getAssessmentAveScore(assessment, 'Project');
+    mat_data.total_operation = 1;
+  }
+  if (assessment.deliversSoftware){
+    mat_data.prj_devops_score = getAssessmentAveScore(assessment, 'Delivery');
+    mat_data.total_prj_devops = 1;
+  }
+  return mat_data;
+}
 
 var snapshot = {
   /**
@@ -897,6 +1282,99 @@ var snapshot = {
       //   });
       // });
       // resolve(returnObj);
+    });
+  },
+  /**
+   * Update/create assessment rollup data document
+   * @return update result
+   */
+  updateAssessmentRollUpData: function() {
+    return new Promise(function(resolve, reject) {
+      var nowTime = new Date();
+
+      for (var i = 0; i <= ASSESSMENT_PERIOD; i++) {
+        var time = moment().subtract(i, 'months');
+        var month = monthNames[time.month()];
+        var year = time.year();
+        assessmentMonths[i] = month + ' ' + year;
+      }
+      assessmentMonths.reverse();
+
+      var promiseArray = [];
+      var squadAssessments = {};
+      var oldRollUpDataRevs = {};
+      var squadsByParent = {};
+
+      promiseArray.push(getSubmittedAssessments());
+      promiseArray.push(getAllSquads());
+      promiseArray.push(marRollupModel.remove({}));
+      Promise.all(promiseArray)
+        .then(function(promiseResults) {
+          squadAssessments = promiseResults[0];
+          squadsByParent = promiseResults[1];
+          var promiseArray2 = [];
+          _.each(Object.keys(squadAssessments), function(squadTeamId) {
+            promiseArray2.push(rollUpAssessmentsBySquad(squadAssessments[squadTeamId], squadTeamId));
+          });
+          return Promise.all(promiseArray2);
+        })
+        .then(function(squadsCalResultsArray){
+          var squadsCalResults = {};
+          _.each(squadsCalResultsArray, function(squadsCalResult) {
+            squadsCalResults[Object.keys(squadsCalResult)[0]] = squadsCalResult[Object.keys(squadsCalResult)[0]];
+          });
+          var promiseArray3 = [];
+          _.each(Object.keys(squadsByParent), function(nonSquadTeamId) {
+
+            promiseArray3.push(rollUpAssessmentsByNonSquad(squadsByParent[nonSquadTeamId]['children'], squadsByParent[nonSquadTeamId]['teamId'], squadsCalResults, nonSquadTeamId));
+          });
+          return Promise.all(promiseArray3);
+        })
+        .then(function(nonSquadCalResults){
+          return marRollupModel.insertMany(nonSquadCalResults);
+        })
+        .then(function(results){
+          if (results) {
+            resolve('Assessment rollup data inserted successfully.');
+          }
+          else {
+            resolve('Empty records.');
+          }
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          var msg;
+          if (err.error) {
+            msg = err.error;
+          } else {
+            msg = err;
+          }
+          loggers.get('models').error('Error: ', msg);
+          reject(msg);
+        });
+    });
+  },
+
+  /**
+   * Retrieve assessment rollup data by team
+   * @param teamId - team record id
+   * @return team rollup data
+   */
+  getAssessmentRollUpByTeam: function(teamId) {
+    return new Promise(function(resolve, reject) {
+      marRollupModel.findOne({teamId: teamId})
+        .then(function(rollUpData) {
+          resolve(rollUpData);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          var msg;
+          if (err.error) {
+            msg = err.error;
+          } else {
+            msg = err;
+          }
+          loggers.get('models').error('Error: ', msg);
+          reject(msg);
+        });
     });
   }
 };

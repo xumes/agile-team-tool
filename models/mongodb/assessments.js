@@ -336,3 +336,17 @@ module.exports.deleteAssessment = function(userEmail, assessmentId){
     }
   });
 };
+
+module.exports.getSubmittedAssessments = function() {
+  return new Promise(function(resolve, reject) {
+    loggers.get('models').verbose('Getting all submitted assessments record from database.');
+    Assessment.find({assessmentStatus: 'Submitted', docStatus:{$ne:'delete'}})
+      .then(function(body) {
+        loggers.get('models').verbose('Submitted assessments record retrieved.');
+        resolve(body);
+      })
+      .catch(function(err) {
+        reject(err);
+      });
+  });
+};
