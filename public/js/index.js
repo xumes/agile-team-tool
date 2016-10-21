@@ -426,7 +426,7 @@ function setRefreshDate(timestamp) {
 //refresh button on the screen to refresh snapshot from workers
 function performChartRefresh(teamId, teamName) {
   destroyIterationCharts();
-  destroyAssessmentCharts();
+  //destroyAssessmentCharts();
   getSnapshot(teamId, teamName);
 }
 
@@ -663,6 +663,47 @@ function loopFindChildren(path) {
     });
     requests.push(req);
   }
+}
+
+function getTeamSnapshots(teamId, teamName){
+  getSnapshot(teamId, teamName);
+  getAssessmentSnapshot(teamId);
+}
+
+function getAssessmentSnapshot(teamId) {
+  $('#squad_assessment_card').hide();
+  $('#nsquad_assessment_card').show();
+  var cUrl = '/api/snapshot/rollupassessmentbyteam/' + encodeURIComponent(teamId);
+  var req = $.ajax({
+    type: 'GET',
+    url: cUrl
+  }).done(function(data) {
+    if (data != undefined) {
+      console.log('assessment rollup:'+JSON.stringify(data));
+      if (_.has(data, 'assessmentData')) {
+        var timestamp;
+        if (data.assessmentData == null) {
+            //console.log("data loaded failed");
+        } else if (data.assessmentData.length <= 0) {
+          timestamp = getServerDateTime();
+          timestamp =  getDate(timestamp, false);
+          assessmentParentRollup(assessmentTempData(), timestamp);
+        } else {
+          timestamp = data.lastUpdate;
+          console.log(timestamp);
+          timestamp =  getDate(timestamp, false);
+          assessmentParentRollup(data.assessmentData, timestamp);
+        }
+      } else {
+        showLog('data loaded: ' + JSON.stringify(data));
+      }
+    }
+  })
+  .fail(function(err) {
+    console.log(err);
+    $('#spinnerContainer').hide();
+  });
+  requests.push(req);
 }
 
 function getSnapshot(teamId, teamName) {
@@ -910,7 +951,7 @@ var selectedElement = '';
 
 function performSnapshotPull(teamId, teamName) {
   destroyIterationCharts();
-  destroyAssessmentCharts();
+  //destroyAssessmentCharts();
   getSnapshot(teamId, teamName);
 }
 
@@ -1032,25 +1073,24 @@ function loadDetails(elementId, setScrollPosition) {
           $('#iterationSection .agile-section-nav').show();
           $('#assessmentSection .agile-section-nav').show();
 
-          $('assessmentSection .agile-section-title').addClass('ibm-showing');
-          $('#assessmentSection a').addClass('ibm-show-active');
-          $('#assessmentSection .ibm-container-body').css('display', 'block');
+          $('#nsquad_assessment_card').hide();
+          $('#squad_assessment_card').show();
 
         } else {
           destroyIterationCharts();
           destroyAssessmentCharts();
 
-          getSnapshot(team['_id'], team['name']);
+          //getSnapshot(team['_id'], team['name']);
+          getTeamSnapshots(team['_id'], team['name']);
           $('#snapshotPull').show(); //show the refresh snapshot date
           $('#teamType').html('Team:&nbsp;');
           $('#nsquad_team_scard').show();
           $('#squad_team_scard').hide();
+          $('#nsquad_assessment_card').show();
+          $('#squad_assessment_card').hide();
           $('#iterationSection .agile-section-nav').hide();
           $('#assessmentSection .agile-section-nav').hide();
           $('#refreshData').attr('onclick', "performChartRefresh('" + team._id + "','" + team.name + "')");
-          $('assessmentSection .agile-section-title').removeClass('ibm-showing');
-          $('#assessmentSection a').removeClass('ibm-show-active');
-          $('#assessmentSection .ibm-container-body').css('display', 'none');
         }
 
         $('#membersList').empty();

@@ -199,7 +199,7 @@
                     </div>
 
                     <div data-widget="showhide" data-type="panel" class="ibm-show-hide" id="assessmentSection">
-                      <h2 class="agile-section-title" id="agile-assessment-section-title">Maturity assessment trends</h2>
+                      <h2 class="agile-section-title" data-open="true" id="agile-assessment-section-title">Maturity assessment trends</h2>
                       <div style="display:none" class="agile-section-nav">
                         <label aria-label="gotoAssesmentList">Go to assessment:</label>
                         <select id="gotoAssesmentList" aria-labelledby="agile-assessment-section-title"><option value="" selected="selected">Select one</option></select>
@@ -210,7 +210,24 @@
                         <hr>
                       </div>
                       <div class="ibm-container-body">
-                        <div id="assessmentCharts"></div>
+                        <div id="nsquad_assessment_card" style="display: none;">
+                          <div class="ibm-columns" style="margin-bottom: 3em;">
+                            <div class="ibm-col-6-2">
+                              <div id="assessmentTrend" style="width: 100%;"></div>
+                            </div>
+                            <div class="ibm-col-6-2">
+                              <div id="assessmentEval" style="width: 100%;"></div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div id="squad_assessment_card" style="display: none">
+                          <div class="ibm-columns">
+                            <div class="ibm-col-6-4">
+                              <div id="assessmentCharts" style="width: 100%;"></div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div>

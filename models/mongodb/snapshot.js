@@ -260,7 +260,7 @@ var assessmentsRollupSchema = {
   },
   assessmentData: [assessmentSchema]
 };
-var marRollup_schema = new Schema(assessmentsRollupSchema, { collection: 'assessmentRollup' });
+var marRollup_schema = new Schema(assessmentsRollupSchema, {collection: 'assessmentRollup'});
 var marRollupModel = mongoose.model('assessmentRollup', marRollup_schema);
 
 function resetData() {
@@ -1021,7 +1021,7 @@ function getAssessmentAveScore(data, type){
  */
 function setMaturityData(assessment, mat_data, assessmentDate){
   mat_data.mar_date = assessmentDate;
-  if (assessment.team_proj_ops == 'Project'){
+  if (assessment.type == 'Project'){
     mat_data.prj_foundation_score = getAssessmentAveScore(assessment, 'Project');
     mat_data.total_prj_foundation = 1;
   }
@@ -1030,7 +1030,7 @@ function setMaturityData(assessment, mat_data, assessmentDate){
     mat_data.operation_score = getAssessmentAveScore(assessment, 'Project');
     mat_data.total_operation = 1;
   }
-  if (assessment.team_dlvr_software == 'Yes'){
+  if (assessment.deliversSoftware){
     mat_data.prj_devops_score = getAssessmentAveScore(assessment, 'Delivery');
     mat_data.total_prj_devops = 1;
   }

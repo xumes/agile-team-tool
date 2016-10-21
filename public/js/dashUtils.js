@@ -713,3 +713,18 @@ function checkParentChildLink(teamList) {
   console.log(invalid + ' teams have invalid parent/child links.');
   console.log(notFound + ' teams not found.');
 };
+
+/**
+ * Formate date in MMM DD, YYYY format
+ * @return date
+ */
+function getDate(timestamp, isMilliseconds){
+  var date;
+  if (isMilliseconds){
+    date = moment.utc(timestamp * 1000).format('MMM DD, YYYY');
+  }
+  else {
+    date = moment.utc(timestamp).format('MMM DD, YYYY');
+  }
+  return date;
+}
