@@ -49,7 +49,11 @@ var HomeNav = React.createClass({
       self.tabClickedStart();
       api.getMyTeams()
       .then(function(data){
-        self.setState({'newTeams':data});
+        var newData = {
+          'tab': 'myteams',
+          'data': data
+        };
+        self.setState({'newTeams':newData});
         self.tabClickedEnd();
       })
       .catch(function(err){
@@ -62,7 +66,11 @@ var HomeNav = React.createClass({
       //self.setState({'tabClicked': 'alltab'});
       api.getAllTeams()
       .then(function(data){
-        self.setState({'newTeams':data});
+        var newData = {
+          'tab': 'allteams',
+          'data': data
+        };
+        self.setState({'newTeams':newData});
       })
       .catch(function(err){
         console.log(err);
@@ -98,15 +106,6 @@ var HomeNav = React.createClass({
   },
 
   render: function() {
-    var nanoPaneStyle = {
-      'display': 'block',
-      'opacity': 1,
-      'visibility': 'visible'
-    };
-    var nanoSliderStyle = {
-      'height': '182px',
-      'transform': 'translate(0px, 0px)'
-    };
     var agileTeamNavStyle = {
       'height': '600px'
     }
