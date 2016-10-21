@@ -200,7 +200,7 @@ var IterationExport = {
     return Iteration.findOne({'_id':docId}).exec();
   },
 
-  getCompletedIterationByKey: function(startkey, endkey) {
+  getCompletedIterationsByKey: function(startkey, endkey) {
     return new Promise(function(resolve, reject) {
       var qReq = {
         '$or': [
@@ -225,7 +225,7 @@ var IterationExport = {
       }
       Iteration.find(qReq).exec()
         .then(function(body) {
-          loggers.get('model-iteration').verbose('getCompletedIterationByKey() - '+body.length+' Completed Iteration docs obtained');
+          loggers.get('model-iteration').verbose('getCompletedIterationsByKey() - '+body.length+' Completed Iteration docs obtained');
           resolve(body);
         })
         .catch( /* istanbul ignore next */ function(err) {
