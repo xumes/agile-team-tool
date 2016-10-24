@@ -36,7 +36,8 @@ module.exports = {
   googleAnalyticsKey: process.env.googleAnalyticsKey || '',
   googleHost: 'maps.googleapis.com',
   googleApiKey: process.env.googleAPIKey || 'AIzaSyAF2vwg6z-pH4xC7Ac1eMcpR9mVG-A2u7Y',
-  facesURL: 'https://faces.tap.ibm.com/api/'
+  facesURL: 'https://faces.tap.ibm.com/api/',
+  ibmNPSKey: process.env.ibmNPSKey || ''
 };
 
 mongoose.connect(process.env.mongoURL || 'mongodb://localhost:27017/agiletool_stage');

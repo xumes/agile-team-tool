@@ -81,3 +81,40 @@ describe('Snapshot API Test', function(){
       });
   });
 });
+
+describe('Snapshot API Test [assessment rollup]', function() {
+  this.timeout(60000);
+  // do the login before testing
+  before(function(done) {
+    agent
+      .get('/api/login/masquerade/' + userEmail)
+      .send()
+      .end(function(err, res) {
+        if (err) throw err;
+        agent.saveCookies(res);
+        done();
+      });
+  });
+
+  it('Successfully roll up assessment data', function(done) {
+    var req = request(app).get('/api/snapshot/updateAssessmentRollUpData');
+    agent.attachCookies(req);
+    req.end(function(err, res) {
+      if (err) {} else {
+        expect(res.statusCode).to.be.equal(200);
+      }
+      done();
+    });
+  });
+
+  it('Successfully return assessment roll up data by team', function(done) {
+    var req = request(app).get('/api/snapshot/rollupassessmentbyteam/' + 'ag_team_CIO');
+    agent.attachCookies(req);
+    req.end(function(err, res) {
+      if (err) {} else {
+        expect(res.statusCode).to.be.equal(200);
+      }
+      done();
+    });
+  });
+});

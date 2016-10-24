@@ -7,7 +7,9 @@ module.exports = function(app, includes) {
   showAssessment = function(req, res) {
     var json = {
       'pageTitle': 'Maturity Assessment',
-      'googleAnalyticsKey': settings.googleAnalyticsKey
+      'googleAnalyticsKey': settings.googleAnalyticsKey,
+      'ibmNPSKey': settings.ibmNPSKey,
+      'environment': settings.environment
     };
     render(req, res, 'assessment', json);
   };

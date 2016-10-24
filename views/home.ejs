@@ -4,9 +4,10 @@
 
 <%- include ./header/header_meta.ejs %>
 
-<script src="//code.highcharts.com/highcharts.js"></script>
-<script src="//code.highcharts.com/highcharts-more.js"></script>
-<script src="//code.highcharts.com/modules/no-data-to-display.js"></script>
+<script type="text/javascript" src="//code.highcharts.com/highcharts.js"></script>
+<script type="text/javascript" src="//code.highcharts.com/highcharts-more.js"></script>
+<script type="text/javascript" src="//code.highcharts.com/modules/no-data-to-display.js"></script>
+<script type="text/javascript" src="//highcharts.github.io/pattern-fill/pattern-fill-v2.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <script type="text/javascript" src="js/index.js?v=<%=Math.random()%>"></script>
@@ -34,6 +35,9 @@
               <div id="ibm-content-main">
                 <div class="ibm-columns">
                   <div class="ibm-col-6-2">
+                    <div class="agile-section-nav">
+                    </div>
+                    <div class="agile-section-filter">
 
                       <nav class="tab-nav">
                         <ul class="tab-ul" role="tablist" style="width: 100%;">
@@ -69,6 +73,7 @@
                         <a href="#" id="teamExpand">Expand all</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#" id="teamCollapse">Collapse all</a>
                       </p>
                     -->
+                    </div>
 
                     <div class="agile-team-nav" data-widget="scrollable" data-height="600">
                       <div id="searchTree" hidden=true></div>
@@ -141,12 +146,11 @@
                           </div>
 
                           <div class="ibm-columns" style="margin-bottom: 3em;">
-
                             <div class="ibm-col-6-2">
                               <div id="pdefectsChart" style="width: 100%; min-height: 280px;"></div>
                             </div>
                             <div class="ibm-col-6-2">
-                              <div id="pstatisfactionChart" style="width: 100%; min-height: 280px;"></div>
+                              <div id="pwipBacklogChart" style="width: 100%; min-height: 280px;"></div> 
                             </div>
                           </div>
 
@@ -154,9 +158,16 @@
                             <div class="ibm-col-6-2">
                               <div id="pPizzaChart" style="width: 100%; min-height: 280px;"></div>
                             </div>
-
                             <div class="ibm-col-6-2">
                               <div id="piePizzaChart" style="width: 100%; min-height: 280px;"></div>
+                            </div>
+                          </div>
+
+                          <div class="ibm-columns" style="margin-bottom: 3em;">
+                            <div class="ibm-col-6-2">
+                              <div id="pstatisfactionChart" style="width: 100%; min-height: 280px;"></div>
+                            </div>
+                            <div class="ibm-col-6-2">
                             </div>
                           </div>
                         </div>
@@ -177,9 +188,8 @@
                               <div class="ibm-col-6-2">
                                 <div id="defectsChart" style="width: 100%; min-height: 280px;"></div>
                               </div>
-
                               <div class="ibm-col-6-2">
-                                <div id="statisfactionChart" style="width: 100%; min-height: 280px;"></div>
+                                <div id="wipBacklogChart" style="width: 100%; min-height: 280px;"></div>
                               </div>
                             </div>
                           </div>
@@ -191,6 +201,15 @@
                               </div>
                               <div class="ibm-col-6-2">
                                 <div id="unitCostChart" style="width: 100%; min-height: 280px;"></div>
+                              </div>
+                            </div>
+                          </div>
+                          <div id="chartgrp4">
+                            <div style="margin-bottom: 3em;" class="ibm-columns">
+                              <div class="ibm-col-6-2">
+                                <div id="statisfactionChart" style="width: 100%; min-height: 280px;"></div>
+                              </div>
+                              <div class="ibm-col-6-2">
                               </div>
                             </div>
                           </div>
@@ -228,6 +247,7 @@
                             </div>
                           </div>
                         </div>
+
                       </div>
                     </div>
                     <div>

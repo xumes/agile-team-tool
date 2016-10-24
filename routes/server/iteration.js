@@ -10,7 +10,9 @@ module.exports = function(app, includes) {
   var showIteration = function(req, res) {
     var json = {
       'pageTitle': 'Iteration Management',
-      'googleAnalyticsKey': settings.googleAnalyticsKey
+      'googleAnalyticsKey': settings.googleAnalyticsKey,
+      'ibmNPSKey': settings.ibmNPSKey,
+      'environment': settings.environment
     };
 
     var userId = req.session.userId;

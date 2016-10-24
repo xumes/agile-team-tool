@@ -35,8 +35,8 @@ var iterationSearchAllDocRules = {
   'startdate': {
     presence: false,
     format: {
-      pattern: /\d{4}\d{2}\d{2}/,
-      message: '^Start date must be in format YYYYMMDD'
+      pattern: /^\d+$/,
+      message: '^End date must be a number.  A valid date maybe formatted as YYYYMMDD'
     },
     compareDate: {
       field: 'startdate',
@@ -45,8 +45,8 @@ var iterationSearchAllDocRules = {
   'enddate': {
     presence: false,
     format: {
-      pattern: /\d{4}\d{2}\d{2}/,
-      message: '^End date must be in format YYYYMMDD'
+      pattern: /^\d+$/,
+      message: '^End date must be a number.  A valid date maybe formatted as YYYYMMDD'
     },
     compareDate: {
       field: 'enddate',
