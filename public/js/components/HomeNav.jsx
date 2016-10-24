@@ -9,44 +9,40 @@ var HomeTeamTree = require('./HomeTeamTree.jsx');
 var HomeNav = React.createClass({
   getInitialState: function() {
     return {
-      spinnerHide: 'none',
-      searchTreeHide: 'none',
-      teamTreeHide: 'block',
-      searchHide: 'none',
       searchTeams: [],
-      tabClicked: 'mytab',
       newTeams: new Object()
     }
   },
 
   searchStart: function() {
-    this.setState({'spinnerHide': 'block'});
-    this.setState({'searchTreeHide': 'none'});
-    this.setState({'teamTreeHide': 'none'});
+    $('#spinnerContainer-search').show();
+    $('#searchTree').hide();
+    $('#teamTree').hide();
   },
 
   searchEnd: function() {
-    this.setState({'spinnerHide': 'none'});
-    this.setState({'searchTreeHide': 'block'});
-    this.setState({'teamTreeHide': 'none'});
+    $('#spinnerContainer-search').hide();
+    $('#searchTree').show();
+    $('#teamTree').hide();
   },
 
   tabClickedStart: function() {
-    this.searchStart();
+    $('#spinnerContainer-search').show();
+    $('#searchTree').hide();
+    $('#teamTree').hide();
   },
 
   tabClickedEnd: function() {
-    this.setState({'spinnerHide': 'none'});
-    this.setState({'teamTreeHide': 'block'});
-    this.setState({'searchTreeHide': 'hide'});
+    $('#spinnerContainer-search').hide();
+    $('#searchTree').hide();
+    $('#teamTree').show();
   },
 
   tabClickedHandler: function(tab) {
     var self = this;
+    self.tabClickedStart();
     if (tab == 'mytab') {
-      self.setState({'searchHide': 'none'});
-      //self.setState({'tabClicked': 'mytab'});
-      self.tabClickedStart();
+      $('#searchFieldDiv').hide();
       api.getMyTeams()
       .then(function(data){
         var newData = {
@@ -54,7 +50,6 @@ var HomeNav = React.createClass({
           'data': data
         };
         self.setState({'newTeams':newData});
-        self.tabClickedEnd();
       })
       .catch(function(err){
         self.tabClickedEnd();
@@ -62,8 +57,7 @@ var HomeNav = React.createClass({
         console.log(err);
       })
     } else {
-      self.setState({'searchHide': 'block'});
-      //self.setState({'tabClicked': 'alltab'});
+      $('#searchFieldDiv').show();
       api.getAllTeams()
       .then(function(data){
         var newData = {
@@ -73,20 +67,20 @@ var HomeNav = React.createClass({
         self.setState({'newTeams':newData});
       })
       .catch(function(err){
+        self.tabClickedEnd();
+        $('#teamTree').empty();
         console.log(err);
       });
     }
   },
 
   searchTeamClickedHandler: function(teamId) {
-    this.setState({'spinnerHide': 'block'});
-    this.setState({'searchTreeHide': 'none'});
-    this.setState({'teamTreeHide': 'none'});
+    console.log(teamId);
   },
 
   componentDidMount: function() {
     var self = this;
-    // self.tabClickedHandler('mytab');
+    self.tabClickedHandler('mytab');
     $('#nameSearchField').on('input',function() {
       var inputText = $('#nameSearchField').val();
       if (inputText.length > 0 && inputText != ' ') {
@@ -94,12 +88,10 @@ var HomeNav = React.createClass({
         api.searchTeams(inputText)
           .then(function(teams){
             self.setState({'searchTeams':teams});
-            self.searchEnd();
           })
           .catch(function(err){
             console.log(err);
             self.setState({'searchTeams':[]});
-            self.searchEnd();
           });
       }
     });
@@ -111,13 +103,13 @@ var HomeNav = React.createClass({
     }
     return (
       <div>
-        <HomeNavTab sendSearchTeams={this.searchChangeHandler} searchStart={this.searchStartHandler} tabClicked={this.tabClickedHandler}/>
-        <HomeSearchField searchHide={this.state.searchHide}/>
-        <HomeSpinner spinnerHide={this.state.spinnerHide}/>
+        <HomeNavTab searchStart={this.searchStartHandler} tabClicked={this.tabClickedHandler}/>
+        <HomeSearchField />
+        <HomeSpinner />
         <div class='agile-team-nav nano' data-widget='scrollable' data-height='600' style={agileTeamNavStyle}>
           <div class="nano-content">
-            <HomeSearchTree searchTeams={this.state.searchTeams} searchTreeHide={this.state.searchTreeHide} clickedTeam={this.searchTeamClickedHandler}/>
-            <HomeTeamTree newTeams={this.state.newTeams} teamTreeHide={this.state.teamTreeHide}/>
+            <HomeSearchTree searchTeams={this.state.searchTeams} clickedTeam={this.searchTeamClickedHandler}/>
+            <HomeTeamTree newTeams={this.state.newTeams}/>
           </div>
         </div>
       </div>

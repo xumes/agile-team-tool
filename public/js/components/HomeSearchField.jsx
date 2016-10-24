@@ -8,6 +8,9 @@ var HomeSearchField = React.createClass({
     }
   },
 
+  componentDidUpdate: function() {
+  },
+
   componentDidMount: function() {
     var self = this;
     $('#nameSearchField').on('input',function() {
@@ -23,13 +26,14 @@ var HomeSearchField = React.createClass({
   cancelBtnOnClick: function() {
     $('#nameSearchField').val('');
     this.setState({'cancelBtnHide': 'none'});
-    $('#searchTree').empty();
     $('#searchTree').hide();
+    $('#teamTree').show();
+    $('.nano').nanoScroller();
   },
 
   render: function() {
     var searchFieldStyle = {
-      'display': this.props.searchHide,
+      'display': 'none',
       'position': 'relative'
     };
     var cancelBtnStyle = {
@@ -37,7 +41,7 @@ var HomeSearchField = React.createClass({
     };
 
     return (
-      <div style={searchFieldStyle}>
+      <div id='searchFieldDiv' style={searchFieldStyle}>
         <input id="nameSearchField" type="search" class="agile-search-field" name="search" placeholder="Enter team name to filter..." aria-label="nameSearchField"></input>
         <input type="image" src="../../img/ibm_icon/close_128.png" id="searchCancel" class="agile-search-field-cancel" style={cancelBtnStyle} onClick={this.cancelBtnOnClick}></input>
       </div>
