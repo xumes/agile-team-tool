@@ -2,8 +2,9 @@ var React = require('react');
 var api = require('../api.jsx');
 var HomeSpinner = require('./HomeSpinner.jsx');
 var _ = require('underscore');
+var Promise = require('bluebird');
 
-var selectedTeam = {};
+var selectedTeam = '';
 
 var HomeTeamTree = React.createClass({
   componentDidMount: function() {
@@ -14,6 +15,10 @@ var HomeTeamTree = React.createClass({
 
   shouldComponentUpdate: function(nextProps, nextState) {
     if (nextProps.newTeams == this.props.newTeams) {
+      if (nextProps.searchTeamSelected != this.props.searchTeamSelected && nextProps.searchTeamSelected != '') {
+        this.loadTeamInAllTeams(nextProps.searchTeamSelected);
+        $('#searchTree').hide();
+      }
       return false;
     } else {
       return true;
@@ -21,13 +26,12 @@ var HomeTeamTree = React.createClass({
   },
 
   componentDidUpdate: function() {
+    var self = this;
     $('#spinnerContainer-search').hide();
     $('#searchTree').hide();
     $('#teamTree').show();
     $('.nano').nanoScroller();
-    if (selectedTeam) {
-
-    }
+    self.initHilightTeam();
   },
 
   triggerTeam: function(teamId) {
@@ -64,6 +68,58 @@ var HomeTeamTree = React.createClass({
     }
   },
 
+  highlightTeam: function(teamId){
+    if (selectedTeam != '') {
+      $('#link_' + selectedTeam).removeClass('agile-team-selected');
+    }
+    if ($('#link_' + teamId).hasClass('agile-team-selected')) {
+
+    } else {
+      $('#link_' + teamId).addClass('agile-team-selected');
+    }
+  },
+
+  initHilightTeam: function() {
+    var self = this;
+    if (selectedTeam == '') {
+      if (($('#teamTree li')[0]).id) {
+        if (($('#teamTree li')[0]).id != 'agteamstandalone') {
+          selectedTeam = ($('#teamTree li')[0]).id;
+        } else {
+          if (selectedTeam = ($('#teamTree li')[1]).id) {
+            selectedTeam = ($('#teamTree li')[1]).id;
+          }
+        }
+      }
+      self.highlightTeam(selectedTeam);
+    } else {
+      if ($('#myTeams').attr('data-state') == 'open') {
+        if (($.find('#' + selectedTeam)).length > 0) {
+          self.highlightTeam(selectedTeam);
+        } else {
+          if (($('#teamTree li')[0]).id) {
+            if (($('#teamTree li')[0]).id != 'agteamstandalone') {
+              selectedTeam = ($('#teamTree li')[0]).id;
+              self.highlightTeam(selectedTeam);
+            } else {
+              if (selectedTeam = ($('#teamTree li')[1]).id) {
+                selectedTeam = ($('#teamTree li')[1]).id;
+                self.highlightTeam(selectedTeam);
+              } else {
+                selectedTeam = '';
+              }
+            }
+          } else {
+            selectedTeam = '';
+          }
+        }
+      } else {
+        self.loadTeamInAllTeams(selectedTeam);
+      }
+    }
+    console.log('sel:',selectedTeam);
+  },
+
   expandParentTeam: function(teamId) {
     var self = this;
     if (teamId != null) {
@@ -72,26 +128,7 @@ var HomeTeamTree = React.createClass({
         //getChildrenTeams(parentId, false);
         api.getChildrenTeams(teamId)
         .then(function(teams){
-          if (!_.isEmpty(teams)) {
-            $('#body_' + teamId).append(self.createMainTwistySection('main_' + teamId, ''));
-            _.each(teams, function(team){
-              console.log(team);
-              $('#main_' + teamId).append(self.createSubSection(team));
-              var trigger = $('#' + team.pathId).find('a.ibm-twisty-trigger');
-              trigger.attr('title', 'Expand/Collapse').on('click', function() {
-                self.triggerTeam(team.pathId);
-              });
-              var link = $('#link_' + team.pathId);
-              link.on('click', function() {
-                $('.nano').nanoScroller();
-                console.log(team._id);
-              });
-            })
-            $('#' + teamId).attr('data-open', 'true');
-            $('#' + teamId).addClass('ibm-active');
-            $('#body_' + teamId).css('display', 'block');
-            $('.nano').nanoScroller();
-          }
+          self.appendChildTeams(teams, teamId);
         })
         .catch(function(err){
           console.log(err);
@@ -105,14 +142,86 @@ var HomeTeamTree = React.createClass({
     }
   },
 
-  loadDetails: function(oid) {
-
+  appendChildTeams: function(teams, teamId) {
+    var self = this;
+    if (!_.isEmpty(teams)) {
+      $('#body_' + teamId).append(self.createMainTwistySection('main_' + teamId, ''));
+      _.each(teams, function(team){
+        if (team.docStatus != 'delete') {
+          $('#main_' + teamId).append(self.createSubSection(team));
+          var trigger = $('#' + team.pathId).find('a.ibm-twisty-trigger');
+          trigger.attr('title', 'Expand/Collapse').on('click', function() {
+            self.triggerTeam(team.pathId);
+          });
+          var link = $('#link_' + team.pathId);
+          link.on('click', function() {
+            self.loadDetails(team.pathId);
+          });
+        }
+      })
+      $('#' + teamId).attr('data-open', 'true');
+      $('#' + teamId).addClass('ibm-active');
+      $('#body_' + teamId).css('display', 'block');
+      $('.nano').nanoScroller();
+    }
   },
 
   collapseParentTeam: function(teamId) {
     $('#' + teamId).removeClass('ibm-active');
     $('#body_' + teamId).css('display', 'none');
     $('.nano').nanoScroller();
+  },
+
+  loadDetails: function(teamId) {
+    $('.nano').nanoScroller();
+    this.highlightTeam(teamId);
+    selectedTeam = teamId;
+    console.log(teamId);
+  },
+
+  loadTeamInAllTeams: function(teamId) {
+    var self = this;
+    $('#spinnerContainer-search').show();
+    $('#teamTree').hide();
+    var path = [];
+    api.loadTeamDetails(teamId)
+    .then(function(team){
+      if (team != null) {
+        if (team.path != null) {
+          path = (team.path.substring(1,team.path.length-1)).split(',');
+        } else {
+          if (!team.hasChild) {
+            path.push('agteamstandalone');
+          }
+        }
+        path.push(team.pathId);
+        var promiseArray = [];
+        _.each(path, function(pathId){
+          promiseArray.push(api.getChildrenTeams(pathId));
+        });
+        return Promise.all(promiseArray);
+      } else {
+        return Promise.reject('no team found');
+      }
+    })
+    .then(function(results){
+      for (var i = 0; i < results.length; i++) {
+        self.appendChildTeams(results[i], path[i]);
+      }
+      self.loadDetails(path[path.length-1]);
+      $('#spinnerContainer-search').hide();
+      $('#teamTree').show();
+      $('.nano').nanoScroller();
+      $('.nano').nanoScroller({
+        scrollTo: $('#link_' + path[path.length-1])
+      });
+    })
+    .catch(function(err){
+      $('#spinnerContainer-search').hide();
+      $('#teamTree').show();
+      self.highlightTeam(($('#teamTree li')[0]).id);
+      console.log(err);
+    });
   },
 
   createMainTwistySection: function(twistyId, extraClass) {
@@ -202,7 +311,7 @@ var HomeTeamTree = React.createClass({
               <a class='ibm-twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={()=>self.triggerTeam(teamId)}>
                 <span class='ibm-access'>{label}</span>
               </a>
-              <a class={isSquad} title={title} id={linkId}>{label}</a>
+              <a class={isSquad} title={title} id={linkId} onClick={()=>self.loadDetails(teamId)}>{label}</a>
               <span class='ibm-access'>{objectId}</span>
               <div class='ibm-twisty-body' id={bodyId} style={{'display':'none'}}></div>
             </li>
@@ -277,7 +386,7 @@ var HomeTeamTree = React.createClass({
             <a class='ibm-twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={()=>self.triggerTeam(teamId)}>
               <span class='ibm-access'>{label}</span>
             </a>
-            <a class='agile-team-link' title={title} id={linkId}>{label}</a>
+            <a class='agile-team-link' title={title} id={linkId} onClick={()=>self.loadDetails(teamId)}>{label}</a>
             <span class='ibm-access'>{objectId}</span>
             <div class='ibm-twisty-body' id={bodyId} style={{'display':'none'}}>
             </div>

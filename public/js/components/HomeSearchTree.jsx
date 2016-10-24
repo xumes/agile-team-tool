@@ -53,7 +53,7 @@ var HomeSearchTree = React.createClass({
             <a class='ibm-twisty-trigger' href='#toggle'>
               <span class='ibm-access'>{label}</span>
             </a>
-            <a class={isSquad} id={linkId} onClick={()=>self.props.clickedTeam(objectId)}>{label}</a>
+            <a class={isSquad} id={linkId} onClick={()=>self.props.clickedTeam(team.pathId)}>{label}</a>
             <span class='ibm-access'>{team.pathId}</span>
           </li>
         )

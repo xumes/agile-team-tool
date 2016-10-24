@@ -10,7 +10,8 @@ var HomeNav = React.createClass({
   getInitialState: function() {
     return {
       searchTeams: [],
-      newTeams: new Object()
+      newTeams: new Object(),
+      searchTeamSelected: ''
     }
   },
 
@@ -49,7 +50,9 @@ var HomeNav = React.createClass({
           'tab': 'myteams',
           'data': data
         };
+        self.setState({'searchTeamSelected': ''});
         self.setState({'newTeams':newData});
+        $('#searchCancel').click();
       })
       .catch(function(err){
         self.tabClickedEnd();
@@ -76,6 +79,7 @@ var HomeNav = React.createClass({
 
   searchTeamClickedHandler: function(teamId) {
     console.log(teamId);
+    this.setState({'searchTeamSelected':teamId});
   },
 
   componentDidMount: function() {
@@ -109,7 +113,7 @@ var HomeNav = React.createClass({
         <div class='agile-team-nav nano' data-widget='scrollable' data-height='600' style={agileTeamNavStyle}>
           <div class="nano-content">
             <HomeSearchTree searchTeams={this.state.searchTeams} clickedTeam={this.searchTeamClickedHandler}/>
-            <HomeTeamTree newTeams={this.state.newTeams}/>
+            <HomeTeamTree newTeams={this.state.newTeams} searchTeamSelected={this.state.searchTeamSelected}/>
           </div>
         </div>
       </div>
