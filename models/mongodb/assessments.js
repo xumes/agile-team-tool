@@ -1,11 +1,9 @@
 var lodash = require('lodash');
 var Promise = require('bluebird');
-var mongoose = require('mongoose');
-mongoose.Promise = require('bluebird');
 var config = require('../../settings');
-mongoose.createConnection(config.mongoURL);
+var mongoose = config.mongoose;
 var loggers = require('../../middleware/logger');
-var Schema   = mongoose.Schema;
+var Schema   = require('mongoose').Schema;
 var lodash = require('lodash');
 var Users = require('./users');
 

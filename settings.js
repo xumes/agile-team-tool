@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var loggers = require('./middleware/logger');
 
 mongoose.Promise = require('bluebird');
 
@@ -15,7 +16,7 @@ module.exports = {
     url: process.env.cloudantURL || 'https://user:pass@user.cloudant.com',
     dbName: process.env.cloudantDb || 'localDb'
   },
-  mongoURL: process.env.mongoURL || 'mongodb://localhost:27017/agiletool_stage',
+  mongoURL: process.env.mongoURL || '',
   saml: {
     path: '/auth/saml/ibm/callback',
     identifierFormat: 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
@@ -40,4 +41,15 @@ module.exports = {
   ibmNPSKey: process.env.ibmNPSKey || ''
 };
 
-mongoose.connect(process.env.mongoURL || 'mongodb://localhost:27017/agiletool_stage');
+if (module.exports.mongoURL && module.exports.mongoURL != '') {
+  mongoose.connect(module.exports.mongoURL);
+  loggers.get('init').info('Using MongoDB and connecting to', module.exports.mongoURL);
+  module.exports.mongoose = mongoose;
+}
+else {
+  // Stub-out so we don't get errors
+  module.exports.mongoose = {
+    model: function() {},
+    schema: ''
+  };
+}
