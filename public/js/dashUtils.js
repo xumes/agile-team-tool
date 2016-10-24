@@ -513,6 +513,9 @@ function loadResultChart(id, title, type, categories, yAxisLabel, series, unit, 
     },
 
     title: {
+      style: {
+        'fontSize': '14px'
+      },
       text: title
     },
 
@@ -528,6 +531,10 @@ function loadResultChart(id, title, type, categories, yAxisLabel, series, unit, 
         text: yAxisLabel
       },
       allowDecimals: false
+    },
+
+    credits: {
+      enabled: false
     },
 
     tooltip: {

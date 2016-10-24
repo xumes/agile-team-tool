@@ -28,7 +28,7 @@
                 <div class="ibm-columns">
                   <div class="ibm-col-1-1">
                     <h2 class="ibm-bold ibm-h3">Agile Team</h2>
-                    <div class="ibm-rule ibm-alternate-1">
+                    <div class="ibm-rule ibm-alternate">
                       <hr>
                     </div>
 
@@ -139,7 +139,7 @@
                               </span>
                             </p>
 
-                            <div class="ibm-rule ibm-alternate-1">
+                            <div class="ibm-rule ibm-alternate">
                               <hr>
                             </div>
                             <table class="ibm-data-table" data-tablerowselector="enable" id="teamMemberTable" summary="List of team members" style="font-size: 90%;">
@@ -205,7 +205,7 @@
                               </span>
                             </p>
 
-                            <div class="ibm-rule ibm-alternate-1">
+                            <div class="ibm-rule ibm-alternate">
                               <hr>
                             </div>
                             <table class="ibm-data-table" data-tablerowselector="enable" id="parentMemberTable" summary="List of sibling team" style="display: none;">
@@ -247,7 +247,7 @@
                                 </span>
                               </p>
 
-                              <div class="ibm-rule ibm-alternate-1">
+                              <div class="ibm-rule ibm-alternate">
                                 <hr>
                               </div>
                               <table class="ibm-data-table" data-tablerowselector="enable" id="childrenMemberTable" summary="List of children team" style="font-size: 90%;">
@@ -350,14 +350,11 @@
                                 </p>
                               </div>
                             </div>
-                            <p/><p/><p/><p/><p/><p/>
-                            <div id="maturityTrend" >
-                                <span for="maturityTrendLink" style="font-size: 10pt; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Link to maturity trend graph:
-                                </span>
-                                <span style="font-size: 10pt" id="maturityTrendLink"></span>&nbsp;
-                                <button class="button" id="copy-button" data-clipboard-target="#maturityTrendLink" style="font-size: 10pt; font-weight: bold;"  onclick="return false;">Copy Link</button>
+                            <div id="maturityTrend" style="padding-top: 25px; padding-bottom: 15px;">
+                                <span style="font-size: 10pt; font-weight: bold; padding-left: 20px;">Link to maturity trend graph:&nbsp;</span>
+                                <span style="font-size: 10pt" id="maturityTrendLink"></span>
+                                <button class="button" id="copy-button" data-clipboard-target="#maturityTrendLink" style="font-size: 10pt; font-weight: bold; margin-left: 15px;" onclick="return false;">Copy Link</button>
                             </div>
-                            <p/><p/><p/>
                           </div>
 
                           <h2 class="ibm-bold ibm-h4">Last update</h2>
@@ -365,7 +362,6 @@
                              <div><span style="font-size: 9pt">Last update:  <span style="font-size: 9pt" id="lastUpdateTimestamp"></span>      &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;      Updated by:  <span style="font-size: 9pt" id="lastUpdateUser"></span></span></div>
                             </div>
                             <div id="debugSection">
-                              <!-- style="display:none;" -->
                               <p>
                                 <label><span STYLE="font-size: 9pt">Doc id for this page(for SIT only):</span></label> <span style="font-size: 9pt" id="doc_id"></span>
                               </p>
@@ -382,18 +378,21 @@
         </div>
       </main>
 
-      <div id="customLinkLabel" class="ibm-common-overlay" data-widget="overlay" style="border:0px solid red; width: 300px; overflow:auto;">
-        <form id="customLinkLabelForm" class="ibm-row-form" method="post">
-          <h2 class="ibm-bold ibm-h3">New Label</h2>
+      <div id="customLinkLabel" class="ibm-common-overlay" data-widget="overlay">
+        <form id="customLinkLabelForm" class="ibm-row-form" action="javascript:void(0);">
+          <h2 class="ibm-bold" style="font-size: 22px; padding-bottom: 0px;">Link Label</h2>
           <p>
             <label for="newlabel">Please enter a new label name:</label>
             <span>
-              <input type="text" name="newlabel" id="newlabel" size="10" aria-label='URL' style='width: 250px;' required />
+              <input type="text" name="newlabel" id="newlabel" aria-label="New label" size="45" placeholder="Other" required/>
             </span>
-          </p><br /><br />
-          <span class="ibm-btn-row">
-            <input type="button" class="ibm-btn-pri ibm-btn-small" id="addnewLinkLabelBtn" value="Create" onclick="addnewLinkLabel();" />
-            <input type="button" class="ibm-btn-pri ibm-btn-small" id="cancelLinkLabelBtn" value="Cancel" onclick="cancelLinkLabel();" />
+          </p>
+          <div class="ibm-rule ibm-alternate">
+            <hr>
+          </div>
+          <span class="ibm-btn-row" style="float:right;">
+            <input type="button" class="ibm-btn-pri ibm-btn-small" id="addnewLinkLabelBtn" value="Create" onclick="addnewLinkLabel();" style="margin-right: 10px;"/>
+            <input type="button" class="ibm-btn-sec ibm-btn-small" id="cancelLinkLabelBtn" value="Cancel" onclick="cancelLinkLabel();" />
           </span>
         </form>
       </div>
@@ -409,6 +408,6 @@
     <%- include ./footer.ejs %>
 
   </div>
-<script type="text/javascript" src="js/team-accessibility-fix.js?v=<%=Math.random()%>"></script>
+  <script type="text/javascript" src="js/team-accessibility-fix.js?v=<%=Math.random()%>"></script>
 </body>
 </html>
