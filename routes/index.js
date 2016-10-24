@@ -28,7 +28,7 @@ module.exports = function(app, passport) {
   }
   else {
     fs.readdirSync('./routes/api_mongo').forEach(function(file) {
-      require('./api/' + file)(app, includes);
+      require('./api_mongo/' + file)(app, includes);
     });
   }
   fs.readdirSync('./routes/v1').forEach(function(file) {
