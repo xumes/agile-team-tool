@@ -89,3 +89,17 @@ module.exports.getAllTeams = function() {
     });
   });
 };
+
+module.exports.getAssessmentTemplate = function(teamId, status){
+  return new Promise(function(resolve, reject){
+    var url = '/api/assessment/template?teamId=' + teamId + '&status=' + status;
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};

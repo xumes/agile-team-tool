@@ -29,7 +29,7 @@ var TeamDropdown = React.createClass({
 
   render: function() {
     var teamSelectListStyle = {
-      'minWidth': '380px'
+      'width': '300px'
     };
     var populateTeamNames = this.state.teamNames.map(function(item) {
       return (

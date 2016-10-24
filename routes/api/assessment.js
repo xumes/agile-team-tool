@@ -31,7 +31,9 @@ module.exports = function(app, includes) {
   };
 
   getAssessmentTemplate = function(req, res) {
-    assessmentTemplateModel.get()
+    var templateId = req.query.templateId;
+    var status = req.query.status;
+    assessmentTemplateModel.get(templateId, status)
       .then(function(result) {
         res.send(result);
       })

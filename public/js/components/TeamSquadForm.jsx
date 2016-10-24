@@ -41,14 +41,12 @@ var TeamForm = React.createClass({
     });
 
     return (
-      <form class="ibm-column-form">
-        <p>
-          <label style={labelStyle} for="teamSelectList">Select an existing team:<span class="ibm-required">*</span></label>
-            <span>
-              <TeamDropdown/>
-           </span>
-         </p>
-      </form>
+      <p>
+        <label style={labelStyle} for="teamSelectList">Select an existing team:<span class="ibm-required">*</span></label>
+          <span>
+            <TeamDropdown/>
+         </span>
+       </p>
     )
   }
 
