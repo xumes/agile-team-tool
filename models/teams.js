@@ -3,12 +3,15 @@ var common = require('./cloudant-driver');
 var iterationModels = require('./iteration');
 var assessmentModels = require('./assessment');
 var _ = require('underscore');
+var crypto = require('crypto');
 var loggers = require('../middleware/logger');
 var validate = require('validate.js');
 var settings = require('../settings');
 var util = require('../helpers/util');
 var rules = require('./validate_rules/teams');
 var memberRules = require('./validate_rules/teamMembers');
+var linkRules = require('./validate_rules/teamLinks');
+var teamLinkRules = linkRules.teamlinkRules;
 var users = require('./users');
 var teamIndex = require('./index/teamIndex');
 var teamDocRules = rules.teamDocRules;
@@ -344,10 +347,10 @@ var team = {
         updateOrDeleteTeamValidation.push(team.getTeam(teamId)); //res[0]
         infoLogs('Getting iterations associated to ' + teamId);
         // var iterationModels = require('./iteration');
-        updateOrDeleteTeamValidation.push(iterationModels.getByIterInfo(teamId)); //res[1]
+        updateOrDeleteTeamValidation.push(iterationModels.getByIterInfo(teamId, _.isEqual(action, 'delete') ? true : false)); //res[1]
         infoLogs('Getting assessments associated to ' + teamId);
         // var assessmentModels = require('./assessment');
-        updateOrDeleteTeamValidation.push(assessmentModels.getTeamAssessments(teamId)); //res[2]
+        updateOrDeleteTeamValidation.push(assessmentModels.getTeamAssessments(teamId, _.isEqual(action, 'delete') ? true : false)); //res[2]
         infoLogs('Getting existing team names that might match ' + updatedTeamDoc['name']);
         updateOrDeleteTeamValidation.push(team.getByName(updatedTeamDoc['name'])); //res[3]
         infoLogs('Getting teams associated to ' + teamId);
@@ -361,8 +364,8 @@ var team = {
         Promise.all(updateOrDeleteTeamValidation)
           .then(function(res) {
             var oldTeamDocu = res[0];
-            var teamIterations = res[1];
-            var teamAssesments = res[2];
+            var teamIterations = util.returnObject(res[1]);
+            var teamAssesments = util.returnObject(res[2]);
             var teamName = res[3];
             var userEmail = user['shortEmail'];
             if (oldTeamDocu['doc_status'] === 'delete') {
@@ -379,7 +382,7 @@ var team = {
                   var bulkDocu = [];
                   oldTeamDocu['doc_status'] = 'delete';
                   bulkDocu.push(oldTeamDocu);
-                  bulkDocu.push(teamIterations.rows);
+                  bulkDocu.push(teamIterations);
                   bulkDocu.push(teamAssesments);
                   bulkDocu = _.flatten(bulkDocu);
                   // reformat into delete docu
@@ -466,7 +469,7 @@ var team = {
                         from No to Yes = only allowed if no child teams are associated
                     */
                   infoLogs('Validating squadteam');
-                  if (updatedTeamDoc['squadteam'] === 'No' && !(_.isEmpty(teamIterations.rows))) {
+                  if (updatedTeamDoc['squadteam'] === 'No' && !(_.isEmpty(teamIterations))) {
                     return reject(formatErrMsg({
                       squadteam: ['Cannot change this team into a non squad team. Iteration information has been entered for this team.']
                     }));
@@ -557,6 +560,7 @@ var team = {
                     updatedTeamDoc['last_updt_user'] = user['shortEmail'];
                     updatedTeamDoc['last_updt_dt'] = util.getServerTime();
                     updatedTeamDoc['_rev'] = oldTeamDocu['_rev'];
+                    updatedTeamDoc['links'] = oldTeamDocu['links'];
                     var finalTeamDoc = {};
                     _.each(oldTeamDocu, function(v, i, l) {
                       if (_.isUndefined(updatedTeamDoc[i]))
@@ -593,12 +597,12 @@ var team = {
                   }
                 }
               })
-              .catch(function(err) {
+              .catch( /* istanbul ignore next */ function(err) {
                 msg = 'User not authorized to do action';
                 return reject(formatErrMsg(msg));
               });
           })
-          .catch(function(err) {
+          .catch( /* istanbul ignore next */ function(err) {
             reject(err);
           });
       }
@@ -809,6 +813,7 @@ var team = {
       }
     }
   },
+
   associateTeams: function(associateObj, action, user) {
     var userEmail = user['shortEmail'];
     var errorLists = {};
@@ -1144,34 +1149,31 @@ var team = {
         infoLogs('No user teams found!');
         resolve(userTeamsList);
       } else {
+        var userTeams = [];
         team.getTeamByEmail(userEmail)
           .then(function(body) {
-            var userTeams = util.returnObject(body);
+            userTeams = util.returnObject(body);
             loggers.get('models').verbose('Found ' + userTeams.length + ' team(s) for ' + userEmail);
             var requestKeys = _.pluck(userTeams, '_id');
-            common.getByViewKeys('teams', 'lookup', requestKeys)
-              .then(function(docs){
-                var strTeams = _.pluck(docs.rows, 'value');
-                _.each(userTeams, function(team){
-                  var lookupObj = _.findWhere(strTeams, {
-                    _id: team._id
-                  });
-                  if (!_.isEmpty(lookupObj)) {
-                    userTeamsList = _.union([team._id], lookupObj.children, userTeamsList);
-                  } else {
-                    userTeamsList = _.union([team._id], team.child_team_id, userTeamsList);
-                  }
-                });
-                userTeamsList = _.uniq(userTeamsList);
-                loggers.get('models').info('Success: ' + userEmail + ' has ' + userTeamsList.length + ' accessible team(s) by relationship.');
-                resolve(userTeamsList);
-              })
-              .catch( /* istanbul ignore next */ function(err){
-                reject(formatErrMsg(err.error));
-              });
+            return common.getByViewKeys('teams', 'lookup', requestKeys);
           })
-          .catch( /* istanbul ignore next */ function(err) {
-            // cannot simulate Cloudant error during testing
+          .then(function(docs){
+            var strTeams = _.pluck(docs.rows, 'value');
+            _.each(userTeams, function(team){
+              var lookupObj = _.findWhere(strTeams, {
+                _id: team._id
+              });
+              if (!_.isEmpty(lookupObj)) {
+                userTeamsList = _.union([team._id], lookupObj.children, userTeamsList);
+              } else {
+                userTeamsList = _.union([team._id], team.child_team_id, userTeamsList);
+              }
+            });
+            userTeamsList = _.uniq(userTeamsList);
+            loggers.get('models').info('Success: ' + userEmail + ' has ' + userTeamsList.length + ' accessible team(s) by relationship.');
+            resolve(userTeamsList);
+          })
+          .catch( /* istanbul ignore next */ function(err){
             reject(formatErrMsg(err.error));
           });
       }
@@ -1250,12 +1252,197 @@ var team = {
           );
         });
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
+        return reject(err);
+      });
+    });
+  },
+
+  modifyImportantLinks: function(teamId, userId, links) {
+    return new Promise(function(resolve, reject){
+      /**
+       *
+       * @param teamId - team id to modify
+       * @param userId - user id of the one who is doing the action
+       * @param links - array of links
+       * @returns - modified team document
+       */
+      var errorLists = {};
+      errorLists['error'] = {};
+      if (_.isEmpty(teamId)){
+        errorLists['error']['teamId'] = ['Team ID is required'];
+        infoLogs(errorLists);
+        return reject(errorLists);
+      }
+      if (_.isEmpty(userId)){
+        errorLists['error']['userId'] = ['User ID is required'];
+        infoLogs(errorLists);
+        return reject(errorLists);
+      }
+      if (_.isEmpty(links)){
+        errorLists['error']['links'] = ['Link url is required'];
+        infoLogs(errorLists);
+        return reject(errorLists);
+      } else {
+        if (!_.isArray(links)){
+          errorLists['error']['links'] = ['Invalid links'];
+          infoLogs(errorLists);
+          return reject(errorLists);
+        } else {
+          var err = [];
+          _.each(links, function(v,i,l) {
+            var mLists = validate(v, teamLinkRules);
+            if (mLists) {
+              if (mLists['linkUrl']){
+                err.push({linkUrl: mLists['linkUrl'][0]});
+              }
+              if (mLists['linkLabel']){
+                err.push({linkLabel: mLists['linkLabel'][0]});
+              }
+            }
+          });
+          if (!_.isEmpty(err)){
+            errorLists['error'] = {'links': err};
+            infoLogs(errorLists);
+            return reject(errorLists);
+          }
+        }
+      }
+
+      //check if user is allowed to edit team
+      util.isUserAllowed(userId, teamId)
+      .then(function(allowed){
+        infoLogs('User ' + userId + ' is allowed to edit team ' + teamId + '. Proceed with modification');
+        return allowed;
+      })
+      .then(function(){
+        return team.getTeam(teamId);
+      })
+      .then(function(teamDetails){
+        teamDetails = teamDetails;
+        var tmpLinks = [];
+        var pattern = /^((http|https):\/\/)/;
+        _.each(links, function(data,idx,ls) {
+          var str = data.linkUrl + process.hrtime().toString();
+          var hashId = crypto.createHash('md5').update(str).digest('hex');
+          var obj = {};
+          obj.id = (data.id !== undefined) ? data.id : hashId;
+          var url = data.linkUrl;
+          if (!pattern.test(url)) {
+            url = 'http://' + url;
+          }
+          obj.linkLabel = data.linkLabel;
+          obj.linkUrl = url;
+          tmpLinks.push(obj);
+        });
+        teamDetails['links'] = tmpLinks;
+        teamDetails['last_updt_user'] = userId;
+        teamDetails['last_updt_dt'] = util.getServerTime();
+        return common.updateRecord(teamDetails);
+      })
+      .then(function(savingResult){
+        return team.getUserTeams(userId);
+      })
+      .then(function(userTeams){
+        return team.getTeam(teamId)
+        .then(function(result){
+          return resolve(
+            {
+              userTeams : userTeams,
+              teamDetails : result
+            }
+          );
+        });
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        return reject(err);
+      });
+    });
+  },
+
+  deleteImportantLinks: function(teamId, userId, links){
+    return new Promise(function(resolve, reject){
+      /**
+       *
+       * @param teamId - team id to modify
+       * @param userId - user id of the one who is doing the action
+       * @param links - array of link IDs
+       * @returns - modified team document
+       */
+      var errorLists = {};
+      errorLists['error'] = {};
+      if (_.isEmpty(teamId)){
+        errorLists['error']['teamId'] = ['Team ID is required'];
+        infoLogs(errorLists);
+        return reject(errorLists);
+      }
+      if (_.isEmpty(userId)){
+        errorLists['error']['userId'] = ['User ID is required'];
+        infoLogs(errorLists);
+        return reject(errorLists);
+      }
+      if (_.isEmpty(links)){
+        errorLists['error']['links'] = ['Link ID is required'];
+        infoLogs(errorLists);
+        return reject(errorLists);
+      } else {
+        if (!_.isArray(links)){
+          errorLists['error']['links'] = ['Invalid links'];
+          infoLogs(errorLists);
+          return reject(errorLists);
+        }
+      }
+
+      //check if user is allowed to edit team
+      util.isUserAllowed(userId, teamId)
+      .then(function(allowed){
+        infoLogs('User ' + userId + ' is allowed to edit team ' + teamId + '. Proceed with modification');
+        return allowed;
+      })
+      .then(function(){
+        return team.getTeam(teamId);
+      })
+      .then(function(teamDetails){
+        if (!_.isEmpty(teamDetails.links)){
+          var curlinkData = teamDetails.links;
+          var tmpLinks = [];
+          var deletedIds = _.pluck(links, 'id');
+          _.each(curlinkData, function(value, key, list){
+            if (_.contains(deletedIds, value.id)){
+              delete curlinkData[key];
+            }
+          });
+          _.each(curlinkData, function(value, key, list){
+            if (value !== undefined){
+              tmpLinks.push(value);
+            }
+          });
+        }
+        teamDetails = teamDetails;
+        teamDetails['links'] = tmpLinks;
+        teamDetails['last_updt_user'] = userId;
+        teamDetails['last_updt_dt'] = util.getServerTime();
+        return common.updateRecord(teamDetails);
+      })
+      .then(function(savingResult){
+        return team.getUserTeams(userId);
+      })
+      .then(function(userTeams){
+        return team.getTeam(teamId)
+        .then(function(result){
+          return resolve(
+            {
+              userTeams : userTeams,
+              teamDetails : result
+            }
+          );
+        });
+      })
+      .catch( /* istanbul ignore next */ function(err){
         return reject(err);
       });
     });
   }
-
 };
 
 var formattedDocuments = function(doc, action) {

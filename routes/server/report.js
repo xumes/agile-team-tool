@@ -7,7 +7,9 @@ module.exports = function(app, includes) {
   showReport = function(req, res) {
     var json = {
       'pageTitle': 'Report',
-      'googleAnalyticsKey': settings.googleAnalyticsKey
+      'googleAnalyticsKey': settings.googleAnalyticsKey,
+      'ibmNPSKey': settings.ibmNPSKey,
+      'environment': settings.environment
     };
     render(req, res, 'report', json);
   };

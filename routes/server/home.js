@@ -6,7 +6,9 @@ module.exports = function(app, includes) {
   showHome = function(req, res) {
     var json = {
       'pageTitle': 'Home',
-      'googleAnalyticsKey': settings.googleAnalyticsKey
+      'googleAnalyticsKey': settings.googleAnalyticsKey,
+      'ibmNPSKey': settings.ibmNPSKey,
+      'environment': settings.environment
     };
     render(req, res, 'home', json);
   };
@@ -19,7 +21,9 @@ module.exports = function(app, includes) {
     var json = {
       'pageTitle': 'Home',
       'googleAnalyticsKey': settings.googleAnalyticsKey,
-      'user': req.session.user
+      'user': req.session.user,
+      'ibmNPSKey': settings.ibmNPSKey,
+      'environment': settings.environment
     };
     render(req, res, 'v2_home', json);
   });

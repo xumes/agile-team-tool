@@ -8,7 +8,7 @@ var AssessmentButtons = require('./AssessmentButtons.jsx');
 
 var AssessmentPage = React.createClass({
   render: function() {
-    return (<div id="assessmentForm">
+    return (<form id="assessmentForm" class="ibm-column-form">
                 {/* START choose squad team, select or create assessment form */}
                 <AssessmentPageFormOne />
                 {/* END choose squad team, select or create assessment form */}
@@ -32,7 +32,7 @@ var AssessmentPage = React.createClass({
                 {/* START assessment generic buttons */}
                 <AssessmentButtons />
                 {/* END assessment generic buttons */}
-              </div>)
+              </form>)
   }
 });
 

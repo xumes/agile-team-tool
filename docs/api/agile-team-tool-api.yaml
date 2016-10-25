@@ -132,7 +132,13 @@ paths:
                 type: number
               deployments:
                 type: integer
+              defectsStartBal:
+                type: integer
               defects:
+                type: integer
+              defectsClosed:
+                type: integer
+              defectsEndBal:
                 type: integer
               cycleTimeWIP:
                 type: number
@@ -201,7 +207,13 @@ paths:
                 type: number
               deployments:
                 type: integer
+              defectsStartBal:
+                type: integer
               defects:
+                type: integer
+              defectsClosed:
+                type: integer
+              defectsEndBal:
                 type: integer
               cycleTimeWIP:
                 type: number
@@ -318,9 +330,15 @@ definitions:
       deployments:
         type: integer
         description: Number of deployments done
+      defectsStartBal:
+        type: integer
+        description: Number of defects from previous iteration
       defects:
         type: integer
-        description: Number of defects
+        description: Number of defects found this iteration
+      defectsClosed:
+        type: integer
+        description: Number of defects resolved this iteration
       clientSatisfaction:
         type: number
         description: Client satisfaction score

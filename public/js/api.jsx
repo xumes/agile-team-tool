@@ -53,8 +53,8 @@ module.exports.searchTeams = function (keyword) {
 
 module.exports.getMyTeams = function() {
   return new Promise(function(resolve, reject){
-    var rootTeamUrl = '/api/teams/lookup/rootteams/' + encodeURIComponent(('114702631').toUpperCase());
-    var standaloneUrl = '/api/teams/lookup/standalone/' + encodeURIComponent(('114702631').toUpperCase());
+    var rootTeamUrl = '/api/teams/lookup/rootteams/' + encodeURIComponent((user.ldap.uid).toUpperCase());
+    var standaloneUrl = '/api/teams/lookup/standalone/' + encodeURIComponent((user.ldap.uid).toUpperCase());
     var req = $.when(
       $.ajax({
         type: 'GET',
@@ -79,6 +79,108 @@ module.exports.getMyTeams = function() {
 module.exports.getAllTeams = function() {
   return new Promise(function(resolve, reject){
     var url = '/api/teams/lookup/rootteams/';
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.getChildrenTeams = function(pathId) {
+  return new Promise(function(resolve, reject){
+    if (pathId == 'agteamstandalone') {
+      var url = '/api/teams/lookup/standalone/';
+    } else {
+      url = '/api/teams/children/' + encodeURIComponent(pathId);
+    }
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.loadTeamDetails = function(pathId) {
+  return new Promise(function(resolve, reject){
+    var url ='/api/teams/haschildren/' + encodeURIComponent(pathId);
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.loadTeam = function(objectId) {
+  return new Promise(function(resolve, reject){
+    var url ='/api/teams/' + encodeURIComponent(objectId);
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.getTeamSnapshots = function(objectId) {
+  return new Promise(function(resolve, reject){
+    var url ='/api/snapshot/get/' + encodeURIComponent(objectId);
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.getSquadIterations = function(objectId) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/iteration/searchTeamIteration?id=' + encodeURIComponent(objectId);
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.getSquadAssessments = function(objectId) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/assessment/view?teamId=' + encodeURIComponent(objectId);
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.getAssessmentTemplate = function(teamId, status){
+  return new Promise(function(resolve, reject){
+    var url = '/api/assessment/template?teamId=' + teamId + '&status=' + status;
     var req = $.ajax({
       type: 'GET',
       url: url

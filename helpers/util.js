@@ -274,3 +274,18 @@ module.exports.queryLDAP = function(id) {
 module.exports.specialCharsHandler = function(id) {
   return id.replace( /(:|\.|\[|\]|,|\/| )/g, '\\$1' );
 };
+
+module.exports.getIntegerValue = function(fieldValue) {
+  var value = 0;
+  if (!_.isUndefined(fieldValue) && !isNaN(parseInt(fieldValue)))
+    value = parseInt(fieldValue);
+  return value;
+};
+
+module.exports.getFloatValue = function(fieldValue) {
+  var value = 0;
+  if (!_.isUndefined(fieldValue) && !isNaN(parseFloat(fieldValue)))
+    value = parseFloat(fieldValue);
+  return value;
+};
+

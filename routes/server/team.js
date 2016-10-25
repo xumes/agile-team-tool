@@ -7,7 +7,9 @@ module.exports = function(app, includes) {
   showTeamManagement = function(req, res) {
     var json = {
       'pageTitle': 'Team Management',
-      'googleAnalyticsKey': settings.googleAnalyticsKey
+      'googleAnalyticsKey': settings.googleAnalyticsKey,
+      'ibmNPSKey': settings.ibmNPSKey,
+      'environment': settings.environment
     };
     render(req, res, 'team', json);
   };
@@ -17,7 +19,9 @@ module.exports = function(app, includes) {
   app.get('/_v2_team', includes.middleware.auth.requireLoginWithRedirect, function(req, res) {
     var json = {
       'pageTitle': 'Team Management',
-      'googleAnalyticsKey': settings.googleAnalyticsKey
+      'googleAnalyticsKey': settings.googleAnalyticsKey,
+      'ibmNPSKey': settings.ibmNPSKey,
+      'environment': settings.environment
     };
     render(req, res, 'v2_team', json);
   });

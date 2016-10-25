@@ -5,11 +5,7 @@ var workerLogger = require('../middleware/logger').get('worker');
 schedule.scheduleJob('*/3 * * * *', function() {
   snapshot.updateRollUpData()
     .then(function() {
-      workerLogger.verbose('Successfully updated iteration rollup data for squads');
-      return snapshot.updateRollUpSquads();
-    })
-    .then(function(rollupSquadsData) {
-      workerLogger.verbose('Successfully updated score roll-up data for squads');
+      workerLogger.verbose('Successfully updated iteration/assessment rollup data for squads');
       return null;
     })
     .catch(function(err) {
@@ -34,7 +30,7 @@ schedule.scheduleJob('*/3 * * * *', function() {
   snapshot.updateAssessmentRollUpData()
     .then(function() {
       workerLogger.verbose('Successfully updated team assessments rollup data.');
-      return null;
+      return snapshot.updateAssessmentRollUpData();
     })
     .catch(function(err) {
       workerLogger.error('Unable to update assessment rollup data err=', err.error);
