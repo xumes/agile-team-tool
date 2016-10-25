@@ -16,25 +16,25 @@ var HomeNav = React.createClass({
   },
 
   searchStart: function() {
-    $('#spinnerContainer-search').show();
+    $('#navSpinner').show();
     $('#searchTree').hide();
     $('#teamTree').hide();
   },
 
   searchEnd: function() {
-    $('#spinnerContainer-search').hide();
+    $('#navSpinner').hide();
     $('#searchTree').show();
     $('#teamTree').hide();
   },
 
   tabClickedStart: function() {
-    $('#spinnerContainer-search').show();
+    $('#navSpinner').show();
     $('#searchTree').hide();
     $('#teamTree').hide();
   },
 
   tabClickedEnd: function() {
-    $('#spinnerContainer-search').hide();
+    $('#navSpinner').hide();
     $('#searchTree').hide();
     $('#teamTree').show();
   },
@@ -109,7 +109,7 @@ var HomeNav = React.createClass({
       <div>
         <HomeNavTab searchStart={this.searchStartHandler} tabClicked={this.tabClickedHandler}/>
         <HomeSearchField />
-        <HomeSpinner />
+        <HomeSpinner id={'navSpinner'}/>
         <div class='agile-team-nav nano' data-widget='scrollable' data-height='600' style={agileTeamNavStyle}>
           <div class="nano-content">
             <HomeSearchTree searchTeams={this.state.searchTeams} clickedTeam={this.searchTeamClickedHandler}/>

@@ -27,7 +27,7 @@ var HomeTeamTree = React.createClass({
 
   componentDidUpdate: function() {
     var self = this;
-    $('#spinnerContainer-search').hide();
+    $('#navSpinner').hide();
     $('#searchTree').hide();
     $('#teamTree').show();
     $('.nano').nanoScroller();
@@ -173,15 +173,37 @@ var HomeTeamTree = React.createClass({
   },
 
   loadDetails: function(teamId) {
+    var self = this;
     $('.nano').nanoScroller();
-    this.highlightTeam(teamId);
+    self.highlightTeam(teamId);
     selectedTeam = teamId;
-    this.props.selectedTeam(teamId);
+    var objectId = $('#' + teamId).children('span').html();
+    var promiseArray = [];
+    promiseArray.push(api.loadTeam(objectId));
+    if ($('#link_' + teamId).hasClass('agile-team-squad')) {
+      var isSquad = true;
+      promiseArray.push(api.getSquadIterations(objectId));
+      promiseArray.push(api.getSquadAssessments(objectId));
+    } else {
+      isSquad = false;
+      promiseArray.push(api.getTeamSnapshots(objectId));
+    }
+    $('#contentSpinner').show();
+    $('#squad_team_scard').hide();
+    $('#nsquad_team_scard').hide();
+    Promise.all(promiseArray)
+    .then(function(results){
+      self.props.selectedTeam(results);
+    })
+    .catch(function(err){
+      console.log(err);
+      $('#contentSpinner').hide();
+    });
   },
 
   loadTeamInAllTeams: function(teamId) {
     var self = this;
-    $('#spinnerContainer-search').show();
+    $('#navSpinner').show();
     $('#teamTree').hide();
     var path = [];
     api.loadTeamDetails(teamId)
@@ -209,7 +231,7 @@ var HomeTeamTree = React.createClass({
         self.appendChildTeams(results[i], path[i]);
       }
       self.loadDetails(path[path.length-1]);
-      $('#spinnerContainer-search').hide();
+      $('#navSpinner').hide();
       $('#teamTree').show();
       $('.nano').nanoScroller();
       $('.nano').nanoScroller({
@@ -217,7 +239,7 @@ var HomeTeamTree = React.createClass({
       });
     })
     .catch(function(err){
-      $('#spinnerContainer-search').hide();
+      $('#navSpinner').hide();
       $('#teamTree').show();
       self.highlightTeam(($('#teamTree li')[0]).id);
       console.log(err);

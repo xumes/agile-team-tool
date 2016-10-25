@@ -17,7 +17,7 @@ var HomeSearchTree = React.createClass({
   },
 
   componentDidUpdate: function() {
-    $('#spinnerContainer-search').hide();
+    $('#navSpinner').hide();
     $('#searchTree').show();
     $('#teamTree').hide();
     $('.nano').nanoScroller();

@@ -4,7 +4,7 @@ var api = require('../api.jsx');
 var HomeSpinner = React.createClass({
   render: function() {
     var spinnerContainerStyle = {
-      'display': this.props.spinnerHide,
+      'display': 'none',
       'textAlign': 'center'
     };
     var spinnerStyle = {
@@ -15,7 +15,7 @@ var HomeSpinner = React.createClass({
       'padding': 0
     };
     return (
-      <div id="spinnerContainer-search" style={spinnerContainerStyle}>
+      <div id={this.props.id} style={spinnerContainerStyle}>
         <div style={spinnerStyle} class="clear-loading loading-effect-1">
           <span style={spanStyle}></span>
           <span style={spanStyle}></span>
