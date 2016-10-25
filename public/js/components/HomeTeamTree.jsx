@@ -176,7 +176,7 @@ var HomeTeamTree = React.createClass({
     $('.nano').nanoScroller();
     this.highlightTeam(teamId);
     selectedTeam = teamId;
-    console.log(teamId);
+    this.props.selectedTeam(teamId);
   },
 
   loadTeamInAllTeams: function(teamId) {

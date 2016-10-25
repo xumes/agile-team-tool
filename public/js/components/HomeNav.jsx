@@ -87,7 +87,7 @@ var HomeNav = React.createClass({
     self.tabClickedHandler('mytab');
     $('#nameSearchField').on('input',function() {
       var inputText = $('#nameSearchField').val();
-      if (inputText.length > 0 && inputText != ' ') {
+      if (inputText.length > 1 && inputText != ' ') {
         self.searchStart();
         api.searchTeams(inputText)
           .then(function(teams){
@@ -113,7 +113,7 @@ var HomeNav = React.createClass({
         <div class='agile-team-nav nano' data-widget='scrollable' data-height='600' style={agileTeamNavStyle}>
           <div class="nano-content">
             <HomeSearchTree searchTeams={this.state.searchTeams} clickedTeam={this.searchTeamClickedHandler}/>
-            <HomeTeamTree newTeams={this.state.newTeams} searchTeamSelected={this.state.searchTeamSelected}/>
+            <HomeTeamTree newTeams={this.state.newTeams} searchTeamSelected={this.state.searchTeamSelected} selectedTeam={this.props.selectedTeam}/>
           </div>
         </div>
       </div>
