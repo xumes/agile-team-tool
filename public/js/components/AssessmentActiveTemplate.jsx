@@ -1,10 +1,31 @@
-// layout components renderer based on IBM v18
-var Promise = require('bluebird');
+var React = require('react');
+var api = require('../api.jsx');
+var lodash = require('lodash');
 
-// assessment page, render main twisty
-module.exports.mainTwisty = function(twistyId, extraClass){
-  var ul = document.createElement('ul');
-  ul.setAttribute('class', 'ibm-twisty ' + extraClass);
-  ul.setAttribute('id', twistyId);
-  return ul;
-};
+var ActiveTemplate = React.createClass({
+  getInitialState: function() {
+    return {
+      activeTemplates: null
+    }
+  },
+  componentDidMount: function() {
+    var self = this;
+    api.getAssessmentTemplate(null, 'active')
+      .then(function(assessmentTemplates) {
+        self.setState({
+          activeTemplates: assessmentTemplates
+        });
+      });
+
+  },
+  render: function() {
+
+    return (
+      <ul>
+        <li>an ul li</li>
+      </ul>
+    )
+  }
+});
+
+module.exports = ActiveTemplate;
