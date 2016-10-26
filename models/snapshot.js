@@ -1283,6 +1283,44 @@ var snapshot = {
         reject(err);
       });
     });
+  },
+
+  batchIterationClosingDefects: function() /* istanbul ignore next */ {
+    return new Promise(function(resolve, reject) {
+      var updatedIterations = [];
+      iterationModel.getByIterInfo(null, true)
+        .then(function(results) {
+          var iterations = util.returnObject(results);
+          _.each(iterations, function(iterationDoc) {
+            if (_.isUndefined(iterationDoc.nbr_defects_end_bal) && !_.isEmpty(iterationDoc.nbr_defects)) {
+              var currentDefects = util.getIntegerValue(iterationDoc.nbr_defects);
+              iterationDoc.nbr_defects = currentDefects + '';
+              iterationDoc.nbr_defects_end_bal = currentDefects + '';
+              iterationDoc.last_updt_user = 'batch';
+              iterationDoc.last_updt_dt = util.getServerTime();
+              updatedIterations.push(iterationDoc);
+            }
+          });
+          infoLogs('total iterations: ' + iterations.length);
+          infoLogs('total updated iterations: ' + updatedIterations.length);
+          var updateRequest = {
+            'docs': updatedIterations
+          };
+          return common.bulkUpdate(updateRequest);
+        })
+        .then(function(results){
+          resolve(results);
+        })
+        .catch(function(err) {
+          var msg;
+          if (err.error) {
+            msg = err.error;
+          } else {
+            msg = err;
+          }
+          reject(formatErrMsg(msg));
+        });
+    });
   }
 };
 

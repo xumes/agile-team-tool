@@ -72,10 +72,10 @@ var assessment = {
     return new Promise(function(resolve, reject) {
       var msg = '';
       if (!_.isEmpty(teamId)) {
-        teamId = util.specialCharsHandler(teamId);
+        var formattedId = util.specialCharsHandler(teamId);
         infoLogs('Getting all team assessment records from Cloudant.');
         var params = {
-          'q': 'team_id:' + teamId,
+          'q': 'team_id:' + formattedId,
           'include_docs': docs || false,
           'sort': ['assessmt_status<string>', '-sort_dt<number>'],
           'limit': 200

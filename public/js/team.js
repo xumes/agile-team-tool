@@ -257,7 +257,9 @@ function loadSelectedAgileTeam() {
     $('#lastUpdateUser').html(currentTeam.last_updt_user);
     $('#lastUpdateTimestamp').html(showDateUTC(currentTeam.last_updt_dt));
     $('#doc_id').html(currentTeam._id);
-    $('#maturityTrendLink').html(window.location.origin+'/maturityTrends?id='+currentTeam._id);
+    var matLink = window.location.origin+'/maturityTrends?id='+encodeURIComponent(currentTeam._id);
+    $('#maturityTrendLink').html(matLink);
+    // $('#copy-button').attr('data-clipboard-text', matLink);
     clearFieldErrorHighlight('teamName');
     clearFieldErrorHighlight('teamMemberName');
     clearFieldErrorHighlight('memberAllocation');
@@ -277,7 +279,7 @@ function loadSelectedAgileTeam() {
     loadAssessmentInformation(null, false);
     if (currentTeam.squadteam != undefined && currentTeam.squadteam.toLowerCase() == 'yes') {
       $('#teamSquadYesNo').val('Yes');
-      $('#squadChildPageSection, #squadIterationPageSection, #squadAssessmentPageSection').show();
+      $('#squadChildPageSection, #squadIterationPageSection, #squadAssessmentPageSection, #maturityTrend').show();
       $('#nonSquadChildPageSection, #nonSquadIterationPageSection, #nonSquadAssessmentPageSection').hide();
       // disable squad indicator if iteration data exist
       $.ajax({
@@ -316,7 +318,7 @@ function loadSelectedAgileTeam() {
 
     } else {
       $('#teamSquadYesNo').val('No');
-      $('#squadChildPageSection, #squadIterationPageSection, #squadAssessmentPageSection').hide();
+      $('#squadChildPageSection, #squadIterationPageSection, #squadAssessmentPageSection, #maturityTrend').hide();
       $('#nonSquadChildPageSection, #nonSquadIterationPageSection, #nonSquadAssessmentPageSection').show();
 
       if (currentTeam.child_team_id.length > 0) {
@@ -745,13 +747,12 @@ function popupCustomLabel(elem, currentLabel, currentUrl, ctr, id){
       onEditmodeLink(currentLabel, currentUrl, ctr, id);
     }
   }
-  // Commmented temporary since v18 has an issue for now Oct/20/2016
-  // if (selected == 'Other') {
-  //   IBMCore.common.widget.overlay.show('customLinkLabel');
-  //   setInterval(function() {
-  //     $('#ibm-overlaywidget-customLinkLabel-content #newlabel').focus();
-  //   }, 2);
-  // }
+  if (selected == 'Other') {
+    IBMCore.common.widget.overlay.show('customLinkLabel');
+    setInterval(function() {
+      $('#ibm-overlaywidget-customLinkLabel-content #newlabel').focus();
+    }, 2);
+  }
 }
 
 var selectdata = [];
@@ -803,7 +804,7 @@ function addnewLinkLabel(){
   if (newlabel !== ''){
     selectdata.push({id: newlabel, text: newlabel});
     $('#'+curLinkLabelID).select2({data: selectdata});
-    IBMCore.common.widget.overlay.hide('customLinkLabel');
+    IBMCore.common.widget.overlay.hide('customLinkLabel', true);
     $('#newlabel').val('');
 
     $('#'+curLinkLabelID).val(newlabel);
@@ -815,7 +816,7 @@ function addnewLinkLabel(){
 
 function cancelLinkLabel(){
   $('#customLinkLabel').css('cursor', 'default');
-  IBMCore.common.widget.overlay.hide('customLinkLabel');
+  IBMCore.common.widget.overlay.hide('customLinkLabel', true);
   $('#select2-' + curLinkLabelID + '-container').text('Select label');
   $('#select2-' + curLinkLabelID + '-container').attr('title', 'Select label');
   $('#'+curLinkLabelID).val('-1');
