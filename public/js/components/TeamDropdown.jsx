@@ -1,5 +1,6 @@
 var React = require('react');
 var api = require('../api.jsx');
+var ReactDOM = require('react-dom');
 
 var TeamDropdown = React.createClass({
   getInitialState: function() {
@@ -19,15 +20,13 @@ var TeamDropdown = React.createClass({
       });
 
     // Use IBM's bundled select2 package
-    $('select[name="teamSelectList"]').select2();
-
+    $(this.refs.selectDropDown).select2();
+    $(this.refs.selectDropDown).change(this.props.teamChangeHandler);
   },
-
-
 
   render: function() {
     var teamSelectListStyle = {
-      'minWidth': '380px'
+      'minWidth': '400px'
     };
     var populateTeamNames = this.state.teamNames.map(function(item) {
       return (
@@ -36,8 +35,8 @@ var TeamDropdown = React.createClass({
     });
 
     return (
-      <select name="teamSelectList" style={teamSelectListStyle}>
-        <option value="new" selected="selected">Create new...</option>
+      <select defaultValue="new" name="teamSelectList" style={teamSelectListStyle} ref='selectDropDown'>
+        <option value="new">Create new...</option>
         {populateTeamNames}
       </select>
     )
