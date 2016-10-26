@@ -1292,14 +1292,22 @@ var snapshot = {
         .then(function(results) {
           var iterations = util.returnObject(results);
           _.each(iterations, function(iterationDoc) {
+            iterationDoc.last_updt_user = 'batch';
+            iterationDoc.last_updt_dt = util.getServerTime();
+
+            var startDefects = util.getIntegerValue(iterationDoc.nbr_defects_start_bal  );
+            var newDefects = util.getIntegerValue(iterationDoc.nbr_defects);
+            var closedDefects = util.getIntegerValue(iterationDoc.nbr_defects_closed);
+            var endBalance = startDefects + newDefects - closedDefects;
+
             if (_.isUndefined(iterationDoc.nbr_defects_end_bal) && !_.isEmpty(iterationDoc.nbr_defects)) {
-              var currentDefects = util.getIntegerValue(iterationDoc.nbr_defects);
-              iterationDoc.nbr_defects = currentDefects + '';
-              iterationDoc.nbr_defects_end_bal = currentDefects + '';
-              iterationDoc.last_updt_user = 'batch';
-              iterationDoc.last_updt_dt = util.getServerTime();
+              iterationDoc.nbr_defects_end_bal = newDefects + '';
+              updatedIterations.push(iterationDoc);
+            } else if (endBalance > 0 && (_.isUndefined(iterationDoc.nbr_defects_end_bal) || _.isEmpty(iterationDoc.nbr_defects_end_bal))) {
+              iterationDoc.nbr_defects_end_bal = endBalance + '';
               updatedIterations.push(iterationDoc);
             }
+
           });
           infoLogs('total iterations: ' + iterations.length);
           infoLogs('total updated iterations: ' + updatedIterations.length);
