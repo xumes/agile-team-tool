@@ -24,7 +24,7 @@ var userSchema = {
   },
   email: {
     type: String,
-    required: [true, 'Email is required.']
+    default: null
   },
   adminAccess: {
     type: String,

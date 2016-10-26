@@ -63,6 +63,10 @@ var IterationSchema = {
     type: Number,
     required: [true, 'Member count is required.']
   },
+  memberFte: {
+    type: Number,
+    default: null
+  },
   status: {
     type: String,
     default: 'Not complete'
@@ -83,15 +87,7 @@ var IterationSchema = {
     type: Number,
     default: null
   },
-  locationScore: {
-    type: Number,
-    default: null
-  },
   deployments: {
-    type: Number,
-    default: null
-  },
-  defects: {
     type: Number,
     default: null
   },
@@ -115,11 +111,15 @@ var IterationSchema = {
     type: Number,
     default: null
   },
-  defectsEndBal: {
+  defects: {
     type: Number,
     default: null
   },
   defectsClosed: {
+    type: Number,
+    default: null
+  },
+  defectsEndBal: {
     type: Number,
     default: null
   },
