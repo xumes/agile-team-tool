@@ -179,19 +179,19 @@ var iteration = {
     data['last_updt_dt'] = util.getServerTime();
     data['last_updt_user'] = user['shortEmail'];
     data['iterationinfo_status'] = iteration.calculateStatus(data);
-    var startDefects = util.getIntegerValue(cleanData['nbr_defects_start_bal']);
-    var newDefects = util.getIntegerValue(cleanData['nbr_defects']);
-    var closedDefects = util.getIntegerValue(cleanData['nbr_defects_closed']);
+    var startDefects = util.getIntegerValue(data['nbr_defects_start_bal']);
+    var newDefects = util.getIntegerValue(data['nbr_defects']);
+    var closedDefects = util.getIntegerValue(data['nbr_defects_closed']);
     var endBalance = startDefects + newDefects - closedDefects;
     // if defect fields where previously empty, let it remain empty
-    if (!_.isUndefined(cleanData['nbr_defects_start_bal']) || !_.isEmpty(cleanData['nbr_defects_start_bal']))
-      cleanData['nbr_defects_start_bal'] = startDefects + '';
-    if (!_.isUndefined(cleanData['nbr_defects']) || !_.isEmpty(cleanData['nbr_defects']))
-      cleanData['nbr_defects'] = newDefects + '';
-    if (!_.isUndefined(cleanData['nbr_defects_closed']) || !_.isEmpty(cleanData['nbr_defects_closed']))
-      cleanData['nbr_defects_closed'] = closedDefects + '';
-    if (!_.isUndefined(cleanData['nbr_defects_end_bal']) || !_.isEmpty(cleanData['nbr_defects_end_bal']))
-      cleanData['nbr_defects_end_bal'] = endBalance + '';
+    if (!_.isUndefined(data['nbr_defects_start_bal']) && !_.isEmpty(data['nbr_defects_start_bal']))
+      data['nbr_defects_start_bal'] = startDefects + '';
+    if (!_.isUndefined(data['nbr_defects']) && !_.isEmpty(data['nbr_defects']))
+      data['nbr_defects'] = newDefects + '';
+    if (!_.isUndefined(data['nbr_defects_closed']) && !_.isEmpty(data['nbr_defects_closed']))
+      data['nbr_defects_closed'] = closedDefects + '';
+    if (endBalance > 0 || (!_.isUndefined(data['nbr_defects_end_bal']) && !_.isEmpty(data['nbr_defects_end_bal'])))
+      data['nbr_defects_end_bal'] = endBalance + '';
     cleanData = util.trimData(data);
     // console.log('EDIT iterationId:', iterationId);
     // console.log('EDIT cleanData:', cleanData);
