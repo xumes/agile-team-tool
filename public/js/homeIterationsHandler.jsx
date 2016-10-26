@@ -215,35 +215,35 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations) {
     defectsSeries.data.push(defectData);
 
     defectClosedData.name = p6Iterations[i].name;
-    defectClosedData.y = isNaN(parseInt(p6Iterations[i].defects_closed)) ? 0 : parseInt(p6Iterations[i].defects_closed);
+    defectClosedData.y = isNaN(parseInt(p6Iterations[i].defectsClosed)) ? 0 : parseInt(p6Iterations[i].defectsClosed);
     defectClosedData.iterURL = iterationURL + p6Iterations[i]._id;
     defectClosedData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     defectClosedData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     defectsClosedSeries.data.push(defectClosedData);
 
     defectEndData.name = p6Iterations[i].name;
-    defectEndData.y = isNaN(parseInt(p6Iterations[i].defects_end_bal)) ? 0 : parseInt(p6Iterations[i].defects_end_bal);
+    defectEndData.y = isNaN(parseInt(p6Iterations[i].defectsEndBal)) ? 0 : parseInt(p6Iterations[i].defectsEndBal);
     defectEndData.iterURL = iterationURL + p6Iterations[i]._id;
     defectEndData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     defectEndData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     defectsEndSeries.data.push(defectEndData);
 
     deployData.name = p6Iterations[i].name;
-    deployData.y = isNaN(parseInt(p6Iterations[i].nbr_dplymnts)) ? 0 : parseInt(p6Iterations[i].nbr_dplymnts);
+    deployData.y = isNaN(parseInt(p6Iterations[i].deployments)) ? 0 : parseInt(p6Iterations[i].deployments);
     deployData.iterURL = iterationURL + p6Iterations[i]._id;
     deployData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     deployData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     deploySeries.data.push(deployData);
 
     teamSatData.name = p6Iterations[i].name;
-    teamSatData.y = isNaN(parseInt(p6Iterations[i].team_sat)) ? 0 : parseFloat(p6Iterations[i].team_sat);
+    teamSatData.y = isNaN(parseInt(p6Iterations[i].teamSatisfaction)) ? 0 : parseFloat(p6Iterations[i].teamSatisfaction);
     teamSatData.iterURL = iterationURL + p6Iterations[i]._id;
     teamSatData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     teamSatData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     teamSatSeries.data.push(teamSatData);
 
     clientSatData.name = p6Iterations[i].name;
-    clientSatData.y = isNaN(parseInt(p6Iterations[i].client_sat)) ? 0 : parseFloat(p6Iterations[i].client_sat);
+    clientSatData.y = isNaN(parseInt(p6Iterations[i].clientSatisfaction)) ? 0 : parseFloat(p6Iterations[i].clientSatisfaction);
     clientSatData.iterURL = iterationURL + p6Iterations[i]._id;
     clientSatData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     clientSatData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
@@ -270,14 +270,14 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations) {
     storyPointFTESeries.data.push(storyPointFTEData);
 
     cycleTimeBacklogData.name = p6Iterations[i].name;
-    cycleTimeBacklogData.y = isNaN(parseInt(p6Iterations[i].nbr_cycletime_in_backlog)) ? 0 : parseFloat(p6Iterations[i].nbr_cycletime_in_backlog);
+    cycleTimeBacklogData.y = isNaN(parseInt(p6Iterations[i].cycleTimeInBacklog)) ? 0 : parseFloat(p6Iterations[i].cycleTimeInBacklog);
     cycleTimeBacklogData.iterURL = iterationURL + p6Iterations[i]._id;
     cycleTimeBacklogData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     cycleTimeBacklogData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     cycleTimeBacklogSeries.data.push(cycleTimeBacklogData);
 
     cycleTimeWIPData.name = p6Iterations[i].name;
-    cycleTimeWIPData.y = isNaN(parseInt(p6Iterations[i].nbr_cycletime_WIP)) ? 0 : parseFloat(p6Iterations[i].nbr_cycletime_WIP);
+    cycleTimeWIPData.y = isNaN(parseInt(p6Iterations[i].cycleTimeWIP)) ? 0 : parseFloat(p6Iterations[i].cycleTimeWIP);
     cycleTimeWIPData.iterURL = iterationURL + p6Iterations[i]._id;
     cycleTimeWIPData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     cycleTimeWIPData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
@@ -329,7 +329,7 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations) {
   $('#spinnerContainer').hide();
   $('#mainContent').show();
   redrawCharts('iterationSection');
-}
+};
 
 function destroyIterationCharts() {
   // var chartIds = ['velocityChart', 'throughputChart', 'pizzaChart', 'defectsChart', 'statisfactionChart', 'unitCostChart', 'pvelocityChart', 'pthroughputChart', 'pPizzaChart', 'pdefectsChart', 'piePizzaChart'];
@@ -2140,4 +2140,17 @@ function redrawCharts(section) {
       chart.setSize(width, height);
     }
   });
+}
+
+function sortIterations(iterations) {
+  if (iterations != null && iterations.length > 1) {
+    iterations.sort(function(a, b) {
+      if (new Date(b.endDate).getTime() == new Date(a.endDate).getTime()) {
+        return 0;
+      } else {
+        return (new Date(b.endDate).getTime() > new Date(a.endDate).getTime()) ? 1 : -1;
+      }
+    });
+  }
+  return iterations;
 }
