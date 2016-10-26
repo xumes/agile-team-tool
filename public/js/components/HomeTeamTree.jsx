@@ -92,19 +92,23 @@ var HomeTeamTree = React.createClass({
         }
       }
       self.highlightTeam(selectedTeam);
+      self.loadDetails(selectedTeam);
     } else {
       if ($('#myTeams').attr('data-state') == 'open') {
         if (($.find('#' + selectedTeam)).length > 0) {
           self.highlightTeam(selectedTeam);
+          self.loadDetails(selectedTeam);
         } else {
           if (($('#teamTree li')[0]).id) {
             if (($('#teamTree li')[0]).id != 'agteamstandalone') {
               selectedTeam = ($('#teamTree li')[0]).id;
               self.highlightTeam(selectedTeam);
+              self.loadDetails(selectedTeam);
             } else {
               if (selectedTeam = ($('#teamTree li')[1]).id) {
                 selectedTeam = ($('#teamTree li')[1]).id;
                 self.highlightTeam(selectedTeam);
+                self.loadDetails(selectedTeam);
               } else {
                 selectedTeam = '';
               }
@@ -184,6 +188,7 @@ var HomeTeamTree = React.createClass({
       var isSquad = true;
       promiseArray.push(api.getSquadIterations(objectId));
       promiseArray.push(api.getSquadAssessments(objectId));
+      promiseArray.push(api.isUserAllowed(objectId));
     } else {
       isSquad = false;
       promiseArray.push(api.getTeamSnapshots(objectId));
@@ -192,6 +197,8 @@ var HomeTeamTree = React.createClass({
     $('#squad_team_scard').hide();
     $('#nsquad_team_scard').hide();
     $('#bodyContent').hide();
+    $('#iterationFallBox').hide();
+    $('#snapshotPull').hide();
     Promise.all(promiseArray)
     .then(function(results){
       self.props.selectedTeam(results);

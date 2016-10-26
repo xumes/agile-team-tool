@@ -2,6 +2,8 @@ var React = require('react');
 var api = require('../api.jsx');
 var HomeIterChart = require('./HomeIterChart.jsx');
 var iteationHandler = require('../homeIterationsHandler.jsx');
+var HomeFallBox = require('./HomeFallBox.jsx');
+var HomeSnapshotPull = require('./HomeSnapshotPull.jsx');
 
 var HomeIterSection = React.createClass({
   componentWillUpdate: function(nextProps, nextState) {
@@ -10,23 +12,35 @@ var HomeIterSection = React.createClass({
     if (this.props.selectedTeam.length > 2) {
       $('#contentSpinner').hide();
       $('#bodyContent').show();
+      $('#iterationFallBox').show();
       var teamId = this.props.selectedTeam[0]._id;
       var iterationData = this.props.selectedTeam[1];
-      iteationHandler.squadIterationsHandler(teamId,this.props.selectedTeam[1]);
+      var teamAccess = this.props.selectedTeam[3];
+      iteationHandler.squadIterationsHandler(teamId, iterationData, teamAccess);
     } else {
       $('#contentSpinner').hide();
       $('#bodyContent').show();
+      $('#snapshotPull').show();
       var teamId = this.props.selectedTeam[0]._id;
       var teamName = this.props.selectedTeam[0].name;
-      var iterationData = this.props.selectedTeam[1].iterationData;
-      var squadScore = (this.props.selectedTeam[1].teamMemberData)[0];
-      iteationHandler.iterationSnapshotHandler(teamId, teamName, iterationData, squadScore);
+      var snapshotData = this.props.selectedTeam[1];
+      iteationHandler.iterationSnapshotHandler(teamId, teamName, snapshotData);
     }
   },
   render: function() {
+    var iterationFallBoxComponents = {
+      'id': 'iterationFallBox',
+      'selectId': 'gotoIterationList',
+      'label': 'Go to iteration:',
+      'goBtnId': 'GoIterationBtn',
+      'createBtnId': 'CreateIterationBtn',
+      'createBtnTitle': 'Create iteration'
+    };
     return (
       <div data-widget='showhide' data-type='panel' class='ibm-show-hide' id='iterationSection'>
+        <HomeSnapshotPull />
         <h2 class='agile-section-title' data-open='true' id='agile-section-title'>Iteration trends</h2>
+        <HomeFallBox component={iterationFallBoxComponents}/>
         <div style={{'marginTop':'2em'}} class='ibm-container-body'>
           <div id='nsquad_team_scard' style={{'display':'none'}}>
             <div class='ibm-columns' style={{'marginBottom': '3em'}}>

@@ -1,7 +1,8 @@
 var Promise = require('bluebird');
 var _ = require('underscore');
+var moment = require('moment');
 
-module.exports.squadIterationsHandler = function(teamId, teamIterations) {
+module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAccess) {
   $('#gotoIterationList').attr('disabled', 'disabled');
 
   var graphCategoryWithChange = [];
@@ -319,7 +320,7 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations) {
   $('#gotoIterationList').removeAttr('disabled');
 
   $('#CreateIterationBtn').attr('disabled', 'disabled');
-  if (hasAccess(teamId)) {
+  if (teamAccess) {
     $('#CreateIterationBtn').removeAttr('disabled');
     $('#CreateIterationBtn').click(function(e) {
       window.location = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=new';
@@ -1771,7 +1772,10 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
   });
 }
 
-module.exports.iterationSnapshotHandler = function(teamId, teamName, teamIterations, nonsquadScore) {
+module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotData) {
+  var teamIterations = snapshotData.iterationData;
+  var nonsquadScore = (snapshotData.teamMemberData)[0];
+  var timestamp = snapshotData.lastUpdate;
   var graphCategory = [];
 
   var velocitySeries = new Object();
@@ -1975,9 +1979,16 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, teamIterati
   loadBarPizzaChartParent('pPizzaChart', 'Squad Team Size Per Iteration', graphCategory, team5to12Ser, pizYMax);
   loadPiePizzaChart('piePizzaChart', '2 Pizza Rule (Squad Teams - Current)', 'pie', pData, cenTitle);
 
+  setRefreshDate(timestamp);
   $('#nsquad_team_scard').show();
   redrawCharts('iterationSection');
 };
+
+function setRefreshDate(timestamp) {
+  //var myDate = new Date(timestamp*1000); // creates a date that represents the number of milliseconds after midnight GMT on Januray 1st 1970.
+  //$("#refreshDate").html(moment(myDate).format("DD-MMM-YYYY, hh:mm"));
+  $('#refreshDate').html(moment.utc(timestamp).format('MMM DD, YYYY, HH:mm (z)'));
+}
 
 function showDateDDMMMYYYY(formatDate) {
   if (formatDate == null || formatDate == '') return '';
