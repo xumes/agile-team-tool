@@ -184,6 +184,16 @@ module.exports = function(app, includes) {
     }
   },
 
+  batchIterationClosingDefects = function(req, res) /* istanbul ignore next */ {
+    snapshotModel.batchIterationClosingDefects()
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch(function(err) {
+        res.status(400).send(err);
+      });
+  },
+
   app.get('/api/snapshot/getteams/:email', [includes.middleware.auth.requireLogin], getTopLevelTeams);
   app.get('/api/snapshot/updaterollupsquads', [includes.middleware.auth.requireLogin], updateRollUpSquads);
   app.get('/api/snapshot/updaterollupdata/', [includes.middleware.auth.requireLogin], updateRollUpData);
@@ -194,4 +204,5 @@ module.exports = function(app, includes) {
   app.get('/api/snapshot/rollupassessmentbyteam/:teamId', [includes.middleware.auth.requireLogin], getAssessmentRollUpByTeam);
   app.get('/api/snapshot/cleanup/:teamId', cleanUpDb);
   app.delete('/api/snapshot/batchcleanup', batchCleanUpDb);
+  app.get('/api/snapshot/closingDefects', batchIterationClosingDefects);
 };
