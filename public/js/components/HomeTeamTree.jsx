@@ -194,11 +194,14 @@ var HomeTeamTree = React.createClass({
       promiseArray.push(api.getTeamSnapshots(objectId));
     }
     $('#contentSpinner').show();
+    $('#bodyContent').hide();
+    $('#snapshotPull').hide();
+    $('#iterationFallBox').hide();
     $('#squad_team_scard').hide();
     $('#nsquad_team_scard').hide();
-    $('#bodyContent').hide();
-    $('#iterationFallBox').hide();
-    $('#snapshotPull').hide();
+    $('#assessmentFallBox').hide();
+    $('#nsquad_assessment_card').hide();
+    $('#squad_assessment_card').hide();
     Promise.all(promiseArray)
     .then(function(results){
       self.props.selectedTeam(results);

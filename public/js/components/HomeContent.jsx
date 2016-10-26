@@ -4,6 +4,7 @@ var HomeSpinner = require('./HomeSpinner.jsx');
 var HomeHighlightBox = require('./HomeHighlightBox.jsx');
 var HomeTeamHeader = require('./HomeTeamHeader.jsx');
 var HomeIterSection = require('./HomeIterSection.jsx');
+var HomeAseSection = require('./HomeAseSection.jsx');
 var _ = require('underscore');
 
 var HomeContent = React.createClass({
@@ -26,6 +27,7 @@ var HomeContent = React.createClass({
           <HomeHighlightBox />
           <HomeTeamHeader selectedTeam={this.props.selectedTeam}/>
           <HomeIterSection selectedTeam={this.props.selectedTeam}/>
+          <HomeAseSection selectedTeam={this.props.selectedTeam}/>
         </div>
       </div>
     )
