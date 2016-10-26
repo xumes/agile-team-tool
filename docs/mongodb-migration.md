@@ -22,6 +22,13 @@ I think these doc types are not needed
 | name  | string' first and last name of person | n/a
 | lastLogin | JS Date Object UTC| n/a
 
+### apiKeys
+| Fields        | Details       | cloudant field
+| ------------- |:-------------:|-------------
+| userId | (UNIQUE ID) for IBM it's CNUM | n/a
+| email | string; for IBM it's pref. ID | n/a
+| key | string; UUID | n/a
+| createDate | JS Date Object UTC| n/a
 
 ### iterations
 
@@ -46,20 +53,20 @@ I think these doc types are not needed
 |startDate| JS Date Object UTC|iteration_start_dt | "01/15/2016"
 |endDate| JS Date Object UTC|iteration_end_dt | "01/16/2016"
 |memberCount| number | team_mbr_cnt |
+|memberFte | number | fte_cnt | Full-time equivalent (member allocation %)
 |committedStories| number | nbr_committed_stories |
 |deliveredStories| number | nbr_stories_dlvrd |
 |commitedStoryPoints| number | nbr_committed_story_pts |
 |storyPointsDelivered | number | nbr_story_pts_dlvrd |
-|locationScore | used for pizza chart i think ? | fte_cnt | 0.0 or 0.5
 |deployments | number | nbr_dplymnts | "" or 1
-|defects | number | nbr_defects | "" or 2
-|clientSatisfaction| number | client_sat | 1.0
 |teamSatisfaction| number | team_sat | 4
+|clientSatisfaction| number | client_sat | 1.0
 |comment| string | iteration_comments |
 |memberChanged| map to a boolean | team_mbr_change | "No" or "Yes"
 |defectsStartBal | number | nbr_defects_start_bal |
-|defectsEndBal | number | nbr_defects_end_bal |
+|defects | number | nbr_defects | "" or 2
 |defectsClosed | number | nbr_defects_closed |
+|defectsEndBal | number | nbr_defects_end_bal |
 |cycleTimeWIP | number | nbr_cycletime_WIP |
 |cycleTimeInBacklog | number | nbr_cycletime_in_backlog |
 
@@ -134,6 +141,7 @@ and update to a team name might be expensive if its high up in the tree.
 |members        | array of objects, copy over as is|
 |type           | map to a diff. string | "squad" or null | squadteam  | "Yes" or "No"
 |description    | string |  | desc |
+|links          | array of objects, copy over as is|
 |createDate     | JS Date Object UTC | |created_dt | "2016-04-12 08:58:50 EDT"
 |createdByUserId    | string of userId | | created_user |
 |createdBy      | string of email | | created_user |
@@ -180,6 +188,15 @@ ex cloudant team doc:
 			"allocation": 100,
 			"role": "Analyst"
 		}],
+    "links": [{
+      "id": "0561939c68b30b8cd8fe85fb5c641fff",
+      "linkLabel": "Wall of work",
+      "linkUrl": "https://agile-tool-nodejs-stage.mybluemix.net/team"
+    }, {
+      "id": "fa054d05bca1450cc8ae424fcb3149ac",
+      "linkLabel": "Other label",
+      "linkUrl": "https://agile-tool-nodejs-stage.mybluemix.net/team"
+    }],
 		"child_team_id": []
 	}
 },
