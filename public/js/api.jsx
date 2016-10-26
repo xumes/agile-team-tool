@@ -178,6 +178,20 @@ module.exports.getSquadAssessments = function(objectId) {
   });
 };
 
+module.exports.isUserAllowed = function(objectId) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/users/isuserallowed?teamId=' + encodeURIComponent(objectId);
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
 module.exports.getAssessmentTemplate = function(teamId, status){
   return new Promise(function(resolve, reject){
     var url = '/api/assessment/template?teamId=' + teamId + '&status=' + status;
