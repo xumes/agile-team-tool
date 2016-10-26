@@ -191,6 +191,7 @@ var HomeTeamTree = React.createClass({
     $('#contentSpinner').show();
     $('#squad_team_scard').hide();
     $('#nsquad_team_scard').hide();
+    $('#bodyContent').hide();
     Promise.all(promiseArray)
     .then(function(results){
       self.props.selectedTeam(results);

@@ -572,24 +572,22 @@ function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsCalResults, nonSquad
       for (var j = 0; j <= iterationMonth; j++) {
         if (!(_.isEmpty(squadsCalResults[squadDoc[i]])) && !(_.isUndefined(squadsCalResults[squadDoc[i]]))) {
           var squadIterationResult = squadsCalResults[squadDoc[i]];
-          if (squadIterationResult[j].totalPoints != undefined) {
-            currData[j].totalPoints = currData[j].totalPoints + squadIterationResult[j].totalPoints;
-            currData[j].totalCommPoints = currData[j].totalPoints + squadIterationResult[j].totalCommPoints;
-            currData[j].totalStories = currData[j].totalStories + squadIterationResult[j].totalStories;
-            currData[j].totalCommStories = currData[j].totalStories + squadIterationResult[j].totalCommStories;
-            currData[j].totalDefects = currData[j].totalDefects + squadIterationResult[j].totalDefects;
-            currData[j].totalDplymts = currData[j].totalDplymts + squadIterationResult[j].totalDplymts;
-            currData[j].totTeamStat = currData[j].totTeamStat + squadIterationResult[j].totTeamStat;
-            currData[j].totTeamStatIter = currData[j].totTeamStatIter + squadIterationResult[j].totTeamStatIter;
-            currData[j].totClientStat = currData[j].totClientStat + squadIterationResult[j].totClientStat;
-            currData[j].totClientStatIter = currData[j].totClientStatIter + squadIterationResult[j].totClientStatIter;
-            currData[j].teamsLt5 = currData[j].teamsLt5 + squadIterationResult[j].teamsLt5;
-            currData[j].teamsGt12 = currData[j].teamsGt12 + squadIterationResult[j].teamsGt12;
-            currData[j].teams5to12 = currData[j].teams5to12 + squadIterationResult[j].teams5to12;
-            currData[j].totalCompleted = currData[j].totalCompleted + squadIterationResult[j].totalCompleted;
-            if (squadIterationResult[j].totalCompleted > 0) {
-              teams[j] = teams[j] + 1;
-            }
+          currData[j].totalPoints = currData[j].totalPoints + squadIterationResult[j].totalPoints;
+          currData[j].totalCommPoints = currData[j].totalPoints + squadIterationResult[j].totalCommPoints;
+          currData[j].totalStories = currData[j].totalStories + squadIterationResult[j].totalStories;
+          currData[j].totalCommStories = currData[j].totalStories + squadIterationResult[j].totalCommStories;
+          currData[j].totalDefects = currData[j].totalDefects + squadIterationResult[j].totalDefects;
+          currData[j].totalDplymts = currData[j].totalDplymts + squadIterationResult[j].totalDplymts;
+          currData[j].totTeamStat = currData[j].totTeamStat + squadIterationResult[j].totTeamStat;
+          currData[j].totTeamStatIter = currData[j].totTeamStatIter + squadIterationResult[j].totTeamStatIter;
+          currData[j].totClientStat = currData[j].totClientStat + squadIterationResult[j].totClientStat;
+          currData[j].totClientStatIter = currData[j].totClientStatIter + squadIterationResult[j].totClientStatIter;
+          currData[j].teamsLt5 = currData[j].teamsLt5 + squadIterationResult[j].teamsLt5;
+          currData[j].teamsGt12 = currData[j].teamsGt12 + squadIterationResult[j].teamsGt12;
+          currData[j].teams5to12 = currData[j].teams5to12 + squadIterationResult[j].teams5to12;
+          currData[j].totalCompleted = currData[j].totalCompleted + squadIterationResult[j].totalCompleted;
+          if (squadIterationResult[j].totalCompleted > 0) {
+            teams[j] = teams[j] + 1;
           }
         }
       }
@@ -776,7 +774,7 @@ function getSubmittedAssessments() {
         } else {
           msg = err;
         }
-        reject(formatErrMsg(msg));
+        reject(msg);
       });
   });
 };
@@ -868,19 +866,18 @@ function rollUpAssessmentsBySquad(assessments, teamId) {
  * @return tribe rollup data
  */
 function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsCalResults) {
-  var squadDoc = squads;
-  var currData = resetAssessmentData();
+    var squadDoc = squads;
+    var currData = resetAssessmentData();
 
-  for (var i = 0; i <= ASSESSMENT_PERIOD; i++) {
-    currData[i].totalSquad = squadDoc.length;
-    currData[i].month = monthArray[i];
-  }
+    for (var i = 0; i <= ASSESSMENT_PERIOD; i++) {
+      currData[i].totalSquad = squadDoc.length;
+      currData[i].month = monthArray[i];
+    }
 
-  for (var i = 0; i < squadDoc.length; i++) {
-    for (var j = 0; j <= ASSESSMENT_PERIOD; j++) {
-      var squadAssessmentResult = squadsCalResults[squadDoc[i]];
-      if (!(_.isEmpty(squadAssessmentResult)) && !(_.isUndefined(squadAssessmentResult))) {
-        if (squadAssessmentResult[j].less_120_days != undefined) {
+    for (var i = 0; i < squadDoc.length; i++) {
+      for (var j = 0; j <= ASSESSMENT_PERIOD; j++) {
+        var squadAssessmentResult = squadsCalResults[squadDoc[i]];
+        if (!(_.isEmpty(squadAssessmentResult)) && !(_.isUndefined(squadAssessmentResult))) {
           currData[j].less_120_days += squadAssessmentResult[j].less_120_days;
           currData[j].gt_120_days += squadAssessmentResult[j].gt_120_days;
           currData[j].no_submission += squadAssessmentResult[j].no_submission;
@@ -892,33 +889,31 @@ function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsCalResults) {
           currData[j].total_prj_foundation += squadAssessmentResult[j].total_prj_foundation;
           currData[j].total_prj_devops += squadAssessmentResult[j].total_prj_devops;
           currData[j].total_operation += squadAssessmentResult[j].total_operation;
-        } else {
+        }
+        else {
           currData[j].no_submission += 1;
         }
       }
-      else {
-        currData[j].no_submission += 1;
+    }
+    _.each(currData, function(period, index) {
+      if (period.total_prj_foundation > 1){
+        period.prj_foundation_score = (period.prj_foundation_score/period.total_prj_foundation).toFixed(1);
       }
-    }
-  }
-  _.each(currData, function(period, index) {
-    if (period.total_prj_foundation > 1){
-      period.prj_foundation_score = (period.prj_foundation_score/period.total_prj_foundation).toFixed(1);
-    }
-    if (period.total_operation > 1){
-      period.operation_score = (period.operation_score/period.total_operation).toFixed(1);
-    }
-    if (period.total_prj_devops > 1) {
-      period.prj_devops_score = (period.prj_devops_score/period.total_prj_devops).toFixed(1);
-    }
-  });
+      if (period.total_operation > 1){
+        period.operation_score = (period.operation_score/period.total_operation).toFixed(1);
+      }
+      if (period.total_prj_devops > 1) {
+        period.prj_devops_score = (period.prj_devops_score/period.total_prj_devops).toFixed(1);
+      }
+    });
 
-  var newDate = new Date();
-  var days = daysInMonth(newDate.getMonth() + 1, newDate.getFullYear());
-  currData.reverse();
-  if (newDate.getDate() < days) {
-    currData[ASSESSMENT_PERIOD].partialMonth = true;
-  }
+    var newDate = new Date();
+    var days = daysInMonth(newDate.getMonth() + 1, newDate.getFullYear());
+    currData.reverse();
+    if (newDate.getDate() < days) {
+      currData[ASSESSMENT_PERIOD].partialMonth = true;
+    }
+
   return currData;
 };
 

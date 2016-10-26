@@ -326,25 +326,9 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations) {
     });
   }
 
-  $('#spinnerContainer').hide();
-  $('#mainContent').show();
+  $('#squad_team_scard').show();
   redrawCharts('iterationSection');
 };
-
-function destroyIterationCharts() {
-  // var chartIds = ['velocityChart', 'throughputChart', 'pizzaChart', 'defectsChart', 'statisfactionChart', 'unitCostChart', 'pvelocityChart', 'pthroughputChart', 'pPizzaChart', 'pdefectsChart', 'piePizzaChart'];
-  // $.each(chartIds, function(index, id) {
-  //   if ($('#' + id).highcharts() != null)
-  //     $('#' + id).highcharts().destroy();
-  // });
-  $(Highcharts.charts).each(function(i, chart) {
-    if (chart == null) return;
-
-    if ($('#iterationSection #' + $(chart.container).attr('id')).length > 0) {
-      chart.destroy();
-    }
-  });
-}
 
 function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, seriesObj2, unit, text, subtitle, showLegend, pointClickable) {
   new Highcharts.Chart({
@@ -1787,94 +1771,7 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
   });
 }
 
-function retrieveIterations(teamIds, startDate, endDate, _callback, args) {
-  var start = getMonthlyRange(startDate);
-  var end = getMonthlyRange(endDate);
-
-  var iterQuery = new Object();
-  iterQuery.selector = new Object();
-  iterQuery.sort = [];
-
-  var selector = new Object();
-  selector.type = 'iterationinfo';
-
-  var condition1 = new Object();
-  condition1.$in = teamIds;
-  selector.team_id = condition1;
-
-  var condition2 = new Object();
-  condition2.$regex = start + ' || ' + end;
-  selector.endDate = condition2;
-
-  var condition3 = new Object();
-  condition3.$eq = 'Completed';
-  selector.iterationinfo_status = condition3;
-
-
-  iterQuery.selector = selector;
-  var sort = new Object();
-  sort.endDate = 'asc';
-
-  iterQuery.sort.push(sort);
-  iterations = selectorQuery(iterQuery, _callback, args);
-}
-
-function currentTeamStats() {
-  var squadTeams = [];
-  var teamsLt5 = 0;
-  var teams5to12 = 0;
-  var teamsGt12 = 0;
-  var tcLt5 = 0;
-  var tc5to12 = 0;
-  var tcGt12 = 0;
-  var fteLt5 = 0;
-  var fte5to12 = 0;
-  var fteGt12 = 0;
-  var entry = new Object();
-
-  for (var i in squadList) {
-    var team = allTeamsLookup[squadList[i]];
-    if (!_.isEmpty(team))
-      squadTeams.push(team);
-  }
-
-  for (var x = 0; x < squadTeams.length; x++) {
-    var teamCnt = squadTeams[x]['total_members'] != null ? squadTeams[x]['total_members'] : teamMemCount(squadTeams[x]['members']);
-    var teamFTE = squadTeams[x]['total_allocation'] != null ? squadTeams[x]['total_allocation'] : teamMemFTE(squadTeams[x]['members']);
-    if (teamCnt != undefined && teamCnt != '') {
-      teamCnt = parseInt(teamCnt);
-      if (teamCnt < 5) {
-        teamsLt5 = teamsLt5 + 1;
-        fteLt5 = fteLt5 + teamFTE;
-        tcLt5 = tcLt5 + teamCnt;
-      } else if (teamCnt > 12) {
-        teamsGt12 = teamsGt12 + 1;
-        fteGt12 = fteGt12 + teamFTE;
-        tcGt12 = tcGt12 + teamCnt;
-
-      } else {
-        teams5to12 = teams5to12 + 1;
-        fte5to12 = fte5to12 + teamFTE;
-        tc5to12 = tc5to12 + teamCnt;
-      }
-    }
-  }
-  entry.teamsLt5 = teamsLt5;
-  entry.tcLt5 = tcLt5;
-  entry.fteLt5 = fteLt5;
-
-  entry.teams5to12 = teams5to12;
-  entry.tc5to12 = tc5to12;
-  entry.fte5to12 = fte5to12;
-
-  entry.teamsGt12 = teamsGt12;
-  entry.tcGt12 = tcGt12;
-  entry.fteGt12 = fteGt12;
-
-  return entry;
-}
-
-function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
+module.exports.iterationSnapshotHandler = function(teamId, teamName, teamIterations, nonsquadScore) {
   var graphCategory = [];
 
   var velocitySeries = new Object();
@@ -2077,45 +1974,10 @@ function iterationScoreCard(teamId, teamName, teamIterations, nonsquadScore) {
   loadMultiLineChartParent('pstatisfactionChart', 'Client and Team Satisfaction', graphCategory, 'Rating', 'Iteration results by month', teamStatSeries, clientStatSeries, 'Points', false, ctsYMax);
   loadBarPizzaChartParent('pPizzaChart', 'Squad Team Size Per Iteration', graphCategory, team5to12Ser, pizYMax);
   loadPiePizzaChart('piePizzaChart', '2 Pizza Rule (Squad Teams - Current)', 'pie', pData, cenTitle);
-  $('#spinnerContainer').hide();
-  $('#mainContent').show();
+
+  $('#nsquad_team_scard').show();
   redrawCharts('iterationSection');
-}
-
-function iterationEmptyScoreCard(teamId, teamName) {
-  var graphCategory = [];
-
-  var velocitySeries = new Object();
-  velocitySeries.name = teamName;
-  velocitySeries.data = [];
-
-  var throughputSeries = new Object();
-  throughputSeries.name = teamName;
-  throughputSeries.data = [];
-
-  destroyIterationCharts();
-
-  loadScoreChart('velocityChart', 'Velocity', 'line', graphCategory, 'Story points', velocitySeries, velocitySeries, 'Points', 'Iteration results by month', null, false, false);
-  loadScoreChart('throughputChart', 'Throughput', 'line', graphCategory, 'Stories/tickets/cards', throughputSeries, throughputSeries, 'Points', 'Iteration results by month', null, false, false);
-}
-
-function completedIterationsHandler(teamId, teamName, squadList, iterationList) {
-  collectedIterations = iterationList;
-  parentIterationScoreCard(teamId, teamName, squadList, collectedIterations);
-
-}
-
-function parentIterationScoreCard(teamId, teamName, squadList, iterationsList) {
-  var teamIterations = [];
-  if (!_.isEmpty(iterationsList) && !_.isEmpty(squadList)) {
-    _.each(squadList, function(id) {
-      teamIterations = _.union(teamIterations, _.where(collectedIterations, {
-        team_id: id
-      }));
-    });
-    iterationScoreCard(teamId, teamName, teamIterations);
-  }
-}
+};
 
 function showDateDDMMMYYYY(formatDate) {
   if (formatDate == null || formatDate == '') return '';
@@ -2130,16 +1992,28 @@ function showDateDDMMMYYYY(formatDate) {
   return (day + monthNames[monthIndex] + year);
 }
 
-function redrawCharts(section) {
-  $(Highcharts.charts).each(function(i,chart) {
-    if (chart == null) return;
+function sortMMMYYYY(iterations) {
+  var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  if (iterations != null && iterations.length > 1) {
+    iterations.sort(function(a, b) {
 
-    if ($('#' + section + ' #' + $(chart.container).attr('id')).length > 0) {
-      var height = chart.renderTo.clientHeight;
-      var width = chart.renderTo.clientWidth;
-      chart.setSize(width, height);
-    }
-  });
+      var date1 = a.month.split('-');
+      var date2 = b.month.split('-');
+      var month1 = monthNames.indexOf(date1[0]);
+      var yr1 = parseInt(date1[1]);
+      var month2 = monthNames.indexOf(date2[0]);
+      var yr2 = parseInt(date2[1]);
+      if (yr1 == yr2) {
+        if (month1 == month2)
+          return 0;
+        else {
+          return (month2 > month1) ? 1 : -1;
+        }
+      } else
+        return (yr2 > yr1) ? 1 : -1;
+    });
+  }
+  return iterations;
 }
 
 function sortIterations(iterations) {
@@ -2153,4 +2027,31 @@ function sortIterations(iterations) {
     });
   }
   return iterations;
+}
+
+function redrawCharts(section) {
+  $(Highcharts.charts).each(function(i,chart) {
+    if (chart == null) return;
+
+    if ($('#' + section + ' #' + $(chart.container).attr('id')).length > 0) {
+      var height = chart.renderTo.clientHeight;
+      var width = chart.renderTo.clientWidth;
+      chart.setSize(width, height);
+    }
+  });
+}
+
+function destroyIterationCharts() {
+  // var chartIds = ['velocityChart', 'throughputChart', 'pizzaChart', 'defectsChart', 'statisfactionChart', 'unitCostChart', 'pvelocityChart', 'pthroughputChart', 'pPizzaChart', 'pdefectsChart', 'piePizzaChart'];
+  // $.each(chartIds, function(index, id) {
+  //   if ($('#' + id).highcharts() != null)
+  //     $('#' + id).highcharts().destroy();
+  // });
+  $(Highcharts.charts).each(function(i, chart) {
+    if (chart == null) return;
+
+    if ($('#iterationSection #' + $(chart.container).attr('id')).length > 0) {
+      chart.destroy();
+    }
+  });
 }

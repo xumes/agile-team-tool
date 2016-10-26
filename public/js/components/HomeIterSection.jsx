@@ -9,21 +9,21 @@ var HomeIterSection = React.createClass({
   componentDidUpdate: function() {
     if (this.props.selectedTeam.length > 2) {
       $('#contentSpinner').hide();
-      $('#squad_team_scard').show();
+      $('#bodyContent').show();
       var teamId = this.props.selectedTeam[0]._id;
+      var iterationData = this.props.selectedTeam[1];
       iteationHandler.squadIterationsHandler(teamId,this.props.selectedTeam[1]);
     } else {
       $('#contentSpinner').hide();
-      $('#nsquad_team_scard').show();
+      $('#bodyContent').show();
       var teamId = this.props.selectedTeam[0]._id;
       var teamName = this.props.selectedTeam[0].name;
       var iterationData = this.props.selectedTeam[1].iterationData;
-      var squadScore = this.props.selectedTeam[1].teamMemberData;
-      iteationHandler.snapshotIterationHandler(teamId, teamName, iterationData, squadScore);
+      var squadScore = (this.props.selectedTeam[1].teamMemberData)[0];
+      iteationHandler.iterationSnapshotHandler(teamId, teamName, iterationData, squadScore);
     }
   },
   render: function() {
-    console.log(this.props.selectedTeam);
     return (
       <div data-widget='showhide' data-type='panel' class='ibm-show-hide' id='iterationSection'>
         <h2 class='agile-section-title' data-open='true' id='agile-section-title'>Iteration trends</h2>

@@ -25,15 +25,3 @@ schedule.scheduleJob('1 0 * * *', function() {
       return null;
     });
 });
-
-schedule.scheduleJob('*/3 * * * *', function() {
-  snapshot.updateAssessmentRollUpData()
-    .then(function() {
-      workerLogger.verbose('Successfully updated team assessments rollup data.');
-      return snapshot.updateAssessmentRollUpData();
-    })
-    .catch(function(err) {
-      workerLogger.error('Unable to update assessment rollup data err=', err.error);
-      return null;
-    });
-});
