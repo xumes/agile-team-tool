@@ -43,14 +43,18 @@ module.exports = {
         if (_.isEmpty(person.id))
           return;
 
-        if ( _.isEmpty(map[(person.id).toLowerCase()]) ) {
+        if ((!_.isEmpty(person.id) && _.isEmpty(map[(person.id).toLowerCase()])) ||
+          (_.isEmpty(person.id) && _.isEmpty(map[(person.key).toUpperCase()]))) {
           var mapVal = {};
 
           mapVal['userId'] = (person.key).toUpperCase();
           mapVal['name'] =  person.name;
           mapVal['email'] = (person.id).toLowerCase();
 
-          map[(person.id).toLowerCase()] = mapVal;
+          if (!_.isEmpty(person.id))
+            map[(person.id).toLowerCase()] = mapVal;
+          else
+            map[(person.key).toUpperCase()] = mapVal;
         }
         else {
         //  console.log(person.id + " already in the map ");

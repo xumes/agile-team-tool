@@ -33,22 +33,22 @@ _.each(cloudantIterations, function(doc) {
     'docStatus' : doc.doc_status,
     'status' : doc.iterationinfo_status,
     'memberCount' : (_.isEmpty(doc.team_mbr_cnt))? undefined: parseInt(doc.team_mbr_cnt),
+    'memberFte':  (_.isEmpty(doc.fte_cnt))? undefined: parseFloat(doc.fte_cnt),
     'committedStories': (_.isEmpty(doc.nbr_committed_stories))? undefined:parseInt(doc.nbr_committed_stories),
     'deliveredStories': (_.isEmpty(doc.nbr_stories_dlvrd))? undefined:parseInt(doc.nbr_stories_dlvrd),
     'commitedStoryPoints': (_.isEmpty(doc.teamnbr_committed_story_pts_mbr_cnt))? undefined:parseInt(doc.nbr_committed_story_pts),
     'storyPointsDelivered': (_.isEmpty(doc.nbr_story_pts_dlvrd))? undefined:parseInt(doc.nbr_story_pts_dlvrd),
-    'locationScore':  (_.isEmpty(doc.fte_cnt))? undefined: parseFloat(doc.fte_cnt),
     'deployments': (_.isEmpty(doc.nbr_dplymnts))? undefined: parseInt(doc.nbr_dplymnts),
-    'defects': (_.isEmpty(doc.nbr_defects))? undefined: parseInt(doc.nbr_defects),
     'clientSatisfaction': (_.isEmpty(doc.client_sat))? undefined : parseFloat(doc.client_sat),
     'teamSatisfaction': (_.isEmpty(doc.team_sat))? undefined : parseFloat(doc.team_sat),
     'comment': doc.iteration_comments,
     'memberChanged': (doc.team_mbr_change==='No')? false : true,
-    'defectsStartBal': parseInt(doc.nbr_defects_start_bal),
-    'defectsEndBal': parseInt(doc.nbr_defects_end_bal),
-    'defectsClosed': parseInt(doc.nbr_defects_closed),
-    'cycleTimeWIP': parseFloat(doc.nbr_cycletime_WIP),
-    'cycleTimeInBacklog'; parseFloat(doc.nbr_cycletime_in_backlog)
+    'defectsStartBal': (_.isEmpty(doc.nbr_defects_start_bal))? undefined : parseInt(doc.nbr_defects_start_bal),
+    'defects': (_.isEmpty(doc.nbr_defects))? undefined: parseInt(doc.nbr_defects),
+    'defectsClosed': (_.isEmpty(doc.nbr_defects_closed))? undefined : parseInt(doc.nbr_defects_closed),
+    'defectsEndBal': (_.isEmpty(doc.nbr_defects_end_bal))? undefined : parseInt(doc.nbr_defects_end_bal),
+    'cycleTimeWIP': (_.isEmpty(doc.nbr_cycletime_WIP))? undefined : parseFloat(doc.nbr_cycletime_WIP),
+    'cycleTimeInBacklog': (_.isEmpty(doc.nbr_cycletime_in_backlog))? undefined : parseFloat(doc.nbr_cycletime_in_backlog)
   };
   mongoIterations.push(mongoDoc);
 });
