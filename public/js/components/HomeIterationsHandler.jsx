@@ -192,7 +192,7 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAcc
     teamMemCountArr.push(tmData.y);
 
     fteData.name = p6Iterations[i].name;
-    fteData.y = isNaN(parseInt(p6Iterations[i].locationScore)) ? 0 : parseFloat(p6Iterations[i].locationScore);
+    fteData.y = isNaN(parseInt(p6Iterations[i].memberFte)) ? 0 : parseFloat(p6Iterations[i].memberFte);
     fteData.iterURL = iterationURL + p6Iterations[i]._id;
     fteData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     fteData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
@@ -252,7 +252,7 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAcc
 
     var StoriesDel = isNaN(parseInt(p6Iterations[i].deliveredStories)) ? 0 : parseInt(p6Iterations[i].deliveredStories);
     var StoryPointDel = isNaN(parseInt(p6Iterations[i].storyPointsDelivered)) ? 0 : parseInt(p6Iterations[i].storyPointsDelivered);
-    var fte = isNaN(parseInt(p6Iterations[i].locationScore)) ? 0 : parseFloat(p6Iterations[i].locationScore);
+    var fte = isNaN(parseInt(p6Iterations[i].memberFte)) ? 0 : parseFloat(p6Iterations[i].memberFte);
     var storiesFTE = isNaN(parseInt((StoriesDel / fte).toFixed(1))) ? 0 : parseFloat((StoriesDel / fte).toFixed(1));
     var strPointsFTE = isNaN(parseInt((StoryPointDel / fte).toFixed(1))) ? 0 : parseFloat((StoryPointDel / fte).toFixed(1));
 
