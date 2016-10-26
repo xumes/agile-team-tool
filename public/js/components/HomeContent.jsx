@@ -22,8 +22,8 @@ var HomeContent = React.createClass({
     return (
       <div>
         <HomeSpinner id={'contentSpinner'}/>
-        <HomeHighlightBox />
-        <div id='mainContent' class='ibm-col-6-4'>
+        <div id="bodyContent" class="ibm-col-6-4">
+          <HomeHighlightBox />
           <HomeTeamHeader selectedTeam={this.props.selectedTeam}/>
           <HomeIterSection selectedTeam={this.props.selectedTeam}/>
         </div>
