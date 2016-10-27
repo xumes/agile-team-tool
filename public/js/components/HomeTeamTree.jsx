@@ -16,7 +16,7 @@ var HomeTeamTree = React.createClass({
   shouldComponentUpdate: function(nextProps, nextState) {
     if (nextProps.newTeams == this.props.newTeams) {
       if (nextProps.searchTeamSelected != this.props.searchTeamSelected && nextProps.searchTeamSelected != '') {
-        this.loadTeamInAllTeams(nextProps.searchTeamSelected);
+        this.loadTeamInAllTeams(nextProps.searchTeamSelected, true);
         $('#searchTree').hide();
       }
       return false;
@@ -247,49 +247,87 @@ var HomeTeamTree = React.createClass({
     });
   },
 
-  loadTeamInAllTeams: function(teamId) {
+  loadTeamInAllTeams: function(teamId, fromSearch) {
     var self = this;
     $('#navSpinner').show();
     $('#teamTree').hide();
     var path = [];
+    if ($('#' + teamId).length > 0 && fromSearch) {
+      console.log('ssss');
+      self.openAllParents(teamId);
+    } else {
+      console.log('vvvvv');
+      api.loadTeamDetails(teamId)
+      .then(function(team){
+        if (team != null) {
+          if (team.path != null) {
+            path = (team.path.substring(1,team.path.length-1)).split(',');
+          } else {
+            if (!team.hasChild) {
+              path.push('agteamstandalone');
+            }
+          }
+          path.push(team.pathId);
+          var promiseArray = [];
+          _.each(path, function(pathId){
+            promiseArray.push(api.getChildrenTeams(pathId));
+          });
+          return Promise.all(promiseArray);
+        } else {
+          return Promise.reject('no team found');
+        }
+      })
+      .then(function(results){
+        for (var i = 0; i < results.length; i++) {
+          self.appendChildTeams(results[i], path[i]);
+        }
+        self.loadDetails(path[path.length-1]);
+        $('#navSpinner').hide();
+        $('#teamTree').show();
+        $('.nano').nanoScroller();
+        $('.nano').nanoScroller({
+          scrollTo: $('#link_' + path[path.length-1])
+        });
+      })
+      .catch(function(err){
+        $('#navSpinner').hide();
+        $('#teamTree').show();
+        self.highlightTeam(($('#teamTree li')[0]).id);
+        console.log(err);
+      });
+    }
+  },
+
+  openAllParents: function(teamId) {
+    var self = this;
+    var paths = [];
     api.loadTeamDetails(teamId)
     .then(function(team){
       if (team != null) {
         if (team.path != null) {
-          path = (team.path.substring(1,team.path.length-1)).split(',');
+          paths = (team.path.substring(1,team.path.length-1)).split(',');
         } else {
           if (!team.hasChild) {
-            path.push('agteamstandalone');
+            paths.push('agteamstandalone');
           }
         }
-        path.push(team.pathId);
-        var promiseArray = [];
-        _.each(path, function(pathId){
-          promiseArray.push(api.getChildrenTeams(pathId));
-        });
-        return Promise.all(promiseArray);
-      } else {
-        return Promise.reject('no team found');
       }
-    })
-    .then(function(results){
-      for (var i = 0; i < results.length; i++) {
-        self.appendChildTeams(results[i], path[i]);
-      }
-      self.loadDetails(path[path.length-1]);
+      _.each(paths, function(path){
+        if ($('#' + path).length > 0) {
+          if (!$('#' + path).hasClass('ibm-active')) {
+            $('#' + path).addClass('ibm-active');
+          }
+          $('#body_' + path).css('display','block');
+        }
+      });
+      self.loadDetails(teamId);
       $('#navSpinner').hide();
       $('#teamTree').show();
       $('.nano').nanoScroller();
       $('.nano').nanoScroller({
-        scrollTo: $('#link_' + path[path.length-1])
+        scrollTo: $('#link_' + teamId)
       });
     })
-    .catch(function(err){
-      $('#navSpinner').hide();
-      $('#teamTree').show();
-      self.highlightTeam(($('#teamTree li')[0]).id);
-      console.log(err);
-    });
   },
 
   createMainTwistySection: function(twistyId, extraClass) {
