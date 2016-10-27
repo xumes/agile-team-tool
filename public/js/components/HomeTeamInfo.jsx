@@ -52,6 +52,34 @@ var HomeTeamInfo = React.createClass({
         self.appendRowDetail(keyLabel, keyValue);
         self.hierarchyTeamHandler(hierarchy, team['name']);
       }
+      if (team['links'] != undefined) {
+        keyLabel = 'Important links';
+        var links = team['links'];
+        var tr = '';
+        if (links.length > 0) {
+          _.each(links, function(value, key, list){
+            tr = tr + '<tr>';
+            tr = tr + '<td>' + value.linkLabel + '</td>';
+            tr = tr + '<td><a href="'+value.linkUrl+'" target="_blank" class="wlink" >'+value.linkUrl+'</a></td>';
+            tr = tr + '</tr>';
+          });
+          var html = '<table class=\'tImportantlink\'>';
+          html = html + tr;
+          html = html + '</table>';
+          keyValue = html;
+          self.appendRowDetail(keyLabel, keyValue, true);
+        }
+      }
+      if (team['members'] != undefined) {
+        keyLabel = 'Number of members';
+        keyValue =team['members'].length;
+        self.appendRowDetail(keyLabel, keyValue);
+      }
+      if (team['members'] != undefined) {
+        keyLabel = 'FTE';
+        keyValue = self.teamMemFTE(team['members']);
+        self.appendRowDetail(keyLabel, keyValue);
+      }
     }
   },
 
@@ -82,6 +110,15 @@ var HomeTeamInfo = React.createClass({
     });
     strHierarchy = strHierarchy + teamName
     $('#Hierarchy td')[1].innerHTML = strHierarchy;
+  },
+
+ teamMemFTE: function(teamMembers) {
+    var teamCount = 0;
+    var tmArr = [];
+    _.each(teamMembers, function(member) {
+      teamCount += parseInt(member.allocation);
+    });
+    return (teamCount / 100);
   },
 
   render: function() {

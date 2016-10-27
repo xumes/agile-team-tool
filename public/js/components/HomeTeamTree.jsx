@@ -192,6 +192,8 @@ var HomeTeamTree = React.createClass({
     $('#assessmentFallBox').hide();
     $('#nsquad_assessment_card').hide();
     $('#squad_assessment_card').hide();
+    $('#membersList').empty();
+    $('#teamMemberTable').hide();
     var teamResult = new Object();
     var isSquad = false;
     api.loadTeam(objectId)
@@ -208,6 +210,13 @@ var HomeTeamTree = React.createClass({
         promiseArray.push(api.getTeamSnapshots(objectId));
       }
       promiseArray.push(api.getTeamHierarchy(team.path));
+      if (team.members.length > 0) {
+        var ids = [];
+        _.each(team.members, function(member){
+          ids.push(member.userId);
+        });
+        promiseArray.push(api.getUsersInfo(ids));
+      }
       return Promise.all(promiseArray)
     })
     .then(function(results){
@@ -218,14 +227,16 @@ var HomeTeamTree = React.createClass({
           'iterations': results[0],
           'assessments': results[1],
           'access': results[2],
-          'hierarchy': results[3]
+          'hierarchy': results[3],
+          'members': results[4]
         };
       } else {
         var rObject = {
           'type': '',
           'team': teamResult,
           'snapshot': results[0],
-          'hierarchy': results[3]
+          'hierarchy': results[1],
+          'members': results[2]
         };
       }
       self.props.selectedTeam(rObject);

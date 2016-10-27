@@ -177,6 +177,18 @@ var users = {
     });
   },
 
+  getUsersInfo: function(ids) {
+    return new Promise(function(resolve, reject) {
+      User.find({'userId': {'$in': ids}}).exec()
+      .then(function(users){
+        resolve(users);
+      })
+      .catch(function(err){
+        reject(err);
+      });
+    });
+  },
+
   create: function(user) {
     return new Promise(function(resolve, reject) {
       var newUser = {

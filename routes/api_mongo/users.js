@@ -59,6 +59,20 @@ module.exports = function(app, includes) {
     res.send(req.session['user']);
   };
 
+  getUsersInfo = function(req, res) {
+    if (!req.body.ids || _.isEmpty(req.body.ids)) {
+      res.status(400).send({'error': 'ids is empty'});
+    } else {
+      Users.getUsersInfo(req.body.ids)
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch(function(err) {
+        res.status(404).send(err);
+      });
+    }
+  };
+
 
   //TODO: Refactor this and store in the database
   getRoles = function(req, res) {
@@ -103,4 +117,6 @@ module.exports = function(app, includes) {
   app.delete('/api/users/apikey', [includes.middleware.auth.requireLogin], deleteApiKey);
 
   app.get('/api/users/roles', [includes.middleware.auth.requireLogin], getRoles);
+
+  app.post('/api/users/info', [includes.middleware.auth.requireLogin], getUsersInfo);
 };

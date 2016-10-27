@@ -206,6 +206,25 @@ module.exports.isUserAllowed = function(objectId) {
   });
 };
 
+module.exports.getUsersInfo = function(userIds) {
+  return new Promise(function(resolve, reject){
+    var requestData = {
+      'ids': userIds
+    };
+    var url = '/api/users/info';
+    var req = $.ajax({
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(requestData),
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
 module.exports.getAssessmentTemplate = function(teamId, status){
   return new Promise(function(resolve, reject){
     var url = '/api/assessment/template?teamId=' + teamId + '&status=' + status;
