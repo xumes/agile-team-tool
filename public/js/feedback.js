@@ -51,14 +51,19 @@ function processFeedback() {
     async: true
   }).done(function(message) {
     $('#sendFeedback').css('cursor', 'default');
-    showMessagePopup(message);
-    IBMCore.common.widget.overlay.hide('sendFeedback');
+    var feedbackMsg = IBMCore.common.widget.overlay.createOverlay({
+      contentHtml: '<p>'+message+'</p>',
+      classes: 'ibm-overlay ibm-overlay-alt'
+    });
+    feedbackMsg.init();
+    feedbackMsg.show();
+    IBMCore.common.widget.overlay.hide('sendFeedback', true);
   });
 }
 
 function closeFeedback() {
   $('#sendFeedback').css('cursor', 'default');
-  IBMCore.common.widget.overlay.hide('sendFeedback');
+  IBMCore.common.widget.overlay.hide('sendFeedback', true);
 }
 
 function initFeedback(userEmail) {

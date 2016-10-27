@@ -80,9 +80,12 @@ exports.deleteRecord = function(_id, _rev) {
   });
 };
 
-exports.getByView = function(_design, _view) {
+exports.getByView = function(_design, _view, _include_docs) {
   return new Promise(function(resolve, reject) {
-    db.viewAsync(_design, _view)
+    _include_docs =  _include_docs || false;
+    db.viewAsync(_design, _view, {
+      'include_docs': _include_docs
+    })
       .then(function(body) {
         body = _.isEmpty(body.rows) ? {} : body;
         resolve(body);

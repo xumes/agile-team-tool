@@ -136,6 +136,20 @@ module.exports.loadTeam = function(objectId) {
   });
 };
 
+module.exports.getTeamHierarchy = function(path) {
+  return new Promise(function(resolve, reject){
+    var url ='/api/teams/hierarchy/team/' + encodeURIComponent(path);
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
 module.exports.getTeamSnapshots = function(objectId) {
   return new Promise(function(resolve, reject){
     var url ='/api/snapshot/get/' + encodeURIComponent(objectId);
@@ -183,6 +197,25 @@ module.exports.isUserAllowed = function(objectId) {
     var url = '/api/users/isuserallowed?teamId=' + encodeURIComponent(objectId);
     var req = $.ajax({
       type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.getUsersInfo = function(userIds) {
+  return new Promise(function(resolve, reject){
+    var requestData = {
+      'ids': userIds
+    };
+    var url = '/api/users/info';
+    var req = $.ajax({
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(requestData),
       url: url
     }).done(function(data){
       resolve(data);

@@ -372,17 +372,17 @@ var IterationExport = {
     return status;
   },
 
-  getNotCompletedIteration: function() {
+  getNotCompletedIterations: function() {
     return Iteration.find({'status': 'Not complete', 'docStatus': {'$ne': 'delete'}}).exec();
   },
 
-  bulkUpdateIteration: function(Iteration) {
+  bulkUpdateIterations: function(Iterations) {
     return new Promise(function(resolve, reject) {
       var bulk = Iteration.collection.initializeUnorderedBulkOp();
-      if (_.isEmpty(Iteration)) {
+      if (_.isEmpty(Iterations)) {
         resolve([]);
       } else {
-        _.each(Iteration, function(Iteration){
+        _.each(Iterations, function(Iteration){
           bulk.find({'_id':Iteration._id}).update({'$set':Iteration.set});
         });
         bulk.execute(function(error, result){
