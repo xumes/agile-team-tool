@@ -29,7 +29,7 @@ var HomeContent = React.createClass({
           <HomeTeamHeader selectedTeam={this.props.selectedTeam}/>
           <HomeIterSection selectedTeam={this.props.selectedTeam}/>
           <HomeAseSection selectedTeam={this.props.selectedTeam}/>
-          <HomeTeamInfo selectedTeam={this.props.selectedTeam}/>
+          <HomeTeamInfo selectedTeam={this.props.selectedTeam} searchTeamSelectedChanged={this.props.searchTeamSelectedChanged}/>
           <HomeMemberTable selectedTeam={this.props.selectedTeam}/>
         </div>
       </div>

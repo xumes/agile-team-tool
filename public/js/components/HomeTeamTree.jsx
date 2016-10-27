@@ -253,10 +253,8 @@ var HomeTeamTree = React.createClass({
     $('#teamTree').hide();
     var path = [];
     if ($('#' + teamId).length > 0 && fromSearch) {
-      console.log('ssss');
       self.openAllParents(teamId);
     } else {
-      console.log('vvvvv');
       api.loadTeamDetails(teamId)
       .then(function(team){
         if (team != null) {
@@ -327,6 +325,11 @@ var HomeTeamTree = React.createClass({
       $('.nano').nanoScroller({
         scrollTo: $('#link_' + teamId)
       });
+    })
+    .catch(function(err){
+      $('#navSpinner').hide();
+      $('#teamTree').show();
+      console.log(err);
     })
   },
 
