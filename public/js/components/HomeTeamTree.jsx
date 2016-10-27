@@ -86,7 +86,7 @@ var HomeTeamTree = React.createClass({
         if (($('#teamTree li')[0]).id != 'agteamstandalone') {
           selectedTeam = ($('#teamTree li')[0]).id;
         } else {
-          if (selectedTeam = ($('#teamTree li')[1]).id) {
+          if (selectedTeam == ($('#teamTree li')[1]).id) {
             selectedTeam = ($('#teamTree li')[1]).id;
           }
         }
@@ -105,7 +105,7 @@ var HomeTeamTree = React.createClass({
               self.highlightTeam(selectedTeam);
               self.loadDetails(selectedTeam);
             } else {
-              if (selectedTeam = ($('#teamTree li')[1]).id) {
+              if (selectedTeam == ($('#teamTree li')[1]).id) {
                 selectedTeam = ($('#teamTree li')[1]).id;
                 self.highlightTeam(selectedTeam);
                 self.loadDetails(selectedTeam);
@@ -178,21 +178,11 @@ var HomeTeamTree = React.createClass({
 
   loadDetails: function(teamId) {
     var self = this;
+    self.removeHighlightParents();
     $('.nano').nanoScroller();
     self.highlightTeam(teamId);
     selectedTeam = teamId;
     var objectId = $('#' + teamId).children('span').html();
-    var promiseArray = [];
-    promiseArray.push(api.loadTeam(objectId));
-    if ($('#link_' + teamId).hasClass('agile-team-squad')) {
-      var isSquad = true;
-      promiseArray.push(api.getSquadIterations(objectId));
-      promiseArray.push(api.getSquadAssessments(objectId));
-      promiseArray.push(api.isUserAllowed(objectId));
-    } else {
-      isSquad = false;
-      promiseArray.push(api.getTeamSnapshots(objectId));
-    }
     $('#contentSpinner').show();
     $('#bodyContent').hide();
     $('#snapshotPull').hide();
@@ -202,9 +192,43 @@ var HomeTeamTree = React.createClass({
     $('#assessmentFallBox').hide();
     $('#nsquad_assessment_card').hide();
     $('#squad_assessment_card').hide();
-    Promise.all(promiseArray)
+    var teamResult = new Object();
+    var isSquad = false;
+    api.loadTeam(objectId)
+    .then(function(team){
+      teamResult = team;
+      var promiseArray = [];
+      if ($('#link_' + teamId).hasClass('agile-team-squad')) {
+        isSquad = true;
+        promiseArray.push(api.getSquadIterations(objectId));
+        promiseArray.push(api.getSquadAssessments(objectId));
+        promiseArray.push(api.isUserAllowed(objectId));
+      } else {
+        isSquad = false;
+        promiseArray.push(api.getTeamSnapshots(objectId));
+      }
+      promiseArray.push(api.getTeamHierarchy(team.path));
+      return Promise.all(promiseArray)
+    })
     .then(function(results){
-      self.props.selectedTeam(results);
+      if (isSquad) {
+        var rObject = {
+          'type': 'squad',
+          'team': teamResult,
+          'iterations': results[0],
+          'assessments': results[1],
+          'access': results[2],
+          'hierarchy': results[3]
+        };
+      } else {
+        var rObject = {
+          'type': '',
+          'team': teamResult,
+          'snapshot': results[0],
+          'hierarchy': results[3]
+        };
+      }
+      self.props.selectedTeam(rObject);
     })
     .catch(function(err){
       console.log(err);

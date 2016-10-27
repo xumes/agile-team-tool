@@ -342,6 +342,16 @@ module.exports = function(app, includes) {
         res.status(400).send(err);
       });
   };
+
+  getTeamHierarchy = function(req, res) {
+    teamModel.getTeamHierarchy(req.params.path)
+    .then(function(result){
+      res.status(200).send(result);
+    })
+    .catch( /* istanbul ignore next */ function(err){
+      res.status(400).send(err);
+    });
+  };
   // search team with name
   app.get('/api/teams/search/:name', [includes.middleware.auth.requireLogin], searchTeamWithName);
 
@@ -412,4 +422,7 @@ module.exports = function(app, includes) {
   app.get('/api/teams/pathId/:pathId', [includes.middleware.auth.requireLogin], getTeamByPathId);
 
   app.post('/api/teams/children/', [includes.middleware.auth.requireLogin], getAllChildrenOnPath);
+
+  // return hierarchy of a team
+  app.get('/api/teams/hierarchy/team/:path?', [includes.middleware.auth.requireLogin], getTeamHierarchy);
 };

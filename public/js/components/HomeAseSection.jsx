@@ -9,19 +9,19 @@ var HomeAseSection = React.createClass({
   componentWillUpdate: function(nextProps, nextState) {
   },
   componentDidUpdate: function() {
-    if (this.props.selectedTeam.length > 2) {
+    if (this.props.selectedTeam.type == 'squad') {
       $('#assessmentFallBox').show();
       $('#squad_assessment_card').show();
-      var teamId = this.props.selectedTeam[0]._id;
-      var assessmentData = this.props.selectedTeam[2];
-      var teamAccess = this.props.selectedTeam[3];
+      var teamId = this.props.selectedTeam.team._id;
+      var assessmentData = this.props.selectedTeam.assessments;
+      var teamAccess = this.props.selectedTeam.access;
       assessmentHandler.teamAssessmentListHander(teamId, assessmentData, teamAccess);
     } else {
       $('#assessmentFallBox').show();
       $('#nsquad_assessment_card').show();
-      var teamId = this.props.selectedTeam[0]._id;
-      var teamName = this.props.selectedTeam[0].name;
-      var snapshotData = this.props.selectedTeam[1];
+      var teamId = this.props.selectedTeam.team._id;
+      var teamName = this.props.selectedTeam.team.name;
+      var snapshotData = this.props.selectedTeam.snapshot;
       assessmentHandler.assessmentParentRollup(snapshotData);
     }
   },

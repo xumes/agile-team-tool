@@ -5,12 +5,12 @@ var teamType = ''
 
 var HomeTeamHeader = React.createClass({
   componentWillUpdate: function(nextProps, nextState){
-    if (nextProps.selectedTeam.length > 2) {
+    if (nextProps.selectedTeam.type == 'squad') {
       teamType = 'Squad: ';
     } else {
       teamType = 'Team: ';
     }
-    teamName = nextProps.selectedTeam[0].name;
+    teamName = nextProps.selectedTeam.team.name;
   },
   componentDidUpdate: function() {
   },

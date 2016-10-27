@@ -735,6 +735,40 @@ module.exports.getParentByTeamId = function(teamId) {
   });
 };
 
+module.exports.getTeamHierarchy = function(path) {
+  return new Promise(function(resolve, reject) {
+    if (path == '' || path == null) {
+      resolve([]);
+    } else {
+      var tempPath = path.substring(1, path.length - 1);
+      var paths = tempPath.split(',');
+      Team.find({'pathId': {'$in': paths}}).exec()
+      .then(function(teams){
+        if (teams.length < paths.length) {
+          resolve({'error': 'cannot get the whole hierarchy'});
+        } else {
+          var returnTeams = [];
+          _.each(paths, function(p){
+            _.find(teams, function(t){
+              if (t.pathId == p) {
+                var returnTeam = {
+                  'pathId': t.pathId,
+                  '_id': t._id,
+                  'name': t.name
+                };
+                return returnTeams.push(returnTeam);
+              }
+            });
+          });
+          resolve(returnTeams);
+        }
+      })
+      .catch(function(err){
+        reject(err);
+      });
+    }
+  });
+};
 
 /*
 How tree structure changes when a team is deleted:

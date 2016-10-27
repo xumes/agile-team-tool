@@ -9,21 +9,21 @@ var HomeIterSection = React.createClass({
   componentWillUpdate: function(nextProps, nextState) {
   },
   componentDidUpdate: function() {
-    if (this.props.selectedTeam.length > 2) {
+    if (this.props.selectedTeam.type == 'squad') {
       $('#contentSpinner').hide();
       $('#bodyContent').show();
       $('#iterationFallBox').show();
-      var teamId = this.props.selectedTeam[0]._id;
-      var iterationData = this.props.selectedTeam[1];
-      var teamAccess = this.props.selectedTeam[3];
+      var teamId = this.props.selectedTeam.team._id;
+      var iterationData = this.props.selectedTeam.iterations;
+      var teamAccess = this.props.selectedTeam.access;
       iteationHandler.squadIterationsHandler(teamId, iterationData, teamAccess);
     } else {
       $('#contentSpinner').hide();
       $('#bodyContent').show();
       $('#snapshotPull').show();
-      var teamId = this.props.selectedTeam[0]._id;
-      var teamName = this.props.selectedTeam[0].name;
-      var snapshotData = this.props.selectedTeam[1];
+      var teamId = this.props.selectedTeam.team._id;
+      var teamName = this.props.selectedTeam.team.name;
+      var snapshotData = this.props.selectedTeam.snapshot;
       iteationHandler.iterationSnapshotHandler(teamId, teamName, snapshotData);
     }
   },

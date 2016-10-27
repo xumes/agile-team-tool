@@ -136,6 +136,20 @@ module.exports.loadTeam = function(objectId) {
   });
 };
 
+module.exports.getTeamHierarchy = function(path) {
+  return new Promise(function(resolve, reject){
+    var url ='/api/teams/hierarchy/team/' + encodeURIComponent(path);
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
 module.exports.getTeamSnapshots = function(objectId) {
   return new Promise(function(resolve, reject){
     var url ='/api/snapshot/get/' + encodeURIComponent(objectId);
