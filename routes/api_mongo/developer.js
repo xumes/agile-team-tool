@@ -1,5 +1,5 @@
 var util = require('../../helpers/util');
-var usersModel = require('../../models/users');
+var usersModel = require('../../models/mongodb/developers');
 
 module.exports = function(app, includes) {
   var middleware = includes.middleware;

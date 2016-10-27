@@ -37,6 +37,21 @@ var memberSchema = new Schema({
   }
 });
 
+var linkSchema = new Schema({
+  id: {
+    type: String,
+    required: [true, 'URL link id is required.']
+  },
+  linkLabel: {
+    type: String,
+    required: [true, 'URL link label is required.']
+  },
+  linkUrl: {
+    type: String,
+    required: [true, 'URL is required.']
+  }
+});
+
 var TeamSchema = new Schema({
   name: {
     type: String,
@@ -61,6 +76,7 @@ var TeamSchema = new Schema({
     type: String,
     default: null
   },
+  links: [linkSchema],
   createdDate: {
     type: Date,
     default: new Date()
