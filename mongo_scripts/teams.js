@@ -123,8 +123,14 @@ _.each(mongoTeams, function(mongoDoc) {
 
 
 //insert into db
-var creds = require('./creds');
+var creds = require('./creds.json');
+//console.log('creds: ', creds);
 // Use connect method to connect to the server
+/*MongoClient.connect(creds.url + "?ssl=true", {
+    server: {
+        sslValidate: false //in case of self-generated certificate
+    }
+},*/
 MongoClient.connect(creds.url, function(err, db) {
   assert.equal(null, err);
   console.log('Connected successfully to server');
