@@ -1,5 +1,5 @@
 var React = require('react');
-var Header = require('./Header.jsx');
+var Header = require('../Header.jsx');
 var AssessmentPageFormOne = require('./AssessmentPageFormOne.jsx');
 var AssessmentPageFormTwo = require('./AssessmentPageFormTwo.jsx');
 var AssessmentPageLastUpdate = require('./AssessmentPageLastUpdate.jsx');
@@ -13,11 +13,11 @@ var AssessmentPage = React.createClass({
                 {/* START choose squad team, select or create assessment form */}
                 <AssessmentPageFormOne />
                 {/* END choose squad team, select or create assessment form */}
-                
+
                 {/* START assessment generic buttons */}
                 <AssessmentButtons />
                 {/* END assessment generic buttons */}
-              
+
                 {/* START Project or Operations team Form Two */}
                 <AssessmentPageFormTwo />
                 {/* END Project or Operations team Form Two */}

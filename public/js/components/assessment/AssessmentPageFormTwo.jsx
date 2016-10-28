@@ -1,6 +1,6 @@
 var React = require('react');
-var Header = require('./Header.jsx');
-var TeamSquadForm = require('./TeamSquadForm.jsx');
+var Header = require('../Header.jsx');
+var TeamSquadForm = require('../team/TeamSquadForm.jsx');
 var CreateSelectAssessment = require('./CreateSelectAssessment.jsx');
 var Datepicker = require('./Datepicker.jsx');
 
@@ -64,7 +64,7 @@ var AssessmentPageFormTwo = React.createClass({
                   </label>
                   <span style={selectFieldHolder}>
                     <Datepicker />
-                    
+
                   </span>
                 </p>
                 </div>)

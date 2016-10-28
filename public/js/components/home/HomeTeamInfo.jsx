@@ -13,7 +13,16 @@ var HomeTeamInfo = React.createClass({
   },
 
   findTeamInAllTeams: function(pathId) {
-
+    var self = this;
+    api.getAllTeams()
+    .then(function(data){
+      var newData = {
+        'tab': 'allteams',
+        'data': data
+      };
+      self.props.newTeamsChanged(newData);
+      self.props.searchTeamSelectedChanged(pathId);
+    });
   },
 
   render: function() {
@@ -47,7 +56,12 @@ var HomeTeamInfo = React.createClass({
               </div>
             );
           } else {
-            return null;
+            return (
+              <div key={plink} style={{'display':'inline'}}>
+                <a class='wlink' style={{'display':'inline','paddingLeft':'0px'}} title='View parent team information' alt='View parent team information' id={plink} href='#' onClick={()=>self.findTeamInAllTeams(h.pathId)}>{h.name}</a>
+                <h>{' > '}</h>
+              </div>
+            );
           }
         });
         var teamHierarchy2 = teamName;

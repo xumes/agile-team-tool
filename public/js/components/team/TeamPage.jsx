@@ -1,5 +1,5 @@
 var React = require('react');
-var Header = require('./Header.jsx');
+var Header = require('../Header.jsx');
 var TeamForm = require('./TeamForm.jsx');
 var TeamMembers = require('./TeamMembers.jsx');
 var TeamLinks = require('./TeamLinks.jsx');

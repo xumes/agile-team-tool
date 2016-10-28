@@ -32,7 +32,7 @@ var HomeIterSection = React.createClass({
       iteationHandler.iterationSnapshotHandler(teamId, teamName, snapshotData);
     }
   },
-  
+
   expandCollapseSection: function(id) {
     if($('#' + id + ' .agile-section-title').hasClass('ibm-showing')) {
       $('#' + id + ' .agile-section-title').removeClass('ibm-showing');

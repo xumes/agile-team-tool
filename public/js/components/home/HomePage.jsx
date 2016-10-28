@@ -1,6 +1,6 @@
 var React = require('react');
 var api = require('../api.jsx');
-var Header = require('./Header.jsx');
+var Header = require('../Header.jsx');
 var HomeNav = require('./HomeNav.jsx');
 var HomeContent = require('./HomeContent.jsx');
 

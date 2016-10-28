@@ -1,6 +1,6 @@
 var React = require('react');
-var Header = require('./Header.jsx');
-var TeamSquadForm = require('./TeamSquadForm.jsx');
+var Header = require('../Header.jsx');
+var TeamSquadForm = require('../team/TeamSquadForm.jsx');
 var CreateSelectAssessment = require('./CreateSelectAssessment.jsx');
 
 var AssessmentPageFormOne = React.createClass({
