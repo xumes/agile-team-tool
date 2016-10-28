@@ -9,6 +9,11 @@ var HomeAseSection = React.createClass({
   componentWillUpdate: function(nextProps, nextState) {
   },
   componentDidUpdate: function() {
+    if(!$('#' + 'assessmentSection' + ' .agile-section-title').hasClass('ibm-showing')) {
+      $('#' + 'assessmentSection' + ' .agile-section-title').addClass('ibm-showing');
+      $('#' + 'assessmentSection' + ' .agile-section-title a').addClass('ibm-show-active');
+      $('#' + 'assessmentSection' + ' div.ibm-container-body').css('display','block');
+    }
     if (this.props.selectedTeam.type == 'squad') {
       $('#assessmentFallBox').show();
       $('#squad_assessment_card').show();
@@ -25,6 +30,17 @@ var HomeAseSection = React.createClass({
       assessmentHandler.assessmentParentRollup(snapshotData);
     }
   },
+  expandCollapseSection: function(id) {
+    if($('#' + id + ' .agile-section-title').hasClass('ibm-showing')) {
+      $('#' + id + ' .agile-section-title').removeClass('ibm-showing');
+      $('#' + id + ' .agile-section-title a').removeClass('ibm-show-active');
+      $('#' + id + ' div.ibm-container-body').css('display','none');
+    } else {
+      $('#' + id + ' .agile-section-title').addClass('ibm-showing');
+      $('#' + id + ' .agile-section-title a').addClass('ibm-show-active');
+      $('#' + id + ' div.ibm-container-body').css('display','block');
+    }
+  },
   render: function() {
     var assessmentFallBoxComponents = {
       'id': 'assessmentFallBox',
@@ -36,8 +52,8 @@ var HomeAseSection = React.createClass({
     };
     return (
       <div data-widget='showhide' data-type='panel' class='ibm-show-hide' id='assessmentSection'>
-        <h2 class='agile-section-title' data-open='true' id='agile-assessment-section-title'>
-          <a href='#show-hide' class='ibm-show-active'>
+        <h2 class='agile-section-title' data-open='true' id='agile-section-title'>
+          <a href='#show-hide' class='ibm-show-active' onClick={()=>this.expandCollapseSection('assessmentSection')}>
             Maturity assessment trends
           </a>
         </h2>

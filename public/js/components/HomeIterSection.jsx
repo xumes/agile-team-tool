@@ -9,6 +9,11 @@ var HomeIterSection = React.createClass({
   componentWillUpdate: function(nextProps, nextState) {
   },
   componentDidUpdate: function() {
+    if(!$('#' + 'iterationSection' + ' .agile-section-title').hasClass('ibm-showing')) {
+      $('#' + 'iterationSection' + ' .agile-section-title').addClass('ibm-showing');
+      $('#' + 'iterationSection' + ' .agile-section-title a').addClass('ibm-show-active');
+      $('#' + 'iterationSection' + ' div.ibm-container-body').css('display','block');
+    }
     if (this.props.selectedTeam.type == 'squad') {
       $('#contentSpinner').hide();
       $('#bodyContent').show();
@@ -27,6 +32,17 @@ var HomeIterSection = React.createClass({
       iteationHandler.iterationSnapshotHandler(teamId, teamName, snapshotData);
     }
   },
+  expandCollapseSection: function(id) {
+    if($('#' + id + ' .agile-section-title').hasClass('ibm-showing')) {
+      $('#' + id + ' .agile-section-title').removeClass('ibm-showing');
+      $('#' + id + ' .agile-section-title a').removeClass('ibm-show-active');
+      $('#' + id + ' div.ibm-container-body').css('display','none');
+    } else {
+      $('#' + id + ' .agile-section-title').addClass('ibm-showing');
+      $('#' + id + ' .agile-section-title a').addClass('ibm-show-active');
+      $('#' + id + ' div.ibm-container-body').css('display','block');
+    }
+  },
   render: function() {
     var iterationFallBoxComponents = {
       'id': 'iterationFallBox',
@@ -39,8 +55,8 @@ var HomeIterSection = React.createClass({
     return (
       <div data-widget='showhide' data-type='panel' class='ibm-show-hide' id='iterationSection'>
         <HomeSnapshotPull />
-        <h2 class='agile-section-title' data-open='true' id='agile-section-title'>
-          <a href='#show-hide' class='ibm-show-active'>
+        <h2 class='agile-section-title ibm-showing' data-open='true' id='agile-section-title'>
+          <a href='#show-hide' class='ibm-show-active' title='Expand/Collapse' onClick={()=>this.expandCollapseSection('iterationSection')}>
             Iteration trends
           </a>
         </h2>
