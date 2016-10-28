@@ -1841,8 +1841,7 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
   monthList = sortMMMYYYY(monthList);
   var curTeamstat = nonsquadScore;
 
-  //for (var i = monthList.length - 1; i > -1; i--) {
-  for (var i = 0; i < monthList.length; i++) {
+  for (var i = monthList.length - 1; i > -1; i--) {
     var graphCat;
     graphCat = monthList[i].month;
     graphCategory.push(graphCat);
