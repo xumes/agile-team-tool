@@ -1,11 +1,11 @@
 var util = require('../../helpers/util');
-var usersModel = require('../../models/mongodb/developers');
+var developersModel = require('../../models/mongodb/developers');
 
 module.exports = function(app, includes) {
   var middleware = includes.middleware;
 
   getApiKey = /* instabul ingore next */ function(req, res) {
-    usersModel.createApikey(req.session['user'])
+    developersModel.createApikey(req.session['user'])
       .then(function(result){
         console.log(result);
         res.status(200).json({
@@ -19,13 +19,21 @@ module.exports = function(app, includes) {
   };
 
   getApiKeyByUser = /* instabul ingore next */ function(req, res) {
-    usersModel.getUserApikeyByUser(req.session['user'])
+    developersModel.getUserApikeyByUser(req.session['user'])
       .then(function(result){
-        console.log(result);
-        res.status(200).json({
-          'apiKey': result.key,
-          'shortEmail': result.email
-        });
+        if (!_.isEmpty(result)) {
+         console.log(result);
+         res.status(200).json({
+           'apiKey': result.key,
+           'shortEmail': result.email
+         });
+       } else {
+         console.log('No result is avilable');
+         res.status(200).json({
+           'apiKey': '',
+           'shortEmail': ''
+         });
+       }
       })
       .catch( /* instabul ingore next */ function(err){
         res.status(404).send(err);
