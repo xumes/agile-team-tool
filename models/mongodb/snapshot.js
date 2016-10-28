@@ -552,7 +552,7 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
  * @param Object squadsCalResults
  * @return nonSquadCalResult
  */
-function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsCalResults, nonSquadTeamPathId, teamMemberData) {
+function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsCalResults, nonSquadTeamPathId, teamMemberData, squadsCalResult2) {
   return new Promise(function(resolve, reject) {
     var squadDoc = squads;
     var currData = resetData();
@@ -571,6 +571,9 @@ function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsCalResults, nonSquad
     for (var i = 0; i < squadDoc.length; i++) {
       for (var j = 0; j <= iterationMonth; j++) {
         if (!(_.isEmpty(squadsCalResults[squadDoc[i]])) && !(_.isUndefined(squadsCalResults[squadDoc[i]]))) {
+          // if (nonSquadTeamId.toString() == '580fb04a0565a8b1482371bd') {
+          //   console.log(squadsCalResults[squadDoc[i]]);
+          // }
           var squadIterationResult = squadsCalResults[squadDoc[i]];
           if (squadIterationResult[j].totalPoints != undefined) {
             currData[j].totalPoints = currData[j].totalPoints + squadIterationResult[j].totalPoints;
@@ -595,7 +598,7 @@ function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsCalResults, nonSquad
       }
     }
     nonSquadCalResult['teamMemberData'] = rollUpTeamMemberData(squadDoc, teamMemberData);
-    nonSquadCalResult['assessmentData'] = rollUpAssessmentsByNonSquad(squadDoc, nonSquadTeamId, squadsCalResults);
+    nonSquadCalResult['assessmentData'] = rollUpAssessmentsByNonSquad(squadDoc, nonSquadTeamId, squadsCalResult2);
 
     var newDate = moment();
     var endOfMonth = moment().endOf('month');
@@ -1064,6 +1067,8 @@ var snapshot = {
       var squadsByParent = {};
       var teamMemberData = {};
       var squadAssessments = {};
+      var squadsCalResultsByIter = {};
+      var squadsCalResultsByAsse = {};
       promiseArray.push(getIterationDocs(startTime, endTime));
       promiseArray.push(getSubmittedAssessments());
       promiseArray.push(getAllSquads());
@@ -1079,21 +1084,34 @@ var snapshot = {
           _.each(Object.keys(squadIterationDocs), function(squadTeamId) {
             promiseArray2.push(rollUpIterationsBySquad(squadIterationDocs[squadTeamId], squadTeamId));
           });
-          _.each(Object.keys(squadAssessments), function(squadTeamId) {
-            promiseArray2.push(rollUpAssessmentsBySquad(squadAssessments[squadTeamId], squadTeamId));
-          });
+          // _.each(Object.keys(squadAssessments), function(squadTeamId) {
+          //   promiseArray2.push(rollUpAssessmentsBySquad(squadAssessments[squadTeamId], squadTeamId));
+          // });
           return Promise.all(promiseArray2);
         })
         .then(function(squadsCalResultsArray){
-          var squadsCalResults = {};
           _.each(squadsCalResultsArray, function(squadsCalResult) {
-            squadsCalResults[Object.keys(squadsCalResult)[0]] = squadsCalResult[Object.keys(squadsCalResult)[0]];
+            if (Object.keys(squadsCalResult)[0] != null || Object.keys(squadsCalResult)[0] != undefined) {
+              squadsCalResultsByIter[Object.keys(squadsCalResult)[0]] = squadsCalResult[Object.keys(squadsCalResult)[0]];
+            }
           });
           var promiseArray3 = [];
-          _.each(Object.keys(squadsByParent), function(nonSquadTeamId) {
-            promiseArray3.push(rollUpDataByNonSquad(squadsByParent[nonSquadTeamId]['children'], squadsByParent[nonSquadTeamId]['teamId'], squadsCalResults, nonSquadTeamId, teamMemberData));
+          _.each(Object.keys(squadAssessments), function(squadTeamId) {
+            promiseArray3.push(rollUpAssessmentsBySquad(squadAssessments[squadTeamId], squadTeamId));
           });
           return Promise.all(promiseArray3);
+        })
+        .then(function(squadsCalResultsArray){
+          _.each(squadsCalResultsArray, function(squadsCalResult) {
+            if (Object.keys(squadsCalResult)[0] != null || Object.keys(squadsCalResult)[0] != undefined) {
+              squadsCalResultsByAsse[Object.keys(squadsCalResult)[0]] = squadsCalResult[Object.keys(squadsCalResult)[0]];
+            }
+          });
+          var promiseArray4 = [];
+          _.each(Object.keys(squadsByParent), function(nonSquadTeamId) {
+            promiseArray4.push(rollUpDataByNonSquad(squadsByParent[nonSquadTeamId]['children'], squadsByParent[nonSquadTeamId]['teamId'], squadsCalResultsByIter, nonSquadTeamId, teamMemberData, squadsCalResultsByAsse));
+          });
+          return Promise.all(promiseArray4);
         })
         .then(function(nonSquadCalResults){
           // var query = {'teamId': Schema.Types.ObjectId};
