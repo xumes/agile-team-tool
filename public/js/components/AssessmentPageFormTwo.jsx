@@ -2,6 +2,7 @@ var React = require('react');
 var Header = require('./Header.jsx');
 var TeamSquadForm = require('./TeamSquadForm.jsx');
 var CreateSelectAssessment = require('./CreateSelectAssessment.jsx');
+var Datepicker = require('./Datepicker.jsx');
 
 var AssessmentPageFormTwo = React.createClass({
   render: function() {
@@ -62,7 +63,8 @@ var AssessmentPageFormTwo = React.createClass({
                     <a class="ibm-information-link" id="assDateTT" data-widget="tooltip" data-contentid="assDateToolTip" style={anchorInfo} title="The assessment date is assigned when the Submit action is taken.  To assign a specific date, i.e. when recording a previously completed assessment, select the date to use as the assessment date."></a>
                   </label>
                   <span style={selectFieldHolder}>
-                    <input type="text" class="ibm-date-picker hasDatepicker" name="assessmentDate" id="assessmentDate" size="44" value="" readonly="readonly" placeholder="Optional assessment date" style={selectFieldWidth} disabled="disabled" />
+                    <Datepicker />
+                    
                   </span>
                 </p>
                 </div>)

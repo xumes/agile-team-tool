@@ -19,7 +19,7 @@ module.exports = function(app, includes) {
   // reactjs
   app.get('/_v2_assessment', includes.middleware.auth.requireLoginWithRedirect, function(req, res) {
     var json = {
-      'pageTitle': 'Team Management',
+      'pageTitle': 'Maturity Assessment',
       'googleAnalyticsKey': settings.googleAnalyticsKey,
       'ibmNPSKey': settings.ibmNPSKey,
       'environment': settings.environment

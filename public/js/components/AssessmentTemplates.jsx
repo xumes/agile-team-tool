@@ -1,8 +1,6 @@
 var React = require('react');
+var AssessmentActiveTemplates = require('./AssessmentActiveTemplates.jsx');
 var api = require('../api.jsx');
-var layoutRenderer = require('../layoutRenderer.jsx');
-var lodash = require('lodash');
-var Header = require('./Header.jsx');
 
 var AssessmentTemplates = React.createClass({
   getInitialState: function() {
@@ -21,14 +19,9 @@ var AssessmentTemplates = React.createClass({
 
   },
   render: function() {
-    var mainTwisty = null;
-    if(!lodash.isEmpty(this.state.activeTemplates)){
-      mainTwisty = layoutRenderer.mainTwisty(this.state.activeTemplates[0].cloudantId, 'agile-assessment');
-      console.log('mainTwisty: ', mainTwisty);
-    }
     return (
       <div id="assessmentContainer" class="agile-maturity">
-      Active template goes here
+      <AssessmentActiveTemplates />
       </div>
     )
   }

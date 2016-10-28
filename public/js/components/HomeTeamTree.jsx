@@ -210,7 +210,7 @@ var HomeTeamTree = React.createClass({
         promiseArray.push(api.getTeamSnapshots(objectId));
       }
       promiseArray.push(api.getTeamHierarchy(team.path));
-      if (team.members.length > 0) {
+      if (team.members != null && team.members.length > 0) {
         var ids = [];
         _.each(team.members, function(member){
           ids.push(member.userId);
@@ -253,10 +253,8 @@ var HomeTeamTree = React.createClass({
     $('#teamTree').hide();
     var path = [];
     if ($('#' + teamId).length > 0 && fromSearch) {
-      console.log('ssss');
       self.openAllParents(teamId);
     } else {
-      console.log('vvvvv');
       api.loadTeamDetails(teamId)
       .then(function(team){
         if (team != null) {
@@ -327,6 +325,11 @@ var HomeTeamTree = React.createClass({
       $('.nano').nanoScroller({
         scrollTo: $('#link_' + teamId)
       });
+    })
+    .catch(function(err){
+      $('#navSpinner').hide();
+      $('#teamTree').show();
+      console.log(err);
     })
   },
 

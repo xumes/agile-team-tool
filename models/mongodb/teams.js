@@ -9,6 +9,8 @@ var Iterations = require('./iterations');
 var Assessments = require('./assessments');
 var loggers = require('../../middleware/logger');
 var async = require('async');
+var crypto = require('crypto');
+var validators = require('mongoose-validators');
 
 // Just needed so that corresponding test could run
 require('../../settings');
@@ -48,7 +50,8 @@ var linkSchema = new Schema({
   },
   linkUrl: {
     type: String,
-    required: [true, 'URL is required.']
+    required: [true, 'URL is required.'],
+    validate: validators.isURL({message: 'URL is invalid.'})
   }
 });
 
@@ -126,6 +129,9 @@ TeamSchema.path('pathId').validate(function(value, done) {
     done(!count);
   });
 }, 'This team name is too similar to another team. Please enter a different team name.');
+
+
+
 
 /*
   model helper functions
@@ -885,6 +891,201 @@ module.exports.updateOrDeleteTeam = function(newDoc, userEmail, userId, action) 
 module.exports.getLookupIndex = function() {
 };
 module.exports.getLookupTeamByType = function() {
+};
+
+module.exports.modifyImportantLinks = function(teamId, userId, links) {
+  return new Promise(function(resolve, reject){
+    /**
+     *
+     * @param teamId - team id to modify
+     * @param userId - user id of the one who is doing the action
+     * @param links - array of links
+     * @returns - modified team document
+     */
+    var errorLists = {};
+    errorLists['error'] = {};
+    if (_.isEmpty(teamId)){
+      errorLists['error']['teamId'] = ['Team ID is required'];
+      loggers.get('models').verbose(errorLists);
+      return reject(errorLists);
+    }
+    if (_.isEmpty(userId)){
+      errorLists['error']['userId'] = ['User ID is required'];
+      loggers.get('models').verbose(errorLists);
+      return reject(errorLists);
+    }
+    if (_.isEmpty(links)){
+      errorLists['error']['links'] = ['Link url is required'];
+      loggers.get('models').verbose(errorLists);
+      return reject(errorLists);
+    } else {
+      if (!_.isArray(links)){
+        errorLists['error']['links'] = ['Invalid links'];
+        loggers.get('models').verbose(errorLists);
+        return reject(errorLists);
+      } else {
+        // var err = [];
+        // _.each(links, function(v,i,l) {
+          // var mLists = validate(v, teamLinkRules);
+          // if (mLists) {
+          //   if (mLists['linkUrl']){
+          //     err.push({linkUrl: mLists['linkUrl'][0]});
+          //   }
+          //   if (mLists['linkLabel']){
+          //     err.push({linkLabel: mLists['linkLabel'][0]});
+          //   }
+          // }
+        // });
+
+        // if (!_.isEmpty(err)){
+        //   errorLists['error'] = {'links': err};
+        //   loggers.get('models').verbose(errorLists);
+        //   return reject(errorLists);
+        // }
+      }
+    }
+
+    //check if user is allowed to edit team
+    Users.isUserAllowed(userId, teamId)
+    .then(function(allowed){
+      loggers.get('models').verbose('User ' + userId + ' is allowed to edit team ' + teamId + '. Proceed with modification');
+      return allowed;
+    })
+    .then(function(){
+      return module.exports.getTeam(teamId);
+    })
+    .then(function(teamDetails){
+      teamDetails = teamDetails;
+      var tmpLinks = [];
+      var pattern = /^((http|https):\/\/)/;
+      _.each(links, function(data,idx,ls) {
+        var str = data.linkUrl + process.hrtime().toString();
+        var hashId = crypto.createHash('md5').update(str).digest('hex');
+        var obj = {};
+        obj.id = (data.id !== undefined) ? data.id : hashId;
+        var url = data.linkUrl;
+        if (!pattern.test(url)) {
+          url = 'http://' + url;
+        }
+        obj.linkLabel = data.linkLabel;
+        obj.linkUrl = url;
+        tmpLinks.push(obj);
+      });
+      teamDetails['links'] = tmpLinks;
+      teamDetails['last_updt_user'] = userId;
+      teamDetails['last_updt_dt'] = util.getServerTime();
+
+      var LinksData = new Team(teamDetails);
+      var errorLinks = LinksData.validateSync();
+      if (errorLinks) {
+        loggers.get('models').verbose(JSON.stringify(errorLinks.errors));
+        return reject(errorLinks.errors);
+      } else {
+        return Team.findByIdAndUpdate(teamId, teamDetails);
+      }
+    })
+    .then(function(savingResult){
+      return module.exports.getUserTeams(userId);
+    })
+    .then(function(userTeams){
+      return module.exports.getTeam(teamId)
+      .then(function(result){
+        return resolve(
+          {
+            userTeams : userTeams,
+            teamDetails : result
+          }
+        );
+      });
+    })
+    .catch( /* istanbul ignore next */ function(err){
+      return reject(err);
+    });
+  });
+};
+
+module.exports.deleteImportantLinks = function(teamId, userId, links) {
+  return new Promise(function(resolve, reject){
+    /**
+     *
+     * @param teamId - team id to modify
+     * @param userId - user id of the one who is doing the action
+     * @param links - array of link IDs
+     * @returns - modified team document
+     */
+    var errorLists = {};
+    errorLists['error'] = {};
+    if (_.isEmpty(teamId)){
+      errorLists['error']['teamId'] = ['Team ID is required'];
+      loggers.get('models').verbose(errorLists);
+      return reject(errorLists);
+    }
+    if (_.isEmpty(userId)){
+      errorLists['error']['userId'] = ['User ID is required'];
+      loggers.get('models').verbose(errorLists);
+      return reject(errorLists);
+    }
+    if (_.isEmpty(links)){
+      errorLists['error']['links'] = ['Link ID is required'];
+      loggers.get('models').verbose(errorLists);
+      return reject(errorLists);
+    } else {
+      if (!_.isArray(links)){
+        errorLists['error']['links'] = ['Invalid links'];
+        loggers.get('models').verbose(errorLists);
+        return reject(errorLists);
+      }
+    }
+
+    //check if user is allowed to edit team
+    Users.isUserAllowed(userId, teamId)
+    .then(function(allowed){
+      loggers.get('models').verbose('User ' + userId + ' is allowed to edit team ' + teamId + '. Proceed with modification');
+      return allowed;
+    })
+    .then(function(){
+      return module.exports.getTeam(teamId);
+    })
+    .then(function(teamDetails){
+      if (!_.isEmpty(teamDetails.links)){
+        var curlinkData = teamDetails.links;
+        var tmpLinks = [];
+        var deletedIds = _.pluck(links, 'id');
+        _.each(curlinkData, function(value, key, list){
+          if (_.contains(deletedIds, value.id)){
+            delete curlinkData[key];
+          }
+        });
+        _.each(curlinkData, function(value, key, list){
+          if (value !== undefined){
+            tmpLinks.push(value);
+          }
+        });
+      }
+      teamDetails = teamDetails;
+      teamDetails['links'] = tmpLinks;
+      teamDetails['last_updt_user'] = userId;
+      teamDetails['last_updt_dt'] = util.getServerTime();
+      return Team.findByIdAndUpdate(teamId, teamDetails);
+    })
+    .then(function(savingResult){
+      return module.exports.getUserTeams(userId);
+    })
+    .then(function(userTeams){
+      return module.exports.getTeam(teamId)
+      .then(function(result){
+        return resolve(
+          {
+            userTeams : userTeams,
+            teamDetails : result
+          }
+        );
+      });
+    })
+    .catch( /* istanbul ignore next */ function(err){
+      return reject(err);
+    });
+  });
 };
 
 var associateActions = function() {

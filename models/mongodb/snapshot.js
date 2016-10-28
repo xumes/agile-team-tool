@@ -5,7 +5,7 @@ var loggers = require('../../middleware/logger');
 var userModel = require('./users.js');
 var teamModel = require('./teams.js');
 var iterationModel = require('./iterations.js');
-var teamScoreModel = require('../teamscore.js');
+//var teamScoreModel = require('../teamscore.js');
 var assessmentModel = require('./assessments.js');
 var userLocations = require('./data/userLocations.js');
 var userTimezone = require('./data/uniqueUserTimezone.js');
@@ -246,161 +246,36 @@ var snapshot_schema = new Schema(snapshotSchema);
 var snapshotModel = mongoose.model('snapshot', snapshot_schema);
 
 function resetData() {
-  return [{
-    'totalPoints': 0,
-    'totalCommPoints': 0,
-    'totalStories': 0,
-    'totalCommStories': 0,
-    'totalCompleted': 0,
-    'totalDefectsStartBal': 0,
-    'totalDefects': 0,
-    'totalDefectsClosed': 0,
-    'totalDefectsEndBal': 0,
-    'totalDplymts': 0,
-    'totTeamStat': 0,
-    'totClientStat': 0,
-    'totTeamStatIter': 0,
-    'totClientStatIter': 0,
-    'totCycleTimeBacklog': 0,
-    'totCycleTimeWIP': 0,
-    'totCycleTimeBacklogIter': 0,
-    'totCycleTimeWIPIter': 0,
-    'teamsLt5': 0,
-    'teams5to12': 0,
-    'teamsGt12': 0,
-    'totalSquad': 0,
-    'month': '',
-    'partialMonth': false
-
-  }, {
-    'totalPoints': 0,
-    'totalCommPoints': 0,
-    'totalStories': 0,
-    'totalCommStories': 0,
-    'totalCompleted': 0,
-    'totalDefectsStartBal': 0,
-    'totalDefects': 0,
-    'totalDefectsClosed': 0,
-    'totalDefectsEndBal': 0,
-    'totalDplymts': 0,
-    'totTeamStat': 0,
-    'totClientStat': 0,
-    'totTeamStatIter': 0,
-    'totClientStatIter': 0,
-    'totCycleTimeBacklog': 0,
-    'totCycleTimeWIP': 0,
-    'totCycleTimeBacklogIter': 0,
-    'totCycleTimeWIPIter': 0,
-    'teamsLt5': 0,
-    'teams5to12': 0,
-    'teamsGt12': 0,
-    'totalSquad': 0,
-    'month': '',
-    'partialMonth': false
-
-  }, {
-    'totalPoints': 0,
-    'totalCommPoints': 0,
-    'totalStories': 0,
-    'totalCommStories': 0,
-    'totalCompleted': 0,
-    'totalDefectsStartBal': 0,
-    'totalDefects': 0,
-    'totalDefectsClosed': 0,
-    'totalDefectsEndBal': 0,
-    'totalDplymts': 0,
-    'totTeamStat': 0,
-    'totClientStat': 0,
-    'totTeamStatIter': 0,
-    'totClientStatIter': 0,
-    'totCycleTimeBacklog': 0,
-    'totCycleTimeWIP': 0,
-    'totCycleTimeBacklogIter': 0,
-    'totCycleTimeWIPIter': 0,
-    'teamsLt5': 0,
-    'teams5to12': 0,
-    'teamsGt12': 0,
-    'totalSquad': 0,
-    'month': '',
-    'partialMonth': false
-
-  }, {
-    'totalPoints': 0,
-    'totalCommPoints': 0,
-    'totalStories': 0,
-    'totalCommStories': 0,
-    'totalCompleted': 0,
-    'totalDefectsStartBal': 0,
-    'totalDefects': 0,
-    'totalDefectsClosed': 0,
-    'totalDefectsEndBal': 0,
-    'totalDplymts': 0,
-    'totTeamStat': 0,
-    'totClientStat': 0,
-    'totTeamStatIter': 0,
-    'totClientStatIter': 0,
-    'totCycleTimeBacklog': 0,
-    'totCycleTimeWIP': 0,
-    'totCycleTimeBacklogIter': 0,
-    'totCycleTimeWIPIter': 0,
-    'teamsLt5': 0,
-    'teams5to12': 0,
-    'teamsGt12': 0,
-    'totalSquad': 0,
-    'month': '',
-    'partialMonth': false
-
-  }, {
-    'totalPoints': 0,
-    'totalCommPoints': 0,
-    'totalStories': 0,
-    'totalCommStories': 0,
-    'totalCompleted': 0,
-    'totalDefectsStartBal': 0,
-    'totalDefects': 0,
-    'totalDefectsClosed': 0,
-    'totalDefectsEndBal': 0,
-    'totalDplymts': 0,
-    'totTeamStat': 0,
-    'totClientStat': 0,
-    'totTeamStatIter': 0,
-    'totClientStatIter': 0,
-    'totCycleTimeBacklog': 0,
-    'totCycleTimeWIP': 0,
-    'totCycleTimeBacklogIter': 0,
-    'totCycleTimeWIPIter': 0,
-    'teamsLt5': 0,
-    'teams5to12': 0,
-    'teamsGt12': 0,
-    'totalSquad': 0,
-    'month': '',
-    'partialMonth': false
-  }, {
-    'totalPoints': 0,
-    'totalCommPoints': 0,
-    'totalStories': 0,
-    'totalCommStories': 0,
-    'totalCompleted': 0,
-    'totalDefectsStartBal': 0,
-    'totalDefects': 0,
-    'totalDefectsClosed': 0,
-    'totalDefectsEndBal': 0,
-    'totalDplymts': 0,
-    'totTeamStat': 0,
-    'totClientStat': 0,
-    'totTeamStatIter': 0,
-    'totClientStatIter': 0,
-    'totCycleTimeBacklog': 0,
-    'totCycleTimeWIP': 0,
-    'totCycleTimeBacklogIter': 0,
-    'totCycleTimeWIPIter': 0,
-    'teamsLt5': 0,
-    'teams5to12': 0,
-    'teamsGt12': 0,
-    'totalSquad': 0,
-    'month': '',
-    'partialMonth': false
-  }];
+  var rollupDataList = [];
+  for (var i=0; i<=iterationMonth; i++) {
+    rollupDataList.push({
+      'totalPoints': 0,
+      'totalCommPoints': 0,
+      'totalStories': 0,
+      'totalCommStories': 0,
+      'totalCompleted': 0,
+      'totalDefectsStartBal': 0,
+      'totalDefects': 0,
+      'totalDefectsClosed': 0,
+      'totalDefectsEndBal': 0,
+      'totalDplymts': 0,
+      'totTeamStat': 0,
+      'totClientStat': 0,
+      'totTeamStatIter': 0,
+      'totClientStatIter': 0,
+      'totCycleTimeBacklog': 0,
+      'totCycleTimeWIP': 0,
+      'totCycleTimeBacklogIter': 0,
+      'totCycleTimeWIPIter': 0,
+      'teamsLt5': 0,
+      'teams5to12': 0,
+      'teamsGt12': 0,
+      'totalSquad': 0,
+      'month': '',
+      'partialMonth': false
+    });
+  }
+  return rollupDataList;
 };
 
 /**
@@ -493,43 +368,48 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
         //return reject(Error(msg));
       } else {
         var monthIndex = 5 - monthDiff;
-        var pts = iterationDoc['storyPointsDelivered'];
-        var commPts = iterationDoc['commitedStoryPoints'];
-        var stories = iterationDoc['deliveredStories'];
-        var commStories = iterationDoc['committedStories'];
-        var teamCnt = iterationDoc['memberCount'];
-        var defects = iterationDoc['defects'];
-        var dplymnts = iterationDoc['deployments'];
-        var teamStat = iterationDoc['teamSatisfaction'];
-        var clientStat = iterationDoc['clientSatisfaction'];
-        if (pts != undefined && pts != null && !_.isNaN(pts)) {
-          currData[monthIndex].totalPoints = currData[monthIndex].totalPoints + parseInt(pts);
-        }
-        if (commPts != undefined && commPts != null && !_.isNaN(pts)) {
-          currData[monthIndex].totalCommPoints = currData[monthIndex].totalCommPoints + parseInt(commPts);
-        }
-        if (stories != undefined && stories != null && !_.isNaN(stories)) {
-          currData[monthIndex].totalStories = currData[monthIndex].totalStories + parseInt(stories);
-        }
-        if (commStories != undefined && commStories != null && !_.isNaN(commStories)) {
-          currData[monthIndex].totalCommStories = currData[monthIndex].totalCommStories + parseInt(commStories);
-        }
-        if (defects != undefined && defects != null && !_.isNaN(defects)) {
-          currData[monthIndex].totalDefects = currData[monthIndex].totalDefects + parseInt(defects);
-        }
-        if (dplymnts != undefined && dplymnts != null && !_.isNaN(dplymnts)) {
-          currData[monthIndex].totalDplymts = currData[monthIndex].totalDplymts + parseInt(dplymnts);
-        }
-        if (teamStat != undefined && teamStat != null && !_.isNaN(teamStat) && (parseInt(teamStat) != 0)) {
+        var pts = util.getIntegerValue(iterationDoc['storyPointsDelivered']);
+        var commPts = util.getIntegerValue(iterationDoc['commitedStoryPoints']);
+        var stories = util.getIntegerValue(iterationDoc['deliveredStories']);
+        var commStories = util.getIntegerValue(iterationDoc['committedStories']);
+        var teamCnt = util.getIntegerValue(iterationDoc['memberCount']);
+        var defectsStartBal = util.getIntegerValue(iterationDoc['defectsStartBal']);
+        var defects = util.getIntegerValue(iterationDoc['defects']);
+        var defectsClosed = util.getIntegerValue(iterationDoc['defectsClosed']);
+        var defectsEndBal = util.getIntegerValue(iterationDoc['defectsEndBal']);
+        var dplymnts = util.getIntegerValue(iterationDoc['deployments']);
+        var teamStat = util.getFloatValue(iterationDoc['teamSatisfaction']);
+        var clientStat = util.getFloatValue(iterationDoc['clientSatisfaction']);
+        var cycleTimeBacklog = util.getFloatValue(iterationDoc['cycleTimeInBacklog']);
+        var cycleTimeWIP = util.getFloatValue(iterationDoc['cycleTimeWIP']);
+
+        currData[monthIndex].totalPoints = currData[monthIndex].totalPoints + pts;
+        currData[monthIndex].totalCommPoints = currData[monthIndex].totalCommPoints + commPts;
+        currData[monthIndex].totalStories = currData[monthIndex].totalStories + stories;
+        currData[monthIndex].totalCommStories = currData[monthIndex].totalCommStories + commStories;
+        currData[monthIndex].totalDefectsStartBal = currData[monthIndex].totalDefects + defectsStartBal;
+        currData[monthIndex].totalDefects = currData[monthIndex].totalDefects + defects;
+        currData[monthIndex].totalDefectsClosed = currData[monthIndex].totalDefects + defectsClosed;
+        currData[monthIndex].totalDefectsEndBal = currData[monthIndex].totalDefects + defectsEndBal;
+        currData[monthIndex].totalDplymts = currData[monthIndex].totalDplymts + dplymnts;
+
+        if (teamStat > 0) {
           currData[monthIndex].totTeamStat = currData[monthIndex].totTeamStat + parseInt(teamStat);
           currData[monthIndex].totTeamStatIter = currData[monthIndex].totTeamStatIter + 1;
         }
-        if (clientStat != undefined && clientStat != null && !_.isNaN(clientStat) && (parseInt(clientStat) != 0)) {
+        if (clientStat > 0) {
           currData[monthIndex].totClientStat = currData[monthIndex].totClientStat + parseInt(clientStat);
           currData[monthIndex].totClientStatIter = currData[monthIndex].totClientStatIter + 1;
         }
-        if (teamCnt != undefined && teamCnt != null && !_.isNaN(teamCnt)) {
-          teamCnt = parseInt(teamCnt);
+        if (cycleTimeBacklog > 0) {
+          currData[monthIndex].totcycleTimeBacklog = currData[monthIndex].totcycleTimeBacklog + cycleTimeBacklog;
+          currData[monthIndex].totCycleTimeBacklogIter = currData[monthIndex].totCycleTimeBacklogIter + 1;
+        }
+        if (cycleTimeWIP > 0) {
+          currData[monthIndex].totCycleTimeWIP = currData[monthIndex].totCycleTimeWIP + cycleTimeWIP;
+          currData[monthIndex].totCycleTimeWIPIter = currData[monthIndex].totCycleTimeWIPIter + 1;
+        }
+        if (teamCnt > 0) {
           if (teamCnt < 5) {
             currData[monthIndex].teamsLt5 = currData[monthIndex].teamsLt5 + 1;
           } else if (teamCnt > 12) {
@@ -552,7 +432,7 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
  * @param Object squadsCalResults
  * @return nonSquadCalResult
  */
-function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsCalResults, nonSquadTeamPathId, teamMemberData) {
+function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsCalResults, nonSquadTeamPathId, teamMemberData, squadsCalResult2) {
   return new Promise(function(resolve, reject) {
     var squadDoc = squads;
     var currData = resetData();
@@ -571,18 +451,28 @@ function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsCalResults, nonSquad
     for (var i = 0; i < squadDoc.length; i++) {
       for (var j = 0; j <= iterationMonth; j++) {
         if (!(_.isEmpty(squadsCalResults[squadDoc[i]])) && !(_.isUndefined(squadsCalResults[squadDoc[i]]))) {
+          // if (nonSquadTeamId.toString() == '580fb04a0565a8b1482371bd') {
+          //   console.log(squadsCalResults[squadDoc[i]]);
+          // }
           var squadIterationResult = squadsCalResults[squadDoc[i]];
           if (squadIterationResult[j].totalPoints != undefined) {
             currData[j].totalPoints = currData[j].totalPoints + squadIterationResult[j].totalPoints;
             currData[j].totalCommPoints = currData[j].totalPoints + squadIterationResult[j].totalCommPoints;
             currData[j].totalStories = currData[j].totalStories + squadIterationResult[j].totalStories;
             currData[j].totalCommStories = currData[j].totalStories + squadIterationResult[j].totalCommStories;
+            currData[j].totalDefectsStartBal = currData[j].totalDefectsStartBal + squadIterationResult[j].totalDefectsStartBal;
             currData[j].totalDefects = currData[j].totalDefects + squadIterationResult[j].totalDefects;
+            currData[j].totalDefectsClosed = currData[j].totalDefectsClosed + squadIterationResult[j].totalDefectsClosed;
+            currData[j].totalDefectsEndBal = currData[j].totalDefectsEndBal + squadIterationResult[j].totalDefectsEndBal;
             currData[j].totalDplymts = currData[j].totalDplymts + squadIterationResult[j].totalDplymts;
             currData[j].totTeamStat = currData[j].totTeamStat + squadIterationResult[j].totTeamStat;
             currData[j].totTeamStatIter = currData[j].totTeamStatIter + squadIterationResult[j].totTeamStatIter;
             currData[j].totClientStat = currData[j].totClientStat + squadIterationResult[j].totClientStat;
             currData[j].totClientStatIter = currData[j].totClientStatIter + squadIterationResult[j].totClientStatIter;
+            currData[j].totCycleTimeBacklog = currData[j].totCycleTimeBacklog + squadIterationResult[j].totCycleTimeBacklog;
+            currData[j].totCycleTimeBacklogIter = currData[j].totCycleTimeBacklogIter + squadIterationResult[j].totCycleTimeBacklogIter;
+            currData[j].totCycleTimeWIP = currData[j].totCycleTimeWIP + squadIterationResult[j].totCycleTimeWIP;
+            currData[j].totCycleTimeWIPIter = currData[j].totCycleTimeWIPIter + squadIterationResult[j].totCycleTimeWIPIter;
             currData[j].teamsLt5 = currData[j].teamsLt5 + squadIterationResult[j].teamsLt5;
             currData[j].teamsGt12 = currData[j].teamsGt12 + squadIterationResult[j].teamsGt12;
             currData[j].teams5to12 = currData[j].teams5to12 + squadIterationResult[j].teams5to12;
@@ -595,7 +485,7 @@ function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsCalResults, nonSquad
       }
     }
     nonSquadCalResult['teamMemberData'] = rollUpTeamMemberData(squadDoc, teamMemberData);
-    nonSquadCalResult['assessmentData'] = rollUpAssessmentsByNonSquad(squadDoc, nonSquadTeamId, squadsCalResults);
+    nonSquadCalResult['assessmentData'] = rollUpAssessmentsByNonSquad(squadDoc, nonSquadTeamId, squadsCalResult2);
 
     var newDate = moment();
     var endOfMonth = moment().endOf('month');
@@ -610,6 +500,12 @@ function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsCalResults, nonSquad
       }
       if (currData[i].totClientStatIter > 0) {
         currData[i].totClientStat = currData[i].totClientStat / currData[i].totClientStatIter;
+      }
+      if (currData[i].totCycleTimeBacklogIter > 0) {
+        currData[i].totCycleTimeBacklog = currData[i].totCycleTimeBacklog / currData[i].totCycleTimeBacklogIter;
+      }
+      if (currData[i].totCycleTimeWIPIter > 0) {
+        currData[i].totCycleTimeWIP = currData[i].totCycleTimeWIP / currData[i].totCycleTimeWIPIter;
       }
     }
     resolve(nonSquadCalResult);
@@ -1064,6 +960,8 @@ var snapshot = {
       var squadsByParent = {};
       var teamMemberData = {};
       var squadAssessments = {};
+      var squadsCalResultsByIter = {};
+      var squadsCalResultsByAsse = {};
       promiseArray.push(getIterationDocs(startTime, endTime));
       promiseArray.push(getSubmittedAssessments());
       promiseArray.push(getAllSquads());
@@ -1079,21 +977,34 @@ var snapshot = {
           _.each(Object.keys(squadIterationDocs), function(squadTeamId) {
             promiseArray2.push(rollUpIterationsBySquad(squadIterationDocs[squadTeamId], squadTeamId));
           });
-          _.each(Object.keys(squadAssessments), function(squadTeamId) {
-            promiseArray2.push(rollUpAssessmentsBySquad(squadAssessments[squadTeamId], squadTeamId));
-          });
+          // _.each(Object.keys(squadAssessments), function(squadTeamId) {
+          //   promiseArray2.push(rollUpAssessmentsBySquad(squadAssessments[squadTeamId], squadTeamId));
+          // });
           return Promise.all(promiseArray2);
         })
         .then(function(squadsCalResultsArray){
-          var squadsCalResults = {};
           _.each(squadsCalResultsArray, function(squadsCalResult) {
-            squadsCalResults[Object.keys(squadsCalResult)[0]] = squadsCalResult[Object.keys(squadsCalResult)[0]];
+            if (Object.keys(squadsCalResult)[0] != null || Object.keys(squadsCalResult)[0] != undefined) {
+              squadsCalResultsByIter[Object.keys(squadsCalResult)[0]] = squadsCalResult[Object.keys(squadsCalResult)[0]];
+            }
           });
           var promiseArray3 = [];
-          _.each(Object.keys(squadsByParent), function(nonSquadTeamId) {
-            promiseArray3.push(rollUpDataByNonSquad(squadsByParent[nonSquadTeamId]['children'], squadsByParent[nonSquadTeamId]['teamId'], squadsCalResults, nonSquadTeamId, teamMemberData));
+          _.each(Object.keys(squadAssessments), function(squadTeamId) {
+            promiseArray3.push(rollUpAssessmentsBySquad(squadAssessments[squadTeamId], squadTeamId));
           });
           return Promise.all(promiseArray3);
+        })
+        .then(function(squadsCalResultsArray){
+          _.each(squadsCalResultsArray, function(squadsCalResult) {
+            if (Object.keys(squadsCalResult)[0] != null || Object.keys(squadsCalResult)[0] != undefined) {
+              squadsCalResultsByAsse[Object.keys(squadsCalResult)[0]] = squadsCalResult[Object.keys(squadsCalResult)[0]];
+            }
+          });
+          var promiseArray4 = [];
+          _.each(Object.keys(squadsByParent), function(nonSquadTeamId) {
+            promiseArray4.push(rollUpDataByNonSquad(squadsByParent[nonSquadTeamId]['children'], squadsByParent[nonSquadTeamId]['teamId'], squadsCalResultsByIter, nonSquadTeamId, teamMemberData, squadsCalResultsByAsse));
+          });
+          return Promise.all(promiseArray4);
         })
         .then(function(nonSquadCalResults){
           // var query = {'teamId': Schema.Types.ObjectId};

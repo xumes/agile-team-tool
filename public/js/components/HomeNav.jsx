@@ -9,9 +9,7 @@ var HomeTeamTree = require('./HomeTeamTree.jsx');
 var HomeNav = React.createClass({
   getInitialState: function() {
     return {
-      searchTeams: [],
-      newTeams: new Object(),
-      searchTeamSelected: ''
+      searchTeams: []
     }
   },
 
@@ -51,7 +49,7 @@ var HomeNav = React.createClass({
           'data': data
         };
         self.setState({'searchTeamSelected': ''});
-        self.setState({'newTeams':newData});
+        self.props.newTeamsChanged(newData);
         $('#searchCancel').click();
       })
       .catch(function(err){
@@ -67,7 +65,7 @@ var HomeNav = React.createClass({
           'tab': 'allteams',
           'data': data
         };
-        self.setState({'newTeams':newData});
+        self.props.newTeamsChanged(newData);
       })
       .catch(function(err){
         self.tabClickedEnd();
@@ -112,8 +110,8 @@ var HomeNav = React.createClass({
         <HomeSpinner id={'navSpinner'}/>
         <div class='agile-team-nav nano' data-widget='scrollable' data-height='600' style={agileTeamNavStyle}>
           <div class="nano-content">
-            <HomeSearchTree searchTeams={this.state.searchTeams} clickedTeam={this.searchTeamClickedHandler}/>
-            <HomeTeamTree newTeams={this.state.newTeams} searchTeamSelected={this.state.searchTeamSelected} selectedTeam={this.props.selectedTeam}/>
+            <HomeSearchTree searchTeams={this.state.searchTeams} clickedTeam={this.props.searchTeamSelectedChanged}/>
+            <HomeTeamTree newTeams={this.props.newTeams} searchTeamSelected={this.props.searchTeamSelected} selectedTeam={this.props.selectedTeam}/>
           </div>
         </div>
       </div>
