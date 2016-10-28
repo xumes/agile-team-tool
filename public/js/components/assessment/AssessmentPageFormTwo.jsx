@@ -5,6 +5,14 @@ var CreateSelectAssessment = require('./CreateSelectAssessment.jsx');
 var Datepicker = require('./Datepicker.jsx');
 
 var AssessmentPageFormTwo = React.createClass({
+  getInitialState: function() {
+    return {
+      enableDatepicker: false
+    }
+  },
+  enableDatepicker: function () {
+    return this.state.enableDatepicker;
+  },
   render: function() {
     var selectFieldHolder = {
       'width': '600'
@@ -63,8 +71,7 @@ var AssessmentPageFormTwo = React.createClass({
                     <a class="ibm-information-link" id="assDateTT" data-widget="tooltip" data-contentid="assDateToolTip" style={anchorInfo} title="The assessment date is assigned when the Submit action is taken.  To assign a specific date, i.e. when recording a previously completed assessment, select the date to use as the assessment date."></a>
                   </label>
                   <span style={selectFieldHolder}>
-                    <Datepicker />
-
+                    <Datepicker enableDatepicker={this.enableDatepicker} />
                   </span>
                 </p>
                 </div>)

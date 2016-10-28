@@ -49,7 +49,8 @@ _.each(cloudantTeams, function(doc) {
 
   //get team parent info from it's indexed doc
   var indexDoc = _.find(concatTeamIndex, function(obj){
-    return obj._id === doc._id;
+    if (obj != undefined)
+     return obj._id === doc._id;
   });
   if (_.isEmpty(indexDoc))
     console.log('warning: ' + doc._id + ' was not found in the index');

@@ -15,7 +15,7 @@ var mongoUserApi = [];
 _.each(cloudantUserApi, function(doc) {
   //set empty string values to be undefined
   doc = _.mapObject(doc, function(val){ return _.isEmpty(val) ? undefined : val; });
-  
+
   var mongoDoc = {
     'userId'     : doc.userId.toUpperCase(),
     'email'      : util.lowerCase(doc.email),

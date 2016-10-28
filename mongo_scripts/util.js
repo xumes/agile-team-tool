@@ -7,7 +7,7 @@ var ObjectId    = require('mongodb').ObjectID;
 
 module.exports = {
   stringToUtcDate: function(string){
-    if (_.isEmpty(string)||!moment(string).isValid()){
+    if (_.isEmpty(string)||!moment(string).isValid() || typeof string != 'string' || string.indexOf('<head>') > -1){
       //console.log("invalid string " + string);
       return undefined;
     }
