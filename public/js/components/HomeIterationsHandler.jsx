@@ -2008,8 +2008,8 @@ function sortMMMYYYY(iterations) {
   if (iterations != null && iterations.length > 1) {
     iterations.sort(function(a, b) {
 
-      var date1 = a.month.split('-');
-      var date2 = b.month.split('-');
+      var date1 = a.month.split(' ');
+      var date2 = b.month.split(' ');
       var month1 = monthNames.indexOf(date1[0]);
       var yr1 = parseInt(date1[1]);
       var month2 = monthNames.indexOf(date2[0]);
