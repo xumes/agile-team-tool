@@ -34,6 +34,7 @@
     "moment-timezone": "^0.5.5",
     "mongodb": "^2.2.9",
     "mongoose": "^4.6.0",
+    "mongoose-validators": "^0.1.0",
     "morgan": "~1.7.0",
     "newrelic": "^1.30.0",
     "node-schedule": "^1.1.1",
