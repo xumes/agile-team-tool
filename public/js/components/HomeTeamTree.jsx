@@ -210,7 +210,7 @@ var HomeTeamTree = React.createClass({
         promiseArray.push(api.getTeamSnapshots(objectId));
       }
       promiseArray.push(api.getTeamHierarchy(team.path));
-      if (team.members.length > 0) {
+      if (team.members != null && team.members.length > 0) {
         var ids = [];
         _.each(team.members, function(member){
           ids.push(member.userId);

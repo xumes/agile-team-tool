@@ -30,17 +30,23 @@ var HomeTeamInfo = React.createClass({
       }
       if (this.props.selectedTeam.hierarchy == undefined || this.props.selectedTeam.hierarchy.error || this.props.selectedTeam.hierarchy.length == 0) {
         var teamHierarchy = 'No parent infomation';
+        var teamHierarchy2 = null;
       } else {
         var hierarchy = this.props.selectedTeam.hierarchy;
         teamHierarchy = hierarchy.map(function(h){
           var plink = 'plink_' + h.pathId;
-          return (
-            <div key={plink} style={{'display':'inline'}}>
-              <a class='wlink' style={{'display':'inline','paddingLeft':'0px'}} title='View parent team information' alt='View parent team information' id={plink} href='#' onClick={()=>self.props.searchTeamSelectedChanged(h.pathId)}>{h.name}</a>
-              <h>{' > '}</h>
-            </div>
-          );
+          if ($('#' + h.pathId).length) {
+            return (
+              <div key={plink} style={{'display':'inline'}}>
+                <a class='wlink' style={{'display':'inline','paddingLeft':'0px'}} title='View parent team information' alt='View parent team information' id={plink} href='#' onClick={()=>self.props.searchTeamSelectedChanged(h.pathId)}>{h.name}</a>
+                <h>{' > '}</h>
+              </div>
+            );
+          } else {
+            return null;
+          }
         });
+        var teamHierarchy2 = teamName;
       }
       if (team.links != undefined) {
         var teamLinks = team.links.map(function(link){
@@ -98,7 +104,7 @@ var HomeTeamInfo = React.createClass({
                   <p>Hierarchy</p>
                 </td>
                 <td>
-                  {teamHierarchy}{teamName}
+                  {teamHierarchy}{teamHierarchy2}
                 </td>
               </tr>
               <tr id='Important links'>

@@ -7,7 +7,7 @@ var HomeMemberTable = React.createClass({
   },
   componentDidUpdate: function() {
     var self = this;
-    if (self.props.selectedTeam.members.length > 0 && self.props.selectedTeam.team != undefined) {
+    if (self.props.selectedTeam.team != undefined && self.props.selectedTeam.members != undefined && self.props.selectedTeam.members.length > 0) {
       $('#teamMemberTable').show();
       var members = _.sortBy(self.props.selectedTeam.members, function(member){
         return member.name.toLowerCase();
