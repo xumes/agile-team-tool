@@ -12,6 +12,10 @@ var HomeTeamInfo = React.createClass({
     return (teamCount / 100);
   },
 
+  findTeamInAllTeams: function(pathId) {
+
+  },
+
   render: function() {
     var self = this;
     if (this.props.selectedTeam.team == undefined) {

@@ -29,7 +29,7 @@ var HomePage = React.createClass({
           <HomeNav selectedTeam={this.selectedTeamChanged} newTeams={this.state.newTeams} newTeamsChanged={this.newTeamsChanged} searchTeamSelectedChanged={this.searchTeamSelectedChanged} searchTeamSelected={this.state.searchTeamSelected}/>
         </div>
         <div id="mainContent" class="ibm-col-6-4">
-          <HomeContent selectedTeam={this.state.selectedTeam} searchTeamSelectedChanged={this.searchTeamSelectedChanged}/>
+          <HomeContent selectedTeam={this.state.selectedTeam} searchTeamSelectedChanged={this.searchTeamSelectedChanged} newTeamsChanged={this.newTeamsChanged}/>
         </div>
       </div>
     )
