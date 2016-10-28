@@ -72,6 +72,34 @@ module.exports = function(app, includes) {
       });
   };
 
+  updateLink = function(req, res) {
+    var links = req.body['links'];
+    var userId = req.session['user']['shortEmail'];
+    var teamId = req.body['teamId'];
+    teamModel.modifyImportantLinks(teamId, userId, links)
+    .then(function(result){
+      res.send(result);
+    })
+    .catch( /* istanbul ignore next */ function(err) {
+      // cannot simulate this error during testing
+      res.status(400).send(err);
+    });
+  };
+
+  deleteLink = function(req, res) {
+    var links = req.body['links'];
+    var userId = req.session['user']['shortEmail'];
+    var teamId = req.body['teamId'];
+    teamModel.deleteImportantLinks(teamId, userId, links)
+    .then(function(result){
+      res.send(result);
+    })
+    .catch( /* istanbul ignore next */ function(err) {
+      // cannot simulate this error during testing
+      res.status(400).send(err);
+    });
+  };
+
   associateTeam = function(req, res) {
     var action = req.body.action;
     var valid = teamModel.associateActions(action);
@@ -220,7 +248,7 @@ module.exports = function(app, includes) {
       })
       .catch(/* istanbul ignore next */ function(err) {
         res.status(400).send(err);
-      })
+      });
   };
 
   getSelectableChildren = function(req, res) {
@@ -352,11 +380,15 @@ module.exports = function(app, includes) {
       res.status(400).send(err);
     });
   };
+
   // search team with name
   app.get('/api/teams/search/:name', [includes.middleware.auth.requireLogin], searchTeamWithName);
 
   // delete team document
   app.delete('/api/teams/', [includes.middleware.auth.requireLogin], deleteTeam);
+
+  // delete a link
+  app.delete('/api/teams/links', [includes.middleware.auth.requireLogin], deleteLink);
 
   // create new team document
   app.post('/api/teams/', [includes.middleware.auth.requireLogin], createTeam);
@@ -369,6 +401,9 @@ module.exports = function(app, includes) {
 
   // modify  team members
   app.put('/api/teams/members', [includes.middleware.auth.requireLogin], modifyTeamMembers);
+
+  // modify links
+  app.put('/api/teams/links', [includes.middleware.auth.requireLogin], updateLink);
 
   // get all applicable team roles
   app.get('/api/teams/roles', [includes.middleware.auth.requireLogin], getTeamRole);
