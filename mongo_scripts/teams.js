@@ -16,9 +16,9 @@ var team_index = team_index.doc;
 
 //combine indexed domains, tribes, squads, and lookup arrays into 1 big array
 var concatTeamIndex = [];
-concatTeamIndex = concatTeamIndex.concat(team_index.domains);
-concatTeamIndex = concatTeamIndex.concat(team_index.tribes);
-concatTeamIndex = concatTeamIndex.concat(team_index.squads);
+// concatTeamIndex = concatTeamIndex.concat(team_index.domains);
+// concatTeamIndex = concatTeamIndex.concat(team_index.tribes);
+// concatTeamIndex = concatTeamIndex.concat(team_index.squads);
 concatTeamIndex = concatTeamIndex.concat(team_index.lookup);
 
 var normalizeString = function(str) {
