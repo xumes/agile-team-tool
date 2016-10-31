@@ -1,11 +1,11 @@
 var util = require('../../helpers/util');
-var developersModel = require('../../models/mongodb/developers');
+var apiKeysModel = require('../../models/mongodb/apiKeys.js');
 
 module.exports = function(app, includes) {
   var middleware = includes.middleware;
 
   getApiKey = /* instabul ingore next */ function(req, res) {
-    developersModel.createApikey(req.session['user'])
+    apiKeysModel.createApikey(req.session['user'])
       .then(function(result){
         console.log(result);
         res.status(200).json({
@@ -19,7 +19,7 @@ module.exports = function(app, includes) {
   };
 
   getApiKeyByUser = /* instabul ingore next */ function(req, res) {
-    developersModel.getUserApikeyByUser(req.session['user'])
+    apiKeysModel.getUserApikeyByUser(req.session['user'])
       .then(function(result){
         if (!_.isEmpty(result)) {
          console.log(result);
@@ -40,10 +40,25 @@ module.exports = function(app, includes) {
       });
   };
 
+  deleteApiKey = function(req, res) {
+    console.log('in Delete Api Key call');
+    apiKeysModel.deleteApikey(req.session['user'])
+      .then(function(result) {
+        console.log('in Delete Api Key call -after call');
+        res.status(200).send(result);
+      })
+      .catch(function(err) {
+        res.status(404).send(err);
+      });
+  };
+
+
   // try to get data from here
   /* instabul ingore next */
-  app.get('/api/developer/apiKey', [includes.middleware.auth.requireLogin], getApiKey);
+  app.get('/api/apiKey/apiKey', [includes.middleware.auth.requireLogin], getApiKey);
   /* instabul ingore next */
-  app.get('/api/developer/apiKeyByUser', [includes.middleware.auth.requireLogin], getApiKeyByUser);
+  app.get('/api/apiKey/apiKeyByUser', [includes.middleware.auth.requireLogin], getApiKeyByUser);
+  /* instabul ingore next */
+  app.delete('/api/apiKey/apikey',  deleteApiKey);
 
 };
