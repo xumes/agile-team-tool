@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var TeamPage = require('./components/TeamPage.jsx');
+var TeamPage = require('./components/team/TeamPage.jsx');
 
 $(document).ready(function() {
   ReactDOM.render(
@@ -8,4 +8,3 @@ $(document).ready(function() {
     document.getElementById('app-content')
   );
 });
-

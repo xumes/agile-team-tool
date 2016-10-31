@@ -1,5 +1,5 @@
 var React = require('react');
-var Header = require('./Header.jsx');
+var Header = require('../Header.jsx');
 
 var AssessmentPageLastUpdate = React.createClass({
   render: function() {
