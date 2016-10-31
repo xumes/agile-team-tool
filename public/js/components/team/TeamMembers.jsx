@@ -34,17 +34,17 @@ var TeamMembers = React.createClass({
     };
 
     var otherRoleSpanStyle = {
-      'padding-left': '.7%'
+      'paddingLeft': '.7%'
     };
 
     var tableStyle = {
       'float': 'left',
-      'font-size': '14px',
+      'fontSize': '14px',
       'width': '100%'
     };
 
     var tableFontStyle = {
-      'font-size': '90%'
+      'fontSize': '90%'
     };
 
     var tableHeaderStyle = {
