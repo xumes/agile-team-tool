@@ -2,25 +2,14 @@ var React = require('react');
 var api = require('../api.jsx');
 
 var HomeNavTab = React.createClass({
-  getInitialState: function() {
-    return {
-      myTeamsState: 'open',
-      allTeamsState: '',
-    }
-  },
-
   myTeamsClicked: function() {
-    if (this.state.myTeamsState != 'open') {
-      this.setState({'myTeamsState': 'open'});
-      this.setState({'allTeamsState': ''});
+    if ($('#myTeams').attr('data-state') != 'open') {
       this.props.tabClicked('mytab');
     }
   },
 
   allTeamsClicked: function() {
-    if (this.state.allTeamsState != 'open') {
-      this.setState({'myTeamsState': ''});
-      this.setState({'allTeamsState': 'open'});
+    if ($('#allTeams').attr('data-state') != 'open') {
       this.props.tabClicked('alltab');
     }
   },
@@ -42,14 +31,11 @@ var HomeNavTab = React.createClass({
       'paddingBottom': '0px'
     };
 
-    var myTeamsState = this.state.myTeamsState;
-    var allTeamsState = this.state.allTeamsState;
-
     return (
       <nav class="tab-nav">
         <ul class='tab-ul' role='tablist' style={tabStyle}>
-            <li id='myTeams' class='tab-ul--item' role='tab' data-state={myTeamsState} tabIndex='0' onClick={this.myTeamsClicked}>My teams</li>
-            <li id='allTeams' class='tab-ul--item' role='tab' data-state={allTeamsState} onClick={this.allTeamsClicked}>All teams</li>
+            <li id='myTeams' class='tab-ul--item' role='tab' data-state={'open'} tabIndex='0' onClick={this.myTeamsClicked}>My teams</li>
+            <li id='allTeams' class='tab-ul--item' role='tab' data-state={''} onClick={this.allTeamsClicked}>All teams</li>
         </ul>
         <i style={indicateStyle}>
           <i class="agile-team-squad">*</i>

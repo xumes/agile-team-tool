@@ -14,19 +14,19 @@ var HomeAseSection = React.createClass({
       $('#' + 'assessmentSection' + ' .agile-section-title a').addClass('ibm-show-active');
       $('#' + 'assessmentSection' + ' div.ibm-container-body').css('display','block');
     }
-    if (this.props.selectedTeam.type == 'squad') {
+    if (this.props.loadDetailTeam.type == 'squad') {
       $('#assessmentFallBox').show();
       $('#squad_assessment_card').show();
-      var teamId = this.props.selectedTeam.team._id;
-      var assessmentData = this.props.selectedTeam.assessments;
-      var teamAccess = this.props.selectedTeam.access;
+      var teamId = this.props.loadDetailTeam.team._id;
+      var assessmentData = this.props.loadDetailTeam.assessments;
+      var teamAccess = this.props.loadDetailTeam.access;
       assessmentHandler.teamAssessmentListHander(teamId, assessmentData, teamAccess);
     } else {
       $('#assessmentFallBox').show();
       $('#nsquad_assessment_card').show();
-      var teamId = this.props.selectedTeam.team._id;
-      var teamName = this.props.selectedTeam.team.name;
-      var snapshotData = this.props.selectedTeam.snapshot;
+      var teamId = this.props.loadDetailTeam.team._id;
+      var teamName = this.props.loadDetailTeam.team.name;
+      var snapshotData = this.props.loadDetailTeam.snapshot;
       assessmentHandler.assessmentParentRollup(snapshotData);
     }
   },

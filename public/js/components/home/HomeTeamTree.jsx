@@ -4,8 +4,6 @@ var HomeSpinner = require('./HomeSpinner.jsx');
 var _ = require('underscore');
 var Promise = require('bluebird');
 
-var selectedTeam = '';
-
 var HomeTeamTree = React.createClass({
   componentDidMount: function() {
   },
@@ -15,8 +13,8 @@ var HomeTeamTree = React.createClass({
 
   shouldComponentUpdate: function(nextProps, nextState) {
     if (nextProps.newTeams == this.props.newTeams) {
-      if (nextProps.searchTeamSelected != this.props.searchTeamSelected && nextProps.searchTeamSelected != '') {
-        this.loadTeamInAllTeams(nextProps.searchTeamSelected, true);
+      if (nextProps.selectedTeam != this.props.selectedTeam && nextProps.selectedTeam != '') {
+        this.loadTeamInAllTeams(nextProps.selectedTeam,true);
         $('#searchTree').hide();
       }
       return false;
@@ -32,6 +30,7 @@ var HomeTeamTree = React.createClass({
     $('#teamTree').show();
     $('.nano').nanoScroller();
     self.initHilightTeam();
+    // self.loadTeamInAllTeams(selectedTeam);
   },
 
   triggerTeam: function(teamId) {
@@ -70,7 +69,8 @@ var HomeTeamTree = React.createClass({
 
   highlightTeam: function(teamId){
     if (selectedTeam != '') {
-      $('#link_' + selectedTeam).removeClass('agile-team-selected');
+      //$('#link_' + selectedTeam).removeClass('agile-team-selected');
+      $('#teamTree a.agile-team-selected').removeClass('agile-team-selected');
     }
     if ($('#link_' + teamId).hasClass('agile-team-selected')) {
 
@@ -181,8 +181,8 @@ var HomeTeamTree = React.createClass({
     self.removeHighlightParents();
     $('.nano').nanoScroller();
     self.highlightTeam(teamId);
-    selectedTeam = teamId;
     var objectId = $('#' + teamId).children('span').html();
+    console.log('ooo:',objectId);
     $('#contentSpinner').show();
     $('#bodyContent').hide();
     $('#snapshotPull').hide();
@@ -239,7 +239,7 @@ var HomeTeamTree = React.createClass({
           'members': results[2]
         };
       }
-      self.props.selectedTeam(rObject);
+      self.props.loadDetailTeamChanged(rObject);
     })
     .catch(function(err){
       console.log(err);
@@ -249,6 +249,7 @@ var HomeTeamTree = React.createClass({
 
   loadTeamInAllTeams: function(teamId, fromSearch) {
     var self = this;
+    selectedTeam = teamId;
     $('#navSpinner').show();
     $('#teamTree').hide();
     var path = [];

@@ -13,24 +13,26 @@ var HomeTeamInfo = React.createClass({
   },
 
   findTeamInAllTeams: function(pathId) {
-    var self = this;
-    api.getAllTeams()
-    .then(function(data){
-      var newData = {
-        'tab': 'allteams',
-        'data': data
-      };
-      self.props.newTeamsChanged(newData);
-      self.props.searchTeamSelectedChanged(pathId);
-    });
+    selectedTeam = pathId;
+    this.props.tabClickedHandler('allteams', pathId);
+    // var self = this;
+    // api.getAllTeams()
+    // .then(function(data){
+    //   var newData = {
+    //     'tab': 'allteams',
+    //     'data': data
+    //   };
+    //   self.props.newTeamsChanged(newData);
+    //   self.props.searchTeamSelectedChanged(pathId);
+    // });
   },
 
   render: function() {
     var self = this;
-    if (this.props.selectedTeam.team == undefined) {
+    if (this.props.loadDetailTeam.team == undefined) {
       return null;
     } else {
-      var team = this.props.selectedTeam.team;
+      var team = this.props.loadDetailTeam.team;
       if (team.name != undefined) {
         var teamName = team.name;
       } else {
@@ -41,17 +43,17 @@ var HomeTeamInfo = React.createClass({
       } else {
         teamDescription = '';
       }
-      if (this.props.selectedTeam.hierarchy == undefined || this.props.selectedTeam.hierarchy.error || this.props.selectedTeam.hierarchy.length == 0) {
+      if (this.props.loadDetailTeam.hierarchy == undefined || this.props.loadDetailTeam.hierarchy.error || this.props.loadDetailTeam.hierarchy.length == 0) {
         var teamHierarchy = 'No parent infomation';
         var teamHierarchy2 = null;
       } else {
-        var hierarchy = this.props.selectedTeam.hierarchy;
+        var hierarchy = this.props.loadDetailTeam.hierarchy;
         teamHierarchy = hierarchy.map(function(h){
           var plink = 'plink_' + h.pathId;
           if ($('#' + h.pathId).length) {
             return (
               <div key={plink} style={{'display':'inline'}}>
-                <a class='wlink' style={{'display':'inline','paddingLeft':'0px'}} title='View parent team information' alt='View parent team information' id={plink} href='#' onClick={()=>self.props.searchTeamSelectedChanged(h.pathId)}>{h.name}</a>
+                <a class='wlink' style={{'display':'inline','paddingLeft':'0px'}} title='View parent team information' alt='View parent team information' id={plink} href='#' onClick={()=>self.props.selectedTeamChanged(h.pathId)}>{h.name}</a>
                 <h>{' > '}</h>
               </div>
             );

@@ -14,21 +14,21 @@ var HomeIterSection = React.createClass({
       $('#' + 'iterationSection' + ' .agile-section-title a').addClass('ibm-show-active');
       $('#' + 'iterationSection' + ' div.ibm-container-body').css('display','block');
     }
-    if (this.props.selectedTeam.type == 'squad') {
+    if (this.props.loadDetailTeam.type == 'squad') {
       $('#contentSpinner').hide();
       $('#bodyContent').show();
       $('#iterationFallBox').show();
-      var teamId = this.props.selectedTeam.team._id;
-      var iterationData = this.props.selectedTeam.iterations;
-      var teamAccess = this.props.selectedTeam.access;
+      var teamId = this.props.loadDetailTeam.team._id;
+      var iterationData = this.props.loadDetailTeam.iterations;
+      var teamAccess = this.props.loadDetailTeam.access;
       iteationHandler.squadIterationsHandler(teamId, iterationData, teamAccess);
     } else {
       $('#contentSpinner').hide();
       $('#bodyContent').show();
       $('#snapshotPull').show();
-      var teamId = this.props.selectedTeam.team._id;
-      var teamName = this.props.selectedTeam.team.name;
-      var snapshotData = this.props.selectedTeam.snapshot;
+      var teamId = this.props.loadDetailTeam.team._id;
+      var teamName = this.props.loadDetailTeam.team.name;
+      var snapshotData = this.props.loadDetailTeam.snapshot;
       iteationHandler.iterationSnapshotHandler(teamId, teamName, snapshotData);
     }
   },
