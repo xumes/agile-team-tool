@@ -15,8 +15,7 @@ var apiKeySchema = {
   },
   email: {
     type: String,
-    required: [true, 'email is required.'],
-    unique: true
+    required: [true, 'email is required.']
   },
   key: {
     type: String,
@@ -28,84 +27,85 @@ var apiKeySchema = {
   }
 };
 
-var apiKeySchema = new Schema(apiKeySchema, { collection : 'apiKeys'});
+var apiKeySchema = new Schema(apiKeySchema, {collection : 'apiKeys'});
 var ApiKey = mongoose.model('apiKeys', apiKeySchema);
 
 var apiKeys = {
   getUserApikeyByUser: function(user) {
-     return new Promise(function(resolve, reject) {
-       var uid = user['ldap']['uid'];
-       if (_.isEmpty(uid)) {
-         loggers.get('model-users').verbose('Getting user api key with UID but empty');
-         var q = {};
-         var query = ApiKey.find(q);
+    return new Promise(function(resolve, reject) {
+      var uid = user['ldap']['uid'];
+      if (_.isEmpty(uid)) {
+        loggers.get('model-users').verbose('Getting user api key with UID but empty');
+        var q = {};
+        var query = ApiKey.find(q);
+      } else {
+        loggers.get('model-users').verbose('Getting user api key with UID ' + uid);
+        var q = {userId: uid};
+        var query = ApiKey.findOne(q);
+      }
+      query
+      .then(function(result){
+        resolve(result);
+      })
+      .catch(function(err){
+        reject(err);
+      });
+    });
+  },
+
+  createApikey: function(user) {
+    return new Promise(function(resolve, reject) {
+      var apiData = {};
+      apiKeys.getUserApikeyByUser(user)
+        .then(function(result) {
+          if (_.isEmpty(result)) {
+            var uuidKey = uuid.v4();
+            apiData['userId'] = user['ldap']['uid'];
+            apiData['email'] = user['shortEmail'];
+            apiData['key'] = uuidKey;
+            var newApiKey = new ApiKey(apiData);
+            ApiKey.create(newApiKey);
+            result = apiData;
+          }
+          apiData = result;
+          return apiData;
+        })
+        .then(function(result) {
+          resolve(apiData);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          loggers.get('models-users').error('ERROR:', err);
+          var msg = err.error;
+          reject(msg);
+        });
+    });
+  },
+
+  deleteApikey: function(user) {
+    return new Promise(function(resolve, reject) {
+      loggers.get('model-users').verbose('Delete api key for user ' + user['ldap']['uid']);
+      apiKeys.getUserApikeyByUser(user)
+     .then(function(userApi) {
+       if (!_.isEmpty(userApi)) {
+         console.log('Ready to remove user uid =: '+user['ldap']['uid']);
+         var q = {userId: user['ldap']['uid']};
+         return ApiKey.remove(q);
        } else {
-         loggers.get('model-users').verbose('Getting user api key with UID ' + uid);
-         var q = {userId: uid};
-         var query = ApiKey.findOne(q);
+         return 'user not exist';
        }
-       query
-       .then(function(result){
-         resolve(result);
-       })
-       .catch(function(err){
-         reject(err);
-       });
+     })
+     .then(function(result) {
+       console.log('r:',result);
+       resolve(result);
+     })
+     .catch( /* istanbul ignore next */ function(err) {
+       console.log(err);
+       loggers.get('models-users').error('ERROR:', err);
+       var msg = err.error;
+       reject(msg);
      });
-   },
-
-   createApikey: function(user) {
-     return new Promise(function(resolve, reject) {
-       var apiData = {};
-       apiKeys.getUserApikeyByUser(user)
-         .then(function(result) {
-           if (_.isEmpty(result)) {
-             var uuidKey = uuid.v4();
-             apiData['userId'] = user['ldap']['uid'];
-             apiData['email'] = user['shortEmail'];
-             apiData['key'] = uuidKey;
-             var newApiKey = new ApiKey(apiData);
-             ApiKey.create(newApiKey);
-             result = apiData;
-           }
-           apiData = result;
-           return apiData;
-         })
-         .then(function(result) {
-           resolve(apiData);
-         })
-         .catch( /* istanbul ignore next */ function(err) {
-           loggers.get('models-users').error('ERROR:', err);
-           var msg = err.error;
-           reject(msg);
-         });
-     });
-   },
-
-   deleteApikey: function(user) {
-     return new Promise(function(resolve, reject) {
-       loggers.get('model-users').verbose('Delete api key for user ' + user.shortEmail);
-       apiKeys.getUserApikeyByUser(user)
-       .then(function(userApi) {
-         if (!_.isEmpty(userApi)) {
-//        return cloudantDriver.deleteRecord(userApi._id, userApi._rev);
-          var deleteApiKey = new ApiKey(userApi);
-          ApiKey.delete(deleteApiKey);
-         } else {
-          return userApi;
-         }
-       })
-       .then(function(result) {
-         resolve(result);
-       })
-       .catch( /* istanbul ignore next */ function(err) {
-         loggers.get('models-users').error('ERROR:', err);
-         var msg = err.error;
-         reject(msg);
-       });
-     });
-   }
-
+    });
+  }
 
 };
 

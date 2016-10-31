@@ -30,10 +30,9 @@ function launchApiKey(userEmail) {
 function getApiKey() {
   // call server side to get a JSON with uuid
   var uuidKey;
-
   $.ajax({
     type: 'GET',
-    url: '/api/developer/apiKey'
+    url: '/api/apiKey/apiKey'
   }).done(function(data) {
     if (data != undefined) {
       uuidKey = data.apiKey;
@@ -48,10 +47,9 @@ function getApiKey() {
 function getApiKeyByUser() {
   // call server side to get a JSON with uuid
   var uuidKey;
-
   $.ajax({
     type: 'GET',
-    url: '/api/developer/apiKeyByUser'
+    url: '/api/apiKey/apiKeyByUser'
   }).done(function(data) {
     if (data != undefined) {
       uuidKey = data.apiKey;
@@ -66,4 +64,15 @@ function getApiKeyByUser() {
     }
   });
 
+}
+
+function deleteApiKey() {
+  // call server side to get a JSON with uuid
+  console.log('In deleteApiKey....');
+  $.ajax({
+    type: 'DELETE',
+    url: '/api/apiKey/apiKey'
+  }).done(function(data) {
+    console.log('DONE');
+  });
 }

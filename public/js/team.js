@@ -1883,7 +1883,7 @@ function getApiKey() {
 
   $.ajax({
     type: 'GET',
-    url: '/api/developer/apiKey'
+    url: '/api/apiKey/apiKey'
   }).done(function(data) {
     if (data != undefined) {
       uuidKey = data.apiKey;
