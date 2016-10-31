@@ -10,7 +10,7 @@ var HomeMemberTable = require('./HomeMemberTable.jsx');
 
 var HomeContent = React.createClass({
   shouldComponentUpdate: function(nextProps, nextState) {
-    if (nextProps.selectedTeam == this.props.selectedTeam) {
+    if (nextProps.loadDetailTeam == this.props.loadDetailTeam) {
       return false;
     } else {
       return true;
@@ -26,11 +26,11 @@ var HomeContent = React.createClass({
         <HomeSpinner id={'contentSpinner'}/>
         <div id="bodyContent" class="ibm-col-6-4">
           <HomeHighlightBox />
-          <HomeTeamHeader selectedTeam={this.props.selectedTeam}/>
-          <HomeIterSection selectedTeam={this.props.selectedTeam}/>
-          <HomeAseSection selectedTeam={this.props.selectedTeam}/>
-          <HomeTeamInfo selectedTeam={this.props.selectedTeam} searchTeamSelectedChanged={this.props.searchTeamSelectedChanged} newTeamsChanged={this.props.newTeamsChanged}/>
-          <HomeMemberTable selectedTeam={this.props.selectedTeam}/>
+          <HomeTeamHeader loadDetailTeam={this.props.loadDetailTeam}/>
+          <HomeIterSection loadDetailTeam={this.props.loadDetailTeam}/>
+          <HomeAseSection loadDetailTeam={this.props.loadDetailTeam}/>
+          <HomeTeamInfo loadDetailTeam={this.props.loadDetailTeam} selectedTeamChanged={this.props.selectedTeamChanged} tabClickedHandler={this.props.tabClickedHandler}/>
+          <HomeMemberTable loadDetailTeam={this.props.loadDetailTeam}/>
         </div>
       </div>
     )

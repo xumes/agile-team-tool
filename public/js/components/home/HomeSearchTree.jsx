@@ -3,11 +3,6 @@ var api = require('../api.jsx');
 var _ = require('underscore');
 
 var HomeSearchTree = React.createClass({
-  getInitialState: function() {
-    return {
-    }
-  },
-
   shouldComponentUpdate: function(nextProps, nextState) {
     if (nextProps.searchTeams == this.props.searchTeams) {
       return false;
@@ -53,7 +48,7 @@ var HomeSearchTree = React.createClass({
             <a class='ibm-twisty-trigger' href='#toggle'>
               <span class='ibm-access'>{label}</span>
             </a>
-            <a class={isSquad} id={linkId} onClick={()=>self.props.clickedTeam(team.pathId)}>{label}</a>
+            <a class={isSquad} id={linkId} onClick={()=>self.props.selectedTeamChanged(team.pathId)}>{label}</a>
             <span class='ibm-access'>{team.pathId}</span>
           </li>
         )

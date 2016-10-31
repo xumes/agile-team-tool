@@ -7,10 +7,13 @@ var TeamLinks = React.createClass({
     var overallStyle = {
       'display': this.props.visible == false ? 'none': 'block'
     };
-
-    return (
-      <h1 style={overallStyle}>Important Links - {this.props.teamId}</h1>
-    )
+    if (this.props.selectedTeam.team != undefined) {
+      return (
+        <h1 style={overallStyle}>Important Links - {this.props.selectedTeam.team._id}</h1>
+      )
+    } else {
+      return null;
+    }
   }
 
 

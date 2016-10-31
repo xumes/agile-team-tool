@@ -37,44 +37,6 @@ var HomeNav = React.createClass({
     $('#teamTree').show();
   },
 
-  tabClickedHandler: function(tab) {
-    var self = this;
-    self.tabClickedStart();
-    if (tab == 'mytab') {
-      $('#searchFieldDiv').hide();
-      api.getMyTeams()
-      .then(function(data){
-        var newData = {
-          'tab': 'myteams',
-          'data': data
-        };
-        self.setState({'searchTeamSelected': ''});
-        self.props.newTeamsChanged(newData);
-        $('#searchCancel').click();
-      })
-      .catch(function(err){
-        self.tabClickedEnd();
-        $('#teamTree').empty();
-        console.log(err);
-      })
-    } else {
-      $('#searchFieldDiv').show();
-      api.getAllTeams()
-      .then(function(data){
-        var newData = {
-          'tab': 'allteams',
-          'data': data
-        };
-        self.props.newTeamsChanged(newData);
-      })
-      .catch(function(err){
-        self.tabClickedEnd();
-        $('#teamTree').empty();
-        console.log(err);
-      });
-    }
-  },
-
   searchTeamClickedHandler: function(teamId) {
     console.log(teamId);
     this.setState({'searchTeamSelected':teamId});
@@ -82,7 +44,7 @@ var HomeNav = React.createClass({
 
   componentDidMount: function() {
     var self = this;
-    self.tabClickedHandler('mytab');
+    self.props.tabClickedHandler('mytab');
     $('#nameSearchField').on('input',function() {
       var inputText = $('#nameSearchField').val();
       if (inputText.length > 1 && inputText != ' ') {
@@ -105,13 +67,13 @@ var HomeNav = React.createClass({
     }
     return (
       <div>
-        <HomeNavTab searchStart={this.searchStartHandler} tabClicked={this.tabClickedHandler}/>
+        <HomeNavTab searchStart={this.searchStartHandler} tabClicked={this.props.tabClickedHandler}/>
         <HomeSearchField />
         <HomeSpinner id={'navSpinner'}/>
         <div class='agile-team-nav nano' data-widget='scrollable' data-height='600' style={agileTeamNavStyle}>
           <div class="nano-content">
-            <HomeSearchTree searchTeams={this.state.searchTeams} clickedTeam={this.props.searchTeamSelectedChanged}/>
-            <HomeTeamTree newTeams={this.props.newTeams} searchTeamSelected={this.props.searchTeamSelected} selectedTeam={this.props.selectedTeam}/>
+            <HomeSearchTree searchTeams={this.state.searchTeams} selectedTeamChanged={this.props.selectedTeamChanged}/>
+            <HomeTeamTree newTeams={this.props.newTeams} selectedTeam={this.props.selectedTeam} loadDetailTeamChanged={this.props.loadDetailTeamChanged}/>
           </div>
         </div>
       </div>
