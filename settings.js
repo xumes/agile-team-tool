@@ -42,7 +42,21 @@ module.exports = {
 };
 
 if (module.exports.mongoURL && module.exports.mongoURL != '') {
-  mongoose.connect(module.exports.mongoURL);
+  var mongoOptions = {
+    'server': {
+      'socketOptions': {
+        'keepAlive': 300000,
+        'connectTimeoutMS': 60000
+      }
+    },
+    'replset': {
+      'socketOptions': {
+        'keepAlive': 300000,
+        'connectTimeoutMS' : 60000
+      }
+    }
+  };
+  mongoose.connect(module.exports.mongoURL, mongoOptions);
   loggers.get('init').info('Using MongoDB and connecting to', module.exports.mongoURL);
   module.exports.mongoose = mongoose;
 }

@@ -18,7 +18,7 @@ var TeamAssessment = React.createClass({
     $('#moreAssessments').show();
     $('#lessAssessments').hide();
     _.each(assessmentsBlocks, function(assessmentBlock){
-      if (assessmentBlock.id.subString(7,assessmentBlock.id.length-1) >= 5) {
+      if (parseInt(assessmentBlock.id.subString(8,assessmentBlock.id.length)) >= 5) {
         $('#'+assessmentBlock.id).hide();
       }
     });
