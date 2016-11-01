@@ -4,7 +4,24 @@ var moment = require('moment');
 
 var TeamAssessment = React.createClass({
   showMoreAssessments: function() {
-
+    var assessmentsBlocks = $('tr[id^=asmntrow_]');
+    $('#assessmentTitle').html('Assessments for' + this.props.selectedTeam.team.name);
+    $('#moreAssessments').hide();
+    $('#lessAssessments').show();
+    _.each(assessmentsBlocks, function(assessmentBlock){
+      $('#'+assessmentBlock.id).show();
+    });
+  },
+  showLessAssessments: function() {
+    var assessmentsBlocks = $('tr[id^=asmntrow_]');
+    $('#assessmentTitle').html('Last 5 Assessments for' + this.props.selectedTeam.team.name);
+    $('#moreAssessments').show();
+    $('#lessAssessments').hide();
+    _.each(assessmentsBlocks, function(assessmentBlock){
+      if (assessmentBlock.id.subString(7,assessmentBlock.id.length-1) >= 5) {
+        $('#'+assessmentBlock.id).hide();
+      }
+    });
   },
   render: function() {
     var self = this;
@@ -41,7 +58,7 @@ var TeamAssessment = React.createClass({
             if (count < 5) {
               count++;
               return (
-                <tr key={assessmentId} id={assessmentId} style={{'display':'block'}}>
+                <tr key={assessmentId} id={assessmentId}>
                   <td></td>
                   <td>
                     <a style={{'textDescription': 'underline', 'color': 'black'}}>{updateTime}</a>
@@ -68,6 +85,15 @@ var TeamAssessment = React.createClass({
           var assessments = null;
         }
         var assessmentLink = 'https://agile-tool-nodejs-stage.mybluemix.net/maturityTrends?id='+self.props.selectedTeam.team._id;
+        if (count >= 5) {
+          var showMoreBtnStyle = {
+            'display': 'block'
+          }
+        } else {
+          var showMoreBtnStyle = {
+            'display': 'none'
+          }
+        }
         return (
           <div class='ibm-container-body' id='assessmentPageSection'>
             <h2 class='ibm-bold ibm-h4'>Assessment information</h2>
@@ -91,7 +117,7 @@ var TeamAssessment = React.createClass({
                     {assessments}
                   </tbody>
                 </table>
-                <div id='moreAssessments' style={{'display': 'none'}}>
+                <div id='moreAssessments' style={showMoreBtnStyle}>
                   <p>
                     <label> <a class='ibm-arrow-forward-bold-link' onClick={self.showMoreAssessments}>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; More..</a> </label>
                   </p>
