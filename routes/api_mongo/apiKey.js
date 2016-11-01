@@ -1,5 +1,5 @@
 var util = require('../../helpers/util');
-var apiKeysModel = require('../../models/mongodb/apiKeys.js');
+var apiKeysModel = require('../../models/mongodb/apiKeys');
 
 module.exports = function(app, includes) {
   var middleware = includes.middleware;
