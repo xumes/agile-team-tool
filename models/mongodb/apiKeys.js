@@ -60,8 +60,8 @@ var apiKeys = {
         .then(function(result) {
           if (_.isEmpty(result)) {
             var uuidKey = uuid.v4();
-            apiData['userId'] = user['ldap']['uid'];
-            apiData['email'] = user['shortEmail'];
+            apiData['userId'] = user['ldap']['uid'].toUpperCase();
+            apiData['email'] = user['shortEmail'].toLowerCase();
             apiData['key'] = uuidKey;
             var newApiKey = new ApiKey(apiData);
             ApiKey.create(newApiKey);
