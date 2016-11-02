@@ -95,13 +95,13 @@ var TeamAssessment = React.createClass({
           }
         }
         return (
-          <div class='ibm-container-body' id='assessmentPageSection'>
+          <div class='ibm-container-body' id='assessmentPageSection' style={overallStyle}>
             <h2 class='ibm-bold ibm-h4'>Assessment information</h2>
               <div id='squadAssessmentPageSection' style={{'display': 'block', 'marginTop': '15px'}}>
                 <div style={{'float':'left', 'fontSize':'14px', 'width':'100%'}} class='tcaption'>
                   <em id='assessmentTitle' class='ibm-bold'>Last 5 Assessments for {teamName}</em>
                   <p style={{'float': 'right'}} class='ibm-button-link'>
-                    <input type='button' class='ibm-btn-pri ibm-btn-small' id='assessBtn' value='Create assessment' onclick='' disabled={createAccess}/>
+                    <input type='button' class='ibm-btn-pri ibm-btn-small' id='assessBtn' value='Create assessment' onClick='' disabled={createAccess}/>
                   </p>
                 </div>
                 <table class='ibm-data-table' id='assessmentTable' summary='List of assessment information' style={{'fontSize': '90%'}}>
@@ -130,7 +130,7 @@ var TeamAssessment = React.createClass({
                 <div id='maturityTrend' style={{'paddingTop': '25px', 'paddingBottom': '15px'}}>
                     <span style={{'fontSize': '10pt', 'fontWeight': 'bold', 'paddingLeft': '20px'}}>Link to maturity trend graph:&nbsp;</span>
                     <span style={{'fontSize': '10pt'}} id='maturityTrendLink'>{assessmentLink}</span>
-                    <button class='button' id='copy-button' data-clipboard-target='#maturityTrendLink' style={{'fontSize': '10pt', 'fontWeight': 'bold', 'marginLeft': '15px'}} onclick='return false;'>Copy Link</button>
+                    <button class='button' id='copy-button' data-clipboard-target='#maturityTrendLink' style={{'fontSize': '10pt', 'fontWeight': 'bold', 'marginLeft': '15px'}} onClick=''>Copy Link</button>
                 </div>
               </div>
           </div>
