@@ -45,4 +45,3 @@ MongoClient.connect(creds.url, function(err, db) {
       process.exit();
     });
 });
-
