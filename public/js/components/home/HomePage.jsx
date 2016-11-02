@@ -69,11 +69,13 @@ var HomePage = React.createClass({
         self.setState({'newTeams': newData});
         // self.setState({'searchTeamSelected': ''});
         $('#searchCancel').click();
+        return null;
       })
       .catch(function(err){
         self.tabClickedEnd();
         $('#teamTree').empty();
         console.log(err);
+        return null;
       })
     } else {
       $('#searchFieldDiv').show();
@@ -87,11 +89,13 @@ var HomePage = React.createClass({
         };
         self.setState({'newTeams': newData});
         console.log('done');
+        return null;
       })
       .catch(function(err){
         self.tabClickedEnd();
         $('#teamTree').empty();
         console.log(err);
+        return null;
       });
     }
   },
