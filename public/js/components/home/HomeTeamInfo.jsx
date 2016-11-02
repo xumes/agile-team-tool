@@ -71,7 +71,7 @@ var HomeTeamInfo = React.createClass({
       if (team.links != undefined) {
         var teamLinks = team.links.map(function(link){
           return (
-            <tr>
+            <tr key={link.linkLabel}>
               <td>{link.linkLabel}</td>
               <td>
                 <a href={link.linkUrl} target='_blank' class='wlink'>{link.linkUrl}</a>

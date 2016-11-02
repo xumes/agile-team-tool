@@ -124,7 +124,7 @@ _.each(mongoTeams, function(mongoDoc) {
 
 
 //insert into db
-var creds = require('./creds.json');
+var creds = require('./creds');
 //console.log('creds: ', creds);
 // Use connect method to connect to the server
 /*MongoClient.connect(creds.url + "?ssl=true", {
