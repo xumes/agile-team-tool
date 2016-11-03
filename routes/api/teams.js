@@ -78,13 +78,13 @@ module.exports = function(app, includes) {
     var teamId = req.body['teamId'];
 
     teamModel.modifyImportantLinks(teamId, userId, links)
-    .then(function(result){
-      res.send(result);
-    })
-    .catch( /* istanbul ignore next */ function(err) {
-      // cannot simulate this error during testing
-      res.status(400).send(err);
-    });
+      .then(function(result){
+        res.send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        // cannot simulate this error during testing
+        res.status(400).send(err);
+      });
   };
 
   deleteLink = function(req, res) {
@@ -93,13 +93,13 @@ module.exports = function(app, includes) {
     var teamId = req.body['teamId'];
 
     teamModel.deleteImportantLinks(teamId, userId, links)
-    .then(function(result){
-      res.send(result);
-    })
-    .catch( /* istanbul ignore next */ function(err) {
-      // cannot simulate this error during testing
-      res.status(400).send(err);
-    });
+      .then(function(result){
+        res.send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        // cannot simulate this error during testing
+        res.status(400).send(err);
+      });
   };
 
   associateTeam = function(req, res) {
