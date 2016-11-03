@@ -97,7 +97,7 @@ var TeamSchema = new Schema({
     type: Date,
     default: new Date()
   },
-  updateByUserId: {
+  updatedByUserId: {
     type: String,
     default: null
   },
