@@ -20,7 +20,8 @@ module.exports = function(app, includes) {
       'pageTitle': 'Logout',
       'googleAnalyticsKey': settings.googleAnalyticsKey,
       'message': 'You have succesfully logged out, please close this browser window.',
-      'ibmNPSKey': settings.ibmNPSKey
+      'ibmNPSKey': settings.ibmNPSKey,
+      'environment': settings.environment
     };
     render(req, res, 'status', json);
   };
