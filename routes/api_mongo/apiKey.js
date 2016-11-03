@@ -42,13 +42,13 @@ module.exports = function(app, includes) {
   };
 
   deleteApiKey = function(req, res) {
-      apiKeysModel.deleteApikey(req.session['user'])
-      .then(function(result) {
-        res.status(200).send(result);
-      })
-      .catch(function(err) {
-        res.status(404).send(err);
-      });
+    apiKeysModel.deleteApikey(req.session['user'])
+    .then(function(result) {
+      res.status(200).send(result);
+    })
+    .catch(function(err) {
+      res.status(404).send(err);
+    });
   };
 
 
