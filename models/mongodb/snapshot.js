@@ -1103,6 +1103,18 @@ var snapshot = {
           reject(err);
         });
     });
+  },
+
+  deleteSnapshot: function(docId) {
+    return new Promise(function(resolve, reject){
+      snapshotModel.remove({'_id': docId})
+        .then(function(result){
+          resolve(result);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject(err);
+        });
+    });
   }
 };
 
