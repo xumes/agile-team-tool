@@ -25,6 +25,9 @@ var TeamIteration = React.createClass({
   },
   render: function() {
     var self = this;
+    var overallStyle = {
+      'display': self.props.visible == false ? 'none': 'block'
+    };
     if (self.props.selectedTeam.team == undefined) {
       return null;
     } else {
@@ -90,13 +93,13 @@ var TeamIteration = React.createClass({
           }
         }
         return (
-          <div class='ibm-container-body' id='iterationPageSection'>
+          <div class='ibm-container-body' id='iterationPageSection' style={overallStyle}>
             <h2 class='ibm-bold ibm-h4'>Iteration information</h2>
               <div id='squadIterationPageSection' style={{'display': 'block', 'marginTop': '15px'}}>
                 <div style={{'float':'left', 'fontSize':'14px', 'width':'100%'}} class='tcaption'>
                   <em id='iterationTitle' class='ibm-bold'>Last 5 Iterations for {teamName}</em>
                   <p style={{'float': 'right'}} class='ibm-button-link'>
-                    <input type='button' class='ibm-btn-pri ibm-btn-small' id='iterTeamBtn' value='Create iteration' onclick='' disabled={createAccess}/>
+                    <input type='button' class='ibm-btn-pri ibm-btn-small' id='iterTeamBtn' value='Create iteration' onClick='' disabled={createAccess}/>
                   </p>
                 </div>
                 <table class='ibm-data-table' id='iterationTable' summary='List of iterations information' style={{'fontSize': '90%'}}>

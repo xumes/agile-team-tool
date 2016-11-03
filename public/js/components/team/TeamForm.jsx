@@ -37,7 +37,7 @@ var TeamForm = React.createClass({
         <p>
           <label for="teamName">&nbsp;<span class="ibm-access">Team name:</span></label>
           <span>
-            <input type="text" name="teamName" id="teamName" size="50" value="" placeholder="Type team name" aria-label="Team name"
+            <input type="text" name="teamName" id="teamName" size="50" placeholder="Type team name" aria-label="Team name"
                    style={teamNameStyle}/>
           </span>
         </p>
@@ -54,8 +54,8 @@ var TeamForm = React.createClass({
             <a class="ibm-information-link" data-widget="tooltip" data-contentid="squadToolTip" style={squadTooltipStyle}><span class="ibm-access">Tooltip</span></a>
           </label>
           <span>
-            <select name="teamSquadYesNo" style={teamNameStyle}>
-              <option value="Yes" selected="selected">Yes</option>
+            <select defaultValue='Yes' name="teamSquadYesNo" style={teamNameStyle}>
+              <option value="Yes">Yes</option>
               <option value="No">No</option>
             </select>
           </span>
@@ -64,10 +64,10 @@ var TeamForm = React.createClass({
         <p>
           <label>&nbsp;<span class="ibm-access">Update buttons</span></label>
           <span class="ibm-btn-row">
-            <input type="button" class="ibm-btn-pri ibm-btn-small" id="addTeamBtn" value="Add team" onclick="updateTeamInfo('add');" />
-            <input type="button" class="ibm-btn-sec ibm-btn-small" id="updateTeamBtn" value="Update team" onclick="updateTeamInfo('update');" disabled />
-            <input type="button" class="ibm-btn-sec ibm-btn-small" id="deleteTeamBtn" value="Delete team" onclick="updateTeamInfo('delete');" disabled />
-            <input type="button" class="ibm-btn-sec ibm-btn-small" id="cancelTeamBtn" value="Reset team" onclick="updateTeamInfo('reset');" />
+            <input type="button" class="ibm-btn-pri ibm-btn-small" id="addTeamBtn" value="Add team" onClick="" />
+            <input type="button" class="ibm-btn-sec ibm-btn-small" id="updateTeamBtn" value="Update team" onClick="" disabled />
+            <input type="button" class="ibm-btn-sec ibm-btn-small" id="deleteTeamBtn" value="Delete team" onClick="" disabled />
+            <input type="button" class="ibm-btn-sec ibm-btn-small" id="cancelTeamBtn" value="Reset team" onClick="" />
           </span>
         </p>
 
