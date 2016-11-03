@@ -240,10 +240,10 @@ var users = {
     });
   },
 
-  delete: function(email) {
+  deleteUser: function(userId) {
     return new Promise(function(resolve, reject) {
       var deleteUser = {
-        'email': email
+        'userId': userId
       };
 
       User.remove(deleteUser)
@@ -257,4 +257,12 @@ var users = {
   }
 };
 
+
 module.exports = users;
+module.exports.testFunction = function() {
+  console.log('xxx15');
+  return new Promise(function(resolve, reject) {
+    console.log('executed');
+    resolve();
+  });
+};

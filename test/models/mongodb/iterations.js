@@ -1,4 +1,5 @@
 var chai = require('chai');
+var Promise = require('bluebird');
 var expect = chai.expect;
 var iterationModel = require('../../../models/mongodb/iterations');
 var userModel = require('../../../models/mongodb/users');
@@ -13,7 +14,21 @@ var testUser = {
   'userId': 'TEST1234567',
   'name': 'test user',
   'email': 'testuser@test.com',
-  'adminAccess': 'none'
+  'adminAccess': 'none',
+  'location': {
+    'site': 'somers, ny, usa',
+    'timezone': 'UTC-4'
+  }
+};
+var inValidUser = {
+  'userId': 'TEST7654321',
+  'name': 'test user2',
+  'email': 'testuser2@test.com',
+  'adminAccess': 'none',
+  'location': {
+    'site': 'somers, ny, usa',
+    'timezone': 'UTC-4'
+  }
 };
 var validIterationDoc = {
   'name': 'mongodb-test-iteration-01',
@@ -35,20 +50,22 @@ var testTeam = {
 var newIterationId = Schema.Types.ObjectId;
 var newTeamId = Schema.Types.ObjectId;
 var validUser = new Object();
-validUser['shortEmail'] = 'testuser@test.com';
+validUser['userId'] = 'TEST1234567';
 var notExistingUser = new Object();
-notExistingUser['shortEmail'] = 'notexisting';
-var inValidUser = new Object();
-inValidUser['shortEmail'] = 'lenka.treflikova@sk.ibm.com';
+notExistingUser['userId'] = 'notexisting';
 
 describe('Iteration model [add]', function() {
   before(function(done){
     var promiseArray = [];
-    promiseArray.push(userModel.delete(testUser.email));
+    promiseArray.push(userModel.deleteUser(testUser.userId));
+    promiseArray.push(userModel.deleteUser(inValidUser.userId));
     promiseArray.push(teamModel.deleteTeamByName(testTeam.name));
     Promise.all(promiseArray)
       .then(function(results){
         return userModel.create(testUser);
+      })
+      .then(function(result){
+        return userModel.create(inValidUser);
       })
       .then(function(result){
         return teamModel.createTeam(testTeam);
@@ -65,7 +82,6 @@ describe('Iteration model [add]', function() {
     var request = {
       'name': validIterationDoc.name,
     };
-
     iterationModel.deleteByFields(request)
       .then(function(result){
         done();
@@ -77,7 +93,7 @@ describe('Iteration model [add]', function() {
 
   it('return successful for adding an iteration', function(done) {
     validIterationDoc['teamId'] = newTeamId;
-    iterationModel.add(validIterationDoc, validUser)
+    iterationModel.add(validIterationDoc, validUser.userId)
       .then(function(result){
         expect(result).to.be.a('object');
         expect(result).to.have.property('_id');
@@ -88,7 +104,7 @@ describe('Iteration model [add]', function() {
   });
 
   it('return fail for adding a duplicate name iteration', function(done){
-    iterationModel.add(validIterationDoc, validUser)
+    iterationModel.add(validIterationDoc, validUser.userId)
       .catch(function(err){
         expect(err).to.be.a('object');
         expect(err).to.have.property('error');
@@ -97,7 +113,7 @@ describe('Iteration model [add]', function() {
   });
 
   it('return fail because the user is not existing', function(done){
-    iterationModel.add(validIterationDoc, notExistingUser)
+    iterationModel.add(validIterationDoc, notExistingUser.userId)
       .catch(function(err){
         expect(err).to.be.a('object');
         expect(err).to.have.property('error');
@@ -106,7 +122,7 @@ describe('Iteration model [add]', function() {
   });
 
   it('return fail because the user is invalid to add iteration to this team', function(done){
-    iterationModel.add(validIterationDoc, inValidUser)
+    iterationModel.add(validIterationDoc, inValidUser.userId)
       .catch(function(err){
         expect(err).to.be.a('object');
         expect(err).to.have.property('error');
@@ -147,11 +163,39 @@ describe('Iteration model [get]', function() {
 });
 
 describe('Iteration model [getCompletedIterationsByKey]', function() {
-  it('return successful for retriveing a iteration by time', function(done) {
+  it('return successful for retriveing iterations by time', function(done) {
     iterationModel.getCompletedIterationsByKey(validIterationDoc.startDate, validIterationDoc.endDate)
       .then(function(result){
         expect(result).to.be.a('array');
         expect(result.length).not.to.equal(0);
+        done();
+      });
+  });
+
+  it('return successful for retriveing iterations by time (only startDate)', function(done) {
+    iterationModel.getCompletedIterationsByKey(validIterationDoc.startDate, null)
+      .then(function(result){
+        expect(result).to.be.a('array');
+        expect(result.length).not.to.equal(0);
+        done();
+      });
+  });
+
+  it('return successful for retriveing iterations by time (only endDate)', function(done) {
+    iterationModel.getCompletedIterationsByKey(null, validIterationDoc.startDate)
+      .then(function(result){
+        expect(result).to.be.a('array');
+        expect(result.length).not.to.equal(0);
+        done();
+      });
+  });
+});
+
+describe('Iteration model [getNotCompletedIterations]', function() {
+  it('return successful for retriveing all not completed iterations', function(done) {
+    iterationModel.getNotCompletedIterations()
+      .then(function(result){
+        expect(result).to.be.a('array');
         done();
       });
   });
@@ -162,8 +206,8 @@ describe('Iteration model [searchTeamIteration]', function() {
     var queryrequest = {
       'id': validIterationDoc.teamId,
       'status': iterStatus,
-      'startdate': moment(new Date('01-01-2016')).format(dateFormat),
-      'enddate': moment(new Date()).format(dateFormat)
+      'startDate': moment(new Date('01-01-2016')).format(dateFormat),
+      'endDate': moment(new Date()).format(dateFormat)
     };
     iterationModel.searchTeamIteration(queryrequest)
       .then(function(result){
@@ -177,7 +221,7 @@ describe('Iteration model [searchTeamIteration]', function() {
     var queryrequest = {
       'id': validIterationDoc.teamId,
       'status': iterStatus,
-      'startdate': validIterationDoc.endDate
+      'startDate': validIterationDoc.endDate
     };
     iterationModel.searchTeamIteration(queryrequest)
       .then(function(result){
@@ -190,7 +234,7 @@ describe('Iteration model [searchTeamIteration]', function() {
     var queryrequest = {
       'id': validIterationDoc.teamId,
       'status': iterStatus,
-      'enddate': validIterationDoc.endDate
+      'endDate': validIterationDoc.endDate
     };
     iterationModel.searchTeamIteration(queryrequest)
       .then(function(result){
@@ -203,7 +247,7 @@ describe('Iteration model [searchTeamIteration]', function() {
 describe('Iteration model [edit]', function() {
   it('return successful for updating a iteration', function(done) {
     validIterationDoc.memberCount = 2;
-    iterationModel.edit(newIterationId, validIterationDoc, validUser)
+    iterationModel.edit(newIterationId, validIterationDoc, validUser.userId)
       .then(function(result){
         expect(result).to.be.a('object');
         expect(result).to.have.property('ok');
@@ -213,7 +257,7 @@ describe('Iteration model [edit]', function() {
 
   it('return successful for updating a iteration (update deliveredStories)', function(done) {
     validIterationDoc.deliveredStories = 1;
-    iterationModel.edit(newIterationId, validIterationDoc, validUser)
+    iterationModel.edit(newIterationId, validIterationDoc, validUser.userId)
       .then(function(result){
         expect(result).to.be.a('object');
         expect(result).to.have.property('ok');
@@ -223,10 +267,19 @@ describe('Iteration model [edit]', function() {
 
   it('return successful for updating a iteration (update endDate)', function(done) {
     validIterationDoc.endDate = '09-15-2016';
-    iterationModel.edit(newIterationId, validIterationDoc, validUser)
+    iterationModel.edit(newIterationId, validIterationDoc, validUser.userId)
       .then(function(result){
         expect(result).to.be.a('object');
         expect(result).to.have.property('ok');
+        done();
+      });
+  });
+
+  it('return fail for updating a iteration by invalid user', function(done) {
+    iterationModel.edit(newIterationId, validIterationDoc, inValidUser.userId)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err).to.have.property('error');
         done();
       });
   });
@@ -234,7 +287,7 @@ describe('Iteration model [edit]', function() {
 
 describe('Iteration model [delete]', function() {
   it('return fail for deleteing a iteration by empty id', function(done) {
-    iterationModel.delete()
+    iterationModel.deleteIter()
       .catch(function(err){
         expect(err).to.be.a('object');
         expect(err).to.have.property('error');
@@ -252,7 +305,7 @@ describe('Iteration model [delete]', function() {
   });
 
   it('return successful for deleteing a iteration by id', function(done) {
-    iterationModel.delete(newIterationId)
+    iterationModel.deleteIter(newIterationId, validUser.userId)
       .then(function(result){
         expect(result).to.be.a('object');
         expect(result).to.have.property('result');
@@ -262,7 +315,8 @@ describe('Iteration model [delete]', function() {
 
   after(function(done){
     var promiseArray = [];
-    promiseArray.push(userModel.delete(testUser.email));
+    promiseArray.push(userModel.deleteUser(testUser.userId));
+    promiseArray.push(userModel.deleteUser(inValidUser.userId));
     promiseArray.push(teamModel.deleteTeamByName(testTeam.name));
     Promise.all(promiseArray)
       .then(function(results){
