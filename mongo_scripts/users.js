@@ -1,9 +1,9 @@
 'use strict';
-var _           = require('underscore');
-var cloudantDb  = require('./data');
+var _ = require('underscore');
+var cloudantDb = require('./data');
 var MongoClient = require('mongodb').MongoClient;
-var ObjectID    = require('mongodb').ObjectID;
-var assert      = require('assert');
+var ObjectID = require('mongodb').ObjectID;
+var assert = require('assert');
 var userLocations = require('../models/mongodb/data/userLocations.js');
 var userTimezone = require('../models/mongodb/data/uniqueUserTimezone.js');
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
@@ -11,7 +11,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 var util = require('./util.js');
 var userMap = util.getUserMap();
 var ulocation = {};
-_.each(userTimezone, function(tz){
+_.each(userTimezone, function(tz) {
   ulocation[tz.location] = tz.timezone;
 });
 
@@ -20,7 +20,7 @@ console.log('getting user location info...');
 _.each(userMap, function(user) {
   user['adminAccess'] = 'none';
   user['lastLogin'] = undefined;
-  _.find(userLocations, function(location){
+  _.find(userLocations, function(location) {
     if (user.email.toLowerCase() == location.email.toLowerCase()) {
       return user['location'] = {
         'site': location.location.toLowerCase(),
@@ -39,18 +39,24 @@ MongoClient.connect(creds.url, function(err, db) {
   console.log('Connected successfully to server');
   db.collection('users')
     .drop()
-    .then(function(){
-      return db.collection('users').createIndex({userId:1}, {background: false, unique: true});
+    .then(function() {
+      return db.collection('users').createIndex({
+        userId: 1
+      }, {
+        background: false,
+        unique: true
+      });
     })
-    .then(function(){
+    .then(function() {
       db.collection('users').insertMany(
-        mongoUsers,
-        {ordered:false},
+        mongoUsers, {
+          ordered: false
+        },
         function(err, r) {
-          if (err){
-            _.each(err.writeErrors, function(e){
-              var err =  e.toJSON();
-              console.log('CloudantId:'+err.op.userId+'   ...  '+err.errmsg);
+          if (err) {
+            _.each(err.writeErrors, function(e) {
+              var err = e.toJSON();
+              console.log('CloudantId:' + err.op.userId + '   ...  ' + err.errmsg);
             });
           }
         }

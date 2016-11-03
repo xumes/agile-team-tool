@@ -60,10 +60,10 @@
     "babel-loader": "^6.2.5",
     "babel-plugin-react-html-attrs": "^2.0.0",
     "babel-preset-react": "^6.16.0",
-    "eslint": "^3.4.0",
-    "eslint-config-google": "^0.6.0",
     "webpack": "^1.13.2",
     "webpack-dev-middleware": "^1.8.4",
-    "webpack-hot-middleware": "^2.12.2"
+    "webpack-hot-middleware": "^2.12.2",
+    "eslint": "3.4.0",
+    "eslint-config-google": "^0.6.0"
   }
 }
