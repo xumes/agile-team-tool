@@ -39,6 +39,7 @@ var memberSchema = new Schema({
   }
 });
 
+var errURLInvalidMsg = 'is not a valid url.';
 var linkSchema = new Schema({
   id: {
     type: String,
@@ -51,7 +52,7 @@ var linkSchema = new Schema({
   linkUrl: {
     type: String,
     required: [true, 'URL is required.'],
-    validate: validators.isURL({message: 'URL is invalid.'})
+    validate: validators.isURL({message: errURLInvalidMsg})
   }
 });
 
@@ -96,7 +97,7 @@ var TeamSchema = new Schema({
     type: Date,
     default: new Date()
   },
-  updateByUserId: {
+  updatedByUserId: {
     type: String,
     default: null
   },
@@ -111,6 +112,7 @@ var TeamSchema = new Schema({
 });
 
 var Team = mongoose.model('Team', TeamSchema);
+var Links = mongoose.model('Links', linkSchema);
 
 /*
   middleware
@@ -129,8 +131,6 @@ TeamSchema.path('pathId').validate(function(value, done) {
     done(!count);
   });
 }, 'This team name is too similar to another team. Please enter a different team name.');
-
-
 
 
 /*
@@ -902,48 +902,8 @@ module.exports.modifyImportantLinks = function(teamId, userId, links) {
      * @param links - array of links
      * @returns - modified team document
      */
-    var errorLists = {};
-    errorLists['error'] = {};
-    if (_.isEmpty(teamId)){
-      errorLists['error']['teamId'] = ['Team ID is required'];
-      loggers.get('models').verbose(errorLists);
-      return reject(errorLists);
-    }
-    if (_.isEmpty(userId)){
-      errorLists['error']['userId'] = ['User ID is required'];
-      loggers.get('models').verbose(errorLists);
-      return reject(errorLists);
-    }
-    if (_.isEmpty(links)){
-      errorLists['error']['links'] = ['Link url is required'];
-      loggers.get('models').verbose(errorLists);
-      return reject(errorLists);
-    } else {
-      if (!_.isArray(links)){
-        errorLists['error']['links'] = ['Invalid links'];
-        loggers.get('models').verbose(errorLists);
-        return reject(errorLists);
-      } else {
-        // var err = [];
-        // _.each(links, function(v,i,l) {
-          // var mLists = validate(v, teamLinkRules);
-          // if (mLists) {
-          //   if (mLists['linkUrl']){
-          //     err.push({linkUrl: mLists['linkUrl'][0]});
-          //   }
-          //   if (mLists['linkLabel']){
-          //     err.push({linkLabel: mLists['linkLabel'][0]});
-          //   }
-          // }
-        // });
-
-        // if (!_.isEmpty(err)){
-        //   errorLists['error'] = {'links': err};
-        //   loggers.get('models').verbose(errorLists);
-        //   return reject(errorLists);
-        // }
-      }
-    }
+    var validResult = validateUpdateImportantLinks(teamId, userId, links);
+    if (validResult && validResult['error'] !== undefined) return reject(validResult);
 
     //check if user is allowed to edit team
     Users.isUserAllowed(userId, teamId)
@@ -972,17 +932,9 @@ module.exports.modifyImportantLinks = function(teamId, userId, links) {
         tmpLinks.push(obj);
       });
       teamDetails['links'] = tmpLinks;
-      teamDetails['last_updt_user'] = userId;
-      teamDetails['last_updt_dt'] = util.getServerTime();
-
-      var LinksData = new Team(teamDetails);
-      var errorLinks = LinksData.validateSync();
-      if (errorLinks) {
-        loggers.get('models').verbose(JSON.stringify(errorLinks.errors));
-        return reject(errorLinks.errors);
-      } else {
-        return Team.findByIdAndUpdate(teamId, teamDetails);
-      }
+      teamDetails['updatedByUserId'] = userId;
+      teamDetails['updateDate'] = util.getServerTime();
+      return Team.findByIdAndUpdate(teamId, teamDetails);
     })
     .then(function(savingResult){
       return module.exports.getUserTeams(userId);
@@ -1015,27 +967,9 @@ module.exports.deleteImportantLinks = function(teamId, userId, links) {
      */
     var errorLists = {};
     errorLists['error'] = {};
-    if (_.isEmpty(teamId)){
-      errorLists['error']['teamId'] = ['Team ID is required'];
-      loggers.get('models').verbose(errorLists);
-      return reject(errorLists);
-    }
-    if (_.isEmpty(userId)){
-      errorLists['error']['userId'] = ['User ID is required'];
-      loggers.get('models').verbose(errorLists);
-      return reject(errorLists);
-    }
-    if (_.isEmpty(links)){
-      errorLists['error']['links'] = ['Link ID is required'];
-      loggers.get('models').verbose(errorLists);
-      return reject(errorLists);
-    } else {
-      if (!_.isArray(links)){
-        errorLists['error']['links'] = ['Invalid links'];
-        loggers.get('models').verbose(errorLists);
-        return reject(errorLists);
-      }
-    }
+
+    var validResult = validateDelImportantLinks(teamId, userId, links);
+    if (validResult && validResult['error'] !== undefined) return reject(validResult);
 
     //check if user is allowed to edit team
     Users.isUserAllowed(userId, teamId)
@@ -1049,24 +983,58 @@ module.exports.deleteImportantLinks = function(teamId, userId, links) {
     .then(function(teamDetails){
       if (!_.isEmpty(teamDetails.links)){
         var curlinkData = teamDetails.links;
+        var tmpcurlinkData = _.clone(teamDetails.links);
         var tmpLinks = [];
         var deletedIds = _.pluck(links, 'id');
+        var failDeleteLinkIds = [];
+        var errmsg;
         _.each(curlinkData, function(value, key, list){
           if (_.contains(deletedIds, value.id)){
             delete curlinkData[key];
           }
         });
+
         _.each(curlinkData, function(value, key, list){
           if (value !== undefined){
             tmpLinks.push(value);
           }
         });
+
+        var currlinkData = _.pluck(tmpcurlinkData, 'id');
+        _.each(deletedIds, function(value, key, list) {
+          if (!_.contains(currlinkData, value)) {
+            failDeleteLinkIds.push(value);
+          }
+        });
+
+        if (failDeleteLinkIds.length > 0) {
+          failDeleteLinkIds = _.reject(deletedIds, _.isUndefined);
+          if (failDeleteLinkIds && failDeleteLinkIds.length > 0) {
+            errmsg = 'The following Link ID does not exist in the database: ' + failDeleteLinkIds.join(',');
+          } else {
+            errmsg = 'Link ID not found';
+          }
+          errorLists['error']['links'] = [errmsg];
+          return reject(errorLists);
+        } else {
+          teamDetails = teamDetails;
+          teamDetails['links'] = tmpLinks;
+          teamDetails['updatedByUserId'] = userId;
+          teamDetails['updateDate'] = util.getServerTime();
+          return Team.findByIdAndUpdate(teamId, teamDetails);
+        }
+      } else {
+        var deletedIds = _.pluck(links, 'id');
+        var errmsg;
+        deletedIds = _.reject(deletedIds, _.isUndefined);
+        if (deletedIds && deletedIds.length > 0) {
+          errmsg = 'The following Link ID does not exist in the database: ' + deletedIds.join(',');
+        } else {
+          errmsg = 'Link ID not found';
+        }
+        errorLists['error']['links'] = [errmsg];
+        return reject(errorLists);
       }
-      teamDetails = teamDetails;
-      teamDetails['links'] = tmpLinks;
-      teamDetails['last_updt_user'] = userId;
-      teamDetails['last_updt_dt'] = util.getServerTime();
-      return Team.findByIdAndUpdate(teamId, teamDetails);
     })
     .then(function(savingResult){
       return module.exports.getUserTeams(userId);
@@ -1086,6 +1054,83 @@ module.exports.deleteImportantLinks = function(teamId, userId, links) {
       return reject(err);
     });
   });
+};
+
+var validateDelImportantLinks = function(teamId, userId, links) {
+  var errorLists = {};
+  errorLists['error'] = {};
+  if (_.isEmpty(teamId)){
+    errorLists['error']['teamId'] = ['Team ID is required'];
+    loggers.get('models').verbose(errorLists);
+    return errorLists;
+  }
+  if (_.isEmpty(userId)){
+    errorLists['error']['userId'] = ['User ID is required'];
+    loggers.get('models').verbose(errorLists);
+    return errorLists;
+  }
+  if (_.isEmpty(links)){
+    errorLists['error']['links'] = ['Link ID is required'];
+    loggers.get('models').verbose(errorLists);
+    return errorLists;
+  } else {
+    if (!_.isArray(links)){
+      errorLists['error']['links'] = ['Invalid links'];
+      loggers.get('models').verbose(errorLists);
+      return errorLists;
+    }
+  }
+  return true;
+};
+
+var validateUpdateImportantLinks = function(teamId, userId, links) {
+  var errorLists = {};
+  errorLists['error'] = {};
+  if (_.isEmpty(teamId)){
+    errorLists['error']['teamId'] = ['Team ID is required'];
+    loggers.get('models').verbose(errorLists);
+    return errorLists;
+  }
+  if (_.isEmpty(userId)){
+    errorLists['error']['userId'] = ['User ID is required'];
+    loggers.get('models').verbose(errorLists);
+    return errorLists;
+  }
+  if (_.isEmpty(links)){
+    errorLists['error']['links'] = ['Link url is required'];
+    loggers.get('models').verbose(errorLists);
+    return errorLists;
+  } else {
+    if (!_.isArray(links)){
+      errorLists['error']['links'] = ['Invalid links'];
+      loggers.get('models').verbose(errorLists);
+      return errorLists;
+    } else {
+      var tmpError = [];
+      var errorLinks = '';
+      var errmsg;
+      _.each(links, function(value, index, list) {
+        var LinksData = new Links(value);
+        errorLinks = LinksData.validateSync();
+        if (errorLinks && errorLinks['errors'] && errorLinks['errors']['linkUrl']) {
+          if (errorLinks['errors']['linkUrl'].message === errURLInvalidMsg) {
+            errmsg = value['linkUrl'] + ' ' + errorLinks['errors']['linkUrl'].message;
+          } else {
+            errmsg = errorLinks['errors']['linkUrl'].message;
+          }
+          tmpError.push({linkUrl: errmsg});
+        }
+        if (errorLinks && errorLinks['errors'] && errorLinks['errors']['linkLabel']) {
+          tmpError.push({linkLabel: errorLinks['errors']['linkLabel'].message});
+        }
+      });
+      if (tmpError.length > 0) {
+        errorLists['error']['links'] = tmpError;
+        return errorLists;
+      }
+    }
+  }
+  return true;
 };
 
 var associateActions = function() {
