@@ -902,13 +902,13 @@ module.exports.modifyImportantLinks = function(teamId, user, links) {
      * @param links - array of links
      * @returns - modified team document
      */
-    var userId = user['ldap']['serialNumber'];
+    var userId = user['ldap']['uid'].toUpperCase();
     var userEmail = user['shortEmail'];
     var validResult = validateUpdateImportantLinks(teamId, userEmail, links);
     if (validResult && validResult['error'] !== undefined) return reject(validResult);
 
     //check if user is allowed to edit team
-    Users.isUserAllowed(userId, teamId)
+    Users.isUserAllowed(userId.toUpperCase(), teamId)
     .then(function(allowed){
       loggers.get('models').verbose('User ' + userEmail + ' is allowed to edit team ' + teamId + '. Proceed with modification');
       return allowed;
@@ -917,7 +917,6 @@ module.exports.modifyImportantLinks = function(teamId, user, links) {
       return module.exports.getTeam(teamId);
     })
     .then(function(teamDetails){
-      teamDetails = teamDetails;
       var tmpLinks = [];
       var pattern = /^((http|https):\/\/)/;
       _.each(links, function(data,idx,ls) {
@@ -970,7 +969,7 @@ module.exports.deleteImportantLinks = function(teamId, user, links) {
      */
     var errorLists = {};
     errorLists['error'] = {};
-    var userId = user['ldap']['serialNumber'];
+    var userId = user['ldap']['uid'].toUpperCase();
     var userEmail = user['shortEmail'];
     var validResult = validateDelImportantLinks(teamId, userId, links);
     if (validResult && validResult['error'] !== undefined) return reject(validResult);
@@ -1012,7 +1011,7 @@ module.exports.deleteImportantLinks = function(teamId, user, links) {
         });
 
         if (failDeleteLinkIds.length > 0) {
-          failDeleteLinkIds = _.reject(deletedIds, _.isUndefined);
+          failDeleteLinkIds = _.reject(failDeleteLinkIds, _.isUndefined);
           if (failDeleteLinkIds && failDeleteLinkIds.length > 0) {
             errmsg = 'The following Link ID does not exist in the database: ' + failDeleteLinkIds.join(',');
           } else {
@@ -1021,7 +1020,6 @@ module.exports.deleteImportantLinks = function(teamId, user, links) {
           errorLists['error']['links'] = [errmsg];
           return reject(errorLists);
         } else {
-          teamDetails = teamDetails;
           teamDetails['links'] = tmpLinks;
           teamDetails['updatedByUserId'] = userId;
           teamDetails['updatedBy'] = userEmail;
