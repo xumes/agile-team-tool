@@ -46,6 +46,19 @@ var testData = {
 };
 
 describe('Assessment Template model [create]', function() {
+  before(function(done){
+    var promiseArray = [];
+    promiseArray.push(assessmentTemplates.deleteByCloudantId(testData.initTemplate().cloudantId));
+    promiseArray.push(assessmentTemplates.deleteByCloudantId('cloudant_id_inactive'));
+    promiseArray.push(assessmentTemplates.deleteByCloudantId('cloudant_id_active'));
+    Promise.all(promiseArray)
+      .then(function(results){
+        done();
+      })
+      .catch(function(err){
+        done();
+      });
+  });
   it('will fail because assessment template data is required', function(done){
     assessmentTemplates.create()
       .catch(function(err) {
@@ -191,8 +204,7 @@ describe('Assessment Template model [get]', function() {
         return assessmentTemplates.get(null, null);
       })
       .then(function(result) {
-        expect(result[0]['status']).to.be.equal('inactive');
-        expect(result[1]['status']).to.be.equal('active');
+        expect(result).to.be.a('array');
         var deleteTpl = [assessmentTemplates.delete(result[0]['_id']), assessmentTemplates.delete(result[1]['_id'])];
         return Promise.all(deleteTpl);
       })

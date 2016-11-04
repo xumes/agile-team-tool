@@ -511,32 +511,6 @@ function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsCalResults, nonSquad
     resolve(nonSquadCalResult);
   });
 };
-/**
- * Calculate month different
- * @param date d1 (start time)
- * @param date d2 (end time)
- * @return int months
- */
-function monthDiff(d1, d2) {
-  var months;
-  months = (d2.getFullYear() - d1.getFullYear()) * 12;
-  months -= d1.getMonth();
-  months += d2.getMonth();
-  return months;
-};
-
-/**
- * Get a dateobject (Six months previous) from another date object
- * @param date date
- * @param int months
- * @return date newDate
- */
-function addMonths(date, months) {
-  var newDate = new Date();
-  newDate.setDate(1);
-  newDate.setMonth(date.getMonth() + months);
-  return new Date(newDate);
-};
 
 /**
  * Get how many days in the month
