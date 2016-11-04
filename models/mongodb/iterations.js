@@ -133,11 +133,15 @@ var IterationSchema = {
   },
 };
 
-function isIterationNumExist(iterationName, iterData) {
+function isIterationNumExist(iterationName, iterData, docId) {
   var duplicate = false;
   _.find(iterData, function(iter){
     if (iter.name == iterationName) {
-      return duplicate = true;
+      if (docId && docId.toString() == iter._id.toString()) {
+        return duplicate = false;
+      } else {
+        return duplicate = true;
+      }
     }
   });
   return duplicate;
@@ -306,9 +310,21 @@ var IterationExport = {
       Users.isUserAllowed(userId.toUpperCase(), data['teamId'])
       .then(function(isAllowed){
         if (isAllowed)
-          return Iteration.where({'_id': docId}).update({'$set':data});
+          return IterationExport.getByIterInfo(data['teamId']);
+          //return Iteration.where({'_id': docId}).update({'$set':data});
         else
           return Promise.reject('The user is not allowed to edit iteration:' + userId);
+      })
+      .then(function(iterData){
+        if (iterData != undefined && iterData.length > 0) {
+          var duplicate = isIterationNumExist(data['name'], iterData, docId);
+          if (duplicate) {
+            var msg = 'Iteration number/identifier: ' + data['name'] + ' already exists';
+            loggers.get('model-iteration').error(msg);
+            return Promise.reject(msg);
+          }
+        }
+        return Iteration.where({'_id': docId}).update({'$set':data});
       })
       .then(function(result){
         return resolve(result);

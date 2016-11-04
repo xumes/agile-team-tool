@@ -396,10 +396,9 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
       formatter: function() {
         var formatResult = '<b>' + this.key + '<b><br>';
         var point = this.point.index;
-        for(i=0;i < this.series.chart.series.length; i++) {
+        for (i=0;i < this.series.chart.series.length; i++) {
           if (this.series.chart.series[i].visible)
-            formatResult += 
-              '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';        
+            formatResult += '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';
         }
         return formatResult;
       }
@@ -537,10 +536,9 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
       formatter: function() {
         var formatResult = '<b>' + this.key + '<b><br>';
         var point = this.point.index;
-        for(i=0;i < this.series.chart.series.length; i++) {
+        for (i=0;i < this.series.chart.series.length; i++) {
           if (this.series.chart.series[i].visible)
-            formatResult += 
-              '<span style="color:' + this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';        
+            formatResult += '<span style="color:' + this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';
         }
         return formatResult;
       }
@@ -674,7 +672,7 @@ function loadBarChartParent(id, title, categories, columnSeries, yMax) {
       },
       series: {
         pointWidth: 35
-      }        
+      }
     },
 
     tooltip: {
@@ -706,10 +704,10 @@ function loadPiePizzaChart(id, title, seriesObj, subtitle) {
       marginRight: 0, width: 380,
       events: {
         load: function(event) {
-          // modify the legend symbol 
+          // modify the legend symbol
           $('#' +id+' .highcharts-legend-item rect').attr('width', '7').attr('height', '7').attr('x', '5').attr('y', '7');
         }
-      } 
+      }
     },
     lang: {
       noData: 'No data to display'
@@ -847,10 +845,9 @@ function loadChartMultiChart(id, title, type, categories, yAxisLabel, xAxisLabel
       formatter: function() {
         var formatResult = '<b>' + this.key + '<b><br>';
         var point = this.point.index;
-        for(i=0;i < this.series.chart.series.length; i++) {
+        for (i=0;i < this.series.chart.series.length; i++) {
           if (this.series.chart.series[i].visible)
-            formatResult += 
-              '<span style="color:' + this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';        
+            formatResult += '<span style="color:' + this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';
         }
         return formatResult;
       }
@@ -905,7 +902,7 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
       marginRight: 0, width: 380,
       events: {
         load: function(event) {
-          // modify the legend symbol 
+          // modify the legend symbol
           $('#' +id+' .highcharts-legend-item rect').attr('width', '7').attr('height', '7').attr('x', '5').attr('y', '-3');
         }
       }
@@ -961,7 +958,7 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
       },
       series: {
         pointWidth: 35
-      }        
+      }
     },
 
     tooltip: {
@@ -969,10 +966,10 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
         var formatResult = '<b>' + this.key + '<b><br>';
         var point = this.point.index;
         if (this.series.chart.series[3].visible)
-          formatResult += 
+          formatResult +=
             '<span style="color:' + this.series.chart.series[3].data[point].color + '">' + getCharacter(this.series.chart.series[3].symbol) +' </span>' + this.series.chart.series[3].name + ': ' + this.series.chart.series[3].data[point].y + '<br>';
         if (this.series.chart.series[4].visible)
-          formatResult += 
+          formatResult +=
             '<span style="color:' + this.series.chart.series[4].data[point].color + '">' + getCharacter(this.series.chart.series[4].symbol) +' </span>' + 'Deployments: ' + this.series.chart.series[4].data[point].y + '<br>';
 
         return formatResult;
@@ -985,7 +982,7 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
       layout: 'horizontal',
       itemMarginTop: -10,
       symbolRadius: 0,
-      itemStyle: {"fontWeight": "normal" }
+      itemStyle: {'fontWeight': 'normal'}
     },
 
     credits: {
@@ -1191,7 +1188,7 @@ function loadMultiDefectDeployChartParent(id, categories, columnSeries1, columnS
       marginRight: 0, width: 380,
       events: {
         load: function(event) {
-          // modify the legend symbol 
+          // modify the legend symbol
           $('#' +id+' .highcharts-legend-item rect').attr('width', '7').attr('height', '7').attr('x', '5').attr('y', '-3');
         }
       }
@@ -1239,7 +1236,7 @@ function loadMultiDefectDeployChartParent(id, categories, columnSeries1, columnS
       },
       series: {
         pointWidth: 35
-      }        
+      }
     },
 
     tooltip: {
@@ -1247,11 +1244,9 @@ function loadMultiDefectDeployChartParent(id, categories, columnSeries1, columnS
         var formatResult = '<b>' + this.key + '<b><br>';
         var point = this.point.index;
         if (this.series.chart.series[3].visible)
-          formatResult += 
-            '<span style="color:' + this.series.chart.series[3].data[point].color + '">' + getCharacter(this.series.chart.series[3].symbol) +' </span>' + this.series.chart.series[3].name + ': ' + this.series.chart.series[3].data[point].y + '<br>';
+          formatResult += '<span style="color:' + this.series.chart.series[3].data[point].color + '">' + getCharacter(this.series.chart.series[3].symbol) +' </span>' + this.series.chart.series[3].name + ': ' + this.series.chart.series[3].data[point].y + '<br>';
         if (this.series.chart.series[4].visible)
-          formatResult += 
-            '<span style="color:' + this.series.chart.series[4].data[point].color + '">' + getCharacter(this.series.chart.series[4].symbol) +' </span>' + 'Deployments: ' + this.series.chart.series[4].data[point].y + '<br>';
+          formatResult += '<span style="color:' + this.series.chart.series[4].data[point].color + '">' + getCharacter(this.series.chart.series[4].symbol) +' </span>' + 'Deployments: ' + this.series.chart.series[4].data[point].y + '<br>';
 
         return formatResult;
       }
@@ -1408,10 +1403,9 @@ function loadMultiLineChartParent(id, title, categories, yAxisLabel, xAxisLabel,
       formatter: function() {
         var formatResult = '<b>' + this.key + '<b><br>';
         var point = this.point.index;
-        for(i=0;i < this.series.chart.series.length; i++) {
+        for (i=0;i < this.series.chart.series.length; i++) {
           if (this.series.chart.series[i].visible)
-            formatResult += 
-              '<span style="color:' + this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';        
+            formatResult += '<span style="color:' + this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';
         }
         return formatResult;
       }
@@ -1422,7 +1416,7 @@ function loadMultiLineChartParent(id, title, categories, yAxisLabel, xAxisLabel,
       verticalAlign: 'bottom',
       layout: 'horizontal',
       itemMarginTop: -10,
-      itemStyle: {fontWeight: 'normal'}      
+      itemStyle: {fontWeight: 'normal'}
     },
 
     credits: {
@@ -1526,10 +1520,9 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
       formatter: function() {
         var formatResult = '<b>' + this.key + '<b><br>';
         var point = this.point.index;
-        for(i=0;i < this.series.chart.series.length; i++) {
+        for (i=0;i < this.series.chart.series.length; i++) {
           if (this.series.chart.series[i].visible)
-            formatResult += 
-              '<span style="color:' + this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';        
+            formatResult += '<span style="color:' + this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';
         }
         return formatResult;
       }
@@ -1885,7 +1878,7 @@ function getCharacter(symbol) {
     case 'triangle-down':
       symbol = '\u25BC';
       break;
-    default: 
+    default:
       symbol = '\u25A0';
   }
   return symbol;
