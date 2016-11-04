@@ -267,6 +267,7 @@ var IterationExport = {
         }
       })
       .then(function(iterData){
+        var isValid = false;
         if (iterData != undefined && iterData.length > 0) {
           var duplicate = isIterationNumExist(data['name'], iterData);
           if (duplicate) {
@@ -274,8 +275,20 @@ var IterationExport = {
             loggers.get('model-iteration').error(msg);
             return Promise.reject(msg);
           }
+          else {
+            isValid = true;
+          }
         }
-        return Iteration.create(data);
+        else {
+          isValid = true;
+        }
+        if (isValid){
+          delete data['_id'];
+          //var iterationData = new Iteration(data);*/
+          //return iterationData.save();
+          return Iteration.create(data);
+        }
+
       })
       .then(function(result){
         loggers.get('model-iteration').verbose('Iteration added ' + result);
