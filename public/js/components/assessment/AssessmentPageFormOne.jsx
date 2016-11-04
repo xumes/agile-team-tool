@@ -9,7 +9,7 @@ var AssessmentPageFormOne = React.createClass({
                 <Header title="Team Maturity Assessment"/>
                 <TeamSquadForm  clickAction={this.clickAction} />
                 <CreateSelectAssessment />
-                <div class="ibm-rule ibm-alternate-1"><hr/></div>
+                <div class="ibm-rule ibm-alternate"><hr/></div>
                </div>)
   }
 });

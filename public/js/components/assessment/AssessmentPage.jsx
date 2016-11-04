@@ -6,7 +6,6 @@ var AssessmentPageLastUpdate = require('./AssessmentPageLastUpdate.jsx');
 var AssessmentTemplates = require('./AssessmentTemplates.jsx');
 var AssessmentButtons = require('./AssessmentButtons.jsx');
 
-
 var AssessmentPage = React.createClass({
   render: function() {
     return (<form id="assessmentForm" class="ibm-column-form">
