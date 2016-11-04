@@ -351,7 +351,7 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
     },
     title: {
       style: {
-        fontSize: '15px',
+        fontSize: '13px',
         fontWeight: 'bold'
       },
       text: title
