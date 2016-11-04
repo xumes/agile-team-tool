@@ -101,7 +101,7 @@ var TeamSchema = new Schema({
     type: String,
     default: null
   },
-  updateBy: {
+  updatedBy: {
     type: String,
     default: null
   },
@@ -893,22 +893,24 @@ module.exports.getLookupIndex = function() {
 module.exports.getLookupTeamByType = function() {
 };
 
-module.exports.modifyImportantLinks = function(teamId, userId, links) {
+module.exports.modifyImportantLinks = function(teamId, user, links) {
   return new Promise(function(resolve, reject){
     /**
      *
      * @param teamId - team id to modify
-     * @param userId - user id of the one who is doing the action
+     * @param user - user id of the one who is doing the action
      * @param links - array of links
      * @returns - modified team document
      */
-    var validResult = validateUpdateImportantLinks(teamId, userId, links);
+    var userId = user['ldap']['serialNumber'];
+    var userEmail = user['shortEmail'];
+    var validResult = validateUpdateImportantLinks(teamId, userEmail, links);
     if (validResult && validResult['error'] !== undefined) return reject(validResult);
 
     //check if user is allowed to edit team
     Users.isUserAllowed(userId, teamId)
     .then(function(allowed){
-      loggers.get('models').verbose('User ' + userId + ' is allowed to edit team ' + teamId + '. Proceed with modification');
+      loggers.get('models').verbose('User ' + userEmail + ' is allowed to edit team ' + teamId + '. Proceed with modification');
       return allowed;
     })
     .then(function(){
@@ -933,11 +935,12 @@ module.exports.modifyImportantLinks = function(teamId, userId, links) {
       });
       teamDetails['links'] = tmpLinks;
       teamDetails['updatedByUserId'] = userId;
+      teamDetails['updatedBy'] = userEmail;
       teamDetails['updateDate'] = util.getServerTime();
       return Team.findByIdAndUpdate(teamId, teamDetails);
     })
     .then(function(savingResult){
-      return module.exports.getUserTeams(userId);
+      return module.exports.getUserTeams(userEmail);
     })
     .then(function(userTeams){
       return module.exports.getTeam(teamId)
@@ -956,25 +959,26 @@ module.exports.modifyImportantLinks = function(teamId, userId, links) {
   });
 };
 
-module.exports.deleteImportantLinks = function(teamId, userId, links) {
+module.exports.deleteImportantLinks = function(teamId, user, links) {
   return new Promise(function(resolve, reject){
     /**
      *
      * @param teamId - team id to modify
-     * @param userId - user id of the one who is doing the action
+     * @param user - user id of the one who is doing the action
      * @param links - array of link IDs
      * @returns - modified team document
      */
     var errorLists = {};
     errorLists['error'] = {};
-
+    var userId = user['ldap']['serialNumber'];
+    var userEmail = user['shortEmail'];
     var validResult = validateDelImportantLinks(teamId, userId, links);
     if (validResult && validResult['error'] !== undefined) return reject(validResult);
 
     //check if user is allowed to edit team
     Users.isUserAllowed(userId, teamId)
     .then(function(allowed){
-      loggers.get('models').verbose('User ' + userId + ' is allowed to edit team ' + teamId + '. Proceed with modification');
+      loggers.get('models').verbose('User ' + userEmail + ' is allowed to edit team ' + teamId + '. Proceed with modification');
       return allowed;
     })
     .then(function(){
@@ -1020,6 +1024,7 @@ module.exports.deleteImportantLinks = function(teamId, userId, links) {
           teamDetails = teamDetails;
           teamDetails['links'] = tmpLinks;
           teamDetails['updatedByUserId'] = userId;
+          teamDetails['updatedBy'] = userEmail;
           teamDetails['updateDate'] = util.getServerTime();
           return Team.findByIdAndUpdate(teamId, teamDetails);
         }
@@ -1037,7 +1042,7 @@ module.exports.deleteImportantLinks = function(teamId, userId, links) {
       }
     })
     .then(function(savingResult){
-      return module.exports.getUserTeams(userId);
+      return module.exports.getUserTeams(userEmail);
     })
     .then(function(userTeams){
       return module.exports.getTeam(teamId)

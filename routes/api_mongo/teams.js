@@ -74,30 +74,30 @@ module.exports = function(app, includes) {
 
   updateLink = function(req, res) {
     var links = req.body['links'];
-    var userId = req.session['user']['shortEmail'];
+    var user = req.session['user'];
     var teamId = req.body['teamId'];
-    teamModel.modifyImportantLinks(teamId, userId, links)
-    .then(function(result){
-      res.send(result);
-    })
-    .catch( /* istanbul ignore next */ function(err) {
-      // cannot simulate this error during testing
-      res.status(400).send(err);
-    });
+    teamModel.modifyImportantLinks(teamId, user, links)
+      .then(function(result){
+        res.send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        // cannot simulate this error during testing
+        res.status(400).send(err);
+      });
   };
 
   deleteLink = function(req, res) {
     var links = req.body['links'];
-    var userId = req.session['user']['shortEmail'];
+    var user = req.session['user'];
     var teamId = req.body['teamId'];
-    teamModel.deleteImportantLinks(teamId, userId, links)
-    .then(function(result){
-      res.send(result);
-    })
-    .catch( /* istanbul ignore next */ function(err) {
-      // cannot simulate this error during testing
-      res.status(400).send(err);
-    });
+    teamModel.deleteImportantLinks(teamId, user, links)
+      .then(function(result){
+        res.send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        // cannot simulate this error during testing
+        res.status(400).send(err);
+      });
   };
 
   associateTeam = function(req, res) {
