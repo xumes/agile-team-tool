@@ -41,7 +41,7 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAcc
   targetSeries.color = '#8CD211';
 
   var defectsStartSeries = new Object();
-  defectsStartSeries.name = 'Existing Defects';
+  defectsStartSeries.name = 'Existing defects';
   defectsStartSeries.data = [];
 
   var defectsSeries = new Object();
@@ -61,11 +61,11 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAcc
   deploySeries.data = [];
 
   var teamSatSeries = new Object();
-  teamSatSeries.name = 'Team Satisfaction';
+  teamSatSeries.name = 'Team satisfaction';
   teamSatSeries.data = [];
 
   var clientSatSeries = new Object();
-  clientSatSeries.name = 'Client Satisfaction';
+  clientSatSeries.name = 'Client satisfaction';
   clientSatSeries.data = [];
 
   var storyFTESeries = new Object();
@@ -142,14 +142,14 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAcc
     var cycleTimeWIPData = new Object();
 
     var categoryWithChange = '';
-    var category = '';
+    var category = moment.utc(p6Iterations[i].endDate).format('DD MMM YYYY');
     if (p6Iterations[i].memberChanged) {
-      category = showDateDDMMMYYYY(p6Iterations[i].endDate);
       categoryWithChange = '*' + category;
-      vData.color = '#FFA500';
-      tData.color = '#FFA500';
+      vData.color = 'orange';
+      //cvData.color = 'orange';
+      tData.color = 'orange';
+      //ctData.color = 'orange';
     } else {
-      category = showDateDDMMMYYYY(p6Iterations[i].endDate);
       categoryWithChange = category;
     }
     graphCategoryWithChange.push(categoryWithChange);
@@ -304,13 +304,13 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAcc
 
   destroyIterationCharts();
 
-  loadScoreChart('velocityChart', 'Velocity', 'line', graphCategoryWithChange, 'Story points', commVelocitySeries,  velocitySeries, 'Points', 'Iteration Dates', '* Indicates Team Change', true, true);
-  loadScoreChart('throughputChart', 'Throughput', 'line', graphCategoryWithChange, 'Stories/tickets/cards', commThroughputSeries, throughputSeries, 'Points', 'Iteration Dates', '* Indicates Team Change', true, true);
-  loadPizzaChart('pizzaChart', '2 Pizza Rule (Team Members)', 'line', graphCategory, 'Count', yMax, teamMemSeries, fteSeries, targetSeries, 'Points');
+  loadScoreChart('velocityChart', 'Velocity', 'line', graphCategoryWithChange, 'Story points', commVelocitySeries,  velocitySeries, 'Points', 'Iteration dates', '* Indicates Team Change', true, true);
+  loadScoreChart('throughputChart', 'Throughput', 'line', graphCategoryWithChange, 'Stories/tickets/cards', commThroughputSeries, throughputSeries, 'Points', 'Iteration dates', '* Indicates Team Change', true, true);
+  loadPizzaChart('pizzaChart', '2 Pizza Rule (Team Size)', 'line', graphCategory, 'Count', yMax, teamMemSeries, fteSeries, targetSeries, 'Points');
   loadMultiDefectDeployChart('defectsChart', graphCategory, defectsStartSeries, defectsSeries, defectsClosedSeries, defectsEndSeries, deploySeries);
   loadSatisfactionChart('statisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', teamSatSeries, clientSatSeries, 'Points', sMax);
-  loadChartMulSeries('unitCostChart', 'Stories / Story Points per FTE', 'line', graphCategory, 'Count', 'Iteration Dates', storyFTESeries, storyPointFTESeries, 'Points', true);
-  loadWipBacklogChart('wipBacklogChart', 'Cycle Time in Backlog and Cycle Time in WIP (in days)', 'line', graphCategory, 'Average days per story', 'Iteration Dates', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', true);
+  loadChartMultiChart('unitCostChart', 'Stories / Story Points per FTE', 'line', graphCategory, 'Count', 'Iteration dates', storyFTESeries, storyPointFTESeries, 'Points', true);
+  loadChartMultiChart('wipBacklogChart', 'Cycle Time in Backlog and WIP (in days)', 'line', graphCategory, 'Average days per story', 'Iteration dates', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', true);
 
   $('#GoIterationBtn').click(function() {
     var iterID = encodeURIComponent($('#gotoIterationList option:selected').val());
@@ -340,18 +340,19 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
       marginRight: 0, width: 380
     },
     lang: {
-      noData: 'No results reported'
+      noData: 'No data to display'
     },
     noData: {
       style: {
-        fontWeight: 'bold',
+        fontWeight: 'normal',
         fontSize: '12px',
         color: '#303030'
       }
     },
     title: {
       style: {
-        'fontSize': '15px'
+        fontSize: '15px',
+        fontWeight: 'bold'
       },
       text: title
     },
@@ -392,14 +393,13 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
     },
 
     tooltip: {
-      shared: true,
       formatter: function() {
-        var formatResult = '<b>' + this.points[0].key + '</b><br>';
-        for (var i = 0; i < this.points.length; i++) {
-          formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25CF</span>' + this.points[i].series.name + ': <b>' + this.points[i].y + '</b><br/>';
-        }
-        if (this.points[0].point.startDate != undefined) {
-          formatResult = formatResult + '<br>' + this.points[0].point.startDate + ' - ' + this.points[0].point.endDate;
+        var formatResult = '<b>' + this.key + '<b><br>';
+        var point = this.point.index;
+        for(i=0;i < this.series.chart.series.length; i++) {
+          if (this.series.chart.series[i].visible)
+            formatResult += 
+              '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';        
         }
         return formatResult;
       }
@@ -409,7 +409,8 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
       align: 'center',
       verticalAlign: 'bottom',
       layout: 'horizontal',
-      itemMarginTop: -10
+      itemMarginTop: -10,
+      itemStyle: {fontWeight: 'normal'}
     },
 
     credits: {
@@ -423,8 +424,7 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
       y: 8,
       style: {
         fontSize: '12px',
-        color: '#FFA500',
-        fontWeight: 'bold'
+        color: 'orange'
       }
     },
 
@@ -477,18 +477,19 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
       marginRight: 0, width: 380
     },
     lang: {
-      noData: 'No results reported'
+      noData: 'No data to display'
     },
     noData: {
       style: {
-        fontWeight: 'bold',
+        fontWeight: 'normal',
         fontSize: '12px',
         color: '#303030'
       }
     },
     title: {
       style: {
-        'fontSize': '15px'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: title
     },
@@ -507,7 +508,7 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
         }
       },
       title: {
-        text: 'Iteration Dates',
+        text: 'Iteration dates',
         x: -20
       },
       categories: categories,
@@ -533,13 +534,14 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
     },
 
     tooltip: {
-      shared: true,
       formatter: function() {
-        var formatResult = '<b>' + this.points[0].key + '</b><br>';
-        for (var i = 0; i < this.points.length; i++) {
-          formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25CF</span>' + this.points[i].series.name + ': <b>' + this.points[i].y + '</b><br/>';
+        var formatResult = '<b>' + this.key + '<b><br>';
+        var point = this.point.index;
+        for(i=0;i < this.series.chart.series.length; i++) {
+          if (this.series.chart.series[i].visible)
+            formatResult += 
+              '<span style="color:' + this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';        
         }
-        formatResult = formatResult + '<br>' + this.points[0].point.startDate + ' - ' + this.points[0].point.endDate;
         return formatResult;
       }
     },
@@ -549,7 +551,20 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
       verticalAlign: 'bottom',
       layout: 'horizontal',
       itemMarginTop: -10,
-      itemDistance: 5
+      itemStyle: {fontWeight: 'normal'}
+    },
+
+    subtitle: {
+      useHTML: true,
+      text: '\u25A0 Member goal (5 - 12)',
+      verticalAlign: 'bottom',
+      align: 'center',
+      y: 10,
+      x: 20,
+      style: {
+        fontSize: '12px',
+        color: '#8CD211'
+      }
     },
 
     credits: {
@@ -580,116 +595,11 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
           }
         }
       }
-    }, {
-      showInLegend: true,
-      name: seriesObj3.name,
-      data: seriesObj3.data,
-      color: seriesObj3.color,
-      marker: {
-        symbol: 'square'
-      }
     }]
   });
 }
 
-function loadStackedPizzaChart(id, title, type, categories, yAxisLabel, seriesObj1, seriesObj2, seriesObj3) {
-
-
-  new Highcharts.Chart({
-    chart: {
-      type: type,
-      renderTo: id,
-      marginLeft: 60,
-      marginRight: 0, width: 380
-    },
-    lang: {
-      noData: 'No results reported'
-    },
-    noData: {
-      style: {
-        fontWeight: 'bold',
-        fontSize: '12px',
-        color: '#303030'
-      }
-    },
-    title: {
-      style: {
-        'fontSize': '15px'
-      },
-      text: title
-    },
-
-    xAxis: {
-      labels: {
-        style: {
-          'fontSize': '9px'
-        }
-      },
-      title: {
-        text: 'Team size by month for completed iterations'
-      },
-      categories: categories
-    },
-
-    yAxis: {
-      min: 0,
-      title: {
-        text: yAxisLabel
-      },
-      reversedStacks: false
-    },
-
-    plotOptions: {
-      column: {
-        stacking: 'normal',
-        dataLabels: {
-          enabled: true,
-          color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black',
-          style: {
-            textShadow: '0 0 0px white',
-            fontSize: '10px'
-          }
-        }
-      }
-    },
-
-    tooltip: {
-      headerFormat: '',
-      pointFormat: 'Total iterations : {point.totalCompleted}'
-    },
-
-    legend: {
-      align: 'center',
-      verticalAlign: 'bottom',
-      layout: 'horizontal'
-    },
-
-    credits: {
-      enabled: false
-    },
-
-    series: [{
-      showInLegend: true,
-      name: seriesObj1.name,
-      data: seriesObj1.data,
-      color: seriesObj1.color
-
-    }, {
-      showInLegend: true,
-      name: seriesObj2.name,
-      data: seriesObj2.data,
-      color: seriesObj2.color
-
-    }, {
-      showInLegend: true,
-      name: seriesObj3.name,
-      data: seriesObj3.data,
-      color: seriesObj3.color
-    }]
-  });
-}
-
-function loadBarPizzaChartParent(id, title, categories, columnSeries, yMax) {
+function loadBarChartParent(id, title, categories, columnSeries, yMax) {
   new Highcharts.Chart({
     chart: {
       type: 'column',
@@ -698,32 +608,32 @@ function loadBarPizzaChartParent(id, title, categories, columnSeries, yMax) {
       marginRight: 0, width: 380
     },
     lang: {
-      noData: 'No results reported'
+      noData: 'No data to display'
     },
     noData: {
       style: {
-        fontWeight: 'bold',
+        fontWeight: 'normal',
         fontSize: '12px',
         color: '#303030'
       }
     },
     title: {
       style: {
-        'fontSize': '15px'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: title
     },
     subtitle: {
       useHTML: true,
-      text: '&#9608 Partial month',
+      text: '\u25A0 Partial month',
       verticalAlign: 'bottom',
       align: 'center',
       y: 12,
       x: 28,
       style: {
         fontSize: '12px',
-        color: '#FFA500',
-        fontWeight: 'bold'
+        color: 'orange'
       }
     },
     legend: {
@@ -760,16 +670,16 @@ function loadBarPizzaChartParent(id, title, categories, columnSeries, yMax) {
 
     plotOptions: {
       column: {
-        stacking: 'normal',
-        pointPlacement: 'on',
-        minPointLength: 0.5
-      }
+        stacking: 'normal'
+      },
+      series: {
+        pointWidth: 35
+      }        
     },
 
     tooltip: {
       headerFormat: '',
-      pointFormat: '<b>% iterations: {point.y}</b>' +
-        '<br/><b># iterations: {point.totalCompleted}</b>'
+      pointFormat: '<b> {point.category}  <b><br>' + '% iterations: {point.y} <br>' + '# iterations: {point.totalCompleted}'
     },
 
     credits: {
@@ -783,38 +693,38 @@ function loadBarPizzaChartParent(id, title, categories, columnSeries, yMax) {
       color: columnSeries.color,
       zoneAxis: 'x',
       zones: [{value: 5}, {dashStyle: 'dash', color: 'orange'}]
-    }, {
-      // this forces the coluns to adjust within the graph area
-      type: 'line',
-      showInLegend: false,
-      // visible: false,
-      name: 'Partial month',
-      color: 'orange'
     }]
   });
 }
 
-function loadPiePizzaChart(id, title, type, seriesObj, subtitle) {
+function loadPiePizzaChart(id, title, seriesObj, subtitle) {
   new Highcharts.Chart({
     chart: {
-      type: type,
+      type: 'pie',
       renderTo: id,
       marginLeft: 60,
-      marginRight: 0, width: 380
+      marginRight: 0, width: 380,
+      events: {
+        load: function(event) {
+          // modify the legend symbol 
+          $('#' +id+' .highcharts-legend-item rect').attr('width', '7').attr('height', '7').attr('x', '5').attr('y', '7');
+        }
+      } 
     },
     lang: {
-      noData: 'No results reported'
+      noData: 'No data to display'
     },
     noData: {
       style: {
-        fontWeight: 'bold',
+        fontWeight: 'normal',
         fontSize: '12px',
         color: '#303030'
       }
     },
     title: {
       style: {
-        'fontSize': '15px'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: title
     },
@@ -836,13 +746,14 @@ function loadPiePizzaChart(id, title, type, seriesObj, subtitle) {
 
     tooltip: {
       headerFormat: '',
-      pointFormat: '<b>Team members:{point.tc}</b><br/><b>FTE:{point.fte}</b>'
+      pointFormat: 'Team members: {point.tc} <br>' + 'FTE: {point.fte}'
     },
 
     legend: {
       align: 'center',
       verticalAlign: 'bottom',
-      layout: 'horizontal'
+      layout: 'horizontal',
+      itemStyle: {fontWeight: 'normal'}
     },
 
     credits: {
@@ -857,7 +768,7 @@ function loadPiePizzaChart(id, title, type, seriesObj, subtitle) {
       x: 30,
       style: {
         fontSize: '10px',
-        //color : '#FFA500',
+        //color : 'orange',
         fontWeight: 'bold'
       }
     },
@@ -873,7 +784,7 @@ function loadPiePizzaChart(id, title, type, seriesObj, subtitle) {
   });
 }
 
-function loadChartMulSeries(id, title, type, categories, yAxisLabel, xAxisLabel, seriesObj1, seriesObj2, unit, pointClickable) {
+function loadChartMultiChart(id, title, type, categories, yAxisLabel, xAxisLabel, seriesObj1, seriesObj2, unit, pointClickable) {
   new Highcharts.Chart({
     chart: {
       type: type,
@@ -882,18 +793,19 @@ function loadChartMulSeries(id, title, type, categories, yAxisLabel, xAxisLabel,
       marginRight: 0, width: 380
     },
     lang: {
-      noData: 'No results reported'
+      noData: 'No data to display'
     },
     noData: {
       style: {
-        fontWeight: 'bold',
+        fontWeight: 'normal',
         fontSize: '12px',
         color: '#303030'
       }
     },
     title: {
       style: {
-        'fontSize': '15px'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: title
     },
@@ -932,14 +844,13 @@ function loadChartMulSeries(id, title, type, categories, yAxisLabel, xAxisLabel,
     },
 
     tooltip: {
-      shared: true,
       formatter: function() {
-        var formatResult = '<b>' + this.points[0].key + '</b><br>';
-        for (var i = 0; i < this.points.length; i++) {
-          formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25CF</span>' + this.points[i].series.name + ': <b>' + this.points[i].y + '</b><br/>';
-        }
-        if (this.points[0].point.startDate != undefined) {
-          formatResult = formatResult + '<br>' + this.points[0].point.startDate + ' - ' + this.points[0].point.endDate;
+        var formatResult = '<b>' + this.key + '<b><br>';
+        var point = this.point.index;
+        for(i=0;i < this.series.chart.series.length; i++) {
+          if (this.series.chart.series[i].visible)
+            formatResult += 
+              '<span style="color:' + this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';        
         }
         return formatResult;
       }
@@ -949,7 +860,8 @@ function loadChartMulSeries(id, title, type, categories, yAxisLabel, xAxisLabel,
       align: 'center',
       verticalAlign: 'bottom',
       layout: 'horizontal',
-      itemMarginTop: -10
+      itemMarginTop: -10,
+      itemStyle: {fontWeight: 'normal'}
     },
 
     credits: {
@@ -990,21 +902,28 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
       type: 'column',
       renderTo: id,
       marginLeft: 60,
-      marginRight: 0, width: 380
+      marginRight: 0, width: 380,
+      events: {
+        load: function(event) {
+          // modify the legend symbol 
+          $('#' +id+' .highcharts-legend-item rect').attr('width', '7').attr('height', '7').attr('x', '5').attr('y', '-3');
+        }
+      }
     },
     lang: {
-      noData: 'No results reported'
+      noData: 'No data to display'
     },
     noData: {
       style: {
-        fontWeight: 'bold',
+        fontWeight: 'normal',
         fontSize: '12px',
         color: '#303030'
       }
     },
     title: {
       style: {
-        'fontSize': '15px'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: 'Deployments and Defects'
     },
@@ -1023,7 +942,7 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
         }
       },
       title: {
-        text: 'Iteration Dates',
+        text: 'Iteration dates',
         x: -20
       },
       categories: categories,
@@ -1038,32 +957,24 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
 
     plotOptions: {
       column: {
-        stacking: 'normal',
-        pointPlacement: 'on',
-        minPointLength: 0.5
+        stacking: 'normal'
       },
+      series: {
+        pointWidth: 35
+      }        
     },
 
     tooltip: {
-      shared: true,
       formatter: function() {
-        var formatResult = '<b>' + this.points[0].key + '</b><br>';
-        // for (var i = 0; i < this.points.length; i++) {
-        //   formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25CF</span>' + this.points[i].series.name + ': <b>' + this.points[i].y + '</b><br/>';
-        // }
-        for (var i = 0; i < this.points.length; i++) {
-          if (i==0) {
-            // var newSeries = this.points[i].series.chart.series[1]; //columnSeries2
-            // var closedSeries = this.points[i].series.chart.series[2]; //columnSeries3
-            var endSeries = this.points[i].series.chart.series[3]; //columnSeries4
-            var deploySeries = this.points[i].series.chart.series[4]; //lineSeries
-            var index = this.points[i].point.x;
-            if (!_.isUndefined(index)) {
-              formatResult = formatResult + '<span style="color:' + endSeries.color + '">\u25CF</span>' + endSeries.name + ': <b>' + endSeries.data[index].y + '</b><br/>';
-              formatResult = formatResult + '<span style="color:' + deploySeries.color + '">\u25CF</span>' + 'Deployments: <b>' + deploySeries.data[index].y + '</b><br/>';
-            }
-          }
-        }
+        var formatResult = '<b>' + this.key + '<b><br>';
+        var point = this.point.index;
+        if (this.series.chart.series[3].visible)
+          formatResult += 
+            '<span style="color:' + this.series.chart.series[3].data[point].color + '">' + getCharacter(this.series.chart.series[3].symbol) +' </span>' + this.series.chart.series[3].name + ': ' + this.series.chart.series[3].data[point].y + '<br>';
+        if (this.series.chart.series[4].visible)
+          formatResult += 
+            '<span style="color:' + this.series.chart.series[4].data[point].color + '">' + getCharacter(this.series.chart.series[4].symbol) +' </span>' + 'Deployments: ' + this.series.chart.series[4].data[point].y + '<br>';
+
         return formatResult;
       }
     },
@@ -1073,8 +984,8 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
       verticalAlign: 'bottom',
       layout: 'horizontal',
       itemMarginTop: -10,
-      symbolRadius: 0
-      // itemStyle: {"fontWeight": "normal" }
+      symbolRadius: 0,
+      itemStyle: {"fontWeight": "normal" }
     },
 
     credits: {
@@ -1177,117 +1088,6 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
   });
 }
 
-function loadWipBacklogChart(id, title, type, categories, yAxisLabel, xAxisLabel, seriesObj1, seriesObj2, unit, pointClickable) {
-  new Highcharts.Chart({
-    chart: {
-      type: type,
-      renderTo: id,
-      marginLeft: 60,
-      marginRight: 0, width: 380
-    },
-    lang: {
-      noData: 'No results reported'
-    },
-    noData: {
-      style: {
-        fontWeight: 'bold',
-        fontSize: '12px',
-        color: '#303030'
-      }
-    },
-    title: {
-      style: {
-        'fontSize': '15px'
-      },
-      text: title
-    },
-
-    xAxis: {
-      labels: {
-        style: {
-          'fontSize': '9px'
-        },
-        formatter: function() {
-          if (typeof this.value === 'string' && this.value.indexOf('*') >= 0) {
-            return '<span style="fill: orange;">' + this.value + '</span>';
-          } else {
-            return this.value;
-          }
-        }
-      },
-      title: {
-        text: xAxisLabel,
-        x: -20
-      },
-      categories: categories,
-      tickmarkPlacement: 'on'
-    },
-
-    yAxis: {
-      title: {
-        text: yAxisLabel
-      }
-    },
-
-    plotOptions: {
-      column: {
-        pointPlacement: 'on'
-      }
-    },
-
-    tooltip: {
-      shared: true,
-      formatter: function() {
-        var formatResult = '<b>' + this.points[0].key + '</b><br>';
-        for (var i = 0; i < this.points.length; i++) {
-          formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25CF</span>' + this.points[i].series.name + ': <b>' + this.points[i].y + '</b><br/>';
-        }
-        if (this.points[0].point.startDate != undefined) {
-          formatResult = formatResult + '<br>' + this.points[0].point.startDate + ' - ' + this.points[0].point.endDate;
-        }
-        return formatResult;
-      }
-    },
-
-    legend: {
-      align: 'center',
-      verticalAlign: 'bottom',
-      layout: 'horizontal',
-      itemMarginTop: -10
-    },
-
-    credits: {
-      enabled: false
-    },
-
-    series: [{
-      showInLegend: true,
-      name: seriesObj1.name,
-      data: seriesObj1.data,
-      point: {
-        events: {
-          click: function(e) {
-            if (pointClickable)
-              window.location = e.point.iterURL;
-          }
-        }
-      }
-    }, {
-      showInLegend: true,
-      name: seriesObj2.name,
-      data: seriesObj2.data,
-      point: {
-        events: {
-          click: function(e) {
-            if (pointClickable)
-              window.location = e.point.iterURL;
-          }
-        }
-      }
-    }]
-  });
-}
-
 function loadLineChartParent(id, title, categories, yAxisLabel, xAxisLabel, lineSeries, unit) {
   new Highcharts.Chart({
     chart: {
@@ -1297,18 +1097,19 @@ function loadLineChartParent(id, title, categories, yAxisLabel, xAxisLabel, line
       marginRight: 0, width: 380
     },
     lang: {
-      noData: 'No results reported'
+      noData: 'No data to display'
     },
     noData: {
       style: {
-        fontWeight: 'bold',
+        fontWeight: 'normal',
         fontSize: '12px',
         color: '#303030'
       }
     },
     title: {
       style: {
-        'fontSize': '15px'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: title
     },
@@ -1341,7 +1142,7 @@ function loadLineChartParent(id, title, categories, yAxisLabel, xAxisLabel, line
     tooltip: {
       formatter: function() {
         if (this.point.totalSquad != undefined) {
-          return yAxisLabel + ': ' + this.point.y + '<br>' + 'Squad Teams: ' + this.point.totalSquad + '<br>' + 'Iterations: ' + this.point.totalCompleted;
+          return '<b>' + this.key + '<b><br>' + yAxisLabel + ': ' + this.point.y + '<br>' + 'Squad teams: ' + this.point.totalSquad + '<br>' + 'Iterations: ' + this.point.totalCompleted;
         } else {
           return '<b>' + this.key + '</b><br>' + yAxisLabel + ': ' + this.point.y + '<br>' + this.point.startDate + ' - ' + this.point.endDate;
         }
@@ -1351,7 +1152,8 @@ function loadLineChartParent(id, title, categories, yAxisLabel, xAxisLabel, line
     legend: {
       align: 'center',
       verticalAlign: 'bottom',
-      layout: 'horizontal'
+      layout: 'horizontal',
+      itemStyle: {fontWeight: 'normal'}
     },
 
     credits: {
@@ -1366,8 +1168,7 @@ function loadLineChartParent(id, title, categories, yAxisLabel, xAxisLabel, line
       x: 30,
       style: {
         fontSize: '12px',
-        color: '#FFA500',
-        fontWeight: 'bold'
+        color: 'orange'
       }
     },
 
@@ -1387,21 +1188,28 @@ function loadMultiDefectDeployChartParent(id, categories, columnSeries1, columnS
       type: 'column',
       renderTo: id,
       marginLeft: 60,
-      marginRight: 0, width: 380
+      marginRight: 0, width: 380,
+      events: {
+        load: function(event) {
+          // modify the legend symbol 
+          $('#' +id+' .highcharts-legend-item rect').attr('width', '7').attr('height', '7').attr('x', '5').attr('y', '-3');
+        }
+      }
     },
     lang: {
-      noData: 'No results reported'
+      noData: 'No data to display'
     },
     noData: {
       style: {
-        fontWeight: 'bold',
+        fontWeight: 'normal',
         fontSize: '12px',
         color: '#303030'
       }
     },
     title: {
       style: {
-        'fontSize': '15px'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: 'Deployment and Defects'
     },
@@ -1427,32 +1235,24 @@ function loadMultiDefectDeployChartParent(id, categories, columnSeries1, columnS
 
     plotOptions: {
       column: {
-        stacking: 'normal',
-        pointPlacement: 'on',
-        minPointLength: 0.5
-      }
+        stacking: 'normal'
+      },
+      series: {
+        pointWidth: 35
+      }        
     },
 
     tooltip: {
-      shared: true,
       formatter: function() {
-        var formatResult = '<b>' + this.points[0].key + '</b><br>';
-        // for (var i = 0; i < this.points.length; i++) {
-        //   formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25CF</span>' + this.points[i].series.name + ': <b>' + this.points[i].y + '</b><br/>';
-        // }
-        for (var i = 0; i < this.points.length; i++) {
-          if (i==0) {
-            var newSeries = this.points[i].series.chart.series[1]; //columnSeries2
-            var closedSeries = this.points[i].series.chart.series[2]; //columnSeries3
-            var endSeries = this.points[i].series.chart.series[3]; //columnSeries4
-            var deploySeries = this.points[i].series.chart.series[4]; //lineSeries
-            var index = this.points[i].point.x;
-            if (!_.isUndefined(index)) {
-              formatResult = formatResult + '<span style="color:' + endSeries.color + '">\u25CF</span>' + endSeries.name + ': <b>' + endSeries.data[index].y + '</b><br/>';
-              formatResult = formatResult + '<span style="color:' + deploySeries.color + '">\u25CF</span>' + 'Deployments: <b>' + deploySeries.data[index].y + '</b><br/>';
-            }
-          }
-        }
+        var formatResult = '<b>' + this.key + '<b><br>';
+        var point = this.point.index;
+        if (this.series.chart.series[3].visible)
+          formatResult += 
+            '<span style="color:' + this.series.chart.series[3].data[point].color + '">' + getCharacter(this.series.chart.series[3].symbol) +' </span>' + this.series.chart.series[3].name + ': ' + this.series.chart.series[3].data[point].y + '<br>';
+        if (this.series.chart.series[4].visible)
+          formatResult += 
+            '<span style="color:' + this.series.chart.series[4].data[point].color + '">' + getCharacter(this.series.chart.series[4].symbol) +' </span>' + 'Deployments: ' + this.series.chart.series[4].data[point].y + '<br>';
+
         return formatResult;
       }
     },
@@ -1462,8 +1262,8 @@ function loadMultiDefectDeployChartParent(id, categories, columnSeries1, columnS
       verticalAlign: 'bottom',
       layout: 'horizontal',
       itemMarginTop: -10,
-      symbolRadius: 0
-      // itemStyle: {"fontWeight": "normal" }
+      symbolRadius: 0,
+      itemStyle: {fontWeight: 'normal'}
     },
 
     credits: {
@@ -1478,8 +1278,7 @@ function loadMultiDefectDeployChartParent(id, categories, columnSeries1, columnS
       x: 30,
       style: {
         fontSize: '12px',
-        color: '#FFA500',
-        fontWeight: 'bold'
+        color: 'orange'
       }
     },
 
@@ -1554,18 +1353,19 @@ function loadMultiLineChartParent(id, title, categories, yAxisLabel, xAxisLabel,
       marginRight: 0, width: 380
     },
     lang: {
-      noData: 'No results reported'
+      noData: 'No data to display'
     },
     noData: {
       style: {
-        fontWeight: 'bold',
+        fontWeight: 'normal',
         fontSize: '12px',
         color: '#303030'
       }
     },
     title: {
       style: {
-        'fontSize': '15px'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: title
     },
@@ -1605,15 +1405,13 @@ function loadMultiLineChartParent(id, title, categories, yAxisLabel, xAxisLabel,
     },
 
     tooltip: {
-      shared: true,
       formatter: function() {
-        var formatResult = '<b>' + this.points[0].key + '</b><br>';
-        var serName = '';
-        for (var i = 0; i < this.points.length; i++) {
-          if (serName != this.points[i].series.name) {
-            formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25CF</span>' + this.points[i].series.name + ': <b>' + this.points[i].y + '</b><br/>';
-          }
-          serName = this.points[i].series.name;
+        var formatResult = '<b>' + this.key + '<b><br>';
+        var point = this.point.index;
+        for(i=0;i < this.series.chart.series.length; i++) {
+          if (this.series.chart.series[i].visible)
+            formatResult += 
+              '<span style="color:' + this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';        
         }
         return formatResult;
       }
@@ -1623,7 +1421,8 @@ function loadMultiLineChartParent(id, title, categories, yAxisLabel, xAxisLabel,
       align: 'center',
       verticalAlign: 'bottom',
       layout: 'horizontal',
-      itemMarginTop: -10
+      itemMarginTop: -10,
+      itemStyle: {fontWeight: 'normal'}      
     },
 
     credits: {
@@ -1635,11 +1434,10 @@ function loadMultiLineChartParent(id, title, categories, yAxisLabel, xAxisLabel,
       verticalAlign: 'bottom',
       align: 'center',
       y: 15,
-      x: 30,
+      x: 20,
       style: {
         fontSize: '12px',
-        color: '#FFA500',
-        fontWeight: 'bold'
+        color: 'orange'
       }
     },
 
@@ -1670,11 +1468,11 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
       marginRight: 0, width: 380
     },
     lang: {
-      noData: 'No results reported'
+      noData: 'No data to display'
     },
     noData: {
       style: {
-        fontWeight: 'bold',
+        fontWeight: 'normal',
         fontSize: '12px',
         color: '#303030'
       }
@@ -1682,7 +1480,8 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
 
     title: {
       style: {
-        'fontSize': '15px'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: title
     },
@@ -1701,7 +1500,7 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
         }
       },
       title: {
-        text: 'Iteration Dates'
+        text: 'Iteration dates'
       },
       categories: categories,
       tickmarkPlacement: 'on'
@@ -1724,13 +1523,14 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
     },
 
     tooltip: {
-      shared: true,
       formatter: function() {
-        var formatResult = '<b>' + this.points[0].key + '</b><br>';
-        for (var i = 0; i < this.points.length; i++) {
-          formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25CF</span>' + this.points[i].series.name + ': <b>' + this.points[i].y + '</b><br/>';
+        var formatResult = '<b>' + this.key + '<b><br>';
+        var point = this.point.index;
+        for(i=0;i < this.series.chart.series.length; i++) {
+          if (this.series.chart.series[i].visible)
+            formatResult += 
+              '<span style="color:' + this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';        
         }
-        formatResult = formatResult + '<br>' + this.points[0].point.startDate + ' - ' + this.points[0].point.endDate;
         return formatResult;
       }
     },
@@ -1739,7 +1539,8 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
       align: 'center',
       verticalAlign: 'bottom',
       layout: 'horizontal',
-      itemMarginTop: -10
+      itemMarginTop: -10,
+      itemStyle: {fontWeight: 'normal'}
     },
 
     credits: {
@@ -1787,22 +1588,22 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
   throughputSeries.data = [];
 
   var teamLt5Ser = new Object();
-  teamLt5Ser.name = 'Teams <5 mbrs';
+  teamLt5Ser.name = 'Teams <5 members';
   teamLt5Ser.data = [];
   teamLt5Ser.color = '#D3D3D3';
 
   var team5to12Ser = new Object();
-  team5to12Ser.name = 'Teams 5-12 mbrs';
+  team5to12Ser.name = 'Teams 5-12 members';
   team5to12Ser.data = [];
   team5to12Ser.color = '#8CD211';
 
   var teamGt12Ser = new Object();
-  teamGt12Ser.name = 'Teams >12 mbrs';
+  teamGt12Ser.name = 'Teams >12 members';
   teamGt12Ser.data = [];
   teamGt12Ser.color = '#808080';
 
   var defectsStartSeries = new Object();
-  defectsStartSeries.name = 'Existing Defects';
+  defectsStartSeries.name = 'Existing defects';
   defectsStartSeries.data = [];
 
   var defectsSeries = new Object();
@@ -1822,11 +1623,11 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
   deploySeries.data = [];
 
   var clientStatSeries = new Object();
-  clientStatSeries.name = 'Client Satisfaction';
+  clientStatSeries.name = 'Client satisfaction';
   clientStatSeries.data = [];
 
   var teamStatSeries = new Object();
-  teamStatSeries.name = 'Team Satisfaction';
+  teamStatSeries.name = 'Team satisfaction';
   teamStatSeries.data = [];
 
   var cycleTimeBacklogSeries = new Object();
@@ -1933,7 +1734,7 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
 
   var pData = [];
   var pDataObj = new Object();
-  pDataObj.name = 'Teams <5 mbrs';
+  pDataObj.name = 'Teams < 5 members';
   pDataObj.y = curTeamstat.teamsLt5 == 0 ? null : curTeamstat.teamsLt5;
   pDataObj.tc = curTeamstat.tcLt5;
   pDataObj.fte = curTeamstat.fteLt5.toFixed(1);
@@ -1941,7 +1742,7 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
   pData.push(pDataObj);
 
   pDataObj = new Object();
-  pDataObj.name = 'Teams 5-12 mbrs';
+  pDataObj.name = 'Teams 5-12 members';
   pDataObj.y = curTeamstat.teams5to12 == 0 ? null : curTeamstat.teams5to12;
   pDataObj.tc = curTeamstat.tc5to12;
   pDataObj.fte = curTeamstat.fte5to12.toFixed(1);
@@ -1950,7 +1751,7 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
   pData.push(pDataObj);
 
   pDataObj = new Object();
-  pDataObj.name = 'Teams >12 mbrs';
+  pDataObj.name = 'Teams > 12 members';
   pDataObj.y = curTeamstat.teamsGt12 == 0 ? null : curTeamstat.teamsGt12;
   pDataObj.tc = curTeamstat.tcGt12;
   pDataObj.fte = curTeamstat.fteGt12.toFixed(1);
@@ -1974,10 +1775,10 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
   loadLineChartParent('pvelocityChart', 'Velocity', graphCategory, 'Story points', 'Iteration results by month', velocitySeries, 'Points');
   loadLineChartParent('pthroughputChart', 'Throughput', graphCategory, 'Stories/tickets/cards', 'Iteration results by month', throughputSeries, 'Points');
   loadMultiDefectDeployChartParent('pdefectsChart', graphCategory, defectsStartSeries, defectsSeries, defectsClosedSeries, defectsEndSeries, deploySeries);
-  loadMultiLineChartParent('pwipBacklogChart', 'Cycle Time in Backlog and Cycle Time in WIP (in days)', graphCategory, 'Average days per story', 'Iteration results by month', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', false);
+  loadMultiLineChartParent('pwipBacklogChart', 'Cycle Time in Backlog and WIP (in days)', graphCategory, 'Average days per story', 'Iteration results by month', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', false);
   loadMultiLineChartParent('pstatisfactionChart', 'Client and Team Satisfaction', graphCategory, 'Rating', 'Iteration results by month', teamStatSeries, clientStatSeries, 'Points', false, ctsYMax);
-  loadBarPizzaChartParent('pPizzaChart', 'Squad Team Size Per Iteration', graphCategory, team5to12Ser, pizYMax);
-  loadPiePizzaChart('piePizzaChart', '2 Pizza Rule (Squad Teams - Current)', 'pie', pData, cenTitle);
+  loadBarChartParent('pPizzaChart', 'Squad Team Size per Iteration', graphCategory, team5to12Ser, pizYMax);
+  loadPiePizzaChart('piePizzaChart', '2 Pizza Rule (squad teams) - Current', pData, cenTitle);
 
   setRefreshDate(timestamp);
   $('#nsquad_team_scard').show();
@@ -2065,4 +1866,27 @@ function destroyIterationCharts() {
       chart.destroy();
     }
   });
+}
+
+function getCharacter(symbol) {
+  switch (symbol) {
+    case 'circle':
+      symbol = '\u25CF';
+      break;
+    case 'diamond':
+      symbol = '\u25C6';
+      break;
+    case 'square':
+      symbol = '\u25A0';
+      break;
+    case 'triangle':
+      symbol = '\u25B2';
+      break;
+    case 'triangle-down':
+      symbol = '\u25BC';
+      break;
+    default: 
+      symbol = '\u25A0';
+  }
+  return symbol;
 }

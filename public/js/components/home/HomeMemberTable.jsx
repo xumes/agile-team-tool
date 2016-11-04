@@ -14,28 +14,35 @@ var HomeMemberTable = React.createClass({
       });
       var team = self.props.loadDetailTeam.team;
       self.updateMemberTable(members, team);
+    } else {
+      $('#teamMemberTable').show();
+      self.updateMemberTable(null, null);
     }
   },
 
   updateMemberTable(members, team) {
-    var j = 0;
-    _.each(members, function(member){
-      var memberDetail = _.find(team.members, function(m){
-        if (m.userId == member.userId) {
-          return {
-            'role': m.role,
-            'allocation': m.allocation
+    if (members != null && team != null) {
+      var j = 0;
+      _.each(members, function(member){
+        var memberDetail = _.find(team.members, function(m){
+          if (m.userId == member.userId) {
+            return {
+              'role': m.role,
+              'allocation': m.allocation
+            }
           }
-        }
+        });
+        var row = "<tr><td id='name_" + j + "'>" + member.name + '</td>';
+        row = row + '<td>' + memberDetail.allocation + '</td>';
+        row = row + "<td id='location_ref_" + j + "'>" + member.location.site + "</div></td>";
+        row = row + '<td>' + memberDetail.role + '</td>';
+        row = row + '</tr>';
+        $('#membersList').append(row);
+        j++;
       });
-      var row = "<tr><td id='name_" + j + "'>" + member.name + '</td>';
-      row = row + '<td>' + memberDetail.allocation + '</td>';
-      row = row + "<td id='location_ref_" + j + "'>" + member.location.site + "</div></td>";
-      row = row + '<td>' + memberDetail.role + '</td>';
-      row = row + '</tr>';
-      $('#membersList').append(row);
-      j++;
-    });
+    } else {
+      $('#membersList').append('<tr class="odd"><td valign="top" colspan="4" class="dataTables_empty">No data available</td></tr>');
+    }
   },
   render: function() {
     return (
