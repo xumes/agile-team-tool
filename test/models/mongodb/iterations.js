@@ -131,37 +131,38 @@ describe('Iteration model [add]', function() {
   });
 });
 
-describe('Iteration model [getByIterInfo]', function() {
-  it('return successful for retriveing a iteration by teamId', function(done) {
-    iterationModel.getByIterInfo(validIterationDoc.teamId)
-      .then(function(result){
-        expect(result).to.be.a('array');
-        expect(result.length).not.to.equal(0);
-        done();
-      });
-  });
+// describe('Iteration model [getByIterInfo]', function() {
+//   it('return successful for retriveing a iteration by teamId', function(done) {
+//     iterationModel.getByIterInfo(validIterationDoc.teamId)
+//       .then(function(result){
+//         expect(result).to.be.a('array');
+//         expect(result.length).not.to.equal(0);
+//         done();
+//       });
+//   });
 
-  it('return successful for retriveing all iterations', function(done) {
-    iterationModel.getByIterInfo('',10)
-      .then(function(result){
-        expect(result).to.be.a('array');
-        expect(result.length).not.to.equal(0);
-        done();
-      });
-  });
-});
+//   it('return successful for retriveing all iterations', function(done) {
+//     iterationModel.getByIterInfo('',10)
+//       .then(function(result){
+//         expect(result).to.be.a('array');
+//         expect(result.length).not.to.equal(0);
+//         done();
+//       });
+//   });
+// });
 
-describe('Iteration model [get]', function() {
-  it('return successful for retriveing a iteration by id', function(done) {
-    iterationModel.get(newIterationId)
-      .then(function(result){
-        expect(result).to.be.a('object');
-        expect(result).to.have.property('_id');
-        done();
-      });
-  });
-});
+// describe('Iteration model [get]', function() {
+//   it('return successful for retriveing a iteration by id', function(done) {
+//     iterationModel.get(newIterationId)
+//       .then(function(result){
+//         expect(result).to.be.a('object');
+//         expect(result).to.have.property('_id');
+//         done();
+//       });
+//   });
+// });
 
+<<<<<<< Updated upstream
 describe('Iteration model [getCompletedIterationsByKey]', function() {
   it('return successful for retriveing iterations by time', function(done) {
     iterationModel.getCompletedIterationsByKey(validIterationDoc.startDate, validIterationDoc.endDate)
@@ -294,16 +295,114 @@ describe('Iteration model [delete]', function() {
         done();
       });
   });
+=======
+// describe('Iteration model [getCompletedIterationsByKey]', function() {
+//   it('return successful for retriveing a iteration by time', function(done) {
+//     iterationModel.getCompletedIterationsByKey(validIterationDoc.startDate, validIterationDoc.endDate)
+//       .then(function(result){
+//         expect(result).to.be.a('array');
+//         expect(result.length).not.to.equal(0);
+//         done();
+//       });
+//   });
+// });
 
-  it('return fail for deleteing a iteration by empty request', function(done) {
-    iterationModel.deleteByFields()
-      .catch(function(err){
-        expect(err).to.be.a('object');
-        expect(err).to.have.property('error');
-        done();
-      });
-  });
+// describe('Iteration model [searchTeamIteration]', function() {
+//   it('return successful for retriveing a iteration by query', function(done) {
+//     var queryrequest = {
+//       'id': validIterationDoc.teamId,
+//       'status': iterStatus,
+//       'startdate': moment(new Date('01-01-2016')).format(dateFormat),
+//       'enddate': moment(new Date()).format(dateFormat)
+//     };
+//     iterationModel.searchTeamIteration(queryrequest)
+//       .then(function(result){
+//         expect(result).to.be.a('array');
+//         expect(result.length).not.to.equal(0);
+//         done();
+//       });
+//   });
 
+//   it('return successful for retriveing a iteration by query (startdate only)', function(done) {
+//     var queryrequest = {
+//       'id': validIterationDoc.teamId,
+//       'status': iterStatus,
+//       'startdate': validIterationDoc.endDate
+//     };
+//     iterationModel.searchTeamIteration(queryrequest)
+//       .then(function(result){
+//         expect(result).to.be.a('array');
+//         done();
+//       });
+//   });
+
+//   it('return successful for retriveing a iteration by query (enddate only)', function(done) {
+//     var queryrequest = {
+//       'id': validIterationDoc.teamId,
+//       'status': iterStatus,
+//       'enddate': validIterationDoc.endDate
+//     };
+//     iterationModel.searchTeamIteration(queryrequest)
+//       .then(function(result){
+//         expect(result).to.be.a('array');
+//         done();
+//       });
+//   });
+// });
+
+// describe('Iteration model [edit]', function() {
+//   it('return successful for updating a iteration', function(done) {
+//     validIterationDoc.memberCount = 2;
+//     iterationModel.edit(newIterationId, validIterationDoc, validUser)
+//       .then(function(result){
+//         expect(result).to.be.a('object');
+//         expect(result).to.have.property('ok');
+//         done();
+//       });
+//   });
+
+//   it('return successful for updating a iteration (update deliveredStories)', function(done) {
+//     validIterationDoc.deliveredStories = 1;
+//     iterationModel.edit(newIterationId, validIterationDoc, validUser)
+//       .then(function(result){
+//         expect(result).to.be.a('object');
+//         expect(result).to.have.property('ok');
+//         done();
+//       });
+//   });
+
+//   it('return successful for updating a iteration (update endDate)', function(done) {
+//     validIterationDoc.endDate = '09-15-2016';
+//     iterationModel.edit(newIterationId, validIterationDoc, validUser)
+//       .then(function(result){
+//         expect(result).to.be.a('object');
+//         expect(result).to.have.property('ok');
+//         done();
+//       });
+//   });
+// });
+
+// describe('Iteration model [delete]', function() {
+//   it('return fail for deleteing a iteration by empty id', function(done) {
+//     iterationModel.delete()
+//       .catch(function(err){
+//         expect(err).to.be.a('object');
+//         expect(err).to.have.property('error');
+//         done();
+//       });
+//   });
+>>>>>>> Stashed changes
+
+//   it('return fail for deleteing a iteration by empty request', function(done) {
+//     iterationModel.deleteByFields()
+//       .catch(function(err){
+//         expect(err).to.be.a('object');
+//         expect(err).to.have.property('error');
+//         done();
+//       });
+//   });
+
+<<<<<<< Updated upstream
   it('return successful for deleteing a iteration by id', function(done) {
     iterationModel.deleteIter(newIterationId, validUser.userId)
       .then(function(result){
@@ -327,3 +426,27 @@ describe('Iteration model [delete]', function() {
       });
   });
 });
+=======
+//   it('return successful for deleteing a iteration by id', function(done) {
+//     iterationModel.delete(newIterationId)
+//       .then(function(result){
+//         expect(result).to.be.a('object');
+//         expect(result).to.have.property('result');
+//         done();
+//       });
+//   });
+
+//   after(function(done){
+//     var promiseArray = [];
+//     promiseArray.push(userModel.delete(testUser.email));
+//     promiseArray.push(teamModel.deleteTeamByName(testTeam.name));
+//     Promise.all(promiseArray)
+//       .then(function(results){
+//         done();
+//       })
+//       .catch(function(err){
+//         done();
+//       });
+//   });
+// });
+>>>>>>> Stashed changes
