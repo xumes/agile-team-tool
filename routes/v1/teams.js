@@ -19,7 +19,7 @@ module.exports = function(app, includes) {
           loggers.get('api').error('[v1.teams.getTeams]:', err);
           res.status(400).send(err);
         });
-    } else {
+    } else {       
       teamModel.getTeamByUid(req.apiuser.userId, includeDocs)
         .then(function(teams) {
           teams = util.returnObject(teams);

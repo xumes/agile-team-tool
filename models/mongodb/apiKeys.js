@@ -35,11 +35,11 @@ var apiKeys = {
     return new Promise(function(resolve, reject) {
       var uid = user['ldap']['uid'];
       if (_.isEmpty(uid)) {
-        loggers.get('model-users').verbose('Getting user api key with UID but empty');
+        loggers.get('model-apiKeys').verbose('Getting user api key with UID but empty');
         var q = {};
         var query = ApiKey.find(q);
       } else {
-        loggers.get('model-users').verbose('Getting user api key with UID ' + uid);
+        loggers.get('model-apiKeys').verbose('Getting user api key with UID ' + uid);
         var q = {userId: uid};
         var query = ApiKey.findOne(q);
       }
@@ -74,7 +74,7 @@ var apiKeys = {
           resolve(apiData);
         })
         .catch( /* istanbul ignore next */ function(err) {
-          loggers.get('models-users').error('ERROR:', err);
+          loggers.get('models-apiKeys').error('ERROR:', err);
           var msg = err.error;
           reject(msg);
         });
@@ -83,7 +83,7 @@ var apiKeys = {
 
   deleteApikey: function(user) {
     return new Promise(function(resolve, reject) {
-      loggers.get('model-users').verbose('Delete api key for user ' + user['ldap']['uid']);
+      loggers.get('model-apiKeys').verbose('Delete api key for user ' + user['ldap']['uid']);
       apiKeys.getUserApikeyByUser(user)
      .then(function(userApi) {
        if (!_.isEmpty(userApi)) {
@@ -104,6 +104,28 @@ var apiKeys = {
        var msg = err.error;
        reject(msg);
      });
+    });
+  },
+
+  getUserApikeyByApikey: function(apiKey) {
+    return new Promise(function(resolve, reject) {
+      if (_.isEmpty(apiKey)) {
+        loggers.get('models-apiKeys').verbose('User api key is empty');
+        var q = {};
+        var query = ApiKey.find(q);
+      } else {
+        loggers.get('model-apiKeys').verbose('Getting user api key with API (Mongo)' + apiKey);
+        var q = {key: apiKey};
+        var query = ApiKey.findOne(q);
+      }
+      query
+      .then(function(result){
+        resolve(result);
+        loggers.get('model-apiKeys').verbose('Finish with getting apiKey with result (Mongo)');
+      })
+      .catch(function(err){
+        reject(err);
+      });
     });
   }
 

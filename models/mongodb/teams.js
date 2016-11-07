@@ -1088,6 +1088,51 @@ module.exports.deleteImportantLinks = function(teamId, userId, links) {
   });
 };
 
+
+module.exports.getUserTeamIdsByUid = function(uid) {
+  return new Promise(function(resolve, reject) {
+    var userTeams = [];
+    var userTeamIds = [];
+    if (_.isEmpty(uid)) {
+      infoLogs('No user teams found!');
+      resolve(userTeamIds);
+    } else {
+      //team.getTeamByUid(uid)       ------------------------------ following line
+      //Team.find({_id: teamId}).lean().exec()
+      Team.getTeamsByUserId(uid, {_id:1})
+        .then(function(body) {
+          userTeams = util.returnObject(body);
+          loggers.get('models').verbose('Found ' + userTeams.length + ' team(s) for ' + uid);
+          var requestKeys = _.pluck(userTeams, '_id');
+          return requestKeys;
+        })
+        .then(function(requestKeys) {
+          var docs = common.getByViewKeys('teams', 'lookup', requestKeys);
+          return docs;
+        })
+        .then(function(docs){
+          var strTeams = _.pluck(docs.rows, 'value');
+          _.each(userTeams, function(team){
+            var lookupObj = _.findWhere(strTeams, {
+              _id: team._id
+            });
+            if (!_.isEmpty(lookupObj)) {
+              userTeamIds = _.union([team._id], lookupObj.children, userTeamIds);
+            } else {
+              userTeamIds = _.union([team._id], team.child_team_id, userTeamIds);
+            }
+          });
+          userTeamIds = _.uniq(userTeamIds);
+          loggers.get('models').info('Success: ' + uid + ' has ' + userTeamIds.length + ' accessible team(s) by relationship.');
+          return resolve(userTeamIds);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          return reject(formatErrMsg(err));
+        });
+    }
+  });
+};
+
 var associateActions = function() {
 };
 module.exports.associateTeams = function() {
