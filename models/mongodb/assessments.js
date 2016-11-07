@@ -170,10 +170,10 @@ var assessmentsSchema = new Schema({
 
 var Assessment = mongoose.model('assessments', assessmentsSchema);
 
-module.exports.addTeamAssessment = function(userEmail, data){
+module.exports.addTeamAssessment = function(userId, data){
   return new Promise(function(resolve, reject) {
-    if (lodash.isEmpty(userEmail) && lodash.isEmpty(data)) {
-      var err = {'error': 'User email and Assessment data is required'};
+    if (lodash.isEmpty(userId) && lodash.isEmpty(data)) {
+      var err = {'error': 'User ID and Assessment data is required'};
       loggers.get('models').error('Error: ' + err);
       reject(err);
     } else {
@@ -183,12 +183,12 @@ module.exports.addTeamAssessment = function(userEmail, data){
         reject(err);
       } else {
         var teamId = data['teamId'];
-        Users.isUserAllowed(userEmail, teamId)
+        Users.isUserAllowed(userId, teamId)
         .then(function(isAllowed){
           if (!isAllowed) {
             var err = {'error': 'Not allowed to add assessment for this team'};
             loggers.get('models').error('Error: ' + err);
-            reject(err);
+            return Promise.reject(err);
           } else {
             return true;
           }
@@ -198,18 +198,18 @@ module.exports.addTeamAssessment = function(userEmail, data){
           var error = newAssessmentData.validateSync();
           if (error) {
             loggers.get('models').error('Error: ' + error);
-            return reject(error);
+            return Promise.reject(error);
           } else {
-            newAssessmentData.save()
-            .then(function(result) {
-              return resolve(result);
-            })
-            .catch( /* istanbul ignore next */ function(err) {
-              /* cannot simulate MongoDB error during testing */
-              loggers.get('models').error('Error: ' + err.error);
-              return reject(err);
-            });
+            return newAssessmentData.save();
           }
+        })
+        .then(function(result) {
+          return resolve(result);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          /* cannot simulate MongoDB error during testing */
+          loggers.get('models').error('Error: ' + err.error);
+          return reject(err);
         });
       }
     }
@@ -256,10 +256,10 @@ module.exports.getAssessment = function(assessmentId){
   });
 };
 
-module.exports.updateTeamAssessment = function(userEmail, data){
+module.exports.updateTeamAssessment = function(userId, data){
   return new Promise(function(resolve, reject) {
-    if (lodash.isEmpty(data) || lodash.isEmpty(userEmail)) {
-      var msg = 'Assessment ID and user email is required';
+    if (lodash.isEmpty(data) || lodash.isEmpty(userId)) {
+      var msg = 'Assessment ID and user ID is required';
       msg={'error':msg};
       loggers.get('models').error('Error: ' + msg);
       return reject(msg);
@@ -271,12 +271,12 @@ module.exports.updateTeamAssessment = function(userEmail, data){
         return reject(msg);
       } else {
         var teamId = data['teamId'];
-        Users.isUserAllowed(userEmail, teamId)
+        Users.isUserAllowed(userId, teamId)
         .then(function(isAllowed) {
           if (!isAllowed) {
             var err = {'error': 'Not allowed to update assessment'};
             loggers.get('models').error('Error: ' + err);
-            reject(err);
+            return Promise.reject(err);
           } else {
             return true;
           }
@@ -298,24 +298,24 @@ module.exports.updateTeamAssessment = function(userEmail, data){
   });
 };
 
-module.exports.deleteAssessment = function(userEmail, assessmentId){
+module.exports.deleteAssessment = function(userId, assessmentId){
   return new Promise(function(resolve, reject) {
-    if (lodash.isEmpty(assessmentId) || lodash.isEmpty(userEmail)) {
-      var msg = 'Assessment ID and user email is required';
+    if (lodash.isEmpty(assessmentId) || lodash.isEmpty(userId)) {
+      var msg = 'Assessment ID and user ID is required';
       msg={'error':msg};
       loggers.get('models').error('Error: ' + msg);
       return reject(msg);
     } else {
-      Assessment.findOne({'_id': assessmentId}, {teamId: 1})
+      Assessment.findOne({'_id': assessmentId}).exec()
       .then( function(result) {
         var teamId = result['teamId'];
-        return Users.isUserAllowed(userEmail, teamId);
+        return Users.isUserAllowed(userId, teamId);
       })
       .then(function(isAllowed){
         if (!isAllowed) {
           var err = {'error': 'Not allowed to delete assessment'};
           loggers.get('models').error('Error: ' + err);
-          reject(err);
+          return Promise.reject(err);
         } else {
           return true;
         }
@@ -329,7 +329,7 @@ module.exports.deleteAssessment = function(userEmail, assessmentId){
       .catch( /* istanbul ignore next */ function(err) {
         /* cannot simulate MongoDB error during testing */
         var msg = err.message;
-        return reject(formatErrMsg(msg));
+        return reject(err);
       });
     }
   });
@@ -343,7 +343,19 @@ module.exports.getSubmittedAssessments = function() {
         loggers.get('models').verbose('Submitted assessments record retrieved.');
         resolve(body);
       })
-      .catch(function(err) {
+      .catch( /* istanbul ignore next */ function(err) {
+        reject(err);
+      });
+  });
+};
+
+module.exports.deleteByCloudantId = function(cloudantId) {
+  return new Promise(function(resolve, reject) {
+    Assessment.remove({cloudantId: cloudantId})
+      .then(function(body) {
+        resolve(body);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
         reject(err);
       });
   });

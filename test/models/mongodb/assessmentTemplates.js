@@ -3,7 +3,10 @@ var expect = chai.expect;
 var Promise = require('bluebird');
 var validTemplates = require('./testData/validTemplates');
 var assessmentTemplates = require('../../../models/mongodb/assessmentTemplates');
-
+var mongoose = require('mongoose');
+var _ = require('underscore');
+var Schema = mongoose.Schema;
+var deleteId = Schema.Types.ObjectId;
 
 var testData = {
   initTemplate : function() {
@@ -49,6 +52,7 @@ describe('Assessment Template model [create]', function() {
   before(function(done){
     var promiseArray = [];
     promiseArray.push(assessmentTemplates.deleteByCloudantId(testData.initTemplate().cloudantId));
+    promiseArray.push(assessmentTemplates.deleteByCloudantId(testData.validTemplates().cloudantId));
     promiseArray.push(assessmentTemplates.deleteByCloudantId('cloudant_id_inactive'));
     promiseArray.push(assessmentTemplates.deleteByCloudantId('cloudant_id_active'));
     Promise.all(promiseArray)
@@ -151,13 +155,18 @@ describe('Assessment Template model [get]', function() {
         expect(result).to.have.property('_id');
         expect(result).to.have.property('status');
         expect(result.status).to.be.equal('active');
-        var tId = result['_id'];
+        deleteId = result['_id'];
         return assessmentTemplates.get(null, 'active');
       })
       .then(function(result) {
-        expect(result[0]['status']).to.be.equal('active');
-        var tId = result[0]['_id'];
-        return assessmentTemplates.delete(tId);
+        expect(result).to.be.a('array');
+        tAssess = _.find(result, function(assessment){
+          if (assessment._id.toString() == deleteId.toString()) {
+            return assessment;
+          }
+        });
+        expect(tAssess['status']).to.be.equal('active');
+        return assessmentTemplates.delete(tAssess['_id']);
       })
       .then(function(result) {
         expect(result.result.ok).to.be.equal(1);
@@ -174,13 +183,18 @@ describe('Assessment Template model [get]', function() {
         expect(result).to.have.property('_id');
         expect(result).to.have.property('status');
         expect(result.status).to.be.equal('inactive');
-        var tId = result['_id'];
+        deleteId = result['_id'];
         return assessmentTemplates.get(null, 'inactive');
       })
       .then(function(result) {
-        expect(result[0]['status']).to.be.equal('inactive');
-        var tId = result[0]['_id'];
-        return assessmentTemplates.delete(tId);
+        expect(result).to.be.a('array');
+        tAssess = _.find(result, function(assessment){
+          if (assessment._id.toString() == deleteId.toString()) {
+            return assessment;
+          }
+        });
+        expect(tAssess['status']).to.be.equal('inactive');
+        return assessmentTemplates.delete(tAssess['_id']);
       })
       .then(function(result) {
         expect(result.result.ok).to.be.equal(1);
@@ -205,7 +219,7 @@ describe('Assessment Template model [get]', function() {
       })
       .then(function(result) {
         expect(result).to.be.a('array');
-        var deleteTpl = [assessmentTemplates.delete(result[0]['_id']), assessmentTemplates.delete(result[1]['_id'])];
+        var deleteTpl = [assessmentTemplates.deleteByCloudantId('cloudant_id_active'), assessmentTemplates.deleteByCloudantId('cloudant_id_inactive')];
         return Promise.all(deleteTpl);
       })
       .then(function() {
