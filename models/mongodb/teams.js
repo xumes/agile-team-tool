@@ -621,7 +621,7 @@ module.exports.getTeamsByUserId = function(uid, proj) {
 //this uses user email
 module.exports.getUserTeams = function(memberEmail) {
   return new Promise(function(resolve, reject){
-    Team.find({members: {$elemMatch:{email:memberEmail}}}, {pathId:1})
+    Team.find({members: {$elemMatch:{email:memberEmail}}, docStatus:{$ne:'delete'}}, {pathId:1})
       .then(function(teams){
         var pathIds = _.pluck(teams, 'pathId');
 
@@ -636,7 +636,36 @@ module.exports.getUserTeams = function(memberEmail) {
       })
       .then(function(q){
         if (q==='') resolve([]);//prevent matching on ''
-        return Team.distinct('_id', {path:new RegExp(q)}).exec();
+        return Team.distinct('_id', {'$or':[{path:new RegExp(q)}, {pathId:new RegExp(q)}]}).exec();
+      })
+      .then(function(result){
+        resolve(result);
+      })
+      .catch(function(err){
+        reject(err);
+      });
+  });
+};
+
+module.exports.getUserTeamsByUserId = function(uid) {
+  return new Promise(function(resolve, reject){
+    Team.find({members: {$elemMatch:{userId:uid}}, docStatus:{$ne:'delete'}}, {pathId:1})
+      .then(function(teams){
+        var pathIds = _.pluck(teams, 'pathId');
+
+        //build a query string to match all, ex: a|b|c to query for all docs with
+        //paths a or b or c
+        var q = '';
+        _.each(pathIds, function(pId){
+          q += pId + '|';
+        });
+        q = q.slice(0, -1); //remove last |
+        console.log(uid, 'q', q);
+        return q;
+      })
+      .then(function(q){
+        if (q==='') resolve([]);//prevent matching on ''
+        return Team.distinct('_id', {'$or':[{path:new RegExp(q)}, {pathId:new RegExp(q)}]}).exec();
       })
       .then(function(result){
         resolve(result);

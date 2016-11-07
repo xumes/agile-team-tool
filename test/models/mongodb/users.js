@@ -10,43 +10,91 @@ var testUser = {
   'email': 'testuser@test.com',
   'adminAccess': 'none'
 };
-var testTeam = {
+var testParentTeam = {
   'name': 'mongodb-test-team-01',
-  'members': {
+  'members': [{
     'name': 'test user',
     'userId': 'TEST1234567',
     'email': 'testuser@test.com'
-  },
+  }],
   'createdByUserId': 'TEST1234567',
   'createdBy': 'testuser@test.com'
 };
-var newTeamId = Schema.Types.ObjectId;
-var testUserDocId = Schema.Types.ObjectId;
+var testAdminUser = {
+  'userId': 'ADMIN1234567',
+  'name': 'admin test user',
+  'email': 'admintestuser@test.com',
+  'adminAccess': 'full'
+};
+var testChildUser = {
+  'userId': 'CHILD1234567',
+  'name': 'child test user',
+  'email': 'childtestuser@test.com',
+  'adminAccess': 'none'
+};
+var testChildTeam = {
+  'name': 'mongodb-test-child-team-01',
+  'members': [{
+    'name': 'admin test user',
+    'userId': 'ADMIN1234567',
+    'email': 'admintestuser@test.com'
+  }, {
+    'name': 'child test user',
+    'userId': 'CHILD1234567',
+    'email': 'childtestuser@test.com'
+  }],
+  'createdByUserId': 'ADMIN1234567',
+  'createdBy': 'admintestuser@test.com'
+};
+var newParentTeamId = Schema.Types.ObjectId;
+var newChildTeamId = Schema.Types.ObjectId;
 
 describe('Users model [create]', function() {
   before(function(done){
     var promiseArray = [];
     promiseArray.push(users.deleteUser(testUser.userId));
-    promiseArray.push(teams.deleteTeamByName(testTeam.name));
+    promiseArray.push(users.deleteUser(testAdminUser.userId));
+    promiseArray.push(users.deleteUser(testChildUser.userId));
+    promiseArray.push(teams.deleteTeamByName(testParentTeam.name));
+    promiseArray.push(teams.deleteTeamByName(testChildTeam.name));
     Promise.all(promiseArray)
       .then(function(){
-        return teams.createTeam(testTeam);
+        return teams.createTeam(testParentTeam);
       })
       .then(function(result){
-        newTeamId = result._id;
+        newParentTeamId = result._id;
+        testChildTeam.path = ','+result.pathId+',';
+        return teams.createTeam(testChildTeam);
+      })
+      .then(function(result){
+        newChildTeamId = result._id;
         done();
       })
       .catch(function(){
         done();
       });
   });
-
   it('return successful for adding a user', function(done) {
     users.create(testUser)
       .then(function(result) {
-        testUserDocId = result._id;
         expect(result).to.be.a('object');
         expect(result.userId).to.equal('TEST1234567');
+        done();
+      });
+  });
+  it('return successful for adding an admin user', function(done) {
+    users.create(testAdminUser)
+      .then(function(result) {
+        expect(result).to.be.a('object');
+        expect(result.userId).to.equal('ADMIN1234567');
+        done();
+      });
+  });
+  it('return successful for adding an child user', function(done) {
+    users.create(testChildUser)
+      .then(function(result) {
+        expect(result).to.be.a('object');
+        expect(result.userId).to.equal('CHILD1234567');
         done();
       });
   });
@@ -79,6 +127,22 @@ describe('Users model [findUserByEmail]', function() {
         done();
       });
   });
+  it('return user info by searching admin user email', function(done) {
+    users.findUserByEmail(testAdminUser.email)
+      .then(function(result) {
+        expect(result).to.be.a('object');
+        expect(result.userId).to.equal('ADMIN1234567');
+        done();
+      });
+  });
+  it('return user info by searching child user email', function(done) {
+    users.findUserByEmail(testChildUser.email)
+      .then(function(result) {
+        expect(result).to.be.a('object');
+        expect(result.userId).to.equal('CHILD1234567');
+        done();
+      });
+  });
 });
 
 describe('Users model [findUserByUserId]', function() {
@@ -90,11 +154,27 @@ describe('Users model [findUserByUserId]', function() {
         done();
       });
   });
-  it('return user info by searching user email', function(done) {
+  it('return user info by searching user userId', function(done) {
     users.findUserByUserId(testUser.userId)
       .then(function(result) {
         expect(result).to.be.a('object');
         expect(result.userId).to.equal('TEST1234567');
+        done();
+      });
+  });
+  it('return user info by searching admin user userId', function(done) {
+    users.findUserByUserId(testAdminUser.userId)
+      .then(function(result) {
+        expect(result).to.be.a('object');
+        expect(result.userId).to.equal('ADMIN1234567');
+        done();
+      });
+  });
+  it('return user info by searching child user userID', function(done) {
+    users.findUserByUserId(testChildUser.userId)
+      .then(function(result) {
+        expect(result).to.be.a('object');
+        expect(result.userId).to.equal('CHILD1234567');
         done();
       });
   });
@@ -106,14 +186,25 @@ describe('Users model [getUsersInfo]', function() {
       .then(function(result) {
         expect(result).to.be.a('array');
         expect(result.length).not.to.equal(0);
+        expect(result[0]).to.have.property('userId');
+        expect(result[0]).to.have.property('email');
+        expect(result[0]).to.have.property('name');
+        expect(result[0]).to.have.property('adminAccess');
         done();
       });
   });
 });
 
 describe('Users model [isUserAllowed]', function() {
-  it('return ture if the user has access', function(done) {
-    users.isUserAllowed(testUser.userId, newTeamId)
+  it('return true if the user has access', function(done) {
+    users.isUserAllowed(testUser.userId, newParentTeamId)
+      .then(function(result) {
+        expect(result).to.equal(true);
+        done();
+      });
+  });
+  it('return true if the user has no access to child team', function(done) {
+    users.isUserAllowed(testUser.userId, newChildTeamId)
       .then(function(result) {
         expect(result).to.equal(true);
         done();
@@ -121,6 +212,41 @@ describe('Users model [isUserAllowed]', function() {
   });
   it('return false if the user has access', function(done) {
     users.isUserAllowed(testUser.userId, '581b72897bc85c73d8254a48')
+      .then(function(result) {
+        expect(result).to.equal(false);
+        done();
+      });
+  });
+  it('return true for admin user access', function(done) {
+    users.isUserAllowed(testAdminUser.userId, newParentTeamId)
+      .then(function(result) {
+        expect(result).to.equal(true);
+        done();
+      });
+  });
+  it('return true for admin user access to child team', function(done) {
+    users.isUserAllowed(testAdminUser.userId, newChildTeamId)
+      .then(function(result) {
+        expect(result).to.equal(true);
+        done();
+      });
+  });
+  it('return true for admin user access', function(done) {
+    users.isUserAllowed(testAdminUser.userId, '581b72897bc85c73d8254a48')
+      .then(function(result) {
+        expect(result).to.equal(true);
+        done();
+      });
+  });
+  it('return true for child user access', function(done) {
+    users.isUserAllowed(testChildUser.userId, newChildTeamId)
+      .then(function(result) {
+        expect(result).to.equal(true);
+        done();
+      });
+  });
+  it('return false for child user access to parent team', function(done) {
+    users.isUserAllowed(testChildUser.userId, newParentTeamId)
       .then(function(result) {
         expect(result).to.equal(false);
         done();
@@ -136,11 +262,13 @@ describe('Users model [delete]', function() {
         done();
       });
   });
-
   after(function(done){
     var promiseArray = [];
     promiseArray.push(users.deleteUser(testUser.userId));
-    promiseArray.push(teams.deleteTeamByName(testTeam.name));
+    promiseArray.push(users.deleteUser(testAdminUser.userId));
+    promiseArray.push(users.deleteUser(testChildUser.userId));
+    promiseArray.push(teams.deleteTeamByName(testParentTeam.name));
+    promiseArray.push(teams.deleteTeamByName(testChildTeam.name));
     Promise.all(promiseArray)
       .then(function(results){
         done();
