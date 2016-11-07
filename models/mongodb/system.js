@@ -89,6 +89,6 @@ var system = {
       });
     });
   },
-}
+};
 
 module.exports = system;
