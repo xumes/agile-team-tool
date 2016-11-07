@@ -18,6 +18,7 @@ var HomeIterSection = React.createClass({
       $('#contentSpinner').hide();
       $('#bodyContent').show();
       $('#iterationFallBox').show();
+      $('#assessmentFallBox').show();
       var teamId = this.props.loadDetailTeam.team._id;
       var iterationData = this.props.loadDetailTeam.iterations;
       var teamAccess = this.props.loadDetailTeam.access;

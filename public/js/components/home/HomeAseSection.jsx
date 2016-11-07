@@ -22,7 +22,6 @@ var HomeAseSection = React.createClass({
       var teamAccess = this.props.loadDetailTeam.access;
       assessmentHandler.teamAssessmentListHander(teamId, assessmentData, teamAccess);
     } else {
-      $('#assessmentFallBox').show();
       $('#nsquad_assessment_card').show();
       var teamId = this.props.loadDetailTeam.team._id;
       var teamName = this.props.loadDetailTeam.team.name;

@@ -189,6 +189,7 @@ var HomeTeamTree = React.createClass({
     $('#iterationFallBox').hide();
     $('#squad_team_scard').hide();
     $('#nsquad_team_scard').hide();
+    $('#iterationFallBox').hide();
     $('#assessmentFallBox').hide();
     $('#nsquad_assessment_card').hide();
     $('#squad_assessment_card').hide();
