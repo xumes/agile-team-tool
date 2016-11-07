@@ -19,7 +19,8 @@ module.exports = function(app, includes) {
     var json = {
       'pageTitle': 'Logout',
       'googleAnalyticsKey': settings.googleAnalyticsKey,
-      'message': 'You have succesfully logged out, please close this browser window.'
+      'message': 'You have succesfully logged out, please close this browser window.',
+      'ibmNPSKey': settings.ibmNPSKey
     };
     render(req, res, 'status', json);
   };

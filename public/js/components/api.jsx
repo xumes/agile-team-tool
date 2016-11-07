@@ -238,3 +238,61 @@ module.exports.getAssessmentTemplate = function(teamId, status){
     });
   });
 };
+
+module.exports.getIterationInfo = function(id) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/iteration/current/' + encodeURIComponent(id);
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.getIterations = function(teamId) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/iteration/searchTeamIteration?id=' + encodeURIComponent(teamId);
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.addIteration = function(data) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/iteration';
+    var req = $.ajax({
+      type: 'POST',
+      url: url,
+      data: data
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.updateIteration = function(data) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/iteration/'+encodeURIComponent(data._id);
+    var req = $.ajax({
+      type: 'PUT',
+      url: url,
+      data: data
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};

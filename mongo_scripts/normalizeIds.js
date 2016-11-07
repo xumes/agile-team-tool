@@ -1,10 +1,10 @@
 'use strict';
-var _           = require('underscore');
-var cloudantDb  = require('./data');
+var _ = require('underscore');
+var cloudantDb = require('./data');
 var MongoClient = require('mongodb').MongoClient;
-var ObjectID    = require('mongodb').ObjectID;
-var assert      = require('assert');
-var async       = require('async');
+var ObjectID = require('mongodb').ObjectID;
+var assert = require('assert');
+var async = require('async');
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 
@@ -23,20 +23,32 @@ MongoClient.connect(creds.url, function(err, db) {
       var teamCursor = db.collection('teams').find();
       teamCursor.each(function(err, doc) {
         if (err) callback(err);
-        if (_.isEmpty(doc)){ console.log('done mapping teams'); callback(null); return;}
+        if (_.isEmpty(doc)) {
+          console.log('done mapping teams');
+          callback(null);
+          return;
+        }
         teamMap[doc.cloudantId] = doc;
       });
     },
     function(callback) {
       var col = db.collection('iterations');
-      var iterCursor = db.collection('iterations').find({teamId:{$ne:null}});
+      var iterCursor = db.collection('iterations').find({
+        teamId: {
+          $ne: null
+        }
+      });
       iterCursor.each(function(err, doc) {
         if (err) callback(err);
-        if (_.isEmpty(doc)){ console.log('done with iteration updates'); callback(null); return;}
+        if (_.isEmpty(doc)) {
+          console.log('done with iteration updates');
+          callback(null);
+          return;
+        }
 
         var cloudantId = doc.teamId;
 
-        if (_.isEmpty(teamMap[cloudantId])){
+        if (_.isEmpty(teamMap[cloudantId])) {
           console.log(cloudantId + " isn't a team. setting this iteration teamId to null..");
           doc.teamId = undefined;
           var result = col.save(doc);
@@ -51,22 +63,37 @@ MongoClient.connect(creds.url, function(err, db) {
     function(callback) {
       //delete all cloudantId keys from iteration collection
       db.collection('iterations')
-        .update({}, {$unset: {cloudantId:1}} , {multi: true},
+        .update({}, {
+          $unset: {
+            cloudantId: 1
+          }
+        }, {
+          multi: true
+        },
         function(err, results) {
           console.log('done removing cloudantId from iterations collection');
           callback(null);
         });
     },
+
     function(callback) {
       var col = db.collection('assessments');
-      var assmntCursor = db.collection('assessments').find({teamId:{$ne:null}});
+      var assmntCursor = db.collection('assessments').find({
+        teamId: {
+          $ne: null
+        }
+      });
       assmntCursor.each(function(err, doc) {
         if (err) callback(err);
-        if (_.isEmpty(doc)){console.log('done with assessment updates'); callback(null); return;}
+        if (_.isEmpty(doc)) {
+          console.log('done with assessment updates');
+          callback(null);
+          return;
+        }
 
         var cloudantId = doc.teamId;
 
-        if (_.isEmpty(teamMap[cloudantId])){
+        if (_.isEmpty(teamMap[cloudantId])) {
           console.log(cloudantId + " isn't a team. setting this assessment teamId to null..");
           doc.teamId = undefined;
           var result = col.save(doc);
@@ -80,7 +107,13 @@ MongoClient.connect(creds.url, function(err, db) {
     },
     function(callback) {
       db.collection('assessments')
-        .update({}, {$unset: {cloudantId:1}} , {multi: true},
+        .update({}, {
+          $unset: {
+            cloudantId: 1
+          }
+        }, {
+          multi: true
+        },
         function(err, results) {
           console.log('done removing cloudantId from assessments collection');
           callback(null);
@@ -88,7 +121,13 @@ MongoClient.connect(creds.url, function(err, db) {
     },
     function(callback) {
       db.collection('teams')
-        .update({}, {$unset: {cloudantId:1}} , {multi: true},
+        .update({}, {
+          $unset: {
+            cloudantId: 1
+          }
+        }, {
+          multi: true
+        },
         function(err, results) {
           console.log('done removing cloudantId from teams collection');
           callback(null);

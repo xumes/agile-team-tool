@@ -1,24 +1,27 @@
 'use strict';
-var _          = require('underscore');
+var _ = require('underscore');
 var cloudantDb = require('./data');
 var MongoClient = require('mongodb').MongoClient;
-var assert     = require('assert');
+var assert = require('assert');
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
-var templates = _.filter(cloudantDb.rows, function(row){ return row.doc.type === 'ref_matassessment'; });
+var templates = _.filter(cloudantDb.rows, function(row) {
+  return row.doc.type === 'ref_matassessment';
+});
 var templates = _.pluck(templates, 'doc');
 
 var util = require('./util.js');
 
 var mongoTemplates = [];
-_.each(templates, function(doc){
-  doc = _.mapObject(doc, function(val){ return _.isEmpty(val) ? null : val; });
+_.each(templates, function(doc) {
+  doc = _.mapObject(doc, function(val) {
+    return _.isEmpty(val) ? null : val;
+  });
   doc = JSON.stringify(doc);
   var mappedDoc = JSON.parse(doc, function(k, v) {
-    if (k === '_rev' || k === 'type'){
+    if (k === '_rev' || k === 'type') {
       console.log('skipping: ' + k);
-    }
-    else if (k === '_id')
+    } else if (k === '_id')
       this.cloudantId = v;
     else if (k === 'atma_version')
       this.version = parseInt(v);
@@ -65,7 +68,7 @@ MongoClient.connect(creds.url, function(err, db) {
   console.log('Connected successfully to server');
   db.collection('assessmentTemplates')
     .drop()
-    .then(function(){
+    .then(function() {
       db.collection('assessmentTemplates').insertMany(mongoTemplates, function(err, r) {
         assert.equal(null, err);
         console.log('Done!  ' + JSON.stringify(r.result));

@@ -171,7 +171,7 @@ function plotAssessmentSeries(teamAssessments) {
 
       }
 
-      var submitDate = fmDate(assessmentsToPlot[i]['submittedDate']);
+      var submitDate = moment.utc(assessmentsToPlot[i]['submittedDate']).format('DD MMM YYYY'); //fmDate(assessmentsToPlot[i]['submittedDate']);
       chartData['categories'].push(submitDate);
       chartData['targetScore'].push(isNaN(parseFloat(results[j]['targetScore'])) ? 0 : parseFloat(results[j]['targetScore']));
       chartData['currentScore'].push(isNaN(parseFloat(results[j]['currentScore'])) ? 0 : parseFloat(results[j]['currentScore']));
@@ -179,19 +179,19 @@ function plotAssessmentSeries(teamAssessments) {
 
     }
   }
-  // alert('sections done');
+
   // plot the line graph of selected maturity assessments
   $.each(chartSeries, function(index, chartData) {
     $('#' + chartData['prefixId'] + '_Chart').highcharts({
       chart: {
         type: 'line', width: 380
       },
-
       title: {
         style: {
-          'fontSize': '14px'
+          fontSize: '13px',
+          fontWeight: 'bold'
         },
-        text: 'Overall Maturity for ' + chartData['title']
+        text: chartData['title'] //'Overall Maturity for ' + chartData['title']
       },
 
       xAxis: {
@@ -221,34 +221,45 @@ function plotAssessmentSeries(teamAssessments) {
       },
 
       tooltip: {
-        shared: true,
-        //pointFormat : '<span style="color:{series.color}">{series.name}: <b>{point.y:,.1f}</b><br/>'
         formatter: function() {
-          var tt = this.x + '<br/>';
-          for (var i = 0; i < this.points.length; i++) {
-            tt = tt + "<label style='color:" + this.points[i].color + ";'>" + this.points[i].series.name + '</label>: ' + "<label style='font-weight: bold;'>" + this.points[i].y + '</label><br/>';
+          var tt = '<b>' + this.key + '<b><br>';
+          var point = this.point.index;
+          for(i=0;i < this.series.chart.series.length; i++) {
+            if (this.series.chart.series[i].visible)
+              tt += 
+                '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';        
           }
-          tt = tt + "<i style='font-size: 8pt;'>Select to see practice results</i>";
+          tt = tt + "<i style='font-size: 8pt;'>Click to see practice results</i>";
           return tt;
-        },
-        useHTML: true,
-        style: {
-          'fontSize': '11px'
         }
       },
 
       legend: {
         align: 'center',
         verticalAlign: 'bottom',
-        layout: 'horizontal'
+        layout: 'horizontal',
+        itemStyle: {fontWeight: 'normal'}
       },
 
       credits: {
         enabled: false
       },
 
+      plotOptions: {
+        series: {
+          allowPointSelect: true,
+          marker: {
+            states: {
+              select: {
+                fillColor: '#8CD211', lineColor: '#8CD211'
+              }
+            }
+          }
+        }
+      },
+
       series: [{
-        name: 'Current',
+        name: 'Overall maturity',
         data: chartData['currentScore'],
         point: {
             // click event callback to render spider graph data of practices for the particular series point.
@@ -258,21 +269,7 @@ function plotAssessmentSeries(teamAssessments) {
             }
           }
         }
-      }
-        /*, {
-        						name : "Target overall",
-        						data : chartData["targetScore"],
-        						point : {
-        							// click event callback to render spider graph data of  practices for the particular series point.
-        							events : {
-        								click : function() {
-        									console.log(this);
-        									plotAssessment(this.index, chartData);
-        								}
-        							}
-        						}
-        					}*/
-      ]
+      }]
     });
   });
 
@@ -292,7 +289,9 @@ function plotAssessment(index, chartData) {
   spiderData['currentScore'] = [];
   var practices = chartData['assessmentResult'][index];
   for (var i = 0; i < practices.length; i++) {
-    spiderData['categories'].push(practices[i]['practiceName']);
+    var practiceName = practices[i]['practiceName'].toLowerCase();
+    practiceName = practiceName.replace(practiceName[0], practiceName[0].toUpperCase());
+    spiderData['categories'].push(practiceName);
     spiderData['targetScore'].push(isNaN(parseFloat(practices[i]['targetScore'])) ? 0 : parseFloat(practices[i]['targetScore']));
     spiderData['currentScore'].push(isNaN(parseFloat(practices[i]['currentScore'])) ? 0 : parseFloat(practices[i]['currentScore']));
   }
@@ -306,11 +305,10 @@ function plotAssessment(index, chartData) {
       type: 'line', width: 380,
       events: {
         load: function() {
-          var text = this.renderer.text('Select an overall score on the adjacent graph to view practice results.', 30, 295)
+          var text = this.renderer.text('Select an overall score on the adjacent graph to view practice results.', 25, 307)
             .css({
               width: '450px',
-              color: '#222',
-              fontSize: '10px'
+              color: '#222'
             }).add();
         }
       }
@@ -318,7 +316,8 @@ function plotAssessment(index, chartData) {
 
     title: {
       style: {
-        'fontSize': '13px'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: spiderData['title']
     },
@@ -359,14 +358,23 @@ function plotAssessment(index, chartData) {
     },
 
     tooltip: {
-      shared: true,
-      pointFormat: '<span style="color:{series.color}">{series.name}: <b>{point.y:,.1f}</b><br/>'
+      formatter: function() {
+        var tt = '<b>' + this.key + '<b><br>';
+        var point = this.point.index;
+        for(i=0;i < this.series.chart.series.length; i++) {
+          if (this.series.chart.series[i].visible)
+            tt += 
+              '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';        
+        }
+        return tt;
+      }
     },
 
     legend: {
       align: 'center',
       verticalAlign: 'bottom',
-      layout: 'horizontal'
+      layout: 'horizontal',
+      itemStyle: {fontWeight: 'normal'}
     },
 
     credits: {
@@ -410,7 +418,7 @@ function createChartSection(prefixId) {
 
 module.exports.assessmentParentRollup = function(snapshotData){
   var assessmentData = snapshotData.assessmentData;
-  var date = moment(snapshotData.lastUpdate).format('MM DD, YYYY');
+  var date = moment(snapshotData.lastUpdate).format('DD MMM YYYY');
   //set div min height
   $('#assessmentTrend').attr('style','min-height: 380px;');
   $('#assessmentEval').attr('style','min-height: 380px;');
@@ -438,12 +446,12 @@ module.exports.assessmentParentRollup = function(snapshotData){
   teamFoundational.color = '#7ab4ee';
 
   var teamDevOps = new Object();
-  teamDevOps.name = 'Project teams (DevOps practices)';
+  teamDevOps.name = 'DevOps practices';
   teamDevOps.data = [];
   teamDevOps.color = '#434348';
 
   var teamOperations = new Object();
-  teamOperations.name = 'Operations teams';
+  teamOperations.name = 'Operations teams (Foundational practices)';
   teamOperations.data = [];
   teamOperations.color = '#808080';
 
@@ -495,11 +503,11 @@ module.exports.assessmentParentRollup = function(snapshotData){
     teamOperations.data.push(tOperationsData);
   }
 
-  loadBarAssessmentEvaluation('assessmentEval', 'Frequency of Maturity Assessment Evaluations as of '+date,'column', graphCategory, teamLt120Days, teamGt120Days, teamNoAssessment, 100);
-  loadLineMaturityTrend('assessmentTrend', 'Maturity Assessment Trends Per Month','line', graphCategory, teamFoundational, teamDevOps, teamOperations, 4);
+  loadBarAssessmentEvaluation('assessmentEval', date, graphCategory,teamLt120Days, teamGt120Days, teamNoAssessment, 100);
+  loadLineMaturityTrend('assessmentTrend', graphCategory, teamFoundational, teamDevOps, teamOperations, 4);
 };
 
-function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, seriesObj2, seriesObj3, yMax) {
+function loadBarAssessmentEvaluation(id, asOfDate, categories, seriesObj1, seriesObj2, seriesObj3, yMax) {
   Highcharts.setOptions({
     lang: {
       thousandsSep: ''
@@ -508,33 +516,44 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
 
   new Highcharts.Chart({
     chart: {
-      type: type,
+      type: 'column',
       renderTo: id,
       marginLeft: 60,
-      width:390
+      width:390,
+      events: {
+        load: function(event) {
+          // modify the legend symbol 
+          $('#' +id+' .highcharts-legend-item rect').attr('width', '7').attr('height', '7').attr('x', '5').attr('y', '7');
+        }
+      }
     },
     lang: {
-      noData: 'No results reported'
+      noData: 'No data to display'
     },
     noData: {
       style: {
-        fontWeight: 'bold',
+        fontWeight: 'normal',
         fontSize: '12px',
         color: '#303030'
       }
     },
     title: {
       style: {
-        'fontSize': '15px'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
-      text: title,
+      text:  'Frequency of Maturity Assessment Evaluations',
       x: 23
+    },
+    subtitle: {
+      style: {
+        fontSize: '13px'
+      }, y: 27,
+      text: '(as of ' + asOfDate + ')'
     },
     legend: {
       symbolRadius: 0,
-      itemStyle: {
-        fontSize: '12px'
-      }
+      itemStyle: {fontWeight: 'normal'}
     },
     xAxis: {
       labels: {
@@ -545,7 +564,8 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
       title: {
         text: 'Months'
       },
-      categories: categories
+      categories: categories,
+      tickmarkPlacement: 'on'
     },
     yAxis: {
       min: 0,
@@ -571,15 +591,14 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
       }
     },
     tooltip: {
-      shared: true,
       formatter: function() {
-        var formatResult = '<b>' + this.points[0].key + ' Squads</b><br>';
-        var serName = '';
-        for (var i = 0; i < this.points.length; i++) {
-          if (serName != this.points[i].series.name) {
-            formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">\u25A0</span>' +  this.points[i].y + ' ('+ this.points[i].percentage.toFixed(1)+' % of teams)<br/>';
-          }
-          serName = this.points[i].series.name;
+        var formatResult = '<b>' + this.key + '<b><br>';
+        var point = this.point.index;
+        for(i=0;i < this.series.chart.series.length; i++) {
+          var percentage = this.series.chart.series[i].data[point].percentage || 0;
+          if (this.series.chart.series[i].visible && this.series.chart.series[i].data[point].y > 0)
+            formatResult += 
+              '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].data[point].y + ' (' + percentage.toFixed(1) + ' % of teams)<br/>';      
         }
         return formatResult;
       }
@@ -618,39 +637,42 @@ function loadBarAssessmentEvaluation(id, title, type, categories, seriesObj1, se
   });
 }
 
-function loadLineMaturityTrend(id, title, type, categories, seriesObj1, seriesObj2, seriesObj3, yMax) {
-
+function loadLineMaturityTrend(id, categories, seriesObj1, seriesObj2, seriesObj3, yMax) {
   new Highcharts.Chart({
     chart: {
-      type: type,
+      type: 'line',
       renderTo: id,
       marginLeft: 65,
       width:390
     },
     lang: {
-      noData: 'No results reported'
+      noData: 'No data to display'
     },
     noData: {
       style: {
-        fontWeight: 'bold',
+        fontWeight: 'normal',
         fontSize: '12px',
         color: '#303030'
       }
     },
     title: {
       style: {
-        'fontSize': '15px'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
-      text: title,
-      x: 28
+      text: 'Maturity Assessment Trends Per Month',
+    },
+    subtitle: {
+      style: {
+        fontSize: '13px'
+      }, y: 27,
+      text: '(based on most recent assessments)'
     },
     legend: {
       align: 'center',
       verticalAlign: 'bottom',
       layout: 'vertical',
-      itemStyle: {
-        fontSize: '12px'
-      }
+      itemStyle: {fontWeight: 'normal'}
     },
     xAxis: {
       labels: {
@@ -669,7 +691,7 @@ function loadLineMaturityTrend(id, title, type, categories, seriesObj1, seriesOb
       max: yMax,
       tickInterval: .5,
       title: {
-        text: 'Average maturity level based on most recent assessments',
+        text: 'Average maturity level',
         style: {
           width: 170
         },
@@ -677,35 +699,13 @@ function loadLineMaturityTrend(id, title, type, categories, seriesObj1, seriesOb
       }
     },
     tooltip: {
-      shared: true,
       formatter: function() {
-        var formatResult = '<b>' + this.points[0].key + ' Maturity Levels</b><br>';
-        var serName = '';
-        for (var i = 0; i < this.points.length; i++) {
-          if (serName != this.points[i].series.name) {
-            var symbol = '';
-            if ( this.points[i].series.symbol ) {
-              switch ( this.points[i].series.symbol ) {
-                case 'circle':
-                  symbol = '\u25CF';
-                  break;
-                case 'diamond':
-                  symbol = '\u25C6';
-                  break;
-                case 'square':
-                  symbol = '\u25A0';
-                  break;
-                case 'triangle':
-                  symbol = '\u25B2';
-                  break;
-                case 'triangle-down':
-                  symbol = '\u25BC';
-                  break;
-              }
-            }
-            formatResult = formatResult + '<span style="color:' + this.points[i].series.color + '">'+symbol+'</span>'+ this.points[i].y + ' ('+ this.points[i].point.squads+' squads)<br/>';
-          }
-          serName = this.points[i].series.name;
+        var formatResult = '<b>' + this.key + '<b><br>';
+        var point = this.point.index;
+        for(i=0;i < this.series.chart.series.length; i++) {
+          if (this.series.chart.series[i].visible)
+            formatResult += 
+              '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].data[point].y + ' ('+ this.series.chart.series[i].data[point].squads + ' squads)<br/>';       
         }
         return formatResult;
       }
@@ -736,4 +736,27 @@ function loadLineMaturityTrend(id, title, type, categories, seriesObj1, seriesOb
       enabled: false
     }
   });
+}
+
+function getCharacter(symbol) {
+  switch (symbol) {
+    case 'circle':
+      symbol = '\u25CF';
+      break;
+    case 'diamond':
+      symbol = '\u25C6';
+      break;
+    case 'square':
+      symbol = '\u25A0';
+      break;
+    case 'triangle':
+      symbol = '\u25B2';
+      break;
+    case 'triangle-down':
+      symbol = '\u25BC';
+      break;
+    default: 
+      symbol = '\u25A0';
+  }
+  return symbol;
 }

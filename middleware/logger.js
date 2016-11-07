@@ -80,19 +80,19 @@ winston.loggers.add('model-sanpshot', {
   }
 });
 
+winston.loggers.add('model-apikeys', {
+  console: {
+    level: logLevel,
+    colorize: logColors,
+    label: 'model-apikeys'
+  }
+});
+
 winston.loggers.add('cache', {
   console: {
     level: logLevel,
     colorize: logColors,
     label: 'cache'
-  }
-});
-
-winston.loggers.add('model-sanpshot', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'model-sanpshot'
   }
 });
 

@@ -7,18 +7,18 @@ jQuery(function($) {
 
   function resetUserInfo(user) {
     return userInfo = {
-        //id: not defined in ldap object,
-        'uid': user.ldap.uid,
-        'building': user.ldap.buildingName,
-        //is-employee: not defined in ldap object,
-        'bio': user.ldap.jobresponsibilities,
-        //location: not defined in ldap object,
-        'email': user.ldap.preferredIdentity,
-        'name': user.ldap.hrFirstName + ' ' + user.ldap.hrLastName,
-        'office-phone': user.ldap.telephoneNumber,
-        //org-title: not defined in ldap object,
-        'notes-id': user.ldap.notesId
-      };
+      //id: not defined in ldap object,
+      'uid': user.ldap.uid,
+      'building': user.ldap.buildingName,
+      //is-employee: not defined in ldap object,
+      'bio': user.ldap.jobresponsibilities,
+      //location: not defined in ldap object,
+      'email': user.ldap.preferredIdentity,
+      'name': user.ldap.hrFirstName + ' ' + user.ldap.hrLastName,
+      'office-phone': user.ldap.telephoneNumber,
+      //org-title: not defined in ldap object,
+      'notes-id': user.ldap.notesId
+    };
   }
 
   function getSquadTeam(filter, callback){
@@ -66,18 +66,17 @@ jQuery(function($) {
         getSquadTeam({name: 1}, function(result) {
           squadTeams = result;
           assessmentQuestionnaireHandler(teamAssessment, templateList);
-            if (urlParameters != undefined && urlParameters.id != undefined && urlParameters.id != '') {
-              if (urlParameters.assessId != undefined && urlParameters.assessId != '' && urlParameters.assessId != 'new') {
-                agileTeamListHandler('teamSelectList', urlParameters.id, urlParameters.assessId, null, null, squadTeams);
-              } else {
-                agileTeamListHandler('teamSelectList', urlParameters.id, 'new', null, null, squadTeams);
-              }
+          if (urlParameters != undefined && urlParameters.id != undefined && urlParameters.id != '') {
+            if (urlParameters.assessId != undefined && urlParameters.assessId != '' && urlParameters.assessId != 'new') {
+              agileTeamListHandler('teamSelectList', urlParameters.id, urlParameters.assessId, null, null, squadTeams);
             } else {
-              agileTeamListHandler('teamSelectList', null, null, null, null, squadTeams);
+              agileTeamListHandler('teamSelectList', urlParameters.id, 'new', null, null, squadTeams);
             }
-          });
-
+          } else {
+            agileTeamListHandler('teamSelectList', null, null, null, null, squadTeams);
+          }
         });
+      });
     });
   }
 
@@ -1026,7 +1025,7 @@ function updateAgileTeamAssessment(action) {
 function reformatDocument(obj){
   var newObj = {};
   _.each(obj, function(v, i) {
-    switch(i){
+    switch (i){
       case 'team_proj_ops':
         newObj['type'] = v;
         break;
@@ -1036,7 +1035,7 @@ function reformatDocument(obj){
       case 'team_dlvr_software':
         newObj['deliversSoftware'] = v === 'Yes' ? true : false;
         break;
-      case 'assessmt_status':   
+      case 'assessmt_status':
         newObj['assessmentStatus'] = v;
         break;
       case 'self-assessmt_dt':

@@ -511,32 +511,6 @@ function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsCalResults, nonSquad
     resolve(nonSquadCalResult);
   });
 };
-/**
- * Calculate month different
- * @param date d1 (start time)
- * @param date d2 (end time)
- * @return int months
- */
-function monthDiff(d1, d2) {
-  var months;
-  months = (d2.getFullYear() - d1.getFullYear()) * 12;
-  months -= d1.getMonth();
-  months += d2.getMonth();
-  return months;
-};
-
-/**
- * Get a dateobject (Six months previous) from another date object
- * @param date date
- * @param int months
- * @return date newDate
- */
-function addMonths(date, months) {
-  var newDate = new Date();
-  newDate.setDate(1);
-  newDate.setMonth(date.getMonth() + months);
-  return new Date(newDate);
-};
 
 /**
  * Get how many days in the month
@@ -1105,82 +1079,15 @@ var snapshot = {
     });
   },
 
-  updateUsersLocation: function() {
+  deleteSnapshot: function(docId) {
     return new Promise(function(resolve, reject){
-      var ulocation = {};
-      _.each(userTimezone, function(tz){
-        ulocation[tz.location] = tz.timezone;
-      });
-      var updateUsers = [];
-      _.each(userLocations, function(location){
-        var updateUser = {
-          'email': location.email.toLowerCase(),
-          'set': {
-            'location': {
-              'site': location.location.toLowerCase(),
-              'timezone': ulocation[location.location.toLowerCase()]
-            }
-          }
-        };
-        updateUsers.push(updateUser);
-      });
-      userModel.bulkUpdateUsers(updateUsers)
+      snapshotModel.remove({'_id': docId})
         .then(function(result){
           resolve(result);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err){
           reject(err);
         });
-      // var returnTimezone = [];
-      // var uniquelocations = _.uniq((_.pluck(userLocations.locations, 'location')));
-      // Promise.mapSeries(uniquelocations, function(item, index, length) {
-      //   return new Promise(function(resolve, reject){
-      //     teamScoreModel.getTimezone([item])
-      //       .then(function(result){
-      //         var obj = {
-      //           'location': item,
-      //           'timezone': result
-      //         };
-      //         returnTimezone.push(obj);
-      //         return resolve(obj);
-      //       })
-      //       .catch(function(err){
-      //         var obj = {
-      //           'location': item,
-      //           'timezone': null
-      //         };
-      //         returnTimezone.push(obj);
-      //         return resolve(obj);
-      //       });
-      //   });
-      // })
-      // .then(function() {
-      //   resolve(returnTimezone);
-      // })
-      // .catch(function(err){
-      //   reject(err);
-      // });
-      // var timezone = _.sortBy(userTimezone.timezone, function(tz){
-      //   return tz.location.toLowerCase();
-      // });
-      // _.each(timezone, function(tz){
-      //   tz.location = tz.location.toLowerCase();
-      // });
-      // var uniqTz = _.uniq(_.pluck(timezone, 'location'));
-      // var returnObj = [];
-      // _.each(uniqTz, function(utz){
-      //   var obj = {
-      //     'location': utz,
-      //     'timezone': null
-      //   };
-      //   _.find(timezone, function(tz){
-      //     if (tz.location == utz) {
-      //       obj.timezone = tz.timezone;
-      //       return returnObj.push(obj);
-      //     }
-      //   });
-      // });
-      // resolve(returnObj);
     });
   }
 };

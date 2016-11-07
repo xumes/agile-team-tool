@@ -76,26 +76,6 @@ var getUserFromFaces = function(email) {
   });
 };
 
-function validObjectId(docId) {
-  var objId = mongoose.Types.ObjectId;
-  if (docId) {
-    if (mongoose.Types.ObjectId.isValid(docId)) {
-      return docId;
-    } else {
-      try {
-        objId = mongoose.Types.ObjectId(docId);
-      } catch (e) {
-        if (e) {
-          return {'error': e.message};
-        }
-      }
-      return objId;
-    }
-  } else {
-    return {'error': 'missing doc id'};
-  }
-}
-
 var UserSchema = new Schema(userSchema);
 var User = mongoose.model('users', UserSchema);
 
@@ -112,25 +92,53 @@ var users = {
           resolve(users);
         })
         .catch( /* istanbul ignore next */ function(err){
-          reject(err);
+          reject({'error':err});
         });
     });
   },
 
   findUserByUserId: function(uid) {
-    if (_.isEmpty(uid)) {
-      return User.find().exec();
-    } else {
-      return User.findOne({userId: uid}).exec();
-    }
+    return new Promise(function(resolve, reject){
+      if (_.isEmpty(uid)) {
+        User.find().exec()
+        .then(function(users){
+          resolve(users);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject({'error':err});
+        });
+      } else {
+        return User.findOne({userId: uid}).exec()
+        .then(function(user){
+          resolve(user);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject({'error':err});
+        });
+      }
+    });
   },
 
   findUserByEmail: function(email) {
-    if (_.isEmpty(email)) {
-      return User.find().exec();
-    } else {
-      return User.findOne({email: email}).exec();
-    }
+    return new Promise(function(resolve, reject){
+      if (_.isEmpty(email)) {
+        User.find().exec()
+        .then(function(users){
+          resolve(users);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject({'error':err});
+        });
+      } else {
+        return User.findOne({email: email.toLowerCase()}).exec()
+        .then(function(user){
+          resolve(user);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject({'error':err});
+        });
+      }
+    });
   },
 
   isTeamMember: function(userId, teamId) {
@@ -145,7 +153,7 @@ var users = {
           return resolve(isMember);
         })
         .catch( /* istanbul ignore next */ function(err) {
-          return reject(err);
+          return reject({'error':err});
         });
     });
   },
@@ -172,7 +180,7 @@ var users = {
         })
         .catch( /* istanbul ignore next */ function(err){
           console.log(err);
-          reject(err);
+          reject({'error':err});
         });
     });
   },
@@ -183,8 +191,8 @@ var users = {
       .then(function(users){
         resolve(users);
       })
-      .catch(function(err){
-        reject(err);
+      .catch( /* istanbul ignore next */ function(err){
+        reject({'error':err});
       });
     });
   },
@@ -214,36 +222,36 @@ var users = {
           resolve(result);
         })
         .catch( /* istanbul ignore next */ function(err){
-          reject(err);
+          reject({'error':err});
         });
     });
   },
+  //
+  // bulkUpdateUsers: function(updateUsers) {
+  //   return new Promise(function(resolve, reject) {
+  //     var bulk = User.collection.initializeUnorderedBulkOp();
+  //     if (_.isEmpty(updateUsers)) {
+  //       resolve([]);
+  //     } else {
+  //       _.each(updateUsers, function(updateUser){
+  //         bulk.find({'email':updateUser.email}).update({'$set':updateUser.set});
+  //       });
+  //       bulk.execute(function(error, result){
+  //         if (error) {
+  //           /* istanbul ignore next */
+  //           reject(error);
+  //         } else {
+  //           resolve(result);
+  //         }
+  //       });
+  //     }
+  //   });
+  // },
 
-  bulkUpdateUsers: function(updateUsers) {
-    return new Promise(function(resolve, reject) {
-      var bulk = User.collection.initializeUnorderedBulkOp();
-      if (_.isEmpty(updateUsers)) {
-        resolve([]);
-      } else {
-        _.each(updateUsers, function(updateUser){
-          bulk.find({'email':updateUser.email}).update({'$set':updateUser.set});
-        });
-        bulk.execute(function(error, result){
-          if (error) {
-            /* istanbul ignore next */
-            reject(error);
-          } else {
-            resolve(result);
-          }
-        });
-      }
-    });
-  },
-
-  delete: function(email) {
+  deleteUser: function(userId) {
     return new Promise(function(resolve, reject) {
       var deleteUser = {
-        'email': email
+        'userId': userId
       };
 
       User.remove(deleteUser)
@@ -251,10 +259,11 @@ var users = {
           resolve(result);
         })
         .catch( /* istanbul ignore next */ function(err){
-          reject(err);
+          reject({'error':err});
         });
     });
   }
 };
+
 
 module.exports = users;

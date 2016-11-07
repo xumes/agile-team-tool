@@ -99,12 +99,7 @@ module.exports.create = function(templateData){
       return reject(msg);
     } else {
       var newTemplateData = new AssessmentTemplates(templateData);
-      var error = newTemplateData.validateSync();
-      if (error) {
-        loggers.get('models').error('Error: ' + error);
-        return reject(error);
-      } else {
-        newTemplateData.save()
+      newTemplateData.save()
         .then(function(result) {
           return resolve(result);
         })
@@ -113,7 +108,6 @@ module.exports.create = function(templateData){
           loggers.get('models').error('Error: ' + err.error);
           return reject(err);
         });
-      }
     }
   });
 };
@@ -177,6 +171,27 @@ module.exports.delete = function(templateId) {
       return reject(msg);
     } else {
       AssessmentTemplates.remove({'_id': templateId})
+        .then(function(body) {
+          return resolve(body);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          /* cannot simulate MongoDB error during testing */
+          var msg = err.message;
+          return reject(formatErrMsg(msg));
+        });
+    }
+  });
+};
+
+module.exports.deleteByCloudantId = /* istanbul ignore next */ function(cloudantId) {
+  return new Promise(function(resolve, reject) {
+    if (lodash.isEmpty(cloudantId)) {
+      var msg = 'Assessment template cloudantId is required';
+      msg={'error':msg};
+      loggers.get('models').error('Error: ' + msg);
+      return reject(msg);
+    } else {
+      AssessmentTemplates.remove({'cloudantId': cloudantId})
         .then(function(body) {
           return resolve(body);
         })
