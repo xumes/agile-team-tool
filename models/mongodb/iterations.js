@@ -271,7 +271,6 @@ var IterationExport = {
         }
       })
       .then(function(iterData){
-        var isValid = false;
         if (iterData != undefined && iterData.length > 0) {
           var duplicate = isIterationNumExist(data['name'], iterData);
           if (duplicate) {
@@ -279,20 +278,9 @@ var IterationExport = {
             loggers.get('model-iteration').error(msg);
             return Promise.reject(msg);
           }
-          else {
-            isValid = true;
-          }
         }
-        else {
-          isValid = true;
-        }
-        if (isValid){
-          delete data['_id'];
-          //var iterationData = new Iteration(data);*/
-          //return iterationData.save();
-          return Iteration.create(data);
-        }
-
+        delete data['_id'];
+        return Iteration.create(data);
       })
       .then(function(result){
         loggers.get('model-iteration').verbose('Iteration added ' + result);
@@ -324,7 +312,21 @@ var IterationExport = {
             return Promise.reject(msg);
           }
         }
-        return Iteration.where({'_id': docId}).update({'$set':data});
+        return Users.findUserByUserId(userId.toUpperCase());
+      })
+      .then(function(userInfo){
+        if (userInfo == null) {
+          var msg = 'This user is not in the database: ' + userId;
+          loggers.get('model-iteration').error(msg);
+          return Promise.reject(msg);
+        }
+        else {
+          data['updateDate'] = moment().format(dateFormat);
+          data['updatedBy'] = userInfo.email;
+          data['updatedByUserId'] = userInfo.userId;
+          data['status'] = IterationExport.calculateStatus(data);
+          return Iteration.where({'_id': docId}).update({'$set':data});
+        }
       })
       .then(function(result){
         return resolve(result);

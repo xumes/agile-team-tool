@@ -87,24 +87,45 @@ var IterationResult = React.createClass({
     }
   },
 
+  numDefault:function(num) {
+    var value = parseInt(num);
+    if (!isNaN(value)) {
+      return value;
+    }
+    else {
+      return 0;
+    }
+  },
+
+  floatDefault:function(num) {
+    var value = parseFloat(num);
+    if (!isNaN(value)) {
+      return value;
+    }
+    else {
+      return '0.0';
+    }
+  },
+
   paste:function(e) {
     e.preventDefault();
   },
 
-  populateForm: function(data){
+  populateForm: function(data, state){
     if (data != undefined && data != null){
       this.setState({
-        commStoriesDel: data.deliveredStories,
-        commPointsDel: data.storyPointsDelivered,
-        deploythisIteration: data.deployments,
-        cycleTimeWIP: data.cycleTimeWIP,
-        cycleTimeInBacklog: data.cycleTimeInBacklog,
+        commStoriesDel: this.numDefault(data.deliveredStories),
+        commPointsDel: this.numDefault(data.storyPointsDelivered),
+        deploythisIteration: this.numDefault(data.deployments),
+        cycleTimeWIP: this.floatDefault(data.cycleTimeWIP),
+        cycleTimeInBacklog: this.floatDefault(data.cycleTimeInBacklog),
         memberChanged: data.memberChanged,
-        clientSatisfaction: data.clientSatisfaction,
-        teamSatisfaction: data.teamSatisfaction,
-        commentIter: data.comment
+        clientSatisfaction: this.floatDefault(data.clientSatisfaction),
+        teamSatisfaction: this.floatDefault(data.teamSatisfaction),
+        commentIter: data.comment,
+        enableFields: state
       });
-      this.refs.defect.populateForm(data);
+      this.refs.defect.populateForm(data, state);
     }
     else {
       this.setState({
@@ -116,18 +137,12 @@ var IterationResult = React.createClass({
         memberChanged: false,
         clientSatisfaction: '0.0',
         teamSatisfaction: '0.0',
-        commentIter: ''
+        commentIter: '',
+        enableFields: state
       });
+      this.refs.defect.populateForm(data, state);
     }
-    this.props.iteration.deliveredStories = this.state.commStoriesDel;
-    this.props.iteration.storyPointsDelivered = this.state.commPointsDel;
-    this.props.iteration.deployments = this.state.deploythisIteration;
-    this.props.iteration.cycleTimeWIP = this.state.cycleTimeWIP;
-    this.props.iteration.cycleTimeInBacklog = this.state.cycleTimeInBacklog;
-    this.props.iteration.memberChanged = this.state.memberChanged;
-    this.props.iteration.clientSatisfaction = this.state.clientSatisfaction;
-    this.props.iteration.teamSatisfaction = this.state.teamSatisfaction;
-    this.props.iteration.comment = this.state.commentIter;
+    
   },
 
   enableFormFields: function(state){
@@ -188,7 +203,7 @@ var IterationResult = React.createClass({
         <div class='ibm-rule ibm-gray-80'>
           <hr/>
         </div>
-        <Defect updateForm = {this.populateForm} enableFields={this.state.enableFields} ref='defect' iteration={this.props.iteration}/>
+        <Defect updateForm = {this.props.populateForm} enableFields={this.state.enableFields} ref='defect' iteration={this.props.iteration}/>
         <div style={spacing}>
           <label for='cycleTimeWIP' style={labelStyle}>Cycle time in WIP (days):<span className='ibm-required'></span></label>
           <span>

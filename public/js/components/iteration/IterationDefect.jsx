@@ -47,17 +47,28 @@ var IterationDefect = React.createClass({
     }
   },
 
+  isNum:function(data) {
+    var value = parseInt(data);
+    if (!isNaN(value)) {
+      return value;
+    }
+    else {
+      return 0;
+    }
+  },
+
   paste:function(e) {
     e.preventDefault();
   },
 
-  populateForm: function(data){
+  populateForm: function(data, state){
     if (data != undefined && data != null){
       this.setState({
-        defectsStartBal: data.defectsStartBal,
-        defectsIteration: data.defects,
-        defectsClosed: data.defectsClosed,
-        defectsEndBal: data.defectsEndBal
+        defectsStartBal: this.isNum(data.defectsStartBal),
+        defectsIteration: this.isNum(data.defects),
+        defectsClosed: this.isNum(data.defectsClosed),
+        defectsEndBal: this.isNum(data.defectsEndBal),
+        enableFields: state
       });
     }
     else {
@@ -65,13 +76,11 @@ var IterationDefect = React.createClass({
         defectsStartBal: 0,
         defectsIteration: 0,
         defectsClosed: 0,
-        defectsEndBal: 0
+        defectsEndBal: 0,
+        enableFields: state
       });
     }
-    this.props.iteration.defectsStartBal = this.state.defectsStartBal;
-    this.props.iteration.defects = this.state.defectsIteration;
-    this.props.iteration.defectsClosed = this.state.defectsClosed;
-    this.props.iteration.defectsEndBal = this.state.defectsEndBal;
+    
   },
 
   enableFormFields: function(state){

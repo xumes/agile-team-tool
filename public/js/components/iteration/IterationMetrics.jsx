@@ -8,7 +8,7 @@ var IterationMetrics = React.createClass({
     }
   },
 
-  populateForm: function(data){
+  populateForm: function(data, state){
     var storiesFTE = '0.0';
     var strPointsFTE = '0.0';
     if (data != undefined && data != null){

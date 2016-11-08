@@ -29,7 +29,7 @@ var IterationCommitment = React.createClass({
     this.setState({fteThisiteration : e.target.value});    
   },
 
-  populateForm: function(data){
+  populateForm: function(data, state){
     if (data != undefined && data != null){
       var allocation;
       if (data.locationScore != '') {
@@ -39,7 +39,8 @@ var IterationCommitment = React.createClass({
         commStories: data.committedStories,
         commPoints: data.storyPointsDelivered,
         memberCount: data.memberCount,
-        fteThisiteration: allocation
+        fteThisiteration: allocation,
+        enableFields: state
       });
     }
     else {
@@ -47,15 +48,14 @@ var IterationCommitment = React.createClass({
         commStories: 0,
         commPoints: 0,
         memberCount: 0,
-        fteThisiteration: '0.0'
+        fteThisiteration: '0.0',
+        enableFields: state
       });
     }
-    this.props.iteration.committedStories = this.state.commStories;
-    this.props.iteration.storyPointsDelivered = this.state.commPoints;
-    this.props.iteration.memberCount = this.state.memberCount;
-    this.props.iteration.memberFte = this.state.fteThisiteration;
   },
-
+  enableFormFields: function(state){
+    this.setState({enableFields: state});
+  },
   
   calculateMetrics: function() {
     if (!isNaN(parseFloat(this.state.fteThisiteration)) && parseFloat(this.state.fteThisiteration) > 0) {

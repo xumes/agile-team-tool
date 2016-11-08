@@ -16,19 +16,12 @@ var IterationButtons = React.createClass({
   },
 
   updateIterationInfo: function(){
-    api.updateIteration(this.props.iteration)
-      .then(function(result) {
-      //TODO add response handling
-      });
+    this.props.parentUpdate('update');
   },
 
   addIterationInfo: function(){
-    api.addIteration(this.props.iteration)
-      .then(function(result) {
-        //TODO add response handling
-      });
+    this.props.parentUpdate('add');
   },
-
 
   render: function() {
     var btnStyle = {

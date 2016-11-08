@@ -5,7 +5,7 @@ var ReactDOM = require('react-dom');
 var TeamDropdown = React.createClass({
   getInitialState: function() {
     return {
-      selectedTeam: '',
+      selectedTeam: this.props.selectedTeam,
       teamNames: []
     }
   },
@@ -14,19 +14,21 @@ var TeamDropdown = React.createClass({
     var self = this; // Need to get reference to this instance
     api.getSquadTeams()
       .then(function(teams) {
-        self.setState({
-          teamNames: teams
-        })
+        self.setState({teamNames: teams});
       });
+    $(this.refs.selectDropDown).select2();
+    $(this.refs.selectDropDown).change(this.handleChange);
+    self.setState({selectedTeam: this.props.selectedTeam});
+  },
 
-    // Use IBM's bundled select2 package
-    $('select[name='teamSelectList']').select2();
-    $('select[name='teamSelectList']').change(this.props.teamChangeHandler);
+  handleChange: function(e){
+    this.setState({selectedTeam: e.target.value});
+    this.props.teamChangeHandler(e);
   },
 
   render: function() {
     var teamSelectListStyle = {
-      'minWidth': '400px'
+      'width': '400px'
     };
     var populateTeamNames = this.state.teamNames.map(function(item) {
       return (
@@ -35,7 +37,7 @@ var TeamDropdown = React.createClass({
     });
 
     return (
-      <select defaultValue='' name='teamSelectList' style={teamSelectListStyle}>
+      <select value={this.state.selectedTeam} name='teamSelectList' style={teamSelectListStyle}  onChange={this.props.teamChangeHandler} ref='selectDropDown'>
         <option value=''>Select one</option>
         {populateTeamNames}
       </select>

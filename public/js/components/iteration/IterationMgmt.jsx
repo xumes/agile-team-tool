@@ -1,5 +1,5 @@
 var React = require('react');
-var SquadDropdown = require('../team/TeamDropdown.jsx');
+var SquadDropdown = require('./TeamDropdown.jsx');
 var IterationDropdown = require('./IterationDropdown.jsx');
 var DatePicker = require('react-datepicker');
 var api = require('../api.jsx');
@@ -10,8 +10,8 @@ var IterationMgmt = React.createClass({
   getInitialState: function() {
     return {
       enableFields: false,
-      iteration: {},
-      selectedTeam: '',
+      enableIter: false,
+      selectedTeam: this.props.iteration.teamId,
       iterationName: '',
       iterationStartDate: null,
       iterationEndDate: null
@@ -19,17 +19,21 @@ var IterationMgmt = React.createClass({
   },
 
   teamSelectOnChange: function(e) {
+    var self = this;
     var selected = e.target.value;
     if (selected != ''){
-      this.setState({enableFields: true, selectedTeam: selected});
-      this.refs.iterList.retrieveIterations(selected);
-      this.props.enableFormFields(true);
+      this.refs.iterList.retrieveIterations(selected, null);
     }
-    else {
-      this.setState({enableFields: false});
-      this.props.enableFormFields(false);
-    }
-    this.props.iteration.teamId = selected;
+    api.isUserAllowed(selected)
+      .then(function(result) {
+        self.props.enableFormFields(result);
+        self.setState({
+          enableIter: true,
+          iterationName: '',
+          iterationStartDate: null,
+          iterationEndDate: null});
+    });    
+    self.props.iteration.teamId = selected;
   },
 
   nameChange: function(e){
@@ -47,28 +51,28 @@ var IterationMgmt = React.createClass({
     this.setState({iterationEndDate : date});
   },
 
-  populateForm: function(data){
+  initTeamIterations: function(teamId, selected){
+    this.refs.iterList.retrieveIterations(teamId, selected);
+  },
+
+  populateForm: function(data, state){
     if (data != undefined && data != null){
-      this.props.iteration.startDate = data.startDate;
-      this.props.iteration.endDate = data.endDate;
       this.setState({
+        selectedTeam: data.teamId,
         iterationName: data.name,
         iterationStartDate: moment(data.startDate),
-        iterationEndDate: moment(data.endDate)
+        iterationEndDate: moment(data.endDate),
+        enableFields: state, 
+        enableIter: true
       });
     }
     else {
-      this.props.iteration.name = '';
-      this.props.iteration.startDate = null;
-      this.props.iteration.endDate = null;
       this.setState({
         iterationName: '',
         iterationStartDate: null,
         iterationEndDate: null
       });
-      
     }
-    this.props.updateForm(data);
   },
 
   render: function() {
@@ -85,13 +89,13 @@ var IterationMgmt = React.createClass({
         <div style={spacing}>
           <label style={labelStyle} for='teamSelectList'>Select an existing squad team:<span className='ibm-required'>*</span></label>
             <span>
-              <SquadDropdown teamChangeHandler={this.teamSelectOnChange}/>
+              <SquadDropdown teamChangeHandler={this.teamSelectOnChange} enableFormFields={this.props.enableFormFields} ref='squadList' selectedTeam={this.state.selectedTeam}/>
            </span>
         </div>
         <div style={spacing}>
           <label style={labelStyle} for='iterationSelectList'>Iteration number/identifier:<span className='ibm-required'>*</span></label>
             <span>
-              <IterationDropdown enableFields={this.state.enableFields} ref='iterList' updateForm = {this.populateForm} iteration={this.props.iteration}/>
+              <IterationDropdown enableFields={this.state.enableIter} enableFormFields={this.props.enableFormFields} ref='iterList' updateForm = {this.props.updateForm} iteration={this.props.iteration}/>
             </span>
         </div>
         <div id='newIterationNameSection' style={spacing}>
