@@ -121,7 +121,7 @@ var apiKeys = {
         resolve(result);
         loggers.get('model-apiKeys').verbose('Finish with getting apiKey with result (Mongo)');
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         reject(err);
       });
     });

@@ -22,8 +22,7 @@ var testUser2 = {
   'shortEmail': 'test2@us.ibm.com',
   'adminAccess': 'none'
 };
-var userApiKey = '12345678';
-var userApiKeyTemp = '111';
+var userApiKey = '';
 
 describe('apiKeys model [createApikey]', function() {
   before(function(done){
@@ -46,6 +45,8 @@ describe('apiKeys model [createApikey]', function() {
     apiKeys.createApikey(testUser)
       .then(function(result) {
         expect(result).to.be.a('object');
+        expect(result).to.have.property('key');
+        userApiKey = result.key;
         done();
       });
   });
@@ -82,9 +83,23 @@ describe('apiKeys model [getUserApikeyByUser]', function() {
   });
 });
 
-describe('apiKeys model [deleteApikey]', function() {
-  it('return successful for deleting an API Key', function(done) {
-    apiKeys.deleteApikey(testUser)
+describe('apiKeys model [getUserApikeyByApikey]', function() {
+  it('return null for non existing user key', function(done) {
+    apiKeys.getUserApikeyByApikey('1234567')
+      .then(function(result) {
+        expect(result).to.be.null;
+        done();
+      });
+  });
+  it('return all api keys', function(done) {
+    apiKeys.getUserApikeyByApikey()
+      .then(function(result) {
+        expect(result).to.be.a('array');
+        done();
+      });
+  });
+  it('return user api key', function(done) {
+    apiKeys.getUserApikeyByApikey(userApiKey)
       .then(function(result) {
         expect(result).to.be.a('object');
         done();
@@ -92,25 +107,9 @@ describe('apiKeys model [deleteApikey]', function() {
   });
 });
 
-describe('apiKeys model [getUserApikeyByApikey]', function() {
-  before(function(done){
-    apiKeys.createApikey(testUser)
-      .then(function(result) {
-        userApiKeyTemp = result.key;
-        console.log('user apiKey Temp********************** = '+userApiKeyTemp);
-        expect(result).to.be.a('object');
-        done();
-      });
-  });
-  it('return null for non existing user key', function(done) {
-    apiKeys.getUserApikeyByApikey(userApiKey)
-      .then(function(result) {
-        expect(result).to.be.null;
-        done();
-      });
-  });
-  it('return user api key', function(done) {
-    apiKeys.getUserApikeyByApikey(userApiKeyTemp)
+describe('apiKeys model [deleteApikey]', function() {
+  it('return successful for deleting an API Key', function(done) {
+    apiKeys.deleteApikey(testUser)
       .then(function(result) {
         expect(result).to.be.a('object');
         done();
