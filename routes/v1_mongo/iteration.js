@@ -17,7 +17,7 @@ module.exports = function(app, includes) {
       userModel.isUserAllowed(req.apiuser.userId,teamId)
         .then(function(isAllowed) {
           if (!isAllowed) {
-            res.status(400).send({ message: 'Unauthorized access.  You must be a member of the team or a member of its parent team.'});
+            res.status(400).send({message: 'Unauthorized access.  You must be a member of the team or a member of its parent team.'});
           } else {
             iterationModel.getByIterInfo(teamId)
             .then(function(iterations) {
