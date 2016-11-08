@@ -5,10 +5,13 @@ var Users = require('../../../models/mongodb/users');
 var _ = require('underscore');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var newUserOid = Schema.Types.ObjectId;
 var newTeamId = Schema.Types.ObjectId;
 var newTeamPathId = '';
 var parentTeamId = Schema.Types.ObjectId;
+var parentTeamPathId = '';
 var childTeamId = Schema.Types.ObjectId;
+var gchildTeamId = Schema.Types.ObjectId;
 
 var testUser = {
   'userId': 'TEST1234567',
@@ -53,6 +56,17 @@ var testTeamParent = {
 };
 var testTeamChild = {
   'name': 'mongodb-test-team-child',
+  'type': '',
+  'members': {
+    'name': 'test user',
+    'userId': 'TEST1234567',
+    'email': 'testuser@test.com'
+  },
+  'createdByUserId': 'TEST1234567',
+  'createdBy': 'testuser@test.com'
+};
+var testTeamGChild = {
+  'name': 'mongodb-test-team-gchild',
   'type': 'squad',
   'members': {
     'name': 'test user',
@@ -80,11 +94,13 @@ describe('Team model [createTeam]', function() {
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-01'));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-parent'));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-child'));
+    promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-gchild'));
     Promise.all(promiseArray)
       .then(function(results){
         return Users.create(testUser);
       })
       .then(function(result){
+        newUserOid = result._id;
         return Users.create(inValidUser);
       })
       .then(function(result){
@@ -128,6 +144,8 @@ describe('Team model [createTeam]', function() {
         expect(result.name).to.equal(testTeamParent.name);
         expect(result).to.have.property('_id');
         parentTeamId = result._id;
+        expect(result).to.have.property('pathId');
+        parentTeamPathId = result.pathId;
         done();
       });
   });
@@ -141,17 +159,72 @@ describe('Team model [createTeam]', function() {
         done();
       });
   });
+  it('return successful for adding a child team', function(done){
+    Teams.createTeam(testTeamGChild)
+      .then(function(result){
+        expect(result).to.be.a('object');
+        expect(result.name).to.equal(testTeamGChild.name);
+        expect(result).to.have.property('_id');
+        gchildTeamId = result._id;
+        done();
+      });
+  });
 });
 
 describe('Team model [associateTeams]', function() {
+  it('return fail for associating teams by empty user id', function(done){
+    Teams.associateTeams(parentTeamId, childTeamId, null)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('The user id cannot be empty.');
+        done();
+      });
+  });
+  it('return fail for associating teams by empty child team id', function(done){
+    Teams.associateTeams(parentTeamId, null, testUser.userId)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('The child team id cannot be empty.');
+        done();
+      });
+  });
+  it('return fail for associating teams by empty parent team id', function(done){
+    Teams.associateTeams(null, childTeamId, testUser.userId)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('The parent team id cannot be empty.');
+        done();
+      });
+  });
+  it('return fail for associating teams by no access for parent team', function(done){
+    Teams.associateTeams(parentTeamId, childTeamId, inValidUser.userId)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('You dont have access to parent team.');
+        done();
+      });
+  });
+  it('return successful for associating teams', function(done){
+    Teams.associateTeams(childTeamId, gchildTeamId, testUser.userId)
+      .then(function(result){
+        expect(result).to.be.a('object');
+        expect(result.ok).to.equal('Updated Successfully');
+        done();
+      });
+  });
+  it('return fail for associating teams because parent team is squad', function(done){
+    Teams.associateTeams(gchildTeamId, childTeamId, testUser.userId)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('Parent team cannot be associated.');
+        done();
+      });
+  });
   it('return successful for associating teams', function(done){
     Teams.associateTeams(parentTeamId, childTeamId, testUser.userId)
       .then(function(result){
-        console.log(result);
-        done();
-      })
-      .catch(function(err){
-        console.log(err);
+        expect(result).to.be.a('object');
+        expect(result.ok).to.equal('Updated Successfully');
         done();
       });
   });
@@ -350,6 +423,152 @@ describe('Team model [getSelectableChildren]', function() {
 describe('Team model [getSquadsOfParent]', function() {
   it('return all squads of parent by pathId', function(done){
     Teams.getSquadsOfParent(newTeamPathId)
+      .then(function(result){
+        expect(result).to.be.a('array');
+        done();
+      });
+  });
+});
+
+describe('Team model [getChildrenByPathId]', function() {
+  it('return empty by empty path id', function(done){
+    Teams.getChildrenByPathId()
+      .then(function(result){
+        expect(result).to.be.a('array');
+        expect(result.length).to.equal(0);
+        done();
+      });
+  });
+  it('return children by parent path id' , function(done){
+    Teams.getChildrenByPathId(parentTeamPathId)
+      .then(function(result){
+        expect(result).to.be.a('array');
+        expect(result.length).to.equal(1);
+        done();
+      });
+  });
+});
+
+describe('Team model [getAllChildrenOnPath]', function() {
+  it('return all children by path', function(done){
+    Teams.getAllChildrenOnPath([parentTeamPathId])
+      .then(function(result){
+        expect(result).to.be.a('array');
+        done();
+      });
+  });
+});
+
+describe('Team model [getTeamAndChildInfo]', function() {
+  it('return team info by team id', function(done){
+    Teams.getTeamAndChildInfo(newTeamId)
+      .then(function(result){
+        expect(result).to.be.a('object');
+        expect(result._id.toString()).to.equal(newTeamId.toString());
+        done();
+      });
+  });
+  it('return team info by team pathId', function(done){
+    Teams.getTeamAndChildInfo(parentTeamPathId)
+      .then(function(result){
+        expect(result).to.be.a('object');
+        expect(result.pathId).to.equal(parentTeamPathId);
+        done();
+      });
+  });
+});
+
+describe('Team model [getRole]', function() {
+  it('return all roles', function(done){
+    Teams.getRole()
+      .then(function(result){
+        expect(result).to.be.a('array');
+        done();
+      });
+  });
+});
+
+describe('Team model [modifyTeamMembers]', function() {
+  var userSession = {
+    'ldap': {
+      'uid': 'TEST1234567'
+    },
+    'shortEmail': 'testuser@test.com'
+  };
+  it('return fail by empty team id', function(done){
+    Teams.modifyTeamMembers(null, userSession, [])
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('Team ID is required');
+        done();
+      });
+  });
+  it('return fail by empty team id', function(done){
+    Teams.modifyTeamMembers(newTeamId, null, [])
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('User is required');
+        done();
+      });
+  });
+  it('return fail by empty team members', function(done){
+    Teams.modifyTeamMembers(newTeamId, userSession, null)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('Member lists is required');
+        done();
+      });
+  });
+  it('return fail by invalid team members', function(done){
+    Teams.modifyTeamMembers(newTeamId, userSession, {'test':'test'})
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('Invalid member lists');
+        done();
+      });
+  });
+  it('return fail by invalid user modify', function(done){
+    userSession.ldap.uid = 'TEST7654321';
+    Teams.modifyTeamMembers(newTeamId, userSession, ['test','test'])
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('Not allowed to modify team members');
+        done();
+      });
+  });
+  it('return fail by invalid user modify', function(done){
+    var newMember = {
+      'name': testUser.name,
+      'userId': testUser.userId,
+      'allocation': 100,
+      'email': testUser.email
+    };
+    userSession.ldap.uid = 'TEST1234567';
+    Teams.modifyTeamMembers(newTeamId, userSession, [newMember])
+      .then(function(result){
+        expect(result).to.be.a('object');
+        expect(result.ok).to.equal('Updated successfully.');
+        done();
+      });
+  });
+});
+
+describe('Team model [getTeamHierarchy]', function() {
+  it('return empty by empty path', function(done){
+    Teams.getTeamHierarchy()
+      .then(function(result){
+        expect(result).to.be.a('array');
+        expect(result.length).to.equal(0);
+        done();
+      });
+  });
+  it('return Hierarchy by path', function(done){
+    Teams.getTeam(gchildTeamId)
+      .then(function(result){
+        expect(result).to.be.a('object');
+        expect(result).to.have.property('path');
+        return Teams.getTeamHierarchy(result.path);
+      })
       .then(function(result){
         expect(result).to.be.a('array');
         done();

@@ -11,7 +11,8 @@ var loggers = require('../../middleware/logger');
 var async = require('async');
 var crypto = require('crypto');
 var validators = require('mongoose-validators');
-
+var moment = require('moment');
+var self = this;
 // Just needed so that corresponding test could run
 require('../../settings');
 
@@ -142,7 +143,7 @@ var getAllUniquePaths = function(){
     .then(function(paths) {
       resolve(_.uniq(_.pluck(paths, 'path')));
     })
-    .catch(function(err) {
+    .catch( /* istanbul ignore next */ function(err) {
       reject(err);
     });
   });
@@ -152,10 +153,10 @@ var createPathId = function(teamName) {
   return teamName.toLowerCase().replace(/[^a-z1-9]/g, '');
 };
 
-var getChildren = function(pathId) {
-  if (_.isEmpty(pathId)) return [];
-  else return Team.find({path:new RegExp(','+pathId+',')}).exec();
-};
+// var getChildren = function(pathId) {
+//   if (_.isEmpty(pathId)) return [];
+//   else return Team.find({path:new RegExp(','+pathId+',')}).exec();
+// };
 
 /*
    exported model functions
@@ -252,7 +253,7 @@ module.exports.getRootTeams = function(uid) {
           });
           resolve(returnTeams);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err){
           reject(err);
         });
     } else {
@@ -389,7 +390,7 @@ module.exports.createTeam = function(teamDoc, creator) {
     .then(function(result){
       resolve(result);
     })
-    .catch(function(err){
+    .catch( /* istanbul ignore next */ function(err){
       reject(err);
     });
   });
@@ -432,7 +433,7 @@ module.exports.getChildrenByPathId = function(pathId) {
           });
           resolve(returnTeams);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err){
           reject(err);
         });
     }
@@ -484,7 +485,7 @@ module.exports.getAllChildrenOnPath = function(path) {
         });
         resolve(returnArray);
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         reject(err);
       });
   });
@@ -553,7 +554,7 @@ module.exports.getTeamAndChildInfo = function(id) {
           resolve(newTeam);
         }
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         reject(err);
       });
   });
@@ -619,33 +620,33 @@ module.exports.getTeamsByUserId = function(uid, proj) {
 };
 //returns an array of team ids where the user is a member of the team + the team's subtree
 //this uses user email
-module.exports.getUserTeams = function(memberEmail) {
-  return new Promise(function(resolve, reject){
-    Team.find({members: {$elemMatch:{email:memberEmail}}, docStatus:{$ne:'delete'}}, {pathId:1})
-      .then(function(teams){
-        var pathIds = _.pluck(teams, 'pathId');
-
-        //build a query string to match all, ex: a|b|c to query for all docs with
-        //paths a or b or c
-        var q = '';
-        _.each(pathIds, function(pId){
-          q += pId + '|';
-        });
-        q = q.slice(0, -1); //remove last |
-        return q;
-      })
-      .then(function(q){
-        if (q==='') resolve([]);//prevent matching on ''
-        return Team.distinct('_id', {'$or':[{path:new RegExp(q)}, {pathId:new RegExp(q)}]}).exec();
-      })
-      .then(function(result){
-        resolve(result);
-      })
-      .catch(function(err){
-        reject(err);
-      });
-  });
-};
+// module.exports.getUserTeams = function(memberEmail) {
+//   return new Promise(function(resolve, reject){
+//     Team.find({members: {$elemMatch:{email:memberEmail}}, docStatus:{$ne:'delete'}}, {pathId:1})
+//       .then(function(teams){
+//         var pathIds = _.pluck(teams, 'pathId');
+//
+//         //build a query string to match all, ex: a|b|c to query for all docs with
+//         //paths a or b or c
+//         var q = '';
+//         _.each(pathIds, function(pId){
+//           q += pId + '|';
+//         });
+//         q = q.slice(0, -1); //remove last |
+//         return q;
+//       })
+//       .then(function(q){
+//         if (q==='') resolve([]);//prevent matching on ''
+//         return Team.distinct('_id', {'$or':[{path:new RegExp(q)}, {pathId:new RegExp(q)}]}).exec();
+//       })
+//       .then(function(result){
+//         resolve(result);
+//       })
+//       .catch( /* istanbul ignore next */ function(err){
+//         reject(err);
+//       });
+//   });
+// };
 
 module.exports.getUserTeamsByUserId = function(uid) {
   return new Promise(function(resolve, reject){
@@ -670,62 +671,51 @@ module.exports.getUserTeamsByUserId = function(uid) {
       .then(function(result){
         resolve(result);
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         reject(err);
       });
   });
 };
 
-module.exports.modifyTeamMembers = function(teamId, userEmail, userId, newMembers) { //TODO this should use userId
+module.exports.modifyTeamMembers = function(teamId, user, newMembers) { //TODO this should use userId
   return new Promise(function(resolve, reject){
+    if (_.isEmpty(user)){
+      return reject({'error':'User is required'});
+    }
+    var userId = user['ldap']['uid'].toUpperCase();
+    var userEmail = user['shortEmail'].toLowerCase();
     if (_.isEmpty(teamId)){
-      return reject('Team ID is required');
+      return reject({'error':'Team ID is required'});
     }
-    if (_.isEmpty(userId)){
-      return reject('User ID is required');
+    if (_.isEmpty(newMembers)){
+      return reject({'error':'Member lists is required'});
     }
-    if (_.isEmpty(members)){
-      return reject('Member lists is required');
-    }
-    if (!_.isArray(members)){
-      return reject('Invalid member lists');
+    if (!_.isArray(newMembers)){
+      return reject({'error':'Invalid member lists'});
     }
     //check if user is allowed to edit team
-    Users.isUserAllowed(userEmail, teamId)//TODO this should use userId
+    Users.isUserAllowed(userId, teamId)//TODO this should use userId
     .then(function(isAllowed){
       if (!isAllowed)
-        return reject('Not allowed to modify team members');
+        return Promise.reject({'error':'Not allowed to modify team members'});
       else
         return true;
     })
     .then(function(){
-      Team.update({_id: teamId},{
+      return Team.update({_id: teamId},{
         $set:
         {
           members: newMembers,
           updatedBy: userEmail,
           updatedByUserId: userId,
-          updateDate: util.getServerTime()
+          updateDate: new Date(moment.utc())
         }
       }).exec();
     })
-    //TODO no idea why we are doing these extra queries in an update.
-    //left them here to refactor after the mongo migration
-    .then(function(savingResult){
-      return Team.getUserTeams(userEmail);
+    .then(function(){
+      return resolve({'ok':'Updated successfully.'});
     })
-    .then(function(userTeams){
-      return Team.getTeam(teamId)
-      .then(function(result){
-        return resolve(
-          {
-            userTeams : userTeams,
-            teamDetails : result
-          }
-        );
-      });
-    })
-    .catch(function(err){
+    .catch( /* istanbul ignore next */ function(err){
       return reject(err);
     });
   });
@@ -737,7 +727,7 @@ module.exports.deleteTeamByName = function(name) {
       .then(function(result){
         resolve(result);
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         reject(err);
       });
   });
@@ -764,7 +754,7 @@ module.exports.getParentByTeamId = function(teamId) {
       .then(function(parentTeam) {
         resolve(parentTeam);
       })
-      .catch(function(err) {
+      .catch( /* istanbul ignore next */ function(err) {
         reject(err);
       });
   });
@@ -798,7 +788,7 @@ module.exports.getTeamHierarchy = function(path) {
           resolve(returnTeams);
         }
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         reject(err);
       });
     }
@@ -840,7 +830,7 @@ module.exports.updateOrDeleteTeam = function(newDoc, userEmail, userId, action) 
             //delete team, iterations, and assessment docs by setting docStatus: delete
             //logger will say 0 deleted if they were already deleted (mongodb doesnt update docs if theres no change)
             loggers.get('model-teams').info('Deleting the following team: ' +teamId);
-            return Team.update({_id : teamId}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:util.getServerTime()}}).exec()
+            return Team.update({_id : teamId}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:new Date(moment.utc())}}).exec()
             .then(function(res){
               loggers.get('model-teams').verbose('Deleted '+res.nModified+ ' team; docStatus: delete');
               loggers.get('model-teams').info('Removing '+oldTeamDoc.pathId+' from team paths');
@@ -875,12 +865,12 @@ module.exports.updateOrDeleteTeam = function(newDoc, userEmail, userId, action) 
             .then(function(){
               loggers.get('model-teams').verbose('Done modifying team paths');
               loggers.get('model-teams').info('Deleting the following assessment docs: ' +assessmentIds);
-              return Assessments.getModel().update({_id : {'$in':assessmentIds}}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:util.getServerTime()}}, {multi: true}).exec();
+              return Assessments.getModel().update({_id : {'$in':assessmentIds}}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:new Date(moment.utc())}}, {multi: true}).exec();
             })
             .then(function(res){
               loggers.get('model-teams').verbose('Set '+res.nModified+ ' assessment documents docStatus: delete');
               loggers.get('model-teams').info('Deleting the following iteration docs: ' +iterationIds);
-              return Iterations.getModel().update({_id : {'$in':iterationIds}}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:util.getServerTime()}}, {multi: true}).exec();
+              return Iterations.getModel().update({_id : {'$in':iterationIds}}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:new Date(moment.utc())}}, {multi: true}).exec();
             })
             .then(function(res){
               loggers.get('model-teams').verbose('Set '+res.nModified+ ' iteration documents docStatus: delete');
@@ -897,7 +887,7 @@ module.exports.updateOrDeleteTeam = function(newDoc, userEmail, userId, action) 
             else {
               newDoc.updatedByUserId = userId;
               newDoc.updatedBy = userEmail;
-              newDoc.updateDate = util.getServerTime();
+              newDoc.updateDate = new Date(moment.utc());
               return Team.update({_id : teamId}, newDoc, {runValidators: true}).exec();
             }
           }
@@ -916,12 +906,6 @@ module.exports.updateOrDeleteTeam = function(newDoc, userEmail, userId, action) 
 //   console.log(e);
 // });
 
-//I think we can refactor the clientside js to use other model functions
-module.exports.getLookupIndex = function() {
-};
-module.exports.getLookupTeamByType = function() {
-};
-
 module.exports.modifyImportantLinks = function(teamId, user, links) {
   return new Promise(function(resolve, reject){
     /**
@@ -932,7 +916,7 @@ module.exports.modifyImportantLinks = function(teamId, user, links) {
      * @returns - modified team document
      */
     var userId = user['ldap']['uid'].toUpperCase();
-    var userEmail = user['shortEmail'];
+    var userEmail = user['shortEmail'].toLowerCase();
     var validResult = validateUpdateImportantLinks(teamId, userEmail, links);
     if (validResult && validResult['error'] !== undefined) return reject(validResult);
 
@@ -964,7 +948,7 @@ module.exports.modifyImportantLinks = function(teamId, user, links) {
       teamDetails['links'] = tmpLinks;
       teamDetails['updatedByUserId'] = userId;
       teamDetails['updatedBy'] = userEmail;
-      teamDetails['updateDate'] = util.getServerTime();
+      teamDetails['updateDate'] = new Date(moment.utc());
       return Team.findByIdAndUpdate(teamId, teamDetails);
     })
     .then(function(savingResult){
@@ -999,7 +983,7 @@ module.exports.deleteImportantLinks = function(teamId, user, links) {
     var errorLists = {};
     errorLists['error'] = {};
     var userId = user['ldap']['uid'].toUpperCase();
-    var userEmail = user['shortEmail'];
+    var userEmail = user['shortEmail'].toLowerCase();
     var validResult = validateDelImportantLinks(teamId, userId, links);
     if (validResult && validResult['error'] !== undefined) return reject(validResult);
 
@@ -1052,7 +1036,7 @@ module.exports.deleteImportantLinks = function(teamId, user, links) {
           teamDetails['links'] = tmpLinks;
           teamDetails['updatedByUserId'] = userId;
           teamDetails['updatedBy'] = userEmail;
-          teamDetails['updateDate'] = util.getServerTime();
+          teamDetails['updateDate'] = new Date(moment.utc());
           return Team.findByIdAndUpdate(teamId, teamDetails);
         }
       } else {
@@ -1165,8 +1149,6 @@ var validateUpdateImportantLinks = function(teamId, userId, links) {
   return true;
 };
 
-var associateActions = function() {
-};
 module.exports.associateTeams = function(parentTeamId, childTeamId, uid) {
   return new Promise(function(resolve, reject){
     if (_.isEmpty(uid)) {
@@ -1204,21 +1186,20 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, uid) {
           var parentPathId = results[0].pathId;
           var childPathId = results[1].pathId;
           var childPath = results[1].path;
-          if (parentPath.indexOf(','+childPathId+',') > 0) {
+          if (parentPath != null && parentPath.indexOf(','+childPathId+',') > 0) {
             return Promise.reject({'error':'Child team cannot be higher level than parent team.'});
           } else {
-            var newChildTeam = results[1];
-            if (childPath == '') {
+            if (childPath == null) {
               oldChildPath = ',' + childPathId + ',';
             } else {
               oldChildPath = childPath + childPathId + ',';
             }
-            if (parentPath == '') {
+            if (parentPath == null) {
               newChildPath = ',' + parentPathId + ',' + childPathId + ',';
-              newChildTeam['path'] = ',' + parentPathId + ',';
+              var newChildTeamPath = ',' + parentPathId + ',';
             } else {
               newChildPath = parentPath + parentPathId + ',' + childPathId + ',';
-              newChildTeam['path'] = parentPath + parentPathId + ',';
+              newChildTeamPath = parentPath + parentPathId + ',';
             }
             var query = {
               'path' : {
@@ -1226,7 +1207,7 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, uid) {
               }
             };
             var promiseArray = [];
-            promiseArray.push(newChildTeam.save());
+            promiseArray.push(Team.update({_id: results[1]._id}, {$set: {path: newChildTeamPath}}).exec());
             promiseArray.push(Team.find(query).exec());
             return Promise.all(promiseArray);
           }
@@ -1236,8 +1217,8 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, uid) {
             var promiseArray = [];
             _.each(results[1], function(team){
               var oldPath = team.path;
-              team['path'] = oldPath.replace(oldChildPath, newChildPath);
-              promiseArray.push(team.save());
+              var newPath = oldPath.replace(oldChildPath, newChildPath);
+              promiseArray.push(Team.update({_id: team._id}, {$set: {path: newPath}}).exec());
             });
             return Promise.all(promiseArray);
           } else {
@@ -1245,7 +1226,7 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, uid) {
           }
         })
         .then(function(result){
-          return resolve(result);
+          return resolve({'ok':'Updated Successfully'});
         })
         .catch( /* istanbul ignore next */ function(err) {
           return reject(err);
