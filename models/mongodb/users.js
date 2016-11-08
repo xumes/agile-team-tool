@@ -8,6 +8,7 @@ var Team = require('./teams');
 var https = require('https');
 var request = require('request');
 var settings = require('../../settings');
+var System = require('./system');
 
 // Just needed so that corresponding test could run
 require('../../settings');
@@ -143,13 +144,15 @@ var users = {
 
   isTeamMember: function(userId, teamId) {
     return new Promise(function(resolve, reject) {
-      Team.getTeamsByUserId(userId, {_id:1})
+      Team.getUserTeamsByUserId(userId)
         .then(function(teams) {
+          console.log(teamId, teams);
           var isMember = false;
           _.each(teams, function(team){
-            if (_.isEqual((team._id).toString(), teamId.toString()))
+            if (_.isEqual((team).toString(), teamId.toString()))
               isMember = true;
           });
+          console.log(isMember);
           return resolve(isMember);
         })
         .catch( /* istanbul ignore next */ function(err) {
@@ -162,19 +165,37 @@ var users = {
     var hasAccess = false;
     return new Promise(function(resolve, reject) {
       var promiseArray = [];
+      promiseArray.push(System.getSystemStatus());
       promiseArray.push(users.findUserByUserId(userId.toUpperCase()));
       promiseArray.push(users.isTeamMember(userId, teamId));
       Promise.all(promiseArray)
         .then(function(results){
           if (results[0] && results[0] != undefined) {
-            if (results[0].adminAccess && results[0].adminAccess != undefined && results[0].adminAccess != 'none') {
-              hasAccess = true;
-              return resolve(hasAccess);
+            if (results[0].adminAccess && results[0].adminAccess != undefined && results[0].adminAccess == 'full') {
+              if (results[1] && results[1] != undefined) {
+                if (results[1].adminAccess && results[1].adminAccess != undefined && results[1].adminAccess.indexOf(results[0].adminAccess) != -1) {
+                  hasAccess = true;
+                }
+              }
+            } else if (results[0].adminAccess && results[0].adminAccess != undefined && results[0].adminAccess == 'none') {
+              if (results[1] && results[1] != undefined) {
+                if (results[1].adminAccess && results[1].adminAccess != undefined && results[1].adminAccess != 'none') {
+                  hasAccess = true;
+                }
+              }
+              if (!hasAccess && results[2] && results[2] != undefined) {
+                hasAccess = results[2];
+              }
             }
-          }
-          if (results[1] && results[1] != undefined) {
-            hasAccess = results[1];
-            return resolve(hasAccess);
+          } else {
+            if (results[1] && results[1] != undefined) {
+              if (results[1].adminAccess && results[1].adminAccess != undefined && results[1].adminAccess != 'none') {
+                hasAccess = true;
+              }
+            }
+            if (!hasAccess && results[2] && results[2] != undefined) {
+              hasAccess = results[2];
+            }
           }
           return resolve(hasAccess);
         })
@@ -264,6 +285,5 @@ var users = {
     });
   }
 };
-
 
 module.exports = users;

@@ -103,6 +103,28 @@ var apiKeys = {
        reject(msg);
      });
     });
+  },
+
+  getUserApikeyByApikey: function(apiKey) {
+    return new Promise(function(resolve, reject) {
+      if (_.isEmpty(apiKey)) {
+        loggers.get('models-apiKeys').verbose('User api key is empty');
+        var q = {};
+        var query = ApiKey.find(q);
+      } else {
+        loggers.get('model-apiKeys').verbose('Getting user api key with API (Mongo)' + apiKey);
+        var q = {key: apiKey};
+        var query = ApiKey.findOne(q);
+      }
+      query
+      .then(function(result){
+        resolve(result);
+        loggers.get('model-apiKeys').verbose('Finish with getting apiKey with result (Mongo)');
+      })
+      .catch(function(err){
+        reject(err);
+      });
+    });
   }
 
 };

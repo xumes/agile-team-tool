@@ -1,7 +1,8 @@
 var fs = require('fs');
 var settings = require('../settings');
 var middleware = {
-  auth: require('../middleware/auth')
+  //auth: require('../middleware/auth')
+  auth: require('../middleware/mongodb/auth')
 };
 var _ = require('underscore');
 
@@ -25,13 +26,17 @@ module.exports = function(app, passport) {
     fs.readdirSync('./routes/api').forEach(function(file) {
       require('./api/' + file)(app, includes);
     });
+    fs.readdirSync('./routes/v1').forEach(function(file) {
+      require('./v1/' + file)(app, includes);
+    });
   }
   else {
     fs.readdirSync('./routes/api_mongo').forEach(function(file) {
       require('./api_mongo/' + file)(app, includes);
     });
+    fs.readdirSync('./routes/v1_mongo').forEach(function(file) {
+      require('./v1_mongo/' + file)(app, includes);
+    });
   }
-  fs.readdirSync('./routes/v1').forEach(function(file) {
-    require('./v1/' + file)(app, includes);
-  });
+
 };

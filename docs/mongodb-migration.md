@@ -17,7 +17,7 @@ I think these doc types are not needed
 | Fields        | Details       | cloudant field
 | ------------- |:-------------:|-------------
 | userId | (UNIQUE ID) for IBM it's CNUM | n/a
-| adminAccess | 'none' or 'full' or 'read' or 'write'| n/a
+| adminAccess | 'none' or 'full'| n/a
 | email | string; for IBM it's pref. ID | n/a
 | name  | string' first and last name of person | n/a
 | lastLogin | JS Date Object UTC| n/a
@@ -29,6 +29,45 @@ I think these doc types are not needed
 | email | string; for IBM it's pref. ID | n/a
 | key | string; UUID | n/a
 | createDate | JS Date Object UTC| n/a
+
+### sysCollOptions
+| Fields        | Details       | cloudant field
+| ------------- |:-------------:|-------------
+| collTag | Mongo collection where listed options is used | n/a
+| collField | Specific document field where listed options is used | n/a
+| validOptions | Array of strings to list down as options | n/a
+
+example valid options for important link labels in team collection:
+```
+['Backlog', 'Defects', 'Retrospectives', 'Standup schedule', 'Wall of Work', 'Other...']
+```
+
+### sysStatus
+| Fields        | Details       | cloudant field
+| ------------- |:-------------:|-------------
+| flag | System flag | n/a
+| desc | Short description of the system flag | n/a
+| active | Boolean if system flag is activated, only one status should be activated if needed | n/a
+| display | System message to display when system flag is activated | n/a
+| adminAccess | System access control related to `users.adminAccess` | n/a
+
+current valid system status flags:
+```
+{
+  flag: 'DynamicChange',
+  desc: 'System is open to all users for read and authorized update',
+  active: false,
+  display: '[Replace with a system wide message to display if `sysStatus.flag` is set to `DynamicChange`]',
+  adminAccess: 'none'
+},
+{
+  flag: 'AdminOnlyChange',
+  desc: 'System is only open to authorized Admin users {see access control} for update; all users will have read-only access',
+  active: false,
+  display: '[Replace with a system wide message to display if `sysStatus.flag` is set to `AdminOnlyChange`]',
+  adminAccess: 'full'
+}
+```
 
 ### iterations
 

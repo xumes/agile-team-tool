@@ -316,11 +316,11 @@ module.exports.getStandalone = function(uid) {
 //list of NON-SQUAD teams that are not part of teamId's subtree
 module.exports.getSelectableParents = function(teamId) {
   return new Promise(function(resolve, reject){
-    if (_.isEmpty(teamId)) return reject(Error('Id of team is required.'));
+    if (_.isEmpty(teamId)) return reject({'error':'Id of team is required.'});
 
     Team.findOne({_id: teamId})
     .then(function(team){
-      if (_.isEmpty(team)) return reject(Error(teamId + ' is not a team.'));
+      if (_.isEmpty(team)) return reject({'error': teamId + ' is not a team.'});
 
       var regEx = new RegExp('^((?!'+team.pathId+').)*$');
       return Team.find({type:{$ne:'squad'}, path: regEx});
@@ -328,7 +328,7 @@ module.exports.getSelectableParents = function(teamId) {
     .then(function(result){
       resolve(result);
     })
-    .catch(function(err) {
+    .catch( /* istanbul ignore next */ function(err) {
       reject(err);
     });
   });
@@ -338,11 +338,11 @@ module.exports.getSelectableParents = function(teamId) {
 //if teamId is a squad team, return none
 module.exports.getSelectableChildren = function(teamId) {
   return new Promise(function(resolve, reject){
-    if (_.isEmpty(teamId)) return reject(Error('Id of team is required.'));
+    if (_.isEmpty(teamId)) return reject({'error':'Id of team is required.'});
 
     Team.findOne({_id: teamId}).exec()
     .then(function(team){
-      if (_.isEmpty(team)) return reject(Error(teamId + ' is not a team.'));
+      if (_.isEmpty(team)) return reject({'error': teamId + ' is not a team.'});
       if (team.type==='squad') return resolve([]);
       return team.pathId;
     })
@@ -367,7 +367,7 @@ module.exports.getSelectableChildren = function(teamId) {
         return resolve(res);
       });
     })
-    .catch(function(err) {
+    .catch( /* istanbul ignore next */ function(err) {
       reject(err);
     });
   });
@@ -382,7 +382,7 @@ module.exports.getSquadsOfParent = function(pathId) {
 module.exports.createTeam = function(teamDoc, creator) {
   return new Promise(function(resolve, reject){
     if (_.isEmpty(teamDoc.name))
-      return reject(Error('Team name is required.'));
+      return reject({'error':'Team name is required.'});
     teamDoc['pathId'] = createPathId(teamDoc.name);
     var newTeamDoc = new Team(teamDoc);
     Team.create(newTeamDoc)
@@ -559,35 +559,35 @@ module.exports.getTeamAndChildInfo = function(id) {
   });
 };
 
-module.exports.getSquadsByPathId = function(pathId) {
-  return new Promise(function(resolve, reject){
-    Team.findOne({pathId: pathId}).exec()
-      .then(function(team){
-        if (team.path) {
-          var query = {
-            type: 'squad',
-            path: {
-              $regex: team.path + team.pathId + ',.*'
-            }
-          };
-        } else {
-          var query = {
-            type: 'squad',
-            path: {
-              $regex: '^,' + team.pathId + ',.*'
-            }
-          };
-        }
-        return Team.find(query).exec();
-      })
-      .then(function(teams){
-        resolve(teams);
-      })
-      .catch(function(err){
-        reject(err);
-      });
-  });
-};
+// module.exports.getSquadsByPathId = function(pathId) {
+//   return new Promise(function(resolve, reject){
+//     Team.findOne({pathId: pathId}).exec()
+//       .then(function(team){
+//         if (team.path) {
+//           var query = {
+//             type: 'squad',
+//             path: {
+//               $regex: team.path + team.pathId + ',.*'
+//             }
+//           };
+//         } else {
+//           var query = {
+//             type: 'squad',
+//             path: {
+//               $regex: '^,' + team.pathId + ',.*'
+//             }
+//           };
+//         }
+//         return Team.find(query).exec();
+//       })
+//       .then(function(teams){
+//         resolve(teams);
+//       })
+//       .catch(function(err){
+//         reject(err);
+//       });
+//   });
+// };
 
 module.exports.getRole = function() {
   return Team.distinct('members.role').exec();
@@ -605,7 +605,7 @@ module.exports.getByName = function(teamName) {
   if (_.isEmpty(teamName))
     return Team.find({},{name:1}).exec();
   else
-    return Team.find({name:teamName}).exec();
+    return Team.findOne({name:teamName}).exec();
 };
 
 module.exports.getTeamsByEmail = function(memberEmail, proj) {
@@ -621,7 +621,7 @@ module.exports.getTeamsByUserId = function(uid, proj) {
 //this uses user email
 module.exports.getUserTeams = function(memberEmail) {
   return new Promise(function(resolve, reject){
-    Team.find({members: {$elemMatch:{email:memberEmail}}}, {pathId:1})
+    Team.find({members: {$elemMatch:{email:memberEmail}}, docStatus:{$ne:'delete'}}, {pathId:1})
       .then(function(teams){
         var pathIds = _.pluck(teams, 'pathId');
 
@@ -636,7 +636,36 @@ module.exports.getUserTeams = function(memberEmail) {
       })
       .then(function(q){
         if (q==='') resolve([]);//prevent matching on ''
-        return Team.distinct('_id', {path:new RegExp(q)}).exec();
+        return Team.distinct('_id', {'$or':[{path:new RegExp(q)}, {pathId:new RegExp(q)}]}).exec();
+      })
+      .then(function(result){
+        resolve(result);
+      })
+      .catch(function(err){
+        reject(err);
+      });
+  });
+};
+
+module.exports.getUserTeamsByUserId = function(uid) {
+  return new Promise(function(resolve, reject){
+    Team.find({members: {$elemMatch:{userId:uid}}, docStatus:{$ne:'delete'}}, {pathId:1})
+      .then(function(teams){
+        var pathIds = _.pluck(teams, 'pathId');
+
+        //build a query string to match all, ex: a|b|c to query for all docs with
+        //paths a or b or c
+        var q = '';
+        _.each(pathIds, function(pId){
+          q += pId + '|';
+        });
+        q = q.slice(0, -1); //remove last |
+        console.log(uid, 'q', q);
+        return q;
+      })
+      .then(function(q){
+        if (q==='') resolve([]);//prevent matching on ''
+        return Team.distinct('_id', {'$or':[{path:new RegExp(q)}, {pathId:new RegExp(q)}]}).exec();
       })
       .then(function(result){
         resolve(result);
@@ -1138,5 +1167,80 @@ var validateUpdateImportantLinks = function(teamId, userId, links) {
 
 var associateActions = function() {
 };
-module.exports.associateTeams = function() {
+module.exports.associateTeams = function(parentTeamId, childTeamId, uid) {
+  return new Promise(function(resolve, reject){
+    if (_.isEmpty(uid)) {
+      return reject({'error':'The user id cannot be empty.'});
+    } else if (_.isEmpty(childTeamId)){
+      return reject({'error':'The child team id cannot be empty.'});
+    } else if (_.isEmpty(parentTeamId)) {
+      return reject({'error':'The parent team id cannot be empty.'});
+    } else {
+      var promiseArray = [];
+      var oldChildPath = '';
+      var newChildPath = '';
+      promiseArray.push(Users.isUserAllowed(parentTeamId, uid));
+      promiseArray.push(Users.isUserAllowed(childTeamId, uid));
+      Promise.all(promiseArray)
+        .then(function(results){
+          if (results[0] == false) {
+            return Promise.reject({'error':'You dont have access to parent team.'});
+          } else if (results[1] == false) {
+            return Promise.reject({'error':'You dont have access to child team.'});
+          } else {
+            var promiseArray = [];
+            promiseArray.push(Teams.getTeam(parentTeamId));
+            promiseArray.push(Teams.getTeam(childTeamId));
+            return Promise.all(promiseArray);
+          }
+        })
+        .then(function(results) {
+          if (_.isEmpty(results[0]) || results[0].type == 'squad') {
+            return Promise.reject({'error':'Parent team cannot be associated.'});
+          } else if (_.isEmpty(results[1])) {
+            return Promise.reject({'error':'Child team cannot be associated.'});
+          }
+          var parentPath = results[0].path;
+          var parentPathId = results[0].pathId;
+          var childPathId = results[1].pathId;
+          var childPath = results[1].path;
+          if (parentPath.indexOf(','+childPathId+',') > 0) {
+            return Promise.reject({'error':'Child team cannot be higher level than parent team.'});
+          } else {
+            oldChildPath = childPath + childPathId + ',';
+            newChildPath = parentPath + parentPathId + ',' + childPathId + ',';
+            var newChildTeam = results[1];
+            newChildTeam['path'] = parentPath + parentPathId + ',';
+            var query = {
+              'path' : {
+                '$regex' : oldChildPath
+              }
+            };
+            var promiseArray = [];
+            promiseArray.push(newChildTeam.save());
+            promiseArray.push(Team.find(query).exec());
+            return Promise.all(promiseArray);
+          }
+        })
+        .then(function(results) {
+          if (!_.isEmpty(results[1])) {
+            var promiseArray = [];
+            _.each(results[1], function(team){
+              var oldPath = team.path;
+              team['path'] = oldPath.replace(oldChildPath, newChildPath);
+              promiseArray.push(team.save());
+            });
+            return Promise.all(promiseArray);
+          } else {
+            return true;
+          }
+        })
+        .then(function(result){
+          return resolve(result);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          return reject(err);
+        });
+    }
+  });
 };
