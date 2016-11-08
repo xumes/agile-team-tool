@@ -33,10 +33,6 @@ module.exports = function(app, passport) {
   else {
     fs.readdirSync('./routes/api_mongo').forEach(function(file) {
       require('./api_mongo/' + file)(app, includes);
-//     if(file != 'teams.js')
-//      require('./v1/' + file)(app, includes);
-//     else
-//      require('./v1_mongo/' + file)(app, includes);
     });
     fs.readdirSync('./routes/v1_mongo').forEach(function(file) {
       require('./v1_mongo/' + file)(app, includes);
