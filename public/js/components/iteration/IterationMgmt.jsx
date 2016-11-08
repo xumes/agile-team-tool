@@ -21,9 +21,7 @@ var IterationMgmt = React.createClass({
   teamSelectOnChange: function(e) {
     var self = this;
     var selected = e.target.value;
-    if (selected != ''){
-      this.refs.iterList.retrieveIterations(selected, null);
-    }
+    
     api.isUserAllowed(selected)
       .then(function(result) {
         self.props.enableFormFields(result);
@@ -32,6 +30,9 @@ var IterationMgmt = React.createClass({
           iterationName: '',
           iterationStartDate: null,
           iterationEndDate: null});
+        if (selected != ''){
+          self.refs.iterList.retrieveIterations(selected, null, result);
+        }
     });    
     self.props.iteration.teamId = selected;
   },
@@ -51,8 +52,8 @@ var IterationMgmt = React.createClass({
     this.setState({iterationEndDate : date});
   },
 
-  initTeamIterations: function(teamId, selected){
-    this.refs.iterList.retrieveIterations(teamId, selected);
+  initTeamIterations: function(teamId, selected, state){
+    this.refs.iterList.retrieveIterations(teamId, selected, state);
   },
 
   populateForm: function(data, state){
@@ -73,6 +74,10 @@ var IterationMgmt = React.createClass({
         iterationEndDate: null
       });
     }
+  },
+
+  enableFormFields: function(state){
+    this.setState({enableFields: state});
   },
 
   render: function() {

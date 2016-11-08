@@ -48,24 +48,18 @@ var IterationDropdown = React.createClass({
     self.setState({selectedIteration: id});
   },
 
-  retrieveIterations: function(teamId, selected){
+  retrieveIterations: function(teamId, selected, state){
     var self = this;
     if (teamId != undefined && teamId != ''){
-      var promiseArray = [];
       if (selected != undefined && selected != null){
         var iterations;
         api.getIterations(teamId)
           .then(function(result) {
-            iterations = result;
-            promiseArray.push(api.getIterationInfo(selected));
-            promiseArray.push(api.isUserAllowed(teamId));
-            return Promise.all(promiseArray);
+            self.setState({iterations: result});
+            return api.getIterationInfo(selected);
           })
           .then(function(result) {
-            self.setState({
-              iterations: iterations
-            });
-            self.props.updateForm(result[0], result[1]);
+            self.props.updateForm(result, state);
           });
       }
       else {
@@ -77,7 +71,7 @@ var IterationDropdown = React.createClass({
           });
         self.setState({selectedIteration: 'new'});
         self.props.iteration._id = '';
-        self.props.updateForm(null, false);
+        self.props.updateForm(null, state);
       }
     }
   },
