@@ -146,13 +146,13 @@ var users = {
     return new Promise(function(resolve, reject) {
       Team.getUserTeamsByUserId(userId)
         .then(function(teams) {
-          console.log(teamId, teams);
+          // console.log(teamId, teams);
           var isMember = false;
           _.each(teams, function(team){
             if (_.isEqual((team).toString(), teamId.toString()))
               isMember = true;
           });
-          console.log(isMember);
+          // console.log(isMember);
           return resolve(isMember);
         })
         .catch( /* istanbul ignore next */ function(err) {
@@ -170,34 +170,25 @@ var users = {
       promiseArray.push(users.isTeamMember(userId, teamId));
       Promise.all(promiseArray)
         .then(function(results){
-          if (results[0] && results[0] != undefined) {
-            if (results[0].adminAccess && results[0].adminAccess != undefined && results[0].adminAccess == 'full') {
-              if (results[1] && results[1] != undefined) {
-                if (results[1].adminAccess && results[1].adminAccess != undefined && results[1].adminAccess.indexOf(results[0].adminAccess) != -1) {
-                  hasAccess = true;
-                }
-              }
-            } else if (results[0].adminAccess && results[0].adminAccess != undefined && results[0].adminAccess == 'none') {
-              if (results[1] && results[1] != undefined) {
-                if (results[1].adminAccess && results[1].adminAccess != undefined && results[1].adminAccess != 'none') {
-                  hasAccess = true;
-                }
-              }
-              if (!hasAccess && results[2] && results[2] != undefined) {
-                hasAccess = results[2];
-              }
-            }
-          } else {
-            if (results[1] && results[1] != undefined) {
-              if (results[1].adminAccess && results[1].adminAccess != undefined && results[1].adminAccess != 'none') {
-                hasAccess = true;
-              }
-            }
-            if (!hasAccess && results[2] && results[2] != undefined) {
-              hasAccess = results[2];
-            }
+          var systemAccess = 'none';
+          var userAccess = 'none';
+          var teamAccess = false;
+          if (results[0] != null && results[0].adminAccess != undefined) {
+            systemAccess = results[0].adminAccess;
           }
-          return resolve(hasAccess);
+          if (results[1] != null && results[1].adminAccess != undefined) {
+            userAccess = results[1].adminAccess;
+          }
+          if (results[2] != undefined) {
+            teamAccess = results[2];
+          }
+          if (userAccess == 'full') {
+            return resolve(true);
+          } else if (systemAccess == 'none' && teamAccess) {
+            return resolve(true);
+          } else {
+            return resolve(false);
+          }
         })
         .catch( /* istanbul ignore next */ function(err){
           console.log(err);

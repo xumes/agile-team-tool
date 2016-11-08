@@ -1,6 +1,6 @@
 var teamModel = require('../../models/mongodb/teams');
 var iterationModel = require('../../models/mongodb/iterations');
-var userModel = require('../../models/mongodb/users')
+var userModel = require('../../models/mongodb/users');
 var util = require('../../helpers/util');
 var loggers = require('../../middleware/logger');
 var _ = require('underscore');
@@ -33,7 +33,7 @@ module.exports = function(app, includes) {
           loggers.get('api').error('[v1.iterations.getIterations]:', err);
           res.status(400).send(err);
         });
-     }
+    }
   };
 
   putIteration = function (req, res) {
@@ -62,7 +62,7 @@ module.exports = function(app, includes) {
         .catch( /* istanbul ignore next */ function(err) {
         /* cannot simulate Cloudant error during testing */
         // console.log('[api] [createIteration]:', err);
-          loggers.get('api').error('[v1_mongo.iterations.putIteration]:', err)
+          loggers.get('api').error('[v1_mongo.iterations.putIteration]:', err);
           res.status(400).send(err);
         });
     }
@@ -104,8 +104,8 @@ module.exports = function(app, includes) {
               loggers.get('api').error('[v1.iterations.postIteration - isUserAllowed]:', err);
               res.status(400).send(err);
             });
-      }
-   });
+        }
+      });
   };
 
   deleteIteration = function (req, res) {

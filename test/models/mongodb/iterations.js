@@ -131,38 +131,37 @@ describe('Iteration model [add]', function() {
   });
 });
 
-// describe('Iteration model [getByIterInfo]', function() {
-//   it('return successful for retriveing a iteration by teamId', function(done) {
-//     iterationModel.getByIterInfo(validIterationDoc.teamId)
-//       .then(function(result){
-//         expect(result).to.be.a('array');
-//         expect(result.length).not.to.equal(0);
-//         done();
-//       });
-//   });
+describe('Iteration model [getByIterInfo]', function() {
+  it('return successful for retriveing a iteration by teamId', function(done) {
+    iterationModel.getByIterInfo(validIterationDoc.teamId)
+      .then(function(result){
+        expect(result).to.be.a('array');
+        expect(result.length).not.to.equal(0);
+        done();
+      });
+  });
 
-//   it('return successful for retriveing all iterations', function(done) {
-//     iterationModel.getByIterInfo('',10)
-//       .then(function(result){
-//         expect(result).to.be.a('array');
-//         expect(result.length).not.to.equal(0);
-//         done();
-//       });
-//   });
-// });
+  it('return successful for retriveing all iterations', function(done) {
+    iterationModel.getByIterInfo('',10)
+      .then(function(result){
+        expect(result).to.be.a('array');
+        expect(result.length).not.to.equal(0);
+        done();
+      });
+  });
+});
 
-// describe('Iteration model [get]', function() {
-//   it('return successful for retriveing a iteration by id', function(done) {
-//     iterationModel.get(newIterationId)
-//       .then(function(result){
-//         expect(result).to.be.a('object');
-//         expect(result).to.have.property('_id');
-//         done();
-//       });
-//   });
-// });
+describe('Iteration model [get]', function() {
+  it('return successful for retriveing a iteration by id', function(done) {
+    iterationModel.get(newIterationId)
+      .then(function(result){
+        expect(result).to.be.a('object');
+        expect(result).to.have.property('_id');
+        done();
+      });
+  });
+});
 
-<<<<<<< Updated upstream
 describe('Iteration model [getCompletedIterationsByKey]', function() {
   it('return successful for retriveing iterations by time', function(done) {
     iterationModel.getCompletedIterationsByKey(validIterationDoc.startDate, validIterationDoc.endDate)
@@ -295,7 +294,7 @@ describe('Iteration model [delete]', function() {
         done();
       });
   });
-=======
+
 // describe('Iteration model [getCompletedIterationsByKey]', function() {
 //   it('return successful for retriveing a iteration by time', function(done) {
 //     iterationModel.getCompletedIterationsByKey(validIterationDoc.startDate, validIterationDoc.endDate)
@@ -391,7 +390,6 @@ describe('Iteration model [delete]', function() {
 //         done();
 //       });
 //   });
->>>>>>> Stashed changes
 
 //   it('return fail for deleteing a iteration by empty request', function(done) {
 //     iterationModel.deleteByFields()
@@ -402,7 +400,6 @@ describe('Iteration model [delete]', function() {
 //       });
 //   });
 
-<<<<<<< Updated upstream
   it('return successful for deleteing a iteration by id', function(done) {
     iterationModel.deleteIter(newIterationId, validUser.userId)
       .then(function(result){
@@ -426,27 +423,3 @@ describe('Iteration model [delete]', function() {
       });
   });
 });
-=======
-//   it('return successful for deleteing a iteration by id', function(done) {
-//     iterationModel.delete(newIterationId)
-//       .then(function(result){
-//         expect(result).to.be.a('object');
-//         expect(result).to.have.property('result');
-//         done();
-//       });
-//   });
-
-//   after(function(done){
-//     var promiseArray = [];
-//     promiseArray.push(userModel.delete(testUser.email));
-//     promiseArray.push(teamModel.deleteTeamByName(testTeam.name));
-//     Promise.all(promiseArray)
-//       .then(function(results){
-//         done();
-//       })
-//       .catch(function(err){
-//         done();
-//       });
-//   });
-// });
->>>>>>> Stashed changes
