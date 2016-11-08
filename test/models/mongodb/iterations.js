@@ -47,6 +47,14 @@ var testTeam = {
   'createdByUserId': 'TEST1234567',
   'createdBy': 'testuser@test.com'
 };
+
+var userSession = {
+  'ldap': {
+    'uid': 'TEST1234567'
+  },
+  'shortEmail': 'testuser@test.com'
+};
+
 var newIterationId = Schema.Types.ObjectId;
 var newTeamId = Schema.Types.ObjectId;
 var validUser = new Object();
@@ -68,7 +76,7 @@ describe('Iteration model [add]', function() {
         return userModel.create(inValidUser);
       })
       .then(function(result){
-        return teamModel.createTeam(testTeam);
+        return teamModel.createTeam(testTeam, userSession);
       })
       .then(function(result){
         newTeamId = result._id;

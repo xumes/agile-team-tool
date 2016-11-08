@@ -384,8 +384,20 @@ module.exports.createTeam = function(teamDoc, creator) {
   return new Promise(function(resolve, reject){
     if (_.isEmpty(teamDoc.name))
       return reject({'error':'Team name is required.'});
-    teamDoc['pathId'] = createPathId(teamDoc.name);
-    var newTeamDoc = new Team(teamDoc);
+    var newTeam = {
+      'name': teamDoc.name,
+      'createdByUserId': creator.ldap.uid.toUpperCase(),
+      'createdBy': creator.shortEmail.toLowerCase(),
+      'pathId': createPathId(teamDoc.name),
+      'docStatus': null,
+      'updatedBy': creator.shortEmail.toLowerCase(),
+      'updatedByUserId': creator.ldap.uid.toUpperCase(),
+      'updateDate': new Date(moment.utc()),
+      'members': teamDoc.members,
+      'type': teamDoc.type,
+    };
+    // teamDoc['pathId'] = createPathId(teamDoc.name);
+    var newTeamDoc = new Team(newTeam);
     Team.create(newTeamDoc)
     .then(function(result){
       resolve(result);
@@ -520,7 +532,7 @@ module.exports.getTeamByPathId = function(pathId) {
  * @param team's objectId
  * @return team's info and child info
  */
-module.exports.getTeamAndChildInfo = function(id) {
+module.exports.loadTeamDetails = function(id) {
   return new Promise(function(resolve, reject){
     var promiseArray = [];
     if (mongoose.Types.ObjectId.isValid(id)) {
@@ -733,32 +745,32 @@ module.exports.deleteTeamByName = function(name) {
   });
 };
 
-module.exports.getParentByTeamId = function(teamId) {
-  return new Promise(function(resolve, reject) {
-    Team.findOne({_id: teamId}).lean().exec()
-      .then(function(team) {
-        if (_.isEmpty(team)) {
-          return reject(new Error('Cannot find parent info'));
-        }
-        if (!_.isEmpty(team.path)) {
-          var paths = team.path.split(',');
-          return paths[_.findLastIndex(paths)];
-        }
-        else {
-          return resolve();
-        }
-      })
-      .then(function(parentPathId) {
-        return Team.findOne({pathId: parentPathId}).exec();
-      })
-      .then(function(parentTeam) {
-        resolve(parentTeam);
-      })
-      .catch( /* istanbul ignore next */ function(err) {
-        reject(err);
-      });
-  });
-};
+// module.exports.getParentByTeamId = function(teamId) {
+//   return new Promise(function(resolve, reject) {
+//     Team.findOne({_id: teamId}).lean().exec()
+//       .then(function(team) {
+//         if (_.isEmpty(team)) {
+//           return reject(new Error('Cannot find parent info'));
+//         }
+//         if (!_.isEmpty(team.path)) {
+//           var paths = team.path.split(',');
+//           return paths[_.findLastIndex(paths)];
+//         }
+//         else {
+//           return resolve();
+//         }
+//       })
+//       .then(function(parentPathId) {
+//         return Team.findOne({pathId: parentPathId}).exec();
+//       })
+//       .then(function(parentTeam) {
+//         resolve(parentTeam);
+//       })
+//       .catch( /* istanbul ignore next */ function(err) {
+//         reject(err);
+//       });
+//   });
+// };
 
 module.exports.getTeamHierarchy = function(path) {
   return new Promise(function(resolve, reject) {

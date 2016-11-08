@@ -85,6 +85,12 @@ var inValidTeam = {
   'createdByUserId': 'TEST1234567',
   'createdBy': 'testuser@test.com'
 };
+var userSession = {
+  'ldap': {
+    'uid': 'TEST1234567'
+  },
+  'shortEmail': 'testuser@test.com'
+};
 
 describe('Team model [createTeam]', function() {
   before(function(done){
@@ -111,7 +117,7 @@ describe('Team model [createTeam]', function() {
       });
   });
   it('return fail for adding a team without team name', function(done){
-    Teams.createTeam(inValidTeam)
+    Teams.createTeam(inValidTeam, userSession)
       .catch(function(err){
         expect(err).to.be.a('object');
         expect(err.error).to.equal('Team name is required.');
@@ -119,7 +125,7 @@ describe('Team model [createTeam]', function() {
       });
   });
   it('return successful for adding a team', function(done){
-    Teams.createTeam(testTeam)
+    Teams.createTeam(testTeam, userSession)
       .then(function(result){
         expect(result).to.be.a('object');
         expect(result.name).to.equal(testTeam.name);
@@ -131,14 +137,14 @@ describe('Team model [createTeam]', function() {
       });
   });
   it('return fail for adding a team with same name', function(done){
-    Teams.createTeam(testTeam)
+    Teams.createTeam(testTeam, userSession)
       .catch(function(err){
         expect(err).to.be.a('object');
         done();
       });
   });
   it('return successful for adding a parent team', function(done){
-    Teams.createTeam(testTeamParent)
+    Teams.createTeam(testTeamParent, userSession)
       .then(function(result){
         expect(result).to.be.a('object');
         expect(result.name).to.equal(testTeamParent.name);
@@ -150,7 +156,7 @@ describe('Team model [createTeam]', function() {
       });
   });
   it('return successful for adding a child team', function(done){
-    Teams.createTeam(testTeamChild)
+    Teams.createTeam(testTeamChild, userSession)
       .then(function(result){
         expect(result).to.be.a('object');
         expect(result.name).to.equal(testTeamChild.name);
@@ -160,7 +166,7 @@ describe('Team model [createTeam]', function() {
       });
   });
   it('return successful for adding a child team', function(done){
-    Teams.createTeam(testTeamGChild)
+    Teams.createTeam(testTeamGChild, userSession)
       .then(function(result){
         expect(result).to.be.a('object');
         expect(result.name).to.equal(testTeamGChild.name);
@@ -461,7 +467,7 @@ describe('Team model [getAllChildrenOnPath]', function() {
 
 describe('Team model [getTeamAndChildInfo]', function() {
   it('return team info by team id', function(done){
-    Teams.getTeamAndChildInfo(newTeamId)
+    Teams.loadTeamDetails(newTeamId)
       .then(function(result){
         expect(result).to.be.a('object');
         expect(result._id.toString()).to.equal(newTeamId.toString());
@@ -469,7 +475,7 @@ describe('Team model [getTeamAndChildInfo]', function() {
       });
   });
   it('return team info by team pathId', function(done){
-    Teams.getTeamAndChildInfo(parentTeamPathId)
+    Teams.loadTeamDetails(parentTeamPathId)
       .then(function(result){
         expect(result).to.be.a('object');
         expect(result.pathId).to.equal(parentTeamPathId);
@@ -489,12 +495,6 @@ describe('Team model [getRole]', function() {
 });
 
 describe('Team model [modifyTeamMembers]', function() {
-  var userSession = {
-    'ldap': {
-      'uid': 'TEST1234567'
-    },
-    'shortEmail': 'testuser@test.com'
-  };
   it('return fail by empty team id', function(done){
     Teams.modifyTeamMembers(null, userSession, [])
       .catch(function(err){

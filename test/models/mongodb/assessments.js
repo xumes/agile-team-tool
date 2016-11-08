@@ -45,6 +45,13 @@ var testTeam = {
   'createdBy': 'testuser@test.com'
 };
 
+var userSession = {
+  'ldap': {
+    'uid': 'TEST1234567'
+  },
+  'shortEmail': 'testuser@test.com'
+};
+
 // var testData = {
 //   validUserEmail : function() {
 //     return 'johndoe@us.ibm.com';
@@ -70,7 +77,7 @@ describe('Assessment model [addTeamAssessment] ', function() {
         return Users.create(inValidUser);
       })
       .then(function(result){
-        return Teams.createTeam(testTeam);
+        return Teams.createTeam(testTeam, userSession);
       })
       .then(function(result){
         newTeamId = result._id;
