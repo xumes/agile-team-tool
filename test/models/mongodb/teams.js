@@ -7,6 +7,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var newTeamId = Schema.Types.ObjectId;
 var newTeamPathId = '';
+var parentTeamId = Schema.Types.ObjectId;
+var childTeamId = Schema.Types.ObjectId;
 
 var testUser = {
   'userId': 'TEST1234567',
@@ -38,6 +40,28 @@ var testTeam = {
   'createdByUserId': 'TEST1234567',
   'createdBy': 'testuser@test.com'
 };
+var testTeamParent = {
+  'name': 'mongodb-test-team-parent',
+  'type': '',
+  'members': {
+    'name': 'test user',
+    'userId': 'TEST1234567',
+    'email': 'testuser@test.com'
+  },
+  'createdByUserId': 'TEST1234567',
+  'createdBy': 'testuser@test.com'
+};
+var testTeamChild = {
+  'name': 'mongodb-test-team-child',
+  'type': 'squad',
+  'members': {
+    'name': 'test user',
+    'userId': 'TEST1234567',
+    'email': 'testuser@test.com'
+  },
+  'createdByUserId': 'TEST1234567',
+  'createdBy': 'testuser@test.com'
+};
 var inValidTeam = {
   'members': {
     'name': 'test user',
@@ -53,6 +77,9 @@ describe('Team model [createTeam]', function() {
     var promiseArray = [];
     promiseArray.push(Users.deleteUser(testUser.userId));
     promiseArray.push(Users.deleteUser(inValidUser.userId));
+    promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-01'));
+    promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-parent'));
+    promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-child'));
     Promise.all(promiseArray)
       .then(function(results){
         return Users.create(testUser);
@@ -91,6 +118,40 @@ describe('Team model [createTeam]', function() {
     Teams.createTeam(testTeam)
       .catch(function(err){
         expect(err).to.be.a('object');
+        done();
+      });
+  });
+  it('return successful for adding a parent team', function(done){
+    Teams.createTeam(testTeamParent)
+      .then(function(result){
+        expect(result).to.be.a('object');
+        expect(result.name).to.equal(testTeamParent.name);
+        expect(result).to.have.property('_id');
+        parentTeamId = result._id;
+        done();
+      });
+  });
+  it('return successful for adding a child team', function(done){
+    Teams.createTeam(testTeamChild)
+      .then(function(result){
+        expect(result).to.be.a('object');
+        expect(result.name).to.equal(testTeamChild.name);
+        expect(result).to.have.property('_id');
+        childTeamId = result._id;
+        done();
+      });
+  });
+});
+
+describe('Team model [associateTeams]', function() {
+  it('return successful for associating teams', function(done){
+    Teams.associateTeams(parentTeamId, childTeamId, testUser.userId)
+      .then(function(result){
+        console.log(result);
+        done();
+      })
+      .catch(function(err){
+        console.log(err);
         done();
       });
   });

@@ -1179,8 +1179,8 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, uid) {
       var promiseArray = [];
       var oldChildPath = '';
       var newChildPath = '';
-      promiseArray.push(Users.isUserAllowed(parentTeamId, uid));
-      promiseArray.push(Users.isUserAllowed(childTeamId, uid));
+      promiseArray.push(Users.isUserAllowed(uid, parentTeamId));
+      promiseArray.push(Users.isUserAllowed(uid, childTeamId));
       Promise.all(promiseArray)
         .then(function(results){
           if (results[0] == false) {
@@ -1189,15 +1189,15 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, uid) {
             return Promise.reject({'error':'You dont have access to child team.'});
           } else {
             var promiseArray = [];
-            promiseArray.push(Teams.getTeam(parentTeamId));
-            promiseArray.push(Teams.getTeam(childTeamId));
+            promiseArray.push(self.getTeam(parentTeamId));
+            promiseArray.push(self.getTeam(childTeamId));
             return Promise.all(promiseArray);
           }
         })
         .then(function(results) {
-          if (_.isEmpty(results[0]) || results[0].type == 'squad') {
+          if (results[0] == null || results[0].type == 'squad') {
             return Promise.reject({'error':'Parent team cannot be associated.'});
-          } else if (_.isEmpty(results[1])) {
+          } else if (results[1] == null) {
             return Promise.reject({'error':'Child team cannot be associated.'});
           }
           var parentPath = results[0].path;
@@ -1207,10 +1207,19 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, uid) {
           if (parentPath.indexOf(','+childPathId+',') > 0) {
             return Promise.reject({'error':'Child team cannot be higher level than parent team.'});
           } else {
-            oldChildPath = childPath + childPathId + ',';
-            newChildPath = parentPath + parentPathId + ',' + childPathId + ',';
             var newChildTeam = results[1];
-            newChildTeam['path'] = parentPath + parentPathId + ',';
+            if (childPath == '') {
+              oldChildPath = ',' + childPathId + ',';
+            } else {
+              oldChildPath = childPath + childPathId + ',';
+            }
+            if (parentPath == '') {
+              newChildPath = ',' + parentPathId + ',' + childPathId + ',';
+              newChildTeam['path'] = ',' + parentPathId + ',';
+            } else {
+              newChildPath = parentPath + parentPathId + ',' + childPathId + ',';
+              newChildTeam['path'] = parentPath + parentPathId + ',';
+            }
             var query = {
               'path' : {
                 '$regex' : oldChildPath
