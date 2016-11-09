@@ -7,7 +7,6 @@ var Users = require('./users');
 var Iterations = require('./iterations');
 var Assessments = require('./assessments');
 var loggers = require('../../middleware/logger');
-var async = require('async');
 var crypto = require('crypto');
 var validators = require('mongoose-validators');
 var moment = require('moment');
@@ -172,12 +171,12 @@ module.exports.searchTeamWithName = function(string) {
 
 //using for snapshot roll up data, get all non squads
 module.exports.getNonSquadTeams = function(proj) {
-  return Team.find({type: {$ne:'squad'}}).select(proj).exec();
+  return Team.find({type: {$ne:'squad'}, docStatus: {$ne: 'delete'}}).select(proj).exec();
 };
 
 //using for snapshot roll up data, get all squads
 module.exports.getSquadTeams = function(proj, filter) {
-  return Team.find({type: 'squad'}, filter).select(proj).exec();
+  return Team.find({type: 'squad', docStatus: {$ne: 'delete'}}, filter).select(proj).exec();
 };
 
 /**
@@ -672,7 +671,6 @@ module.exports.getUserTeamsByUserId = function(uid) {
           q += pId + '|';
         });
         q = q.slice(0, -1); //remove last |
-        console.log(uid, 'q', q);
         return q;
       })
       .then(function(q){
