@@ -57,14 +57,14 @@ current valid system status flags:
   flag: 'DynamicChange',
   desc: 'System is open to all users for read and authorized update',
   active: false,
-  display: '[Replace with a system wide message to display if `sysStatus.flag` is set to `DynamicChange`]',
+  display: '[Replace with a system wide message to display if `sysStatus.active` is set to `true`]',
   adminAccess: 'none'
 },
 {
   flag: 'AdminOnlyChange',
   desc: 'System is only open to authorized Admin users {see access control} for update; all users will have read-only access',
   active: false,
-  display: '[Replace with a system wide message to display if `sysStatus.flag` is set to `AdminOnlyChange`]',
+  display: '[Replace with a system wide message to display if `sysStatus.active` is set to `true`]',
   adminAccess: 'full'
 }
 ```
