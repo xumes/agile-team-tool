@@ -15,5 +15,5 @@ module.exports = function(app, includes) {
     });
   };
 
-  app.get('/v1_mongo/teams', includes.middleware.auth.requireApikey, getTeams);
+  app.get('/v1/teams', includes.middleware.authMongo.requireApikey, getTeams);
 };

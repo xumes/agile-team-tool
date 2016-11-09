@@ -21,7 +21,7 @@ var helmet = require('helmet');
 var initCloudant = require('./cloudant/init');
 
 /* istanbul ignore if */
-require('fs').readFile('./art', 'utf8', function(err, art) {
+/*require('fs').readFile('./art', 'utf8', function(err, art) {
   console.log(art);
   loggers.get('init').info('Configuration Settings:');
   if (process.env.TRAVIS != 'true') {
@@ -30,6 +30,7 @@ require('fs').readFile('./art', 'utf8', function(err, art) {
   console.log('\n');
   initCloudant.init();
 });
+*/
 
 var app = express();
 app.use(favicon(__dirname + '/public/img/favicon.ico'));
