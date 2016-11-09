@@ -445,6 +445,25 @@ var IterationExport = {
       }
     });
   },
+
+  softDelete: function(docId, user) {
+    return new Promise(function(resolve, reject) {
+      var updateDoc = {};
+      var userId = user['ldap']['uid'].toUpperCase();
+      var userEmail = user['shortEmail'].toLowerCase();
+      updateDoc.docStatus = 'delete';
+      updateDoc.updatedByUserId = userId;
+      updateDoc.updatedBy = userEmail;
+      updateDoc.updateDate = new Date(moment.utc());
+      Iteration.update({'_id': docId}, {'$set': updateDoc}).exec()
+        .then(function(result){
+          return resolve(result);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          return reject(err);
+        });
+    });
+  },
   // used in tests
   deleteIter: function(docId, userId) {
     return new Promise(function(resolve, reject) {

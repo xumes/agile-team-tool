@@ -243,6 +243,17 @@ describe('Assessment model [updateTeamAssessment] ', function() {
   });
 });
 
+describe('Iteration model [softDelete]', function() {
+  it('return successful for soft deleteing a iteration', function(done) {
+    Assessments.softDelete(newAssessId, userSession)
+      .then(function(result){
+        expect(result).to.be.a('object');
+        expect(result).to.have.property('ok');
+        done();
+      });
+  });
+});
+
 describe('Assessment model [deleteAssessment] ', function() {
   it('return fail because Assessment ID and User ID/email is required', function(done) {
     Assessments.deleteAssessment(null, null)

@@ -823,13 +823,13 @@ module.exports.updateTeam = function(teamId, user, newDoc) {
   return new Promise(function(resolve, reject){
     var updateDoc = {};
     if (_.isEmpty(teamId)) {
-      return reject({'error': 'Team id can not be empty.'});
+      return reject({'error': 'Team ID is required.'});
     }
-    if (_.isEmpty(user['ldap']['uid']) || _.isEmpty(user['shortEmail'])) {
-      return reject({'error': 'User can not be empty.'});
+    if (_.isEmpty(user)) {
+      return reject({'error': 'User ID is required.'});
     }
     if (newDoc.name == undefined || newDoc.name == '') {
-      return reject({'error': 'Team name can not be empty.'});
+      return reject({'error': 'Team name is required.'});
     } else {
       updateDoc.name = newDoc.name;
     }
@@ -839,105 +839,103 @@ module.exports.updateTeam = function(teamId, user, newDoc) {
     updateDoc.updatedByUserId = userId;
     updateDoc.updatedBy = userEmail;
     updateDoc.updateDate = new Date(moment.utc());
-    Team.update({'_id': teamId}, {'$set': updateDoc}, {runValidators: true}).exec()
+    Users.isUserAllowed(userId, teamId)
+      .then(function(result){
+        if (!result) {
+          return Promise.reject({'error':'Not allowed to modify team.'});
+        }
+        return Team.update({'_id': teamId}, {'$set': updateDoc}).exec();
+      })
       .then(function(result){
         return resolve(result);
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         return reject(err);
       });
   });
 };
 
-//TODO should split this into 2 functions to make it cleaner.
-module.exports.updateOrDeleteTeam = function(newDoc, userEmail, userId, action) {
-  var teamId = newDoc._id;
+module.exports.softDelete = function(teamId, user) {
   return new Promise(function(resolve, reject){
-    Promise.join(
-      module.exports.getTeam(teamId),
-      Iterations.getByIterInfo(teamId),
-      Assessments.getTeamAssessments(teamId),
-      function(oldTeamDoc, iterations, assessments){
-        Users.isUserAllowed(userEmail, teamId)
-        .then(function(isAllowed){
-          if (!isAllowed) return Promise.reject(Error('User not allowed to preform action.')); //for some reason have to use static reject here o.w next thens() get called
-          else return;
-        })
-        //use is allowed to update or delete
-        .then(function(){
-          if (action==='delete') {
-            var iterationIds = _.pluck(iterations, '_id');
-            var assessmentIds = _.pluck(assessments, '_id');
-            //delete team, iterations, and assessment docs by setting docStatus: delete
-            //logger will say 0 deleted if they were already deleted (mongodb doesnt update docs if theres no change)
-            loggers.get('model-teams').info('Deleting the following team: ' +teamId);
-            return Team.update({_id : teamId}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:new Date(moment.utc())}}).exec()
-            .then(function(res){
-              loggers.get('model-teams').verbose('Deleted '+res.nModified+ ' team; docStatus: delete');
-              loggers.get('model-teams').info('Removing '+oldTeamDoc.pathId+' from team paths');
-              return Team.find({path: new RegExp(','+oldTeamDoc.pathId+',')}).exec();
-            })
-            .then(function(teams){
-              if (_.isEmpty(teams)) return;
-              else {
-                //now we have the teams that have paths we need to update.
-                //I couldn't find a way to dynamically update multi docs in mongoose so using async library
-                //this takes almost a minute if it has to update ~2k paths
-                async.each(teams, function(team, callback) {
-                  var newPath = team.path.split(','+oldTeamDoc.pathId).pop();
-                  newPath = (newPath===',') ? undefined : newPath;
-                  return Team.update({_id : team._id}, {$set: {path:newPath}}).exec()
-                  .then(function(r){
-                    loggers.get('model-teams').verbose('updated a team path. oldPath: '+team.path+', new path: '+newPath );
-                    return callback();
-                  })
-                  .catch(function(e){
-                    return callback(e);
-                  });
-                },function(err) {
-                  if ( err ) {
-                    loggers.get('model-teams').error(Error(err));
-                  }
-                  else
-                    loggers.get('model-teams').info(teams.length+' team paths were updated.');
-                });
-              }
-            })
-            .then(function(){
-              loggers.get('model-teams').verbose('Done modifying team paths');
-              loggers.get('model-teams').info('Deleting the following assessment docs: ' +assessmentIds);
-              return Assessments.getModel().update({_id : {'$in':assessmentIds}}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:new Date(moment.utc())}}, {multi: true}).exec();
-            })
-            .then(function(res){
-              loggers.get('model-teams').verbose('Set '+res.nModified+ ' assessment documents docStatus: delete');
-              loggers.get('model-teams').info('Deleting the following iteration docs: ' +iterationIds);
-              return Iterations.getModel().update({_id : {'$in':iterationIds}}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:new Date(moment.utc())}}, {multi: true}).exec();
-            })
-            .then(function(res){
-              loggers.get('model-teams').verbose('Set '+res.nModified+ ' iteration documents docStatus: delete');
-              return resolve('Successfully deleted the team: '+oldTeamDoc.name+' updated children paths, deleted associated iteration and assessment docs.');
-            })
-            .catch(function(e){
-              return reject(e);
-            });
+    if (_.isEmpty(teamId)) {
+      return reject({'error': 'Team ID is required.'});
+    }
+    if (_.isEmpty(user)) {
+      return reject({'error': 'User ID is required.'});
+    }
+    var updateDoc = {};
+    var userId = user['ldap']['uid'].toUpperCase();
+    var userEmail = user['shortEmail'].toLowerCase();
+    updateDoc.docStatus = 'delete';
+    updateDoc.updatedByUserId = userId;
+    updateDoc.updatedBy = userEmail;
+    updateDoc.updateDate = new Date(moment.utc());
+    var parentPathId = '';
+    var parentPath = '';
+    Users.isUserAllowed(userId, teamId)
+      .then(function(result){
+        if (!result) {
+          return Promise.reject({'error':'Not allowed to delete team.'});
+        }
+        var promiseArray = [];
+        promiseArray.push(self.getTeam(teamId));
+        promiseArray.push(Iterations.getByIterInfo(teamId));
+        promiseArray.push(Assessments.getTeamAssessments(teamId));
+        return Promise.all(promiseArray);
+      })
+      .then(function(results){
+        var team = results[0];
+        var iterations = results[1];
+        var assessments = results[2];
+        parentPathId = team.pathId;
+        if (team.path == null) {
+          parentPath = ',' + parentPathId + ',';
+        } else {
+          parentPath = team.path + parentPathId + ',';
+        }
+        var query = {
+          'path' : {
+            '$regex' : parentPath
           }
-          //else update the team  ... no delete
-          else {
-            if (oldTeamDoc.pathId !== newDoc.pathId || oldTeamDoc.path !== newDoc.path)
-              return Promise.reject(Error('Changing pathId or path is not supported currently'));
-            else {
-              newDoc.updatedByUserId = userId;
-              newDoc.updatedBy = userEmail;
-              newDoc.updateDate = new Date(moment.utc());
-              return Team.update({_id : teamId}, newDoc, {runValidators: true}).exec();
-            }
-          }
-        })
-        .catch(function(e){
-          return reject(e);
+        };
+        var promiseArray = [];
+        promiseArray.push(Team.find(query).exec());
+        _.each(iterations, function(iter){
+          promiseArray.push(Iterations.softDelete(iter._id, user));
         });
-      }
-    );
+        _.each(assessments, function(as){
+          promiseArray.push(Assessments.softDelete(as._id, user));
+        });
+        promiseArray.push(Team.update({'_id': teamId}, {'$set': updateDoc}).exec());
+        return Promise.all(promiseArray);
+      })
+      .then(function(results){
+        var teams = results[0];
+        var promiseArray = [];
+        _.each(teams, function(team){
+          var updateTeamDoc = {};
+          var tid = team._id;
+          var tpath = team.path;
+          tpath = tpath.replace(parentPath, '');
+          if (tpath == '') {
+            tpath = null;
+          } else {
+            tpath = ',' + tpath;
+          }
+          updateTeamDoc.path = tpath;
+          updateTeamDoc.updatedByUserId = userId;
+          updateTeamDoc.updatedBy = userEmail;
+          updateTeamDoc.updateDate = new Date(moment.utc());
+          promiseArray.push(Team.update({'_id': tid}, {'$set': updateTeamDoc}).exec());
+        });
+        return Promise.all(promiseArray);
+      })
+      .then(function(result){
+        return resolve({'ok': 'Delete successfully'});
+      })
+      .catch(function(err){
+        return reject(err);
+      });
   });
 };
 

@@ -5,7 +5,6 @@ var Users = require('../../../models/mongodb/users');
 var _ = require('underscore');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var newUserOid = Schema.Types.ObjectId;
 var newTeamId = Schema.Types.ObjectId;
 var newTeamPathId = '';
 var parentTeamId = Schema.Types.ObjectId;
@@ -106,16 +105,12 @@ describe('Team model [createTeam]', function() {
         return Users.create(testUser);
       })
       .then(function(result){
-        console.log(result);
-        newUserOid = result._id;
         return Users.create(inValidUser);
       })
       .then(function(result){
-        console.log(result);
         done();
       })
       .catch(function(err){
-        console.log(err);
         done();
       });
   });
@@ -617,9 +612,6 @@ describe('Team model [modifyImportantLinks]', function() {
   });
 });
 
-describe('Team model [deleteImportantLinks]', function() {
-});
-
 describe('Team model [getTeamHierarchy]', function() {
   it('return empty by empty path', function(done){
     Teams.getTeamHierarchy()
@@ -638,6 +630,116 @@ describe('Team model [getTeamHierarchy]', function() {
       })
       .then(function(result){
         expect(result).to.be.a('array');
+        done();
+      });
+  });
+});
+
+describe('Team model [updateTeam]', function() {
+  var newDoc = {
+    'name' : 'mongodb-test-team-01',
+    'description': 'aaa'
+  };
+  it('return fail by empty team id', function(done){
+    Teams.updateTeam(null, userSession, newDoc)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('Team ID is required.');
+        done();
+      });
+  });
+  it('return fail by empty user', function(done){
+    Teams.updateTeam(newTeamId, null, newDoc)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('User ID is required.');
+        done();
+      });
+  });
+  it('return fail by empty doc name', function(done){
+    newDoc.name = '';
+    Teams.updateTeam(newTeamId, userSession, newDoc)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('Team name is required.');
+        done();
+      });
+  });
+  it('return fail by duplicate doc name', function(done){
+    newDoc.name = 'mongodb-test-team-parent';
+    Teams.updateTeam(newTeamId, userSession, newDoc)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        done();
+      });
+  });
+  it('return fail by wrong user', function(done){
+    newDoc.name = 'mongodb-test-team-01';
+    userSession.ldap.uid = 'TEST7654321';
+    Teams.updateTeam(newTeamId, userSession, newDoc)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('Not allowed to modify team.');
+        done();
+      });
+  });
+  it('return successful', function(done){
+    userSession.ldap.uid = 'TEST1234567';
+    Teams.updateTeam(newTeamId, userSession, newDoc)
+      .then(function(result){
+        expect(result).to.be.a('object');
+        done();
+      });
+  });
+});
+
+describe('Team model [softDelete]', function() {
+  it('return fail by empty team id', function(done){
+    Teams.softDelete(null, userSession)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('Team ID is required.');
+        done();
+      });
+  });
+  it('return fail by empty user', function(done){
+    Teams.softDelete(parentTeamId, null)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('User ID is required.');
+        done();
+      });
+  });
+  it('return fail by wrong user', function(done){
+    userSession.ldap.uid = 'TEST7654321';
+    Teams.softDelete(parentTeamId, userSession)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('Not allowed to delete team.');
+        done();
+      });
+  });
+  it('return successful', function(done){
+    userSession.ldap.uid = 'TEST1234567';
+    Teams.softDelete(parentTeamId, userSession)
+      .then(function(result){
+        expect(result).to.be.a('object');
+        done();
+      });
+  });
+  after(function(done){
+    var promiseArray = [];
+    promiseArray.push(Users.deleteUser(testUser.userId));
+    promiseArray.push(Users.deleteUser(inValidUser.userId));
+    promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-01'));
+    promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-parent'));
+    promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-child'));
+    promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-gchild'));
+    Promise.all(promiseArray)
+      .then(function(results){
+        done();
+      })
+      .catch(function(err){
         done();
       });
   });

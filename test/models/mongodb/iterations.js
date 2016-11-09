@@ -293,6 +293,17 @@ describe('Iteration model [edit]', function() {
   });
 });
 
+describe('Iteration model [softDelete]', function() {
+  it('return successful for soft deleteing a iteration', function(done) {
+    iterationModel.softDelete(newIterationId, userSession)
+      .then(function(result){
+        expect(result).to.be.a('object');
+        expect(result).to.have.property('ok');
+        done();
+      });
+  });
+});
+
 describe('Iteration model [delete]', function() {
   it('return fail for deleteing a iteration by empty id', function(done) {
     iterationModel.deleteIter()
