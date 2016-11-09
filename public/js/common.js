@@ -26,7 +26,6 @@ function getPageVariables(page, _callback) {
         //org-title: not defined in ldap object,
         'notes-id': user.ldap.notesId
       };
-      siteEnv();
       // LDAP employee name has different convetion from Faces API value
       getPersonFromFaces(userInfo.email, updateUserInfo, []);
       //get system status from DB for display on the top banner
@@ -39,6 +38,15 @@ function getPageVariables(page, _callback) {
       _callback.apply(this);
     }
   });
+}
+
+function getSiteStatus() {
+  $.get('/api/util/systemstatus', function(data, status) {
+    if (status == 'success') {
+      setSystemMessage(data.flag, data.display);
+    }
+  });
+  setSystemEnvironment(environment);
 }
 
 function setSystemMessage(systemStatusControl, systemStatusMsg){
@@ -56,9 +64,11 @@ function setSystemEnvironment(environment){
   if (_.isEmpty(environment) || environment.toLowerCase() == 'development') {
     $('#systMsg').html('Stage');
     $('#systMsg').show();
+    $('#debugSection').show();
   } else {
     console.log('Environment variable: '+ environment);
     $('#systMsg').hide();
+    $('#debugSection').hide();
   }
 }
 
