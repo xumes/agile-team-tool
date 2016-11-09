@@ -29,6 +29,12 @@
 <script id="ibmNpsSurveyScript" async src="//nps.mybluemix.net/survey/nps-survey.js"></script>
 <% } %>
 
+<% if (typeof(environment) !== 'undefined' && environment != '') { %>
+<script>
+  var environment =<%-JSON.stringify(environment)-%>;
+</script>
+<% } %>
+
 <script>
   digitalData = {
     "page" : {

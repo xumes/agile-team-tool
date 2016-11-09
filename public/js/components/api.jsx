@@ -11,6 +11,20 @@ function clearRequests() {
   requests.length = 0;
 }
 
+module.exports.getSystemStatus = function(data) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/util/systemstatus';
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
 module.exports.fetchTeamNames = function () {
   return new Promise(function(resolve, reject) {
     $.get('/api/teams/names')
