@@ -33,35 +33,22 @@ module.exports = function(app, includes) {
       });
   };
 
+  //checked
   deleteTeam = function(req, res) {
-    if (!(_.isEmpty(req.body['doc_status'])) && req.body['doc_status'] === 'delete') {
-      teamModel.updateOrDeleteTeam(req.body, req.session['user'], 'delete')
-        .then(function(result) {
-          teamModel.getUserTeams(req.session['user']['shortEmail'])
-            .then(function(body) {
-              res.status(200).send(body);
-            });
-        })
-        .catch(function(err) {
-          res.status(400).send(err);
-        });
-    } else {
-      res.status(400).send({
-        error: 'Invalid request'
+    teamModel.softDelete(req.body.teamId, req.session['user'])
+      .then(function(result) {
+        res.status(401).send(result);
+      })
+      .catch(function(err) {
+        res.status(400).send(err);
       });
-    }
   };
 
+  //checked
   updateTeam = function(req, res) {
-    teamModel.updateOrDeleteTeam(req.body, req.session['user'], 'update')
+    teamModel.updateTeam(req.body.teamId, req.body.doc, req.session['user'])
       .then(function(result) {
-        teamModel.getUserTeams(req.session['user']['shortEmail'])
-          .then(function(body) {
-            var updateResult = new Object();
-            updateResult.team = result;
-            updateResult.userTeams = body;
-            res.send(updateResult);
-          });
+        res.status(200).send(result);
       })
       .catch(function(err) {
         res.status(400).send(err);
