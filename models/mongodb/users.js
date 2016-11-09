@@ -47,35 +47,35 @@ var userSchema = {
   }
 };
 
-var getUserFromFaces = function(email) {
-  return new Promise(function(resolve, reject){
-    if (email != null && email != '') {
-      var json;
-      var facesURL = settings.facesURL;
-      var facesFun = 'find/?limit=100&q=email:' + encodeURIComponent('"' + escape(email) + '"');
-      var url = facesURL + facesFun;
-      request.get(url, function(err, res, body){
-        /* istanbul ignore next */ if (res.statusCode != 200) {
-          var msg = {'error': 'can not get response'};
-          resolve(msg);
-        } else {
-          try {
-            json = JSON.parse(body);
-          } /* istanbul ignore next */ catch (err) {
-            var msg = {'error': 'json error'};
-            resolve(msg);
-          }
-          if (json.length > 0) {
-            resolve(json[0]);
-          } /* istanbul ignore next */ else {
-            var msg = {'error': 'can not find match result'};
-            resolve(msg);
-          }
-        }
-      });
-    }
-  });
-};
+// var getUserFromFaces = function(email) {
+//   return new Promise(function(resolve, reject){
+//     if (email != null && email != '') {
+//       var json;
+//       var facesURL = settings.facesURL;
+//       var facesFun = 'find/?limit=100&q=email:' + encodeURIComponent('"' + escape(email) + '"');
+//       var url = facesURL + facesFun;
+//       request.get(url, function(err, res, body){
+//         /* istanbul ignore next */ if (res.statusCode != 200) {
+//           var msg = {'error': 'can not get response'};
+//           resolve(msg);
+//         } else {
+//           try {
+//             json = JSON.parse(body);
+//           } /* istanbul ignore next */ catch (err) {
+//             var msg = {'error': 'json error'};
+//             resolve(msg);
+//           }
+//           if (json.length > 0) {
+//             resolve(json[0]);
+//           } /* istanbul ignore next */ else {
+//             var msg = {'error': 'can not find match result'};
+//             resolve(msg);
+//           }
+//         }
+//       });
+//     }
+//   });
+// };
 
 var UserSchema = new Schema(userSchema);
 var User = mongoose.model('users', UserSchema);
@@ -221,15 +221,20 @@ var users = {
           'timezone': null
         }
       };
-      getUserFromFaces(newUser.email)
-        .then(function(facesInfo){
-          if (!facesInfo.error) {
-            if (facesInfo.location) {
-              newUser.location.site = facesInfo.location;
-            }
-          }
-          return User.create(newUser);
-        })
+      if (user.location != undefined && !_.isEmpty(user.location)) {
+        newUser.location.site = user.location.site;
+        newUser.location.timezone = user.location.timezone;
+      }
+      User.create(newUser)
+      // getUserFromFaces(newUser.email)
+      //   .then(function(facesInfo){
+      //     if (!facesInfo.error) {
+      //       if (facesInfo.location) {
+      //         newUser.location.site = facesInfo.location;
+      //       }
+      //     }
+      //     return User.create(newUser);
+      //   })
         .then(function(result){
           resolve(result);
         })

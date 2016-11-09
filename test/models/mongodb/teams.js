@@ -106,13 +106,16 @@ describe('Team model [createTeam]', function() {
         return Users.create(testUser);
       })
       .then(function(result){
+        console.log(result);
         newUserOid = result._id;
         return Users.create(inValidUser);
       })
       .then(function(result){
+        console.log(result);
         done();
       })
       .catch(function(err){
+        console.log(err);
         done();
       });
   });
@@ -551,6 +554,70 @@ describe('Team model [modifyTeamMembers]', function() {
         done();
       });
   });
+});
+
+describe('Team model [modifyImportantLinks]', function() {
+  var newLink = {
+    'linkLabel': 'Wall of work',
+    'linkUrl': 'https://trello.com/b/yITPQoST/jellyfish-iteration-agile-team-tool'
+  };
+  it('return fail by empty team id', function(done){
+    Teams.modifyImportantLinks(null, userSession, [newLink])
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error.teamId[0]).to.equal('Team ID is required');
+        done();
+      });
+  });
+  it('return fail by empty user', function(done){
+    var testUserSession = {
+      'ldap': {
+        'uid': ''
+      },
+      'shortEmail': ''
+    };
+    Teams.modifyImportantLinks(newTeamId, testUserSession, [newLink])
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error.userId[0]).to.equal('User ID is required');
+        done();
+      });
+  });
+  it('return fail by invalid links', function(done){
+    Teams.modifyImportantLinks(newTeamId, userSession, {'test':'test'})
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error.links[0]).to.equal('Invalid links');
+        done();
+      });
+  });
+  it('return fail by invalid user modify', function(done){
+    userSession.ldap.uid = 'TEST7654321';
+    Teams.modifyImportantLinks(newTeamId, userSession, [newLink])
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('Not allowed to modify team links');
+        done();
+      });
+  });
+  it('return successful', function(done){
+    userSession.ldap.uid = 'TEST1234567';
+    Teams.modifyImportantLinks(newTeamId, userSession, [newLink])
+      .then(function(result){
+        expect(result).to.be.a('object');
+        done();
+      });
+  });
+  it('return successful by empty links', function(done){
+    Teams.modifyImportantLinks(newTeamId, userSession, [])
+      .then(function(result){
+        expect(result).to.be.a('object');
+        done();
+      });
+  });
+});
+
+describe('Team model [deleteImportantLinks]', function() {
 });
 
 describe('Team model [getTeamHierarchy]', function() {
