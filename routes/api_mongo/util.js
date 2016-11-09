@@ -1,16 +1,11 @@
+var System = require('../../models/mongodb/system');
 var util = require('../../helpers/util');
-
-// Admins stored at document id ag_ref_access_control
-var adminId = 'ag_ref_access_control';
-// System status stored at document id ag_ref_system_status_control
-var systemId = 'ag_ref_system_status_control';
-
 
 module.exports = function(app, includes) {
   var middleware = includes.middleware;
 
   getSystemStatus = function(req, res) {
-    util.getSystemStatus(systemId)
+    System.getSystemStatus()
       .then(function(result) {
         res.status(200).send(result);
       })

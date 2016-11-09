@@ -5,7 +5,6 @@ var moment = require('moment');
 var _ = require('underscore');
 var Schema = mongoose.Schema;
 var Team = require('./teams');
-var https = require('https');
 var request = require('request');
 var settings = require('../../settings');
 var System = require('./system');
