@@ -3,7 +3,6 @@ var _ = require('underscore');
 var Promise = require('bluebird');
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
-var util = require('../../helpers/util');
 var Users = require('./users');
 var Iterations = require('./iterations');
 var Assessments = require('./assessments');
@@ -819,6 +818,36 @@ D->E
 X->Y->Z
 All affected team that had a path relation to C, will have to be updated.
 */
+
+module.exports.updateTeam = function(teamId, user, newDoc) {
+  return new Promise(function(resolve, reject){
+    var updateDoc = {};
+    if (_.isEmpty(teamId)) {
+      return reject({'error': 'Team id can not be empty.'});
+    }
+    if (_.isEmpty(user['ldap']['uid']) || _.isEmpty(user['shortEmail'])) {
+      return reject({'error': 'User can not be empty.'});
+    }
+    if (newDoc.name == undefined || newDoc.name == '') {
+      return reject({'error': 'Team name can not be empty.'});
+    } else {
+      updateDoc.name = newDoc.name;
+    }
+    var userId = user['ldap']['uid'].toUpperCase();
+    var userEmail = user['shortEmail'].toLowerCase();
+    updateDoc.description = newDoc.description;
+    updateDoc.updatedByUserId = userId;
+    updateDoc.updatedBy = userEmail;
+    updateDoc.updateDate = new Date(moment.utc());
+    Team.update({'_id': teamId}, {'$set': updateDoc}, {runValidators: true}).exec()
+      .then(function(result){
+        return resolve(result);
+      })
+      .catch(function(err){
+        return reject(err);
+      });
+  });
+};
 
 //TODO should split this into 2 functions to make it cleaner.
 module.exports.updateOrDeleteTeam = function(newDoc, userEmail, userId, action) {

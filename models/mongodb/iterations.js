@@ -6,7 +6,6 @@ var ObjectId = require('mongodb').ObjectID;
 var loggers = require('../../middleware/logger');
 var Users = require('./users.js');
 var moment = require('moment');
-var util = require('../../helpers/util');
 var dateFormat = 'YYYY-MM-DD HH:mm:ss';
 var Schema   = mongoose.Schema;
 require('../../settings');
