@@ -7,6 +7,7 @@ var TeamParentAssociation = require('./TeamParentAssociation.jsx');
 var TeamChildAssociation = require('./TeamChildAssociation.jsx');
 var TeamIteration = require('./TeamIteration.jsx');
 var TeamAssessment = require('./TeamAssessment.jsx');
+var TeamLastUpdate = require('./TeamLastUpdate.jsx');
 var api = require('../api.jsx');
 
 var TeamPage = React.createClass({
@@ -14,6 +15,21 @@ var TeamPage = React.createClass({
     return {
       selectedTeam: new Object(),
       teamInfoVisible: false
+    }
+  },
+
+  showHideSection: function(id) {
+    if ($('#' + id + ' a').hasClass('ibm-show-active')) {
+      $('#' + id + ' a').removeClass('ibm-show-active');
+      $('#' + id + ' h2').removeClass('ibm-showing');
+      $('#' + id + ' .ibm-container-body').css('display','none');
+    } else {
+      $('.squad-sections h2 a').removeClass('ibm-show-active');
+      $('.squad-sections h2').removeClass('ibm-showing');
+      $('.squad-sections .ibm-container-body').css('display','none');
+      $('#' + id + ' a').addClass('ibm-show-active');
+      $('#' + id + ' h2').addClass('ibm-showing');
+      $('#' + id + ' .ibm-container-body').css('display','block');
     }
   },
 
@@ -87,12 +103,15 @@ var TeamPage = React.createClass({
       <div>
         <Header title="Agile Team" />
         <TeamForm teamChangeHandler={this.teamChangeHandler} />
-        <TeamMembers visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} />
-        <TeamLinks visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} />
-        <TeamParentAssociation visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} />
-        <TeamChildAssociation visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} />
-        <TeamIteration visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} />
-        <TeamAssessment visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} />
+        <div class='squad-sections'>
+          <TeamMembers visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
+          <TeamLinks visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
+          <TeamParentAssociation visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
+          <TeamChildAssociation visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
+          <TeamIteration visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
+          <TeamAssessment visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
+          <TeamLastUpdate visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
+        </div>
       </div>
     )
   }

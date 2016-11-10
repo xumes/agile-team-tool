@@ -4,12 +4,19 @@ var TeamChildAssociation = React.createClass({
 
 
   render: function() {
+    var self = this;
     var overallStyle = {
       'display': this.props.visible == false ? 'none': 'block'
     };
 
     return (
-      <h1 style={overallStyle}>Team Child Association {this.props.teamId}</h1>
+      <div class='ibm-show-hide ibm-widget-processed' id='childAssociationSection' style={overallStyle}>
+        <h2 class='ibm-bold ibm-h4'>
+          <a class='' title='Expand/Collapse' onClick={()=>self.props.showHideSection('childAssociationSection')}>
+            Team Child Association
+          </a>
+        </h2>
+      </div>
     )
   }
 

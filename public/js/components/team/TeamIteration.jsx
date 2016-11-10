@@ -39,9 +39,13 @@ var TeamIteration = React.createClass({
       }
       if (self.props.selectedTeam.type != 'squad') {
         return (
-          <div class='ibm-container-body' id='iterationPageSection'>
-            <h2 class='ibm-bold ibm-h4'>Iteration information</h2>
-            <div id='nonSquadIterationPageSection' style={{'display': 'block'}}>
+          <div class='ibm-show-hide ibm-widget-processe' id='iterationPageSection' style={overallStyle}>
+            <h2 class='ibm-bold ibm-h4'>
+              <a class='' title='Expand/Collapse' onClick={()=>self.props.showHideSection('iterationPageSection')}>
+                Iteration information
+              </a>
+            </h2>
+            <div class='ibm-container-body' id='nonSquadIterationPageSection' style={{'display': 'none', 'marginTop': '15px'}}>
               <p>Non squad team does not manage iteration information.</p>
             </div>
           </div>
@@ -81,7 +85,11 @@ var TeamIteration = React.createClass({
             }
           })
         } else {
-          var iterations = null;
+          var iterations = (
+            <tr class='odd'>
+              <td colSpan='4' class='dataTables_empty'>No data available</td>
+            </tr>
+          );
         }
         if (count >= 5) {
           var showMoreBtnStyle = {
@@ -93,9 +101,13 @@ var TeamIteration = React.createClass({
           }
         }
         return (
-          <div class='ibm-container-body' id='iterationPageSection' style={overallStyle}>
-            <h2 class='ibm-bold ibm-h4'>Iteration information</h2>
-              <div id='squadIterationPageSection' style={{'display': 'block', 'marginTop': '15px'}}>
+          <div class='ibm-show-hide ibm-widget-processe' id='iterationPageSection' style={overallStyle}>
+            <h2 class='ibm-bold ibm-h4'>
+              <a class='' title='Expand/Collapse' onClick={()=>self.props.showHideSection('iterationPageSection')}>
+                Iteration information
+              </a>
+            </h2>
+              <div class='ibm-container-body' id='squadIterationPageSection' style={{'display': 'none', 'marginTop': '15px'}}>
                 <div style={{'float':'left', 'fontSize':'14px', 'width':'100%'}} class='tcaption'>
                   <em id='iterationTitle' class='ibm-bold'>Last 5 Iterations for {teamName}</em>
                   <p style={{'float': 'right'}} class='ibm-button-link'>
