@@ -129,7 +129,7 @@ var TeamIteration = React.createClass({
                 </table>
                 <div id='moreIterations' style={showMoreBtnStyle}>
                   <p>
-                    <label> <a class='ibm-arrow-forward-bold-link' onClick={self.showMoreIterations}>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; More..</a> </label>
+                    <label style={{'width':'200px'}}> <a class='ibm-arrow-forward-bold-link' onClick={self.showMoreIterations}>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; More..</a> </label>
                   </p>
                 </div>
                 <div id='lessIterations' style={{'display': 'none'}}>

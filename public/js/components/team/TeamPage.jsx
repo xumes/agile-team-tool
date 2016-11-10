@@ -103,15 +103,17 @@ var TeamPage = React.createClass({
       <div>
         <Header title="Agile Team" />
         <TeamForm teamChangeHandler={this.teamChangeHandler} />
-        <div class='squad-sections'>
-          <TeamMembers visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
-          <TeamLinks visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
-          <TeamParentAssociation visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
-          <TeamChildAssociation visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
-          <TeamIteration visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
-          <TeamAssessment visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
-          <TeamLastUpdate visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
-        </div>
+        <form id='createTeamForm' class='ibm-column-form'>
+          <div class='squad-sections'>
+            <TeamMembers visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
+            <TeamLinks visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
+            <TeamParentAssociation visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
+            <TeamChildAssociation visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
+            <TeamIteration visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
+            <TeamAssessment visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
+            <TeamLastUpdate visible={this.state.teamInfoVisible} selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
+          </div>
+        </form>
       </div>
     )
   }
