@@ -1174,21 +1174,23 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, uid) {
       var promiseArray = [];
       var oldChildPath = '';
       var newChildPath = '';
-      promiseArray.push(Users.isUserAllowed(uid, parentTeamId));
-      promiseArray.push(Users.isUserAllowed(uid, childTeamId));
+      // promiseArray.push(Users.isUserAllowed(uid, parentTeamId));
+      // promiseArray.push(Users.isUserAllowed(uid, childTeamId));
+      promiseArray.push(self.getTeam(parentTeamId));
+      promiseArray.push(self.getTeam(childTeamId));
       Promise.all(promiseArray)
-        .then(function(results){
-          if (results[0] == false) {
-            return Promise.reject({'error':'You dont have access to parent team.'});
-          } else if (results[1] == false) {
-            return Promise.reject({'error':'You dont have access to child team.'});
-          } else {
-            var promiseArray = [];
-            promiseArray.push(self.getTeam(parentTeamId));
-            promiseArray.push(self.getTeam(childTeamId));
-            return Promise.all(promiseArray);
-          }
-        })
+        // .then(function(results){
+        //   if (results[0] == false) {
+        //     return Promise.reject({'error':'You dont have access to parent team.'});
+        //   } else if (results[1] == false) {
+        //     return Promise.reject({'error':'You dont have access to child team.'});
+        //   } else {
+        //     var promiseArray = [];
+        //     promiseArray.push(self.getTeam(parentTeamId));
+        //     promiseArray.push(self.getTeam(childTeamId));
+        //     return Promise.all(promiseArray);
+        //   }
+        // })
         .then(function(results) {
           if (results[0] == null || results[0].type == 'squad') {
             return Promise.reject({'error':'Parent team cannot be associated.'});

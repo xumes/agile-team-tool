@@ -200,14 +200,14 @@ describe('Team model [associateTeams]', function() {
         done();
       });
   });
-  it('return fail for associating teams by no access for parent team', function(done){
-    Teams.associateTeams(parentTeamId, childTeamId, inValidUser.userId)
-      .catch(function(err){
-        expect(err).to.be.a('object');
-        expect(err.error).to.equal('You dont have access to parent team.');
-        done();
-      });
-  });
+  // it('return fail for associating teams by no access for parent team', function(done){
+  //   Teams.associateTeams(parentTeamId, childTeamId, inValidUser.userId)
+  //     .catch(function(err){
+  //       expect(err).to.be.a('object');
+  //       expect(err.error).to.equal('You dont have access to parent team.');
+  //       done();
+  //     });
+  // });
   it('return successful for associating teams', function(done){
     Teams.associateTeams(childTeamId, gchildTeamId, testUser.userId)
       .then(function(result){
