@@ -110,7 +110,7 @@ var IterationCommitment = React.createClass({
     var linkStyle1 = {
       'position': 'relative',
       'top': '-5px',
-      'left': '-290px',
+      'left': '-260px',
       'display': 'inline'
     };
     var linkStyle2 = {
@@ -123,39 +123,43 @@ var IterationCommitment = React.createClass({
     var linkStyle3 = {
       'position': 'relative',
       'top': '-5px',
-      'left': '-355px',
+      'left': '-340px',
       'display': 'inline'
     };
+    var spacing = {
+      'marginBottom':'10px'
+    };
+
     return (
       <div>
         <h2 className='ibm-bold ibm-h4'>Iteration commitments</h2>
-        <p>
+        <div style={spacing}>
           <label for='commStories' style={labelStyle}>Committed stories:<span className='ibm-required'></span></label>
           <span>
             <input type='number' name='commStories' id='commStories' size='8' value={this.state.commStories} placeholder='0' min='0' className='inputCustom' onChange={this.commStoriesChange} disabled={!this.state.enableFields} onKeyPress={this.wholeNumCheck} onPaste={this.paste}/>
           </span>
-        </p>
-        <p>
+        </div>
+        <div style={spacing}>
           <label for='commPoints' style={labelStyle}>Committed story points:<span className='ibm-required'></span></label>
           <span>
             <input type='number' name='commPoints' id='commPoints' size='8' value={this.state.commPoints} placeholder='0' min='0' className='inputCustom' onChange={this.commPointsChange} disabled={!this.state.enableFields} onKeyPress={this.wholeNumCheck} onPaste={this.paste}/>
           </span>
-        </p>
-        <p>
+        </div>
+        <div style={spacing}>
           <label for='memberCount' style={labelStyle}>Team members this iteration:<span className='ibm-required'></span></label>
           <a className='ibm-information-link' id='memberCountTT' style={linkStyle1}/>
           <span>
             <input type='number' name='memberCount' id='memberCount' size='8' value={this.state.memberCount} placeholder='0' min='0' className='inputCustom' onChange={this.memberCountChange} disabled={!this.state.enableFields} onKeyPress={this.wholeNumCheck} onPaste={this.paste}/>
             <a id='refreshFTE' className='ibm-refresh-link' style={linkStyle2} role='button'></a>
           </span>
-        </p>
-        <p>
+        </div>
+        <div style={spacing}>
           <label for='fteThisiteration' style={labelStyle}>FTE this iteration:<span className='ibm-required'></span></label>
           <a className='ibm-information-link' id='fteThisiterationTT' style={linkStyle3}/>
           <span>
             <input type='number' name='fteThisiteration' id='fteThisiteration' min='0' step='0.1' size='21' value={this.state.fteThisiteration} placeholder='0.0' className='inputCustom' onChange={this.fteThisiterationChange} disabled={!this.state.enableFields} onKeyPress={this.decimalNumCheck} onBlur={this.roundOff} onPaste={this.paste}/>
           </span>
-        </p>
+        </div>
         <div className='ibm-rule ibm-gray-80'>
           <hr/>
         </div>

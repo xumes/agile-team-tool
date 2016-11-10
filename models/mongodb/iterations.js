@@ -273,7 +273,12 @@ var IterationExport = {
         if (iterData != undefined && iterData.length > 0) {
           var duplicate = isIterationNumExist(data['name'], iterData);
           if (duplicate) {
-            var msg = 'Iteration number/identifier: ' + data['name'] + ' already exists';
+            var msg = {};
+            msg.errors = {
+              name:{
+                message:'Iteration number/identifier: ' + data['name'] + ' already exists'
+              }
+            };
             loggers.get('model-iteration').error(msg);
             return Promise.reject(msg);
           }

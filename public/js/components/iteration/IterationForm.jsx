@@ -40,6 +40,9 @@ var initData = {
 'updatedByUserId':'',
 'updateDate':''};
 
+var invalidBorder = '#f00';
+var invalidBackground = '';
+
 var IterationForm = React.createClass({
   getInitialState: function() {
     initData.teamId = this.props.selectedTeam;
@@ -111,25 +114,149 @@ var IterationForm = React.createClass({
     if (action == 'add'){
       api.addIteration(self.state.iteration)
       .then(function(result) {
-      //TODO add response handling
         self.setState({iteration: result});
+        self.clearHighlightedIterErrors();
         self.showMessagePopup('You have successfully added Iteration information.');
         self.updateIterationCache();
+      })
+      .catch(function(err){
+        self.handleIterationErrors(err, 'add');
       });
     }
     else if (action == 'update'){
       api.updateIteration(self.state.iteration)
       .then(function(result) {
-      //TODO add response handling
-        self.showMessagePopup('You have successfully updated Iteration information');
+        self.clearHighlightedIterErrors();
+        self.showMessagePopup('You have successfully updated Iteration information.');
         self.updateIterationCache();
+      })
+      .catch(function(err){
+        self.handleIterationErrors(err, 'update');
       });
     }
-    
   },
 
   showMessagePopup: function(message) {
     alert(message);
+  },
+
+  handleIterationErrors:function (errorResponse, operation) {
+    var errorlist = '';
+    var response = errorResponse.responseJSON;
+
+    if (response && response.error) {
+      var errors = response.error.errors;
+      if (errors){        
+        // Return iteration errors as String
+        errorlist = this.getIterationErrorPopup(errors);
+        if (errorlist != '') {
+          this.showMessagePopup(errorlist);
+          if (operation === 'add') {
+            this.setState({addBtnDisable: false});
+          } else if (operation === 'update') {
+            this.setState({updateBtnDisable: false});
+          }
+        }
+      }
+      else {
+        this.showMessagePopup(response.error);
+      }
+    }
+},
+
+getIterationErrorPopup: function(errors) {
+  var errorLists = '';
+  // Model fields/Form element field
+  var fields = {
+    '_id': 'iterationSelectList',
+    'teamId': 'teamSelectList',
+    'name': 'iterationName',
+    'startDate': 'iterationStartDate',
+    'endDate': 'iterationEndDate',
+    'committedStories': 'commStories',
+    'commitedStoryPoints': 'commPoints',
+    'memberCount': 'memberCount',
+    'memberFte': 'fteThisiteration',
+    'deliveredStories': 'commStoriesDel',
+    'storyPointsDelivered': 'commPointsDel',
+    'deployments': 'DeploythisIteration',
+    'defectsStartBal': 'defectsStartBal',
+    'defects': 'defectsIteration',
+    'defectsClosed': 'defectsClosed',
+    'defectsEndBal': 'defectsEndBal',
+    'cycleTimeWIP': 'cycleTimeWIP',
+    'cycleTimeInBacklog': 'cycleTimeInBacklog',
+    'memberChanged': 'teamChangeList',
+    'clientSatisfaction': 'clientSatisfaction',
+    'teamSatisfaction': 'teamSatisfaction'
+  };
+
+  Object.keys(fields).forEach(function(mdlField, index) {
+    var frmElement = fields[mdlField];
+    if (errors[mdlField]) {
+      if (frmElement) {
+        setFieldErrorHighlight(frmElement);
+      }
+      errorLists = errorLists + errors[mdlField].message + '\n';
+    } else {
+      if (frmElement) {
+        clearFieldErrorHighlight(frmElement);
+      }
+    }
+  });
+    return errorLists;
+  },
+  
+  setFieldErrorHighlight: function (id) {
+    if ($('#' + value).is('select')) {
+      $($('#select2-' + id + '-container').parent()).css('border-color', invalidBorder);
+      $($('#select2-' + id + '-container').parent()).css('background', invalidBackground);
+    }
+    else {
+      $('#' + id).css('border-color', invalidBorder);
+      $('#' + id).css('background', invalidBackground);
+    }
+  },
+
+  clearFieldErrorHighlight: function (id) {
+    if ($('#' + id).is('select')) {
+      $($('#select2-' + id + '-container').parent()).css('border-color', '');
+      $($('#select2-' + id + '-container').parent()).css('background', '');
+    }
+    else {
+      $('#' + id).css('border-color', '');
+      $('#' + id).css('background', '');
+    }
+  },
+
+  clearHighlightedIterErrors: function () {
+    var fields = [
+      'teamSelectList',
+      'iterationName',
+      'iterationStartDate',
+      'iterationEndDate',
+      'commStories',
+      'commPoints',
+      'memberCount',
+      'fteThisiteration',
+      'commStoriesDel',
+      'commPointsDel',
+      'DeploythisIteration',
+      'defectsStartBal',
+      'defectsIteration',
+      'defectsClosed',
+      'defectsEndBal',
+      'cycleTimeWIP',
+      'cycleTimeInBacklog',
+      'teamChangeList',
+      'commentIter',
+      'clientSatisfaction',
+      'teamSatisfaction'
+    ];
+
+    for (j = 0; j < fields.length; j++) {
+      clearFieldErrorHighlight(fields[j]);
+    }
   },
 
   render: function() {
