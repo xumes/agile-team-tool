@@ -57,9 +57,6 @@ var TeamMembers = React.createClass({
       });
     }
 
-    var overallStyle = {
-      'display': self.props.visible == false ? 'none': 'block'
-    };
     var hiddenStyle = {
       'display': 'none'
     };
@@ -103,7 +100,7 @@ var TeamMembers = React.createClass({
     };
 
     return (
-      <div class='ibm-show-hide ibm-widget-processed' id='teamDetailsPageSection' style={overallStyle}>
+      <div class='ibm-show-hide ibm-widget-processed' id='teamDetailsPageSection'>
         <h2 class='ibm-bold ibm-h4'>
           <a class='' title='Expand/Collapse' onClick={()=>self.props.showHideSection('teamDetailsPageSection')}>
             Team membership
