@@ -40,9 +40,13 @@ var TeamAssessment = React.createClass({
       }
       if (self.props.selectedTeam.type != 'squad') {
         return (
-          <div class='ibm-container-body' id='assessmentPageSection'>
-            <h2 class='ibm-bold ibm-h4'>Assessment information</h2>
-            <div id='nonSquadAssessmentPageSection' style={{'display': 'block'}}>
+          <div class='ibm-show-hide ibm-widget-processe' id='assessmentPageSection' style={overallStyle}>
+            <h2 class='ibm-bold ibm-h4'>
+              <a class='' title='Expand/Collapse' onClick={()=>self.props.showHideSection('assessmentPageSection')}>
+                Assessment information
+              </a>
+            </h2>
+            <div class='ibm-container-body' id='nonSquadAssessmentPageSection' style={{'display': 'none', 'marginTop': '15px'}}>
               <p>Non squad team does not manage assessment information.</p>
             </div>
           </div>
@@ -82,7 +86,11 @@ var TeamAssessment = React.createClass({
             }
           })
         } else {
-          var assessments = null;
+          var assessments = (
+            <tr class='odd'>
+              <td colSpan='4' class='dataTables_empty'>No data available</td>
+            </tr>
+          );
         }
         var assessmentLink = 'https://agile-tool-nodejs-stage.mybluemix.net/maturityTrends?id='+self.props.selectedTeam.team._id;
         if (count >= 5) {
@@ -95,44 +103,48 @@ var TeamAssessment = React.createClass({
           }
         }
         return (
-          <div class='ibm-container-body' id='assessmentPageSection' style={overallStyle}>
-            <h2 class='ibm-bold ibm-h4'>Assessment information</h2>
-              <div id='squadAssessmentPageSection' style={{'display': 'block', 'marginTop': '15px'}}>
-                <div style={{'float':'left', 'fontSize':'14px', 'width':'100%'}} class='tcaption'>
-                  <em id='assessmentTitle' class='ibm-bold'>Last 5 Assessments for {teamName}</em>
-                  <p style={{'float': 'right'}} class='ibm-button-link'>
-                    <input type='button' class='ibm-btn-pri ibm-btn-small' id='assessBtn' value='Create assessment' onClick='' disabled={createAccess}/>
-                  </p>
-                </div>
-                <table class='ibm-data-table' id='assessmentTable' summary='List of assessment information' style={{'fontSize': '90%'}}>
-                  <thead>
-                    <tr>
-                      <th scope='col' width='1%'></th>
-                      <th scope='col' width='30%'>Assessment/Creation Date</th>
-                      <th scope='col' width='35%'>Status</th>
-                      <th scope='col' width='35%'>Last Update User</th>
-                    </tr>
-                  </thead>
-                  <tbody id='assessmentList'>
-                    {assessments}
-                  </tbody>
-                </table>
-                <div id='moreAssessments' style={showMoreBtnStyle}>
-                  <p>
-                    <label> <a class='ibm-arrow-forward-bold-link' onClick={self.showMoreAssessments}>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; More..</a> </label>
-                  </p>
-                </div>
-                <div id='lessAssessments' style={{'display': 'none'}}>
-                  <p>
-                    <label> <a class='ibm-arrow-forward-bold-link'onClick={self.showLessAssessments}>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Less..</a> </label>
-                  </p>
-                </div>
-                <div id='maturityTrend' style={{'paddingTop': '25px', 'paddingBottom': '15px'}}>
-                    <span style={{'fontSize': '10pt', 'fontWeight': 'bold', 'paddingLeft': '20px'}}>Link to maturity trend graph:&nbsp;</span>
-                    <span style={{'fontSize': '10pt'}} id='maturityTrendLink'>{assessmentLink}</span>
-                    <button class='button' id='copy-button' data-clipboard-target='#maturityTrendLink' style={{'fontSize': '10pt', 'fontWeight': 'bold', 'marginLeft': '15px'}} onClick=''>Copy Link</button>
-                </div>
+          <div class='ibm-show-hide ibm-widget-processe' id='assessmentPageSection' style={overallStyle}>
+            <h2 class='ibm-bold ibm-h4'>
+              <a class='' title='Expand/Collapse' onClick={()=>self.props.showHideSection('assessmentPageSection')}>
+                Assessment information
+              </a>
+            </h2>
+            <div class='ibm-container-body' id='squadAssessmentPageSection' style={{'display': 'none', 'marginTop': '15px'}}>
+              <div style={{'float':'left', 'fontSize':'14px', 'width':'100%'}} class='tcaption'>
+                <em id='assessmentTitle' class='ibm-bold'>Last 5 Assessments for {teamName}</em>
+                <p style={{'float': 'right'}} class='ibm-button-link'>
+                  <input type='button' class='ibm-btn-pri ibm-btn-small' id='assessBtn' value='Create assessment' onClick='' disabled={createAccess}/>
+                </p>
               </div>
+              <table class='ibm-data-table' id='assessmentTable' summary='List of assessment information' style={{'fontSize': '90%'}}>
+                <thead>
+                  <tr>
+                    <th scope='col' width='1%'></th>
+                    <th scope='col' width='30%'>Assessment/Creation Date</th>
+                    <th scope='col' width='35%'>Status</th>
+                    <th scope='col' width='35%'>Last Update User</th>
+                  </tr>
+                </thead>
+                <tbody id='assessmentList'>
+                  {assessments}
+                </tbody>
+              </table>
+              <div id='moreAssessments' style={showMoreBtnStyle}>
+                <p>
+                  <label> <a class='ibm-arrow-forward-bold-link' onClick={self.showMoreAssessments}>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; More..</a> </label>
+                </p>
+              </div>
+              <div id='lessAssessments' style={{'display': 'none'}}>
+                <p>
+                  <label> <a class='ibm-arrow-forward-bold-link'onClick={self.showLessAssessments}>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Less..</a> </label>
+                </p>
+              </div>
+              <div id='maturityTrend' style={{'paddingTop': '25px', 'paddingBottom': '15px'}}>
+                  <span style={{'fontSize': '10pt', 'fontWeight': 'bold', 'paddingLeft': '20px'}}>Link to maturity trend graph:&nbsp;</span>
+                  <span style={{'fontSize': '10pt'}} id='maturityTrendLink'>{assessmentLink}</span>
+                  <button class='button' id='copy-button' data-clipboard-target='#maturityTrendLink' style={{'fontSize': '10pt', 'fontWeight': 'bold', 'marginLeft': '15px'}} onClick=''>Copy Link</button>
+              </div>
+            </div>
           </div>
         )
       }
