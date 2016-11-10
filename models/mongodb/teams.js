@@ -3,7 +3,6 @@ var _ = require('underscore');
 var Promise = require('bluebird');
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
-var util = require('../../helpers/util');
 var Users = require('./users');
 var Iterations = require('./iterations');
 var Assessments = require('./assessments');
@@ -11,7 +10,8 @@ var loggers = require('../../middleware/logger');
 var async = require('async');
 var crypto = require('crypto');
 var validators = require('mongoose-validators');
-
+var moment = require('moment');
+var self = this;
 // Just needed so that corresponding test could run
 require('../../settings');
 
@@ -142,7 +142,7 @@ var getAllUniquePaths = function(){
     .then(function(paths) {
       resolve(_.uniq(_.pluck(paths, 'path')));
     })
-    .catch(function(err) {
+    .catch( /* istanbul ignore next */ function(err) {
       reject(err);
     });
   });
@@ -152,10 +152,10 @@ var createPathId = function(teamName) {
   return teamName.toLowerCase().replace(/[^a-z1-9]/g, '');
 };
 
-var getChildren = function(pathId) {
-  if (_.isEmpty(pathId)) return [];
-  else return Team.find({path:new RegExp(','+pathId+',')}).exec();
-};
+// var getChildren = function(pathId) {
+//   if (_.isEmpty(pathId)) return [];
+//   else return Team.find({path:new RegExp(','+pathId+',')}).exec();
+// };
 
 /*
    exported model functions
@@ -252,7 +252,7 @@ module.exports.getRootTeams = function(uid) {
           });
           resolve(returnTeams);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err){
           reject(err);
         });
     } else {
@@ -383,13 +383,25 @@ module.exports.createTeam = function(teamDoc, creator) {
   return new Promise(function(resolve, reject){
     if (_.isEmpty(teamDoc.name))
       return reject({'error':'Team name is required.'});
-    teamDoc['pathId'] = createPathId(teamDoc.name);
-    var newTeamDoc = new Team(teamDoc);
+    var newTeam = {
+      'name': teamDoc.name,
+      'createdByUserId': creator.ldap.uid.toUpperCase(),
+      'createdBy': creator.shortEmail.toLowerCase(),
+      'pathId': createPathId(teamDoc.name),
+      'docStatus': null,
+      'updatedBy': creator.shortEmail.toLowerCase(),
+      'updatedByUserId': creator.ldap.uid.toUpperCase(),
+      'updateDate': new Date(moment.utc()),
+      'members': teamDoc.members,
+      'type': teamDoc.type,
+    };
+    // teamDoc['pathId'] = createPathId(teamDoc.name);
+    var newTeamDoc = new Team(newTeam);
     Team.create(newTeamDoc)
     .then(function(result){
       resolve(result);
     })
-    .catch(function(err){
+    .catch( /* istanbul ignore next */ function(err){
       reject(err);
     });
   });
@@ -432,7 +444,7 @@ module.exports.getChildrenByPathId = function(pathId) {
           });
           resolve(returnTeams);
         })
-        .catch(function(err){
+        .catch( /* istanbul ignore next */ function(err){
           reject(err);
         });
     }
@@ -484,7 +496,7 @@ module.exports.getAllChildrenOnPath = function(path) {
         });
         resolve(returnArray);
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         reject(err);
       });
   });
@@ -519,7 +531,7 @@ module.exports.getTeamByPathId = function(pathId) {
  * @param team's objectId
  * @return team's info and child info
  */
-module.exports.getTeamAndChildInfo = function(id) {
+module.exports.loadTeamDetails = function(id) {
   return new Promise(function(resolve, reject){
     var promiseArray = [];
     if (mongoose.Types.ObjectId.isValid(id)) {
@@ -553,7 +565,7 @@ module.exports.getTeamAndChildInfo = function(id) {
           resolve(newTeam);
         }
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         reject(err);
       });
   });
@@ -619,33 +631,33 @@ module.exports.getTeamsByUserId = function(uid, proj) {
 };
 //returns an array of team ids where the user is a member of the team + the team's subtree
 //this uses user email
-module.exports.getUserTeams = function(memberEmail) {
-  return new Promise(function(resolve, reject){
-    Team.find({members: {$elemMatch:{email:memberEmail}}, docStatus:{$ne:'delete'}}, {pathId:1})
-      .then(function(teams){
-        var pathIds = _.pluck(teams, 'pathId');
-
-        //build a query string to match all, ex: a|b|c to query for all docs with
-        //paths a or b or c
-        var q = '';
-        _.each(pathIds, function(pId){
-          q += pId + '|';
-        });
-        q = q.slice(0, -1); //remove last |
-        return q;
-      })
-      .then(function(q){
-        if (q==='') resolve([]);//prevent matching on ''
-        return Team.distinct('_id', {'$or':[{path:new RegExp(q)}, {pathId:new RegExp(q)}]}).exec();
-      })
-      .then(function(result){
-        resolve(result);
-      })
-      .catch(function(err){
-        reject(err);
-      });
-  });
-};
+// module.exports.getUserTeams = function(memberEmail) {
+//   return new Promise(function(resolve, reject){
+//     Team.find({members: {$elemMatch:{email:memberEmail}}, docStatus:{$ne:'delete'}}, {pathId:1})
+//       .then(function(teams){
+//         var pathIds = _.pluck(teams, 'pathId');
+//
+//         //build a query string to match all, ex: a|b|c to query for all docs with
+//         //paths a or b or c
+//         var q = '';
+//         _.each(pathIds, function(pId){
+//           q += pId + '|';
+//         });
+//         q = q.slice(0, -1); //remove last |
+//         return q;
+//       })
+//       .then(function(q){
+//         if (q==='') resolve([]);//prevent matching on ''
+//         return Team.distinct('_id', {'$or':[{path:new RegExp(q)}, {pathId:new RegExp(q)}]}).exec();
+//       })
+//       .then(function(result){
+//         resolve(result);
+//       })
+//       .catch( /* istanbul ignore next */ function(err){
+//         reject(err);
+//       });
+//   });
+// };
 
 module.exports.getUserTeamsByUserId = function(uid) {
   return new Promise(function(resolve, reject){
@@ -670,62 +682,51 @@ module.exports.getUserTeamsByUserId = function(uid) {
       .then(function(result){
         resolve(result);
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         reject(err);
       });
   });
 };
 
-module.exports.modifyTeamMembers = function(teamId, userEmail, userId, newMembers) { //TODO this should use userId
+module.exports.modifyTeamMembers = function(teamId, user, newMembers) { //TODO this should use userId
   return new Promise(function(resolve, reject){
+    if (_.isEmpty(user)){
+      return reject({'error':'User is required'});
+    }
+    var userId = user['ldap']['uid'].toUpperCase();
+    var userEmail = user['shortEmail'].toLowerCase();
     if (_.isEmpty(teamId)){
-      return reject('Team ID is required');
+      return reject({'error':'Team ID is required'});
     }
-    if (_.isEmpty(userId)){
-      return reject('User ID is required');
+    if (_.isEmpty(newMembers)){
+      return reject({'error':'Member lists is required'});
     }
-    if (_.isEmpty(members)){
-      return reject('Member lists is required');
-    }
-    if (!_.isArray(members)){
-      return reject('Invalid member lists');
+    if (!_.isArray(newMembers)){
+      return reject({'error':'Invalid member lists'});
     }
     //check if user is allowed to edit team
-    Users.isUserAllowed(userEmail, teamId)//TODO this should use userId
+    Users.isUserAllowed(userId, teamId)//TODO this should use userId
     .then(function(isAllowed){
       if (!isAllowed)
-        return reject('Not allowed to modify team members');
+        return Promise.reject({'error':'Not allowed to modify team members'});
       else
         return true;
     })
     .then(function(){
-      Team.update({_id: teamId},{
+      return Team.update({_id: teamId},{
         $set:
         {
           members: newMembers,
           updatedBy: userEmail,
           updatedByUserId: userId,
-          updateDate: util.getServerTime()
+          updateDate: new Date(moment.utc())
         }
       }).exec();
     })
-    //TODO no idea why we are doing these extra queries in an update.
-    //left them here to refactor after the mongo migration
-    .then(function(savingResult){
-      return Team.getUserTeams(userEmail);
+    .then(function(){
+      return resolve({'ok':'Updated successfully.'});
     })
-    .then(function(userTeams){
-      return Team.getTeam(teamId)
-      .then(function(result){
-        return resolve(
-          {
-            userTeams : userTeams,
-            teamDetails : result
-          }
-        );
-      });
-    })
-    .catch(function(err){
+    .catch( /* istanbul ignore next */ function(err){
       return reject(err);
     });
   });
@@ -737,38 +738,38 @@ module.exports.deleteTeamByName = function(name) {
       .then(function(result){
         resolve(result);
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         reject(err);
       });
   });
 };
 
-module.exports.getParentByTeamId = function(teamId) {
-  return new Promise(function(resolve, reject) {
-    Team.findOne({_id: teamId}).lean().exec()
-      .then(function(team) {
-        if (_.isEmpty(team)) {
-          return reject(new Error('Cannot find parent info'));
-        }
-        if (!_.isEmpty(team.path)) {
-          var paths = team.path.split(',');
-          return paths[_.findLastIndex(paths)];
-        }
-        else {
-          return resolve();
-        }
-      })
-      .then(function(parentPathId) {
-        return Team.findOne({pathId: parentPathId}).exec();
-      })
-      .then(function(parentTeam) {
-        resolve(parentTeam);
-      })
-      .catch(function(err) {
-        reject(err);
-      });
-  });
-};
+// module.exports.getParentByTeamId = function(teamId) {
+//   return new Promise(function(resolve, reject) {
+//     Team.findOne({_id: teamId}).lean().exec()
+//       .then(function(team) {
+//         if (_.isEmpty(team)) {
+//           return reject(new Error('Cannot find parent info'));
+//         }
+//         if (!_.isEmpty(team.path)) {
+//           var paths = team.path.split(',');
+//           return paths[_.findLastIndex(paths)];
+//         }
+//         else {
+//           return resolve();
+//         }
+//       })
+//       .then(function(parentPathId) {
+//         return Team.findOne({pathId: parentPathId}).exec();
+//       })
+//       .then(function(parentTeam) {
+//         resolve(parentTeam);
+//       })
+//       .catch( /* istanbul ignore next */ function(err) {
+//         reject(err);
+//       });
+//   });
+// };
 
 module.exports.getTeamHierarchy = function(path) {
   return new Promise(function(resolve, reject) {
@@ -798,7 +799,7 @@ module.exports.getTeamHierarchy = function(path) {
           resolve(returnTeams);
         }
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         reject(err);
       });
     }
@@ -818,108 +819,124 @@ X->Y->Z
 All affected team that had a path relation to C, will have to be updated.
 */
 
-//TODO should split this into 2 functions to make it cleaner.
-module.exports.updateOrDeleteTeam = function(newDoc, userEmail, userId, action) {
-  var teamId = newDoc._id;
+module.exports.updateTeam = function(teamId, user, newDoc) {
   return new Promise(function(resolve, reject){
-    Promise.join(
-      module.exports.getTeam(teamId),
-      Iterations.getByIterInfo(teamId),
-      Assessments.getTeamAssessments(teamId),
-      function(oldTeamDoc, iterations, assessments){
-        Users.isUserAllowed(userEmail, teamId)
-        .then(function(isAllowed){
-          if (!isAllowed) return Promise.reject(Error('User not allowed to preform action.')); //for some reason have to use static reject here o.w next thens() get called
-          else return;
-        })
-        //use is allowed to update or delete
-        .then(function(){
-          if (action==='delete') {
-            var iterationIds = _.pluck(iterations, '_id');
-            var assessmentIds = _.pluck(assessments, '_id');
-            //delete team, iterations, and assessment docs by setting docStatus: delete
-            //logger will say 0 deleted if they were already deleted (mongodb doesnt update docs if theres no change)
-            loggers.get('model-teams').info('Deleting the following team: ' +teamId);
-            return Team.update({_id : teamId}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:util.getServerTime()}}).exec()
-            .then(function(res){
-              loggers.get('model-teams').verbose('Deleted '+res.nModified+ ' team; docStatus: delete');
-              loggers.get('model-teams').info('Removing '+oldTeamDoc.pathId+' from team paths');
-              return Team.find({path: new RegExp(','+oldTeamDoc.pathId+',')}).exec();
-            })
-            .then(function(teams){
-              if (_.isEmpty(teams)) return;
-              else {
-                //now we have the teams that have paths we need to update.
-                //I couldn't find a way to dynamically update multi docs in mongoose so using async library
-                //this takes almost a minute if it has to update ~2k paths
-                async.each(teams, function(team, callback) {
-                  var newPath = team.path.split(','+oldTeamDoc.pathId).pop();
-                  newPath = (newPath===',') ? undefined : newPath;
-                  return Team.update({_id : team._id}, {$set: {path:newPath}}).exec()
-                  .then(function(r){
-                    loggers.get('model-teams').verbose('updated a team path. oldPath: '+team.path+', new path: '+newPath );
-                    return callback();
-                  })
-                  .catch(function(e){
-                    return callback(e);
-                  });
-                },function(err) {
-                  if ( err ) {
-                    loggers.get('model-teams').error(Error(err));
-                  }
-                  else
-                    loggers.get('model-teams').info(teams.length+' team paths were updated.');
-                });
-              }
-            })
-            .then(function(){
-              loggers.get('model-teams').verbose('Done modifying team paths');
-              loggers.get('model-teams').info('Deleting the following assessment docs: ' +assessmentIds);
-              return Assessments.getModel().update({_id : {'$in':assessmentIds}}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:util.getServerTime()}}, {multi: true}).exec();
-            })
-            .then(function(res){
-              loggers.get('model-teams').verbose('Set '+res.nModified+ ' assessment documents docStatus: delete');
-              loggers.get('model-teams').info('Deleting the following iteration docs: ' +iterationIds);
-              return Iterations.getModel().update({_id : {'$in':iterationIds}}, {$set: {docStatus: 'delete', updatedByUserId:userId, updatedBy:userEmail, updateDate:util.getServerTime()}}, {multi: true}).exec();
-            })
-            .then(function(res){
-              loggers.get('model-teams').verbose('Set '+res.nModified+ ' iteration documents docStatus: delete');
-              return resolve('Successfully deleted the team: '+oldTeamDoc.name+' updated children paths, deleted associated iteration and assessment docs.');
-            })
-            .catch(function(e){
-              return reject(e);
-            });
-          }
-          //else update the team  ... no delete
-          else {
-            if (oldTeamDoc.pathId !== newDoc.pathId || oldTeamDoc.path !== newDoc.path)
-              return Promise.reject(Error('Changing pathId or path is not supported currently'));
-            else {
-              newDoc.updatedByUserId = userId;
-              newDoc.updatedBy = userEmail;
-              newDoc.updateDate = util.getServerTime();
-              return Team.update({_id : teamId}, newDoc, {runValidators: true}).exec();
-            }
-          }
-        })
-        .catch(function(e){
-          return reject(e);
-        });
-      }
-    );
+    var updateDoc = {};
+    if (_.isEmpty(teamId)) {
+      return reject({'error': 'Team ID is required.'});
+    }
+    if (_.isEmpty(user)) {
+      return reject({'error': 'User ID is required.'});
+    }
+    if (newDoc.name == undefined || newDoc.name == '') {
+      return reject({'error': 'Team name is required.'});
+    } else {
+      updateDoc.name = newDoc.name;
+    }
+    var userId = user['ldap']['uid'].toUpperCase();
+    var userEmail = user['shortEmail'].toLowerCase();
+    updateDoc.description = newDoc.description;
+    updateDoc.updatedByUserId = userId;
+    updateDoc.updatedBy = userEmail;
+    updateDoc.updateDate = new Date(moment.utc());
+    Users.isUserAllowed(userId, teamId)
+      .then(function(result){
+        if (!result) {
+          return Promise.reject({'error':'Not allowed to modify team.'});
+        }
+        return Team.update({'_id': teamId}, {'$set': updateDoc}).exec();
+      })
+      .then(function(result){
+        return resolve(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        return reject(err);
+      });
   });
 };
 
-// module.exports.updateOrDeleteTeam('57ead48d027c6a5a884c7ec4','jeffsmit@us.ibm.com','jeff smith', 'delete').then(function(res) {
-//   console.log(res);
-// }).catch(function(e){
-//   console.log(e);
-// });
-
-//I think we can refactor the clientside js to use other model functions
-module.exports.getLookupIndex = function() {
-};
-module.exports.getLookupTeamByType = function() {
+module.exports.softDelete = function(teamId, user) {
+  return new Promise(function(resolve, reject){
+    if (_.isEmpty(teamId)) {
+      return reject({'error': 'Team ID is required.'});
+    }
+    if (_.isEmpty(user)) {
+      return reject({'error': 'User ID is required.'});
+    }
+    var updateDoc = {};
+    var userId = user['ldap']['uid'].toUpperCase();
+    var userEmail = user['shortEmail'].toLowerCase();
+    updateDoc.docStatus = 'delete';
+    updateDoc.updatedByUserId = userId;
+    updateDoc.updatedBy = userEmail;
+    updateDoc.updateDate = new Date(moment.utc());
+    var parentPathId = '';
+    var parentPath = '';
+    Users.isUserAllowed(userId, teamId)
+      .then(function(result){
+        if (!result) {
+          return Promise.reject({'error':'Not allowed to delete team.'});
+        }
+        var promiseArray = [];
+        promiseArray.push(self.getTeam(teamId));
+        promiseArray.push(Iterations.getByIterInfo(teamId));
+        promiseArray.push(Assessments.getTeamAssessments(teamId));
+        return Promise.all(promiseArray);
+      })
+      .then(function(results){
+        var team = results[0];
+        var iterations = results[1];
+        var assessments = results[2];
+        parentPathId = team.pathId;
+        if (team.path == null) {
+          parentPath = ',' + parentPathId + ',';
+        } else {
+          parentPath = team.path + parentPathId + ',';
+        }
+        var query = {
+          'path' : {
+            '$regex' : parentPath
+          }
+        };
+        var promiseArray = [];
+        promiseArray.push(Team.find(query).exec());
+        _.each(iterations, function(iter){
+          promiseArray.push(Iterations.softDelete(iter._id, user));
+        });
+        _.each(assessments, function(as){
+          promiseArray.push(Assessments.softDelete(as._id, user));
+        });
+        promiseArray.push(Team.update({'_id': teamId}, {'$set': updateDoc}).exec());
+        return Promise.all(promiseArray);
+      })
+      .then(function(results){
+        var teams = results[0];
+        var promiseArray = [];
+        _.each(teams, function(team){
+          var updateTeamDoc = {};
+          var tid = team._id;
+          var tpath = team.path;
+          tpath = tpath.replace(parentPath, '');
+          if (tpath == '') {
+            tpath = null;
+          } else {
+            tpath = ',' + tpath;
+          }
+          updateTeamDoc.path = tpath;
+          updateTeamDoc.updatedByUserId = userId;
+          updateTeamDoc.updatedBy = userEmail;
+          updateTeamDoc.updateDate = new Date(moment.utc());
+          promiseArray.push(Team.update({'_id': tid}, {'$set': updateTeamDoc}).exec());
+        });
+        return Promise.all(promiseArray);
+      })
+      .then(function(result){
+        return resolve({'ok': 'Delete successfully'});
+      })
+      .catch(function(err){
+        return reject(err);
+      });
+  });
 };
 
 module.exports.modifyImportantLinks = function(teamId, user, links) {
@@ -932,20 +949,16 @@ module.exports.modifyImportantLinks = function(teamId, user, links) {
      * @returns - modified team document
      */
     var userId = user['ldap']['uid'].toUpperCase();
-    var userEmail = user['shortEmail'];
+    var userEmail = user['shortEmail'].toLowerCase();
     var validResult = validateUpdateImportantLinks(teamId, userEmail, links);
     if (validResult && validResult['error'] !== undefined) return reject(validResult);
 
     //check if user is allowed to edit team
     Users.isUserAllowed(userId.toUpperCase(), teamId)
     .then(function(allowed){
-      loggers.get('models').verbose('User ' + userEmail + ' is allowed to edit team ' + teamId + '. Proceed with modification');
-      return allowed;
-    })
-    .then(function(){
-      return module.exports.getTeam(teamId);
-    })
-    .then(function(teamDetails){
+      if (!allowed) {
+        return Promise.reject({'error':'Not allowed to modify team links'});
+      }
       var tmpLinks = [];
       var pattern = /^((http|https):\/\/)/;
       _.each(links, function(data,idx,ls) {
@@ -961,25 +974,16 @@ module.exports.modifyImportantLinks = function(teamId, user, links) {
         obj.linkUrl = url;
         tmpLinks.push(obj);
       });
-      teamDetails['links'] = tmpLinks;
-      teamDetails['updatedByUserId'] = userId;
-      teamDetails['updatedBy'] = userEmail;
-      teamDetails['updateDate'] = util.getServerTime();
-      return Team.findByIdAndUpdate(teamId, teamDetails);
+      var updateTeam = {
+        'links': tmpLinks,
+        'updatedByUserId': userId,
+        'updatedBy': userEmail,
+        'updateDate': new Date(moment.utc())
+      };
+      return Team.update({'_id': teamId},{'$set': updateTeam}).exec();
     })
-    .then(function(savingResult){
-      return module.exports.getUserTeams(userEmail);
-    })
-    .then(function(userTeams){
-      return module.exports.getTeam(teamId)
-      .then(function(result){
-        return resolve(
-          {
-            userTeams : userTeams,
-            teamDetails : result
-          }
-        );
-      });
+    .then(function(result){
+      return resolve(result);
     })
     .catch( /* istanbul ignore next */ function(err){
       return reject(err);
@@ -987,133 +991,133 @@ module.exports.modifyImportantLinks = function(teamId, user, links) {
   });
 };
 
-module.exports.deleteImportantLinks = function(teamId, user, links) {
-  return new Promise(function(resolve, reject){
-    /**
-     *
-     * @param teamId - team id to modify
-     * @param user - user id of the one who is doing the action
-     * @param links - array of link IDs
-     * @returns - modified team document
-     */
-    var errorLists = {};
-    errorLists['error'] = {};
-    var userId = user['ldap']['uid'].toUpperCase();
-    var userEmail = user['shortEmail'];
-    var validResult = validateDelImportantLinks(teamId, userId, links);
-    if (validResult && validResult['error'] !== undefined) return reject(validResult);
-
-    //check if user is allowed to edit team
-    Users.isUserAllowed(userId, teamId)
-    .then(function(allowed){
-      loggers.get('models').verbose('User ' + userEmail + ' is allowed to edit team ' + teamId + '. Proceed with modification');
-      return allowed;
-    })
-    .then(function(){
-      return module.exports.getTeam(teamId);
-    })
-    .then(function(teamDetails){
-      if (!_.isEmpty(teamDetails.links)){
-        var curlinkData = teamDetails.links;
-        var tmpcurlinkData = _.clone(teamDetails.links);
-        var tmpLinks = [];
-        var deletedIds = _.pluck(links, 'id');
-        var failDeleteLinkIds = [];
-        var errmsg;
-        _.each(curlinkData, function(value, key, list){
-          if (_.contains(deletedIds, value.id)){
-            delete curlinkData[key];
-          }
-        });
-
-        _.each(curlinkData, function(value, key, list){
-          if (value !== undefined){
-            tmpLinks.push(value);
-          }
-        });
-
-        var currlinkData = _.pluck(tmpcurlinkData, 'id');
-        _.each(deletedIds, function(value, key, list) {
-          if (!_.contains(currlinkData, value)) {
-            failDeleteLinkIds.push(value);
-          }
-        });
-
-        if (failDeleteLinkIds.length > 0) {
-          failDeleteLinkIds = _.reject(failDeleteLinkIds, _.isUndefined);
-          if (failDeleteLinkIds && failDeleteLinkIds.length > 0) {
-            errmsg = 'The following Link ID does not exist in the database: ' + failDeleteLinkIds.join(',');
-          } else {
-            errmsg = 'Link ID not found';
-          }
-          errorLists['error']['links'] = [errmsg];
-          return reject(errorLists);
-        } else {
-          teamDetails['links'] = tmpLinks;
-          teamDetails['updatedByUserId'] = userId;
-          teamDetails['updatedBy'] = userEmail;
-          teamDetails['updateDate'] = util.getServerTime();
-          return Team.findByIdAndUpdate(teamId, teamDetails);
-        }
-      } else {
-        var deletedIds = _.pluck(links, 'id');
-        var errmsg;
-        deletedIds = _.reject(deletedIds, _.isUndefined);
-        if (deletedIds && deletedIds.length > 0) {
-          errmsg = 'The following Link ID does not exist in the database: ' + deletedIds.join(',');
-        } else {
-          errmsg = 'Link ID not found';
-        }
-        errorLists['error']['links'] = [errmsg];
-        return reject(errorLists);
-      }
-    })
-    .then(function(savingResult){
-      return module.exports.getUserTeams(userEmail);
-    })
-    .then(function(userTeams){
-      return module.exports.getTeam(teamId)
-      .then(function(result){
-        return resolve(
-          {
-            userTeams : userTeams,
-            teamDetails : result
-          }
-        );
-      });
-    })
-    .catch( /* istanbul ignore next */ function(err){
-      return reject(err);
-    });
-  });
-};
-
-var validateDelImportantLinks = function(teamId, userId, links) {
-  var errorLists = {};
-  errorLists['error'] = {};
-  if (_.isEmpty(teamId)){
-    errorLists['error']['teamId'] = ['Team ID is required'];
-    loggers.get('models').verbose(errorLists);
-    return errorLists;
-  }
-  if (_.isEmpty(userId)){
-    errorLists['error']['userId'] = ['User ID is required'];
-    loggers.get('models').verbose(errorLists);
-    return errorLists;
-  }
-  if (_.isEmpty(links)){
-    errorLists['error']['links'] = ['Link ID is required'];
-    loggers.get('models').verbose(errorLists);
-    return errorLists;
-  } else {
-    if (!_.isArray(links)){
-      errorLists['error']['links'] = ['Invalid links'];
-      loggers.get('models').verbose(errorLists);
-      return errorLists;
-    }
-  }
-  return true;
-};
+// module.exports.deleteImportantLinks = function(teamId, user, links) {
+//   return new Promise(function(resolve, reject){
+//     /**
+//      *
+//      * @param teamId - team id to modify
+//      * @param user - user id of the one who is doing the action
+//      * @param links - array of link IDs
+//      * @returns - modified team document
+//      */
+//     var errorLists = {};
+//     errorLists['error'] = {};
+//     var userId = user['ldap']['uid'].toUpperCase();
+//     var userEmail = user['shortEmail'].toLowerCase();
+//     var validResult = validateDelImportantLinks(teamId, userId, links);
+//     if (validResult && validResult['error'] !== undefined) return reject(validResult);
+//
+//     //check if user is allowed to edit team
+//     Users.isUserAllowed(userId, teamId)
+//     .then(function(allowed){
+//       loggers.get('models').verbose('User ' + userEmail + ' is allowed to edit team ' + teamId + '. Proceed with modification');
+//       return allowed;
+//     })
+//     .then(function(){
+//       return module.exports.getTeam(teamId);
+//     })
+//     .then(function(teamDetails){
+//       if (!_.isEmpty(teamDetails.links)){
+//         var curlinkData = teamDetails.links;
+//         var tmpcurlinkData = _.clone(teamDetails.links);
+//         var tmpLinks = [];
+//         var deletedIds = _.pluck(links, 'id');
+//         var failDeleteLinkIds = [];
+//         var errmsg;
+//         _.each(curlinkData, function(value, key, list){
+//           if (_.contains(deletedIds, value.id)){
+//             delete curlinkData[key];
+//           }
+//         });
+//
+//         _.each(curlinkData, function(value, key, list){
+//           if (value !== undefined){
+//             tmpLinks.push(value);
+//           }
+//         });
+//
+//         var currlinkData = _.pluck(tmpcurlinkData, 'id');
+//         _.each(deletedIds, function(value, key, list) {
+//           if (!_.contains(currlinkData, value)) {
+//             failDeleteLinkIds.push(value);
+//           }
+//         });
+//
+//         if (failDeleteLinkIds.length > 0) {
+//           failDeleteLinkIds = _.reject(failDeleteLinkIds, _.isUndefined);
+//           if (failDeleteLinkIds && failDeleteLinkIds.length > 0) {
+//             errmsg = 'The following Link ID does not exist in the database: ' + failDeleteLinkIds.join(',');
+//           } else {
+//             errmsg = 'Link ID not found';
+//           }
+//           errorLists['error']['links'] = [errmsg];
+//           return reject(errorLists);
+//         } else {
+//           teamDetails['links'] = tmpLinks;
+//           teamDetails['updatedByUserId'] = userId;
+//           teamDetails['updatedBy'] = userEmail;
+//           teamDetails['updateDate'] = new Date(moment.utc());
+//           return Team.findByIdAndUpdate(teamId, teamDetails);
+//         }
+//       } else {
+//         var deletedIds = _.pluck(links, 'id');
+//         var errmsg;
+//         deletedIds = _.reject(deletedIds, _.isUndefined);
+//         if (deletedIds && deletedIds.length > 0) {
+//           errmsg = 'The following Link ID does not exist in the database: ' + deletedIds.join(',');
+//         } else {
+//           errmsg = 'Link ID not found';
+//         }
+//         errorLists['error']['links'] = [errmsg];
+//         return reject(errorLists);
+//       }
+//     })
+//     .then(function(savingResult){
+//       return module.exports.getUserTeams(userEmail);
+//     })
+//     .then(function(userTeams){
+//       return module.exports.getTeam(teamId)
+//       .then(function(result){
+//         return resolve(
+//           {
+//             userTeams : userTeams,
+//             teamDetails : result
+//           }
+//         );
+//       });
+//     })
+//     .catch( /* istanbul ignore next */ function(err){
+//       return reject(err);
+//     });
+//   });
+// };
+//
+// var validateDelImportantLinks = function(teamId, userId, links) {
+//   var errorLists = {};
+//   errorLists['error'] = {};
+//   if (_.isEmpty(teamId)){
+//     errorLists['error']['teamId'] = ['Team ID is required'];
+//     loggers.get('models').verbose(errorLists);
+//     return errorLists;
+//   }
+//   if (_.isEmpty(userId)){
+//     errorLists['error']['userId'] = ['User ID is required'];
+//     loggers.get('models').verbose(errorLists);
+//     return errorLists;
+//   }
+//   if (_.isEmpty(links)){
+//     errorLists['error']['links'] = ['Link ID is required'];
+//     loggers.get('models').verbose(errorLists);
+//     return errorLists;
+//   } else {
+//     if (!_.isArray(links)){
+//       errorLists['error']['links'] = ['Invalid links'];
+//       loggers.get('models').verbose(errorLists);
+//       return errorLists;
+//     }
+//   }
+//   return true;
+// };
 
 var validateUpdateImportantLinks = function(teamId, userId, links) {
   var errorLists = {};
@@ -1125,11 +1129,6 @@ var validateUpdateImportantLinks = function(teamId, userId, links) {
   }
   if (_.isEmpty(userId)){
     errorLists['error']['userId'] = ['User ID is required'];
-    loggers.get('models').verbose(errorLists);
-    return errorLists;
-  }
-  if (_.isEmpty(links)){
-    errorLists['error']['links'] = ['Link url is required'];
     loggers.get('models').verbose(errorLists);
     return errorLists;
   } else {
@@ -1165,8 +1164,6 @@ var validateUpdateImportantLinks = function(teamId, userId, links) {
   return true;
 };
 
-var associateActions = function() {
-};
 module.exports.associateTeams = function(parentTeamId, childTeamId, uid) {
   return new Promise(function(resolve, reject){
     if (_.isEmpty(uid)) {
@@ -1179,8 +1176,8 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, uid) {
       var promiseArray = [];
       var oldChildPath = '';
       var newChildPath = '';
-      promiseArray.push(Users.isUserAllowed(parentTeamId, uid));
-      promiseArray.push(Users.isUserAllowed(childTeamId, uid));
+      promiseArray.push(Users.isUserAllowed(uid, parentTeamId));
+      promiseArray.push(Users.isUserAllowed(uid, childTeamId));
       Promise.all(promiseArray)
         .then(function(results){
           if (results[0] == false) {
@@ -1189,35 +1186,43 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, uid) {
             return Promise.reject({'error':'You dont have access to child team.'});
           } else {
             var promiseArray = [];
-            promiseArray.push(Teams.getTeam(parentTeamId));
-            promiseArray.push(Teams.getTeam(childTeamId));
+            promiseArray.push(self.getTeam(parentTeamId));
+            promiseArray.push(self.getTeam(childTeamId));
             return Promise.all(promiseArray);
           }
         })
         .then(function(results) {
-          if (_.isEmpty(results[0]) || results[0].type == 'squad') {
+          if (results[0] == null || results[0].type == 'squad') {
             return Promise.reject({'error':'Parent team cannot be associated.'});
-          } else if (_.isEmpty(results[1])) {
+          } else if (results[1] == null) {
             return Promise.reject({'error':'Child team cannot be associated.'});
           }
           var parentPath = results[0].path;
           var parentPathId = results[0].pathId;
           var childPathId = results[1].pathId;
           var childPath = results[1].path;
-          if (parentPath.indexOf(','+childPathId+',') > 0) {
+          if (parentPath != null && parentPath.indexOf(','+childPathId+',') > 0) {
             return Promise.reject({'error':'Child team cannot be higher level than parent team.'});
           } else {
-            oldChildPath = childPath + childPathId + ',';
-            newChildPath = parentPath + parentPathId + ',' + childPathId + ',';
-            var newChildTeam = results[1];
-            newChildTeam['path'] = parentPath + parentPathId + ',';
+            if (childPath == null) {
+              oldChildPath = ',' + childPathId + ',';
+            } else {
+              oldChildPath = childPath + childPathId + ',';
+            }
+            if (parentPath == null) {
+              newChildPath = ',' + parentPathId + ',' + childPathId + ',';
+              var newChildTeamPath = ',' + parentPathId + ',';
+            } else {
+              newChildPath = parentPath + parentPathId + ',' + childPathId + ',';
+              newChildTeamPath = parentPath + parentPathId + ',';
+            }
             var query = {
               'path' : {
                 '$regex' : oldChildPath
               }
             };
             var promiseArray = [];
-            promiseArray.push(newChildTeam.save());
+            promiseArray.push(Team.update({_id: results[1]._id}, {$set: {path: newChildTeamPath}}).exec());
             promiseArray.push(Team.find(query).exec());
             return Promise.all(promiseArray);
           }
@@ -1227,8 +1232,8 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, uid) {
             var promiseArray = [];
             _.each(results[1], function(team){
               var oldPath = team.path;
-              team['path'] = oldPath.replace(oldChildPath, newChildPath);
-              promiseArray.push(team.save());
+              var newPath = oldPath.replace(oldChildPath, newChildPath);
+              promiseArray.push(Team.update({_id: team._id}, {$set: {path: newPath}}).exec());
             });
             return Promise.all(promiseArray);
           } else {
@@ -1236,7 +1241,7 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, uid) {
           }
         })
         .then(function(result){
-          return resolve(result);
+          return resolve({'ok':'Updated Successfully'});
         })
         .catch( /* istanbul ignore next */ function(err) {
           return reject(err);

@@ -46,6 +46,19 @@ var testChildTeam = {
   'createdByUserId': 'ADMIN1234567',
   'createdBy': 'admintestuser@test.com'
 };
+var userSession1 = {
+  'ldap': {
+    'uid': 'TEST1234567'
+  },
+  'shortEmail': 'testuser@test.com'
+};
+var userSession2 = {
+  'ldap': {
+    'uid': 'ADMIN1234567'
+  },
+  'shortEmail': 'admintestuser@test.com'
+};
+
 var newParentTeamId = Schema.Types.ObjectId;
 var newChildTeamId = Schema.Types.ObjectId;
 
@@ -59,12 +72,12 @@ describe('Users model [create]', function() {
     promiseArray.push(teams.deleteTeamByName(testChildTeam.name));
     Promise.all(promiseArray)
       .then(function(){
-        return teams.createTeam(testParentTeam);
+        return teams.createTeam(testParentTeam, userSession1);
       })
       .then(function(result){
         newParentTeamId = result._id;
         testChildTeam.path = ','+result.pathId+',';
-        return teams.createTeam(testChildTeam);
+        return teams.createTeam(testChildTeam, userSession2);
       })
       .then(function(result){
         newChildTeamId = result._id;
@@ -203,10 +216,10 @@ describe('Users model [isUserAllowed]', function() {
         done();
       });
   });
-  it('return true if the user has no access to child team', function(done) {
+  it('return false if the user has no access to child team', function(done) {
     users.isUserAllowed(testUser.userId, newChildTeamId)
       .then(function(result) {
-        expect(result).to.equal(true);
+        expect(result).to.equal(false);
         done();
       });
   });

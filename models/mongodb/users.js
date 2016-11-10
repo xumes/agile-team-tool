@@ -5,7 +5,6 @@ var moment = require('moment');
 var _ = require('underscore');
 var Schema = mongoose.Schema;
 var Team = require('./teams');
-var https = require('https');
 var request = require('request');
 var settings = require('../../settings');
 var System = require('./system');
@@ -47,35 +46,35 @@ var userSchema = {
   }
 };
 
-var getUserFromFaces = function(email) {
-  return new Promise(function(resolve, reject){
-    if (email != null && email != '') {
-      var json;
-      var facesURL = settings.facesURL;
-      var facesFun = 'find/?limit=100&q=email:' + encodeURIComponent('"' + escape(email) + '"');
-      var url = facesURL + facesFun;
-      request.get(url, function(err, res, body){
-        /* istanbul ignore next */ if (res.statusCode != 200) {
-          var msg = {'error': 'can not get response'};
-          resolve(msg);
-        } else {
-          try {
-            json = JSON.parse(body);
-          } /* istanbul ignore next */ catch (err) {
-            var msg = {'error': 'json error'};
-            resolve(msg);
-          }
-          if (json.length > 0) {
-            resolve(json[0]);
-          } /* istanbul ignore next */ else {
-            var msg = {'error': 'can not find match result'};
-            resolve(msg);
-          }
-        }
-      });
-    }
-  });
-};
+// var getUserFromFaces = function(email) {
+//   return new Promise(function(resolve, reject){
+//     if (email != null && email != '') {
+//       var json;
+//       var facesURL = settings.facesURL;
+//       var facesFun = 'find/?limit=100&q=email:' + encodeURIComponent('"' + escape(email) + '"');
+//       var url = facesURL + facesFun;
+//       request.get(url, function(err, res, body){
+//         /* istanbul ignore next */ if (res.statusCode != 200) {
+//           var msg = {'error': 'can not get response'};
+//           resolve(msg);
+//         } else {
+//           try {
+//             json = JSON.parse(body);
+//           } /* istanbul ignore next */ catch (err) {
+//             var msg = {'error': 'json error'};
+//             resolve(msg);
+//           }
+//           if (json.length > 0) {
+//             resolve(json[0]);
+//           } /* istanbul ignore next */ else {
+//             var msg = {'error': 'can not find match result'};
+//             resolve(msg);
+//           }
+//         }
+//       });
+//     }
+//   });
+// };
 
 var UserSchema = new Schema(userSchema);
 var User = mongoose.model('users', UserSchema);
@@ -146,13 +145,13 @@ var users = {
     return new Promise(function(resolve, reject) {
       Team.getUserTeamsByUserId(userId)
         .then(function(teams) {
-          console.log(teamId, teams);
+          // console.log(teamId, teams);
           var isMember = false;
           _.each(teams, function(team){
             if (_.isEqual((team).toString(), teamId.toString()))
               isMember = true;
           });
-          console.log(isMember);
+          // console.log(isMember);
           return resolve(isMember);
         })
         .catch( /* istanbul ignore next */ function(err) {
@@ -170,34 +169,25 @@ var users = {
       promiseArray.push(users.isTeamMember(userId, teamId));
       Promise.all(promiseArray)
         .then(function(results){
-          if (results[0] && results[0] != undefined) {
-            if (results[0].adminAccess && results[0].adminAccess != undefined && results[0].adminAccess == 'full') {
-              if (results[1] && results[1] != undefined) {
-                if (results[1].adminAccess && results[1].adminAccess != undefined && results[1].adminAccess.indexOf(results[0].adminAccess) != -1) {
-                  hasAccess = true;
-                }
-              }
-            } else if (results[0].adminAccess && results[0].adminAccess != undefined && results[0].adminAccess == 'none') {
-              if (results[1] && results[1] != undefined) {
-                if (results[1].adminAccess && results[1].adminAccess != undefined && results[1].adminAccess != 'none') {
-                  hasAccess = true;
-                }
-              }
-              if (!hasAccess && results[2] && results[2] != undefined) {
-                hasAccess = results[2];
-              }
-            }
-          } else {
-            if (results[1] && results[1] != undefined) {
-              if (results[1].adminAccess && results[1].adminAccess != undefined && results[1].adminAccess != 'none') {
-                hasAccess = true;
-              }
-            }
-            if (!hasAccess && results[2] && results[2] != undefined) {
-              hasAccess = results[2];
-            }
+          var systemAccess = 'none';
+          var userAccess = 'none';
+          var teamAccess = false;
+          if (results[0] != null && results[0].adminAccess != undefined) {
+            systemAccess = results[0].adminAccess;
           }
-          return resolve(hasAccess);
+          if (results[1] != null && results[1].adminAccess != undefined) {
+            userAccess = results[1].adminAccess;
+          }
+          if (results[2] != undefined) {
+            teamAccess = results[2];
+          }
+          if (userAccess == 'full') {
+            return resolve(true);
+          } else if (systemAccess == 'none' && teamAccess) {
+            return resolve(true);
+          } else {
+            return resolve(false);
+          }
         })
         .catch( /* istanbul ignore next */ function(err){
           console.log(err);
@@ -230,15 +220,20 @@ var users = {
           'timezone': null
         }
       };
-      getUserFromFaces(newUser.email)
-        .then(function(facesInfo){
-          if (!facesInfo.error) {
-            if (facesInfo.location) {
-              newUser.location.site = facesInfo.location;
-            }
-          }
-          return User.create(newUser);
-        })
+      if (user.location != undefined && !_.isEmpty(user.location)) {
+        newUser.location.site = user.location.site;
+        newUser.location.timezone = user.location.timezone;
+      }
+      User.create(newUser)
+      // getUserFromFaces(newUser.email)
+      //   .then(function(facesInfo){
+      //     if (!facesInfo.error) {
+      //       if (facesInfo.location) {
+      //         newUser.location.site = facesInfo.location;
+      //       }
+      //     }
+      //     return User.create(newUser);
+      //   })
         .then(function(result){
           resolve(result);
         })

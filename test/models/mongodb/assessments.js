@@ -45,6 +45,13 @@ var testTeam = {
   'createdBy': 'testuser@test.com'
 };
 
+var userSession = {
+  'ldap': {
+    'uid': 'TEST1234567'
+  },
+  'shortEmail': 'testuser@test.com'
+};
+
 // var testData = {
 //   validUserEmail : function() {
 //     return 'johndoe@us.ibm.com';
@@ -70,7 +77,7 @@ describe('Assessment model [addTeamAssessment] ', function() {
         return Users.create(inValidUser);
       })
       .then(function(result){
-        return Teams.createTeam(testTeam);
+        return Teams.createTeam(testTeam, userSession);
       })
       .then(function(result){
         newTeamId = result._id;
@@ -231,6 +238,17 @@ describe('Assessment model [updateTeamAssessment] ', function() {
     Assessments.updateTeamAssessment(testUser.userId, data)
       .then(function(result) {
         expect(result['version']).to.be.equal('New assessment version');
+        done();
+      });
+  });
+});
+
+describe('Iteration model [softDelete]', function() {
+  it('return successful for soft deleteing a iteration', function(done) {
+    Assessments.softDelete(newAssessId, userSession)
+      .then(function(result){
+        expect(result).to.be.a('object');
+        expect(result).to.have.property('ok');
         done();
       });
   });

@@ -14,7 +14,7 @@ gulp.task('lint', function() {
 });
 
 gulp.task('pre-test', function() {
-  return gulp.src(['*.js', 'routes/*.js', 'routes/*/*.js', 'models/*.js', '!models/teamscore.js', 'models/mongodb/*.js'])
+  return gulp.src(['*.js', 'routes/*.js', 'routes/*/*.js', '!models/*.js', 'models/mongodb/*.js'])
     // Covering files
     .pipe(istanbul())
     // Force `require` to return covered files

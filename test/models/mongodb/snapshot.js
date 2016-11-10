@@ -16,6 +16,13 @@ var testTeam = {
   'createdByUserId': 'TEST1234567',
   'createdBy': 'testuser@test.com'
 };
+var userSession = {
+  'ldap': {
+    'uid': 'TEST1234567'
+  },
+  'shortEmail': 'testuser@test.com'
+};
+
 var newTeamId = Schema.Types.ObjectId;
 var newTeamPathId = '';
 var newSnapshotId = Schema.Types.ObjectId;
@@ -27,7 +34,7 @@ describe('Snapshot Model Test', function(){
       promiseArray.push(teamModel.deleteTeamByName(testTeam.name));
       Promise.all(promiseArray)
         .then(function(){
-          return teamModel.createTeam(testTeam);
+          return teamModel.createTeam(testTeam, userSession);
         })
         .then(function(result){
           newTeamId = result._id;

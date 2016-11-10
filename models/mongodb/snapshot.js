@@ -10,10 +10,7 @@ var assessmentModel = require('./assessments.js');
 var userLocations = require('./data/userLocations.js');
 var userTimezone = require('./data/uniqueUserTimezone.js');
 var moment = require('moment');
-var https = require('https');
-var request = Promise.promisifyAll(require('request'));
 var util = require('../../helpers/util');
-var async = require('async');
 var dateFormat = 'YYYY-MM-DD HH:mm:ss';
 var Schema   = mongoose.Schema;
 

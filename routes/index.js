@@ -1,8 +1,7 @@
 var fs = require('fs');
 var settings = require('../settings');
 var middleware = {
-  //auth: require('../middleware/auth')
-  auth: require('../middleware/mongodb/auth')
+  auth: require('../middleware/auth')
 };
 var _ = require('underscore');
 
@@ -22,7 +21,7 @@ module.exports = function(app, passport) {
   fs.readdirSync('./routes/server').forEach(function(file) {
     require('./server/' + file)(app, includes);
   });
-  if (settings.mongoURL && _.isEmpty(settings.mongoURL)) {
+  if (settings.mongoURL == undefined || _.isEmpty(settings.mongoURL)) {
     fs.readdirSync('./routes/api').forEach(function(file) {
       require('./api/' + file)(app, includes);
     });
