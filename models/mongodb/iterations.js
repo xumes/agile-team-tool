@@ -6,7 +6,6 @@ var ObjectId = require('mongodb').ObjectID;
 var loggers = require('../../middleware/logger');
 var Users = require('./users.js');
 var moment = require('moment');
-var util = require('../../helpers/util');
 var dateFormat = 'YYYY-MM-DD HH:mm:ss';
 var Schema   = mongoose.Schema;
 require('../../settings');
@@ -274,11 +273,12 @@ var IterationExport = {
         if (iterData != undefined && iterData.length > 0) {
           var duplicate = isIterationNumExist(data['name'], iterData);
           if (duplicate) {
-            var msg = {errors:{
-                        name:{
-                          message:'Iteration number/identifier: ' + data['name'] + ' already exists'}
-                        }
-                      };
+            var msg = {};
+            msg.errors = {
+              name:{
+                message:'Iteration number/identifier: ' + data['name'] + ' already exists'
+              }
+            };
             loggers.get('model-iteration').error(msg);
             return Promise.reject(msg);
           }
@@ -328,7 +328,7 @@ var IterationExport = {
           data['updateDate'] = moment().format(dateFormat);
           data['updatedBy'] = userInfo.email;
           data['updatedByUserId'] = userInfo.userId;
-          data['status'] = IterationExport.calculateStatus(data);         
+          data['status'] = IterationExport.calculateStatus(data);
           return Iteration.where({'_id': docId}).update({'$set':data});
         }
       })
@@ -448,6 +448,25 @@ var IterationExport = {
           }
         });
       }
+    });
+  },
+
+  softDelete: function(docId, user) {
+    return new Promise(function(resolve, reject) {
+      var updateDoc = {};
+      var userId = user['ldap']['uid'].toUpperCase();
+      var userEmail = user['shortEmail'].toLowerCase();
+      updateDoc.docStatus = 'delete';
+      updateDoc.updatedByUserId = userId;
+      updateDoc.updatedBy = userEmail;
+      updateDoc.updateDate = new Date(moment.utc());
+      Iteration.update({'_id': docId}, {'$set': updateDoc}).exec()
+        .then(function(result){
+          return resolve(result);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          return reject(err);
+        });
     });
   },
   // used in tests

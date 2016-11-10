@@ -145,8 +145,8 @@ var IterationForm = React.createClass({
     var response = errorResponse.responseJSON;
 
     if (response && response.error) {
-      if (response.error.errors){
-        var errors = response.error.errors;
+      var errors = response.error.errors;
+      if (errors){        
         // Return iteration errors as String
         errorlist = this.getIterationErrorPopup(errors);
         if (errorlist != '') {
