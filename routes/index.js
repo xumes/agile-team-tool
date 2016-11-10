@@ -1,8 +1,7 @@
 var fs = require('fs');
 var settings = require('../settings');
 var middleware = {
-  auth: require('../middleware/auth'),
-  authMongo: require('../middleware/mongodb/auth')
+  auth: require('../middleware/auth')
 };
 var _ = require('underscore');
 
