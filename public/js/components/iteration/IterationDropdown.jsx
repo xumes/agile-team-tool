@@ -8,20 +8,26 @@ var IterationDropdown = React.createClass({
       iterations: []
     }
   },
+
+  componentWillMount: function() {
+    var self = this;
+    var teamId = this.props.iteration.teamId;
+    if (teamId != undefined && teamId != '') {
+      api.getIterations(teamId)
+        .then(function(result) {
+          self.setState({
+            iterations: result, 
+            selectedIteration: self.props.iteration._id
+          });
+          self.loadSelected(self.props.iteration._id);
+        });
+    }
+  },
   
   componentDidMount: function() {
-    var self = this;
-    if (this.props.iteration.teamId != undefined && this.props.iteration.teamId != ''){
-    api.getIterations(this.props.iteration.teamId)
-      .then(function(result) {
-        self.setState({iterations: result, selectedIteration: self.props.iteration._id
-        });
-        self.loadSelected(self.props.iteration._id);
-      });
-    }
     // Use IBM's bundled select2 package
-    $(this.refs.selectDropDown).select2();
-    $(this.refs.selectDropDown).change(this.handleChange);
+    $(this.refs.iterationSelectList).select2();
+    $(this.refs.iterationSelectList).change(this.handleChange);
   },
 
   handleChange: function(e) {
@@ -34,8 +40,7 @@ var IterationDropdown = React.createClass({
       var iteration;
       api.getIterationInfo(id)
         .then(function(result) {
-          iteration = result;
-          
+          iteration = result;          
           return api.isUserAllowed(self.props.iteration.teamId);
         })
         .then(function(result){
@@ -48,36 +53,28 @@ var IterationDropdown = React.createClass({
     self.setState({selectedIteration: id});
   },
 
-  retrieveIterations: function(teamId, selected){
+  retrieveIterations: function(teamId, selected, state){
     var self = this;
     if (teamId != undefined && teamId != ''){
-      var promiseArray = [];
       if (selected != undefined && selected != null){
         var iterations;
         api.getIterations(teamId)
           .then(function(result) {
-            iterations = result;
-            promiseArray.push(api.getIterationInfo(selected));
-            promiseArray.push(api.isUserAllowed(teamId));
-            return Promise.all(promiseArray);
+            self.setState({iterations: result, selectedIteration: selected});
+            return api.getIterationInfo(selected);
           })
           .then(function(result) {
-            self.setState({
-              iterations: iterations
-            });
-            self.props.updateForm(result[0], result[1]);
+            self.props.updateForm(result, state);
           });
       }
       else {
         api.getIterations(teamId)
           .then(function(result) {
-            self.setState({
-              iterations: result
-            });
+            self.setState({iterations: result});
           });
         self.setState({selectedIteration: 'new'});
         self.props.iteration._id = '';
-        self.props.updateForm(null, false);
+        self.props.updateForm(null, state);
       }
     }
   },
@@ -90,7 +87,7 @@ var IterationDropdown = React.createClass({
     });
 
     return (
-      <select name='iterationSelectList' disabled={!this.props.enableFields} defaultValue={this.state.selectedIteration} className='iterationField' onChange={this.handleChange} ref='selectDropDown'>
+      <select id='iterationSelectList' disabled={!this.props.enableFields} value={this.state.selectedIteration} className='iterationField' onChange={this.handleChange} ref='iterationSelectList'>
         <option value='new' key='new'>Create new..</option>
         {populateIteratNames}
       </select>

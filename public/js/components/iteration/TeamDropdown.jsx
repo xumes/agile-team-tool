@@ -10,15 +10,18 @@ var TeamDropdown = React.createClass({
     }
   },
 
-  componentDidMount: function() {
+  componentWillMount: function() {
     var self = this; // Need to get reference to this instance
     api.getSquadTeams()
       .then(function(teams) {
         self.setState({teamNames: teams});
-      });
-    $(this.refs.selectDropDown).select2();
-    $(this.refs.selectDropDown).change(this.handleChange);
-    self.setState({selectedTeam: this.props.selectedTeam});
+    });
+    this.setState({selectedTeam: this.props.selectedTeam});
+  },
+
+  componentDidMount: function() {    
+    $(this.refs.teamSelectList).select2();
+    $(this.refs.teamSelectList).change(this.handleChange);
   },
 
   handleChange: function(e){
@@ -37,7 +40,7 @@ var TeamDropdown = React.createClass({
     });
 
     return (
-      <select value={this.state.selectedTeam} name='teamSelectList' style={teamSelectListStyle}  onChange={this.props.teamChangeHandler} ref='selectDropDown'>
+      <select value={this.state.selectedTeam} id='teamSelectList' style={teamSelectListStyle}  onChange={this.props.teamChangeHandler} ref='teamSelectList'>
         <option value=''>Select one</option>
         {populateTeamNames}
       </select>

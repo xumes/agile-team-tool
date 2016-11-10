@@ -274,7 +274,11 @@ var IterationExport = {
         if (iterData != undefined && iterData.length > 0) {
           var duplicate = isIterationNumExist(data['name'], iterData);
           if (duplicate) {
-            var msg = 'Iteration number/identifier: ' + data['name'] + ' already exists';
+            var msg = {errors:{
+                        name:{
+                          message:'Iteration number/identifier: ' + data['name'] + ' already exists'}
+                        }
+                      };
             loggers.get('model-iteration').error(msg);
             return Promise.reject(msg);
           }
@@ -324,7 +328,7 @@ var IterationExport = {
           data['updateDate'] = moment().format(dateFormat);
           data['updatedBy'] = userInfo.email;
           data['updatedByUserId'] = userInfo.userId;
-          data['status'] = IterationExport.calculateStatus(data);
+          data['status'] = IterationExport.calculateStatus(data);         
           return Iteration.where({'_id': docId}).update({'$set':data});
         }
       })

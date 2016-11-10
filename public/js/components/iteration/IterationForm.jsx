@@ -40,6 +40,9 @@ var initData = {
 'updatedByUserId':'',
 'updateDate':''};
 
+var invalidBorder = '#f00';
+var invalidBackground = '';
+
 var IterationForm = React.createClass({
   getInitialState: function() {
     initData.teamId = this.props.selectedTeam;
@@ -88,6 +91,7 @@ var IterationForm = React.createClass({
 
   enableFormFields: function(state){
     this.setState({enableFields: state});
+    this.refs.management.enableFormFields(state);
     this.refs.commitment.enableFormFields(state);
     this.refs.result.enableFormFields(state);
     this.setState({addBtnDisable: false, updateBtnDisable: true});
@@ -101,8 +105,8 @@ var IterationForm = React.createClass({
     return utcTime;
   },
 
-  updateIterationCache: function(iteration, selected) {
-    this.refs.management.initTeamIterations(this.state.iteration.teamId, this.state.iteration._id);
+  updateIterationCache: function() {
+    this.refs.management.initTeamIterations(this.state.iteration.teamId, this.state.iteration._id, true);
   },
 
   updateIterationInfo: function(action){
@@ -110,86 +114,149 @@ var IterationForm = React.createClass({
     if (action == 'add'){
       api.addIteration(self.state.iteration)
       .then(function(result) {
-      //TODO add response handling
         self.setState({iteration: result});
+        self.clearHighlightedIterErrors();
         self.showMessagePopup('You have successfully added Iteration information.');
         self.updateIterationCache();
+      })
+      .catch(function(err){
+        self.handleIterationErrors(err, 'add');
       });
     }
     else if (action == 'update'){
       api.updateIteration(self.state.iteration)
       .then(function(result) {
-      //TODO add response handling
-        self.showMessagePopup('You have successfully added Iteration information.');
+        self.clearHighlightedIterErrors();
+        self.showMessagePopup('You have successfully updated Iteration information.');
         self.updateIterationCache();
+      })
+      .catch(function(err){
+        self.handleIterationErrors(err, 'update');
       });
     }
-    
-  },
-
-  loadSelectedAgileTeamIterationInfo: function(){
-  var iterationId = this.state.iteration._id;
-  // retrieve and load latest iteration information for the team
-  $.ajax({
-    type: 'GET',
-    url: '/api/iteration/current/' + encodeURIComponent(iterationId)
-  })
-    .fail(function(xhr, textStatus, errorThrown) {
-      if (xhr.status === 400) {
-        errorHandler(xhr, textStatus, errorThrown);
-      }
-    })
-    .done(function(data) {
-      teamIterInfo = data;
-      clearHighlightedIterErrors();
-      $('#iterationSelectList').val(teamIterInfo._id);
-      $('#select2-iterationSelectList-container').text($('#iterationSelectList option:selected').text());
-      $('#select2-iterationSelectList-container').attr('title', $('#iterationSelectList option:selected').text());
-      $('#iterationName').val(teamIterInfo.iteration_name);
-      $('#iterationStartDate').val(showDateDDMMMYYYY(teamIterInfo.iteration_start_dt));
-      $('#iterationEndDate').val(showDateDDMMMYYYY(teamIterInfo.iteration_end_dt));
-      $('#iterationinfoStatus').val(teamIterInfo.iterationinfo_status);
-      $('#commStories').val(teamIterInfo.nbr_committed_stories);
-      $('#commPoints').val(teamIterInfo.nbr_committed_story_pts);
-      $('#memberCount').val(teamIterInfo.team_mbr_cnt);
-      $('#commStoriesDel').val(teamIterInfo.nbr_stories_dlvrd);
-      $('#commPointsDel').val(teamIterInfo.nbr_story_pts_dlvrd);
-      $('#storyPullIn').val(teamIterInfo.nbr_stories_pulled_in);
-      $('#storyPtPullIn').val(teamIterInfo.nbr_story_pts_pulled_in);
-      $('#retroItems').val(teamIterInfo.retro_action_items);
-      $('#retroItemsComplete').val(teamIterInfo.retro_action_items_complete);
-      $('#teamChangeList').val(teamIterInfo.team_mbr_change);
-      $('#select2-teamChangeList-container').text($('#teamChangeList option:selected').text());
-      $('#select2-teamChangeList-container').attr('title', $('#teamChangeList option:selected').text());
-      $('#lastUpdateUser').html(teamIterInfo.last_updt_user);
-      $('#lastUpdateTimestamp').html(showDateUTC(teamIterInfo.last_updt_dt));
-      $('#commentIter').val(teamIterInfo.iteration_comments);
-      $('#doc_id').html(teamIterInfo._id);
-      if (teamIterInfo.fte_cnt != '') {
-        var alloc = parseFloat(teamIterInfo.fte_cnt).toFixed(1);
-        $('#fteThisiteration').val(alloc);
-      }
-      $('#DeploythisIteration').val(teamIterInfo.nbr_dplymnts);
-      $('#defectsStartBal').val(teamIterInfo.nbr_defects_start_bal);
-      $('#defectsIteration').val(teamIterInfo.nbr_defects);
-      $('#defectsClosed').val(teamIterInfo.nbr_defects_closed);
-      $('#defectsEndBal').val(teamIterInfo.nbr_defects_end_bal);
-      $('#cycleTimeWIP').val(teamIterInfo.nbr_cycletime_WIP);
-      $('#cycleTimeInBacklog').val(teamIterInfo.nbr_cycletime_in_backlog);
-      $('#clientSatisfaction').val(teamIterInfo.client_sat);
-      $('#teamSatisfaction').val(teamIterInfo.team_sat);
-      calculateMetrics();
-
-      if (!hasAccess(teamIterInfo.team_id)) {
-        enableIterationFields(false);
-      } else {
-        enableIterationFields(true);
-      }
-    });
   },
 
   showMessagePopup: function(message) {
     alert(message);
+  },
+
+  handleIterationErrors:function (errorResponse, operation) {
+    var errorlist = '';
+    var response = errorResponse.responseJSON;
+
+    if (response && response.error) {
+      if (response.error.errors){
+        var errors = response.error.errors;
+        // Return iteration errors as String
+        errorlist = this.getIterationErrorPopup(errors);
+        if (errorlist != '') {
+          this.showMessagePopup(errorlist);
+          if (operation === 'add') {
+            this.setState({addBtnDisable: false});
+          } else if (operation === 'update') {
+            this.setState({updateBtnDisable: false});
+          }
+        }
+      }
+      else {
+        this.showMessagePopup(response.error);
+      }
+    }
+},
+
+getIterationErrorPopup: function(errors) {
+  var errorLists = '';
+  // Model fields/Form element field
+  var fields = {
+    '_id': 'iterationSelectList',
+    'teamId': 'teamSelectList',
+    'name': 'iterationName',
+    'startDate': 'iterationStartDate',
+    'endDate': 'iterationEndDate',
+    'committedStories': 'commStories',
+    'commitedStoryPoints': 'commPoints',
+    'memberCount': 'memberCount',
+    'memberFte': 'fteThisiteration',
+    'deliveredStories': 'commStoriesDel',
+    'storyPointsDelivered': 'commPointsDel',
+    'deployments': 'DeploythisIteration',
+    'defectsStartBal': 'defectsStartBal',
+    'defects': 'defectsIteration',
+    'defectsClosed': 'defectsClosed',
+    'defectsEndBal': 'defectsEndBal',
+    'cycleTimeWIP': 'cycleTimeWIP',
+    'cycleTimeInBacklog': 'cycleTimeInBacklog',
+    'memberChanged': 'teamChangeList',
+    'clientSatisfaction': 'clientSatisfaction',
+    'teamSatisfaction': 'teamSatisfaction'
+  };
+
+  Object.keys(fields).forEach(function(mdlField, index) {
+    var frmElement = fields[mdlField];
+    if (errors[mdlField]) {
+      if (frmElement) {
+        setFieldErrorHighlight(frmElement);
+      }
+      errorLists = errorLists + errors[mdlField].message + '\n';
+    } else {
+      if (frmElement) {
+        clearFieldErrorHighlight(frmElement);
+      }
+    }
+  });
+    return errorLists;
+  },
+  
+  setFieldErrorHighlight: function (id) {
+    if ($('#' + value).is('select')) {
+      $($('#select2-' + id + '-container').parent()).css('border-color', invalidBorder);
+      $($('#select2-' + id + '-container').parent()).css('background', invalidBackground);
+    }
+    else {
+      $('#' + id).css('border-color', invalidBorder);
+      $('#' + id).css('background', invalidBackground);
+    }
+  },
+
+  clearFieldErrorHighlight: function (id) {
+    if ($('#' + id).is('select')) {
+      $($('#select2-' + id + '-container').parent()).css('border-color', '');
+      $($('#select2-' + id + '-container').parent()).css('background', '');
+    }
+    else {
+      $('#' + id).css('border-color', '');
+      $('#' + id).css('background', '');
+    }
+  },
+
+  clearHighlightedIterErrors: function () {
+    var fields = [
+      'teamSelectList',
+      'iterationName',
+      'iterationStartDate',
+      'iterationEndDate',
+      'commStories',
+      'commPoints',
+      'memberCount',
+      'fteThisiteration',
+      'commStoriesDel',
+      'commPointsDel',
+      'DeploythisIteration',
+      'defectsStartBal',
+      'defectsIteration',
+      'defectsClosed',
+      'defectsEndBal',
+      'cycleTimeWIP',
+      'cycleTimeInBacklog',
+      'teamChangeList',
+      'commentIter',
+      'clientSatisfaction',
+      'teamSatisfaction'
+    ];
+
+    for (j = 0; j < fields.length; j++) {
+      clearFieldErrorHighlight(fields[j]);
+    }
   },
 
   render: function() {
