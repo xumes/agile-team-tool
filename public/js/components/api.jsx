@@ -310,3 +310,17 @@ module.exports.updateIteration = function(data) {
     });
   });
 };
+
+module.exports.getSelectableParents = function(teamId) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/teams/lookup/parents/' + encodeURIComponent(teamId);
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      return resolve(data);
+    }).fail(function(err){
+      return reject(err);
+    });
+  });
+};
