@@ -26,6 +26,12 @@ var Criteria = React.createClass({
 });
 
 var Level = React.createClass({
+    /*
+    <td>
+      Criteria Radio
+    </td>
+    <td>Target Radio</td>
+    */
     render: function(){
         var thisLevel = this.props.levels.map(function(l){
             return (<tr>
@@ -33,24 +39,22 @@ var Level = React.createClass({
             <td>
                 <Criteria criteria={l.criteria} />
             </td>
-            <td>
-              Criteria Radio
-            </td>
-            <td>Target Radio</td>
             </tr>)
         });
+        /*
+        <th scope="col" style={thWidth}>
+          Current<a style={anchorInfo} class="ibm-information-link" data-widget="tooltip" title="Your team's current maturity level."></a>
+        </th>
+        <th scope="col" style={thWidth}>
+          Target<a style={anchorInfo} class="ibm-information-link" data-widget="tooltip" title="Your team's targets for the next 90 days.  Choose the practices that the team agrees will have the most impact."></a>
+        </th>
+        */
         return (<div class="ibm-twisty-body" style={displayBlock}>
         <table class="ibm-data-table ibm-altrows agile-practice" width="100%" summary="Maturity assessment level and description for the identified practice.">
           <caption>{this.props.description}</caption>
           <thead>
             <tr>
               <th scope="col" colSpan="2">Maturity level</th>
-              <th scope="col" style={thWidth}>
-                Current<a style={anchorInfo} class="ibm-information-link" data-widget="tooltip" title="Your team's current maturity level."></a>
-              </th>
-              <th scope="col" style={thWidth}>
-                Target<a style={anchorInfo} class="ibm-information-link" data-widget="tooltip" title="Your team's targets for the next 90 days.  Choose the practices that the team agrees will have the most impact."></a>
-              </th>
             </tr>
           </thead>
           <tbody>
