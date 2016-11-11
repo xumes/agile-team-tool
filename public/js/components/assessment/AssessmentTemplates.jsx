@@ -8,6 +8,7 @@ var AssessmentTemplates = React.createClass({
       activeTemplates: null
     }
   },
+  
   componentDidMount: function() {
     var self = this;
     api.getAssessmentTemplate(null, 'active')

@@ -10,7 +10,7 @@ var extractDetails = function(obj){
   _.each(obj, function(v,i){
     details.push({
       '_id' : v['_id'],
-      'submittedDate' : moment(v['submittedDate']).format('D MMM YYYY')    
+      'submittedDate' : moment(v['submittedDate']).format('D MMM YYYY')
     });
   });
   return details;
@@ -31,12 +31,18 @@ var AssessmentPageFormOne = React.createClass({
   clickAction: function(e){
    var self = this;
    var teamId = e.target.value;
-   var teamId = '57ed4eec95b9391b5c248993';
    api.getSquadAssessments(teamId)
    .then(function(result){
       self.setState({
         assessmentLists: extractDetails(result)
       })
+   })
+   .then(function(){
+    api.isUserAllowed(teamId)
+     .then(function(allowed){
+        console.log('is login user allowed: ', allowed);
+        self.props.setUIState(allowed);
+     });
    })
   },
 
@@ -53,8 +59,9 @@ var AssessmentPageFormOne = React.createClass({
     });
     
     return ( <div>
-                <Header title="Team Maturity Assessment"/>
-                <TeamSquadForm  clickAction={this.clickAction} />
+                <Header title="Team Maturity Assessment" />
+                <TeamSquadForm  clickAction={this.clickAction}/>
+                <div class="agile-read-only-status ibm-item-note-alternate" id="userEditMsg" style={this.props.showInfoDisplayStyle}>You have view-only access for the selected team (to update a team, you must be a member or a member of its parent team).</div>
                 <p>
                 <label for="assessmentSelectList">Create new or select an existing assessment:<span class="ibm-required">*</span></label>
                   <span>

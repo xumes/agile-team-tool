@@ -23,8 +23,7 @@ var Datepicker = React.createClass({
     var enableDatepicker = this.props.enableDatepicker();
     var selectFieldWidth = {'width':'300px'};
     if(enableDatepicker){
-      return <DatePicker selected={this.state.startDate}
-          onChange={this.handleChange} />;
+      return <DatePicker selected={this.state.startDate} onChange={this.handleChange} size="44" />;
     } else {
       return (<input type="text" class="ibm-date-picker hasDatepicker" name="assessmentDate" id="assessmentDate" size="44" value="" readonly="readonly" placeholder="Optional assessment date" style={selectFieldWidth} disabled="disabled" />)
     }

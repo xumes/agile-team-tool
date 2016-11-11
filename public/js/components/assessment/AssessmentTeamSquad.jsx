@@ -26,9 +26,11 @@ var TeamForm = React.createClass({
     var labelStyle = {
       'lineHeight': '27px',
     };
+    
     var teamSelectListStyle = {
       'width': '300px'
     };
+
     var populateTeamNames = this.state.teamNames.map(function(item) {
       return (
         <option value={item._id}>{item.name}</option>

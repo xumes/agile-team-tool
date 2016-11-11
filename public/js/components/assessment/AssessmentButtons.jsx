@@ -19,7 +19,7 @@ var AssessmentButtons = React.createClass({
       <div>
         <div style={isVisible}>
           <span style={spanStyle}>
-            Team assessment status: <span style={statusColor}>Submitted</span>
+            Team assessment status: <span style={statusColor}>{this.props.assessmentStatus}</span>
           </span>
         </div>
         <div class="ibm-btn-row" style={{"textAlign": "right"}}>
