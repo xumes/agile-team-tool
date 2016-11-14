@@ -169,6 +169,7 @@ var users = {
       promiseArray.push(users.isTeamMember(userId, teamId));
       Promise.all(promiseArray)
         .then(function(results){
+          console.log(results);
           var systemAccess = 'none';
           var userAccess = 'none';
           var teamAccess = false;

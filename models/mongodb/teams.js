@@ -1260,3 +1260,59 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, uid) {
     }
   });
 };
+
+module.exports.removeAssociation = function(childTeamId, uid) {
+  return new Promise(function(resolve, reject){
+    if (_.isEmpty(uid)) {
+      return reject({'error':'The user id cannot be empty.'});
+    } else if (_.isEmpty(childTeamId)){
+      return reject({'error':'The child team id cannot be empty.'});
+    } else {
+      var promiseArray = [];
+      var oldChildPath = '';
+      var newChildPath = '';
+      Users.isUserAllowed(uid, childTeamId)
+        .then(function(result){
+          if (!result) {
+            return Promise.reject({'error': 'You dont have access to this team.'});
+          }
+          return self.getTeam(childTeamId);
+        })
+        .then(function(team){
+          if (team.path == null) {
+            return Promise.reject({'error': 'This team is alrady a root team.'});
+          }
+          oldChildPath = team.path + team.pathId + ',';
+          newChildPath = ',' + team.pathId + ',';
+          var query = {
+            'path' : {
+              '$regex' : oldChildPath
+            }
+          };
+          var promiseArray = [];
+          promiseArray.push(Team.update({_id: team._id}, {$set: {path: null}}).exec());
+          promiseArray.push(Team.find(query).exec());
+          return Promise.all(promiseArray);
+        })
+        .then(function(results) {
+          if (!_.isEmpty(results[1])) {
+            var promiseArray = [];
+            _.each(results[1], function(team){
+              var oldPath = team.path;
+              var newPath = oldPath.replace(oldChildPath, newChildPath);
+              promiseArray.push(Team.update({_id: team._id}, {$set: {path: newPath}}).exec());
+            });
+            return Promise.all(promiseArray);
+          } else {
+            return true;
+          }
+        })
+        .then(function(result){
+          return resolve({'ok':'Updated Successfully'});
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          return reject(err);
+        });
+    }
+  });
+};

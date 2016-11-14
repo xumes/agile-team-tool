@@ -372,3 +372,22 @@ module.exports.associateTeam = function(parentTeamId, childTeamId) {
     });
   });
 };
+
+module.exports.removeAssociation = function(childTeamId) {
+  return new Promise(function(resolve, reject) {
+    var requestData = {
+      'childTeamId': childTeamId
+    };
+    var url = '/api/teams/removeassociation';
+    var req = $.ajax({
+      type: 'PUT',
+      contentType: 'application/json',
+      data: JSON.stringify(requestData),
+      url: url
+    }).done(function(data){
+      return resolve(data);
+    }).fail(function(err){
+      return reject(err);
+    });
+  });
+};

@@ -95,6 +95,17 @@ module.exports = function(app, includes) {
   };
 
   //checked
+  removeAssociation = function(req, res) {
+    teamModel.removeAssociation(req.body.childTeamId, req.session['user']['ldap']['uid'])
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch(function(err){
+        res.status(400).send(err);
+      });
+  };
+
+  //checked
   modifyTeamMembers = function(req, res) {
     teamModel.modifyTeamMembers(req.body['teamId'], req.session['user'], req.body['members'])
     .then(function(result){
@@ -354,6 +365,9 @@ module.exports = function(app, includes) {
 
   // associate team document
   app.put('/api/teams/associates', [includes.middleware.auth.requireLogin], associateTeam);
+
+  // remove association team document
+  app.put('/api/teams/removeassociation', [includes.middleware.auth.requireLogin], removeAssociation);
 
   // modify  team members
   app.put('/api/teams/members', [includes.middleware.auth.requireLogin], modifyTeamMembers);

@@ -8,19 +8,20 @@ var Promise = require('bluebird');
 var TeamChildAssociation = React.createClass({
   getInitialState: function() {
     return {
-      childrenTeams: {
+      childTeams: {
         'teamId': null,
         'children': [],
-        'selectableChildren': []
+        'selectableChildren': [],
+        'access': false
       },
     }
   },
   componentDidUpdate: function() {
     var self = this;
     if (self.props.selectedTeam.team._id && currentTeam != self.props.selectedTeam.team._id.toString()) {
-      self.childTeamInit(self.props.selectedTeam.team)
+      self.childTeamInit(self.props.selectedTeam)
         .then(function(result){
-          return self.setState({childrenTeams: result});
+          return self.setState({childTeams: result});
         })
         .catch(function(err){
           console.log(err);
@@ -30,27 +31,28 @@ var TeamChildAssociation = React.createClass({
   },
   childTeamsUpdateHandler: function() {
     var self = this;
-    self.childTeamInit(self.props.selectedTeam.team)
+    self.childTeamInit(self.props.selectedTeam)
       .then(function(result){
-        return self.setState({childrenTeams: result});
+        return self.setState({childTeams: result});
       })
       .catch(function(err){
         console.log(err);
         return err;
       })
   },
-  childTeamInit: function(team) {
+  childTeamInit: function(selectedTeam) {
     return new Promise(function(resolve, reject){
       var promiseArray = [];
-      promiseArray.push(api.getChildrenTeams(team.pathId));
-      promiseArray.push(api.getSelectableChildren(team._id));
+      promiseArray.push(api.getChildrenTeams(selectedTeam.team.pathId));
+      promiseArray.push(api.getSelectableChildren(selectedTeam.team._id));
       Promise.all(promiseArray)
         .then(function(results){
-          currentTeam = team._id.toString();
+          currentTeam = selectedTeam.team._id.toString();
           var returnObject = {
-            'teamId': team._id,
+            'teamId': selectedTeam.team._id,
             'children': results[0],
-            'selectableChildren': results[1]
+            'selectableChildren': results[1],
+            'access': selectedTeam.access
           };
           return resolve(returnObject);
         })
@@ -69,8 +71,13 @@ var TeamChildAssociation = React.createClass({
           </a>
         </h2>
         <div class='ibm-container-body' style={{'display':'none'}}>
-          <TeamChildAddSection childrenTeams={self.state.childrenTeams} childTeamsUpdateHandler={self.childTeamsUpdateHandler}/>
-          <TeamChildRemoveSection childrenTeams={self.state.childrenTeams} childTeamsUpdateHandler={self.childTeamsUpdateHandler}/>
+          <div id='nonSquadChildPageSection'>
+            <TeamChildAddSection childTeams={self.state.childTeams} childTeamsUpdateHandler={self.childTeamsUpdateHandler}/>
+              <div class="ibm-rule ibm-alternate">
+                <hr />
+              </div>
+            <TeamChildRemoveSection childTeams={self.state.childTeams} childTeamsUpdateHandler={self.childTeamsUpdateHandler}/>
+          </div>
         </div>
       </div>
     )

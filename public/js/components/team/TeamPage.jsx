@@ -52,11 +52,11 @@ var TeamPage = React.createClass({
           isSquad = true;
           promiseArray.push(api.getSquadIterations(objectId));
           promiseArray.push(api.getSquadAssessments(objectId));
-          promiseArray.push(api.isUserAllowed(objectId));
         } else {
           isSquad = false;
           promiseArray.push(api.getTeamSnapshots(objectId));
         }
+        promiseArray.push(api.isUserAllowed(objectId));
         promiseArray.push(api.getTeamHierarchy(team.path));
         if (team.members != null && team.members.length > 0) {
           var ids = [];
@@ -83,8 +83,9 @@ var TeamPage = React.createClass({
             'type': '',
             'team': teamResult,
             'snapshot': results[0],
-            'hierarchy': results[1],
-            'members': results[2]
+            'access': results[1],
+            'hierarchy': results[2],
+            'members': results[3]
           };
         }
         return self.setState({

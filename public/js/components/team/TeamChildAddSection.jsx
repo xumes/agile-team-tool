@@ -26,7 +26,7 @@ var TeamChildAddSection = React.createClass({
     if (selectedChildId == '') {
       return;
     } else {
-      api.associateTeam(this.props.childrenTeams.teamId, selectedChildId)
+      api.associateTeam(this.props.childTeams.teamId, selectedChildId)
         .then(function(result){
           $('#updateParentBtn').prop('disabled', true);
           alert('You have successfully updated the Child team association.');
@@ -39,10 +39,10 @@ var TeamChildAddSection = React.createClass({
     }
   },
   render: function() {
-    if (this.props.childrenTeams.selectableChildren.length <= 0 || this.props.childrenTeams.selectableChildren == undefined) {
+    if (this.props.childTeams.selectableChildren.length <= 0 || this.props.childTeams.selectableChildren == undefined) {
       var populateTeamNames = null;
     } else {
-      var populateTeamNames = this.props.childrenTeams.selectableChildren.map(function(item) {
+      var populateTeamNames = this.props.childTeams.selectableChildren.map(function(item) {
         return (
           <option key={item._id} value={item._id}>{item.name}</option>
         )
@@ -53,7 +53,7 @@ var TeamChildAddSection = React.createClass({
         <p>
           <label aria-label='childSelectList'>Select a child team:<span class='ibm-required'>*</span></label>
           <span>
-            <select id='childSelectList' name='childSelectList' style={{'width':'400px'}} ref='selectDropDown'>
+            <select id='childSelectList' name='childSelectList' style={{'width':'400px'}} ref='selectDropDown' disabled={!this.props.childTeams.access}>
               <option key='' value=''>Select One</option>
               {populateTeamNames}
             </select>

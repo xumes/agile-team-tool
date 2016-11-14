@@ -234,6 +234,52 @@ describe('Team model [associateTeams]', function() {
   });
 });
 
+describe('Team model [removeAssociation]', function() {
+  it('return fail for removing association by empty user id', function(done){
+    Teams.removeAssociation(childTeamId, null)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('The user id cannot be empty.');
+        done();
+      });
+  });
+  it('return fail for removing association by empty child team id', function(done){
+    Teams.removeAssociation(null, testUser.userId)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('The child team id cannot be empty.');
+        done();
+      });
+  });
+  it('return fail for removing association by no access user', function(done){
+    Teams.removeAssociation(childTeamId, inValidUser.userId)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('You dont have access to this team.');
+        done();
+      });
+  });
+  it('return fail for removing association by root team', function(done){
+    Teams.removeAssociation(parentTeamId, testUser.userId)
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('This team is alrady a root team.');
+        done();
+      });
+  });
+  it('return successful for removing association', function(done){
+    Teams.removeAssociation(childTeamId, testUser.userId)
+      .then(function(result){
+        expect(result).to.be.a('object');
+        expect(result.ok).to.equal('Updated Successfully');
+        return Teams.associateTeams(parentTeamId, childTeamId, testUser.userId);
+      })
+      .then(function(result){
+        done();
+      });
+  });
+});
+
 describe('Team model [getTeam]', function() {
   it('return all teams by empty id', function(done){
     Teams.getTeam()
