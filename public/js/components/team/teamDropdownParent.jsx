@@ -3,40 +3,37 @@ var api = require('../api.jsx');
 var ReactDOM = require('react-dom');
 
 var TeamDropdownParent = React.createClass({
-  getInitialState: function() {
-    return {
-      selectedTeam: 'new',
-      teamNames: []
+  componentDidUpdate: function() {
+    if (this.props.selectableParentTeams.parent == null || this.props.selectableParentTeams.parent == undefined) {
+      var defaultParentValue = '';
+    } else {
+      defaultParentValue = this.props.selectableParentTeams.parent._id;
     }
+    $('#parentSelectList').val(defaultParentValue).change();
   },
-
   componentDidMount: function() {
-    var self = this; // Need to get reference to this instance
-    api.fetchTeamNames()
-      .then(function(teams) {
-        self.setState({
-          teamNames: teams
-        })
-      });
-
     // Use IBM's bundled select2 package
     $(this.refs.selectDropDown).select2();
-    //$(this.refs.selectDropDown).change(this.props.teamChangeHandler);
+    $(this.refs.selectDropDown).change(this.props.parentChangeHandler);
   },
 
   render: function() {
+    var self = this;
     var teamSelectListStyle = {
       'width': '400px'
     };
-    var populateTeamNames = this.state.teamNames.map(function(item) {
-      return (
-        <option key={item._id} value={item._id}>{item.name}</option>
-      )
-    });
-
+    if (this.props.selectableParentTeams.selectableParents.length <= 0 || this.props.selectableParentTeams.selectableParents == undefined) {
+      var populateTeamNames = null;
+    } else {
+      var populateTeamNames = this.props.selectableParentTeams.selectableParents.map(function(item) {
+        return (
+          <option key={item._id} value={item._id}>{item.name}</option>
+        )
+      });
+    }
     return (
-      <select defaultValue="new" name="teamSelectList" style={teamSelectListStyle} ref='selectDropDown'>
-        <option value="new">Create new...</option>
+      <select id='parentSelectList' name='parentSelectList' style={teamSelectListStyle} ref='selectDropDown'>
+        <option key='' value=''>No parent team</option>
         {populateTeamNames}
       </select>
     )

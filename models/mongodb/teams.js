@@ -322,7 +322,7 @@ module.exports.getSelectableParents = function(teamId) {
       if (_.isEmpty(team)) return reject({'error': teamId + ' is not a team.'});
 
       var regEx = new RegExp('^((?!'+team.pathId+').)*$');
-      return Team.find({type:{$ne:'squad'}, path: regEx});
+      return Team.find({type:{$ne:'squad'}, path: regEx, docStatus: {$ne: 'delete'}});
     })
     .then(function(result){
       resolve(result);
@@ -343,29 +343,39 @@ module.exports.getSelectableChildren = function(teamId) {
     .then(function(team){
       if (_.isEmpty(team)) return reject({'error': teamId + ' is not a team.'});
       if (team.type==='squad') return resolve([]);
-      return team.pathId;
+      if (team.path == null) {
+        var parentPathId = [team.pathId];
+        var parentPath = ',' + team.pathId + ',';
+      } else {
+        parentPathId = team.path.substring(1,team.path.length-2).split(',');
+        parentPath = team.path + team.pathId + ',';
+      }
+      return Team.find({path: {$ne: parentPath}, pathId: {$nin: parentPathId}, docStatus: {$ne: 'delete'}}).exec();
     })
-    .then(function(pathId){
-      //this might be expensive if theres a boat load of teams
-      return Promise.join(
-        Team.find({path:null}), //root teams of any type
-        getAllUniquePaths(),
-      function(rootedTeams, uniquePaths) {
-        uniquePaths = _.filter(uniquePaths, function(path){return path.indexOf(pathId)<0;});
-        var rootedPathIds = [];
-        _.each(uniquePaths, function(path){
-          var pId = path.substring(1, path.indexOf(',',1));
-          if (!_.contains(rootedPathIds, pId))
-            rootedPathIds.push(pId);
-        });
-        var res = [];
-        _.each(rootedTeams, function(team){
-          if (_.contains(rootedPathIds, team.pathId))
-            res.push(team);
-        });
-        return resolve(res);
-      });
+    .then(function(teams){
+      return resolve(teams);
     })
+    // .then(function(pathId){
+    //   //this might be expensive if theres a boat load of teams
+    //   return Promise.join(
+    //     Team.find({path:null, docStatus: {$ne: 'delete'}}), //root teams of any type
+    //     getAllUniquePaths(),
+    //   function(rootedTeams, uniquePaths) {
+    //     uniquePaths = _.filter(uniquePaths, function(path){return path.indexOf(pathId)<0;});
+    //     var rootedPathIds = [];
+    //     _.each(uniquePaths, function(path){
+    //       var pId = path.substring(1, path.indexOf(',',1));
+    //       if (!_.contains(rootedPathIds, pId))
+    //         rootedPathIds.push(pId);
+    //     });
+    //     var res = [];
+    //     _.each(rootedTeams, function(team){
+    //       if (_.contains(rootedPathIds, team.pathId))
+    //         res.push(team);
+    //     });
+    //     return resolve(res);
+    //   });
+    // })
     .catch( /* istanbul ignore next */ function(err) {
       reject(err);
     });
@@ -432,6 +442,7 @@ module.exports.getChildrenByPathId = function(pathId) {
               'path': team.path,
               'pathId': team.pathId,
               'hasChild': null,
+              'description': team.description,
               'docStatus': team.docStatus
             };
             if (uniquePaths.indexOf(','+team.pathId+',') >= 0) {

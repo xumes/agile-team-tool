@@ -338,3 +338,37 @@ module.exports.getSelectableParents = function(teamId) {
     });
   });
 };
+
+module.exports.getSelectableChildren = function(teamId) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/teams/lookup/children/' + encodeURIComponent(teamId);
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      return resolve(data);
+    }).fail(function(err){
+      return reject(err);
+    });
+  });
+};
+
+module.exports.associateTeam = function(parentTeamId, childTeamId) {
+  return new Promise(function(resolve, reject) {
+    var requestData = {
+      'parentTeamId': parentTeamId,
+      'childTeamId': childTeamId
+    };
+    var url = '/api/teams/associates';
+    var req = $.ajax({
+      type: 'PUT',
+      contentType: 'application/json',
+      data: JSON.stringify(requestData),
+      url: url
+    }).done(function(data){
+      return resolve(data);
+    }).fail(function(err){
+      return reject(err);
+    });
+  });
+};
