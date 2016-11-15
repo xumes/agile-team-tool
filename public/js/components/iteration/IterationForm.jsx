@@ -42,19 +42,22 @@ var initData = {
 
 var invalidBorder = '#f00';
 var invalidBackground = '';
+var teamInfo = new Object();
 
 var IterationForm = React.createClass({
   getInitialState: function() {
-    initData.teamId = this.props.selectedTeam;
-    initData._id = this.props.selectedIteration;
+    var initIteration = _.clone(initData);
+    initIteration.teamId = this.props.selectedTeam;
+    initIteration._id = this.props.selectedIteration;
     return {
       enableFields: false,
-      iteration: initData,
+      iteration: initIteration,
       addBtnDisable: true,
       updateBtnDisable: true,
       lastUpdateTimestamp: '',
       lastUpdateUser: '',
       id:'',
+      selectedTeamInfo: new Object()
     }
   },
 
@@ -83,18 +86,18 @@ var IterationForm = React.createClass({
         addBtnDisable: false,
         updateBtnDisable: true,
         enableFields: true});
-        this.setState({iteration: initData});
+        this.setState({iteration: _.clone(initData)});
     }
     
     this.refs.buttons.enableButtons(this.state.addBtnDisable, this.state.updateBtnDisable);
   },
 
   enableFormFields: function(state){
-    this.setState({enableFields: state});
+    this.setState({enableFields: state,addBtnDisable: false, updateBtnDisable: true});
     this.refs.management.enableFormFields(state);
     this.refs.commitment.enableFormFields(state);
     this.refs.result.enableFormFields(state);
-    this.setState({addBtnDisable: false, updateBtnDisable: true});
+    //this.setState({addBtnDisable: false, updateBtnDisable: true});
     this.refs.buttons.enableButtons(this.state.addBtnDisable, this.state.updateBtnDisable);
   },
 
@@ -106,7 +109,7 @@ var IterationForm = React.createClass({
   },
 
   updateIterationCache: function() {
-    this.refs.management.initTeamIterations(this.state.iteration.teamId, this.state.iteration._id, true);
+    this.refs.management.initTeamIterations(this.state.iteration.teamId, this.state.iteration._id, true, ['new', 'Create new...']);
   },
 
   updateIterationInfo: function(action){
@@ -134,6 +137,13 @@ var IterationForm = React.createClass({
         self.handleIterationErrors(err, 'update');
       });
     }
+    else if (action == 'clear' || action == 'clearIteration') {
+      if (action == 'clear'){
+        this.setState({iteration:_.clone(initData)});
+      }
+      this.clearHighlightedIterErrors();
+      window.scrollTo(0, 0);
+    }
   },
 
   showMessagePopup: function(message) {
@@ -149,7 +159,7 @@ var IterationForm = React.createClass({
       if (errors){        
         // Return iteration errors as String
         errorlist = this.getIterationErrorPopup(errors);
-        if (errorlist != '') {
+        if (!_.isEmpty(errorlist)) {
           this.showMessagePopup(errorlist);
           if (operation === 'add') {
             this.setState({addBtnDisable: false});
@@ -259,6 +269,54 @@ getIterationErrorPopup: function(errors) {
     }
   },
 
+  addIteration: function (action) {
+    var self =this;
+    api.loadTeam(self.state.iteration.teamId)
+    .then(function(data) {
+      if (data != undefined) {
+        var jsonData = data;
+        if (jsonData.type != undefined && jsonData.type.toLowerCase() != 'squad') {
+          self.showMessagePopup('Team information has been changed to non squad.  Iteration information cannot be entered for non squad teams.');
+          //loadAgileTeams('new', '');
+          self.updateIterationInfo('clearIteration');
+          return;
+        }
+
+        var exists = false;
+        if(action == 'update'){
+          api.updateIteration(self.state.iteration)
+            .then(function(data){
+              // update cache
+              self.updateIterationCache();
+              self.clearHighlightedIterErrors();
+              self.showMessagePopup('You have successfully updated Iteration information.');
+            })
+            .catch(function(err){
+              self.handleIterationErrors(err, 'update');
+            });
+        }
+      }
+    });
+  },
+  calculateMetrics: function() {
+    if (!isNaN(parseFloat(this.state.fteThisiteration)) && parseFloat(this.state.fteThisiteration) > 0) {
+      var commStoriesDel = this.props.iteration.deliveredStories;
+      commStoriesDel = !isNaN(parseFloat(commStoriesDel)) ? commStoriesDel : 0;
+      var storiesFTE = commStoriesDel / this.state.fteThisiteration;
+      this.props.iteration.unitcostStoriesFTE = storiesFTE.toFixed(1);
+
+      var commPointsDel = this.props.iteration.storyPointsDelivered;
+      commPointsDel = !isNaN(parseFloat(commPointsDel)) ? commPointsDel : 0;
+      var strPointsFTE = commPointsDel / this.state.fteThisiteration;
+      this.props.iteration.unitcostStorypointsFTE = strPointsFTE.toFixed(1);
+    }
+  },
+
+  getTeamInfo: function(){
+    var team = this.refs.management.getTeamInfo();
+    return team;
+  },
+
   render: function() {
     
     var subStyle = {
@@ -271,7 +329,7 @@ getIterationErrorPopup: function(errors) {
     return (
       <form className='ibm-column-form'>
         <Management updateForm={this.populateForm} enableFormFields={this.enableFormFields} ref='management' iteration={this.state.iteration}/>
-        <Commitment updateForm={this.populateForm} enableFields={this.state.enableFields} ref='commitment' iteration={this.state.iteration}/>
+        <Commitment updateForm={this.populateForm} enableFields={this.state.enableFields} ref='commitment' iteration={this.state.iteration} selectedTeamInfo={this.getTeamInfo} addIteration={this.addIteration}/>
         <Result updateForm={this.populateForm} enableFields={this.state.enableFields} ref='result' iteration={this.state.iteration}/>
         <Metrics updateForm={this.populateForm} ref='metrics' iteration={this.state.iteration}/>
         <Buttons ref='buttons' iteration={this.state.iteration} parentUpdate = {this.updateIterationInfo}/>

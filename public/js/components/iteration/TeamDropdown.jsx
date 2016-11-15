@@ -6,7 +6,8 @@ var TeamDropdown = React.createClass({
   getInitialState: function() {
     return {
       selectedTeam: this.props.selectedTeam,
-      teamNames: []
+      teamNames: [],
+      teamInfo: new Object()
     }
   },
 
@@ -14,9 +15,25 @@ var TeamDropdown = React.createClass({
     var self = this; // Need to get reference to this instance
     api.getSquadTeams()
       .then(function(teams) {
-        self.setState({teamNames: teams});
+        var selectedTeamInfo;
+        if (teams != undefined && teams.length > 0 && 
+        self.props.selectedTeam != undefined && self.props.selectedTeam != ''){
+          selectedTeamInfo = _.find(teams, {_id:self.props.selectedTeam});
+        }
+        self.setState({teamNames: teams, selectedTeam: self.props.selectedTeam, teamInfo: selectedTeamInfo});
+        if (self.props.selectedTeam != undefined && self.props.selectedTeam != ''){
+          return api.isUserAllowed(self.props.selectedTeam);
+        }
+        else {
+          return null;
+        }
+    })
+    .then(function(result){
+      if (result != null){
+        self.props.enableFormFields(result);
+      }
     });
-    this.setState({selectedTeam: this.props.selectedTeam});
+
   },
 
   componentDidMount: function() {    
@@ -25,8 +42,13 @@ var TeamDropdown = React.createClass({
   },
 
   handleChange: function(e){
-    this.setState({selectedTeam: e.target.value});
+    var selectedTeamInfo = _.find(this.state.teamNames, {_id:e.target.value});
+    this.setState({selectedTeam: e.target.value, teamInfo: selectedTeamInfo});
     this.props.teamChangeHandler(e);
+  },
+
+  getTeamInfo: function(){
+    return this.state.teamInfo;
   },
 
   render: function() {

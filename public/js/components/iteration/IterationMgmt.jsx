@@ -5,23 +5,28 @@ var DatePicker = require('react-datepicker');
 var api = require('../api.jsx');
 require('react-datepicker/dist/react-datepicker.css');
 var moment = require('moment');
+var readonlyMsg = 'You have view-only access for the selected team (to update a team, you must be a member or a member of its parent team)';
 
 var IterationMgmt = React.createClass({
   getInitialState: function() {
     return {
       enableFields: false,
       enableIter: false,
-      selectedTeam: this.props.iteration.teamId,
+      selectedTeam: '',
       iterationName: '',
       iterationStartDate: null,
-      iterationEndDate: null
+      iterationEndDate: null,
+      hideMsg: true
     }
+  },
+
+  componentWillMount: function() {
+    this.setState({selectedTeam: this.props.iteration.teamId});
   },
 
   teamSelectOnChange: function(e) {
     var self = this;
     var selected = e.target.value;
-    
     api.isUserAllowed(selected)
       .then(function(result) {
         self.props.enableFormFields(result);
@@ -29,9 +34,15 @@ var IterationMgmt = React.createClass({
           enableIter: true,
           iterationName: '',
           iterationStartDate: null,
-          iterationEndDate: null});
-        if (selected != ''){
-          self.refs.iterList.retrieveIterations(selected, null, result);
+          iterationEndDate: null,
+          hideMsg: result});
+        if (!_.isEmpty(selected)){
+          if (result){
+            self.refs.iterList.retrieveIterations(selected, null, result, ['new', 'Create new...']);
+          }
+          else{
+            self.refs.iterList.retrieveIterations(selected, null, result, ['', 'Select one']);
+          }
         }
     });    
     self.props.iteration.teamId = selected;
@@ -52,8 +63,9 @@ var IterationMgmt = React.createClass({
     this.setState({iterationEndDate : date});
   },
 
-  initTeamIterations: function(teamId, selected, state){
-    this.refs.iterList.retrieveIterations(teamId, selected, state);
+  initTeamIterations: function(teamId, selected, state, firstEntry){
+    //this.setState({enableIter: true});
+    this.refs.iterList.retrieveIterations(teamId, selected, state, firstEntry);
   },
 
   populateForm: function(data, state){
@@ -77,7 +89,12 @@ var IterationMgmt = React.createClass({
   },
 
   enableFormFields: function(state){
-    this.setState({enableFields: state});
+    this.setState({enableFields: state, hideMsg: state});
+  },
+
+  getTeamInfo: function(){
+    var team = this.refs.squadList.getTeamInfo();
+    return team;
   },
 
   render: function() {
@@ -89,14 +106,19 @@ var IterationMgmt = React.createClass({
       'marginBottom':'10px'
     };
 
+    var msgSpacing = {
+      'paddingLeft':'5%'
+    };
+
     return (
       <div>
         <div style={spacing}>
           <label style={labelStyle} for='teamSelectList'>Select an existing squad team:<span className='ibm-required'>*</span></label>
             <span>
-              <SquadDropdown teamChangeHandler={this.teamSelectOnChange} enableFormFields={this.props.enableFormFields} ref='squadList' selectedTeam={this.state.selectedTeam}/>
+              <SquadDropdown teamChangeHandler={this.teamSelectOnChange} enableFormFields={this.props.enableFormFields} ref='squadList' selectedTeam={this.state.selectedTeam} selectedTeamInfo={this.props.selectedTeamInfo}/>
            </span>
         </div>
+        {!this.state.hideMsg ? <div className="agile-read-only-status ibm-item-note-alternate" style={msgSpacing} id='userEditMsg'>{readonlyMsg}</div>:null}
         <div style={spacing}>
           <label style={labelStyle} for='iterationSelectList'>Iteration number/identifier:<span className='ibm-required'>*</span></label>
             <span>

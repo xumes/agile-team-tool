@@ -45,6 +45,7 @@
     "react": "^15.3.2",
     "react-datepicker": "^0.33.0",
     "react-dom": "^15.3.2",
+    "react-tooltip": "^3.2.1",
     "request": "^2.73.0",
     "rewire": "^2.5.2",
     "serve-favicon": "~2.3.0",
