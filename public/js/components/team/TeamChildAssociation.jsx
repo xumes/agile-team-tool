@@ -3,6 +3,7 @@ var TeamChildAddSection = require('./TeamChildAddSection.jsx');
 var TeamChildRemoveSection = require('./TeamChildRemoveSection.jsx');
 var api = require('../api.jsx');
 var currentTeam = '';
+var _ = require('underscore');
 var Promise = require('bluebird');
 
 var TeamChildAssociation = React.createClass({
@@ -63,6 +64,21 @@ var TeamChildAssociation = React.createClass({
   },
   render: function() {
     var self = this;
+    if (!_.isEmpty(self.props.selectedTeam) && self.props.selectedTeam.team.type == 'squad') {
+      var squadStyle = {
+        'display': 'block'
+      };
+      var nonSquadStyle = {
+        'display': 'none'
+      };
+    } else {
+      var squadStyle = {
+        'display': 'none'
+      };
+      var nonSquadStyle = {
+        'display': 'block'
+      };
+    }
     return (
       <div class='ibm-show-hide ibm-widget-processed' id='childAssociationSection'>
         <h2 class='ibm-bold ibm-h4'>
@@ -71,7 +87,10 @@ var TeamChildAssociation = React.createClass({
           </a>
         </h2>
         <div class='ibm-container-body' style={{'display':'none'}}>
-          <div id='nonSquadChildPageSection'>
+          <div id='squadChildPageSection' style={squadStyle}>
+            <p>Squad team cannot have a child team association</p>
+          </div>
+          <div id='nonSquadChildPageSection' style={nonSquadStyle}>
             <TeamChildAddSection childTeams={self.state.childTeams} childTeamsUpdateHandler={self.childTeamsUpdateHandler}/>
               <div class="ibm-rule ibm-alternate">
                 <hr />

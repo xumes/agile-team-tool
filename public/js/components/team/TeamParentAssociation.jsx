@@ -30,7 +30,8 @@ var TeamParentAssociation = React.createClass({
           }
           var returnResult = {
             'parent': currentParent,
-            'selectableParents': result
+            'selectableParents': result,
+            'access': self.props.selectedTeam.access
           };
           return self.setState({selectableParentTeams:returnResult});
         })
