@@ -32,7 +32,7 @@ var TeamDropdownParent = React.createClass({
       });
     }
     return (
-      <select id='parentSelectList' name='parentSelectList' style={teamSelectListStyle} ref='selectDropDown'>
+      <select id='parentSelectList' name='parentSelectList' style={teamSelectListStyle} ref='selectDropDown' disabled={!this.props.selectableParentTeams.access}>
         <option key='' value=''>No parent team</option>
         {populateTeamNames}
       </select>
