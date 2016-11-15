@@ -1,4 +1,10 @@
 var React = require('react');
+var Tooltip = require('react-tooltip');
+var memberCountTT = "Number of unique team members supporting this iteration.  The default is derived based on the team's current makeup and can be overridden by user input. This count is used to compute the iteration's FTE value and the 2 Pizza Rule metric results.";
+
+var fteThisiterationTT = "FTE (Full-time Equivalent) is sum of all Team Member allocation percentages divided by number of unique Team Members.  The default is derived based on the current team's makeup and can be overridden by user input.  This value is used to compute the iteration's Unit Cost values";
+
+var refreshFTETT = 'Clicking this ICON will replace the team member count and the FTE value with current values from the Team Information area on the Home page.';
 
 var IterationCommitment = React.createClass({
   getInitialState: function() {
@@ -32,7 +38,7 @@ var IterationCommitment = React.createClass({
   populateForm: function(data, state){
     if (data != undefined && data != null){
       var allocation;
-      if (data.locationScore != '') {
+      if (!_.isEmpty(data.locationScore)) {
         allocation = parseFloat(data.locationScore).toFixed(1);
       }
       this.setState({
@@ -102,6 +108,43 @@ var IterationCommitment = React.createClass({
     e.preventDefault();
   },
 
+  teamMemCount: function () {
+    var count = 0;
+    var currentTeam = this.props.selectedTeamInfo();
+    if (!_.isEmpty(currentTeam) && currentTeam.members) {
+      count = currentTeam.members.length;
+    }
+    return count;
+  },
+
+  teamMemFTE: function () {
+    var fte = 0.0;
+    var currentTeam = this.props.selectedTeamInfo();
+    if (!_.isEmpty(currentTeam) && currentTeam.members) {
+      var teamCount = 0;
+      _.each(currentTeam.members, function(member) {
+        teamCount += parseInt(member.allocation);
+      });
+      fte = parseFloat(teamCount / 100).toFixed(1);
+    }
+    return fte;
+  },
+
+  refreshFTE: function () {
+    var tmc = this.teamMemCount();
+    var fte = this.teamMemFTE();
+    if (confirm('You are about to overwrite the contents of these fields with ' + tmc + ' and ' + fte + ' respectively.  Do you want to continue?')){
+      this.refFTECount(tmc, fte);
+    }
+  },
+
+  refFTECount: function (tmc, fte) {
+    this.props.iteration.memberCount = tmc;
+    this.props.iteration.memberFte = fte;
+    this.setState({memberCount : tmc, fteThisiteration: fte});
+    this.props.addIteration('update');
+  },
+
   render: function() {
     var labelStyle = {
       'lineHeight': '20px',
@@ -133,6 +176,7 @@ var IterationCommitment = React.createClass({
     return (
       <div>
         <h2 className='ibm-bold ibm-h4'>Iteration commitments</h2>
+        <Tooltip id='commTT'/>
         <div style={spacing}>
           <label for='commStories' style={labelStyle}>Committed stories:<span className='ibm-required'></span></label>
           <span>
@@ -147,15 +191,15 @@ var IterationCommitment = React.createClass({
         </div>
         <div style={spacing}>
           <label for='memberCount' style={labelStyle}>Team members this iteration:<span className='ibm-required'></span></label>
-          <a className='ibm-information-link' id='memberCountTT' style={linkStyle1}/>
+          <a className='ibm-information-link' style={linkStyle1} data-tip={memberCountTT}/>
           <span>
             <input type='number' name='memberCount' id='memberCount' size='8' value={this.state.memberCount} placeholder='0' min='0' className='inputCustom' onChange={this.memberCountChange} disabled={!this.state.enableFields} onKeyPress={this.wholeNumCheck} onPaste={this.paste}/>
-            <a id='refreshFTE' className='ibm-refresh-link' style={linkStyle2} role='button'></a>
+            <a className='ibm-refresh-link' style={linkStyle2} role='button' onClick={this.refreshFTE} data-tip={refreshFTETT}/>
           </span>
         </div>
         <div style={spacing}>
           <label for='fteThisiteration' style={labelStyle}>FTE this iteration:<span className='ibm-required'></span></label>
-          <a className='ibm-information-link' id='fteThisiterationTT' style={linkStyle3}/>
+          <a className='ibm-information-link' style={linkStyle3} data-tip={fteThisiterationTT}/>
           <span>
             <input type='number' name='fteThisiteration' id='fteThisiteration' min='0' step='0.1' size='21' value={this.state.fteThisiteration} placeholder='0.0' className='inputCustom' onChange={this.fteThisiterationChange} disabled={!this.state.enableFields} onKeyPress={this.decimalNumCheck} onBlur={this.roundOff} onPaste={this.paste}/>
           </span>

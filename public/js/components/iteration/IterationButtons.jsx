@@ -23,6 +23,10 @@ var IterationButtons = React.createClass({
     this.props.parentUpdate('add');
   },
 
+  clearIterationInfo: function(){
+    this.props.parentUpdate('clear');
+  },
+
   render: function() {
     var btnStyle = {
       'width': '730px'

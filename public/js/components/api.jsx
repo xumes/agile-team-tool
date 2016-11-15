@@ -325,6 +325,26 @@ module.exports.updateIteration = function(data) {
   });
 };
 
+module.exports.searchTeamIteration = function(teamId, startDate, enddate) {
+  return new Promise(function(resolve, reject){
+    if (_.isUndefined(startDate) || _.isNull(startDate)){
+      startDate = 0;
+    }
+    if (_.isUndefined(enddate) || _.isNull(enddate)){
+      enddate = '';
+    }
+    var url = '/api/iteration/searchTeamIteration?id=' + encodeURIComponent(teamId)+ '&startdate='+startDate+'&enddate=' + enddate ;
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
 module.exports.getSelectableParents = function(teamId) {
   return new Promise(function(resolve, reject){
     var url = '/api/teams/lookup/parents/' + encodeURIComponent(teamId);
