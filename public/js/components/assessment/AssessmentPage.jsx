@@ -37,6 +37,10 @@ var AssessmentPage = React.createClass({
           'disabled'
         ],
         'status': ''
+      },
+      'selectedAssessment': {
+        'isNew': false,
+        'assessment': {}
       }
     }
   },
@@ -61,48 +65,19 @@ var AssessmentPage = React.createClass({
             'status': result.assessmentStatus
           }
         }
-        return self.setState({assessmentStatus: returnObject});
+        var returnAssessment = {
+          'isNew': false,
+          'assessment': result
+        };
+        self.setState({
+          assessmentStatus: returnObject,
+          selectedAssessment: returnAssessment
+        });
+        return;
       })
       .catch(function(err){
         return console.log(err);
       });
-    // // reset UI
-  //   var self = this;
-  //   var assessId = e.target.value;
-  //   var teamId = '';
-  //   var status = '';
-  //   api.getAssessmentDetails(assessId)
-  //  .then(function(result){
-  //     teamId = result['teamId'];
-  //     status = result['assessmentStatus'];
-  //     var details = {
-  //       assessmentStatus : result['assessmentStatus']
-  //     };
-  //     self.setState({
-  //       assessmentStatus: details['assessmentStatus']
-  //     })
-  //  })
-  //  .then(function(){
-  //     console.log('getting user edit permission for team: ', teamId);
-  //    // check user permission in this team
-  //    // agile team tool id on my local, 580f5ebe6ea2e326d40b9377
-  //    //teamId = '580f5ebe6ea2e326d40b9377'; // hardcoding member team id to simulate isUserAllowed === true
-  //    api.isUserAllowed(teamId)
-  //    .then(function(allowed){
-  //       console.log('assessmentStatus: ', status);
-  //       if(allowed && status == 'Draft'){
-  //         self.setState({
-  //           disabledFormTwo: '',
-  //           disabledButtons: ''
-  //         });
-  //       } else{
-  //         self.setState({
-  //           disabledFormTwo: 'disabled',
-  //           disabledButtons: 'disabled'
-  //         });
-  //       }
-  //    });
-  //  })
   },
 
   teamChangeHandler: function(e) {
@@ -121,13 +96,21 @@ var AssessmentPage = React.createClass({
            ''
          ],
          'status': ''
-       }
+       };
        var returnAssessments = {
          'assessments': results[0],
          'access': results[1]
-       }
-       self.setState({assessmentStatus: returnObject});
-       return self.setState({assessmentInfo: returnAssessments});
+       };
+       var returnAssessment = {
+         'isNew': true,
+         'assessment': {}
+       };
+       self.setState({
+         assessmentStatus: returnObject,
+         assessmentInfo: returnAssessments,
+         selectedAssessment: returnAssessment
+       });
+       return;
      })
      .catch(function(err){
        return console.log(err);
@@ -148,7 +131,7 @@ var AssessmentPage = React.createClass({
         {/* END assessment generic buttons */}
 
         {/* START Project or Operations team Form Two */}
-        <AssessmentPageFormTwo disabledFormTwo={this.state.disabledFormTwo} formTwo={this.state.FormTwo} />
+        <AssessmentPageFormTwo selectedAssessment={this.state.selectedAssessment} />
         {/* END Project or Operations team Form Two */}
 
         {/* START Assessment Template */}
