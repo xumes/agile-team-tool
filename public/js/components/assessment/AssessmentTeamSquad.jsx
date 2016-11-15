@@ -19,30 +19,30 @@ var TeamForm = React.createClass({
       });
     // Use IBM's bundled select2 package
     $('select[name="teamSelectList"]').select2();
-    $('select[name="teamSelectList"]').change(this.props.clickAction);
+    $('select[name="teamSelectList"]').change(this.props.teamChangeHandler);
   },
 
   render: function() {
     var labelStyle = {
       'lineHeight': '27px',
     };
-    
+
     var teamSelectListStyle = {
       'width': '300px'
     };
 
     var populateTeamNames = this.state.teamNames.map(function(item) {
       return (
-        <option value={item._id}>{item.name}</option>
+        <option key={item._id} value={item._id}>{item.name}</option>
       )
     });
 
     return (
       <p>
-        <label style={labelStyle} for="teamSelectList">Select an existing team:<span class="ibm-required">*</span></label>
+        <label style={labelStyle} for='teamSelectList'>Select an existing team:<span class='ibm-required'>*</span></label>
           <span>
-            <select name="teamSelectList" style={teamSelectListStyle}>
-            <option value="">Select one</option>
+            <select name='teamSelectList' style={teamSelectListStyle}>
+            <option key='' value=''>Select one</option>
             {populateTeamNames}
           </select>
          </span>
