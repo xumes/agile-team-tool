@@ -3,8 +3,22 @@ var Header = require('../Header.jsx');
 var TeamSquadForm = require('../team/TeamSquadForm.jsx');
 var Datepicker = require('./Datepicker.jsx');
 var _ = require('underscore');
+var moment = require('moment');
+var assessId = '';
 
 var AssessmentPageFormTwo = React.createClass({
+  getInitialState: function() {
+    return {
+      submittedDate: moment()
+    }
+  },
+  componentDidUpdate: function() {
+    if (assessId != this.props.selectedAssessment.assessId) {
+      $('#teamTypeSelectList').val(this.props.selectedAssessment.type).change();
+      $('#softwareYesNo').val(this.props.selectedAssessment.software).change();
+      assessId = this.props.selectedAssessment.assessId;
+    }
+  },
   componentDidMount: function() {
     $('select[name="teamTypeSelectList"]').select2();
     //$('select[name='teamTypeSelectList']').change();
@@ -30,19 +44,11 @@ var AssessmentPageFormTwo = React.createClass({
       'top' :'0px',
       'display': 'inline'
     };
+
     if (this.props.selectedAssessment.isNew == false) {
       var isDisabled = true;
     } else {
       isDisabled = false;
-    }
-    var assessmentType = 'Project';
-    var software = 'Yes';
-
-    if (!_.isEmpty(this.props.selectedAssessment.assessment)) {
-      assessmentType = this.props.selectedAssessment.assessment.type;
-      if (!this.props.selectedAssessment.assessment.deliversSoftware) {
-        software = false
-      }
     }
 
     return (
@@ -54,7 +60,7 @@ var AssessmentPageFormTwo = React.createClass({
             <a style={anchorInfo} class='ibm-information-link' id='teamTypeTT' data-widget='tooltip' data-contentid='teamTypeToolTip' title='Operations teams support a repeatable process that delivers value to the customer.  Unlike a project, it normally has no definite start and end date.  Operation examples include recruitment, budgeting, call centers, supply chain and software operations.'></a>
           </label>
           <span>
-            <select defaultValue={assessmentType} name='teamTypeSelectList' style={selectFieldWidth} disabled={isDisabled} >
+            <select id='teamTypeSelectList' name='teamTypeSelectList' style={selectFieldWidth} disabled={isDisabled} >
               <option value='Project'>Project</option>
               <option value='Operations'>Operations</option>
             </select>
@@ -66,7 +72,7 @@ var AssessmentPageFormTwo = React.createClass({
             <a class='ibm-information-link' id='softwareTT' data-widget='tooltip' data-contentid='softwareToolTip' style={anchorInfo} title='Answering yes to this will add the optional DevOps software delivery practices.'></a>
           </label>
           <span>
-            <select defaultValue={software} name='softwareYesNo' style={selectFieldWidth} disabled={isDisabled} >
+            <select id='softwareYesNo' name='softwareYesNo' style={selectFieldWidth} disabled={isDisabled} >
               <option value='Yes'>Yes</option>
               <option value='No'>No</option>
             </select>
@@ -78,7 +84,7 @@ var AssessmentPageFormTwo = React.createClass({
             <a class='ibm-information-link' id='assDateTT' data-widget='tooltip' data-contentid='assDateToolTip' style={anchorInfo} title='The assessment date is assigned when the Submit action is taken.  To assign a specific date, i.e. when recording a previously completed assessment, select the date to use as the assessment date.'></a>
           </label>
           <span style={selectFieldHolder}>
-            <Datepicker enableDatepicker={!isDisabled} size='44' />
+            <Datepicker enableDatepicker={!isDisabled} submittedDate={this.props.selectedAssessment.date} dateChangeHandler={this.props.dateChangeHandler} size='44' />
           </span>
         </p>
       </div>
