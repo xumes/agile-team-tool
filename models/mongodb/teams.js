@@ -999,7 +999,7 @@ module.exports.modifyImportantLinks = function(teamId, user, links) {
     if (validResult && validResult['error'] !== undefined) return reject(validResult);
 
     //check if user is allowed to edit team
-    Users.isUserAllowed(userId.toUpperCase(), teamId)
+    Users.isUserAllowed(userId, teamId)
     .then(function(allowed){
       if (!allowed) {
         return Promise.reject({'error':'Not allowed to modify team links'});
@@ -1011,6 +1011,9 @@ module.exports.modifyImportantLinks = function(teamId, user, links) {
         var hashId = crypto.createHash('md5').update(str).digest('hex');
         var obj = {};
         obj.id = (data.id !== undefined) ? data.id : hashId;
+        if (data._id !== undefined) {
+          obj._id = data._id;
+        }
         var url = data.linkUrl;
         if (!pattern.test(url)) {
           url = 'http://' + url;
@@ -1036,133 +1039,98 @@ module.exports.modifyImportantLinks = function(teamId, user, links) {
   });
 };
 
-// module.exports.deleteImportantLinks = function(teamId, user, links) {
-//   return new Promise(function(resolve, reject){
-//     /**
-//      *
-//      * @param teamId - team id to modify
-//      * @param user - user id of the one who is doing the action
-//      * @param links - array of link IDs
-//      * @returns - modified team document
-//      */
-//     var errorLists = {};
-//     errorLists['error'] = {};
-//     var userId = user['ldap']['uid'].toUpperCase();
-//     var userEmail = user['shortEmail'].toLowerCase();
-//     var validResult = validateDelImportantLinks(teamId, userId, links);
-//     if (validResult && validResult['error'] !== undefined) return reject(validResult);
-//
-//     //check if user is allowed to edit team
-//     Users.isUserAllowed(userId, teamId)
-//     .then(function(allowed){
-//       loggers.get('models').verbose('User ' + userEmail + ' is allowed to edit team ' + teamId + '. Proceed with modification');
-//       return allowed;
-//     })
-//     .then(function(){
-//       return module.exports.getTeam(teamId);
-//     })
-//     .then(function(teamDetails){
-//       if (!_.isEmpty(teamDetails.links)){
-//         var curlinkData = teamDetails.links;
-//         var tmpcurlinkData = _.clone(teamDetails.links);
-//         var tmpLinks = [];
-//         var deletedIds = _.pluck(links, 'id');
-//         var failDeleteLinkIds = [];
-//         var errmsg;
-//         _.each(curlinkData, function(value, key, list){
-//           if (_.contains(deletedIds, value.id)){
-//             delete curlinkData[key];
-//           }
-//         });
-//
-//         _.each(curlinkData, function(value, key, list){
-//           if (value !== undefined){
-//             tmpLinks.push(value);
-//           }
-//         });
-//
-//         var currlinkData = _.pluck(tmpcurlinkData, 'id');
-//         _.each(deletedIds, function(value, key, list) {
-//           if (!_.contains(currlinkData, value)) {
-//             failDeleteLinkIds.push(value);
-//           }
-//         });
-//
-//         if (failDeleteLinkIds.length > 0) {
-//           failDeleteLinkIds = _.reject(failDeleteLinkIds, _.isUndefined);
-//           if (failDeleteLinkIds && failDeleteLinkIds.length > 0) {
-//             errmsg = 'The following Link ID does not exist in the database: ' + failDeleteLinkIds.join(',');
-//           } else {
-//             errmsg = 'Link ID not found';
-//           }
-//           errorLists['error']['links'] = [errmsg];
-//           return reject(errorLists);
-//         } else {
-//           teamDetails['links'] = tmpLinks;
-//           teamDetails['updatedByUserId'] = userId;
-//           teamDetails['updatedBy'] = userEmail;
-//           teamDetails['updateDate'] = new Date(moment.utc());
-//           return Team.findByIdAndUpdate(teamId, teamDetails);
-//         }
-//       } else {
-//         var deletedIds = _.pluck(links, 'id');
-//         var errmsg;
-//         deletedIds = _.reject(deletedIds, _.isUndefined);
-//         if (deletedIds && deletedIds.length > 0) {
-//           errmsg = 'The following Link ID does not exist in the database: ' + deletedIds.join(',');
-//         } else {
-//           errmsg = 'Link ID not found';
-//         }
-//         errorLists['error']['links'] = [errmsg];
-//         return reject(errorLists);
-//       }
-//     })
-//     .then(function(savingResult){
-//       return module.exports.getUserTeams(userEmail);
-//     })
-//     .then(function(userTeams){
-//       return module.exports.getTeam(teamId)
-//       .then(function(result){
-//         return resolve(
-//           {
-//             userTeams : userTeams,
-//             teamDetails : result
-//           }
-//         );
-//       });
-//     })
-//     .catch( /* istanbul ignore next */ function(err){
-//       return reject(err);
-//     });
-//   });
-// };
-//
-// var validateDelImportantLinks = function(teamId, userId, links) {
-//   var errorLists = {};
-//   errorLists['error'] = {};
-//   if (_.isEmpty(teamId)){
-//     errorLists['error']['teamId'] = ['Team ID is required'];
-//     loggers.get('models').verbose(errorLists);
-//     return errorLists;
-//   }
-//   if (_.isEmpty(userId)){
-//     errorLists['error']['userId'] = ['User ID is required'];
-//     loggers.get('models').verbose(errorLists);
-//     return errorLists;
-//   }
-//   if (_.isEmpty(links)){
-//     errorLists['error']['links'] = ['Link ID is required'];
-//     loggers.get('models').verbose(errorLists);
-//     return errorLists;
-//   } else {
-//     if (!_.isArray(links)){
-//       errorLists['error']['links'] = ['Invalid links'];
-//       loggers.get('models').verbose(errorLists);
-//       return errorLists;
-//     }
-//   }
-//   return true;
-// };
+module.exports.deleteImportantLinks = function(teamId, user, links) {
+  return new Promise(function(resolve, reject){
+    /**
+     *
+     * @param teamId - team id to modify
+     * @param user - user id of the one who is doing the action
+     * @param links - array of link IDs
+     * @returns - modified team document
+     */
+    var errorLists = {};
+    errorLists['error'] = {};
+    var userId = user['ldap']['uid'].toUpperCase();
+    var userEmail = user['shortEmail'].toLowerCase();
+    var validResult = validateDelImportantLinks(teamId, userId, links);
+    if (validResult && validResult['error'] !== undefined) return reject(validResult);
+
+    //check if user is allowed to edit team
+    Users.isUserAllowed(userId, teamId)
+    .then(function(allowed){
+      loggers.get('models').verbose('User ' + userEmail + ' is allowed to edit team ' + teamId + '. Proceed with modification');
+      return allowed;
+    })
+    .then(function(){
+      return module.exports.getTeam(teamId);
+    })
+    .then(function(teamDetails){
+      if (!_.isEmpty(teamDetails.links)){
+        var curlinkData = teamDetails.links;
+        var tmpcurlinkData = _.clone(teamDetails.links);
+        var tmpLinks = [];
+        var deletedIds = _.pluck(links, 'id');
+        var failDeleteLinkIds = [];
+        var errmsg;
+        _.each(curlinkData, function(value, key, list){
+          if (_.contains(deletedIds, value.id)){
+            delete curlinkData[key];
+          }
+        });
+
+        _.each(curlinkData, function(value, key, list){
+          if (value !== undefined){
+            tmpLinks.push(value);
+          }
+        });
+
+        var currlinkData = _.pluck(tmpcurlinkData, 'id');
+        _.each(deletedIds, function(value, key, list) {
+          if (!_.contains(currlinkData, value)) {
+            failDeleteLinkIds.push(value);
+          }
+        });
+
+        if (failDeleteLinkIds.length > 0) {
+          failDeleteLinkIds = _.reject(failDeleteLinkIds, _.isUndefined);
+          if (failDeleteLinkIds && failDeleteLinkIds.length > 0) {
+            errmsg = 'The following Link ID does not exist in the database: ' + failDeleteLinkIds.join(',');
+          } else {
+            errmsg = 'Link ID not found';
+          }
+          errorLists['error']['links'] = [errmsg];
+          return reject(errorLists);
+        } else {
+          var updateTeam = {
+            'links': tmpLinks,
+            'updatedByUserId': userId,
+            'updatedBy': userEmail,
+            'updateDate': new Date(moment.utc())
+          };
+          return Team.update({'_id': teamId},{'$set': updateTeam}).exec();
+          // return Team.findByIdAndUpdate(teamId, teamDetails);
+        }
+      } else {
+        var deletedIds = _.pluck(links, 'id');
+        var errmsg;
+        deletedIds = _.reject(deletedIds, _.isUndefined);
+        if (deletedIds && deletedIds.length > 0) {
+          errmsg = 'The following Link ID does not exist in the database: ' + deletedIds.join(',');
+        } else {
+          errmsg = 'Link ID not found';
+        }
+        errorLists['error']['links'] = [errmsg];
+        return reject(errorLists);
+      }
+    })
+    .then(function(result) {
+      return resolve(result);
+    })
+    .catch( /* istanbul ignore next */ function(err){
+      return reject(err);
+    });
+  });
+};
 
 var validateUpdateImportantLinks = function(teamId, userId, links) {
   var errorLists = {};
@@ -1204,6 +1172,33 @@ var validateUpdateImportantLinks = function(teamId, userId, links) {
         errorLists['error']['links'] = tmpError;
         return errorLists;
       }
+    }
+  }
+  return true;
+};
+
+var validateDelImportantLinks = function(teamId, userId, links) {
+  var errorLists = {};
+  errorLists['error'] = {};
+  if (_.isEmpty(teamId)){
+    errorLists['error']['teamId'] = ['Team ID is required'];
+    loggers.get('models').verbose(errorLists);
+    return errorLists;
+  }
+  if (_.isEmpty(userId)){
+    errorLists['error']['userId'] = ['User ID is required'];
+    loggers.get('models').verbose(errorLists);
+    return errorLists;
+  }
+  if (_.isEmpty(links)){
+    errorLists['error']['links'] = ['Link ID is required'];
+    loggers.get('models').verbose(errorLists);
+    return errorLists;
+  } else {
+    if (!_.isArray(links)){
+      errorLists['error']['links'] = ['Invalid links'];
+      loggers.get('models').verbose(errorLists);
+      return errorLists;
     }
   }
   return true;

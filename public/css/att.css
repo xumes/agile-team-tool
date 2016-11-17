@@ -1094,6 +1094,14 @@ li #allTeams {
   margin-right: 10px;
 }
 
+#importantLinks .trash_icon {
+  width: 25px; height: 25px;
+}
+
+#importantLinks .add_link {
+  font-size:14px !important;
+}
+
 #importantLinks .wrap1 {
   float: left;
 }
@@ -1104,6 +1112,18 @@ li #allTeams {
 
 #importantLinks .urlwrapper{
   margin-left: 20px; position: absolute; margin-top: -1px;
+}
+
+#importantLinks .addlinkWrapper {
+  margin-left:30px; margin-top:5px;
+}
+
+#importantLinks .updateLinkWrapper {
+  margin-left: 560px;
+}
+
+#importantLinks .implabel {
+  width: 200px;
 }
 
 .importantLinksSection {

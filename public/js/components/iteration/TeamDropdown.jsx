@@ -30,6 +30,7 @@ var TeamDropdown = React.createClass({
     })
     .then(function(result){
       if (result != null){
+        self.props.readOnlyAccess(!result);
         self.props.enableFormFields(result);
       }
     });
