@@ -402,6 +402,13 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
   padding: 0 0 5px;
 }
 
+textarea[disabled] {
+  background-color: #ececec;
+  border: 2px solid #ececec;
+  color: #777677;
+  cursor: not-allowed;
+}
+
 .agile-section-title {
   font-size: 90% !important;
   font-weight: bold !important;

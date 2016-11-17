@@ -1,5 +1,4 @@
 var React = require('react');
-var api = require('../api.jsx');
 var ReactDOM = require('react-dom');
 
 var TeamDropdownParent = React.createClass({
@@ -9,6 +8,8 @@ var TeamDropdownParent = React.createClass({
     } else {
       defaultParentValue = this.props.selectableParentTeams.parent._id;
     }
+    console.log('this.props.selectableParentTeams.access', this.props.selectableParentTeams, this.props.selectableParentTeams.access,this.refs.selectDropDown);
+    this.refs.selectDropDown.disabled = !this.props.selectableParentTeams.access;
     $('#parentSelectList').val(defaultParentValue).change();
   },
   componentDidMount: function() {
@@ -16,7 +17,6 @@ var TeamDropdownParent = React.createClass({
     $(this.refs.selectDropDown).select2();
     $(this.refs.selectDropDown).change(this.props.parentChangeHandler);
   },
-
   render: function() {
     var self = this;
     var teamSelectListStyle = {
@@ -38,7 +38,6 @@ var TeamDropdownParent = React.createClass({
       </select>
     )
   }
-
 });
 
 module.exports = TeamDropdownParent;

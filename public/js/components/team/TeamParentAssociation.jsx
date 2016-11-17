@@ -1,7 +1,7 @@
 var React = require('react');
 var TeamDropdownParent = require('./TeamDropdownParent.jsx');
 var TeamDropdown = require('./TeamDropdown.jsx');
-var api = require('../api.jsx');
+var teamApi = require('./TeamApi.jsx');
 var currentTeam = '';
 var teamParentId = '';
 var selecedParentId = '';
@@ -10,6 +10,7 @@ var TeamParentAssociation = React.createClass({
   getInitialState: function() {
     return {
       selectableParentTeams: {
+        'access': true,
         'parent': null,
         'selectableParents': []
       },
@@ -17,8 +18,8 @@ var TeamParentAssociation = React.createClass({
   },
   componentDidUpdate: function() {
     var self = this;
-    if (self.props.selectedTeam.team._id && currentTeam != self.props.selectedTeam.team._id.toString()) {
-      api.getSelectableParents(self.props.selectedTeam.team._id)
+    if (self.props.selectedTeam && self.props.selectedTeam.team._id && currentTeam != self.props.selectedTeam.team._id.toString()) {
+      teamApi.getSelectableParents(self.props.selectedTeam.team._id)
         .then(function(result){
           currentTeam = self.props.selectedTeam.team._id.toString();
           if (self.props.selectedTeam.hierarchy.length > 0) {
@@ -54,7 +55,7 @@ var TeamParentAssociation = React.createClass({
     if (selecedParentId == teamParentId) {
       return ;
     } else {
-      api.associateTeam(selecedParentId, self.props.selectedTeam.team._id)
+      teamApi.associateTeam(selecedParentId, self.props.selectedTeam.team._id)
         .then(function(result){
           teamParentId = selecedParentId;
           $('#updateParentBtn').prop('disabled', true);
@@ -72,7 +73,7 @@ var TeamParentAssociation = React.createClass({
     return (
       <div class='ibm-show-hide ibm-widget-processed' id='assocParentPageSection'>
         <h2 class='ibm-bold ibm-h4'>
-          <a class='' title='Expand/Collapse'onClick={()=>self.props.showHideSection('assocParentPageSection')}>
+          <a class='' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={()=>self.props.showHideSection('assocParentPageSection')}>
             Parent Team Association
           </a>
         </h2>
@@ -93,9 +94,6 @@ var TeamParentAssociation = React.createClass({
       </div>
     )
   }
-
-
-
 });
 
 module.exports = TeamParentAssociation;

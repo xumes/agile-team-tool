@@ -36,9 +36,9 @@ var TeamIteration = React.createClass({
       }
       if (self.props.selectedTeam.type != 'squad') {
         return (
-          <div class='ibm-show-hide ibm-widget-processe' id='iterationPageSection'>
+          <div class='ibm-show-hide ibm-widget-processed' id='iterationPageSection'>
             <h2 class='ibm-bold ibm-h4'>
-              <a class='' title='Expand/Collapse' onClick={()=>self.props.showHideSection('iterationPageSection')}>
+              <a class='' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={()=>self.props.showHideSection('iterationPageSection')}>
                 Iteration information
               </a>
             </h2>
@@ -98,9 +98,9 @@ var TeamIteration = React.createClass({
           }
         }
         return (
-          <div class='ibm-show-hide ibm-widget-processe' id='iterationPageSection'>
+          <div class='ibm-show-hide ibm-widget-processed' id='iterationPageSection'>
             <h2 class='ibm-bold ibm-h4'>
-              <a class='' title='Expand/Collapse' onClick={()=>self.props.showHideSection('iterationPageSection')}>
+              <a class='' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={()=>self.props.showHideSection('iterationPageSection')}>
                 Iteration information
               </a>
             </h2>

@@ -37,9 +37,9 @@ var TeamAssessment = React.createClass({
       }
       if (self.props.selectedTeam.type != 'squad') {
         return (
-          <div class='ibm-show-hide ibm-widget-processe' id='assessmentPageSection'>
+          <div class='ibm-show-hide ibm-widget-processed' id='assessmentPageSection'>
             <h2 class='ibm-bold ibm-h4'>
-              <a class='' title='Expand/Collapse' onClick={()=>self.props.showHideSection('assessmentPageSection')}>
+              <a class='' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={()=>self.props.showHideSection('assessmentPageSection')}>
                 Assessment information
               </a>
             </h2>
@@ -100,9 +100,9 @@ var TeamAssessment = React.createClass({
           }
         }
         return (
-          <div class='ibm-show-hide ibm-widget-processe' id='assessmentPageSection'>
+          <div class='ibm-show-hide ibm-widget-processed' id='assessmentPageSection'>
             <h2 class='ibm-bold ibm-h4'>
-              <a class='' title='Expand/Collapse' onClick={()=>self.props.showHideSection('assessmentPageSection')}>
+              <a class='' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={()=>self.props.showHideSection('assessmentPageSection')}>
                 Assessment information
               </a>
             </h2>
@@ -147,9 +147,6 @@ var TeamAssessment = React.createClass({
       }
     }
   }
-
-
-
 });
 
 module.exports = TeamAssessment;

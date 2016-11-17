@@ -16,7 +16,7 @@ var TeamLastUpdate = React.createClass({
     return (
       <div class='ibm-show-hide ibm-widget-processed' id='lastUpdateSection'>
         <h2 class='ibm-bold ibm-h4'>
-          <a class='' href='#show-hide' title='Expand/Collapse' onClick={()=>self.props.showHideSection('lastUpdateSection')}>
+          <a class='' href='#show-hide' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={()=>self.props.showHideSection('lastUpdateSection')}>
             Last update
           </a>
         </h2>

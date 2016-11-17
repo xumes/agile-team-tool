@@ -62,7 +62,7 @@ var TeamChildAddSection = React.createClass({
         <p class='ibm-btn-row'>
           <label>&nbsp;<span class='ibm-access'>Update buttons</span></label>
           <span>
-            <input type='button' class='ibm-btn-pri ibm-btn-small' id='updateChildBtn' value='Associate team to a child team' onClick={this.associateTeamHandler}/>
+            <input type='button' class='ibm-btn-pri ibm-btn-small' id='updateChildBtn' value='Associate team as a child' onClick={this.associateTeamHandler}/>
           </span>
         </p>
       </div>
