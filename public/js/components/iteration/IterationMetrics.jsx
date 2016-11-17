@@ -3,8 +3,8 @@ var React = require('react');
 var IterationMetrics = React.createClass({
   getInitialState: function() {
     return {
-      unitcostStoriesFTE: '0.0',
-      unitcostStorypointsFTE: '0.0'
+      unitCostStoriesFTE: '0.0',
+      unitCostStoryPointsFTE: '0.0'
     }
   },
 
@@ -12,21 +12,47 @@ var IterationMetrics = React.createClass({
     var storiesFTE = '0.0';
     var strPointsFTE = '0.0';
     if (data != undefined && data != null){
-      var allocation;
-      
-      if (data.locationScore != null && data.locationScore != undefined && data.locationScore != '') {
-        allocation = parseFloat(data.locationScore).toFixed(1);
-        if (allocation != null && allocation != undefined && allocation.trim() != '0.0') {
-          storiesFTE = (data.deliveredStories / allocation).toFixed(1);
-          strPointsFTE = (data.storyPointsDelivered / allocation).toFixed(1);
-        }
+      if (data.memberFte != null && data.deliveredStories != null) {
+        storiesFTE = (this.numericValue(data.deliveredStories) / this.floatDefault(data.memberFte)).toFixed(1);
+      }
+      if (data.storyPointsDelivered != null && data.memberFte != null) {
+        strPointsFTE = (this.numericValue(data.storyPointsDelivered) / this.floatDefault(data.memberFte)).toFixed(1);
       }
     }
 
     this.setState({
-        unitcostStoriesFTE: storiesFTE,
-        unitcostStorypointsFTE: strPointsFTE
+        unitCostStoriesFTE: storiesFTE,
+        unitCostStoryPointsFTE: strPointsFTE
       });
+  },
+
+  updateField: function(field, value){
+    if (field === 'unitCostStoriesFTE'){
+      this.setState({unitCostStoriesFTE: this.floatDefault(value).toFixed(1)});
+    }
+    else if (field == 'unitCostStoryPointsFTE'){
+      this.setState({unitCostStoryPointsFTE: this.floatDefault(value).toFixed(1)});
+    }
+  },
+
+  numericValue:function(data) {
+    var value = parseInt(data);
+    if (!isNaN(value)) {
+      return value;
+    }
+    else {
+      return 0;
+    }
+  },
+
+  floatDefault:function(num) {
+    var value = parseFloat(num);
+    if (!isNaN(value)) {
+      return value;
+    }
+    else {
+      return '0.0';
+    }
   },
 
   render: function() {
@@ -39,15 +65,15 @@ var IterationMetrics = React.createClass({
       <div>
         <h2 className='ibm-bold ibm-h4'>Iteration metrics (calculated values)</h2>
         <p>
-          <label for='unitcostStoriesFTE' style={labelStyle}>Unit cost - Stories per FTE:<span className='ibm-required'></span></label>
+          <label for='unitCostStoriesFTE' style={labelStyle}>Unit cost - Stories per FTE:<span className='ibm-required'></span></label>
           <span>
-            <input type='number' name='unitcostpercStories' id='unitcostStoriesFTE' size='21' min='0' value={this.state.unitcostStoriesFTE} placeholder='0.0' disabled className='inputCustom' step='0.1'/>
+            <input id='unitCostStoriesFTE' size='21' value={this.state.unitCostStoriesFTE} placeholder='0.0' disabled className='inputCustom' />
           </span>
         </p>
         <p>
-          <label for='unitcostStorypointsFTE' style={labelStyle}>Unit cost - Story points per FTE:<span className='ibm-required'></span></label>
+          <label for='unitCostStoryPointsFTE' style={labelStyle}>Unit cost - Story points per FTE:<span className='ibm-required'></span></label>
           <span>
-            <input type='number' name='unitcostpercStorypoints' id='unitcostStorypointsFTE' size='21' min='0' value={this.state.unitcostStorypointsFTE} placeholder='0.0' disabled className='inputCustom' step='0.1'/>
+            <input id='unitCostStoryPointsFTE' size='21' value={this.state.unitCostStoryPointsFTE} placeholder='0.0' disabled className='inputCustom' />
           </span>
         </p>
         <div className='ibm-rule ibm-alternate-1'>

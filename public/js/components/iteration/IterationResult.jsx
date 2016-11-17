@@ -38,44 +38,48 @@ var IterationResult = React.createClass({
   },
 
   commStoriesDelChange: function(e){
-    this.props.iteration.deliveredStories = e.target.value;
-    this.setState({commStoriesDel : e.target.value});
+    var delStories = e.target.value;
+    this.props.updateField('deliveredStories', delStories);
+    this.calculateMetrics(delStories, this.state.commPointsDel);
+    this.setState({commStoriesDel : delStories});
   },
   commPointsDelChange: function(e){
-    this.setState({commPointsDel : e.target.value});
-    this.props.iteration.storyPointsDelivered = e.target.value;
+    var delPoints = e.target.value;
+    this.props.updateField('storyPointsDelivered', delPoints);
+    this.calculateMetrics(this.state.commStoriesDel, delPoints);
+    this.setState({commPointsDel : delPoints});
   },
   deploythisIterationChange: function(e){
+    this.props.updateField('deployments', e.target.value);
     this.setState({deploythisIteration : e.target.value});
-    this.props.iteration.deployments = e.target.value;
   },
   defectsIterationChange: function(e){
+    this.props.updateField('defects', e.target.value);
     this.setState({defectsIteration : e.target.value});
-    this.props.iteration.defects = e.target.value;
   },
   cycleTimeWIPChange: function(e){
+    this.props.updateField('cycleTimeWIP', e.target.value);
     this.setState({cycleTimeWIP : e.target.value});
-    this.props.iteration.cycleTimeWIP = e.target.value;
   },
   cycleTimeInBacklogChange: function(e){
+    this.props.updateField('cycleTimeInBacklog', e.target.value);
     this.setState({cycleTimeInBacklog : e.target.value});
-    this.props.iteration.cycleTimeInBacklog = e.target.value;
   },
   memberChange: function(e){
-    this.props.iteration.memberChanged = e.target.value;
+    this.props.updateField('memberChanged', e.target.value);
     this.setState({memberChanged : e.target.value});    
   },
   clientSatisfactionChange: function(e){
+    this.props.updateField('clientSatisfaction', e.target.value);
     this.setState({clientSatisfaction : e.target.value});
-    this.props.iteration.clientSatisfaction = e.target.value;
   },
   teamSatisfactionChange: function(e){
+    this.props.updateField('teamSatisfaction', e.target.value);
     this.setState({teamSatisfaction : e.target.value});
-    this.props.iteration.teamSatisfaction = e.target.value;
   },
   commentIterChange: function(e){
+    this.props.updateField('comment', e.target.value);
     this.setState({commentIter : e.target.value});
-    this.props.iteration.comment = e.target.value;
   },
 
   wholeNumCheck: function(e) {
@@ -101,7 +105,7 @@ var IterationResult = React.createClass({
     }
   },
 
-  numDefault:function(num) {
+  numericValue:function(num) {
     var value = parseInt(num);
     if (!isNaN(value)) {
       return value;
@@ -128,15 +132,15 @@ var IterationResult = React.createClass({
   populateForm: function(data, state){
     if (data != undefined && data != null){
       this.setState({
-        commStoriesDel: this.numDefault(data.deliveredStories),
-        commPointsDel: this.numDefault(data.storyPointsDelivered),
-        deploythisIteration: this.numDefault(data.deployments),
+        commStoriesDel: this.numericValue(data.deliveredStories),
+        commPointsDel: this.numericValue(data.storyPointsDelivered),
+        deploythisIteration: this.numericValue(data.deployments),
         cycleTimeWIP: this.floatDefault(data.cycleTimeWIP),
         cycleTimeInBacklog: this.floatDefault(data.cycleTimeInBacklog),
         memberChanged: data.memberChanged,
         clientSatisfaction: this.floatDefault(data.clientSatisfaction),
         teamSatisfaction: this.floatDefault(data.teamSatisfaction),
-        commentIter: data.comment,
+        commentIter: data.comment != null?data.comment:'',
         enableFields: state
       });
       this.refs.defect.populateForm(data, state);
@@ -162,6 +166,17 @@ var IterationResult = React.createClass({
   enableFormFields: function(state){
     this.setState({enableFields: state});
     this.refs.defect.enableFormFields(state);
+  },
+
+  calculateMetrics: function(commStoriesDel, commPointsDel) {
+    var fte = this.props.iteration.memberFte;
+    if (fte != null && !isNaN(parseFloat(fte))){      
+      var storiesFTE = (this.numericValue(commStoriesDel) / fte).toFixed(1);
+      this.props.updateMetrics('unitCostStoriesFTE', storiesFTE);
+
+      var strPointsFTE = (this.numericValue(commPointsDel) / fte).toFixed(1);
+      this.props.updateMetrics('unitCostStoryPointsFTE', strPointsFTE);
+    }
   },
 
   render: function() {
@@ -218,7 +233,7 @@ var IterationResult = React.createClass({
         <div class='ibm-rule ibm-gray-80'>
           <hr/>
         </div>
-        <Defect updateForm = {this.props.populateForm} enableFields={this.state.enableFields} ref='defect' iteration={this.props.iteration}/>
+        <Defect enableFields={this.state.enableFields} ref='defect' iteration={this.props.iteration} />
         <div style={spacing}>
           <label for='cycleTimeWIP' style={labelStyle}>Cycle time in WIP (days):<span className='ibm-required'></span></label>
           <span>

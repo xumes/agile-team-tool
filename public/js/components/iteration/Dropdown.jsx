@@ -15,8 +15,9 @@ var Dropdown = React.createClass({
   },
 
   handleChange: function(e) {
-    this.props.iteration.memberChanged = e.target.value;
-    this.setState({selected: e.target.value});
+    var teamChanged = e.target.value;
+    this.props.iteration.memberChanged = teamChanged;
+    this.setState({selected: teamChanged});    
   },
   
   render: function() {

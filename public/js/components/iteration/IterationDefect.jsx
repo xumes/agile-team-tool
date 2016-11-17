@@ -15,24 +15,36 @@ var IterationDefect = React.createClass({
   },
 
   defectsStartBalChange: function(e){
-    this.setState({defectsStartBal : e.target.value});
-    this.setState({defectsEndBal: this.computeDefectsEndBalance()});
-    this.props.iteration.defectsStartBal = this.state.defectsStartBal;
-    this.props.iteration.defectsEndBal = this.state.defectsEndBal;
+    var defStartBal = e.target.value;
+    this.setState({defectsStartBal : defStartBal});
+
+    var defEndBal = this.computeDefectsEndBalance();
+    this.setState({defectsEndBal: defEndBal});
+
+    this.props.iteration.defectsStartBal = defStartBal;
+    this.props.iteration.defectsEndBal = defEndBal;
   },
 
   defectsIterationChange: function(e){
-    this.setState({defectsIteration : e.target.value});
-    this.setState({defectsEndBal: this.computeDefectsEndBalance()});
-    this.props.iteration.defects = this.state.defectsIteration;
-    this.props.iteration.defectsEndBal = this.state.defectsEndBal;
+    var defIteration = e.target.value;
+    this.setState({defectsIteration : defIteration});
+
+    var defEndBal = this.computeDefectsEndBalance();
+    this.setState({defectsEndBal: defEndBal});
+
+    this.props.iteration.defects = defIteration;
+    this.props.iteration.defectsEndBal = defEndBal;
   },
 
   defectsClosedChange: function(e){
-    this.setState({defectsClosed : e.target.value});
-    this.setState({defectsEndBal: this.computeDefectsEndBalance()});
-    this.props.iteration.defectsClosed = this.state.defectsClosed;
-    this.props.iteration.defectsEndBal = this.state.defectsEndBal;
+    var defClosed = e.target.value;
+    this.setState({defectsClosed : defClosed});
+
+    var defEndBal = this.computeDefectsEndBalance();
+    this.setState({defectsEndBal: defEndBal});
+
+    this.props.iteration.defectsClosed = defClosed;
+    this.props.iteration.defectsEndBal = defEndBal;
   },
   
   wholeNumCheck: function(e) {
@@ -50,7 +62,7 @@ var IterationDefect = React.createClass({
     }
   },
 
-  isNum:function(data) {
+  numericValue:function(data) {
     var value = parseInt(data);
     if (!isNaN(value)) {
       return value;
@@ -67,10 +79,10 @@ var IterationDefect = React.createClass({
   populateForm: function(data, state){
     if (data != undefined && data != null){
       this.setState({
-        defectsStartBal: this.isNum(data.defectsStartBal),
-        defectsIteration: this.isNum(data.defects),
-        defectsClosed: this.isNum(data.defectsClosed),
-        defectsEndBal: this.isNum(data.defectsEndBal),
+        defectsStartBal: this.numericValue(data.defectsStartBal),
+        defectsIteration: this.numericValue(data.defects),
+        defectsClosed: this.numericValue(data.defectsClosed),
+        defectsEndBal: this.numericValue(data.defectsEndBal),
         enableFields: state
       });
     }
@@ -91,23 +103,20 @@ var IterationDefect = React.createClass({
   },
 
   computeDefectsEndBalance: function() {
-    var openDefects = parseInt(this.state.defectsStartBal);
-    var newDefects = parseInt(this.state.defectsIteration);
-    var closedDefects = parseInt(this.state.defectsClosed);
-    openDefects = isNaN(openDefects) ? 0 : openDefects;
-    newDefects = isNaN(newDefects) ? 0 : newDefects;
-    closedDefects = isNaN(closedDefects) ? 0 : closedDefects;
+    var openDefects = this.numericValue(this.state.defectsStartBal);
+    var newDefects = this.numericValue(this.state.defectsIteration);
+    var closedDefects = this.numericValue(this.state.defectsClosed);
     return openDefects + newDefects - closedDefects;
   },
 
   refreshDefectsStartBalance: function() {
     var self = this;
-    var currentStartBalance = self.isNum(this.props.iteration.defectsStartBal);
+    var currentStartBalance = self.numericValue(this.props.iteration.defectsStartBal);
     var newStartBalance = 0;
     api.searchTeamIteration(self.props.iteration.teamId, self.props.iteration.startDate)
     .then(function(iterations){
       if (!_.isEmpty(iterations) && !_.isUndefined(iterations[0].defectsEndBal) & !isNaN(parseInt(iterations[0].defectsEndBal))){
-        newStartBalance = self.isNum(iterations[0].defectsEndBal);
+        newStartBalance = self.numericValue(iterations[0].defectsEndBal);
       }
       if (isNaN(parseInt(currentStartBalance)) || currentStartBalance == 0 || _.isEqual(currentStartBalance, newStartBalance)) {
         self.defectStartBalanceHandler(iterations);
@@ -126,7 +135,7 @@ var IterationDefect = React.createClass({
 
   defectStartBalanceHandler:function (iterations) {
     var startBalance = 0;
-    if (iterations != undefined && !_.isNull(iterations[0].defectsEndBal) && !isNaN(this.isNum(iterations[0].defectsEndBal)))
+    if (iterations != undefined && !_.isNull(iterations[0].defectsEndBal) && !isNaN(this.numericValue(iterations[0].defectsEndBal)))
       startBalance = iterations[0].defectsEndBal;
 
     this.setState({defectsStartBal : startBalance});

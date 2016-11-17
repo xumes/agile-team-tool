@@ -57,17 +57,25 @@ var IterationForm = React.createClass({
       lastUpdateTimestamp: '',
       lastUpdateUser: '',
       id:'',
-      selectedTeamInfo: new Object()
+      selectedTeamInfo: new Object(),
+      readOnlyAccess: true
     }
+  },
+
+  readOnlyAccess: function(status){
+    this.setState({readOnlyAccess: status});
   },
 
   populateForm: function(data, state){
     //populate form fields per data retrieved
-    this.refs.management.populateForm(data, state);
-    this.refs.commitment.populateForm(data, state);
-    this.refs.result.populateForm(data, state);
-    this.refs.metrics.populateForm(data, state);
-
+    var enableStatus = !this.state.readOnlyAccess;
+    if (state != null && state != undefined){
+      enableStatus = state;
+    }
+      this.refs.management.populateForm(data, enableStatus);
+      this.refs.commitment.populateForm(data, enableStatus);
+      this.refs.result.populateForm(data, enableStatus);
+      this.refs.metrics.populateForm(data, enableStatus);
     if (data != undefined && data != null){
       this.setState({
         lastUpdateTimestamp: this.showDateUTC(data.updateDate),
@@ -317,6 +325,16 @@ getIterationErrorPopup: function(errors) {
     return team;
   },
 
+  updateField: function(field,value){
+    var copy = _.clone(this.state.iteration);
+    copy[field] = value;
+    this.setState({iteration:copy});
+  },
+
+  updateMetrics: function(field, value){
+    this.refs.metrics.updateField(field, value);
+  },
+
   render: function() {
     
     var subStyle = {
@@ -328,9 +346,9 @@ getIterationErrorPopup: function(errors) {
     
     return (
       <form className='ibm-column-form'>
-        <Management updateForm={this.populateForm} enableFormFields={this.enableFormFields} ref='management' iteration={this.state.iteration}/>
-        <Commitment updateForm={this.populateForm} enableFields={this.state.enableFields} ref='commitment' iteration={this.state.iteration} selectedTeamInfo={this.getTeamInfo} addIteration={this.addIteration}/>
-        <Result updateForm={this.populateForm} enableFields={this.state.enableFields} ref='result' iteration={this.state.iteration}/>
+        <Management updateForm={this.populateForm} enableFormFields={this.enableFormFields} ref='management' iteration={this.state.iteration} updateField={this.updateField} readOnlyAccess={this.readOnlyAccess}/>
+        <Commitment updateForm={this.populateForm} enableFields={this.state.enableFields} ref='commitment' iteration={this.state.iteration} selectedTeamInfo={this.getTeamInfo} addIteration={this.addIteration} updateField={this.updateField} updateMetrics={this.updateMetrics}/>
+        <Result updateForm={this.populateForm} enableFields={this.state.enableFields} ref='result' iteration={this.state.iteration} updateField={this.updateField} updateMetrics={this.updateMetrics}/>
         <Metrics updateForm={this.populateForm} ref='metrics' iteration={this.state.iteration}/>
         <Buttons ref='buttons' iteration={this.state.iteration} parentUpdate = {this.updateIterationInfo}/>
         <h2 className='ibm-bold ibm-h4'>Last update</h2>

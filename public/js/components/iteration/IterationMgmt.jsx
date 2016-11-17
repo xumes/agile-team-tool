@@ -29,6 +29,7 @@ var IterationMgmt = React.createClass({
     var selected = e.target.value;
     api.isUserAllowed(selected)
       .then(function(result) {
+        self.props.readOnlyAccess(!result);
         self.props.enableFormFields(result);
         self.setState({
           enableIter: true,
@@ -44,27 +45,30 @@ var IterationMgmt = React.createClass({
             self.refs.iterList.retrieveIterations(selected, null, result, ['', 'Select one']);
           }
         }
-    });    
-    self.props.iteration.teamId = selected;
+      });
+    
+    self.props.updateField('teamId',selected);
+    //self.setState({selectedTeam: selected});
   },
 
   nameChange: function(e){
-    this.props.iteration.name = e.target.value;
+    this.props.updateField('name',e.target.value);
+    this.teamMemFTE();
     this.setState({iterationName : e.target.value});
   },
 
   startDateChange: function(date){
-    this.props.iteration.startDate = moment(date).format('MM/DD/YYYY');
-    this.setState({iterationStartDate : date});
+    this.props.updateField('startDate', moment(date).format('MM/DD/YYYY'));
+    this.setState({iterationStartDate : date});    
   },
 
   endDateChange: function(date){
-    this.props.iteration.endDate = moment(date).format('MM/DD/YYYY');
-    this.setState({iterationEndDate : date});
+    this.props.updateField('endDate', moment(date).format('MM/DD/YYYY'));
+    this.setState({iterationEndDate : date});    
   },
 
   initTeamIterations: function(teamId, selected, state, firstEntry){
-    //this.setState({enableIter: true});
+    this.setState({enableIter: true});
     this.refs.iterList.retrieveIterations(teamId, selected, state, firstEntry);
   },
 
@@ -97,6 +101,19 @@ var IterationMgmt = React.createClass({
     return team;
   },
 
+  teamMemFTE: function () {
+    var fte = 0.0;
+    var currentTeam = this.getTeamInfo();
+    if (!_.isEmpty(currentTeam) && currentTeam.members) {
+      var teamCount = 0;
+      _.each(currentTeam.members, function(member) {
+        teamCount += numericValue(member.allocation);
+      });
+      fte = parseFloat(teamCount / 100).toFixed(1);
+    }
+    return fte;
+  },
+
   render: function() {
     var labelStyle = {
       'lineHeight': '20px',
@@ -115,14 +132,14 @@ var IterationMgmt = React.createClass({
         <div style={spacing}>
           <label style={labelStyle} for='teamSelectList'>Select an existing squad team:<span className='ibm-required'>*</span></label>
             <span>
-              <SquadDropdown teamChangeHandler={this.teamSelectOnChange} enableFormFields={this.props.enableFormFields} ref='squadList' selectedTeam={this.state.selectedTeam} selectedTeamInfo={this.props.selectedTeamInfo}/>
+              <SquadDropdown teamChangeHandler={this.teamSelectOnChange} enableFormFields={this.props.enableFormFields} ref='squadList' selectedTeam={this.state.selectedTeam} selectedTeamInfo={this.props.selectedTeamInfo} readOnlyAccess={this.props.readOnlyAccess}/>
            </span>
         </div>
         {!this.state.hideMsg ? <div className="agile-read-only-status ibm-item-note-alternate" style={msgSpacing} id='userEditMsg'>{readonlyMsg}</div>:null}
         <div style={spacing}>
           <label style={labelStyle} for='iterationSelectList'>Iteration number/identifier:<span className='ibm-required'>*</span></label>
             <span>
-              <IterationDropdown enableFields={this.state.enableIter} enableFormFields={this.props.enableFormFields} ref='iterList' updateForm = {this.props.updateForm} iteration={this.props.iteration}/>
+              <IterationDropdown enableFields={this.state.enableIter} enableFormFields={this.props.enableFormFields} ref='iterList' updateForm = {this.props.updateForm} iteration={this.props.iteration} updateField={this.props.updateField}/>
             </span>
         </div>
         <div id='newIterationNameSection' style={spacing}>

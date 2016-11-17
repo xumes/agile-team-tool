@@ -20,7 +20,7 @@ var IterationDropdown = React.createClass({
             iterations: result,
             selectedIteration: self.props.iteration._id
           });
-          self.loadSelected(self.props.iteration._id, self.props.enableFields);
+          self.loadSelected(self.props.iteration._id);
         });
     }
   },
@@ -32,21 +32,23 @@ var IterationDropdown = React.createClass({
   },
 
   handleChange: function(e) {
-    this.loadSelected(e.target.value, true);
+    this.loadSelected(e.target.value);
   },
 
-  loadSelected: function(id, state) {
+  loadSelected: function(id) {
     var self = this;
     if (!_.isEmpty(id) && id != 'new'){
-      var iteration;
       api.getIterationInfo(id)
         .then(function(result) {
-          iteration = result;          
-          self.props.updateForm(result, state);
+          self.props.updateForm(result);
         });
     }
     else {
+      var teamId = self.props.iteration.teamId;
       self.props.updateForm(null, false);
+      if (!_.isEmpty(teamId)){
+        self.props.updateField('teamId',teamId);
+      }
     }
     self.setState({selectedIteration: id});
   },
@@ -64,16 +66,24 @@ var IterationDropdown = React.createClass({
           .then(function(result) {
             self.props.updateForm(result, state);
             self.setState({iterations: iterations, selectedIteration: selected, firstOption: firstOption});
+          })
+          .catch(function(err){
+            console.log('[retrieveIterations] error:'+JSON.stringify(err));
           });
       }
       else {
         api.getIterations(teamId)
           .then(function(result) {
-            self.setState({iterations: result});
+            self.setState({iterations: result, selectedIteration: firstOption[0], firstOption: firstOption});
+            var teamId = self.props.iteration.teamId;
+            self.props.updateForm(null, state);
+            if (!_.isEmpty(teamId)){
+              self.props.updateField('teamId',teamId);
+            }
+          })
+          .catch(function(err){
+            console.log('[retrieveIterations] error:'+JSON.stringify(err));
           });
-        self.setState({selectedIteration: firstOption[0], firstOption: firstOption});
-        self.props.iteration._id = '';
-        self.props.updateForm(null, state);
       }
     }
   },
