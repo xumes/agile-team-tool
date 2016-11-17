@@ -411,3 +411,35 @@ module.exports.removeAssociation = function(childTeamId) {
     });
   });
 };
+
+module.exports.updateLink = function(data) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/teams/links';
+    var req = $.ajax({
+      type: 'PUT',
+      url: url,
+      contentType: 'application/json',
+      data: JSON.stringify(data)
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.deleteLink = function(data) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/teams/links';
+    var req = $.ajax({
+      type: 'DELETE',
+      url: url,
+      contentType: 'application/json',
+      data: JSON.stringify(data)
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};

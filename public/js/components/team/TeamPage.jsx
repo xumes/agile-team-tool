@@ -9,7 +9,9 @@ var TeamChildAssociation = require('./TeamChildAssociation.jsx');
 var TeamIteration = require('./TeamIteration.jsx');
 var TeamAssessment = require('./TeamAssessment.jsx');
 var TeamLastUpdate = require('./TeamLastUpdate.jsx');
+var ModalLinkLabelForm = require('./ModalLinkLabelForm.jsx');
 var api = require('../api.jsx');
+var update = require('immutability-helper');
 
 var TeamPage = React.createClass({
   getInitialState: function() {
@@ -19,7 +21,17 @@ var TeamPage = React.createClass({
     return {
       defaultTeam: id,
       selectedTeam: new Object(),
-      teamInfoVisible: false
+      teamInfoVisible: false,
+      initSelectLabel: [
+        {id: '-1', text: 'Select label'},
+        {id: 'Wall of work', text: 'Wall of work'},
+        {id: 'Backlog', text: 'Backlog'},
+        {id: 'Retrospectives', text: 'Retrospectives'},
+        {id: 'Defects', text: 'Defects'},
+        {id: 'Standup schedule', text: 'Standup schedule'},
+        {id: 'Other', text: 'Other...'}
+      ],
+      selectedLinkLabel: ''
     }
   },
   componentDidMount: function() {
@@ -112,6 +124,37 @@ var TeamPage = React.createClass({
       });
     }
   },
+  updateSelectLabel: function(obj) {
+    console.log('TeamPage updateSelectLabel obj:', obj)
+    // console.log('TeamPage updateSelectLabel this.state.initSelectLabel:', JSON.stringify(this.state.initSelectLabel,null,1))
+    // console.log('TeamPage updateSelectLabel obj:', JSON.stringify(obj,null,1))
+    var selectLabels = this.state.initSelectLabel.concat(obj);
+    // console.log('TeamPage updateSelectLabel selectLabels:', JSON.stringify(selectLabels,null,1))
+    this.setState({initSelectLabel: selectLabels})
+  },
+  updateLink: function(teamId, linkData) {
+    console.log('TeamPage updateLink...', JSON.stringify(linkData))
+    var self = this;
+    var currentLinkData = self.state.selectedTeam;
+    if (teamId === currentLinkData.team._id) {
+      var updatedLinkData = update(currentLinkData, {
+        team: {
+          links: {
+            $set: linkData
+          }
+        }
+      });
+      self.setState({selectedTeam: updatedLinkData});
+    }
+  },
+  setSelectedLinkLabel: function(objLabel) {
+    console.log('TeamPage setSelectedLinkLabel objLabel:',objLabel)
+    this.setState({selectedLinkLabel: objLabel});
+    // return this.state.selectedLinkLabel;
+  },
+  getSelectedLinkLabel: function() {
+    return this.state.selectedLinkLabel;
+  },
   render: function() {
     var overallStyle = {
       'display': this.state.teamInfoVisible == false ? 'none': 'block'
@@ -123,7 +166,7 @@ var TeamPage = React.createClass({
           <TeamForm teamChangeHandler={this.teamChangeHandler} selectedTeam={this.state.selectedTeam} defaultTeam={this.state.defaultTeam} getSelectedTeam={this.getSelectedTeam}/>
           <div id='teamDetailSection' class='squad-sections' style={overallStyle}>
             <TeamMembers selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
-            <TeamLinks selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
+            <TeamLinks selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection} initSelectLabel={this.state.initSelectLabel} getSelectedLinkLabel={this.getSelectedLinkLabel} setSelectedLinkLabel={this.setSelectedLinkLabel} updateSelectLabel={this.updateSelectLabel} updateLink={this.updateLink} />
             <TeamParentAssociation selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
             <TeamChildAssociation selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
             <TeamIteration selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
@@ -131,6 +174,7 @@ var TeamPage = React.createClass({
             <TeamLastUpdate selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
           </div>
         </form>
+        <ModalLinkLabelForm initSelectLabel={this.state.initSelectLabel} getSelectedLinkLabel={this.getSelectedLinkLabel} setSelectedLinkLabel={this.setSelectedLinkLabel} />
       </div>
     )
   }
