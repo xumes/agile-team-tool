@@ -1,4 +1,5 @@
 var teamModel = require('../../models/mongodb/teams');
+var sysModel = require('../../models/mongodb/system');
 // var teamIndex = require('../../models/index/teamIndex');
 // var validate = require('validate.js');
 var _ = require('underscore');
@@ -23,8 +24,7 @@ module.exports = function(app, includes) {
 
   //checked
   createTeam = function(req, res) {
-    var teamDoc = req.body;
-    teamModel.createTeam(teamDoc, req.session['user'])
+    teamModel.createTeam(req.body, req.session['user'])
       .then(function(result) {
         res.status(201).send(result);
       })
@@ -35,9 +35,9 @@ module.exports = function(app, includes) {
 
   //checked
   deleteTeam = function(req, res) {
-    teamModel.softDelete(req.body.teamId, req.session['user'])
+    teamModel.softDelete(req.body, req.session['user'])
       .then(function(result) {
-        res.status(401).send(result);
+        res.status(200).send(result);
       })
       .catch(function(err) {
         res.status(400).send(err);
@@ -46,7 +46,7 @@ module.exports = function(app, includes) {
 
   //checked
   updateTeam = function(req, res) {
-    teamModel.updateTeam(req.body.teamId, req.body.doc, req.session['user'])
+    teamModel.updateTeam(req.body, req.session['user'])
       .then(function(result) {
         res.status(200).send(result);
       })
@@ -116,9 +116,20 @@ module.exports = function(app, includes) {
     });
   };
 
+  getTeamLinkLabels = function(req, res) {
+    sysModel.getTeamLinkLabels()
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        // cannot simulate this error during testing
+        res.status(400).send(err);
+      });
+  };
+
   //checked
-  getTeamRole = function(req, res) {
-    teamModel.getRole()
+  getTeamMemberRoles = function(req, res) {
+    sysModel.getTeamMemberRoles()
       .then(function(result) {
         res.status(200).send(result);
       })
@@ -375,8 +386,11 @@ module.exports = function(app, includes) {
   // modify links
   app.put('/api/teams/links', [includes.middleware.auth.requireLogin], updateLink);
 
+  // modify links
+  app.get('/api/teams/linklabels', [includes.middleware.auth.requireLogin], getTeamLinkLabels);
+
   // get all applicable team roles
-  app.get('/api/teams/roles', [includes.middleware.auth.requireLogin], getTeamRole);
+  app.get('/api/teams/roles', [includes.middleware.auth.requireLogin], getTeamMemberRoles);
 
   // get all squad team
   app.get('/api/teams/squads', [includes.middleware.auth.requireLogin], getSquadTeams);

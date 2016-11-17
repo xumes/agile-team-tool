@@ -14,6 +14,7 @@ var testParentTeam = {
   'name': 'mongodb-test-team-01',
   'members': [{
     'name': 'test user',
+    'role': 'Tester',
     'userId': 'TEST1234567',
     'email': 'testuser@test.com'
   }],
@@ -36,10 +37,12 @@ var testChildTeam = {
   'name': 'mongodb-test-child-team-01',
   'members': [{
     'name': 'admin test user',
+    'role': 'Tester',
     'userId': 'ADMIN1234567',
     'email': 'admintestuser@test.com'
   }, {
     'name': 'child test user',
+    'role': 'Tester',
     'userId': 'CHILD1234567',
     'email': 'childtestuser@test.com'
   }],
@@ -83,7 +86,7 @@ describe('Users model [create]', function() {
         newChildTeamId = result._id;
         done();
       })
-      .catch(function(){
+      .catch(function(err){
         done();
       });
   });
@@ -216,14 +219,14 @@ describe('Users model [isUserAllowed]', function() {
         done();
       });
   });
-  it('return false if the user has no access to child team', function(done) {
+  it('return true if the user has access to child team', function(done) {
     users.isUserAllowed(testUser.userId, newChildTeamId)
       .then(function(result) {
-        expect(result).to.equal(false);
+        expect(result).to.equal(true);
         done();
       });
   });
-  it('return false if the user has access', function(done) {
+  it('return false if the user has no access', function(done) {
     users.isUserAllowed(testUser.userId, '581b72897bc85c73d8254a48')
       .then(function(result) {
         expect(result).to.equal(false);

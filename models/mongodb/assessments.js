@@ -1,3 +1,5 @@
+'use strict';
+var _ = require('underscore');
 var lodash = require('lodash');
 var Promise = require('bluebird');
 var config = require('../../settings');
@@ -170,6 +172,23 @@ var assessmentsSchema = new Schema({
 }, {collection:'assessments'});
 
 var Assessment = mongoose.model('assessments', assessmentsSchema);
+
+
+module.exports.hasAssessments = function(teamId) {
+  return new Promise(function(resolve, reject) {
+    // Team.find({path:new RegExp(','+pathId+',$')}, docStatus:{$ne:'delete'}}, {_id:1})
+    Assessment.find({'teamId': teamId, docStatus:{$ne:'delete'}}, {_id:1})
+      .then(function(results) {
+        if (_.isEmpty(results))
+          resolve(false);
+        else
+          resolve(true);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        reject(err);
+      });
+  });
+};
 
 module.exports.addTeamAssessment = function(userId, data){
   return new Promise(function(resolve, reject) {

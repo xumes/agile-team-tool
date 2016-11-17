@@ -52,11 +52,9 @@ var system = {
     return new Promise(function(resolve, reject) {
       SysCollOptions.findOne({'collTag': 'team', 'collField': 'members.role'}).exec()
       .then(function(options){
-        console.log(options);
         resolve(options.validOptions);
       })
       .catch( /* istanbul ignore next */ function(err){
-        console.log(err);
         reject({'error':err});
       });
     });
@@ -66,11 +64,9 @@ var system = {
     return new Promise(function(resolve, reject) {
       SysCollOptions.findOne({'collTag': 'team', 'collField': 'links.linkLabel'}).exec()
       .then(function(options){
-        console.log(options);
         resolve(options.validOptions);
       })
       .catch( /* istanbul ignore next */ function(err){
-        console.log(err);
         reject({'error':err});
       });
     });
@@ -80,11 +76,9 @@ var system = {
     return new Promise(function(resolve, reject) {
       SysStatus.findOne({'active': true}).exec()
       .then(function(status){
-        console.log(status);
         resolve(status);
       })
       .catch( /* istanbul ignore next */ function(err){
-        console.log(err);
         reject({'error':err});
       });
     });

@@ -74,37 +74,37 @@ module.exports = function(app, includes) {
   };
 
 
-  //TODO: Refactor this and store in the database
-  getRoles = function(req, res) {
-    var roles = [{
-      name: 'Analyst'
-    }, {
-      name: 'Architect'
-    }, {
-      name: 'Consultant'
-    }, {
-      name: 'DBA'
-    }, {
-      name: 'Designer'
-    }, {
-      name: 'Developer'
-    }, {
-      name: 'Infrastructure'
-    }, {
-      name: 'Iteration Manager'
-    }, {
-      name: 'Manager'
-    }, {
-      name: 'Operations and Support'
-    }, {
-      name: 'Product Owner'
-    }, {
-      name: 'Program & Project Mgmt'
-    }, {
-      name: 'Tester'
-    }];
-    res.json(roles);
-  };
+  // //TODO: Refactor this and store in the database
+  // getRoles = function(req, res) {
+  //   var roles = [{
+  //     name: 'Analyst'
+  //   }, {
+  //     name: 'Architect'
+  //   }, {
+  //     name: 'Consultant'
+  //   }, {
+  //     name: 'DBA'
+  //   }, {
+  //     name: 'Designer'
+  //   }, {
+  //     name: 'Developer'
+  //   }, {
+  //     name: 'Infrastructure'
+  //   }, {
+  //     name: 'Iteration Manager'
+  //   }, {
+  //     name: 'Manager'
+  //   }, {
+  //     name: 'Operations and Support'
+  //   }, {
+  //     name: 'Product Owner'
+  //   }, {
+  //     name: 'Program & Project Mgmt'
+  //   }, {
+  //     name: 'Tester'
+  //   }];
+  //   res.json(roles);
+  // };
 
   app.get('/api/users/active', [includes.middleware.auth.requireLogin], getActiveUser);
 
@@ -116,7 +116,7 @@ module.exports = function(app, includes) {
   // try to get data from here
   app.delete('/api/users/apikey', [includes.middleware.auth.requireLogin], deleteApiKey);
 
-  app.get('/api/users/roles', [includes.middleware.auth.requireLogin], getRoles);
+  // app.get('/api/users/roles', [includes.middleware.auth.requireLogin], getRoles);
 
   app.post('/api/users/info', [includes.middleware.auth.requireLogin], getUsersInfo);
 };
