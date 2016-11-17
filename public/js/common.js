@@ -136,7 +136,7 @@ function getPersonFromFaces(userEmail, _callback, args) {
     } else
       gFacesCache = [];
 
-    var svcRoot = 'https://faces.tap.ibm.com/api/';
+    var svcRoot = 'https://faces.w3ibm.mybluemix.net/api/';
     var svcFunc = 'find/?limit=100&q=email:' + encodeURIComponent('"' + escape(userEmail) + '"');
     var svcURL = svcRoot + svcFunc;
     $.ajax({
@@ -206,7 +206,7 @@ function getPersonByCnumFromFaces(uid, _callback, args) {
     } else
       gFacesCache = [];
 
-    var svcRoot = 'https://faces.tap.ibm.com/api/';
+    var svcRoot = 'https://faces.w3ibm.mybluemix.net/api/';
     var svcFunc = 'find/?limit=100&q=uid:' + encodeURIComponent('"' + escape(uid) + '"');
     var svcURL = svcRoot + svcFunc;
     $.ajax({

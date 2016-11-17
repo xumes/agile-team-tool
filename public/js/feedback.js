@@ -114,7 +114,7 @@ function validateEmail() {
 
 //TODO remove ?
 function getEmail(notesId) {
-  var facesRoot = 'https://faces.tap.ibm.com/api/';
+  var facesRoot = 'https://faces.w3ibm.mybluemix.net/api/';
   var facesFunc = 'find/?format=faces&q=notes/id:' + encodeURIComponent(notesId);
   var facesURL = facesRoot + facesFunc;
 

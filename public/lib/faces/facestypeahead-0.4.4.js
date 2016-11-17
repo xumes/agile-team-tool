@@ -598,9 +598,12 @@ var configDefaults = {
         headerLabel:        '',     //Label for a header which would appear above the results
         moreResultsLabel:   'See more Faces (${count})',
         moreResultsLabel2:  'See more Faces (over ${count})',
-        moreResultsUrl:     '/faces.tap.ibm.com#${query}',
-        host:               protocol + '//faces.tap.ibm.com',
-        imageHost:          protocol + '//images.tap.ibm.com',
+        // moreResultsUrl:     '/faces.tap.ibm.com#${query}',
+        // host:               protocol + '//faces.tap.ibm.com',
+        // imageHost:          protocol + '//images.tap.ibm.com',
+        moreResultsUrl:     '/faces.w3ibm.mybluemix.net#${query}',
+        host:               protocol + '//faces.w3ibm.mybluemix.net',
+        imageHost:          protocol + '//images.w3ibm.mybluemix.net',
         largeImageSize:     50,
         smallImageSize:     32,
         url: function(host) {
@@ -613,7 +616,8 @@ var configDefaults = {
             //'user': 'finleyt@us.ibm.com',
         },
         onclick: function(person) {
-            location.href=protocol + '//faces.tap.ibm.com/#uid:'+person.uid+'/'+person.name;
+            // location.href=protocol + '//faces.tap.ibm.com/#uid:'+person.uid+'/'+person.name;
+            location.href=protocol + '//faces.w3ibm.mybluemix.net/#uid:'+person.uid+'/'+person.name;
             //Alternative: opens Connections profile
             //location.href = 'http://w3.ibm.com/connections/profiles/html/profileView.do?email=' + person.email;
             //Or, return something to put it in the text box instead
@@ -1630,7 +1634,9 @@ var TypeAhead = function (inputBox, settings) {
             port += 10000;
         }
             
-        img.src = [settings.faces.imageHost, ':', port, '/image/', user.uid, '.jpg?s=', imageSize].join('');
+        // img.src = [settings.faces.imageHost, ':', port, '/image/', user.uid, '.jpg?s=', imageSize].join('');
+        // HCD
+        img.src = [settings.faces.imageHost, ':', '/image/', user.uid, '.jpg?s=', imageSize].join('');
         img.setAttribute('alt', user.name);
         fragment.appendChild(img);
         
