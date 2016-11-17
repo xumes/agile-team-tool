@@ -8,7 +8,6 @@ var TeamForm = React.createClass({
       teamNames: []
     }
   },
-
   componentDidMount: function() {
     var self = this;
     api.getSquadTeams({name:1})
@@ -33,7 +32,6 @@ var TeamForm = React.createClass({
         <option value={item._id}>{item.name}</option>
       )
     });
-
     return (
       <p>
         <label style={labelStyle} for="teamSelectList">Select an existing team:<span class="ibm-required">*</span></label>
@@ -46,7 +44,6 @@ var TeamForm = React.createClass({
        </p>
     )
   }
-
 });
 
 module.exports = TeamForm;

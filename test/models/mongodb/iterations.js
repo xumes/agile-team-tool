@@ -41,6 +41,7 @@ var testTeam = {
   'name': 'mongodb-test-team-01',
   'members': {
     'name': 'test user',
+    'role': 'Tester',
     'userId': 'TEST1234567',
     'email': 'testuser@test.com'
   },
@@ -98,6 +99,13 @@ describe('Iteration model [add]', function() {
         done();
       });
   });
+  it('returns false because new team has no iteration', function(done) {
+    iterationModel.hasIterations(newTeamId)
+      .then(function(result) {
+        expect(result).to.equal(false);
+        done();
+      });
+  });
 
   it('return successful for adding an iteration', function(done) {
     validIterationDoc['teamId'] = newTeamId;
@@ -107,6 +115,10 @@ describe('Iteration model [add]', function() {
         expect(result).to.have.property('_id');
         newIterationId = result._id;
         iterStatus = result.status;
+        return iterationModel.hasIterations(newTeamId);
+      })
+      .then(function(result) {
+        expect(result).to.equal(true);
         done();
       });
   });

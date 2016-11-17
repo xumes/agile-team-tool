@@ -155,6 +155,21 @@ var IterationExport = {
     return Iteration;
   },
 
+  hasIterations: function(teamId) {
+    return new Promise(function(resolve, reject) {
+      Iteration.find({'teamId': teamId, docStatus:{$ne:'delete'}}, {_id:1})
+        .then(function(results) {
+          if (_.isEmpty(results))
+            resolve(false);
+          else
+            resolve(true);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject({'error':err});
+        });
+    });
+  },
+
   getByIterInfo: function(teamId, limit) {
     return new Promise(function(resolve, reject) {
       if (teamId) {
@@ -234,7 +249,6 @@ var IterationExport = {
           resolve(body);
         })
         .catch( /* istanbul ignore next */ function(err) {
-          /* cannot simulate Cloudant error during testing */
           reject({'error':err});
         });
     });
@@ -484,7 +498,6 @@ var IterationExport = {
             resolve(body);
           })
           .catch( /* istanbul ignore next */ function(err) {
-          /* cannot simulate Cloudant error during testing */
             loggers.get('model-iteration').error('delete() ' + err);
             reject({'error':err});
           });
@@ -504,7 +517,6 @@ var IterationExport = {
             resolve(body);
           })
           .catch( /* istanbul ignore next */ function(err) {
-          /* cannot simulate Cloudant error during testing */
             loggers.get('model-iteration').error('deleteByFields() ' + err);
             reject({'error':err});
           });

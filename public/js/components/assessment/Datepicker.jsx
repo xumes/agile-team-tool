@@ -5,27 +5,18 @@ var moment = require('moment');
 require('react-datepicker/dist/react-datepicker.css');
 
 var Datepicker = React.createClass({
-  displayName: 'Example',
-
-  getInitialState: function() {
-    return {
-      startDate: moment()
-    };
-  },
-
-  handleChange: function(date) {
-    this.setState({
-      startDate: date
-    });
-  },
-
   render: function() {
     var enableDatepicker = this.props.enableDatepicker;
     var selectFieldWidth = {'width':'300px'};
     if(enableDatepicker){
-      return <DatePicker selected={this.state.startDate} onChange={this.handleChange} size='44' />;
+      return (
+        <DatePicker dateFormat='DDMMMYYYY' id='submitDatePicker' selected={this.props.submittedDate} onChange={this.props.dateChangeHandler} size='44' />
+      );
     } else {
-      return (<input type='text' class='ibm-date-picker hasDatepicker' name='assessmentDate' id='assessmentDate' size='44' value='' readOnly='readonly' placeholder='Optional assessment date' style={selectFieldWidth} disabled='disabled' />)
+      startDate = moment(this.props.submittedDate).format('DDMMMYYYY');
+      return (
+        <input type='text' class='ibm-date-picker hasDatepicker' name='assessmentDate' id='assessmentDate' size='44' value='' readOnly='readonly' placeholder={startDate} style={selectFieldWidth} disabled='disabled' />
+      );
     }
   }
 });

@@ -1,5 +1,5 @@
 var React = require('react');
-var api = require('../api.jsx');
+var teamApi = require('./TeamApi.jsx');
 var _ = require('underscore');
 var Promise = require('bluebird');
 var removeAssociationArray = [];
@@ -25,7 +25,7 @@ var TeamChildRemoveSection = React.createClass({
     if (event.target.value == 'remove' && removeAssociationArray.length > 0) {
       var promiseArray = [];
       _.each(removeAssociationArray, function(teamId){
-        promiseArray.push(api.removeAssociation(teamId));
+        promiseArray.push(teamApi.removeAssociation(teamId));
       });
       Promise.all(promiseArray)
         .then(function(result){

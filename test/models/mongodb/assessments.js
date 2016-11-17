@@ -38,6 +38,7 @@ var testTeam = {
   'name': 'mongodb-test-team-01',
   'members': {
     'name': 'test user',
+    'role': 'Tester',
     'userId': 'TEST1234567',
     'email': 'testuser@test.com'
   },
@@ -87,6 +88,14 @@ describe('Assessment model [addTeamAssessment] ', function() {
         done();
       });
   });
+  it('returns false because new team has no Assessment data', function(done) {
+    Assessments.hasAssessments(newTeamId)
+      .then(function(result) {
+        expect(result).to.equal(false);
+        done();
+      });
+  });
+
   it('fail because User ID and Assessment data is required', function(done) {
     Assessments.addTeamAssessment(null, null)
       .catch(function(err) {
@@ -141,8 +150,13 @@ describe('Assessment model [addTeamAssessment] ', function() {
       .then(function(result) {
         newAssessId = result['_id'];
         expect(result['assessorUserId']).to.be.equal(assessmentData['assessorUserId']);
+        return Assessments.hasAssessments(newTeamId);
+      })
+      .then(function(result) {
+        expect(result).to.equal(true);
         done();
       });
+
   });
 });
 

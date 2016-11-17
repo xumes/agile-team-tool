@@ -2,6 +2,7 @@ var React = require('react');
 var TeamChildAddSection = require('./TeamChildAddSection.jsx');
 var TeamChildRemoveSection = require('./TeamChildRemoveSection.jsx');
 var api = require('../api.jsx');
+var teamApi = require('./TeamApi.jsx');
 var currentTeam = '';
 var _ = require('underscore');
 var Promise = require('bluebird');
@@ -19,7 +20,7 @@ var TeamChildAssociation = React.createClass({
   },
   componentDidUpdate: function() {
     var self = this;
-    if (self.props.selectedTeam.team._id && currentTeam != self.props.selectedTeam.team._id.toString()) {
+    if (self.props.selectedTeam.team && self.props.selectedTeam.team._id && currentTeam != self.props.selectedTeam.team._id.toString()) {
       self.childTeamInit(self.props.selectedTeam)
         .then(function(result){
           return self.setState({childTeams: result});
@@ -31,8 +32,7 @@ var TeamChildAssociation = React.createClass({
     }
   },
   childTeamsUpdateHandler: function() {
-    var self = this;
-    self.childTeamInit(self.props.selectedTeam)
+    this.childTeamInit(self.props.selectedTeam)
       .then(function(result){
         return self.setState({childTeams: result});
       })
@@ -45,7 +45,7 @@ var TeamChildAssociation = React.createClass({
     return new Promise(function(resolve, reject){
       var promiseArray = [];
       promiseArray.push(api.getChildrenTeams(selectedTeam.team.pathId));
-      promiseArray.push(api.getSelectableChildren(selectedTeam.team._id));
+      promiseArray.push(teamApi.getSelectableChildren(selectedTeam.team._id));
       Promise.all(promiseArray)
         .then(function(results){
           currentTeam = selectedTeam.team._id.toString();
@@ -101,9 +101,6 @@ var TeamChildAssociation = React.createClass({
       </div>
     )
   }
-
-
-
 });
 
 module.exports = TeamChildAssociation;
