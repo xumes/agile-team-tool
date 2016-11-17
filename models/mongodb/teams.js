@@ -873,7 +873,7 @@ module.exports.updateTeam = function(teamDoc, user) {
     Users.isUserAllowed(userId, teamId)
       .then(function(result){
         if (!result) {
-          return Promise.reject({name:'CustomError',errors:{user:{message:'Not allowed to modify team.'}}});
+          return Promise.reject({'error':'Not allowed to modify team links'});
         }
         var promiseArray = [];
         promiseArray.push(self.getTeam(teamId));
