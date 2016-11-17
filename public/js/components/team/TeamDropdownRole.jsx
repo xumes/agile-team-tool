@@ -1,5 +1,5 @@
 var React = require('react');
-var teamApi = require('../TeamApi.jsx');
+var teamApi = require('./TeamApi.jsx');
 var ReactDOM = require('react-dom');
 
 var TeamDropdownRole = React.createClass({

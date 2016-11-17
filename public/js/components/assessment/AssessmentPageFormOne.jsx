@@ -29,7 +29,11 @@ var AssessmentPageFormOne = React.createClass({
     }
     if (this.props.squadAssessments.assessments.length > 0) {
       var assessmentListsOption = this.props.squadAssessments.assessments.map(function(item) {
-        var submittedDate = moment(item.submittedDate).format('D MMM YYYY');
+        if (item.submittedDate == null) {
+          var submittedDate = 'Created: ' + moment(item.createDate).format('DDMMMYYYY') + ' (Draft)';
+        } else {
+          submittedDate = moment(item.submittedDate).format('DDMMMYYYY');
+        }
         return (
           <option key={item._id} value={item._id}>{submittedDate}</option>
         );

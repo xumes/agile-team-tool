@@ -10,6 +10,7 @@ var testTeam = {
   'type': '',
   'members': {
     'name': 'test user',
+    'role': 'Tester',
     'userId': 'TEST1234567',
     'email': 'testuser@test.com'
   },

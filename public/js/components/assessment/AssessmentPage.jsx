@@ -37,7 +37,8 @@ var AssessmentPage = React.createClass({
         'type': 'Project',
         'software': 'Yes',
         'date': moment()
-      }
+      },
+      'assessmentDetail': {}
     }
   },
 
@@ -60,7 +61,8 @@ var AssessmentPage = React.createClass({
       };
       return self.setState({
         assessmentStatus: rAssessmentStatus,
-        selectedAssessment: rSelectedAssessment
+        selectedAssessment: rSelectedAssessment,
+        assessmentDetail: {}
       });
     } else {
       api.getAssessmentDetails(assessId)
@@ -92,9 +94,11 @@ var AssessmentPage = React.createClass({
             'software': software,
             'date': result.submittedDate
           };
+          var rAssessmentDetail = result;
           return self.setState({
             assessmentStatus: rAssessmentStatus,
-            selectedAssessment: rSelectedAssessment
+            selectedAssessment: rSelectedAssessment,
+            assessmentDetail: rAssessmentDetail
           });
         })
         .catch(function(err){
@@ -127,7 +131,8 @@ var AssessmentPage = React.createClass({
       return self.setState({
         assessmentStatus: rAssessmentStatus,
         squadAssessments: rSquadAssessments,
-        selectedAssessment: rSelectedAssessment
+        selectedAssessment: rSelectedAssessment,
+        assessmentDetail: {}
       });
     } else {
       var promiseArray = [];
@@ -155,7 +160,8 @@ var AssessmentPage = React.createClass({
          return self.setState({
            assessmentStatus: rAssessmentStatus,
            squadAssessments: rSquadAssessments,
-           selectedAssessment: rSelectedAssessment
+           selectedAssessment: rSelectedAssessment,
+           assessmentDetail: {}
          });
        })
        .catch(function(err){
@@ -174,10 +180,13 @@ var AssessmentPage = React.createClass({
     return (
       <form id="assessmentForm" class="ibm-column-form">
         <Header title="Team Maturity Assessment" />
+        {/* START choose squad team*/}
         <AssessmentTeamSquad teamChangeHandler={this.teamChangeHandler} />
-        {/* START choose squad team, select or create assessment form */}
+        {/* END choose squad team*/}
+
+        {/* START select or create assessment form */}
         <AssessmentPageFormOne squadAssessments={this.state.squadAssessments} assessmentChangeHandler={this.assessmentChangeHandler}/>
-        {/* END choose squad team, select or create assessment form */}
+        {/* END select or create assessment form */}
 
         {/* START assessment generic buttons */}
         <AssessmentButtons assessmentStatus={this.state.assessmentStatus} />
@@ -188,7 +197,7 @@ var AssessmentPage = React.createClass({
         {/* END Project or Operations team Form Two */}
 
         {/* START Assessment Template */}
-        <AssessmentTemplates />
+        <AssessmentTemplates assessmentDetail={this.state.assessmentDetail}/>
         {/* END Assessment Template */}
 
         {/* START assessment last update */}
