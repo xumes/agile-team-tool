@@ -228,6 +228,32 @@ describe('Assessment Template model [get]', function() {
   });
 });
 
+describe('Assessment Template model [getTemplateByVersion]', function() {
+  it('will return false with empty version number', function(done){
+    assessmentTemplates.getTemplateByVersion()
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error).to.equal('Version number cannot be empty.');
+        done();
+      });
+  });
+  it('will return template with the version number', function(done){
+    var activeTemplate = testData.validTemplates();
+    assessmentTemplates.create(activeTemplate)
+      .then(function(result){
+        return assessmentTemplates.getTemplateByVersion(activeTemplate.cloudantId);
+      })
+      .then(function(result){
+        expect(result).to.be.a('object');
+        expect(result.cloudantId).to.equal(activeTemplate.cloudantId);
+        return assessmentTemplates.delete(result._id);
+      })
+      .then(function(){
+        done();
+      });
+  });
+});
+
 describe('Assessment Template model [update]', function() {
   it('return fail because template ID is required', function(done) {
     assessmentTemplates.update(null)

@@ -142,6 +142,24 @@ module.exports.get = function(templateId, status) {
   });
 };
 
+module.exports.getTemplateByVersion = function(version) {
+  return new Promise(function(resolve, reject) {
+    if (!lodash.isEmpty(version)) {
+      AssessmentTemplates.findOne({'cloudantId': version})
+      .then(function(result) {
+        return resolve(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        /* cannot simulate MongoDB error during testing */
+        loggers.get('models').error('Error: ' + err.error);
+        return reject(err);
+      });
+    } else {
+      return reject({'error': 'Version number cannot be empty.'});
+    }
+  });
+};
+
 module.exports.update = function(templateId, templateData) {
   return new Promise(function(resolve, reject) {
     if (lodash.isEmpty(templateId)) {

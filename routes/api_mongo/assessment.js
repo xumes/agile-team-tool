@@ -43,6 +43,18 @@ module.exports = function(app, includes) {
       });
   };
 
+  getTemplateByVersion = function(req, res) {
+    var version = req.params.version;
+    assessmentTemplateModel.getTemplateByVersion(version)
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        /* cannot simulate Cloudant error during testing */
+        res.status(400).send(err);
+      });
+  };
+
   addAssessment = function(req, res) {
     assessmentModel.addTeamAssessment(req.session['user'].shortEmail, req.body)
       .then(function(result) {
@@ -77,6 +89,7 @@ module.exports = function(app, includes) {
   app.get('/api/assessment/view', [includes.middleware.auth.requireLogin], getAssessment);
   app.get('/api/assessment/trend', getAssessment);
   app.get('/api/assessment/template', [includes.middleware.auth.requireLogin], getAssessmentTemplate);
+  app.get('/api/assessment/template/version/:version', [includes.middleware.auth.requireLogin], getTemplateByVersion);
   app.put('/api/assessment', [includes.middleware.auth.requireLogin], updateAssessment);
   app.delete('/api/assessment', [includes.middleware.auth.requireLogin], deleteAssessment);
   app.post('/api/assessment', [includes.middleware.auth.requireLogin], addAssessment);
