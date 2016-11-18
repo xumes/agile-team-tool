@@ -3,3 +3,4 @@ coverage/
 .idea/
 mongo_scripts/data.json
 mongo_scripts/creds.json
+mongo_scripts/creds.js
