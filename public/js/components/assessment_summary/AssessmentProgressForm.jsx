@@ -19,7 +19,7 @@ var principles = [];
 
 var teamId = '';
 var assessId = '';
-var displayType = {'display': 'none'};
+var displayType = {'display': 'block'};
 
 var AssessmentProgressForm = React.createClass({
   getInitialState: function() {
@@ -42,11 +42,9 @@ var AssessmentProgressForm = React.createClass({
     self.initShowHideWidget();
     api.getTeamAssessments(teamId, assessId)
       .then(function(assessResult) {
-        console.log('AssessmentProgressForm componentDidMount assessResult:',assessResult[0]);
-        console.log('AssessmentProgressForm componentDidMount total componentResults:', assessResult[0].componentResults.length);
-        // console.log('AssessmentProgressForm componentDidMount componentResults:', assessResult[0].componentResults);
+        console.log('AssessmentProgressForm componentDidMount assessResult[0]:',assessResult[0] );
+        console.log('AssessmentProgressForm componentDidMount assessResult[1]:',assessResult[1] );
         self.setState({assessResult: assessResult});
-        // self.processData(teamId, assessId, assessResult)
       })
       .catch(function(err) {
         return console.log(err);
@@ -55,9 +53,9 @@ var AssessmentProgressForm = React.createClass({
 
   hasDevOps: function(team_dlvr_software) {
     console.log('[hasDevOps] team_dlvr_software:',team_dlvr_software)
-    if (team_dlvr_software) {
+    if (team_dlvr_software === undefined || team_dlvr_software === false) {
       /*$('#delContainer').remove();*/ // dont use this bec sometimes React will throw error
-      displayType = {'display': 'block'};
+      displayType = {'display': 'none'};
     }
   },
 
@@ -273,12 +271,13 @@ var AssessmentProgressForm = React.createClass({
     var resultRows = [];
     var loadResultArray = [];
     var overAllArray = [];
-    var uuid = Math.random().toString(36).substr(2, 5);
     for (var ctr1 = 0; ctr1 < assessmt_data.length; ctr1++) {
       //index 0 - leadership
       //index 1- delivery
       var assessmt = assessmt_data[ctr1];
-      console.log('[displaySelected] assessmt._id:',assessmt._id);
+      console.log('[displaySelected] y:', y);
+      console.log('[displaySelected] assessmt:', assessmt);
+
       // console.log('[displaySelected] assessId:',assessId);
       // console.log('[render] assessmt:', assessmt);
       if (assessmt._id !== undefined) {
@@ -418,7 +417,7 @@ var AssessmentProgressForm = React.createClass({
   },
 
   setAssessHeader: function(index, assessName) {
-    // console.log('[setAssessHeader] index:',index,' assessName:',assessName)
+    console.log('[setAssessHeader] index:',index,' assessName:',assessName)
     $('#assessId_' + index + ' a').text($('#assessId_' + index + ' a').text() + ' ' + assessName);
   },
 
@@ -455,8 +454,6 @@ var AssessmentProgressForm = React.createClass({
       chartData = this.getChartData(cat);
       title = this.getPracticeName(assessed_index, id);
     }
-    // console.log(' ')
-    // console.log('[displaySelectedChart] title:', title)
     console.log('[displaySelectedChart] chartData:', chartData)
     var assessments = [];
     if (hasIndAssessment) {
@@ -493,10 +490,12 @@ var AssessmentProgressForm = React.createClass({
       var assessmt_cmpnt = assessmentData[i].componentResults[assessed_index];
       obj.assessed = new Object;
       if (assessmt_cmpnt != null) {
-        if (assessmt_cmpnt.targetScore != undefined)
+        if (assessmt_cmpnt.targetScore != undefined) {
           obj.assessed.targetScore = parseFloat(assessmt_cmpnt.targetScore);
-        if (assessmt_cmpnt.currentScore != undefined)
+        }
+        if (assessmt_cmpnt.currentScore != undefined) {
           obj.assessed.currentScore = parseFloat(assessmt_cmpnt.currentScore);
+        }
       }
       result.push(obj);
     }
@@ -513,10 +512,8 @@ var AssessmentProgressForm = React.createClass({
       for (var x = 0; x < data.length; x++) {
         var date = data[x].self_assessmt_dt;
         console.log('[plotOverAll] date:', date);
-        // var formattedDate = utils.showDateDDMMMYYYY(date.substring(0, date.indexOf(' ')));
-        var formattedDate = utils.showDateDDMMMYYYY(date);
-        console.log('[plotOverAll] formattedDate:', formattedDate);
-        result.categories[x] = formattedDate
+        var formattedDate = utils.showDateDDMMYYYYV2(date);
+        result.categories[x] = formattedDate;
         if (data[x].assessed.targetScore != null) {
           result.target_score[x] = data[x].assessed.targetScore;
         } else {
@@ -634,7 +631,9 @@ var AssessmentProgressForm = React.createClass({
       for (var x = 0; x < data.length; x++) {
         var date = data[x].self_assessmt_dt;
         console.log('[getChartData] date:',date);
-        result.categories[x] = utils.showDateDDMMMYYYY(date);
+        console.log('[getChartData] format1:', utils.showDateDDMMMYYYY(date));
+        console.log('[getChartData] format2:', utils.showDateDDMMYYYYV2(date));
+        result.categories[x] = utils.showDateDDMMYYYYV2(date);
         for (var y = 0; y < data[x].assessed.length; y++) {
           if (data[x].assessed[y].targetScore != '') {
             result.target_score[x] = parseInt(data[x].assessed[y].targetScore);
@@ -829,13 +828,16 @@ var AssessmentProgressForm = React.createClass({
     var loadResultArray = [];
     var overAllArray = [];
 
+    console.log('[displaySelected] assessmt_data:', assessmt_data);
     for (var ctr1 = 0; ctr1 < assessmt_data.length; ctr1++) {
       //index 0 - leadership
       //index 1- delivery
       var assessmt = assessmt_data[ctr1];
-      // console.log('[displaySelected] assessmt._id:',assessmt._id);
-      // console.log('[displaySelected] assessId:',assessId);
-      if (assessmt._id !== undefined) {
+      console.log('[displaySelected] assessmt:', assessmt);
+      console.log('[displaySelected] ctr1:', ctr1);
+      console.log('[displaySelected] assessmt._id:',assessmt._id);
+      console.log('[displaySelected] assessId:',assessId);
+      if (assessmt._id === assessId) {
         lastRecord = ctr1;
         var selfAsstDate = '';
         if (assessmt['submittedDate'] != null && assessmt['submittedDate'] != '') {
@@ -845,7 +847,8 @@ var AssessmentProgressForm = React.createClass({
         if (assessmt.assessedDate != null && assessmt.assessedDate != '') {
           indAsstDate = utils.showDateMMDDYYYY(assessmt.assessedDate.substring(0, assessmt.assessedDate.indexOf(' ')));
         }
-        console.log('[render] indAsstDate:',indAsstDate)
+        // console.log('[render] indAsstDate:',indAsstDate)
+
         self.setIndAssessor(assessmt.assessorUserId);
         // loadHeader(selfAsstDate, assessmt.assessmentStatus, indAsstDate, assessmt.assessorStatus); // not needed anymore
 
@@ -856,7 +859,7 @@ var AssessmentProgressForm = React.createClass({
         if (assessmt.assessorStatus == 'Submitted') {
           hasIndAssessment = true;
         } else {
-          removeIndAssessment();
+          self.removeIndAssessment();
         }
 
         var firstIndex = lastRecord - 6;
@@ -913,27 +916,45 @@ var AssessmentProgressForm = React.createClass({
         self.hasDevOps(assessmt.deliversSoftware);
 
         if (assessmt.actionPlans != null) {
-          self.displayActionPlan(assessmt.actionPlans);
+          // self.displayActionPlan(assessmt.actionPlans);
 
-          if (hasAccess(teamId)) {
-            if (assessmt.actionPlans.length > 0) {
-              $('#saveActPlanBtn').removeAttr('disabled');
-              $('#cancelActPlanBtn').removeAttr('disabled');
-            }
-            $('#addActEntryBtn').removeAttr('disabled');
-          }
+          // if (hasAccess(teamId)) {
+          //   if (assessmt.actionPlans.length > 0) {
+          //     $('#saveActPlanBtn').removeAttr('disabled');
+          //     $('#cancelActPlanBtn').removeAttr('disabled');
+          //   }
+          //   $('#addActEntryBtn').removeAttr('disabled');
+          // }
         }
         selAssessment = assessId;
         break;
       }
     }
 
-    loadResultArray = overAllArray.concat(loadResultArray);
+    // loadResultArray = overAllArray.concat(loadResultArray);
+    var resultBodyAry = [];
+    var deliveryResultAry = [];
+    _.each(overAllArray, function(value, key, list) {
+      if (value.props.id === 'resultBody') {
+        resultBodyAry.push(value);
+      }
+      if (value.props.id === 'deliveryResult') {
+        deliveryResultAry.push(value);
+      }
+    });
+    _.each(loadResultArray, function(value, key, list) {
+      if (value.props.id === 'resultBody') {
+        resultBodyAry.push(value);
+      }
+      if (value.props.id === 'deliveryResult') {
+        deliveryResultAry.push(value);
+      }
+    });
 
     return (
       <form id="progressForm" class="agile-maturity">
-        <ProjectComponent resultBodyAry={loadResultArray} />
-        <DeliveryComponent deliveryResultAry={loadResultArray} displayType={displayType} />
+        <ProjectComponent resultBodyAry={resultBodyAry} />
+        <DeliveryComponent deliveryResultAry={deliveryResultAry} displayType={displayType} />
         <ActionPlanComponent />
         <IndependentAssessorSection />
         <LastUpdateSection />

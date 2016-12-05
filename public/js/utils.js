@@ -64,16 +64,6 @@ module.exports.getJsonParametersFromUrl = function() {
 
 module.exports.showDateDDMMMYYYY = function(formatDate) {
   console.log('[showDateDDMMMYYYY] formatDate:', formatDate);
-  // if (formatDate == null || formatDate == '') return '';
-  // var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-  // // var date = new Date(formatDate.replace(/-/g, '/'));
-  // var date = new Date(formatDate);
-  // var day = date.getDate();
-  // day = day.toString().length < 2 ? '0' + day.toString() : day.toString();
-  // var monthIndex = date.getMonth();
-  // var year = date.getFullYear();
-  // var newDateFormate = (day + monthNames[monthIndex] + year);
   var newDateFormate = moment.utc(formatDate).format('DD MMM YYYY');
   console.log('[showDateDDMMMYYYY] newDateFormate:', newDateFormate);
   return newDateFormate;
@@ -83,6 +73,15 @@ module.exports.showDateDDMMYYYY = function(formatDate) {
   var newDateFormate = moment.utc(formatDate).format('DDMMMYYYY');
   console.log('[showDateDDMMYYYY] newDateFormate:', newDateFormate);
   return newDateFormate;
+};
+
+module.exports.showDateDDMMYYYYV2 = function(formatDate) {
+  console.log('[showDateDDMMYYYYV2] formatDate:', formatDate);
+  if (!_.isEmpty(formatDate)) {
+    var newDateFormate = moment(formatDate).format('DDMMMYYYY');
+    console.log('[showDateDDMMYYYYV2] newDateFormate:', newDateFormate);
+    return newDateFormate;
+  }
 };
 
 module.exports.showDateMMDDYYYY = function(formatDate) {
