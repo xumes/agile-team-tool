@@ -9,15 +9,23 @@ var assessId = '';
 var AssessmentPageFormTwo = React.createClass({
   getInitialState: function() {
     return {
-      submittedDate: moment()
+      submittedDate: null
     }
   },
   componentDidUpdate: function() {
-    if (assessId != this.props.selectedAssessment.assessId) {
-      $('#teamTypeSelectList').val(this.props.selectedAssessment.type).change();
-      $('#softwareYesNo').val(this.props.selectedAssessment.software).change();
-      assessId = this.props.selectedAssessment.assessId;
-    }
+    // if (_.isEmpty(this.props.assessment.assessment)) {
+    //   if (assessId != '') {
+    //
+    //   }
+    // }
+    // if (assessId != _.isEmpty(this.props.assessment.assessment)?'':this.props.assessment.assessment._id.toString()) {
+    //   $('#teamTypeSelectList').val(this.props.assessment.assessment.type).change();
+    //   $('#softwareYesNo').val(this.props.assessment.assessment.deliversSoftware == true?'Yes':'No').change();
+    //   assessId = this.props.selectedAssessment.assessId;
+    // }
+    // $('select[name="softwareYesNo"]').change(this.props.assessSoftwareChangeHandler);
+    $('select[name="teamTypeSelectList"]').select2();
+    $('select[name="softwareYesNo"]').select2();
   },
   componentDidMount: function() {
     $('select[name="teamTypeSelectList"]').select2();
@@ -46,11 +54,34 @@ var AssessmentPageFormTwo = React.createClass({
       'display': 'inline'
     };
 
-    if (this.props.selectedAssessment.isNew == false || this.props.access == false) {
+    if (!this.props.assessment.access) {
       var isDisabled = true;
     } else {
-      isDisabled = false;
+      if (_.isEmpty(this.props.assessment.assessment)) {
+        if (this.props.assessment.squadAssessments.length > 0 && this.props.assessment.squadAssessments[0]['assessmentStatus'] == 'Draft') {
+          isDisabled = true;
+        } else {
+          isDisabled = false;
+        }
+      } else {
+        if (this.props.assessment.assessment.assessmentStatus == 'Draft') {
+          isDisabled = false;
+        } else {
+          isDisabled = true;
+        }
+      }
     }
+    // var assessmentDate = null;
+    // if (this.state.submittedDate != null) {
+    //   assessmentDate = this.state.submittedDate;
+    // } else {
+    //   if (!_.isEmpty(this.props.assessment.assessment) && this.props.assessment.assessment.assessmentStatus == 'Submitted') {
+    //     assessmentDate = this.props.assessment.assessment.submittedDate;
+    //   }
+    // }
+    // this.state.submittedDate = null;
+
+    var isSoftware = this.props.assessment.templateType.software?'Yes':'No';
 
     return (
       <div>
@@ -62,7 +93,7 @@ var AssessmentPageFormTwo = React.createClass({
             title='Operations teams support a repeatable process that delivers value to the customer.  Unlike a project, it normally has no definite start and end date.  Operation examples include recruitment, budgeting, call centers, supply chain and software operations.'></a>
           </label>
           <span>
-            <select id='teamTypeSelectList' name='teamTypeSelectList' style={selectFieldWidth} disabled={isDisabled} >
+            <select value={this.props.assessment.templateType.type} id='teamTypeSelectList' name='teamTypeSelectList' style={selectFieldWidth} disabled={isDisabled} >
               <option value='Project'>Project</option>
               <option value='Operations'>Operations</option>
             </select>
@@ -73,7 +104,7 @@ var AssessmentPageFormTwo = React.createClass({
             <a class='ibm-information-link' id='softwareTT' data-widget='tooltip' data-contentid='softwareToolTip' style={anchorInfo} title='Answering yes to this will add the optional DevOps software delivery practices.'></a>
           </label>
           <span>
-            <select id='softwareYesNo' name='softwareYesNo' style={selectFieldWidth} disabled={isDisabled} >
+            <select value={isSoftware} id='softwareYesNo' name='softwareYesNo' style={selectFieldWidth} disabled={isDisabled} >
               <option value='Yes'>Yes</option>
               <option value='No'>No</option>
             </select>
@@ -85,7 +116,7 @@ var AssessmentPageFormTwo = React.createClass({
             <a class='ibm-information-link' id='assDateTT' data-widget='tooltip' data-contentid='assDateToolTip' style={anchorInfo} title='The assessment date is assigned when the Submit action is taken.  To assign a specific date, i.e. when recording a previously completed assessment, select the date to use as the assessment date.'></a>
           </label>
           <span style={selectFieldHolder}>
-            <Datepicker enableDatepicker={!isDisabled} submittedDate={this.props.selectedAssessment.date} dateChangeHandler={this.props.dateChangeHandler} size='44' />
+            <Datepicker enableDatepicker={!isDisabled} submittedDate={this.props.assessment.templateType.submittedDate} dateChangeHandler={this.props.dateChangeHandler} size='44' />
           </span>
         </p>
         <div id='teamTypeToolTip' class='ibm-tooltip-content'>

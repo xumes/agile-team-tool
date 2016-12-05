@@ -12,16 +12,16 @@ var AssessmentActiveTemplates2 = React.createClass({
     $('textarea').val('');
     $('textarea').prop('disabled', false);
     $('input[type=\'radio\']').prop('disabled', false);
-    if (self.props.selectedAssessment != undefined && !_.isEmpty(self.props.selectedAssessment)) {
-      var template = self.props.template;
+    if (self.props.assessment.assessment != undefined && !_.isEmpty(self.props.assessment.assessment)) {
+      var template = self.props.assessment.assessmentTemplate;
       var templateCount = self.countPractics(template);
-      if (self.props.type == 'Operations') {
+      if (self.props.assessment.templateType.type == 'Operations') {
         templateCount.splice(0,1);
       } else {
         templateCount.splice(1,1);
       }
-      var components = self.props.selectedAssessment.componentResults;
-      if (self.props.selectedAssessment.assessmentStatus != 'Draft' || !self.props.access) {
+      var components = self.props.assessment.assessment.componentResults;
+      if (self.props.assessment.assessment.assessmentStatus != 'Draft' || !self.props.assessment.access) {
         $('textarea').prop('disabled', true);
         $('input[type=\'radio\']').prop('disabled', true);
       }
@@ -53,7 +53,7 @@ var AssessmentActiveTemplates2 = React.createClass({
         })
       }
     } else {
-      if (!self.props.access) {
+      if (!self.props.assessment.access) {
         $('textarea').prop('disabled', true);
         $('input[type=\'radio\']').prop('disabled', true);
       }
@@ -81,35 +81,35 @@ var AssessmentActiveTemplates2 = React.createClass({
   },
   render: function()  {
     var self = this;
-    if (_.isEmpty(self.props.template)) {
+    if (_.isEmpty(self.props.assessment.assessmentTemplate)) {
       return null;
     } else {
       var showingSection1 = -1;
       var showingSection2 = -1;
-      if (self.props.template.cloudantId.substring(self.props.template.cloudantId.length-2, self.props.template.cloudantId.length-1) == 0) {
-        var versionNumber = self.props.template.cloudantId.substring(self.props.template.cloudantId.length-1, self.props.template.cloudantId.length);
+      if (self.props.assessment.assessmentTemplate.cloudantId.substring(self.props.assessment.assessmentTemplate.cloudantId.length-2, self.props.assessment.assessmentTemplate.cloudantId.length-1) == 0) {
+        var versionNumber = self.props.assessment.assessmentTemplate.cloudantId.substring(self.props.assessment.assessmentTemplate.cloudantId.length-1, self.props.assessment.assessmentTemplate.cloudantId.length);
       } else {
-        versionNumber = self.props.template.cloudantId.substring(self.props.template.cloudantId.length-2, self.props.template.cloudantId.length);
+        versionNumber = self.props.assessment.assessmentTemplate.cloudantId.substring(self.props.assessment.assessmentTemplate.cloudantId.length-2, self.props.assessment.assessmentTemplate.cloudantId.length);
       }
-      if (self.props.type == 'Project') {
+      if (self.props.assessment.templateType.type == 'Project') {
         showingSection1 = 0;
-      } else if(self.props.type == 'Operations') {
+      } else if(self.props.assessment.templateType.type == 'Operations') {
         showingSection1 = 1;
       }
-      if (self.props.software == 'Yes') {
+      if (self.props.assessment.templateType.software) {
         showingSection2 = 2;
       }
       var containerId = 'atma';
-      if (self.props.template.components.length <= 0) {
+      if (self.props.assessment.assessmentTemplate.components.length <= 0) {
         var components = null;
       } else {
         var count = 0;
-        components = self.props.template.components.map(function(component, idx){
+        components = self.props.assessment.assessmentTemplate.components.map(function(component, idx){
           if (idx == showingSection1 || idx == showingSection2) {
             var componentId = containerId + '_' + count;
             var assessedComponents = {};
-            if (!_.isEmpty(self.props.assessment) && !_.isEmpty(self.props.assessment.components)) {
-              assessedComponents = self.props.assessment.components[count];
+            if (!_.isEmpty(self.props.assessment.assessment) && !_.isEmpty(self.props.assessment.assessment.components)) {
+              assessedComponents = self.props.assessment.assessment.components[count];
             }
             count ++ ;
             return (

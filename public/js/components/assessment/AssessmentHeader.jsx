@@ -1,4 +1,5 @@
 var React = require('react');
+var _ = require('underscore');
 
 var Header = React.createClass({
   render: function() {
@@ -6,7 +7,7 @@ var Header = React.createClass({
      'padding':'5px'
    };
 
-   if (this.props.noShowSummary) {
+   if (_.isEmpty(this.props.assessment.assessment) || this.props.assessment.assessment.assessmentStatus == 'Draft') {
       var showStyle = {
         'display': 'none'
       };

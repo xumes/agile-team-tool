@@ -20,19 +20,12 @@ var AssessmentTemplates = React.createClass({
   },
 
   render: function() {
-    if (_.isEmpty(this.props.assessmentTemplate.template)) {
-      var template = this.state.activeTemplates;
-    } else {
-      if (this.props.assessmentTemplate.template.length > 0) {
-        template = this.props.assessmentTemplate.template[0];
-      } else {
-        template = this.props.assessmentTemplate.template;
-      }
+    if (_.isEmpty(this.props.assessment.assessmentTemplate)) {
+      this.props.assessment.assessmentTemplate = this.state.activeTemplates;
     }
-
     return (
       <div id="assessmentContainer" class="agile-maturity">
-      <AssessmentActiveTemplates template={template} selectedAssessment={this.props.assessmentTemplate.assessment} type={this.props.assessmentTemplate.type} software={this.props.assessmentTemplate.software} access={this.props.assessmentTemplate.access}/>
+      <AssessmentActiveTemplates assessment={this.props.assessment}/>
       </div>
     )
   }
