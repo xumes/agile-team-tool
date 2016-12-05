@@ -950,7 +950,7 @@ example cloudant template:
 ####First Phase
 
 1. Migrate data
-  1. consider initializing the team index document though the application end point before importing Cloudant documents for mongo conversion 
+  1. consider initializing the team index document though the application end point before importing Cloudant documents for mongo conversion
   2. ```$ curl http://admin:pass@domain/dbName/_all_docs?include_docs=true > docs.json  ``` get all docs
   3. run scripts using a mongo driver over docs differentiate the docs using  "type" field. save mapping into compose
 2. Develop models with migrated data

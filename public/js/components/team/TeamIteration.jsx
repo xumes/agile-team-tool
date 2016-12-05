@@ -23,6 +23,11 @@ var TeamIteration = React.createClass({
       }
     });
   },
+
+  createIteration: function(){
+    window.location = 'iteration?id=' + encodeURIComponent(this.props.selectedTeam.team._id) + '&iter=new';
+  },
+
   render: function() {
     var self = this;
     if (self.props.selectedTeam.team == undefined) {
@@ -61,7 +66,7 @@ var TeamIteration = React.createClass({
                 <tr key={iterationId} id={iterationId}>
                   <td></td>
                   <td>
-                    <a style={{'textDescription': 'underline', 'color': 'black'}}>{iname}</a>
+                    <a style={{'textDescription': 'underline', 'color': 'black'}} href={`/iteration?id=${self.props.selectedTeam.team._id}&iter=${iteration._id}`}>{iname}</a>
                   </td>
                   <td>{startDate}</td>
                   <td>{endDate}</td>
@@ -73,7 +78,7 @@ var TeamIteration = React.createClass({
                 <tr key={iterationId} id={iterationId} style={{'display':'none'}}>
                   <td></td>
                   <td>
-                    <a style={{'textDescription': 'underline', 'color': 'black'}}>{iname}</a>
+                    <a style={{'textDescription': 'underline', 'color': 'black'}} href={`/iteration?id=${self.props.selectedTeam.team._id}&iter=${iteration._id}`}>{iname}</a>
                   </td>
                   <td>{startDate}</td>
                   <td>{endDate}</td>
@@ -108,7 +113,7 @@ var TeamIteration = React.createClass({
                 <div style={{'float':'left', 'fontSize':'14px', 'width':'100%'}} class='tcaption'>
                   <em id='iterationTitle' class='ibm-bold'>Last 5 Iterations for {teamName}</em>
                   <p style={{'float': 'right'}} class='ibm-button-link'>
-                    <input type='button' class='ibm-btn-pri ibm-btn-small' id='iterTeamBtn' value='Create iteration' onClick='' disabled={createAccess}/>
+                    <input type='button' class='ibm-btn-pri ibm-btn-small' id='iterTeamBtn' value='Create iteration' onClick={this.createIteration} disabled={createAccess}/>
                   </p>
                 </div>
                 <table class='ibm-data-table' id='iterationTable' summary='List of iterations information' style={{'fontSize': '90%'}}>

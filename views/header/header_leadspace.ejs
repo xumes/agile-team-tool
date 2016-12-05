@@ -1,5 +1,5 @@
 <header role="banner" aria-label="ibm-pagetitle-h1">
-  
+
   <!-- CONTENT_NAV_BEGIN -->
   <nav role="navigation" aria-label="Tool navigation">
     <div id="ibm-content-nav">
@@ -7,27 +7,27 @@
         <ul class="ibm-tabs" role="tablist" aria-label="Tool navigation">
 
           <%if(pageTitle=="Home"){ %>
-            <li role="presentation" class="ibm-active headerTabs"><a role="tab" class="headerTabsInner" href="/" aria-selected="true"/> Home</a></li>
+            <li role="presentation" class="ibm-active headerTabs"><a role="tab" class="headerTabsInner" href="/" aria-selected="true"/>Home</a></li>
           <% }else{ %>
-            <li role="presentation" class="headerTabs"><a role="tab" class="headerTabsInner" href="/"/> Home</a></li>
+            <li role="presentation" class="headerTabs"><a role="tab" class="headerTabsInner" href="/"/>Home</a></li>
            <% } %>
-           
+
           <%if(pageTitle=="Team Management"){ %>
-            <li role="presentation" class="ibm-active headerTabs"><a role="tab" class="headerTabsInner" href="/team" aria-selected="true"/> Team Management</a></li>
+            <li role="presentation" class="ibm-active headerTabs"><a role="tab" class="headerTabsInner" href="<%=link.team%>" aria-selected="true"/>Team Management</a></li>
           <% }else{ %>
-            <li role="presentation" class="headerTabs"><a role="tab" class="headerTabsInner" href="/team"/>Team Management</a></li>
+            <li role="presentation" class="headerTabs"><a role="tab" class="headerTabsInner" href="<%=link.team%>"/>Team Management</a></li>
           <% } %>
-            
+
           <%if(pageTitle=="Iteration Management"){ %>
-            <li role="presentation" class="ibm-active headerTabs"><a role="tab" class="headerTabsInner" href="/iteration" aria-selected="true"/> Iteration Management</a></li>
+            <li role="presentation" class="ibm-active headerTabs"><a role="tab" class="headerTabsInner" href="<%=link.iteration%>" aria-selected="true"/> Iteration Management</a></li>
           <% }else{ %>
-            <li role="presentation" class="headerTabs"><a role="tab" class="headerTabsInner" href="/iteration"/> Iteration Management</a></li>
+            <li role="presentation" class="headerTabs"><a role="tab" class="headerTabsInner" href="<%=link.iteration%>"/>Iteration Management</a></li>
           <% } %>
-          
+
           <%if(pageTitle=="Maturity Assessment"){ %>
-            <li role="presentation" class="ibm-active headerTabs"><a role="tab" class="headerTabsInner" href="/assessment" aria-selected="true"/> Maturity Assessment</a></li>
+            <li role="presentation" class="ibm-active headerTabs"><a role="tab" class="headerTabsInner" href="<%=link.assessment%>" aria-selected="true"/>Maturity Assessment</a></li>
           <% }else{ %>
-            <li role="presentation" class="headerTabs"><a role="tab" class="headerTabsInner" href="/assessment"/> Maturity Assessment</a></li>
+            <li role="presentation" class="headerTabs"><a role="tab" class="headerTabsInner" href="<%=link.assessment%>"/>Maturity Assessment</a></li>
           <% } %>
         </ul>
       </div>

@@ -39,6 +39,7 @@ var testTeam = {
   'members': {
     'name': 'test user',
     'role': 'Tester',
+    'allocation': 100,
     'userId': 'TEST1234567',
     'email': 'testuser@test.com'
   },
@@ -51,6 +52,13 @@ var userSession = {
     'uid': 'TEST1234567'
   },
   'shortEmail': 'testuser@test.com'
+};
+
+var invalidUserSession = {
+  'ldap': {
+    'uid': 'TEST7654321'
+  },
+  'shortEmail': 'testuser2@test.com'
 };
 
 // var testData = {
@@ -107,7 +115,7 @@ describe('Assessment model [addTeamAssessment] ', function() {
   it('fail because user is not authorized to add assessment to team', function(done) {
     assessmentData = validAssessments;
     assessmentData['teamId'] = newTeamId;
-    Assessments.addTeamAssessment(inValidUser.userId, assessmentData)
+    Assessments.addTeamAssessment(invalidUserSession, assessmentData)
       .catch(function(err){
         expect(err.error).to.be.equal('Not allowed to add assessment for this team');
         done();
@@ -117,7 +125,7 @@ describe('Assessment model [addTeamAssessment] ', function() {
   it('fail because Assessment team id is required', function(done) {
     var assessmentData = validAssessments;
     delete assessmentData['teamId'];
-    Assessments.addTeamAssessment(testUser.userId, assessmentData)
+    Assessments.addTeamAssessment(userSession, assessmentData)
       .catch(function(err) {
         expect(err.error).to.be.equal('Assessment team id is required');
         done();
@@ -130,7 +138,7 @@ describe('Assessment model [addTeamAssessment] ', function() {
     delete assessmentData['version'];
     delete assessmentData['componentResults'];
     delete assessmentData['actionPlans'];
-    Assessments.addTeamAssessment(testUser.userId, assessmentData)
+    Assessments.addTeamAssessment(userSession, assessmentData)
       .catch(function(err) {
         expect(err.name).to.be.equal('ValidationError');
         done();
@@ -146,7 +154,7 @@ describe('Assessment model [addTeamAssessment] ', function() {
     assessmentData['assessorUserId'] = testUser.userId;
     delete assessmentData['componentResults'];
     delete assessmentData['actionPlans'];
-    Assessments.addTeamAssessment(testUser.userId, assessmentData)
+    Assessments.addTeamAssessment(userSession, assessmentData)
       .then(function(result) {
         newAssessId = result['_id'];
         expect(result['assessorUserId']).to.be.equal(assessmentData['assessorUserId']);
@@ -156,7 +164,6 @@ describe('Assessment model [addTeamAssessment] ', function() {
         expect(result).to.equal(true);
         done();
       });
-
   });
 });
 
@@ -223,7 +230,7 @@ describe('Assessment model [updateTeamAssessment] ', function() {
   });
 
   it('return fail because Assessment Team ID is required', function(done) {
-    Assessments.updateTeamAssessment(testUser.userId, validAssessments)
+    Assessments.updateTeamAssessment(userSession, validAssessments)
       .catch(function(err) {
         expect(err.error).to.be.equal('Invalid assessment or team id');
         done();
@@ -236,7 +243,7 @@ describe('Assessment model [updateTeamAssessment] ', function() {
       'teamId': newTeamId,
       'version': 'New assessment version'
     };
-    Assessments.updateTeamAssessment(inValidUser.userId, data)
+    Assessments.updateTeamAssessment(invalidUserSession, data)
       .catch(function(err) {
         expect(err.error).to.be.equal('Not allowed to update assessment');
         done();
@@ -247,9 +254,10 @@ describe('Assessment model [updateTeamAssessment] ', function() {
     var data = {
       '_id': newAssessId,
       'teamId': newTeamId,
+      'assessmentStatus': 'Submitted',
       'version': 'New assessment version'
     };
-    Assessments.updateTeamAssessment(testUser.userId, data)
+    Assessments.updateTeamAssessment(userSession, data)
       .then(function(result) {
         expect(result['version']).to.be.equal('New assessment version');
         done();

@@ -4,27 +4,28 @@ var teamApi = require('./TeamApi.jsx');
 var TeamAccessMessage = require('./TeamAccessMessage.jsx');
 var TeamDropdown = require('./TeamDropdown.jsx');
 var TeamFormButtons = require('./TeamFormButtons.jsx');
+var TeamErrorValidationHandler = require('./TeamErrorValidationHandler.jsx');
 
 var TeamForm = React.createClass({
+  getInitialState: function() {
+    return {
+      formError: {
+        error: new Object(),
+        map: [
+          {field: 'name', id: 'teamName'},
+          {field: 'type', id: 'teamSquadYesNo'}
+        ]
+      }
+    }
+  },
   componentDidMount: function() {
-    console.log('componentDidMount TeamForm', (this.props.defaultTeam != 'new'));
     $('select[name="teamSquadYesNo"]').select2();
     $("a[data-widget='tooltip']").tooltip();
-    //if (this.props.defaultTeam != 'new')
-      //$('#teamSelectList').val(this.props.defaultTeam).trigger('change');
   },
-  /*
   componentWillReceiveProps: function(newProps) {
-    console.log('TeamForm componentWillReceiveProps ', newProps);
-    var selectedTeam = newProps.selectedTeam;
-    if (!_.isEmpty(selectedTeam)) 
-      this.setState({teamSelectListDefault: selectedTeam.team._id});
-    else
-      this.setState({teamSelectListDefault: 'new'});
+    this.setState(this.getInitialState());
   },
-  */
   componentDidUpdate: function() {
-    console.log('TeamForm componentDidUpdate', this.props);
     var selectedTeam = this.props.selectedTeam;
     if (!_.isEmpty(selectedTeam)) {
       //this.setState({teamSelectListDefault: selectedTeam.team._id});
@@ -39,22 +40,21 @@ var TeamForm = React.createClass({
           if (!_.isEmpty(selectedTeam.iterations) || !_.isEmpty(selectedTeam.assessments))
             this.refs.teamSquadYesNo.disabled = true;
         } else {
-          if (!_.isEmpty(selectedTeam.subtree))
-          this.refs.teamSquadYesNo.disabled = true;
+          if (!_.isEmpty(selectedTeam.children) && selectedTeam.children.length > 0)
+            this.refs.teamSquadYesNo.disabled = true;
         }
       }
     } else {
       //this.setState({teamSelectListDefault: 'new'});
       this.refs.teamName.value = '';
       this.refs.teamDesc.value = '';
-      this.refs.teamSquadYesNo.value = 'Yes'; 
+      this.refs.teamSquadYesNo.value = 'Yes';
       this.refs.teamName.disabled = false;
       this.refs.teamDesc.disabled = false;
       this.refs.teamSquadYesNo.disabled = false;
     }
     // force select2 to update display value
     $('#teamSquadYesNo').trigger('change');
-    //console.log( this.state.teamSelectListDefault);
   },
   formAction: function(action) {
     var self = this;
@@ -70,35 +70,90 @@ var TeamForm = React.createClass({
         team.type = null;
       // ajax call
       if (action=='add') {
-        teamApi.postTeam(team)
+        teamApi.postTeam(JSON.stringify(team))
           .then(function(result) {
-            console.log('add', result);
-            self.props.getSelectedTeam(result._id);
+            self.props.getSelectedTeam(result._id, 'You have successfully added a team and you have been added as the first team member. You can now add additional team members.');
           })
           .catch(function(err) {
-            console.log('error', err);
+            var map = self.state.formError.map;
+            self.setState({
+              formError: {
+                error: err,
+                map: map
+              }
+            });
           });
       } else {
-        teamApi.putTeam(team)
+        teamApi.putTeam(JSON.stringify(team))
           .then(function(result) {
-            console.log('add update', result);
-            self.props.getSelectedTeam(result._id);
+            self.props.getSelectedTeam(team._id, 'You have successfully updated Team Information.');
           })
           .catch(function(err) {
-            console.log('update error', err);
+            var map = self.state.formError.map;
+            self.setState({
+              formError: {
+                error: err,
+                map: map
+              }
+            });
           });
       }
     } else if (action=='delete') {
-      // ajax call
-      teamApi.deleteTeam(team)
-        .then(function(result) {
-          console.log('delete', result);
-          self.props.getSelectedTeam('delete');
-        })
-        .catch(function(err) {
-          console.log('delete error', err);
-        });
+      var selectedTeam = self.props.selectedTeam;
+      var hasAssoc = false;
+      var msg = 'You have requested to delete ' + selectedTeam.team.name + '. \n\n';
+      msg = msg + 'This team has the following associations: \n';
+
+      if (!_.isEmpty(selectedTeam.hierarchy) && selectedTeam.hierarchy.length > 0) {
+        msg = msg + '\t Parent team: 1 \n';
+        hasAssoc = true;
+      }
+      if (!_.isEqual(selectedTeam.type, 'squad') && selectedTeam.children.length > 0) {
+        msg = msg + '\t Child team(s): ' + selectedTeam.children.length + ' \n';
+        hasAssoc = true;
+      }
+      if (!_.isEmpty(selectedTeam.iterations) && selectedTeam.iterations.length > 0) {
+        msg = msg + '\t Iteration information: ' + selectedTeam.iterations.length + ' \n';
+        hasAssoc = true;
+      }
+      if (!_.isEmpty(selectedTeam.assessments) && selectedTeam.assessments.length > 0) {
+        msg = msg + '\t Maturity assessment(s): ' + selectedTeam.assessments.length + ' \n';
+        hasAssoc = true;
+      }
+      if (!hasAssoc) {
+        msg = msg + '\t Team has no associations. \n\n';
+      } else {
+        msg = msg + '\n\t *You can return to Team Management page to review any of these associations. \n\n';
+        if (!_.isEqual(selectedTeam.type, 'squad'))
+          msg = msg + 'If you delete this team, any parent/child associations to this team will be removed. \n\n';
+        else
+          msg = msg + 'If you delete this team, any parent/child associations to this team will be removed. Any iteration information, and maturity assessments related to this team will be DELETED. \n\n';
+      }
+      msg = msg + 'Select OK to proceed with the team delete or Cancel.';
+      if (confirm(msg)) {
+        // ajax call
+        teamApi.deleteTeam(JSON.stringify(team))
+          .then(function(result) {
+            self.props.getSelectedTeam('delete');
+          })
+          .catch(function(err) {
+            var map = self.state.formError.map;
+              self.setState({
+                formError: {
+                  error: err,
+                  map: map
+                }
+              });
+          });
+        }
     } else if (action=='reset') {
+      var map = self.state.formError.map;
+      self.setState({
+        formError: {
+          error: new Object(),
+          map: map
+        }
+      });
       $('#teamSelectList').val('new').trigger('change');
     }
   },
@@ -156,6 +211,7 @@ var TeamForm = React.createClass({
           </p>
         </div>
         <TeamFormButtons selectedTeam={this.props.selectedTeam} formAction={this.formAction} updateTeamSelelictList={this.props.updateTeamSelelictList}/>
+        <TeamErrorValidationHandler formError={this.state.formError} />
       </div>
     )
   }

@@ -2,98 +2,97 @@ var React = require('react');
 var SquadDropdown = require('./TeamDropdown.jsx');
 var IterationDropdown = require('./IterationDropdown.jsx');
 var DatePicker = require('react-datepicker');
+var Tooltip = require('react-tooltip');
 var api = require('../api.jsx');
 require('react-datepicker/dist/react-datepicker.css');
 var moment = require('moment');
+var Dropdown = require('./Dropdown.jsx');
+var dropList = [];
+dropList.push({id:true, name: 'Yes'});
+dropList.push({id:false, name: 'No'});
+
 var readonlyMsg = 'You have view-only access for the selected team (to update a team, you must be a member or a member of its parent team)';
+
+var memberCountTT = "Number of unique team members supporting this iteration.  The default is derived based on the team's current makeup and can be overridden by user input. This count is used to compute the iteration's FTE value and the 2 Pizza Rule metric results.";
+
+var fteThisiterationTT = "FTE (Full-time Equivalent) is sum of all Team Member allocation percentages divided by number of unique Team Members.  The default is derived based on the current team's makeup and can be overridden by user input.  This value is used to compute the iteration's Unit Cost values";
+
+var refreshFTETT = 'Clicking this ICON will replace the team member count and the FTE value with current values from the Team Information area on the Home page.';
+
+var teamChangeListTT = 'Indicate if there was a change to the team\'s makeup during this iteration.  Changes might include adding/replacing/removing members or member allocation percentage updates that you feel are significant.  Indicating that a team change occurred might help to explain higher/lower team productivity when compared to other iterations.';
+
 
 var IterationMgmt = React.createClass({
   getInitialState: function() {
     return {
-      enableFields: false,
-      enableIter: false,
-      selectedTeam: '',
-      iterationName: '',
       iterationStartDate: null,
-      iterationEndDate: null,
-      hideMsg: true
+      iterationEndDate: null
     }
   },
 
-  componentWillMount: function() {
-    this.setState({selectedTeam: this.props.iteration.teamId});
-  },
-
-  teamSelectOnChange: function(e) {
+  teamSelectOnChange: function(teamId, userAllowed) {
     var self = this;
-    var selected = e.target.value;
-    api.isUserAllowed(selected)
-      .then(function(result) {
-        self.props.readOnlyAccess(!result);
-        self.props.enableFormFields(result);
-        self.setState({
-          enableIter: true,
-          iterationName: '',
-          iterationStartDate: null,
-          iterationEndDate: null,
-          hideMsg: result});
-        if (!_.isEmpty(selected)){
-          if (result){
-            self.refs.iterList.retrieveIterations(selected, null, result, ['new', 'Create new...']);
-          }
-          else{
-            self.refs.iterList.retrieveIterations(selected, null, result, ['', 'Select one']);
-          }
-        }
-      });
-    
-    self.props.updateField('teamId',selected);
-    //self.setState({selectedTeam: selected});
+    self.props.updateField('teamId',teamId);
+    if (!_.isEmpty(teamId)){
+      this.props.teamReset(teamId);
+      this.refs.iterList.retrieveIterations(teamId, null);
+      this.props.readOnlyAccess(!userAllowed);
+    }
+    else {
+      this.props.teamReset(teamId);
+    }
   },
 
   nameChange: function(e){
     this.props.updateField('name',e.target.value);
-    this.teamMemFTE();
-    this.setState({iterationName : e.target.value});
+    if(!_.isEmpty(e.target.value)){
+      this.props.clearError('iterationName');
+    }
+  },
+
+  nameBlur: function(e){
+    if(!_.isEmpty(e.target.value) && (_.isEmpty(this.props.iteration._id) || this.props.iteration._id === 'new')){
+      this.props.updateAllocation();
+    }
   },
 
   startDateChange: function(date){
-    this.props.updateField('startDate', moment(date).format('MM/DD/YYYY'));
-    this.setState({iterationStartDate : date});    
+    var selectedStartDate = moment(date);
+    var selectedEndDate = moment(this.refs.iterationEndDate.selected);
+    if (selectedStartDate.diff(selectedEndDate) < 0) {
+      this.props.clearError('iterationStartDate');
+      this.props.clearError('iterationEndDate');
+    }
+
+    selectedEndDate = selectedStartDate.add(13,'day');
+    var obj = {};
+    obj.startDate = new Date(date);
+    obj.endDate = new Date(selectedEndDate);
+    this.props.updateFields(obj);
+
+    this.props.defectBal();
   },
 
   endDateChange: function(date){
-    this.props.updateField('endDate', moment(date).format('MM/DD/YYYY'));
-    this.setState({iterationEndDate : date});    
+    var selectedStartDate = moment(this.refs.iterationStartDate.selected);
+    var selectedEndDate = moment(date);
+    if (selectedEndDate.diff(selectedStartDate) > 0) {
+      this.props.clearError('iterationStartDate');
+      this.props.clearError('iterationEndDate');
+    }
+    this.props.updateField('endDate', new Date(date));
   },
 
   initTeamIterations: function(teamId, selected, state, firstEntry){
-    this.setState({enableIter: true});
     this.refs.iterList.retrieveIterations(teamId, selected, state, firstEntry);
   },
 
-  populateForm: function(data, state){
-    if (data != undefined && data != null){
-      this.setState({
-        selectedTeam: data.teamId,
-        iterationName: data.name,
-        iterationStartDate: moment(data.startDate),
-        iterationEndDate: moment(data.endDate),
-        enableFields: state, 
-        enableIter: true
-      });
+  defaultDate: function(date){
+    var result = null;
+    if (!_.isNull(date) && !_.isEmpty(date)){
+      result = moment(date);
     }
-    else {
-      this.setState({
-        iterationName: '',
-        iterationStartDate: null,
-        iterationEndDate: null
-      });
-    }
-  },
-
-  enableFormFields: function(state){
-    this.setState({enableFields: state, hideMsg: state});
+    return result;
   },
 
   getTeamInfo: function(){
@@ -101,64 +100,180 @@ var IterationMgmt = React.createClass({
     return team;
   },
 
+  memberCountChange: function(e){
+    this.props.updateField('memberCount',e.target.value);
+  },
+
+  fteThisiterationChange: function(e){
+    this.props.updateField('memberFte',e.target.value);
+  },
+
+  fteThisiterationUpdate: function(e){
+    var ftes = this.floatDefault(e.target.value).toFixed(1);
+    this.props.updateField('memberFte',ftes);
+  },
+
+  numericValue:function(data) {
+    var value = parseInt(data);
+    if (!isNaN(value)) {
+      return value;
+    }
+    else {
+      return 0;
+    }
+  },
+
+  floatDefault:function(num) {
+    var value = parseFloat(num);
+    if (!isNaN(value)) {
+      return value;
+    }
+    else {
+      return 0;
+    }
+  },
+
+  teamMemCount: function () {
+    var count = 0;
+    var currentTeam = this.getTeamInfo();
+    if (!_.isEmpty(currentTeam) && currentTeam.members) {
+      count = currentTeam.members.length;
+    }
+    return count;
+  },
+
   teamMemFTE: function () {
     var fte = 0.0;
     var currentTeam = this.getTeamInfo();
     if (!_.isEmpty(currentTeam) && currentTeam.members) {
       var teamCount = 0;
+      var self = this;
       _.each(currentTeam.members, function(member) {
-        teamCount += numericValue(member.allocation);
+        teamCount += self.numericValue(member.allocation);
       });
       fte = parseFloat(teamCount / 100).toFixed(1);
     }
     return fte;
   },
 
+  refreshFTE: function () {
+    var tmc = this.teamMemCount();
+    var fte = this.teamMemFTE();
+    if (confirm('You are about to overwrite the contents of these fields with ' + tmc + ' and ' + fte + ' respectively.  Do you want to continue?')){
+      this.refFTECount(tmc, fte);
+    }
+  },
+
+  refFTECount: function (tmc, fte) {
+    this.props.updateAllocation();
+    this.props.processIteration();
+  },
+
+  paste:function(e) {
+    e.preventDefault();
+  },
+
+  decimalNumCheck:function(e) {
+    var pattern = /^\d*[.]?\d*$/;
+    if (e.charCode >= 32 && e.charCode < 127 &&  !pattern.test(e.target.value + String.fromCharCode(e.charCode)))
+    {
+      e.preventDefault();
+    }
+  },
+
   render: function() {
     var labelStyle = {
-      'lineHeight': '20px',
-      'width': '240px'
+      'width': '218px'
     };
-    var spacing = {
-      'marginBottom':'10px'
+    var labelStyle2 = {
+      'width': '170px'
     };
 
     var msgSpacing = {
       'paddingLeft':'5%'
     };
 
+    var linkStyle = {
+      'position': 'relative',
+      'top': '-10px',
+      'left': '3px',
+      'display': 'inline'
+    };
+
+    var linkStyle2 = {
+      'position': 'relative',
+      'top': '3px',
+      'left': '5px',
+      'display': 'inline',
+      'pointer': 'pointer'
+    };
+
     return (
       <div>
-        <div style={spacing}>
-          <label style={labelStyle} for='teamSelectList'>Select an existing squad team:<span className='ibm-required'>*</span></label>
+        <Tooltip id='commTT'/>
+        <div className='iteration'>
+            <label style={labelStyle} for='teamSelectList'>Select an existing squad team:<span className='ibm-required'>*</span></label>
             <span>
-              <SquadDropdown teamChangeHandler={this.teamSelectOnChange} enableFormFields={this.props.enableFormFields} ref='squadList' selectedTeam={this.state.selectedTeam} selectedTeamInfo={this.props.selectedTeamInfo} readOnlyAccess={this.props.readOnlyAccess}/>
-           </span>
-        </div>
-        {!this.state.hideMsg ? <div className="agile-read-only-status ibm-item-note-alternate" style={msgSpacing} id='userEditMsg'>{readonlyMsg}</div>:null}
-        <div style={spacing}>
-          <label style={labelStyle} for='iterationSelectList'>Iteration number/identifier:<span className='ibm-required'>*</span></label>
-            <span>
-              <IterationDropdown enableFields={this.state.enableIter} enableFormFields={this.props.enableFormFields} ref='iterList' updateForm = {this.props.updateForm} iteration={this.props.iteration} updateField={this.props.updateField}/>
+              <SquadDropdown teamChangeHandler={this.teamSelectOnChange} ref='squadList' selectedTeamInfo={this.props.selectedTeamInfo} readOnlyAccess={this.props.readOnlyAccess} iteration={this.props.iteration} teamReset={this.props.teamReset}/>
             </span>
         </div>
-        <div id='newIterationNameSection' style={spacing}>
+        {this.props.isReadOnly ? <div className="agile-read-only-status ibm-item-note-alternate" style={msgSpacing} id='userEditMsg'>{readonlyMsg}</div>:null}
+        <div className='iteration'>
+            <label style={labelStyle} for='iterationSelectList'>Iteration number/identifier:<span className='ibm-required'>*</span></label>
+            <span>
+              <IterationDropdown ref='iterList' updateForm={this.props.updateForm} iteration={this.props.iteration} updateField={this.props.updateField} isReadOnly={this.props.isReadOnly} teamReset={this.props.teamReset}/>
+            </span>
+        </div>
+        <div className='iteration'>
           <label style={labelStyle} for='iterationName'>&nbsp;<span className='ibm-access'>Iteration number/identifier</span></label>
           <span>
-            <input type='text' name='iterationName' id='iterationName' size='44' value={this.state.iterationName} placeholder='Iteration number/identifier' disabled={!this.state.enableFields} onChange={this.nameChange} className='iterationField'/>
+            <input type='text' name='iterationName' id='iterationName' size='44' value={this.props.iteration.name} placeholder='Iteration number/identifier' disabled={!this.props.enableFields} onChange={this.nameChange} onBlur={this.nameBlur} className='iterationField'/>
           </span>
         </div>
-        <div style={spacing}>
-          <label style={labelStyle} for='iterationStartDate'>Iteration start date:<span className='ibm-required'>*</span></label>
-          <span>
-            <DatePicker selected={this.state.iterationStartDate} onChange={this.startDateChange} name='iterationStartDate' id='iterationStartDate' size='44' value={this.state.iterationStartDate} disabled={!this.state.enableFields} placeholderText='Iteration start date' className='iterationField'/>
-          </span>
+        <div className='iteration'>
+          <div>
+            <label style={labelStyle} for='iterationStartDate'>Iteration start date:<span className='ibm-required'>*</span></label>
+            <span>
+              <DatePicker selected={this.props.iteration.startDate != null? moment(this.props.iteration.startDate):null} readOnly dateFormat='DDMMMYYYY' onChange={this.startDateChange} name='iterationStartDate' id='iterationStartDate' size='44' disabled={!this.props.enableFields} placeholderText='Iteration start date' className='iterationField-2' ref='iterationStartDate'/>
+            </span>
+          </div>
+          <div>
+            <label for='iterationEndDate' style={labelStyle2}>Iteration end date:<span className='ibm-required'>*</span></label>
+            <span>
+              <DatePicker selected={this.props.iteration.endDate != null ? moment(this.props.iteration.endDate): null} readOnly dateFormat='DDMMMYYYY' onChange={this.endDateChange} name='iterationEndDate' id='iterationEndDate' size='44' disabled={!this.props.enableFields} placeholderText='Iteration end date' className='iterationField-2' ref='iterationEndDate'/>
+            </span>
+          </div>
         </div>
-        <div style={spacing}>
-          <label style={labelStyle} for='iterationEndDate'>Iteration end date:<span className='ibm-required'>*</span></label>
-          <span>
-            <DatePicker selected={this.state.iterationEndDate} onChange={this.endDateChange} name='iterationEndDate' id='iterationEndDate' size='44' value={this.state.iterationEndDate} disabled={!this.state.enableFields} placeholderText='Iteration end date' className='iterationField'/>
-          </span>
+        <div className='iteration'>
+          <div className='iteration-sm'>
+            <label for='memberCount' style={labelStyle}>Team members this iteration:<span className='ibm-required'></span>
+              <a className='ibm-information-link' style={linkStyle} data-tip={memberCountTT}/>
+            </label>
+            <span>
+              <input type='text' name='memberCount' id='memberCount' size='8' value={this.props.iteration.memberCount != null ?this.props.iteration.memberCount:''} placeholder='0' className='inputCustom' onChange={this.memberCountChange} disabled={!this.props.enableFields} onKeyPress={this.wholeNumCheck} onPaste={this.paste}/>
+              {(!this.props.isReadOnly && !_.isEmpty(this.props.iteration.teamId)) ?
+                <a className='ibm-refresh-link' style={linkStyle2} role='button' onClick={this.refreshFTE} data-tip={refreshFTETT}/> : null}
+            </span>
+          </div>
+          <div>
+            <label for='fteThisiteration' style={labelStyle2}>FTE this iteration:<span className='ibm-required'></span>
+            <a className='ibm-information-link' style={linkStyle} data-tip={fteThisiterationTT}/>
+            </label>
+            <span>
+              <input type='text' name='fteThisiteration' id='fteThisiteration' size='8' value={this.props.iteration.memberFte != null?this.props.iteration.memberFte:''} placeholder='0.0' className='inputCustom' onChange={this.fteThisiterationChange} disabled={!this.props.enableFields} onKeyPress={this.decimalNumCheck} onBlur={this.fteThisiterationUpdate} onPaste={this.paste}/>
+            </span>
+          </div>
+          
+        </div>
+        <div className='iteration'>
+          <div>
+            <label for='teamChangeList' style={labelStyle}>Was there a team change?
+              <a className='ibm-information-link' id='teamChangeListTT' style={linkStyle} data-tip={teamChangeListTT}></a>
+            </label>
+            <span>
+              <Dropdown selectionList={dropList} id='teamChangeList' name='teamChangeList' enableFields={this.props.enableFields} iteration={this.props.iteration} updateField={this.props.updateField}/>
+            </span>
+          </div>
         </div>
         <div className='ibm-rule ibm-gray-80'>
           <hr/>

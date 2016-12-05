@@ -21,11 +21,12 @@ var AssessmentPageFormTwo = React.createClass({
   },
   componentDidMount: function() {
     $('select[name="teamTypeSelectList"]').select2();
-    //$('select[name='teamTypeSelectList']').change();
+    $('select[name="teamTypeSelectList"]').change(this.props.assessTypeChangeHandler);
 
     $('select[name="softwareYesNo"]').select2();
-    //$('select[name='softwareYesNo']').change();
+    $('select[name="softwareYesNo"]').change(this.props.assessSoftwareChangeHandler);
 
+    $("a[data-widget='tooltip']").tooltip();
   },
 
   render: function() {
@@ -45,7 +46,7 @@ var AssessmentPageFormTwo = React.createClass({
       'display': 'inline'
     };
 
-    if (this.props.selectedAssessment.isNew == false) {
+    if (this.props.selectedAssessment.isNew == false || this.props.access == false) {
       var isDisabled = true;
     } else {
       isDisabled = false;
@@ -57,7 +58,8 @@ var AssessmentPageFormTwo = React.createClass({
         <p>
           <label for='teamTypeSelectList'>
             Is this team primarily a Project or Operations team? <span class='ibm-required'>*</span>
-            <a style={anchorInfo} class='ibm-information-link' id='teamTypeTT' data-widget='tooltip' data-contentid='teamTypeToolTip' title='Operations teams support a repeatable process that delivers value to the customer.  Unlike a project, it normally has no definite start and end date.  Operation examples include recruitment, budgeting, call centers, supply chain and software operations.'></a>
+            <a style={anchorInfo} class='ibm-information-link' id='teamTypeTT' data-widget='tooltip' data-contentid='teamTypeToolTip'
+            title='Operations teams support a repeatable process that delivers value to the customer.  Unlike a project, it normally has no definite start and end date.  Operation examples include recruitment, budgeting, call centers, supply chain and software operations.'></a>
           </label>
           <span>
             <select id='teamTypeSelectList' name='teamTypeSelectList' style={selectFieldWidth} disabled={isDisabled} >
@@ -66,7 +68,6 @@ var AssessmentPageFormTwo = React.createClass({
             </select>
          </span>
         </p>
-
         <p>
           <label for='softwareYesNo'>Does the team deliver software? <span class='ibm-required'>*</span>
             <a class='ibm-information-link' id='softwareTT' data-widget='tooltip' data-contentid='softwareToolTip' style={anchorInfo} title='Answering yes to this will add the optional DevOps software delivery practices.'></a>
@@ -87,6 +88,21 @@ var AssessmentPageFormTwo = React.createClass({
             <Datepicker enableDatepicker={!isDisabled} submittedDate={this.props.selectedAssessment.date} dateChangeHandler={this.props.dateChangeHandler} size='44' />
           </span>
         </p>
+        <div id='teamTypeToolTip' class='ibm-tooltip-content'>
+          <p class='toolTip'>
+            Operations teams support a repeatable process that delivers value to the customer.  Unlike a project, it normally has no definite start and end date.  Operation examples include recruitment, budgeting, call centers, supply chain and software operations.
+          </p>
+        </div>
+        <div id='softwareToolTip' class='ibm-tooltip-content'>
+          <p class='toolTip'>
+            Answering yes to this will add the optional DevOps software delivery practices.
+          </p>
+        </div>
+        <div id='assDateToolTip' class='ibm-tooltip-content'>
+          <p class='toolTip'>
+            The assessment date is assigned when the Submit action is taken.  To assign a specific date, i.e. when recording a previously completed assessment, select the date to use as the assessment date.
+          </p>
+        </div>
       </div>
     )
   }

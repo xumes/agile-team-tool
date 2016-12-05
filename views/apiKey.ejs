@@ -10,6 +10,18 @@ jQuery(function($) {
     getPageVariables('help');
   });
 });
+function getApiKey() {
+  $.ajax({
+    type: 'GET',
+    url: '/api/developer/apiKey'
+  }).done(function(data) {
+    if (data != undefined) {
+      uuidKey = data.apiKey;
+      $('#apiKey').html(data.apiKey);
+      $('#apiKeySection').show();
+    }
+  });
+}
 </script>
 <script type="text/javascript" src="js/team.js?v=<%=Math.random()%>"></script>
 

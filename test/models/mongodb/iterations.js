@@ -39,9 +39,11 @@ var validIterationDoc = {
 };
 var testTeam = {
   'name': 'mongodb-test-team-01',
+  'type': 'squad',
   'members': {
     'name': 'test user',
     'role': 'Tester',
+    'allocation': 100,
     'userId': 'TEST1234567',
     'email': 'testuser@test.com'
   },
@@ -64,6 +66,7 @@ var notExistingUser = new Object();
 notExistingUser['userId'] = 'notexisting';
 
 describe('Iteration model [add]', function() {
+  var createdTeam = {};
   before(function(done){
     var promiseArray = [];
     promiseArray.push(userModel.deleteUser(testUser.userId));
@@ -81,6 +84,7 @@ describe('Iteration model [add]', function() {
       })
       .then(function(result){
         newTeamId = result._id;
+        createdTeam = result;
         done();
       })
       .catch(function(err){
@@ -119,6 +123,11 @@ describe('Iteration model [add]', function() {
       })
       .then(function(result) {
         expect(result).to.equal(true);
+        createdTeam.type = null;
+        return teamModel.updateTeam(createdTeam, userSession);
+      })
+      .catch(function(err) {
+        expect(err).to.be.a('object');
         done();
       });
   });

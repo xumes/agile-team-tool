@@ -5,24 +5,25 @@ var ReactDOM = require('react-dom');
 var TeamDropdown = React.createClass({
   getInitialState: function() {
     return {
-      selectedTeam: this.props.selectedTeam,
       teamNames: [],
-      teamInfo: new Object()
+      teamInfo: {},
+      firstOption:  ['', 'Select one']
     }
   },
 
   componentWillMount: function() {
-    var self = this; // Need to get reference to this instance
+    var self = this;
     api.getSquadTeams()
       .then(function(teams) {
         var selectedTeamInfo;
+        var teamId = self.props.iteration.teamId;
         if (teams != undefined && teams.length > 0 && 
-        self.props.selectedTeam != undefined && self.props.selectedTeam != ''){
-          selectedTeamInfo = _.find(teams, {_id:self.props.selectedTeam});
+        teamId != undefined && teamId != ''){
+          selectedTeamInfo = _.find(teams, {_id:teamId});
         }
-        self.setState({teamNames: teams, selectedTeam: self.props.selectedTeam, teamInfo: selectedTeamInfo});
-        if (self.props.selectedTeam != undefined && self.props.selectedTeam != ''){
-          return api.isUserAllowed(self.props.selectedTeam);
+        self.setState({teamNames: teams, teamInfo: selectedTeamInfo});
+        if (teamId != undefined && teamId != ''){
+          return api.isUserAllowed(self.props.iteration.teamId);
         }
         else {
           return null;
@@ -30,22 +31,42 @@ var TeamDropdown = React.createClass({
     })
     .then(function(result){
       if (result != null){
-        self.props.readOnlyAccess(!result);
-        self.props.enableFormFields(result);
+        return self.props.readOnlyAccess(!result);
       }
+    })
+    .catch(function(err){
+      console.log('[team-componentWillMount] error:'+JSON.stringify(err));
     });
+
 
   },
 
-  componentDidMount: function() {    
-    $(this.refs.teamSelectList).select2();
-    $(this.refs.teamSelectList).change(this.handleChange);
+  componentDidMount: function() {  
+    $('select[name="teamSelectList"]').select2();
+    $('select[name="teamSelectList"]').change(this.handleChange);
+  },
+
+  componentDidUpdate: function() {
+    $('select[name="teamSelectList"]').select2();
   },
 
   handleChange: function(e){
-    var selectedTeamInfo = _.find(this.state.teamNames, {_id:e.target.value});
-    this.setState({selectedTeam: e.target.value, teamInfo: selectedTeamInfo});
-    this.props.teamChangeHandler(e);
+    var self = this;
+    var teamId = e.target.value;
+    if (!_.isEmpty(teamId)){
+      api.isUserAllowed(teamId)
+        .then(function(result) {
+          var selectedTeamInfo = _.find(self.state.teamNames, {_id:teamId});
+          self.setState({teamInfo: selectedTeamInfo});
+          self.props.teamChangeHandler(teamId, result);
+        })
+        .catch(function(err){
+          console.log('[team change] error:'+JSON.stringify(err));
+        });
+    }
+    else {
+      this.props.teamReset(teamId);
+    }
   },
 
   getTeamInfo: function(){
@@ -61,10 +82,9 @@ var TeamDropdown = React.createClass({
         <option key={item._id} value={item._id}>{item.name}</option>
       )
     });
-
     return (
-      <select value={this.state.selectedTeam} id='teamSelectList' style={teamSelectListStyle}  onChange={this.props.teamChangeHandler} ref='teamSelectList'>
-        <option value=''>Select one</option>
+      <select value={this.props.iteration.teamId} name='teamSelectList' id='teamSelectList' style={teamSelectListStyle}  onChange={this.handleChange} ref='teamSelectList'>
+        <option value={this.state.firstOption[0]} key={this.state.firstOption[0]}>{this.state.firstOption[1]}</option>
         {populateTeamNames}
       </select>
     )

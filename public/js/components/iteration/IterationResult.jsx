@@ -21,65 +21,45 @@ var teamSatisfactionTT = 'Please indicate how happy your team was during the cou
     '<br />1 - Very unhappy';
 
 var IterationResult = React.createClass({
-  getInitialState: function() {
-    return {
-      enableFields: this.props.enableFields,
-      commStoriesDel: '0',
-      commPointsDel: '0',
-      deploythisIteration: '0',
-      defectsIteration: '0',
-      cycleTimeWIP: '0.0',
-      cycleTimeInBacklog: '0.0',
-      memberChanged: false,
-      clientSatisfaction: '0.0',
-      teamSatisfaction: '0.0',
-      commentIter: ''
-    }
-  },
 
   commStoriesDelChange: function(e){
     var delStories = e.target.value;
     this.props.updateField('deliveredStories', delStories);
-    this.calculateMetrics(delStories, this.state.commPointsDel);
-    this.setState({commStoriesDel : delStories});
+    this.calculateMetrics(delStories, this.props.iteration.storyPointsDelivered);
   },
+
   commPointsDelChange: function(e){
     var delPoints = e.target.value;
     this.props.updateField('storyPointsDelivered', delPoints);
-    this.calculateMetrics(this.state.commStoriesDel, delPoints);
-    this.setState({commPointsDel : delPoints});
+    this.calculateMetrics(this.props.iteration.deliveredStories, delPoints);
   },
+
   deploythisIterationChange: function(e){
     this.props.updateField('deployments', e.target.value);
-    this.setState({deploythisIteration : e.target.value});
   },
+
   defectsIterationChange: function(e){
     this.props.updateField('defects', e.target.value);
-    this.setState({defectsIteration : e.target.value});
   },
+
   cycleTimeWIPChange: function(e){
     this.props.updateField('cycleTimeWIP', e.target.value);
-    this.setState({cycleTimeWIP : e.target.value});
   },
+
   cycleTimeInBacklogChange: function(e){
     this.props.updateField('cycleTimeInBacklog', e.target.value);
-    this.setState({cycleTimeInBacklog : e.target.value});
   },
-  memberChange: function(e){
-    this.props.updateField('memberChanged', e.target.value);
-    this.setState({memberChanged : e.target.value});    
-  },
+
   clientSatisfactionChange: function(e){
     this.props.updateField('clientSatisfaction', e.target.value);
-    this.setState({clientSatisfaction : e.target.value});
   },
+
   teamSatisfactionChange: function(e){
     this.props.updateField('teamSatisfaction', e.target.value);
-    this.setState({teamSatisfaction : e.target.value});
   },
+
   commentIterChange: function(e){
     this.props.updateField('comment', e.target.value);
-    this.setState({commentIter : e.target.value});
   },
 
   wholeNumCheck: function(e) {
@@ -102,6 +82,16 @@ var IterationResult = React.createClass({
     var value = parseFloat(e.target.value);
     if (!isNaN(value)) {
       e.target.value = value.toFixed(1);
+    }
+  },
+
+  statisfactionCheck:function(e) {
+    var value = parseFloat(e.target.value);
+    if (!isNaN(value)) {
+      value = value.toFixed(1);
+      if (value == 0 || (value >= 1 && value <= 4)) {
+        e.target.value = value;
+      }
     }
   },
 
@@ -129,45 +119,6 @@ var IterationResult = React.createClass({
     e.preventDefault();
   },
 
-  populateForm: function(data, state){
-    if (data != undefined && data != null){
-      this.setState({
-        commStoriesDel: this.numericValue(data.deliveredStories),
-        commPointsDel: this.numericValue(data.storyPointsDelivered),
-        deploythisIteration: this.numericValue(data.deployments),
-        cycleTimeWIP: this.floatDefault(data.cycleTimeWIP),
-        cycleTimeInBacklog: this.floatDefault(data.cycleTimeInBacklog),
-        memberChanged: data.memberChanged,
-        clientSatisfaction: this.floatDefault(data.clientSatisfaction),
-        teamSatisfaction: this.floatDefault(data.teamSatisfaction),
-        commentIter: data.comment != null?data.comment:'',
-        enableFields: state
-      });
-      this.refs.defect.populateForm(data, state);
-    }
-    else {
-      this.setState({
-        commStoriesDel: 0,
-        commPointsDel: 0,
-        deploythisIteration: 0,
-        cycleTimeWIP: '0.0',
-        cycleTimeInBacklog:  '0.0',
-        memberChanged: false,
-        clientSatisfaction: '0.0',
-        teamSatisfaction: '0.0',
-        commentIter: '',
-        enableFields: state
-      });
-      this.refs.defect.populateForm(data, state);
-    }
-    
-  },
-
-  enableFormFields: function(state){
-    this.setState({enableFields: state});
-    this.refs.defect.enableFormFields(state);
-  },
-
   calculateMetrics: function(commStoriesDel, commPointsDel) {
     var fte = this.props.iteration.memberFte;
     if (fte != null && !isNaN(parseFloat(fte))){      
@@ -177,6 +128,10 @@ var IterationResult = React.createClass({
       var strPointsFTE = (this.numericValue(commPointsDel) / fte).toFixed(1);
       this.props.updateMetrics('unitCostStoryPointsFTE', strPointsFTE);
     }
+  },
+
+  getDefectsStartBalance: function(){
+    this.refs.defect.getDefectsStartBalance();
   },
 
   render: function() {
@@ -215,29 +170,30 @@ var IterationResult = React.createClass({
         <div style={spacing}>
           <label for='commStoriesDel' style={labelStyle}>Throughput - Stories/tickets/cards delivered:<span className='ibm-required'></span></label>
             <span>
-              <input type='number' name='commStoriesDel' id='commStoriesDel' size='8' value={this.state.commStoriesDel} placeholder='0' min='0' className='inputCustom' onChange={this.commStoriesDelChange} disabled={!this.state.enableFields} onKeyPress={this.wholeNumCheck} onPaste={this.paste}/>
+              <input type='text' name='commStoriesDel' id='commStoriesDel' size='8' value={this.props.iteration.deliveredStories != null?this.props.iteration.deliveredStories:''} placeholder='0' className='inputCustom' onChange={this.commStoriesDelChange} disabled={!this.props.enableFields} onKeyPress={this.wholeNumCheck} onPaste={this.paste}/>
             </span>
         </div>
         <div style={spacing}>
           <label for='commPointsDel' style={labelStyle}>Velocity - Story points delivered:<span className='ibm-required'></span></label>
           <span>
-            <input type='number' name='commPointsDel' id='commPointsDel' size='8' value={this.state.commPointsDel} placeholder='0' min='0' className='inputCustom' onChange={this.commPointsDelChange} disabled={!this.state.enableFields} onKeyPress={this.wholeNumCheck} onPaste={this.paste}/>
+            <input type='text' name='commPointsDel' id='commPointsDel' size='8' value={this.props.iteration.storyPointsDelivered != null ?
+            this.props.iteration.storyPointsDelivered:''} placeholder='0' className='inputCustom' onChange={this.commPointsDelChange} disabled={!this.props.enableFields} onKeyPress={this.wholeNumCheck} onPaste={this.paste}/>
           </span>
         </div>
         <div style={spacing}>
           <label for='deploythisIteration' style={labelStyle}>Deployments this iteration:</label>
           <span>
-            <input type='number' name='deploythisIteration' id='deploythisIteration' size='8' value={this.state.deploythisIteration} placeholder='0' min='0' className='inputCustom' onChange={this.deploythisIterationChange} disabled={!this.state.enableFields} onKeyPress={this.wholeNumCheck} onPaste={this.paste}/>
+            <input type='text' name='deploythisIteration' id='deploythisIteration' size='8' value={this.props.iteration.deployments != null?this.props.iteration.deployments:''} placeholder='0' className='inputCustom' onChange={this.deploythisIterationChange} disabled={!this.props.enableFields} onKeyPress={this.wholeNumCheck} onPaste={this.paste}/>
           </span>
         </div>
         <div class='ibm-rule ibm-gray-80'>
           <hr/>
         </div>
-        <Defect enableFields={this.state.enableFields} ref='defect' iteration={this.props.iteration} />
+        <Defect enableFields={this.props.enableFields} ref='defect' iteration={this.props.iteration} updateDefectBal={this.props.updateDefectBal}/>
         <div style={spacing}>
           <label for='cycleTimeWIP' style={labelStyle}>Cycle time in WIP (days):<span className='ibm-required'></span></label>
           <span>
-            <input type='number' name='cycleTimeWIP' id='cycleTimeWIP' min='0' step='0.1' size='21' value={this.state.cycleTimeWIP} placeholder='0.0' className='inputCustom' onChange={this.cycleTimeWIPChange} disabled={!this.state.enableFields} onKeyPress={this.decimalNumCheck} onBlur={this.roundOff} onPaste={this.paste}/>
+            <input type='text' name='cycleTimeWIP' id='cycleTimeWIP' size='21' value={this.props.iteration.cycleTimeWIP != null ?this.props.iteration.cycleTimeWIP:''} placeholder='0.0' className='inputCustom' onChange={this.cycleTimeWIPChange} disabled={!this.props.enableFields} onKeyPress={this.decimalNumCheck} onBlur={this.roundOff} onPaste={this.paste}/>
           </span>
           <div className='agile-static-helptip-WIP' id='helpWIP' alt='How to calculate WIP: For each story delivered in this iteration, how long did it take to go from being worked on (planned for this iteration) to production delivery? Put the average number of days in this field.'>
             <strong>How to calculate WIP</strong><br/>
@@ -247,7 +203,7 @@ var IterationResult = React.createClass({
         <div style={spacing}>
           <label for='cycleTimeInBacklog' style={labelStyle}>Cycle time in backlog (days):<span className='ibm-required'></span></label>
           <span>
-            <input type='number' name='cycleTimeInBacklog' id='cycleTimeInBacklog' min='0' step='0.1' size='21' value={this.state.cycleTimeInBacklog} placeholder='0.0' className='inputCustom' onChange={this.cycleTimeInBacklogChange} disabled={!this.state.enableFields} onKeyPress={this.decimalNumCheck} onBlur={this.roundOff} onPaste={this.paste}/>
+            <input type='text' name='cycleTimeInBacklog' id='cycleTimeInBacklog' size='21' value={this.props.iteration.cycleTimeInBacklog != null ? this.props.iteration.cycleTimeInBacklog:''} placeholder='0.0' className='inputCustom' onChange={this.cycleTimeInBacklogChange} disabled={!this.props.enableFields} onKeyPress={this.decimalNumCheck} onBlur={this.roundOff} onPaste={this.paste}/>
           </span>
           <div className='agile-static-helptip-backlog' id='helpBacklog' alt='How to calculate backlog time: For each story delivered in this iteration how long was it in your backlog before it was planned for this iteration? Put the average number of days in this field.'>
             <strong>How to calculate backlog time</strong><br/>
@@ -259,7 +215,7 @@ var IterationResult = React.createClass({
             <a className='ibm-information-link' id='teamChangeListTT' style={linkStyle1} data-tip={teamChangeListTT}></a>
           </label>
           <span>
-           <Dropdown selectionList={dropList} selected={this.state.memberChanged} id='teamChangeList' name='teamChangeList' enableFields={this.state.enableFields} iteration={this.props.iteration}/>
+           <Dropdown selectionList={dropList} id='teamChangeList' name='teamChangeList' enableFields={this.props.enableFields} iteration={this.props.iteration} updateField={this.props.updateField}/>
           </span>
         </div>
         <div style={spacing}>
@@ -267,7 +223,7 @@ var IterationResult = React.createClass({
             <a className='ibm-information-link' id='clientSatisfactionTT' style={linkStyle1} data-tip={clientSatisfactionTT}></a>
           </label>
           <span>
-            <input type='number' name='clientSatisfaction' id='clientSatisfaction' min='0' max='4.0' step='0.1' size='21' value={this.state.clientSatisfaction} placeholder='0.0' className='inputCustom' onChange={this.clientSatisfactionChange} disabled={!this.state.enableFields} onKeyPress={this.decimalNumCheck} onBlur={this.roundOff} onPaste={this.paste}/>
+            <input type='text' name='clientSatisfaction' id='clientSatisfaction' size='21' value={this.props.iteration.clientSatisfaction != null ? this.props.iteration.clientSatisfaction:''} placeholder='0.0' className='inputCustom' onChange={this.clientSatisfactionChange} disabled={!this.props.enableFields} onKeyPress={this.decimalNumCheck} onBlur={this.statisfactionCheck} onPaste={this.paste}/>
           </span>
         </div>
         <div style={spacing}>
@@ -275,13 +231,13 @@ var IterationResult = React.createClass({
             <a className='ibm-information-link' id='teamSatisfactionTT' style={linkStyle1} data-tip={teamSatisfactionTT}></a>
           </label>
           <span>
-            <input type='number' name='teamSatisfaction' id='teamSatisfaction' min='0' max='4.0' step='0.1' size='21' value={this.state.teamSatisfaction} placeholder='0.0' className='inputCustom' onChange={this.teamSatisfactionChange} disabled={!this.state.enableFields} onKeyPress={this.decimalNumCheck} onBlur={this.roundOff} onPaste={this.paste}/>
+            <input type='text' name='teamSatisfaction' id='teamSatisfaction' size='21' value={this.props.iteration.teamSatisfaction != null ? this.props.iteration.teamSatisfaction:''} placeholder='0.0' className='inputCustom' onChange={this.teamSatisfactionChange} disabled={!this.props.enableFields} onKeyPress={this.decimalNumCheck} onBlur={this.statisfactionCheck} onPaste={this.paste}/>
           </span>
         </div>
         <div style={spacing}>
           <label for='commentIter' style={labelStyle}>Comment about this iteration:<span className='ibm-required'></span></label>
           <span>
-            <textarea rows='4' cols='53' name='commentIter' id='commentIter' value={this.state.commentIter} onChange={this.commentIterChange} disabled={!this.state.enableFields}/>
+            <textarea rows='4' cols='53' name='commentIter' id='commentIter' value={this.props.iteration.comment != null ? this.props.iteration.comment:''} onChange={this.commentIterChange} disabled={!this.props.enableFields}/>
           </span>
         </div>
         <div className='ibm-rule ibm-gray-80'>

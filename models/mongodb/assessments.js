@@ -9,9 +9,10 @@ var Schema   = require('mongoose').Schema;
 var lodash = require('lodash');
 var Users = require('./users');
 var moment = require('moment');
+var self = this;
 
 var actionPlansSchema = new Schema({
-  id : {
+  actionPlanId : {
     type: Number
   },
   isUserCreated: {
@@ -23,19 +24,25 @@ var actionPlansSchema = new Schema({
   principleId: {
     type: Number
   },
+  principleName: {
+    type: String
+  },
   practiceName: {
     type: String
+  },
+  practiceId: {
+    type: Number
   },
   improveDescription: {
     type: String
   },
-  currentLevel: {
-    type: String
+  currentScore: {
+    type: Number
   },
-  targetLevel: {
-    type: String
+  targetScore: {
+    type: Number
   },
-  progressComment: {
+  progressSummary: {
     type: String
   },
   keyMetric: {
@@ -123,8 +130,7 @@ var assessmentsSchema = new Schema({
     enum: ['Submitted', 'Draft']
   },
   assessorUserId: {
-    type: String,
-    required: [true, 'assessorUserId is required.']
+    type: String
   },
   assessor: {
     type: String
@@ -190,9 +196,9 @@ module.exports.hasAssessments = function(teamId) {
   });
 };
 
-module.exports.addTeamAssessment = function(userId, data){
+module.exports.addTeamAssessment = function(user, data){
   return new Promise(function(resolve, reject) {
-    if (lodash.isEmpty(userId) && lodash.isEmpty(data)) {
+    if (lodash.isEmpty(user) && lodash.isEmpty(data)) {
       var err = {'error': 'User ID and Assessment data is required'};
       loggers.get('models').error('Error: ' + err);
       reject(err);
@@ -203,24 +209,40 @@ module.exports.addTeamAssessment = function(userId, data){
         reject(err);
       } else {
         var teamId = data['teamId'];
-        Users.isUserAllowed(userId, teamId)
+        Users.isUserAllowed(user['ldap']['uid'].toUpperCase(), teamId)
         .then(function(isAllowed){
           if (!isAllowed) {
             var err = {'error': 'Not allowed to add assessment for this team'};
             loggers.get('models').error('Error: ' + err);
             return Promise.reject(err);
           } else {
-            return true;
+            return Users.findUserByUserId(user['ldap']['uid'].toUpperCase());
           }
         })
-        .then(function() {
-          var newAssessmentData = new Assessment(data);
-          var error = newAssessmentData.validateSync();
-          if (error) {
-            loggers.get('models').error('Error: ' + error);
-            return Promise.reject(error);
+        .then(function(createdUser) {
+          if (createdUser == null) {
+            /* istanbul ignore next */
+            return Promise.reject({'error': 'This user is not exist.'});
           } else {
-            return newAssessmentData.save();
+            data['createdByUserId'] = createdUser.userId;
+            data['createdBy'] = createdUser.name;
+            data['createDate'] = new Date(moment.utc());
+            data['updatedByUserId'] = createdUser.userId;
+            data['updatedBy'] = createdUser.name;
+            data['updateDate'] = new Date(moment.utc());
+            if (data['assessmentStatus'] == 'Submitted') {
+              data['submittedByUserId'] = createdUser.userId;
+              data['submittedBy'] = createdUser.name;
+              data['submittedDate'] = new Date(moment.utc());
+            }
+            var newAssessmentData = new Assessment(data);
+            var error = newAssessmentData.validateSync();
+            if (error) {
+              loggers.get('models').error('Error: ' + error);
+              return Promise.reject(error);
+            } else {
+              return newAssessmentData.save();
+            }
           }
         })
         .then(function(result) {
@@ -243,9 +265,15 @@ module.exports.getTeamAssessments = function(teamId){
       loggers.get('models').error('Error: ' + err);
       reject(err);
     } else {
-      Assessment.find({'teamId': teamId})
+      Assessment.find({'teamId': teamId,'docStatus':{'$ne':'delete'}}).exec()
       .then(function(result) {
-        resolve(result);
+        var returnAssessments = _.sortBy(result, function(assess){
+          if (assess.assessmentStatus == 'Submitted') {
+            return new Date(assess.submittedDate);
+          }
+        });
+        returnAssessments = returnAssessments.reverse();
+        resolve(returnAssessments);
       })
       .catch( /* istanbul ignore next */ function(err) {
         /* cannot simulate MongoDB error during testing */
@@ -276,9 +304,9 @@ module.exports.getAssessment = function(assessmentId){
   });
 };
 
-module.exports.updateTeamAssessment = function(userId, data){
+module.exports.updateTeamAssessment = function(user, data){
   return new Promise(function(resolve, reject) {
-    if (lodash.isEmpty(data) || lodash.isEmpty(userId)) {
+    if (lodash.isEmpty(data) || lodash.isEmpty(user)) {
       var msg = 'Assessment ID and user ID is required';
       msg={'error':msg};
       loggers.get('models').error('Error: ' + msg);
@@ -291,19 +319,30 @@ module.exports.updateTeamAssessment = function(userId, data){
         return reject(msg);
       } else {
         var teamId = data['teamId'];
-        Users.isUserAllowed(userId, teamId)
+        Users.isUserAllowed(user['ldap']['uid'].toUpperCase(), teamId)
         .then(function(isAllowed) {
           if (!isAllowed) {
             var err = {'error': 'Not allowed to update assessment'};
             loggers.get('models').error('Error: ' + err);
             return Promise.reject(err);
           } else {
-            return true;
+            return Users.findUserByUserId(user['ldap']['uid'].toUpperCase());
           }
         })
-        .then(function() {
-          delete data['updateDate']; // use server time
-          console.log('line 288: ', data);
+        .then(function(updatedUser) {
+          if (updatedUser == null) {
+            /* istanbul ignore next */
+            return Promise.reject({'error': 'This user is not exist.'});
+          } else {
+            data['updatedByUserId'] = updatedUser.userId;
+            data['updatedBy'] = updatedUser.name;
+            data['updateDate'] = new Date(moment.utc());
+            if (data['assessmentStatus'] == 'Submitted') {
+              data['submittedByUserId'] = updatedUser.userId;
+              data['submittedBy'] = updatedUser.name;
+              data['submittedDate'] = new Date(moment.utc());
+            }
+          }
           return Assessment.findOneAndUpdate({'_id' :  data['_id']}, data, {'new':true});
         })
         .then(function(result) {
@@ -320,20 +359,48 @@ module.exports.updateTeamAssessment = function(userId, data){
 
 module.exports.softDelete = function(docId, user) {
   return new Promise(function(resolve, reject) {
-    var updateDoc = {};
-    var userId = user['ldap']['uid'].toUpperCase();
-    var userEmail = user['shortEmail'].toLowerCase();
-    updateDoc.docStatus = 'delete';
-    updateDoc.updatedByUserId = userId;
-    updateDoc.updatedBy = userEmail;
-    updateDoc.updateDate = new Date(moment.utc());
-    Assessment.update({'_id': docId}, {'$set': updateDoc}).exec()
-      .then(function(result){
-        return resolve(result);
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        return reject(err);
-      });
+    if (lodash.isEmpty(docId)) {
+      return reject({'error':'Assessment Id is required'});
+    } else {
+      Assessment.findOne({'_id': docId}).exec()
+        .then(function(result){
+          return Users.isUserAllowed(user['ldap']['uid'].toUpperCase(), result['teamId']);
+        })
+        .then(function(result){
+          if (!result) {
+            return Promise.reject({'error': 'Not allowed to delete assessment'});
+          } else {
+            var updateDoc = {};
+            var userId = user['ldap']['uid'].toUpperCase();
+            var userEmail = user['shortEmail'].toLowerCase();
+            updateDoc.docStatus = 'delete';
+            updateDoc.updatedByUserId = userId;
+            updateDoc.updatedBy = userEmail;
+            updateDoc.updateDate = new Date(moment.utc());
+            return Assessment.update({'_id': docId}, {'$set': updateDoc}).exec();
+          }
+        })
+        .then(function(result){
+          return resolve(result);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          return reject(err);
+        });
+    }
+    // var updateDoc = {};
+    // var userId = user['ldap']['uid'].toUpperCase();
+    // var userEmail = user['shortEmail'].toLowerCase();
+    // updateDoc.docStatus = 'delete';
+    // updateDoc.updatedByUserId = userId;
+    // updateDoc.updatedBy = userEmail;
+    // updateDoc.updateDate = new Date(moment.utc());
+    // Assessment.update({'_id': docId}, {'$set': updateDoc}).exec()
+    //   .then(function(result){
+    //     return resolve(result);
+    //   })
+    //   .catch( /* istanbul ignore next */ function(err){
+    //     return reject(err);
+    //   });
   });
 };
 

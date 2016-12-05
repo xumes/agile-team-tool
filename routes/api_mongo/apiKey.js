@@ -51,10 +51,11 @@ module.exports = function(app, includes) {
 
   // try to get data from here
   /* instabul ingore next */
+  app.get('/api/developer/apiKey', [includes.middleware.auth.requireLogin], getApiKey); //old path
+  /* instabul ingore next */
   app.get('/api/apiKey/apiKey', [includes.middleware.auth.requireLogin], getApiKey);
   /* instabul ingore next */
   app.get('/api/apiKey/apiKeyByUser', [includes.middleware.auth.requireLogin], getApiKeyByUser);
   /* instabul ingore next */
   app.delete('/api/apiKey/apikey', [includes.middleware.auth.requireLogin], deleteApiKey);
-
 };

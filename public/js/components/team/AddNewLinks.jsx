@@ -6,7 +6,6 @@ var AddNewLinks = React.createClass({
   render: function() {
     var self = this;
     var numChildLinks = self.props.getNumChildLinks();
-    // console.log('render numChildLinks:',numChildLinks)
     var childLinks = [];
     for (var i = 0; i < numChildLinks; i++) {
       childLinks.push(<LinksForm key={i}
@@ -16,6 +15,7 @@ var AddNewLinks = React.createClass({
         updateLink={self.props.updateLink}
         resetNumChildLinks={self.props.resetNumChildLinks}
         getSelectedLinkLabel={self.props.getSelectedLinkLabel}
+        getNumChildLinks={self.props.getNumChildLinks}
         setSelectedLinkLabel={self.props.setSelectedLinkLabel} />);
     };
     return (

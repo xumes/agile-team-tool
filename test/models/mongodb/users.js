@@ -15,6 +15,7 @@ var testParentTeam = {
   'members': [{
     'name': 'test user',
     'role': 'Tester',
+    'allocation': 100,
     'userId': 'TEST1234567',
     'email': 'testuser@test.com'
   }],
@@ -38,11 +39,13 @@ var testChildTeam = {
   'members': [{
     'name': 'admin test user',
     'role': 'Tester',
+    'allocation': 100,
     'userId': 'ADMIN1234567',
     'email': 'admintestuser@test.com'
   }, {
     'name': 'child test user',
     'role': 'Tester',
+    'allocation': 100,
     'userId': 'CHILD1234567',
     'email': 'childtestuser@test.com'
   }],
@@ -84,6 +87,14 @@ describe('Users model [create]', function() {
       })
       .then(function(result){
         newChildTeamId = result._id;
+        // delete all created users who were members of the team
+        promiseArray = [];
+        promiseArray.push(users.deleteUser(testUser.userId));
+        promiseArray.push(users.deleteUser(testAdminUser.userId));
+        promiseArray.push(users.deleteUser(testChildUser.userId));
+        return Promise.all(promiseArray);
+      })
+      .then(function(result){
         done();
       })
       .catch(function(err){

@@ -22,12 +22,12 @@ var TeamDropdownRole = React.createClass({
     $(this.refs.memberRoleSelectList).select2();
     $(this.refs.memberRoleSelectList).change(this.props.memberRoleChangeHandler);
   },
-  componentDidUpdate: function() {
-    console.log(this.refs);
+  componentDidUpdate: function(prevProps, prevState) {
     var selectedTeam = this.props.selectedTeam;
-    if (!_.isEmpty(selectedTeam))
+    if (!_.isEmpty(selectedTeam)) {
       this.refs.memberRoleSelectList.disabled = !selectedTeam.access;
-    else
+      this.refs.memberRoleSelectList.value = this.state.memberRoles.indexOf(this.props.selectedRole) != -1 || this.props.selectedRole != '' ? this.props.selectedRole : 'Other...';
+    } else
       this.refs.memberRoleSelectList.disabled = false;
   },
   render: function() {
@@ -39,7 +39,6 @@ var TeamDropdownRole = React.createClass({
         <option key={item} value={item}>{item}</option>
       )
     });
-
     return (
       <select defaultValue={this.props.selectedRole} id='memberRoleSelectList' name='memberRoleSelectList' ref='memberRoleSelectList' style={widthStyle}>
         <option value=''>Select one</option>

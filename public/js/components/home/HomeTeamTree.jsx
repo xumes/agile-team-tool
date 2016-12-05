@@ -446,7 +446,8 @@ var HomeTeamTree = React.createClass({
           var title = 'view ' + team.name + ' information';
           return (
             <li class='agile-team-standalone' key={objectId} data-open='false' id={teamId}>
-              <a class={isSquad} title={title} id={linkId}>{label}</a>
+              <a class={isSquad} title={title} id={linkId} onClick={()=>self.loadDetails(teamId)}>{label}</a>
+              <span class='ibm-access'>{objectId}</span>
             </li>
           );
         })

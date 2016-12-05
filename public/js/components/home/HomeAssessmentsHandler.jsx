@@ -23,7 +23,7 @@ module.exports.teamAssessmentListHander = function(teamId, teamAssessments, team
     if (!draftExist) {
       $('#CreateAssesmentBtn').removeAttr('disabled');
       $('#CreateAssesmentBtn').click(function(e) {
-        window.location = 'assessment?id=' + encodeURIComponent(teamId) + '&assessId=new';
+        window.location = 'assessment?id=' + encodeURIComponent(teamId);
       });
     }
   }
@@ -32,10 +32,12 @@ module.exports.teamAssessmentListHander = function(teamId, teamAssessments, team
     var teamID = encodeURIComponent(teamId);
     var assessId = encodeURIComponent($('#gotoAssesmentList option:selected').val());
     var isDraft = ($('#gotoAssesmentList option:selected').text().toLowerCase().indexOf('draft') > -1);
-    if (assessId == '' || isDraft)
+    if (assessId == '' || isDraft) {
       window.location = 'assessment?id=' + teamID + '&assessId=' + assessId;
-    else
+    }
+    else {
       window.location = 'progress?id=' + teamID + '&assessId=' + assessId;
+    }
   });
 
   if (listOption.length > 6) {
@@ -224,10 +226,10 @@ function plotAssessmentSeries(teamAssessments) {
         formatter: function() {
           var tt = '<b>' + this.key + '<b><br>';
           var point = this.point.index;
-          for(i=0;i < this.series.chart.series.length; i++) {
+          for (i=0;i < this.series.chart.series.length; i++) {
             if (this.series.chart.series[i].visible)
-              tt += 
-                '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';        
+              tt +=
+                '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';
           }
           tt = tt + "<i style='font-size: 8pt;'>Click to see practice results</i>";
           return tt;
@@ -361,10 +363,10 @@ function plotAssessment(index, chartData) {
       formatter: function() {
         var tt = '<b>' + this.key + '<b><br>';
         var point = this.point.index;
-        for(i=0;i < this.series.chart.series.length; i++) {
+        for (i=0;i < this.series.chart.series.length; i++) {
           if (this.series.chart.series[i].visible)
-            tt += 
-              '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';        
+            tt +=
+              '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';
         }
         return tt;
       }
@@ -522,7 +524,7 @@ function loadBarAssessmentEvaluation(id, asOfDate, categories, seriesObj1, serie
       width:390,
       events: {
         load: function(event) {
-          // modify the legend symbol 
+          // modify the legend symbol
           $('#' +id+' .highcharts-legend-item rect').attr('width', '7').attr('height', '7').attr('x', '5').attr('y', '7');
         }
       }
@@ -594,11 +596,11 @@ function loadBarAssessmentEvaluation(id, asOfDate, categories, seriesObj1, serie
       formatter: function() {
         var formatResult = '<b>' + this.key + '<b><br>';
         var point = this.point.index;
-        for(i=0;i < this.series.chart.series.length; i++) {
+        for (i=0;i < this.series.chart.series.length; i++) {
           var percentage = this.series.chart.series[i].data[point].percentage || 0;
           if (this.series.chart.series[i].visible && this.series.chart.series[i].data[point].y > 0)
-            formatResult += 
-              '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].data[point].y + ' (' + percentage.toFixed(1) + ' % of teams)<br/>';      
+            formatResult +=
+              '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].data[point].y + ' (' + percentage.toFixed(1) + ' % of teams)<br/>';
         }
         return formatResult;
       }
@@ -702,10 +704,10 @@ function loadLineMaturityTrend(id, categories, seriesObj1, seriesObj2, seriesObj
       formatter: function() {
         var formatResult = '<b>' + this.key + '<b><br>';
         var point = this.point.index;
-        for(i=0;i < this.series.chart.series.length; i++) {
+        for (i=0;i < this.series.chart.series.length; i++) {
           if (this.series.chart.series[i].visible)
-            formatResult += 
-              '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].data[point].y + ' ('+ this.series.chart.series[i].data[point].squads + ' squads)<br/>';       
+            formatResult +=
+              '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].data[point].y + ' ('+ this.series.chart.series[i].data[point].squads + ' squads)<br/>';
         }
         return formatResult;
       }
@@ -755,7 +757,7 @@ function getCharacter(symbol) {
     case 'triangle-down':
       symbol = '\u25BC';
       break;
-    default: 
+    default:
       symbol = '\u25A0';
   }
   return symbol;

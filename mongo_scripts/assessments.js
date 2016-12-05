@@ -60,12 +60,14 @@ _.each(cloudantAssessments, function(doc) {
       this.createDate = util.stringToUtcDate(v);
     else if (k === 'created_user') {
       this.createdByUserId = util.getUserId(userMap, v);
-      this.createdBy = util.getUserName(userMap, v);
+      //this.createdBy = util.getUserName(userMap, v);
+      this.createdBy = v;
     } else if (k === 'last_updt_dt')
       this.updateDate = util.stringToUtcDate(v);
     else if (k === 'last_updt_user') {
       this.updatedByUserId = util.getUserId(userMap, v);
-      this.updatedBy = util.getUserName(userMap, v);
+      //this.updatedBy = util.getUserName(userMap, v);
+      this.updatedBy = v;
     }
     //nested objs
     else if (k === 'assessmt_cmpnt_rslts')

@@ -1,57 +1,75 @@
 var React = require('react');
+var TeamErrorValidationHandler = require('./TeamErrorValidationHandler.jsx');
 var teamApi = require('./TeamApi.jsx');
 var _ = require('underscore');
 var Promise = require('bluebird');
 var removeAssociationArray = [];
 
 var TeamChildRemoveSection = React.createClass({
+  getInitialState: function() {
+    return {
+      formError: {
+        error: new Object(),
+        map: [
+          {field: 'path', id: 'childSelectList'}
+        ]
+      }
+    }
+  },
   componentDidUpdate: function() {
     removeAssociationArray = [];
-    $('#childrenAction').val('actions');
-    $('#childrenAction').text('Actions...');
-    $('#childrenAction').val('actions').change();
+    $('#childAction').text('Actions...');
+    $('#childListAction').val('').change();
     $('input[name="child"]').each(function(){
       $(this).prop('checked', false);
     });
-    $(this.refs.selectDropDown).select2();
+    this.refs.childListAction.disabled = true;
+    $(this.refs.childListAction).select2();
   },
   componentDidMount: function() {
     // Use IBM's bundled select2 package
-    $(this.refs.selectDropDown).select2();
-    $(this.refs.selectDropDown).change(this.removeAssociation);
+    $(this.refs.childListAction).select2();
+    $(this.refs.childListAction).change(this.removeAssociation);
   },
   removeAssociation: function(event) {
     var self = this;
     if (event.target.value == 'remove' && removeAssociationArray.length > 0) {
       var promiseArray = [];
-      _.each(removeAssociationArray, function(teamId){
-        promiseArray.push(teamApi.removeAssociation(teamId));
+      _.each(removeAssociationArray, function(childId){
+        promiseArray.push(teamApi.removeAssociation(childId));
       });
       Promise.all(promiseArray)
         .then(function(result){
-          alert('Child team(s) has been removed successfully.');
-          self.props.childTeamsUpdateHandler();
+          self.props.childTeamsUpdateHandler('Child team(s) has been removed successfully.');
           return result;
         })
         .catch(function(err){
-          return err;
+          var map = self.state.formError.map;
+          return self.setState({
+            formError: {
+              error: err,
+              map: map
+            }
+          });
         })
     }
   },
-  selectedChild: function(id) {
+  childSelected: function(id) {
     if (removeAssociationArray.indexOf(id) < 0) {
       removeAssociationArray.push(id);
     } else {
       removeAssociationArray.splice(removeAssociationArray.indexOf(id), 1);
     }
     if (removeAssociationArray.length != 0) {
-      $('#childrenAction').val('actions(' + removeAssociationArray.length + ')');
-      $('#childrenAction').text('Actions...(' + removeAssociationArray.length + ')');
+      $('#childAction').val('actions(' + removeAssociationArray.length + ')');
+      $('#childAction').text('Actions...(' + removeAssociationArray.length + ')');
+      this.refs.childListAction.disabled = false;
     } else {
-      $('#childrenAction').val('actions');
-      $('#childrenAction').text('Actions...');
+      $('#childAction').val('actions');
+      $('#childAction').text('Actions...');
+      this.refs.childListAction.disabled = true;
     }
-    $(this.refs.selectDropDown).select2();
+    $(this.refs.childListAction).select2();
   },
   render: function() {
     var self = this;
@@ -72,7 +90,7 @@ var TeamChildRemoveSection = React.createClass({
         return (
           <tr key={trid} id={trid}>
             <td scope='row' class='ibm-table-row'>
-              <input name='child' id={childid} type='checkbox' value={count-1} disabled={!self.props.childTeams.access} onClick={()=>self.selectedChild(team._id)}/>
+              <input name='child' id={childid} type='checkbox' value={count-1} disabled={!self.props.childTeams.access} onClick={()=>self.childSelected(team._id)}/>
               <label for={childid} class='ibm-access'>Select {team.name}</label>
             </td>
             <td id={teamid}>{team.name}</td>
@@ -91,9 +109,9 @@ var TeamChildRemoveSection = React.createClass({
             <p style={{'float': 'right', 'width': '400px'}}>
               <span id='spinner' style={{'display': 'none'}} class='ibm-spinner'></span>
               <span style={{'width': '350px'}}>
-                <label aria-label='childrenListAction' class='ibm-access'>Action</label>
-                  <select id='childrenListAction' name='childrenListAction' style={{'width': '170px'}} aria-label='childrenListAction' ref={'selectDropDown'} disabled={!self.props.childTeams.access}>
-                    <option id='childrenAction' value='actions'>Actions...</option>
+                <label aria-label='childListAction' class='ibm-access'>Action</label>
+                  <select id='childListAction' name='childListAction' ref='childListAction' style={{'width': '170px'}} aria-label='childListAction'>
+                    <option id='childAction' value=''>Actions...</option>
                     <option value='remove'>Remove</option>
                   </select>
               </span>
@@ -109,9 +127,10 @@ var TeamChildRemoveSection = React.createClass({
             </tr>
           </thead>
           <tbody id='childrenList'>
-            {childTeams}
+            {childTeams != null ? childTeams : <tr class='odd'><td colSpan='64' class='dataTables_empty'>No data available</td></tr>}
           </tbody>
         </table>
+        <TeamErrorValidationHandler formError={this.state.formError} />
       </div>
     )
   }

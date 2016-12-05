@@ -215,16 +215,17 @@ var users = {
         'userId': user.userId.toUpperCase(),
         'email': user.email.toLowerCase(),
         'name': user.name,
-        'adminAccess': user.adminAccess,
+        'adminAccess': user.adminAccess || 'none',
         'location': {
           'site': null,
           'timezone': null
         }
       };
       if (user.location != undefined && !_.isEmpty(user.location)) {
-        newUser.location.site = user.location.site;
-        newUser.location.timezone = user.location.timezone;
+        newUser.location.site = user.location.site || null;
+        newUser.location.timezone = user.location.timezone || null;
       }
+      // console.log('creating user ', newUser);
       User.create(newUser)
       // getUserFromFaces(newUser.email)
       //   .then(function(facesInfo){

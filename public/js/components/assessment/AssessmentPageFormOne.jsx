@@ -6,6 +6,10 @@ var _ = require('underscore');
 var moment = require('moment');
 
 var AssessmentPageFormOne = React.createClass({
+  componentDidUpdate: function() {
+    $('select[name="assessmentSelectList"]').select2();
+  },
+
   componentDidMount: function(){
     $('select[name="assessmentSelectList"]').select2();
     $('select[name="assessmentSelectList"]').change(this.props.assessmentChangeHandler);
@@ -18,6 +22,8 @@ var AssessmentPageFormOne = React.createClass({
     var teamSelectListStyle = {
       'width': '300px'
     };
+    var optionTitle= 'Create new assessment...';
+    var optionValue= 'n';
     if (this.props.squadAssessments.access) {
       var accessStyle = {
         'display': 'none'
@@ -26,16 +32,28 @@ var AssessmentPageFormOne = React.createClass({
       accessStyle = {
         'display': 'block'
       };
+      optionTitle= 'Select one';
+      optionValue= 's';
     }
     if (this.props.squadAssessments.assessments.length > 0) {
-      var assessmentListsOption = this.props.squadAssessments.assessments.map(function(item) {
-        if (item.submittedDate == null) {
-          var submittedDate = 'Created: ' + moment(item.createDate).format('DDMMMYYYY') + ' (Draft)';
+      var assessments = _.sortBy(this.props.squadAssessments.assessments, function(assess){
+        if (assess.assessmentStatus == 'Submitted') {
+           return 'aaa'+new Date(assess.submittedDate);
+        } else
+          return 'zzz'+new Date(assess.createDate);
+      });
+      assessments = assessments.reverse();
+      var assessmentListsOption = assessments.map(function(item) {
+        var displayDate = moment(item.createDate).format('DDMMMYYYY');
+        if (!_.isEqual(item.assessmentStatus, 'Submitted')) {
+          displayDate = 'Created: ' + displayDate + ' (Draft)';
+          optionTitle= 'Select one';
+          optionValue= 's';
         } else {
-          submittedDate = moment(item.submittedDate).format('DDMMMYYYY');
+          displayDate = moment(item.submittedDate).format('DDMMMYYYY');
         }
         return (
-          <option key={item._id} value={item._id}>{submittedDate}</option>
+          <option key={item._id} value={item._id}>{displayDate}</option>
         );
       });
     } else {
@@ -48,8 +66,8 @@ var AssessmentPageFormOne = React.createClass({
         <p>
           <label for='assessmentSelectList'>Create new or select an existing assessment:<span class='ibm-required'>*</span></label>
             <span>
-              <select name='assessmentSelectList' style={teamSelectListStyle} disabled={!this.props.squadAssessments.access}>
-                <option value=''>Create new assessment...</option>
+              <select name='assessmentSelectList' style={teamSelectListStyle}>
+                <option value={optionValue}>{optionTitle}</option>
                 {assessmentListsOption}
               </select>
             </span>

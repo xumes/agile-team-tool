@@ -20,7 +20,18 @@ var HomeMemberTable = React.createClass({
     }
   },
 
-  updateMemberTable(members, team) {
+  toTitleCase: function(str) {
+    var strArray = str.toUpperCase().split(',');
+    if (strArray.length < 3) {
+      return str.toUpperCase();
+    } else {
+      strArray[0] = strArray[0].replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+      return strArray.join(', ');
+    }
+  },
+
+  updateMemberTable: function(members, team) {
+    var self = this;
     if (members != null && team != null) {
       var j = 0;
       _.each(members, function(member){
@@ -32,9 +43,10 @@ var HomeMemberTable = React.createClass({
             }
           }
         });
+        var mLocation = self.toTitleCase(member.location.site);
         var row = "<tr><td id='name_" + j + "'>" + member.name + '</td>';
         row = row + '<td>' + memberDetail.allocation + '</td>';
-        row = row + "<td id='location_ref_" + j + "'>" + member.location.site + "</div></td>";
+        row = row + "<td id='location_ref_" + j + "'>" + mLocation + "</div></td>";
         row = row + '<td>' + memberDetail.role + '</td>';
         row = row + '</tr>';
         $('#membersList').append(row);

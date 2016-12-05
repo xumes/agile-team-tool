@@ -11,6 +11,7 @@ var testTeam = {
   'members': {
     'name': 'test user',
     'role': 'Tester',
+    'allocation': 100,
     'userId': 'TEST1234567',
     'email': 'testuser@test.com'
   },

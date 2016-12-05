@@ -3,28 +3,12 @@ var api = require('../api.jsx');
 var _ = require('underscore');
 var LinksButtonCtl = require('./LinksButtonCtl.jsx');
 var LinksSelectDropdown = require('./LinksSelectDropdown.jsx');
+var utils = require('../../utils');
 
 var LinksForm = React.createClass({
 
   componentDidMount: function() {
-    $('select[name=\'linklabel_[]\']').select2();
-    // this.showHideLinkDivOnCancel();
-    this.showHideLinkDivOnAdd();
-  },
-
-  componentDidUpdate: function(prevProps, prevState) {
-    $('select[name=\'linklabel_[]\']').select2();
-  },
-
-  showHideLinkDivOnAdd: function() {
-    $('#importantLinkWrapper div.importantLinksSection').on('mouseover', function(){
-      var ctr = $(this).attr('data-counter');
-      $('#removelink_'+ctr).show();
-      $('#savelink_'+ctr).show();
-    });
-    $('#importantLinkWrapper div.importantLinksSection').on('mouseout', function(){
-      $('.newlink').hide();
-    });
+    utils.autoAddHttp();
   },
 
   render: function() {
@@ -34,7 +18,7 @@ var LinksForm = React.createClass({
     var linkLabelOption = defaultSelectData.map(function(row, id){
       return <option value={row.id} key={row.id}>{row.text}</option>
     });
-    var styleHidden = {'display': 'none'};
+
     return(
       <div id={`link_${id}`} key={id} data-counter={id} class='importantLinksSection'>
           {/* display dropdown select for link labels */}
@@ -44,20 +28,20 @@ var LinksForm = React.createClass({
             linkLabelOption={linkLabelOption}
             getSelectedLinkLabel={self.props.getSelectedLinkLabel}
             setSelectedLinkLabel={self.props.setSelectedLinkLabel}
-            updateSelectLabel={self.props.updateSelectLabel}
             initSelectLabel={self.props.initSelectLabel}
-            setOnEditModeLinkIds={self.setOnEditModeLinkIds} />
+            setOnEditModeLinkIds={self.setOnEditModeLinkIds}
+            selectedTeam={self.props.selectedTeam} />
 
-        <div>
-          <input type='text' name='url_[]' id={id} placeholder='URL' size='60' />
+        <div>{/* display url textfield */}
+          <input type='text' name='url_[]' id={`url_${id}`} data-counter={id} placeholder='URL' size='60' class='implink' />
         </div>
 
+        {/* display update, cancel & delete icon button */}
         <LinksButtonCtl data-counter={id}
           action='onInsert'
           selectedTeam={self.props.selectedTeam}
           resetNumChildLinks={self.props.resetNumChildLinks}
-          updateLink={self.props.updateLink}
-          />
+          updateLink={self.props.updateLink} />
       </div>
     );
   }

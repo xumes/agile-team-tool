@@ -1,9 +1,10 @@
 var React = require('react');
 var api = require('../api.jsx');
 var Management = require('./IterationMgmt.jsx');
-var Commitment = require('./IterationCommitment.jsx');
-var Result = require('./IterationResult.jsx');
-var Metrics = require('./IterationMetrics.jsx');
+var Throughput = require('./IterationThroughput.jsx');
+var Velocity = require('./IterationVelocity.jsx');
+var Defect = require('./IterationDefect.jsx');
+var Additional = require('./IterationAdditional.jsx');
 var Buttons = require('./IterationButtons.jsx');
 
 var moment = require('moment');
@@ -12,29 +13,29 @@ var initData = {
 'createDate':'',
 'createdByUserId':'',
 'createdBy':'',
-'startDate':'',
-'endDate':'',
+'startDate':null,
+'endDate':null,
 'name':'',
 'teamId':'',
-'memberCount':null,
+'memberCount':'',
 'locationScore':null,
-'cycleTimeInBacklog':null,
-'cycleTimeWIP':null,
-'defectsEndBal':null,
-'defectsClosed':null,
-'defects':null,
-'defectsStartBal':null,
+'cycleTimeInBacklog':'',
+'cycleTimeWIP':'',
+'defectsEndBal':'',
+'defectsClosed':'',
+'defects':'',
+'defectsStartBal':'',
 'memberChanged':false,
 'comment':'',
-'teamSatisfaction':null,
-'clientSatisfaction':null,
-'deployments':null,
-'storyPointsDelivered':null,
-'commitedStoryPoints':null,
-'deliveredStories':null,
-'committedStories':null,
+'teamSatisfaction':'',
+'clientSatisfaction':'',
+'deployments':'',
+'storyPointsDelivered':'',
+'commitedStoryPoints':'',
+'deliveredStories':'',
+'committedStories':'',
 'status':'',
-'memberFte':null,
+'memberFte':'',
 'docStatus':null,
 'updatedBy':'',
 'updatedByUserId':'',
@@ -58,55 +59,90 @@ var IterationForm = React.createClass({
       lastUpdateUser: '',
       id:'',
       selectedTeamInfo: new Object(),
-      readOnlyAccess: true
+      readOnlyAccess: false
     }
   },
 
   readOnlyAccess: function(status){
-    this.setState({readOnlyAccess: status});
+    var add = false;
+    var update = false;
+    if (!status) {
+      if(!_.isEmpty(this.state.iteration.teamId)) {
+        if (this.state.iteration._id === 'new' || _.isEmpty(this.state.iteration._id)){
+          add = true;
+          update = false;
+        }
+        else {
+          add = false;
+          update = true;
+        }
+      }
+    }
+    this.setState({
+      readOnlyAccess: status, 
+      enableFields: !status,
+      addBtnDisable: !add,
+      updateBtnDisable: !update});
   },
 
-  populateForm: function(data, state){
+  teamReset: function(teamId){
+    var resetData = _.clone(initData);
+    resetData.teamId = teamId;
+    this.clearHighlightedIterErrors();
+    var addDisable = false;
+    if (_.isEmpty(teamId) || this.state.readOnlyAccess){
+      addDisable = true;
+    }
+    this.setState({
+      iteration: resetData,
+      addBtnDisable: addDisable,
+      updateBtnDisable: true});
+  },
+
+  populateForm: function(data){
     //populate form fields per data retrieved
     var enableStatus = !this.state.readOnlyAccess;
-    if (state != null && state != undefined){
-      enableStatus = state;
+    var add = false;
+    var update = false;
+    this.clearHighlightedIterErrors();
+    if (enableStatus){
+      if(data != null){
+        if ( data._id != 'new'){
+          add = false;
+          update = true;
+        }
+        else {
+          add = true
+          update = false;
+        }
+      }
+      else {
+        add = true
+        update = false;
+      }
     }
-      this.refs.management.populateForm(data, enableStatus);
-      this.refs.commitment.populateForm(data, enableStatus);
-      this.refs.result.populateForm(data, enableStatus);
-      this.refs.metrics.populateForm(data, enableStatus);
     if (data != undefined && data != null){
       this.setState({
         lastUpdateTimestamp: this.showDateUTC(data.updateDate),
         lastUpdateUser: data.updatedBy,
         id: data._id,
-        addBtnDisable: true,
-        updateBtnDisable: false,
-        enableFields: true});
-        this.setState({iteration: data});
+        addBtnDisable: !add,
+        updateBtnDisable: !update,
+        enableFields: enableStatus,
+        iteration: data});
     }
     else{
+      var resetData = _.clone(initData);
       this.setState({
         lastUpdateTimestamp: '',
         lastUpdateUser: '',
         id: '',
-        addBtnDisable: false,
-        updateBtnDisable: true,
-        enableFields: true});
-        this.setState({iteration: _.clone(initData)});
+        addBtnDisable: !add,
+        updateBtnDisable: !update,
+        enableFields: enableStatus,
+        iteration: resetData});
     }
-    
-    this.refs.buttons.enableButtons(this.state.addBtnDisable, this.state.updateBtnDisable);
-  },
-
-  enableFormFields: function(state){
-    this.setState({enableFields: state,addBtnDisable: false, updateBtnDisable: true});
-    this.refs.management.enableFormFields(state);
-    this.refs.commitment.enableFormFields(state);
-    this.refs.result.enableFormFields(state);
-    //this.setState({addBtnDisable: false, updateBtnDisable: true});
-    this.refs.buttons.enableButtons(this.state.addBtnDisable, this.state.updateBtnDisable);
+    return;
   },
 
   showDateUTC: function(formatDate) {
@@ -123,31 +159,17 @@ var IterationForm = React.createClass({
   updateIterationInfo: function(action){
     var self = this;
     if (action == 'add'){
-      api.addIteration(self.state.iteration)
-      .then(function(result) {
-        self.setState({iteration: result});
-        self.clearHighlightedIterErrors();
-        self.showMessagePopup('You have successfully added Iteration information.');
-        self.updateIterationCache();
-      })
-      .catch(function(err){
-        self.handleIterationErrors(err, 'add');
-      });
+      this.setState({addBtnDisable: true});
+      this.processIteration();
     }
     else if (action == 'update'){
-      api.updateIteration(self.state.iteration)
-      .then(function(result) {
-        self.clearHighlightedIterErrors();
-        self.showMessagePopup('You have successfully updated Iteration information.');
-        self.updateIterationCache();
-      })
-      .catch(function(err){
-        self.handleIterationErrors(err, 'update');
-      });
+      this.setState({updateBtnDisable: true});
+      this.processIteration();
     }
     else if (action == 'clear' || action == 'clearIteration') {
       if (action == 'clear'){
-        this.setState({iteration:_.clone(initData)});
+        var resetData = _.clone(initData);
+        this.setState({iteration:resetData, enableFields: false, readOnlyAccess: false, addBtnDisable: true, updateBtnDisable: true});
       }
       this.clearHighlightedIterErrors();
       window.scrollTo(0, 0);
@@ -277,7 +299,7 @@ getIterationErrorPopup: function(errors) {
     }
   },
 
-  addIteration: function (action) {
+  processIteration: function () {
     var self =this;
     api.loadTeam(self.state.iteration.teamId)
     .then(function(data) {
@@ -290,49 +312,59 @@ getIterationErrorPopup: function(errors) {
           return;
         }
 
-        var exists = false;
-        if(action == 'update'){
+        if(_.isEmpty(self.state.iteration._id) || self.state.iteration._id === 'new'){
+          api.addIteration(self.state.iteration)
+          .then(function(result) {
+            self.setState({iteration: result});
+            self.clearHighlightedIterErrors();
+            self.showMessagePopup('You have successfully added Iteration information.');
+            self.updateIterationCache();
+          })
+          .catch(function(err){
+            self.handleIterationErrors(err, 'add');
+          });
+        }
+        else {
           api.updateIteration(self.state.iteration)
-            .then(function(data){
-              // update cache
-              self.updateIterationCache();
-              self.clearHighlightedIterErrors();
-              self.showMessagePopup('You have successfully updated Iteration information.');
-            })
-            .catch(function(err){
-              self.handleIterationErrors(err, 'update');
-            });
+          .then(function(result) {
+            self.clearHighlightedIterErrors();
+            self.showMessagePopup('You have successfully updated Iteration information.');
+            self.updateIterationCache();
+          })
+          .catch(function(err){
+            self.handleIterationErrors(err, 'update');
+          });
         }
       }
     });
   },
-  calculateMetrics: function() {
-    if (!isNaN(parseFloat(this.state.fteThisiteration)) && parseFloat(this.state.fteThisiteration) > 0) {
-      var commStoriesDel = this.props.iteration.deliveredStories;
-      commStoriesDel = !isNaN(parseFloat(commStoriesDel)) ? commStoriesDel : 0;
-      var storiesFTE = commStoriesDel / this.state.fteThisiteration;
-      this.props.iteration.unitcostStoriesFTE = storiesFTE.toFixed(1);
 
-      var commPointsDel = this.props.iteration.storyPointsDelivered;
-      commPointsDel = !isNaN(parseFloat(commPointsDel)) ? commPointsDel : 0;
-      var strPointsFTE = commPointsDel / this.state.fteThisiteration;
-      this.props.iteration.unitcostStorypointsFTE = strPointsFTE.toFixed(1);
-    }
-  },
-
-  getTeamInfo: function(){
-    var team = this.refs.management.getTeamInfo();
-    return team;
-  },
-
-  updateField: function(field,value){
+  updateField: function(field, value){
     var copy = _.clone(this.state.iteration);
     copy[field] = value;
     this.setState({iteration:copy});
   },
 
-  updateMetrics: function(field, value){
-    this.refs.metrics.updateField(field, value);
+  getDefectsStartBalance: function () {
+    this.refs.defect.getDefectsStartBalance();
+  },
+
+  updateAllocation: function () {
+    var memCnt = this.refs.management.teamMemCount();
+    var memFte = this.refs.management.teamMemFTE();
+    var copy = _.clone(this.state.iteration);
+    copy['memberCount'] = memCnt;
+    copy['memberFte'] = memFte;
+    this.setState({iteration:copy});
+  },
+
+  updateFields: function(result){
+    var copy = _.clone(this.state.iteration);
+    _.each(result, function(value, key){
+      copy[key] = value;
+    });
+    
+    this.setState({iteration:copy});
   },
 
   render: function() {
@@ -346,11 +378,18 @@ getIterationErrorPopup: function(errors) {
     
     return (
       <form className='ibm-column-form'>
-        <Management updateForm={this.populateForm} enableFormFields={this.enableFormFields} ref='management' iteration={this.state.iteration} updateField={this.updateField} readOnlyAccess={this.readOnlyAccess}/>
-        <Commitment updateForm={this.populateForm} enableFields={this.state.enableFields} ref='commitment' iteration={this.state.iteration} selectedTeamInfo={this.getTeamInfo} addIteration={this.addIteration} updateField={this.updateField} updateMetrics={this.updateMetrics}/>
-        <Result updateForm={this.populateForm} enableFields={this.state.enableFields} ref='result' iteration={this.state.iteration} updateField={this.updateField} updateMetrics={this.updateMetrics}/>
-        <Metrics updateForm={this.populateForm} ref='metrics' iteration={this.state.iteration}/>
-        <Buttons ref='buttons' iteration={this.state.iteration} parentUpdate = {this.updateIterationInfo}/>
+        <Management updateForm={this.populateForm} enableFields={this.state.enableFields}  ref='management' iteration={this.state.iteration} updateField={this.updateField} readOnlyAccess={this.readOnlyAccess} isReadOnly={this.state.readOnlyAccess} clearError={this.clearFieldErrorHighlight} defectBal={this.getDefectsStartBalance} teamReset={this.teamReset} updateAllocation={this.updateAllocation} processIteration={this.processIteration} updateFields={this.updateFields}/>
+
+        <Throughput enableFields={this.state.enableFields} ref='throughput' iteration={this.state.iteration}  updateField={this.updateField}/>
+
+        <Velocity enableFields={this.state.enableFields} ref='velocity' iteration={this.state.iteration} updateField={this.updateField}/>
+        
+        <Defect enableFields={this.state.enableFields} ref='defect' iteration={this.state.iteration} updateField={this.updateField} updateDefectBal={this.updateFields} isReadOnly={this.state.readOnlyAccess}/>
+
+        <Additional enableFields={this.state.enableFields} ref='additional' iteration={this.state.iteration} updateField={this.updateField} clearError={this.clearFieldErrorHighlight}/>
+
+        <Buttons ref='buttons' iteration={this.state.iteration} parentUpdate= {this.updateIterationInfo} addBtnDisable={this.state.addBtnDisable} updateBtnDisable={this.state.updateBtnDisable}/>
+
         <h2 className='ibm-bold ibm-h4'>Last update</h2>
         <div className='ibm-rule ibm-alternate-1'>
           <hr/>

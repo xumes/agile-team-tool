@@ -32,7 +32,7 @@ jQuery(function($) {
         },
         topsearch: {
           headerLabel: 'w3 Results',
-          enabled: true
+          enabled: false
         }
       });
 
@@ -636,7 +636,7 @@ function loadMemberInfo(index) {
     searchKey = $('#uid_ref_' + index).text();
     svcFacesSearch = 'uid:' + escape(searchKey);
   }
-  var svcRoot = 'https://faces.tap.ibm.com/api/';
+  var svcRoot = 'https://faces.w3ibm.mybluemix.net/api/';
   var svcFunc = 'find/?format=faces&limit=100&q=' + svcFacesSearch;
   var svcURL = svcRoot + svcFunc;
   $('#addMemberBtn').attr('disabled', 'disabled');
@@ -1883,7 +1883,7 @@ function getApiKey() {
 
   $.ajax({
     type: 'GET',
-    url: '/api/apiKey/apiKey'
+    url: '/api/developer/apiKey'
   }).done(function(data) {
     if (data != undefined) {
       uuidKey = data.apiKey;

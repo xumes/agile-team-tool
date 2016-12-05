@@ -3,19 +3,19 @@ var React = require('react');
 var IterationMetrics = React.createClass({
   getInitialState: function() {
     return {
-      unitCostStoriesFTE: '0.0',
-      unitCostStoryPointsFTE: '0.0'
+      unitCostStoriesFTE: '',
+      unitCostStoryPointsFTE: ''
     }
   },
 
-  populateForm: function(data, state){
-    var storiesFTE = '0.0';
-    var strPointsFTE = '0.0';
+  populateForm: function(data){
+    var storiesFTE = '';
+    var strPointsFTE = '';
     if (data != undefined && data != null){
-      if (data.memberFte != null && data.deliveredStories != null) {
+      var fte = this.floatDefault(data.memberFte);
+      if (fte > 0){
         storiesFTE = (this.numericValue(data.deliveredStories) / this.floatDefault(data.memberFte)).toFixed(1);
-      }
-      if (data.storyPointsDelivered != null && data.memberFte != null) {
+
         strPointsFTE = (this.numericValue(data.storyPointsDelivered) / this.floatDefault(data.memberFte)).toFixed(1);
       }
     }
@@ -51,7 +51,7 @@ var IterationMetrics = React.createClass({
       return value;
     }
     else {
-      return '0.0';
+      return 0;
     }
   },
 
@@ -67,13 +67,13 @@ var IterationMetrics = React.createClass({
         <p>
           <label for='unitCostStoriesFTE' style={labelStyle}>Unit cost - Stories per FTE:<span className='ibm-required'></span></label>
           <span>
-            <input id='unitCostStoriesFTE' size='21' value={this.state.unitCostStoriesFTE} placeholder='0.0' disabled className='inputCustom' />
+            <input type='text' id='unitCostStoriesFTE' size='21' value={this.state.unitCostStoriesFTE} placeholder='0.0' disabled className='inputCustom' />
           </span>
         </p>
         <p>
           <label for='unitCostStoryPointsFTE' style={labelStyle}>Unit cost - Story points per FTE:<span className='ibm-required'></span></label>
           <span>
-            <input id='unitCostStoryPointsFTE' size='21' value={this.state.unitCostStoryPointsFTE} placeholder='0.0' disabled className='inputCustom' />
+            <input type='text' id='unitCostStoryPointsFTE' size='21' value={this.state.unitCostStoryPointsFTE} placeholder='0.0' disabled className='inputCustom' />
           </span>
         </p>
         <div className='ibm-rule ibm-alternate-1'>

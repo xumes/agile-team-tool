@@ -1,6 +1,8 @@
 var React = require('react');
 var LinksButtonCtl = require('./LinksButtonCtl.jsx');
 var LinksSelectDropdown = require('./LinksSelectDropdown.jsx');
+var LinksUrlTextfield = require('./LinksUrlTextfield.jsx');
+var utils = require('../../utils');
 var _ = require('underscore');
 
 var LoadLinkData = React.createClass({
@@ -10,13 +12,16 @@ var LoadLinkData = React.createClass({
     };
   },
 
+  componentDidMount: function() {
+    utils.autoAddHttp();
+  },
+
   setOnEditModeLinkIds: function(id) {
     var self = this;
     var editedLinkIds = {};
     editedLinkIds[id] = id;
     onEditModeLinkIds = Object.assign(self.state.onEditModeLinkIds, editedLinkIds);
-    // console.log('setOnEditModeLinkIds onEditModeLinkIds:',onEditModeLinkIds)
-    self.setState({onEditModeLinkIds: onEditModeLinkIds});
+    //self.setState({onEditModeLinkIds: onEditModeLinkIds});
   },
 
   getOnEditModeLinkIds: function() {
@@ -35,8 +40,7 @@ var LoadLinkData = React.createClass({
 
   onEditmodeLink: function(event) {
     var id = event.target.dataset.id;
-    var updatedlinkUrl = event.target.value;
-    // console.log('onEditmodeLink id:',id, ' updatedlinkUrl:',updatedlinkUrl)
+    console.log('onEditmodeLink', id);
     $('#UpdateCancelLinkGrp_'+id).show();
     $('#DeleteLinkGrp_'+id).hide();
     this.setOnEditModeLinkIds(id);
@@ -47,10 +51,10 @@ var LoadLinkData = React.createClass({
     var teamId = self.props.selectedTeam.team._id;
     var links = self.props.selectedTeam.team.links;
     var defaultSelectData = self.props.initSelectLabel;
-    // console.log('LoadLinkData render BEFORE initSelectLabel:',JSON.stringify(defaultSelectData))
     var linkIds1 = _.pluck(links, 'linkLabel');
     var linkIds2 = _.pluck(defaultSelectData, 'id');
     var diffLinks = _.difference(linkIds1, linkIds2);
+    var hasAccess = self.props.selectedTeam.access;
     var selectData = [];
     if (diffLinks.length > 0) {
       _.each(diffLinks, function(tmp){
@@ -58,52 +62,51 @@ var LoadLinkData = React.createClass({
       });
     }
     selectData = defaultSelectData.concat(selectData);
-    // console.log('LoadLinkData render AFTER initSelectLabel:',JSON.stringify(selectData))
-    // console.log('LoadLinkData render diffLinks:', JSON.stringify(diffLinks))
     var linkLabelOption = selectData.map(function(row, idx){
       return <option value={row.id} key={idx}>{row.text}</option>
     });
-    var styleRemoveLink = {'display': 'none'};
-    var linkSection = links.map(function(row, idx){
-      var _id = row._id;
-      var id = row.id;
-      var selectedVal = row.linkLabel;
-      var linkUrl = row.linkUrl;
-      return(
-        <div id={`link_${id}`} key={_id} data-counter={id} class='importantLinksSection'>
-          {/* display dropdown select for link labels */}
-          <LinksSelectDropdown
-            row={row}
-            id={id}
-            _id={_id}
-            selectedVal={selectedVal}
-            linkLabelOption={linkLabelOption}
-            getSelectedLinkLabel={self.props.getSelectedLinkLabel}
-            setSelectedLinkLabel={self.props.setSelectedLinkLabel}
-            updateSelectLabel={self.props.updateSelectLabel}
-            initSelectLabel={self.props.initSelectLabel}
-            setOnEditModeLinkIds={self.setOnEditModeLinkIds} />
+    var linkSection;
+    if (links && links.length > 0) {
+      linkSection = links.map(function(row, idx){
+        var _id = row._id;
+        var id = row.id;
+        var selectedVal = row.linkLabel;
+        var linkUrl = row.linkUrl;
+        return(
+          <div id={`link_${id}`} key={`linkWrapper-${id}`} data-counter={id} class='importantLinksSection'>
+            {/* display dropdown select for link labels */}
+            <LinksSelectDropdown key={`select-${idx}-${id}`}
+              row={row}
+              id={id}
+              _id={_id}
+              selectedVal={selectedVal}
+              linkLabelOption={linkLabelOption}
+              getSelectedLinkLabel={self.props.getSelectedLinkLabel}
+              setSelectedLinkLabel={self.props.setSelectedLinkLabel}
+              initSelectLabel={self.props.initSelectLabel}
+              setOnEditModeLinkIds={self.setOnEditModeLinkIds}
+              selectedTeam={self.props.selectedTeam} />
 
-          <div>{/* display url textfield */}
-            <input type='text' name='url_[]' id={`url_${id}`}
-              data-id={id} defaultValue={linkUrl}
-              placeholder='URL' size='60' 
-              onChange={(event) => self.onEditmodeLink(event) }/>
+            {/* display url textfield */}
+            <LinksUrlTextfield data-id={id} selectedTeam={self.props.selectedTeam}
+              linkUrl={linkUrl} data-counter={idx} onEditmodeLink={self.onEditmodeLink} />
+
+            {/* display update, cancel & delete icon button */}
+            <LinksButtonCtl row={row} key={`btnctl-${idx}-${id}`}
+              data-counter={id}
+              action='onEdit'
+              getOnEditModeLinkIds={self.getOnEditModeLinkIds}
+              setOnEditModeLinkIds={self.setOnEditModeLinkIds}
+              removeOnEditModeLinkIds={self.removeOnEditModeLinkIds}
+              selectedTeam={self.props.selectedTeam}
+              updateLink={self.props.updateLink}
+              resetNumChildLinks={self.props.resetNumChildLinks} />
           </div>
-
-          {/* display update, cancel & delete icon button */}
-          <LinksButtonCtl row={row}
-            data-counter={id}
-            action='onEdit'
-            getOnEditModeLinkIds={self.getOnEditModeLinkIds}
-            setOnEditModeLinkIds={self.setOnEditModeLinkIds}
-            removeOnEditModeLinkIds={self.removeOnEditModeLinkIds} 
-            selectedTeam={self.props.selectedTeam}
-            updateLink={self.props.updateLink}
-            resetNumChildLinks={self.props.resetNumChildLinks} />
-        </div>
-      );
-    });
+        );
+      });
+    } else {
+      linkSection = hasAccess ? '' : <span>No data available</span>;
+    }
 
     return(
       <div>

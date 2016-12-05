@@ -3,14 +3,8 @@ var ReactDOM = require('react-dom');
 
 var TeamDropdownParent = React.createClass({
   componentDidUpdate: function() {
-    if (this.props.selectableParentTeams.parent == null || this.props.selectableParentTeams.parent == undefined) {
-      var defaultParentValue = '';
-    } else {
-      defaultParentValue = this.props.selectableParentTeams.parent._id;
-    }
-    console.log('this.props.selectableParentTeams.access', this.props.selectableParentTeams, this.props.selectableParentTeams.access,this.refs.selectDropDown);
     this.refs.selectDropDown.disabled = !this.props.selectableParentTeams.access;
-    $('#parentSelectList').val(defaultParentValue).change();
+    $('#parentSelectList').val(this.props.selectableParentTeams.currentParentId).change();
   },
   componentDidMount: function() {
     // Use IBM's bundled select2 package
@@ -32,7 +26,7 @@ var TeamDropdownParent = React.createClass({
       });
     }
     return (
-      <select id='parentSelectList' name='parentSelectList' style={teamSelectListStyle} ref='selectDropDown' disabled={!this.props.selectableParentTeams.access}>
+      <select id='parentSelectList' name='parentSelectList' style={teamSelectListStyle} ref='selectDropDown' disabled={!this.props.selectableParentTeams.access} >
         <option key='' value=''>No parent team</option>
         {populateTeamNames}
       </select>

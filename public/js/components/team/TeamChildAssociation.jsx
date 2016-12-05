@@ -3,7 +3,7 @@ var TeamChildAddSection = require('./TeamChildAddSection.jsx');
 var TeamChildRemoveSection = require('./TeamChildRemoveSection.jsx');
 var api = require('../api.jsx');
 var teamApi = require('./TeamApi.jsx');
-var currentTeam = '';
+var currentTeamId = '';
 var _ = require('underscore');
 var Promise = require('bluebird');
 
@@ -11,33 +11,35 @@ var TeamChildAssociation = React.createClass({
   getInitialState: function() {
     return {
       childTeams: {
-        'teamId': null,
+        'access': false,
+        'currentTeamId': '',
         'children': [],
-        'selectableChildren': [],
-        'access': false
+        'selectableChildren': []
       },
     }
   },
   componentDidUpdate: function() {
     var self = this;
-    if (self.props.selectedTeam.team && self.props.selectedTeam.team._id && currentTeam != self.props.selectedTeam.team._id.toString()) {
+    if (!_.isEmpty(self.props.selectedTeam) && currentTeamId != self.props.selectedTeam.team._id && self.props.selectedTeam.type != 'squad') {
       self.childTeamInit(self.props.selectedTeam)
         .then(function(result){
           return self.setState({childTeams: result});
         })
         .catch(function(err){
-          console.log(err);
           return err;
         })
     }
   },
-  childTeamsUpdateHandler: function() {
+  childTeamsUpdateHandler: function(msg) {
+    var self = this;
+    currentTeamId = '';
     this.childTeamInit(self.props.selectedTeam)
       .then(function(result){
-        return self.setState({childTeams: result});
+        self.setState({childTeams: result});
+        if (!_.isEmpty(msg))
+          alert(msg);
       })
       .catch(function(err){
-        console.log(err);
         return err;
       })
   },
@@ -48,12 +50,12 @@ var TeamChildAssociation = React.createClass({
       promiseArray.push(teamApi.getSelectableChildren(selectedTeam.team._id));
       Promise.all(promiseArray)
         .then(function(results){
-          currentTeam = selectedTeam.team._id.toString();
+          currentTeamId = selectedTeam.team._id;
           var returnObject = {
-            'teamId': selectedTeam.team._id,
+            'access': selectedTeam.access,
+            'currentTeamId': selectedTeam.team._id,
             'children': results[0],
-            'selectableChildren': results[1],
-            'access': selectedTeam.access
+            'selectableChildren': results[1]
           };
           return resolve(returnObject);
         })

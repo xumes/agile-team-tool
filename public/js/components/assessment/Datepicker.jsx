@@ -5,6 +5,12 @@ var moment = require('moment');
 require('react-datepicker/dist/react-datepicker.css');
 
 var Datepicker = React.createClass({
+  componentDidUpdate: function() {
+    $('.react-datepicker-ignore-onclickoutside').css('readonly','true');
+  },
+  componentDidMount: function() {
+    $('.react-datepicker-ignore-onclickoutside').css('readonly','true');
+  },
   render: function() {
     var enableDatepicker = this.props.enableDatepicker;
     var selectFieldWidth = {'width':'300px'};

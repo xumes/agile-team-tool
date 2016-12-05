@@ -68,7 +68,7 @@ var HomeTeamInfo = React.createClass({
         });
         var teamHierarchy2 = teamName;
       }
-      if (team.links != undefined) {
+      if (team.links != undefined && team.links.length > 0) {
         var teamLinks = team.links.map(function(link){
           return (
             <tr key={link.linkLabel}>
@@ -107,7 +107,7 @@ var HomeTeamInfo = React.createClass({
                 </td>
                 <td>
                   <p>
-                    <a class='wlink' href='' title='Manage team information'>{teamName}</a>
+                    <a class='wlink' href={`/team?id=${team._id}`} title='Manage team information'>{teamName}</a>
                   </p>
                 </td>
               </tr>
@@ -127,18 +127,20 @@ var HomeTeamInfo = React.createClass({
                   {teamHierarchy}{teamHierarchy2}
                 </td>
               </tr>
-              <tr id='Important links'>
-                <td>
-                  <p>Important links</p>
-                </td>
-                <td>
-                  <table class='tImportantlink'>
-                    <tbody>
-                      {teamLinks}
-                    </tbody>
-                  </table>
-                </td>
-              </tr>
+              {teamLinks !== null &&
+                <tr id='Important links'>
+                  <td>
+                    <p>Important links</p>
+                  </td>
+                  <td>
+                    <table class='tImportantlink'>
+                      <tbody>
+                        {teamLinks}
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              }
               <tr id='Number of members'>
                 <td>
                   <p>Number of members</p>

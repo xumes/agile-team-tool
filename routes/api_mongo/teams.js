@@ -85,7 +85,7 @@ module.exports = function(app, includes) {
 
   //checked
   associateTeam = function(req, res) {
-    teamModel.associateTeams(req.body.parentTeamId, req.body.childTeamId, req.session['user']['ldap']['uid'])
+    teamModel.associateTeams(req.body.parentTeamId, req.body.childTeamId, req.session['user'])
       .then(function(result){
         res.status(200).send(result);
       })
@@ -96,7 +96,7 @@ module.exports = function(app, includes) {
 
   //checked
   removeAssociation = function(req, res) {
-    teamModel.removeAssociation(req.body.childTeamId, req.session['user']['ldap']['uid'])
+    teamModel.removeAssociation(req.body.childTeamId, req.session['user'])
       .then(function(result){
         res.status(200).send(result);
       })
@@ -107,7 +107,7 @@ module.exports = function(app, includes) {
 
   //checked
   modifyTeamMembers = function(req, res) {
-    teamModel.modifyTeamMembers(req.body['teamId'], req.session['user'], req.body['members'])
+    teamModel.modifyTeamMembers(req.body['_id'], req.session['user'], req.body['members'])
     .then(function(result){
       res.status(200).send(result);
     })
@@ -304,8 +304,19 @@ module.exports = function(app, includes) {
   };
 
   //checked
-  loadTeamDetails = function(req, res) {
-    teamModel.loadTeamDetails(req.params.teamId)
+  hasChildrenByPathId = function(req, res) {
+    teamModel.hasChildrenByPathId(req.params.pathId)
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
+  };
+
+  //checked
+  loadTeamChildDetails = function(req, res) {
+    teamModel.loadTeamChildDetails(req.params.teamId)
       .then(function(result){
         res.status(200).send(result);
       })
@@ -434,8 +445,11 @@ module.exports = function(app, includes) {
   // get first level children teams by parent's pathId
   app.get('/api/teams/children/:pathId', [includes.middleware.auth.requireLogin], getChildrenByPathId);
 
+  // get children boolean indicator
+  app.get('/api/teams/haschildren/:pathId', [includes.middleware.auth.requireLogin], hasChildrenByPathId);
+
   // get team info and if it has a child
-  app.get('/api/teams/haschildren/:teamId', [includes.middleware.auth.requireLogin], loadTeamDetails);
+  app.get('/api/teams/teamchilddetail/:teamId', [includes.middleware.auth.requireLogin], loadTeamChildDetails);
 
   // get team info by pathId
   app.get('/api/teams/pathId/:pathId', [includes.middleware.auth.requireLogin], getTeamByPathId);

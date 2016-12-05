@@ -12,7 +12,7 @@ schemes:
 basePath: /v1
 produces:
   - application/json
-  
+
 paths:
   /teams:
     get:
@@ -41,7 +41,7 @@ paths:
       responses:
         200:
           description: An array of teams
-          schema: 
+          schema:
             type: array
             items:
               $ref: '#/definitions/Team'
@@ -122,7 +122,7 @@ paths:
                 type: integer
               deliveredStories:
                 type: integer
-              commitedStoryPoints:
+              committedStoryPoints:
                 type: integer
               storyPointsDelivered:
                 type: integer
@@ -197,7 +197,7 @@ paths:
                 type: integer
               deliveredStories:
                 type: integer
-              commitedStoryPoints:
+              committedStoryPoints:
                 type: integer
               storyPointsDelivered:
                 type: integer
@@ -271,7 +271,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'  
+            $ref: '#/definitions/Error'
 definitions:
   Team:
     type: object

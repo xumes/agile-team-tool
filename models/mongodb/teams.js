@@ -17,7 +17,7 @@ require('../../settings');
 /*
   Team Schema
 */
-var memberSchema = new Schema({
+var MemberSchema = new Schema({
   name: {
     type: String,
     required: [true, 'Member name is required.']
@@ -28,36 +28,38 @@ var memberSchema = new Schema({
   },
   allocation: {
     type: Number,
-    default: 0,
+    required: [true, 'Member allocation is required.'],
     min: [0, 'Allocation must be between 0 and 100.'],
     max: [100, 'Allocation must be between 0 and 100.']
   },
   userId: {
     type: String,
-    required: [true, 'Member userId is required.']
+    required: [true, 'Member UID is required.']
   },
   email: {
     type: String,
-    required: [true, 'Member email is required.']
+    default: null
+    //required: [true, 'Member email is required.'] // allow for BP profiles that does not have email
   }
-});
+},{_id : false});
 
-var errURLInvalidMsg = 'is not a valid url.';
-var linkSchema = new Schema({
+var errURLInvalidMsg = '{VALUE} is not a valid url.';
+var LinkSchema = new Schema({
   id: {
     type: String,
     required: [true, 'URL link id is required.']
   },
   linkLabel: {
     type: String,
-    required: [true, 'URL link label is required.']
+    required: [true, 'URL link label is required.'],
+    validate: validators.matches({message: 'URL link label is required.'}, /^(?!.*(Select label|Other...))/ig)
   },
   linkUrl: {
     type: String,
     required: [true, 'URL is required.'],
     validate: validators.isURL({message: errURLInvalidMsg})
   }
-});
+},{_id : false});
 
 var TeamSchema = new Schema({
   name: {
@@ -74,7 +76,7 @@ var TeamSchema = new Schema({
     type: String,
     default: null
   },
-  members: [memberSchema],
+  members: [MemberSchema],
   type: {
     type: String,
     default: null
@@ -83,7 +85,7 @@ var TeamSchema = new Schema({
     type: String,
     default: null
   },
-  links: [linkSchema],
+  links: [LinkSchema],
   createdDate: {
     type: Date,
     default: new Date(moment.utc())
@@ -114,21 +116,60 @@ var TeamSchema = new Schema({
   }
 });
 
+// var EventSchema = new Schema({
+//   _id: {
+//     type: String,
+//     required: [true, 'Team ID is required.']
+//   },
+//   userAllowed: {
+//     type: Boolean
+//     required: [true,
+//     validate: {
+//       validator: function(v) {
+//         return v;
+//       },
+//       message: 'User is not allowed'
+//     }
+//   }
+
+// });
+
 var Team = mongoose.model('Team', TeamSchema);
-var Links = mongoose.model('Links', linkSchema);
+var Links = mongoose.model('Links', LinkSchema);
+var Members = mongoose.model('Members', MemberSchema);
 
 /*
   middleware
 */
-
+// TeamSchema.pre('validate', true, function(next, done) {
+//   // calling next kicks off the next middleware in parallel
+//   console.log('pre validate team');
+//   next();
+//   setTimeout(done, 100);
+// });
+// TeamSchema.post('update', function(error, res, next) {
+//   console.log('post update team');
+//   if (error.name === 'MongoError' && error.code === 11000) {
+//     next(new Error('This team name already exists. Please enter a different team name.'));
+//   } else {
+//     next(error);
+//   }
+// });
+/* istanbul ignore next */
+TeamSchema.pre('update', function() {
+  /* istanbul ignore next */
+  console.log('pre update team');
+});
 //validate hooks on path. might be better to use a pre hook if this causes issues
 TeamSchema.path('name').validate(function(value, done) {
+  // console.log('team name validation', this.pathId);
   this.model('Team').count({name: value}, function(err, count) {
     if (err) return done(err);
     done(!count);
   });
 }, 'This team name already exists. Please enter a different team name.');
 TeamSchema.path('pathId').validate(function(value, done) {
+  // console.log('team pathId validation', this.pathId);
   this.model('Team').count({pathId: value}, function(err, count) {
     if (err) return done(err);
     done(!count);
@@ -136,12 +177,14 @@ TeamSchema.path('pathId').validate(function(value, done) {
 }, 'This team name is too similar to another team. Please enter a different team name.');
 
 
+
+
 /*
   model helper functions
 */
 var getAllUniquePaths = function(){
   return new Promise(function(resolve, reject){
-    Team.find({path: {$ne: null}}, {path: 1})
+    Team.find({path: {$ne: null}, docStatus:{$ne:'delete'}}, {path: 1})
     .then(function(paths) {
       resolve(_.uniq(_.pluck(paths, 'path')));
     })
@@ -169,7 +212,7 @@ module.exports.searchTeamWithName = function(string) {
   var searchQuery = {
     'name': {
       '$regex': new RegExp('.*' + string.toLowerCase() + '.*', 'i')
-    }
+    }, docStatus:{$ne:'delete'}
   };
   return Team.find(searchQuery).sort('pathId').exec();
 };
@@ -198,7 +241,7 @@ module.exports.getRootTeams = function(uid) {
           '$elemMatch': {
             'userId': uid.toUpperCase()
           }
-        }
+        }, docStatus:{$ne:'delete'}
       };
       var promiseArray = [];
       promiseArray.push(Team.find(query).sort('pathId').exec());
@@ -261,7 +304,7 @@ module.exports.getRootTeams = function(uid) {
         });
     } else {
       return Promise.join(
-        Team.find({path: null, type:{$ne:'squad'}}).sort('pathId').exec(),
+        Team.find({path: null, type:{$ne:'squad'}, docStatus:{$ne:'delete'}}).sort('pathId').exec(),
         getAllUniquePaths(),
       function(rootedTeams, uniquePaths) {
         uniquePaths = uniquePaths.join(',');
@@ -289,7 +332,7 @@ module.exports.getStandalone = function(uid) {
         '$elemMatch': {
           'userId': uid.toUpperCase()
         }
-      }
+      }, docStatus:{$ne:'delete'}
     };
     return Promise.join(
       Team.find(query).sort('pathId').exec(),
@@ -304,7 +347,7 @@ module.exports.getStandalone = function(uid) {
     });
   } else {
     return Promise.join(
-      Team.find({path: null}).sort('pathId').exec(),
+      Team.find({path: null, docStatus:{$ne:'delete'}}).sort('pathId').exec(),
       getAllUniquePaths(),
     function(rootedTeams, uniquePaths) {
       uniquePaths = uniquePaths.join(',');
@@ -322,12 +365,17 @@ module.exports.getSelectableParents = function(teamId) {
   return new Promise(function(resolve, reject){
     if (_.isEmpty(teamId)) reject({'error':'Id of team is required.'});
 
-    Team.findOne({_id: teamId})
+    Team.findOne({_id: teamId, docStatus:{$ne:'delete'}})
     .then(function(team){
       if (_.isEmpty(team)) reject({'error': teamId + ' is not a team.'});
 
       var regEx = new RegExp('^((?!'+team.pathId+').)*$');
-      return Team.find({type:{$ne:'squad'}, path: regEx, docStatus:{$ne:'delete'}});
+      return Team.find({
+        $or: [
+          {type:{$ne:'squad'}, path: regEx, docStatus:{$ne:'delete'}},
+          {type:{$ne:'squad'}, path: {$eq:null}, docStatus:{$ne:'delete'}, _id: {$ne:teamId}}
+        ]
+      },{_id:1,name:2});
     })
     .then(function(result){
       resolve(result);
@@ -338,59 +386,71 @@ module.exports.getSelectableParents = function(teamId) {
   });
 };
 
-//list of root teams (any team type; no parents) where teamId is not in their subtree.
-//if teamId is a squad team, return none
+//list of all teams (any team type; no parents)
 module.exports.getSelectableChildren = function(teamId) {
-  return new Promise(function(resolve, reject){
-    if (_.isEmpty(teamId)) return reject({'error':'Id of team is required.'});
-
-    Team.findOne({_id: teamId}).exec()
-    .then(function(team){
-      if (_.isEmpty(team)) return reject({'error': teamId + ' is not a team.'});
-      if (team.type==='squad') return resolve([]);
-      if (team.path == null) {
-        var parentPathId = [team.pathId];
-        var parentPath = ',' + team.pathId + ',';
-      } else {
-        parentPathId = team.path.substring(1,team.path.length-2).split(',');
-        parentPath = team.path + team.pathId + ',';
-      }
-      return Team.find({path: {$ne: parentPath}, pathId: {$nin: parentPathId}, docStatus:{$ne:'delete'}}).exec();
-    })
-    .then(function(teams){
-      return resolve(teams);
-    })
-    // .then(function(pathId){
-    //   //this might be expensive if theres a boat load of teams
-    //   return Promise.join(
-    //     Team.find({path:null, docStatus:{$ne:'delete'}}), //root teams of any type
-    //     getAllUniquePaths(),
-    //   function(rootedTeams, uniquePaths) {
-    //     uniquePaths = _.filter(uniquePaths, function(path){return path.indexOf(pathId)<0;});
-    //     var rootedPathIds = [];
-    //     _.each(uniquePaths, function(path){
-    //       var pId = path.substring(1, path.indexOf(',',1));
-    //       if (!_.contains(rootedPathIds, pId))
-    //         rootedPathIds.push(pId);
-    //     });
-    //     var res = [];
-    //     _.each(rootedTeams, function(team){
-    //       if (_.contains(rootedPathIds, team.pathId))
-    //         res.push(team);
-    //     });
-    //     return resolve(res);
-    //   });
-    // })
-    .catch( /* istanbul ignore next */ function(err) {
-      reject(err);
-    });
+  return new Promise(function(resolve, reject) {
+    if (_.isEmpty(teamId))
+      return reject({'error':'Team ID is required.'});
+    else
+      Team.find({_id: {$ne: teamId}, path:null, docStatus:{$ne:'delete'}}).exec()
+        .then(function(result) {
+          resolve(result);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          reject(err);
+        });
   });
+  // return new Promise(function(resolve, reject){
+  //   if (_.isEmpty(teamId)) return reject({'error':'Id of team is required.'});
+
+  //   // Team.findOne({_id: teamId, docStatus:{$ne:'delete'}}).exec()
+  //   // .then(function(team){
+  //   //   if (_.isEmpty(team)) return reject({'error': teamId + ' is not a team.'});
+  //   //   if (team.type==='squad') return resolve([]);
+  //   //   if (team.path == null) {
+  //   //     var parentPathId = [team.pathId];
+  //   //     var parentPath = ',' + team.pathId + ',';
+  //   //   } else {
+  //   //     parentPathId = team.path.substring(1,team.path.length-2).split(',');
+  //   //     parentPath = team.path + team.pathId + ',';
+  //   //   }
+  //   //   return Team.find({path: {$ne: parentPath}, pathId: {$nin: parentPathId}, docStatus:{$ne:'delete'}}).exec();
+  //   // })
+  //   // Team.find({_id: {$ne: teamId}, path:null}, docStatus:{$ne:'delete'}).exec()
+  //   // .then(function(teams){
+  //   //   return resolve(teams);
+  //   // })
+  //   // .then(function(pathId){
+  //   //   //this might be expensive if theres a boat load of teams
+  //   //   return Promise.join(
+  //   //     Team.find({path:null, docStatus:{$ne:'delete'}}), //root teams of any type
+  //   //     getAllUniquePaths(),
+  //   //   function(rootedTeams, uniquePaths) {
+  //   //     uniquePaths = _.filter(uniquePaths, function(path){return path.indexOf(pathId)<0;});
+  //   //     var rootedPathIds = [];
+  //   //     _.each(uniquePaths, function(path){
+  //   //       var pId = path.substring(1, path.indexOf(',',1));
+  //   //       if (!_.contains(rootedPathIds, pId))
+  //   //         rootedPathIds.push(pId);
+  //   //     });
+  //   //     var res = [];
+  //   //     _.each(rootedTeams, function(team){
+  //   //       if (_.contains(rootedPathIds, team.pathId))
+  //   //         res.push(team);
+  //   //     });
+  //   //     return resolve(res);
+  //   //   });
+  //   // })
+  //   .catch( /* istanbul ignore next */ function(err) {
+  //     reject(err);
+  //   });
+  // });
 };
 
-module.exports.getSquadsOfParent = function(pathId) {
-  if (_.isEmpty(pathId)) return [];
-  else return Team.find({path:new RegExp(','+pathId+','), type:'squad'}).exec();
-};
+// module.exports.getSquadsOfParent = function(pathId) {
+//   if (_.isEmpty(pathId)) return [];
+//   else return Team.find({path:new RegExp(','+pathId+','), type:'squad', docStatus:{$ne:'delete'}}).exec();
+// };
 
 //TODO fix front-end js so teamDoc comes through the api in a correct format
 module.exports.createTeam = function(teamDoc, creator) {
@@ -420,12 +480,53 @@ module.exports.createTeam = function(teamDoc, creator) {
     };
     var newTeamDoc = new Team(newTeam);
     Team.create(newTeamDoc)
-    .then(function(result){
-      resolve(result);
-    })
-    .catch( /* istanbul ignore next */ function(err){
-      reject(err);
-    });
+      .then(function(result){
+        teamDoc = result;
+        return self.createUsers(teamDoc.members);
+      })
+      .then(function() {
+        resolve(teamDoc);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        reject(err);
+      });
+  });
+};
+
+module.exports.createUsers = function(members) {
+  return new Promise(function(resolve,reject) {
+    var ids = [''];
+    if (!_.isEmpty(members)) {
+      _.each(members, function(member){
+        ids.push(member.userId);
+      });
+    } else {
+      resolve(null);
+    }
+    Users.getUsersInfo(_.uniq(ids))
+      .then(function(users) {
+        if (!_.isEmpty(members)) {
+          var promiseArray = [];
+          var user = new Object();
+          _.each(members, function(member) {
+            user = _.find(users, function(user) {
+              if (_.isEqual(member.userId, user.userId))
+                return user;
+            });
+            if (_.isEmpty(user)) {
+              promiseArray.push(Users.create(member));
+            }
+          });
+          return Promise.all(promiseArray);
+        }
+        return null;
+      })
+      .then(function(result) {
+        resolve({'ok':'New users created successfully.'});
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        reject(err);
+      });
   });
 };
 
@@ -454,7 +555,7 @@ module.exports.getChildrenByPathId = function(pathId) {
     }
     else {
       var promiseArray = [];
-      promiseArray.push(Team.find({path:new RegExp(','+pathId+',$')}).sort('pathId').exec());
+      promiseArray.push(Team.find({path:new RegExp(','+pathId+',$'), docStatus:{$ne:'delete'}}).sort('pathId').exec());
       promiseArray.push(getAllUniquePaths());
       Promise.all(promiseArray)
         .then(function(results){
@@ -500,7 +601,7 @@ module.exports.getAllChildrenOnPath = function(path) {
       var query = {
         'path' : {
           '$regex' : pathString + '$'
-        }
+        }, docStatus:{$ne:'delete'}
       };
       promiseArray.push(Team.find(query).sort('pathId').exec());
     });
@@ -550,9 +651,9 @@ module.exports.getAllChildrenOnPath = function(path) {
 //TODO refactor getTeam(id)
 module.exports.getTeam = function(id) {
   if (_.isEmpty(id))
-    return Team.find({}).exec();
+    return Team.find({docStatus:{$ne:'delete'}}).exec();
   else
-    return Team.findOne({_id:id}).exec();
+    return Team.findOne({_id:id, docStatus:{$ne:'delete'}}).exec();
 };
 
 /**
@@ -560,22 +661,22 @@ module.exports.getTeam = function(id) {
  */
 module.exports.getTeamByPathId = function(pathId) {
   if (_.isEmpty(pathId))
-    return Team.find({}).exec();
+    return Team.find({docStatus:{$ne:'delete'}}).exec();
   else
-    return Team.findOne({pathId:pathId}).exec();
+    return Team.findOne({pathId:pathId, docStatus:{$ne:'delete'}}).exec();
 };
 /**
  * Using in home page, getting the team info and if it has a child team
  * @param team's objectId
  * @return team's info and child info
  */
-module.exports.loadTeamDetails = function(id) {
+module.exports.loadTeamChildDetails = function(id) {
   return new Promise(function(resolve, reject){
     var promiseArray = [];
     if (mongoose.Types.ObjectId.isValid(id)) {
-      promiseArray.push(Team.findOne({_id:id}).exec());
+      promiseArray.push(Team.findOne({_id:id, docStatus:{$ne:'delete'}}).exec());
     } else {
-      promiseArray.push(Team.findOne({pathId:id}).exec());
+      promiseArray.push(Team.findOne({pathId:id, docStatus:{$ne:'delete'}}).exec());
     }
     promiseArray.push(getAllUniquePaths());
     Promise.all(promiseArray)
@@ -728,43 +829,69 @@ module.exports.getUserTeamsByUserId = function(uid) {
 module.exports.modifyTeamMembers = function(teamId, user, newMembers) { //TODO this should use userId
   return new Promise(function(resolve, reject){
     if (_.isEmpty(user)){
-      return reject({'error':'User is required'});
+      return reject({'error':'User is required.'});
     }
     var userId = user['ldap']['uid'].toUpperCase();
     var userEmail = user['shortEmail'].toLowerCase();
     if (_.isEmpty(teamId)){
-      return reject({'error':'Team ID is required'});
+      return reject({'error':'Team ID is required.'});
     }
     if (_.isEmpty(newMembers)){
-      return reject({'error':'Member lists is required'});
+      return reject({'error':'Member lists is required.'});
     }
     if (!_.isArray(newMembers)){
-      return reject({'error':'Invalid member lists'});
+      return reject({'error':'Invalid member lists.'});
     }
+    var updatedMembers = [];
+    var error = {};
+    _.each(newMembers, function(member) {
+      updatedMembers.push({
+        name: member.name,
+        allocation: member.allocation,
+        role: member.role,
+        userId: member.userId,
+        email: member.email
+      });
+    });
+    for (var i=0; i<updatedMembers.length; i++) {
+      var memberData = new Members(updatedMembers[i]);
+      error = memberData.validateSync();
+      if (!_.isEmpty(error))
+        i = updatedMembers.length;
+    }
+    if (!_.isEmpty(error))
+      return reject(error);
     //check if user is allowed to edit team
     Users.isUserAllowed(userId, teamId)//TODO this should use userId
     .then(function(isAllowed){
       if (!isAllowed)
-        return Promise.reject({'error':'Not allowed to modify team members'});
+        return Promise.reject({'error':'User is not allowed to modify team members.'});
       else
         return true;
     })
-    .then(function(){
-      return Team.update({_id: teamId},{
+    .then(function() {
+      var promiseArray = [];
+      promiseArray.push(self.createUsers(newMembers));
+      promiseArray.push(Team.findByIdAndUpdate({_id: teamId},{
         $set:
         {
-          members: newMembers,
+          members: updatedMembers,
           updatedBy: userEmail,
           updatedByUserId: userId,
           updateDate: new Date(moment.utc())
         }
-      }).exec();
+      }, {new:true}));
+      return Promise.all(promiseArray);
     })
-    .then(function(){
-      return resolve({'ok':'Updated successfully.'});
+    // .then(function() {
+    //   return self.createUsers(newMembers);
+    // })
+    .then(function(results){
+      // return resolve({'ok':'Updated successfully.'});
+      resolve(results[1]);
     })
     .catch( /* istanbul ignore next */ function(err){
-      return reject(err);
+      reject(err);
     });
   });
 };
@@ -815,7 +942,7 @@ module.exports.getTeamHierarchy = function(path) {
     } else {
       var tempPath = path.substring(1, path.length - 1);
       var paths = tempPath.split(',');
-      Team.find({'pathId': {'$in': paths}}).exec()
+      Team.find({'pathId': {'$in': paths}, docStatus:{$ne:'delete'}}).exec()
       .then(function(teams){
         if (teams.length < paths.length) {
           resolve({'error': 'cannot get the whole hierarchy'});
@@ -873,7 +1000,7 @@ module.exports.updateTeam = function(teamDoc, user) {
     Users.isUserAllowed(userId, teamId)
       .then(function(result){
         if (!result) {
-          return Promise.reject({'error':'Not allowed to modify team links'});
+          return Promise.reject({'error':'User is not allowed to modify team.'});
         }
         var promiseArray = [];
         promiseArray.push(self.getTeam(teamId));
@@ -888,16 +1015,31 @@ module.exports.updateTeam = function(teamDoc, user) {
         var hasIterations = results[2];
         var hasAssessments = results[3];
         if (updatedDoc.type == 'squad' && team.type == null && hasChildren)
-          return Promise.reject({'error':'Cannot change this team into a squad team. Child team has been entered for this team.'});
+          return Promise.reject({
+            errors: {
+              type: {message:'Cannot change this team into a squad team. Child team has been entered for this team.'}
+            }
+          });
         if (updatedDoc.type != 'squad' && team.type == 'squad' && (hasIterations || hasAssessments))
-          return Promise.reject({'error':'Cannot change this team into a non squad team. Iteration information has been entered for this team.'});
-        return Team.update({'_id': teamId}, {'$set': updatedDoc}).exec();
+          return Promise.reject({
+            errors: {
+              type: {message:'Cannot change this team into a non squad team. Iteration and/or assessment information has been entered for this team.'}
+            }
+          });
+        return Team.findByIdAndUpdate({'_id': teamId}, {'$set': updatedDoc}, {new:true}).exec();
       })
       .then(function(result){
         resolve(result);
       })
       .catch( /* istanbul ignore next */ function(err){
-        reject(err);
+        if (err.name === 'MongoError' && err.code === 11000)
+          reject({
+            errors: {
+              name: {message:'This team name already exists. Please enter a different team name.'}
+            }
+          });
+        else
+          reject(err);
       });
   });
 };
@@ -920,7 +1062,7 @@ module.exports.softDelete = function(teamDoc, user) {
     Users.isUserAllowed(userId, teamId)
       .then(function(result){
         if (!result) {
-          return Promise.reject({'error':'Not allowed to delete team.'});
+          return Promise.reject({'error':'User is not allowed to delete team.'});
         }
         var promiseArray = [];
         promiseArray.push(self.getTeam(teamId));
@@ -941,7 +1083,7 @@ module.exports.softDelete = function(teamDoc, user) {
         var query = {
           'path' : {
             '$regex' : parentPath
-          }
+          }, docStatus:{$ne:'delete'}
         };
         var promiseArray = [];
         promiseArray.push(Team.find(query).exec());
@@ -1002,7 +1144,7 @@ module.exports.modifyImportantLinks = function(teamId, user, links) {
     Users.isUserAllowed(userId, teamId)
     .then(function(allowed){
       if (!allowed) {
-        return Promise.reject({'error':'Not allowed to modify team links'});
+        return Promise.reject({'error':'User is not allowed to modify team links.'});
       }
       var tmpLinks = [];
       var pattern = /^((http|https):\/\/)/;
@@ -1028,7 +1170,8 @@ module.exports.modifyImportantLinks = function(teamId, user, links) {
         'updatedBy': userEmail,
         'updateDate': new Date(moment.utc())
       };
-      return Team.update({'_id': teamId},{'$set': updateTeam}).exec();
+      // return Team.update({'_id': teamId},{'$set': updateTeam}).exec();
+      return Team.findByIdAndUpdate({'_id': teamId},{'$set': updateTeam},{new:true}).exec();
     })
     .then(function(result){
       return resolve(result);
@@ -1059,6 +1202,9 @@ module.exports.deleteImportantLinks = function(teamId, user, links) {
     Users.isUserAllowed(userId, teamId)
     .then(function(allowed){
       loggers.get('models').verbose('User ' + userEmail + ' is allowed to edit team ' + teamId + '. Proceed with modification');
+      if (!allowed) {
+        return Promise.reject({'error':'User is not allowed to modify team links.'});
+      }
       return allowed;
     })
     .then(function(){
@@ -1090,7 +1236,6 @@ module.exports.deleteImportantLinks = function(teamId, user, links) {
             failDeleteLinkIds.push(value);
           }
         });
-
         if (failDeleteLinkIds.length > 0) {
           failDeleteLinkIds = _.reject(failDeleteLinkIds, _.isUndefined);
           if (failDeleteLinkIds && failDeleteLinkIds.length > 0) {
@@ -1099,7 +1244,7 @@ module.exports.deleteImportantLinks = function(teamId, user, links) {
             errmsg = 'Link ID not found';
           }
           errorLists['error']['links'] = [errmsg];
-          return reject(errorLists);
+          return Promise.reject(errorLists);
         } else {
           var updateTeam = {
             'links': tmpLinks,
@@ -1107,8 +1252,8 @@ module.exports.deleteImportantLinks = function(teamId, user, links) {
             'updatedBy': userEmail,
             'updateDate': new Date(moment.utc())
           };
-          return Team.update({'_id': teamId},{'$set': updateTeam}).exec();
-          // return Team.findByIdAndUpdate(teamId, teamDetails);
+          // return Team.update({'_id': teamId},{'$set': updateTeam}).exec();
+          return Team.findByIdAndUpdate({'_id': teamId},{'$set': updateTeam},{new:true}).exec();
         }
       } else {
         var deletedIds = _.pluck(links, 'id');
@@ -1120,7 +1265,7 @@ module.exports.deleteImportantLinks = function(teamId, user, links) {
           errmsg = 'Link ID not found';
         }
         errorLists['error']['links'] = [errmsg];
-        return reject(errorLists);
+        return Promise.reject(errorLists);
       }
     })
     .then(function(result) {
@@ -1157,12 +1302,7 @@ var validateUpdateImportantLinks = function(teamId, userId, links) {
         var LinksData = new Links(value);
         errorLinks = LinksData.validateSync();
         if (errorLinks && errorLinks['errors'] && errorLinks['errors']['linkUrl']) {
-          if (errorLinks['errors']['linkUrl'].message === errURLInvalidMsg) {
-            errmsg = value['linkUrl'] + ' ' + errorLinks['errors']['linkUrl'].message;
-          } else {
-            errmsg = errorLinks['errors']['linkUrl'].message;
-          }
-          tmpError.push({linkUrl: errmsg});
+          tmpError.push({linkUrl: errorLinks['errors']['linkUrl'].message});
         }
         if (errorLinks && errorLinks['errors'] && errorLinks['errors']['linkLabel']) {
           tmpError.push({linkLabel: errorLinks['errors']['linkLabel'].message});
@@ -1204,45 +1344,77 @@ var validateDelImportantLinks = function(teamId, userId, links) {
   return true;
 };
 
-module.exports.associateTeams = function(parentTeamId, childTeamId, uid) {
+module.exports.associateTeams = function(parentTeamId, childTeamId, user) {
   return new Promise(function(resolve, reject){
-    if (_.isEmpty(uid)) {
-      reject({errors: {userId: {message: 'The user id cannot be empty.'}}});
+    var userId = user ? user['ldap']['uid'].toUpperCase() : '';
+    var userEmail = user ? user['shortEmail'].toLowerCase() : '';
+    if (_.isEmpty(userId)) {
+      reject({
+        errors: {
+          userId: {message: 'The user id cannot be empty.'}
+        }
+      });
     } else if (_.isEmpty(childTeamId)){
-      reject({errors: {childTeamId: {message: 'The child team id cannot be empty.'}}});
+      reject({
+        errors: {
+          path: {message:'Child team ID is required.'}
+        }
+      });
     } else if (_.isEmpty(parentTeamId)) {
-      reject({errors: {parentTeamId: {message: 'The parent team id cannot be empty.'}}});
+      reject({
+        errors: {
+          path: {message:'Parent team ID is required.'}
+        }
+      });
     } else {
       var promiseArray = [];
       var oldChildPath = '';
       var newChildPath = '';
-      // promiseArray.push(Users.isUserAllowed(uid, parentTeamId));
-      // promiseArray.push(Users.isUserAllowed(uid, childTeamId));
+      var parentPath = '';
+      var parentPathId = '';
+      var childPathId = '';
+      var childPath = '';
+      promiseArray.push(Users.isUserAllowed(userId, parentTeamId));
+      promiseArray.push(Users.isUserAllowed(userId, childTeamId));
       promiseArray.push(self.getTeam(parentTeamId));
       promiseArray.push(self.getTeam(childTeamId));
       Promise.all(promiseArray)
-        // .then(function(results){
-        //   if (results[0] == false) {
-        //     return Promise.reject({'error':'You dont have access to parent team.'});
-        //   } else if (results[1] == false) {
-        //     return Promise.reject({'error':'You dont have access to child team.'});
-        //   } else {
-        //     var promiseArray = [];
-        //     promiseArray.push(self.getTeam(parentTeamId));
-        //     promiseArray.push(self.getTeam(childTeamId));
-        //     return Promise.all(promiseArray);
-        //   }
-        // })
-        .then(function(results) {
-          if (results[0] == null || results[0].type == 'squad') {
-            return Promise.reject({'error':'Parent team cannot be associated.'});
-          } else if (results[1] == null) {
-            return Promise.reject({'error':'Child team cannot be associated.'});
+        .then(function(results){
+          var hasParentAccess = results[0];
+          var hasChildAccess = results[1];
+          var parentTeam = results[2];
+          var childTeam = results[3];
+          if (_.isEmpty(parentTeam)) {
+            return Promise.reject({
+              errors: {
+                path: {message:'Parent team was already deleted.'}
+              }
+            });
+          } else if (_.isEmpty(childTeam)) {
+            return Promise.reject({
+              errors: {
+                path: {message:'Child team was already deleted.'}
+              }
+            });
+          } else  if (!hasParentAccess && !hasChildAccess) {
+            return Promise.reject({'error':'User is not allowed to modify relationships for either ' + parentTeam.name + ' or ' + childTeam.name + '.'});
+          } else if (parentTeam.type == 'squad') {
+            return Promise.reject({
+              errors: {
+                path: {message:'Parent team has been updated as a squad team.  Squad teams cannot be selected as parent team.'}
+              }
+            });
+          // } else if (!_.isEmpty(childTeam.path)) {
+          //   return reject({
+          //     errors: {
+          //       path: {message:'Child team has been updated with another parent team.'}
+          //     }
+          //   });
           }
-          var parentPath = results[0].path;
-          var parentPathId = results[0].pathId;
-          var childPathId = results[1].pathId;
-          var childPath = results[1].path;
+          parentPath = parentTeam.path;
+          parentPathId = parentTeam.pathId;
+          childPathId = childTeam.pathId;
+          childPath = childTeam.path;
           if (parentPath != null && parentPath.indexOf(','+childPathId+',') > 0) {
             return Promise.reject({'error':'Child team cannot be higher level than parent team.'});
           } else {
@@ -1261,10 +1433,19 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, uid) {
             var query = {
               'path' : {
                 '$regex' : oldChildPath
-              }
+              }, docStatus:{$ne:'delete'}
             };
             var promiseArray = [];
-            promiseArray.push(Team.update({_id: results[1]._id}, {$set: {path: newChildTeamPath}}).exec());
+            promiseArray.push(
+              Team.update({_id: childTeam._id}, {
+                $set:
+                {
+                  path: newChildTeamPath,
+                  updatedBy: userEmail,
+                  updatedByUserId: userId,
+                  updateDate: new Date(moment.utc())
+                }
+              }).exec());
             promiseArray.push(Team.find(query).exec());
             return Promise.all(promiseArray);
           }
@@ -1275,15 +1456,31 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, uid) {
             _.each(results[1], function(team){
               var oldPath = team.path;
               var newPath = oldPath.replace(oldChildPath, newChildPath);
-              promiseArray.push(Team.update({_id: team._id}, {$set: {path: newPath}}).exec());
+              if (_.isEqual(team.pathId, parentPathId)) {
+                promiseArray.push(
+                  Team.update({_id: team._id}, {
+                    $set:
+                    {
+                      path: newPath,
+                      updatedBy: userEmail,
+                      updatedByUserId: userId,
+                      updateDate: new Date(moment.utc())
+                    }
+                  }).exec());
+              } else
+                promiseArray.push(Team.update({_id: team._id}, {$set: {path: newPath}}).exec());
             });
             return Promise.all(promiseArray);
           } else {
             return true;
           }
         })
-        .then(function(result){
-          resolve({'ok':'Updated Successfully'});
+        .then(function(results){
+          return Team.find({$or: [{_id:parentTeamId}, {_id:childTeamId}]}).exec();
+        })
+        .then(function(results){
+          //resolve({'ok':'Updated Successfully'});
+          resolve(results);
         })
         .catch( /* istanbul ignore next */ function(err) {
           reject(err);
@@ -1292,36 +1489,170 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, uid) {
   });
 };
 
-module.exports.removeAssociation = function(childTeamId, uid) {
+module.exports.removeAssociation = function(childTeamId, user) {
   return new Promise(function(resolve, reject){
-    if (_.isEmpty(uid)) {
-      return reject({'error':'The user id cannot be empty.'});
+    var userId = user ? user['ldap']['uid'].toUpperCase() : '';
+    var userEmail = user ? user['shortEmail'].toLowerCase() : '';
+    if (_.isEmpty(userId)) {
+      reject({
+        errors: {
+          userId: {message: 'The user id cannot be empty.'}
+        }
+      });
     } else if (_.isEmpty(childTeamId)){
-      return reject({'error':'The child team id cannot be empty.'});
+      reject({
+        errors: {
+          path: {message:'Child team ID is required.'}
+        }
+      });
     } else {
+      // var promiseArray = [];
+      // var oldChildPath = '';
+      // var newChildPath = '';
+      // var parentPathId = '';
+      // // promiseArray.push(Users.isUserAllowed(userId, parentTeamId));
+      // promiseArray.push(Users.isUserAllowed(userId, childTeamId));
+      // // promiseArray.push(self.getTeam(parentTeamId));
+      // promiseArray.push(self.getTeam(childTeamId));
+      // Promise.all(promiseArray)
+      //   .then(function(results){
+      //     // var hasParentAccess = results[0];
+      //     var hasChildAccess = results[0];
+      //     // var parentTeam = results[2];
+      //     var childTeam = results[1];
+      //     // if (_.isEmpty(parentTeam)) {
+      //     //   return reject({
+      //     //     errors: {
+      //     //       path: {message:'Parent team was already deleted.'}
+      //     //     }
+      //     //   });
+      //     // } else
+      //     if (_.isEmpty(childTeam)) {
+      //       return reject({
+      //         errors: {
+      //           path: {message:'Child team was already deleted.'}
+      //         }
+      //       });
+      //     // } else  if (!hasParentAccess && !hasChildAccess) {
+      //     } else  if (!hasChildAccess) {
+      //       return reject({'error':'User is not allowed to modify relationships for ' + childTeam.name + '.'});
+      //     // } else if (parentTeam.type == 'squad') {
+      //     //   return reject({
+      //     //     errors: {
+      //     //       path: {message: parentTeam.name + ' team was updated as a squad team.  Squad teams cannot be selected as parent team.'}
+      //     //     }
+      //     //   });
+      //     }
+      //     else if (_.isEmpty(childTeam.path)) {
+      //       return reject({
+      //         errors: {
+      //           path: {message:'Child team was updated and any team association was removed.'}
+      //         }
+      //       });
+      //     // } else if (!_.isEmpty(childTeam.path) && childTeam.path.indexOf(parentPathId) == -1) {
+      //     //   return reject({
+      //     //     errors: {
+      //     //       path: {message: childTeam.name + ' team was updated and is currently not related to ' + parentTeam.name + '.'}
+      //     //     }
+      //     //   });
+      //     }
+      //     // parentPathId = parentTeam.pathId;
+      //     oldChildPath = childTeam.path + childTeam.pathId + ',';
+      //     newChildPath = ',' + childTeam.pathId + ',';
+      //     var query = {
+      //       'path' : {
+      //         '$regex' : oldChildPath
+      //       }, docStatus:{$ne:'delete'}
+      //     };
+      //     var promiseArray = [];
+      //     promiseArray.push(Team.update({_id: childTeam._id}, {$set: {path: null}}).exec());
+      //     promiseArray.push(Team.find(query).exec());
+      //     return Promise.all(promiseArray);
+      //   })
+      //   .then(function(results) {
+      //     if (!_.isEmpty(results[1])) {
+      //       var promiseArray = [];
+      //       _.each(results[1], function(team){
+      //         var oldPath = team.path;
+      //         var newPath = oldPath.replace(oldChildPath, newChildPath);
+      //         // if (_.isEqual(team.pathId, parentPathId)) {
+      //         //   promiseArray.push(
+      //         //     Team.update({_id: team._id}, {
+      //         //       $set:
+      //         //       {
+      //         //         path: newPath,
+      //         //         updatedBy: userEmail,
+      //         //         updatedByUserId: userId,
+      //         //         updateDate: new Date(moment.utc())
+      //         //       }
+      //         //     }).exec());
+      //         // } else
+      //           promiseArray.push(Team.update({_id: team._id}, {$set: {path: newPath}}).exec());
+      //       });
+      //       return Promise.all(promiseArray);
+      //     } else {
+      //       return true;
+      //     }
+      //   })
+      //   .then(function(results){
+      //     return Team.find({$or: [{_id:parentTeamId}, {_id:childTeamId}]}).exec();
+      //   })
+      //   .then(function(results){
+      //     //resolve({'ok':'Updated Successfully'});
+      //     resolve(results);
+      //   })
+      //   .catch( /* istanbul ignore next */ function(err){
+      //     reject(err);
+      //   });
+
       var promiseArray = [];
       var oldChildPath = '';
       var newChildPath = '';
-      Users.isUserAllowed(uid, childTeamId)
+      var oldParentPathId = null;
+      Users.isUserAllowed(userId, childTeamId)
         .then(function(result){
           if (!result) {
-            return Promise.reject({'error': 'You dont have access to this team.'});
+            return Promise.reject({
+              errors: {
+                path: {message: 'You dont have access to remove parent association for this team.'}
+              }
+            });
           }
           return self.getTeam(childTeamId);
         })
         .then(function(team){
-          if (team.path == null) {
-            return Promise.reject({'error': 'This team is alrady a root team.'});
-          }
+          if (_.isEmpty(team))
+            return Promise.reject({
+              errors: {
+                path: {message:'Child team was already deleted.'}
+              }
+            });
+          else if (_.isEmpty(team.path))
+            return Promise.reject({
+              errors: {
+                path: {message:'Child team may have been updated and any team association was removed.'}
+              }
+            });
           oldChildPath = team.path + team.pathId + ',';
           newChildPath = ',' + team.pathId + ',';
+          var parents = team.path.split(',');
+          oldParentPathId = parents[parents.length - 2];
           var query = {
             'path' : {
               '$regex' : oldChildPath
-            }
+            }, docStatus:{$ne:'delete'}
           };
           var promiseArray = [];
-          promiseArray.push(Team.update({_id: team._id}, {$set: {path: null}}).exec());
+          promiseArray.push(
+            Team.update({_id: team._id}, {
+              $set:
+              {
+                path: null,
+                updatedBy: userEmail,
+                updatedByUserId: userId,
+                updateDate: new Date(moment.utc())
+              }
+            }).exec());
           promiseArray.push(Team.find(query).exec());
           return Promise.all(promiseArray);
         })
@@ -1331,15 +1662,31 @@ module.exports.removeAssociation = function(childTeamId, uid) {
             _.each(results[1], function(team){
               var oldPath = team.path;
               var newPath = oldPath.replace(oldChildPath, newChildPath);
-              promiseArray.push(Team.update({_id: team._id}, {$set: {path: newPath}}).exec());
+              if (_.isEqual(team.pathId, oldParentPathId)) {
+                promiseArray.push(
+                  Team.update({_id: team._id}, {
+                    $set:
+                    {
+                      path: newPath,
+                      updatedBy: userEmail,
+                      updatedByUserId: userId,
+                      updateDate: new Date(moment.utc())
+                    }
+                  }).exec());
+              } else
+                promiseArray.push(Team.update({_id: team._id}, {$set: {path: newPath}}).exec());
             });
             return Promise.all(promiseArray);
           } else {
             return true;
           }
         })
-        .then(function(result){
-          return resolve({'ok':'Updated Successfully'});
+        .then(function(results){
+          return Team.find({$or: [{pathId:oldParentPathId}, {_id:childTeamId}]}).exec();
+        })
+        .then(function(results){
+          //resolve({'ok':'Updated Successfully'});
+          resolve(results);
         })
         .catch( /* istanbul ignore next */ function(err){
           return reject(err);

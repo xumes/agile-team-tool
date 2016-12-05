@@ -33,7 +33,7 @@ var IterationPage = React.createClass({
   render: function() {
     return (
       <div>
-        <Header title='Iteration management' />
+        <Header title='Iteration information' />
         <IterationForm selectedTeam={this.state.selectedTeam} selectedIteration={this.state.selectedIteration} />
       </div>
     )

@@ -10,15 +10,8 @@ var TeamDropdown = React.createClass({
     }
   },
   componentDidMount: function() {
-    console.log('TeamDropdown componentDidMount');
     var self = this;
-    this.getTeamNames();
-    //api.fetchTeamNames()
-    //  .then(function(teams) {
-    //    self.setState({
-    //      teamNames: teams
-    //    })
-    //  });
+    self.getTeamNames();
     // Use IBM's bundled select2 package
     $(self.refs.teamSelectList).select2();
     $(self.refs.teamSelectList).change(this.props.teamChangeHandler);
@@ -33,28 +26,22 @@ var TeamDropdown = React.createClass({
       });
   },
   componentWillReceiveProps: function(newProps) {
-    console.log('TeamDropdown componentWillReceiveProps ', newProps);
     var team = _.find(this.state.teamNames, function(team) {
         return team._id == newProps.defaultTeam;
       });
     if (_.isEmpty(team) || _.isEqual(newProps.defaultTeam, 'delete')) {
+      if (_.isEqual(newProps.defaultTeam, 'delete'))
+        alert('You have successfully deleted the team.');
       this.getTeamNames();
     }
   },
-  /*
-  componentWillUpdate(nextProps, nextState) {
-    console.log('TeamDropdown componentWillUpdate',nextProps, nextState);
-  },
-  */
   componentDidUpdate(prevProps, prevState) {
-    console.log('TeamDropdown componentDidUpdate')
     if (_.isEqual(this.props.defaultTeam, 'delete'))
       this.refs.teamSelectList.value = 'new';
     else
       this.refs.teamSelectList.value = this.props.defaultTeam;
   },
   render: function() {
-    console.log('TeamDropdown render',this.props.defaultTeam,this.state.teamNames.length);;
     var teamSelectListStyle = {
       'minWidth': '400px'
     };

@@ -1,10 +1,8 @@
 var React = require('react');
-var api = require('../api.jsx');
 
 var Dropdown = React.createClass({
   getInitialState: function() {
     return {
-      selected: this.props.selected,
       selections: this.props.selectionList
     }
   },
@@ -14,21 +12,21 @@ var Dropdown = React.createClass({
     $('select[name="selectionList"]').change(this.handleChange);
   },
 
+  componentDidUpdate: function() {
+    $('select[name="selectionList"]').select2();
+  },
+
   handleChange: function(e) {
     var teamChanged = e.target.value;
-    this.props.iteration.memberChanged = teamChanged;
-    this.setState({selected: teamChanged});    
+    this.props.updateField('memberChanged', teamChanged);
   },
   
   render: function() {
-    var dropListStyle = {
-      'width': '170px'
-    };
     var populateSelection = this.state.selections.map(function(item) {
       return (<option key={item.id} value={item.id}>{item.name}</option>);
       });
     return (
-      <select name="selectionList" style={dropListStyle} disabled={!this.props.enableFields} value={this.state.selected}>
+      <select name="selectionList" className='inputCustom' disabled={!this.props.enableFields} value={this.props.iteration.memberChanged}  onChange={this.handleChange}>
         {populateSelection}
       </select>
     )

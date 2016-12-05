@@ -1,5 +1,7 @@
 var Promise = require('bluebird');
-
+Promise.config({
+  warnings: false
+});
 var requests = [];
 
 
@@ -122,9 +124,23 @@ module.exports.getChildrenTeams = function(pathId) {
   });
 };
 
-module.exports.loadTeamDetails = function(pathId) {
+module.exports.hasChildrenByPathId = function(pathId) {
   return new Promise(function(resolve, reject){
     var url ='/api/teams/haschildren/' + encodeURIComponent(pathId);
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.loadTeamDetails = function(pathId) {
+  return new Promise(function(resolve, reject){
+    var url ='/api/teams/teamchilddetail/' + encodeURIComponent(pathId);
     var req = $.ajax({
       type: 'GET',
       url: url
@@ -267,6 +283,25 @@ module.exports.getAssessmentTemplate = function(teamId, status){
   });
 };
 
+module.exports.deleteAssessment = function(assessId) {
+  return new Promise(function(resolve, reject){
+    var data = {
+      'docId': assessId
+    };
+    var url = '/api/assessment';
+    var req = $.ajax({
+      type: 'DELETE',
+      contentType: 'application/json',
+      data: JSON.stringify(data),
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
 module.exports.getIterationInfo = function(id) {
   return new Promise(function(resolve, reject){
     var url = '/api/iteration/current/' + encodeURIComponent(id);
@@ -345,76 +380,39 @@ module.exports.searchTeamIteration = function(teamId, startDate, enddate) {
   });
 };
 
-module.exports.getSelectableParents = function(teamId) {
+module.exports.getTemplateByVersion = function(version) {
   return new Promise(function(resolve, reject){
-    var url = '/api/teams/lookup/parents/' + encodeURIComponent(teamId);
+    var url = '/api/assessment/template/version/' + encodeURIComponent(version);
     var req = $.ajax({
       type: 'GET',
-      url: url
+      url: url,
     }).done(function(data){
-      return resolve(data);
+      resolve(data);
     }).fail(function(err){
-      return reject(err);
+      reject(err);
     });
   });
 };
 
-module.exports.getSelectableChildren = function(teamId) {
+module.exports.addAssessment = function(data) {
   return new Promise(function(resolve, reject){
-    var url = '/api/teams/lookup/children/' + encodeURIComponent(teamId);
+    var url = '/api/assessment/';
     var req = $.ajax({
-      type: 'GET',
-      url: url
-    }).done(function(data){
-      return resolve(data);
-    }).fail(function(err){
-      return reject(err);
-    });
-  });
-};
-
-module.exports.associateTeam = function(parentTeamId, childTeamId) {
-  return new Promise(function(resolve, reject) {
-    var requestData = {
-      'parentTeamId': parentTeamId,
-      'childTeamId': childTeamId
-    };
-    var url = '/api/teams/associates';
-    var req = $.ajax({
-      type: 'PUT',
+      type: 'POST',
+      url: url,
       contentType: 'application/json',
-      data: JSON.stringify(requestData),
-      url: url
+      data: JSON.stringify(data)
     }).done(function(data){
-      return resolve(data);
+      resolve(data);
     }).fail(function(err){
-      return reject(err);
+      reject(err);
     });
   });
 };
 
-module.exports.removeAssociation = function(childTeamId) {
-  return new Promise(function(resolve, reject) {
-    var requestData = {
-      'childTeamId': childTeamId
-    };
-    var url = '/api/teams/removeassociation';
-    var req = $.ajax({
-      type: 'PUT',
-      contentType: 'application/json',
-      data: JSON.stringify(requestData),
-      url: url
-    }).done(function(data){
-      return resolve(data);
-    }).fail(function(err){
-      return reject(err);
-    });
-  });
-};
-
-module.exports.updateLink = function(data) {
+module.exports.updateAssessment = function(data) {
   return new Promise(function(resolve, reject){
-    var url = '/api/teams/links';
+    var url = '/api/assessment/';
     var req = $.ajax({
       type: 'PUT',
       url: url,
@@ -428,18 +426,16 @@ module.exports.updateLink = function(data) {
   });
 };
 
-module.exports.deleteLink = function(data) {
+module.exports.getTeamAssessments = function(teamId, assessId) {
   return new Promise(function(resolve, reject){
-    var url = '/api/teams/links';
+    var url = '/api/assessment/view?teamId=' + encodeURIComponent(teamId) + '&assessId=' + encodeURIComponent(assessId);
     var req = $.ajax({
-      type: 'DELETE',
+      type: 'GET',
       url: url,
-      contentType: 'application/json',
-      data: JSON.stringify(data)
     }).done(function(data){
       resolve(data);
     }).fail(function(err){
       reject(err);
     });
   });
-};
+}

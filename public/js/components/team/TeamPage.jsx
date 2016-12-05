@@ -15,27 +15,16 @@ var update = require('immutability-helper');
 
 var TeamPage = React.createClass({
   getInitialState: function() {
-    console.log('getInitialState TeamPage');
     var urlParams = getJsonParametersFromUrl();
     var id =  _.isEmpty(urlParams) || _.isEmpty(urlParams.id) ? 'new' : urlParams.id;
     return {
       defaultTeam: id,
       selectedTeam: new Object(),
       teamInfoVisible: false,
-      initSelectLabel: [
-        {id: '-1', text: 'Select label'},
-        {id: 'Wall of work', text: 'Wall of work'},
-        {id: 'Backlog', text: 'Backlog'},
-        {id: 'Retrospectives', text: 'Retrospectives'},
-        {id: 'Defects', text: 'Defects'},
-        {id: 'Standup schedule', text: 'Standup schedule'},
-        {id: 'Other', text: 'Other...'}
-      ],
       selectedLinkLabel: ''
     }
   },
   componentDidMount: function() {
-    console.log('componentDidMount TeamPage');
     if (this.state.defaultTeam != 'new')
       this.getSelectedTeam(this.state.defaultTeam);
   },
@@ -54,86 +43,108 @@ var TeamPage = React.createClass({
     }
   },
   teamChangeHandler: function(event) {
-    return this.getSelectedTeam(event.target.value);
-  },
-  getSelectedTeam: function(teamId) {
     var self = this;
-    if (teamId == 'new' || teamId == 'delete') {
-      self.setState({
-        defaultTeam: teamId,
-        selectedTeam: new Object(),
-        teamInfoVisible: false
-      });
-    } else {
-      var teamResult = new Object();
-      var isSquad = false;
-      api.loadTeam(teamId)
-      .then(function(team){
-        teamResult = team;
-        var promiseArray = [];
-        promiseArray.push(api.getTeamHierarchy(team.path)); //results[0]
-        promiseArray.push(api.isUserAllowed(teamId)); //results[1]
-        var ids = [''];
-        if (team.members != null && team.members.length > 0) {
-          _.each(team.members, function(member){
-            ids.push(member.userId);
-          });
-        }
-        promiseArray.push(api.getUsersInfo(ids)); //results[2]
-        if (team.type == 'squad') {
-          isSquad = true;
-          promiseArray.push(api.getSquadIterations(teamId)); //results[3]
-          promiseArray.push(api.getSquadAssessments(teamId)); //results[4]
-        } else {
-          isSquad = false;
-          //promiseArray.push(api.getChildrenTeams(team.pathId));  //results[3]
-          //promiseArray.push(api.getTeamSnapshots(teamId)); //results[4]
-        }
-        return Promise.all(promiseArray)
-      })
-      .then(function(results){
-        if (isSquad) {
-          var rObject = {
-            'type': 'squad',
-            'team': teamResult,
-            'hierarchy': results[0],
-            'access': results[1],
-            'members': results[2],
-            'iterations': results[3],
-            'assessments': results[4],
-          };
-        } else {
-          var rObject = {
-            'type': '',
-            'team': teamResult,
-            'hierarchy': results[0],
-            'access': results[1],
-            'members': results[2],
-            //'children': results[3],
-            //'snapshot': results[4],
-          };
-        }
+    this.initSelectedTeam(event.target.value)
+      .then(function(result) {
         return self.setState({
-          defaultTeam: teamId,
-          selectedTeam: rObject,
-          teamInfoVisible: true
+          defaultTeam: result.defaultTeam,
+          selectedTeam: result.selectedTeam,
+          teamInfoVisible: result.teamInfoVisible
         });
       })
       .catch(function(err){
-        return console.log(err);
+        return err;
       });
-    }
   },
-  updateSelectLabel: function(obj) {
-    console.log('TeamPage updateSelectLabel obj:', obj)
-    // console.log('TeamPage updateSelectLabel this.state.initSelectLabel:', JSON.stringify(this.state.initSelectLabel,null,1))
-    // console.log('TeamPage updateSelectLabel obj:', JSON.stringify(obj,null,1))
-    var selectLabels = this.state.initSelectLabel.concat(obj);
-    // console.log('TeamPage updateSelectLabel selectLabels:', JSON.stringify(selectLabels,null,1))
-    this.setState({initSelectLabel: selectLabels})
+  getSelectedTeam: function(teamId, msg) {
+    var self = this;
+    this.initSelectedTeam(teamId)
+      .then(function(result) {
+        self.setState({
+          defaultTeam: result.defaultTeam,
+          selectedTeam: result.selectedTeam,
+          teamInfoVisible: result.teamInfoVisible
+        });
+        if (!_.isEmpty(msg))
+          alert(msg);
+        return result;
+      })
+      .catch(function(err){
+        return err;
+      });
   },
+  initSelectedTeam: function(teamId) {
+    return new Promise(function(resolve, reject) {
+      var self = this;
+      if (teamId == 'new' || teamId == 'delete') {
+        return resolve({
+          defaultTeam: teamId,
+          selectedTeam: new Object(),
+          teamInfoVisible: false
+        });
+      } else {
+        var teamResult = new Object();
+        var isSquad = false;
+        api.loadTeam(teamId)
+        .then(function(team){
+          teamResult = team;
+          var promiseArray = [];
+          promiseArray.push(api.getTeamHierarchy(team.path)); //results[0]
+          promiseArray.push(api.isUserAllowed(teamId)); //results[1]
+          var ids = [''];
+          if (team.members != null && team.members.length > 0) {
+            _.each(team.members, function(member){
+              ids.push(member.userId);
+            });
+          }
+          promiseArray.push(api.getUsersInfo(ids)); //results [2]
+          if (team.type == 'squad') {
+            isSquad = true;
+            promiseArray.push(api.getSquadIterations(teamId)); //results[3]
+            promiseArray.push(api.getSquadAssessments(teamId)); //results[4]
+          } else {
+            isSquad = false;
+            promiseArray.push(api.getChildrenTeams(team.pathId)); //results[3]
+            //promiseArray.push(api.getTeamSnapshots(teamId)); //results[4]
+          }
+          return Promise.all(promiseArray);
+        })
+        .then(function(results) {
+          if (isSquad) {
+            var rObject = {
+              'type': 'squad',
+              'team': teamResult,
+              'hierarchy': results[0],
+              'access': results[1],
+              'members': results[2],
+              'iterations': results[3],
+              'assessments': results[4],
+            };
+          } else {
+            var rObject = {
+              'type': '',
+              'team': teamResult,
+              'hierarchy': results[0],
+              'access': results[1],
+              'members': results[2],
+              'children': results[3],
+              //'snapshot': results[4],
+            };
+          }
+          return resolve({
+            defaultTeam: teamId,
+            selectedTeam: rObject,
+            teamInfoVisible: true
+          });
+        })
+        .catch(function(err){
+          return reject(err);
+        });
+      }
+    });
+  },
+
   updateLink: function(teamId, linkData) {
-    console.log('TeamPage updateLink...', JSON.stringify(linkData))
     var self = this;
     var currentLinkData = self.state.selectedTeam;
     if (teamId === currentLinkData.team._id) {
@@ -148,9 +159,7 @@ var TeamPage = React.createClass({
     }
   },
   setSelectedLinkLabel: function(objLabel) {
-    console.log('TeamPage setSelectedLinkLabel objLabel:',objLabel)
     this.setState({selectedLinkLabel: objLabel});
-    // return this.state.selectedLinkLabel;
   },
   getSelectedLinkLabel: function() {
     return this.state.selectedLinkLabel;
@@ -166,7 +175,7 @@ var TeamPage = React.createClass({
           <TeamForm teamChangeHandler={this.teamChangeHandler} selectedTeam={this.state.selectedTeam} defaultTeam={this.state.defaultTeam} getSelectedTeam={this.getSelectedTeam}/>
           <div id='teamDetailSection' class='squad-sections' style={overallStyle}>
             <TeamMembers selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
-            <TeamLinks selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection} initSelectLabel={this.state.initSelectLabel} getSelectedLinkLabel={this.getSelectedLinkLabel} setSelectedLinkLabel={this.setSelectedLinkLabel} updateSelectLabel={this.updateSelectLabel} updateLink={this.updateLink} />
+            <TeamLinks selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection} getSelectedLinkLabel={this.getSelectedLinkLabel} setSelectedLinkLabel={this.setSelectedLinkLabel} updateLink={this.updateLink} />
             <TeamParentAssociation selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
             <TeamChildAssociation selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
             <TeamIteration selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
@@ -174,7 +183,7 @@ var TeamPage = React.createClass({
             <TeamLastUpdate selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
           </div>
         </form>
-        <ModalLinkLabelForm initSelectLabel={this.state.initSelectLabel} getSelectedLinkLabel={this.getSelectedLinkLabel} setSelectedLinkLabel={this.setSelectedLinkLabel} />
+        <ModalLinkLabelForm getSelectedLinkLabel={this.getSelectedLinkLabel} setSelectedLinkLabel={this.setSelectedLinkLabel} />
       </div>
     )
   }

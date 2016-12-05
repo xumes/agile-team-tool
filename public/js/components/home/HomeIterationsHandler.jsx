@@ -85,6 +85,7 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAcc
   cycleTimeWIPSeries.data = [];
 
   var series = [];
+  // var iterationURL = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=';
   var iterationURL = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=';
 
   // Get last 6 iterations
@@ -315,6 +316,7 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAcc
   $('#GoIterationBtn').click(function() {
     var iterID = encodeURIComponent($('#gotoIterationList option:selected').val());
     var teamID = encodeURIComponent(teamId);
+    // window.location = 'iteration?id=' + teamID + '&iter=' + iterID;
     window.location = 'iteration?id=' + teamID + '&iter=' + iterID;
   });
   $('#gotoIterationList').removeAttr('disabled');
@@ -323,6 +325,7 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAcc
   if (teamAccess) {
     $('#CreateIterationBtn').removeAttr('disabled');
     $('#CreateIterationBtn').click(function(e) {
+      // window.location = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=new';
       window.location = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=new';
     });
   }

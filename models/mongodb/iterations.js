@@ -5,9 +5,11 @@ var mongoose = require('mongoose');
 var ObjectId = require('mongodb').ObjectID;
 var loggers = require('../../middleware/logger');
 var Users = require('./users.js');
+var util = require('../../helpers/util');
 var moment = require('moment');
 var dateFormat = 'YYYY-MM-DD HH:mm:ss';
 var Schema   = mongoose.Schema;
+
 require('../../settings');
 
 var IterationSchema = {
@@ -144,6 +146,76 @@ function isIterationNumExist(iterationName, iterData, docId) {
     }
   });
   return duplicate;
+};
+
+function validateDate(startDate, endDate) {
+  var dateFormat = 'MM/DD/YYYY';
+  var error = {};
+  var d1 = moment(new Date(startDate), dateFormat);
+  var d2 = moment(new Date(endDate), dateFormat);
+  var diff = moment(d1).diff(d2, 'days', true);
+  if (diff >= 1) {
+    error.startDate = {
+      message : 'Start date must be <= end date'
+    };
+  }
+  return error;
+};
+
+function checkSatisfaction(value) {
+  var invalid = false;
+  value = parseFloat(value);
+  if (value === 0) {
+    invalid = true;
+  } else {
+    if ((value != 0 && value < 1) || value > 4) {
+      invalid = true;
+    }
+  }
+
+  return invalid;
+};
+
+
+function validateIteration(data, iterData, docId){
+  var errorMsg = {};
+  var errorsList = {};
+  var result = validateDate(data.startDate, data.endDate);
+
+  if (!_.isEmpty(result)){
+    var field = _.keys(result);
+    if (field.length > 0){
+      _.each(field, function(value, key){
+        errorsList[value] = result[value];
+      });
+    }
+  }
+
+  var duplicate = isIterationNumExist(data['name'], iterData, docId);
+  if (duplicate) {
+    errorsList.name = {
+      message:'Iteration number/identifier: ' + data['name'] + ' already exists'
+    };
+  }
+
+  var invalid = checkSatisfaction(data['teamSatisfaction']);
+  if (invalid){
+    errorsList.teamSatisfaction = {
+      message:'Team satisfaction should be between 1.0 - 4.0'
+    };
+  }
+
+  invalid = checkSatisfaction(data['clientSatisfaction']);
+  if (invalid){
+    errorsList.clientSatisfaction = {
+      message:'Client satisfaction should be between 1.0 - 4.0'
+    };
+  }
+  if (_.keys(errorsList).length > 0){
+    errorMsg.errors = errorsList;
+  }
+
+  return errorMsg;
 };
 
 var iterationSchema = new Schema(IterationSchema);
@@ -285,19 +357,36 @@ var IterationExport = {
       })
       .then(function(iterData){
         if (iterData != undefined && iterData.length > 0) {
-          var duplicate = isIterationNumExist(data['name'], iterData);
-          if (duplicate) {
-            var msg = {};
-            msg.errors = {
-              name:{
-                message:'Iteration number/identifier: ' + data['name'] + ' already exists'
-              }
-            };
-            loggers.get('model-iteration').error(msg);
-            return Promise.reject(msg);
+          var errors = validateIteration(data, iterData);
+          if (!_.isEmpty(errors)){
+            return Promise.reject(errors);
           }
         }
         delete data['_id'];
+        return data;
+      })
+      .then(function(cleanData) {
+        return IterationExport.getDefectsOpenBalance(cleanData.teamId, cleanData.endDate);
+      })
+      .then(function(openBalance) {
+        if (_.isUndefined(data['defectsStartBal']) && _.isEmpty(data['defectsStartBal'])) {
+          data['defectsStartBal'] = openBalance;
+        } else {
+          openBalance = util.getIntegerValue(data['defectsStartBal']);
+        }
+        loggers.get('model-iteration').verbose('[iterationModels.add] Defect start balance: ' + openBalance);
+        var newDefects = util.getIntegerValue(data['defects']);
+        loggers.get('model-iteration').verbose('[iterationModels.add] Defect new defects: ' + newDefects);
+        var closedDefects = util.getIntegerValue(data['defectsClosed']);
+        loggers.get('model-iteration').verbose('[iterationModels.add] Defect resolved defects: ' + closedDefects);
+        var endBalance = openBalance + newDefects - closedDefects;
+        loggers.get('model-iteration').verbose('[iterationModels.add] Defect end balance: ' + endBalance);
+        if (_.isUndefined(data['defects']) || !_.isEmpty(data['defects']))
+          data['defects'] = newDefects;
+        if (_.isUndefined(data['defectsClosed']) || !_.isEmpty(data['defectsClosed']))
+          data['defectsClosed'] = closedDefects;
+        data['defectsEndBal'] = endBalance;
+
         return Iteration.create(data);
       })
       .then(function(result){
@@ -323,12 +412,11 @@ var IterationExport = {
       })
       .then(function(iterData){
         if (iterData != undefined && iterData.length > 0) {
-          var duplicate = isIterationNumExist(data['name'], iterData, docId);
-          if (duplicate) {
-            var msg = 'Iteration number/identifier: ' + data['name'] + ' already exists';
-            loggers.get('model-iteration').error(msg);
-            return Promise.reject(msg);
+          var errors = validateIteration(data, iterData, docId);
+          if (!_.isEmpty(errors)){
+            return Promise.reject(errors);
           }
+
         }
         return Users.findUserByUserId(userId.toUpperCase());
       })
@@ -352,6 +440,38 @@ var IterationExport = {
       .catch( /* istanbul ignore next */ function(err){
         loggers.get('model-iteration').error('Iteration edit error: ' + err);
         return reject({'error':err});
+      });
+    });
+  },
+
+  /*
+   * Get previous iteration's closing defect balance
+   * @params teamid - team ID
+   * @params iterEndDate - iteration end date
+   */
+  getDefectsOpenBalance: function(teamId, iterEndDate) {
+    return new Promise(function(resolve, reject) {
+      var params = {
+        id: teamId,
+        status: null,
+        startdate: '0',
+        enddate: iterEndDate
+      };
+      IterationExport.searchTeamIteration(params)
+      .then(function(iteration) {
+        console.log('[getDefectsOpenBalance] body: '+JSON.stringify(iteration));
+        if (!_.isEmpty(iteration)) {
+          if (!_.isUndefined(iteration[0].defectsEndBal) & !isNaN(iteration[0].defectsEndBal))
+            return util.getIntegerValue(iteration[0].defectsEndBal);
+        }
+        return 0;
+      })
+      .then(function(body) {
+        resolve(body);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        loggers.get('models').error('[iterationModel.getOpeningDefectBalance]:', err);
+        reject({'error':err});
       });
     });
   },
@@ -504,7 +624,7 @@ var IterationExport = {
       }
     });
   },
-  deleteByFields: function(request) {
+  deleteByFields: /* istanbul ignore next */ function(request) {
     return new Promise(function(resolve, reject) {
       if (!request) {
         var msg = 'request is missing';

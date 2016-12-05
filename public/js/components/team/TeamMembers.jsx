@@ -1,15 +1,41 @@
 var React = require('react');
 var _ = require('underscore');
 var TeamDropdownRole = require('./TeamDropdownRole.jsx');
-var taPerson = null;
+var TeamErrorValidationHandler = require('./TeamErrorValidationHandler.jsx');
+var teamApi = require('./TeamApi.jsx');
 
 var TeamMembers = React.createClass({
   getInitialState: function() {
     return {
-      selectedMember: new Object()
+      selectedAction: 'add',
+      selectedIndex: [],
+      selectedMember: {
+        name: '',
+        role: '',
+        allocation: '',
+        userId: '',
+        email: ''
+      },
+      facesPerson: new Object(),
+      teamMembers: [],
+      userMembers: [],
+      formError: {
+        error: new Object(),
+        map: [
+          {field: 'name', id: 'teamMemberName'},
+          {field: 'userId', id: 'teamMemberName'},
+          {field: 'role', id: 'memberRoleSelectList'},
+          {field: 'role', id: 'otherRoleDesc'},
+          {field: 'allocation', id: 'memberAllocation'}
+        ]
+      }
     }
   },
   componentDidMount: function() {
+    var self = this;
+    self.state.teamMembers = self.props.selectedTeam && self.props.selectedTeam.team ? self.props.selectedTeam.team.members : [];
+    self.state.userMembers = self.props.selectedTeam && self.props.selectedTeam.members ? self.props.selectedTeam.members : [];
+
     FacesTypeAhead.init(
       $('#teamMemberName'), {
         key: 'ciodashboard;agileteamtool@us.ibm.com',
@@ -18,69 +44,99 @@ var TeamMembers = React.createClass({
         faces: {
           headerLabel: 'People',
           onclick: function(person) {
-            taPerson = person;
+            self.state.facesPerson = person;
             return person['name'];
           }
         },
         topsearch: {
           headerLabel: 'w3 Results',
-          enabled: true
+          enabled: false
         }
       });
-
     // Use IBM's bundled select2 package
-    $('select[name=\'memberRoleSelectList\']').select2();
-    $('select[name=\'memberListAction\']').select2();
+    $('#memberRoleSelectList').select2();
+    $('#memberListAction').select2();
+    $('#memberListAction').change(this.memberListActionChange);
+  },
+  componentWillReceiveProps: function(newProps) {
+    var self = this;
+    self.state.teamMembers = newProps.selectedTeam && newProps.selectedTeam.team ? newProps.selectedTeam.team.members : [];
+    self.state.userMembers = newProps.selectedTeam && newProps.selectedTeam.members ? newProps.selectedTeam.members : [];
+    var map = self.state.formError.map;
+    self.setState({
+      formError: {
+        error: new Object(),
+        map: map
+      }
+    });
   },
   componentDidUpdate: function() {
     var selectedTeam = this.props.selectedTeam;
-    if (!_.isEmpty(selectedTeam)) { 
-      this.refs.teamMemberName.disabled = !selectedTeam.access;
-      this.refs.otherRoleDesc.disabled = !selectedTeam.access;
-      this.refs.memberAllocation.disabled = !selectedTeam.access;
-      this.refs.memberListAction.disabled = true;
-      this.refs.addMemberBtn.disabled = !selectedTeam.access;
-      this.refs.updateMemberBtn.disabled = true;
-      this.refs.cancelMemberBtn.disabled = !selectedTeam.access;
-      $('input[type=checkbox]').change(this.memberClick);
-    } else {
-      this.refs.teamMemberName.disabled = false;
-      this.refs.otherRoleDesc.disabled = false;
+    if (!_.isEmpty(selectedTeam) && selectedTeam.access) {
+      this.refs.teamMemberName.value = this.state.selectedMember.name;
+      this.refs.teamMemberName.disabled = _.isEqual(this.state.selectedAction, 'update') ? true : false;
+      if ($('#memberRoleSelectList option[value="' + this.state.selectedMember.role + '"]').length == 0) {
+        $('#memberRoleSelectList').val('Other...').trigger('change');
+        this.refs.otherRoleDesc.value = this.state.selectedMember.role;
+        this.refs.otherRoleDesc.disabled = false;
+      } else {
+        $('#memberRoleSelectList').val(this.state.selectedMember.role).trigger('change');
+        this.refs.otherRoleDesc.value = '';
+        this.refs.otherRoleDesc.disabled = true;
+      }
+      this.refs.memberAllocation.value = this.state.selectedMember.allocation;
       this.refs.memberAllocation.disabled = false;
       this.refs.memberListAction.disabled = true;
-      this.refs.addMemberBtn.disabled = false;
-      this.refs.updateMemberBtn.disabled = true;
+      this.refs.addMemberBtn.disabled = _.isEqual(this.state.selectedAction, 'add') ? false : true;
+      this.refs.updateMemberBtn.disabled = _.isEqual(this.state.selectedAction, 'update') ? false : true;
       this.refs.cancelMemberBtn.disabled = false;
+    } else {
+      this.refs.teamMemberName.disabled = true;
+      this.refs.otherRoleDesc.disabled = true;
+      this.refs.memberAllocation.disabled = true;
+      this.refs.memberListAction.disabled = true;
+      this.refs.addMemberBtn.disabled = true;
+      this.refs.updateMemberBtn.disabled = true;
+      this.refs.cancelMemberBtn.disabled = true;
+    }
+  },
+  toTitleCase: function(str) {
+    var strArray = str.toUpperCase().split(',');
+    if (strArray.length < 3) {
+      return str.toUpperCase();
+    } else {
+      strArray[0] = strArray[0].replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+      return strArray.join(', ');
     }
   },
   memberRoleChangeHandler: function(e) {
-    var role = $('#memberRoleSelectList option:selected').text();
-    if ($('#memberRoleSelectList option:selected').val().indexOf('Other...') != -1)
+    var role = e.currentTarget.value || $('#memberRoleSelectList option:selected').val();
+    if (role.indexOf('Other...') != -1) {
+      this.state.selectedMember.role = role;
       $('#otherRoleDescSection').show();
-    else
+      $('#otherRoleDesc').removeAttr('disabled');
+      $('#otherRoleDesc').val('');
+    } else {
+      this.state.selectedMember.role = '';
       $('#otherRoleDescSection').hide();
-
-    if ($('#memberRoleSelectList').val() != '')
-      clearFieldErrorHighlight('memberRoleSelectList');
+    }
   },
   memberRoleOtherChange: function(e) {
-    if ($('#otherRoleDesc').val() != '')
-      clearFieldErrorHighlight('otherRoleDesc');      
+    if (this.refs.otherRoleDesc.value != '') {
+      this.state.role = this.refs.otherRoleDesc.value;
+    }
   },
   memberNameChange: function(e) {
-    if ($('#teamMemberName').val() == '')
-      taPerson = null;
-    else if (taPerson != undefined && $('#teamMemberName').val() != taPerson['name'])
-      taPerson = null;
-
-    if (taPerson != null)
-      clearFieldErrorHighlight('teamMemberName');
+    if (e.currentTarget.value == '')
+      this.setState({facesPerson: new Object()});
+    else if (!_.isEmpty(this.state.facesPerson) && !_.isEqual(e.currentTarget.value, this.state.facesPerson.name))
+      this.setState({facesPerson: new Object()});
   },
   memberNameBlur: function(e) {
-    if (taPerson != undefined && taPerson != null) {
-      clearFieldErrorHighlight('teamMemberName');
-      if ($('#memberAllocation').val() == '')
-        $('#memberAllocation').val('100');
+    if (!_.isEmpty(this.state.facesPerson) && _.isEqual(e.currentTarget.value, this.state.facesPerson.name)) {
+      if (this.refs.memberAllocation.value == '') {
+        this.refs.memberAllocation.value = 100;
+      }
     }
   },
   wholeNumCheck: function(e) {
@@ -90,168 +146,218 @@ var TeamMembers = React.createClass({
       e.preDefault();
     }
   },
-  memberClick: function(e) {
-    var count = $('input[name="member"]:checked').length;
-
+  memberSelected: function() {
+    var index = [];
+    var count = 0;
+    $('input[name="member"]:checked').each(function() {
+      count++;
+      index.push($(this).val());
+    });
     if (count > 0) {
-      $('#memberListAction').removeAttr('disabled');
-      $('#memberAction').html('Actions... (' + count + ')');
-      $('#select2-memberListAction-container').text('Actions... (' + count + ')');
-      $('#select2-memberListAction-container').attr('title', 'Actions... (' + count + ')');
-      $('#select2-memberListAction-container').css('color', 'black');
-
+      this.state.selectedIndex = index;
+      this.refs.memberListAction.disabled = false;
+      $('#memberAction').text('Actions... (' + count + ')');
+      $('#memberAction').val('');
+      $(this.refs.memberListAction).select2();
     } else {
-      $('#memberListAction').val('');
-      $('#select2-memberListAction-container').text('Actions...');
-      $('#select2-memberListAction-container').attr('title', 'Actions...');
-      $('#select2-memberListAction-container').css('color', 'grey');
-      $('#memberListAction').attr('disabled', 'disabled');
-      updateMemberInfo('clear');
+      this.resetMember();
     }
   },
   memberListActionChange: function(e) {
-    if ($('input[name="member"]:checked').length < 1) {
-      showMessagePopup('No selected members to perform desired action.');
-      $('#memberListAction').val('');
-      $('#select2-memberListAction-container').text('Actions...');
-      $('#select2-memberListAction-container').attr('title', 'Actions...');
-      $('#select2-memberListAction-container').css('color', 'grey');
-      $('#memberListAction').attr('disabled', 'disabled');
-      return;
-    }
-    var enableAction = false;
-    var action = $('#memberListAction option:selected').val();
+    var self = this;
+    var action = e.currentTarget.value;
     if (action == 'remove') {
-      $('#addMemberBtn').attr('disabled', 'disabled');
-      $('#updateMemberBtn').attr('disabled', 'disabled');
-      deleteTeamMember();
-
+      self.refs.addMemberBtn.disabled = true;
+      self.refs.updateMemberBtn.disabled = true;
+      var teamMembers = [];
+      for (var i=0; i<self.state.teamMembers.length; i++) {
+        if (self.state.selectedIndex.indexOf(i+'') == -1)
+          teamMembers.push(self.state.teamMembers[i]);
+      }
+      var team = {
+        _id: self.props.selectedTeam.team._id,
+        members: teamMembers
+      };
+      teamApi.modifyTeamMembers(JSON.stringify(team))
+        .then(function(result) {
+          self.state.teamMembers = teamMembers;
+          self.resetMember();
+          alert('You have successfully removed Team member(s).');
+        })
+        .catch(function(err) {
+          var map = self.state.formError.map;
+          self.setState({
+            formError: {
+              error: err,
+              map: map
+            }
+          });
+        });
+        $('#memberListAction').val('').change();
     } else if (action == 'update') {
       if ($('input[name="member"]:checked').length > 1) {
         showMessagePopup('Only one member can be selected for update.');
+        $('#memberListAction').val('').change();
 
       } else {
-        loadMemberInfo($('input[name="member"]:checked').val());
+        var index = $('input[name="member"]:checked').val();
+        var member = {
+          name: $('#name_ref_'+index).html(),
+          role: $('#role_ref_'+index).html(),
+          allocation: $('#alloc_ref_'+index).html(),
+          userId: $('#userId_ref_'+index).html(),
+          email: $('#email_ref_'+index).html(),
+        };
+        var map = self.state.formError.map;
+        self.setState({
+          selectedIndex: [index],
+          selectedAction: action,
+          selectedMember: member,
+          formError: {
+            error: new Object(),
+            map: map
+          }
+        });
+        $('#memberListAction').val('').change();
+        this.refs.memberListAction.disabled = false;
       }
-      enableAction = true;
-    }
-    var count = $('input[name="member"]:checked').length;
-    var actionText = count > 0 ? 'Actions...(' + count + ')' : 'Actions...';
-    if (enableAction) {
-      $('#memberListAction').removeAttr('disabled');
-      $('#memberListAction').val('');
-      $('#select2-memberListAction-container').text(actionText);
-      $('#select2-memberListAction-container').attr('title', actionText);
-      $('#select2-memberListAction-container').css('color', 'black');
-    } else {
-      $('#select2-memberListAction-container').text(actionText);
-      $('#select2-memberListAction-container').attr('title', actionText);
-      $('#select2-memberListAction-container').css('color', 'grey');
-      $('#memberListAction').attr('disabled', 'disabled');
     }
   },
   addUpdateMember: function(e) {
-    $('#addMemberBtn').attr('disabled', 'disabled');
-    $('#memberListAction').attr('disabled', 'disabled');
-    $('#updateMemberBtn').attr('disabled', 'disabled');
-    var hasError = false;
-    var currAlloc = isNaN(parseInt($('#memberAllocation').val())) ? 0 : parseInt($('#memberAllocation').val());
-    if (taPerson == undefined || $('#teamMemberName').val() == '') {
-      setFieldErrorHighlight('teamMemberName');
-      showMessagePopup('Unable to retrieve information from Faces for the member indicated.  Please try the selection again.');
-      hasError = true;
-    } else if (isNaN(currAlloc) || (currAlloc < 0 || currAlloc > 100)) {
-      setFieldErrorHighlight('memberAllocation');
-      showMessagePopup('Team member allocation should be between <br> 0 - 100');
-      hasError = true;
-    } else if ($('#memberRoleSelectList option:selected').val() == '') {
-      setFieldErrorHighlight('memberRoleSelectList');
-      showMessagePopup('Please select a valid role');
-      hasError = true;
-    } else if ($('#memberRoleSelectList option:selected').val() == 'other' && $('#otherRoleDesc').val().trim() == '') {
-      setFieldErrorHighlight('otherRoleDesc');
-      showMessagePopup('Specify the "Other" role for the selected member.');
-      hasError = true;
-    }
-    if (hasError) {
-      if (e.target.id == 'addMemberBtn')
-        $('#addMemberBtn').removeAttr('disabled');
-      else if (e.target.id == 'updateMemberBtn')
-        $('#updateMemberBtn').removeAttr('disabled');
-
-      return;
+    var self = this;
+    if (e.target.id == 'addMemberBtn') {
+      var member = {
+        name: $('#teamMemberName').val(),
+        role:  $('#memberRoleSelectList').val() == 'Other...' ? $('#otherRoleDesc').val() : $('#memberRoleSelectList').val(),
+        allocation: $('#memberAllocation').val(),
+        userId: self.state.facesPerson.uid ? self.state.facesPerson.uid.toUpperCase() : null,
+        email: self.state.facesPerson.email ? self.state.facesPerson.email.toLowerCase() : null,
+        location: {
+          site: self.state.facesPerson.location ? self.state.facesPerson.location.toLowerCase() : null
+        }
+      }
+      var teamMembers = self.state.teamMembers;
+      var userMembers = self.state.userMembers;
+      teamMembers.push(member);
+      userMembers.push(member);
+      var team = {
+        _id: self.props.selectedTeam.team._id,
+        members: teamMembers
+      };
+      teamApi.modifyTeamMembers(JSON.stringify(team))
+        .then(function(result) {
+          self.resetMember();
+          alert('You have successfully added a Team Member to team to ' + self.props.selectedTeam.team.name + '.');
+        })
+        .catch(function(err) {
+          self.state.teamMembers.pop();
+          self.state.userMembers.pop();
+          var map = self.state.formError.map;
+          self.setState({
+            formError: {
+              error: err,
+              map: map
+            }
+          });
+        });
+    } else if (e.target.id == 'updateMemberBtn') {
+      var member = self.state.selectedMember;
+      member.role = $('#memberRoleSelectList').val() == 'Other...' ? $('#otherRoleDesc').val() : $('#memberRoleSelectList').val();
+      member.allocation = $('#memberAllocation').val();
+      var teamMembers = self.state.teamMembers;
+      teamMembers[self.state.selectedIndex[0]] = member;
+      //ajax call
+      var team = {
+        _id: self.props.selectedTeam.team._id,
+        members: teamMembers
+      };
+      teamApi.modifyTeamMembers(JSON.stringify(team))
+        .then(function(result) {
+          self.resetMember();
+          alert('You have successfully updated a Team Member.');
+        })
+        .catch(function(err) {
+          var map = self.state.formError.map;
+          self.setState({
+            formError: {
+              error: err,
+              map: map
+            }
+          });
+        });
     }
   },
   resetMember: function(e) {
-    taPerson = null;
-    $('#otherRoleDescSection').fadeOut();
-    $('#memberRoleSelectList').val('');
-    $('#memberRoleSelectList').trigger('change');
-    clearFieldErrorHighlight('memberRoleSelectList');
-    $('#otherRoleDesc').val('');
-    clearFieldErrorHighlight('otherRoleDesc');
-    $('#teamMemberName').val('');
-    clearFieldErrorHighlight('teamMemberName');
-    $('#memberAllocation').val('');
-    clearFieldErrorHighlight('memberAllocation');
-    $('#teamMemberName').removeAttr('disabled');
-    $('#addMemberBtn').removeAttr('disabled');
-    $('#updateMemberBtn').attr('disabled', 'disabled');
-    $('#memberListAction').attr('disabled', 'disabled');
-    $('#select2-memberListAction-container').text('Action...');
-    $("input[name='member']:checked").each(function() {
-      this.checked = false;
+    var map = this.state.formError.map;
+    this.setState({
+      selectedAction: 'add',
+      selectedIndex: [],
+      selectedMember: {
+        name: '',
+        role: '',
+        allocation: '',
+        userId: '',
+        email: ''
+      },
+      facesPerson: new Object(),
+      formError: {
+        error: new Object(),
+        map: map
+      }
     });
+    $("input[name='member']:checked").removeAttr('checked');
+    $('#memberAction').text('Actions...');
+    $('#memberAction').val('');
+    this.refs.memberListAction.disabled = true;
+    $(this.refs.memberListAction).select2();
   },
   render: function() {
     var self = this;
-    if (_.isEmpty(self.props.selectedTeam.members) || self.props.selectedTeam.members.length <= 0) {
-      var teamMembers = null;
-    } else {
-      var tmembers = self.props.selectedTeam.team.members;
-      var count = 0;
-      tempMembers = _.sortBy(self.props.selectedTeam.members, function(member){
-        return member.name.toLowerCase();
-      });
-      teamMembers = tempMembers.map(function(member){
-        var tmember = _.find(tmembers, function(m){
-          if (m.userId == member.userId) {
-            return m;
-          }
-        });
-        var memberRole = tmember.role;
-        var memberAllocation = tmember.allocation;
-        var memberBlockId = 'mrow_' + count;
-        var memberId = 'member_' + count;
-        var memberName = member.name;
-        var memberEmail = member.email;
-        var memberLocation = member.location.site;
-        var nameRefId = 'name_ref_' + count;
-        var emailRefId = 'email_ref_' + count;
-        var locationRefId = 'location_ref_' + count;
-        var roleRefId = 'role_ref_' + count;
-        var allocRefId = 'alloc_ref_' + count;
-        if (self.props.selectedTeam.access) {
-          memberAccess = '';
-        } else {
-          memberAccess='true';
+    var count = 0;
+    self.state.teamMembers = _.sortBy(self.state.teamMembers, function(m){
+      return m.name.toLowerCase();
+    });
+    teamMemberList = self.state.teamMembers.map(function(member){
+      var userMember = _.find(self.state.userMembers, function(um){
+        if (um.userId == member.userId) {
+          return um;
         }
-        count++;
-        return (
-          <tr key={memberBlockId} id={memberBlockId}>
-            <td scope='row' class='ibm-table-row'>
-              <label for={memberId} class='ibm-access'>Select {memberName}</label>
-              <input type='checkbox' name='member' id={memberId} value={count-1} disabled={memberAccess} />
-            </td>
-            <td id={nameRefId}>{memberName}</td>
-            <td id={emailRefId}>{memberEmail}</td>
-            <td id={allocRefId}>{memberAllocation}</td>
-            <td id={locationRefId}>{memberLocation}</td>
-            <td id={roleRefId}>{memberRole}</td>
-          </tr>
-        );
       });
-    }
+      var memberRole = member.role;
+      var memberAllocation = member.allocation;
+      var memberBlockId = 'mrow_' + count;
+      var memberId = 'member_' + count;
+      var memberName = member.name;
+      var memberEmail = member.email;
+      var memberUserId = member.userId;
+      var memberLocation = userMember ? self.toTitleCase(userMember.location.site) : '';
+      var nameRefId = 'name_ref_' + count;
+      var emailRefId = 'email_ref_' + count;
+      var userIdRefId = 'userId_ref_' + count;
+      var locationRefId = 'location_ref_' + count;
+      var roleRefId = 'role_ref_' + count;
+      var allocRefId = 'alloc_ref_' + count;
+      if (self.props.selectedTeam.access) {
+        memberAccess = '';
+      } else {
+        memberAccess='true';
+      }
+      count++;
+      return (
+        <tr key={memberBlockId} id={memberBlockId}>
+          <td scope='row' class='ibm-table-row'>
+            <label for={memberId} class='ibm-access'>Select {memberName}</label>
+            <input type='checkbox' name='member' id={memberId} value={count-1} disabled={memberAccess} onClick={()=>self.memberSelected()}/>
+          </td>
+          <td id={nameRefId}>{memberName}</td>
+          <td id={emailRefId}>{memberEmail}</td>
+          <td id={userIdRefId} style={{'display':'none'}}>{memberUserId}</td>
+          <td id={allocRefId}>{memberAllocation}</td>
+          <td id={locationRefId}>{memberLocation}</td>
+          <td id={roleRefId}>{memberRole}</td>
+        </tr>
+      );
+    });
     var hiddenStyle = {
       'display': 'none'
     };
@@ -283,7 +389,7 @@ var TeamMembers = React.createClass({
               <a class='ibm-information-link' data-widget='tooltip' data-contentid='squadToolTip-role' style={tooltipStyle}><span class='ibm-access'>Tooltip</span></a>
             </label>
             <span>
-              <TeamDropdownRole memberRoleChangeHandler={this.memberRoleChangeHandler} selectedTeam={this.props.selectedTeam} selectedRole={this.state.selectedRole}/>
+              <TeamDropdownRole memberRoleChangeHandler={this.memberRoleChangeHandler} selectedTeam={this.props.selectedTeam} selectedRole={this.state.selectedMember.role}/>
             </span>
           </p>
 
@@ -323,7 +429,7 @@ var TeamMembers = React.createClass({
               <span id='spin' style={{'display': 'none'}} class='ibm-spinner'></span>
               <span style={{'width': '350px'}}>
               <label for='memberListAction' class='ibm-access'>Action</label>
-              <select id='memberListAction' name='memberListAction' ref='memberListAction' style={{'width': '150px'}} aria-label='memberListAction' onChange={this.memberListActionChange}>
+              <select id='memberListAction' name='memberListAction' ref='memberListAction' style={{'width': '150px'}} aria-label='memberListAction' >
                   <option id='memberAction' defaultValue='Actions...' >Actions...</option>
                   <option value='update'>Update</option>
                   <option value='remove'>Remove</option>
@@ -343,10 +449,11 @@ var TeamMembers = React.createClass({
               </tr>
             </thead>
             <tbody id='memberList'>
-              {teamMembers != null ? teamMembers : <tr class='odd'><td colSpan='6' class='dataTables_empty'>No data available</td></tr>}
+              {teamMemberList != null ? teamMemberList : <tr class='odd'><td colSpan='6' class='dataTables_empty'>No data available</td></tr>}
             </tbody>
           </table>
         </div>
+        <TeamErrorValidationHandler formError={this.state.formError} />
       </div>
     )
   }

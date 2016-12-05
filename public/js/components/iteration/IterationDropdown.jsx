@@ -4,9 +4,23 @@ var api = require('../api.jsx');
 var IterationDropdown = React.createClass({
   getInitialState: function() {    
     return {
-      selectedIteration: this.props.iteration._id,
       iterations: [],
       firstOption:  ['new', 'Create new...']
+    }
+  },
+
+  componentWillReceiveProps: function(nextProps){
+    if (nextProps.iteration != undefined && nextProps.iteration != null){
+      selectEnable = false;
+      if(!_.isNull(nextProps.iteration.teamId) && !_.isEmpty(nextProps.iteration.teamId) &&
+        !nextProps.isReadOnly){
+        this.setState({
+        firstOption: ['new', 'Create new...']
+      });
+      }
+      else {
+        this.setState({firstOption: ['', 'Select one']});
+      }
     }
   },
 
@@ -16,19 +30,24 @@ var IterationDropdown = React.createClass({
     if (teamId != undefined && !_.isEmpty(teamId)) {
       api.getIterations(teamId)
         .then(function(result) {
-          self.setState({
-            iterations: result,
-            selectedIteration: self.props.iteration._id
-          });
+          
           self.loadSelected(self.props.iteration._id);
+          self.setState({iterations: result});
+        })
+        .catch(function(err){
+          console.log('[iter-componentWillMount] error:'+JSON.stringify(err));
         });
     }
   },
   
   componentDidMount: function() {
     // Use IBM's bundled select2 package
-    $(this.refs.iterationSelectList).select2();
-    $(this.refs.iterationSelectList).change(this.handleChange);
+    $('select[name="iterationSelectList"]').select2();
+    $('select[name="iterationSelectList"]').change(this.handleChange);
+  },
+
+  componentDidUpdate: function() {
+    $('select[name="iterationSelectList"]').select2();
   },
 
   handleChange: function(e) {
@@ -40,20 +59,19 @@ var IterationDropdown = React.createClass({
     if (!_.isEmpty(id) && id != 'new'){
       api.getIterationInfo(id)
         .then(function(result) {
-          self.props.updateForm(result);
+          return self.props.updateForm(result);
+        })
+        .catch(function(err){
+          console.log('[loadSelected] error:'+JSON.stringify(err));
         });
     }
     else {
       var teamId = self.props.iteration.teamId;
-      self.props.updateForm(null, false);
-      if (!_.isEmpty(teamId)){
-        self.props.updateField('teamId',teamId);
-      }
+      this.props.teamReset(teamId);
     }
-    self.setState({selectedIteration: id});
   },
 
-  retrieveIterations: function(teamId, selected, state, firstOption){
+  retrieveIterations: function(teamId, selected){
     var self = this;
     if (teamId != undefined && !_.isEmpty(teamId)){
       if (selected != undefined && selected != null){
@@ -64,8 +82,8 @@ var IterationDropdown = React.createClass({
             return api.getIterationInfo(selected);
           })
           .then(function(result) {
-            self.props.updateForm(result, state);
-            self.setState({iterations: iterations, selectedIteration: selected, firstOption: firstOption});
+            self.props.updateForm(result);
+            self.setState({iterations: iterations});
           })
           .catch(function(err){
             console.log('[retrieveIterations] error:'+JSON.stringify(err));
@@ -74,12 +92,7 @@ var IterationDropdown = React.createClass({
       else {
         api.getIterations(teamId)
           .then(function(result) {
-            self.setState({iterations: result, selectedIteration: firstOption[0], firstOption: firstOption});
-            var teamId = self.props.iteration.teamId;
-            self.props.updateForm(null, state);
-            if (!_.isEmpty(teamId)){
-              self.props.updateField('teamId',teamId);
-            }
+            self.setState({iterations: result});
           })
           .catch(function(err){
             console.log('[retrieveIterations] error:'+JSON.stringify(err));
@@ -96,7 +109,7 @@ var IterationDropdown = React.createClass({
     });
 
     return (
-      <select id='iterationSelectList' disabled={!this.props.enableFields} value={this.state.selectedIteration} className='iterationField' onChange={this.handleChange} ref='iterationSelectList'>
+      <select id='iterationSelectList' name='iterationSelectList' disabled={_.isEmpty(this.props.iteration.teamId)?true:false} value={this.props.iteration._id} className='iterationField' onChange={this.handleChange}>
         <option value={this.state.firstOption[0]} key={this.state.firstOption[0]}>{this.state.firstOption[1]}</option>
         {populateIteratNames}
       </select>

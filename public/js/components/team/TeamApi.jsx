@@ -12,11 +12,23 @@ var teamApi = {
         });
     });
   },
+  fetchTeamLinkLabels: function () {
+    return new Promise(function(resolve, reject) {
+      $.get('/api/teams/linklabels')
+        .complete(function(data) {
+          resolve(data);
+        })
+        .fail(function(err) {
+          reject(new Error('Unable to fetch link labels'));
+        });
+    });
+  },
   postTeam: function(data) {
     return new Promise(function(resolve, reject){
       var url = '/api/teams';
       var req = $.ajax({
         type: 'POST',
+        contentType: 'application/json',
         url: url,
         data: data
       }).done(function(data){
@@ -31,6 +43,7 @@ var teamApi = {
       var url = '/api/teams';
       var req = $.ajax({
         type: 'PUT',
+        contentType: 'application/json',
         url: url,
         data: data
       }).done(function(data){
@@ -45,8 +58,54 @@ var teamApi = {
       var url = '/api/teams';
       var req = $.ajax({
         type: 'DELETE',
+        contentType: 'application/json',
         url: url,
         data: data
+      }).done(function(data){
+        resolve(data);
+      }).fail(function(err){
+        reject(err);
+      });
+    });
+  },
+  modifyTeamMembers: function(data) {
+    return new Promise(function(resolve, reject){
+      var url = '/api/teams/members';
+      var req = $.ajax({
+        type: 'PUT',
+        contentType: 'application/json',
+        url: url,
+        data: data
+      }).done(function(data){
+        resolve(data);
+      }).fail(function(err){
+        reject(err);
+      });
+    });
+  },
+  updateLink: function(data) {
+    return new Promise(function(resolve, reject){
+      var url = '/api/teams/links';
+      var req = $.ajax({
+        type: 'PUT',
+        url: url,
+        contentType: 'application/json',
+        data: JSON.stringify(data)
+      }).done(function(data){
+        resolve(data);
+      }).fail(function(err){
+        reject(err);
+      });
+    });
+  },
+  deleteLink: function(data) {
+    return new Promise(function(resolve, reject){
+      var url = '/api/teams/links';
+      var req = $.ajax({
+        type: 'DELETE',
+        url: url,
+        contentType: 'application/json',
+        data: JSON.stringify(data)
       }).done(function(data){
         resolve(data);
       }).fail(function(err){

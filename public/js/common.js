@@ -146,7 +146,7 @@ function getPersonFromFaces(userEmail, _callback, args) {
     } else
       gFacesCache = [];
 
-    var svcRoot = 'https://faces.tap.ibm.com/api/';
+    var svcRoot = 'https://faces.w3ibm.mybluemix.net/api/';
     var svcFunc = 'find/?limit=100&q=email:' + encodeURIComponent('"' + escape(userEmail) + '"');
     var svcURL = svcRoot + svcFunc;
     $.ajax({
@@ -216,7 +216,7 @@ function getPersonByCnumFromFaces(uid, _callback, args) {
     } else
       gFacesCache = [];
 
-    var svcRoot = 'https://faces.tap.ibm.com/api/';
+    var svcRoot = 'https://faces.w3ibm.mybluemix.net/api/';
     var svcFunc = 'find/?limit=100&q=uid:' + encodeURIComponent('"' + escape(uid) + '"');
     var svcURL = svcRoot + svcFunc;
     $.ajax({
@@ -328,7 +328,22 @@ function setGlobalTeamList(teamList) {
  * @returns {Boolean}
  */
 function hasAccess(teamId) {
-  return isAdmin() || isUserMemberOfTeam(teamId);
+  var flag = false;
+
+  // valid admin status for Admin user related updates only.
+  if (!_.isEmpty(systemStatus.agildash_system_status_display) &&
+    (systemStatus.agildash_system_status_display.toUpperCase() == 'AdminOnlyChange'.toUpperCase() ||
+      systemStatus.agildash_system_status_display == 'AdminOnlyReadChange'.toUpperCase())) {
+    if (isAdmin()) {
+      flag = true;
+    } else {
+      flag = false;
+    }
+  } else {
+    flag = isAdmin() || isUserMemberOfTeam(teamId);
+
+  }
+  return flag;
 }
 
 /**
@@ -656,7 +671,7 @@ function getTeamAssessments(teamId, docs, _callback, args) {
     _callback.apply(this, args);
     return null;
   }
-  var teamUrl = '/api/assessment/view?teamId=' + encodeURIComponent(teamId);
+  var teamUrl = '/api/assessment/view?teamId=' + encodeURIComponent(teamId) + '&docs=' + docs;
   return getRemoteData(teamUrl, _callback, args);
 }
 
@@ -790,27 +805,28 @@ function updateAgileTeamCache(team) {
  */
 function initTeamTemplate() {
   var teamTemplate = {
-    'name': '',
-    'pathId': '',
-    'path': '',
+    '_id': '',
+    //"_rev": "",
     'type': '',
-    'description': '',
-    'createDate': '',
-    'createdByUserId': '',
-    'createdBy': '',
-    'updateDate': '',
-    'updatedByUserId': '',
-    'updatedBy': '',
-    'docStatus': '',
+    'name': '',
+    'desc': '',
+    'squadteam': '',
+    'parent_team_id': '',
+    'last_updt_dt': '',
+    'last_updt_user': '',
+    'created_user': '',
+    'created_dt': '',
+    'doc_status': '',
     'members': [{
+      'key': '',
+      'id': '',
       'name': '',
-      'allocation': '',
-      'role': '',
-      'userId': 0,
-      'email': ''
-    }]
+      'allocation': 0,
+      'role': ''
+    }],
+    'child_team_id': []
   };
-  teamTemplate['members'] = []; // ? wat
+  teamTemplate['members'] = [];
   return teamTemplate;
 }
 

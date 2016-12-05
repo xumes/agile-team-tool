@@ -161,17 +161,16 @@ function sortTeamMembersByName(members) {
  */
 function sortAssessmentTemplate(templates) {
   templates = templates.sort(function(a, b) {
-    //var aDate = a['atma_eff_dt'].split(' ')[0].replace(/-/g, '/') + ' ' + a['atma_eff_dt'].split(' ')[1];
-    var aDate = a['effectiveDate'].split(' ')[0].replace(/-/g, '/') + ' ' + a['effectiveDate'].split(' ')[1];
-    var bDate = b['effectiveDate'].split(' ')[0].replace(/-/g, '/') + ' ' + b['effectiveDate'].split(' ')[1];
-    if (a['status'].toLowerCase() == 'active' && b['status'].toLowerCase() == 'active') {
+    var aDate = a['atma_eff_dt'].split(' ')[0].replace(/-/g, '/') + ' ' + a['atma_eff_dt'].split(' ')[1];
+    var bDate = b['atma_eff_dt'].split(' ')[0].replace(/-/g, '/') + ' ' + b['atma_eff_dt'].split(' ')[1];
+    if (a['atma_status'].toLowerCase() == 'active' && b['atma_status'].toLowerCase() == 'active') {
       if (new Date(bDate).getTime() == new Date(aDate).getTime()) {
         return 0;
       } else {
         return (new Date(bDate).getTime() > new Date(aDate).getTime()) ? 1 : -1;
       }
     } else {
-      if (b['status'].toLowerCase() == 'inactive')
+      if (b['atma_status'].toLowerCase() == 'inactive')
         return -1;
       else
         return 1;
@@ -190,25 +189,25 @@ function sortAssessmentTemplate(templates) {
 function sortAssessments(assessments) {
   if (assessments != null && assessments.length > 1) {
     assessments.sort(function(a, b) {
-      if (a['assessmentStatus'].toLowerCase() == 'draft' && b['assessmentStatus'].toLowerCase() == 'draft') {
-        var aCreateDate = a['createDate'].split(' ')[0].replace(/-/g, '/') + ' ' + a['createDate'].split(' ')[1];
-        var bCreateDate = b['createDate'].split(' ')[0].replace(/-/g, '/') + ' ' + b['createDate'].split(' ')[1];
+      if (a['assessmt_status'].toLowerCase() == 'draft' && b['assessmt_status'].toLowerCase() == 'draft') {
+        var aCreateDate = a['created_dt'].split(' ')[0].replace(/-/g, '/') + ' ' + a['created_dt'].split(' ')[1];
+        var bCreateDate = b['created_dt'].split(' ')[0].replace(/-/g, '/') + ' ' + b['created_dt'].split(' ')[1];
         if (new Date(bCreateDate).getTime() == new Date(aCreateDate).getTime()) {
           return 0;
         } else {
           return (new Date(bCreateDate).getTime() > new Date(aCreateDate).getTime()) ? 1 : -1;
         }
 
-      } else if (a['assessmentStatus'].toLowerCase() == 'submitted' && b['assessmentStatus'].toLowerCase() == 'submitted') {
-        var aSubmitDate = a['submittedDate'].split(' ')[0].replace(/-/g, '/') + ' ' + a['submittedDate'].split(' ')[1];
-        var bSubmitDate = b['submittedDate'].split(' ')[0].replace(/-/g, '/') + ' ' + b['submittedDate'].split(' ')[1];
+      } else if (a['assessmt_status'].toLowerCase() == 'submitted' && b['assessmt_status'].toLowerCase() == 'submitted') {
+        var aSubmitDate = a['self-assessmt_dt'].split(' ')[0].replace(/-/g, '/') + ' ' + a['self-assessmt_dt'].split(' ')[1];
+        var bSubmitDate = b['self-assessmt_dt'].split(' ')[0].replace(/-/g, '/') + ' ' + b['self-assessmt_dt'].split(' ')[1];
         if (new Date(bSubmitDate).getTime() == new Date(aSubmitDate).getTime()) {
           return 1;
         } else {
           return (new Date(bSubmitDate).getTime() > new Date(aSubmitDate).getTime()) ? 1 : -1;
         }
       } else {
-        if (b['assessmentStatus'].toLowerCase() == 'submitted')
+        if (b['assessmt_status'].toLowerCase() == 'submitted')
           return -1;
         else
           return 1;
@@ -233,10 +232,10 @@ function getAssessmentDropdownList(assessments) {
   for (var i = 0; i < assessments.length; i++) {
     var option = [];
     option.push(assessments[i]._id);
-    if (assessments[i]['assessmentStatus'] != '' && assessments[i]['assessmentStatus'].toLowerCase() == 'submitted')
-      option.push(showDateDDMMMYYYY(assessments[i]['submittedDate'].split(' ')[0]));
+    if (assessments[i]['assessmt_status'] != '' && assessments[i]['assessmt_status'].toLowerCase() == 'submitted')
+      option.push(showDateDDMMMYYYY(assessments[i]['self-assessmt_dt'].split(' ')[0]));
     else
-      option.push('Created: ' + showDateDDMMMYYYY(assessments[i]['createDate'].split(' ')[0]) + ' (' + assessments[i]['assessmentStatus'] + ')');
+      option.push('Created: ' + showDateDDMMMYYYY(assessments[i]['created_dt'].split(' ')[0]) + ' (' + assessments[i]['assessmt_status'] + ')');
 
     listOption.push(option);
   }
@@ -327,10 +326,10 @@ function getSquadDropdownList(teams) {
 function sortIterations(iterations) {
   if (iterations != null && iterations.length > 1) {
     iterations.sort(function(a, b) {
-      if (new Date(b.endDate).getTime() == new Date(a.endDate).getTime()) {
+      if (new Date(b.iteration_end_dt).getTime() == new Date(a.iteration_end_dt).getTime()) {
         return 0;
       } else {
-        return (new Date(b.endDate).getTime() > new Date(a.endDate).getTime()) ? 1 : -1;
+        return (new Date(b.iteration_end_dt).getTime() > new Date(a.iteration_end_dt).getTime()) ? 1 : -1;
       }
     });
   }
@@ -375,7 +374,7 @@ function showDateDDMMMYYYY(formatDate) {
   if (formatDate == null || formatDate == '') return '';
   var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-  var date = new Date(formatDate);
+  var date = new Date(formatDate.replace(/-/g, '/'));
   var day = date.getDate();
   day = day.toString().length < 2 ? '0' + day.toString() : day.toString();
   var monthIndex = date.getMonth();
