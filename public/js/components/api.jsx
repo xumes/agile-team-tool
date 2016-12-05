@@ -360,15 +360,21 @@ module.exports.updateIteration = function(data) {
   });
 };
 
-module.exports.searchTeamIteration = function(teamId, startDate, enddate) {
+module.exports.searchTeamIteration = function(teamId, startDate, enddate, limit, status) {
   return new Promise(function(resolve, reject){
-    if (_.isUndefined(startDate) || _.isNull(startDate)){
-      startDate = 0;
+    var url = '/api/iteration/searchTeamIteration?id=' + encodeURIComponent(teamId);
+    if (!_.isEmpty(startDate)) {
+      url += '&startdate=' + startDate;
     }
-    if (_.isUndefined(enddate) || _.isNull(enddate)){
-      enddate = '';
+    if (!_.isEmpty(enddate)) {
+      url += '&enddate=' + enddate
     }
-    var url = '/api/iteration/searchTeamIteration?id=' + encodeURIComponent(teamId)+ '&startdate='+startDate+'&enddate=' + enddate ;
+    if (!isNaN(limit)) {
+      url += '&limit=' + limit
+    }
+    if (!isNaN(status)) {
+      url += '&status=' + status
+    }
     var req = $.ajax({
       type: 'GET',
       url: url

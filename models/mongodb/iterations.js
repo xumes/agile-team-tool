@@ -328,8 +328,8 @@ var IterationExport = {
 
   add: function(data, userId) {
     return new Promise(function(resolve, reject) {
-      data['createDate'] = moment().format(dateFormat);
-      data['updateDate'] = moment().format(dateFormat);
+      data['createDate'] = new Date(moment.utc());
+      data['updateDate'] = new Date(moment.utc());
       data['status'] = IterationExport.calculateStatus(data);
       Users.findUserByUserId(userId.toUpperCase())
       .then(function(userInfo){
@@ -427,7 +427,7 @@ var IterationExport = {
           return Promise.reject(msg);
         }
         else {
-          data['updateDate'] = moment().format(dateFormat);
+          data['updateDate'] = new Date(moment.utc());
           data['updatedBy'] = userInfo.email;
           data['updatedByUserId'] = userInfo.userId;
           data['status'] = IterationExport.calculateStatus(data);
@@ -478,7 +478,7 @@ var IterationExport = {
 
   searchTeamIteration: function(p) {
     return new Promise(function(resolve, reject){
-      var qReq = {};
+      var qReq = {'docStatus': {'$ne': 'delete'}};
       if (!_.isEmpty(p.id))
         qReq['teamId'] = new ObjectId(p.id);
 
@@ -502,14 +502,26 @@ var IterationExport = {
             '$lte': moment(new Date(endDate)).format(dateFormat)
           };
       }
-      loggers.get('model-iteration').verbose('Querying Iteration:' + JSON.stringify(qReq));
-      Iteration.find(qReq).sort('-endDate').exec()
-      .then(function(iterations){
-        resolve(iterations);
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        reject({'error':err});
-      });
+      var limit = util.getIntegerValue(p.limit);
+      if(limit > 0) {
+        loggers.get('model-iteration').verbose('Querying Iteration w/ limit :' + JSON.stringify(qReq), p.limit);
+        Iteration.find(qReq).sort('-endDate').limit(limit).exec()
+        .then(function(iterations){
+          resolve(iterations);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject({'error':err});
+        });
+      } else {
+        loggers.get('model-iteration').verbose('Querying Iteration:' + JSON.stringify(qReq));
+        Iteration.find(qReq).sort('-endDate').exec()
+        .then(function(iterations){
+          resolve(iterations);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject({'error':err});
+        });
+      }
     });
   },
 
