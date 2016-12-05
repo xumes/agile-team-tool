@@ -20,9 +20,12 @@ var HomeTeamHeader = React.createClass({
       'display': 'inline'
     }
     return (
-      <div class="div--team">
-        <h2 class="heading-teamType" id="teamType">{teamType}</h2>
-        <h2 style={headerStyle} id="teamName">{teamName}</h2>
+      <div class='home-team-header'>
+        {/*<h2 class='heading-teamType' id="teamType">{teamType}</h2>*/}
+        <div class='home-team-header-title'>
+          <img class='home-team-header-img' src='../../../img/Att-icons/att-icons_tribe.svg'></img>
+          <h class='home-team-header-teamname' style={headerStyle} id="teamName">{teamName}</h>
+        </div>
       </div>
     )
   }

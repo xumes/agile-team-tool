@@ -426,7 +426,7 @@ textarea[disabled] {
   padding-left: 20px !important;
 }
 
-.agile-section-title a::before, 
+.agile-section-title a::before,
 .squad-sections .ibm-show-hide h2 a::before,
 .agile-assessment a.ibm-twisty-trigger::before,
 .agile-maturity .agile-summary a::before {
@@ -514,25 +514,33 @@ textarea[disabled] {
 #teamTree ul.ibm-twisty > li.ibm-active > a.ibm-twisty-trigger,
 #teamTree ul.ibm-twisty > li a.ibm-twisty-trigger,
 #teamTree ul.ibm-twisty > li a.agile-team-link {
-  color: #323232;
+  color: #4D4D4D;
+  font-size: 1.6em;
+  font-family: "Helvetica Neue";
+  font-weight: 300;
+  line-height: 48px;
 }
 
 #searchTree ul.ibm-twisty > li a.agile-team-link {
-  color: #323232;
+  color: #4D4D4D;
+}
+
+#teamTree {
+  width: 100%;
 }
 
 #teamTreeMain {
-  margin-right: 5px;
-  width: 98%;
+  width: 100%;
 }
 
 #teamTreeMain a.ibm-twisty-trigger {
-  border-bottom: 0 none !important;
   margin: 0px 2px 0px 2px;
 }
 
 #teamTree a::before {
-  font-size: 0.8rem;
+  font-size: 1.6em;
+  font-weight: 300;
+  color: #3B6DAA;
 }
 
 #teamTree .agile-team-standalone a::before {
@@ -541,9 +549,10 @@ textarea[disabled] {
 
 #teamTree a.agile-team-link {
   display: inherit;
-  margin-left: 15px;
-  padding-left: 5px;
-  border-bottom: 1px solid #e0e0e0 !important;
+  margin-left: 8.0%;
+  margin-right: 8.0%;
+  padding-left: 0;
+  /*border-bottom: 1px solid #e0e0e0 !important;*/
   cursor: pointer;
 }
 
@@ -560,13 +569,17 @@ textarea[disabled] {
 }
 
 .agile-team-selected {
-  font-weight: bold;
-  background-color: #5aaafa;
+  border-bottom: 2px solid #008ABF;
 }
 
 .agile-team-squad, #teamTree li.agile-team-squad a::after, #teamTree a.agile-team-squad::after,  #teamTable a.agile-team-squad::after, #searchTree a.agile-team-squad::after{
-  content: " * ";
-  color: red;
+  /*content: " * ";
+  color: red;*/
+  background-image: url('../img/Att-icons/att-icons_tribe.svg');
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 10% 40%;
+  text-indent: 8%;
 }
 
 #teamTree .ibm-twisty-body > p {
@@ -613,7 +626,7 @@ textarea[disabled] {
   padding-top: 0px;
   padding-bottom: 0px;
   font-size:  10.5pt;
-  color: #323232;
+  color: #4D4D4D;
   display: block;
 }
 
@@ -621,7 +634,7 @@ textarea[disabled] {
   padding-top: 0px;
   padding-bottom: 0px;
   font-size:  10.5pt;
-  color: #323232;
+  color: #4D4D4D;
   display: block;
 }
 

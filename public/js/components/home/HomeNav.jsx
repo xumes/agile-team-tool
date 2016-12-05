@@ -62,16 +62,13 @@ var HomeNav = React.createClass({
   },
 
   render: function() {
-    var agileTeamNavStyle = {
-      'height': '600px'
-    }
     return (
-      <div>
+      <div id='agileHomeNav' style={{'height': '100%'}}>
         <HomeNavTab searchStart={this.searchStartHandler} tabClicked={this.props.tabClickedHandler}/>
-        <HomeSearchField />
+        {/*<HomeSearchField style={{'marginTop': '20px'}}/>*/}
         <HomeSpinner id={'navSpinner'}/>
-        <div class='agile-team-nav nano' data-widget='scrollable' data-height='600' style={agileTeamNavStyle}>
-          <div class="nano-content">
+        <div class='home-team-nav nano' data-widget='scrollable' data-height='600'>
+          <div class='nano-content'>
             <HomeSearchTree searchTeams={this.state.searchTeams} selectedTeamChanged={this.props.selectedTeamChanged}/>
             <HomeTeamTree newTeams={this.props.newTeams} selectedTeam={this.props.selectedTeam} loadDetailTeamChanged={this.props.loadDetailTeamChanged}/>
           </div>

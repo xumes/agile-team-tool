@@ -22,9 +22,9 @@ var HomeContent = React.createClass({
   },
   render: function() {
     return (
-      <div>
+      <div style={{'width': '100%', 'height': '100%'}}>
         <HomeSpinner id={'contentSpinner'}/>
-        <div id="bodyContent" class="ibm-col-6-4">
+        <div id="bodyContent" style={{'height':'100%','width':'100%'}}>
           <HomeHighlightBox />
           <HomeTeamHeader loadDetailTeam={this.props.loadDetailTeam}/>
           <HomeIterSection loadDetailTeam={this.props.loadDetailTeam}/>

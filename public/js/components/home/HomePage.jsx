@@ -100,14 +100,54 @@ var HomePage = React.createClass({
     }
   },
 
+  showHomeNav: function() {
+    $('#homeNavDiv').show();
+    $('.home-nav-show-btn').prop('disabled',true);
+    $('#homeNavDiv').animate({
+      left: '+=500',
+    },200,function(){
+      $('.home-nav-show-btn').prop('disabled',false);
+    });
+  },
+
   render: function() {
+    var pageStyle = {
+      'width': '100%',
+      'height': '100%'
+    }
+    var columnsStyle = {
+      'width': '96.6%',
+      'padding': '0',
+      'margin': '0 1.7%',
+      'height': '100%',
+      'fontSize': '62.5%'
+    };
+    var sectionOneStyle = {
+      'width': '33.3%',
+      'backgroundColor': '#F7F7F7',
+      'height': '100%'
+    }
+    var sectionTwoStyle = {
+      'width': '66.6%',
+      'height': '100%'
+    }
     return (
-      <div class="ibm-columns" >
-        <div class="ibm-col-6-2">
-          <HomeNav loadDetailTeamChanged={this.loadDetailTeamChanged} selectedTeam={this.state.selectedTeam} selectedTeamChanged={this.selectedTeamChanged} newTeams={this.state.newTeams} newTeamsChanged={this.newTeamsChanged} tabClickedHandler={this.tabClickedHandler}/>
+      <div style={pageStyle}>
+        <div class='ibm-columns' style={columnsStyle}>
+          <div id='mainContent' class='ibm-col-6-4' style={sectionTwoStyle}>
+            <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler}/>
+          </div>
+          <div class='ibm-col-6-2' style={sectionOneStyle}>
+          </div>
         </div>
-        <div id="mainContent" class="ibm-col-6-4">
-          <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler}/>
+        <div id='homeNavShowBtnDiv' class='home-nav-show-btn-div'>
+          <input class='home-nav-show-btn' type='image' src='../../../img/Att-icons/att-icons_expand.svg' onClick={this.showHomeNav}/>
+          <div class='home-nav-show-text'>
+            Teams
+          </div>
+        </div>
+        <div id='homeNavDiv' class='home-nav-div' hidden='true'>
+          <HomeNav loadDetailTeamChanged={this.loadDetailTeamChanged} selectedTeam={this.state.selectedTeam} selectedTeamChanged={this.selectedTeamChanged} newTeams={this.state.newTeams} newTeamsChanged={this.newTeamsChanged} tabClickedHandler={this.tabClickedHandler}/>
         </div>
       </div>
     )

@@ -4,8 +4,6 @@
 
   <%- include ./header/header_meta.ejs %>
 
-  <link href="//ciolab.ibm.com/misc/typeahead/builds/facestypeahead-0.4.4.min.css" rel="stylesheet" />
-  <script src="//ciolab.ibm.com/misc/typeahead/builds/facestypeahead-0.4.4.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.4.0/clipboard.min.js"></script>
   <script src="//cdn.jsdelivr.net/bluebird/3.4.5/bluebird.min.js"></script>
 
@@ -20,31 +18,16 @@
 
 </head>
 
-<%- include ./header/header.ejs %>
-
 <body id="ibm-com" class="ibm-type" onload="getSiteStatus();">
-<div id="ibm-top" class="ibm-landing-page">
+  <div id ='agile-home-header'>
+    <div id='agile-home-header-title'>
+      <h>IBM Agile Team Tool</h>
+    </div>
+  </div>
 
-  <div id="ibm-content-wrapper">
-    <%- include ./header/header_leadspace.ejs %>
+  <div id="app-content" style='height: 100%; background-color: white;'>
+  </div>
 
-    <main role="main" aria-labelledby="Agile teams">
-      <div id="ibm-pcon">
-        <div id="ibm-content">
-          <div id="ibm-content-body">
-            <div id="ibm-content-main">
-              <div id="app-content">
-
-                  <!--<h2 class="ibm-bold ibm-h3">Agile Team</h2>-->
-                  <!--<div class="ibm-rule ibm-alternate-1">-->
-                    <!--<hr>-->
-                  <!--</div>-->
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
 
   <div id="ibm-related-content">
     <div id="ibm-merchandising-module">
@@ -53,10 +36,7 @@
       <!-- /MTE -->
     </div>
   </div>
-</div>
-<%- include ./footer.ejs %>
 
-</div>
 
 <script type="text/javascript" src="js/team-accessibility-fix.js?v=<%=Math.random()%>"></script>
 <script type="text/javascript" src="/dist/homeJs.js"></script>
