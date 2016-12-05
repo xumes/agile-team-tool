@@ -75,10 +75,15 @@ module.exports.showDateDDMMYYYY = function(formatDate) {
   return newDateFormate;
 };
 
-module.exports.showDateDDMMYYYYV2 = function(formatDate) {
+module.exports.showDateDDMMYYYYV2 = function(formatDate, withoutSpacing) {
+  var withoutSpacing = withoutSpacing || false;
+  var format = 'DD MMM YYYY';
   console.log('[showDateDDMMYYYYV2] formatDate:', formatDate);
   if (!_.isEmpty(formatDate)) {
-    var newDateFormate = moment(formatDate).format('DDMMMYYYY');
+    if (withoutSpacing) {
+      format = 'DDMMMYYYY';
+    }
+    var newDateFormate = moment(formatDate).format(format);
     console.log('[showDateDDMMYYYYV2] newDateFormate:', newDateFormate);
     return newDateFormate;
   }

@@ -354,7 +354,7 @@ var AssessmentProgressForm = React.createClass({
                 displaySelectedChart={self.displaySelectedChart}
                 assessed_cmpnt={assessed_cmpnt} x={ctr2} id={id} />);
 
-              // storePrinciples(practicesCnt, assessed_cmpnt, assessmt_cmpnt_rslts.componentName);
+              self.storePrinciples(practicesCnt, assessed_cmpnt, assessmt_cmpnt_rslts.componentName);
               practicesCnt++;
             }
           }
@@ -515,12 +515,12 @@ var AssessmentProgressForm = React.createClass({
         var formattedDate = utils.showDateDDMMYYYYV2(date);
         result.categories[x] = formattedDate;
         if (data[x].assessed.targetScore != null) {
-          result.target_score[x] = data[x].assessed.targetScore;
+          result.target_score[x] = parseFloat(data[x].assessed.targetScore.toFixed(1));
         } else {
           result.target_score[x] = 0;
         }
         if (data[x].assessed.currentScore != null) {
-          result.current_score[x] = data[x].assessed.currentScore;
+          result.current_score[x] = parseFloat(data[x].assessed.currentScore.toFixed(1));
         } else {
           result.current_score[x] = 0;
         }
