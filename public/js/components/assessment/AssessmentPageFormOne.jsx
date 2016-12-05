@@ -24,7 +24,7 @@ var AssessmentPageFormOne = React.createClass({
     };
     var optionTitle= 'Create new assessment...';
     var optionValue= 'n';
-    if (this.props.squadAssessments.access) {
+    if (this.props.assessment.access || this.props.assessment.teamId == '') {
       var accessStyle = {
         'display': 'none'
       };
@@ -35,8 +35,8 @@ var AssessmentPageFormOne = React.createClass({
       optionTitle= 'Select one';
       optionValue= 's';
     }
-    if (this.props.squadAssessments.assessments.length > 0) {
-      var assessments = _.sortBy(this.props.squadAssessments.assessments, function(assess){
+    if (this.props.assessment.squadAssessments.length > 0) {
+      var assessments = _.sortBy(this.props.assessment.squadAssessments, function(assess){
         if (assess.assessmentStatus == 'Submitted') {
            return 'aaa'+new Date(assess.submittedDate);
         } else

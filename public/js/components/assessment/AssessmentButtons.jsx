@@ -13,7 +13,7 @@ var AssessmentButtons = React.createClass({
     var self = this;
     var assessType = $('#teamTypeSelectList').val();
     var software = $('#softwareYesNo').val();
-    var assessId = self.props.assessmentStatus.assessId;
+    //var assessId = self.props.assessmentStatus.assessId;
     var teamId = $('select[name=\'teamSelectList\']').val();
     var updateDoc = {
       'assessmentStatus' : 'Submitted',
@@ -49,18 +49,18 @@ var AssessmentButtons = React.createClass({
     if (checkedIsEmpty) {
       return alert('All assessment maturity practices need to be answered.  See highlighted practices in yellow.');
     }
-    if (self.props.assessmentStatus.assessId == '') {
+    if (_.isEmpty(self.props.assessment.assessment)) {
       var req = api.addAssessment(updateDoc);
     } else {
-      updateDoc['_id'] = assessId;
+      updateDoc['_id'] = self.props.assessment.assessment._id;
       req = api.updateAssessment(updateDoc);
     }
     req.then(function(result){
       alert('Maturity assessment has been submitted.');
-      if (self.props.assessmentStatus.assessId == '') {
-        self.props.teamChangeHandler(null, teamId, result._id);
+      if (_.isEmpty(self.props.assessment.assessment)) {
+        $('select[name=\'teamSelectList\']').val(self.props.assessment.teamId).change();
       } else {
-        self.props.teamChangeHandler(null, teamId, assessId);
+        $('select[name=\'teamSelectList\']').val(self.props.assessment.teamId).change();
       }
       return;
     }).catch(function(err){
@@ -73,7 +73,7 @@ var AssessmentButtons = React.createClass({
     var self = this;
     var assessType = $('#teamTypeSelectList').val();
     var software = $('#softwareYesNo').val();
-    var assessId = self.props.assessmentStatus.assessId;
+    // var assessId = self.props.assessmentStatus.assessId;
     var teamId = $('select[name=\'teamSelectList\']').val();
     var updateDoc = {
       'assessmentStatus' : 'Draft',
@@ -99,19 +99,19 @@ var AssessmentButtons = React.createClass({
     if (p2N) {
       self.getUpdateDoc(1, p2N, checkedCurrs, checkedTargs, updateDoc);
     }
-    if (self.props.assessmentStatus.assessId == '') {
+    if (_.isEmpty(self.props.assessment.assessment)) {
       var req = api.addAssessment(updateDoc);
     } else {
-      updateDoc['_id'] = assessId;
+      updateDoc['_id'] = self.props.assessment.assessment._id;
       req = api.updateAssessment(updateDoc);
     }
     req.then(function(result){
       alert('Maturity assessment has been saved as draft.');
       //$('select[name=\'teamSelectList\']').val(teamId).change();
-      if (self.props.assessmentStatus.assessId == '') {
-        self.props.teamChangeHandler(null, teamId, result._id);
+      if (_.isEmpty(self.props.assessment.assessment)) {
+        $('select[name=\'teamSelectList\']').val(self.props.assessment.teamId).change();
       } else {
-        self.props.teamChangeHandler(null, teamId, assessId);
+        $('select[name=\'teamSelectList\']').val(self.props.assessment.teamId).change();
       }
       return;
     }).catch(function(err){
@@ -121,22 +121,21 @@ var AssessmentButtons = React.createClass({
   },
 
   cancelAssessment: function() {
-    $('select[name="assessmentSelectList"]').val(this.props.assessmentStatus.assessId).change();
+    $('select[name="assessmentSelectList"]').val(this.props.assessment.assessment._id).change();
     alert('Current changes have been cancelled.');
   },
 
   deleteAssessment: function() {
     var self = this;
-    var teamId = $('select[name=\'teamSelectList\']').val();
-    if (self.props.assessmentStatus.assessId == '' || self.props.assessmentStatus.status != 'Draft') {
+    if (_.isEmpty(self.props.assessment.assessment) || self.props.assessment.assessment.assessmentStatus != 'Draft') {
       alert('This assessment cannot be deleted.');
     } else {
-      api.deleteAssessment(self.props.assessmentStatus.assessId)
+      api.deleteAssessment(self.props.assessment.assessment._id)
         .then(function(result){
           // $('select[name="assessmentSelectList"] option[value=' + self.props.assessmentStatus.assessId + ']').remove();
           // $('select[name="assessmentSelectList"]').val('').change();
+          $('select[name=\'teamSelectList\']').val(self.props.assessment.teamId).change();
           alert('Your assessment has been deleted.');
-          self.props.teamChangeHandler(null, teamId, null);
           return;
         })
         .catch(function(err){
@@ -237,23 +236,60 @@ var AssessmentButtons = React.createClass({
 
     var statusColor = { color : 'blue'};
 
-    if(this.props.assessmentStatus.status == '')
+    if (!this.props.assessment.access) {
+      var submitBtnDisplay = true;
+      var saveBtnDislpay = true;
+      var deleteBtnDisplay = true;
+      var cancelBtnDisplay = true;
+    } else {
+      if (_.isEmpty(this.props.assessment.assessment)) {
+        // console.log(this.props.assessment.squadAssessments);
+        if (this.props.assessment.squadAssessments.length > 0 && this.props.assessment.squadAssessments[0]['assessmentStatus'] == 'Draft') {
+          submitBtnDisplay = true;
+          saveBtnDislpay = true;
+          deleteBtnDisplay = true;
+          cancelBtnDisplay = true;
+        } else {
+          submitBtnDisplay = false;
+          saveBtnDislpay = false;
+          deleteBtnDisplay = true;
+          cancelBtnDisplay = false;
+        }
+      } else {
+        if (this.props.assessment.assessment.assessmentStatus == 'Draft') {
+          submitBtnDisplay = false;
+          saveBtnDislpay = false;
+          deleteBtnDisplay = false;
+          cancelBtnDisplay = false;
+        } else {
+          submitBtnDisplay = true;
+          saveBtnDislpay = true;
+          deleteBtnDisplay = true;
+          cancelBtnDisplay = true;
+        }
+      }
+    }
+
+    if(_.isEmpty(this.props.assessment.assessment)) {
       var isVisible = { display: 'none'};
-    else
-      var isVisible = { display: 'block'};
+      var status = '';
+    } else {
+      isVisible = { display: 'block'};
+      status = this.props.assessment.assessment.assessmentStatus;
+    }
 
     return (
       <div>
         <div style={isVisible}>
           <span style={spanStyle}>
-            Team assessment status: <span style={statusColor}>{this.props.assessmentStatus.status}</span>
+            Team assessment status: <span style={statusColor}>{status}</span>
           </span>
         </div>
         <div class="ibm-btn-row" style={{"textAlign": "right"}}>
-          <input id='submitAssessBtn' type="button" class="ibm-btn-pri ibm-btn-small" name="submitAssessBtn" value="Submit" disabled={this.props.assessmentStatus.disabledButtons[0]} onClick={this.submitAssess}/>
-          <input id='saveAssessBtn' type="button" class="ibm-btn-sec ibm-btn-small" name="saveAssessBtn" value="Save as draft" disabled={this.props.assessmentStatus.disabledButtons[1]} onClick={this.saveDraft}/>
-          <input id='deleteAssessBtn' type="button" class="ibm-btn-sec ibm-btn-small" name="deleteAssessBtn" value="Delete draft" disabled={this.props.assessmentStatus.disabledButtons[2]} onClick={this.deleteAssessment}/>
-          <input id='cancelAssessBtn' type="button" class="ibm-btn-sec ibm-btn-small" name="cancelAssessBtn" value="Cancel current changes" disabled={this.props.assessmentStatus.disabledButtons[3]} onClick={this.cancelAssessment}/>
+          <input id='submitAssessBtn' type="button" class="ibm-btn-pri ibm-btn-small" name="submitAssessBtn" value="Submit" disabled={submitBtnDisplay} onClick={this.submitAssess}/>
+          <input id='saveAssessBtn' type="button" class="ibm-btn-sec ibm-btn-small" name="saveAssessBtn" value="Save as draft" disabled={saveBtnDislpay} onClick={this.saveDraft}/>
+          <input id='deleteAssessBtn' type="button" class="ibm-btn-sec ibm-btn-small" name="deleteAssessBtn" value="Delete draft" disabled={deleteBtnDisplay} onClick={this.deleteAssessment}/>
+          <input id='cancelAssessBtn' type="button" class="ibm-btn-sec ibm-btn-small" name="cancelAssessBtn" value="Cancel current changes" disabled={cancelBtnDisplay} onClick={this.cancelAssessment}/>
           <span id="progressIndicatorTop"></span>
         </div>
       </div>
