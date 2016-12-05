@@ -62,7 +62,7 @@ var IterationSchema = {
   },
   memberCount: {
     type: Number,
-    required: [true, 'Member count is required.']
+    //required: [true, 'Member count is required.']
   },
   memberFte: {
     type: Number,
@@ -366,7 +366,7 @@ var IterationExport = {
         return data;
       })
       .then(function(cleanData) {
-        return IterationExport.getDefectsOpenBalance(cleanData.teamId, cleanData.endDate);
+        return IterationExport.getDefectsOpenBalance(cleanData.teamId, cleanData.startDate);
       })
       .then(function(openBalance) {
         if (_.isUndefined(data['defectsStartBal']) && _.isEmpty(data['defectsStartBal'])) {
@@ -449,9 +449,8 @@ var IterationExport = {
     return new Promise(function(resolve, reject) {
       var params = {
         id: teamId,
-        status: null,
-        startdate: '0',
-        enddate: iterEndDate
+        endDate: iterEndDate,
+        limit: 1
       };
       IterationExport.searchTeamIteration(params)
       .then(function(iteration) {
