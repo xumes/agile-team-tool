@@ -15,7 +15,7 @@ var teamSatisfactionTT = 'Please indicate how happy your team was during the cou
     '<br />2 - Unhappy' +
     '<br />1 - Very unhappy';
 
-var IterationResult = React.createClass({
+var IterationAdditional = React.createClass({
   componentDidUpdate: function(prevProps, prevState) {
     var value = this.floatDefault(this.props.iteration.cycleTimeInBacklog);
     if (value > 0) {
@@ -143,7 +143,7 @@ var IterationResult = React.createClass({
             </div>
           </div>
         </div>
-        
+
         <div className='iteration'>
           <div>
             <label for='clientSatisfaction' style={labelStyle}>Client satisfaction:
@@ -178,6 +178,6 @@ var IterationResult = React.createClass({
       </div>
     )
   }
-}); 
+});
 
-module.exports = IterationResult;
+module.exports = IterationAdditional;

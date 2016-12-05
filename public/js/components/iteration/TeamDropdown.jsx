@@ -17,7 +17,7 @@ var TeamDropdown = React.createClass({
       .then(function(teams) {
         var selectedTeamInfo;
         var teamId = self.props.iteration.teamId;
-        if (teams != undefined && teams.length > 0 && 
+        if (teams != undefined && teams.length > 0 &&
         teamId != undefined && teamId != ''){
           selectedTeamInfo = _.find(teams, {_id:teamId});
         }
@@ -41,7 +41,7 @@ var TeamDropdown = React.createClass({
 
   },
 
-  componentDidMount: function() {  
+  componentDidMount: function() {
     $('select[name="teamSelectList"]').select2();
     $('select[name="teamSelectList"]').change(this.handleChange);
   },
@@ -61,7 +61,7 @@ var TeamDropdown = React.createClass({
           self.props.teamChangeHandler(teamId, result);
         })
         .catch(function(err){
-          console.log('[team change] error:'+JSON.stringify(err));
+          console.log('[team change] error:'+JSON.stringify(err), err);
         });
     }
     else {

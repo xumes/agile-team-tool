@@ -70,7 +70,7 @@ var IterationMgmt = React.createClass({
     obj.endDate = new Date(selectedEndDate);
     this.props.updateFields(obj);
 
-    this.props.defectBal();
+    //this.props.defectBal();
   },
 
   endDateChange: function(date){
@@ -204,8 +204,8 @@ var IterationMgmt = React.createClass({
       'position': 'relative',
       'top': '3px',
       'left': '5px',
-      'display': 'inline',
-      'pointer': 'pointer'
+      'display': (!this.props.isReadOnly && !_.isEmpty(this.props.iteration.teamId)) ? 'inline':'none',
+      'cursor': 'pointer'
     };
 
     return (
@@ -251,8 +251,7 @@ var IterationMgmt = React.createClass({
             </label>
             <span>
               <input type='text' name='memberCount' id='memberCount' size='8' value={this.props.iteration.memberCount != null ?this.props.iteration.memberCount:''} placeholder='0' className='inputCustom' onChange={this.memberCountChange} disabled={!this.props.enableFields} onKeyPress={this.wholeNumCheck} onPaste={this.paste}/>
-              {(!this.props.isReadOnly && !_.isEmpty(this.props.iteration.teamId)) ?
-                <a className='ibm-refresh-link' style={linkStyle2} role='button' onClick={this.refreshFTE} data-tip={refreshFTETT}/> : null}
+              <a className='ibm-refresh-link' style={linkStyle2} role='button' onClick={this.refreshFTE} data-tip={refreshFTETT}/>
             </span>
           </div>
           <div>
@@ -263,7 +262,7 @@ var IterationMgmt = React.createClass({
               <input type='text' name='fteThisiteration' id='fteThisiteration' size='8' value={this.props.iteration.memberFte != null?this.props.iteration.memberFte:''} placeholder='0.0' className='inputCustom' onChange={this.fteThisiterationChange} disabled={!this.props.enableFields} onKeyPress={this.decimalNumCheck} onBlur={this.fteThisiterationUpdate} onPaste={this.paste}/>
             </span>
           </div>
-          
+
         </div>
         <div className='iteration'>
           <div>

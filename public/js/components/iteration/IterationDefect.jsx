@@ -1,5 +1,9 @@
+var moment = require('moment');
 var React = require('react');
 var api = require('../api.jsx');
+var currentIterId = '';
+var currentTeamId = '';
+var currentStartDate = '';
 var Tooltip = require('react-tooltip');
 var refreshDefectsStartBalTT = 'Click to recalculate the opening balance of defects, based on the previous iteration, overwriting the value currently in this field.';
 
@@ -8,43 +12,42 @@ var IterationDefect = React.createClass({
     var obj = {};
     var defStartBal = e.target.value;
 
-    var openDefects = this.numericValue(defStartBal);
-    var newDefects = this.numericValue(this.props.iteration.defectsIteration);
+    var openDefects = this.numericValue(e.target.value);
+    var newDefects = this.numericValue(this.props.iteration.defects);
     var closedDefects = this.numericValue(this.props.iteration.defectsClosed);
     var defEndBal = openDefects + newDefects - closedDefects;
-    
-    obj.defectsStartBal = defStartBal;
+
+    obj.defectsStartBal = openDefects;
     obj.defectsEndBal = defEndBal;
     this.props.updateDefectBal(obj);
   },
 
   defectsIterationChange: function(e){
     var obj = {};
-    var defIteration = e.target.value;
+
     var openDefects = this.numericValue(this.props.iteration.defectsStartBal);
-    var newDefects = this.numericValue(defIteration);
+    var newDefects = this.numericValue(e.target.value);
     var closedDefects = this.numericValue(this.props.iteration.defectsClosed);
     var defEndBal = openDefects + newDefects - closedDefects;
 
-    obj.defects = defIteration;
+    obj.defects = newDefects;
     obj.defectsEndBal = defEndBal;
     this.props.updateDefectBal(obj);
   },
 
   defectsClosedChange: function(e){
     var obj = {};
-    var defClosed = e.target.value;
 
     var openDefects = this.numericValue(this.props.iteration.defectsStartBal);
     var newDefects = this.numericValue(this.props.iteration.defects);
-    var closedDefects = this.numericValue(defClosed);
+    var closedDefects = this.numericValue(e.target.value);
     var defEndBal = openDefects + newDefects - closedDefects;
 
-    obj.defectsClosed = defClosed;
+    obj.defectsClosed = closedDefects;
     obj.defectsEndBal = defEndBal;
     this.props.updateDefectBal(obj);
   },
-  
+
   wholeNumCheck: function(e) {
     var pattern = /^\d*$/;
     if (e.charCode >= 32 && e.charCode < 127 &&  !pattern.test(String.fromCharCode(e.charCode)))
@@ -67,45 +70,58 @@ var IterationDefect = React.createClass({
     e.preventDefault();
   },
 
+  componentDidUpdate: function() {
+    this.refs.defectsStartBal.value = this.props.iteration.defectsStartBal;
+    this.refs.defects.value = this.props.iteration.defects;
+    this.refs.defectsClosed.value = this.props.iteration.defectsClosed;
+    this.refs.defectsEndBal.value = this.props.iteration.defectsEndBal;
+    var newStartDate = moment(this.props.iteration.startDate).format('YYYY-MM-DD');
+    if (currentTeamId != this.props.iteration.teamId || (currentStartDate != newStartDate && !_.isEqual(newStartDate, 'Invalid date'))) {
+      currentIterId = this.props.iteration._id
+      currentTeamId = this.props.iteration.teamId;
+      currentStartDate = moment(this.props.iteration.startDate).format('YYYY-MM-DD');
+      if (_.isEmpty(currentIterId))
+        this.getDefectsStartBalance();
+    }
+  },
+
   getDefectsStartBalance: function () {
-    var startDate = this.props.iteration.startDate;
-    var teamId = this.props.iteration.teamId;
     var self = this;
-    if(_.isEmpty(this.props.iteration._id)){
-      if (_.isEmpty(startDate)) return;
-      api.searchTeamIteration(teamId, startDate)
-      .then(function(iterations){
-        return self.defectStartBalanceHandler(iterations);
-      })
-      .catch(function(err){
-        //TODO error  handling
-        console.log('[getDefectsStartBalance] '+JSON.stringify(err));
-      });
-    }    
+    if(!_.isEmpty(currentTeamId) && !_.isEqual(currentStartDate, 'Invalid date')){
+      api.searchTeamIteration(currentTeamId, null, currentStartDate, 1)
+        .then(function(iterations){
+          return self.defectStartBalanceHandler(iterations);
+        })
+        .catch(function(err){
+          //TODO error  handling
+          console.log('[getDefectsStartBalance] '+JSON.stringify(err), err);
+        });
+    }
   },
 
   refreshDefectsStartBalance: function() {
     var self = this;
-    var currentStartBalance = self.numericValue(this.props.iteration.defectsStartBal);
+    var currentStartBalance = self.numericValue(self.props.iteration.defectsStartBal);
     var newStartBalance = 0;
-    api.searchTeamIteration(self.props.iteration.teamId, self.props.iteration.startDate)
-    .then(function(iterations){
-      if (!_.isEmpty(iterations) && !_.isUndefined(iterations[0].defectsEndBal) & !isNaN(parseInt(iterations[0].defectsEndBal))){
-        newStartBalance = self.numericValue(iterations[0].defectsEndBal);
-      }
-      if (isNaN(parseInt(currentStartBalance)) || currentStartBalance == 0 || _.isEqual(currentStartBalance, newStartBalance)) {
-        self.defectStartBalanceHandler(iterations);
-      } else {
-        if (confirm('You are about to overwrite the defect opening balance from ' + currentStartBalance + ' to ' + newStartBalance + '.  Do you want to continue?')){
-          self.defectStartBalanceHandler(iterations);
-        }
-      }
-    })
-    .catch(function(err){
-      //TODO error  handling
-      console.log('[refreshDefectsStartBalance] '+JSON.stringify(err));
-    });
-
+    if(!_.isEmpty(currentTeamId) && !_.isEqual(currentStartDate, 'Invalid date')) {
+      api.searchTeamIteration(currentTeamId, null, currentStartDate, 1)
+        .then(function(iterations){
+          if (!_.isEmpty(iterations) && !_.isUndefined(iterations[0].defectsEndBal) & !isNaN(parseInt(iterations[0].defectsEndBal))){
+            newStartBalance = self.numericValue(iterations[0].defectsEndBal);
+          }
+          if (currentStartBalance == 0 || _.isEqual(currentStartBalance, newStartBalance)) {
+            self.defectStartBalanceHandler(iterations);
+          } else {
+            if (confirm('You are about to overwrite the defect opening balance from ' + currentStartBalance + ' to ' + newStartBalance + '.  Do you want to continue?')){
+              self.defectStartBalanceHandler(iterations);
+            }
+          }
+        })
+        .catch(function(err){
+          //TODO error  handling
+          console.log('[refreshDefectsStartBalance] '+JSON.stringify(err), err);
+        });
+    }
   },
 
   defectStartBalanceHandler:function (iterations) {
@@ -115,7 +131,7 @@ var IterationDefect = React.createClass({
       startBalance = iterations[0].defectsEndBal;
 
     var openDefects = this.numericValue(startBalance);
-    var newDefects = this.numericValue(this.props.iteration.defectsIteration);
+    var newDefects = this.numericValue(this.props.iteration.defects);
     var closedDefects = this.numericValue(this.props.iteration.defectsClosed);
     var defEndBal = openDefects + newDefects - closedDefects;
 
@@ -133,8 +149,8 @@ var IterationDefect = React.createClass({
       'position': 'relative',
       'top': '3px',
       'left': '5px',
-      'display': 'inline',
-      'pointer': 'pointer'
+      'display': (!this.props.isReadOnly && !_.isEmpty(this.props.iteration.teamId)) ? 'inline':'none',
+      'cursor': 'pointer'
     };
 
     return (
@@ -148,21 +164,20 @@ var IterationDefect = React.createClass({
           <div className='defectsSection'>
             <div>
               <label for='defectsStartBal'>Opening balance:</label>
-              <input type='text' name='defectsStartBal' id='defectsStartBal' value={this.props.iteration.defectsStartBal != null ? this.props.iteration.defectsStartBal:''} placeholder='0' size='6' onChange={this.defectsStartBalChange} disabled={!this.props.enableFields} onKeyPress={this.wholeNumCheck} onPaste={this.paste} />
-              {(!this.props.isReadOnly && !_.isEmpty(this.props.iteration.teamId)) ? 
-                <a id='refreshDefectsStartBal' className='ibm-refresh-link' style={linkStyle} role='button' onClick={this.refreshDefectsStartBalance} data-tip={refreshDefectsStartBalTT}></a>:null}
+              <input type='text' name='defectsStartBal' id='defectsStartBal' ref='defectsStartBal' placeholder='0' size='6' onChange={this.defectsStartBalChange} disabled={!this.props.enableFields} onKeyPress={this.wholeNumCheck} onPaste={this.paste} />
+              <a id='refreshDefectsStartBal' className='ibm-refresh-link' style={linkStyle} role='button' onClick={this.refreshDefectsStartBalance} data-tip={refreshDefectsStartBalTT} />
             </div>
             <div>
-              <label for='defectsIteration'>New this iteration:</label>
-              <input type='text' name='defectsIteration' id='defectsIteration' value={this.props.iteration.defects != null ? this.props.iteration.defects:''} placeholder='0' size='6' onChange={this.defectsIterationChange} disabled={!this.props.enableFields} onKeyPress={this.wholeNumCheck} onPaste={this.paste}/>                      
+              <label for='defects'>New this iteration:</label>
+              <input type='text' name='defects' id='defects' ref='defects' placeholder='0' size='6' onChange={this.defectsIterationChange} disabled={!this.props.enableFields} onKeyPress={this.wholeNumCheck} onPaste={this.paste}/>
             </div>
             <div>
               <label for='defectsClosed'>Resolved this iteration:</label>
-              <input type='text' name='defectsClosed' id='defectsClosed' value={this.props.iteration.defectsClosed != null? this.props.iteration.defectsClosed:''} placeholder='0' size='6' onChange={this.defectsClosedChange} disabled={!this.props.enableFields} onKeyPress={this.wholeNumCheck} onPaste={this.paste}/>                      
+              <input type='text' name='defectsClosed' id='defectsClosed' ref='defectsClosed' placeholder='0' size='6' onChange={this.defectsClosedChange} disabled={!this.props.enableFields} onKeyPress={this.wholeNumCheck} onPaste={this.paste}/>
             </div>
             <div>
               <label for='defectsEndBal'>Closing balance:</label>
-              <input type='text' name='defectsEndBal' id='defectsEndBal' value={this.props.iteration.defectsEndBal != null ? this.props.iteration.defectsEndBal:''} placeholder='0' size='6' onKeyPress={this.wholeNumCheck} onPaste={this.paste} disabled />
+              <input type='text' name='defectsEndBal' id='defectsEndBal' ref='defectsEndBal' placeholder='0' size='6' disabled />
             </div>
           </div>
           <div className='ibm-rule ibm-gray-80'>
