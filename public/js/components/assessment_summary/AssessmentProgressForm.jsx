@@ -945,7 +945,7 @@ var AssessmentProgressForm = React.createClass({
       <form id="progressForm" class="agile-maturity">
         <ProjectComponent resultBodyAry={resultBodyAry} />
         <DeliveryComponent deliveryResultAry={deliveryResultAry} displayType={displayType} />
-        <ActionPlanComponent />
+        <ActionPlanComponent teamId={this.state.teamId} assessId={this.state.assessId} />
         <IndependentAssessorSection />
         <LastUpdateSection />
         <DebugSection />
