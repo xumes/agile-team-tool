@@ -839,15 +839,6 @@ var AssessmentProgressForm = React.createClass({
       console.log('[displaySelected] assessId:',assessId);
       if (assessmt._id === assessId) {
         lastRecord = ctr1;
-        var selfAsstDate = '';
-        if (assessmt['submittedDate'] != null && assessmt['submittedDate'] != '') {
-          selfAsstDate = utils.showDateMMDDYYYY(assessmt['submittedDate'].substring(0, assessmt['submittedDate'].indexOf(' ')));
-        }
-        var indAsstDate = '';
-        if (assessmt.assessedDate != null && assessmt.assessedDate != '') {
-          indAsstDate = utils.showDateMMDDYYYY(assessmt.assessedDate.substring(0, assessmt.assessedDate.indexOf(' ')));
-        }
-        // console.log('[render] indAsstDate:',indAsstDate)
 
         self.setIndAssessor(assessmt.assessorUserId);
         // loadHeader(selfAsstDate, assessmt.assessmentStatus, indAsstDate, assessmt.assessorStatus); // not needed anymore
@@ -891,8 +882,7 @@ var AssessmentProgressForm = React.createClass({
               id={id}
               x={ctr2}
               counter={ctr1}
-              currentScore={assessmt_cmpnt_rslts.currentScore}
-              targetScore={assessmt_cmpnt_rslts.targetScore} 
+              assessed_cmpnt={assessmt_cmpnt_rslts}
               hasIndAssessment={hasIndAssessment}
               displaySelectedChart={self.displaySelectedChart} />);
 
