@@ -35,7 +35,7 @@ _.each(cloudantIterations, function(doc) {
     'memberCount' : parseInt(doc.team_mbr_cnt),
     'committedStories': parseInt(doc.nbr_committed_stories),
     'deliveredStories': parseInt(doc.nbr_stories_dlvrd),
-    'commitedStoryPoints': parseInt(doc.nbr_committed_story_pts),
+    'committedStoryPoints': parseInt(doc.nbr_committed_story_pts),
     'storyPointsDelivered': parseInt(doc.nbr_story_pts_dlvrd),
     'locationScore':  parseFloat(doc.fte_cnt),
     'deployments': parseInt(doc.nbr_dplymnts),
