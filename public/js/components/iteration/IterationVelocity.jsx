@@ -58,12 +58,12 @@ var IterationCommitment = React.createClass({
 
   calculateMetrics: function(commPointsDel) {
     var fte = this.props.iteration.memberFte;
-    if (fte != null && !isNaN(parseFloat(fte))){      
+    if (fte != null && !isNaN(parseFloat(fte))){
       var strPointsFTE = (this.numericValue(commPointsDel) / fte).toFixed(1);
       this.setState({unitCostStoryPointsFTE:strPointsFTE});
     }
   },
-  
+
   wholeNumCheck: function(e) {
     var pattern = /^\d*$/;
     if (e.charCode >= 32 && e.charCode < 127 &&  !pattern.test(String.fromCharCode(e.charCode)))
@@ -135,7 +135,7 @@ var IterationCommitment = React.createClass({
           <div>
           <label for='unitCostStoryPointsFTE' style={labelStyle}>Story points per FTE(calculated):<span className='ibm-required'></span></label>
           <span>
-            <input type='text' id='unitCostStoryPointsFTE' size='6' value={this.state.unitCostStoryPointsFTE} placeholder='0.0' disabled/>
+            <input type='text' id='unitCostStoryPointsFTE' size='6' value={this.state.unitCostStoryPointsFTE} className='inputCustom' placeholder='0.0' disabled/>
           </span>
           </div>
         </div>

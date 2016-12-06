@@ -141,7 +141,6 @@ module.exports = function(app, includes) {
    * @param {Date}      startdate (format: YYYYMMDD) (optional)
    * @param {Date}      enddate (format: YYYYMMDD) (optional)
    * @param {Number}    limit (optional)
-   * @param {Boolean}   includeDocs (true or false) (optional)
    */
   var searchTeamIteration = function(req, res, next) {
     var teamId = req.query.id;
@@ -150,11 +149,10 @@ module.exports = function(app, includes) {
 
     var params = {
       id: teamId,
-      status: req.query.status,
       startDate: req.query.startdate,
       endDate: req.query.enddate,
-      includeDocs:  req.query.includeDocs,
-      limit: req.query.limit
+      limit: req.query.limit,
+      status: req.query.status
     };
     Iterations.searchTeamIteration(params)
       .then(function(result) {

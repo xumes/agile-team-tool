@@ -6,40 +6,39 @@ var Velocity = require('./IterationVelocity.jsx');
 var Defect = require('./IterationDefect.jsx');
 var Additional = require('./IterationAdditional.jsx');
 var Buttons = require('./IterationButtons.jsx');
-
 var moment = require('moment');
 var initData = {
-'_id':'',
-'createDate':'',
-'createdByUserId':'',
-'createdBy':'',
-'startDate':null,
-'endDate':null,
-'name':'',
-'teamId':'',
-'memberCount':'',
-'locationScore':null,
-'cycleTimeInBacklog':'',
-'cycleTimeWIP':'',
-'defectsEndBal':'',
-'defectsClosed':'',
-'defects':'',
-'defectsStartBal':'',
-'memberChanged':false,
-'comment':'',
-'teamSatisfaction':'',
-'clientSatisfaction':'',
-'deployments':'',
-'storyPointsDelivered':'',
-'commitedStoryPoints':'',
-'deliveredStories':'',
-'committedStories':'',
-'status':'',
-'memberFte':'',
-'docStatus':null,
-'updatedBy':'',
-'updatedByUserId':'',
-'updateDate':''};
+  '_id':'',
+  'createDate':'',
+  'createdByUserId':'',
+  'createdBy':'',
+  'startDate':null,
+  'endDate':null,
+  'name':'',
+  'teamId':'',
+  'memberCount':'',
+  'cycleTimeInBacklog':'',
+  'cycleTimeWIP':'',
+  'defectsEndBal':'',
+  'defectsClosed':'',
+  'defects':'',
+  'defectsStartBal':'',
+  'memberChanged':false,
+  'comment':'',
+  'teamSatisfaction':'',
+  'clientSatisfaction':'',
+  'deployments':'',
+  'storyPointsDelivered':'',
+  'commitedStoryPoints':'',
+  'deliveredStories':'',
+  'committedStories':'',
+  'status':'',
+  'memberFte':'',
+  'docStatus':null,
+  'updatedBy':'',
+  'updatedByUserId':'',
+  'updateDate':''
+};
 
 var invalidBorder = '#f00';
 var invalidBackground = '';
@@ -79,7 +78,7 @@ var IterationForm = React.createClass({
       }
     }
     this.setState({
-      readOnlyAccess: status, 
+      readOnlyAccess: status,
       enableFields: !status,
       addBtnDisable: !add,
       updateBtnDisable: !update});
@@ -107,16 +106,14 @@ var IterationForm = React.createClass({
     this.clearHighlightedIterErrors();
     if (enableStatus){
       if(data != null){
-        if ( data._id != 'new'){
+        if ( data._id != 'new') {
           add = false;
           update = true;
-        }
-        else {
+        } else {
           add = true
           update = false;
         }
-      }
-      else {
+      } else {
         add = true
         update = false;
       }
@@ -129,9 +126,9 @@ var IterationForm = React.createClass({
         addBtnDisable: !add,
         updateBtnDisable: !update,
         enableFields: enableStatus,
-        iteration: data});
-    }
-    else{
+        iteration: data
+      });
+    } else {
       var resetData = _.clone(initData);
       this.setState({
         lastUpdateTimestamp: '',
@@ -140,7 +137,8 @@ var IterationForm = React.createClass({
         addBtnDisable: !add,
         updateBtnDisable: !update,
         enableFields: enableStatus,
-        iteration: resetData});
+        iteration: resetData
+      });
     }
     return;
   },
@@ -186,7 +184,7 @@ var IterationForm = React.createClass({
 
     if (response && response.error) {
       var errors = response.error.errors;
-      if (errors){        
+      if (errors){
         // Return iteration errors as String
         errorlist = this.getIterationErrorPopup(errors);
         if (!_.isEmpty(errorlist)) {
@@ -221,7 +219,7 @@ getIterationErrorPopup: function(errors) {
     'storyPointsDelivered': 'commPointsDel',
     'deployments': 'DeploythisIteration',
     'defectsStartBal': 'defectsStartBal',
-    'defects': 'defectsIteration',
+    'defects': 'defects',
     'defectsClosed': 'defectsClosed',
     'defectsEndBal': 'defectsEndBal',
     'cycleTimeWIP': 'cycleTimeWIP',
@@ -246,7 +244,7 @@ getIterationErrorPopup: function(errors) {
   });
     return errorLists;
   },
-  
+
   setFieldErrorHighlight: function (id) {
     if ($('#' + value).is('select')) {
       $($('#select2-' + id + '-container').parent()).css('border-color', invalidBorder);
@@ -283,7 +281,7 @@ getIterationErrorPopup: function(errors) {
       'commPointsDel',
       'DeploythisIteration',
       'defectsStartBal',
-      'defectsIteration',
+      'defects',
       'defectsClosed',
       'defectsEndBal',
       'cycleTimeWIP',
@@ -363,19 +361,19 @@ getIterationErrorPopup: function(errors) {
     _.each(result, function(value, key){
       copy[key] = value;
     });
-    
+
     this.setState({iteration:copy});
   },
 
   render: function() {
-    
+
     var subStyle = {
       'width': '410px'
     };
     var subStyle2 = {
       'width': '730px'
     };
-    
+
     return (
       <form className='ibm-column-form'>
         <Management updateForm={this.populateForm} enableFields={this.state.enableFields}  ref='management' iteration={this.state.iteration} updateField={this.updateField} readOnlyAccess={this.readOnlyAccess} isReadOnly={this.state.readOnlyAccess} clearError={this.clearFieldErrorHighlight} defectBal={this.getDefectsStartBalance} teamReset={this.teamReset} updateAllocation={this.updateAllocation} processIteration={this.processIteration} updateFields={this.updateFields}/>
@@ -383,7 +381,7 @@ getIterationErrorPopup: function(errors) {
         <Throughput enableFields={this.state.enableFields} ref='throughput' iteration={this.state.iteration}  updateField={this.updateField}/>
 
         <Velocity enableFields={this.state.enableFields} ref='velocity' iteration={this.state.iteration} updateField={this.updateField}/>
-        
+
         <Defect enableFields={this.state.enableFields} ref='defect' iteration={this.state.iteration} updateField={this.updateField} updateDefectBal={this.updateFields} isReadOnly={this.state.readOnlyAccess}/>
 
         <Additional enableFields={this.state.enableFields} ref='additional' iteration={this.state.iteration} updateField={this.updateField} clearError={this.clearFieldErrorHighlight}/>

@@ -62,7 +62,7 @@ var IterationSchema = {
   },
   memberCount: {
     type: Number,
-    required: [true, 'Member count is required.']
+    //required: [true, 'Member count is required.']
   },
   memberFte: {
     type: Number,
@@ -328,8 +328,8 @@ var IterationExport = {
 
   add: function(data, userId) {
     return new Promise(function(resolve, reject) {
-      data['createDate'] = moment().format(dateFormat);
-      data['updateDate'] = moment().format(dateFormat);
+      data['createDate'] = new Date(moment.utc());
+      data['updateDate'] = new Date(moment.utc());
       data['status'] = IterationExport.calculateStatus(data);
       Users.findUserByUserId(userId.toUpperCase())
       .then(function(userInfo){
@@ -366,7 +366,7 @@ var IterationExport = {
         return data;
       })
       .then(function(cleanData) {
-        return IterationExport.getDefectsOpenBalance(cleanData.teamId, cleanData.endDate);
+        return IterationExport.getDefectsOpenBalance(cleanData.teamId, cleanData.startDate);
       })
       .then(function(openBalance) {
         if (_.isUndefined(data['defectsStartBal']) && _.isEmpty(data['defectsStartBal'])) {
@@ -374,13 +374,9 @@ var IterationExport = {
         } else {
           openBalance = util.getIntegerValue(data['defectsStartBal']);
         }
-        loggers.get('model-iteration').verbose('[iterationModels.add] Defect start balance: ' + openBalance);
         var newDefects = util.getIntegerValue(data['defects']);
-        loggers.get('model-iteration').verbose('[iterationModels.add] Defect new defects: ' + newDefects);
         var closedDefects = util.getIntegerValue(data['defectsClosed']);
-        loggers.get('model-iteration').verbose('[iterationModels.add] Defect resolved defects: ' + closedDefects);
         var endBalance = openBalance + newDefects - closedDefects;
-        loggers.get('model-iteration').verbose('[iterationModels.add] Defect end balance: ' + endBalance);
         if (_.isUndefined(data['defects']) || !_.isEmpty(data['defects']))
           data['defects'] = newDefects;
         if (_.isUndefined(data['defectsClosed']) || !_.isEmpty(data['defectsClosed']))
@@ -427,7 +423,7 @@ var IterationExport = {
           return Promise.reject(msg);
         }
         else {
-          data['updateDate'] = moment().format(dateFormat);
+          data['updateDate'] = new Date(moment.utc());
           data['updatedBy'] = userInfo.email;
           data['updatedByUserId'] = userInfo.userId;
           data['status'] = IterationExport.calculateStatus(data);
@@ -453,13 +449,12 @@ var IterationExport = {
     return new Promise(function(resolve, reject) {
       var params = {
         id: teamId,
-        status: null,
-        startdate: '0',
-        enddate: iterEndDate
+        endDate: iterEndDate,
+        limit: 1
       };
       IterationExport.searchTeamIteration(params)
       .then(function(iteration) {
-        console.log('[getDefectsOpenBalance] body: '+JSON.stringify(iteration));
+        //console.log('[getDefectsOpenBalance] body: '+JSON.stringify(iteration));
         if (!_.isEmpty(iteration)) {
           if (!_.isUndefined(iteration[0].defectsEndBal) & !isNaN(iteration[0].defectsEndBal))
             return util.getIntegerValue(iteration[0].defectsEndBal);
@@ -478,7 +473,7 @@ var IterationExport = {
 
   searchTeamIteration: function(p) {
     return new Promise(function(resolve, reject){
-      var qReq = {};
+      var qReq = {'docStatus': {'$ne': 'delete'}};
       if (!_.isEmpty(p.id))
         qReq['teamId'] = new ObjectId(p.id);
 
@@ -502,14 +497,26 @@ var IterationExport = {
             '$lte': moment(new Date(endDate)).format(dateFormat)
           };
       }
-      loggers.get('model-iteration').verbose('Querying Iteration:' + JSON.stringify(qReq));
-      Iteration.find(qReq).sort('-endDate').exec()
-      .then(function(iterations){
-        resolve(iterations);
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        reject({'error':err});
-      });
+      var limit = util.getIntegerValue(p.limit);
+      if (limit > 0) {
+        loggers.get('model-iteration').verbose('Querying Iteration w/ limit :' + JSON.stringify(qReq), p.limit);
+        Iteration.find(qReq).sort('-endDate').limit(limit).exec()
+        .then(function(iterations){
+          resolve(iterations);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject({'error':err});
+        });
+      } else {
+        loggers.get('model-iteration').verbose('Querying Iteration:' + JSON.stringify(qReq));
+        Iteration.find(qReq).sort('-endDate').exec()
+        .then(function(iterations){
+          resolve(iterations);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject({'error':err});
+        });
+      }
     });
   },
 
