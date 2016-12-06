@@ -53,6 +53,7 @@ body {
   -webkit-transform: rotate(90deg); /* Safari */
   transform: rotate(90deg);
   font-size: 1.6em;
+  font-family: "HelvNeue Light for IBM";
   color: #734098;
 }
 
@@ -177,4 +178,11 @@ body {
 
 .home-team-header-img svg {
   fill: red;
+}
+
+.home-team-header-hierarchy {
+  height: 8.3%;
+  width: 100%;
+  padding-top: 1%;
+  padding-left: 2%;
 }
