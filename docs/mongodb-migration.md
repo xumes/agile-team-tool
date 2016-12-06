@@ -49,7 +49,7 @@ I think these doc types are not needed
 |memberCount| number | team_mbr_cnt |
 |committedStories| number | nbr_committed_stories |
 |deliveredStories| number | nbr_stories_dlvrd |
-|commitedStoryPoints| number | nbr_committed_story_pts |
+|committedStoryPoints| number | nbr_committed_story_pts |
 |storyPointsDelivered | number | nbr_story_pts_dlvrd |
 |locationScore | used for pizza chart i think ? | fte_cnt | 0.0 or 0.5 
 |deployments | number | nbr_dplymnts | "" or 1
