@@ -476,7 +476,8 @@ module.exports.createTeam = function(teamDoc, creator) {
       'updatedByUserId': creator ? creator['ldap']['uid'].toUpperCase() : '',
       'updateDate': new Date(moment.utc()),
       'members': teamDoc.members,
-      'type': _.isEqual(teamDoc.type, 'squad') ? 'squad' : null
+      'type': _.isEqual(teamDoc.type, 'squad') ? 'squad' : null,
+      'description': (!_.isEmpty(teamDoc.description)) ? teamDoc.description : null
     };
     var newTeamDoc = new Team(newTeam);
     Team.create(newTeamDoc)
