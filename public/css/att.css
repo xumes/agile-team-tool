@@ -1379,6 +1379,12 @@ font-family:'BodoniMTW01-BookItalic';
   padding-top: 5px;
 }
 
+.action_plan {
+  width: 70px;
+  font-size: 9pt;
+  text-align: center;
+}
+
 .__react_component_tooltip{
   background: rgb(236, 236, 236) !important;
   color: rgb(50, 50, 50) !important;

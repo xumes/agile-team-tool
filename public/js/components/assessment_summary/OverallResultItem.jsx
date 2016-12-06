@@ -4,12 +4,10 @@ var OverallResultItem = React.createClass({
 
   render: function() {
     var self = this;
-    // var assessed_cmpnt = self.props.assessed_cmpnt;
-    // var practiceId = assessed_cmpnt.practiceId;
-    // var practiceName = assessed_cmpnt.practiceName;
-    var currentScore = self.props.currentScore.toFixed(1) || '-';
-    var targetScore = self.props.targetScore.toFixed(1) || '-';
-    var assessorTarget = self.props.assessorTarget;
+    var assessed_cmpnt = self.props.assessed_cmpnt;
+    var currentScore = assessed_cmpnt.currentScore.toFixed(1) || '-';
+    var targetScore = assessed_cmpnt.targetScore.toFixed(1) || '-';
+    var assessorTarget = assessed_cmpnt.assessorTarget;
     var assessed_index = self.props.x;
     var id = self.props.id;
     var hasIndAssessment = self.props.hasIndAssessment;

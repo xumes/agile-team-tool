@@ -21,6 +21,7 @@ var HomeMemberTable = React.createClass({
   },
 
   toTitleCase: function(str) {
+    if (_.isEmpty(str)) return '';
     var strArray = str.toUpperCase().split(',');
     if (strArray.length < 3) {
       return str.toUpperCase();
