@@ -1,6 +1,5 @@
 var React = require('react');
 var api = require('../api.jsx');
-var lodash = require('lodash');
 var ActionItem = require('./ActionItem.jsx');
 
 var btnState = {
