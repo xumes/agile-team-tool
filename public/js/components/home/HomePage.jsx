@@ -3,6 +3,7 @@ var api = require('../api.jsx');
 var Header = require('../Header.jsx');
 var HomeNav = require('./HomeNav.jsx');
 var HomeContent = require('./HomeContent.jsx');
+var InlineSVG = require('svg-inline-react');
 
 var HomePage = React.createClass({
   getInitialState: function() {
@@ -131,6 +132,7 @@ var HomePage = React.createClass({
       'width': '66.6%',
       'height': '100%'
     }
+    var src = require('../../../img/Att-icons/att-icons_expand.svg');
     return (
       <div style={pageStyle}>
         <div class='ibm-columns' style={columnsStyle}>
@@ -141,7 +143,7 @@ var HomePage = React.createClass({
           </div>
         </div>
         <div id='homeNavShowBtnDiv' class='home-nav-show-btn-div'>
-          <input class='home-nav-show-btn' type='image' src='../../../img/Att-icons/att-icons_expand.svg' onClick={this.showHomeNav}/>
+          <InlineSVG class='home-nav-show-btn' src={src} onClick={this.showHomeNav}></InlineSVG>
           <div class='home-nav-show-text'>
             Teams
           </div>

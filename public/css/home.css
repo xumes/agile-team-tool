@@ -1,9 +1,11 @@
 html {
   height: 100%;
   font-size: 62.5%;
+  background-color: white;
 }
 
 body {
+  font-size: 1em;
   height: 100%
 }
 
@@ -31,7 +33,7 @@ body {
 .home-nav-show-btn-div {
   width: 2.4%;
   height: 30%;
-  background-color: #7CC7FF;
+  background-color: #F7F7F7;
   position: absolute;
   top: 6.3%;
   left: -0.2%;
@@ -39,11 +41,15 @@ body {
   box-shadow: 2px 2px 4px #000000;
 }
 
-.home-nav-show-btn {
+.home-nav-show-btn svg{
   width: 70%;
   padding: 0;
   margin-left: 20%;
   margin-top: 208%;
+  cursor: pointer;
+}
+.home-nav-show-btn path, .home-nav-show-btn polygon {
+  fill: #5A5A5A
 }
 
 .home-nav-show-text {
@@ -54,7 +60,7 @@ body {
   transform: rotate(90deg);
   font-size: 1.6em;
   font-family: "HelvNeue Light for IBM";
-  color: #734098;
+  color: #5A5A5A;
 }
 
 .home-nav-div {
@@ -146,6 +152,7 @@ body {
 
 .home-team-header {
   margin-top: 0.1%;
+  margin-left: 0.5%;
   width: 100%;
   height: 30%;
   background-color: #7CC7FF;
@@ -153,36 +160,89 @@ body {
 
 .home-team-header-title {
   position: relative;
-  width: 50%;
+  width: 90%;
   height: 17%;
-  padding-top: 10%;
-  padding-left: 2%;
-  display: inline-block;
+  position: relative;
+  top: 30%;
+  left: 1.5%;
 }
 
-.home-team-header-title > h {
+.home-team-header-teamname-div {
+  width: 90%;
+  height: 100%;
+  display: inline-block;
+  margin-left: 0.5%;
+}
+
+.home-team-header-teamname {
   font-family: "Helvetica Neue";
-  font-size: 30px;
+  font-size: 3em;
   font-weight: 300;
   line-height: 36px;
-  color: #734098;
-  margin-left: 2%;
+  color: #323232;
+}
+
+.home-team-header-img-div {
+  width: 5%;
+  height: 80%;
+  display: inline-block;
+  float: left;
 }
 
 .home-team-header-img {
-  fill: #734098 !important;
-  width: 8%;
-  height: 100%;
-  margin-bottom: 3%;
 }
 
 .home-team-header-img svg {
-  fill: red;
+  width: 100%;
+  height: 100%;
+  padding-top: 10%;
+}
+
+.home-team-header-img path {
+  fill: #323232 !important;
 }
 
 .home-team-header-hierarchy {
   height: 8.3%;
   width: 100%;
-  padding-top: 1%;
-  padding-left: 2%;
+  position: relative;
+  top: 32%;
+  left: 2%;
+}
+
+.hierarchy-link {
+  font-family: "HelvNeue Roman for IBM";
+  display:inline;
+  padding-left:0px;
+  font-size: 1.4em;
+  color: #EFF9FF;
+}
+
+.hierarchy-mark {
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.4em;
+  color: #EFF9FF;
+}
+
+.hierarchy-lastteam {
+  font-family: "HelvNeue Roman for IBM";
+  display: inline;
+  font-size: 1.4em;
+  color: #EFF9FF;
+  border-bottom: 1px solid #EFF9FF;
+}
+
+.home-team-header-btns-div {
+  background-color: red;
+  height: 22.2%;
+  width: 95%;
+  position: relative;
+  top: 48%;
+  left: 2%;
+}
+
+.home-team-header-btns {
+  width: 20%;
+  height: 100%;
+  background-color: green;
 }

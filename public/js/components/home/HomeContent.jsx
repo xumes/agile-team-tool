@@ -26,7 +26,7 @@ var HomeContent = React.createClass({
         <HomeSpinner id={'contentSpinner'}/>
         <div id="bodyContent" style={{'height':'100%','width':'100%'}}>
           <HomeHighlightBox />
-          <HomeTeamHeader loadDetailTeam={this.props.loadDetailTeam}/>
+          <HomeTeamHeader loadDetailTeam={this.props.loadDetailTeam} selectedTeamChanged={this.props.selectedTeamChanged} tabClickedHandler={this.props.tabClickedHandler}/>
           <HomeIterSection loadDetailTeam={this.props.loadDetailTeam}/>
           <HomeAseSection loadDetailTeam={this.props.loadDetailTeam}/>
           <HomeTeamInfo loadDetailTeam={this.props.loadDetailTeam} selectedTeamChanged={this.props.selectedTeamChanged} tabClickedHandler={this.props.tabClickedHandler}/>
