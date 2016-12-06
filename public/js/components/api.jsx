@@ -13,6 +13,20 @@ function clearRequests() {
   requests.length = 0;
 }
 
+module.exports.getFaceImage = function(uid) {
+  return new Promise(function(resolve, reject){
+    var url = 'http://dpev027.innovate.ibm.com:10000/image/' + encodeURIComponent(uid.toUpperCase());
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
 module.exports.getSystemStatus = function(data) {
   return new Promise(function(resolve, reject){
     var url = '/api/util/systemstatus';
@@ -367,13 +381,13 @@ module.exports.searchTeamIteration = function(teamId, startDate, enddate, limit,
       url += '&startdate=' + startDate;
     }
     if (!_.isEmpty(enddate)) {
-      url += '&enddate=' + enddate
+      url += '&enddate=' + enddate;
     }
     if (!isNaN(limit)) {
-      url += '&limit=' + limit
+      url += '&limit=' + limit;
     }
     if (!isNaN(status)) {
-      url += '&status=' + status
+      url += '&status=' + status;
     }
     var req = $.ajax({
       type: 'GET',
@@ -444,4 +458,4 @@ module.exports.getTeamAssessments = function(teamId, assessId) {
       reject(err);
     });
   });
-}
+};
