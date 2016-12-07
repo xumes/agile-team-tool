@@ -115,7 +115,7 @@ var ActionPlanComponent = React.createClass({
   validateAction: function (actions) {
     var hasError = false;
     var error = _.filter(this.state.assessment.actionPlans, function(item){
-      if (item.practiceId || _.isEmpty(item.practiceId)){
+      if (_.isNull(item.practiceId) || _.isEmpty(item.practiceId)){
         return item;
       }
     });
