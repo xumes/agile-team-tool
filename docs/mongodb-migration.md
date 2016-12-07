@@ -95,7 +95,7 @@ current valid system status flags:
 |memberFte | number | fte_cnt | Full-time equivalent (member allocation %)
 |committedStories| number | nbr_committed_stories |
 |deliveredStories| number | nbr_stories_dlvrd |
-|commitedStoryPoints| number | nbr_committed_story_pts |
+|committedStoryPoints| number | nbr_committed_story_pts |
 |storyPointsDelivered | number | nbr_story_pts_dlvrd |
 |deployments | number | nbr_dplymnts | "" or 1
 |teamSatisfaction| number | team_sat | 4

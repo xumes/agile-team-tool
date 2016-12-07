@@ -49,7 +49,7 @@ var IterationCommitment = React.createClass({
   },
 
   commPointsChange: function(e){
-    this.props.updateField('commitedStoryPoints',e.target.value);
+    this.props.updateField('committedStoryPoints',e.target.value);
   },
 
   deploythisIterationChange: function(e){
@@ -112,7 +112,7 @@ var IterationCommitment = React.createClass({
           <div className='iteration-sm'>
             <label for='commPoints' style={labelStyle}>Story points - Committed:<span className='ibm-required'></span></label>
             <span>
-              <input type='text' name='commPoints' id='commPoints' size='6' value={this.props.iteration.commitedStoryPoints!=null ? this.props.iteration.commitedStoryPoints:''} placeholder='0' className='inputCustom' onChange={this.commPointsChange} disabled={!this.props.enableFields} onKeyPress={this.wholeNumCheck} onPaste={this.paste}/>
+              <input type='text' name='commPoints' id='commPoints' size='6' value={this.props.iteration.committedStoryPoints!=null ? this.props.iteration.committedStoryPoints:''} placeholder='0' className='inputCustom' onChange={this.commPointsChange} disabled={!this.props.enableFields} onKeyPress={this.wholeNumCheck} onPaste={this.paste}/>
             </span>
           </div>
           <div>

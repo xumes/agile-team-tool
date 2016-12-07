@@ -366,7 +366,7 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
       } else {
         var monthIndex = 5 - monthDiff;
         var pts = util.getIntegerValue(iterationDoc['storyPointsDelivered']);
-        var commPts = util.getIntegerValue(iterationDoc['commitedStoryPoints']);
+        var commPts = util.getIntegerValue(iterationDoc['committedStoryPoints']);
         var stories = util.getIntegerValue(iterationDoc['deliveredStories']);
         var commStories = util.getIntegerValue(iterationDoc['committedStories']);
         var teamCnt = util.getIntegerValue(iterationDoc['memberCount']);

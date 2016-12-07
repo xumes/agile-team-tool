@@ -164,7 +164,7 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAcc
     velocitySeries.data.push(vData);
 
     cvData.name = p6Iterations[i].name;
-    cvData.y = isNaN(parseInt(p6Iterations[i].commitedStoryPoints)) ? 0 : parseInt(p6Iterations[i].commitedStoryPoints);
+    cvData.y = isNaN(parseInt(p6Iterations[i].committedStoryPoints)) ? 0 : parseInt(p6Iterations[i].committedStoryPoints);
     cvData.iterURL = iterationURL + p6Iterations[i]._id;
     cvData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     cvData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
