@@ -1,9 +1,10 @@
 var React = require('react');
+var utils = require('../../utils');
 
 var LastUpdateSection = React.createClass({
   render: function() {
     var updatedBy = this.props.selectedAssessment.updatedBy;
-    var updateDate = this.props.selectedAssessment.updateDate;
+    var updateDate = utils.showDateUTC(this.props.selectedAssessment.updateDate);
     return (
       <div>
         <h3 class="ibm-bold ibm-h4">Last update</h3>
