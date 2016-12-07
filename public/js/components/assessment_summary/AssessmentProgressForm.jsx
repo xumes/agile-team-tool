@@ -31,7 +31,8 @@ var AssessmentProgressForm = React.createClass({
     return {
       teamId: teamId,
       assessId: assessId,
-      assessResult: assessResult
+      assessResult: assessResult,
+      selectedAssessment: {}
     }
   },
 
@@ -42,8 +43,11 @@ var AssessmentProgressForm = React.createClass({
     self.initShowHideWidget();
     api.getTeamAssessments(teamId, assessId)
       .then(function(assessResult) {
-        console.log('AssessmentProgressForm componentDidMount assessResult[0]:',assessResult[0] );
-        console.log('AssessmentProgressForm componentDidMount assessResult[1]:',assessResult[1] );
+        _.each(assessResult, function(value, key, list) {
+          if (value._id === assessId) {
+            self.setState({selectedAssessment: value});
+          }
+        });
         self.setState({assessResult: assessResult});
       })
       .catch(function(err) {
@@ -843,9 +847,9 @@ var AssessmentProgressForm = React.createClass({
         self.setIndAssessor(assessmt.assessorUserId);
         // loadHeader(selfAsstDate, assessmt.assessmentStatus, indAsstDate, assessmt.assessorStatus); // not needed anymore
 
-        $('#lastUpdateUser').html(assessmt.updatedBy);
-        $('#lastUpdateTimestamp').html(utils.showDateUTC(assessmt.updateDate));
-        $('#doc_id').html(assessmt['_id']);
+        // $('#lastUpdateUser').html(assessmt.updatedBy);
+        // $('#lastUpdateTimestamp').html(utils.showDateUTC(assessmt.updateDate));
+        // $('#doc_id').html(assessmt['_id']);
 
         if (assessmt.assessorStatus == 'Submitted') {
           hasIndAssessment = true;
@@ -945,10 +949,10 @@ var AssessmentProgressForm = React.createClass({
       <form id="progressForm" class="agile-maturity">
         <ProjectComponent resultBodyAry={resultBodyAry} />
         <DeliveryComponent deliveryResultAry={deliveryResultAry} displayType={displayType} />
-        <ActionPlanComponent teamId={this.state.teamId} assessId={this.state.assessId} />
-        <IndependentAssessorSection />
-        <LastUpdateSection />
-        <DebugSection />
+        <ActionPlanComponent teamId={this.state.teamId} assessId={this.state.assessId} selectedAssessment={this.state.selectedAssessment} />
+        <IndependentAssessorSection selectedAssessment={this.state.selectedAssessment} />
+        <LastUpdateSection selectedAssessment={this.state.selectedAssessment} />
+        <DebugSection selectedAssessment={this.state.selectedAssessment} />
         <div class="ibm-rule ibm-alternate">
           <hr />
         </div>
