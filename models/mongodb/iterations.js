@@ -80,7 +80,7 @@ var IterationSchema = {
     type: Number,
     default: null
   },
-  commitedStoryPoints: {
+  committedStoryPoints: {
     type: Number,
     default: null
   },
