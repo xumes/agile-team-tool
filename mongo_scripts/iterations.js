@@ -40,7 +40,7 @@ _.each(cloudantIterations, function(doc) {
     'memberFte': (_.isEmpty(doc.fte_cnt)) ? undefined : parseFloat(doc.fte_cnt),
     'committedStories': (_.isEmpty(doc.nbr_committed_stories)) ? undefined : parseInt(doc.nbr_committed_stories),
     'deliveredStories': (_.isEmpty(doc.nbr_stories_dlvrd)) ? undefined : parseInt(doc.nbr_stories_dlvrd),
-    'commitedStoryPoints': (_.isEmpty(doc.nbr_committed_story_pts)) ? undefined : parseInt(doc.nbr_committed_story_pts),
+    'committedStoryPoints': (_.isEmpty(doc.nbr_committed_story_pts)) ? undefined : parseInt(doc.nbr_committed_story_pts),
     'storyPointsDelivered': (_.isEmpty(doc.nbr_story_pts_dlvrd)) ? undefined : parseInt(doc.nbr_story_pts_dlvrd),
     'deployments': (_.isEmpty(doc.nbr_dplymnts)) ? undefined : parseInt(doc.nbr_dplymnts),
     'clientSatisfaction': (_.isEmpty(doc.client_sat)) ? undefined : parseFloat(doc.client_sat),

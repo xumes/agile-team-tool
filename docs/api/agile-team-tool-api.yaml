@@ -315,7 +315,7 @@ definitions:
       deliveredStories:
         type: integer
         description: Number of delivered stories
-      commitedStoryPoints:
+      committedStoryPoints:
         type: integer
         description: Number of committed story points
       storyPointsDelivered:

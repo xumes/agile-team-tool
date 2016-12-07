@@ -28,11 +28,11 @@ var TeamChildAssociation = React.createClass({
         .catch(function(err){
           return err;
         })
-    }
+    } else
+      currentTeamId = '';
   },
   childTeamsUpdateHandler: function(msg) {
     var self = this;
-    currentTeamId = '';
     this.childTeamInit(self.props.selectedTeam)
       .then(function(result){
         self.setState({childTeams: result});

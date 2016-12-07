@@ -43,7 +43,7 @@ var IterationCommitment = React.createClass({
   },
 
   commPointsChange: function(e){
-    this.props.updateField('commitedStoryPoints',e.target.value);
+    this.props.updateField('committedStoryPoints',e.target.value);
   },
 
   calculateMetrics: function(commStoriesDel) {
