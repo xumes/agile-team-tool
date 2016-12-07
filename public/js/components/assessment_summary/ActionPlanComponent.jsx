@@ -113,18 +113,16 @@ var ActionPlanComponent = React.createClass({
   },
 
   validateAction: function (actions) {
-    var actionId = -1;
     var hasError = false;
-    for (var x = 0; x < $('#actionPlan > tr').length; x++) {
-      var practiceIndex = $('#practice_' + x + ' option:selected').val();
-      if ($('#select_item_' + x).length && practiceIndex == '') {
-        hasError = true;
-        break;
+    var error = _.filter(this.state.assessment.actionPlans, function(item){
+      if (item.practiceId || _.isEmpty(item.practiceId)){
+        return item;
       }
-    }
-    if (hasError) {
+    });
+
+    if (error.length > 0) {
+      hasError = true;
       this.showMessagePopup('Please select principle.');
-      $('#practice_' + x).focus();
     }
     return hasError;
   },

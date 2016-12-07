@@ -1,35 +1,10 @@
 var React = require('react');
 var DatePicker = require('react-datepicker');
 require('react-datepicker/dist/react-datepicker.css');
-var btnState = {
-  'addDisabled': false,
-  'deleteDisabled': true,
-  'saveDisabled': true,
-  'cancelDisabled': true,
-};
-var defaultItem = {
-  'actionPlanId' : null,
-  'isUserCreated': false,
-  'componentName': '',
-  'principleId':  null,
-  'practiceName': '',
-  'improveDescription': '',
-  'currentLevel': '',
-  'targetLevel': '',
-  'progressComment': '',
-  'keyMetric': '',
-  'reviewDate': null,
-  'actionStatus': ''};
 
 var statusList = ['Open', 'In-progress', 'Closed'];
 
 var ActionItem = React.createClass({
-  getInitialState: function() {
-    return {
-      btnState: btnState,
-      actionPlan: []
-    }
-  },
 
   improveDescriptionChange: function(event){
     var obj = {};
@@ -155,10 +130,17 @@ var ActionItem = React.createClass({
       </td>
       <td id={'td_status_' + this.props.action.actionPlanId}>
         <span>
-          <select aria-label='Action list' id={'status_' + this.props.action.actionPlanId } name={'status_' + this.props.action.actionPlanId} disabled={this.props.parameter.allowEdit && _.isEmpty(this.props.action.practiceName)} 
-          value={this.props.action.actionStatus} style={{'fontSize': '9pt', 'width': '80px'}} onChange={this.actionStatusChange}>
-          {status}
-          </select>
+          {this.props.parameter.allowEdit && _.isEmpty(this.props.action.practiceName)?
+            <select aria-label='Action list' id={'status_' + this.props.action.actionPlanId } name={'status_' + this.props.action.actionPlanId} disabled={true} 
+            value={this.props.action.actionStatus} style={{'fontSize': '9pt', 'width': '80px', 'color': 'grey'}} onChange={this.actionStatusChange}>
+            {status}
+            </select>:
+            <select aria-label='Action list' id={'status_' + this.props.action.actionPlanId } name={'status_' + this.props.action.actionPlanId} disabled={false}
+            value={this.props.action.actionStatus} style={{'fontSize': '9pt', 'width': '80px'}} onChange={this.actionStatusChange}>
+            {status}
+            </select>
+          }
+          
         </span>
       </td>
       </tr>
