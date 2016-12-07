@@ -8,15 +8,19 @@ var TeamAssessment = React.createClass({
     clipboard = new Clipboard('#copy-button');
     var self = this;
     if (!_.isEmpty(self.props.selectedTeam)) {
-      self.refs.assessBtn.disabled = !self.props.selectedTeam.access;
-      if (!_.isEmpty(self.props.selectedTeam) && !_.isEmpty(self.props.selectedTeam.assessments)) {
-        _.each(self.props.selectedTeam.assessments, function(assessment) {
-          if (_.isEqual(assessment.assessmentStatus, 'Draft'))
-            self.refs.assessBtn.disabled = true;
-        });
+      if (!_.isUndefined(self.refs.assessBtn)) {
+        self.refs.assessBtn.disabled = !self.props.selectedTeam.access;
+        if (!_.isEmpty(self.props.selectedTeam) && !_.isEmpty(self.props.selectedTeam.assessments)) {
+          _.each(self.props.selectedTeam.assessments, function(assessment) {
+            if (_.isEqual(assessment.assessmentStatus, 'Draft'))
+              self.refs.assessBtn.disabled = true;
+          });
+        }
       }
-    } else
-      self.refs.assessBtn.disabled = true;
+    } else {
+      if (!_.isUndefined(self.refs.assessBtn))
+        self.refs.assessBtn.disabled = true;
+    }
   },
   showMoreAssessments: function() {
     var assessmentsBlocks = $('tr[id^=asmntrow_]');
