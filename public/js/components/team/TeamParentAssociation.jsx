@@ -74,7 +74,7 @@ var TeamParentAssociation = React.createClass({
           return err;
         });
     } else {
-      teamApi.removeAssociation(self.state.selectableParentTeams.currentParentId, self.props.selectedTeam.team._id)
+      teamApi.removeAssociation(self.props.selectedTeam.team._id)
         .then(function(result) {
           teamParentId = '';
           alert('You have successfully removed the Parent team association.');
