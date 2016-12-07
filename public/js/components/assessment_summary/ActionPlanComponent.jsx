@@ -65,13 +65,17 @@ var ActionPlanComponent = React.createClass({
     })
     .then(function(assessResult) {
         var btnStateCopy = _.clone(btnState);
-        if (assessResult != null){
+        if (assessResult != null && userAllowed){
           btnStateCopy.addDisabled = false;
+          if (assessResult.actionPlans.length > 0){
+            btnStateCopy.saveDisabled = false;
+            btnStateCopy.cancelDisabled = false;
+          }
         }
         self.filterData(assessResult);
         var parameter = _.clone(self.state.itemParameter);
-        
         parameter.allowEdit = userAllowed;
+
         self.setState({assessment: assessResult, btnState: btnStateCopy, itemParameter: parameter});
     })
     .catch(function(err) {
