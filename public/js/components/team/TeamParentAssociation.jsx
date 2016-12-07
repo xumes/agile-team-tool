@@ -6,8 +6,6 @@ var api = require('../api.jsx');
 var teamApi = require('./TeamApi.jsx');
 var currentTeamId = '';
 var currentParentId = '';
-var teamParentId = '';
-var selecedParentId = '';
 
 var TeamParentAssociation = React.createClass({
   getInitialState: function() {
@@ -65,7 +63,7 @@ var TeamParentAssociation = React.createClass({
     if (this.state.selectableParentTeams.currentParentId != '') {
       teamApi.associateTeam(self.state.selectableParentTeams.currentParentId, self.props.selectedTeam.team._id)
         .then(function(result) {
-          teamParentId = selecedParentId;
+          currentParentId = self.state.selectableParentTeams.currentParentId;
           alert('You have successfully updated the Parent team association.');
           return result;
         })
@@ -74,9 +72,13 @@ var TeamParentAssociation = React.createClass({
           return err;
         });
     } else {
+      if (currentParentId == '' && currentParentId == self.state.selectableParentTeams.currentParentId) {
+        alert('No Parent team association to remove.');
+        return;
+      }
       teamApi.removeAssociation(self.props.selectedTeam.team._id)
         .then(function(result) {
-          teamParentId = '';
+          currentParentId = '';
           alert('You have successfully removed the Parent team association.');
           return result;
         })
