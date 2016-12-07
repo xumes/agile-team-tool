@@ -183,6 +183,28 @@ body {
   font-weight: 300;
   line-height: 36px;
   color: #323232;
+  display: inline-block;
+  float: left;
+}
+
+.home-team-header-teamname-btn {
+  width: 4%;
+  height: 60%;
+  display: inline-block;
+  float: left;
+  position: relative;
+  top: 20%;
+  left: 2%;
+  cursor: pointer;
+}
+
+.home-team-header-teamname-btn-img svg {
+  width: 100%;
+  height: 100%;
+}
+
+.home-team-header-teamname-btn-img path, .home-team-header-teamname-btn-img polygon, .home-team-header-teamname-btn-img circle, .home-team-header-teamname-btn-img rect{
+  fill: #4178BE !important;
 }
 
 .home-team-header-img-div {
@@ -201,7 +223,7 @@ body {
   padding-top: 10%;
 }
 
-.home-team-header-img path {
+.home-team-header-img path, .home-team-header-img polygon, .home-team-header-img circle, .home-team-header-img rect {
   fill: #323232 !important;
 }
 
@@ -316,11 +338,150 @@ body {
 }
 
 .home-team-header-member-image {
-  width: 8.5%;
-  height: 90%;
+  width: 9%;
+  height: 80%;
   border-radius: 50%;
+  margin-left: 0.5%;
   display: inline-block;
-  margin-left: 1%;
   border: 0.1em solid #FFFFFF;
   float: left;
+}
+
+#teamMemberTable {
+  width: 62.8%;
+  height: 200%;
+  padding: 0;
+  /*background-color: red;*/
+  position: absolute;;
+  left: 2.7%;
+  top: 36%;
+  z-index: 9;
+}
+
+.team-member-table-title-div {
+  width: 100%;
+  height: 5.3%;
+  background-color: #FFFFFF;
+  border-left: 1px solid #C7C7C7;
+  border-right: 1px solid #C7C7C7;
+  border-top: 1px solid #C7C7C7;
+}
+
+.team-member-table-title {
+  height: 32.5%;
+  position: relative;
+  top: 35%;
+  left: 2%;
+  font-family: "HelvNeue Light for IBM";
+  font-size: 2.5em;
+  color: #4178BE;
+}
+
+.team-member-table {
+  width: 100%;
+  height: 94%;
+}
+
+.team-member-table-header-block {
+  width: 100%;
+  height: 2.65%;
+  border-left: 1px solid #C7C7C7;
+  border-right: 1px solid #C7C7C7;
+}
+
+.team-member-table-header-block > div {
+  height: 100%;
+  background-color: #EFEFEF;
+  display: inline-block;
+  float: left;
+}
+
+.team-member-table-header-block > div > h {
+  position: relative;
+  top: 32%;
+  left: 8%;
+  height: 45%;
+  font-family: "HelvNeue Bold for IBM";
+  font-size: 1.4em;
+  /*line-height: 18px;*/
+  color: #323232;
+}
+
+.team-member-table-content-block {
+  width: 100%;
+  height: 5.3%;
+  border-left: 1px solid #C7C7C7;
+  border-right: 1px solid #C7C7C7;
+}
+
+.team-member-table-content-block > div {
+  height: 100%;
+  display: inline-block;
+  float: left;
+}
+
+.team-member-table-content-block > div > div > img {
+  width: 70%;
+  height: 70%;
+  position: relative;
+  top: 15%;
+  left: 15%;
+  border-radius: 50%;
+  /*display: inline-block;*/
+}
+
+.team-member-table-content-block > div > div > h {
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.6em;
+  color: #5A5A5A;
+  padding: 0;
+  margin: 0;
+  /*display: inline-block;*/
+}
+
+.team-member-table-content-block > div > div > h1 {
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.4em;
+  color: #325C80;
+  padding: 0;
+  margin: 0;
+}
+
+
+.team-member-table-content-block > div > h {
+  position: relative;
+  top: 25%;
+  left: 5%;
+  height: 45%;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.6em;
+  color: #5A5A5A;
+}
+
+.team-member-table-footer-block {
+  width: 100%;
+  height: 5.3%;
+  background-color: #FFFFFF;
+  border: 1px solid #C7C7C7;
+  box-shadow: 0 2px 4px #C7C7C7;
+}
+
+.team-member-table-add-btn {
+  width: 20%;
+  height: 37.5%;
+  position: relative;
+  top: 25%;
+  left: 8%;
+  border: 2px solid #4178BE;
+  cursor: pointer;
+}
+
+.team-member-table-add-btn > h {
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.4em;
+  text-align: center;
+  color: #4178BE;
+  position: relative;
+  top: 25%;
+  left: 15%;
 }

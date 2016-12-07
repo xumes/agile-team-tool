@@ -1,5 +1,6 @@
 var React = require('react');
 var api = require('../api.jsx');
+var HomeMemberTable = require('./HomeMemberTable.jsx');
 var InlineSVG = require('svg-inline-react');
 var Promise = require('bluebird');
 var _ = require('underscore');
@@ -8,36 +9,14 @@ var teamType = ''
 
 var HomeTeamHeader = React.createClass({
   componentWillUpdate: function(nextProps, nextState){
-    if (nextProps.loadDetailTeam.type == 'squad') {
-      teamType = 'Squad: ';
-    } else {
-      teamType = 'Team: ';
-    }
-    teamName = nextProps.loadDetailTeam.team.name;
+    // if (nextProps.loadDetailTeam.type == 'squad') {
+    //   teamType = 'Squad: ';
+    // } else {
+    //   teamType = 'Team: ';
+    // }
+    // teamName = nextProps.loadDetailTeam.team.name;
   },
   componentDidUpdate: function() {
-    // var self = this;
-    // if (self.props.loadDetailTeam.team == undefined) {
-    //   return null;
-    // } else {
-    //   var team = this.props.loadDetailTeam.team;
-    //   var promiseArray = [];
-    //   _.each(team.members, function(member){
-    //     promiseArray.push(api.getFaceImage(member.userId));
-    //   })
-    //   Promise.all(promiseArray)
-    //   .then(function(results){
-    //     var count = 0;
-    //     _.each(results, function(fimg){
-    //       if (count < 10) {
-    //         var faceImageId = 'faceImage_' + count;
-    //         count ++ ;
-    //         //$("#" + faceImageId).attr("src","data:image/png;base64," + fimg);
-    //         $("#" + faceImageId).attr("src","http://dpev027.innovate.ibm.com:10000/image/4G2830897");
-    //       }
-    //     });
-    //   });
-    // }
   },
   findTeamInAllTeams: function(pathId) {
     selectedTeam = pathId;
@@ -50,7 +29,14 @@ var HomeTeamHeader = React.createClass({
        teamCount += parseInt(member.allocation);
      });
      return (teamCount / 100);
-   },
+  },
+  showTeamTable: function() {
+    if ($('#teamMemberTable').css('display') == 'none') {
+      $('#teamMemberTable').show();
+    } else {
+      $('#teamMemberTable').hide();
+    }
+  },
   render: function() {
     //console.log(this.props.selectedTeam);
     var self = this
@@ -72,6 +58,12 @@ var HomeTeamHeader = React.createClass({
       } else {
         teamDescription = '';
       }
+      var squadMarkDisplay = {
+        'display': 'none'
+      };
+      if (team.type == 'squad') {
+        squadMarkDisplay['display'] = 'block';
+      }
       if (self.props.loadDetailTeam.hierarchy == undefined || self.props.loadDetailTeam.hierarchy.error || self.props.loadDetailTeam.hierarchy.length == 0) {
         var teamHierarchy = '';
         var teamHierarchy2 = null;
@@ -83,14 +75,14 @@ var HomeTeamHeader = React.createClass({
             return (
               <div key={plink} style={{'display':'inline'}}>
                 <a class='hierarchy-link' title='View parent team information' alt='View parent team information' id={plink} href='#' onClick={()=>self.props.selectedTeamChanged(h.pathId)}>{h.name}</a>
-                <h class='hierarchy-mark'>  &#10095;  </h>
+                <h class='hierarchy-mark'>&nbsp;&nbsp;&#10095;&nbsp;&nbsp;</h>
               </div>
             );
           } else {
             return (
               <div key={plink} style={{'display':'inline'}}>
                 <a class='hierarchy-link' title='View parent team information' alt='View parent team information' id={plink} href='#' onClick={()=>self.findTeamInAllTeams(h.pathId)}>{h.name}</a>
-                <h class='hierarchy-mark'>  &#10095;  </h>
+                <h class='hierarchy-mark'>&nbsp;&nbsp;&#10095;&nbsp;&nbsp;</h>
               </div>
             );
           }
@@ -116,16 +108,21 @@ var HomeTeamHeader = React.createClass({
         teamMemNumber = 0;
         teamFTE = 0;
       }
-      var src = require('../../../img/Att-icons/att-icons_tribe.svg');
       return (
         <div class='home-team-header'>
           {/*<h2 class='heading-teamType' id="teamType">{teamType}</h2>*/}
           <div class='home-team-header-title'>
-            <div class='home-team-header-img-div'>
-              <InlineSVG class='home-team-header-img' src={src}></InlineSVG>
+            <div class='home-team-header-img-div' style={squadMarkDisplay}>
+              <InlineSVG class='home-team-header-img' src={require('../../../img/Att-icons/att-icons_tribe.svg')}></InlineSVG>
             </div>
             <div class='home-team-header-teamname-div'>
               <h class='home-team-header-teamname' style={headerStyle} id="teamName">{teamName}</h>
+              <div class='home-team-header-teamname-btn'>
+                <InlineSVG class='home-team-header-teamname-btn-img' src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
+              </div>
+              <div class='home-team-header-teamname-btn'>
+                <InlineSVG class='home-team-header-teamname-btn-img' src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
+              </div>
             </div>
           </div>
           <div class='home-team-header-hierarchy'>
@@ -152,7 +149,7 @@ var HomeTeamHeader = React.createClass({
               </div>
             </div>
             <div class='home-team-header-btns2'>
-              <InlineSVG class='home-team-header-btn-img2' src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
+              <InlineSVG onClick={()=>self.showTeamTable()} class='home-team-header-btn-img2' src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
               <div class='home-team-header-btn-title2'>
                 <h>}</h>
               </div>
@@ -161,6 +158,7 @@ var HomeTeamHeader = React.createClass({
               </div>
             </div>
           </div>
+          <HomeMemberTable loadDetailTeam={this.props.loadDetailTeam}/>
         </div>
       )
     }
