@@ -196,7 +196,16 @@ var ActionPlanComponent = React.createClass({
       if(!result)
         return action;
     });
-    deleteItems.actionPlans = deleted;
+    //cleanup empty rows
+    var submit_data = _.filter(deleted, function(action){
+      var result = false;
+      if (_.isNull(action.practiceId) || _.isEmpty(action.practiceId)){
+        result = true;
+      }
+      if(!result)
+        return action;
+    });
+    deleteItems.actionPlans = submit_data;
     
     this.submitActionPlan(deleteItems, 'Actions item(s) deleted successfully.');
     var btnStateCopy = _.clone(this.state.btnState);;
