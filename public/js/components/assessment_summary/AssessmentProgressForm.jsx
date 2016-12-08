@@ -467,6 +467,57 @@ var AssessmentProgressForm = React.createClass({
     $("#actPlanContainer").showhide();
   },
 
+  submitActionPlan: function (data, msg) {
+    var self = this;
+    api.updateAssessment(data)
+    .then(function(result){
+      self.setState({selectedAssessment:result});
+      if (msg != null && msg != '')
+        self.showMessagePopup(msg);
+    })
+    .catch(function(err){
+      self.validationHandler(err);
+    });
+  },
+
+  showMessagePopup: function(message) {
+    alert(message);
+  },
+
+  validationHandler:function (errorResponse, operation) {
+    var self = this;
+    var errorlist = '';
+    var response = errorResponse.responseJSON;
+
+    if (response && response.error) {
+      var errors = response.error.errors;
+      if (errors){        
+        var popupMsg = '';
+        if (_.isObject(errors)) {
+          _.each(errors, function(err, attr) {
+            popupMsg += err.message + '<br>';
+          });
+        } else {
+          popupMsg = errors;
+        }
+        if (!_.isEmpty(popupMsg)) {
+          self.showMessagePopup(popupMsg);
+        }
+      }
+    }
+  },
+
+  executeReset: function (actionPlan) {
+    var self = this;
+    api.getAssessmentDetails(this.state.assessId)
+      .then(function(data){
+        self.setState({selectedAssessment: data});
+      })
+      .catch(function(err){
+        console.log(JSON.stringify(err));
+      });
+  },
+
   render: function() {
     var self = this;
     var teamId = self.state.teamId;
@@ -569,7 +620,7 @@ var AssessmentProgressForm = React.createClass({
       <form id="progressForm" class="agile-maturity">
         <ProjectComponent resultBodyAry={resultBodyAry} />
         <DeliveryComponent deliveryResultAry={deliveryResultAry} displayType={displayType} />
-        <ActionPlanComponent teamId={this.state.teamId} assessId={this.state.assessId} selectedAssessment={this.state.selectedAssessment} />
+        <ActionPlanComponent teamId={this.state.teamId} submitActionPlan={this.submitActionPlan} executeReset={this.executeReset} selectedAssessment={this.state.selectedAssessment} />
         <IndependentAssessorSection selectedAssessment={this.state.selectedAssessment} />
         <LastUpdateSection selectedAssessment={this.state.selectedAssessment} />
         <DebugSection selectedAssessment={this.state.selectedAssessment} />
