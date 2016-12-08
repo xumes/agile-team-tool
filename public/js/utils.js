@@ -63,41 +63,34 @@ module.exports.getJsonParametersFromUrl = function() {
 };
 
 module.exports.showDateDDMMMYYYY = function(formatDate) {
-  console.log('[showDateDDMMMYYYY] formatDate:', formatDate);
   var newDateFormate = moment.utc(formatDate).format('DD MMM YYYY');
-  console.log('[showDateDDMMMYYYY] newDateFormate:', newDateFormate);
   return newDateFormate;
 };
 
 module.exports.showDateDDMMYYYY = function(formatDate) {
   var newDateFormate = moment.utc(formatDate).format('DDMMMYYYY');
-  console.log('[showDateDDMMYYYY] newDateFormate:', newDateFormate);
   return newDateFormate;
 };
 
 module.exports.showDateDDMMYYYYV2 = function(formatDate, withoutSpacing) {
   var withoutSpacing = withoutSpacing || false;
   var format = 'DD MMM YYYY';
-  console.log('[showDateDDMMYYYYV2] formatDate:', formatDate);
   if (!_.isEmpty(formatDate)) {
     if (withoutSpacing) {
       format = 'DDMMMYYYY';
     }
     var newDateFormate = moment(formatDate).format(format);
-    console.log('[showDateDDMMYYYYV2] newDateFormate:', newDateFormate);
     return newDateFormate;
   }
 };
 
 module.exports.showDateMMDDYYYY = function(formatDate) {
-  console.log('[showDateMMDDYYYY] formatDate:', formatDate);
   var date = new Date(formatDate.replace(/-/g, '/'));
   var month = date.getUTCMonth() + 1;
   month = month.toString().length < 2 ? '0' + month.toString() : month.toString();
   var day = date.getUTCDate();
   day = day.toString().length < 2 ? '0' + day.toString() : day.toString();
   var newDateFormate = month + '/' + day + '/' + date.getUTCFullYear();
-  console.log('[showDateMMDDYYYY] newDateFormate:', newDateFormate);
   return newDateFormate;
 };
 

@@ -20,10 +20,6 @@ var ComponentResultItem = React.createClass({
     } else if (id == 'deliveryResult') {
       graphId = 'deliveryContainer';
     }
-    // console.log('ComponentResultItem render assessed_index:', assessed_index);
-    // console.log('ComponentResultItem render id:', id);
-    // console.log('ComponentResultItem render graphId:', graphId);
-    // console.log('ComponentResultItem render practiceName:', practiceName);
     return (
       <tr>
         <td><a role='button' href='javascript:void(0);' onClick={(e) => self.props.displaySelectedChart(e, assessed_index, practiceId, graphId)} >{practiceName}</a></td>
