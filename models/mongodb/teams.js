@@ -177,8 +177,6 @@ TeamSchema.path('pathId').validate(function(value, done) {
 }, 'This team name is too similar to another team. Please enter a different team name.');
 
 
-
-
 /*
   model helper functions
 */
@@ -198,6 +196,59 @@ var createPathId = function(teamName) {
   teamName = teamName || '';
   return  teamName.toLowerCase().replace(/[^a-z1-9]/g, '');
 };
+
+// //********** BEGIN UNCOMMENT THIS SECTION IF WE NEED pathId IN-SYNC WITH ACTUAL TEAM NAME **********************
+// var updateTeamPathIds = function(currPath, oldPathId, newPathId) {
+//   return new Promise(function(resolve, reject) {
+//     if (!_.isEqual(oldPathId, newPathId)) {
+//       var oldParentPath = null;
+//       var newParentPath = null;
+//       if (currPath == null) {
+//         oldParentPath = ',' + oldPathId + ',';
+//         newParentPath = ',' + newPathId + ',';
+//       } else {
+//         oldParentPath = currPath + oldPathId + ',';
+//         newParentPath = currPath + newPathId + ',';
+//       }
+//       var query = {
+//         'path' : {
+//           '$regex' : oldPathId
+//         }, docStatus:{$ne:'delete'}
+//       };
+//       var promiseArray = [];
+//       var currentTeam = null;
+//       promiseArray.push(Team.findOne({pathId: newPathId, docStatus:{$ne:'delete'}}));
+//       promiseArray.push(Team.find(query));
+//       Promise.all(promiseArray)
+//         .then(function(results) {
+//           currentTeam = results[0];
+//           var teams = results[1];
+//           var promiseArray = [];
+//           _.each(teams, function(team){
+//             var updateTeamDoc = {};
+//             var tid = team._id;
+//             var tpath = team.path;
+//             if (_.isEmpty(tpath)) {
+//               tpath = null;
+//             } else {
+//               tpath = tpath.replace(oldParentPath, newParentPath);
+//             }
+//             updateTeamDoc.path = tpath;
+//             console.log(tid,tpath);
+//             promiseArray.push(Team.update({'_id': tid}, {'$set': updateTeamDoc}));
+//           });
+//           return Promise.all(promiseArray);
+//         })
+//         .then(function(results) {
+//           resolve(currentTeam);
+//         })
+//         .catch(function(err) {
+//           reject(err);
+//         })
+//     }
+//   });
+// };
+// // //********** END UNCOMMENT THIS SECTION IF WE NEED pathId IN-SYNC WITH ACTUAL TEAM NAME **********************
 
 // var getChildren = function(pathId) {
 //   if (_.isEmpty(pathId)) return [];
@@ -994,7 +1045,6 @@ A->B
 D->E
 X->Y->Z
 All affected team that had a path relation to C, will have to be _.isEmpty(teamDoc) || updated.teamDoc._id*/
-
 module.exports.updateTeam = function(teamDoc, user) {
   return new Promise(function(resolve, reject) {
     var updatedDoc = {};
@@ -1004,9 +1054,11 @@ module.exports.updateTeam = function(teamDoc, user) {
     var teamId = teamDoc._id;
     var userId = user ? user['ldap']['uid'].toUpperCase() : '';
     var userEmail = user ? user['shortEmail'].toLowerCase() : '';
+    var oldPathId = '';
     var newPathId = createPathId(teamDoc.name);
-    var useNewPathId = false;
+    var parentPath = null;
     updatedDoc.name = teamDoc.name;
+    updatedDoc.pathId = newPathId;
     updatedDoc.description = teamDoc.description;
     updatedDoc.type = teamDoc.type;
     updatedDoc.updatedByUserId = userId;
@@ -1029,6 +1081,8 @@ module.exports.updateTeam = function(teamDoc, user) {
         var hasChildren = results[1];
         var hasIterations = results[2];
         var hasAssessments = results[3];
+        oldPathId = team.pathId;
+        parentPath = team.path;
         if (updatedDoc.type == 'squad' && team.type == null && hasChildren)
           return Promise.reject({
             errors: {
@@ -1042,21 +1096,20 @@ module.exports.updateTeam = function(teamDoc, user) {
             }
           });
         return Team.findByIdAndUpdate({'_id': teamId}, {'$set': updatedDoc}, {new:true}).exec();
-        // var promiseArray = [];
-        // promiseArray.push(Team.findByIdAndUpdate({'_id': teamId}, {'$set': updatedDoc}, {new:true}));
-        // if (!_.isEqual(team.pathId, newPathId)) {
-        //   useNewPathId = true;
-
-        // }
       })
       .then(function(result){
-        resolve(result);
+        // //********** BEGIN UNCOMMENT THIS SECTION IF WE NEED pathId IN-SYNC WITH ACTUAL TEAM NAME **********************
+        // if (!_.isEqual(oldPathId, newPathId))
+        //   resolve (updateTeamPathIds(parentPath, oldPathId, newPathId, user));
+        // else
+        // //********** END UNCOMMENT THIS SECTION IF WE NEED pathId IN-SYNC WITH ACTUAL TEAM NAME **********************
+          resolve (result);
       })
       .catch( /* istanbul ignore next */ function(err){
         if (err.name === 'MongoError' && err.code === 11000)
           reject({
             errors: {
-              name: {message:'This team name already exists. Please enter a different team name.'}
+              name: {message:'This team name already exists or is too similar to another team. Please enter a different team name.'}
             }
           });
         else
