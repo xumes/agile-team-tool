@@ -76,7 +76,6 @@ var TeamForm = React.createClass({
             self.props.getSelectedTeam(result._id, 'You have successfully added a team and you have been added as the first team member. You can now add additional team members.');
           })
           .catch(function(err) {
-            console.log(err);
             var map = self.state.formError.map;
             self.setState({
               formError: {
@@ -177,12 +176,7 @@ var TeamForm = React.createClass({
     };
     return (
       <div>
-        <p>
-          <label style={labelStyle} for='teamSelectList'>Create or select an existing team:<span class="ibm-required">*</span></label>
-            <span>
-              <TeamDropdown teamChangeHandler={this.props.teamChangeHandler} defaultTeam={this.props.defaultTeam}/>
-           </span>
-        </p>
+        <TeamDropdown teamChangeHandler={this.props.teamChangeHandler} defaultTeam={this.props.defaultTeam} selectedTeam={this.props.selectedTeam} />
         <TeamAccessMessage selectedTeam={this.props.selectedTeam} />
         <p>
           <label for="teamName">&nbsp;<span class="ibm-access">Team name:</span></label>

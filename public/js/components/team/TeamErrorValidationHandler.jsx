@@ -25,18 +25,20 @@ var TeamErrorValidationHandler = React.createClass({
     this.handleErrors();
   },
   handleErrors: function() {
-    //console.log('handleErrors', this.state);
     var errors = this.state.errors;
     var formFields = this.state.formFields;
     var msg = '';
     var msgList = [];
+    var frmList = [];
     // find all db related errors
     _.each(formFields, function(f) {
-      clearFieldErrorHighlight(f.id);
+      if (frmList.indexOf(f.id) == -1)
+        clearFieldErrorHighlight(f.id);
       if (!_.isEmpty(errors) && !_.isEmpty(errors[f.field])) {
         setFieldErrorHighlight(f.id);
         if (msgList.indexOf(f.field) == -1) {
           msgList.push(f.field);
+          frmList.push(f.id);
           if (msg != '') msg += '\n';
           msg += errors[f.field].message;
         }
