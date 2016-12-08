@@ -802,21 +802,33 @@ module.exports.getTeamsByUserId = function(uid, proj) {
 module.exports.getUserTeamsByUserId = function(uid) {
   return new Promise(function(resolve, reject){
     Team.find({members: {$elemMatch:{userId:uid}}, docStatus:{$ne:'delete'}}, {pathId:1})
+      // .then(function(teams){
+      //   var pathIds = _.pluck(teams, 'pathId');
+      //   //build a query string to match all, ex: a|b|c to query for all docs with
+      //   //paths a or b or c
+      //   var q = '';
+      //   _.each(pathIds, function(pId){
+      //     q += pId + '|';
+      //   });
+      //   q = q.slice(0, -1); //remove last |
+      //   return q;
+      // })
+      // .then(function(q){
+      //   if (q==='') resolve([]);//prevent matching on ''
+      //   return Team.distinct('_id', {'$or':[{path:new RegExp(q)}, {pathId:new RegExp(q)}]}).exec();
+      // })
       .then(function(teams){
-        var pathIds = _.pluck(teams, 'pathId');
-
-        //build a query string to match all, ex: a|b|c to query for all docs with
-        //paths a or b or c
-        var q = '';
-        _.each(pathIds, function(pId){
-          q += pId + '|';
-        });
-        q = q.slice(0, -1); //remove last |
-        return q;
+        return _.pluck(teams, 'pathId');
       })
-      .then(function(q){
-        if (q==='') resolve([]);//prevent matching on ''
-        return Team.distinct('_id', {'$or':[{path:new RegExp(q)}, {pathId:new RegExp(q)}]}).exec();
+      .then(function(pathIds){
+        if (_.isEmpty(pathIds)) resolve([]);//prevent matching on ''
+        var orPaths = [];
+        var orPathIds = [];
+        _.each(pathIds, function(pId) {
+          orPaths.push({path: new RegExp(','+pId+',')});
+          orPathIds.push({pathId: pId});
+        });
+        return Team.distinct('_id', {'$or': _.union(orPaths, orPathIds)}).exec();
       })
       .then(function(result){
         resolve(result);
@@ -992,6 +1004,8 @@ module.exports.updateTeam = function(teamDoc, user) {
     var teamId = teamDoc._id;
     var userId = user ? user['ldap']['uid'].toUpperCase() : '';
     var userEmail = user ? user['shortEmail'].toLowerCase() : '';
+    var newPathId = createPathId(teamDoc.name);
+    var useNewPathId = false;
     updatedDoc.name = teamDoc.name;
     updatedDoc.description = teamDoc.description;
     updatedDoc.type = teamDoc.type;
@@ -1028,6 +1042,12 @@ module.exports.updateTeam = function(teamDoc, user) {
             }
           });
         return Team.findByIdAndUpdate({'_id': teamId}, {'$set': updatedDoc}, {new:true}).exec();
+        // var promiseArray = [];
+        // promiseArray.push(Team.findByIdAndUpdate({'_id': teamId}, {'$set': updatedDoc}, {new:true}));
+        // if (!_.isEqual(team.pathId, newPathId)) {
+        //   useNewPathId = true;
+
+        // }
       })
       .then(function(result){
         resolve(result);
