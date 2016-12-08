@@ -10,10 +10,6 @@ var AssessmentSummaryInfo = React.createClass({
     if (urlParameters != undefined) {
       var teamId = urlParameters.id;
       var assessId = urlParameters.assessId;
-      if (teamId != undefined && assessId != undefined) {
-        // this.retrieveAssessmentResult(teamId, assessId);
-        // setAssessmentLink(teamId, assessId);
-      }
     }
     if (urlParameters != undefined && urlParameters.testUser != undefined) {
       // setTestUser(urlParameters.testUser);
@@ -31,18 +27,13 @@ var AssessmentSummaryInfo = React.createClass({
     var self = this;
     api.loadTeam(self.state.teamId)
       .then(function(teamDetail) {
-        // console.log('AssessmentSummaryInfo componentDidMount teamDetail:',teamDetail)
         if (teamDetail !== undefined && teamDetail._id !== undefined) {
           self.setState({teamName: teamDetail.name});
           return api.getTeamAssessments(self.state.teamId, self.state.assessId);
         }
       })
       .then(function(assessResult) {
-        console.log('AssessmentSummaryInfo [componentDidMount] assessResult:',assessResult);
         _.each(assessResult, function(value, key, list) {
-          console.log('AssessmentSummaryInfo value._id:', value._id)
-          console.log('AssessmentSummaryInfo assessId:', self.state.assessId)
-          console.log('AssessmentSummaryInfo key:', key)
           if (value._id === self.state.assessId) {
             var assessInfo = {
               assessId: value._id,
@@ -53,8 +44,6 @@ var AssessmentSummaryInfo = React.createClass({
               submittedDate: value.submittedDate,
               assessorUserId: value.assessorUserId
             }
-            console.log('AssessmentSummaryInfo assessInfo.assessId:', assessInfo.assessId);
-            console.log('AssessmentSummaryInfo assessInfo:', JSON.stringify(assessInfo,null,1));
             self.setState({assessInfo: assessInfo});
           }
         });
@@ -81,12 +70,6 @@ var AssessmentSummaryInfo = React.createClass({
       // $('#indAssmtStat').remove();
       // $('#indAssmtDt').remove();
     }
-
-    console.log('AssessmentSummaryInfo [render] assessmentDt:', assessmentDt)
-    console.log('AssessmentSummaryInfo [render] assessorUserId:', assessorUserId)
-    console.log('AssessmentSummaryInfo [render] isEmpty? assessorUserId:', _.isEmpty(assessorUserId))
-    console.log('AssessmentSummaryInfo [render] indDt:', indDt);
-    console.log('AssessmentSummaryInfo [render] displayType:', displayType);
 
     return (
       <div class="ibm-container-body">

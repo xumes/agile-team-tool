@@ -19,11 +19,6 @@ var OverallResultItem = React.createClass({
       graphId = 'deliveryContainer';
     }
     var ctr = self.props.counter;
-    // console.log('OverallResultItem render ctr:', ctr);
-    // console.log('OverallResultItem render assessed_index:', assessed_index);
-    // console.log('OverallResultItem render id:', id);
-    // console.log('OverallResultItem render graphId:', graphId);
-    // console.log('OverallResultItem render label:', label);
     return (
       <tr>
         <td><a role='button' href='javascript:void(0);' onClick={(e) => self.props.displaySelectedChart(e, assessed_index, label, graphId)}>{label}</a></td>
