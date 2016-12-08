@@ -37,6 +37,13 @@ var HomeTeamHeader = React.createClass({
       $('#teamMemberTable').fadeOut();
     }
   },
+  showDescriptionBlock: function() {
+    if ($('.home-team-header-description-div').css('display') == 'none') {
+      $('.home-team-header-description-div').fadeIn();
+    } else {
+      $('.home-team-header-description-div').fadeOut();
+    }
+  },
   render: function() {
     //console.log(this.props.selectedTeam);
     var self = this
@@ -117,27 +124,30 @@ var HomeTeamHeader = React.createClass({
             </div>
             <div class='home-team-header-teamname-div'>
               <h class='home-team-header-teamname' style={headerStyle} id="teamName">{teamName}</h>
-              <div class='home-team-header-teamname-btn'>
+              <div class='home-team-header-teamname-btn' onClick={self.showDescriptionBlock}>
                 <InlineSVG class='home-team-header-teamname-btn-img' src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
               </div>
               <div class='home-team-header-teamname-btn'>
                 <InlineSVG class='home-team-header-teamname-btn-img' src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
               </div>
-              <div class='home-team-header-description-div'>
+              <div class='home-team-header-description-div' style={{'display':'none'}}>
                 <div class='home-team-header-description-arrow'>
                   <InlineSVG class='home-team-header-description-arrow-img' src={require('../../../img/Att-icons/play-arrow.svg')}></InlineSVG>
                 </div>
                 <div class='home-team-header-description-title'>
                   <h>Team Description</h>
-                  <h1>X</h1>
+                  <h1 onClick={self.showDescriptionBlock}>X</h1>
                 </div>
                 <div class='home-team-header-description-content'>
                   <div>
                     <h1>
-                      aa
+                      {teamName}
                     </h1>
+                    <p>
+                      {teamDescription}
+                    </p>
                   </div>
-
+                  <button type='button' class='ibm-btn-sec ibm-btn-blue-50 ibm-btn-small'>Edit</button>
                 </div>
               </div>
             </div>

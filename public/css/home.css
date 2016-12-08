@@ -519,7 +519,7 @@ body {
 
 .home-team-header-description-arrow-img svg {
   position: relative;
-  right: 80%;
+  right: 85%;
   height: 100%;
   width: 200%;
 }
@@ -532,7 +532,8 @@ body {
   width: 95%;
   background-color: #4178BE;
   display: inline-block;
-  float: left
+  float: left;
+  box-shadow: 1px 0 1px #C7C7C7;
 }
 .home-team-header-description-title > h {
   height: 50%;
@@ -547,7 +548,7 @@ body {
 }
 
 .home-team-header-description-title > h1 {
-  height: 70%;
+  height: 50%;
   position: relative;
   top: 40%;
   right: 5%;
@@ -567,21 +568,42 @@ body {
   background-color: #FFFFFF;
   position: relative;
   left: 5%;
-  top: 20%;
-  box-shadow: 2px 2px 4px #C7C7C7;
+  box-shadow: 1px 1px 1px #C7C7C7;
+  float: left
 }
 
 .home-team-header-description-content > div {
   position: relative;
-  height: 20%;
-  background-color: green;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 60%;
   display: inline-block;
 }
 
 .home-team-header-description-content > div > h1 {
   position: relative;
   height: 20%;
+  width: 100%;
   float: left;
-  background-color: red;
   display: inline-block;
+  font-family: "HelvNeue Bold for IBM";
+  font-size: 1.4em;
+  color: #464646;
+  padding: 0;
+}
+
+.home-team-header-description-content > div > p {
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.4em;
+  line-height: 1.6em;
+  color: #464646;
+}
+
+.home-team-header-description-content > button {
+
+  float: right;
+  position: relative;
+  right: 10%;
+  top: 10%;
 }
