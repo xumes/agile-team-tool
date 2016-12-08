@@ -186,11 +186,10 @@ var HomeTeamTree = React.createClass({
     $('#contentSpinner').show();
     $('#bodyContent').hide();
     $('#snapshotPull').hide();
-    $('#iterationFallBox').hide();
+    //$('#iterationFallBox').hide();
     $('#squad_team_scard').hide();
     $('#nsquad_team_scard').hide();
-    $('#iterationFallBox').hide();
-    $('#assessmentFallBox').hide();
+    //$('#assessmentFallBox').hide();
     $('#nsquad_assessment_card').hide();
     $('#squad_assessment_card').hide();
     $('#membersList').empty();

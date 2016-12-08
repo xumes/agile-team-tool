@@ -14,7 +14,7 @@ var HomePage = React.createClass({
       loadDetailTeam: new Object()
     }
   },
-
+  
   selectedTeamChanged: function(team) {
     this.setState({'selectedTeam': team});
   },

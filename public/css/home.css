@@ -154,8 +154,9 @@ body {
 }
 
 .home-team-header {
-  margin-top: 0.1%;
-  margin-left: 0.5%;
+  position: relative;
+  top: 0.1%;
+  left: 0.5%;
   width: 100%;
   height: 30%;
   background-color: #7CC7FF;
@@ -348,13 +349,12 @@ body {
 }
 
 #teamMemberTable {
-  width: 62.8%;
-  height: 200%;
+  width: 100%;
+  height: 600%;
   padding: 0;
   /*background-color: red;*/
-  position: absolute;;
-  left: 2.7%;
-  top: 36%;
+  position: relative;;;
+  top: 52%;
   z-index: 9;
 }
 
@@ -378,10 +378,10 @@ body {
 }
 
 .team-member-table-close-btn {
-  height: 32.5%;
   position: relative;
   top: 35%;
-  left: 80%;
+  right: 2%;
+  float: right;
   font-family: "HelvNeue Light for IBM";
   font-size: 3em;
   color: #C7C7C7;
@@ -477,6 +477,12 @@ body {
   box-shadow: 0 2px 4px #C7C7C7;
 }
 
+.team-member-table-footer-block > button {
+  position: relative;
+  top: 20%;
+  left: 8%;
+}
+
 .team-member-table-add-btn {
   width: 20%;
   height: 37.5%;
@@ -533,7 +539,7 @@ body {
   background-color: #4178BE;
   display: inline-block;
   float: left;
-  box-shadow: 1px 0 1px #C7C7C7;
+  box-shadow: 1px 0 1px #4178BE;
 }
 .home-team-header-description-title > h {
   height: 50%;
@@ -601,9 +607,106 @@ body {
 }
 
 .home-team-header-description-content > button {
-
   float: right;
   position: relative;
   right: 10%;
   top: 10%;
+}
+
+.home-trends-block {
+  position: relative;
+  left: 0.5%;
+  width: 100%;
+  height: 350%;
+}
+
+.home-trends-block-title {
+  float: left;
+  width: 100%;
+  height: 2.7%;
+}
+
+.home-trends-block-title > h1 {
+  float: left;
+  display: inline-block;
+  position: relative;
+  top: 60%;
+  padding: 0;
+  font-family: "HelvNeue Light for IBM";
+  font-size: 2.5em;
+  color: #734098;
+}
+
+.home-trends-block-title > span {
+  display: inline-block;
+  float: left;
+  position: relative;
+  top: 63%;
+  left: 38%;
+  width: 1%;
+  height: 13%;
+  background-color: #FFA501;
+  padding: 0;
+}
+.home-trends-block-title > h4 {
+  display: inline-block;
+  float: left;
+  position: relative;
+  top: 60%;
+  left: 38%;
+  font-family: "HelvNeue Light for IBM";
+  font-size: 1.1em;
+  color: #777677;
+  padding: 0;
+}
+
+.home-trends-block-title > div {
+  display: inline-block;;
+  float: right;
+  position: relative;
+  top: 45%;
+  right: 1%;
+  width: 3%;
+  cursor: pointer;
+}
+
+#iterationSection, #assessmentSection{
+  float: left;
+  position: relative;
+  width: 100%;
+  height: 46%;
+}
+
+.home-chart {
+  border: 1px solid #000000;
+}
+
+.container-body-columns {
+  position: relative;
+  width: 99%;
+  height: 23%;
+}
+
+.container-body-columns-ase {
+  position: relative;
+  width: 99%;
+  height: 30%;
+}
+
+.container-body-col-2-1 {
+  position: relative;
+  width: 47%;
+  height: 100%;
+  display: inline-block;
+  float: left;
+  border: 1px solid #C7C7C7;
+  margin-left: 2%;
+}
+
+.container-body-col-2-1 > div {
+  position: relative;
+  width: 96%;
+  height: 96%;
+  top: 2%;
+  left: 2%;
 }
