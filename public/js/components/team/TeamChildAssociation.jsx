@@ -20,7 +20,6 @@ var TeamChildAssociation = React.createClass({
   },
   componentDidUpdate: function() {
     var self = this;
-    console.log(currentTeamId,self.props.selectedTeam);
     if (!_.isEmpty(self.props.selectedTeam) && currentTeamId != self.props.selectedTeam.team._id && self.props.selectedTeam.type != 'squad') {
       self.childTeamInit(self.props.selectedTeam)
         .then(function(result){
