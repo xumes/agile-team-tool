@@ -82,7 +82,7 @@ var ActionItem = React.createClass({
         {this.props.action.isUserCreated ?
         <td id={'td_practice_' + this.props.action.actionPlanId }>
           <span>
-            <select aria-label='Practice list' id={'practice_' + this.props.action.actionPlanId} name={'practice_' + this.props.action.actionPlanId} style={defWidth} onChange={this.prepopulate} value={this.props.action.practiceId}>
+            <select aria-label='Practice list' id={'practice_' + this.props.action.actionPlanId} name={'practice_' + this.props.action.actionPlanId} style={defWidth} onChange={this.prepopulate} value={this.props.action.practiceId != null ? this.props.action.practiceId : ''}>
               <option value='' key=''></option>
               {practices}
             </select> 

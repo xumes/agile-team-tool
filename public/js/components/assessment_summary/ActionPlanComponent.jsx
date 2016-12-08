@@ -14,11 +14,13 @@ var defaultItem = {
   'isUserCreated': true,
   'componentName': '',
   'principleId':  null,
+  'practiceId': null,
+  'principleName': '',
   'practiceName': '',
   'improveDescription': '',
-  'currentLevel': '',
-  'targetLevel': '',
-  'progressComment': '',
+  'currentScore': '',
+  'targetScore': '',
+  'progressSummary': '',
   'keyMetric': '',
   'reviewDate': null,
   'actionStatus': 'Open'};
@@ -79,7 +81,7 @@ var ActionPlanComponent = React.createClass({
         self.setState({assessment: assessResult, btnState: btnStateCopy, itemParameter: parameter});
     })
     .catch(function(err) {
-      return console.log(JSON.stringify(err));
+      console.log(JSON.stringify(err));
     });
   },
 
@@ -115,7 +117,7 @@ var ActionPlanComponent = React.createClass({
   validateAction: function (actions) {
     var hasError = false;
     var error = _.filter(this.state.assessment.actionPlans, function(item){
-      if (_.isNull(item.practiceId) || _.isEmpty(item.practiceId)){
+      if (_.isNull(item.practiceId)){
         return item;
       }
     });
@@ -199,11 +201,9 @@ var ActionPlanComponent = React.createClass({
     //cleanup empty rows
     var submit_data = _.filter(deleted, function(action){
       var result = false;
-      if (_.isNull(action.practiceId) || _.isEmpty(action.practiceId)){
-        result = true;
-      }
-      if(!result)
+      if (!_.isNull(action.practiceId)){
         return action;
+      }
     });
     deleteItems.actionPlans = submit_data;
     
@@ -283,18 +283,27 @@ var ActionPlanComponent = React.createClass({
       if( item.actionPlanId === itemId)
         return item;
     });
-    
-    var principle = _.find(this.state.principles, function(item){
-      if( item.index == practiceId)
-        return item;
-    });
 
-    item.practiceId = practiceId;
-    item.practiceName = principle.assessedComponent.practiceName;
-    item.principleId = principle.assessedComponent.principleId;
-    item.principleName = principle.assessedComponent.principleName;
-    item.currentScore = principle.assessedComponent.currentScore;        
-    item.targetScore = principle.assessedComponent.targetScore;
+    if (_.isEmpty(practiceId)){
+      item.practiceId = null;
+      item.practiceName = '';
+      item.principleId = null;
+      item.principleName = '';
+      item.currentScore = null;
+      item.targetScore = null;
+    }
+    else {
+      var principle = _.find(this.state.principles, function(item){
+        if( item.index == practiceId)
+          return item;
+        });
+      item.practiceId = parseInt(practiceId);
+      item.practiceName = principle.assessedComponent.practiceName;
+      item.principleId = parseInt(principle.assessedComponent.principleId);
+      item.principleName = principle.assessedComponent.principleName;
+      item.currentScore = parseInt(principle.assessedComponent.currentScore);        
+      item.targetScore = parseInt(principle.assessedComponent.targetScore);
+    }
 
     var btnState = _.clone(this.state.btnState);
     btnState.saveDisabled = false;
