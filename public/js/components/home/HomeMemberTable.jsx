@@ -3,23 +3,6 @@ var api = require('../api.jsx');
 var _ = require('underscore');
 
 var HomeMemberTable = React.createClass({
-  componentWillUpdate: function(nextProps, nextState) {
-  },
-  componentDidUpdate: function() {
-    // var self = this;
-    // if (self.props.loadDetailTeam.team != undefined && self.props.loadDetailTeam.members != undefined && self.props.loadDetailTeam.members.length > 0) {
-    //   $('#teamMemberTable').show();
-    //   var members = _.sortBy(self.props.loadDetailTeam.members, function(member){
-    //     return member.name.toLowerCase();
-    //   });
-    //   var team = self.props.loadDetailTeam.team;
-    //   self.updateMemberTable(members, team);
-    // } else {
-    //   $('#teamMemberTable').show();
-    //   self.updateMemberTable(null, null);
-    // }
-  },
-
   toTitleCase: function(str) {
     if (_.isEmpty(str)) return '';
     var strArray = str.toUpperCase().split(',');
@@ -31,32 +14,6 @@ var HomeMemberTable = React.createClass({
     }
   },
 
-  updateMemberTable: function(members, team) {
-    var self = this;
-    if (members != null && team != null) {
-      var j = 0;
-      _.each(members, function(member){
-        var memberDetail = _.find(team.members, function(m){
-          if (m.userId == member.userId) {
-            return {
-              'role': m.role,
-              'allocation': m.allocation
-            }
-          }
-        });
-        var mLocation = self.toTitleCase(member.location.site);
-        var row = "<tr><td id='name_" + j + "'>" + member.name + '</td>';
-        row = row + '<td>' + memberDetail.allocation + '</td>';
-        row = row + "<td id='location_ref_" + j + "'>" + mLocation + "</div></td>";
-        row = row + '<td>' + memberDetail.role + '</td>';
-        row = row + '</tr>';
-        $('#membersList').append(row);
-        j++;
-      });
-    } else {
-      $('#membersList').append('<tr class="odd"><td valign="top" colspan="4" class="dataTables_empty">No data available</td></tr>');
-    }
-  },
   render: function() {
     var self = this;
     if (self.props.loadDetailTeam.team == undefined) {
@@ -88,9 +45,15 @@ var HomeMemberTable = React.createClass({
             if (idx % 2 != 0) {
               blockColor['backgroundColor'] = '#EFEFEF';
             }
+            var blockId = 'member_'+idx;
+            var nameId = 'name_'+idx;
+            var locationId = 'location_'+idx;
+            var roleId = 'role_'+idx;
+            var allocationId = 'allocation_'+idx;
+            var awkId = 'awk_'+idx;
             return (
-              <div key={idx} class='team-member-table-content-block' style = {blockColor}>
-                <div style={{'width':'29.8%'}}>
+              <div key={blockId} id={blockId} class='team-member-table-content-block' style = {blockColor}>
+                <div id={nameId} style={{'width':'29.8%'}}>
                   <div style={{'width':'28.6%','height':'100%','display':'inline-block','float':'left'}}>
                     <img src={src}></img>
                   </div>
@@ -100,17 +63,17 @@ var HomeMemberTable = React.createClass({
                     <h1>{member.email}</h1>
                   </div>
                 </div>
-                <div style={{'width':'19.3%'}}>
+                <div id={roleId} style={{'width':'19.3%'}}>
                   <h>{memberDetail.role}</h>
                 </div>
-                <div style={{'width':'21.9%'}}>
+                <div id={locationId} style={{'width':'21.9%'}}>
                   <h>{mLocation}</h>
                 </div>
-                <div style={{'width':'13.3%'}}>
+                <div id={allocationId} style={{'width':'13.3%'}}>
                   <h>{memberDetail.allocation + '%'}</h>
                 </div>
-                <div style={{'width':'15.7%'}}>
-                  <h>5 days</h>
+                <div id={awkId} style={{'width':'15.7%'}}>
+                  <h>Full time</h>
                 </div>
               </div>
             )
@@ -121,6 +84,7 @@ var HomeMemberTable = React.createClass({
         <div id='teamMemberTable' style={{'display':'none'}}>
           <div class='team-member-table-title-div'>
             <h class='team-member-table-title'>Team Details</h>
+            <h class='team-member-table-close-btn' onClick={()=>self.props.showTeamTable()}>X</h>
           </div>
           <div class='team-member-table' id='memberTable'>
             <div class='team-member-table-header-block'>

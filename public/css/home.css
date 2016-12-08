@@ -377,6 +377,17 @@ body {
   color: #4178BE;
 }
 
+.team-member-table-close-btn {
+  height: 32.5%;
+  position: relative;
+  top: 35%;
+  left: 80%;
+  font-family: "HelvNeue Light for IBM";
+  font-size: 3em;
+  color: #C7C7C7;
+  cursor: pointer;
+}
+
 .team-member-table {
   width: 100%;
   height: 94%;
@@ -484,4 +495,93 @@ body {
   position: relative;
   top: 25%;
   left: 15%;
+}
+
+.home-team-header-description-div {
+  /*position: absolute;*/
+  position: relative;
+  left: -3%;
+  top: -25%;
+  display: inline-block;
+  z-index: 10;
+  width: 40%;
+  height: 700%;
+}
+.home-team-header-description-arrow {
+  height: 20%;
+  width: 5%;
+  display: inline-block;
+  float: left;
+  -ms-transform: rotate(180deg); /* IE 9 */
+  -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+  transform: rotate(180deg);
+}
+
+.home-team-header-description-arrow-img svg {
+  position: relative;
+  right: 80%;
+  height: 100%;
+  width: 200%;
+}
+
+.home-team-header-description-arrow-img svg polygon {
+  fill: #4178BE;
+}
+.home-team-header-description-title {
+  height: 20%;
+  width: 95%;
+  background-color: #4178BE;
+  display: inline-block;
+  float: left
+}
+.home-team-header-description-title > h {
+  height: 50%;
+  position: relative;
+  top: 35%;
+  left: 5%;
+  font-family: "HelvNeue Bold for IBM";
+  font-size: 1.5em;
+  color: #FFFFFF;
+  display: inline-block;
+  float: left;
+}
+
+.home-team-header-description-title > h1 {
+  height: 70%;
+  position: relative;
+  top: 40%;
+  right: 5%;
+  font-family: "HelvNeue Light for IBM";
+  font-size: 2em;
+  color: #FFFFFF;
+  display: inline-block;
+  float: right;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.home-team-header-description-content {
+  height: 80%;
+  width: 95%;
+  background-color: #FFFFFF;
+  position: relative;
+  left: 5%;
+  top: 20%;
+  box-shadow: 2px 2px 4px #C7C7C7;
+}
+
+.home-team-header-description-content > div {
+  position: relative;
+  height: 20%;
+  background-color: green;
+  display: inline-block;
+}
+
+.home-team-header-description-content > div > h1 {
+  position: relative;
+  height: 20%;
+  float: left;
+  background-color: red;
+  display: inline-block;
 }

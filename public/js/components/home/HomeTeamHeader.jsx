@@ -32,9 +32,9 @@ var HomeTeamHeader = React.createClass({
   },
   showTeamTable: function() {
     if ($('#teamMemberTable').css('display') == 'none') {
-      $('#teamMemberTable').show();
+      $('#teamMemberTable').fadeIn();
     } else {
-      $('#teamMemberTable').hide();
+      $('#teamMemberTable').fadeOut();
     }
   },
   render: function() {
@@ -123,6 +123,23 @@ var HomeTeamHeader = React.createClass({
               <div class='home-team-header-teamname-btn'>
                 <InlineSVG class='home-team-header-teamname-btn-img' src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
               </div>
+              <div class='home-team-header-description-div'>
+                <div class='home-team-header-description-arrow'>
+                  <InlineSVG class='home-team-header-description-arrow-img' src={require('../../../img/Att-icons/play-arrow.svg')}></InlineSVG>
+                </div>
+                <div class='home-team-header-description-title'>
+                  <h>Team Description</h>
+                  <h1>X</h1>
+                </div>
+                <div class='home-team-header-description-content'>
+                  <div>
+                    <h1>
+                      aa
+                    </h1>
+                  </div>
+
+                </div>
+              </div>
             </div>
           </div>
           <div class='home-team-header-hierarchy'>
@@ -158,7 +175,7 @@ var HomeTeamHeader = React.createClass({
               </div>
             </div>
           </div>
-          <HomeMemberTable loadDetailTeam={this.props.loadDetailTeam}/>
+          <HomeMemberTable loadDetailTeam={this.props.loadDetailTeam} showTeamTable={this.showTeamTable}/>
         </div>
       )
     }
