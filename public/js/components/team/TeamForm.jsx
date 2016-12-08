@@ -13,6 +13,7 @@ var TeamForm = React.createClass({
         error: new Object(),
         map: [
           {field: 'name', id: 'teamName'},
+          {field: 'pathId', id: 'teamName'},
           {field: 'type', id: 'teamSquadYesNo'}
         ]
       }
@@ -75,6 +76,7 @@ var TeamForm = React.createClass({
             self.props.getSelectedTeam(result._id, 'You have successfully added a team and you have been added as the first team member. You can now add additional team members.');
           })
           .catch(function(err) {
+            console.log(err);
             var map = self.state.formError.map;
             self.setState({
               formError: {
