@@ -12,11 +12,9 @@ var TeamErrorValidationHandler = React.createClass({
     this.state.errors = new Object();
     if (_.has(newProps.formError.error, 'responseJSON') && _.has(newProps.formError.error.responseJSON, 'errors') && _.isEqual(newProps.formError.error.responseJSON.name, 'ValidationError')) {
       this.state.errors = newProps.formError.error.responseJSON.errors
-    } else if (_.has(newProps.formError.error, 'responseJSON') && _.has(newProps.formError.error.responseJSON, 'error')) {
-      this.state.errors = newProps.formError.error.responseJSON;
+    } else if (_.has(newProps.formError.error, 'responseJSON') && _.has(newProps.formError.error.responseJSON, 'errors')) {
+      this.state.errors = newProps.formError.error.responseJSON.errors;
     } else if (_.has(newProps.formError.error, 'responseText')) {
-      this.state.errors = JSON.parse(newProps.formError.error.responseText).errors;
-    } else if (!_.isEmpty(newProps.formError.error.responseText)) {
       this.state.errors = JSON.parse(newProps.formError.error.responseText);
     } else if (!_.isEmpty(newProps.formError.error)) {
       this.state.errors = ['An error has occurred while performing the operation.'];
@@ -34,6 +32,7 @@ var TeamErrorValidationHandler = React.createClass({
     _.each(formFields, function(f) {
       if (frmList.indexOf(f.id) == -1)
         clearFieldErrorHighlight(f.id);
+
       if (!_.isEmpty(errors) && !_.isEmpty(errors[f.field])) {
         setFieldErrorHighlight(f.id);
         if (msgList.indexOf(f.field) == -1) {

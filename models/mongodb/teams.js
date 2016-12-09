@@ -1069,6 +1069,13 @@ module.exports.updateTeam = function(teamDoc, user) {
         if (!result) {
           return Promise.reject({'error':'User is not allowed to modify team.'});
         }
+        if (_.isEmpty(updatedDoc.name)) {
+          return Promise.reject({
+            errors: {
+              name: {message:'This team name is required.'}
+            }
+          });
+        }
         var promiseArray = [];
         promiseArray.push(self.getTeam(teamId));
         promiseArray.push(self.hasChildrenByPathId(teamDoc.pathId));
@@ -1103,7 +1110,7 @@ module.exports.updateTeam = function(teamDoc, user) {
         //   resolve (updateTeamPathIds(parentPath, oldPathId, newPathId, user));
         // else
         // //********** END UNCOMMENT THIS SECTION IF WE NEED pathId IN-SYNC WITH ACTUAL TEAM NAME **********************
-          resolve (result);
+        resolve (result);
       })
       .catch( /* istanbul ignore next */ function(err){
         if (err.name === 'MongoError' && err.code === 11000)

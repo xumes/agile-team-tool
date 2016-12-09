@@ -45,7 +45,8 @@ var TeamForm = React.createClass({
             this.refs.teamSquadYesNo.disabled = true;
         }
       }
-    } else {
+      this.state.formErrorerror = new Object();
+    } else if (_.isEmpty(this.state.formError.error) && (_.isEqual(this.props.defaultTeam, 'new') || _.isEqual(this.props.defaultTeam, 'delete'))) {
       //this.setState({teamSelectListDefault: 'new'});
       this.refs.teamName.value = '';
       this.refs.teamDesc.value = '';
@@ -135,7 +136,7 @@ var TeamForm = React.createClass({
         // ajax call
         teamApi.deleteTeam(JSON.stringify(team))
           .then(function(result) {
-            self.props.getSelectedTeam('delete');
+            self.props.getSelectedTeam('delete', 'You have successfully deleted the team.');
           })
           .catch(function(err) {
             var map = self.state.formError.map;

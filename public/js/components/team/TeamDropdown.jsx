@@ -26,13 +26,6 @@ var TeamDropdown = React.createClass({
       });
   },
   componentWillReceiveProps: function(newProps) {
-    var team = _.find(this.state.teamNames, function(team) {
-        return team._id == newProps.defaultTeam;
-      });
-    if (_.isEmpty(team) || _.isEqual(newProps.defaultTeam, 'delete')) {
-      if (_.isEqual(newProps.defaultTeam, 'delete'))
-        alert('You have successfully deleted the team.');
-    }
     this.getTeamNames();
   },
   componentDidUpdate(prevProps, prevState) {

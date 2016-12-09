@@ -4,10 +4,10 @@ var moment = require('moment');
 var clipboard = null;
 var TeamAssessment = React.createClass({
   componentDidUpdate: function() {
-    if (clipboard) clipboard.destroy();
-    clipboard = new Clipboard('#copy-button');
     var self = this;
     if (!_.isEmpty(self.props.selectedTeam) && self.props.selectedTeam.type == 'squad') {
+      if (clipboard) clipboard.destroy();
+      clipboard = new Clipboard('#copy-button');
       self.refs.assessBtn.disabled = !self.props.selectedTeam.access;
       if (!_.isEmpty(self.props.selectedTeam.assessments)) {
         _.each(self.props.selectedTeam.assessments, function(assessment) {
@@ -39,6 +39,9 @@ var TeamAssessment = React.createClass({
   },
   createAssessment: function() {
     window.location = 'assessment?id=' + encodeURIComponent(this.props.selectedTeam.team._id);
+  },
+  copyLinkClick: function(e) {
+    e.preventDefault();
   },
   render: function() {
     var self = this;
@@ -163,7 +166,7 @@ var TeamAssessment = React.createClass({
               <div id='maturityTrend' style={{'paddingTop': '25px', 'paddingBottom': '15px'}}>
                   <span style={{'fontSize': '10pt', 'fontWeight': 'bold', 'paddingLeft': '20px'}}>Link to maturity trend graph:&nbsp;</span>
                   <span style={{'fontSize': '10pt'}} id='maturityTrendLink'>{assessmentLink}</span>
-                  <input type='button' class='ibm-btn-sec ibm-btn-small clipboardBtn' id='copy-button' data-clipboard-target='#maturityTrendLink' value='Copy link' style={{'fontSize': '10pt', 'padding': '3px', 'marginLeft': '15px'}}/>
+                  <input type='button' class='ibm-btn-sec ibm-btn-small clipboardBtn' id='copy-button' value='Copy link' data-clipboard-target='#maturityTrendLink' style={{'fontSize': '10pt', 'padding': '3px', 'marginLeft': '15px'}}/>
               </div>
             </div>
           </div>
