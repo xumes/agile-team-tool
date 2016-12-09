@@ -20,6 +20,7 @@ var principles = [];
 var teamId = '';
 var assessId = '';
 var displayType = {'display': 'block'};
+var chartSeriesData = [];
 
 var AssessmentProgressForm = React.createClass({
   getInitialState: function() {
@@ -233,7 +234,9 @@ var AssessmentProgressForm = React.createClass({
       }];
     }
 
-    this.loadResultChart(elementId, title, 'line', chartData.categories, 'Maturity Level', assessments,
+    chartSeriesData = _.clone(assessments);
+
+    this.loadResultChart(elementId, title, 'line', chartData.categories, 'Maturity Level', chartSeriesData,
       null, 'Select practice from adjacent table to see the results.');
   },
 
@@ -535,7 +538,6 @@ var AssessmentProgressForm = React.createClass({
       var assessmt = assessmt_data[ctr1];
       if (assessmt._id === assessId) {
         lastRecord = ctr1;
-        self.setIndAssessor(assessmt.assessorUserId);
 
         if (assessmt.assessorStatus == 'Submitted') {
           hasIndAssessment = true;
@@ -565,7 +567,9 @@ var AssessmentProgressForm = React.createClass({
             } else {
               id = 'deliveryResult';
             }
+
             self.displayOverAll(id, assessmt_cmpnt_rslts.currentScore, assessmt_cmpnt_rslts.targetScore, ctr2);
+
             overAllArray.push(<OverallResultItem
               key={`overall-${ctr2}-${ctr1}`}
               id={id}
@@ -575,7 +579,6 @@ var AssessmentProgressForm = React.createClass({
               hasIndAssessment={hasIndAssessment}
               displaySelectedChart={self.displaySelectedChart} />);
 
-            self.setAssessHeader(ctr2, assessmt_cmpnt_rslts.componentName);
             for (var ctr3 = 0; ctr3 < assessmt_cmpnt_rslts.assessedComponents.length; ctr3++) {
               var assessed_cmpnt = assessmt_cmpnt_rslts.assessedComponents[ctr3];
               loadResultArray.push(<ComponentResultItem
