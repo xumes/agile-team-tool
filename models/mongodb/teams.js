@@ -2,6 +2,7 @@
 var _ = require('underscore');
 var Promise = require('bluebird');
 var mongoose = require('mongoose');
+var crypto = require('crypto');
 var Schema   = mongoose.Schema;
 var Users = require('./users');
 var Iterations = require('./iterations');
@@ -194,7 +195,7 @@ var getAllUniquePaths = function(){
 
 var createPathId = function(teamName) {
   teamName = teamName || '';
-  return  teamName.toLowerCase().replace(/[^a-z1-9]/g, '');
+  return  teamName.toLowerCase().replace(/[^a-z0-9]/g, '')+'-'+crypto.randomBytes(2).toString('hex');
 };
 
 // //********** BEGIN UNCOMMENT THIS SECTION IF WE NEED pathId IN-SYNC WITH ACTUAL TEAM NAME **********************

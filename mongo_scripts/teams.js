@@ -1,5 +1,6 @@
 'use strict';
 var _ = require('underscore');
+var crypto = require('crypto');
 var cloudantDb = require('./data');
 var MongoClient = require('mongodb').MongoClient;
 var ObjectID = require('mongodb').ObjectID;
@@ -26,7 +27,7 @@ var concatTeamIndex = [];
 concatTeamIndex = concatTeamIndex.concat(team_index.lookup);
 
 var normalizeString = function(str) {
-  return str.toLowerCase().replace(/[^a-z1-9]/g, '');
+  return str.toLowerCase().replace(/[^a-z0-9]/g, '') +'-'+crypto.randomBytes(2).toString('hex');
 };
 
 var pathMap = {};
