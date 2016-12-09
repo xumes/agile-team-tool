@@ -8,6 +8,7 @@ var HomeAseSection = require('./HomeAseSection.jsx');
 var HomeTeamInfo = require('./HomeTeamInfo.jsx');
 var HomeMemberTable = require('./HomeMemberTable.jsx');
 var InlineSVG = require('svg-inline-react');
+var HomeChartFilter = require('./HomeChartFilter.jsx');
 
 var HomeContent = React.createClass({
   shouldComponentUpdate: function(nextProps, nextState) {
@@ -36,6 +37,14 @@ var HomeContent = React.createClass({
   componentWillUnmount: function() {
     window.removeEventListener('resize', this.handleResize);
   },
+
+  showFilter: function() {
+    if ($('.home-chart-filter-block').css('display') == 'none') {
+      $('.home-chart-filter-block').fadeIn();
+    } else {
+      $('.home-chart-filter-block').fadeOut();
+    }
+  },
   render: function() {
     return (
       <div style={{'width': '100%', 'height': '100%'}}>
@@ -50,9 +59,10 @@ var HomeContent = React.createClass({
               <h4>&nbsp;/&nbsp;</h4>
               <h4 style={{'color':'#FFA501'}}>---</h4>
               <h4>&nbsp;Partial data</h4>
-              <div>
+              <div onClick={this.showFilter} style={{'cursor':'pointer'}}>
                 <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
               </div>
+              <HomeChartFilter loadDetailTeam={this.props.loadDetailTeam} showFilter={this.showFilter}/>
             </div>
             <HomeIterSection loadDetailTeam={this.props.loadDetailTeam}/>
             <HomeAseSection loadDetailTeam={this.props.loadDetailTeam}/>

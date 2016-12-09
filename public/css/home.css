@@ -350,7 +350,7 @@ body {
 
 #teamMemberTable {
   width: 100%;
-  height: 600%;
+  height: 680%;
   padding: 0;
   /*background-color: red;*/
   position: relative;;;
@@ -665,9 +665,8 @@ body {
   float: right;
   position: relative;
   top: 45%;
-  right: 1%;
+  right: 2.5%;
   width: 3%;
-  cursor: pointer;
 }
 
 #iterationSection, #assessmentSection{
@@ -709,4 +708,107 @@ body {
   height: 96%;
   top: 2%;
   left: 2%;
+}
+
+.home-chart-filter-block {
+  position: relative;
+  display: inline-block;
+  z-index: 10;
+  left: 32%;
+  cursor: default;
+}
+
+.home-chart-filter-arrow {
+  height: 20%;
+  width: 5%;
+  display: inline-block;
+  float: left;
+  -ms-transform: rotate(180deg); /* IE 9 */
+  -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+  transform: rotate(180deg);
+}
+.home-chart-filter-arrow-img svg {
+  position: relative;
+  right: 85%;
+  height: 100%;
+  width: 200%;
+}
+.home-chart-filter-arrow-img svg polygon {
+  fill: #4178BE;
+}
+
+.home-chart-filter-title {
+  height: 20%;
+  width: 95%;
+  background-color: #4178BE;
+  display: inline-block;
+  float: left;
+}
+
+.home-chart-filter-title > h1 {
+  height: 50%;
+  position: relative;
+  top: 35%;
+  left: 5%;
+  font-family: "HelvNeue Bold for IBM";
+  font-size: 1.5em;
+  color: #FFFFFF;
+  display: inline-block;
+  float: left;
+  padding: 0;
+}
+
+.home-chart-filter-title > h2 {
+  height: 50%;
+  position: relative;
+  top: 40%;
+  right: 5%;
+  font-family: "HelvNeue Light for IBM";
+  font-size: 2em;
+  color: #FFFFFF;
+  display: inline-block;
+  float: right;
+  padding: 0;
+  cursor: pointer;
+}
+
+.home-chart-filter-content {
+  height: 60%;
+  width: 95%;
+  background-color: #FFFFFF;
+  position: relative;
+  left: 5%;
+  /*box-shadow:  2px 2px 2px #C7C7C7;*/
+  float: left;
+}
+
+.home-chart-filter-columns {
+  height: 20%;
+  width: 100%;
+}
+
+.home-chart-filter-columns > div {
+  position: relative;
+  float: left;
+  top: 10%;
+  left: 10%;
+  background-color: #7CC7FF;
+  height: 80%;
+  width: 37.5%;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.2em;
+  line-height: 2em;
+  color: #323232;
+  text-align: center;
+  cursor: pointer;
+}
+
+.home-chart-filter-btns {
+  height: 20%;
+  width: 95%;
+  position: relative;
+  left: 5%;
+  float: left;
+  background-color: #FFFFFF;
+  border-top: 1px solid #C7C7C7
 }
