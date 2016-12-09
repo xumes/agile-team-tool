@@ -4,9 +4,13 @@ var ProjectComponent = React.createClass({
 
   render: function() {
     var resultBodyAry = this.props.resultBodyAry;
+    if (resultBodyAry.length > 0) {
+      var componentName = resultBodyAry[0]['props']['assessed_cmpnt'].componentName;
+    }
+
     return (
       <div data-widget="showhide" data-type="panel" class="ibm-show-hide ibm-widget-processed" id="colContainer">
-        <h2 class="agile-summary" data-open="true" id="assessId_0"></h2>
+        <h2 class="agile-summary" data-open="true" id="assessId_0"><a href="javascript:void();" class="ibm-show-active">{componentName}</a></h2>
         <div class="ibm-container-body" id="assessContainer_0">
           <div class="ibm-columns">
             <div class="ibm-col-2-1">
