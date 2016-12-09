@@ -234,9 +234,8 @@ var AssessmentProgressForm = React.createClass({
       }];
     }
 
-    if (_.isEmpty(chartSeriesData)) {
-      chartSeriesData = _.clone(assessments);
-    }
+    chartSeriesData = _.clone(assessments);
+
     this.loadResultChart(elementId, title, 'line', chartData.categories, 'Maturity Level', chartSeriesData,
       null, 'Select practice from adjacent table to see the results.');
   },
