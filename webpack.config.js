@@ -1,0 +1,46 @@
+const Webpack = require('webpack');
+const path = require('path');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+module.exports = {
+  entry: {
+    home: path.join(__dirname, 'public/js/v2Home.jsx'),
+    iterations: path.join(__dirname, 'public/js/v2Iteration.jsx'),
+    teams: path.join(__dirname, 'public/js/v2Team.jsx'),
+    assessments: path.join(__dirname, 'public/js/v2Assessment.jsx'),
+    assessmentSummary: path.join(__dirname, 'public/js/v2AssessmentSummary.jsx'),
+    styles: path.join(__dirname, 'public/css/styles.jsx')
+  },
+  output: {
+    filename: '[name].js',
+    path: path.join(__dirname, 'public/dist')
+  },
+  module: {
+    loaders: [
+      {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract('style', 'css')
+      },
+      {
+        test: /\.jsx$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['react', 'es2015'],
+          plugins: ['react-html-attrs']
+        }
+      }
+    ]
+  },
+  plugins: [
+    new ExtractTextPlugin('[name].css'),
+    new Webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      },
+      output: {
+        comments: false
+      }
+    })
+  ]
+};

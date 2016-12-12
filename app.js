@@ -18,6 +18,8 @@ var passport = require('passport');
 var RedisStore = require('connect-redis')(session);
 var favicon = require('serve-favicon');
 var helmet = require('helmet');
+var httpProxy = require('http-proxy');
+var bundle = require('./bundle');
 var initCloudant = require('./cloudant/init');
 
 /* istanbul ignore if */
@@ -81,24 +83,18 @@ require('./middleware/login')(passport);
 require('./routes')(app, passport);
 
 // Webpack for React
-var webpack = require('webpack');
-var webpackDevMiddleware = require('webpack-dev-middleware');
-var webpackHotMiddleware = require('webpack-hot-middleware');
-var webpackConfig = require('./webpack.dev.config');
-var compiler = webpack(webpackConfig);
 
-app.use(webpackDevMiddleware(compiler, {
-  hot: true,
-  publicPath: webpackConfig.output.publicPath,
-  stats: {colors: true},
-  historyApiFallback: true
-}));
+/* istanbul ignore next */
+if (process.env.NODE_ENV !== 'production') {
+  var proxy = httpProxy.createProxyServer();
+  bundle();
 
-app.use(webpackHotMiddleware(compiler, {
-  log: console.log,
-  path: '/__webpack_hmr',
-  heartbeat: 10 * 1000
-}));
+  app.all('/dist/*', function(req, res) {
+    proxy.web(req, res, {
+      target: 'http://localhost:3001'
+    });
+  });
+}
 
 /**
  * Error Handlers

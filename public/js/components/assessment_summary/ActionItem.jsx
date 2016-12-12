@@ -1,6 +1,5 @@
 var React = require('react');
 var DatePicker = require('react-datepicker');
-require('react-datepicker/dist/react-datepicker.css');
 
 var statusList = ['Open', 'In-progress', 'Closed'];
 

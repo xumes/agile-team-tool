@@ -114,7 +114,7 @@ function plotAssessmentSeries(teamAssessments) {
     }
   }
 
-  chartSeries = [];
+  var chartSeries = [];
   var chartData = new Object();
 
   if (assessmentsToPlot.length > 0){
@@ -283,7 +283,7 @@ function plotAssessmentSeries(teamAssessments) {
 }
 
 function plotAssessment(index, chartData) {
-  spiderData = new Object();
+  var spiderData = new Object();
   spiderData['title'] = chartData['title'] + ' Practices for ' + chartData['categories'][index]; // "Assessment Practices for " + chartData["categories"][index];
   spiderData['prefixId'] = chartData['prefixId'];
   spiderData['categories'] = [];
