@@ -7,3 +7,4 @@ mongo_scripts/creds.js
 npm-debug.log
 .DS_store
 agile-team-tool-manifest.yml
+.node-version
