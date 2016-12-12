@@ -92,7 +92,7 @@ function destroyAssessmentCharts() {
 
 function noAssessmentRecord(){
   $('#assessmentCharts').empty();
-
+  $('#assessmentCharts').css('min-height', '40px');
   var p = document.createElement('p');
   p.appendChild(document.createTextNode('No assessment results to display.'));
   $('#assessmentCharts').append(p);
@@ -119,6 +119,7 @@ function plotAssessmentSeries(teamAssessments) {
 
   if (assessmentsToPlot.length > 0){
     $('#assessmentCharts').empty();
+    $('#assessmentCharts').css('min-height', '280px');
   }
   else {
     noAssessmentRecord();
