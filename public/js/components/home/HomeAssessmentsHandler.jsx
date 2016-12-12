@@ -227,7 +227,7 @@ function plotAssessmentSeries(teamAssessments) {
         formatter: function() {
           var tt = '<b>' + this.key + '<b><br>';
           var point = this.point.index;
-          for (i=0;i < this.series.chart.series.length; i++) {
+          for (var i=0;i < this.series.chart.series.length; i++) {
             if (this.series.chart.series[i].visible)
               tt +=
                 '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';
@@ -277,7 +277,7 @@ function plotAssessmentSeries(teamAssessments) {
   });
 
   // plot the spider graph of the last assessment in the series.
-  for (i = 0; i < chartSeries.length; i++) {
+  for (var i = 0; i < chartSeries.length; i++) {
     var lastResultIndex = chartSeries[i]['assessmentResult'].length - 1;
     plotAssessment(lastResultIndex, chartSeries[i]);
   }
@@ -364,7 +364,7 @@ function plotAssessment(index, chartData) {
       formatter: function() {
         var tt = '<b>' + this.key + '<b><br>';
         var point = this.point.index;
-        for (i=0;i < this.series.chart.series.length; i++) {
+        for (var i=0;i < this.series.chart.series.length; i++) {
           if (this.series.chart.series[i].visible)
             tt +=
               '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';
@@ -597,7 +597,7 @@ function loadBarAssessmentEvaluation(id, asOfDate, categories, seriesObj1, serie
       formatter: function() {
         var formatResult = '<b>' + this.key + '<b><br>';
         var point = this.point.index;
-        for (i=0;i < this.series.chart.series.length; i++) {
+        for (var i=0;i < this.series.chart.series.length; i++) {
           var percentage = this.series.chart.series[i].data[point].percentage || 0;
           if (this.series.chart.series[i].visible && this.series.chart.series[i].data[point].y > 0)
             formatResult +=
@@ -705,7 +705,7 @@ function loadLineMaturityTrend(id, categories, seriesObj1, seriesObj2, seriesObj
       formatter: function() {
         var formatResult = '<b>' + this.key + '<b><br>';
         var point = this.point.index;
-        for (i=0;i < this.series.chart.series.length; i++) {
+        for (var i=0;i < this.series.chart.series.length; i++) {
           if (this.series.chart.series[i].visible)
             formatResult +=
               '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].data[point].y + ' ('+ this.series.chart.series[i].data[point].squads + ' squads)<br/>';
