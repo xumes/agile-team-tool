@@ -23,21 +23,18 @@ var TeamIteration = React.createClass({
       }
     });
   },
-
   createIteration: function(){
     window.location = 'iteration?id=' + encodeURIComponent(this.props.selectedTeam.team._id) + '&iter=new';
   },
-
   render: function() {
     var self = this;
     if (self.props.selectedTeam.team == undefined) {
       return null;
     } else {
       var teamName = self.props.selectedTeam.team.name;
+      var createAccess = 'disabled';
       if (self.props.selectedTeam.access) {
-        var createAccess = '';
-      } else {
-        createAccess = 'disabled';
+        createAccess = '';
       }
       if (self.props.selectedTeam.type != 'squad') {
         return (

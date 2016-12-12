@@ -50,10 +50,9 @@ var TeamAssessment = React.createClass({
       return null;
     } else {
       var teamName = self.props.selectedTeam.team.name;
+      var createAccess = 'disabled';
       if (self.props.selectedTeam.access) {
-        var createAccess = '';
-      } else {
-        createAccess = 'disabled';
+        createAccess = '';
       }
       if (self.props.selectedTeam.type != 'squad') {
         return (
@@ -137,7 +136,7 @@ var TeamAssessment = React.createClass({
               <div style={{'float':'left', 'fontSize':'14px', 'width':'100%'}} class='tcaption'>
                 <em id='assessmentTitle' class='ibm-bold'>Last 5 Assessments for {teamName}</em>
                 <p style={{'float': 'right'}} class='ibm-button-link'>
-                  <input type='button' class='ibm-btn-pri ibm-btn-small' id='assessBtn' ref='assessBtn' value='Create assessment' onClick={this.createAssessment}/>
+                  <input type='button' class='ibm-btn-pri ibm-btn-small' id='assessBtn' ref='assessBtn' value='Create assessment' onClick={this.createAssessment} disabled={createAccess}/>
                 </p>
               </div>
               <table class='ibm-data-table' id='assessmentTable' summary='List of assessment information' style={{'fontSize': '90%'}}>
