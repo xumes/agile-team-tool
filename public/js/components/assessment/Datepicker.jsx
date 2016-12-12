@@ -2,8 +2,6 @@ var React = require('react');
 var DatePicker = require('react-datepicker');
 var moment = require('moment');
 
-require('react-datepicker/dist/react-datepicker.css');
-
 var Datepicker = React.createClass({
   componentDidUpdate: function() {
     $('.react-datepicker-ignore-onclickoutside').css('readonly','true');
