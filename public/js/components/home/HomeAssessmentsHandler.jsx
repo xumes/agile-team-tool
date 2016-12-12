@@ -41,7 +41,7 @@ module.exports.teamAssessmentListHander = function(teamId, teamAssessments, team
   });
 
   if (listOption.length > 6) {
-    newOption = [];
+    var newOption = [];
     for (var i = 0; i <= 5; i++)
       newOption.push(listOption[i]);
     listOption = newOption;
@@ -92,7 +92,7 @@ function destroyAssessmentCharts() {
 
 function noAssessmentRecord(){
   $('#assessmentCharts').empty();
-  $('#assessmentCharts').css('min-height', '40px');
+  // $('#assessmentCharts').css('min-height', '40px');
   var p = document.createElement('p');
   p.appendChild(document.createTextNode('No assessment results to display.'));
   $('#assessmentCharts').append(p);
@@ -119,13 +119,13 @@ function plotAssessmentSeries(teamAssessments) {
 
   if (assessmentsToPlot.length > 0){
     $('#assessmentCharts').empty();
-    $('#assessmentCharts').css('min-height', '280px');
+    // $('#assessmentCharts').css('min-height', '280px');
   }
   else {
     noAssessmentRecord();
   }
   var count = 0;
-  for (i = assessmentsToPlot.length - 1; i > -1; i--) {
+  for (var i = assessmentsToPlot.length - 1; i > -1; i--) {
     var results = assessmentsToPlot[i]['componentResults'];
     for (var j = 0; j < results.length; j++) {
       var found = false;
@@ -229,7 +229,7 @@ function plotAssessmentSeries(teamAssessments) {
         formatter: function() {
           var tt = '<b>' + this.key + '<b><br>';
           var point = this.point.index;
-          for (i=0;i < this.series.chart.series.length; i++) {
+          for (var i = 0; i < this.series.chart.series.length; i++) {
             if (this.series.chart.series[i].visible)
               tt +=
                 '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';
@@ -336,8 +336,8 @@ function plotAssessment(index, chartData) {
           'fontSize': '10px'
         },
         formatter: function() {
-          var text = this.value,
-            formatted = text.length > 15 ? text.substring(0, 15) + '...' : text;
+          var text = this.value;
+          var formatted = text.length > 15 ? text.substring(0, 15) + '...' : text;
 
           return formatted;
         }
@@ -367,7 +367,7 @@ function plotAssessment(index, chartData) {
       formatter: function() {
         var tt = '<b>' + this.key + '<b><br>';
         var point = this.point.index;
-        for (i=0;i < this.series.chart.series.length; i++) {
+        for (var i = 0;i < this.series.chart.series.length; i++) {
           if (this.series.chart.series[i].visible)
             tt +=
               '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';
@@ -402,10 +402,11 @@ function createChartSection(prefixId, count) {
   var mainDiv = document.createElement('div');
   mainDiv.setAttribute('class', 'container-body-columns-ase');
   // mainDiv.setAttribute('style', margintop);
-  mainDiv.setAttribute('style', 'height: 30%;' + margintop);
+  mainDiv.setAttribute('style', 'height: 33%;' + margintop);
+  mainDiv.setAttribute('id', prefixId + 'Chart_block');
 
   var colDiv = document.createElement('div');
-  colDiv.setAttribute('class', 'container-body-col-2-1');
+  colDiv.setAttribute('class', 'container-body-col-2-2');
 
   var div = document.createElement('div');
   div.setAttribute('id', prefixId + '_Chart');
@@ -414,7 +415,7 @@ function createChartSection(prefixId, count) {
   mainDiv.appendChild(colDiv);
 
   colDiv = document.createElement('div');
-  colDiv.setAttribute('class', 'container-body-col-2-1');
+  colDiv.setAttribute('class', 'container-body-col-2-2');
   div = document.createElement('div');
   div.setAttribute('id', prefixId + '_SpiderChart');
   // div.setAttribute('style', 'min-height: 310px;');
@@ -428,8 +429,8 @@ module.exports.assessmentParentRollup = function(snapshotData){
   var assessmentData = snapshotData.assessmentData;
   var date = moment(snapshotData.lastUpdate).format('DD MMM YYYY');
   //set div min height
-  $('#assessmentTrend').attr('style','min-height: 380px;');
-  $('#assessmentEval').attr('style','min-height: 380px;');
+  // $('#assessmentTrend').attr('style','min-height: 380px;');
+  // $('#assessmentEval').attr('style','min-height: 380px;');
   var graphCategory = [];
   //Evaluation rollup
   var teamNoAssessment = new Object();
@@ -603,7 +604,7 @@ function loadBarAssessmentEvaluation(id, asOfDate, categories, seriesObj1, serie
       formatter: function() {
         var formatResult = '<b>' + this.key + '<b><br>';
         var point = this.point.index;
-        for (i=0;i < this.series.chart.series.length; i++) {
+        for (var i = 0;i < this.series.chart.series.length; i++) {
           var percentage = this.series.chart.series[i].data[point].percentage || 0;
           if (this.series.chart.series[i].visible && this.series.chart.series[i].data[point].y > 0)
             formatResult +=
@@ -712,7 +713,7 @@ function loadLineMaturityTrend(id, categories, seriesObj1, seriesObj2, seriesObj
       formatter: function() {
         var formatResult = '<b>' + this.key + '<b><br>';
         var point = this.point.index;
-        for (i=0;i < this.series.chart.series.length; i++) {
+        for (var i = 0;i < this.series.chart.series.length; i++) {
           if (this.series.chart.series[i].visible)
             formatResult +=
               '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].data[point].y + ' ('+ this.series.chart.series[i].data[point].squads + ' squads)<br/>';

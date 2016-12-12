@@ -5,7 +5,7 @@ var api = require('../api.jsx');
 var HomeIterChart = React.createClass({
   render: function() {
     return (
-      <div class='container-body-col-2-1'>
+      <div id={this.props.id + '_block'} class='container-body-col-2-1'>
         <div id={this.props.id}></div>
       </div>
     )

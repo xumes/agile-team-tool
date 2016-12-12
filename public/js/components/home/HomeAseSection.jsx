@@ -60,11 +60,11 @@ var HomeAseSection = React.createClass({
         <HomeFallBox component={assessmentFallBoxComponents} />
         <div style={{'height':'100%'}} class='ibm-container-body'>
           <div id='nsquad_assessment_card' style={{'display': 'none', 'height':'100%'}}>
-            <div class='container-body-columns-ase' style={{'height':'33%'}}>
-              <div class='container-body-col-2-1' >
+            <div class='container-body-columns-ase' style={{'height':'35%'}}>
+              <div class='container-body-col-2-2' >
                 <div id={'assessmentTrend'}></div>
               </div>
-              <div class='container-body-col-2-1' >
+              <div class='container-body-col-2-2' >
                 <div id={'assessmentEval'}></div>
               </div>
             </div>

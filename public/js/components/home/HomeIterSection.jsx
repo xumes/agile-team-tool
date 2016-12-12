@@ -85,21 +85,13 @@ var HomeIterSection = React.createClass({
             </div>
           </div>
           <div id='squad_team_scard' style={{'display':'none','height':'100%'}}>
-            <div class='container-body-columns'>
-              <HomeIterChart id={'velocityChart'} />
-              <HomeIterChart id={'throughputChart'} />
-            </div>
-            <div class='container-body-columns' style={{'top':'2%'}}>
-              <HomeIterChart id={'defectsChart'} />
-              <HomeIterChart id={'wipBacklogChart'} />
-            </div>
-            <div class='container-body-columns' style={{'top':'4%'}}>
-              <HomeIterChart id={'pizzaChart'} />
-              <HomeIterChart id={'unitCostChart'} />
-            </div>
-            <div class='container-body-columns' style={{'top':'6%'}}>
-              <HomeIterChart id={'statisfactionChart'} />
-            </div>
+            <HomeIterChart id={'velocityChart'} />
+            <HomeIterChart id={'throughputChart'} />
+            <HomeIterChart id={'defectsChart'} />
+            <HomeIterChart id={'wipBacklogChart'} />
+            <HomeIterChart id={'pizzaChart'} />
+            <HomeIterChart id={'unitCostChart'} />
+            <HomeIterChart id={'statisfactionChart'} />
           </div>
         </div>
       </div>

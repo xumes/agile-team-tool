@@ -3,8 +3,31 @@ var api = require('../api.jsx');
 var InlineSVG = require('svg-inline-react');
 var squadBtns = ['Velocity', 'Throughput', 'Deployments & Defects', 'Cycle Time', 'Team Size', 'FTE', 'Satisfaction', 'Project', 'Team Delivery', 'Operations'];
 var nonSquadBtns = ['Velocity', 'Throughput', 'Deployments & Defects', 'Cycle Time', 'Team Size', 'FTE', 'Satisfaction', 'Trends', 'Evaluation'];
+var squadBtns = {
+  'velocity': true,
+  'throuthput': true,
+  'defects': true,
+  'wipBacklog': true,
+  'pizza': true,
+  'unitCost': true,
+  'prj':true,
+  'ops':true,
+  'devops':true
+}
 
 var HomeChartFilter = React.createClass({
+  showSec: function(id) {
+    if ($('#'+id+'Chart_block').css('display') == 'none') {
+      $('#'+id+'Chart_block').fadeIn();
+      $('#'+id+'ChartBtn').removeClass('home-chart-filter-unselected');
+      $('#'+id+'ChartBtn').addClass('home-chart-filter-selected');
+    } else {
+      $('#'+id+'Chart_block').fadeOut();
+      $('#'+id+'ChartBtn').removeClass('home-chart-filter-selected');
+      $('#'+id+'ChartBtn').addClass('home-chart-filter-unselected');
+    }
+
+  },
   render: function() {
     var self = this;
     if (self.props.loadDetailTeam.team == undefined) {
@@ -12,27 +35,30 @@ var HomeChartFilter = React.createClass({
     } else {
       var team = self.props.loadDetailTeam.team;
       if (team.type == 'squad') {
+        // var content = Object.keys(squadBtns).map(function(key){
+        //
+        // });
         var content = (
           <div class='home-chart-filter-content'>
             <div class='home-chart-filter-columns'>
-              <div>Velocity</div>
-              <div style={{'left':'15%'}}>Throughput</div>
+              <div class='home-chart-filter-selected' id='velocityChartBtn' onClick={()=>this.showSec('velocity')}>Velocity</div>
+              <div class='home-chart-filter-selected' id='throughputChartBtn' onClick={()=>this.showSec('throughput')} style={{'left':'15%'}}>Throughput</div>
             </div>
             <div class='home-chart-filter-columns'>
-              <div>Defects</div>
-              <div style={{'left':'15%'}}>Cycle Time</div>
+              <div class='home-chart-filter-selected' id='defectsChartBtn' onClick={()=>this.showSec('defects')}>Defects</div>
+              <div class='home-chart-filter-selected' id='wipBacklogChartBtn' onClick={()=>this.showSec('wipBacklog')} style={{'left':'15%'}}>Cycle Time</div>
             </div>
             <div class='home-chart-filter-columns'>
-              <div>Team Size</div>
-              <div style={{'left':'15%'}}>FTE</div>
+              <div class='home-chart-filter-selected' id='pizzaChartBtn' onClick={()=>this.showSec('pizza')}>Team Size</div>
+              <div class='home-chart-filter-selected' id='unitCostChartBtn' onClick={()=>this.showSec('unitCost')} style={{'left':'15%'}}>FTE</div>
             </div>
             <div class='home-chart-filter-columns'>
-              <div>Satisfaction</div>
-              <div style={{'left':'15%'}}>Project</div>
+              <div class='home-chart-filter-selected' id='statisfactionChartBtn' onClick={()=>this.showSec('statisfaction')}>Satisfaction</div>
+              <div class='home-chart-filter-selected' id='prjChartBtn' id=''onClick={()=>this.showSec('prj')} style={{'left':'15%'}}>Project</div>
             </div>
             <div class='home-chart-filter-columns'>
-              <div>Team Delivery</div>
-              <div style={{'left':'15%'}}>Operations</div>
+              <div class='home-chart-filter-selected' id='devopsChartBtn' onClick={()=>this.showSec('devops')}>Team Delivery</div>
+              <div class='home-chart-filter-selected' id='opsChartBtn' onClick={()=>this.showSec('ops')} style={{'left':'15%'}}>Operations</div>
             </div>
           </div>
         )
@@ -40,23 +66,23 @@ var HomeChartFilter = React.createClass({
         content = (
           <div class='home-chart-filter-content'>
             <div class='home-chart-filter-columns'>
-              <div>Velocity</div>
-              <div style={{'left':'15%'}}>Throughput</div>
+              <div class='home-chart-filter-selected'>Velocity</div>
+              <div class='home-chart-filter-selected' style={{'left':'15%'}}>Throughput</div>
             </div>
             <div class='home-chart-filter-columns'>
-              <div>Defects</div>
-              <div style={{'left':'15%'}}>Cycle Time</div>
+              <div class='home-chart-filter-selected'>Defects</div>
+              <div class='home-chart-filter-selected' style={{'left':'15%'}}>Cycle Time</div>
             </div>
             <div class='home-chart-filter-columns'>
-              <div>Team Size</div>
-              <div style={{'left':'15%'}}>FTE</div>
+              <div class='home-chart-filter-selected'>Team Size</div>
+              <div class='home-chart-filter-selected' style={{'left':'15%'}}>FTE</div>
             </div>
             <div class='home-chart-filter-columns'>
-              <div>Satisfaction</div>
-              <div style={{'left':'15%'}}>Trends</div>
+              <div class='home-chart-filter-selected'>Satisfaction</div>
+              <div class='home-chart-filter-selected' style={{'left':'15%'}}>Trends</div>
             </div>
             <div class='home-chart-filter-columns'>
-              <div>Evaluation</div>
+              <div class='home-chart-filter-selected'>Evaluation</div>
             </div>
           </div>
         )

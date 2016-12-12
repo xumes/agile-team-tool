@@ -688,21 +688,32 @@ body {
 
 .container-body-columns-ase {
   position: relative;
-  width: 99%;
-  height: 30%;
+  width: 100%;
+  height: 31%;
 }
 
 .container-body-col-2-1 {
   position: relative;
   width: 47%;
+  height: 23%;
+  display: block;
+  float: left;
+  border: 1px solid #C7C7C7;
+  margin-left: 2%;
+  margin-top: 2%;
+}
+
+.container-body-col-2-2 {
+  position: relative;
+  width: 47%;
   height: 100%;
-  display: inline-block;
+  display: block;
   float: left;
   border: 1px solid #C7C7C7;
   margin-left: 2%;
 }
 
-.container-body-col-2-1 > div {
+.container-body-col-2-1 > div, .container-body-col-2-2 > div  {
   position: relative;
   width: 96%;
   height: 96%;
@@ -787,12 +798,29 @@ body {
   width: 100%;
 }
 
-.home-chart-filter-columns > div {
+.home-chart-filter-selected {
   position: relative;
   float: left;
   top: 10%;
   left: 10%;
   background-color: #7CC7FF;
+  border: 0.1em solid #7CC7FF;
+  height: 80%;
+  width: 37.5%;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.2em;
+  line-height: 2em;
+  color: #323232;
+  text-align: center;
+  cursor: pointer;
+}
+
+.home-chart-filter-unselected {
+  position: relative;
+  float: left;
+  top: 10%;
+  left: 10%;
+  border: 0.1em solid #00B4A0;
   height: 80%;
   width: 37.5%;
   font-family: "HelvNeue Roman for IBM";
