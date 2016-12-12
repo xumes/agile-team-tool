@@ -4,7 +4,6 @@ var IterationDropdown = require('./IterationDropdown.jsx');
 var DatePicker = require('react-datepicker');
 var Tooltip = require('react-tooltip');
 var api = require('../api.jsx');
-require('react-datepicker/dist/react-datepicker.css');
 var moment = require('moment');
 var Dropdown = require('./Dropdown.jsx');
 var dropList = [];
