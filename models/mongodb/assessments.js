@@ -233,7 +233,9 @@ module.exports.addTeamAssessment = function(user, data){
             if (data['assessmentStatus'] == 'Submitted') {
               data['submittedByUserId'] = createdUser.userId;
               data['submittedBy'] = createdUser.name;
-              data['submittedDate'] = new Date(moment.utc());
+              if (_.isEmpty(data['submittedDate'])) {
+                data['submittedDate'] = new Date(moment.utc());
+              }
             }
             var newAssessmentData = new Assessment(data);
             var error = newAssessmentData.validateSync();
