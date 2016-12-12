@@ -20,6 +20,7 @@ var principles = [];
 var teamId = '';
 var assessId = '';
 var displayType = {'display': 'block'};
+var chartSeriesData = [];
 
 var AssessmentProgressForm = React.createClass({
   getInitialState: function() {
@@ -233,7 +234,9 @@ var AssessmentProgressForm = React.createClass({
       }];
     }
 
-    this.loadResultChart(elementId, title, 'line', chartData.categories, 'Maturity Level', assessments,
+    chartSeriesData = _.clone(assessments);
+
+    this.loadResultChart(elementId, title, 'line', chartData.categories, 'Maturity Level', chartSeriesData,
       null, 'Select practice from adjacent table to see the results.');
   },
 
@@ -467,6 +470,57 @@ var AssessmentProgressForm = React.createClass({
     $("#actPlanContainer").showhide();
   },
 
+  submitActionPlan: function (data, msg) {
+    var self = this;
+    api.updateAssessment(data)
+    .then(function(result){
+      self.setState({selectedAssessment:result});
+      if (msg != null && msg != '')
+        self.showMessagePopup(msg);
+    })
+    .catch(function(err){
+      self.validationHandler(err);
+    });
+  },
+
+  showMessagePopup: function(message) {
+    alert(message);
+  },
+
+  validationHandler:function (errorResponse, operation) {
+    var self = this;
+    var errorlist = '';
+    var response = errorResponse.responseJSON;
+
+    if (response && response.error) {
+      var errors = response.error.errors;
+      if (errors){        
+        var popupMsg = '';
+        if (_.isObject(errors)) {
+          _.each(errors, function(err, attr) {
+            popupMsg += err.message + '<br>';
+          });
+        } else {
+          popupMsg = errors;
+        }
+        if (!_.isEmpty(popupMsg)) {
+          self.showMessagePopup(popupMsg);
+        }
+      }
+    }
+  },
+
+  executeReset: function (actionPlan) {
+    var self = this;
+    api.getAssessmentDetails(this.state.assessId)
+      .then(function(data){
+        self.setState({selectedAssessment: data});
+      })
+      .catch(function(err){
+        console.log(JSON.stringify(err));
+      });
+  },
+
   render: function() {
     var self = this;
     var teamId = self.state.teamId;
@@ -484,7 +538,6 @@ var AssessmentProgressForm = React.createClass({
       var assessmt = assessmt_data[ctr1];
       if (assessmt._id === assessId) {
         lastRecord = ctr1;
-        self.setIndAssessor(assessmt.assessorUserId);
 
         if (assessmt.assessorStatus == 'Submitted') {
           hasIndAssessment = true;
@@ -514,7 +567,9 @@ var AssessmentProgressForm = React.createClass({
             } else {
               id = 'deliveryResult';
             }
+
             self.displayOverAll(id, assessmt_cmpnt_rslts.currentScore, assessmt_cmpnt_rslts.targetScore, ctr2);
+
             overAllArray.push(<OverallResultItem
               key={`overall-${ctr2}-${ctr1}`}
               id={id}
@@ -524,7 +579,6 @@ var AssessmentProgressForm = React.createClass({
               hasIndAssessment={hasIndAssessment}
               displaySelectedChart={self.displaySelectedChart} />);
 
-            self.setAssessHeader(ctr2, assessmt_cmpnt_rslts.componentName);
             for (var ctr3 = 0; ctr3 < assessmt_cmpnt_rslts.assessedComponents.length; ctr3++) {
               var assessed_cmpnt = assessmt_cmpnt_rslts.assessedComponents[ctr3];
               loadResultArray.push(<ComponentResultItem
@@ -569,7 +623,7 @@ var AssessmentProgressForm = React.createClass({
       <form id="progressForm" class="agile-maturity">
         <ProjectComponent resultBodyAry={resultBodyAry} />
         <DeliveryComponent deliveryResultAry={deliveryResultAry} displayType={displayType} />
-        <ActionPlanComponent teamId={this.state.teamId} assessId={this.state.assessId} selectedAssessment={this.state.selectedAssessment} />
+        <ActionPlanComponent teamId={this.state.teamId} submitActionPlan={this.submitActionPlan} executeReset={this.executeReset} selectedAssessment={this.state.selectedAssessment} />
         <IndependentAssessorSection selectedAssessment={this.state.selectedAssessment} />
         <LastUpdateSection selectedAssessment={this.state.selectedAssessment} />
         <DebugSection selectedAssessment={this.state.selectedAssessment} />

@@ -13,7 +13,7 @@ module.exports.teamAssessmentListHander = function(teamId, teamAssessments, team
   for (var i = 0; i < listOption.length; i++) {
     if (listOption[i][1].toLowerCase().indexOf('draft') > -1) {
       draftExist = true;
-      draftAssesID = listOption[i][0];
+      var draftAssesID = listOption[i][0];
       break;
     }
   }
@@ -92,7 +92,7 @@ function destroyAssessmentCharts() {
 
 function noAssessmentRecord(){
   $('#assessmentCharts').empty();
-
+  $('#assessmentCharts').css('min-height', '40px');
   var p = document.createElement('p');
   p.appendChild(document.createTextNode('No assessment results to display.'));
   $('#assessmentCharts').append(p);
@@ -114,11 +114,12 @@ function plotAssessmentSeries(teamAssessments) {
     }
   }
 
-  chartSeries = [];
+  var chartSeries = [];
   var chartData = new Object();
 
   if (assessmentsToPlot.length > 0){
     $('#assessmentCharts').empty();
+    $('#assessmentCharts').css('min-height', '280px');
   }
   else {
     noAssessmentRecord();
@@ -285,7 +286,7 @@ function plotAssessmentSeries(teamAssessments) {
 }
 
 function plotAssessment(index, chartData) {
-  spiderData = new Object();
+  var spiderData = new Object();
   spiderData['title'] = chartData['title'] + ' Practices for ' + chartData['categories'][index]; // "Assessment Practices for " + chartData["categories"][index];
   spiderData['prefixId'] = chartData['prefixId'];
   spiderData['categories'] = [];

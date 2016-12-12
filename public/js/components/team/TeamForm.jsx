@@ -13,6 +13,7 @@ var TeamForm = React.createClass({
         error: new Object(),
         map: [
           {field: 'name', id: 'teamName'},
+          {field: 'pathId', id: 'teamName'},
           {field: 'type', id: 'teamSquadYesNo'}
         ]
       }
@@ -44,7 +45,8 @@ var TeamForm = React.createClass({
             this.refs.teamSquadYesNo.disabled = true;
         }
       }
-    } else {
+      this.state.formErrorerror = new Object();
+    } else if (_.isEmpty(this.state.formError.error) && (_.isEqual(this.props.defaultTeam, 'new') || _.isEqual(this.props.defaultTeam, 'delete'))) {
       //this.setState({teamSelectListDefault: 'new'});
       this.refs.teamName.value = '';
       this.refs.teamDesc.value = '';
@@ -134,7 +136,7 @@ var TeamForm = React.createClass({
         // ajax call
         teamApi.deleteTeam(JSON.stringify(team))
           .then(function(result) {
-            self.props.getSelectedTeam('delete');
+            self.props.getSelectedTeam('delete', 'You have successfully deleted the team.');
           })
           .catch(function(err) {
             var map = self.state.formError.map;
@@ -175,12 +177,7 @@ var TeamForm = React.createClass({
     };
     return (
       <div>
-        <p>
-          <label style={labelStyle} for='teamSelectList'>Create or select an existing team:<span class="ibm-required">*</span></label>
-            <span>
-              <TeamDropdown teamChangeHandler={this.props.teamChangeHandler} defaultTeam={this.props.defaultTeam}/>
-           </span>
-        </p>
+        <TeamDropdown teamChangeHandler={this.props.teamChangeHandler} defaultTeam={this.props.defaultTeam} selectedTeam={this.props.selectedTeam} />
         <TeamAccessMessage selectedTeam={this.props.selectedTeam} />
         <p>
           <label for="teamName">&nbsp;<span class="ibm-access">Team name:</span></label>

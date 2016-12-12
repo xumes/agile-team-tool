@@ -14,11 +14,13 @@ var defaultItem = {
   'isUserCreated': true,
   'componentName': '',
   'principleId':  null,
+  'practiceId': null,
+  'principleName': '',
   'practiceName': '',
   'improveDescription': '',
-  'currentLevel': '',
-  'targetLevel': '',
-  'progressComment': '',
+  'currentScore': '',
+  'targetScore': '',
+  'progressSummary': '',
   'keyMetric': '',
   'reviewDate': null,
   'actionStatus': 'Open'};
@@ -55,51 +57,45 @@ var ActionPlanComponent = React.createClass({
     }
   },
 
-  componentDidMount: function() {
+  componentWillReceiveProps: function() {
     var self = this;
     var userAllowed = false;
     api.isUserAllowed(this.props.teamId)
-    .then(function(allowed){
-      userAllowed = allowed;
-      return api.getAssessmentDetails(self.props.assessId);
-    })
-    .then(function(assessResult) {
-        var btnStateCopy = _.clone(btnState);
-        if (assessResult != null && userAllowed){
-          btnStateCopy.addDisabled = false;
-          if (assessResult.actionPlans.length > 0){
-            btnStateCopy.saveDisabled = false;
-            btnStateCopy.cancelDisabled = false;
-          }
+    .then(function(userAllowed){
+      var btnStateCopy = _.clone(btnState);
+      var assessResult = self.props.selectedAssessment;
+      if (assessResult != null && userAllowed){
+        btnStateCopy.addDisabled = false;
+        if (assessResult.actionPlans.length > 0){
+          btnStateCopy.saveDisabled = false;
+          btnStateCopy.cancelDisabled = false;
         }
-        self.filterData(assessResult);
-        var parameter = _.clone(self.state.itemParameter);
-        parameter.allowEdit = userAllowed;
-
-        self.setState({assessment: assessResult, btnState: btnStateCopy, itemParameter: parameter});
+      }
+      self.filterData(assessResult);
+      var parameter = _.clone(self.state.itemParameter);
+      parameter.allowEdit = userAllowed;
+      self.setState({assessment: assessResult, btnState: btnStateCopy, itemParameter: parameter});
     })
     .catch(function(err) {
-      return console.log(JSON.stringify(err));
+      console.log(JSON.stringify(err));
     });
   },
 
   resetActionPlan: function(){
     var self = this;
-    api.getAssessmentDetails(self.props.assessId)
-      .then(function(data){
-        if (confirm('Any unsaved data will be lost. Please confirm that you want to proceed with the reset.')){
-          self.executeReset(data);
+    if (confirm('Any unsaved data will be lost. Please confirm that you want to proceed with the reset.')){
+      var btnStateCopy = _.clone(btnState);
+      if (this.state.assessment != null && this.state.itemParameter.allowEdit){
+        btnStateCopy.addDisabled = false;
+        if (this.state.assessment.actionPlans.length > 0){
+          btnStateCopy.saveDisabled = false;
+          btnStateCopy.cancelDisabled = false;
         }
-      })
-      .catch(function(err){
-        console.log(JSON.stringify(err));
-      })
-  },
-
-  executeReset: function (actionPlan) {
-    var btnStateCopy = _.clone(btnState);
-    btnStateCopy.addDisabled = false;
-    this.setState({assessment: actionPlan, btnState:btnStateCopy});
+      }
+      btnStateCopy.addDisabled = false;
+      this.setState({btnState:btnStateCopy});
+      self.props.executeReset();
+    }
   },
 
   processActionPlan: function () {
@@ -107,7 +103,7 @@ var ActionPlanComponent = React.createClass({
     if (selected != null && selected != undefined) {
       var invalid = this.validateAction(selected);
       if (!invalid) {
-        this.submitActionPlan(selected, 'Action Plan item(s) saved successfully.');
+        this.props.submitActionPlan(selected, 'Action Plan item(s) saved successfully.');
       }
     }
   },
@@ -115,7 +111,7 @@ var ActionPlanComponent = React.createClass({
   validateAction: function (actions) {
     var hasError = false;
     var error = _.filter(this.state.assessment.actionPlans, function(item){
-      if (_.isNull(item.practiceId) || _.isEmpty(item.practiceId)){
+      if (_.isNull(item.practiceId)){
         return item;
       }
     });
@@ -127,44 +123,8 @@ var ActionPlanComponent = React.createClass({
     return hasError;
   },
 
-  submitActionPlan: function (data, msg) {
-    var self = this;
-    api.updateAssessment(data)
-    .then(function(result){
-      self.setState({assessment:result});
-      if (msg != null && msg != '')
-        self.showMessagePopup(msg);
-    })
-    .catch(function(err){
-      self.validationHandler(err);
-    });
-  },
-
   showMessagePopup: function(message) {
     alert(message);
-  },
-
-  validationHandler:function (errorResponse, operation) {
-    var self = this;
-    var errorlist = '';
-    var response = errorResponse.responseJSON;
-
-    if (response && response.error) {
-      var errors = response.error.errors;
-      if (errors){        
-        var popupMsg = '';
-        if (_.isObject(errors)) {
-          _.each(errors, function(err, attr) {
-            popupMsg += err.message + '<br>';
-          });
-        } else {
-          popupMsg = errors;
-        }
-        if (!_.isEmpty(popupMsg)) {
-          self.showMessagePopup(popupMsg);
-        }
-      }
-    }
   },
 
   deleteActionItems: function () {
@@ -199,32 +159,16 @@ var ActionPlanComponent = React.createClass({
     //cleanup empty rows
     var submit_data = _.filter(deleted, function(action){
       var result = false;
-      if (_.isNull(action.practiceId) || _.isEmpty(action.practiceId)){
-        result = true;
-      }
-      if(!result)
+      if (!_.isNull(action.practiceId)){
         return action;
+      }
     });
     deleteItems.actionPlans = submit_data;
     
-    this.submitActionPlan(deleteItems, 'Actions item(s) deleted successfully.');
+    this.props.submitActionPlan(deleteItems, 'Actions item(s) deleted successfully.');
     var btnStateCopy = _.clone(this.state.btnState);;
     btnStateCopy.deleteDisabled = true;
     this.setState({btnState: btnStateCopy});
-  },
-
-  getSelectedAssessment: function (assessmentList) {
-    var selectedAssessment = '';
-    if (assessmentList != null && assessmentList != undefined) {
-      for (var y = 0; y < assessmentList.length; y++) {
-        var assessmt = assessmentList[y];
-        if (assessmt._id == assessId) {
-          selectedAssessment = assessmt;
-          break;
-        }
-      }
-    }
-    return selectedAssessment;
   },
 
   deleteBtnControl: function () {
@@ -240,28 +184,25 @@ var ActionPlanComponent = React.createClass({
   filterData: function(assessment){
     var self = this;
     if(assessment != null){
-      var practicesCnt=0;
-      var principles = _.clone(this.state.principles);
+      var principleCnt=0;
+      var principles = [];
       _.each(assessment.componentResults, function(result, index){
         var assessedComponent = result.assessedComponents;
         _.each(assessedComponent, function(component){
           var obj = {};
-          obj.index = practicesCnt;
+          obj.index = principleCnt;
           obj.assessedComponent = component;
           obj.componentName = result.componentName;
-          practicesCnt++;
+          principleCnt++;
           principles.push(obj);
-          return obj;
         });
       });
-      this.setState({principles: principles});
-      self.storePractices();
+      self.storeOptions(principles);
     };
   },
 
-  storePractices: function () {
+  storeOptions: function (principles) {
     var list = [];
-    var principles = this.state.principles;
     var practices = [];
     if (principles != null) {
       for (var x = 0; x < principles.length; x++) {
@@ -273,7 +214,7 @@ var ActionPlanComponent = React.createClass({
       var parameter = _.clone(this.state.itemParameter);
       parameter.practices = practices;
       parameter.principles = principles;
-      this.setState({practices: practices, itemParameter: parameter});
+      this.setState({practices: practices, itemParameter: parameter, principles: principles});
     }
   },
 
@@ -283,18 +224,27 @@ var ActionPlanComponent = React.createClass({
       if( item.actionPlanId === itemId)
         return item;
     });
-    
-    var principle = _.find(this.state.principles, function(item){
-      if( item.index == practiceId)
-        return item;
-    });
 
-    item.practiceId = practiceId;
-    item.practiceName = principle.assessedComponent.practiceName;
-    item.principleId = principle.assessedComponent.principleId;
-    item.principleName = principle.assessedComponent.principleName;
-    item.currentScore = principle.assessedComponent.currentScore;        
-    item.targetScore = principle.assessedComponent.targetScore;
+    if (_.isEmpty(practiceId)){
+      item.practiceId = null;
+      item.practiceName = '';
+      item.principleId = null;
+      item.principleName = '';
+      item.currentScore = null;
+      item.targetScore = null;
+    }
+    else {
+      var principle = _.find(this.state.principles, function(item){
+        if( item.index == practiceId)
+          return item;
+        });
+      item.practiceId = parseInt(practiceId);
+      item.practiceName = principle.assessedComponent.practiceName;
+      item.principleId = parseInt(principle.assessedComponent.principleId);
+      item.principleName = principle.assessedComponent.principleName;
+      item.currentScore = parseInt(principle.assessedComponent.currentScore);        
+      item.targetScore = parseInt(principle.assessedComponent.targetScore);
+    }
 
     var btnState = _.clone(this.state.btnState);
     btnState.saveDisabled = false;
@@ -329,10 +279,10 @@ var ActionPlanComponent = React.createClass({
     }
     return (
       <div data-widget="showhide" data-type="panel" class="ibm-show-hide" id="actPlanContainer">
-        <h2 class="agile-summary" data-open="true">Action Plan</h2>
-        <div class="ibm-container-body">
-          <div class="auto-container">
-            <table class="ibm-data-table ibm-altrows ibm-col-1-1 action datatable-margin" summary="__REPLACE_ME__">
+        <h2 className="agile-summary" data-open="true">Action Plan</h2>
+        <div className="ibm-container-body">
+          <div className="auto-container">
+            <table className="ibm-data-table ibm-altrows ibm-col-1-1 action datatable-margin" summary="__REPLACE_ME__">
               <thead>
                 <tr>
                   <th id="selectCol"></th>
@@ -352,14 +302,13 @@ var ActionPlanComponent = React.createClass({
               </tbody>
             </table>
           </div>
-          <div class="ibm-btn-row btnRow">
-            <h3 class="floatLeft">*Note: there is a 350 character limit on entered text</h3>
+          <div className="ibm-btn-row btnRow">
+            <h3 className="floatLeft">*Note: there is a 350 character limit on entered text</h3>
             <input type="button" className="ibm-btn-sec ibm-btn-small" id="addActEntryBtn" value="Add action item"  disabled={this.state.btnState.addDisabled} onClick={this.addEmptyRow} />
             <input type="button" className="ibm-btn-sec ibm-btn-small" id="deleteActPlanBtn" value="Delete action item"  disabled={this.state.btnState.deleteDisabled} onClick={this.deleteActionItems}/>
             <input type="button" className="ibm-btn-pri ibm-btn-small" id="saveActPlanBtn" value="Save action plan"  disabled={this.state.btnState.saveDisabled} onClick={this.processActionPlan}/>
             <input type="button" className="ibm-btn-sec ibm-btn-small" id="cancelActPlanBtn" value="Reset action plan"  disabled={this.state.btnState.cancelDisabled} onClick={this.resetActionPlan}/>
           </div>
-          <div id="dialog" title="Confirmation Required" />
         </div>
       </div>
     );

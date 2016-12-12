@@ -4,9 +4,13 @@ var DeliveryComponent = React.createClass({
   render: function() {
     var displayType = this.props.displayType;
     var deliveryResultAry = this.props.deliveryResultAry;
+    if (deliveryResultAry.length > 0) {
+      var componentName = deliveryResultAry[0]['props']['assessed_cmpnt'].componentName;
+    }
+
     return (
       <div data-widget="showhide" data-type="panel" class="ibm-show-hide" id="delContainer" style={displayType} >
-        <h2 class="agile-summary" data-open="true" id="assessId_1"></h2>
+        <h2 class="agile-summary" data-open="true" id="assessId_1"><a href="javascript:void();" class="ibm-show-active">{componentName}</a></h2>
         <div class="ibm-container-body" id="assessContainer_1">
           <div class="ibm-columns">
             <div class="ibm-col-2-1">

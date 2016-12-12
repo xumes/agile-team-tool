@@ -427,7 +427,7 @@ var IterationExport = {
           data['updatedBy'] = userInfo.email;
           data['updatedByUserId'] = userInfo.userId;
           data['status'] = IterationExport.calculateStatus(data);
-          return Iteration.where({'_id': docId}).update({'$set':data});
+          return Iteration.where({'_id': docId}).update({},{'$set':data}, {runValidators:true});
         }
       })
       .then(function(result){

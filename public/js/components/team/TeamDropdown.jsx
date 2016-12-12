@@ -26,24 +26,21 @@ var TeamDropdown = React.createClass({
       });
   },
   componentWillReceiveProps: function(newProps) {
-    var team = _.find(this.state.teamNames, function(team) {
-        return team._id == newProps.defaultTeam;
-      });
-    if (_.isEmpty(team) || _.isEqual(newProps.defaultTeam, 'delete')) {
-      if (_.isEqual(newProps.defaultTeam, 'delete'))
-        alert('You have successfully deleted the team.');
-      this.getTeamNames();
-    }
+    this.getTeamNames();
   },
   componentDidUpdate(prevProps, prevState) {
     if (_.isEqual(this.props.defaultTeam, 'delete'))
       this.refs.teamSelectList.value = 'new';
     else
       this.refs.teamSelectList.value = this.props.defaultTeam;
+    $(this.refs.teamSelectList).select2();
   },
   render: function() {
+    var labelStyle = {
+      'lineHeight': '20px',
+    };
     var teamSelectListStyle = {
-      'minWidth': '400px'
+      'width': '400px'
     };
     var populateTeamNames = this.state.teamNames.map(function(item) {
       return (
@@ -51,10 +48,15 @@ var TeamDropdown = React.createClass({
       )
     });
     return (
-      <select defaultValue={this.props.defaultTeam} id="teamSelectList"  name="teamSelectList" ref='teamSelectList' style={teamSelectListStyle} >
-        <option value="new">Create new...</option>
-        {populateTeamNames}
-      </select>
+      <p>
+        <label style={labelStyle} for='teamSelectList'>Create or select an existing team:<span class="ibm-required">*</span></label>
+          <span>
+            <select defaultValue={this.props.defaultTeam} id="teamSelectList"  name="teamSelectList" ref='teamSelectList' style={teamSelectListStyle} >
+              <option value="new">Create new...</option>
+              {populateTeamNames}
+            </select>
+         </span>
+      </p>
     )
   }
 });

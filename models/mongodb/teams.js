@@ -2,6 +2,7 @@
 var _ = require('underscore');
 var Promise = require('bluebird');
 var mongoose = require('mongoose');
+var crypto = require('crypto');
 var Schema   = mongoose.Schema;
 var Users = require('./users');
 var Iterations = require('./iterations');
@@ -177,8 +178,6 @@ TeamSchema.path('pathId').validate(function(value, done) {
 }, 'This team name is too similar to another team. Please enter a different team name.');
 
 
-
-
 /*
   model helper functions
 */
@@ -196,8 +195,61 @@ var getAllUniquePaths = function(){
 
 var createPathId = function(teamName) {
   teamName = teamName || '';
-  return  teamName.toLowerCase().replace(/[^a-z1-9]/g, '');
+  return  teamName.toLowerCase().replace(/[^a-z0-9]/g, '')+'-'+crypto.randomBytes(2).toString('hex');
 };
+
+// //********** BEGIN UNCOMMENT THIS SECTION IF WE NEED pathId IN-SYNC WITH ACTUAL TEAM NAME **********************
+// var updateTeamPathIds = function(currPath, oldPathId, newPathId) {
+//   return new Promise(function(resolve, reject) {
+//     if (!_.isEqual(oldPathId, newPathId)) {
+//       var oldParentPath = null;
+//       var newParentPath = null;
+//       if (currPath == null) {
+//         oldParentPath = ',' + oldPathId + ',';
+//         newParentPath = ',' + newPathId + ',';
+//       } else {
+//         oldParentPath = currPath + oldPathId + ',';
+//         newParentPath = currPath + newPathId + ',';
+//       }
+//       var query = {
+//         'path' : {
+//           '$regex' : oldPathId
+//         }, docStatus:{$ne:'delete'}
+//       };
+//       var promiseArray = [];
+//       var currentTeam = null;
+//       promiseArray.push(Team.findOne({pathId: newPathId, docStatus:{$ne:'delete'}}));
+//       promiseArray.push(Team.find(query));
+//       Promise.all(promiseArray)
+//         .then(function(results) {
+//           currentTeam = results[0];
+//           var teams = results[1];
+//           var promiseArray = [];
+//           _.each(teams, function(team){
+//             var updateTeamDoc = {};
+//             var tid = team._id;
+//             var tpath = team.path;
+//             if (_.isEmpty(tpath)) {
+//               tpath = null;
+//             } else {
+//               tpath = tpath.replace(oldParentPath, newParentPath);
+//             }
+//             updateTeamDoc.path = tpath;
+//             console.log(tid,tpath);
+//             promiseArray.push(Team.update({'_id': tid}, {'$set': updateTeamDoc}));
+//           });
+//           return Promise.all(promiseArray);
+//         })
+//         .then(function(results) {
+//           resolve(currentTeam);
+//         })
+//         .catch(function(err) {
+//           reject(err);
+//         })
+//     }
+//   });
+// };
+// // //********** END UNCOMMENT THIS SECTION IF WE NEED pathId IN-SYNC WITH ACTUAL TEAM NAME **********************
 
 // var getChildren = function(pathId) {
 //   if (_.isEmpty(pathId)) return [];
@@ -802,21 +854,33 @@ module.exports.getTeamsByUserId = function(uid, proj) {
 module.exports.getUserTeamsByUserId = function(uid) {
   return new Promise(function(resolve, reject){
     Team.find({members: {$elemMatch:{userId:uid}}, docStatus:{$ne:'delete'}}, {pathId:1})
+      // .then(function(teams){
+      //   var pathIds = _.pluck(teams, 'pathId');
+      //   //build a query string to match all, ex: a|b|c to query for all docs with
+      //   //paths a or b or c
+      //   var q = '';
+      //   _.each(pathIds, function(pId){
+      //     q += pId + '|';
+      //   });
+      //   q = q.slice(0, -1); //remove last |
+      //   return q;
+      // })
+      // .then(function(q){
+      //   if (q==='') resolve([]);//prevent matching on ''
+      //   return Team.distinct('_id', {'$or':[{path:new RegExp(q)}, {pathId:new RegExp(q)}]}).exec();
+      // })
       .then(function(teams){
-        var pathIds = _.pluck(teams, 'pathId');
-
-        //build a query string to match all, ex: a|b|c to query for all docs with
-        //paths a or b or c
-        var q = '';
-        _.each(pathIds, function(pId){
-          q += pId + '|';
-        });
-        q = q.slice(0, -1); //remove last |
-        return q;
+        return _.pluck(teams, 'pathId');
       })
-      .then(function(q){
-        if (q==='') resolve([]);//prevent matching on ''
-        return Team.distinct('_id', {'$or':[{path:new RegExp(q)}, {pathId:new RegExp(q)}]}).exec();
+      .then(function(pathIds){
+        if (_.isEmpty(pathIds)) resolve([]);//prevent matching on ''
+        var orPaths = [];
+        var orPathIds = [];
+        _.each(pathIds, function(pId) {
+          orPaths.push({path: new RegExp(','+pId+',')});
+          orPathIds.push({pathId: pId});
+        });
+        return Team.distinct('_id', {'$or': _.union(orPaths, orPathIds)}).exec();
       })
       .then(function(result){
         resolve(result);
@@ -982,7 +1046,6 @@ A->B
 D->E
 X->Y->Z
 All affected team that had a path relation to C, will have to be _.isEmpty(teamDoc) || updated.teamDoc._id*/
-
 module.exports.updateTeam = function(teamDoc, user) {
   return new Promise(function(resolve, reject) {
     var updatedDoc = {};
@@ -992,7 +1055,11 @@ module.exports.updateTeam = function(teamDoc, user) {
     var teamId = teamDoc._id;
     var userId = user ? user['ldap']['uid'].toUpperCase() : '';
     var userEmail = user ? user['shortEmail'].toLowerCase() : '';
+    var oldPathId = '';
+    var newPathId = createPathId(teamDoc.name);
+    var parentPath = null;
     updatedDoc.name = teamDoc.name;
+    updatedDoc.pathId = newPathId;
     updatedDoc.description = teamDoc.description;
     updatedDoc.type = teamDoc.type;
     updatedDoc.updatedByUserId = userId;
@@ -1002,6 +1069,13 @@ module.exports.updateTeam = function(teamDoc, user) {
       .then(function(result){
         if (!result) {
           return Promise.reject({'error':'User is not allowed to modify team.'});
+        }
+        if (_.isEmpty(updatedDoc.name)) {
+          return Promise.reject({
+            errors: {
+              name: {message:'This team name is required.'}
+            }
+          });
         }
         var promiseArray = [];
         promiseArray.push(self.getTeam(teamId));
@@ -1015,6 +1089,8 @@ module.exports.updateTeam = function(teamDoc, user) {
         var hasChildren = results[1];
         var hasIterations = results[2];
         var hasAssessments = results[3];
+        oldPathId = team.pathId;
+        parentPath = team.path;
         if (updatedDoc.type == 'squad' && team.type == null && hasChildren)
           return Promise.reject({
             errors: {
@@ -1030,13 +1106,18 @@ module.exports.updateTeam = function(teamDoc, user) {
         return Team.findByIdAndUpdate({'_id': teamId}, {'$set': updatedDoc}, {new:true}).exec();
       })
       .then(function(result){
-        resolve(result);
+        // //********** BEGIN UNCOMMENT THIS SECTION IF WE NEED pathId IN-SYNC WITH ACTUAL TEAM NAME **********************
+        // if (!_.isEqual(oldPathId, newPathId))
+        //   resolve (updateTeamPathIds(parentPath, oldPathId, newPathId, user));
+        // else
+        // //********** END UNCOMMENT THIS SECTION IF WE NEED pathId IN-SYNC WITH ACTUAL TEAM NAME **********************
+        resolve (result);
       })
       .catch( /* istanbul ignore next */ function(err){
         if (err.name === 'MongoError' && err.code === 11000)
           reject({
             errors: {
-              name: {message:'This team name already exists. Please enter a different team name.'}
+              name: {message:'This team name already exists or is too similar to another team. Please enter a different team name.'}
             }
           });
         else
