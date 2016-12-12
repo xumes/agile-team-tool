@@ -40,10 +40,10 @@ var AssessmentActiveTemplates2 = React.createClass({
               var targLevelId = assessedComponent.targetScore - 1;
               var currLevelName = assessedComponent.currentLevelName;
               var targLevelName = assessedComponent.targetLevelName;
-              currAssessId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_td_curr_' + currLevelId;
-              targAssessId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_td_targ_' + targLevelId;
-              levelLabelId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_ans';
-              textAreaId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_action';
+              var currAssessId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_td_curr_' + currLevelId;
+              var targAssessId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_td_targ_' + targLevelId;
+              var levelLabelId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_ans';
+              var textAreaId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_action';
               $('#' + currAssessId + ' .iradio_square-blue.curr').addClass('checked');
               $('#' + targAssessId + ' .iradio_square-blue.targ').addClass('checked');
               $('#' + levelLabelId).html('Current: ' + currLevelName + ' | Target: ' + targLevelName);

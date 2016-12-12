@@ -13,7 +13,7 @@ module.exports.teamAssessmentListHander = function(teamId, teamAssessments, team
   for (var i = 0; i < listOption.length; i++) {
     if (listOption[i][1].toLowerCase().indexOf('draft') > -1) {
       draftExist = true;
-      draftAssesID = listOption[i][0];
+      var draftAssesID = listOption[i][0];
       break;
     }
   }
