@@ -29,7 +29,8 @@ module.exports = {
           presets: ['react', 'es2015'],
           plugins: ['react-html-attrs']
         }
-      }
+      },
+      { test: /\.svg$/, loader: 'svg-inline'}
     ]
   },
   plugins: [
