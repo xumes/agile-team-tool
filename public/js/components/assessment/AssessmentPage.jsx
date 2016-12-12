@@ -43,6 +43,12 @@ var AssessmentPage = React.createClass({
         $('select[name=\'teamSelectList\']').val(teamId).change();
       },1000);
     }
+    if (assessId != null) {
+      setTimeout(function(){
+        console.log('aaaaa:', assessId);
+        $('select[name=\'assessmentSelectList\']').val(assessId).change();
+      },1500);
+    }
   },
 
   teamChangeHandler: function(e, tId, sId) {
