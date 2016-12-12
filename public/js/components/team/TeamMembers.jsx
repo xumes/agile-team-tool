@@ -318,7 +318,7 @@ var TeamMembers = React.createClass({
     self.state.teamMembers = _.sortBy(self.state.teamMembers, function(m){
       return m.name.toLowerCase();
     });
-    teamMemberList = self.state.teamMembers.map(function(member){
+    var teamMemberList = self.state.teamMembers.map(function(member){
       var userMember = _.find(self.state.userMembers, function(um){
         if (um.userId == member.userId) {
           return um;
