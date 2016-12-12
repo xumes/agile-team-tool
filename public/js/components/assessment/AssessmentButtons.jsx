@@ -15,6 +15,12 @@ var AssessmentButtons = React.createClass({
     var software = $('#softwareYesNo').val();
     //var assessId = self.props.assessmentStatus.assessId;
     var teamId = $('select[name=\'teamSelectList\']').val();
+    var submittedDate = $('#submitDatePicker').val();
+    if ($('#submitDatePicker').val() == '') {
+      var submittedDate = ''
+    } else {
+      submittedDate = new Date(submittedDate);
+    }
     var updateDoc = {
       'assessmentStatus' : 'Submitted',
       'version' : newestTemplateVersion,
@@ -22,7 +28,8 @@ var AssessmentButtons = React.createClass({
       'deliversSoftware' : false,
       'componentResults' : [],
       'actionPlans': [],
-      'teamId': teamId
+      'teamId': teamId,
+      'submittedDate': submittedDate
     }
     var objectLength = 0;
     var checkedIsEmpty = false;
@@ -57,11 +64,12 @@ var AssessmentButtons = React.createClass({
     }
     req.then(function(result){
       alert('Maturity assessment has been submitted.');
-      if (_.isEmpty(self.props.assessment.assessment)) {
-        $('select[name=\'teamSelectList\']').val(self.props.assessment.teamId).change();
-      } else {
-        $('select[name=\'teamSelectList\']').val(self.props.assessment.teamId).change();
-      }
+      $('select[name=\'teamSelectList\']').val(self.props.assessment.teamId).change();
+      setTimeout(function(){
+        console.log(result._id);
+        $('select[name=\'assessmentSelectList\']').val(result._id).change();
+      },1500);
+
       return;
     }).catch(function(err){
       alert(err);
@@ -121,7 +129,11 @@ var AssessmentButtons = React.createClass({
   },
 
   cancelAssessment: function() {
-    $('select[name="assessmentSelectList"]').val(this.props.assessment.assessment._id).change();
+    if (this.props.assessment.assessment._id == null) {
+      $('select[name="assessmentSelectList"]').val('n').change();
+    } else {
+      $('select[name="assessmentSelectList"]').val(this.props.assessment.assessment._id).change();
+    }
     alert('Current changes have been cancelled.');
   },
 
@@ -130,18 +142,23 @@ var AssessmentButtons = React.createClass({
     if (_.isEmpty(self.props.assessment.assessment) || self.props.assessment.assessment.assessmentStatus != 'Draft') {
       alert('This assessment cannot be deleted.');
     } else {
-      api.deleteAssessment(self.props.assessment.assessment._id)
-        .then(function(result){
-          // $('select[name="assessmentSelectList"] option[value=' + self.props.assessmentStatus.assessId + ']').remove();
-          // $('select[name="assessmentSelectList"]').val('').change();
-          $('select[name=\'teamSelectList\']').val(self.props.assessment.teamId).change();
-          alert('Your assessment has been deleted.');
-          return;
-        })
-        .catch(function(err){
-          console.log(err);
-          return;
-        });
+      if(confirm('You have requested to delete this draft assessment.  All saved progress will be deleted. Please confirm that you want to proceed with this delete.')){
+        api.deleteAssessment(self.props.assessment.assessment._id)
+          .then(function(result){
+            // $('select[name="assessmentSelectList"] option[value=' + self.props.assessmentStatus.assessId + ']').remove();
+            // $('select[name="assessmentSelectList"]').val('').change();
+            $('select[name=\'teamSelectList\']').val(self.props.assessment.teamId).change();
+            alert('Your assessment has been deleted.');
+            return;
+          })
+          .catch(function(err){
+            console.log(err);
+            return;
+          });
+      }
+      else{
+        return false;
+      }
     }
   },
 

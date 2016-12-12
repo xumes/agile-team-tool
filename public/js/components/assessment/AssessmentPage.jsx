@@ -45,7 +45,6 @@ var AssessmentPage = React.createClass({
     }
     if (assessId != null) {
       setTimeout(function(){
-        console.log('aaaaa:', assessId);
         $('select[name=\'assessmentSelectList\']').val(assessId).change();
       },1500);
     }
