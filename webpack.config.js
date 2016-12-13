@@ -1,6 +1,6 @@
-const Webpack = require('webpack');
-const path = require('path');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+var Webpack = require('webpack');
+var path = require('path');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -26,7 +26,7 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel-loader',
         query: {
-          presets: ['react', 'es2015'],
+          presets: ['react'],
           plugins: ['react-html-attrs']
         }
       }

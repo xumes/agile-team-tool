@@ -88,7 +88,7 @@ var TeamAssessment = React.createClass({
                 <tr key={assessmentId} id={assessmentId}>
                   <td></td>
                   <td>
-                    <a style={{'textDescription': 'underline', 'color': 'black'}} href={`/assessment?id=${self.props.selectedTeam.team._id}&assessId=${assessment._id}`}>{displayDate}</a>
+                    <a style={{'textDescription': 'underline', 'color': 'black'}} href={'/assessment?id=' + self.props.selectedTeam.team._id + '&assessId=' + assessment._id}>{displayDate}</a>
                   </td>
                   <td>{status}</td>
                   <td>{updateBy}</td>
@@ -100,7 +100,7 @@ var TeamAssessment = React.createClass({
                 <tr key={assessmentId} id={assessmentId} style={{'display':'none'}}>
                   <td></td>
                   <td>
-                    <a style={{'textDescription': 'underline', 'color': 'black'}} href={`/assessment?id=${self.props.selectedTeam.team._id}&assessId=${assessment._id}`}>{displayDate}</a>
+                    <a style={{'textDescription': 'underline', 'color': 'black'}} href={'/assessment?id=' + self.props.selectedTeam.team._id + '&assessId=' + assessment._id}>{displayDate}</a>
                   </td>
                   <td>{status}</td>
                   <td>{updateBy}</td>

@@ -89,6 +89,7 @@ var HomeTeamInfo = React.createClass({
         teamMemNumber = 0;
         teamFTE = 0;
       }
+      var teamHref = '/team?id=' + team._id;
       return (
         <div>
           <div>
@@ -107,7 +108,7 @@ var HomeTeamInfo = React.createClass({
                 </td>
                 <td>
                   <p>
-                    <a class='wlink' href={`/team?id=${team._id}`} title='Manage team information'>{teamName}</a>
+                    <a class='wlink' href={teamHref} title='Manage team information'>{teamName}</a>
                   </p>
                 </td>
               </tr>
