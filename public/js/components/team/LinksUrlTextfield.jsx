@@ -22,7 +22,7 @@ var LinksUrlTextfield = React.createClass({
     if (hasAccess !== undefined && !hasAccess) $('#url_'+id).val(linkUrl);
     return (
       <div>
-        <input type='text' name='url_[]' id={'url_' + id} key={'input-' + idx + '-id'} data-id={id} defaultValue={linkUrl} data-counter={id} placeholder='URL' size='60' class='implink' onChange={self.props.onEditmodeLink} />
+        <input type='text' name='url_[]' id={'url_' + id} key={'input-' + idx + '-' + id} data-id={id} defaultValue={linkUrl} data-counter={id} placeholder='URL' size='60' class='implink' onChange={self.props.onEditmodeLink} />
       </div>
     );
   }

@@ -92,7 +92,7 @@ var LoadLinkData = React.createClass({
               linkUrl={linkUrl} data-counter={idx} onEditmodeLink={self.onEditmodeLink} />
 
             {/* display update, cancel & delete icon button */}
-            <LinksButtonCtl row={row} key={'btnctl-' + 'idx' + '-' + id}
+            <LinksButtonCtl row={row} key={'btnctl-' + idx + '-' + id}
               data-counter={id}
               action='onEdit'
               getOnEditModeLinkIds={self.getOnEditModeLinkIds}
