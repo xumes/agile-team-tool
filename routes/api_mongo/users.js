@@ -73,6 +73,15 @@ module.exports = function(app, includes) {
     }
   };
 
+  getActiveUserInfo = function(req, res) {
+      Users.getUsersInfo(req.session.userId)
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch(function(err) {
+        res.status(404).send(err);
+      });
+  };
 
   // //TODO: Refactor this and store in the database
   // getRoles = function(req, res) {
@@ -119,4 +128,5 @@ module.exports = function(app, includes) {
   // app.get('/api/users/roles', [includes.middleware.auth.requireLogin], getRoles);
 
   app.post('/api/users/info', [includes.middleware.auth.requireLogin], getUsersInfo);
+  app.get('/api/users/activeInfo', [includes.middleware.auth.requireLogin], getActiveUserInfo);
 };
