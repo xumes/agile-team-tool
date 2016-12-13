@@ -4,7 +4,7 @@ var mocha = require('gulp-mocha');
 var eslint   = require('gulp-eslint');
 
 gulp.task('lint', function() {
-  return gulp.src(['**/*.js', '!node_modules/**', '!models/mongodb/data/**', '!mongo_scripts/**', '!public/lib/**/*.js'])
+  return gulp.src(['**/*.js', '!node_modules/**', '!models/mongodb/data/**', '!mongo_scripts/**', '!public/lib/**/*.js', '!bundle.js', '!webpack.config.js'])
     .pipe(eslint({
       useEslintrc: true,
       envs: ['node', 'mocha']
