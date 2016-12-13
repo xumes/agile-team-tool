@@ -3,9 +3,10 @@ var React = require('react');
 var ProjectComponent = React.createClass({
 
   render: function() {
+    var componentName = '';
     var resultBodyAry = this.props.resultBodyAry;
     if (resultBodyAry.length > 0) {
-      var componentName = resultBodyAry[0]['props']['assessed_cmpnt'].componentName;
+      componentName = resultBodyAry[0]['props']['assessed_cmpnt'].componentName;
     }
 
     return (
