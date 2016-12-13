@@ -12,7 +12,8 @@ var HomePage = React.createClass({
       searchTeamSelected: '',
       selectedTeam: '',
       newTeams: new Object(),
-      loadDetailTeam: new Object()
+      loadDetailTeam: new Object(),
+      selectedIter: ''
     }
   },
 
@@ -24,6 +25,10 @@ var HomePage = React.createClass({
   },
   searchTeamSelectedChanged: function(teamId) {
     this.setState({'searchTeamSelected': teamId});
+  },
+
+  iterChangeHandler: function(e) {
+    this.setState({'selectedIter': e.target.value.toString()});
   },
 
   loadDetailTeamChanged: function(team) {
@@ -40,7 +45,7 @@ var HomePage = React.createClass({
       $('#mainContent').css('left', '0');
       $('#hideNavBtn').show();
     }
-    this.setState({'loadDetailTeam': team});
+    this.setState({'loadDetailTeam': team, 'selectedIter': ''});
   },
 
   searchStart: function() {
@@ -154,7 +159,7 @@ var HomePage = React.createClass({
             <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler}/>
           </div>
           <div id='iterContent' class='ibm-col-6-2' style={sectionOneStyle}>
-            <HomeIterContent loadDetailTeam={this.state.loadDetailTeam} />
+            <HomeIterContent loadDetailTeam={this.state.loadDetailTeam} selectedIter={this.state.selectedIter} iterChangeHandler={this.iterChangeHandler}/>
           </div>
         </div>
         <div id='homeNavShowBtnDiv' class='home-nav-show-btn-div'>

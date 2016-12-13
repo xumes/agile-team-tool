@@ -856,3 +856,177 @@ body {
   background-color: #FFFFFF;
   border-top: 1px solid #C7C7C7
 }
+
+#iterContent > div {
+  height: 100%;
+}
+
+.home-iter-title {
+  position: relative;
+  left: 5%;
+  float: left;
+  top: 4%;
+  width: 90%;
+  height: 2%;
+  font-family: "HelvNeue Light for IBM";
+  font-size: 2.5em;
+  color: #734098;
+}
+
+.home-no-iter-info {
+  position: relative;
+  left: 5%;
+  float: left;
+  top: 5%;
+  width: 90%;
+  height: 2%;
+  font-family: "HelvNeue Light for IBM";
+  font-size: 2.0em;
+  color: #000000;
+}
+
+
+.home-iter-selection-block {
+  position: relative;
+  left: 5%;
+  float: left;
+  top: 4%;
+  width: 90%;
+  height: 3%;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.6em;
+}
+
+.home-iter-selection-block > select {
+  position: relative;
+  width: 80%;
+  height: 100%;
+}
+
+.home-iter-last-update-block {
+  position: relative;
+  left: 5%;
+  float: left;
+  top: 4%;
+  width: 90%;
+  height: 3%;
+}
+
+.home-iter-last-update-title {
+  position: relative;
+  height: 100%;
+  width: 40%;
+  display: inline-block;
+  float: left;
+  font-family: "Helvetica Neue LT W1G";
+  font-size: 1.6em;
+  line-height: 1.8em;
+  color: #323232;
+}
+
+.home-iter-last-update {
+  position: relative;
+  top: 15%;
+  height: 85%;
+  width: 40%;
+  display: inline-block;
+  float: right;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.3em;
+  text-align: right;
+  line-height: 1.6em;
+  color: #5A5A5A;
+}
+
+.home-iter-sprint-block {
+  position: relative;
+  top: 5%;
+  left: 5%;
+  width: 90%;
+  height: 8%;
+  float: left;
+}
+
+.home-iter-throughput-block {
+  position: relative;
+  top: 7%;
+  left: 5%;
+  width: 90%;
+  height: 7%;
+  float: left;
+}
+
+.home-iter-velocity-block {
+  position: relative;
+  top: 9%;
+  left: 5%;
+  width: 90%;
+  height: 8%;
+  float: left;
+}
+
+.home-iter-defects-block {
+  position: relative;
+  top: 11%;
+  left: 5%;
+  width: 90%;
+  height: 8%;
+  float: left;
+}
+
+.home-iter-cyclage-block {
+  position: relative;
+  top: 13%;
+  left: 5%;
+  width: 90%;
+  height: 5.5%;
+  float: left;
+}
+
+.home-iter-overal-block {
+  position: relative;
+  top: 15%;
+  left: 5%;
+  width: 90%;
+  height: 5.5%;
+  float: left;
+}
+
+.home-iter-comment-block {
+  position: relative;
+  top: 17%;
+  left: 5%;
+  width: 90%;
+  height: 15%;
+  float: left;
+}
+
+.home-iter-content-title {
+  position: relative;
+  width: 100%;
+  float: left;
+  font-family: "HelvNeue Medium for IBM";
+  font-size: 1.6em;
+  line-height: 1.9em;
+  color: #5A5A5A;
+}
+
+.home-iter-content-sub {
+  position: relative;
+  width: 70%;
+  float: left;
+  display: inline-block;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.6em;
+  text-align: left;
+  line-height: 1.6em;
+  color: #777677;
+}
+
+.home-iter-comment-test {
+  width: 100%;
+  height: 80%;
+  resize: none;
+  border: 1px solid #979797;
+  background-color: #FFFFFF;
+}
