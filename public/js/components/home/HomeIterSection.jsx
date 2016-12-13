@@ -58,7 +58,7 @@ var HomeIterSection = React.createClass({
       <div data-widget='showhide' data-type='panel' class='ibm-show-hide' id='iterationSection'>
         <HomeSnapshotPull />
         <h2 class='agile-section-title ibm-showing' data-open='true' id='agile-section-title'>
-          <a href='#show-hide' class='ibm-show-active' title='Expand/Collapse' onClick={()=>this.expandCollapseSection('iterationSection')}>
+          <a href='#show-hide' class='ibm-show-active' title='Expand/Collapse' onClick={this.expandCollapseSection.bind(null, 'iterationSection')}>
             Iteration trends
           </a>
         </h2>

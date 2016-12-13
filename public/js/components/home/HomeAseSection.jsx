@@ -52,7 +52,7 @@ var HomeAseSection = React.createClass({
     return (
       <div data-widget='showhide' data-type='panel' class='ibm-show-hide' id='assessmentSection'>
         <h2 class='agile-section-title ibm-showing' data-open='true' id='agile-section-title'>
-          <a href='#show-hide' class='ibm-show-active' onClick={()=>this.expandCollapseSection('assessmentSection')}>
+          <a href='#show-hide' class='ibm-show-active' onClick={this.expandCollapseSection.bind(null, 'assessmentSection')}>
             Maturity assessment trends
           </a>
         </h2>

@@ -16,7 +16,7 @@ var AssessmentTemplatePractice = React.createClass({
         count ++ ;
         return (
           <li key={practiceId} id={practiceId} data-open='true' class='ibm-active'>
-            <a class='ibm-twisty-trigger' style={{'cursor':'pointer'}} onClick={()=>self.props.expandComponent(practiceId)}>
+            <a class='ibm-twisty-trigger' style={{'cursor':'pointer'}} onClick={self.props.expandComponent.bind(null, practiceId)}>
               {practice.name}
               <span id={practiceAnsId}>Not answered</span>
             </a>
