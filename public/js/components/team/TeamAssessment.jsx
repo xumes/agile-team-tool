@@ -82,13 +82,17 @@ var TeamAssessment = React.createClass({
             var status = assessment.assessmentStatus;
             var displayDate = _.isEqual(status,'Submitted') ? moment(assessment.submittedDate).format('DDMMMYYYY') : moment(assessment.createDate).format('DDMMMYYYY');
             var updateBy = assessment.updatedBy;
+            var teamId = self.props.selectedTeam.team._id;
+            var assessId = assessment._id;
+            var assessLink = _.isEqual(status,'Submitted') ? '/progress' : '/assessment'
+            assessLink = assessLink+'?id='+teamId+'&assessId='+assessId;
             if (count < 5) {
               count++;
               return (
                 <tr key={assessmentId} id={assessmentId}>
                   <td></td>
                   <td>
-                    <a style={{'textDescription': 'underline', 'color': 'black'}} href={'/assessment?id=' + self.props.selectedTeam.team._id + '&assessId=' + assessment._id}>{displayDate}</a>
+                    <a style={{'textDescription': 'underline', 'color': 'black'}} href={assessLink} >{displayDate}</a>
                   </td>
                   <td>{status}</td>
                   <td>{updateBy}</td>
@@ -100,7 +104,7 @@ var TeamAssessment = React.createClass({
                 <tr key={assessmentId} id={assessmentId} style={{'display':'none'}}>
                   <td></td>
                   <td>
-                    <a style={{'textDescription': 'underline', 'color': 'black'}} href={'/assessment?id=' + self.props.selectedTeam.team._id + '&assessId=' + assessment._id}>{displayDate}</a>
+                    <a style={{'textDescription': 'underline', 'color': 'black'}} href={assessLink}>{displayDate}</a>
                   </td>
                   <td>{status}</td>
                   <td>{updateBy}</td>
