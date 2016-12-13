@@ -56,15 +56,6 @@ var HomeIterSection = React.createClass({
     };
     return (
       <div data-widget='showhide' data-type='panel' class='ibm-show-hide' id='iterationSection'>
-        {/*
-          <HomeSnapshotPull />
-          <h2 class='agile-section-title ibm-showing' data-open='true' id='agile-section-title'>
-          <a href='#show-hide' class='ibm-show-active' title='Expand/Collapse' onClick={()=>this.expandCollapseSection('iterationSection')}>
-            Iteration trends
-          </a>
-        </h2>
-        <HomeFallBox component={iterationFallBoxComponents}/>
-        */}
         <HomeFallBox component={iterationFallBoxComponents}/>
         <div style={{'height':'100%'}} class='ibm-container-body'>
           <div id='nsquad_team_scard' style={{'display':'none', 'height':'100%'}}>

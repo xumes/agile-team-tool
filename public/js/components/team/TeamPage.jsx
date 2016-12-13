@@ -19,7 +19,7 @@ var TeamPage = React.createClass({
     var id =  _.isEmpty(urlParams) || _.isEmpty(urlParams.id) ? 'new' : urlParams.id;
     return {
       defaultTeam: id,
-      selectedTeam: new Object(),
+      selectedTeam: {},
       teamInfoVisible: false,
       selectedLinkLabel: ''
     }
@@ -79,11 +79,11 @@ var TeamPage = React.createClass({
       if (teamId == 'new' || teamId == 'delete') {
         return resolve({
           defaultTeam: teamId,
-          selectedTeam: new Object(),
+          selectedTeam: {},
           teamInfoVisible: false
         });
       } else {
-        var teamResult = new Object();
+        var teamResult = {};
         var isSquad = false;
         api.loadTeam(teamId)
         .then(function(team){

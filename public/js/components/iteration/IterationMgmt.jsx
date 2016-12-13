@@ -56,8 +56,8 @@ var IterationMgmt = React.createClass({
   },
 
   startDateChange: function(date){
-    var selectedStartDate = moment(date);
-    var selectedEndDate = moment(this.refs.iterationEndDate.selected);
+    var selectedStartDate = moment.utc(date);
+    var selectedEndDate = moment.utc(this.refs.iterationEndDate.selected);
     if (selectedStartDate.diff(selectedEndDate) < 0) {
       this.props.clearError('iterationStartDate');
       this.props.clearError('iterationEndDate');
@@ -73,8 +73,8 @@ var IterationMgmt = React.createClass({
   },
 
   endDateChange: function(date){
-    var selectedStartDate = moment(this.refs.iterationStartDate.selected);
-    var selectedEndDate = moment(date);
+    var selectedStartDate = moment.utc(this.refs.iterationStartDate.selected);
+    var selectedEndDate = moment.utc(date);
     if (selectedEndDate.diff(selectedStartDate) > 0) {
       this.props.clearError('iterationStartDate');
       this.props.clearError('iterationEndDate');
@@ -89,7 +89,7 @@ var IterationMgmt = React.createClass({
   defaultDate: function(date){
     var result = null;
     if (!_.isNull(date) && !_.isEmpty(date)){
-      result = moment(date);
+      result = moment.utc(date);
     }
     return result;
   },
@@ -233,13 +233,13 @@ var IterationMgmt = React.createClass({
           <div>
             <label style={labelStyle} for='iterationStartDate'>Iteration start date:<span className='ibm-required'>*</span></label>
             <span>
-              <DatePicker selected={this.props.iteration.startDate != null? moment(this.props.iteration.startDate):null} readOnly dateFormat='DDMMMYYYY' onChange={this.startDateChange} name='iterationStartDate' id='iterationStartDate' size='44' disabled={!this.props.enableFields} placeholderText='Iteration start date' className='iterationField-2' ref='iterationStartDate'/>
+              <DatePicker selected={this.props.iteration.startDate != null? moment.utc(this.props.iteration.startDate):null} readOnly dateFormat='DDMMMYYYY' onChange={this.startDateChange} name='iterationStartDate' id='iterationStartDate' size='44' disabled={!this.props.enableFields} placeholderText='Iteration start date' className='iterationField-2' ref='iterationStartDate'/>
             </span>
           </div>
           <div>
             <label for='iterationEndDate' style={labelStyle2}>Iteration end date:<span className='ibm-required'>*</span></label>
             <span>
-              <DatePicker selected={this.props.iteration.endDate != null ? moment(this.props.iteration.endDate): null} readOnly dateFormat='DDMMMYYYY' onChange={this.endDateChange} name='iterationEndDate' id='iterationEndDate' size='44' disabled={!this.props.enableFields} placeholderText='Iteration end date' className='iterationField-2' ref='iterationEndDate'/>
+              <DatePicker selected={this.props.iteration.endDate != null ? moment.utc(this.props.iteration.endDate): null} readOnly dateFormat='DDMMMYYYY' onChange={this.endDateChange} name='iterationEndDate' id='iterationEndDate' size='44' disabled={!this.props.enableFields} placeholderText='Iteration end date' className='iterationField-2' ref='iterationEndDate'/>
             </span>
           </div>
         </div>

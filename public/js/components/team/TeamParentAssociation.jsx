@@ -16,7 +16,7 @@ var TeamParentAssociation = React.createClass({
         'selectableParents': []
       },
       formError: {
-        error: new Object(),
+        error: {},
         map: [
           {field: 'path', id: 'parentSelectList'}
         ]
@@ -88,12 +88,15 @@ var TeamParentAssociation = React.createClass({
         });
     }
   },
+  showHideSection: function() {
+    this.props.showHideSection('assocParentPageSection');
+  },
   render: function() {
     var self = this;
     return (
       <div class='ibm-show-hide ibm-widget-processed' id='assocParentPageSection'>
         <h2 class='ibm-bold ibm-h4'>
-          <a class='' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={()=>self.props.showHideSection('assocParentPageSection')}>
+          <a class='' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={self.showHideSection}>
             Parent Team Association
           </a>
         </h2>
@@ -101,7 +104,7 @@ var TeamParentAssociation = React.createClass({
           <p>
             <label aria-label='parentSelectList'>Select a parent team:<span class='ibm-required'>*</span></label>
             <span>
-              <TeamDropdownParent selectableParentTeams={self.state.selectableParentTeams} parentChangeHandler={this.parentChangeHandler}/>
+              <TeamDropdownParent selectableParentTeams={self.state.selectableParentTeams} parentChangeHandler={self.parentChangeHandler}/>
             </span>
           </p>
           <p class='ibm-btn-row'>

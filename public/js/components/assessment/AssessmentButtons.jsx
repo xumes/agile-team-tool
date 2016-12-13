@@ -83,6 +83,12 @@ var AssessmentButtons = React.createClass({
     var software = $('#softwareYesNo').val();
     // var assessId = self.props.assessmentStatus.assessId;
     var teamId = $('select[name=\'teamSelectList\']').val();
+    console.log($('#submitDatePicker').val());
+    if ($('#submitDatePicker').val() == '') {
+      var submittedDate = ''
+    } else {
+      submittedDate = new Date(submittedDate);
+    }
     var updateDoc = {
       'assessmentStatus' : 'Draft',
       'version' : newestTemplateVersion,
@@ -90,7 +96,8 @@ var AssessmentButtons = React.createClass({
       'deliversSoftware' : false,
       'componentResults' : [],
       'actionPlans': [],
-      'teamId': teamId
+      'teamId': teamId,
+      'submittedDate': submittedDate
     }
     updateDoc.componentResults.push(JSON.parse(JSON.stringify(templates[newestTemplateVersion][assessType])));
     var p1N = updateDoc.componentResults[0].practiceNumber;

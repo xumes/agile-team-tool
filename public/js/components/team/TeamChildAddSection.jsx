@@ -6,7 +6,7 @@ var TeamChildAddSection = React.createClass({
   getInitialState: function() {
     return {
       formError: {
-        error: new Object(),
+        error: {},
         map: [
           {field: 'path', id: 'childSelectList'}
         ]

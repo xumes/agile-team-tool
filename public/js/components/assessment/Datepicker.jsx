@@ -7,14 +7,13 @@ var Datepicker = React.createClass({
     // $('.react-datepicker-ignore-onclickoutside').css('readonly','true');
     if (this.props.enableDatepicker) {
         $('#submitDatePicker').prop('disabled',false);
-        $('#submitDatePicker').val('');
     } else {
       $('#submitDatePicker').prop('disabled',true);
-      if (this.props.submittedDate == null) {
-        $('#submitDatePicker').val('');
-      } else {
-        $('#submitDatePicker').datepicker('setDate', new Date(this.props.submittedDate));
-      }
+    }
+    if (this.props.submittedDate == null) {
+      $('#submitDatePicker').val('');
+    } else {
+      $('#submitDatePicker').datepicker('setDate', new Date(this.props.submittedDate));
     }
   },
   componentDidMount: function() {

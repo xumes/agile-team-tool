@@ -26,7 +26,7 @@ var LinksSelectDropdown = React.createClass({
   },
 
   changeHandlerPopupCustomLabel: function(event) {
-    selectedVal = event.target.value;
+    var selectedVal = event.target.value;
     var selectedId = event.target.dataset.id;
     var id = this.props['id'];
     var row = {};

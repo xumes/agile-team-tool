@@ -33,9 +33,6 @@ var TeamMembers = React.createClass({
   },
   componentDidMount: function() {
     var self = this;
-    self.state.teamMembers = self.props.selectedTeam && self.props.selectedTeam.team ? self.props.selectedTeam.team.members : [];
-    self.state.userMembers = self.props.selectedTeam && self.props.selectedTeam.members ? self.props.selectedTeam.members : [];
-
     FacesTypeAhead.init(
       $('#teamMemberName'), {
         key: 'ciodashboard;agileteamtool@us.ibm.com',
@@ -60,10 +57,10 @@ var TeamMembers = React.createClass({
   },
   componentWillReceiveProps: function(newProps) {
     var self = this;
-    self.state.teamMembers = newProps.selectedTeam && newProps.selectedTeam.team ? newProps.selectedTeam.team.members : [];
-    self.state.userMembers = newProps.selectedTeam && newProps.selectedTeam.members ? newProps.selectedTeam.members : [];
     var map = self.state.formError.map;
     self.setState({
+      teamMembers: newProps.selectedTeam && newProps.selectedTeam.team ? newProps.selectedTeam.team.members : [],
+      userMembers: newProps.selectedTeam && newProps.selectedTeam.members ? newProps.selectedTeam.members : [],
       formError: {
         error: new Object(),
         map: map
@@ -312,9 +309,13 @@ var TeamMembers = React.createClass({
     this.refs.memberListAction.disabled = true;
     $(this.refs.memberListAction).select2();
   },
+  showHideSection: function() {
+    this.props.showHideSection('teamDetailsPageSection');
+  },
   render: function() {
     var self = this;
     var count = 0;
+    var memberAccess = '';
     self.state.teamMembers = _.sortBy(self.state.teamMembers, function(m){
       return m.name.toLowerCase();
     });
@@ -348,7 +349,7 @@ var TeamMembers = React.createClass({
         <tr key={memberBlockId} id={memberBlockId}>
           <td scope='row' class='ibm-table-row'>
             <label for={memberId} class='ibm-access'>Select {memberName}</label>
-            <input type='checkbox' name='member' id={memberId} value={count-1} disabled={memberAccess} onClick={()=>self.memberSelected()}/>
+            <input type='checkbox' name='member' id={memberId} value={count-1} disabled={memberAccess} onClick={self.memberSelected}/>
           </td>
           <td id={nameRefId}>{memberName}</td>
           <td id={emailRefId}>{memberEmail}</td>
@@ -373,7 +374,7 @@ var TeamMembers = React.createClass({
     return (
       <div class='ibm-show-hide ibm-widget-processed' id='teamDetailsPageSection'>
         <h2 class='ibm-bold ibm-h4'>
-          <a class='' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={()=>self.props.showHideSection('teamDetailsPageSection')}>
+          <a class='' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={self.showHideSection}>
             Team membership
           </a>
         </h2>

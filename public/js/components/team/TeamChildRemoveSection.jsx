@@ -9,7 +9,7 @@ var TeamChildRemoveSection = React.createClass({
   getInitialState: function() {
     return {
       formError: {
-        error: new Object(),
+        error: {},
         map: [
           {field: 'path', id: 'childSelectList'}
         ]
@@ -71,6 +71,9 @@ var TeamChildRemoveSection = React.createClass({
     }
     $(this.refs.childListAction).select2();
   },
+  showHideSection: function() {
+    this.props.showHideSection('iterationPageSection');
+  },
   render: function() {
     var self = this;
     if (self.props.childTeams.children.length > 0) {
@@ -90,7 +93,7 @@ var TeamChildRemoveSection = React.createClass({
         return (
           <tr key={trid} id={trid}>
             <td scope='row' class='ibm-table-row'>
-              <input name='child' id={childid} type='checkbox' value={count-1} disabled={!self.props.childTeams.access} onClick={()=>self.childSelected(team._id)}/>
+              <input name='child' id={childid} type='checkbox' value={count-1} disabled={!self.props.childTeams.access} onClick={self.childSelected.bind(null, team._id)}/>
               <label for={childid} class='ibm-access'>Select {team.name}</label>
             </td>
             <td id={teamid}>{team.name}</td>

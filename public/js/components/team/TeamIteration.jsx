@@ -23,27 +23,27 @@ var TeamIteration = React.createClass({
       }
     });
   },
-
   createIteration: function(){
     window.location = 'iteration?id=' + encodeURIComponent(this.props.selectedTeam.team._id) + '&iter=new';
   },
-
+  showHideSection: function() {
+    this.props.showHideSection('iterationPageSection');
+  },
   render: function() {
     var self = this;
     if (self.props.selectedTeam.team == undefined) {
       return null;
     } else {
       var teamName = self.props.selectedTeam.team.name;
+      var createAccess = 'disabled';
       if (self.props.selectedTeam.access) {
-        var createAccess = '';
-      } else {
-        createAccess = 'disabled';
+        createAccess = '';
       }
       if (self.props.selectedTeam.type != 'squad') {
         return (
           <div class='ibm-show-hide ibm-widget-processed' id='iterationPageSection'>
             <h2 class='ibm-bold ibm-h4'>
-              <a class='' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={()=>self.props.showHideSection('iterationPageSection')}>
+              <a class='' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={self.showHideSection}>
                 Iteration information
               </a>
             </h2>
@@ -105,7 +105,7 @@ var TeamIteration = React.createClass({
         return (
           <div class='ibm-show-hide ibm-widget-processed' id='iterationPageSection'>
             <h2 class='ibm-bold ibm-h4'>
-              <a class='' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={()=>self.props.showHideSection('iterationPageSection')}>
+              <a class='' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={self.showHideSection}>
                 Iteration information
               </a>
             </h2>

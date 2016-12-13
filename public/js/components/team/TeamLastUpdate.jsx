@@ -4,6 +4,9 @@ var moment = require('moment');
 var timeFormat = 'MMM DD, YYYY, HH:mm'
 
 var TeamLastUpdate = React.createClass({
+  showHideSection: function() {
+    this.props.showHideSection('lastUpdateSection');
+  },
   render: function() {
     var self = this;
     if (self.props.selectedTeam.team == undefined) {
@@ -16,7 +19,7 @@ var TeamLastUpdate = React.createClass({
     return (
       <div class='ibm-show-hide ibm-widget-processed' id='lastUpdateSection'>
         <h2 class='ibm-bold ibm-h4'>
-          <a class='' href='#show-hide' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={()=>self.props.showHideSection('lastUpdateSection')}>
+          <a class='' href='#show-hide' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={self.showHideSection}>
             Last update
           </a>
         </h2>
