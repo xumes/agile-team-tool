@@ -1023,6 +1023,18 @@ body {
   color: #777677;
 }
 
+.home-iter-content-point {
+  position: relative;
+  width: 10%;
+  float: right;
+  display: inline-block;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.6em;
+  text-align: right;
+  line-height: 1.6em;
+  color: #4178BE;
+}
+
 .home-iter-comment-test {
   width: 100%;
   height: 80%;
