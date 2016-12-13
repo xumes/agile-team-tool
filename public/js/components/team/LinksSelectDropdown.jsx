@@ -75,7 +75,7 @@ var LinksSelectDropdown = React.createClass({
     if (action === 'onInsert') {
       return (
         <div>
-          <select key={id} id={`linklabel_${id}`} name='linklabel_[]' class='implabel' defaultValue={selectedVal}>
+          <select key={id} id={'linklabel_' + id} name='linklabel_[]' class='implabel' defaultValue={selectedVal}>
             {linkLabelOption}
           </select>
         </div>
@@ -83,7 +83,7 @@ var LinksSelectDropdown = React.createClass({
     } else {
       return (
         <div>
-          <select key={id} data-id={id} data-mongo-id={_id} id={`linklabel_${id}`} name='linklabel_[]' class='implabel' defaultValue={selectedVal}>
+          <select key={id} data-id={id} data-mongo-id={_id} id={'linklabel_' + id} name='linklabel_[]' class='implabel' defaultValue={selectedVal}>
             {linkLabelOption}
           </select>
         </div>

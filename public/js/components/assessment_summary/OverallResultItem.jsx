@@ -21,7 +21,7 @@ var OverallResultItem = React.createClass({
     var ctr = self.props.counter;
     return (
       <tr>
-        <td><a role='button' href='javascript:void(0);' onClick={(e) => self.props.displaySelectedChart(e, assessed_index, label, graphId)}>{label}</a></td>
+        <td><a role='button' href='javascript:void(0);' onClick={function(e){ self.props.displaySelectedChart(e, assessed_index, label, graphId) }}>{label}</a></td>
         <td>{currentScore}</td>
         <td>{targetScore}</td>
         {hasIndAssessment && <td>{assessorTarget}</td>}
