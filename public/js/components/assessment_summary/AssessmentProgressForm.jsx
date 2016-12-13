@@ -569,9 +569,8 @@ var AssessmentProgressForm = React.createClass({
             }
 
             self.displayOverAll(id, assessmt_cmpnt_rslts.currentScore, assessmt_cmpnt_rslts.targetScore, ctr2);
-
             overAllArray.push(<OverallResultItem
-              key={`overall-${ctr2}-${ctr1}`}
+              key={'overall-' + ctr2 + '-' + ctr1}
               id={id}
               x={ctr2}
               counter={ctr1}
@@ -582,7 +581,7 @@ var AssessmentProgressForm = React.createClass({
             for (var ctr3 = 0; ctr3 < assessmt_cmpnt_rslts.assessedComponents.length; ctr3++) {
               var assessed_cmpnt = assessmt_cmpnt_rslts.assessedComponents[ctr3];
               loadResultArray.push(<ComponentResultItem
-                key={`asmtresult-${ctr2}-${ctr3}`}
+                key={'asmtresult-' + ctr2 + '-' + ctr3}
                 hasIndAssessment={hasIndAssessment}
                 displaySelectedChart={self.displaySelectedChart}
                 assessed_cmpnt={assessed_cmpnt} x={ctr2} id={id} />);

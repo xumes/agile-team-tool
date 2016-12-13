@@ -66,7 +66,7 @@ var TeamIteration = React.createClass({
                 <tr key={iterationId} id={iterationId}>
                   <td></td>
                   <td>
-                    <a style={{'textDescription': 'underline', 'color': 'black'}} href={`/iteration?id=${self.props.selectedTeam.team._id}&iter=${iteration._id}`}>{iname}</a>
+                    <a style={{'textDescription': 'underline', 'color': 'black'}} href={'/iteration?id=' + self.props.selectedTeam.team._id + '&iter=' + iteration._id}>{iname}</a>
                   </td>
                   <td>{startDate}</td>
                   <td>{endDate}</td>
@@ -78,7 +78,7 @@ var TeamIteration = React.createClass({
                 <tr key={iterationId} id={iterationId} style={{'display':'none'}}>
                   <td></td>
                   <td>
-                    <a style={{'textDescription': 'underline', 'color': 'black'}} href={`/iteration?id=${self.props.selectedTeam.team._id}&iter=${iteration._id}`}>{iname}</a>
+                    <a style={{'textDescription': 'underline', 'color': 'black'}} href={'/iteration?id=' + self.props.selectedTeam.team._id + '&iter=' + iteration._id}>{iname}</a>
                   </td>
                   <td>{startDate}</td>
                   <td>{endDate}</td>
