@@ -33,21 +33,21 @@ var AssessmentPage = React.createClass({
     }
   },
   componentDidMount: function() {
-    var self = this;
-    var urlParams = getJsonParametersFromUrl();
-    var teamId =  _.isEmpty(urlParams) || _.isEmpty(urlParams.id) ? '' : urlParams.id;
-    var assessId = _.isEmpty(urlParams) || _.isEmpty(urlParams.assessId) ? null : urlParams.assessId;
-    if (teamId != '') {
-      //self.teamChangeHandler(null, teamId, assessId);
-      setTimeout(function(){
-        $('select[name=\'teamSelectList\']').val(teamId).change();
-      },1000);
-    }
-    if (assessId != null) {
-      setTimeout(function(){
-        $('select[name=\'assessmentSelectList\']').val(assessId).change();
-      },1500);
-    }
+    // var self = this;
+    // var urlParams = getJsonParametersFromUrl();
+    // var teamId =  _.isEmpty(urlParams) || _.isEmpty(urlParams.id) ? '' : urlParams.id;
+    // var assessId = _.isEmpty(urlParams) || _.isEmpty(urlParams.assessId) ? null : urlParams.assessId;
+    // if (teamId != '') {
+    //   //self.teamChangeHandler(null, teamId, assessId);
+    //   setTimeout(function(){
+    //     $('select[name=\'teamSelectList\']').val(teamId).change();
+    //   },3000);
+    // }
+    // if (assessId != null) {
+    //   setTimeout(function(){
+    //     $('select[name=\'assessmentSelectList\']').val(assessId).change();
+    //   },3000);
+    // }
   },
 
   teamChangeHandler: function(e, tId, sId) {
