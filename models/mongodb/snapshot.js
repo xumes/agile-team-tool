@@ -391,11 +391,11 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
         currData[monthIndex].totalDplymts = currData[monthIndex].totalDplymts + dplymnts;
 
         if (teamStat > 0) {
-          currData[monthIndex].totTeamStat = currData[monthIndex].totTeamStat + parseInt(teamStat);
+          currData[monthIndex].totTeamStat = currData[monthIndex].totTeamStat + teamStat;
           currData[monthIndex].totTeamStatIter = currData[monthIndex].totTeamStatIter + 1;
         }
         if (clientStat > 0) {
-          currData[monthIndex].totClientStat = currData[monthIndex].totClientStat + parseInt(clientStat);
+          currData[monthIndex].totClientStat = currData[monthIndex].totClientStat + clientStat;
           currData[monthIndex].totClientStatIter = currData[monthIndex].totClientStatIter + 1;
         }
         if (cycleTimeBacklog > 0) {
