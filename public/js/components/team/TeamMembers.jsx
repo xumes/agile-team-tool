@@ -32,10 +32,6 @@ var TeamMembers = React.createClass({
     }
   },
   componentDidMount: function() {
-    var self = this;
-    self.state.teamMembers = self.props.selectedTeam && self.props.selectedTeam.team ? self.props.selectedTeam.team.members : [];
-    self.state.userMembers = self.props.selectedTeam && self.props.selectedTeam.members ? self.props.selectedTeam.members : [];
-
     FacesTypeAhead.init(
       $('#teamMemberName'), {
         key: 'ciodashboard;agileteamtool@us.ibm.com',
@@ -60,10 +56,10 @@ var TeamMembers = React.createClass({
   },
   componentWillReceiveProps: function(newProps) {
     var self = this;
-    self.state.teamMembers = newProps.selectedTeam && newProps.selectedTeam.team ? newProps.selectedTeam.team.members : [];
-    self.state.userMembers = newProps.selectedTeam && newProps.selectedTeam.members ? newProps.selectedTeam.members : [];
     var map = self.state.formError.map;
     self.setState({
+      teamMembers: newProps.selectedTeam && newProps.selectedTeam.team ? newProps.selectedTeam.team.members : [],
+      userMembers: newProps.selectedTeam && newProps.selectedTeam.members ? newProps.selectedTeam.members : [],
       formError: {
         error: new Object(),
         map: map
@@ -315,6 +311,7 @@ var TeamMembers = React.createClass({
   render: function() {
     var self = this;
     var count = 0;
+    var memberAccess = '';
     self.state.teamMembers = _.sortBy(self.state.teamMembers, function(m){
       return m.name.toLowerCase();
     });
