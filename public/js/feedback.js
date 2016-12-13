@@ -79,6 +79,7 @@ function initFeedback(userInfo) {
 }
 
 function launchFeeback() {
+  $('#feedback').removeAttr('disabled');
   $.ajax({
     type: 'GET',
     url: '/api/users/activeInfo',
