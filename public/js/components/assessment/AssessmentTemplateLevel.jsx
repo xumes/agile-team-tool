@@ -16,7 +16,10 @@ var AssessmentTemplateLevel = React.createClass({
       $(this).removeClass('hover');
     })
   },
-  currClickHandler: function(practiceId, levelCurrId, clickValue) {
+  currClickHandler: function(params) {
+    var practiceId = params[0];
+    var levelCurrId = params[1];
+    var clickValue = params[2];
     if ($('#'+levelCurrId+' > div > input').prop('disabled')) {
       return;
     }
@@ -32,7 +35,10 @@ var AssessmentTemplateLevel = React.createClass({
     }
     $('#' + practiceId + ' > a').css('background', '');
   },
-  targClickHandler: function(practiceId, levelCurrId, clickValue) {
+  targClickHandler: function(params) {
+    var practiceId = params[0];
+    var levelCurrId = params[1];
+    var clickValue = params[2];
     if ($('#'+levelCurrId+' > div > input').prop('disabled')) {
       return;
     }
@@ -99,13 +105,13 @@ var AssessmentTemplateLevel = React.createClass({
             <td id={levelCurrId} class='agile-question-opt ibm-background-cool-gray-20'>
               <div class='iradio_square-blue curr' role='radio' aria-checked='false' aria-disabled='false' aria-label='Maturity level' style={{'position': 'relative'}}>
                 <input type='radio' name={levelCurrId} value={clickValue} aria-label={clickValue} style={currStyle}/>
-                <ins class='iCheck-helper' style={currStyle} onClick={()=>self.currClickHandler(practiceId, levelCurrId, clickValue)}></ins>
+                <ins class='iCheck-helper' style={currStyle} onClick={self.currClickHandler.bind(null, [practiceId, levelCurrId, clickValue])}></ins>
               </div>
             </td>
             <td id={levelTargId} class='agile-question-opt ibm-background-cool-gray-20'>
               <div class='iradio_square-blue targ' role='radio' aria-checked='false' aria-disabled='false' aria-label='Maturity level' style={{'position': 'relative'}}>
                 <input type='radio' name={levelTargId} value={clickValue} aria-label={clickValue} style={currStyle}/>
-                <ins class='iCheck-helper' style={currStyle} onClick={()=>self.targClickHandler(practiceId, levelTargId, clickValue)}></ins>
+                <ins class='iCheck-helper' style={currStyle} onClick={self.targClickHandler.bind(null, [practiceId, levelTargId, clickValue])}></ins>
               </div>
             </td>
             {/*<td></td>*/}

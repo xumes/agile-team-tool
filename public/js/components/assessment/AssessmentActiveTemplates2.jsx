@@ -114,7 +114,7 @@ var AssessmentActiveTemplates2 = React.createClass({
             count ++ ;
             return (
               <li key={componentId} id={componentId} data-open='true' class='ibm-active'>
-                <a class='ibm-twisty-trigger' style={{'cursor':'pointer'}} onClick={()=>self.expandComponent(componentId)}>{component.name}</a>
+                <a class='ibm-twisty-trigger' style={{'cursor':'pointer'}} onClick={self.expandComponent.bind(null,componentId)}>{component.name}</a>
                 <div class='ibm-twisty-body' style={{'display':'block'}}><AssessmentTemplatePrinciple principles={component.principles} componentId={componentId} expandComponent={self.expandComponent}/></div>
               </li>
             )

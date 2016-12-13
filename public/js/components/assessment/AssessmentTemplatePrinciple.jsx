@@ -15,7 +15,7 @@ var AssessmentTemplatePrinciple = React.createClass({
         count ++ ;
         return (
           <li key={principleId} id={principleId} data-open='true' class='ibm-active'>
-            <a class='ibm-twisty-trigger' style={{'cursor':'pointer'}} onClick={()=>self.props.expandComponent(principleId)}>{principle.name}</a>
+            <a class='ibm-twisty-trigger' style={{'cursor':'pointer'}} onClick={self.props.expandComponent.bind(null, principleId)}>{principle.name}</a>
             <div class='ibm-twisty-body' style={{'display':'block'}}><AssessmentTemplatePractice practices={principle.practices} principleId={principleId} expandComponent={self.props.expandComponent}/></div>
           </li>
         )
