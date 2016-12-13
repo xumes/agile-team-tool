@@ -9,7 +9,7 @@ var TeamChildRemoveSection = React.createClass({
   getInitialState: function() {
     return {
       formError: {
-        error: new Object(),
+        error: {},
         map: [
           {field: 'path', id: 'childSelectList'}
         ]
@@ -70,6 +70,9 @@ var TeamChildRemoveSection = React.createClass({
       this.refs.childListAction.disabled = true;
     }
     $(this.refs.childListAction).select2();
+  },
+  showHideSection: function() {
+    this.props.showHideSection('iterationPageSection');
   },
   render: function() {
     var self = this;

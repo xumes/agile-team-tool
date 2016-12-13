@@ -40,8 +40,8 @@ var TeamAssessment = React.createClass({
   createAssessment: function() {
     window.location = 'assessment?id=' + encodeURIComponent(this.props.selectedTeam.team._id);
   },
-  copyLinkClick: function(e) {
-    e.preventDefault();
+  showHideSection: function() {
+    this.props.showHideSection('assessmentPageSection');
   },
   render: function() {
     var self = this;
@@ -58,7 +58,7 @@ var TeamAssessment = React.createClass({
         return (
           <div class='ibm-show-hide ibm-widget-processed' id='assessmentPageSection'>
             <h2 class='ibm-bold ibm-h4'>
-              <a class='' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={()=>self.props.showHideSection('assessmentPageSection')}>
+              <a class='' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={self.showHideSection}>
                 Assessment information
               </a>
             </h2>
@@ -128,7 +128,7 @@ var TeamAssessment = React.createClass({
         return (
           <div class='ibm-show-hide ibm-widget-processed' id='assessmentPageSection'>
             <h2 class='ibm-bold ibm-h4'>
-              <a class='' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={()=>self.props.showHideSection('assessmentPageSection')}>
+              <a class='' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={self.showHideSection}>
                 Assessment information
               </a>
             </h2>

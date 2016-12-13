@@ -10,7 +10,7 @@ var TeamForm = React.createClass({
   getInitialState: function() {
     return {
       formError: {
-        error: new Object(),
+        error: {},
         map: [
           {field: 'name', id: 'teamName'},
           {field: 'pathId', id: 'teamName'},
@@ -45,7 +45,7 @@ var TeamForm = React.createClass({
             this.refs.teamSquadYesNo.disabled = true;
         }
       }
-      this.state.formErrorerror = new Object();
+      this.state.formErrorerror = {};
     } else if (_.isEmpty(this.state.formError.error) && (_.isEqual(this.props.defaultTeam, 'new') || _.isEqual(this.props.defaultTeam, 'delete'))) {
       //this.setState({teamSelectListDefault: 'new'});
       this.refs.teamName.value = '';
@@ -62,7 +62,7 @@ var TeamForm = React.createClass({
     var self = this;
     var team = self.props.selectedTeam.team;
     if (_.isEmpty(team))
-      team = new Object();
+      team = {};
     if (action=='add' || action=='update') {
       team.name = this.refs.teamName.value;
       team.description = this.refs.teamDesc.value;
@@ -152,7 +152,7 @@ var TeamForm = React.createClass({
       var map = self.state.formError.map;
       self.setState({
         formError: {
-          error: new Object(),
+          error: {},
           map: map
         }
       });

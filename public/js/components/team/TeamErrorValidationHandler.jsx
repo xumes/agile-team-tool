@@ -4,12 +4,12 @@ var React = require('react');
 var TeamErrorValidationHandler = React.createClass({
   getInitialState: function() {
     return {
-      errors: new Object(),
+      errors: {},
       formFields: []
     }
   },
   componentWillReceiveProps: function(newProps) {
-    this.state.errors = new Object();
+    this.state.errors = {};
     if (_.has(newProps.formError.error, 'responseJSON') && _.has(newProps.formError.error.responseJSON, 'errors') && _.isEqual(newProps.formError.error.responseJSON.name, 'ValidationError')) {
       this.state.errors = newProps.formError.error.responseJSON.errors
     } else if (_.has(newProps.formError.error, 'responseJSON') && _.has(newProps.formError.error.responseJSON, 'errors')) {
@@ -52,6 +52,28 @@ var TeamErrorValidationHandler = React.createClass({
     });
     if (msg != '')
       showMessagePopup(msg);
+  },
+  setFieldErrorHighlight: function(id) {
+    var borderColor = 'red';
+    var backgroundColor = '';
+    if ($('#' + id).is('select')) {
+      $($('#select2-' + id + '-container').parent()).css('border-color', borderColor);
+      $($('#select2-' + id + '-container').parent()).css('background', backgroundColor);
+    } else {
+      $('#' + id).css('background', backgroundColor);
+      $('#' + id).css('border-color', borderColor);
+    }
+  },
+  clearFieldErrorHighlight: function(id) {
+    var borderColor = '';
+    var backgroundColor = '';
+    if ($('#' + id).is('select')) {
+      $($('#select2-' + id + '-container').parent()).css('border-color', borderColor);
+      $($('#select2-' + id + '-container').parent()).css('background', backgroundColor);
+    } else {
+      $('#' + id).css('background', backgroundColor);
+      $('#' + id).css('border-color', borderColor);
+    }
   },
   render: function() {
     return(
