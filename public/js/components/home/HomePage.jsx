@@ -3,6 +3,7 @@ var api = require('../api.jsx');
 var Header = require('../Header.jsx');
 var HomeNav = require('./HomeNav.jsx');
 var HomeContent = require('./HomeContent.jsx');
+var HomeIterContent = require('./HomeIterContent.jsx');
 var InlineSVG = require('svg-inline-react');
 
 var HomePage = React.createClass({
@@ -136,12 +137,12 @@ var HomePage = React.createClass({
       'height': '100%'
     };
     var sectionOneStyle = {
-      'width': '33.3%',
+      'width': '30.91%',
       'backgroundColor': '#F7F7F7',
-      'height': '100%'
+      'height': '200%'
     }
     var sectionTwoStyle = {
-      'width': '66.6%',
+      'width': '69.09%',
       'height': '100%',
       'position': 'relative'
     }
@@ -153,6 +154,7 @@ var HomePage = React.createClass({
             <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler}/>
           </div>
           <div id='iterContent' class='ibm-col-6-2' style={sectionOneStyle}>
+            <HomeIterContent loadDetailTeam={this.state.loadDetailTeam} />
           </div>
         </div>
         <div id='homeNavShowBtnDiv' class='home-nav-show-btn-div'>
