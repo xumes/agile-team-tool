@@ -22,7 +22,7 @@ var ComponentResultItem = React.createClass({
     }
     return (
       <tr>
-        <td><a role='button' href='javascript:void(0);' onClick={(e) => self.props.displaySelectedChart(e, assessed_index, practiceId, graphId)} >{practiceName}</a></td>
+        <td class="aligntxtLeft"><a role='button' href='javascript:void(0);' onClick={self.props.displaySelectedChart.bind(null, assessed_index, practiceId, graphId)} >{practiceName}</a></td>
         <td>{currentScore}</td>
         <td>{targetScore}</td>
         {hasIndAssessment && <td>{assessorTarget}</td>}

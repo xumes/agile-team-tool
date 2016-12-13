@@ -2,7 +2,7 @@ var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
 var webpackConfig = require('./webpack.config');
 var winston = require('winston');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = function() {
   // Override production config for development
@@ -23,7 +23,7 @@ module.exports = function() {
     winston.loggers.get('app').info('Bundled in', Date.now() - bundleStart, ' ms!');
   });
 
-  const bundler = new WebpackDevServer(compiler, {
+  var bundler = new WebpackDevServer(compiler, {
     publicPath: '/dist/',
     hot: true,
     quiet: true,

@@ -28,7 +28,7 @@ var TeamDropdown = React.createClass({
   componentWillReceiveProps: function(newProps) {
     this.getTeamNames();
   },
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate: function(prevProps, prevState) {
     if (_.isEqual(this.props.defaultTeam, 'delete'))
       this.refs.teamSelectList.value = 'new';
     else

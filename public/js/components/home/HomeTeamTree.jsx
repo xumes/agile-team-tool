@@ -464,7 +464,7 @@ var HomeTeamTree = React.createClass({
               <ul class='ibm-twisty  ibm-widget-processed' id='teamTreeMain'>
                 {myteams}
                 <li data-open='true' id='agteamstandalone' class='ibm-active'>
-                  <a class='ibm-twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam(null, 'agteamstandalone')}>
+                  <a class='ibm-twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, 'agteamstandalone')}>
                     <span class='ibm-access'>Standalone Teams</span>
                   </a>
                   <a class='agile-team-link'>Standalone Teams</a>
@@ -494,10 +494,10 @@ var HomeTeamTree = React.createClass({
         var title = 'view ' + team.name + ' information';
         return (
           <li data-open='false' id={teamId} key={objectId}>
-            <a class='ibm-twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam(null, teamId)}>
+            <a class='ibm-twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, teamId)}>
               <span class='ibm-access'>{label}</span>
             </a>
-            <a class='agile-team-link' title={title} id={linkId} onClick={self.loadDetails(null,teamId)}>{label}</a>
+            <a class='agile-team-link' title={title} id={linkId} onClick={self.loadDetails.bind(null,teamId)}>{label}</a>
             <span class='ibm-access'>{objectId}</span>
             <div class='ibm-twisty-body' id={bodyId} style={{'display':'none'}}>
             </div>
@@ -510,7 +510,7 @@ var HomeTeamTree = React.createClass({
             <ul class='ibm-twisty ' id='main_'>
               {allteams}
               <li data-open='false' id='agteamstandalone'>
-                <a class='ibm-twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam(null, 'agteamstandalone')}>
+                <a class='ibm-twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, 'agteamstandalone')}>
                   <span class='ibm-access'>Standalone Teams</span>
                 </a>
                 <a class='agile-team-link' title='View Standalone Teams information'>Standalone Teams</a>

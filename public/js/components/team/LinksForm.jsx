@@ -20,7 +20,7 @@ var LinksForm = React.createClass({
     });
 
     return(
-      <div id={`link_${id}`} key={id} data-counter={id} class='importantLinksSection'>
+      <div id={'link_' + id} key={id} data-counter={id} class='importantLinksSection'>
           {/* display dropdown select for link labels */}
           <LinksSelectDropdown
             action='onInsert'
@@ -33,7 +33,7 @@ var LinksForm = React.createClass({
             selectedTeam={self.props.selectedTeam} />
 
         <div>{/* display url textfield */}
-          <input type='text' name='url_[]' id={`url_${id}`} data-counter={id} placeholder='URL' size='60' class='implink' />
+          <input type='text' name='url_[]' id={'url_' + id} data-counter={id} placeholder='URL' size='60' class='implink' />
         </div>
 
         {/* display update, cancel & delete icon button */}
