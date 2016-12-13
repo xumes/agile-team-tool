@@ -11,11 +11,25 @@ var TeamForm = React.createClass({
 
   componentDidMount: function() {
     var self = this;
+    var urlParams = getJsonParametersFromUrl();
+    var teamId =  _.isEmpty(urlParams) || _.isEmpty(urlParams.id) ? '' : urlParams.id;
+    var assessId = _.isEmpty(urlParams) || _.isEmpty(urlParams.assessId) ? null : urlParams.assessId;
     api.getSquadTeams({name:1})
       .then(function(teams) {
         self.setState({
           teamNames: teams
-        })
+        });
+        if (teamId != '') {
+          //self.teamChangeHandler(null, teamId, assessId);
+          setTimeout(function(){
+            $('select[name=\'teamSelectList\']').val(teamId).change();
+          },1000);
+        }
+        if (assessId != null) {
+          setTimeout(function(){
+            $('select[name=\'assessmentSelectList\']').val(assessId).change();
+          },2000);
+        }
       });
     // Use IBM's bundled select2 package
     $('select[name="teamSelectList"]').select2();

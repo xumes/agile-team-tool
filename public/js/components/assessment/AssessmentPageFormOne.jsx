@@ -13,6 +13,15 @@ var AssessmentPageFormOne = React.createClass({
   componentDidMount: function(){
     $('select[name="assessmentSelectList"]').select2();
     $('select[name="assessmentSelectList"]').change(this.props.assessmentChangeHandler);
+    var self = this;
+    var urlParams = getJsonParametersFromUrl();
+    var teamId =  _.isEmpty(urlParams) || _.isEmpty(urlParams.id) ? '' : urlParams.id;
+    var assessId = _.isEmpty(urlParams) || _.isEmpty(urlParams.assessId) ? null : urlParams.assessId;
+    if (assessId != null) {
+      setTimeout(function(){
+        $('select[name=\'assessmentSelectList\']').val(assessId).change();
+      },2000);
+    }
   },
 
   render: function() {
