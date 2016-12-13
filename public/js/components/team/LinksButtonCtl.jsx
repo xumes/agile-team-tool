@@ -72,7 +72,7 @@ var LinksButtonCtl = React.createClass({
     // $('#link_'+id).remove(); // dont use this
   },
 
-  deleteLink: function(event, id) {
+  deleteLink: function(id) {
     var self = this;
     var teamId = self.props.selectedTeam['team']._id;
     var linkData = [];
@@ -221,7 +221,7 @@ var LinksButtonCtl = React.createClass({
     });
 
     var linkData = [];
-    for (i=0; i<labelArray.length; i++){
+    for (var i=0; i<labelArray.length; i++){
       var obj = {};
       obj.id = labelId[i];
       obj._id = labelmongoId[i];
@@ -251,7 +251,7 @@ var LinksButtonCtl = React.createClass({
               <a href='javascript:void(0)' alt='Update link' title='Update link' class='updatelink existlink' onClick={self.updateLink.bind(this, id)}><img src='../img/accept-ico.png' /></a>
             </div>
             <div data-counter={id} id={`DeleteLinkGrp_${id}`} style={styleDisplayNone}>
-              <a href='javascript:void(0)' id={`removelink_${id}`}  title='Delete the link' alt='Delete the link' class='removelink' onClick={(event) => self.deleteLink(event, id)} ><img src='../img/trash-ico.svg' class='trash_icon' /></a>
+              <a href='javascript:void(0)' id={`removelink_${id}`}  title='Delete the link' alt='Delete the link' class='removelink' onClick={self.deleteLink.bind(null, id)} ><img src='../img/trash-ico.svg' class='trash_icon' /></a>
             </div>
           </div>
         );

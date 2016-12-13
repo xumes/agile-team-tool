@@ -93,7 +93,7 @@ var TeamChildRemoveSection = React.createClass({
         return (
           <tr key={trid} id={trid}>
             <td scope='row' class='ibm-table-row'>
-              <input name='child' id={childid} type='checkbox' value={count-1} disabled={!self.props.childTeams.access} onClick={()=>self.childSelected(team._id)}/>
+              <input name='child' id={childid} type='checkbox' value={count-1} disabled={!self.props.childTeams.access} onClick={self.childSelected.bind(null, team._id)}/>
               <label for={childid} class='ibm-access'>Select {team.name}</label>
             </td>
             <td id={teamid}>{team.name}</td>
