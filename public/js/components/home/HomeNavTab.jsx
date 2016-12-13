@@ -35,7 +35,7 @@ var HomeNavTab = React.createClass({
           <div class='home-nav-tab-buttons'>
             <input class='home-nav-tab-buttons-item' type='image' src='../../../img/Att-icons/Att-icons_Add.svg' />
             <input class='home-nav-tab-buttons-item' type='image' src='../../../img/Att-icons/att-icons_search.svg' />
-            <input class='home-nav-tab-buttons-item' type='image' src='../../../img/Att-icons/att-icons_contract.svg' onClick={this.homeNavHide}/>
+            <input id='hideNavBtn' class='home-nav-tab-buttons-item' type='image' src='../../../img/Att-icons/att-icons_contract.svg' onClick={this.homeNavHide}/>
           </div>
         </div>
       </nav>

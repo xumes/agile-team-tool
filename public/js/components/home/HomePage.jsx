@@ -14,7 +14,7 @@ var HomePage = React.createClass({
       loadDetailTeam: new Object()
     }
   },
-  
+
   selectedTeamChanged: function(team) {
     this.setState({'selectedTeam': team});
   },
@@ -26,6 +26,19 @@ var HomePage = React.createClass({
   },
 
   loadDetailTeamChanged: function(team) {
+    if (team.team.type != 'squad') {
+      $('#homeNavDiv').show();
+      $('#homeNavDiv').css('left','0');
+      $('#iterContent').hide();
+      $('#mainContent').css('left', '30.5%');
+      $('#hideNavBtn').hide();
+    } else {
+      // $('#homeNavDiv').hide();
+      // $('#homeNavDiv').css('left','-500px');
+      $('#iterContent').show();
+      $('#mainContent').css('left', '0');
+      $('#hideNavBtn').show();
+    }
     this.setState({'loadDetailTeam': team});
   },
 
@@ -120,8 +133,7 @@ var HomePage = React.createClass({
       'width': '96.6%',
       'padding': '0',
       'margin': '0 1.7%',
-      'height': '100%',
-      'fontSize': '62.5%'
+      'height': '100%'
     };
     var sectionOneStyle = {
       'width': '33.3%',
@@ -130,7 +142,8 @@ var HomePage = React.createClass({
     }
     var sectionTwoStyle = {
       'width': '66.6%',
-      'height': '100%'
+      'height': '100%',
+      'position': 'relative'
     }
     var src = require('../../../img/Att-icons/att-icons_expand.svg');
     return (
@@ -139,7 +152,7 @@ var HomePage = React.createClass({
           <div id='mainContent' class='ibm-col-6-4' style={sectionTwoStyle}>
             <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler}/>
           </div>
-          <div class='ibm-col-6-2' style={sectionOneStyle}>
+          <div id='iterContent' class='ibm-col-6-2' style={sectionOneStyle}>
           </div>
         </div>
         <div id='homeNavShowBtnDiv' class='home-nav-show-btn-div'>

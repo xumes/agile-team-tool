@@ -107,7 +107,11 @@ var HomeTeamHeader = React.createClass({
             var src = 'http://dpev027.innovate.ibm.com:10000/image/' + member.userId.toUpperCase();
             count ++ ;
             return (
-              <img key={faceImageId} id={faceImageId} class='home-team-header-member-image' src={src}></img>
+              <div key={faceImageId}>
+                <div class='ibm-padding-content' style={{'padding': '0', 'borderRadius': '50%'}}>
+                  <img id={faceImageId} class='home-team-header-member-image' src={src}></img>
+                </div>
+              </div>
             )
           }
         })

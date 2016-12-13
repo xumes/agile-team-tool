@@ -49,7 +49,7 @@ var HomeContent = React.createClass({
     return (
       <div style={{'width': '100%', 'height': '100%'}}>
         <HomeSpinner id={'contentSpinner'}/>
-        <div id="bodyContent" style={{'height':'100%','width':'100%'}}>
+        <div id='bodyContent' style={{'height':'100%','width':'100%'}}>
           <HomeHighlightBox />
           <HomeTeamHeader loadDetailTeam={this.props.loadDetailTeam} selectedTeamChanged={this.props.selectedTeamChanged} tabClickedHandler={this.props.tabClickedHandler}/>
           <div class='home-trends-block'>

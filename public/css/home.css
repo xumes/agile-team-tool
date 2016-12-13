@@ -338,7 +338,15 @@ body {
   float: left;
 }
 
-.home-team-header-member-image {
+.home-team-header-members-div > div {
+  width: 10%;
+  height: 100%;
+  display: inline-block;
+  float: left;
+  text-align: center;
+}
+
+/*.home-team-header-member-image {
   width: 9%;
   height: 80%;
   border-radius: 50%;
@@ -346,6 +354,14 @@ body {
   display: inline-block;
   border: 0.1em solid #FFFFFF;
   float: left;
+}*/
+
+.home-team-header-member-image {
+  width: 90%;
+  height: auto;
+
+  border: 0.1em solid #FFFFFF;
+  border-radius: 50%;
 }
 
 #teamMemberTable {
