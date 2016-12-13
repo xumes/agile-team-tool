@@ -1,29 +1,7 @@
 var React = require('react');
 var api = require('../api.jsx');
 var InlineSVG = require('svg-inline-react');
-var squadBtns = {
-  'velocity': true,
-  'throughput': true,
-  'defects': true,
-  'wipBacklog': true,
-  'pizza': true,
-  'unitCost': true,
-  'statisfaction': true,
-  'prj':true,
-  'ops':true,
-  'devops':true
-}
-var nonSquadBtns = {
-  'pvelocity': true,
-  'pthroughput': true,
-  'pdefects': true,
-  'pwipBacklog': true,
-  'pPizza': true,
-  'piePizza': true,
-  'statisfaction': true,
-  'eval':true,
-  'trend':true
-}
+var chartStatus = require('./chartStatus.jsx').chartStatus;
 
 var HomeChartFilter = React.createClass({
   showSec: function(id) {
@@ -42,12 +20,12 @@ var HomeChartFilter = React.createClass({
     var self = this;
     var team = self.props.loadDetailTeam.team;
     if (team.type == 'squad') {
-      _.each(Object.keys(squadBtns), function(key){
+      _.each(Object.keys(chartStatus.squad.btns), function(key){
         if ($('#'+key+'ChartBtn').hasClass('home-chart-filter-unselected')) {
-          squadBtns[key] = false;
+          chartStatus.squad.btns[key] = false;
           $('#'+key+'Chart_block').hide();
         } else {
-          squadBtns[key] = true;
+          chartStatus.squad.btns[key] = true;
           $('#'+key+'Chart_block').show();
         }
       });
@@ -84,17 +62,62 @@ var HomeChartFilter = React.createClass({
       }
       $('#squad_team_scard > .container-body-col-2-1').css('height',chartHeight);
       $('#iterationSection').css('height',secHeight);
-      $(Highcharts.charts).each(function(i,chart) {
-        if (chart == null) return;
-        if ($('#' + $(chart.container).attr('id')).length > 0) {
-          var height = chart.renderTo.clientHeight;
-          var width = chart.renderTo.clientWidth;
-          chart.setSize(width, height);
+      chartStatus.squad.charts.chartHeight = chartHeight;
+      chartStatus.squad.charts.secHeight = secHeight;
+    } else {
+      _.each(Object.keys(chartStatus.nonSquad.btns), function(key){
+        if ($('#'+key+'ChartBtn').hasClass('home-chart-filter-unselected')) {
+          chartStatus.nonSquad.btns[key] = false;
+          $('#'+key+'Chart_block').hide();
+        } else {
+          chartStatus.nonSquad.btns[key] = true;
+          $('#'+key+'Chart_block').show();
         }
       });
-    } else {
-
+      var charts = $('#nsquad_team_scard > .container-body-col-2-1');
+      var chartLength = 0;
+      _.each(charts, function(chart){
+        if ($('#'+chart.id).css('display') != 'none') {
+          chartLength++;
+        }
+      });
+      var chartHeight = '';
+      var secHeight = '';
+      switch (Math.floor((chartLength+1)/2)) {
+        case 0:
+          chartHeight = '0';
+          secHeight = '0';
+          break;
+        case 1:
+          chartHeight = '98%';
+          secHeight = '11.5%';
+          break;
+        case 2:
+          chartHeight = '48%';
+          secHeight = '23%';
+          break;
+        case 3:
+          chartHeight = '31%';
+          secHeight = '34.5%';
+          break;
+        case 4:
+          chartHeight = '23%';
+          secHeight = '46%';
+          break;
+      }
+      $('#nsquad_team_scard > .container-body-col-2-1').css('height',chartHeight);
+      $('#iterationSection').css('height',secHeight);
+      chartStatus.nonSquad.charts.chartHeight = chartHeight;
+      chartStatus.nonSquad.charts.secHeight = secHeight;
     }
+    $(Highcharts.charts).each(function(i,chart) {
+      if (chart == null) return;
+      if ($('#' + $(chart.container).attr('id')).length > 0) {
+        var height = chart.renderTo.clientHeight;
+        var width = chart.renderTo.clientWidth;
+        chart.setSize(width, height);
+      }
+    });
   },
   render: function() {
     var self = this;
@@ -103,25 +126,25 @@ var HomeChartFilter = React.createClass({
     } else {
       var team = self.props.loadDetailTeam.team;
       if (team.type == 'squad') {
-        var btns = Object.keys(squadBtns).map(function(key, indx){
-          if (squadBtns[key]) {
+        var btns = Object.keys(chartStatus.squad.btns).map(function(key, indx){
+          if (chartStatus.squad.btns[key]) {
             var btnClass = 'home-chart-filter-selected';
           } else {
             btnClass = 'home-chart-filter-unselected';
           }
           return (
-            <div key={key} class={btnClass} id={key + 'ChartBtn'} onClick={()=>self.showSec(key)}>{key}</div>
+            <div key={key} class={btnClass} id={key + 'ChartBtn'} onClick={self.showSec.bind(null, key)}>{key}</div>
           )
         });
       } else {
-        btns = Object.keys(nonSquadBtns).map(function(key, indx){
-          if (nonSquadBtns[key]) {
+        btns = Object.keys(chartStatus.nonSquad.btns).map(function(key, indx){
+          if (chartStatus.nonSquad.btns[key]) {
             var btnClass = 'home-chart-filter-selected';
           } else {
             btnClass = 'home-chart-filter-unselected';
           }
           return (
-            <div key={key} class={btnClass} id={key + 'ChartBtn'} onClick={()=>self.showSec(key)}>{key}</div>
+            <div key={key} class={btnClass} id={key + 'ChartBtn'} onClick={self.showSec.bind(null, key)}>{key}</div>
           )
         });
       }

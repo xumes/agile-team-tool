@@ -81,14 +81,14 @@ var HomeTeamHeader = React.createClass({
           if ($('#' + h.pathId).length) {
             return (
               <div key={plink} style={{'display':'inline'}}>
-                <a class='hierarchy-link' title='View parent team information' alt='View parent team information' id={plink} href='#' onClick={()=>self.props.selectedTeamChanged(h.pathId)}>{h.name}</a>
+                <a class='hierarchy-link' title='View parent team information' alt='View parent team information' id={plink} href='#' onClick={self.props.selectedTeamChanged.bind(null, h.pathId)}>{h.name}</a>
                 <h class='hierarchy-mark'>&nbsp;&nbsp;&#10095;&nbsp;&nbsp;</h>
               </div>
             );
           } else {
             return (
               <div key={plink} style={{'display':'inline'}}>
-                <a class='hierarchy-link' title='View parent team information' alt='View parent team information' id={plink} href='#' onClick={()=>self.findTeamInAllTeams(h.pathId)}>{h.name}</a>
+                <a class='hierarchy-link' title='View parent team information' alt='View parent team information' id={plink} href='#' onClick={self.findTeamInAllTeams.bind(null, h.pathId)}>{h.name}</a>
                 <h class='hierarchy-mark'>&nbsp;&nbsp;&#10095;&nbsp;&nbsp;</h>
               </div>
             );
@@ -176,7 +176,7 @@ var HomeTeamHeader = React.createClass({
               </div>
             </div>
             <div class='home-team-header-btns2'>
-              <InlineSVG onClick={()=>self.showTeamTable()} class='home-team-header-btn-img2' src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
+              <InlineSVG onClick={self.showTeamTable} class='home-team-header-btn-img2' src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
               <div class='home-team-header-btn-title2'>
                 <h>}</h>
               </div>

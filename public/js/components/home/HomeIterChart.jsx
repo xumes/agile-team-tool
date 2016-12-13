@@ -1,6 +1,6 @@
 var React = require('react');
 var api = require('../api.jsx');
-// var Highcharts = require('highcharts');
+var chartStatus = require('./chartStatus.jsx').chartStatus;
 
 var HomeIterChart = React.createClass({
   render: function() {

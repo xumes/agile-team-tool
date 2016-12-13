@@ -4,6 +4,7 @@ var HomeIterChart = require('./HomeIterChart.jsx');
 var iteationHandler = require('./HomeIterationsHandler.jsx');
 var HomeFallBox = require('./HomeFallBox.jsx');
 var HomeSnapshotPull = require('./HomeSnapshotPull.jsx');
+var chartStatus = require('./chartStatus.jsx').chartStatus;
 
 var HomeIterSection = React.createClass({
   componentWillUpdate: function(nextProps, nextState) {
@@ -22,6 +23,8 @@ var HomeIterSection = React.createClass({
       var teamId = this.props.loadDetailTeam.team._id;
       var iterationData = this.props.loadDetailTeam.iterations;
       var teamAccess = this.props.loadDetailTeam.access;
+      $('#iterationSection').css('height', chartStatus.squad.charts.secHeight);
+      $('#squad_team_scard > .container-body-col-2-1').css('height', chartStatus.squad.charts.chartHeight);
       iteationHandler.squadIterationsHandler(teamId, iterationData, teamAccess);
     } else {
       $('#contentSpinner').hide();
@@ -30,6 +33,8 @@ var HomeIterSection = React.createClass({
       var teamId = this.props.loadDetailTeam.team._id;
       var teamName = this.props.loadDetailTeam.team.name;
       var snapshotData = this.props.loadDetailTeam.snapshot;
+      $('#iterationSection').css('height', chartStatus.nonSquad.charts.secHeight);
+      $('#nsquad_team_scard > .container-body-col-2-1').css('height', chartStatus.nonSquad.charts.chartHeight);
       iteationHandler.iterationSnapshotHandler(teamId, teamName, snapshotData);
     }
   },

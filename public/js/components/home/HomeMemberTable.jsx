@@ -84,7 +84,7 @@ var HomeMemberTable = React.createClass({
         <div id='teamMemberTable' style={{'display':'none'}}>
           <div class='team-member-table-title-div'>
             <h class='team-member-table-title'>Team Details</h>
-            <h class='team-member-table-close-btn' onClick={()=>self.props.showTeamTable()}>X</h>
+            <h class='team-member-table-close-btn' onClick={self.props.showTeamTable}>X</h>
           </div>
           <div class='team-member-table' id='memberTable'>
             <div class='team-member-table-header-block'>
