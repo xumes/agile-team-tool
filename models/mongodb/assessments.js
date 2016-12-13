@@ -230,7 +230,7 @@ module.exports.addTeamAssessment = function(user, data){
             data['updatedByUserId'] = createdUser.userId;
             data['updatedBy'] = createdUser.name;
             data['updateDate'] = new Date(moment.utc());
-            if (data['assessmentStatus'] == 'Submitted') {
+            if (data['assessmentStatus'] == 'Submitted' || data['assessmentStatus']=='Draft') {
               data['submittedByUserId'] = createdUser.userId;
               data['submittedBy'] = createdUser.name;
               if (_.isEmpty(data['submittedDate'])) {
@@ -339,10 +339,12 @@ module.exports.updateTeamAssessment = function(user, data){
             data['updatedByUserId'] = updatedUser.userId;
             data['updatedBy'] = updatedUser.name;
             data['updateDate'] = new Date(moment.utc());
-            if (data['assessmentStatus'] == 'Submitted') {
+            if (data['assessmentStatus'] == 'Submitted' || data['assessmentStatus'] == 'Draft') {
               data['submittedByUserId'] = updatedUser.userId;
               data['submittedBy'] = updatedUser.name;
-              data['submittedDate'] = new Date(moment.utc());
+              if (_.isEmpty(data['submittedDate'])) {
+                data['submittedDate'] = new Date(moment.utc());
+              }
             }
           }
           return Assessment.findOneAndUpdate({'_id' :  data['_id']}, data, {'new':true});
