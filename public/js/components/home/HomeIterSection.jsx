@@ -68,21 +68,13 @@ var HomeIterSection = React.createClass({
         <HomeFallBox component={iterationFallBoxComponents}/>
         <div style={{'height':'100%'}} class='ibm-container-body'>
           <div id='nsquad_team_scard' style={{'display':'none', 'height':'100%'}}>
-            <div class='container-body-columns'>
-              <HomeIterChart id={'pvelocityChart'} />
-              <HomeIterChart id={'pthroughputChart'} />
-            </div>
-            <div class='container-body-columns' style={{'top':'2%'}}>
-              <HomeIterChart id={'pdefectsChart'} />
-              <HomeIterChart id={'pwipBacklogChart'} />
-            </div>
-            <div class='container-body-columns' style={{'top':'4%'}}>
-              <HomeIterChart id={'pPizzaChart'} />
-              <HomeIterChart id={'piePizzaChart'} />
-            </div>
-            <div class='container-body-columns' style={{'top':'6%'}}>
-              <HomeIterChart id={'pstatisfactionChart'} />
-            </div>
+            <HomeIterChart id={'pvelocityChart'} />
+            <HomeIterChart id={'pthroughputChart'} />
+            <HomeIterChart id={'pdefectsChart'} />
+            <HomeIterChart id={'pwipBacklogChart'} />
+            <HomeIterChart id={'pPizzaChart'} />
+            <HomeIterChart id={'piePizzaChart'} />
+            <HomeIterChart id={'pstatisfactionChart'} />
           </div>
           <div id='squad_team_scard' style={{'display':'none','height':'100%'}}>
             <HomeIterChart id={'velocityChart'} />

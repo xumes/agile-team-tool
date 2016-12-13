@@ -793,19 +793,19 @@ body {
   float: left;
 }
 
-.home-chart-filter-columns {
+/*.home-chart-filter-columns {
   height: 20%;
   width: 100%;
-}
+}*/
 
 .home-chart-filter-selected {
   position: relative;
   float: left;
-  top: 10%;
-  left: 10%;
+  margin-top: 1.5%;
+  margin-left: 8%;
   background-color: #7CC7FF;
   border: 0.1em solid #7CC7FF;
-  height: 80%;
+  height: 16%;
   width: 37.5%;
   font-family: "HelvNeue Roman for IBM";
   font-size: 1.2em;
@@ -818,10 +818,10 @@ body {
 .home-chart-filter-unselected {
   position: relative;
   float: left;
-  top: 10%;
-  left: 10%;
+  margin-top: 1.5%;
+  margin-left: 8%;
   border: 0.1em solid #00B4A0;
-  height: 80%;
+  height: 16%;
   width: 37.5%;
   font-family: "HelvNeue Roman for IBM";
   font-size: 1.2em;
