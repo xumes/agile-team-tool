@@ -225,14 +225,14 @@ module.exports.addTeamAssessment = function(user, data){
             return Promise.reject({'error': 'This user is not exist.'});
           } else {
             data['createdByUserId'] = createdUser.userId;
-            data['createdBy'] = createdUser.name;
+            data['createdBy'] = createdUser.email;
             data['createDate'] = new Date(moment.utc());
             data['updatedByUserId'] = createdUser.userId;
-            data['updatedBy'] = createdUser.name;
+            data['updatedBy'] = createdUser.email;
             data['updateDate'] = new Date(moment.utc());
             if (data['assessmentStatus'] == 'Submitted' || data['assessmentStatus']=='Draft') {
               data['submittedByUserId'] = createdUser.userId;
-              data['submittedBy'] = createdUser.name;
+              data['submittedBy'] = createdUser.email;
               if (_.isEmpty(data['submittedDate'])) {
                 data['submittedDate'] = new Date(moment.utc());
               }
@@ -337,11 +337,11 @@ module.exports.updateTeamAssessment = function(user, data){
             return Promise.reject({'error': 'This user is not exist.'});
           } else {
             data['updatedByUserId'] = updatedUser.userId;
-            data['updatedBy'] = updatedUser.name;
+            data['updatedBy'] = updatedUser.email;
             data['updateDate'] = new Date(moment.utc());
             if (data['assessmentStatus'] == 'Submitted' || data['assessmentStatus'] == 'Draft') {
               data['submittedByUserId'] = updatedUser.userId;
-              data['submittedBy'] = updatedUser.name;
+              data['submittedBy'] = updatedUser.email;
               if (_.isEmpty(data['submittedDate'])) {
                 data['submittedDate'] = new Date(moment.utc());
               }

@@ -73,9 +73,9 @@ var LoadLinkData = React.createClass({
         var selectedVal = row.linkLabel;
         var linkUrl = row.linkUrl;
         return(
-          <div id={`link_${id}`} key={`linkWrapper-${id}`} data-counter={id} class='importantLinksSection'>
+          <div id={'link_' + id} key={'linkWrapper-' + id} data-counter={id} class='importantLinksSection'>
             {/* display dropdown select for link labels */}
-            <LinksSelectDropdown key={`select-${idx}-${id}`}
+            <LinksSelectDropdown key={'select-' + idx + '-' + id}
               row={row}
               id={id}
               _id={_id}
@@ -92,7 +92,7 @@ var LoadLinkData = React.createClass({
               linkUrl={linkUrl} data-counter={idx} onEditmodeLink={self.onEditmodeLink} />
 
             {/* display update, cancel & delete icon button */}
-            <LinksButtonCtl row={row} key={`btnctl-${idx}-${id}`}
+            <LinksButtonCtl row={row} key={'btnctl-' + idx + '-' + id}
               data-counter={id}
               action='onEdit'
               getOnEditModeLinkIds={self.getOnEditModeLinkIds}

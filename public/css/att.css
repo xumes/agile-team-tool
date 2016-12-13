@@ -691,6 +691,8 @@ ul[class='ibm-twisty agile-principle'], ul[class='ibm-twisty agile-practice'] {
 #app-content .mat-levels {float: right;}
 #app-content .padTopby10 {padding-top: 10px;}
 #app-content .padTopby5 {padding-top: 5px;}
+#delTable td.aligntxtLeft, #colTable td.aligntxtLeft {text-align: left;}
+
 
 /*=END Assessment Summary */
 [class*='agile-practice'] .ibm-twisty-body table {

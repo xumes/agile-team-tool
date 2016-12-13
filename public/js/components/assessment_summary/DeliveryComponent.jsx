@@ -4,8 +4,9 @@ var DeliveryComponent = React.createClass({
   render: function() {
     var displayType = this.props.displayType;
     var deliveryResultAry = this.props.deliveryResultAry;
+    var componentName = '';
     if (deliveryResultAry.length > 0) {
-      var componentName = deliveryResultAry[0]['props']['assessed_cmpnt'].componentName;
+      componentName = deliveryResultAry[0]['props']['assessed_cmpnt'].componentName;
     }
 
     return (
