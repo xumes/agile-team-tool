@@ -62,9 +62,13 @@ var TeamParentAssociation = React.createClass({
     var self = this;
     if (this.state.selectableParentTeams.currentParentId != '') {
       teamApi.associateTeam(self.state.selectableParentTeams.currentParentId, self.props.selectedTeam.team._id)
-        .then(function(result) {
+        .then(function(results) {
           currentParentId = self.state.selectableParentTeams.currentParentId;
           alert('You have successfully updated the Parent team association.');
+          var result = _.find(results, function(team) {
+            if (team._id == self.props.selectedTeam.team._id) return team;
+          });
+          self.props.sectionUpdateHandler(result);
           return result;
         })
         .catch(function(err) {
@@ -77,9 +81,13 @@ var TeamParentAssociation = React.createClass({
         return;
       }
       teamApi.removeAssociation(self.props.selectedTeam.team._id)
-        .then(function(result) {
+        .then(function(results) {
           currentParentId = '';
           alert('You have successfully removed the Parent team association.');
+          var result = _.find(results, function(team) {
+            if (team._id == self.props.selectedTeam.team._id) return team;
+          });
+          self.props.sectionUpdateHandler(result);
           return result;
         })
         .catch(function(err) {
@@ -97,7 +105,7 @@ var TeamParentAssociation = React.createClass({
       <div class='ibm-show-hide ibm-widget-processed' id='assocParentPageSection'>
         <h2 class='ibm-bold ibm-h4'>
           <a class='' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={self.showHideSection}>
-            Parent Team Association
+            Parent team association
           </a>
         </h2>
         <div class='ibm-container-body' style={{'display':'none'}}>

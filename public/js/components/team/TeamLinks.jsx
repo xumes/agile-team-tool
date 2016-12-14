@@ -80,7 +80,7 @@ var TeamLinks = React.createClass({
         <div class='ibm-show-hide ibm-widget-processed' id='teamLinkSection'>
           <h2 class='ibm-bold ibm-h4'>
             <a class='' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={self.showHideSection}>
-              Important Links
+              Important links
             </a>
           </h2>
           <div class="ibm-container-body" id="importantLinks" style={{'display':'none'}}>

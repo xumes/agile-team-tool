@@ -28,8 +28,8 @@ var TeamChildAddSection = React.createClass({
       alert('No team selected to associate as a Child team.');
       return;
     } else {
-      teamApi.associateTeam(this.props.childTeams.currentTeamId, self.refs.childSelectList.value)
-        .then(function(result) {
+      teamApi.associateTeam(self.props.childTeams.currentTeamId, self.refs.childSelectList.value)
+        .then(function(results) {
           self.props.childTeamsUpdateHandler('You have successfully created a Child team association.');
           return null;
         })
