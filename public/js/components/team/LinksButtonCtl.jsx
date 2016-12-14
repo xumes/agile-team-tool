@@ -30,7 +30,6 @@ var LinksButtonCtl = React.createClass({
       });
       $('#importantLinkWrapper div.importantLinksSection').on('mouseout', function(){
         var ctr = $(this).attr('data-counter');
-        var editModeLinkIds = self.props.getOnEditModeLinkIds();
         $('#DeleteLinkGrp_'+ctr).hide();
         $('#UpdateCancelLinkGrp_'+ctr).hide();
       });

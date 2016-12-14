@@ -189,7 +189,7 @@ function sortAssessmentTemplate(templates) {
 function sortAssessments(assessments) {
   if (assessments != null && assessments.length > 1) {
     assessments.sort(function(a, b) {
-      if (a['assessmt_status'].toLowerCase() == 'draft' && b['assessmt_status'].toLowerCase() == 'draft') {
+      if (a['assessmt_status'] !== undefined && a['assessmt_status'].toLowerCase() == 'draft' && b['assessmt_status'].toLowerCase() == 'draft') {
         var aCreateDate = a['created_dt'].split(' ')[0].replace(/-/g, '/') + ' ' + a['created_dt'].split(' ')[1];
         var bCreateDate = b['created_dt'].split(' ')[0].replace(/-/g, '/') + ' ' + b['created_dt'].split(' ')[1];
         if (new Date(bCreateDate).getTime() == new Date(aCreateDate).getTime()) {
@@ -198,7 +198,7 @@ function sortAssessments(assessments) {
           return (new Date(bCreateDate).getTime() > new Date(aCreateDate).getTime()) ? 1 : -1;
         }
 
-      } else if (a['assessmt_status'].toLowerCase() == 'submitted' && b['assessmt_status'].toLowerCase() == 'submitted') {
+      } else if (a['assessmt_status'] !== undefined && a['assessmt_status'].toLowerCase() == 'submitted' && b['assessmt_status'].toLowerCase() == 'submitted') {
         var aSubmitDate = a['self-assessmt_dt'].split(' ')[0].replace(/-/g, '/') + ' ' + a['self-assessmt_dt'].split(' ')[1];
         var bSubmitDate = b['self-assessmt_dt'].split(' ')[0].replace(/-/g, '/') + ' ' + b['self-assessmt_dt'].split(' ')[1];
         if (new Date(bSubmitDate).getTime() == new Date(aSubmitDate).getTime()) {
@@ -207,7 +207,7 @@ function sortAssessments(assessments) {
           return (new Date(bSubmitDate).getTime() > new Date(aSubmitDate).getTime()) ? 1 : -1;
         }
       } else {
-        if (b['assessmt_status'].toLowerCase() == 'submitted')
+        if (b['assessmt_status'] !== undefined && b['assessmt_status'].toLowerCase() == 'submitted')
           return -1;
         else
           return 1;

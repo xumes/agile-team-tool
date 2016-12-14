@@ -20,8 +20,7 @@ var LoadLinkData = React.createClass({
     var self = this;
     var editedLinkIds = {};
     editedLinkIds[id] = id;
-    onEditModeLinkIds = Object.assign(self.state.onEditModeLinkIds, editedLinkIds);
-    //self.setState({onEditModeLinkIds: onEditModeLinkIds});
+    _.extend(self.state.onEditModeLinkIds, editedLinkIds);
   },
 
   getOnEditModeLinkIds: function() {
