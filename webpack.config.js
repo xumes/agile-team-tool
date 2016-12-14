@@ -30,7 +30,7 @@ module.exports = {
           plugins: ['react-html-attrs']
         }
       },
-      { test: /\.svg$/, loader: 'svg-inline'}
+      {test: /\.svg$/, loader: 'svg-inline'}
     ]
   },
   plugins: [

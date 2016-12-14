@@ -84,18 +84,16 @@ function launchFeeback() {
     type: 'GET',
     url: '/api/users/activeInfo',
     contentType: 'application/json'
-  })
-  .fail(function(xhr, textStatus, errorThrown) {
+  }).fail(function(xhr, textStatus, errorThrown) {
     if (xhr.status === 400) {
       console.log(JSON.stringify(errorThrown));
     }
-  })
-  .done(function(userInfo) {
+  }).done(function(userInfo) {
     initFeedback(userInfo[0]);
     getTeamNames(teamNamesHandler, []);
     IBMCore.common.widget.overlay.show('sendFeedback');
     $('#feeback_submit').attr('disabled', 'disabled');
- });
+  });
 }
 
 function validateEmail() {

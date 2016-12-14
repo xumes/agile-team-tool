@@ -74,13 +74,13 @@ module.exports = function(app, includes) {
   };
 
   getActiveUserInfo = function(req, res) {
-      Users.getUsersInfo(req.session.userId)
-      .then(function(result) {
-        res.status(200).send(result);
-      })
-      .catch(function(err) {
-        res.status(404).send(err);
-      });
+    Users.getUsersInfo(req.session.userId)
+    .then(function(result) {
+      res.status(200).send(result);
+    })
+    .catch(function(err) {
+      res.status(404).send(err);
+    });
   };
 
   // //TODO: Refactor this and store in the database

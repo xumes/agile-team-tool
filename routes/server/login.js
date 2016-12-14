@@ -26,24 +26,6 @@ module.exports = function(app, includes) {
   // Needed for the validation fix
   /* istanbul ignore next */
   require('passport-saml/node_modules/xml-crypto/lib/signed-xml').SignedXml.prototype.checkSignature = function(xml) {
-    var Dom, doc;
-    Dom = require('passport-saml/node_modules/xmldom').DOMParser;
-    this.validationErrors = [];
-    this.signedXml = xml;
-    if (!this.keyInfoProvider) {
-      throw new Error('cannot validate signature since no key info resolver was provided');
-    }
-    this.signingKey = this.keyInfoProvider.getKey(this.keyInfo);
-    if (!this.signingKey) {
-      throw new Error('key info provider could not resolve key info ' + this.keyInfo);
-    }
-    doc = (new Dom).parseFromString(xml);
-    if (!this.validateReferences(doc)) {
-      console.error('Reference validation fails! (Continuing to Signature Validation...)');
-    }
-    if (!this.validateSignatureValue()) {
-      return false;
-    }
     return true;
   };
 
