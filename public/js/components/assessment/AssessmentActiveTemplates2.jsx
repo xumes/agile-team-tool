@@ -58,6 +58,7 @@ var AssessmentActiveTemplates2 = React.createClass({
         $('input[type=\'radio\']').prop('disabled', true);
       }
     }
+    $("#atma a[data-widget='tooltip']").tooltip();
   },
   countPractics: function(template) {
     var templateCount = []
@@ -124,16 +125,6 @@ var AssessmentActiveTemplates2 = React.createClass({
       return (
         <ul class='ibm-twisty agile-assessment ibm-widget-processed' id={containerId} data-widget='twisty'>
           {components}
-          <div id='currTooltip' class='ibm-tooltip-content'>
-            <p class='toolTip'>
-              Your teams current maturity level.
-            </p>
-          </div>
-          <div id='targTooltip' class='ibm-tooltip-content'>
-            <p class='toolTip'>
-              Your teams target maturity level.
-            </p>
-          </div>
         </ul>
       );
     }
