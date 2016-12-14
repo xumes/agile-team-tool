@@ -387,7 +387,7 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
         currData[monthIndex].totalDefectsStartBal = currData[monthIndex].totalDefects + defectsStartBal;
         currData[monthIndex].totalDefects = currData[monthIndex].totalDefects + defects;
         currData[monthIndex].totalDefectsClosed = currData[monthIndex].totalDefects + defectsClosed;
-        currData[monthIndex].totalDefectsEndBal = currData[monthIndex].totalDefects + defectsEndBal;
+        currData[monthIndex].totalDefectsEndBal = currData[monthIndex].totalDefectsEndBal + defectsEndBal;
         currData[monthIndex].totalDplymts = currData[monthIndex].totalDplymts + dplymnts;
 
         if (teamStat > 0) {
@@ -399,7 +399,7 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
           currData[monthIndex].totClientStatIter = currData[monthIndex].totClientStatIter + 1;
         }
         if (cycleTimeBacklog > 0) {
-          currData[monthIndex].totcycleTimeBacklog = currData[monthIndex].totcycleTimeBacklog + cycleTimeBacklog;
+          currData[monthIndex].totCycleTimeBacklog = currData[monthIndex].totCycleTimeBacklog + cycleTimeBacklog;
           currData[monthIndex].totCycleTimeBacklogIter = currData[monthIndex].totCycleTimeBacklogIter + 1;
         }
         if (cycleTimeWIP > 0) {
