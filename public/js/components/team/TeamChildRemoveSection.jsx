@@ -39,7 +39,7 @@ var TeamChildRemoveSection = React.createClass({
         promiseArray.push(teamApi.removeAssociation(childId));
       });
       Promise.all(promiseArray)
-        .then(function(result){
+        .then(function(results){
           self.props.childTeamsUpdateHandler('Child team(s) has been removed successfully.');
           return result;
         })

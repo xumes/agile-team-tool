@@ -143,7 +143,14 @@ var TeamPage = React.createClass({
       }
     });
   },
-
+  sectionUpdateHandler: function(updatedTeam) {
+    var self = this;
+    var selectedTeam = self.state.selectedTeam;
+    selectedTeam.team = updatedTeam;
+    self.setState({
+      selectedTeam: selectedTeam
+    });
+  },
   updateLink: function(teamId, linkData) {
     var self = this;
     var currentLinkData = self.state.selectedTeam;
@@ -174,9 +181,9 @@ var TeamPage = React.createClass({
         <form id='createTeamForm' class='ibm-column-form'>
           <TeamForm teamChangeHandler={this.teamChangeHandler} selectedTeam={this.state.selectedTeam} defaultTeam={this.state.defaultTeam} getSelectedTeam={this.getSelectedTeam}/>
           <div id='teamDetailSection' class='squad-sections' style={overallStyle}>
-            <TeamMembers selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
+            <TeamMembers selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection} sectionUpdateHandler={this.sectionUpdateHandler} />
             <TeamLinks selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection} getSelectedLinkLabel={this.getSelectedLinkLabel} setSelectedLinkLabel={this.setSelectedLinkLabel} updateLink={this.updateLink} />
-            <TeamParentAssociation selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
+            <TeamParentAssociation selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection} sectionUpdateHandler={this.sectionUpdateHandler} />
             <TeamChildAssociation selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
             <TeamIteration selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
             <TeamAssessment selectedTeam={this.state.selectedTeam} showHideSection={this.showHideSection}/>
