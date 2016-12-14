@@ -1,5 +1,6 @@
 var React = require('react');
 var api = require('../api.jsx');
+var InlineSVG = require('svg-inline-react');
 var _ = require('underscore');
 var moment = require('moment');
 
@@ -61,6 +62,9 @@ var HomeIterContent = React.createClass({
               <select defaultValue={defIterId} id='homeIterSelection'>
                 {iterations}
               </select>
+              <div class='home-iter-add-btn-block'>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
+              </div>
             </div>
             <div class='home-iter-last-update-block'>
               <div class='home-iter-last-update-title'>Last updated</div>
@@ -73,57 +77,63 @@ var HomeIterContent = React.createClass({
             <div class='home-iter-sprint-block'>
               <div class='home-iter-content-title'>Sprint Availability</div>
               <div class='home-iter-content-sub'>Optimum team availability (In days)</div>
+              <div class='home-iter-content-point' style={{'height': '16%'}}></div>
               <div class='home-iter-content-sub'>Person days unavailable</div>
+              <div class='home-iter-content-point' style={{'height': '16%'}}></div>
               <div class='home-iter-content-sub'>Was there a team member change?</div>
-              <div class='home-iter-content-point'>{memberChanged}</div>
+              <div class='home-iter-content-point' style={{'height': '16%'}}>{memberChanged}</div>
               <div class='home-iter-content-sub'>Person days available</div>
+              <div class='home-iter-content-point' style={{'height': '16%'}}></div>
+
             </div>
             <div class='home-iter-throughput-block'>
               <div class='home-iter-content-title'>Throughput (Operations)</div>
               <div class='home-iter-content-sub'>Stories/Cards/Tickets-Committed</div>
-              <div class='home-iter-content-point'>{committedStories}</div>
+              <div class='home-iter-content-point' style={{'height': '20%'}}>{committedStories}</div>
               <div class='home-iter-content-sub'>Stories/Cards/Tickets-Delivered</div>
-              <div class='home-iter-content-point'>{deliveredStories}</div>
+              <div class='home-iter-content-point' style={{'height': '20%'}}>{deliveredStories}</div>
               <div class='home-iter-content-sub'>Stories per person days</div>
+              <div class='home-iter-content-point' style={{'height': '20%'}}></div>
             </div>
             <div class='home-iter-velocity-block'>
               <div class='home-iter-content-title'>Velocity (Development)</div>
               <div class='home-iter-content-sub'>Story points committed</div>
-              <div class='home-iter-content-point'>{commitedStoryPoints}</div>
+              <div class='home-iter-content-point' style={{'height': '16%'}}>{commitedStoryPoints}</div>
               <div class='home-iter-content-sub'>Story points delivered</div>
-              <div class='home-iter-content-point'>{storyPointsDelivered}</div>
+              <div class='home-iter-content-point' style={{'height': '16%'}}>{storyPointsDelivered}</div>
               <div class='home-iter-content-sub'>Deployments this iteration</div>
-              <div class='home-iter-content-point'>{deployments}</div>
+              <div class='home-iter-content-point' style={{'height': '16%'}}>{deployments}</div>
               <div class='home-iter-content-sub'>Story points per person days</div>
+              <div class='home-iter-content-point' style={{'height': '16%'}}></div>
             </div>
             <div class='home-iter-defects-block'>
               <div class='home-iter-content-title'>Defects</div>
               <div class='home-iter-content-sub'>Opening balance</div>
-              <div class='home-iter-content-point'>{defectsStartBal}</div>
+              <div class='home-iter-content-point' style={{'height': '16%'}}>{defectsStartBal}</div>
               <div class='home-iter-content-sub'>New this iteration</div>
-              <div class='home-iter-content-point'>{defects}</div>
+              <div class='home-iter-content-point' style={{'height': '16%'}}>{defects}</div>
               <div class='home-iter-content-sub'>Resolved this iteration</div>
-              <div class='home-iter-content-point'>{defectsClosed}</div>
+              <div class='home-iter-content-point' style={{'height': '16%'}}>{defectsClosed}</div>
               <div class='home-iter-content-sub'>Closing balance</div>
-              <div class='home-iter-content-point'>{defectsEndBal}</div>
+              <div class='home-iter-content-point' style={{'height': '16%'}}>{defectsEndBal}</div>
             </div>
             <div class='home-iter-cyclage-block'>
               <div class='home-iter-content-title'>Cyclage</div>
               <div class='home-iter-content-sub'>WIP Cycle Time (In days)</div>
-              <div class='home-iter-content-point'>{cycleTimeWIP}</div>
+              <div class='home-iter-content-point' style={{'height': '26.4%'}}>{cycleTimeWIP}</div>
               <div class='home-iter-content-sub'>Backlog Cycle Time (In days)</div>
-              <div class='home-iter-content-point'>{cycleTimeInBacklog}</div>
+              <div class='home-iter-content-point' style={{'height': '26.4%'}}>{cycleTimeInBacklog}</div>
             </div>
             <div class='home-iter-overal-block'>
               <div class='home-iter-content-title'>Overal Satisfaction</div>
               <div class='home-iter-content-sub'>Client satisfaction</div>
-              <div class='home-iter-content-point'>{clientSatisfaction}</div>
+              <div class='home-iter-content-point' style={{'height': '26.4%'}}>{clientSatisfaction}</div>
               <div class='home-iter-content-sub'>Team satisfaction</div>
-              <div class='home-iter-content-point'>{teamSatisfaction}</div>
+              <div class='home-iter-content-point' style={{'height': '26.4%'}}>{teamSatisfaction}</div>
             </div>
             <div class='home-iter-comment-block'>
               <div class='home-iter-content-title'>Iteration Comments</div>
-              <textarea class='home-iter-comment-test' readOnly='readonly'>{defIter.comment}</textarea>
+              <textarea class='home-iter-comment-test' value={defIter.comment}></textarea>
             </div>
           </div>
 
