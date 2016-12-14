@@ -10,7 +10,7 @@ var HomeIterContent = React.createClass({
     var self = this;
     if (!($('#homeIterSelection').hasClass('select2-hidden-accessible'))) {
       $('#homeIterSelection').select2();
-      $('#homeIterSelection').change(this.props.iterChangeHandler);
+      $('#homeIterSelection').change(self.props.iterChangeHandler);
     }
     _.each($('.home-iter-content-point'), function(blk){
       if (blk.id != '') {
@@ -19,23 +19,33 @@ var HomeIterContent = React.createClass({
         $('#'+blk.id).prop('contenteditable', 'false');
       }
     });
-    $('.home-iter-content-point').on('click', function() {
-      setTimeout(function() {
-        document.execCommand('selectAll', false, null)
-      }, 0);
-    });
-    $('.home-iter-content-point').keypress(function(e){
-      var key = e.which;
-      if (key == 13)  // the enter key code
-      {
-        self.saveIter(e.target.id);
-      }
-    });
-    $('.home-iter-content-point').keyup(function(e){
-      if (e.keyCode == 27) {
-        self.cancelChange(e.target.id);
-      }
-    });
+    if (self.props.loadDetailTeam.access) {
+      $('.home-iter-content-point').on('click', function() {
+        setTimeout(function() {
+          document.execCommand('selectAll', false, null)
+        }, 0);
+      });
+      $('.home-iter-content-point').keypress(function(e){
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+          self.saveIter(e.target.id);
+        }
+      });
+      $('.home-iter-content-point').keyup(function(e){
+        if (e.keyCode == 27) {
+          self.cancelChange(e.target.id);
+        }
+      });
+    } else {
+      $('.home-iter-content-point').prop('onclick',null).off('click');
+      $('.home-iter-content-point').keypress(function(e){
+
+      });
+      $('.home-iter-content-point').keyup(function(e){
+
+      });
+    }
   },
   iterBlockClickHandler: function(e) {
     var self = this;
@@ -113,6 +123,7 @@ var HomeIterContent = React.createClass({
         var cycleTimeInBacklog = (defIter.cycleTimeInBacklog == null) ? '' : defIter.cycleTimeInBacklog;
         var clientSatisfaction = (defIter.clientSatisfaction == null) ? '' : defIter.clientSatisfaction;
         var teamSatisfaction = (defIter.teamSatisfaction == null) ? '' : defIter.teamSatisfaction;
+        var access = self.props.loadDetailTeam.access;
         return (
           <div>
             <div class='home-iter-title'>Iteration Overview</div>
@@ -143,7 +154,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Person days unavailable</div>
-                <div data-default={memberFte} id='memberFte' class='home-iter-content-point' onClick={this.iterBlockClickHandler}>{memberFte}</div>
+                <div data-default={memberFte} id='memberFte' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{memberFte}</div>
                 <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'memberFte')}>
                   <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                 </div>
@@ -153,7 +164,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Was there a team member change?</div>
-                <div data-default={memberChanged} id='memberChanged' class='home-iter-content-point' onClick={this.iterBlockClickHandler}>{memberChanged}</div>
+                <div data-default={memberChanged} id='memberChanged' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{memberChanged}</div>
                   <div class='home-iter-content-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
@@ -173,7 +184,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '25%'}}>
                 <div class='home-iter-content-sub'>Stories/Cards/Tickets-Committed</div>
-                <div data-default={committedStories} id='committedStories' class='home-iter-content-point' onClick={this.iterBlockClickHandler}>{committedStories}</div>
+                <div data-default={committedStories} id='committedStories' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{committedStories}</div>
                   <div class='home-iter-content-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
@@ -183,7 +194,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '25%'}}>
                 <div class='home-iter-content-sub'>Stories/Cards/Tickets-Delivered</div>
-                <div data-default={deliveredStories} id='deliveredStories' class='home-iter-content-point' onClick={this.iterBlockClickHandler}>{deliveredStories}</div>
+                <div data-default={deliveredStories} id='deliveredStories' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{deliveredStories}</div>
                   <div class='home-iter-content-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
@@ -203,7 +214,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Story points committed</div>
-                <div data-default={commitedStoryPoints} id='commitedStoryPoints' class='home-iter-content-point' onClick={this.iterBlockClickHandler}>{commitedStoryPoints}</div>
+                <div data-default={commitedStoryPoints} id='commitedStoryPoints' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{commitedStoryPoints}</div>
                   <div class='home-iter-content-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
@@ -213,7 +224,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Story points delivered</div>
-                <div data-default={storyPointsDelivered} id='storyPointsDelivered' class='home-iter-content-point' onClick={this.iterBlockClickHandler}>{storyPointsDelivered}</div>
+                <div data-default={storyPointsDelivered} id='storyPointsDelivered' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{storyPointsDelivered}</div>
                   <div class='home-iter-content-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
@@ -223,7 +234,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Deployments this iteration</div>
-                <div data-default={deployments} id='deployments' class='home-iter-content-point' onClick={this.iterBlockClickHandler}>{deployments}</div>
+                <div data-default={deployments} id='deployments' class='home-iter-content-point' onClick={access?this.iterBlockClickHandler:''}>{deployments}</div>
                   <div class='home-iter-content-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
@@ -243,7 +254,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Opening balance</div>
-                <div data-default={defectsStartBal} id='defectsStartBal' class='home-iter-content-point' onClick={this.iterBlockClickHandler}>{defectsStartBal}</div>
+                <div data-default={defectsStartBal} id='defectsStartBal' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{defectsStartBal}</div>
                   <div class='home-iter-content-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
@@ -253,7 +264,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>New this iteration</div>
-                <div data-default={defects} id='defects' class='home-iter-content-point' onClick={this.iterBlockClickHandler}>{defects}</div>
+                <div data-default={defects} id='defects' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{defects}</div>
                   <div class='home-iter-content-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
@@ -263,7 +274,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Resolved this iteration</div>
-                <div data-default={defectsClosed} id='defectsClosed' class='home-iter-content-point' onClick={this.iterBlockClickHandler}>{defectsClosed}</div>
+                <div data-default={defectsClosed} id='defectsClosed' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{defectsClosed}</div>
                   <div class='home-iter-content-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
@@ -273,7 +284,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Closing balance</div>
-                <div data-default={defectsEndBal} id='defectsEndBal' class='home-iter-content-point' onClick={this.iterBlockClickHandler}>{defectsEndBal}</div>
+                <div data-default={defectsEndBal} id='defectsEndBal' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{defectsEndBal}</div>
                   <div class='home-iter-content-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
@@ -289,7 +300,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
                 <div class='home-iter-content-sub'>WIP Cycle Time (In days)</div>
-                <div data-default={cycleTimeWIP} id='cycleTimeWIP' class='home-iter-content-point' onClick={this.iterBlockClickHandler}>{cycleTimeWIP}</div>
+                <div data-default={cycleTimeWIP} id='cycleTimeWIP' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{cycleTimeWIP}</div>
                   <div class='home-iter-content-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
@@ -299,7 +310,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
                 <div class='home-iter-content-sub'>Backlog Cycle Time (In days)</div>
-                <div data-default={cycleTimeInBacklog} id='cycleTimeInBacklog' class='home-iter-content-point' onClick={this.iterBlockClickHandler}>{cycleTimeInBacklog}</div>
+                <div data-default={cycleTimeInBacklog} id='cycleTimeInBacklog' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{cycleTimeInBacklog}</div>
                   <div class='home-iter-content-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
@@ -314,7 +325,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
                 <div class='home-iter-content-sub'>Client satisfaction</div>
-                <div data-default={clientSatisfaction} id='clientSatisfaction' class='home-iter-content-point' onClick={this.iterBlockClickHandler}>{clientSatisfaction}</div>
+                <div data-default={clientSatisfaction} id='clientSatisfaction' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{clientSatisfaction}</div>
                   <div class='home-iter-content-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
@@ -324,7 +335,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
                 <div class='home-iter-content-sub'>Team satisfaction</div>
-                <div data-default={teamSatisfaction} id='teamSatisfaction' class='home-iter-content-point' onClick={this.iterBlockClickHandler}>{teamSatisfaction}</div>
+                <div data-default={teamSatisfaction} id='teamSatisfaction' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{teamSatisfaction}</div>
                   <div class='home-iter-content-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>

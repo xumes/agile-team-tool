@@ -1075,7 +1075,11 @@ body {
   color: #777677;
 }
 
-.home-iter-content-point:hover {
+/*.home-iter-content-point:hover {
+  background-color: #FFFFFF;
+  border: 0.1em solid #4178BE;
+}*/
+.home-iter-content-point-hover:hover{
   background-color: #FFFFFF;
   border: 0.1em solid #4178BE;
 }
