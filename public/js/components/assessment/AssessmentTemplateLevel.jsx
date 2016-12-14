@@ -118,6 +118,8 @@ var AssessmentTemplateLevel = React.createClass({
           </tr>
         )
       });
+      var currTT = "Your team's current maturity level.";
+      var targTT = "Your team's targets for the next 90 days.  Choose the practices that the team agrees will have the most impact.";
       return (
         <table class='ibm-data-table ibm-altrows agile-practice' width='100%' summary='Maturity assessment level and description for the identified practice.'>
           <caption>{this.props.description}</caption>
@@ -125,15 +127,15 @@ var AssessmentTemplateLevel = React.createClass({
               <tr>
                 <th scope='col' width='15%'>Maturity level</th>
                 <th scope='col' width='75%'></th>
-                <th scope='col' width='5%' id={levelMainId+'th_curr'} style={{'left': '-1%', 'textAlign': 'center', 'position': 'relative'}}>
+                <th scope='col' width='7%' id={levelMainId+'th_curr'} style={{'left': '-1%', 'textAlign': 'center', 'position': 'relative'}}>
                   Current
-                  <a class='ibm-information-link' data-widget='tooltip' style={{'cursor': 'default', 'position': 'relative', 'left': '5%', 'top': '0%', 'display': 'inline'}} data-contentid='currTooltip'>
+                  <a class='ibm-information-link' data-widget='tooltip' style={{'cursor': 'default', 'position': 'relative', 'left': '5%', 'top': '0%', 'display': 'inline'}} title={currTT}>
                     <span class='ibm-access'>Tooltip</span>
                   </a>
                 </th>
-                <th scope='col' width='5%' id={levelMainId+'th_targ'} style={{'textAlign': 'center'}}>
+                <th scope='col' width='7%' id={levelMainId+'th_targ'} style={{'textAlign': 'center'}}>
                   Target
-                  <a class='ibm-information-link' data-widget='tooltip' style={{'cursor': 'default', 'position': 'relative', 'left': '5%', 'top': '0%', 'display': 'inline'}} data-contentid='targTooltip'>
+                  <a class='ibm-information-link' data-widget='tooltip' style={{'cursor': 'default', 'position': 'relative', 'left': '5%', 'top': '0%', 'display': 'inline'}} title={targTT}>
                     <span class='ibm-access'>Tooltip</span>
                   </a>
                 </th>
