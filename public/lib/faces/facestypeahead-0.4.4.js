@@ -51,20 +51,17 @@ dojo.provide("dojo.NodeList-data");
   //  in the original list. This is true even when the list length is 1, eg:
   //  when looking up a node by ID (#foo)
   };
-
   dojo.NodeList.prototype.removeData = function(key){
   // summary: Remove the data associated with these nodes.
   // key: String?
   //  If ommitted, clean all data for this node.
   //  If passed, remove the data item found at `key`
   };
-
   dojo._nodeDataCache = {
   // summary: An alias to the private dataCache for NodeList-data. NEVER USE THIS!
   //  This private is only exposed for the benefit of unit testing, and is
   //  removed during the build process.
   };
-
 =====*/
 
   var dataCache = {}, x = 0, dataattr = "data-dojo-dataid", nl = d.NodeList,
