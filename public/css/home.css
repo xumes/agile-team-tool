@@ -943,7 +943,7 @@ body {
 .home-iter-last-update {
   position: relative;
   top: 15%;
-  right: 8%;
+  right: 4%;
   height: 85%;
   width: 40%;
   display: inline-block;
@@ -959,8 +959,8 @@ body {
   position: relative;
   top: 5.5%;
   left: 5%;
-  width: 90%;
-  height: 8%;
+  width: 95%;
+  height: 10%;
   float: left;
 }
 
@@ -968,8 +968,8 @@ body {
   position: relative;
   top: 7.5%;
   left: 5%;
-  width: 90%;
-  height: 7%;
+  width: 95%;
+  height: 8%;
   float: left;
 }
 
@@ -977,8 +977,8 @@ body {
   position: relative;
   top: 9.5%;
   left: 5%;
-  width: 90%;
-  height: 8%;
+  width: 95%;
+  height: 10%;
   float: left;
 }
 
@@ -986,8 +986,8 @@ body {
   position: relative;
   top: 11.5%;
   left: 5%;
-  width: 90%;
-  height: 8%;
+  width: 95%;
+  height: 10%;
   float: left;
 }
 
@@ -995,8 +995,8 @@ body {
   position: relative;
   top: 13.5%;
   left: 5%;
-  width: 90%;
-  height: 5.5%;
+  width: 95%;
+  height: 6%;
   float: left;
 }
 
@@ -1004,8 +1004,8 @@ body {
   position: relative;
   top: 15.5%;
   left: 5%;
-  width: 90%;
-  height: 5.5%;
+  width: 95%;
+  height: 6%;
   float: left;
 }
 
@@ -1028,6 +1028,12 @@ body {
   color: #5A5A5A;
 }
 
+.home-iter-content-col {
+  position: relative;
+  width: 100%;
+  float: left;
+}
+
 .home-iter-content-sub {
   position: relative;
   width: 70%;
@@ -1042,8 +1048,9 @@ body {
 
 .home-iter-content-point {
   position: relative;
-  right: 8%;
-  width: 15%;
+  right: 10%;
+  width: 12%;
+  height: 70%;
   float: right;
   display: inline-block;
   font-family: "HelvNeue Roman for IBM";
@@ -1054,9 +1061,35 @@ body {
   cursor: pointer;
 }
 
+.home-iter-content-point-uneditable {
+  position: relative;
+  right: 10%;
+  width: 12%;
+  height: 70%;
+  float: right;
+  display: inline-block;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.6em;
+  text-align: right;
+  line-height: 1.6em;
+  color: #777677;
+}
+
 .home-iter-content-point:hover {
   background-color: #FFFFFF;
   border: 0.1em solid #4178BE;
+}
+
+.home-iter-content-btn {
+  position: relative;
+  display: inline-block;
+  float: right;
+  top: 5%;
+  right: -8.5%;
+  width: 5%;
+  height: 60%;
+  cursor: pointer;
+  display: none;
 }
 
 .home-iter-comment-test {

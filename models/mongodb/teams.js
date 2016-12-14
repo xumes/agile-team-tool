@@ -339,7 +339,8 @@ module.exports.getRootTeams = function(uid) {
                 'path': team.path,
                 'pathId': team.pathId,
                 'hasChild': null,
-                'docStatus': team.docStatus
+                'docStatus': team.docStatus,
+                'description': (!_.isEmpty(team.description)) ? team.description : null
               };
               if (uniquePaths.indexOf(','+team.pathId+',') >= 0) {
                 newTeam.hasChild = true;
@@ -625,7 +626,7 @@ module.exports.getChildrenByPathId = function(pathId) {
               'pathId': team.pathId,
               'hasChild': null,
               'description': team.description,
-              'docStatus': team.docStatus
+              'docStatus': team.docStatus,
             };
             if (uniquePaths.indexOf(','+team.pathId+',') >= 0) {
               newTeam.hasChild = true;

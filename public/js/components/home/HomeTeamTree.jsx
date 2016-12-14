@@ -367,7 +367,8 @@ var HomeTeamTree = React.createClass({
 
     var href = document.createElement('a');
     href.setAttribute('class', 'agile-team-link ' + extraClass);
-    href.setAttribute('title', 'View ' + team.name + ' team information ');
+    var desc = (team.description == null)?'No description specified':team.description;
+    href.setAttribute('title',desc);
     href.setAttribute('id', 'link_' + team.pathId);
     href.appendChild(document.createTextNode(team.name));
     li.appendChild(href);
@@ -415,7 +416,8 @@ var HomeTeamTree = React.createClass({
           } else {
             var hasChild = '';
           }
-          var title = 'view ' + team.name + ' information';
+          var teamDesc = (team.description == null)?'No description specified':team.description;
+          var title = teamDesc;
           return (
             <li class={hasChild} key={objectId} data-open='false' id={teamId}>
               <a class='ibm-twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, teamId)}>
@@ -442,7 +444,8 @@ var HomeTeamTree = React.createClass({
           } else {
             isSquad = 'agile-team-link agile-team-standalone';
           }
-          var title = 'view ' + team.name + ' information';
+          var teamDesc = (team.description == null)?'No description specified':team.description;
+          var title = teamDesc;
           return (
             <li class='agile-team-standalone' key={objectId} data-open='false' id={teamId}>
               <a class={isSquad} title={title} id={linkId} onClick={self.loadDetails.bind(null,teamId)}>{label}</a>
@@ -491,7 +494,8 @@ var HomeTeamTree = React.createClass({
         var mainId = 'main_' + team.pathId;
         var label = team.name;
         var objectId = team._id;
-        var title = 'view ' + team.name + ' information';
+        var teamDesc = (team.description == null)?'No description specified':team.description;
+        var title = teamDesc;
         return (
           <li data-open='false' id={teamId} key={objectId}>
             <a class='ibm-twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, teamId)}>
