@@ -86,7 +86,7 @@ var userCache = {
 
   setAllTeams: function() {
     return new Promise(function(resolve, reject) {
-      teamModel.getTeam(null)
+      teamModel.getByName(null)
         .then(function(result) {
           resolve(util.returnObject(result));
         })
@@ -108,7 +108,7 @@ var userCache = {
       };
       Promise.all(
         [
-          teamModel.getName(null),
+          teamModel.getByName(null),
           teamModel.getUserTeams(userEmail),
           users.getAdmins(),
           util.getSystemStatus('ag_ref_system_status_control')
@@ -142,7 +142,7 @@ var userCache = {
       };
       Promise.all(
         [
-          teamModel.getName(null),
+          teamModel.getByName(null),
           teamModel.getUserTeams(userEmail),
           users.getAdmins(),
           util.getSystemStatus('ag_ref_system_status_control'),

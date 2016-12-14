@@ -45,7 +45,7 @@ describe('Assessment API Test', function() {
   before(function(done) {
     var teamId;
     var revDelete;
-    teamModel.getName(teamData.name)
+    teamModel.getByName(teamData.name)
       .then(function(body) {
         if (_.isEmpty(body)) {
           return teamModel.createTeam(teamData, dummyData.user.details);

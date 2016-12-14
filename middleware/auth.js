@@ -1,4 +1,6 @@
 var userModel = require('../models/users');
+var apiKeyModel = require('../models/mongodb/apiKeys');
+
 _ = require('underscore');
 
 var auth = {
@@ -43,6 +45,39 @@ var auth = {
     //   res.send(401, {status:401, message: 'Unauthorized'});
     // else
     //   return next();
+  },
+
+
+  requireMongoApikey: function(req, res, next) {
+    if (_.isEmpty(req.headers.apikey)) {
+      res.status(401).send({
+        status: 401,
+        message: 'Unauthorized'
+      });
+    } else {
+  //      userModel.getUserApikeyByApikey(req.headers.apikey)
+      console.log('Ready to call API key by API ');
+      apiKeyModel.getUserApikeyByApikey(req.headers.apikey)
+      .then(function(apiuser) {
+        if (_.isEmpty(apiuser)) {
+          res.status(401).send({
+            status: 401,
+            message: 'Unauthorized'
+          });
+          return null;
+        } else {
+          console.log('API user object return from apiKeyModel '+apiuser.userId+' email is '+apiuser.email);
+          apiuser = {userId: apiuser.userId, email: apiuser.email};
+          req.apiuser = apiuser;
+          return next();
+        }
+      })
+      .catch(function(err) {
+        console.log(err);
+        res.status(err.statusCode).send(err.message);
+        return null;
+      });
+    }
   },
 
   requireApikey: function(req, res, next) {

@@ -300,7 +300,7 @@ var team = {
       teamDoc = util.trimData(teamDoc);
       var validateTeam = validate(teamDoc, teamDocRules);
       if (_.isEmpty(validateTeam)) {
-        team.getName(teamDoc['name'])
+        team.getByName(teamDoc['name'])
           .then(function(body) {
             if (_.isEmpty(body) && _.isEmpty(validateTeam)) {
               common.addRecord(teamDoc)
@@ -352,7 +352,7 @@ var team = {
         // var assessmentModels = require('./assessment');
         updateOrDeleteTeamValidation.push(assessmentModels.getTeamAssessments(teamId, _.isEqual(action, 'delete') ? true : false)); //res[2]
         infoLogs('Getting existing team names that might match ' + updatedTeamDoc['name']);
-        updateOrDeleteTeamValidation.push(team.getName(updatedTeamDoc['name'])); //res[3]
+        updateOrDeleteTeamValidation.push(team.getByName(updatedTeamDoc['name'])); //res[3]
         infoLogs('Getting teams associated to ' + teamId);
         _.each(updatedTeamDoc['child_team_id'], function(id) {
           updateOrDeleteTeamValidation.push(team.getTeam(id));
@@ -652,7 +652,7 @@ var team = {
         });
     });
   },
-  getName: function(teamName) {
+  getByName: function(teamName) {
     if (_.isEmpty(teamName)) {
       infoLogs('Getting all team name records from Cloudant');
       return new Promise(function(resolve, reject) {
@@ -1180,16 +1180,16 @@ var team = {
     });
   },
 
+  /**
+   * Reformat document to update/delete document structure for BULK operation
+   *
+   * @param teamId - team id to modify
+   * @param userId - user id of the one who is doing the action
+   * @param members - array of member user
+   * @returns - modified tem document
+   */
   modifyTeamMembers: function(teamId, userId, members) {
     return new Promise(function(resolve, reject){
-      /**
-       * Reformat document to update/delete document structure for BULK operation
-       *
-       * @param teamId - team id to modify
-       * @param userId - user id of the one who is doing the action
-       * @param members - array of member user
-       * @returns - modified tem document
-       */
       var errorLists = {};
       errorLists['error'] = {};
       if (_.isEmpty(teamId)){

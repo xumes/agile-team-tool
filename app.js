@@ -18,10 +18,12 @@ var passport = require('passport');
 var RedisStore = require('connect-redis')(session);
 var favicon = require('serve-favicon');
 var helmet = require('helmet');
+var httpProxy = require('http-proxy');
+var bundle = require('./bundle');
 var initCloudant = require('./cloudant/init');
 
 /* istanbul ignore if */
-require('fs').readFile('./art', 'utf8', function(err, art) {
+/*require('fs').readFile('./art', 'utf8', function(err, art) {
   console.log(art);
   loggers.get('init').info('Configuration Settings:');
   if (process.env.TRAVIS != 'true') {
@@ -30,6 +32,7 @@ require('fs').readFile('./art', 'utf8', function(err, art) {
   console.log('\n');
   initCloudant.init();
 });
+*/
 
 var app = express();
 app.use(favicon(__dirname + '/public/img/favicon.ico'));
@@ -79,6 +82,20 @@ require('./middleware/login')(passport);
 
 //Routes/Controllers for the views
 require('./routes')(app, passport);
+
+// Webpack for React
+
+/* istanbul ignore next */
+if (process.env.NODE_ENV !== 'production') {
+  var proxy = httpProxy.createProxyServer();
+  bundle();
+
+  app.all('/dist/*', function(req, res) {
+    proxy.web(req, res, {
+      target: 'http://localhost:3001'
+    });
+  });
+}
 
 /**
  * Error Handlers

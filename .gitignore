@@ -4,3 +4,8 @@ coverage/
 mongo_scripts/data.json
 mongo_scripts/creds.json
 mongo_scripts/creds.js
+npm-debug.log
+.DS_store
+agile-team-tool-manifest.yml
+.node-version
+public/dist/

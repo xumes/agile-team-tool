@@ -402,6 +402,13 @@ p , input, textarea, span, select, table,.ibm-data-table caption {
   padding: 0 0 5px;
 }
 
+textarea[disabled] {
+  background-color: #ececec;
+  border: 2px solid #ececec;
+  color: #777677;
+  cursor: not-allowed;
+}
+
 .agile-section-title {
   font-size: 90% !important;
   font-weight: bold !important;
@@ -673,6 +680,21 @@ ul[class='ibm-twisty agile-principle'], ul[class='ibm-twisty agile-practice'] {
   padding-bottom: 0px;
 }
 
+/*=BEGIN Assessment Summary */
+#progressForm #resultBody, #progressForm #deliveryResult {text-align: left;}
+#progressForm .m-height {min-height: 480px;}
+#progressForm .auto-container {width: 100%; overflow: auto;}
+#progressForm .datatable-margin {margin-bottom: 30px; font-size: 9pt}
+#progressForm .btnRow {text-align: right; padding-top: 15px;}
+#progressForm .floatLeft {float: left;}
+#progressForm .defaultFontSize {font-size: 9pt}
+#app-content .mat-levels {float: right;}
+#app-content .padTopby10 {padding-top: 10px;}
+#app-content .padTopby5 {padding-top: 5px;}
+#delTable td.aligntxtLeft, #colTable td.aligntxtLeft {text-align: left;}
+
+
+/*=END Assessment Summary */
 [class*='agile-practice'] .ibm-twisty-body table {
   margin-bottom: 15px;
 }
@@ -851,9 +873,6 @@ span.customSpan{
   vertical-align: top;
   min-width: 30%;
   max-width: 50%;
-  margin-left: 625px;
-  margin-top: -4%;
-  margin-bottom: 0.1%;
   font-size: 9.5pt;
   color: grey;
 }
@@ -862,9 +881,6 @@ span.customSpan{
   vertical-align: top;
   min-width: 30%;
   max-width: 50%;
-  margin-left: 625px;
-  margin-top: -4%;
-  margin-bottom: 0.2%;
   font-size: 9.5pt;
   color: grey;
 }
@@ -893,7 +909,7 @@ span.customSpan{
 
 
 .inputCustom {
-  width: 170px;
+  width: 85px;
   background: #fff none repeat scroll 0 0;
   border: 1px solid #000;
 }
@@ -1087,6 +1103,14 @@ li #allTeams {
   margin-right: 10px;
 }
 
+#importantLinks .trash_icon {
+  width: 25px; height: 25px;
+}
+
+#importantLinks .add_link {
+  font-size:14px !important;
+}
+
 #importantLinks .wrap1 {
   float: left;
 }
@@ -1097,6 +1121,18 @@ li #allTeams {
 
 #importantLinks .urlwrapper{
   margin-left: 20px; position: absolute; margin-top: -1px;
+}
+
+#importantLinks .addlinkWrapper {
+  margin-left:30px; margin-top:5px;
+}
+
+#importantLinks .updateLinkWrapper {
+  margin-left: 560px;
+}
+
+#importantLinks .implabel {
+  width: 200px;
 }
 
 .importantLinksSection {
@@ -1303,6 +1339,49 @@ font-family:'BodoniMTW01-BookItalic';
   width: 23.72881%;
   float: left;
   margin-right: 1.69492%;
+}
+
+/* Iteration Fields */
+.iterationField{
+  width: 400px;
+}
+
+.iterationField-2{
+  width: 200px;
+}
+
+.iteration{
+  padding-top: 10px;
+  padding-bottom: 5px;
+  display: flex;
+}
+.iteration div {
+  margin-right: 25px;
+}
+
+.iteration-sm {
+  margin-right: 165px!important;
+}
+
+.iteration > label, .iteration > * label {
+  font-size: 14px;
+  padding-top: 5px;
+}
+
+.action_plan {
+  width: 70px;
+  font-size: 9pt;
+  text-align: center;
+}
+
+.__react_component_tooltip{
+  background: rgb(236, 236, 236) !important;
+  color: rgb(50, 50, 50) !important;
+  padding: 1em !important;
+  font-size: 8.5pt !important;
+  line-height: 20px !important;
+  display: block !important;
+  max-width: 300px;
 }
 
 /* Header

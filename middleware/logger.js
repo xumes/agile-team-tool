@@ -40,6 +40,14 @@ winston.loggers.add('models', {
   }
 });
 
+winston.loggers.add('model-teams', {
+  console: {
+    level: logLevel,
+    colorize: logColors,
+    label: 'model-teams'
+  }
+});
+
 winston.loggers.add('model-users', {
   console: {
     level: logLevel,
@@ -48,11 +56,19 @@ winston.loggers.add('model-users', {
   }
 });
 
-winston.loggers.add('cache', {
+winston.loggers.add('model-iteration', {
   console: {
     level: logLevel,
     colorize: logColors,
-    label: 'cache'
+    label: 'model-iteration'
+  }
+});
+
+winston.loggers.add('model-apiKeys', {
+  console: {
+    level: logLevel,
+    colorize: logColors,
+    label: 'model-apiKeys'
   }
 });
 
@@ -61,6 +77,22 @@ winston.loggers.add('model-sanpshot', {
     level: logLevel,
     colorize: logColors,
     label: 'model-sanpshot'
+  }
+});
+
+winston.loggers.add('model-apikeys', {
+  console: {
+    level: logLevel,
+    colorize: logColors,
+    label: 'model-apikeys'
+  }
+});
+
+winston.loggers.add('cache', {
+  console: {
+    level: logLevel,
+    colorize: logColors,
+    label: 'cache'
   }
 });
 
