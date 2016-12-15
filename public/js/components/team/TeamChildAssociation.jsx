@@ -87,8 +87,8 @@ var TeamChildAssociation = React.createClass({
     return (
       <div class='ibm-show-hide ibm-widget-processed' id='childAssociationSection'>
         <h2 class='ibm-bold ibm-h4'>
-          <a class='' title='Expand/Collapse' onClick={self.showHideSection}>
-            Team Child Association
+          <a class='' title='Expand/Collapse' style={{'cursor':'pointer'}} onClick={self.showHideSection}>
+            Child team association
           </a>
         </h2>
         <div class='ibm-container-body' style={{'display':'none'}}>
@@ -100,7 +100,7 @@ var TeamChildAssociation = React.createClass({
               <div class="ibm-rule ibm-alternate">
                 <hr />
               </div>
-            <TeamChildRemoveSection childTeams={self.state.childTeams} childTeamsUpdateHandler={self.childTeamsUpdateHandler}/>
+            <TeamChildRemoveSection childTeams={self.state.childTeams} childTeamsUpdateHandler={self.childTeamsUpdateHandler} selectedTeam={self.props.selectedTeam}/>
           </div>
         </div>
       </div>

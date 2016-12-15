@@ -141,7 +141,7 @@ var TeamMembers = React.createClass({
     var pattern = /^\d*$/;
     if (e.charCode >= 32 && e.charCode < 127 &&  !pattern.test(String.fromCharCode(e.charCode)))
     {
-      e.preDefault();
+      e.preventDefault();
     }
   },
   memberSelected: function() {
@@ -181,6 +181,7 @@ var TeamMembers = React.createClass({
           self.state.teamMembers = teamMembers;
           self.resetMember();
           alert('You have successfully removed Team member(s).');
+          self.props.sectionUpdateHandler(result);
         })
         .catch(function(err) {
           var map = self.state.formError.map;
@@ -246,6 +247,7 @@ var TeamMembers = React.createClass({
         .then(function(result) {
           self.resetMember();
           alert('You have successfully added a Team Member to team to ' + self.props.selectedTeam.team.name + '.');
+          self.props.sectionUpdateHandler(result);
         })
         .catch(function(err) {
           self.state.teamMembers.pop();
@@ -273,6 +275,7 @@ var TeamMembers = React.createClass({
         .then(function(result) {
           self.resetMember();
           alert('You have successfully updated a Team Member.');
+          self.props.sectionUpdateHandler(result);
         })
         .catch(function(err) {
           var map = self.state.formError.map;

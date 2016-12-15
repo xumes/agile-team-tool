@@ -39,7 +39,7 @@ var TeamChildRemoveSection = React.createClass({
         promiseArray.push(teamApi.removeAssociation(childId));
       });
       Promise.all(promiseArray)
-        .then(function(result){
+        .then(function(results){
           self.props.childTeamsUpdateHandler('Child team(s) has been removed successfully.');
           return result;
         })
@@ -108,7 +108,7 @@ var TeamChildRemoveSection = React.createClass({
     return (
       <div id='childRemoveSection'>
         <div style={{'fontSize':'14px', 'width':'100%'}} class='tcaption'>
-          <em id='childrenNameTitle' class='ibm-bold'>Child team association for CIO</em>
+          <em id='childrenNameTitle' class='ibm-bold'>Child team association for {self.props.selectedTeam != null && !_.isEmpty(self.props.selectedTeam) ? self.props.selectedTeam.team.name : ''}</em>
             <p style={{'float': 'right', 'width': '400px'}}>
               <span id='spinner' style={{'display': 'none'}} class='ibm-spinner'></span>
               <span style={{'width': '350px'}}>
