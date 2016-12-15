@@ -9,6 +9,137 @@ body {
   height: 100%
 }
 
+#teamTree ul.ibm-twisty > li.ibm-active > a.ibm-twisty-trigger,
+#teamTree ul.ibm-twisty > li a.ibm-twisty-trigger,
+#teamTree ul.ibm-twisty > li a.agile-team-link {
+  color: #4D4D4D;
+  font-size: 1.6em;
+  font-family: "Helvetica Neue";
+  font-weight: 300;
+  line-height: 48px;
+}
+
+#searchTree ul.ibm-twisty > li a.agile-team-link {
+  color: #4D4D4D;
+}
+
+#teamTree {
+  width: 100%;
+}
+
+#teamTreeMain {
+  width: 100%;
+}
+
+#teamTreeMain a.ibm-twisty-trigger {
+  margin: 0px 2px 0px 2px;
+}
+
+#teamTree a::before {
+  font-size: 1.6em;
+  font-weight: 300;
+  color: #3B6DAA;
+}
+
+#teamTree .agile-team-standalone a::before {
+  font-size: 0rem
+}
+
+#teamTree a.agile-team-link {
+  display: inherit;
+  margin-left: 8.0%;
+  margin-right: 8.0%;
+  padding-left: 0;
+  cursor: pointer;
+}
+
+/*#searchTree a.agile-team-link {
+  display: inherit;
+  margin-left: 15px;
+  padding-left: 5px;
+  border-bottom: 1px solid #e0e0e0 !important;
+  cursor: pointer;
+}*/
+
+a:hover {
+  text-decoration: none !important;
+  border-bottom: 0.2em solid #008ABF;
+}
+
+.agile-team-parent-selected {
+  background-color: #c0e6ff;
+}
+
+.agile-team-selected {
+  border-bottom: 0.2em solid #008ABF;
+}
+
+.agile-team-squad, #teamTree li.agile-team-squad a::after, #teamTree a.agile-team-squad::after,  #teamTable a.agile-team-squad::after, #searchTree a.agile-team-squad::after{
+  /*content: " * ";
+  color: red;*/
+  background-image: url('../img/Att-icons/att-icons_tribe.svg');
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 10% 40%;
+  text-indent: 8%;
+}
+
+#teamTree .ibm-twisty-body > p {
+  margin-left: 0px;
+  padding-bottom: 1px;
+  padding-top: 1px;
+}
+
+#searchTree .ibm-twisty-body > p {
+  margin-left: 0px;
+  padding-bottom: 1px;
+  padding-top: 1px;
+}
+
+#teamTree li {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  line-height: 1.625rem
+}
+
+#searchTree li {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  line-height: 1.625rem
+}
+
+#teamTree li > a {
+  margin-top: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left: 15px;
+  font-size:  10.5pt;
+}
+
+#searchTree li > a {
+  margin-top: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left: 15px;
+  font-size:  10.5pt;
+}
+
+#teamTree div > p > a {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  font-size:  10.5pt;
+  color: #4D4D4D;
+  display: block;
+}
+
+#searchTree div > p > a {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  font-size:  10.5pt;
+  color: #4D4D4D;
+  display: block;
+}
+
 #agile-home-header {
   background-color: black;
   width: 100%;
