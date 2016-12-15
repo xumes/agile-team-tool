@@ -26,7 +26,6 @@ var HomeIterSection = React.createClass({
       $('#iterationSection').css('height', chartStatus.squad.charts.secHeight);
       $('#squad_team_scard > .container-body-col-2-1').css('height', chartStatus.squad.charts.chartHeight);
       _.each(Object.keys(chartStatus.squad.btns), function(key){
-        console.log(key);
         if (!chartStatus.squad.btns[key]) {
           $('#'+key+'Chart_block').hide();
         }

@@ -40,6 +40,11 @@ var HomeContent = React.createClass({
 
   showFilter: function() {
     if ($('.home-chart-filter-block').css('display') == 'none') {
+      if (this.props.loadDetailTeam.team.type == 'squad') {
+        $('.home-chart-filter-block').css('left', '32%');
+      } else {
+        $('.home-chart-filter-block').css('left', '-5%');
+      }
       $('.home-chart-filter-block').fadeIn();
     } else {
       $('.home-chart-filter-block').fadeOut();

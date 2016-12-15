@@ -4,6 +4,24 @@ var InlineSVG = require('svg-inline-react');
 var _ = require('underscore');
 var moment = require('moment');
 var selectedIter = new Object();
+var iterData = {
+  memberChanged : 'No',
+  memberFte : '',
+  committedStories : '',
+  deliveredStories : '',
+  commitedStoryPoints : '',
+  storyPointsDelivered : '',
+  deployments : '',
+  defectsStartBal : '',
+  defects : '',
+  defectsClosed : '',
+  defectsEndBal : '',
+  cycleTimeWIP : '',
+  cycleTimeInBacklog : '',
+  clientSatisfaction : '',
+  teamSatisfaction : '',
+  comment: '',
+}
 
 var HomeIterContent = React.createClass({
   componentDidUpdate: function() {
@@ -20,6 +38,7 @@ var HomeIterContent = React.createClass({
       }
     });
     if (self.props.loadDetailTeam.access) {
+      $('.home-iter-content-point').addClass('home-iter-content-point-hover');
       $('.home-iter-content-point').on('click', function() {
         setTimeout(function() {
           document.execCommand('selectAll', false, null)
@@ -38,6 +57,7 @@ var HomeIterContent = React.createClass({
         }
       });
     } else {
+      $('.home-iter-content-point').removeClass('home-iter-content-point-hover');
       $('.home-iter-content-point').prop('onclick',null).off('click');
       $('.home-iter-content-point').keypress(function(e){
 
@@ -65,7 +85,7 @@ var HomeIterContent = React.createClass({
     this.cancelChange(id);
   },
   saveIter: function(id) {
-    $('#'+id).data('default',$('#'+id).html());
+    iterData[id] = $('#'+id).html()
     $('#'+id).parent().children('.home-iter-content-btn').css('display','none')
     $('#'+id).css('background-color', '').css('border', '');
     $('#'+id).prop('contenteditable', 'false');
@@ -73,7 +93,7 @@ var HomeIterContent = React.createClass({
   cancelChange: function(id) {
     $('#'+id).parent().children('.home-iter-content-btn').css('display','none')
     $('#'+id).css('background-color', '').css('border', '');
-    $('#'+id).html($('#'+id).data('default'));
+    $('#'+id).html(iterData[id]);
     $('#'+id).prop('contenteditable', 'false');
   },
   render: function() {
@@ -105,24 +125,25 @@ var HomeIterContent = React.createClass({
         var lastUpdatedBy = defIter.updatedBy;
         var lastUpdateTime = moment(defIter.updateDate).format('MMM DD YYYY');
         if (defIter.memberChanged) {
-          var memberChanged = 'Yes';
+          iterData.memberChanged = 'Yes';
         } else {
-          memberChanged = 'No';
+          iterData.memberChanged = 'No';
         }
-        var memberFte = (defIter.memberFte == null) ? '' : defIter.memberFte;
-        var committedStories = (defIter.committedStories == null) ? '' : defIter.committedStories;
-        var deliveredStories = (defIter.deliveredStories == null) ? '' : defIter.deliveredStories;
-        var commitedStoryPoints = (defIter.commitedStoryPoints == null) ? '' : defIter.commitedStoryPoints;
-        var storyPointsDelivered = (defIter.storyPointsDelivered == null) ? '' : defIter.storyPointsDelivered;
-        var deployments = (defIter.deployments == null) ? '' : defIter.deployments;
-        var defectsStartBal = (defIter.defectsStartBal == null) ? '' : defIter.defectsStartBal;
-        var defects = (defIter.defects == null) ? '' : defIter.defects;
-        var defectsClosed = (defIter.defectsClosed == null) ? '' : defIter.defectsClosed;
-        var defectsEndBal = (defIter.defectsEndBal == null) ? '' : defIter.defectsEndBal;
-        var cycleTimeWIP = (defIter.cycleTimeWIP == null) ? '' : defIter.cycleTimeWIP;
-        var cycleTimeInBacklog = (defIter.cycleTimeInBacklog == null) ? '' : defIter.cycleTimeInBacklog;
-        var clientSatisfaction = (defIter.clientSatisfaction == null) ? '' : defIter.clientSatisfaction;
-        var teamSatisfaction = (defIter.teamSatisfaction == null) ? '' : defIter.teamSatisfaction;
+        iterData.memberFte = (defIter.memberFte == null) ? '' : defIter.memberFte;
+        iterData.committedStories = (defIter.committedStories == null) ? '' : defIter.committedStories;
+        iterData.deliveredStories = (defIter.deliveredStories == null) ? '' : defIter.deliveredStories;
+        iterData.commitedStoryPoints = (defIter.commitedStoryPoints == null) ? '' : defIter.commitedStoryPoints;
+        iterData.storyPointsDelivered = (defIter.storyPointsDelivered == null) ? '' : defIter.storyPointsDelivered;
+        iterData.deployments = (defIter.deployments == null) ? '' : defIter.deployments;
+        iterData.defectsStartBal = (defIter.defectsStartBal == null) ? '' : defIter.defectsStartBal;
+        iterData.defects = (defIter.defects == null) ? '' : defIter.defects;
+        iterData.defectsClosed = (defIter.defectsClosed == null) ? '' : defIter.defectsClosed;
+        iterData.defectsEndBal = (defIter.defectsEndBal == null) ? '' : defIter.defectsEndBal;
+        iterData.cycleTimeWIP = (defIter.cycleTimeWIP == null) ? '' : defIter.cycleTimeWIP;
+        iterData.cycleTimeInBacklog = (defIter.cycleTimeInBacklog == null) ? '' : defIter.cycleTimeInBacklog;
+        iterData.clientSatisfaction = (defIter.clientSatisfaction == null) ? '' : defIter.clientSatisfaction;
+        iterData.teamSatisfaction = (defIter.teamSatisfaction == null) ? '' : defIter.teamSatisfaction;
+        iterData.comment = (defIter.comment == null) ? '' : defIter.comment;
         var access = self.props.loadDetailTeam.access;
         return (
           <div>
@@ -154,7 +175,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Person days unavailable</div>
-                <div data-default={memberFte} id='memberFte' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{memberFte}</div>
+                <div id='memberFte' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.memberFte}</div>
                 <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'memberFte')}>
                   <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                 </div>
@@ -164,11 +185,11 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Was there a team member change?</div>
-                <div data-default={memberChanged} id='memberChanged' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{memberChanged}</div>
-                  <div class='home-iter-content-btn'>
+                <div id='memberChanged' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.memberChanged}</div>
+                  <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'memberChanged')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
-                  <div class='home-iter-content-btn' style={{'right':'-19%'}}>
+                  <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'memberChanged')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
               </div>
@@ -184,21 +205,21 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '25%'}}>
                 <div class='home-iter-content-sub'>Stories/Cards/Tickets-Committed</div>
-                <div data-default={committedStories} id='committedStories' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{committedStories}</div>
-                  <div class='home-iter-content-btn'>
+                <div id='committedStories' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.committedStories}</div>
+                  <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'committedStories')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
-                  <div class='home-iter-content-btn' style={{'right':'-19%'}}>
+                  <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'committedStories')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '25%'}}>
                 <div class='home-iter-content-sub'>Stories/Cards/Tickets-Delivered</div>
-                <div data-default={deliveredStories} id='deliveredStories' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{deliveredStories}</div>
-                  <div class='home-iter-content-btn'>
+                <div id='deliveredStories' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.deliveredStories}</div>
+                  <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'deliveredStories')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
-                  <div class='home-iter-content-btn' style={{'right':'-19%'}}>
+                  <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'deliveredStories')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
               </div>
@@ -214,31 +235,31 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Story points committed</div>
-                <div data-default={commitedStoryPoints} id='commitedStoryPoints' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{commitedStoryPoints}</div>
-                  <div class='home-iter-content-btn'>
+                <div id='commitedStoryPoints' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.commitedStoryPoints}</div>
+                  <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'commitedStoryPoints')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
-                  <div class='home-iter-content-btn' style={{'right':'-19%'}}>
+                  <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'commitedStoryPoints')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Story points delivered</div>
-                <div data-default={storyPointsDelivered} id='storyPointsDelivered' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{storyPointsDelivered}</div>
-                  <div class='home-iter-content-btn'>
+                <div id='storyPointsDelivered' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.storyPointsDelivered}</div>
+                  <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'storyPointsDelivered')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
-                  <div class='home-iter-content-btn' style={{'right':'-19%'}}>
+                  <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'storyPointsDelivered')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Deployments this iteration</div>
-                <div data-default={deployments} id='deployments' class='home-iter-content-point' onClick={access?this.iterBlockClickHandler:''}>{deployments}</div>
-                  <div class='home-iter-content-btn'>
+                <div id='deployments' class='home-iter-content-point' onClick={access?this.iterBlockClickHandler:''}>{iterData.deployments}</div>
+                  <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'deployments')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
-                  <div class='home-iter-content-btn' style={{'right':'-19%'}}>
+                  <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'deployments')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
               </div>
@@ -254,41 +275,41 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Opening balance</div>
-                <div data-default={defectsStartBal} id='defectsStartBal' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{defectsStartBal}</div>
-                  <div class='home-iter-content-btn'>
+                <div id='defectsStartBal' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.defectsStartBal}</div>
+                  <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'defectsStartBal')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
-                  <div class='home-iter-content-btn' style={{'right':'-19%'}}>
+                  <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'defectsStartBal')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>New this iteration</div>
-                <div data-default={defects} id='defects' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{defects}</div>
-                  <div class='home-iter-content-btn'>
+                <div id='defects' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.defects}</div>
+                  <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'defects')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
-                  <div class='home-iter-content-btn' style={{'right':'-19%'}}>
+                  <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'defects')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Resolved this iteration</div>
-                <div data-default={defectsClosed} id='defectsClosed' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{defectsClosed}</div>
-                  <div class='home-iter-content-btn'>
+                <div id='defectsClosed' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.defectsClosed}</div>
+                  <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'defectsClosed')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
-                  <div class='home-iter-content-btn' style={{'right':'-19%'}}>
+                  <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'defectsClosed')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Closing balance</div>
-                <div data-default={defectsEndBal} id='defectsEndBal' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{defectsEndBal}</div>
-                  <div class='home-iter-content-btn'>
+                <div id='defectsEndBal' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.defectsEndBal}</div>
+                  <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'defectsEndBal')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
-                  <div class='home-iter-content-btn' style={{'right':'-19%'}}>
+                  <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'defectsEndBal')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
               </div>
@@ -300,21 +321,21 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
                 <div class='home-iter-content-sub'>WIP Cycle Time (In days)</div>
-                <div data-default={cycleTimeWIP} id='cycleTimeWIP' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{cycleTimeWIP}</div>
-                  <div class='home-iter-content-btn'>
+                <div id='cycleTimeWIP' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.cycleTimeWIP}</div>
+                  <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'cycleTimeWIP')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
-                  <div class='home-iter-content-btn' style={{'right':'-19%'}}>
+                  <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'cycleTimeWIP')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
                 <div class='home-iter-content-sub'>Backlog Cycle Time (In days)</div>
-                <div data-default={cycleTimeInBacklog} id='cycleTimeInBacklog' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{cycleTimeInBacklog}</div>
-                  <div class='home-iter-content-btn'>
+                <div id='cycleTimeInBacklog' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.cycleTimeInBacklog}</div>
+                  <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'cycleTimeInBacklog')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
-                  <div class='home-iter-content-btn' style={{'right':'-19%'}}>
+                  <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'cycleTimeInBacklog')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
               </div>
@@ -325,28 +346,28 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
                 <div class='home-iter-content-sub'>Client satisfaction</div>
-                <div data-default={clientSatisfaction} id='clientSatisfaction' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{clientSatisfaction}</div>
-                  <div class='home-iter-content-btn'>
+                <div id='clientSatisfaction' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.clientSatisfaction}</div>
+                  <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'clientSatisfaction')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
-                  <div class='home-iter-content-btn' style={{'right':'-19%'}}>
+                  <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'clientSatisfaction')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
                 <div class='home-iter-content-sub'>Team satisfaction</div>
-                <div data-default={teamSatisfaction} id='teamSatisfaction' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{teamSatisfaction}</div>
-                  <div class='home-iter-content-btn'>
+                <div id='teamSatisfaction' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.teamSatisfaction}</div>
+                  <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'teamSatisfaction')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
-                  <div class='home-iter-content-btn' style={{'right':'-19%'}}>
+                  <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'teamSatisfaction')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
                   </div>
               </div>
             </div>
             <div class='home-iter-comment-block'>
               <div class='home-iter-content-title'>Iteration Comments</div>
-              <textarea class='home-iter-comment-test' defaultValue={defIter.comment}></textarea>
+              <textarea class='home-iter-comment-test' defaultValue={iterData.comment}></textarea>
             </div>
           </div>
 

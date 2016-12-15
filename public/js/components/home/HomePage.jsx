@@ -39,12 +39,13 @@ var HomePage = React.createClass({
       $('#mainContent').css('left', '30.5%');
       $('#hideNavBtn').hide();
     } else {
-      // $('#homeNavDiv').hide();
-      // $('#homeNavDiv').css('left','-500px');
+      $('#homeNavDiv').hide();
+      $('#homeNavDiv').css('left','-500px');
       $('#iterContent').show();
       $('#mainContent').css('left', '0');
       $('#hideNavBtn').show();
     }
+    $('.home-chart-filter-block').hide();
     this.setState({'loadDetailTeam': team, 'selectedIter': ''});
   },
 
