@@ -2,6 +2,7 @@ var React = require('react');
 var api = require('../api.jsx');
 var templates = require('./AssessmentUpdateDocs.jsx');
 var _ = require('underscore');
+var moment = require('moment');
 var newestTemplateVersion = 'ag_ref_atma_components_v06';
 
 var AssessmentButtons = React.createClass({
@@ -19,7 +20,7 @@ var AssessmentButtons = React.createClass({
     if ($('#submitDatePicker').val() == '') {
       var submittedDate = ''
     } else {
-      submittedDate = new Date(submittedDate);
+      submittedDate = new Date(moment($('#submitDatePicker').val(), 'DDMMMYYYY'));
     }
     var updateDoc = {
       'assessmentStatus' : 'Submitted',
@@ -83,11 +84,10 @@ var AssessmentButtons = React.createClass({
     var software = $('#softwareYesNo').val();
     // var assessId = self.props.assessmentStatus.assessId;
     var teamId = $('select[name=\'teamSelectList\']').val();
-    console.log($('#submitDatePicker').val());
     if ($('#submitDatePicker').val() == '') {
       var submittedDate = ''
     } else {
-      submittedDate = new Date(submittedDate);
+      submittedDate = new Date(moment($('#submitDatePicker').val(), 'DDMMMYYYY'));
     }
     var updateDoc = {
       'assessmentStatus' : 'Draft',
