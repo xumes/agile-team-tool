@@ -17,7 +17,7 @@ body {
 
 #agile-home-header-title {
   position: relative;
-  width: 10%;
+  width: 20%;
   height: 43.2%;
   left: 1.7%;
   top: 28.4%;
@@ -255,7 +255,7 @@ body {
   display: inline;
   font-size: 1.4em;
   color: #EFF9FF;
-  border-bottom: 1px solid #EFF9FF;
+  border-bottom: 0.1em solid #EFF9FF;
 }
 
 .home-team-header-btns-div {
@@ -378,9 +378,9 @@ body {
   width: 100%;
   height: 5.3%;
   background-color: #FFFFFF;
-  border-left: 1px solid #C7C7C7;
-  border-right: 1px solid #C7C7C7;
-  border-top: 1px solid #C7C7C7;
+  border-left: 0.1em solid #C7C7C7;
+  border-right: 0.1em solid #C7C7C7;
+  border-top: 0.1em solid #C7C7C7;
 }
 
 .team-member-table-title {
@@ -412,8 +412,8 @@ body {
 .team-member-table-header-block {
   width: 100%;
   height: 2.65%;
-  border-left: 1px solid #C7C7C7;
-  border-right: 1px solid #C7C7C7;
+  border-left: 0.1em solid #C7C7C7;
+  border-right: 0.1em solid #C7C7C7;
 }
 
 .team-member-table-header-block > div {
@@ -437,8 +437,8 @@ body {
 .team-member-table-content-block {
   width: 100%;
   height: 5.3%;
-  border-left: 1px solid #C7C7C7;
-  border-right: 1px solid #C7C7C7;
+  border-left: 0.1em solid #C7C7C7;
+  border-right: 0.1em solid #C7C7C7;
 }
 
 .team-member-table-content-block > div {
@@ -489,8 +489,8 @@ body {
   width: 100%;
   height: 5.3%;
   background-color: #FFFFFF;
-  border: 1px solid #C7C7C7;
-  box-shadow: 0 2px 4px #C7C7C7;
+  border: 0.1em solid #C7C7C7;
+  box-shadow: 0 0.2em 0.4em #C7C7C7;
 }
 
 .team-member-table-footer-block > button {
@@ -505,7 +505,7 @@ body {
   position: relative;
   top: 25%;
   left: 8%;
-  border: 2px solid #4178BE;
+  border: 0.2em solid #4178BE;
   cursor: pointer;
 }
 
@@ -555,7 +555,7 @@ body {
   background-color: #4178BE;
   display: inline-block;
   float: left;
-  box-shadow: 1px 0 1px #4178BE;
+  box-shadow: 0.1em 0 0.1em #4178BE;
 }
 .home-team-header-description-title > h {
   height: 50%;
@@ -590,7 +590,7 @@ body {
   background-color: #FFFFFF;
   position: relative;
   left: 5%;
-  box-shadow: 1px 1px 1px #C7C7C7;
+  box-shadow: 0.1em 0.1em 0.1em #C7C7C7;
   float: left
 }
 
@@ -693,7 +693,7 @@ body {
 }
 
 .home-chart {
-  border: 1px solid #000000;
+  border: 0.1em solid #000000;
 }
 
 .container-body-columns {
@@ -714,7 +714,7 @@ body {
   height: 23%;
   display: block;
   float: left;
-  border: 1px solid #C7C7C7;
+  border: 0.1em solid #C7C7C7;
   margin-left: 2%;
   margin-top: 2%;
 }
@@ -725,7 +725,7 @@ body {
   height: 100%;
   display: block;
   float: left;
-  border: 1px solid #C7C7C7;
+  border: 0.1em solid #C7C7C7;
   margin-left: 2%;
 }
 
@@ -854,7 +854,7 @@ body {
   left: 5%;
   float: left;
   background-color: #FFFFFF;
-  border-top: 1px solid #C7C7C7
+  border-top: 0.1em solid #C7C7C7
 }
 
 #iterContent > div {
@@ -1100,6 +1100,6 @@ body {
   width: 100%;
   height: 80%;
   resize: none;
-  border: 1px solid #979797;
+  border: 0.1em solid #979797;
   background-color: #FFFFFF;
 }
