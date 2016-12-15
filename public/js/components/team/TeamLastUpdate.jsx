@@ -1,7 +1,6 @@
 var React = require('react');
 var _ = require('underscore');
 var moment = require('moment');
-var timeFormat = 'MMM DD, YYYY, HH:mm'
 
 var TeamLastUpdate = React.createClass({
   showHideSection: function() {
@@ -14,7 +13,7 @@ var TeamLastUpdate = React.createClass({
       var updatedBy = null;
     } else {
       updatedBy = self.props.selectedTeam.team.updatedBy;
-      updateTime = moment(self.props.selectedTeam.team.updateDate).format(timeFormat) + ' (UTC)';
+      updateTime = moment.utc(self.props.selectedTeam.team.updateDate).format('MMM DD, YYYY, HH:mm (z)');
     }
     return (
       <div class='ibm-show-hide ibm-widget-processed' id='lastUpdateSection'>
