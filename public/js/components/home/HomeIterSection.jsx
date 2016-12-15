@@ -25,6 +25,12 @@ var HomeIterSection = React.createClass({
       var teamAccess = this.props.loadDetailTeam.access;
       $('#iterationSection').css('height', chartStatus.squad.charts.secHeight);
       $('#squad_team_scard > .container-body-col-2-1').css('height', chartStatus.squad.charts.chartHeight);
+      _.each(Object.keys(chartStatus.squad.btns), function(key){
+        console.log(key);
+        if (!chartStatus.squad.btns[key]) {
+          $('#'+key+'Chart_block').hide();
+        }
+      });
       iteationHandler.squadIterationsHandler(teamId, iterationData, teamAccess);
     } else {
       $('#contentSpinner').hide();
@@ -35,6 +41,11 @@ var HomeIterSection = React.createClass({
       var snapshotData = this.props.loadDetailTeam.snapshot;
       $('#iterationSection').css('height', chartStatus.nonSquad.charts.secHeight);
       $('#nsquad_team_scard > .container-body-col-2-1').css('height', chartStatus.nonSquad.charts.chartHeight);
+      _.each(Object.keys(chartStatus.nonSquad.btns), function(key){
+        if (!chartStatus.nonSquad.btns[key]) {
+          $('#'+key+'Chart_block').hide();
+        }
+      });
       iteationHandler.iterationSnapshotHandler(teamId, teamName, snapshotData);
     }
   },
