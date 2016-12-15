@@ -5,6 +5,11 @@ var HomeNav = require('./HomeNav.jsx');
 var HomeContent = require('./HomeContent.jsx');
 var HomeIterContent = require('./HomeIterContent.jsx');
 var InlineSVG = require('svg-inline-react');
+var windowSize = {
+  'height': 768,
+  'width': 1440,
+  'fontSize': 0.625
+}
 
 var HomePage = React.createClass({
   getInitialState: function() {
@@ -15,6 +20,24 @@ var HomePage = React.createClass({
       loadDetailTeam: new Object(),
       selectedIter: ''
     }
+  },
+
+  componentDidMount: function() {
+    this.handleResize();
+    window.addEventListener('resize', this.handleResize);
+  },
+
+  componentWillUnmount: function() {
+    window.removeEventListener('resize', this.handleResize);
+  },
+
+  handleResize: function() {
+    var fontSize = (window.innerHeight/windowSize['height']) * (window.innerWidth/windowSize['width']) * windowSize['fontSize'];
+    windowSize['height'] = window.innerHeight;
+    windowSize['width'] = window.innerWidth;
+    windowSize['fontSize'] = fontSize;
+    var changeSize = fontSize*100 + '%';
+    $('html').css('font-size', changeSize);
   },
 
   selectedTeamChanged: function(team) {
