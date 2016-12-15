@@ -11,7 +11,7 @@ var AssessmentPageLastUpdate = React.createClass({
       var assessId = '';
       var updatedBy = '';
     } else {
-      updateDate = moment(this.props.assessment.assessment.updateDate).format('MMM DD, YYYY, HH:mm') + ' (UTC)';
+      updateDate = moment.utc(this.props.assessment.assessment.updateDate).format('MMM DD, YYYY, HH:mm (z)');
       assessId = this.props.assessment.assessment._id.toString();
       updatedBy = this.props.assessment.assessment.updatedBy;
     }
