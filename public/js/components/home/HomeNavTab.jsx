@@ -33,7 +33,7 @@ var HomeNavTab = React.createClass({
               <li class='home-nav-tab-item' id='allTeams' role='tab' data-state={''} onClick={this.allTeamsClicked}>All Teams</li>
           </div>
           <div class='home-nav-tab-buttons'>
-            <input class='home-nav-tab-buttons-item' type='image' src='../../../img/Att-icons/Att-icons_Add.svg' />
+            <input class='home-nav-tab-buttons-item' type='image' src='../../../img/Att-icons/att-icons_Add.svg' />
             <input class='home-nav-tab-buttons-item' type='image' src='../../../img/Att-icons/att-icons_search.svg' />
             <input id='hideNavBtn' class='home-nav-tab-buttons-item' type='image' src='../../../img/Att-icons/att-icons_contract.svg' onClick={this.homeNavHide}/>
           </div>
