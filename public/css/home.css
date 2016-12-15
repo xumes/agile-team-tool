@@ -179,10 +179,10 @@ body {
 }
 
 .home-team-header-teamname {
+  display: inline;
   font-family: "Helvetica Neue";
   font-size: 3em;
   font-weight: 300;
-  line-height: 36px;
   color: #323232;
   display: inline-block;
   float: left;

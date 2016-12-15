@@ -20,7 +20,7 @@ var HomeMemberTable = React.createClass({
       return null;
     } else {
       team = self.props.loadDetailTeam.team;
-      if (team.members.length == 0) {
+      if (team.members == null || team.members.length == 0) {
         var teamMembers = null;
       } else {
         var members = _.sortBy(self.props.loadDetailTeam.members, function(member){

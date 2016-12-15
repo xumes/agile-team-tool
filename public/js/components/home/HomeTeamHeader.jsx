@@ -55,8 +55,14 @@ var HomeTeamHeader = React.createClass({
       return null;
     } else {
       var team = this.props.loadDetailTeam.team;
+      var teamNameFontSize = '3em'
+      var teamNameFontLingHeight = '';
       if (team.name != undefined) {
         var teamName = team.name;
+        if (team.name.length > 45) {
+          teamNameFontSize = 45/team.name.length * 3 + 'em';
+          teamNameFontLingHeight = teamNameFontSize;
+        }
       } else {
         teamName = '';
       }
@@ -127,7 +133,7 @@ var HomeTeamHeader = React.createClass({
               <InlineSVG class='home-team-header-img' src={require('../../../img/Att-icons/att-icons_tribe.svg')}></InlineSVG>
             </div>
             <div class='home-team-header-teamname-div'>
-              <h class='home-team-header-teamname' style={headerStyle} id="teamName">{teamName}</h>
+              <h class='home-team-header-teamname' style={{'fontSize': teamNameFontSize, 'lineHeight': teamNameFontLingHeight}} id="teamName">{teamName}</h>
               <div class='home-team-header-teamname-btn' onClick={self.showDescriptionBlock}>
                 <InlineSVG class='home-team-header-teamname-btn-img' src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
               </div>

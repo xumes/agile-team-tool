@@ -370,6 +370,11 @@ var HomeTeamTree = React.createClass({
     var desc = (team.description == null)?'No description specified':team.description;
     href.setAttribute('title',desc);
     href.setAttribute('id', 'link_' + team.pathId);
+    // if (team.name.length > 40) {
+    //   var teamName = team.name.substring(0, 40) + '...';
+    // } else {
+    //   teamName = team.name;
+    // }
     href.appendChild(document.createTextNode(team.name));
     li.appendChild(href);
 
