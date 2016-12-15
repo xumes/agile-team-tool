@@ -108,7 +108,7 @@ var TeamChildRemoveSection = React.createClass({
     return (
       <div id='childRemoveSection'>
         <div style={{'fontSize':'14px', 'width':'100%'}} class='tcaption'>
-          <em id='childrenNameTitle' class='ibm-bold'>Child team association for CIO</em>
+          <em id='childrenNameTitle' class='ibm-bold'>Child team association for {self.props.selectedTeam != null && !_.isEmpty(self.props.selectedTeam) ? self.props.selectedTeam.team.name : ''}</em>
             <p style={{'float': 'right', 'width': '400px'}}>
               <span id='spinner' style={{'display': 'none'}} class='ibm-spinner'></span>
               <span style={{'width': '350px'}}>

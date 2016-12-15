@@ -100,7 +100,7 @@ var TeamChildAssociation = React.createClass({
               <div class="ibm-rule ibm-alternate">
                 <hr />
               </div>
-            <TeamChildRemoveSection childTeams={self.state.childTeams} childTeamsUpdateHandler={self.childTeamsUpdateHandler}/>
+            <TeamChildRemoveSection childTeams={self.state.childTeams} childTeamsUpdateHandler={self.childTeamsUpdateHandler} selectedTeam={self.props.selectedTeam}/>
           </div>
         </div>
       </div>
