@@ -356,7 +356,7 @@ var IterationExport = {
         }
       })
       .then(function(iterData){
-        if (iterData != undefined && iterData.length > 0) {
+        if (iterData != undefined) {
           var errors = validateIteration(data, iterData);
           if (!_.isEmpty(errors)){
             return Promise.reject(errors);
