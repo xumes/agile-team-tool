@@ -1195,6 +1195,23 @@ body {
   cursor: pointer;
   display: none;
 }
+.home-iter-content-btn > i > svg {
+  width: 100%;
+  height: auto;
+}
+.home-iter-locked-btn {
+  position: relative;
+  display: inline-block;
+  float: right;
+  top: 5%;
+  right: -8.5%;
+  width: 5%;
+  height: 60%;
+}
+.home-iter-locked-btn > i > svg {
+  width: 100%;
+  height: auto;
+}
 
 .home-iter-comment-test {
   width: 100%;
