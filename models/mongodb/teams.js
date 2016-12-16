@@ -1777,37 +1777,3 @@ module.exports.removeAssociation = function(childTeamId, user) {
     }
   });
 };
-
-module.exports.countDeveloper = function() {
-  return new Promise(function(resolve, reject) {
-    var query = {
-      'path' : {
-        '$regex' : ',cio,'
-      }, docStatus:{$ne:'delete'}
-    };
-    Team.find(query)
-      .then(function(teams){
-        var designer = {
-          'Designer': 0,
-          'UX Designer': 0,
-          'UX Visual Designer': 0,
-          'FE Developer': 0,
-          'Lead designer': 0
-        };
-        var people = [];
-        _.each(teams, function(team){
-          _.each(team.members, function(member){
-            if (member.role == 'Designer' || member.role == 'UX Designer' || member.role == 'UX Visual Designer' || member.role == 'FE Developer' || member.role == 'Lead designer' && people.indexOf(member.userId) < 0) {
-              designer[member.role] = designer[member.role] + 1;
-            }
-            people.push(member.userId);
-          });
-        });
-        // console.log(developers.length);
-        resolve(designer);
-      })
-      .catch(function(err){
-        reject(err);
-      });
-  });
-};

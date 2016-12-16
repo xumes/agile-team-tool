@@ -370,17 +370,6 @@ module.exports = function(app, includes) {
     });
   };
 
-  //checked
-  countDeveloper = function(req, res) {
-    teamModel.countDeveloper()
-    .then(function(result){
-      res.status(200).send(result);
-    })
-    .catch( /* istanbul ignore next */ function(err){
-      res.status(400).send(err);
-    });
-  };
-
   // search team with name
   app.get('/api/teams/search/:name', [includes.middleware.auth.requireLogin], searchTeamWithName);
 
@@ -469,6 +458,4 @@ module.exports = function(app, includes) {
 
   // return hierarchy of a team
   app.get('/api/teams/hierarchy/team/:path?', [includes.middleware.auth.requireLogin], getTeamHierarchy);
-
-  app.get('/api/teams/c/count', [includes.middleware.auth.requireLogin], countDeveloper);
 };
