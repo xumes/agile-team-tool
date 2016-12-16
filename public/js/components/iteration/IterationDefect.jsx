@@ -127,7 +127,7 @@ var IterationDefect = React.createClass({
   defectStartBalanceHandler:function (iterations) {
     var startBalance = 0;
     var obj = {};
-    if (iterations != undefined && !_.isNull(iterations[0].defectsEndBal) && !isNaN(this.numericValue(iterations[0].defectsEndBal)))
+    if (iterations != undefined && iterations.length > 0 && !_.isNull(iterations[0].defectsEndBal) && !isNaN(this.numericValue(iterations[0].defectsEndBal)))
       startBalance = iterations[0].defectsEndBal;
 
     var openDefects = this.numericValue(startBalance);
