@@ -4,7 +4,6 @@ var HomeIterChart = require('./HomeIterChart.jsx');
 var iteationHandler = require('./HomeIterationsHandler.jsx');
 var HomeFallBox = require('./HomeFallBox.jsx');
 var HomeSnapshotPull = require('./HomeSnapshotPull.jsx');
-var chartStatus = require('./chartStatus.jsx').chartStatus;
 
 var HomeIterSection = React.createClass({
   componentWillUpdate: function(nextProps, nextState) {
@@ -18,18 +17,11 @@ var HomeIterSection = React.createClass({
     if (this.props.loadDetailTeam.type == 'squad') {
       $('#contentSpinner').hide();
       $('#bodyContent').show();
-      //$('#iterationFallBox').show();
-      //$('#assessmentFallBox').show();
+      $('#iterationFallBox').show();
+      $('#assessmentFallBox').show();
       var teamId = this.props.loadDetailTeam.team._id;
       var iterationData = this.props.loadDetailTeam.iterations;
       var teamAccess = this.props.loadDetailTeam.access;
-      $('#iterationSection').css('height', chartStatus.squad.charts.secHeight);
-      $('#squad_team_scard > .container-body-col-2-1').css('height', chartStatus.squad.charts.chartHeight);
-      _.each(Object.keys(chartStatus.squad.btns), function(key){
-        if (!chartStatus.squad.btns[key]) {
-          $('#'+key+'Chart_block').hide();
-        }
-      });
       iteationHandler.squadIterationsHandler(teamId, iterationData, teamAccess);
     } else {
       $('#contentSpinner').hide();
@@ -38,13 +30,6 @@ var HomeIterSection = React.createClass({
       var teamId = this.props.loadDetailTeam.team._id;
       var teamName = this.props.loadDetailTeam.team.name;
       var snapshotData = this.props.loadDetailTeam.snapshot;
-      $('#iterationSection').css('height', chartStatus.nonSquad.charts.secHeight);
-      $('#nsquad_team_scard > .container-body-col-2-1').css('height', chartStatus.nonSquad.charts.chartHeight);
-      _.each(Object.keys(chartStatus.nonSquad.btns), function(key){
-        if (!chartStatus.nonSquad.btns[key]) {
-          $('#'+key+'Chart_block').hide();
-        }
-      });
       iteationHandler.iterationSnapshotHandler(teamId, teamName, snapshotData);
     }
   },
@@ -71,25 +56,55 @@ var HomeIterSection = React.createClass({
     };
     return (
       <div data-widget='showhide' data-type='panel' class='ibm-show-hide' id='iterationSection'>
+        <HomeSnapshotPull />
+        <h2 class='agile-section-title ibm-showing' data-open='true' id='agile-section-title'>
+          <a href='#show-hide' class='ibm-show-active' title='Expand/Collapse' onClick={this.expandCollapseSection.bind(null, 'iterationSection')}>
+            Iteration trends
+          </a>
+        </h2>
         <HomeFallBox component={iterationFallBoxComponents}/>
-        <div style={{'height':'100%'}} class='ibm-container-body'>
-          <div id='nsquad_team_scard' style={{'display':'none', 'height':'100%'}}>
-            <HomeIterChart id={'pvelocityChart'} />
-            <HomeIterChart id={'pthroughputChart'} />
-            <HomeIterChart id={'pdefectsChart'} />
-            <HomeIterChart id={'pwipBacklogChart'} />
-            <HomeIterChart id={'pPizzaChart'} />
-            <HomeIterChart id={'piePizzaChart'} />
-            <HomeIterChart id={'pstatisfactionChart'} />
+        <div style={{'marginTop':'2em'}} class='ibm-container-body'>
+          <div id='nsquad_team_scard' style={{'display':'none'}}>
+            <div class='ibm-columns' style={{'marginBottom': '3em'}}>
+              <HomeIterChart id={'pvelocityChart'} />
+              <HomeIterChart id={'pthroughputChart'} />
+            </div>
+            <div class='ibm-columns' style={{'marginBottom': '3em'}}>
+              <HomeIterChart id={'pdefectsChart'} />
+              <HomeIterChart id={'pwipBacklogChart'} />
+            </div>
+            <div class='ibm-columns' style={{'marginBottom': '3em'}}>
+              <HomeIterChart id={'pPizzaChart'} />
+              <HomeIterChart id={'piePizzaChart'} />
+            </div>
+            <div class='ibm-columns' style={{'marginBottom': '3em'}}>
+              <HomeIterChart id={'pstatisfactionChart'} />
+              <HomeIterChart id={''} />
+            </div>
           </div>
-          <div id='squad_team_scard' style={{'display':'none','height':'100%'}}>
-            <HomeIterChart id={'velocityChart'} />
-            <HomeIterChart id={'throughputChart'} />
-            <HomeIterChart id={'defectsChart'} />
-            <HomeIterChart id={'wipBacklogChart'} />
-            <HomeIterChart id={'pizzaChart'} />
-            <HomeIterChart id={'unitCostChart'} />
-            <HomeIterChart id={'statisfactionChart'} />
+          <div id='squad_team_scard' style={{'display':'none'}}>
+            <div class='ibm-columns' style={{'marginBottom': '3em'}}>
+              <HomeIterChart id={'velocityChart'} />
+              <HomeIterChart id={'throughputChart'} />
+            </div>
+            <div id="chartgrp2">
+              <div class='ibm-columns' style={{'marginBottom': '3em'}}>
+                <HomeIterChart id={'defectsChart'} />
+                <HomeIterChart id={'wipBacklogChart'} />
+              </div>
+            </div>
+            <div id="chartgrp3">
+              <div class='ibm-columns' style={{'marginBottom': '3em'}}>
+                <HomeIterChart id={'pizzaChart'} />
+                <HomeIterChart id={'unitCostChart'} />
+              </div>
+            </div>
+            <div id="chartgrp4">
+              <div class='ibm-columns' style={{'marginBottom': '3em'}}>
+                <HomeIterChart id={'statisfactionChart'} />
+                <HomeIterChart id={''} />
+              </div>
+            </div>
           </div>
         </div>
       </div>

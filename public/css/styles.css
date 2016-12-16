@@ -1,13 +1,10 @@
-
 /*blockquote, q {
   quotes: none;
 }
-
 blockquote:before, blockquote:after, q:before, q:after {
   content: '';
   content: none;
 }
-
 table {
   border-collapse: collapse;
   border-spacing: 0;
@@ -56,7 +53,6 @@ img {
 /*p {
   padding: 0 0 15px 0;
 }
-
 section:after {
   content: ".";
   display: block;
@@ -66,15 +62,12 @@ section:after {
   clear: both;
   visibility: hidden;
 }
-
 section {
   display: inline-block;
 }
-
 * html section {
   height: 1%;
 }
-
 section {
   display: block;
 }*/

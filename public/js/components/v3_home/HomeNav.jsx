@@ -16,25 +16,25 @@ var HomeNav = React.createClass({
   searchStart: function() {
     $('#navSpinner').show();
     $('#searchTree').hide();
-    $('#teamTree').hide();
+    $('#newTeamTree').hide();
   },
 
   searchEnd: function() {
     $('#navSpinner').hide();
     $('#searchTree').show();
-    $('#teamTree').hide();
+    $('#newTeamTree').hide();
   },
 
   tabClickedStart: function() {
     $('#navSpinner').show();
     $('#searchTree').hide();
-    $('#teamTree').hide();
+    $('#newTeamTree').hide();
   },
 
   tabClickedEnd: function() {
     $('#navSpinner').hide();
     $('#searchTree').hide();
-    $('#teamTree').show();
+    $('#newTeamTree').show();
   },
 
   searchTeamClickedHandler: function(teamId) {

@@ -75,25 +75,25 @@ var HomePage = React.createClass({
   searchStart: function() {
     $('#navSpinner').show();
     $('#searchTree').hide();
-    $('#teamTree').hide();
+    $('#newTeamTree').hide();
   },
 
   searchEnd: function() {
     $('#navSpinner').hide();
     $('#searchTree').show();
-    $('#teamTree').hide();
+    $('#newTeamTree').hide();
   },
 
   tabClickedStart: function() {
     $('#navSpinner').show();
     $('#searchTree').hide();
-    $('#teamTree').hide();
+    $('#newTeamTree').hide();
   },
 
   tabClickedEnd: function() {
     $('#navSpinner').hide();
     $('#searchTree').hide();
-    $('#teamTree').show();
+    $('#newTeamTree').show();
   },
 
   tabClickedHandler: function(tab, pathId) {
@@ -117,7 +117,7 @@ var HomePage = React.createClass({
       })
       .catch(function(err){
         self.tabClickedEnd();
-        $('#teamTree').empty();
+        $('#newTeamTree').empty();
         console.log(err);
         return null;
       })
@@ -137,7 +137,7 @@ var HomePage = React.createClass({
       })
       .catch(function(err){
         self.tabClickedEnd();
-        $('#teamTree').empty();
+        $('#newTeamTree').empty();
         console.log(err);
         return null;
       });

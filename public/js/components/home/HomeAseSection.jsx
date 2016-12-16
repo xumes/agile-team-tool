@@ -1,5 +1,6 @@
 var React = require('react');
 var api = require('../api.jsx');
+var HomeIterChart = require('./HomeIterChart.jsx');
 var assessmentHandler = require('./HomeAssessmentsHandler.jsx');
 var HomeFallBox = require('./HomeFallBox.jsx');
 var HomeSnapshotPull = require('./HomeSnapshotPull.jsx');
@@ -14,7 +15,7 @@ var HomeAseSection = React.createClass({
       $('#' + 'assessmentSection' + ' div.ibm-container-body').css('display','block');
     }
     if (this.props.loadDetailTeam.type == 'squad') {
-      //$('#assessmentFallBox').show();
+      $('#assessmentFallBox').show();
       $('#squad_assessment_card').show();
       var teamId = this.props.loadDetailTeam.team._id;
       var assessmentData = this.props.loadDetailTeam.assessments;
@@ -49,28 +50,29 @@ var HomeAseSection = React.createClass({
       'createBtnTitle': 'Create assessment'
     };
     return (
-      <div data-widget='showhide' data-type='panel' class='ibm-show-hide' id='assessmentSection' style={{'top': '2%'}}>
-        {/*
+      <div data-widget='showhide' data-type='panel' class='ibm-show-hide' id='assessmentSection'>
         <h2 class='agile-section-title ibm-showing' data-open='true' id='agile-section-title'>
           <a href='#show-hide' class='ibm-show-active' onClick={this.expandCollapseSection.bind(null, 'assessmentSection')}>
             Maturity assessment trends
           </a>
         </h2>
-        */}
         <HomeFallBox component={assessmentFallBoxComponents} />
-        <div style={{'height':'100%'}} class='ibm-container-body'>
-          <div id='nsquad_assessment_card' style={{'display': 'none', 'height':'100%'}}>
-            <div class='container-body-columns-ase' style={{'height':'35%'}}>
-              <div id={'trend_Block'} class='container-body-col-2-2' >
-                <div id={'assessmentTrend'}></div>
-              </div>
-              <div id={'eval_Block'} class='container-body-col-2-2' >
-                <div id={'assessmentEval'}></div>
-              </div>
+        <div class='ibm-rule ibm-alternate'>
+          <hr></hr>
+        </div>
+        <div class='ibm-container-body'>
+          <div id='nsquad_assessment_card' style={{'display': 'none'}}>
+            <div class='ibm-columns' style={{'marginBottom': '3em'}}>
+              <HomeIterChart id={'assessmentTrend'} />
+              <HomeIterChart id={'assessmentEval'} />
             </div>
           </div>
-          <div id='squad_assessment_card' style={{'display': 'none', 'height':'100%'}}>
-              <div id={'assessmentCharts'} style={{'height':'100%'}}></div>
+          <div id='squad_assessment_card' style={{'display': 'none'}}>
+            <div class='ibm-columns' style={{'marginBottom': '3em'}}>
+              <div class='ibm-col-6-4'>
+                <div id={'assessmentCharts'} style={{'width': '100%','minHeight':'280px'}}></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

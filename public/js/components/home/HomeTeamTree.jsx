@@ -186,10 +186,11 @@ var HomeTeamTree = React.createClass({
     $('#contentSpinner').show();
     $('#bodyContent').hide();
     $('#snapshotPull').hide();
-    //$('#iterationFallBox').hide();
+    $('#iterationFallBox').hide();
     $('#squad_team_scard').hide();
     $('#nsquad_team_scard').hide();
-    //$('#assessmentFallBox').hide();
+    $('#iterationFallBox').hide();
+    $('#assessmentFallBox').hide();
     $('#nsquad_assessment_card').hide();
     $('#squad_assessment_card').hide();
     $('#membersList').empty();
@@ -367,14 +368,8 @@ var HomeTeamTree = React.createClass({
 
     var href = document.createElement('a');
     href.setAttribute('class', 'agile-team-link ' + extraClass);
-    var desc = (team.description == null)?'No description specified':team.description;
-    href.setAttribute('title',desc);
+    href.setAttribute('title', 'View ' + team.name + ' team information ');
     href.setAttribute('id', 'link_' + team.pathId);
-    // if (team.name.length > 40) {
-    //   var teamName = team.name.substring(0, 40) + '...';
-    // } else {
-    //   teamName = team.name;
-    // }
     href.appendChild(document.createTextNode(team.name));
     li.appendChild(href);
 
@@ -421,8 +416,7 @@ var HomeTeamTree = React.createClass({
           } else {
             var hasChild = '';
           }
-          var teamDesc = (team.description == null)?'No description specified':team.description;
-          var title = teamDesc;
+          var title = 'view ' + team.name + ' information';
           return (
             <li class={hasChild} key={objectId} data-open='false' id={teamId}>
               <a class='ibm-twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, teamId)}>
@@ -449,8 +443,7 @@ var HomeTeamTree = React.createClass({
           } else {
             isSquad = 'agile-team-link agile-team-standalone';
           }
-          var teamDesc = (team.description == null)?'No description specified':team.description;
-          var title = teamDesc;
+          var title = 'view ' + team.name + ' information';
           return (
             <li class='agile-team-standalone' key={objectId} data-open='false' id={teamId}>
               <a class={isSquad} title={title} id={linkId} onClick={self.loadDetails.bind(null,teamId)}>{label}</a>
@@ -499,8 +492,7 @@ var HomeTeamTree = React.createClass({
         var mainId = 'main_' + team.pathId;
         var label = team.name;
         var objectId = team._id;
-        var teamDesc = (team.description == null)?'No description specified':team.description;
-        var title = teamDesc;
+        var title = 'view ' + team.name + ' information';
         return (
           <li data-open='false' id={teamId} key={objectId}>
             <a class='ibm-twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, teamId)}>

@@ -305,13 +305,13 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAcc
 
   destroyIterationCharts();
 
-  loadScoreChart('velocityChart', 'Velocity', 'line', graphCategoryWithChange, 'Story points', commVelocitySeries,  velocitySeries, 'Points', '', '* Indicates Team Change', true, true);
-  loadScoreChart('throughputChart', 'Throughput', 'line', graphCategoryWithChange, 'Stories/tickets/cards', commThroughputSeries, throughputSeries, 'Points', '', '* Indicates Team Change', true, true);
+  loadScoreChart('velocityChart', 'Velocity', 'line', graphCategoryWithChange, 'Story points', commVelocitySeries,  velocitySeries, 'Points', 'Iteration dates', '* Indicates Team Change', true, true);
+  loadScoreChart('throughputChart', 'Throughput', 'line', graphCategoryWithChange, 'Stories/tickets/cards', commThroughputSeries, throughputSeries, 'Points', 'Iteration dates', '* Indicates Team Change', true, true);
   loadPizzaChart('pizzaChart', '2 Pizza Rule (Team Size)', 'line', graphCategory, 'Count', yMax, teamMemSeries, fteSeries, targetSeries, 'Points');
   loadMultiDefectDeployChart('defectsChart', graphCategory, defectsStartSeries, defectsSeries, defectsClosedSeries, defectsEndSeries, deploySeries);
   loadSatisfactionChart('statisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', teamSatSeries, clientSatSeries, 'Points', sMax);
-  loadChartMultiChart('unitCostChart', 'Stories / Story Points per FTE', 'line', graphCategory, 'Count', '', storyFTESeries, storyPointFTESeries, 'Points', true);
-  loadChartMultiChart('wipBacklogChart', 'Cycle Time in Backlog and WIP (in days)', 'line', graphCategory, 'Average days per story', '', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', true);
+  loadChartMultiChart('unitCostChart', 'Stories / Story Points per FTE', 'line', graphCategory, 'Count', 'Iteration dates', storyFTESeries, storyPointFTESeries, 'Points', true);
+  loadChartMultiChart('wipBacklogChart', 'Cycle Time in Backlog and WIP (in days)', 'line', graphCategory, 'Average days per story', 'Iteration dates', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', true);
 
   $('#GoIterationBtn').click(function() {
     var iterID = encodeURIComponent($('#gotoIterationList option:selected').val());
@@ -354,9 +354,8 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
-        fontSize: '1.3em',
-        color: '#5A5A5A'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: title
     },
@@ -491,9 +490,8 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
-        fontSize: '1.3em',
-        color: '#5A5A5A'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: title
     },
@@ -512,7 +510,7 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
         }
       },
       title: {
-        text: '',
+        text: 'Iteration dates',
         x: -20
       },
       categories: categories,
@@ -622,24 +620,23 @@ function loadBarChartParent(id, title, categories, columnSeries, yMax) {
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
-        fontSize: '1.3em',
-        color: '#5A5A5A'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: title
     },
-    // subtitle: {
-    //   useHTML: true,
-    //   text: '\u25A0 Partial month',
-    //   verticalAlign: 'bottom',
-    //   align: 'center',
-    //   y: 12,
-    //   x: 28,
-    //   style: {
-    //     fontSize: '12px',
-    //     color: 'orange'
-    //   }
-    // },
+    subtitle: {
+      useHTML: true,
+      text: '\u25A0 Partial month',
+      verticalAlign: 'bottom',
+      align: 'center',
+      y: 12,
+      x: 28,
+      style: {
+        fontSize: '12px',
+        color: 'orange'
+      }
+    },
     legend: {
       itemStyle: {
         color: 'orange'
@@ -659,7 +656,7 @@ function loadBarChartParent(id, title, categories, columnSeries, yMax) {
         }
       },
       title: {
-        text: ''
+        text: 'Iteration results by month'
       },
       categories: categories,
       tickmarkPlacement: 'on'
@@ -727,9 +724,8 @@ function loadPiePizzaChart(id, title, seriesObj, subtitle) {
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
-        fontSize: '1.3em',
-        color: '#5A5A5A'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: title
     },
@@ -809,9 +805,8 @@ function loadChartMultiChart(id, title, type, categories, yAxisLabel, xAxisLabel
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
-        fontSize: '1.3em',
-        color: '#5A5A5A'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: title
     },
@@ -927,9 +922,8 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
-        fontSize: '1.3em',
-        color: '#5A5A5A'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: 'Deployments and Defects'
     },
@@ -948,7 +942,7 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
         }
       },
       title: {
-        text: '',
+        text: 'Iteration dates',
         x: -20
       },
       categories: categories,
@@ -1114,9 +1108,8 @@ function loadLineChartParent(id, title, categories, yAxisLabel, xAxisLabel, line
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
-        fontSize: '1.3em',
-        color: '#5A5A5A'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: title
     },
@@ -1167,17 +1160,17 @@ function loadLineChartParent(id, title, categories, yAxisLabel, xAxisLabel, line
       enabled: false
     },
 
-    // subtitle: {
-    //   text: '---Partial month',
-    //   verticalAlign: 'bottom',
-    //   align: 'center',
-    //   y: 15,
-    //   x: 30,
-    //   style: {
-    //     fontSize: '12px',
-    //     color: 'orange'
-    //   }
-    // },
+    subtitle: {
+      text: '---Partial month',
+      verticalAlign: 'bottom',
+      align: 'center',
+      y: 15,
+      x: 30,
+      style: {
+        fontSize: '12px',
+        color: 'orange'
+      }
+    },
 
     series: [{
       showInLegend: false,
@@ -1215,9 +1208,8 @@ function loadMultiDefectDeployChartParent(id, categories, columnSeries1, columnS
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
-        fontSize: '1.3em',
-        color: '#5A5A5A'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: 'Deployment and Defects'
     },
@@ -1229,7 +1221,7 @@ function loadMultiDefectDeployChartParent(id, categories, columnSeries1, columnS
         }
       },
       title: {
-        text: ''
+        text: 'Iteration results by month'
       },
       categories: categories,
       tickmarkPlacement: 'on'
@@ -1276,17 +1268,17 @@ function loadMultiDefectDeployChartParent(id, categories, columnSeries1, columnS
       enabled: false
     },
 
-    // subtitle: {
-    //   text: '---Partial month',
-    //   verticalAlign: 'bottom',
-    //   align: 'center',
-    //   y: 15,
-    //   x: 30,
-    //   style: {
-    //     fontSize: '12px',
-    //     color: 'orange'
-    //   }
-    // },
+    subtitle: {
+      text: '---Partial month',
+      verticalAlign: 'bottom',
+      align: 'center',
+      y: 15,
+      x: 30,
+      style: {
+        fontSize: '12px',
+        color: 'orange'
+      }
+    },
 
     defs: {
       patterns: [{
@@ -1370,9 +1362,8 @@ function loadMultiLineChartParent(id, title, categories, yAxisLabel, xAxisLabel,
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
-        fontSize: '1.3em',
-        color: '#5A5A5A'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: title
     },
@@ -1435,17 +1426,17 @@ function loadMultiLineChartParent(id, title, categories, yAxisLabel, xAxisLabel,
       enabled: false
     },
 
-    // subtitle: {
-    //   text: '---Partial month',
-    //   verticalAlign: 'bottom',
-    //   align: 'center',
-    //   y: 15,
-    //   x: 20,
-    //   style: {
-    //     fontSize: '12px',
-    //     color: 'orange'
-    //   }
-    // },
+    subtitle: {
+      text: '---Partial month',
+      verticalAlign: 'bottom',
+      align: 'center',
+      y: 15,
+      x: 20,
+      style: {
+        fontSize: '12px',
+        color: 'orange'
+      }
+    },
 
     series: [{
       showInLegend: true,
@@ -1486,9 +1477,8 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
 
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
-        fontSize: '1.3em',
-        color: '#5A5A5A'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: title
     },
@@ -1507,7 +1497,7 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
         }
       },
       title: {
-        text: ''
+        text: 'Iteration dates'
       },
       categories: categories,
       tickmarkPlacement: 'on'
@@ -1778,11 +1768,11 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
     ctsYMax = null;
   }
   destroyIterationCharts();
-  loadLineChartParent('pvelocityChart', 'Velocity', graphCategory, 'Story points', '', velocitySeries, 'Points');
-  loadLineChartParent('pthroughputChart', 'Throughput', graphCategory, 'Stories/tickets/cards', '', throughputSeries, 'Points');
+  loadLineChartParent('pvelocityChart', 'Velocity', graphCategory, 'Story points', 'Iteration results by month', velocitySeries, 'Points');
+  loadLineChartParent('pthroughputChart', 'Throughput', graphCategory, 'Stories/tickets/cards', 'Iteration results by month', throughputSeries, 'Points');
   loadMultiDefectDeployChartParent('pdefectsChart', graphCategory, defectsStartSeries, defectsSeries, defectsClosedSeries, defectsEndSeries, deploySeries);
-  loadMultiLineChartParent('pwipBacklogChart', 'Cycle Time in Backlog and WIP (in days)', graphCategory, 'Average days per story', '', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', false);
-  loadMultiLineChartParent('pstatisfactionChart', 'Client and Team Satisfaction', graphCategory, 'Rating', '', teamStatSeries, clientStatSeries, 'Points', false, ctsYMax);
+  loadMultiLineChartParent('pwipBacklogChart', 'Cycle Time in Backlog and WIP (in days)', graphCategory, 'Average days per story', 'Iteration results by month', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', false);
+  loadMultiLineChartParent('pstatisfactionChart', 'Client and Team Satisfaction', graphCategory, 'Rating', 'Iteration results by month', teamStatSeries, clientStatSeries, 'Points', false, ctsYMax);
   loadBarChartParent('pPizzaChart', 'Squad Team Size per Iteration', graphCategory, team5to12Ser, pizYMax);
   loadPiePizzaChart('piePizzaChart', '2 Pizza Rule (squad teams) - Current', pData, cenTitle);
 

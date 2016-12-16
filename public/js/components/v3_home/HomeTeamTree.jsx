@@ -27,7 +27,7 @@ var HomeTeamTree = React.createClass({
     var self = this;
     $('#navSpinner').hide();
     $('#searchTree').hide();
-    $('#teamTree').show();
+    $('#newTeamTree').show();
     $('.nano').nanoScroller();
     self.initHilightTeam();
     // self.loadTeamInAllTeams(selectedTeam);
@@ -48,7 +48,7 @@ var HomeTeamTree = React.createClass({
     if (teamId != null) {
       $($('#' + teamId).children('a.agile-team-link')[0]).removeClass('agile-team-parent-selected');
     } else {
-      $('#teamTree a.agile-team-parent-selected').removeClass('agile-team-parent-selected');
+      $('#newTeamTree a.agile-team-parent-selected').removeClass('agile-team-parent-selected');
     }
   },
 
@@ -59,7 +59,7 @@ var HomeTeamTree = React.createClass({
         $($('#' + teamId).children('a.agile-team-link')[0]).addClass('agile-team-parent-selected');
       }
     } else {
-      var li = $('#teamTree a.agile-team-selected').parents('li');
+      var li = $('#newTeamTree a.agile-team-selected').parents('li');
       for (var i = 1; i <= li.length; i++) {
         var element = li[i];
         $($(element).children('a.agile-team-link')[0]).addClass('agile-team-parent-selected');
@@ -70,7 +70,7 @@ var HomeTeamTree = React.createClass({
   highlightTeam: function(teamId){
     if (selectedTeam != '') {
       //$('#link_' + selectedTeam).removeClass('agile-team-selected');
-      $('#teamTree a.agile-team-selected').removeClass('agile-team-selected');
+      $('#newTeamTree a.agile-team-selected').removeClass('agile-team-selected');
     }
     if ($('#link_' + teamId).hasClass('agile-team-selected')) {
 
@@ -82,12 +82,12 @@ var HomeTeamTree = React.createClass({
   initHilightTeam: function() {
     var self = this;
     if (selectedTeam == '') {
-      if (($('#teamTree li')[0]).id) {
-        if (($('#teamTree li')[0]).id != 'agteamstandalone') {
-          selectedTeam = ($('#teamTree li')[0]).id;
+      if (($('#newTeamTree li')[0]).id) {
+        if (($('#newTeamTree li')[0]).id != 'agteamstandalone') {
+          selectedTeam = ($('#newTeamTree li')[0]).id;
         } else {
-          if (selectedTeam == ($('#teamTree li')[1]).id) {
-            selectedTeam = ($('#teamTree li')[1]).id;
+          if (selectedTeam == ($('#newTeamTree li')[1]).id) {
+            selectedTeam = ($('#newTeamTree li')[1]).id;
           }
         }
       }
@@ -99,14 +99,14 @@ var HomeTeamTree = React.createClass({
           self.highlightTeam(selectedTeam);
           self.loadDetails(selectedTeam);
         } else {
-          if (($('#teamTree li')[0]).id) {
-            if (($('#teamTree li')[0]).id != 'agteamstandalone') {
-              selectedTeam = ($('#teamTree li')[0]).id;
+          if (($('#newTeamTree li')[0]).id) {
+            if (($('#newTeamTree li')[0]).id != 'agteamstandalone') {
+              selectedTeam = ($('#newTeamTree li')[0]).id;
               self.highlightTeam(selectedTeam);
               self.loadDetails(selectedTeam);
             } else {
-              if (selectedTeam == ($('#teamTree li')[1]).id) {
-                selectedTeam = ($('#teamTree li')[1]).id;
+              if (selectedTeam == ($('#newTeamTree li')[1]).id) {
+                selectedTeam = ($('#newTeamTree li')[1]).id;
                 self.highlightTeam(selectedTeam);
                 self.loadDetails(selectedTeam);
               } else {
@@ -251,7 +251,7 @@ var HomeTeamTree = React.createClass({
     var self = this;
     selectedTeam = teamId;
     $('#navSpinner').show();
-    $('#teamTree').hide();
+    $('#newTeamTree').hide();
     var path = [];
     if ($('#' + teamId).length > 0 && fromSearch) {
       self.openAllParents(teamId);
@@ -282,7 +282,7 @@ var HomeTeamTree = React.createClass({
         }
         self.loadDetails(path[path.length-1]);
         $('#navSpinner').hide();
-        $('#teamTree').show();
+        $('#newTeamTree').show();
         $('.nano').nanoScroller();
         $('.nano').nanoScroller({
           scrollTo: $('#link_' + path[path.length-1])
@@ -290,8 +290,8 @@ var HomeTeamTree = React.createClass({
       })
       .catch(function(err){
         $('#navSpinner').hide();
-        $('#teamTree').show();
-        self.highlightTeam(($('#teamTree li')[0]).id);
+        $('#newTeamTree').show();
+        self.highlightTeam(($('#newTeamTree li')[0]).id);
         console.log(err);
       });
     }
@@ -321,7 +321,7 @@ var HomeTeamTree = React.createClass({
       });
       self.loadDetails(teamId);
       $('#navSpinner').hide();
-      $('#teamTree').show();
+      $('#newTeamTree').show();
       $('.nano').nanoScroller();
       $('.nano').nanoScroller({
         scrollTo: $('#link_' + teamId)
@@ -329,7 +329,7 @@ var HomeTeamTree = React.createClass({
     })
     .catch(function(err){
       $('#navSpinner').hide();
-      $('#teamTree').show();
+      $('#newTeamTree').show();
       console.log(err);
     })
   },
@@ -460,16 +460,16 @@ var HomeTeamTree = React.createClass({
         })
         if (_.isEmpty(this.props.newTeams.data.standalone)) {
           return (
-            <div id='teamTree' style={teamTreeStyle}>
-              <ul class='ibm-twisty  ibm-widget-processed' id='teamTreeMain'>
+            <div id='newTeamTree' style={teamTreeStyle}>
+              <ul class='ibm-twisty  ibm-widget-processed' id='newTeamTreeMain'>
                 {myteams}
               </ul>
             </div>
           );
         } else {
           return (
-            <div id='teamTree' style={teamTreeStyle}>
-              <ul class='ibm-twisty  ibm-widget-processed' id='teamTreeMain'>
+            <div id='newTeamTree' style={teamTreeStyle}>
+              <ul class='ibm-twisty  ibm-widget-processed' id='newTeamTreeMain'>
                 {myteams}
                 <li data-open='true' id='agteamstandalone' class='ibm-active'>
                   <a class='ibm-twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, 'agteamstandalone')}>
@@ -514,8 +514,8 @@ var HomeTeamTree = React.createClass({
         );
       });
       return (
-        <div id='teamTree' style={teamTreeStyle}>
-          <ul class='ibm-twisty  ibm-widget-processed' id='teamTreeMain'>
+        <div id='newTeamTree' style={teamTreeStyle}>
+          <ul class='ibm-twisty  ibm-widget-processed' id='newTeamTreeMain'>
             <ul class='ibm-twisty ' id='main_'>
               {allteams}
               <li data-open='false' id='agteamstandalone'>

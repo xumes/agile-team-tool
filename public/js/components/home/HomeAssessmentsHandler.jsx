@@ -41,7 +41,7 @@ module.exports.teamAssessmentListHander = function(teamId, teamAssessments, team
   });
 
   if (listOption.length > 6) {
-    var newOption = [];
+    newOption = [];
     for (var i = 0; i <= 5; i++)
       newOption.push(listOption[i]);
     listOption = newOption;
@@ -92,7 +92,7 @@ function destroyAssessmentCharts() {
 
 function noAssessmentRecord(){
   $('#assessmentCharts').empty();
-  // $('#assessmentCharts').css('min-height', '40px');
+  $('#assessmentCharts').css('min-height', '40px');
   var p = document.createElement('p');
   p.appendChild(document.createTextNode('No assessment results to display.'));
   $('#assessmentCharts').append(p);
@@ -119,13 +119,13 @@ function plotAssessmentSeries(teamAssessments) {
 
   if (assessmentsToPlot.length > 0){
     $('#assessmentCharts').empty();
-    // $('#assessmentCharts').css('min-height', '280px');
+    $('#assessmentCharts').css('min-height', '280px');
   }
   else {
     noAssessmentRecord();
   }
-  var count = 0;
-  for (var i = assessmentsToPlot.length - 1; i > -1; i--) {
+
+  for (i = assessmentsToPlot.length - 1; i > -1; i--) {
     var results = assessmentsToPlot[i]['componentResults'];
     for (var j = 0; j < results.length; j++) {
       var found = false;
@@ -151,8 +151,7 @@ function plotAssessmentSeries(teamAssessments) {
       });
       if (!found) {
         // create a section in the page for the particular assessment group
-        $('#assessmentCharts').append(createChartSection(identifier, count));
-        count++;
+        $('#assessmentCharts').append(createChartSection(identifier));
         // var hrDiv = document.createElement('div');
         // hrDiv.setAttribute('class', 'ibm-rule ibm-alternate ibm-gray-30');
         // hrDiv.appendChild(document.createElement('hr'));
@@ -192,9 +191,8 @@ function plotAssessmentSeries(teamAssessments) {
       },
       title: {
         style: {
-          fontFamily: 'HelvNeue Light for IBM',
-          fontSize: '1.3em',
-          color: '#5A5A5A'
+          fontSize: '13px',
+          fontWeight: 'bold'
         },
         text: chartData['title'] //'Overall Maturity for ' + chartData['title']
       },
@@ -321,9 +319,8 @@ function plotAssessment(index, chartData) {
 
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
-        fontSize: '1.3em',
-        color: '#5A5A5A'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: spiderData['title']
     },
@@ -336,8 +333,8 @@ function plotAssessment(index, chartData) {
           'fontSize': '10px'
         },
         formatter: function() {
-          var text = this.value;
-          var formatted = text.length > 15 ? text.substring(0, 15) + '...' : text;
+          var text = this.value,
+            formatted = text.length > 15 ? text.substring(0, 15) + '...' : text;
 
           return formatted;
         }
@@ -397,28 +394,25 @@ function plotAssessment(index, chartData) {
   });
 }
 
-function createChartSection(prefixId, count) {
-  var margintop = 'top: ' + count*2 + '%';
+function createChartSection(prefixId) {
   var mainDiv = document.createElement('div');
-  mainDiv.setAttribute('class', 'container-body-columns-ase');
-  // mainDiv.setAttribute('style', margintop);
-  mainDiv.setAttribute('style', 'height: 33%;' + margintop);
-  mainDiv.setAttribute('id', prefixId + 'Chart_block');
+  mainDiv.setAttribute('class', 'ibm-columns');
+  mainDiv.setAttribute('style', 'margin-bottom: 3em;');
 
   var colDiv = document.createElement('div');
-  colDiv.setAttribute('class', 'container-body-col-2-2');
+  colDiv.setAttribute('class', 'ibm-col-6-2');
 
   var div = document.createElement('div');
   div.setAttribute('id', prefixId + '_Chart');
-  // div.setAttribute('style', 'min-height: 310px;');
+  div.setAttribute('style', 'width: 100%; min-height: 310px;');
   colDiv.appendChild(div);
   mainDiv.appendChild(colDiv);
 
   colDiv = document.createElement('div');
-  colDiv.setAttribute('class', 'container-body-col-2-2');
+  colDiv.setAttribute('class', 'ibm-col-6-2');
   div = document.createElement('div');
   div.setAttribute('id', prefixId + '_SpiderChart');
-  // div.setAttribute('style', 'min-height: 310px;');
+  div.setAttribute('style', 'width: 100%; min-height: 310px;');
   colDiv.appendChild(div);
   mainDiv.appendChild(colDiv);
 
@@ -429,8 +423,8 @@ module.exports.assessmentParentRollup = function(snapshotData){
   var assessmentData = snapshotData.assessmentData;
   var date = moment(snapshotData.lastUpdate).format('DD MMM YYYY');
   //set div min height
-  // $('#assessmentTrend').attr('style','min-height: 380px;');
-  // $('#assessmentEval').attr('style','min-height: 380px;');
+  $('#assessmentTrend').attr('style','min-height: 380px;');
+  $('#assessmentEval').attr('style','min-height: 380px;');
   var graphCategory = [];
   //Evaluation rollup
   var teamNoAssessment = new Object();
@@ -548,9 +542,8 @@ function loadBarAssessmentEvaluation(id, asOfDate, categories, seriesObj1, serie
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
-        fontSize: '1.3em',
-        color: '#5A5A5A'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text:  'Frequency of Maturity Assessment Evaluations',
       x: 23
@@ -667,9 +660,8 @@ function loadLineMaturityTrend(id, categories, seriesObj1, seriesObj2, seriesObj
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
-        fontSize: '1.3em',
-        color: '#5A5A5A'
+        fontSize: '13px',
+        fontWeight: 'bold'
       },
       text: 'Maturity Assessment Trends Per Month',
     },

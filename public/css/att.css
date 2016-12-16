@@ -514,33 +514,25 @@ textarea[disabled] {
 #teamTree ul.ibm-twisty > li.ibm-active > a.ibm-twisty-trigger,
 #teamTree ul.ibm-twisty > li a.ibm-twisty-trigger,
 #teamTree ul.ibm-twisty > li a.agile-team-link {
-  color: #4D4D4D;
-  font-size: 1.6em;
-  font-family: "Helvetica Neue";
-  font-weight: 300;
-  line-height: 48px;
+  color: #323232;
 }
 
 #searchTree ul.ibm-twisty > li a.agile-team-link {
-  color: #4D4D4D;
-}
-
-#teamTree {
-  width: 100%;
+  color: #323232;
 }
 
 #teamTreeMain {
-  width: 100%;
+  margin-right: 5px;
+  width: 98%;
 }
 
 #teamTreeMain a.ibm-twisty-trigger {
+  border-bottom: 0 none !important;
   margin: 0px 2px 0px 2px;
 }
 
 #teamTree a::before {
-  font-size: 1.6em;
-  font-weight: 300;
-  color: #3B6DAA;
+  font-size: 0.8rem;
 }
 
 #teamTree .agile-team-standalone a::before {
@@ -549,10 +541,9 @@ textarea[disabled] {
 
 #teamTree a.agile-team-link {
   display: inherit;
-  margin-left: 8.0%;
-  margin-right: 8.0%;
-  padding-left: 0;
-  /*border-bottom: 1px solid #e0e0e0 !important;*/
+  margin-left: 15px;
+  padding-left: 5px;
+  border-bottom: 1px solid #e0e0e0 !important;
   cursor: pointer;
 }
 
@@ -564,22 +555,18 @@ textarea[disabled] {
   cursor: pointer;
 }
 
-.agile-team-parent-selected {
+#teamTree .agile-team-parent-selected {
   background-color: #c0e6ff;
 }
 
-.agile-team-selected {
-  border-bottom: 2px solid #008ABF;
+#teamTree .agile-team-selected {
+  font-weight: bold;
+  background-color: #5aaafa;
 }
 
-.agile-team-squad, #teamTree li.agile-team-squad a::after, #teamTree a.agile-team-squad::after,  #teamTable a.agile-team-squad::after, #searchTree a.agile-team-squad::after{
-  /*content: " * ";
-  color: red;*/
-  background-image: url('../img/Att-icons/att-icons_tribe.svg');
-  background-repeat: no-repeat;
-  background-position: left center;
-  background-size: 10% 40%;
-  text-indent: 8%;
+#teamTree .agile-team-squad, #teamTree li.agile-team-squad a::after, #teamTree a.agile-team-squad::after,  #teamTable a.agile-team-squad::after, #searchTree a.agile-team-squad::after{
+  content: " * ";
+  color: red;
 }
 
 #teamTree .ibm-twisty-body > p {
@@ -626,7 +613,7 @@ textarea[disabled] {
   padding-top: 0px;
   padding-bottom: 0px;
   font-size:  10.5pt;
-  color: #4D4D4D;
+  color: #323232;
   display: block;
 }
 
@@ -634,7 +621,7 @@ textarea[disabled] {
   padding-top: 0px;
   padding-bottom: 0px;
   font-size:  10.5pt;
-  color: #4D4D4D;
+  color: #323232;
   display: block;
 }
 
@@ -1204,12 +1191,10 @@ li #allTeams {
 /*blockquote, q {
   quotes: none;
 }
-
 blockquote:before, blockquote:after, q:before, q:after {
   content: '';
   content: none;
 }
-
 table {
   border-collapse: collapse;
   border-spacing: 0;
@@ -1258,7 +1243,6 @@ img {
 /*p {
   padding: 0 0 15px 0;
 }
-
 section:after {
   content: ".";
   display: block;
@@ -1268,15 +1252,12 @@ section:after {
   clear: both;
   visibility: hidden;
 }
-
 section {
   display: inline-block;
 }
-
 * html section {
   height: 1%;
 }
-
 section {
   display: block;
 }*/
