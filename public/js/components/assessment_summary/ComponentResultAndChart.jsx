@@ -68,8 +68,10 @@ var ComponentResultAndChart = React.createClass({
     if (assessments != null && assessments.length > 1) {
       assessments.sort(function(a, b) {
         if (a['assessmentStatus'].toLowerCase() == 'draft' && b['assessmentStatus'].toLowerCase() == 'draft') {
-          var aCreateDate = a['createDate'].split(' ')[0].replace(/-/g, '/') + ' ' + a['createDate'].split(' ')[1];
-          var bCreateDate = b['createDate'].split(' ')[0].replace(/-/g, '/') + ' ' + b['createDate'].split(' ')[1];
+          // var aCreateDate = a['createDate'].split(' ')[0].replace(/-/g, '/') + ' ' + a['createDate'].split(' ')[1];
+          // var bCreateDate = b['createDate'].split(' ')[0].replace(/-/g, '/') + ' ' + b['createDate'].split(' ')[1];
+          var aCreateDate = a['createDate'];
+          var bCreateDate = b['createDate'];
           if (new Date(bCreateDate).getTime() == new Date(aCreateDate).getTime()) {
             return 0;
           } else {
@@ -77,8 +79,10 @@ var ComponentResultAndChart = React.createClass({
           }
 
         } else if (a['assessmentStatus'].toLowerCase() == 'submitted' && b['assessmentStatus'].toLowerCase() == 'submitted') {
-          var aSubmitDate = a['submittedDate'].split(' ')[0].replace(/-/g, '/') + ' ' + a['submittedDate'].split(' ')[1];
-          var bSubmitDate = b['submittedDate'].split(' ')[0].replace(/-/g, '/') + ' ' + b['submittedDate'].split(' ')[1];
+          // var aSubmitDate = a['submittedDate'].split(' ')[0].replace(/-/g, '/') + ' ' + a['submittedDate'].split(' ')[1];
+          // var bSubmitDate = b['submittedDate'].split(' ')[0].replace(/-/g, '/') + ' ' + b['submittedDate'].split(' ')[1];
+          var aSubmitDate = a['submittedDate'];
+          var bSubmitDate = b['submittedDate'];          
           if (new Date(bSubmitDate).getTime() == new Date(aSubmitDate).getTime()) {
             return 1;
           } else {
