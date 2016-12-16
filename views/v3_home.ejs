@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+
+  <%- include ./header/header_meta.ejs %>
+  <link href="/css/home.css" rel="stylesheet" type="text/css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.4.0/clipboard.min.js"></script>
+  <script src="//cdn.jsdelivr.net/bluebird/3.4.5/bluebird.min.js"></script>
+
+  <script src="//code.highcharts.com/highcharts.js"></script>
+  <script src="//code.highcharts.com/highcharts-more.js"></script>
+  <script src="//code.highcharts.com/modules/no-data-to-display.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    var user =<%-JSON.stringify(user)-%>;
+    var selectedTeam = '';
+  </script>
+
+</head>
+
+<body id="ibm-com" class="ibm-type" onload="getSiteStatus();">
+  <div id ='agile-home-header'>
+    <div id='agile-home-header-title'>
+      <h>IBM Agile Team Tool</h>
+    </div>
+  </div>
+
+  <div id="app-content" style='height: 100%; background-color: white;'>
+  </div>
+
+
+  <div id="ibm-related-content">
+    <div id="ibm-merchandising-module">
+      <!-- MTE will generate this -->
+      <!-- <aside role="complementary" aria-label="Related content"> MTE dynamic modules populate in here. <aside> -->
+      <!-- /MTE -->
+    </div>
+  </div>
+
+
+<script type="text/javascript" src="js/team-accessibility-fix.js?v=<%=Math.random()%>"></script>
+<script type="text/javascript" src="/dist/v3home.js"></script>
+
+</body>
+</html>
