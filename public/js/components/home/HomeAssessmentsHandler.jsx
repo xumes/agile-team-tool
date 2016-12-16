@@ -177,9 +177,8 @@ function plotAssessmentSeries(teamAssessments) {
       var submitDate = moment.utc(assessmentsToPlot[i]['submittedDate']).format('DD MMM YYYY'); //fmDate(assessmentsToPlot[i]['submittedDate']);
       chartData['categories'].push(submitDate);
       chartData['targetScore'].push(isNaN(parseFloat(results[j]['targetScore'])) ? 0 : parseFloat(results[j]['targetScore']));
-      chartData['currentScore'].push(isNaN(parseFloat(results[j]['currentScore'])) ? 0 : parseFloat(results[j]['currentScore']));
+      chartData['currentScore'].push(isNaN(parseFloat(results[j]['currentScore'])) ? 0 : parseFloat(parseFloat(results[j]['currentScore']).toFixed(1)));
       chartData['assessmentResult'].push(results[j]['assessedComponents']);
-
     }
   }
 
@@ -488,20 +487,20 @@ module.exports.assessmentParentRollup = function(snapshotData){
     teamNoAssessment.data.push(tNoData);
 
     tFoundationData.name = assessmentData[i].month;
-    var foundationScore = isNaN(parseFloat(assessmentData[i].prj_foundation_score)) ? null : parseFloat(assessmentData[i].prj_foundation_score) == 0 ? null : parseFloat(assessmentData[i].prj_foundation_score);
-    tFoundationData.y = foundationScore;
+    var foundationScore = isNaN(parseFloat(assessmentData[i].prj_foundation_score)) ? null : parseFloat(assessmentData[i].prj_foundation_score) == 0 ? null : (parseFloat(assessmentData[i].prj_foundation_score));
+    tFoundationData.y = (foundationScore == null) ? null : parseFloat(foundationScore.toFixed(1));
     tFoundationData.squads = assessmentData[i].total_prj_foundation;
     teamFoundational.data.push(tFoundationData);
 
     tDevOpsData.name = assessmentData[i].month;
-    var devopsScore = isNaN(parseFloat(assessmentData[i].prj_devops_score)) ? null : parseFloat(assessmentData[i].prj_devops_score) == 0 ? null : parseFloat(assessmentData[i].prj_devops_score);
-    tDevOpsData.y = devopsScore;
+    var devopsScore = isNaN(parseFloat(assessmentData[i].prj_devops_score)) ? null : parseFloat(assessmentData[i].prj_devops_score) == 0 ? null : (parseFloat(assessmentData[i].prj_devops_score));
+    tDevOpsData.y = (devopsScore == null) ? null : parseFloat(devopsScore.toFixed(1));
     tDevOpsData.squads = assessmentData[i].total_prj_devops;
     teamDevOps.data.push(tDevOpsData);
 
     tOperationsData.name = assessmentData[i].month;
-    var operationScore = isNaN(parseFloat(assessmentData[i].operation_score)) ? null : parseFloat(assessmentData[i].operation_score) == 0 ? null : parseFloat(assessmentData[i].operation_score);
-    tOperationsData.y = operationScore;
+    var operationScore = isNaN(parseFloat(assessmentData[i].operation_score)) ? null : parseFloat(assessmentData[i].operation_score) == 0 ? null : (parseFloat(assessmentData[i].operation_score));
+    tOperationsData.y = (operationScore == null) ? null : parseFloat(operationScore.toFixed(1));
     tOperationsData.squads = assessmentData[i].total_operation;
     teamOperations.data.push(tOperationsData);
   }
