@@ -57,8 +57,8 @@ var IterationMgmt = React.createClass({
 
   startDateChange: function(date){
     var selectedStartDate = moment.utc(date);
-    var selectedEndDate = moment.utc(this.refs.iterationEndDate.selected);
-    if (selectedStartDate.diff(selectedEndDate) < 0) {
+    var selectedEndDate = moment.utc(this.props.iteration.endDate);
+    if (selectedStartDate <= selectedEndDate) {
       this.props.clearError('iterationStartDate');
       this.props.clearError('iterationEndDate');
     }
@@ -73,9 +73,9 @@ var IterationMgmt = React.createClass({
   },
 
   endDateChange: function(date){
-    var selectedStartDate = moment.utc(this.refs.iterationStartDate.selected);
+    var selectedStartDate = moment.utc(this.props.iteration.startDate);
     var selectedEndDate = moment.utc(date);
-    if (selectedEndDate.diff(selectedStartDate) > 0) {
+    if (selectedEndDate >= selectedStartDate) {
       this.props.clearError('iterationStartDate');
       this.props.clearError('iterationEndDate');
     }
