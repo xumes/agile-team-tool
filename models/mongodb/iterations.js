@@ -158,7 +158,7 @@ function validateDate(value) {
   var dateFormat = 'MM/DD/YYYY';
   var error = false;
   var d1, d2;
-  if(_.isFunction(this.getUpdate)){
+  if (_.isFunction(this.getUpdate)){
     d1 = moment(new Date(this.getUpdate().$set.startDate), dateFormat);
     d2 = moment(new Date(this.getUpdate().$set.endDate), dateFormat);
   }
