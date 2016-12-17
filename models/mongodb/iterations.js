@@ -50,7 +50,8 @@ var IterationSchema = {
   },
   endDate: {
     type: Date,
-    required: [true, 'End date of Iteration is required.']
+    required: [true, 'End date of Iteration is required.'],
+    validate: [validateDate, 'End date must be >= start date']
   },
   name: {
     type: String,
@@ -94,10 +95,14 @@ var IterationSchema = {
   },
   clientSatisfaction: {
     type: Number,
+    min: [1, 'Client satisfaction should be between 1.0 - 4.0'],
+    max: [4, 'Client satisfaction should be between 1.0 - 4.0'],
     default: null
   },
   teamSatisfaction: {
     type: Number,
+    min: [1, 'Team satisfaction should be between 1.0 - 4.0'],
+    max: [4,'Team satisfaction should be between 1.0 - 4.0'],
     default: null
   },
   comment: {
@@ -122,6 +127,7 @@ var IterationSchema = {
   },
   defectsEndBal: {
     type: Number,
+    min: [0, 'Closing balance defects must be a number'],
     default: null
   },
   cycleTimeWIP: {
@@ -148,49 +154,28 @@ function isIterationNumExist(iterationName, iterData, docId) {
   return duplicate;
 };
 
-function validateDate(startDate, endDate) {
+function validateDate(value) {
   var dateFormat = 'MM/DD/YYYY';
-  var error = {};
-  var d1 = moment(new Date(startDate), dateFormat);
-  var d2 = moment(new Date(endDate), dateFormat);
+  var error = false;
+  var d1, d2;
+  if(_.isFunction(this.getUpdate)){
+    d1 = moment(new Date(this.getUpdate().$set.startDate), dateFormat);
+    d2 = moment(new Date(this.getUpdate().$set.endDate), dateFormat);
+  }
+  else {
+    d1 = moment(new Date(this.startDate), dateFormat);
+    d2 = moment(new Date(this.endDate), dateFormat);
+  }
   var diff = moment(d1).diff(d2, 'days', true);
-  if (diff >= 1) {
-    error.startDate = {
-      message : 'Start date must be <= end date'
-    };
+  if (diff < 1) {
+    error = true;
   }
   return error;
 };
 
-function checkSatisfaction(value) {
-  var invalid = false;
-  value = parseFloat(value);
-  if (value === 0) {
-    invalid = true;
-  } else {
-    if ((value != 0 && value < 1) || value > 4) {
-      invalid = true;
-    }
-  }
-
-  return invalid;
-};
-
-
 function validateIteration(data, iterData, docId){
   var errorMsg = {};
   var errorsList = {};
-  var result = validateDate(data.startDate, data.endDate);
-
-  if (!_.isEmpty(result)){
-    var field = _.keys(result);
-    if (field.length > 0){
-      _.each(field, function(value, key){
-        errorsList[value] = result[value];
-      });
-    }
-  }
-
   var duplicate = isIterationNumExist(data['name'], iterData, docId);
   if (duplicate) {
     errorsList.name = {
@@ -198,19 +183,6 @@ function validateIteration(data, iterData, docId){
     };
   }
 
-  var invalid = checkSatisfaction(data['teamSatisfaction']);
-  if (invalid){
-    errorsList.teamSatisfaction = {
-      message:'Team satisfaction should be between 1.0 - 4.0'
-    };
-  }
-
-  invalid = checkSatisfaction(data['clientSatisfaction']);
-  if (invalid){
-    errorsList.clientSatisfaction = {
-      message:'Client satisfaction should be between 1.0 - 4.0'
-    };
-  }
   if (_.keys(errorsList).length > 0){
     errorMsg.errors = errorsList;
   }
@@ -427,7 +399,7 @@ var IterationExport = {
           data['updatedBy'] = userInfo.email;
           data['updatedByUserId'] = userInfo.userId;
           data['status'] = IterationExport.calculateStatus(data);
-          return Iteration.where({'_id': docId}).update({},{'$set':data}, {runValidators:true});
+          return Iteration.where({'_id': docId}).update({},{'$set':data}, {runValidators:true, context: 'query'});
         }
       })
       .then(function(result){
