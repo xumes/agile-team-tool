@@ -360,7 +360,11 @@ var HomeTeamTree = React.createClass({
     spanLink.appendChild(document.createTextNode(team.name));
 
     var span = document.createElement('a');
-    span.setAttribute('class', 'ibm-twisty-trigger');
+    if (team.type == 'squad') {
+      span.setAttribute('class', 'ibm-twisty-trigger trigger-squad');
+    } else {
+      span.setAttribute('class', 'ibm-twisty-trigger');
+    }
     span.setAttribute('href', '#toggle');
     span.appendChild(spanLink);
     li.appendChild(span);
@@ -370,11 +374,6 @@ var HomeTeamTree = React.createClass({
     var desc = (team.description == null)?'No description specified':team.description;
     href.setAttribute('title',desc);
     href.setAttribute('id', 'link_' + team.pathId);
-    // if (team.name.length > 40) {
-    //   var teamName = team.name.substring(0, 40) + '...';
-    // } else {
-    //   teamName = team.name;
-    // }
     href.appendChild(document.createTextNode(team.name));
     li.appendChild(href);
 
@@ -413,8 +412,10 @@ var HomeTeamTree = React.createClass({
           var objectId = team._id;
           if (team.type == 'squad') {
             var isSquad = 'agile-team-link agile-team-standalone agile-team-squad';
+            var triggerClass =  'ibm-twisty-trigger trigger-squad';
           } else {
             isSquad = 'agile-team-link agile-team-standalone';
+            triggerClass =  'ibm-twisty-trigger';
           }
           if (team.hasChild == false) {
             var hasChild = 'agile-team-standalone';
@@ -425,7 +426,7 @@ var HomeTeamTree = React.createClass({
           var title = teamDesc;
           return (
             <li class={hasChild} key={objectId} data-open='false' id={teamId}>
-              <a class='ibm-twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, teamId)}>
+              <a class={triggerClass} href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, teamId)}>
                 <span class='ibm-access'>{label}</span>
               </a>
               <a class={isSquad} title={title} id={linkId} onClick={self.loadDetails.bind(null, teamId)}>{label}</a>
@@ -446,13 +447,18 @@ var HomeTeamTree = React.createClass({
           var objectId = team._id;
           if (team.type == 'squad') {
             var isSquad = 'agile-team-link agile-team-standalone agile-team-squad';
+            var triggerClass =  'ibm-twisty-trigger trigger-squad';
           } else {
             isSquad = 'agile-team-link agile-team-standalone';
+            triggerClass = 'ibm-twisty-trigger';
           }
           var teamDesc = (team.description == null)?'No description specified':team.description;
           var title = teamDesc;
           return (
             <li class='agile-team-standalone' key={objectId} data-open='false' id={teamId}>
+              <a class={triggerClass} href='#toggle' title='Expand/Collapse'>
+                <span class='ibm-access'>{label}</span>
+              </a>
               <a class={isSquad} title={title} id={linkId} onClick={self.loadDetails.bind(null,teamId)}>{label}</a>
               <span class='ibm-access'>{objectId}</span>
             </li>

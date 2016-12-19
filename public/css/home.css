@@ -71,12 +71,19 @@ body {
 }
 
 #newTeamTree a.agile-team-squad, #newTeamTree li.agile-team-squad a::after, #newTeamTree a.agile-team-squad::after{
-  background-image: url('../img/Att-icons/att-icons_tribe.svg');
+  /*background-image: url('../img/Att-icons/att-icons_tribe.svg');
   background-repeat: no-repeat;
   background-position: left center;
   background-size: 10% 40%;
-  text-indent: 8%;
+  text-indent: 8%;*/
 }
+#newTeamTree a.trigger-squad::before {
+  background-image: url('../img/Att-icons/att-icons_tribe.svg');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  width: 6%;
+}
+
 
 #newTeamTree .ibm-twisty-body > p {
   margin-left: 0px;

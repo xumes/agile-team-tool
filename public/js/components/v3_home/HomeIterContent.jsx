@@ -379,7 +379,7 @@ var HomeIterContent = React.createClass({
             </div>
             <div class='home-iter-comment-block'>
               <div class='home-iter-content-title'>Iteration Comments</div>
-              <textarea class='home-iter-comment-test' defaultValue={iterData.comment}></textarea>
+              <textarea class='home-iter-comment-test' readOnly={!access}>{iterData.comment}</textarea>
             </div>
           </div>
 
