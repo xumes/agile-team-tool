@@ -53,13 +53,13 @@ var AssessmentPageFormOne = React.createClass({
       });
       assessments = assessments.reverse();
       var assessmentListsOption = assessments.map(function(item) {
-        var displayDate = moment(item.createDate).format('DDMMMYYYY');
+        var displayDate = moment.utc(item.createDate).format('DDMMMYYYY');
         if (!_.isEqual(item.assessmentStatus, 'Submitted')) {
           displayDate = 'Created: ' + displayDate + ' (Draft)';
           optionTitle= 'Select one';
           optionValue= 's';
         } else {
-          displayDate = moment(item.submittedDate).format('DDMMMYYYY');
+          displayDate = moment.utc(item.submittedDate).format('DDMMMYYYY');
         }
         return (
           <option key={item._id} value={item._id}>{displayDate}</option>

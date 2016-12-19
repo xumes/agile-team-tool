@@ -76,7 +76,7 @@ function assessmentDropdownList(assessments) {
 }
 
 function fmDate(date) {
-  return moment(date).format('DDMMMYYYY');
+  return moment.utc(date).format('DDMMMYYYY');
 };
 
 function destroyAssessmentCharts() {
@@ -420,7 +420,7 @@ function createChartSection(prefixId) {
 
 module.exports.assessmentParentRollup = function(snapshotData){
   var assessmentData = snapshotData.assessmentData;
-  var date = moment(snapshotData.lastUpdate).format('DD MMM YYYY');
+  var date = moment.utc(snapshotData.lastUpdate).format('DD MMM YYYY');
   //set div min height
   $('#assessmentTrend').attr('style','min-height: 380px;');
   $('#assessmentEval').attr('style','min-height: 380px;');
