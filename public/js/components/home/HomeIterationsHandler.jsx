@@ -305,8 +305,8 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAcc
 
   destroyIterationCharts();
 
-  loadScoreChart('velocityChart', 'Velocity', 'line', graphCategoryWithChange, 'Story points', commVelocitySeries,  velocitySeries, 'Points', 'Iteration dates', '* Indicates Team Change', true, true);
-  loadScoreChart('throughputChart', 'Throughput', 'line', graphCategoryWithChange, 'Stories/tickets/cards', commThroughputSeries, throughputSeries, 'Points', 'Iteration dates', '* Indicates Team Change', true, true);
+  loadScoreChart('velocityChart', 'Velocity', 'line', graphCategoryWithChange, 'Story points', velocitySeries, commVelocitySeries, 'Points', 'Iteration dates', '* Indicates Team Change', true, true);
+  loadScoreChart('throughputChart', 'Throughput', 'line', graphCategoryWithChange, 'Stories/tickets/cards', throughputSeries, commThroughputSeries, 'Points', 'Iteration dates', '* Indicates Team Change', true, true);
   loadPizzaChart('pizzaChart', '2 Pizza Rule (Team Size)', 'line', graphCategory, 'Count', yMax, teamMemSeries, fteSeries, targetSeries, 'Points');
   loadMultiDefectDeployChart('defectsChart', graphCategory, defectsStartSeries, defectsSeries, defectsClosedSeries, defectsEndSeries, deploySeries);
   loadSatisfactionChart('statisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', teamSatSeries, clientSatSeries, 'Points', sMax);
