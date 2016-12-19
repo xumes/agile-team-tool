@@ -705,7 +705,7 @@ function loadLineMaturityTrend(id, categories, seriesObj1, seriesObj2, seriesObj
         var formatResult = '<b>' + this.key + '<b><br>';
         var point = this.point.index;
         for (var i=0;i < this.series.chart.series.length; i++) {
-          if (this.series.chart.series[i].visible)
+          if (this.series.chart.series[i].visible && this.series.chart.series[i].data[point].y)
             formatResult +=
               '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].data[point].y + ' ('+ this.series.chart.series[i].data[point].squads + ' squads)<br/>';
         }
