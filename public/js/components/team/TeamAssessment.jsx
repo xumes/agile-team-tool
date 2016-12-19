@@ -69,14 +69,29 @@ var TeamAssessment = React.createClass({
         )
       } else {
         var count = 0;
+        var assessments = [];
         if (self.props.selectedTeam.assessments != undefined && !_.isEmpty(self.props.selectedTeam.assessments)) {
-          var assessments = _.sortBy(self.props.selectedTeam.assessments, function(assess){
-            if (assess.assessmentStatus == 'Submitted') {
-              return 'aaa'+new Date(assess.submittedDate);
-            } else
-              return 'zzz'+new Date(assess.createDate);
+          // var assessments = _.sortBy(self.props.selectedTeam.assessments, function(assess){
+          //   if (assess.assessmentStatus == 'Submitted') {
+          //     return 'aaa'+new Date(assess.submittedDate);
+          //   } else
+          //     return 'zzz'+new Date(assess.createDate);
+          // });
+          // sort the draft assessment first..
+          var draft_assessments = _.sortBy(self.props.selectedTeam.assessments, function(assess) {
+            if (assess.assessmentStatus == 'Draft') {
+              assessments.push(assess);
+              return assess.createDate;
+            }
           });
-          assessments = assessments.reverse();
+          // next, sort the submitted assessment
+          var submitted_assessments = _.sortBy(self.props.selectedTeam.assessments, function(assess) {
+            if (assess.assessmentStatus == 'Submitted') {
+              assessments.push(assess);
+              return assess.submittedDate;
+            }
+          });
+          // assessments = assessments.reverse();
           assessments = assessments.map(function(assessment){
             var assessmentId = 'asmntrow_'+count;
             var status = assessment.assessmentStatus;
