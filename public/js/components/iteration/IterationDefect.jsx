@@ -75,11 +75,11 @@ var IterationDefect = React.createClass({
     this.refs.defects.value = this.props.iteration.defects;
     this.refs.defectsClosed.value = this.props.iteration.defectsClosed;
     this.refs.defectsEndBal.value = this.props.iteration.defectsEndBal;
-    var newStartDate = moment(this.props.iteration.startDate).format('YYYY-MM-DD');
+    var newStartDate = moment.utc(this.props.iteration.startDate).format('YYYY-MM-DD');
     if (currentTeamId != this.props.iteration.teamId || (currentStartDate != newStartDate && !_.isEqual(newStartDate, 'Invalid date'))) {
       currentIterId = this.props.iteration._id
       currentTeamId = this.props.iteration.teamId;
-      currentStartDate = moment(this.props.iteration.startDate).format('YYYY-MM-DD');
+      currentStartDate = moment.utc(this.props.iteration.startDate).format('YYYY-MM-DD');
       if (_.isEmpty(currentIterId))
         this.getDefectsStartBalance();
     }

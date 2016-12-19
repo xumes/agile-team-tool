@@ -20,7 +20,7 @@ var AssessmentButtons = React.createClass({
     if ($('#submitDatePicker').val() == '') {
       var submittedDate = ''
     } else {
-      submittedDate = new Date(moment($('#submitDatePicker').val(), 'DDMMMYYYY'));
+      submittedDate = new Date(moment.utc($('#submitDatePicker').val(), 'DDMMMYYYY'));
     }
     var updateDoc = {
       'assessmentStatus' : 'Submitted',
@@ -87,7 +87,7 @@ var AssessmentButtons = React.createClass({
     if ($('#submitDatePicker').val() == '') {
       var submittedDate = ''
     } else {
-      submittedDate = new Date(moment($('#submitDatePicker').val(), 'DDMMMYYYY'));
+      submittedDate = new Date(moment.utc($('#submitDatePicker').val(), 'DDMMMYYYY'));
     }
     var updateDoc = {
       'assessmentStatus' : 'Draft',

@@ -57,8 +57,8 @@ var TeamIteration = React.createClass({
         if (self.props.selectedTeam.iterations != undefined && !_.isEmpty(self.props.selectedTeam.iterations)) {
           var iterations = self.props.selectedTeam.iterations.map(function(iteration){
             var iterationId = 'irow_'+count;
-            var startDate = moment(iteration.startDate).format('DDMMMYYYY');
-            var endDate = moment(iteration.endDate).format('DDMMMYYYY');
+            var startDate = moment.utc(iteration.startDate).format('DDMMMYYYY');
+            var endDate = moment.utc(iteration.endDate).format('DDMMMYYYY');
             var iname = iteration.name;
             if (count < 5) {
               count++;
