@@ -4,8 +4,6 @@
 
 <%- include ./header/header_meta.ejs %>
 
-<script type="text/javascript" src="js/assessmentResult.js?v=<%=Math.random()%>"></script>
-
 <script src="//code.highcharts.com/highcharts.js"></script>
 <script src="//code.highcharts.com/highcharts-more.js"></script>
 
@@ -15,7 +13,7 @@
 
 </head>
 
-<body id="ibm-com" class="ibm-type" onload="siteEnv()">
+<body id="ibm-com" class="ibm-type" onload="getSiteStatus()">
   <div id="ibm-top" class="ibm-landing-page">
     <%- include ./header/header.ejs %>
     
