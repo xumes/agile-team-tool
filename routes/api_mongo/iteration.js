@@ -91,7 +91,7 @@ module.exports = function(app, includes) {
     }
     // loggers.get('api').verbose('[createIteration] POST data:', data);
     // console.log('[createIteration] POST data:', data);
-    Iterations.add(data, req.session.userId)
+    Iterations.add(data, req.session['user'])
       .then(function(result) {
         res.send(result);
       })
@@ -122,7 +122,7 @@ module.exports = function(app, includes) {
       });
     }
     // loggers.get('api').verbose('[updateIteration] POST data:', JSON.stringify(data, null, 4));
-    Iterations.edit(iterationId, data, req.session.userId)
+    Iterations.edit(iterationId, data, req.session['user'])
       .then(function(result) {
         res.status(200).send(result);
       })
