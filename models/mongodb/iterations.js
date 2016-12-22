@@ -298,8 +298,9 @@ var IterationExport = {
     });
   },
 
-  add: function(data, userId) {
+  add: function(data, user) {
     return new Promise(function(resolve, reject) {
+      var userId = user.ldap.uid;
       data['createDate'] = new Date(moment.utc());
       data['updateDate'] = new Date(moment.utc());
       data['status'] = IterationExport.calculateStatus(data);
@@ -368,8 +369,9 @@ var IterationExport = {
     });
   },
 
-  edit: function(docId, data, userId) {
+  edit: function(docId, data, user) {
     return new Promise(function(resolve, reject) {
+      var userId = user.ldap.uid;
       Users.isUserAllowed(userId.toUpperCase(), data['teamId'])
       .then(function(isAllowed){
         if (isAllowed)

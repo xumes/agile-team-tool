@@ -74,13 +74,18 @@ module.exports = function(app, includes) {
   };
 
   getActiveUserInfo = function(req, res) {
-    Users.getUsersInfo(req.session.userId)
-    .then(function(result) {
-      res.status(200).send(result);
-    })
-    .catch(function(err) {
-      res.status(404).send(err);
-    });
+    var userId;
+    var user = req.session['user'];
+    if (user) {
+      userId = user ? user['ldap']['uid'].toUpperCase() : '';
+      Users.getUsersInfo(userId)
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch(function(err) {
+        res.status(404).send(err);
+      });
+    }
   };
 
   // //TODO: Refactor this and store in the database
