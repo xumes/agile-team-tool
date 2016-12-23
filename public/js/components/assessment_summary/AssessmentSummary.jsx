@@ -1,5 +1,5 @@
 var React = require('react');
-var AssessmentTabNav = require('../AssessmentTabNav.jsx');
+var AssessmentTabNav = require('./AssessmentTabNav.jsx');
 var AssessmentSummaryInfo = require('./AssessmentSummaryInfo.jsx');
 var ComponentResultAndChart = require('./ComponentResultAndChart.jsx');
 var AssessmentProgressForm = require('./AssessmentProgressForm.jsx');
