@@ -14,6 +14,11 @@ var moment = require('moment');
 var self = this;
 // Just needed so that corresponding test could run
 require('../../settings');
+var userTimezone = require('./data/uniqueUserTimezone.js');
+var ulocation = {};
+_.each(userTimezone, function(tz) {
+  ulocation[tz.location] = tz.timezone;
+});
 
 /*
   Team Schema
@@ -567,6 +572,9 @@ module.exports.createUsers = function(members) {
                 return user;
             });
             if (_.isEmpty(user)) {
+              if (!_.isEmpty(member.location)) {
+                member.location.timezone = ulocation[member.location.site];
+              }
               promiseArray.push(Users.create(member));
             }
           });
