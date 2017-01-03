@@ -14,6 +14,11 @@ var moment = require('moment');
 var self = this;
 // Just needed so that corresponding test could run
 require('../../settings');
+var userTimezone = require('./data/uniqueUserTimezone.js');
+var ulocation = {};
+_.each(userTimezone, function(tz) {
+  ulocation[tz.location] = tz.timezone;
+});
 
 /*
   Team Schema
@@ -568,6 +573,9 @@ module.exports.createUsers = function(members) {
                 return user;
             });
             if (_.isEmpty(user)) {
+              if (!_.isEmpty(member.location)) {
+                member.location.timezone = ulocation[member.location.site];
+              }
               promiseArray.push(Users.create(member));
             }
           });
@@ -727,11 +735,14 @@ module.exports.getTeamByPathId = function(pathId) {
 module.exports.loadTeamChildDetails = function(id) {
   return new Promise(function(resolve, reject){
     var promiseArray = [];
-    if (mongoose.Types.ObjectId.isValid(id)) {
-      promiseArray.push(Team.findOne({_id:id, docStatus:{$ne:'delete'}}).exec());
-    } else {
-      promiseArray.push(Team.findOne({pathId:id, docStatus:{$ne:'delete'}}).exec());
-    }
+    // if (mongoose.Types.ObjectId.isValid(id)) {
+    //   console.log('id');
+    //   promiseArray.push(Team.findOne({_id:id, docStatus:{$ne:'delete'}}).exec());
+    // } else {
+    //   console.log('path');
+    //   promiseArray.push(Team.findOne({pathId:id, docStatus:{$ne:'delete'}}).exec());
+    // }
+    promiseArray.push(Team.findOne({pathId:id, docStatus:{$ne:'delete'}}).exec());
     promiseArray.push(getAllUniquePaths());
     Promise.all(promiseArray)
       .then(function(results){
