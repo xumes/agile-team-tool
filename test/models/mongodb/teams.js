@@ -616,17 +616,17 @@ describe('Team model [getAllChildrenOnPath]', function() {
 });
 
 describe('Team model [getTeamAndChildInfo]', function() {
-  it('return team info by team id', function(done){
-    Teams.loadTeamChildDetails(newTeamId)
-      .then(function(result){
-        expect(result).to.be.a('object');
-        expect(result._id.toString()).to.equal(newTeamId.toString());
-        done();
-      })
-      .catch(function(err){
-        done();
-      });
-  });
+  // it('return team info by team id', function(done){
+  //   Teams.loadTeamChildDetails(newTeamId)
+  //     .then(function(result){
+  //       expect(result).to.be.a('object');
+  //       expect(result._id.toString()).to.equal(newTeamId.toString());
+  //       done();
+  //     })
+  //     .catch(function(err){
+  //       done();
+  //     });
+  // });
   it('return team info by team pathId', function(done){
     Teams.loadTeamChildDetails(parentTeamPathId)
       .then(function(result){
