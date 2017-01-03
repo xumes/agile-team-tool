@@ -3,6 +3,7 @@ var iterationModel = require('../../models/iteration');
 var util = require('../../helpers/util');
 var loggers = require('../../middleware/logger');
 var _ = require('underscore');
+var cors = require('cors');
 
 module.exports = function(app, includes) {
   getIterations = function (req, res) {
@@ -95,8 +96,8 @@ module.exports = function(app, includes) {
     });
   };
 
-  app.get('/v1/iterations', includes.middleware.auth.requireApikey, getIterations);
-  app.put('/v1/iterations', includes.middleware.auth.requireApikey, putIteration);
-  app.post('/v1/iterations', includes.middleware.auth.requireApikey, postIteration);
-  app.delete('/v1/iterations', includes.middleware.auth.requireApikey, deleteIteration);
+  app.get('/v1/iterations', cors(), includes.middleware.auth.requireApikey, getIterations);
+  app.put('/v1/iterations', cors(), includes.middleware.auth.requireApikey, putIteration);
+  app.post('/v1/iterations', cors(), includes.middleware.auth.requireApikey, postIteration);
+  app.delete('/v1/iterations', cors(), includes.middleware.auth.requireApikey, deleteIteration);
 };
