@@ -58,12 +58,26 @@ var userSession = {
   'shortEmail': 'testuser@test.com'
 };
 
+var notExistingSession = {
+  'ldap': {
+    'uid': 'notexisting'
+  },
+  'shortEmail': 'notexisting@test.com'
+};
+
+var inValidSession = {
+  'ldap': {
+    'uid': 'TEST7654321'
+  },
+  'shortEmail': 'testuser2@test.com'
+};
+
 var newIterationId = Schema.Types.ObjectId;
 var newTeamId = Schema.Types.ObjectId;
-var validUser = new Object();
-validUser['userId'] = 'TEST1234567';
-var notExistingUser = new Object();
-notExistingUser['userId'] = 'notexisting';
+// var validUser = new Object();
+// validUser['ldap']['userId'] = 'TEST1234567';
+// var notExistingUser = new Object();
+// notExistingUser['ldap']['userId'] = 'notexisting';
 
 describe('Iteration model [add]', function() {
   var createdTeam = {};
@@ -113,7 +127,7 @@ describe('Iteration model [add]', function() {
 
   it('return successful for adding an iteration', function(done) {
     validIterationDoc['teamId'] = newTeamId;
-    iterationModel.add(validIterationDoc, validUser.userId)
+    iterationModel.add(validIterationDoc, userSession)
       .then(function(result){
         expect(result).to.be.a('object');
         expect(result).to.have.property('_id');
@@ -133,7 +147,7 @@ describe('Iteration model [add]', function() {
   });
 
   it('return fail for adding a duplicate name iteration', function(done){
-    iterationModel.add(validIterationDoc, validUser.userId)
+    iterationModel.add(validIterationDoc, userSession)
       .catch(function(err){
         expect(err).to.be.a('object');
         expect(err).to.have.property('error');
@@ -142,7 +156,7 @@ describe('Iteration model [add]', function() {
   });
 
   it('return fail because the user is not existing', function(done){
-    iterationModel.add(validIterationDoc, notExistingUser.userId)
+    iterationModel.add(validIterationDoc, notExistingSession)
       .catch(function(err){
         expect(err).to.be.a('object');
         expect(err).to.have.property('error');
@@ -151,7 +165,7 @@ describe('Iteration model [add]', function() {
   });
 
   it('return fail because the user is invalid to add iteration to this team', function(done){
-    iterationModel.add(validIterationDoc, inValidUser.userId)
+    iterationModel.add(validIterationDoc, inValidSession)
       .catch(function(err){
         expect(err).to.be.a('object');
         expect(err).to.have.property('error');
@@ -276,7 +290,7 @@ describe('Iteration model [searchTeamIteration]', function() {
 describe('Iteration model [edit]', function() {
   it('return successful for updating a iteration', function(done) {
     validIterationDoc.memberCount = 2;
-    iterationModel.edit(newIterationId, validIterationDoc, validUser.userId)
+    iterationModel.edit(newIterationId, validIterationDoc, userSession)
       .then(function(result){
         expect(result).to.be.a('object');
         expect(result).to.have.property('ok');
@@ -286,7 +300,7 @@ describe('Iteration model [edit]', function() {
 
   it('return successful for updating a iteration (update deliveredStories)', function(done) {
     validIterationDoc.deliveredStories = 1;
-    iterationModel.edit(newIterationId, validIterationDoc, validUser.userId)
+    iterationModel.edit(newIterationId, validIterationDoc, userSession)
       .then(function(result){
         expect(result).to.be.a('object');
         expect(result).to.have.property('ok');
@@ -296,7 +310,7 @@ describe('Iteration model [edit]', function() {
 
   it('return successful for updating a iteration (update endDate)', function(done) {
     validIterationDoc.endDate = '09-15-2016';
-    iterationModel.edit(newIterationId, validIterationDoc, validUser.userId)
+    iterationModel.edit(newIterationId, validIterationDoc, userSession)
       .then(function(result){
         expect(result).to.be.a('object');
         expect(result).to.have.property('ok');
@@ -305,7 +319,7 @@ describe('Iteration model [edit]', function() {
   });
 
   it('return fail for updating a iteration by invalid user', function(done) {
-    iterationModel.edit(newIterationId, validIterationDoc, inValidUser.userId)
+    iterationModel.edit(newIterationId, validIterationDoc, inValidSession)
       .catch(function(err){
         expect(err).to.be.a('object');
         expect(err).to.have.property('error');
@@ -441,7 +455,7 @@ describe('Iteration model [delete]', function() {
 //   });
 
   it('return successful for deleteing a iteration by id', function(done) {
-    iterationModel.deleteIter(newIterationId, validUser.userId)
+    iterationModel.deleteIter(newIterationId, userSession)
       .then(function(result){
         expect(result).to.be.a('object');
         expect(result).to.have.property('result');
