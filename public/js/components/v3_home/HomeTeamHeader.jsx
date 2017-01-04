@@ -1,6 +1,7 @@
 var React = require('react');
 var api = require('../api.jsx');
 var HomeMemberTable = require('./HomeMemberTable.jsx');
+var HomeBookmark = require('./HomeBookmark.jsx');
 var InlineSVG = require('svg-inline-react');
 var Promise = require('bluebird');
 var _ = require('underscore');
@@ -179,9 +180,7 @@ var HomeTeamHeader = React.createClass({
                 <h>Team Bookmarks</h>
               </div>
             </div>
-            <div id='teamBookmark' class='team-bookmark-block'>
-              aaa
-            </div>
+            <HomeBookmark loadDetailTeam={this.props.loadDetailTeam}/>
             <div class='home-team-header-btns'>
               <InlineSVG class='home-team-header-btn-img' src={require('../../../img/Att-icons2/att-icons_main-nav-maturity.svg')}></InlineSVG>
               <div class='home-team-header-btn-title'>
