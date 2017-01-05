@@ -5,6 +5,7 @@ var _ = require('underscore');
 
 var HomeBookmark = React.createClass({
   render: function() {
+    var self = this;
     if (this.props.loadDetailTeam.team !=null && this.props.loadDetailTeam.team.links != null && this.props.loadDetailTeam.team.links.length > 0) {
       console.log(this.props.loadDetailTeam.team.links);
       var teamLinks = this.props.loadDetailTeam.team.links.map(function(link){
@@ -18,14 +19,14 @@ var HomeBookmark = React.createClass({
       teamLinks = null;
     }
     return (
-      <div id='teamBookmark' class='team-bookmark-block'>
+      <div id='teamBookmark' class='team-bookmark-block' style={{'display':'none'}}>
         <div class='home-team-header-bookmark-arrow'>
           <InlineSVG class='home-team-header-bookmark-arrow-img' src={require('../../../img/Att-icons/play-arrow.svg')}></InlineSVG>
         </div>
         <div class='home-team-header-bookmark-content'>
           <div class='home-team-header-bookmark-title'>
             <h>Important Links</h>
-            <h1 onClick={self.showDescriptionBlock}>X</h1>
+            <h1 onClick={self.props.showBookmark}>X</h1>
           </div>
           <div class='home-team-header-bookmark-scroll'>
             {teamLinks}

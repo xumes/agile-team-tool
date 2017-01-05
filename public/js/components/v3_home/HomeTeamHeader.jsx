@@ -45,6 +45,13 @@ var HomeTeamHeader = React.createClass({
       $('.home-team-header-description-div').fadeOut();
     }
   },
+  showBookmark: function() {
+    if ($('#teamBookmark').css('display') == 'none') {
+      $('#teamBookmark').fadeIn();
+    } else {
+      $('#teamBookmark').fadeOut();
+    }
+  },
   render: function() {
     //console.log(this.props.selectedTeam);
     var self = this
@@ -174,13 +181,13 @@ var HomeTeamHeader = React.createClass({
             </tr>
           </div>
           <div class='home-team-header-btns-div'>
-            <div class='home-team-header-btns'>
+            <div class='home-team-header-btns' onClick={self.showBookmark}>
               <InlineSVG class='home-team-header-btn-img' src={require('../../../img/Att-icons2/att-icons_main-nav-bookmark.svg')}></InlineSVG>
               <div class='home-team-header-btn-title'>
                 <h>Team Bookmarks</h>
               </div>
             </div>
-            <HomeBookmark loadDetailTeam={this.props.loadDetailTeam}/>
+            <HomeBookmark loadDetailTeam={self.props.loadDetailTeam} showBookmark={self.showBookmark}/>
             <div class='home-team-header-btns'>
               <InlineSVG class='home-team-header-btn-img' src={require('../../../img/Att-icons2/att-icons_main-nav-maturity.svg')}></InlineSVG>
               <div class='home-team-header-btn-title'>
@@ -197,7 +204,7 @@ var HomeTeamHeader = React.createClass({
               </div>
             </div>
           </div>
-          <HomeMemberTable loadDetailTeam={this.props.loadDetailTeam} showTeamTable={this.showTeamTable}/>
+          <HomeMemberTable loadDetailTeam={self.props.loadDetailTeam} showTeamTable={self.showTeamTable}/>
         </div>
       )
     }
