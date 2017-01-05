@@ -3,6 +3,7 @@ var api = require('../api.jsx');
 var HomeSpinner = require('./HomeSpinner.jsx');
 var _ = require('underscore');
 var Promise = require('bluebird');
+var clickedTeamId = '';
 
 var HomeTeamTree = React.createClass({
   componentDidMount: function() {
@@ -130,13 +131,16 @@ var HomeTeamTree = React.createClass({
       if ($('#' + teamId).attr('data-open') == 'false') {
         //var objectId = $('#' + teamId).children('span').html();
         //getChildrenTeams(parentId, false);
-        api.getChildrenTeams(teamId)
-        .then(function(teams){
-          self.appendChildTeams(teams, teamId);
-        })
-        .catch(function(err){
-          console.log(err);
-        });
+        if (clickedTeamId != teamId) {
+          clickedTeamId = teamId;
+          api.getChildrenTeams(teamId)
+          .then(function(teams){
+            self.appendChildTeams(teams, teamId);
+          })
+          .catch(function(err){
+            console.log(err);
+          });
+        }
       } else {
         $('#' + teamId).attr('data-open', 'true');
         $('#' + teamId).addClass('ibm-active');

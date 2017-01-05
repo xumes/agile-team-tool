@@ -320,7 +320,7 @@ module.exports.getRootTeams = function(uid) {
                   }
                 }
               } else {
-                if (team.path != compareTeam.path) {
+                if (team.path != compareTeam.path && compareTeam.type != 'squad') {
                   var comparePath = '';
                   if (compareTeam.path == null) {
                     comparePath = ',' + compareTeam.pathId + ',';
@@ -355,6 +355,7 @@ module.exports.getRootTeams = function(uid) {
               returnTeams.push(newTeam);
             }
           });
+          // console.log(returnTeams);
           resolve(returnTeams);
         })
         .catch( /* istanbul ignore next */ function(err){
