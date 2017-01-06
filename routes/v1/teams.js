@@ -34,5 +34,5 @@ module.exports = function(app, includes) {
     }
   };
 
-  app.get('/v1/teams', includes.middleware.auth.requireApikey, getTeams);
+  app.get('/v1/teams', cors({origin: '*'}), includes.middleware.auth.requireApikey, getTeams);
 };
