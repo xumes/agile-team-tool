@@ -1279,7 +1279,7 @@ body {
   height: 100%;
   width: 95%;
   background-color: #FFFFFF;
-  box-shadow: 0 0 10px 0 rgba(0,0,0,0.16);
+  box-shadow: 0 0 1em 0 rgba(0,0,0,0.16);
 }
 
 .home-team-header-bookmark-title {
@@ -1332,6 +1332,15 @@ body {
   border-bottom: 0.1em solid #E0E0E0;
 }
 
+.home-team-header-bookmark-scroll > div > div {
+  position: relative;
+  /*left: 1%;*/
+  height: 100%;
+  width: 1%;
+  float: left;
+  background-color: #4178BE;
+}
+
 .home-team-header-bookmark-scroll > div > h1 {
   font-family: "HelvNeue Roman for IBM";
   font-size: 1.4em;
@@ -1340,7 +1349,34 @@ body {
   position: relative;
   top: 35%;
   left: 5%;
+  float: left;
+  width: 50%;
   cursor: pointer;
+}
+
+.home-team-header-bookmark-scroll > div > span {
+  position: relative;
+  width: 8%;
+  height: 80%;
+  top: 10%;
+  left: 29%;
+  float: left;
+  cursor: pointer;
+}
+
+.home-team-header-bookmark-scroll > div > span > i > svg{
+  position: relative;
+  width: 100%;
+  height: auto;
+  top: 20%;
+  left: 0;
+}
+
+.home-team-header-bookmark-scroll > div > span > i > svg path {
+  fill: #24AFE5;
+}
+.home-team-header-bookmark-scroll > div > span > i > svg rect {
+  fill: #24AFE5;
 }
 
 .home-team-header-bookmark-btns {

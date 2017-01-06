@@ -4,6 +4,32 @@ var InlineSVG = require('svg-inline-react');
 var _ = require('underscore');
 
 var HomeBookmark = React.createClass({
+  componentDidMount:function() {
+    this.linkHoverHandler();
+  },
+  componentDidUpdate: function() {
+    this.linkHoverHandler();
+  },
+  linkHoverHandler: function() {
+    var self = this;
+    if (self.props.loadDetailTeam.team !=null && self.props.loadDetailTeam.team.links != null && self.props.loadDetailTeam.team.links.length > 0) {
+      _.each(self.props.loadDetailTeam.team.links, function(link){
+        $('#'+link.id).hover(function(){
+          $('#'+link.id).css('background-color','rgba(85,150,230,0.12)');
+          $('#'+link.id+' > div').css('display','block');
+          $('#'+link.id+' > h1').css('left','4%');
+          $('#'+link.id+' > span').css('left','28%');
+          $('#'+link.id+' > span').css('display','block');
+        }, function(){
+          $('#'+link.id).css('background-color','#FFFFFF');
+          $('#'+link.id+' > div').css('display','none');
+          $('#'+link.id+' > h1').css('left','5%');
+          $('#'+link.id+' > span').css('left','29%');
+          $('#'+link.id+' > span').css('display','none');
+        });
+      });
+    }
+  },
   render: function() {
     var self = this;
     if (this.props.loadDetailTeam.team !=null && this.props.loadDetailTeam.team.links != null && this.props.loadDetailTeam.team.links.length > 0) {
@@ -11,7 +37,14 @@ var HomeBookmark = React.createClass({
       var teamLinks = this.props.loadDetailTeam.team.links.map(function(link){
         return (
           <div key={link.id} id={link.id}>
+            <div style={{'display':'none'}}></div>
             <h1>{link.linkLabel}</h1>
+            <span style={{'display':'none'}}>
+                <InlineSVG src={require('../../../img/Att-icons2/att-icons_edit.svg')}></InlineSVG>
+            </span>
+            <span style={{'display':'none','marginLeft':'3%'}}>
+                <InlineSVG src={require('../../../img/Att-icons2/att-icons_delete.svg')}></InlineSVG>
+            </span>
           </div>
         )
       });
