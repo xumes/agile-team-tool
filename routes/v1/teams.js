@@ -2,6 +2,7 @@ var teamModel = require('../../models/teams');
 var util = require('../../helpers/util');
 var loggers = require('../../middleware/logger');
 var _ = require('underscore');
+var cors = require('cors');
 
 module.exports = function(app, includes) {
   getTeams = function (req, res) {

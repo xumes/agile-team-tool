@@ -96,8 +96,8 @@ module.exports = function(app, includes) {
     });
   };
 
-  app.get('/v1/iterations', cors(), includes.middleware.auth.requireMongoApikey, getIterations);
-  app.put('/v1/iterations', cors(), includes.middleware.auth.requireMongoApikey, putIteration);
-  app.post('/v1/iterations', cors(), includes.middleware.auth.requireMongoApikey, postIteration);
-  app.delete('/v1/iterations', cors(), includes.middleware.auth.requireMongoApikey, deleteIteration);
+  app.get('/v1/iterations', cors({origin: '*'}), includes.middleware.auth.requireMongoApikey, getIterations);
+  app.put('/v1/iterations', cors({origin: '*'}), includes.middleware.auth.requireMongoApikey, putIteration);
+  app.post('/v1/iterations', cors({origin: '*'}), includes.middleware.auth.requireMongoApikey, postIteration);
+  app.delete('/v1/iterations', cors({origin: '*'}), includes.middleware.auth.requireMongoApikey, deleteIteration);
 };
