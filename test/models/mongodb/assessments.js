@@ -23,7 +23,7 @@ var testUser = {
   }
 };
 
-var inValidUser = {
+var invalidUser = {
   'userId': 'TEST7654321',
   'name': 'test user2',
   'email': 'testuser2@test.com',
@@ -40,25 +40,25 @@ var testTeam = {
     'name': 'test user',
     'role': 'Tester',
     'allocation': 100,
-    'userId': 'TEST1234567',
-    'email': 'testuser@test.com'
+    'userId': testUser.userId,
+    'email': testUser.email
   },
-  'createdByUserId': 'TEST1234567',
-  'createdBy': 'testuser@test.com'
+  'createdByUserId': testUser.userId,
+  'createdBy': testUser.email
 };
 
 var userSession = {
   'ldap': {
-    'uid': 'TEST1234567'
+    'uid': testUser.userId
   },
-  'shortEmail': 'testuser@test.com'
+  'shortEmail': testUser.email
 };
 
 var invalidUserSession = {
   'ldap': {
-    'uid': 'TEST7654321'
+    'uid': invalidUser.userId
   },
-  'shortEmail': 'testuser2@test.com'
+  'shortEmail': invalidUser.email
 };
 
 // var testData = {
@@ -75,7 +75,7 @@ describe('Assessment model [addTeamAssessment] ', function() {
   before(function(done){
     var promiseArray = [];
     promiseArray.push(Users.deleteUser(testUser.userId));
-    promiseArray.push(Users.deleteUser(inValidUser.userId));
+    promiseArray.push(Users.deleteUser(invalidUser.userId));
     promiseArray.push(Teams.deleteTeamByName(testTeam.name));
     promiseArray.push(Assessments.deleteByCloudantId(validAssessments.cloudantId));
     Promise.all(promiseArray)
@@ -83,7 +83,7 @@ describe('Assessment model [addTeamAssessment] ', function() {
         return Users.create(testUser);
       })
       .then(function(result){
-        return Users.create(inValidUser);
+        return Users.create(invalidUser);
       })
       .then(function(result){
         return Teams.createTeam(testTeam, userSession);
@@ -286,7 +286,7 @@ describe('Assessment model [deleteAssessment] ', function() {
   });
 
   it('return fail because user is not allowed to delete Assessment', function(done) {
-    Assessments.deleteAssessment(inValidUser.userId, newAssessId)
+    Assessments.deleteAssessment(invalidUser.userId, newAssessId)
       .catch(function(err) {
         expect(err.error).to.be.equal('Not allowed to delete assessment');
         done();
@@ -305,7 +305,7 @@ describe('Assessment model [deleteAssessment] ', function() {
   after(function(done){
     var promiseArray = [];
     promiseArray.push(Users.deleteUser(testUser.userId));
-    promiseArray.push(Users.deleteUser(inValidUser.userId));
+    promiseArray.push(Users.deleteUser(invalidUser.userId));
     promiseArray.push(Teams.deleteTeamByName(testTeam.name));
     Promise.all(promiseArray)
       .then(function(results){
