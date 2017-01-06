@@ -2,6 +2,7 @@ var teamModel = require('../../models/mongodb/teams');
 var util = require('../../helpers/util');
 var loggers = require('../../middleware/logger');
 var _ = require('underscore');
+var cors = require('cors');
 
 module.exports = function(app, includes) {
   getTeams = function (req, res) {
@@ -15,5 +16,5 @@ module.exports = function(app, includes) {
     });
   };
 
-  app.get('/v1/teams', includes.middleware.auth.requireMongoApikey, getTeams);
+  app.get('/v1/teams', cors({origin: '*'}), includes.middleware.auth.requireMongoApikey, getTeams);
 };
