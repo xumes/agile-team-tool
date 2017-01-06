@@ -1,5 +1,5 @@
 var React = require('react');
-var utils = require('../utils');
+var utils = require('../../utils');
 
 var AssessmentTabNav = React.createClass({
   setAssessmentLink: function(teamId, assessId) {
