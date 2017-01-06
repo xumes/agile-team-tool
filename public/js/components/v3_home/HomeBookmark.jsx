@@ -17,13 +17,13 @@ var HomeBookmark = React.createClass({
         $('#'+link.id).hover(function(){
           $('#'+link.id).css('background-color','rgba(85,150,230,0.12)');
           $('#'+link.id+' > div').css('display','block');
-          $('#'+link.id+' > h1').css('left','4%');
+          $('#'+link.id+' > a').css('left','4%');
           $('#'+link.id+' > span').css('left','28%');
           $('#'+link.id+' > span').css('display','block');
         }, function(){
           $('#'+link.id).css('background-color','#FFFFFF');
           $('#'+link.id+' > div').css('display','none');
-          $('#'+link.id+' > h1').css('left','5%');
+          $('#'+link.id+' > a').css('left','5%');
           $('#'+link.id+' > span').css('left','29%');
           $('#'+link.id+' > span').css('display','none');
         });
@@ -38,7 +38,7 @@ var HomeBookmark = React.createClass({
         return (
           <div key={link.id} id={link.id}>
             <div style={{'display':'none'}}></div>
-            <h1>{link.linkLabel}</h1>
+            <a href={link.linkUrl} title={link.linkUrl}>{link.linkLabel}</a>
             <span style={{'display':'none'}}>
                 <InlineSVG src={require('../../../img/Att-icons2/att-icons_edit.svg')}></InlineSVG>
             </span>

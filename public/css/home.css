@@ -1341,7 +1341,7 @@ body {
   background-color: #4178BE;
 }
 
-.home-team-header-bookmark-scroll > div > h1 {
+.home-team-header-bookmark-scroll > div > a {
   font-family: "HelvNeue Roman for IBM";
   font-size: 1.4em;
   color: #4178BE;
