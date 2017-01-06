@@ -23,7 +23,7 @@ var testUser = {
     'timezone': 'UTC-4'
   }
 };
-var inValidUser = {
+var invalidUser = {
   'userId': 'TEST7654321',
   'name': 'test user2',
   'email': 'testuser2@test.com',
@@ -39,11 +39,11 @@ var testTeam = {
     'name': 'test user',
     'role': 'Tester',
     'allocation': 100,
-    'userId': 'TEST1234567',
-    'email': 'testuser@test.com'
+    'userId': testUser.userId,
+    'email': testUser.email
   },
-  'createdByUserId': 'TEST1234567',
-  'createdBy': 'testuser@test.com'
+  'createdByUserId': testUser.userId,
+  'createdBy': testUser.email
 };
 var testTeamParent = {
   'name': 'mongodb-test-team-parent',
@@ -52,11 +52,11 @@ var testTeamParent = {
     'name': 'test user',
     'role': 'Tester',
     'allocation': 100,
-    'userId': 'TEST1234567',
-    'email': 'testuser@test.com'
+    'userId': testUser.userId,
+    'email': testUser.email
   },
-  'createdByUserId': 'TEST1234567',
-  'createdBy': 'testuser@test.com'
+  'createdByUserId': testUser.userId,
+  'createdBy': testUser.email
 };
 var testTeamChild = {
   'name': 'mongodb-test-team-child',
@@ -65,11 +65,11 @@ var testTeamChild = {
     'name': 'test user',
     'role': 'Tester',
     'allocation': 100,
-    'userId': 'TEST1234567',
-    'email': 'testuser@test.com'
+    'userId': testUser.userId,
+    'email': testUser.email
   },
-  'createdByUserId': 'TEST1234567',
-  'createdBy': 'testuser@test.com'
+  'createdByUserId': testUser.userId,
+  'createdBy': testUser.email
 };
 var testTeamGChild = {
   'name': 'mongodb-test-team-gchild',
@@ -78,10 +78,10 @@ var testTeamGChild = {
     'name': 'test user',
     'role': 'Tester',
     'allocation': 100,
-    'userId': 'TEST1234567',
-    'email': 'testuser@test.com'
+    'userId': testUser.userId,
+    'email': testUser.email
   },
-  'createdByUserId': 'TEST1234567',
+  'createdByUserId': testUser.userId,
   'createdBy': 'testuser@test.com'
 };
 var inValidTeam = {
@@ -89,30 +89,30 @@ var inValidTeam = {
     'name': 'test user',
     'role': 'Tester',
     'allocation': 100,
-    'userId': 'TEST1234567',
-    'email': 'testuser@test.com'
+    'userId': testUser.userId,
+    'email': testUser.email
   },
-  'createdByUserId': 'TEST1234567',
-  'createdBy': 'testuser@test.com'
+  'createdByUserId': testUser.userId,
+  'createdBy': testUser.email
 };
 var userSession = {
   'ldap': {
-    'uid': 'TEST1234567'
+    'uid': testUser.userId
   },
-  'shortEmail': 'testuser@test.com'
+  'shortEmail': testUser.email
 };
 var invalidUserSession = {
   'ldap': {
-    'uid': 'TESTTESTTEST'
+    'uid': invalidUser.userId
   },
-  'shortEmail': 'testuser@test.com'
+  'shortEmail': invalidUser.email
 };
 
 describe('Team model [createTeam]', function() {
   before(function(done){
     var promiseArray = [];
     promiseArray.push(Users.deleteUser(testUser.userId));
-    promiseArray.push(Users.deleteUser(inValidUser.userId));
+    promiseArray.push(Users.deleteUser(invalidUser.userId));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-01'));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-parent'));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-child'));
@@ -122,7 +122,7 @@ describe('Team model [createTeam]', function() {
         return Users.create(testUser);
       })
       .then(function(result){
-        return Users.create(inValidUser);
+        return Users.create(invalidUser);
       })
       .then(function(result){
         done();
@@ -716,7 +716,7 @@ describe('Team model [modifyTeamMembers]', function() {
       'role': 'TEST',
       'email': testUser.email
     };
-    userSession.ldap.uid = 'TEST1234567';
+    userSession.ldap.uid = testUser.userId;
     Teams.modifyTeamMembers(newTeamId, userSession, [newMember])
       .then(function(result){
         expect(result).to.be.a('object');
@@ -774,7 +774,7 @@ describe('Team model [modifyImportantLinks]', function() {
       });
   });
   it('return successful', function(done){
-    userSession.ldap.uid = 'TEST1234567';
+    userSession.ldap.uid = testUser.userId;
     Teams.modifyImportantLinks(newTeamId, userSession, [newLink])
       .then(function(result){
         expect(result).to.be.a('object');
@@ -835,7 +835,7 @@ describe('Team model [deleteImportantLinks]', function() {
       });
   });
   it('return fail by empty link', function(done){
-    userSession.ldap.uid = 'TEST1234567';
+    userSession.ldap.uid = testUser.userId;
     Teams.deleteImportantLinks(newTeamId, userSession, [{id: ''}])
       .catch(function(err){
         expect(err).to.be.a('object');
@@ -843,7 +843,7 @@ describe('Team model [deleteImportantLinks]', function() {
       });
   });
   it('return fail by empty team', function(done){
-    userSession.ldap.uid = 'TEST1234567';
+    userSession.ldap.uid = testUser.userId;
     Teams.deleteImportantLinks(parentTeamId, userSession, [{id: ''}])
       .catch(function(err){
         expect(err).to.be.a('object');
@@ -851,7 +851,7 @@ describe('Team model [deleteImportantLinks]', function() {
       });
   });
   it('return successful', function(done){
-    userSession.ldap.uid = 'TEST1234567';
+    userSession.ldap.uid = testUser.userId;
     Teams.deleteImportantLinks(newTeamId, userSession, [{id: newLinkId}])
       .then(function(result){
         expect(result).to.be.a('object');
@@ -926,7 +926,7 @@ describe('Team model [updateTeam]', function() {
   it('return fail by duplicate doc name', function(done){
     newDoc._id = newTeamId;
     newDoc.name = 'mongodb-test-team-parent';
-    userSession.ldap.uid = 'TEST1234567';
+    userSession.ldap.uid = testUser.userId;
     Teams.updateTeam(newDoc, userSession)
       .catch(function(err){
         expect(err).to.be.a('object');
@@ -948,7 +948,7 @@ describe('Team model [updateTeam]', function() {
   it('return successful', function(done){
     newDoc._id = parentTeamId;
     newDoc.name = testTeamParent.name;
-    userSession.ldap.uid = 'TEST1234567';
+    userSession.ldap.uid = testUser.userId;
     Teams.updateTeam(newDoc, userSession)
       .then(function(result){
         expect(result).to.be.a('object');
@@ -995,7 +995,7 @@ describe('Team model [softDelete]', function() {
       });
   });
   it('return successful', function(done){
-    userSession.ldap.uid = 'TEST1234567';
+    userSession.ldap.uid = testUser.userId;
     newDoc._id = parentTeamId;
     Teams.softDelete(newDoc, userSession)
       .then(function(result){
@@ -1009,7 +1009,7 @@ describe('Team model [softDelete]', function() {
   after(function(done){
     var promiseArray = [];
     promiseArray.push(Users.deleteUser(testUser.userId));
-    promiseArray.push(Users.deleteUser(inValidUser.userId));
+    promiseArray.push(Users.deleteUser(invalidUser.userId));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-01'));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-parent'));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-child'));
