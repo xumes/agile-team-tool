@@ -55,8 +55,6 @@ var auth = {
         message: 'Unauthorized'
       });
     } else {
-  //      userModel.getUserApikeyByApikey(req.headers.apikey)
-      console.log('Ready to call API key by API ');
       apiKeyModel.getUserApikeyByApikey(req.headers.apikey)
       .then(function(apiuser) {
         if (_.isEmpty(apiuser)) {
@@ -66,7 +64,6 @@ var auth = {
           });
           return null;
         } else {
-          console.log('API user object return from apiKeyModel '+apiuser.userId+' email is '+apiuser.email);
           apiuser = {userId: apiuser.userId, email: apiuser.email};
           req.apiuser = apiuser;
           return next();

@@ -300,7 +300,8 @@ var IterationExport = {
 
   add: function(data, user) {
     return new Promise(function(resolve, reject) {
-      var userId = user.ldap.uid;
+      // user validated through apikey works with users collection object, session ldap object if otherwise
+      var userId = user.userId || user.ldap.uid;
       data['createDate'] = new Date(moment.utc());
       data['updateDate'] = new Date(moment.utc());
       data['status'] = IterationExport.calculateStatus(data);
@@ -371,7 +372,8 @@ var IterationExport = {
 
   edit: function(docId, data, user) {
     return new Promise(function(resolve, reject) {
-      var userId = user.ldap.uid;
+      // user validated through apikey works with users collection object, session ldap object if otherwise
+      var userId = user.userId || user.ldap.uid;
       Users.isUserAllowed(userId.toUpperCase(), data['teamId'])
       .then(function(isAllowed){
         if (isAllowed)
@@ -585,8 +587,10 @@ var IterationExport = {
     });
   },
   // used in tests
-  deleteIter: function(docId, userId) {
+  deleteIter: function(docId, user) {
     return new Promise(function(resolve, reject) {
+      // using apikey works with users collection object, session ldap object if otherwise
+      var userId = user.userId || user.ldap.uid;
       if (!docId) {
         var msg = {
           _id: ['_id/_rev is missing']

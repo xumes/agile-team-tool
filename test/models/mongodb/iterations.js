@@ -20,7 +20,7 @@ var testUser = {
     'timezone': 'UTC-4'
   }
 };
-var inValidUser = {
+var invalidUser = {
   'userId': 'TEST7654321',
   'name': 'test user2',
   'email': 'testuser2@test.com',
@@ -44,54 +44,50 @@ var testTeam = {
     'name': 'test user',
     'role': 'Tester',
     'allocation': 100,
-    'userId': 'TEST1234567',
-    'email': 'testuser@test.com'
+    'userId': testUser.userId,
+    'email': testUser.email
   },
-  'createdByUserId': 'TEST1234567',
-  'createdBy': 'testuser@test.com'
+  'createdByUserId': testUser.userId,
+  'createdBy': testUser.email
 };
-
 var userSession = {
   'ldap': {
-    'uid': 'TEST1234567'
+    'uid': testUser.userId
   },
-  'shortEmail': 'testuser@test.com'
+  'shortEmail': testUser.email
+};
+var invalidUserSession = {
+  'ldap': {
+    'uid': invalidUser.userId
+  },
+  'shortEmail': invalidUser.email
 };
 
-var notExistingSession = {
+var notExistingUserSession = {
   'ldap': {
     'uid': 'notexisting'
   },
   'shortEmail': 'notexisting@test.com'
 };
 
-var inValidSession = {
-  'ldap': {
-    'uid': 'TEST7654321'
-  },
-  'shortEmail': 'testuser2@test.com'
-};
-
 var newIterationId = Schema.Types.ObjectId;
 var newTeamId = Schema.Types.ObjectId;
-// var validUser = new Object();
-// validUser['ldap']['userId'] = 'TEST1234567';
-// var notExistingUser = new Object();
-// notExistingUser['ldap']['userId'] = 'notexisting';
+var notExistingUser = new Object();
+notExistingUser['userId'] = 'notexisting';
 
 describe('Iteration model [add]', function() {
   var createdTeam = {};
   before(function(done){
     var promiseArray = [];
     promiseArray.push(userModel.deleteUser(testUser.userId));
-    promiseArray.push(userModel.deleteUser(inValidUser.userId));
+    promiseArray.push(userModel.deleteUser(invalidUser.userId));
     promiseArray.push(teamModel.deleteTeamByName(testTeam.name));
     Promise.all(promiseArray)
       .then(function(results){
         return userModel.create(testUser);
       })
       .then(function(result){
-        return userModel.create(inValidUser);
+        return userModel.create(invalidUser);
       })
       .then(function(result){
         return teamModel.createTeam(testTeam, userSession);
@@ -156,7 +152,7 @@ describe('Iteration model [add]', function() {
   });
 
   it('return fail because the user is not existing', function(done){
-    iterationModel.add(validIterationDoc, notExistingSession)
+    iterationModel.add(validIterationDoc, notExistingUserSession)
       .catch(function(err){
         expect(err).to.be.a('object');
         expect(err).to.have.property('error');
@@ -165,7 +161,7 @@ describe('Iteration model [add]', function() {
   });
 
   it('return fail because the user is invalid to add iteration to this team', function(done){
-    iterationModel.add(validIterationDoc, inValidSession)
+    iterationModel.add(validIterationDoc, invalidUserSession)
       .catch(function(err){
         expect(err).to.be.a('object');
         expect(err).to.have.property('error');
@@ -319,7 +315,7 @@ describe('Iteration model [edit]', function() {
   });
 
   it('return fail for updating a iteration by invalid user', function(done) {
-    iterationModel.edit(newIterationId, validIterationDoc, inValidSession)
+    iterationModel.edit(newIterationId, validIterationDoc, invalidUserSession)
       .catch(function(err){
         expect(err).to.be.a('object');
         expect(err).to.have.property('error');
@@ -341,7 +337,7 @@ describe('Iteration model [softDelete]', function() {
 
 describe('Iteration model [delete]', function() {
   it('return fail for deleteing a iteration by empty id', function(done) {
-    iterationModel.deleteIter()
+    iterationModel.deleteIter('', userSession)
       .catch(function(err){
         expect(err).to.be.a('object');
         expect(err).to.have.property('error');
@@ -406,7 +402,7 @@ describe('Iteration model [delete]', function() {
 // describe('Iteration model [edit]', function() {
 //   it('return successful for updating a iteration', function(done) {
 //     validIterationDoc.memberCount = 2;
-//     iterationModel.edit(newIterationId, validIterationDoc, validUser)
+//     iterationModel.edit(newIterationId, validIterationDoc, userSession)
 //       .then(function(result){
 //         expect(result).to.be.a('object');
 //         expect(result).to.have.property('ok');
@@ -416,7 +412,7 @@ describe('Iteration model [delete]', function() {
 
 //   it('return successful for updating a iteration (update deliveredStories)', function(done) {
 //     validIterationDoc.deliveredStories = 1;
-//     iterationModel.edit(newIterationId, validIterationDoc, validUser)
+//     iterationModel.edit(newIterationId, validIterationDoc, userSession)
 //       .then(function(result){
 //         expect(result).to.be.a('object');
 //         expect(result).to.have.property('ok');
@@ -426,7 +422,7 @@ describe('Iteration model [delete]', function() {
 
 //   it('return successful for updating a iteration (update endDate)', function(done) {
 //     validIterationDoc.endDate = '09-15-2016';
-//     iterationModel.edit(newIterationId, validIterationDoc, validUser)
+//     iterationModel.edit(newIterationId, validIterationDoc, userSession)
 //       .then(function(result){
 //         expect(result).to.be.a('object');
 //         expect(result).to.have.property('ok');
@@ -466,7 +462,7 @@ describe('Iteration model [delete]', function() {
   after(function(done){
     var promiseArray = [];
     promiseArray.push(userModel.deleteUser(testUser.userId));
-    promiseArray.push(userModel.deleteUser(inValidUser.userId));
+    promiseArray.push(userModel.deleteUser(invalidUser.userId));
     promiseArray.push(teamModel.deleteTeamByName(testTeam.name));
     Promise.all(promiseArray)
       .then(function(results){
