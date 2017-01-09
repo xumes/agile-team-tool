@@ -67,7 +67,7 @@ var HomeBookmark = React.createClass({
           <div class='home-team-header-bookmark-btns'>
             <p class='ibm-btn-row ibm-button-link' style={{'position':'relative','top':'15%','right':'5%','float':'right'}}>
               <a class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50'>Add New Link</a>
-              <a class='ibm-btn-sec ibm-btn-small ibm-btn-blue-50'>Cancel</a>
+              <a class='ibm-btn-sec ibm-btn-small ibm-btn-blue-50' onClick={self.props.showBookmark}>Cancel</a>
             </p>
           </div>
         </div>

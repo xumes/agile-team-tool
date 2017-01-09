@@ -9,6 +9,7 @@ var HomeTeamInfo = require('./HomeTeamInfo.jsx');
 var HomeMemberTable = require('./HomeMemberTable.jsx');
 var InlineSVG = require('svg-inline-react');
 var HomeChartFilter = require('./HomeChartFilter.jsx');
+var HomeAseSummary = require('./HomeAseSummary.jsx');
 
 var HomeContent = React.createClass({
   shouldComponentUpdate: function(nextProps, nextState) {
@@ -57,6 +58,7 @@ var HomeContent = React.createClass({
         <div id='bodyContent' style={{'height':'100%','width':'100%'}}>
           <HomeHighlightBox />
           <HomeTeamHeader loadDetailTeam={this.props.loadDetailTeam} selectedTeamChanged={this.props.selectedTeamChanged} tabClickedHandler={this.props.tabClickedHandler}/>
+          <HomeAseSummary loadDetailTeam={this.props.loadDetailTeam} />
           <div class='home-trends-block'>
             <div class='home-trends-block-title'>
               <h1>Trends</h1>

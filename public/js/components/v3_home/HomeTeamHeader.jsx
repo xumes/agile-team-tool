@@ -52,6 +52,13 @@ var HomeTeamHeader = React.createClass({
       $('#teamBookmark').fadeOut();
     }
   },
+  showAssessments: function() {
+    if ($('.home-assessment-summary').css('display') == 'none') {
+      $('.home-assessment-summary').fadeIn();
+    } else {
+      $('.home-assessment-summary').fadeOut();
+    }
+  },
   render: function() {
     //console.log(this.props.selectedTeam);
     var self = this
@@ -188,7 +195,7 @@ var HomeTeamHeader = React.createClass({
               </div>
             </div>
             <HomeBookmark loadDetailTeam={self.props.loadDetailTeam} showBookmark={self.showBookmark}/>
-            <div class='home-team-header-btns'>
+            <div class='home-team-header-btns' onClick={self.showAssessments}>
               <InlineSVG class='home-team-header-btn-img' src={require('../../../img/Att-icons2/att-icons_main-nav-maturity.svg')}></InlineSVG>
               <div class='home-team-header-btn-title'>
                 <h>Maturity Assessment</h>
