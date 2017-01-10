@@ -85,7 +85,11 @@ var HomeAseSummary = React.createClass({
         });
       } else {
         assessContent = (
-          <div class='home-assessment-summary-content'>No Assessment Info</div>
+          <div class='home-assessment-summary-content'>
+            <h1>
+              No Assessment Info
+            </h1>
+          </div>
         )
       }
       return (

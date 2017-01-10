@@ -1390,7 +1390,7 @@ body {
   position: relative;
   float: left;
   left: 0.5%;
-  z-index: 10;
+  z-index: 7;
   background-color: #EFF9FF;
   width: 100%;
   height: 10%;
@@ -1566,9 +1566,24 @@ body {
 .home-assessment-summary-btn > button {
   position: relative;
   width: 90%;
-  height: 60%;
+  height: 50%;
   left: 10%;
-  top: 20%;
+  top: 25%;
+  font-size: 1.6em;
+  line-height: 0.8em;
+}
+
+.home-assessment-summary-content > h1 {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  font-family: "Helvetica Neue";
+  font-size: 1.8em;
+  font-weight: 300;
+  line-height: 4em;
+  color: #5A5A5A;
+  padding: 0;
+  text-align: center;
 }
 
 /*.home-assessment-summary-btn > button {
