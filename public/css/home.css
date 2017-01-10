@@ -49,6 +49,21 @@ body {
   cursor: pointer;
 }
 
+.agile-team-link > .agile-team-title {
+  font-size: 1.2em;
+  font-weight: 300;
+  color: #4D4D4D;
+  padding: 0;
+}
+
+.agile-team-selected > .agile-team-title {
+  border-bottom: 0.15em solid #008ABF;
+}
+
+.agile-team-title-selected {
+  border-bottom: 0.15em solid #008ABF;
+}
+
 /*#searchTree a.agile-team-link {
   display: inherit;
   margin-left: 15px;
@@ -67,7 +82,7 @@ body {
 }
 
 #newTeamTree a.agile-team-selected {
-  border-bottom: 0.15em solid #008ABF;
+  /*border-bottom: 0.15em solid #008ABF;*/
 }
 
 #newTeamTree a.agile-team-squad, #newTeamTree li.agile-team-squad a::after, #newTeamTree a.agile-team-squad::after{

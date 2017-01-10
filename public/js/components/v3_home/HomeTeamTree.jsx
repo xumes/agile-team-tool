@@ -374,7 +374,11 @@ var HomeTeamTree = React.createClass({
     var desc = (team.description == null)?'No description specified':team.description;
     href.setAttribute('title',desc);
     href.setAttribute('id', 'link_' + team.pathId);
-    href.appendChild(document.createTextNode(team.name));
+    var sp = document.createElement('span');
+    sp.setAttribute('class', 'agile-team-title');
+    // href.appendChild(document.createTextNode(team.name));
+    sp.appendChild(document.createTextNode(team.name));
+    href.appendChild(sp);
     li.appendChild(href);
 
     //we're putting this span to hold the relevant team id
@@ -429,7 +433,7 @@ var HomeTeamTree = React.createClass({
               <a class={triggerClass} href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, teamId)}>
                 <span class='ibm-access'>{label}</span>
               </a>
-              <a class={isSquad} title={title} id={linkId} onClick={self.loadDetails.bind(null, teamId)}>{label}</a>
+              <a class={isSquad} title={title} id={linkId} onClick={self.loadDetails.bind(null, teamId)}><span class='agile-team-title'>{label}</span></a>
               <span class='ibm-access'>{objectId}</span>
               <div class='ibm-twisty-body' id={bodyId} style={{'display':'none'}}></div>
             </li>
@@ -459,7 +463,7 @@ var HomeTeamTree = React.createClass({
               <a class={triggerClass} href='#toggle' title='Expand/Collapse'>
                 <span class='ibm-access'>{label}</span>
               </a>
-              <a class={isSquad} title={title} id={linkId} onClick={self.loadDetails.bind(null,teamId)}>{label}</a>
+              <a class={isSquad} title={title} id={linkId} onClick={self.loadDetails.bind(null,teamId)}><span class='agile-team-title'>{label}</span></a>
               <span class='ibm-access'>{objectId}</span>
             </li>
           );
@@ -481,7 +485,7 @@ var HomeTeamTree = React.createClass({
                   <a class='ibm-twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, 'agteamstandalone')}>
                     <span class='ibm-access'>Standalone Teams</span>
                   </a>
-                  <a class='agile-team-link'>Standalone Teams</a>
+                  <a class='agile-team-link'><span class='agile-team-title'>Standalone Teams</span></a>
                   <span class='ibm-access'>agteamstandalone</span>
                   <div class='ibm-twisty-boddy' id='body_agteamstandalone' style={{'display':'block'}}>
                     <ul class='ibm-twisty ' id='main_agteamstandalone'>
@@ -512,7 +516,9 @@ var HomeTeamTree = React.createClass({
             <a class='ibm-twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, teamId)}>
               <span class='ibm-access'>{label}</span>
             </a>
-            <a class='agile-team-link' title={title} id={linkId} onClick={self.loadDetails.bind(null,teamId)}>{label}</a>
+            <a class='agile-team-link' title={title} id={linkId} onClick={self.loadDetails.bind(null,teamId)}>
+              <span class='agile-team-title'>{label}</span>
+            </a>
             <span class='ibm-access'>{objectId}</span>
             <div class='ibm-twisty-body' id={bodyId} style={{'display':'none'}}>
             </div>
@@ -528,7 +534,9 @@ var HomeTeamTree = React.createClass({
                 <a class='ibm-twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, 'agteamstandalone')}>
                   <span class='ibm-access'>Standalone Teams</span>
                 </a>
-                <a class='agile-team-link' title='View Standalone Teams information'>Standalone Teams</a>
+                <a class='agile-team-link' title='View Standalone Teams information'>
+                  <span class='agile-team-title'>Standalone Teams</span>
+                </a>
                 <span class='ibm-access'>agteamstandalone</span>
                 <div class='ibm-twisty-body' id='body_agteamstandalone' style={{'display':'none'}}>
                 </div>
