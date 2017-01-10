@@ -17,7 +17,19 @@ var HomeTeamHeader = React.createClass({
     // }
     // teamName = nextProps.loadDetailTeam.team.name;
   },
+  componentDidMount: function() {
+    if (this.props.loadDetailTeam.team != undefined && this.props.loadDetailTeam.team.type == 'squad') {
+      $('#homeHeaderAseBtn').show();
+    } else {
+      $('#homeHeaderAseBtn').hide();
+    }
+  },
   componentDidUpdate: function() {
+    if (this.props.loadDetailTeam.team != undefined && this.props.loadDetailTeam.team.type == 'squad') {
+      $('#homeHeaderAseBtn').show();
+    } else {
+      $('#homeHeaderAseBtn').hide();
+    }
   },
   findTeamInAllTeams: function(pathId) {
     selectedTeam = pathId;
@@ -195,7 +207,7 @@ var HomeTeamHeader = React.createClass({
               </div>
             </div>
             <HomeBookmark loadDetailTeam={self.props.loadDetailTeam} showBookmark={self.showBookmark}/>
-            <div class='home-team-header-btns' onClick={self.showAssessments}>
+            <div class='home-team-header-btns' onClick={self.showAssessments} id='homeHeaderAseBtn'>
               <InlineSVG class='home-team-header-btn-img' src={require('../../../img/Att-icons/att-icons_main-nav-maturity.svg')}></InlineSVG>
               <div class='home-team-header-btn-title'>
                 <h>Maturity Assessment</h>
