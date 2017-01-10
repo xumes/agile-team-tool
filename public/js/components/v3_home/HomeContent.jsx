@@ -67,7 +67,7 @@ var HomeContent = React.createClass({
               <h4 style={{'color':'#FFA501'}}>---</h4>
               <h4>&nbsp;Partial data</h4>
               <div onClick={this.showFilter} style={{'cursor':'pointer'}}>
-                <InlineSVG src={require('../../../img/Att-icons2/att-icons_filter.svg')}></InlineSVG>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons_filter.svg')}></InlineSVG>
               </div>
               <HomeChartFilter loadDetailTeam={this.props.loadDetailTeam} showFilter={this.showFilter}/>
             </div>

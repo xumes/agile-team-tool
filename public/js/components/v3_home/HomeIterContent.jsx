@@ -173,34 +173,34 @@ var HomeIterContent = React.createClass({
                 <div class='home-iter-content-sub'>Optimum team availability (In days)</div>
                 <div id='optimumPoint' class='home-iter-content-point-uneditable'></div>
                   <div class='home-iter-locked-btn'>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_locked.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_locked.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Person days unavailable</div>
                 <div id='memberFte' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.memberFte}</div>
                 <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'memberFte')}>
-                  <InlineSVG src={require('../../../img/Att-icons2/att-icons_confirm.svg')}></InlineSVG>
+                  <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                 </div>
                 <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'memberFte')}>
-                  <InlineSVG src={require('../../../img/Att-icons2/att-icons_close-cancel.svg')}></InlineSVG>
+                  <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                 </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Was there a team member change?</div>
                 <div id='memberChanged' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.memberChanged}</div>
                   <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'memberChanged')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_confirm.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                   </div>
                   <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'memberChanged')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_close-cancel.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Person days available</div>
                 <div id='personDays' class='home-iter-content-point-uneditable'></div>
                   <div class='home-iter-locked-btn'>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_locked.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_locked.svg')}></InlineSVG>
                   </div>
               </div>
             </div>
@@ -213,27 +213,27 @@ var HomeIterContent = React.createClass({
                 <div class='home-iter-content-sub'>Stories/Cards/Tickets-Committed</div>
                 <div id='committedStories' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.committedStories}</div>
                   <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'committedStories')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_confirm.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                   </div>
                   <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'committedStories')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_close-cancel.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '25%'}}>
                 <div class='home-iter-content-sub'>Stories/Cards/Tickets-Delivered</div>
                 <div id='deliveredStories' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.deliveredStories}</div>
                   <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'deliveredStories')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_confirm.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                   </div>
                   <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'deliveredStories')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_close-cancel.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '25%'}}>
                 <div class='home-iter-content-sub'>Stories per person days</div>
                 <div id='storiesDays' class='home-iter-content-point-uneditable'></div>
                   <div class='home-iter-locked-btn'>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_locked.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_locked.svg')}></InlineSVG>
                   </div>
               </div>
             </div>
@@ -246,37 +246,37 @@ var HomeIterContent = React.createClass({
                 <div class='home-iter-content-sub'>Story points committed</div>
                 <div id='commitedStoryPoints' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.commitedStoryPoints}</div>
                   <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'commitedStoryPoints')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_confirm.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                   </div>
                   <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'commitedStoryPoints')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_close-cancel.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Story points delivered</div>
                 <div id='storyPointsDelivered' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.storyPointsDelivered}</div>
                   <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'storyPointsDelivered')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_confirm.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                   </div>
                   <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'storyPointsDelivered')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_close-cancel.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Deployments this iteration</div>
                 <div id='deployments' class='home-iter-content-point' onClick={access?this.iterBlockClickHandler:''}>{iterData.deployments}</div>
                   <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'deployments')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_confirm.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                   </div>
                   <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'deployments')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_close-cancel.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Story points per person days</div>
                 <div id='storyPointsDays' class='home-iter-content-point-uneditable'></div>
                   <div class='home-iter-locked-btn'>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_locked.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_locked.svg')}></InlineSVG>
                   </div>
               </div>
             </div>
@@ -289,40 +289,40 @@ var HomeIterContent = React.createClass({
                 <div class='home-iter-content-sub'>Opening balance</div>
                 <div id='defectsStartBal' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.defectsStartBal}</div>
                   <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'defectsStartBal')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_confirm.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                   </div>
                   <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'defectsStartBal')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_close-cancel.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>New this iteration</div>
                 <div id='defects' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.defects}</div>
                   <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'defects')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_confirm.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                   </div>
                   <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'defects')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_close-cancel.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Resolved this iteration</div>
                 <div id='defectsClosed' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.defectsClosed}</div>
                   <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'defectsClosed')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_confirm.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                   </div>
                   <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'defectsClosed')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_close-cancel.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Closing balance</div>
                 <div id='defectsEndBal' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.defectsEndBal}</div>
                   <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'defectsEndBal')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_confirm.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                   </div>
                   <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'defectsEndBal')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_close-cancel.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                   </div>
               </div>
             </div>
@@ -335,20 +335,20 @@ var HomeIterContent = React.createClass({
                 <div class='home-iter-content-sub'>WIP Cycle Time (In days)</div>
                 <div id='cycleTimeWIP' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.cycleTimeWIP}</div>
                   <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'cycleTimeWIP')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_confirm.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                   </div>
                   <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'cycleTimeWIP')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_close-cancel.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
                 <div class='home-iter-content-sub'>Backlog Cycle Time (In days)</div>
                 <div id='cycleTimeInBacklog' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.cycleTimeInBacklog}</div>
                   <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'cycleTimeInBacklog')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_confirm.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                   </div>
                   <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'cycleTimeInBacklog')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_close-cancel.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                   </div>
               </div>
             </div>
@@ -360,20 +360,20 @@ var HomeIterContent = React.createClass({
                 <div class='home-iter-content-sub'>Client satisfaction</div>
                 <div id='clientSatisfaction' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.clientSatisfaction}</div>
                   <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'clientSatisfaction')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_confirm.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                   </div>
                   <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'clientSatisfaction')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_close-cancel.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
                 <div class='home-iter-content-sub'>Team satisfaction</div>
                 <div id='teamSatisfaction' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.teamSatisfaction}</div>
                   <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'teamSatisfaction')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_confirm.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                   </div>
                   <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'teamSatisfaction')}>
-                    <InlineSVG src={require('../../../img/Att-icons2/att-icons_close-cancel.svg')}></InlineSVG>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                   </div>
               </div>
             </div>

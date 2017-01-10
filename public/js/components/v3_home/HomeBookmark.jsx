@@ -40,10 +40,10 @@ var HomeBookmark = React.createClass({
             <div style={{'display':'none'}}></div>
             <a href={link.linkUrl} title={link.linkUrl}>{link.linkLabel}</a>
             <span style={{'display':'none'}}>
-                <InlineSVG src={require('../../../img/Att-icons2/att-icons_edit.svg')}></InlineSVG>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons_edit.svg')}></InlineSVG>
             </span>
             <span style={{'display':'none','marginLeft':'3%'}}>
-                <InlineSVG src={require('../../../img/Att-icons2/att-icons_delete.svg')}></InlineSVG>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons_delete.svg')}></InlineSVG>
             </span>
           </div>
         )
