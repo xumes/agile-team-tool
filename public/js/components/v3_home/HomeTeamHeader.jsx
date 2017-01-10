@@ -74,8 +74,8 @@ var HomeTeamHeader = React.createClass({
       var teamNameFontLingHeight = '';
       if (team.name != undefined) {
         var teamName = team.name;
-        if (team.name.length > 45) {
-          teamNameFontSize = 45/team.name.length * 3 + 'em';
+        if (team.name.length > 50) {
+          teamNameFontSize = 50/team.name.length * 3 + 'em';
           teamNameFontLingHeight = teamNameFontSize;
         }
       } else {
