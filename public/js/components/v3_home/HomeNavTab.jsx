@@ -1,5 +1,7 @@
 var React = require('react');
 var api = require('../api.jsx');
+var InlineSVG = require('svg-inline-react');
+var HomeSearchField = require('./HomeSearchField.jsx');
 
 var HomeNavTab = React.createClass({
   myTeamsClicked: function() {
@@ -11,6 +13,14 @@ var HomeNavTab = React.createClass({
   allTeamsClicked: function() {
     if ($('#allTeams').attr('data-state') != 'open') {
       this.props.tabClicked('alltab');
+    }
+  },
+
+  showSearch: function() {
+    if ($('#searchFieldDiv').css('display') == 'none') {
+      $('#searchFieldDiv').fadeIn();
+    } else {
+      $('#searchFieldDiv').fadeOut();
     }
   },
 
@@ -33,14 +43,20 @@ var HomeNavTab = React.createClass({
               <li class='home-nav-tab-item' id='allTeams' role='tab' data-state={''} onClick={this.allTeamsClicked}>All Teams</li>
           </div>
           <div class='home-nav-tab-buttons'>
-            <input class='home-nav-tab-buttons-item' type='image' src='../../../img/Att-icons/att-icons_Add.svg' />
-            <input class='home-nav-tab-buttons-item' type='image' src='../../../img/Att-icons/att-icons_search.svg' />
-            <input id='hideNavBtn' class='home-nav-tab-buttons-item' type='image' src='../../../img/Att-icons/att-icons_contract.svg' onClick={this.homeNavHide}/>
+            <div id='hideNavBtn' class='home-nav-tab-buttons-item' onClick={this.homeNavHide}>
+              <InlineSVG src={require('../../../img/Att-icons/att-icons_contract.svg')}></InlineSVG>
+            </div>
+            <div id='navSearchBtn' class='home-nav-tab-buttons-item' onClick={this.showSearch}>
+              <InlineSVG src={require('../../../img/Att-icons/att-icons_search.svg')}></InlineSVG>
+            </div>
+            <div class='home-nav-tab-buttons-item'>
+              <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
+            </div>
           </div>
         </div>
+        <HomeSearchField />
       </nav>
     )
   }
 });
-
 module.exports = HomeNavTab;

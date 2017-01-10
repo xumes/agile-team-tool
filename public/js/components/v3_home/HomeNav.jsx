@@ -2,7 +2,6 @@ var React = require('react');
 var api = require('../api.jsx');
 var HomeNavTab = require('./HomeNavTab.jsx');
 var HomeSpinner = require('./HomeSpinner.jsx');
-var HomeSearchField = require('./HomeSearchField.jsx');
 var HomeSearchTree = require('./HomeSearchTree.jsx');
 var HomeTeamTree = require('./HomeTeamTree.jsx');
 
@@ -15,25 +14,25 @@ var HomeNav = React.createClass({
 
   searchStart: function() {
     $('#navSpinner').show();
-    $('#searchTree').hide();
+    $('#newSearchTree').hide();
     $('#newTeamTree').hide();
   },
 
   searchEnd: function() {
     $('#navSpinner').hide();
-    $('#searchTree').show();
+    $('#newSearchTree').show();
     $('#newTeamTree').hide();
   },
 
   tabClickedStart: function() {
     $('#navSpinner').show();
-    $('#searchTree').hide();
+    $('#newSearchTree').hide();
     $('#newTeamTree').hide();
   },
 
   tabClickedEnd: function() {
     $('#navSpinner').hide();
-    $('#searchTree').hide();
+    $('#newSearchTree').hide();
     $('#newTeamTree').show();
   },
 

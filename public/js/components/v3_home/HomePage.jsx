@@ -74,25 +74,25 @@ var HomePage = React.createClass({
 
   searchStart: function() {
     $('#navSpinner').show();
-    $('#searchTree').hide();
+    $('#newSearchTree').hide();
     $('#newTeamTree').hide();
   },
 
   searchEnd: function() {
     $('#navSpinner').hide();
-    $('#searchTree').show();
+    $('#newSearchTree').show();
     $('#newTeamTree').hide();
   },
 
   tabClickedStart: function() {
     $('#navSpinner').show();
-    $('#searchTree').hide();
+    $('#newSearchTree').hide();
     $('#newTeamTree').hide();
   },
 
   tabClickedEnd: function() {
     $('#navSpinner').hide();
-    $('#searchTree').hide();
+    $('#newSearchTree').hide();
     $('#newTeamTree').show();
   },
 
@@ -104,6 +104,7 @@ var HomePage = React.createClass({
     $('#myTeams').attr('data-state','open');
     if (tab == 'mytab') {
       $('#searchFieldDiv').hide();
+      $('#navSearchBtn').hide();
       api.getMyTeams()
       .then(function(data){
         var newData = {
@@ -122,9 +123,10 @@ var HomePage = React.createClass({
         return null;
       })
     } else {
-      $('#searchFieldDiv').show();
+      // $('#searchFieldDiv').show();
       $('#allTeams').attr('data-state','open');
       $('#myTeams').attr('data-state','');
+      $('#navSearchBtn').show();
       api.getAllTeams()
       .then(function(data){
         var newData = {

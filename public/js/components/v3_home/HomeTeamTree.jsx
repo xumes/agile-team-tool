@@ -15,7 +15,7 @@ var HomeTeamTree = React.createClass({
     if (nextProps.newTeams == this.props.newTeams) {
       if (nextProps.selectedTeam != this.props.selectedTeam && nextProps.selectedTeam != '') {
         this.loadTeamInAllTeams(nextProps.selectedTeam,true);
-        $('#searchTree').hide();
+        $('#newSearchTree').hide();
       }
       return false;
     } else {
@@ -26,7 +26,7 @@ var HomeTeamTree = React.createClass({
   componentDidUpdate: function() {
     var self = this;
     $('#navSpinner').hide();
-    $('#searchTree').hide();
+    $('#newSearchTree').hide();
     $('#newTeamTree').show();
     $('.nano').nanoScroller();
     self.initHilightTeam();

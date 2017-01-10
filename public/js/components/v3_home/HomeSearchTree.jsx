@@ -13,7 +13,7 @@ var HomeSearchTree = React.createClass({
 
   componentDidUpdate: function() {
     $('#navSpinner').hide();
-    $('#searchTree').show();
+    $('#newSearchTree').show();
     $('#newTeamTree').hide();
     $('.nano').nanoScroller();
 
@@ -26,11 +26,7 @@ var HomeSearchTree = React.createClass({
     var self = this;
 
     if (_.isEmpty(this.props.searchTeams)) {
-      var populateTeams = (
-        <div>
-          <h>Not Found!</h>
-        </div>
-      );
+      var populateTeams = null;
     } else {
       var populateTeams = this.props.searchTeams.map(function(team) {
         var subTwistyId = 'search_' + team.pathId;
@@ -39,24 +35,26 @@ var HomeSearchTree = React.createClass({
         var isSquad = false;
         var objectId = team._id;
         if (team.type == 'squad') {
-          isSquad = 'agile-team-link agile-team-standalone agile-team-squad'
+          var triggerSquad = 'ibm-twisty-trigger trigger-squad';
+          var isSquad = 'agile-team-link agile-team-standalone agile-team-squad';
         } else {
-          isSquad = 'agile-team-link agile-team-standalone'
+          triggerSquad = 'ibm-twisty-trigger';
+          isSquad = 'agile-team-link agile-team-standalone';
         }
         return (
           <li key={objectId} data-open='false' class='agile-team-standalone' id={subTwistyId}>
-            <a class='ibm-twisty-trigger' href='#toggle'>
+            <a class={triggerSquad} href='#toggle'>
               <span class='ibm-access'>{label}</span>
             </a>
-            <a class={isSquad} id={linkId} onClick={self.props.selectedTeamChanged.bind(null, team.pathId)}>{label}</a>
+            <a class={isSquad} id={linkId} onClick={self.props.selectedTeamChanged.bind(null, team.pathId)}><span class='agile-team-title'>{label}</span></a>
             <span class='ibm-access'>{team.pathId}</span>
           </li>
         )
       });
     }
     return (
-      <div id='searchTree' style={treeStyle}>
-        <ul class='ibm-twisty' id='searchTreeMain'>
+      <div id='newSearchTree' style={treeStyle}>
+        <ul class='ibm-twisty' id='newSearchTreeMain'>
           {populateTeams}
         </ul>
       </div>
