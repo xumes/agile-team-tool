@@ -26,16 +26,6 @@ paths:
           required: true
           type: string
           format: string
-        - name: docs
-          in: query
-          description: Flag to check if all team related information will be returned
-          required: false
-          type: boolean
-        - name: all
-          in: query
-          description: Flag to check if all child teams by ACL will be returned
-          required: false
-          type: boolean
       tags:
         - Team
       responses:
@@ -67,11 +57,6 @@ paths:
           required: false
           type: string
           format: string
-        - name: docs
-          in: query
-          description: Flag to check if all iteration related information will be returned
-          required: false
-          type: boolean
       tags:
         - Iteration
       responses:
@@ -227,7 +212,6 @@ paths:
                 maximum: 4
             example:
               _id: xxxxxxx
-              teamId: xxxxxxx
               status: xxxxxxx
       tags:
         - Iteration
