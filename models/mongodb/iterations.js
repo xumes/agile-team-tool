@@ -383,7 +383,7 @@ var IterationExport = {
         }
         if (_.isEmpty(data['teamId']))
           data['teamId'] = iterData['teamId'];
-        return Users.isUserAllowed(userId.toUpperCase(), data['teamId'])
+        return Users.isUserAllowed(userId.toUpperCase(), data['teamId']);
       })
       .then(function(isAllowed){
         if (isAllowed)
