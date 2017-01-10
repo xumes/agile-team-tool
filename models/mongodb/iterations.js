@@ -374,7 +374,17 @@ var IterationExport = {
     return new Promise(function(resolve, reject) {
       // user validated through apikey works with users collection object, session ldap object if otherwise
       var userId = user.userId || user.ldap.uid;
-      Users.isUserAllowed(userId.toUpperCase(), data['teamId'])
+      IterationExport.get(docId)
+      .then(function(iterData){
+        if (_.isEmpty(iterData)) {
+          var msg = 'Iteration does not exist: ' + docId;
+          loggers.get('model-iteration').error(msg);
+          return Promise.reject(msg);
+        }
+        if (_.isEmpty(data['teamId']))
+          data['teamId'] = iterData['teamId'];
+        return Users.isUserAllowed(userId.toUpperCase(), data['teamId'])
+      })
       .then(function(isAllowed){
         if (isAllowed)
           return IterationExport.getByIterInfo(data['teamId']);
