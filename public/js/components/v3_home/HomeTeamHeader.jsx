@@ -133,19 +133,28 @@ var HomeTeamHeader = React.createClass({
       }
       var faceImages = null;
       if (team.members != undefined) {
+        team.members = _.sortBy(team.members, function(m){
+          return m.name.replace(/\s/g,'');
+        });
         var teamMemNumber = team.members.length;
         var teamFTE = self.teamMemFTE(team.members);
-        var count = 0;
-        var faceImages = team.members.map(function(member){
-          if (count < 10) {
-            var faceImageId = 'faceImage_' + count;
+        var faceImages = team.members.map(function(member, index){
+          if (index < 9) {
+            var faceImageId = 'faceImage_' + index;
             var src = 'http://dpev027.innovate.ibm.com:10000/image/' + member.userId.toUpperCase();
-            count ++ ;
             return (
-              <div key={faceImageId}>
-                <div class='ibm-padding-content' style={{'padding': '0', 'borderRadius': '50%'}}>
+              <div key={faceImageId} class='home-header-image'>
+                <a class='ibm-padding-content' style={{'padding': '0', 'borderRadius': '50%'}} title={member.name}>
                   <img id={faceImageId} class='home-team-header-member-image' src={src}></img>
-                </div>
+                </a>
+              </div>
+            )
+          } else if (index == 9) {
+            var faceImageId = 'faceImage_' + index;
+            var count = '+' + (teamMemNumber - index);
+            return (
+              <div key={faceImageId} class='home-header-image' onClick={self.showTeamTable}>
+                  <div class='more-image'>{count}</div>
               </div>
             )
           }

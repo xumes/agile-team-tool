@@ -1699,6 +1699,25 @@ body {
   text-align: center;
 }
 
+.home-header-image {
+  position: relative;
+  width: 10%;
+  height: 100%;
+}
+.more-image {
+  position: relative;
+  left: 5%;
+  width: 90%;
+  height: 90%;
+  border-radius: 50%;
+  border: 0.1em solid #FFFFFF;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.6em;
+  color: #FFFFFF;
+  line-height: 3.2em;
+  cursor: pointer;
+}
+
 /*.home-assessment-summary-btn > button {
   position: relative;
   left: 10%;
