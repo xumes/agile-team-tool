@@ -83,46 +83,77 @@ var HomeTeamTree = React.createClass({
   initHilightTeam: function() {
     var self = this;
     if (selectedTeam == '') {
-      if (($('#teamTree li')[0]).id) {
-        if (($('#teamTree li')[0]).id != 'agteamstandalone') {
-          selectedTeam = ($('#teamTree li')[0]).id;
-        } else {
-          if (selectedTeam == ($('#teamTree li')[1]).id) {
-            selectedTeam = ($('#teamTree li')[1]).id;
+      if ($('#teamTree li')[0]) {
+        if (($('#teamTree li')[0]).id) {
+          if (($('#teamTree li')[0]).id != 'agteamstandalone') {
+            selectedTeam = ($('#teamTree li')[0]).id;
+          } else {
+            if (selectedTeam == ($('#teamTree li')[1]).id) {
+              selectedTeam = ($('#teamTree li')[1]).id;
+            }
           }
         }
+        self.highlightTeam(selectedTeam);
+        self.loadDetails(selectedTeam);
+      } else {
+        $('#bodyContent').hide();
+        $('#snapshotPull').hide();
+        $('#iterationFallBox').hide();
+        $('#squad_team_scard').hide();
+        $('#nsquad_team_scard').hide();
+        $('#iterationFallBox').hide();
+        $('#assessmentFallBox').hide();
+        $('#nsquad_assessment_card').hide();
+        $('#squad_assessment_card').hide();
+        $('#membersList').empty();
+        $('#teamMemberTable').hide();
+        $('#no-teams-highlightbox').show();
       }
-      self.highlightTeam(selectedTeam);
-      self.loadDetails(selectedTeam);
     } else {
       if ($('#myTeams').attr('data-state') == 'open') {
         if (($.find('#' + selectedTeam)).length > 0) {
           self.highlightTeam(selectedTeam);
           self.loadDetails(selectedTeam);
         } else {
-          if (($('#teamTree li')[0]).id) {
-            if (($('#teamTree li')[0]).id != 'agteamstandalone') {
-              selectedTeam = ($('#teamTree li')[0]).id;
-              self.highlightTeam(selectedTeam);
-              self.loadDetails(selectedTeam);
-            } else {
-              if (selectedTeam == ($('#teamTree li')[1]).id) {
-                selectedTeam = ($('#teamTree li')[1]).id;
+          if ($('#teamTree li')[0]) {
+            if (($('#teamTree li')[0]).id) {
+              if (($('#teamTree li')[0]).id != 'agteamstandalone') {
+                selectedTeam = ($('#teamTree li')[0]).id;
                 self.highlightTeam(selectedTeam);
                 self.loadDetails(selectedTeam);
               } else {
-                selectedTeam = '';
+                if (selectedTeam == ($('#teamTree li')[1]).id) {
+                  selectedTeam = ($('#teamTree li')[1]).id;
+                  self.highlightTeam(selectedTeam);
+                  self.loadDetails(selectedTeam);
+                } else {
+                  selectedTeam = '';
+                }
               }
+            } else {
+              selectedTeam = '';
             }
           } else {
             selectedTeam = '';
+            $('#bodyContent').hide();
+            $('#snapshotPull').hide();
+            $('#iterationFallBox').hide();
+            $('#squad_team_scard').hide();
+            $('#nsquad_team_scard').hide();
+            $('#iterationFallBox').hide();
+            $('#assessmentFallBox').hide();
+            $('#nsquad_assessment_card').hide();
+            $('#squad_assessment_card').hide();
+            $('#membersList').empty();
+            $('#teamMemberTable').hide();
+            $('#no-teams-highlightbox').show();
           }
         }
       } else {
         self.loadTeamInAllTeams(selectedTeam);
       }
     }
-    console.log('sel:',selectedTeam);
+    // console.log('sel:',selectedTeam);
   },
 
   expandParentTeam: function(teamId) {
@@ -186,7 +217,7 @@ var HomeTeamTree = React.createClass({
     $('.nano').nanoScroller();
     self.highlightTeam(teamId);
     var objectId = $('#' + teamId).children('span').html();
-    console.log('ooo:',objectId);
+    // console.log('ooo:',objectId);
     $('#contentSpinner').show();
     $('#bodyContent').hide();
     $('#snapshotPull').hide();
@@ -199,6 +230,7 @@ var HomeTeamTree = React.createClass({
     $('#squad_assessment_card').hide();
     $('#membersList').empty();
     $('#teamMemberTable').hide();
+    $('#no-teams-highlightbox').hide();
     var teamResult = new Object();
     var isSquad = false;
     api.loadTeam(objectId)
