@@ -735,11 +735,12 @@ body {
 }
 
 .home-team-header-description-div {
-  /*position: absolute;*/
-  position: relative;
-  left: -3%;
+  position: absolute;
+  float: left;
+  /*position: relative;*/
+  /*left: -3%;*/
   top: -25%;
-  display: inline-block;
+  /*display: inline-block;*/
   z-index: 10;
   width: 40%;
   height: 700%;

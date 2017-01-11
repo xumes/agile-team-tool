@@ -2,6 +2,7 @@ var React = require('react');
 var api = require('../api.jsx');
 var HomeMemberTable = require('./HomeMemberTable.jsx');
 var HomeBookmark = require('./HomeBookmark.jsx');
+var HomeTeamDescription = require('./HomeTeamDescription.jsx');
 var InlineSVG = require('svg-inline-react');
 var Promise = require('bluebird');
 var _ = require('underscore');
@@ -162,32 +163,13 @@ var HomeTeamHeader = React.createClass({
             </div>
             <div class='home-team-header-teamname-div'>
               <h class='home-team-header-teamname' style={{'fontSize': teamNameFontSize, 'lineHeight': teamNameFontLingHeight}} id="teamName">{teamName}</h>
-              <div class='home-team-header-teamname-btn' onClick={self.showDescriptionBlock}>
+              <div class='home-team-header-teamname-btn' id='homeHeaderDesBtn' onClick={self.showDescriptionBlock}>
                 <InlineSVG class='home-team-header-teamname-btn-img' src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
               </div>
               <div class='home-team-header-teamname-btn'>
                 <InlineSVG class='home-team-header-teamname-btn-img' src={require('../../../img/Att-icons/att-icons_team-settings-21.svg')}></InlineSVG>
               </div>
-              <div class='home-team-header-description-div' style={{'display':'none'}}>
-                <div class='home-team-header-description-arrow'>
-                  <InlineSVG class='home-team-header-description-arrow-img' src={require('../../../img/Att-icons/play-arrow.svg')}></InlineSVG>
-                </div>
-                <div class='home-team-header-description-title'>
-                  <h>Team Description</h>
-                  <h1 onClick={self.showDescriptionBlock}>X</h1>
-                </div>
-                <div class='home-team-header-description-content'>
-                  <div>
-                    <h1>
-                      {teamName}
-                    </h1>
-                    <p>
-                      {teamDescription}
-                    </p>
-                  </div>
-                  <button type='button' class='ibm-btn-sec ibm-btn-blue-50 ibm-btn-small'>Edit</button>
-                </div>
-              </div>
+              <HomeTeamDescription teamName={teamName} teamDescription={teamDescription} showDescriptionBlock={self.showDescriptionBlock}/>
             </div>
           </div>
           <div class='home-team-header-hierarchy'>
