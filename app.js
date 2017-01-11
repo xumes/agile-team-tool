@@ -21,6 +21,7 @@ var helmet = require('helmet');
 var httpProxy = require('http-proxy');
 var bundle = require('./bundle');
 var initCloudant = require('./cloudant/init');
+var cors = require('cors');
 
 /* istanbul ignore if */
 /*require('fs').readFile('./art', 'utf8', function(err, art) {
@@ -54,10 +55,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //security (mostly header stuff)
-// app.use(helmet());
 app.use(helmet({
   frameguard: false
 }));
+
 
 // Force SSL
 /* istanbul ignore if */
@@ -78,6 +79,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.options('*', cors());
 require('./middleware/login')(passport);
 
 //Routes/Controllers for the views
