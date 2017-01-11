@@ -20,7 +20,6 @@ var favicon = require('serve-favicon');
 var helmet = require('helmet');
 var httpProxy = require('http-proxy');
 var bundle = require('./bundle');
-var initCloudant = require('./cloudant/init');
 
 /* istanbul ignore if */
 /*require('fs').readFile('./art', 'utf8', function(err, art) {
@@ -30,7 +29,6 @@ var initCloudant = require('./cloudant/init');
     console.log(settings);
   }
   console.log('\n');
-  initCloudant.init();
 });
 */
 
