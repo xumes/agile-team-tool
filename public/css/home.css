@@ -832,10 +832,14 @@ body {
 }
 
 .home-team-header-description-content > div > p {
+  position: relative;
+  float: left;
+  height: 70%;
   font-family: "HelvNeue Roman for IBM";
   font-size: 1.4em;
   line-height: 1.6em;
   color: #464646;
+  overflow: scroll;
 }
 
 .home-team-header-description-content > button {
