@@ -1584,6 +1584,44 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, user) {
   });
 };
 
+// module.exports.getDesigner = function() {
+//   return new Promise(function(resolve, reject){
+//     var designer = [];
+//     // var dlist = ['Designer', 'UX Designer', 'UX Visual Designer', 'FE Developer', 'Lead designer'];
+//     var dlist = ['Developer'];
+//     var regex = new RegExp(',agileandtalentdomain-1753,');
+//     Team.find({'path': regex, 'docStatus': {$ne:'delete'}}).exec()
+//       .then(function(teams){
+//         _.each(teams, function(team){
+//           _.each(team.members, function(member){
+//             if (dlist.indexOf(member.role) >= 0) {
+//               var pd = {
+//                 'name': member.name,
+//                 'id': member.userId,
+//                 'email': member.email,
+//                 'role': member.role
+//               };
+//               var dup = false;
+//               _.find(designer, function(d){
+//                 if (d.id == pd.id) {
+//                   dup = true;
+//                   return;
+//                 }
+//               });
+//               if (!dup) {
+//                 designer.push(pd);
+//               }
+//             }
+//           });
+//         });
+//         resolve(designer);
+//       })
+//       .catch(function(err){
+//         reject(err);
+//       });
+//   });
+// };
+
 module.exports.removeAssociation = function(childTeamId, user) {
   return new Promise(function(resolve, reject){
     var userId = user ? user['ldap']['uid'].toUpperCase() : '';

@@ -42,8 +42,10 @@ var HomeMemberTable = React.createClass({
             var blockColor = {
               'backgroundColor': '#FFFFFF'
             }
+            var blockClass = 'team-member-table-content-block1';
             if (idx % 2 != 0) {
               blockColor['backgroundColor'] = '#EFEFEF';
+              blockClass = 'team-member-table-content-block2';
             }
             var blockId = 'member_'+idx;
             var nameId = 'name_'+idx;
@@ -52,7 +54,7 @@ var HomeMemberTable = React.createClass({
             var allocationId = 'allocation_'+idx;
             var awkId = 'awk_'+idx;
             return (
-              <div key={blockId} id={blockId} class='team-member-table-content-block' style = {blockColor}>
+              <div key={blockId} id={blockId} class={blockClass}>
                 <div id={nameId} style={{'width':'29.8%'}}>
                   <div style={{'width':'28.6%','height':'100%','display':'inline-block','float':'left'}}>
                     <img src={src}></img>
