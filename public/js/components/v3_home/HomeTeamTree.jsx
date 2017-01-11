@@ -3,6 +3,7 @@ var api = require('../api.jsx');
 var HomeSpinner = require('./HomeSpinner.jsx');
 var _ = require('underscore');
 var Promise = require('bluebird');
+var clickedTeamId = '';
 
 var HomeTeamTree = React.createClass({
   componentDidMount: function() {
@@ -82,46 +83,73 @@ var HomeTeamTree = React.createClass({
   initHilightTeam: function() {
     var self = this;
     if (selectedTeam == '') {
-      if (($('#newTeamTree li')[0]).id) {
-        if (($('#newTeamTree li')[0]).id != 'agteamstandalone') {
-          selectedTeam = ($('#newTeamTree li')[0]).id;
-        } else {
-          if (selectedTeam == ($('#newTeamTree li')[1]).id) {
-            selectedTeam = ($('#newTeamTree li')[1]).id;
+      if ($('#newTeamTree li')[0]) {
+        if (($('#newTeamTree li')[0]).id) {
+          if (($('#newTeamTree li')[0]).id != 'agteamstandalone') {
+            selectedTeam = ($('#newTeamTree li')[0]).id;
+          } else {
+            if (selectedTeam == ($('#newTeamTree li')[1]).id) {
+              selectedTeam = ($('#newTeamTree li')[1]).id;
+            }
           }
         }
+        self.highlightTeam(selectedTeam);
+        self.loadDetails(selectedTeam);
+      } else {
+        $('#bodyContent').hide();
+        $('#snapshotPull').hide();
+        //$('#iterationFallBox').hide();
+        $('#squad_team_scard').hide();
+        $('#nsquad_team_scard').hide();
+        //$('#assessmentFallBox').hide();
+        $('#nsquad_assessment_card').hide();
+        $('#squad_assessment_card').hide();
+        $('#membersList').empty();
+        $('#teamMemberTable').hide();
       }
-      self.highlightTeam(selectedTeam);
-      self.loadDetails(selectedTeam);
     } else {
       if ($('#myTeams').attr('data-state') == 'open') {
         if (($.find('#' + selectedTeam)).length > 0) {
           self.highlightTeam(selectedTeam);
           self.loadDetails(selectedTeam);
         } else {
-          if (($('#newTeamTree li')[0]).id) {
-            if (($('#newTeamTree li')[0]).id != 'agteamstandalone') {
-              selectedTeam = ($('#newTeamTree li')[0]).id;
-              self.highlightTeam(selectedTeam);
-              self.loadDetails(selectedTeam);
-            } else {
-              if (selectedTeam == ($('#newTeamTree li')[1]).id) {
-                selectedTeam = ($('#newTeamTree li')[1]).id;
+          if ($('#newTeamTree li')[0]) {
+            if (($('#newTeamTree li')[0]).id) {
+              if (($('#newTeamTree li')[0]).id != 'agteamstandalone') {
+                selectedTeam = ($('#newTeamTree li')[0]).id;
                 self.highlightTeam(selectedTeam);
                 self.loadDetails(selectedTeam);
               } else {
-                selectedTeam = '';
+                if (selectedTeam == ($('#newTeamTree li')[1]).id) {
+                  selectedTeam = ($('#newTeamTree li')[1]).id;
+                  self.highlightTeam(selectedTeam);
+                  self.loadDetails(selectedTeam);
+                } else {
+                  selectedTeam = '';
+                }
               }
+            } else {
+              selectedTeam = '';
             }
           } else {
             selectedTeam = '';
+            $('#bodyContent').hide();
+            $('#snapshotPull').hide();
+            //$('#iterationFallBox').hide();
+            $('#squad_team_scard').hide();
+            $('#nsquad_team_scard').hide();
+            //$('#assessmentFallBox').hide();
+            $('#nsquad_assessment_card').hide();
+            $('#squad_assessment_card').hide();
+            $('#membersList').empty();
+            $('#teamMemberTable').hide();
           }
         }
       } else {
         self.loadTeamInAllTeams(selectedTeam);
       }
     }
-    console.log('sel:',selectedTeam);
+    // console.log('sel:',selectedTeam);
   },
 
   expandParentTeam: function(teamId) {
@@ -130,13 +158,16 @@ var HomeTeamTree = React.createClass({
       if ($('#' + teamId).attr('data-open') == 'false') {
         //var objectId = $('#' + teamId).children('span').html();
         //getChildrenTeams(parentId, false);
-        api.getChildrenTeams(teamId)
-        .then(function(teams){
-          self.appendChildTeams(teams, teamId);
-        })
-        .catch(function(err){
-          console.log(err);
-        });
+        if (clickedTeamId != teamId) {
+          clickedTeamId = teamId;
+          api.getChildrenTeams(teamId)
+          .then(function(teams){
+            self.appendChildTeams(teams, teamId);
+          })
+          .catch(function(err){
+            console.log(err);
+          });
+        }
       } else {
         $('#' + teamId).attr('data-open', 'true');
         $('#' + teamId).addClass('ibm-active');
@@ -182,7 +213,7 @@ var HomeTeamTree = React.createClass({
     $('.nano').nanoScroller();
     self.highlightTeam(teamId);
     var objectId = $('#' + teamId).children('span').html();
-    console.log('ooo:',objectId);
+    // console.log('ooo:',objectId);
     $('#contentSpinner').show();
     $('#bodyContent').hide();
     $('#snapshotPull').hide();
