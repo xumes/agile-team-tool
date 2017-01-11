@@ -3,6 +3,32 @@ var api = require('../api.jsx');
 var _ = require('underscore');
 
 var HomeMemberTable = React.createClass({
+  componentDidMount: function() {
+    this.hoverBlock('team-member-table-content-location');
+    this.hoverBlock('team-member-table-content-allocation');
+    this.hoverBlock('team-member-table-content-awk');
+  },
+  componentDidUpdate: function() {
+    this.hoverBlock('team-member-table-content-location');
+    this.hoverBlock('team-member-table-content-allocation');
+    this.hoverBlock('team-member-table-content-awk');
+  },
+  hoverBlock: function(block) {
+    $('.' + block + ' > h').unbind('mouseenter mouseleave');
+    if (this.props.loadDetailTeam.access) {
+      $('.' + block + ' > h').hover(function(){
+        $(this).css('border','0.1em solid');
+        $(this).css('background-color','#FFFFFF');
+        $(this).css('padding-top','0.2em');
+        $(this).css('cursor','pointer');
+      }, function(){
+        $(this).css('border','');
+        $(this).css('background-color','');
+        $(this).css('padding-top','0');
+        $(this).css('cursor','default');
+      });
+    }
+  },
   toTitleCase: function(str) {
     if (_.isEmpty(str)) return '';
     var strArray = str.toUpperCase().split(',');
@@ -68,13 +94,13 @@ var HomeMemberTable = React.createClass({
                 <div id={roleId} style={{'width':'19.3%'}}>
                   <h>{memberDetail.role}</h>
                 </div>
-                <div id={locationId} style={{'width':'21.9%'}}>
+                <div class='team-member-table-content-location' id={locationId} style={{'width':'21.9%'}}>
                   <h>{mLocation}</h>
                 </div>
-                <div id={allocationId} style={{'width':'13.3%'}}>
+                <div class='team-member-table-content-allocation' id={allocationId} style={{'width':'13.3%'}}>
                   <h>{memberDetail.allocation + '%'}</h>
                 </div>
-                <div id={awkId} style={{'width':'15.7%'}}>
+                <div class='team-member-table-content-awk' id={awkId} style={{'width':'15.7%'}}>
                   <h>Full time</h>
                 </div>
               </div>
