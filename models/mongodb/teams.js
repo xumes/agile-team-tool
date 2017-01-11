@@ -833,35 +833,35 @@ module.exports.getTeamsByEmail = function(memberEmail, proj) {
 module.exports.getTeamsByUserId = function(uid, proj) {
   return Team.find({members: {$elemMatch:{userId:uid}}, docStatus:{$ne:'delete'}}).select(proj).exec();
 };
-//returns an array of team ids where the user is a member of the team + the team's subtree
-//this uses user email
-// module.exports.getUserTeams = function(memberEmail) {
-//   return new Promise(function(resolve, reject){
-//     Team.find({members: {$elemMatch:{email:memberEmail}}, docStatus:{$ne:'delete'}}, {pathId:1})
-//       .then(function(teams){
-//         var pathIds = _.pluck(teams, 'pathId');
-//
-//         //build a query string to match all, ex: a|b|c to query for all docs with
-//         //paths a or b or c
-//         var q = '';
-//         _.each(pathIds, function(pId){
-//           q += pId + '|';
-//         });
-//         q = q.slice(0, -1); //remove last |
-//         return q;
-//       })
-//       .then(function(q){
-//         if (q==='') resolve([]);//prevent matching on ''
-//         return Team.distinct('_id', {'$or':[{path:new RegExp(q)}, {pathId:new RegExp(q)}]}).exec();
-//       })
-//       .then(function(result){
-//         resolve(result);
-//       })
-//       .catch( /* istanbul ignore next */ function(err){
-//         reject(err);
-//       });
-//   });
-// };
+
+module.exports.getAllUserTeamsByUserId = function(uid) {
+  return new Promise(function(resolve, reject){
+    Team.find({members: {$elemMatch:{userId:uid}}, docStatus:{$ne:'delete'}}, {pathId:1})
+      .then(function(teams){
+        return _.pluck(teams, 'pathId');
+      })
+      .then(function(pathIds){
+        if (_.isEmpty(pathIds)) resolve([]);//prevent matching on ''
+        var orPaths = [];
+        var orPathIds = [];
+        _.each(pathIds, function(pId) {
+          orPaths.push({path: new RegExp(','+pId+',')});
+          orPathIds.push({pathId: pId});
+        });
+        return Team.distinct('_id', {'$or': _.union(orPaths, orPathIds)}).exec();
+      })
+      .then(function(ids){
+        Team.find({_id: {$in: ids}}).exec()
+        .then(function(teams){
+          console.log('team result: '+JSON.stringify(teams));
+          resolve (teams);
+        });
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        reject(err);
+      });
+  });
+};
 
 module.exports.getUserTeamsByUserId = function(uid) {
   return new Promise(function(resolve, reject){
