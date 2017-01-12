@@ -1,6 +1,8 @@
 var React = require('react');
 var api = require('../api.jsx');
 var _ = require('underscore');
+var InlineSVG = require('svg-inline-react');
+
 
 var HomeMemberTable = React.createClass({
   componentDidMount: function() {
@@ -13,6 +15,7 @@ var HomeMemberTable = React.createClass({
     this.hoverBlock('team-member-table-content-allocation');
     this.hoverBlock('team-member-table-content-awk');
   },
+
   hoverBlock: function(block) {
     $('.' + block + ' > h').unbind('mouseenter mouseleave');
     if (this.props.loadDetailTeam.access) {
@@ -27,6 +30,35 @@ var HomeMemberTable = React.createClass({
         $(this).css('padding-top','0');
         $(this).css('cursor','default');
       });
+    }
+  },
+  delTeamMemberHandler: function(idx) {
+    var self = this;
+    var blockId = 'name_' + idx;
+    var memberEmail = $('#' + blockId + ' > div > h1').html();
+    var newMembers = [];
+    var newMembersContent = [];
+    var r = confirm('Do you want to delete this member: ' + memberEmail + '?');
+    if (r) {
+      _.each(self.props.loadDetailTeam.team.members, function(member){
+        if (member.email != memberEmail) {
+          newMembers.push(member);
+        }
+      });
+      _.each(self.props.loadDetailTeam.members, function(member){
+        if (member.email != memberEmail) {
+          newMembersContent.push(member);
+        }
+      });
+      // self.props.loadDetailTeam.team.members = newMembers;
+      api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
+        .then(function(results){
+          self.props.realodTeamMembers(newMembers, newMembersContent);
+          // console.log(results);
+        })
+        .catch(function(err){
+          console.log(err);
+        });
     }
   },
   toTitleCase: function(str) {
@@ -52,7 +84,11 @@ var HomeMemberTable = React.createClass({
         var members = _.sortBy(self.props.loadDetailTeam.members, function(member){
           return member.name.toLowerCase();
         });
-        var team = self.props.loadDetailTeam.team;
+        if (self.props.loadDetailTeam.access) {
+          var addTeamBtnStyle = false;
+        } else {
+          addTeamBtnStyle = true;
+        }
         teamMembers = members.map(function(member, idx){
           if (idx <= 14) {
             var memberDetail = _.find(team.members, function(m){
@@ -79,6 +115,17 @@ var HomeMemberTable = React.createClass({
             var roleId = 'role_'+idx;
             var allocationId = 'allocation_'+idx;
             var awkId = 'awk_'+idx;
+            if (self.props.loadDetailTeam.access) {
+              var deletBtn = (
+                <div onClick={self.delTeamMemberHandler.bind(null, idx)}>
+                  <InlineSVG src={require('../../../img/Att-icons/att-icons_delete.svg')}></InlineSVG>
+                </div>
+              );
+              var addTeamBtnStyle = false;
+            } else {
+              deletBtn = null;
+              addTeamBtnStyle = true;
+            }
             return (
               <div key={blockId} id={blockId} class={blockClass}>
                 <div id={nameId} style={{'width':'29.8%'}}>
@@ -102,6 +149,7 @@ var HomeMemberTable = React.createClass({
                 </div>
                 <div class='team-member-table-content-awk' id={awkId} style={{'width':'15.7%'}}>
                   <h>Full time</h>
+                  {deletBtn}
                 </div>
               </div>
             )
@@ -142,7 +190,7 @@ var HomeMemberTable = React.createClass({
             </div>
             {teamMembers}
             <div class='team-member-table-footer-block'>
-              <button type='button' class='ibm-btn-sec ibm-btn-blue-50'>Add Team Member</button>
+              <button type='button' class='ibm-btn-sec ibm-btn-blue-50' disabled={addTeamBtnStyle}>Add Team Member</button>
             </div>
           </div>
         </div>

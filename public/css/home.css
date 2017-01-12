@@ -719,6 +719,32 @@ body {
   color: #5A5A5A;
 }
 
+.team-member-table-content-awk > div {
+  position: relative;
+  float: right;
+  right: 10%;
+  width: 15%;
+  height: 70%;
+  cursor: pointer;
+  display: none;
+}
+
+.team-member-table-content-awk > div > i > svg {
+  width: 100%;
+  height: 100%;
+}
+
+.team-member-table-content-awk > div > i > svg path,
+.team-member-table-content-awk > div > i > svg rect {
+  fill: #27B0E5;
+}
+
+.team-member-table-content-block1:hover > .team-member-table-content-awk > div,
+.team-member-table-content-block2:hover > .team-member-table-content-awk > div
+ {
+  display: block;
+}
+
 .team-member-table-footer-block {
   width: 100%;
   height: 5.3%;

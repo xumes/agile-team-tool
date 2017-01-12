@@ -156,6 +156,16 @@ var HomePage = React.createClass({
     });
   },
 
+  realodTeamMembers: function(members, membersContent) {
+    var self = this;
+    // var newTeam = this.state.loadDetailTeam;
+    var newTeam = JSON.parse(JSON.stringify(this.state.loadDetailTeam));
+    newTeam.team.members = members;
+    newTeam.members = membersContent;
+    this.setState({'loadDetailTeam': newTeam}, function(){
+    });
+  },
+
   render: function() {
     var pageStyle = {
       'width': '100%',
@@ -182,7 +192,7 @@ var HomePage = React.createClass({
       <div style={pageStyle}>
         <div class='ibm-columns' style={columnsStyle}>
           <div id='mainContent' class='ibm-col-6-4' style={sectionTwoStyle}>
-            <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler}/>
+            <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler} realodTeamMembers={this.realodTeamMembers}/>
           </div>
           <div id='iterContent' class='ibm-col-6-2' style={sectionOneStyle}>
             <HomeIterContent loadDetailTeam={this.state.loadDetailTeam} selectedIter={this.state.selectedIter} iterChangeHandler={this.iterChangeHandler}/>
