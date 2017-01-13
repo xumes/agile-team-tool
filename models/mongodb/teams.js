@@ -857,7 +857,6 @@ module.exports.getAllUserTeamsByUserId = function(uid) {
              }
            }
          });
-         //console.log('ids : '+JSON.stringify(ids));
          var user = new Object();
          var teamsTemp = [];
          var teamTemp = new Object();
@@ -910,7 +909,6 @@ module.exports.getAllUserTeamsByUserId = function(uid) {
             });
             resolve (teamsTemp);
           });
-         //resolve (teams);
        });
      })
      .catch( /* istanbul ignore next */ function(err){
