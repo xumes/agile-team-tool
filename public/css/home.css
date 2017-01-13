@@ -896,7 +896,7 @@ body {
   font-size: 1.4em;
   line-height: 1.6em;
   color: #464646;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .home-team-header-description-content > button {
@@ -1492,7 +1492,7 @@ body {
   height: 66%;
   width: 100%;
   float: left;
-  overflow: scroll;
+  overflow: auto;
   border-bottom: 0.1em solid #E0E0E0;
 }
 

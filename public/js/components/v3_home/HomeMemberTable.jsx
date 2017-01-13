@@ -290,7 +290,7 @@ var HomeMemberTable = React.createClass({
             </div>
             {teamMembers}
             <div class='team-member-table-footer-block'>
-              <button type='button' class='ibm-btn-sec ibm-btn-blue-50' disabled={addTeamBtnStyle}>Add Team Member</button>
+              <button type='button' class='ibm-btn-sec ibm-btn-blue-50' disabled={addTeamBtnStyle} onClick={self.showAddTeamTable}>Add Team Member</button>
             </div>
           </div>
         </div>
