@@ -44,12 +44,17 @@ var HomePage = React.createClass({
   },
 
   handleResize: function() {
-    var fontSize = (window.innerHeight/windowSize['height']) * (window.innerWidth/windowSize['width']) * windowSize['fontSize'];
-    windowSize['height'] = window.innerHeight;
-    windowSize['width'] = window.innerWidth;
-    windowSize['fontSize'] = fontSize;
-    var changeSize = fontSize*100 + '%';
-    $('html').css('font-size', changeSize);
+    if (window.innerWidth >= 1440) {
+      var fontSize = (window.innerWidth/windowSize['width']) * windowSize['fontSize'];
+      // windowSize['height'] = window.innerHeight;
+      // windowSize['width'] = window.innerWidth;
+      // windowSize['fontSize'] = fontSize;
+      var changeSize = fontSize*100 + '%';
+      $('html').css('font-size', changeSize);
+    } else {
+      changeSize = windowSize['fontSize']*100 + '%';
+      $('html').css('font-size', changeSize);
+    }
   },
 
   selectedTeamChanged: function(team) {
