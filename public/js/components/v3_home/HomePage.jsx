@@ -18,8 +18,20 @@ var HomePage = React.createClass({
       selectedTeam: '',
       newTeams: new Object(),
       loadDetailTeam: new Object(),
-      selectedIter: ''
+      selectedIter: '',
+      roles: []
     }
+  },
+
+  componentWillMount: function() {
+    var self = this;
+    api.fetchTeamMemberRoles()
+      .then(function(roles){
+        self.setState({'roles': roles});
+      })
+      .catch(function(err){
+        console.log(err);
+      });
   },
 
   componentDidMount: function() {
@@ -192,7 +204,7 @@ var HomePage = React.createClass({
       <div style={pageStyle}>
         <div class='ibm-columns' style={columnsStyle}>
           <div id='mainContent' class='ibm-col-6-4' style={sectionTwoStyle}>
-            <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler} realodTeamMembers={this.realodTeamMembers}/>
+            <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler} realodTeamMembers={this.realodTeamMembers} roles={this.state.roles}/>
           </div>
           <div id='iterContent' class='ibm-col-6-2' style={sectionOneStyle}>
             <HomeIterContent loadDetailTeam={this.state.loadDetailTeam} selectedIter={this.state.selectedIter} iterChangeHandler={this.iterChangeHandler}/>
