@@ -2,7 +2,7 @@ var React = require('react');
 var LinksButtonCtl = require('./LinksButtonCtl.jsx');
 var LinksSelectDropdown = require('./LinksSelectDropdown.jsx');
 var LinksUrlTextfield = require('./LinksUrlTextfield.jsx');
-var utils = require('../../utils');
+var utils = require('../utils.jsx');
 var _ = require('underscore');
 
 var LoadLinkData = React.createClass({

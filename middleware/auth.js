@@ -1,7 +1,6 @@
-var userModel = require('../models/users');
+'use strict';
 var apiKeyModel = require('../models/mongodb/apiKeys');
-
-_ = require('underscore');
+var _ = require('underscore');
 
 var auth = {
   requireLogin: function(req, res, next) {
@@ -15,7 +14,6 @@ var auth = {
   },
 
   requireLoginWithRedirect: function(req, res, next) {
-    //console.log("req.path=", req.path);
     if (req.path == '/auth' || req.path == '/auth/saml/ibm/callback')
       return next();
     else if (_.isEmpty(req.user))
@@ -47,7 +45,6 @@ var auth = {
     //   return next();
   },
 
-
   requireMongoApikey: function(req, res, next) {
     if (_.isEmpty(req.headers.apikey)) {
       res.status(401).send({
@@ -56,35 +53,6 @@ var auth = {
       });
     } else {
       apiKeyModel.getUserApikeyByApikey(req.headers.apikey)
-      .then(function(apiuser) {
-        if (_.isEmpty(apiuser)) {
-          res.status(401).send({
-            status: 401,
-            message: 'Unauthorized'
-          });
-          return null;
-        } else {
-          apiuser = {userId: apiuser.userId, email: apiuser.email};
-          req.apiuser = apiuser;
-          return next();
-        }
-      })
-      .catch(function(err) {
-        console.log(err);
-        res.status(err.statusCode).send(err.message);
-        return null;
-      });
-    }
-  },
-
-  requireApikey: function(req, res, next) {
-    if (_.isEmpty(req.headers.apikey)) {
-      res.status(401).send({
-        status: 401,
-        message: 'Unauthorized'
-      });
-    } else {
-      userModel.getUserApikeyByApikey(req.headers.apikey)
       .then(function(apiuser) {
         if (_.isEmpty(apiuser)) {
           res.status(401).send({
