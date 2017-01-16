@@ -1577,3 +1577,50 @@ describe('Team models [deleteImportantLinks]', function(){
       });
   });
 });
+
+describe('Team models [getAllUserTeamsByUserId]: get all team full doc (with location object) for a given serial number/ uid', function() {
+  // before(function(done) {
+  //   cache.setHomeCache(userDetails['shortEmail'])
+  //   .then(function(body){
+  //     session = body;
+  //     session['user'] = userDetails;
+  //     done();
+  //   })
+  // })
+
+  it('return error because serial number/ uid is empty', function(done) {
+    teamModel.getAllUserTeamsByUserId(null)
+      .catch(function(err) {
+        expect(err).to.not.equal(null);
+        expect(err).to.have.property('error');
+        expect(err.error).to.have.property('uid');
+      })
+      .finally(function() {
+        done();
+      });
+  });
+
+  it('return empty team lists serial number/ uid without team', function(done) {
+    teamModel.getAllUserTeamsByUserId('invalid-uid')
+      .then(function(body) {
+        expect(body).to.be.empty;
+      })
+      .finally(function() {
+        done();
+      });
+  });
+
+  it('return team objects (with location object in members) for this serial number/ uid', function(done) {
+    teamModel.getAllUserTeamsByUserId(userDetails['ldap']['serialNumber'])
+      .then(function(body) {
+        expect(body[0]['key']).to.be.equal(userDetails['ldap']['serialNumber']);
+      })
+      .catch(function(err) {
+        expect(err).to.be.equal(null);
+      })
+      .finally(function() {
+        done();
+      });
+  });
+
+});

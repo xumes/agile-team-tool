@@ -1023,3 +1023,17 @@ describe('Team model [softDelete]', function() {
       });
   });
 });
+
+describe('Team model [getAllUserTeamsByUserId]', function() {
+  it('return all teams full object with location - site and timezone by user id', function(done){
+    Teams.getTeamsByUserId(testUser.userId)
+      .then(function(result){
+        expect(result).to.be.a('array');
+        done();
+      })
+      .catch(function(err) {
+        done();
+      });
+  });
+});
+
