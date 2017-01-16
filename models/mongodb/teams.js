@@ -93,7 +93,7 @@ var TeamSchema = new Schema({
     default: null
   },
   links: [LinkSchema],
-  createdDate: {
+  createDate: {
     type: Date,
     default: new Date(moment.utc())
   },
