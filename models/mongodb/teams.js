@@ -14,6 +14,7 @@ var moment = require('moment');
 var self = this;
 // Just needed so that corresponding test could run
 require('../../settings');
+var teamModel = require('./teams');
 var userTimezone = require('./data/uniqueUserTimezone.js');
 var ulocation = {};
 _.each(userTimezone, function(tz) {
@@ -92,7 +93,7 @@ var TeamSchema = new Schema({
     default: null
   },
   links: [LinkSchema],
-  createdDate: {
+  createDate: {
     type: Date,
     default: new Date(moment.utc())
   },
@@ -834,36 +835,90 @@ module.exports.getTeamsByEmail = function(memberEmail, proj) {
 module.exports.getTeamsByUserId = function(uid, proj) {
   return Team.find({members: {$elemMatch:{userId:uid}}, docStatus:{$ne:'delete'}}).select(proj).exec();
 };
-//returns an array of team ids where the user is a member of the team + the team's subtree
-//this uses user email
-// module.exports.getUserTeams = function(memberEmail) {
-//   return new Promise(function(resolve, reject){
-//     Team.find({members: {$elemMatch:{email:memberEmail}}, docStatus:{$ne:'delete'}}, {pathId:1})
-//       .then(function(teams){
-//         var pathIds = _.pluck(teams, 'pathId');
-//
-//         //build a query string to match all, ex: a|b|c to query for all docs with
-//         //paths a or b or c
-//         var q = '';
-//         _.each(pathIds, function(pId){
-//           q += pId + '|';
-//         });
-//         q = q.slice(0, -1); //remove last |
-//         return q;
-//       })
-//       .then(function(q){
-//         if (q==='') resolve([]);//prevent matching on ''
-//         return Team.distinct('_id', {'$or':[{path:new RegExp(q)}, {pathId:new RegExp(q)}]}).exec();
-//       })
-//       .then(function(result){
-//         resolve(result);
-//       })
-//       .catch( /* istanbul ignore next */ function(err){
-//         reject(err);
-//       });
-//   });
-// };
 
+//getAllUserTeamByUserId returns all member's team and children of member's team in full team's do document
+module.exports.getAllUserTeamsByUserId = function(uid) {
+  return new Promise(function(resolve, reject){
+    teamModel.getUserTeamsByUserId(uid)
+     .then(function(ids){
+       Team.find({_id: {$in: ids}}).exec()
+       .then(function(teams){
+         //console.log('team result: '+JSON.stringify(teams));
+         var ids = [''];
+         var memberTemp = {};
+
+         _.each(teams, function(team) {
+           if (!_.isEmpty(team.members) && team.members.length != 0 && team.members != undefined) {
+             var members = team.members;
+             //console.log('Members in team: '+JSON.stringify(members));
+             if (!_.isEmpty(members)) {
+               _.each(members, function(member){
+                 ids.push(member.userId);
+               });
+             }
+           }
+         });
+         var user = new Object();
+         var teamsTemp = [];
+         var teamTemp = new Object();
+         Users.getUsersInfo(_.uniq(ids))
+          .then(function(users) {
+            _.each(teams, function(team) {
+              teamTemp =
+              {
+                '_id':team._id,
+                'name':team.name,
+                'pathId':team.pathId,
+                'createDate':team.createdDate,
+                'createdByUserId':team.createdByUserId,
+                'createdBy':team.createdBy,
+                'updatedByUserId':team.updatedByUserId,
+                'updatedBy':team.updatedBy,
+                'docStatus':team.docStatus,
+                'updateDate':team.updateDate,
+                'createdDate':team.createDate,
+                'links':team.links,
+                'description':team.description,
+                'members':[],
+                'path':team.parentTeamId
+              };
+
+              if (!_.isEmpty(team.members) && team.members.length != 0 && team.members != undefined) {
+                var members = team.members;
+                _.each(members, function(member){
+                  memberTemp =
+                 {'name':member.name,
+                  'role':member.role,
+                  'allocation':member.allocation,
+                  'userId':member.userId,
+                  'email':member.email,
+                  'location':{
+                    'site': '',
+                    'timezone': ''
+                  }
+                 };
+                  user = _.find(users, function(user) {
+                    if (_.isEqual(member.userId, user.userId)){
+                      memberTemp.location.site = user.location.site;
+                      memberTemp.location.timezone = user.location.timezone;
+                      teamTemp.members.push(memberTemp);
+                    }
+                  });
+                });
+              }
+              return teamsTemp.push(teamTemp);
+            });
+            resolve (teamsTemp);
+          });
+       });
+     })
+     .catch( /* istanbul ignore next */ function(err){
+       reject(err);
+     });
+  });
+};
+
+//getuserTeambyUserId returns object id of all members team and children of members's team in only array of _id
 module.exports.getUserTeamsByUserId = function(uid) {
   return new Promise(function(resolve, reject){
     Team.find({members: {$elemMatch:{userId:uid}}, docStatus:{$ne:'delete'}}, {pathId:1})
