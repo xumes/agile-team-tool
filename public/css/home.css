@@ -2,9 +2,11 @@ html {
   /*height: 100%;
   font-size: 62.5%;*/
   width: 100vw;
-  height: 53.33vw;
-  min-width: 1440px;
-  min-height: 768px;
+  height: 56.25vw;
+  min-width: 1280px;
+  min-height: 720px;
+  max-width: 1920px;
+  max-height: 1080px;
   font-size: 62.5%;
   background-color: white;
 }
@@ -36,7 +38,7 @@ body {
 
 #newTeamTree, #newSearchTree {
   position: relative;
-  left: 2%;
+  left: -1%;
   width: 96%;
 }
 #newTeamTree, #newSearchTree {
@@ -166,8 +168,7 @@ body {
   position: relative;
   top: 85%;
   height: 30%;
-  width: 96%;
-  left: 2%;
+  width: 100%;
 }
 
 .home-nav-search-field {
@@ -242,35 +243,47 @@ body {
 }
 
 .home-nav-show-btn-div {
-  width: 2.4%;
-  height: 30%;
+  width: 2.6vw;
+  height: 16.9vw;
+  min-width: 33.28px;
+  min-height: 216.32px;
   background-color: #F7F7F7;
-  position: absolute;
-  top: 6.3%;
+  position: relative;
+  top: -100%;
   left: -0.2%;
   z-index: 10;
   box-shadow: 0.2em 0.2em 2em #000000;
 }
 
 .home-nav-show-btn {
-  width: 100%;
-  height: 100%;
+  position: relative;
+  float: left;
+  width: 70%;
+  height: 10%;
+  top: -302%;
+  left: 15%;
   cursor: pointer;
 }
-.home-nav-show-btn svg{
-  width: 70%;
-  height: 20%;
+
+.home-nav-show-btn > i {
   position: relative;
-  left: 20%;
-  padding-top: 150%;
+  float: left;
+}
+.home-nav-show-btn svg{
+  width: 100%;
+  height: 100%;
 }
 .home-nav-show-btn path, .home-nav-show-btn polygon {
   fill: #5A5A5A
 }
 
 .home-nav-show-text {
-  -ms-transform: rotate(90deg); /* IE 9 */
-  -webkit-transform: rotate(90deg); /* Safari */
+  position: relative;
+  float: left;
+  top: -295%;
+  right: 18%;
+  -ms-transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
   transform: rotate(90deg);
   font-size: 1.6em;
   font-family: "HelvNeue Light for IBM";
@@ -278,12 +291,13 @@ body {
 }
 
 .home-nav-div {
-  width: 32%;
+  width: 30%;
   height: 100%;
   background-color: #F7F7F7;
-  position: absolute;
-  top: 6.2%;
-  left: -500px;
+  position: relative;;
+  float: left;
+  top: -203%;
+  left: -6%;
   z-index: 11;
 }
 
@@ -295,8 +309,8 @@ body {
 }
 
 .home-nav-tab {
-  width : 93.2%;
-  margin: 0 3.4%;
+  width : 89%;
+  left: 5.5%;
   height: 14.2%;
   background-color: #F7F7F7;
   /*display: flex;*/
@@ -305,35 +319,35 @@ body {
 }
 
 .home-nav-tab-list {
-  width: 60%;
+  position: relative;
+  width: 70%;
   height: 100%;
-  display: inline-block;
   float: left;
 }
 
 .home-nav-tab-item {
-  width: 40%;
+  width: 50%;
   height: 100%;
-  font-family: "Helvetica Neue";
-  font-size: 2em;
   /*line-height: 1em;*/
   color: #4D4D4D;
   padding: 0;
   margin: 0;
-  text-align: center;
   display: inline-block
 }
 
-.home-nav-tab-item:not(:last-child) {
-  margin-right: 20%
+.home-nav-tab-item > h {
+  font-family: "Helvetica Neue";
+  font-size: 2em;
+  text-align: left;
+  padding: 0;
 }
 
-.home-nav-tab-item:hover {
+.home-nav-tab-item:hover > h {
   border-bottom: 0.15em solid #008ABF;
   cursor: pointer
 }
 
-.home-nav-tab-item[data-state="open"] {
+.home-nav-tab-item[data-state="open"] > h{
   border-bottom: 0.15em solid #008ABF;
   font-weight: bold
 }
@@ -360,8 +374,12 @@ body {
 }
 
 .home-team-nav {
-  width : 93.2%;
-  margin: 10% 3.4% 0 3.4%;
+  position: relative;
+  /*width : 93.2%;
+  margin: 10% 3.4% 0 3.4%;*/
+  width: 89%;
+  left: 5.5%;
+  top: 6%;
   height: 70%;
 }
 
@@ -1770,13 +1788,13 @@ body {
   position: relative;
   left: 5%;
   width: 90%;
-  height: 90%;
+  height: 75%;
   border-radius: 50%;
   border: 0.1em solid #FFFFFF;
   font-family: "HelvNeue Roman for IBM";
   font-size: 1.6em;
   color: #FFFFFF;
-  line-height: 3.2em;
+  line-height: 3em;
   cursor: pointer;
 }
 

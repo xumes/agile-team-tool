@@ -44,7 +44,7 @@ var HomePage = React.createClass({
   },
 
   handleResize: function() {
-    if (window.innerWidth >= 1440) {
+    if (window.innerWidth >= 1280) {
       var fontSize = (window.innerWidth/windowSize['width']) * windowSize['fontSize'];
       // windowSize['height'] = window.innerHeight;
       // windowSize['width'] = window.innerWidth;
@@ -75,12 +75,14 @@ var HomePage = React.createClass({
     if (team.team.type != 'squad') {
       $('#homeNavDiv').show();
       $('#homeNavDiv').css('left','0');
+      $('#homeNavDiv').css('top','-130%');
       $('#iterContent').hide();
-      $('#mainContent').css('left', '30.5%');
+      $('#mainContent').css('left', '28.5%');
       $('#hideNavBtn').hide();
     } else {
       $('#homeNavDiv').hide();
-      $('#homeNavDiv').css('left','-500px');
+      $('#homeNavDiv').css('left','-6%');
+      $('#homeNavDiv').css('top','-203%');
       $('#iterContent').show();
       $('#mainContent').css('left', '0');
       $('#hideNavBtn').show();
@@ -167,7 +169,7 @@ var HomePage = React.createClass({
     $('#homeNavDiv').show();
     $('.home-nav-show-btn').prop('disabled',true);
     $('#homeNavDiv').animate({
-      left: '+=500',
+      left: '-3.2%',
     },200,function(){
       $('.home-nav-show-btn').prop('disabled',false);
     });
@@ -216,7 +218,9 @@ var HomePage = React.createClass({
           </div>
         </div>
         <div id='homeNavShowBtnDiv' class='home-nav-show-btn-div'>
-          <InlineSVG class='home-nav-show-btn' src={src} onClick={this.showHomeNav}></InlineSVG>
+          <div class='home-nav-show-btn'>
+            <InlineSVG src={src} onClick={this.showHomeNav}></InlineSVG>
+          </div>
           <div class='home-nav-show-text'>
             Teams
           </div>
