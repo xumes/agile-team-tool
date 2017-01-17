@@ -93,48 +93,97 @@ paths:
               - startDate
               - endDate
             properties:
-              teamId:
+              _id:
                 type: string
-              iterationName:
-                type: string
+              createDate:
+                type: Date
+                required: [true, 'Creation date is required.']
+              createdByUserId:
+                type: String
+                required: [true, 'UserId of creator is required.']
+              createdBy:
+                type: String
+                required: [true, 'Name of creator is required.']
               startDate:
-                type: string
+                type: Date
+                required: [true, 'Start date of Iteration is required.']
               endDate:
-                type: string
+                type: Date
+                required: [true, 'End date of Iteration is required.']
+                validate: [validateDate, 'End date must be >= start date']
+              name:
+                type: String
+                required: [true, 'Name of Iteration is required.']
+              teamId:
+                type: Schema.Types.ObjectId
+                required: [true, 'TeamId of Iteration is required.']
               memberCount:
-                type: integer
-              committedStories:
-                type: integer
-              deliveredStories:
-                type: integer
-              committedStoryPoints:
-                type: integer
-              storyPointsDelivered:
-                type: integer
-              comment:
-                type: string
-              memberFTECount:
-                type: number
-              deployments:
-                type: integer
-              defectsStartBal:
-                type: integer
-              defects:
-                type: integer
-              defectsClosed:
-                type: integer
-              defectsEndBal:
-                type: integer
-              cycleTimeWIP:
-                type: number
+                type: Number
               cycleTimeInBacklog:
-                type: number
-              clientSatisfaction:
-                type: number
-                maximum: 4
+                type: Number
+                default: null
+              cycleTimeWIP:
+                type: Number
+                default: null
+              defectsEndBal:
+                type: Number
+                min: [0, 'Closing balance defects must be a number']
+                default: null
+              defectsClosed:
+                type: Number
+                default: null
+              defects:
+                type: Number
+                default: null
+              defectsStartBal:
+                type: Number
+                default: null
+              memberChanged:
+                type: Boolean
+                default: false
+              comment:
+                type: String
+                default: null
               teamSatisfaction:
-                type: number
-                maximum: 4
+                type: Number
+                min: [1, 'Team satisfaction should be between 1.0 - 4.0']
+                max: [4,'Team satisfaction should be between 1.0 - 4.0']
+                default: null
+              clientSatisfaction:
+                type: Number
+                min: [1, 'Client satisfaction should be between 1.0 - 4.0']
+                max: [4, 'Client satisfaction should be between 1.0 - 4.0']
+                default: null
+              deployments:
+                type: Number
+                default: null
+              storyPointsDelivered:
+                type: Number
+                default: null
+              committedStoryPoints:
+                type: Number
+                default: null
+              deliveredStories:
+                type: Number
+                default: null
+              committedStories: 
+                type: Number
+                default: null
+              status:
+                type: String
+                default: 'Not complete'
+              memberFte:
+                type: Number
+                default: null
+              updatedBy:
+                type: String
+                default: null
+              updatedByUserId:
+                type: String
+                default: null
+              updateDate:
+                type: Date
+                default: new Date()
       tags:
         - Iteration
       responses:
@@ -168,48 +217,95 @@ paths:
             required:
               - _id
             properties:
-              _id:
-                type: string
-              iterationName:
-                type: string
+              createDate:
+                type: Date
+                required: [true, 'Creation date is required.']
+              createdByUserId:
+                type: String
+                required: [true, 'UserId of creator is required.']
+              createdBy:
+                type: String
+                required: [true, 'Name of creator is required.']
               startDate:
-                type: string
+                type: Date
+                required: [true, 'Start date of Iteration is required.']
               endDate:
-                type: string
+                type: Date
+                required: [true, 'End date of Iteration is required.']
+                validate: [validateDate, 'End date must be >= start date']
+              name:
+                type: String
+                required: [true, 'Name of Iteration is required.']
+              teamId:
+                type: Schema.Types.ObjectId
+                required: [true, 'TeamId of Iteration is required.']
               memberCount:
-                type: integer
-              committedStories:
-                type: integer
-              deliveredStories:
-                type: integer
-              committedStoryPoints:
-                type: integer
-              storyPointsDelivered:
-                type: integer
-              comment:
-                type: string
-              memberFTECount:
-                type: number
-              deployments:
-                type: integer
-              defectsStartBal:
-                type: integer
-              defects:
-                type: integer
-              defectsClosed:
-                type: integer
-              defectsEndBal:
-                type: integer
-              cycleTimeWIP:
-                type: number
+                type: Number
               cycleTimeInBacklog:
-                type: number
-              clientSatisfaction:
-                type: number
-                maximum: 4
+                type: Number
+                default: null
+              cycleTimeWIP:
+                type: Number
+                default: null
+              defectsEndBal:
+                type: Number
+                min: [0, 'Closing balance defects must be a number']
+                default: null
+              defectsClosed:
+                type: Number
+                default: null
+              defects:
+                type: Number
+                default: null
+              defectsStartBal:
+                type: Number
+                default: null
+              memberChanged:
+                type: Boolean
+                default: false
+              comment:
+                type: String
+                default: null
               teamSatisfaction:
-                type: number
-                maximum: 4
+                type: Number
+                min: [1, 'Team satisfaction should be between 1.0 - 4.0']
+                max: [4,'Team satisfaction should be between 1.0 - 4.0']
+                default: null
+              clientSatisfaction:
+                type: Number
+                min: [1, 'Client satisfaction should be between 1.0 - 4.0']
+                max: [4, 'Client satisfaction should be between 1.0 - 4.0']
+                default: null
+              deployments:
+                type: Number
+                default: null
+              storyPointsDelivered:
+                type: Number
+                default: null
+              committedStoryPoints:
+                type: Number
+                default: null
+              deliveredStories:
+                type: Number
+                default: null
+              committedStories: 
+                type: Number
+                default: null
+              status:
+                type: String
+                default: 'Not complete'
+              memberFte:
+                type: Number
+                default: null
+              updatedBy:
+                type: String
+                default: null
+              updatedByUserId:
+                type: String
+                default: null
+              updateDate:
+                type: Date
+                default: new Date()
             example:
               _id: xxxxxxx
               status: xxxxxxx
@@ -275,63 +371,123 @@ definitions:
       _id:
         type: string
         description: Unique database objectid
-      teamId:
-        type: string
-        description: Unique identifier representing the team
-      iterationName:
-        type: string
-        description: Unique iteration name
+      createDate:
+        type: Date
+        required: [true, 'Creation date is required.']
+        description: record create daytime   date format 2016-01-04T00:00:00.000Z
+      createdByUserId:
+        type: String
+        required: [true, 'UserId of creator is required.']
+        desciprtion: record create user id (cnum = serial + 3 digit personal system code)
+      createdBy:
+        type: String
+        required: [true, 'Name of creator is required.']
+        description: record create user email
       startDate:
-        type: string
-        description: Iteration start date in mm/dd/yyyy format
+        type: Date
+        required: [true, 'Start date of Iteration is required.']
+        description: iteration start date - date format 2016-01-04T00:00:00.000Z
       endDate:
-        type: string
-        description: Iteration end date in mm/dd/yyyy format
+        type: Date
+        required: [true, 'End date of Iteration is required.']
+        validate: [validateDate, 'End date must be >= start date']
+        description: iteration end date date format 2016-01-04T00:00:00.000Z
+      name:
+        type: String
+        required: [true, 'Name of Iteration is required.']
+        description: iteration name
+      teamId:
+        type: Schema.Types.ObjectId
+        required: [true, 'TeamId of Iteration is required.']
+        description: iteration parent team id
       memberCount:
-        type: integer
-        description: Number of members in the team
-      memberFTECount:
-        type: number
-        description: Full time equivalent of team member allocation
-      committedStories:
-        type: integer
-        description: Number of committed stories
-      deliveredStories:
-        type: integer
-        description: Number of delivered stories
-      committedStoryPoints:
-        type: integer
-        description: Number of committed story points
-      storyPointsDelivered:
-        type: integer
-        description: Number of delivered story points
-      cycleTimeWIP:
-        type: number
-        description: Cycle time WIP
+        type: Number
+        description: number of team member in this iteration
       cycleTimeInBacklog:
-        type: number
-        description: Cycle time Backlog
-      deployments:
-        type: integer
-        description: Number of deployments done
-      defectsStartBal:
-        type: integer
-        description: Number of defects from previous iteration
-      defects:
-        type: integer
-        description: Number of defects found this iteration
+        type: Number
+        default: null
+        description: average days of iteration storys from backlog to planning 
+      cycleTimeWIP:
+        type: Number
+        default: null
+        description: average days of iteration storys from planning to delivery
+      defectsEndBal:
+        type: Number
+        min: [0, 'Closing balance defects must be a number']
+        default: null
+        description: number of defect by end of iteration
       defectsClosed:
-        type: integer
-        description: Number of defects resolved this iteration
-      clientSatisfaction:
-        type: number
-        description: Client satisfaction score
-      teamSatisfaction:
-        type: number
-        description: Team satisfaction score
+        type: Number
+        default: null
+        description: number of defect closed by this iteration
+      defects:
+        type: Number
+        default: null
+        description: number of defect carry over by last iteration 
+      defectsStartBal:
+        type: Number
+        default: null
+        description: number of opening defect by the start of this iteration
+      memberChanged:
+        type: Boolean
+        default: false
+        description: has team dynamic on member changed?
       comment:
-        type: string
-        description: Iteration comments
+        type: String
+        default: null
+        description: iteration note
+      teamSatisfaction:
+        type: Number
+        min: [1, 'Team satisfaction should be between 1.0 - 4.0']
+        max: [4,'Team satisfaction should be between 1.0 - 4.0']
+        default: null
+        description: team satisfaction - value from 1.0 - 4.0
+      clientSatisfaction:
+        type: Number
+        min: [1, 'Client satisfaction should be between 1.0 - 4.0']
+        max: [4, 'Client satisfaction should be between 1.0 - 4.0']
+        default: null
+        description: client satisfaction - value from 1.0 - 4.0
+      deployments:
+        type: Number
+        default: null
+        description: number of deployment in this iteration
+      storyPointsDelivered:
+        type: Number
+        default: null
+        description: number of story point delivered in this iteration
+      committedStoryPoints:
+        type: Number
+        default: null
+        description: number of committed story point in this iteration
+      deliveredStories:
+        type: Number
+        default: null
+        description: number of story delivered in this iteration
+      committedStories: 
+        type: Number
+        default: null
+        description: number of committed story in this iteration
+      status:
+        type: String
+        default: 'Not complete'
+        description: record status (deleted is soft delete)
+      memberFte:
+        type: Number
+        default: null
+        description: number of story delivered by FTE
+      updatedBy:
+        type: String
+        default: null
+        description: update user email id
+      updatedByUserId:
+        type: String
+        default: null
+        description: update users id (cnum - serial number + 3 digit personal system code)
+      updateDate:
+        type: Date
+        default: new Date()
+        description: update date date format 2016-01-04T00:00:00.000Z
   Error:
     type: object
     properties:

@@ -1616,7 +1616,7 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
   defectsEndSeries.data = [];
 
   var deploySeries = new Object();
-  deploySeries.name = 'Deployments per iteration';
+  deploySeries.name = 'Deployments';
   deploySeries.data = [];
 
   var clientStatSeries = new Object();

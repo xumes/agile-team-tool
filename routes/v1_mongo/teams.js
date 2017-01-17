@@ -6,7 +6,8 @@ var cors = require('cors');
 
 module.exports = function(app, includes) {
   getTeams = function (req, res) {
-    return teamModel.getTeamsByUserId(req.apiuser.userId)
+    //return teamModel.getTeamsByUserId(req.apiuser.userId)
+    return teamModel.getAllUserTeamsByUserId(req.apiuser.userId)
     .then(function(teams) {
       res.status(200).send(teams);
     })
