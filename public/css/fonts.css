@@ -1,0 +1,36 @@
+@font-face {
+  font-family: "UX1 Glyphicons";
+  font-style: normal;
+  font-weight: normal;
+  src: url("../fonts/ux1-glyphicons.woff") format("woff");
+}
+
+@font-face {
+  font-family: "HelvNeue Roman for IBM";
+  font-style: normal;
+  src: url("../fonts/helvetica-neue-roman.eot?") format("eot"), 
+    url("../fonts/helvetica-neue-roman.woff2") format("woff2"), 
+    url("../fonts/helvetica-neue-roman.woff") format("woff"), 
+    url("../fonts/helvetica-neue-roman.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "HelvNeue Medium for IBM";
+  font-style: normal;
+  font-weight: 500;
+  src: url("../fonts/helvetica-neue-medium.eot?") format("eot"), 
+    url("../fonts/helvetica-neue-medium.woff2") format("woff2"), 
+    url("../fonts/helvetica-neue-medium.woff") format("woff"), 
+    url("../fonts/helvetica-neue-medium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "HelvNeue Bold for IBM";
+  font-style: normal;
+  font-weight: 700;
+  src: url("../fonts/helvetica-neue-bold.eot?") format("eot"), 
+    url("../fonts/helvetica-neue-bold.woff2") format("woff2"), 
+    url("../fonts/helvetica-neue-bold.woff") format("woff"), 
+    url("../fonts/helvetica-neue-bold.ttf") format("truetype");
+}
+

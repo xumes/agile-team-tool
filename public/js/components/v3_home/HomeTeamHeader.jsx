@@ -198,7 +198,7 @@ var HomeTeamHeader = React.createClass({
                 <h>Team Bookmarks</h>
               </div>
             </div>
-            <HomeBookmark loadDetailTeam={self.props.loadDetailTeam} showBookmark={self.showBookmark}/>
+            <HomeBookmark loadDetailTeam={self.props.loadDetailTeam} showBookmark={self.showBookmark} updateTeamLink={self.props.updateTeamLink}/>
             <div class='home-team-header-btns' onClick={self.showAssessments} id='homeHeaderAseBtn'>
               <InlineSVG class='home-team-header-btn-img' src={require('../../../img/Att-icons/att-icons_main-nav-maturity.svg')}></InlineSVG>
               <div class='home-team-header-btn-title'>

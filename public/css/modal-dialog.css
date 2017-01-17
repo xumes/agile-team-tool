@@ -1,0 +1,416 @@
+
+/* BEGIN: ReactModal */
+.att-modal {
+  width: 320px;
+  background-color: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin:0 auto !important;
+  z-index: 12;
+  box-shadow:0 0 10px rgba(0, 0, 0, 0.16);
+  background-clip: padding-box;
+  border: none;
+  border-radius: 0;
+  line-height: 18px;
+}
+
+.att-modal-overlay {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background-color: rgba(0, 0, 0, 0.50);
+  z-index: 11;
+}
+
+.x1-ui-modal.modal button.close .glyphicon {
+  font-size: inherit;
+  color: #FFF;
+}
+
+.glyphicon-remove::before {
+  content: "\e604";
+}
+
+.glyphicon, .checkbox input[type="checkbox"] + span::after, 
+.checkbox-inline input[type="checkbox"] + span::after, 
+.switch input[type="checkbox"] + span, .switch-inline input[type="checkbox"] + span, 
+.breadcrumb > li + li::before, .alert::before, .alert-dismissable .close::before, .alert-dismissible .close::before {
+  color: #777677;
+  font-family: "UX1 Glyphicons";
+  font-size: 16px;
+}
+
+/* END: ReactModal */
+
+/* BEGIN: Important Link section */
+.implabel {
+  width: 279px;
+}
+
+.implink {
+  width: 279px;
+}
+
+.att-modal input, .att-modal p, .att-modal span, .att-modal select {
+  font-size: 10.5pt;
+  padding: 0px;
+}
+
+.ibm-row-form p {
+  margin-bottom: 8.3%;
+}
+
+.ibm-row-form label {
+  font-family: "HelvNeue Medium for IBM";
+  color: #323232;
+  font-size: 14px;
+  line-height: 18px;
+  outline: none;
+}
+
+.ibm-row-form .lblRoman {
+	font-family: "HelvNeue Roman for IBM";
+	line-height: 22px;
+}
+
+.glyphicon {
+  font-family: "UX1 Glyphicons";
+  font-size: 14px;
+}
+
+.glyphicon-remove::before {
+  content: "\e604";
+  color: #fff;
+}
+
+.iterspecific {
+  background-color: #eee;
+  font-family: "HelvNeue Medium for IBM";
+  font-size: 1.4em;
+  line-height: 18px;
+  text-align: left;
+}
+
+.iterspecific span.caption {
+  left: 1% !important;
+  padding-left: 11px;
+  padding-top: 10px;
+  width: 99% !important;
+}
+
+/* END: Important Link Modal */
+
+*::before, *::after {
+  box-sizing: border-box;
+}
+
+/* line 4642 */
+/*label { 
+  color: #323232;
+  font-family: "Helvetica Neue for IBM",Helvetica,Arial,sans-serif;
+  font-weight: 500;
+  margin: 0 10px 10px 0;
+}*/
+
+label {
+  max-width: 100%;
+}
+
+
+.modal-header::after {
+  clear: both;
+}
+
+.modal-header::before, .modal-header::after {
+  content: " ";
+  display: table;
+}
+
+.modal-footer::before, .modal-footer::after {
+  content: " ";
+  display: table;
+}
+
+.modal-footer::after {
+  clear: both;
+}
+
+.modal-footer {
+  border-top: 1px solid #e0e0e0;
+  padding: 30px 20px;
+  text-align: right;
+}
+
+.modal-footer {
+  border: medium none;
+  padding: 10px 20px;
+}
+
+.modal-footer .btn + .btn {
+	margin-left: 10px;
+	margin-bottom: 0;
+}
+
+.modal-title {
+  color: #ffffff;
+  display: inline-block;
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 44px;
+  font-family: "HelvNeue Bold for IBM" !important;
+}
+
+.modal-header .close { /* line 13835 */
+  line-height: 44px;
+  margin: 0; }
+  .modal-header .close:hover .glyphicon, .modal-header .close:hover .checkbox input[type="checkbox"] + span::after, .checkbox .modal-header .close:hover input[type="checkbox"] + span::after, .modal-header .close:hover
+  .checkbox-inline input[type="checkbox"] + span::after,
+  .checkbox-inline .modal-header .close:hover input[type="checkbox"] + span::after, .modal-header .close:hover .switch input[type="checkbox"] + span, .switch .modal-header .close:hover input[type="checkbox"] + span, .modal-header .close:hover
+  .switch-inline input[type="checkbox"] + span,
+  .switch-inline .modal-header .close:hover input[type="checkbox"] + span, .modal-header .close:hover .breadcrumb > li + li:before, .modal-header .close:hover .alert:before, .modal-header .close:hover .alert-dismissable .close:before, .alert-dismissable .modal-header .close:hover .close:before, .modal-header .close:hover
+  .alert-dismissible .close:before,
+  .alert-dismissible .modal-header .close:hover .close:before,
+  .modal-header .close:focus .glyphicon,
+  .modal-header .close:focus .checkbox input[type="checkbox"] + span::after, .checkbox
+  .modal-header .close:focus input[type="checkbox"] + span::after,
+  .modal-header .close:focus
+  .checkbox-inline input[type="checkbox"] + span::after,
+  .checkbox-inline
+  .modal-header .close:focus input[type="checkbox"] + span::after,
+  .modal-header .close:focus .switch input[type="checkbox"] + span, .switch
+  .modal-header .close:focus input[type="checkbox"] + span,
+  .modal-header .close:focus
+  .switch-inline input[type="checkbox"] + span,
+  .switch-inline
+  .modal-header .close:focus input[type="checkbox"] + span,
+  .modal-header .close:focus .breadcrumb > li + li:before,
+  .modal-header .close:focus .alert:before,
+  .modal-header .close:focus .alert-dismissable .close:before, .alert-dismissable
+  .modal-header .close:focus .close:before,
+  .modal-header .close:focus
+  .alert-dismissible .close:before,
+  .alert-dismissible
+  .modal-header .close:focus .close:before {
+    border-color: #FFFFFF; }
+  .modal-header .close .glyphicon, .modal-header .close .checkbox input[type="checkbox"] + span::after, .checkbox .modal-header .close input[type="checkbox"] + span::after, .modal-header .close
+  .checkbox-inline input[type="checkbox"] + span::after,
+  .checkbox-inline .modal-header .close input[type="checkbox"] + span::after, .modal-header .close .switch input[type="checkbox"] + span, .switch .modal-header .close input[type="checkbox"] + span, .modal-header .close
+  .switch-inline input[type="checkbox"] + span,
+  .switch-inline .modal-header .close input[type="checkbox"] + span, .modal-header .close .breadcrumb > li + li:before, .modal-header .close .alert:before, .modal-header .close .alert-dismissable .close:before, .alert-dismissable .modal-header .close .close:before, .modal-header .close
+  .alert-dismissible .close:before,
+  .alert-dismissible .modal-header .close .close:before {
+    color: #fff }
+
+.modal-title {
+  line-height: 44px;
+  margin: 0;
+}
+
+.modal-header {
+  background-color: #4178BE;
+  padding: 0 20px;
+  height: 44px;
+  min-height: initial;
+  border: none;
+}
+
+.modal-header {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0 20px;
+}
+
+.modal-header .close {
+  line-height: 44px;
+  margin: 0;
+}
+
+.sr-only { /* line 8732 */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.close { /* 11046 */
+  float: right;
+  font-size: 21px;
+  font-weight: normal;
+  line-height: 1;
+  color: #777677;
+  text-shadow: none;
+  opacity: 0.2;
+  filter: alpha(opacity=20); }
+  .close:hover, .close:focus { /* 11055 */
+    color: #777677;
+    text-decoration: none;
+    cursor: pointer;
+    opacity: 0.5;
+    filter: alpha(opacity=50); }
+
+button.close { /* 11062 */
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  -webkit-appearance: none; }
+
+
+.close { /* line 13225 */
+  float: right;
+  font-size: inherit;
+  line-height: inherit;
+  opacity: 1;
+  filter: alpha(opacity=100); }
+  .close:hover, .close:focus { /* line 13231 */
+    opacity: 1;
+    color: #fff;
+    filter: alpha(opacity=100); }
+
+button.close {
+  position: absolute;
+  right: 16px;
+  top: 0; }
+  button.close:hover span,
+  button.close:focus span {
+    border-color: #777677; opacity: 1;}
+  button.close .glyphicon, button.close .checkbox input[type="checkbox"] + span::after, .checkbox button.close input[type="checkbox"] + span::after, button.close
+  .checkbox-inline input[type="checkbox"] + span::after,
+  .checkbox-inline button.close input[type="checkbox"] + span::after, button.close .switch input[type="checkbox"] + span, .switch button.close input[type="checkbox"] + span, button.close
+  .switch-inline input[type="checkbox"] + span,
+  .switch-inline button.close input[type="checkbox"] + span, button.close .breadcrumb > li + li:before, button.close .alert:before, button.close .alert-dismissable .close:before, .alert-dismissable button.close .close:before, button.close
+  .alert-dismissible .close:before,
+  .alert-dismissible button.close .close:before {
+    border: 1px solid transparent;
+    padding: 3px;
+    color: #777677; }
+
+button.close {
+  background: transparent none repeat scroll 0 0;
+  border: 0 none;
+  cursor: pointer;
+  padding: 0;
+}
+
+button {
+  overflow: visible;
+}
+
+.x1-ui-modal.modal button.close .glyphicon {
+  color: #fff;
+  font-size: inherit;
+}
+
+.sr-only {
+  border: 0 none;
+  clip: rect(0px, 0px, 0px, 0px);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.modal-header .close .glyphicon, .modal-header .close .checkbox input[type="checkbox"] + span::after, .checkbox .modal-header .close input[type="checkbox"] + span::after, .modal-header .close .checkbox-inline input[type="checkbox"] + span::after, .checkbox-inline .modal-header .close input[type="checkbox"] + span::after, .modal-header .close .switch input[type="checkbox"] + span, .switch .modal-header .close input[type="checkbox"] + span, .modal-header .close .switch-inline input[type="checkbox"] + span, .switch-inline .modal-header .close input[type="checkbox"] + span, .modal-header .close .breadcrumb > li + li::before, .modal-header .close .alert::before, .modal-header .close .alert-dismissable .close::before, .alert-dismissable .modal-header .close .close::before, .modal-header .close .alert-dismissible .close::before, .alert-dismissible .modal-header .close .close::before {
+  color: #fff;
+}
+
+/* Line 13242 */
+button.close .glyphicon, button.close .checkbox input[type="checkbox"] + span::after, .checkbox button.close input[type="checkbox"] + span::after, button.close .checkbox-inline input[type="checkbox"] + span::after, .checkbox-inline button.close input[type="checkbox"] + span::after, button.close .switch input[type="checkbox"] + span, .switch button.close input[type="checkbox"] + span, button.close .switch-inline input[type="checkbox"] + span, .switch-inline button.close input[type="checkbox"] + span, button.close .breadcrumb > li + li::before, button.close .alert::before, button.close .alert-dismissable .close::before, .alert-dismissable button.close .close::before, button.close .alert-dismissible .close::before, .alert-dismissible button.close .close::before {
+  border: 1px solid transparent;
+  padding: 3px;
+}
+
+.glyphicon-xs, .breadcrumb > li + li::before, .alert-dismissable .close::before, .alert-dismissible .close::before {
+  font-size: 14px;
+}
+
+.glyphicon, .checkbox input[type="checkbox"] + span::after, .checkbox-inline input[type="checkbox"] + span::after, .switch input[type="checkbox"] + span, .switch-inline input[type="checkbox"] + span, .breadcrumb > li + li::before, .alert::before, .alert-dismissable .close::before, .alert-dismissible .close::before {
+  font-family: "UX1 Glyphicons";
+  font-size: 16px;
+}
+
+.glyphicon-remove::before {
+  content: "\e604";
+}
+
+.modal-body {
+  padding: 30px 20px;
+  position: relative;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+  display: block;
+}
+
+
+/* btn */
+.btn-primary {
+  background-color: #4178be;
+  border-color: #4178be;
+  color: #ffffff;
+}
+
+.btn {
+  border-radius: 0;
+  border-width: 2px !important ;
+  font-family: "Helvetica Neue Roman for IBM",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  height: 30px;
+  line-height: 26px;
+  padding: 0 20px;
+}
+
+.btn {
+  -moz-user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 18px;
+  margin-bottom: 0;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.btn-secondary,
+.btn-cancel {
+  background-color: #FFFFFF;
+  border-color: #4178BE;
+  color: #4178BE; }
+
+
+.btn-secondary:hover, .btn-secondary:focus, .btn-secondary.focus, .btn-secondary:active, .btn-secondary.active,
+.open > .btn-secondary.dropdown-toggle,
+.btn-cancel:hover,
+.btn-cancel:focus,
+.btn-cancel.focus,
+.btn-cancel:active,
+.btn-cancel.active,
+.open >
+.btn-cancel.dropdown-toggle {
+  background-color: #eef4fc;
+  border-color: #4178BE;
+  color: #4178BE; }
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .btn-primary:active, 
+  .btn-primary.active, .open > .btn-primary.dropdown-toggle {
+    background-color: #325c80;
+    border-color: #325c80;
+    color: #ffffff;
+}
+
+button, html input[type="button"], input[type="reset"], input[type="submit"] {
+  cursor: pointer;
+}

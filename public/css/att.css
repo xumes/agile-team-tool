@@ -397,10 +397,10 @@ div.ibm-rule {
   margin: 7px 0 5px;
 }
 
-p , input, textarea, span, select, table,.ibm-data-table caption {
+/*p , input, textarea, span, select, table,.ibm-data-table caption {
   font-size: 10.5pt;
   padding: 0 0 5px;
-}
+}*/
 
 textarea[disabled] {
   background-color: #ececec;
@@ -1405,10 +1405,10 @@ header nav ul li a:hover {
   opacity: 0.75;
 }
 
-input[type='text'] {
+/* input[type='text'] {
   line-height: 2.5rem !important;
   height: 2.5rem !important;
-}
+}*/
 
 .ibm-alternate {
   border-color: #e0e0e0 !important;

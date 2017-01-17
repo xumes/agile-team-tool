@@ -5,6 +5,7 @@ var HomeNav = require('./HomeNav.jsx');
 var HomeContent = require('./HomeContent.jsx');
 var HomeIterContent = require('./HomeIterContent.jsx');
 var InlineSVG = require('svg-inline-react');
+var update = require('immutability-helper');
 var windowSize = {
   'height': 768,
   'width': 1440,
@@ -156,6 +157,21 @@ var HomePage = React.createClass({
     });
   },
 
+  updateTeamLink: function(teamId, linkData) {
+    var self = this;
+    var currentLinkData = self.state.loadDetailTeam;
+    if (teamId === currentLinkData.team._id) {
+      var updatedLinkData = update(currentLinkData, {
+        team: {
+          links: {
+            $set: linkData
+          }
+        }
+      });
+      self.setState({loadDetailTeam: updatedLinkData});
+    }
+  },
+
   render: function() {
     var pageStyle = {
       'width': '100%',
@@ -182,7 +198,7 @@ var HomePage = React.createClass({
       <div style={pageStyle}>
         <div class='ibm-columns' style={columnsStyle}>
           <div id='mainContent' class='ibm-col-6-4' style={sectionTwoStyle}>
-            <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler}/>
+            <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler} updateTeamLink={this.updateTeamLink} />
           </div>
           <div id='iterContent' class='ibm-col-6-2' style={sectionOneStyle}>
             <HomeIterContent loadDetailTeam={this.state.loadDetailTeam} selectedIter={this.state.selectedIter} iterChangeHandler={this.iterChangeHandler}/>
