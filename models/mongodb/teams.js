@@ -71,8 +71,7 @@ var LinkSchema = new Schema({
 var TeamSchema = new Schema({
   name: {
     type: String,
-    required: [true, 'Team name is required.'],
-    unique: true //declares unique index if collection is empty
+    required: [true, 'Team name is required.']
   },
   pathId: {
     type: String,
@@ -170,7 +169,7 @@ TeamSchema.pre('update', function() {
 //validate hooks on path. might be better to use a pre hook if this causes issues
 TeamSchema.path('name').validate(function(value, done) {
   // console.log('team name validation', this.pathId);
-  this.model('Team').count({name: value}, function(err, count) {
+  this.model('Team').count({name: value, docStatus:{$ne:'delete'}}, function(err, count) {
     if (err) return done(err);
     done(!count);
   });
@@ -1240,14 +1239,15 @@ module.exports.softDelete = function(teamDoc, user) {
           promiseArray.push(Iterations.softDelete(iter._id, user));
         });
         _.each(assessments, function(as){
+          console.log(as._id, user);
           promiseArray.push(Assessments.softDelete(as._id, user));
         });
-        promiseArray.push(Team.update({'_id': teamId}, {'$set': updatedDoc}).exec());
         return Promise.all(promiseArray);
       })
       .then(function(results){
         var teams = results[0];
         var promiseArray = [];
+        promiseArray.push(Team.update({'_id': teamId}, {'$set': updatedDoc}).exec());
         _.each(teams, function(team){
           var updateTeamDoc = {};
           var tid = team._id;

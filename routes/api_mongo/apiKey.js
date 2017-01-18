@@ -1,3 +1,4 @@
+var _ = require('underscore');
 var util = require('../../helpers/util');
 var apiKeysModel = require('../../models/mongodb/apiKeys');
 
@@ -17,7 +18,7 @@ module.exports = function(app, includes) {
       });
   };
 
-  getApiKeyByUser = /* instabul ingore next */ function(req, res) {
+  getUserApikeyByUser = /* instabul ingore next */ function(req, res) {
     apiKeysModel.getUserApikeyByUser(req.session['user'])
       .then(function(result){
         if (!_.isEmpty(result)) {
@@ -55,7 +56,7 @@ module.exports = function(app, includes) {
   /* instabul ingore next */
   app.get('/api/apiKey/apiKey', [includes.middleware.auth.requireLogin], getApiKey);
   /* instabul ingore next */
-  app.get('/api/apiKey/apiKeyByUser', [includes.middleware.auth.requireLogin], getApiKeyByUser);
+  app.get('/api/apiKey/apiKeyByUser', [includes.middleware.auth.requireLogin], getUserApikeyByUser);
   /* instabul ingore next */
   app.delete('/api/apiKey/apikey', [includes.middleware.auth.requireLogin], deleteApiKey);
 };

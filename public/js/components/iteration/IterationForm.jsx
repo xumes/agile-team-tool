@@ -39,6 +39,7 @@ var initData = {
   'updatedByUserId':'',
   'updateDate':''
 };
+var utils = require('../utils.jsx');
 
 var invalidBorder = '#f00';
 var invalidBackground = '';
@@ -233,38 +234,16 @@ getIterationErrorPopup: function(errors) {
     var frmElement = fields[mdlField];
     if (errors[mdlField]) {
       if (frmElement) {
-        setFieldErrorHighlight(frmElement);
+        utils.setFieldErrorHighlight(frmElement);
       }
       errorLists = errorLists + errors[mdlField].message + '\n';
     } else {
       if (frmElement) {
-        clearFieldErrorHighlight(frmElement);
+        utils.clearFieldErrorHighlight(frmElement);
       }
     }
   });
     return errorLists;
-  },
-
-  setFieldErrorHighlight: function (id) {
-    if ($('#' + value).is('select')) {
-      $($('#select2-' + id + '-container').parent()).css('border-color', invalidBorder);
-      $($('#select2-' + id + '-container').parent()).css('background', invalidBackground);
-    }
-    else {
-      $('#' + id).css('border-color', invalidBorder);
-      $('#' + id).css('background', invalidBackground);
-    }
-  },
-
-  clearFieldErrorHighlight: function (id) {
-    if ($('#' + id).is('select')) {
-      $($('#select2-' + id + '-container').parent()).css('border-color', '');
-      $($('#select2-' + id + '-container').parent()).css('background', '');
-    }
-    else {
-      $('#' + id).css('border-color', '');
-      $('#' + id).css('background', '');
-    }
   },
 
   clearHighlightedIterErrors: function () {
@@ -293,7 +272,7 @@ getIterationErrorPopup: function(errors) {
     ];
 
     for (j = 0; j < fields.length; j++) {
-      clearFieldErrorHighlight(fields[j]);
+      utils.clearFieldErrorHighlight(fields[j]);
     }
   },
 
@@ -376,7 +355,7 @@ getIterationErrorPopup: function(errors) {
 
     return (
       <form className='ibm-column-form'>
-        <Management updateForm={this.populateForm} enableFields={this.state.enableFields}  ref='management' iteration={this.state.iteration} updateField={this.updateField} readOnlyAccess={this.readOnlyAccess} isReadOnly={this.state.readOnlyAccess} clearError={this.clearFieldErrorHighlight} defectBal={this.getDefectsStartBalance} teamReset={this.teamReset} updateAllocation={this.updateAllocation} processIteration={this.processIteration} updateFields={this.updateFields}/>
+        <Management updateForm={this.populateForm} enableFields={this.state.enableFields}  ref='management' iteration={this.state.iteration} updateField={this.updateField} readOnlyAccess={this.readOnlyAccess} isReadOnly={this.state.readOnlyAccess} clearError={utils.clearFieldErrorHighlight} defectBal={this.getDefectsStartBalance} teamReset={this.teamReset} updateAllocation={this.updateAllocation} processIteration={this.processIteration} updateFields={this.updateFields}/>
 
         <Throughput enableFields={this.state.enableFields} ref='throughput' iteration={this.state.iteration}  updateField={this.updateField}/>
 
@@ -384,7 +363,7 @@ getIterationErrorPopup: function(errors) {
 
         <Defect enableFields={this.state.enableFields} ref='defect' iteration={this.state.iteration} updateField={this.updateField} updateDefectBal={this.updateFields} isReadOnly={this.state.readOnlyAccess}/>
 
-        <Additional enableFields={this.state.enableFields} ref='additional' iteration={this.state.iteration} updateField={this.updateField} clearError={this.clearFieldErrorHighlight}/>
+        <Additional enableFields={this.state.enableFields} ref='additional' iteration={this.state.iteration} updateField={this.updateField} clearError={utils.clearFieldErrorHighlight}/>
 
         <Buttons ref='buttons' iteration={this.state.iteration} parentUpdate= {this.updateIterationInfo} addBtnDisable={this.state.addBtnDisable} updateBtnDisable={this.state.updateBtnDisable}/>
 

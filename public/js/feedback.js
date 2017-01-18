@@ -13,8 +13,27 @@ jQuery(function($) {
   });
 });
 
+function getTeamNames(_callback, args) {
+  $.ajax({
+    type: 'GET',
+    url: '/api/teams/names'
+  }).done(function(data) {
+    args.push(data);
+
+    if (typeof _callback === 'function') {
+      _callback.apply(this, args);
+    }
+  }).fail(function() {
+    if (typeof _callback === 'function') {
+      _callback.apply(this, args);
+    }
+  });
+}
+
 function teamNamesHandler(teams) {
-  teams = sortAgileTeamsByName(teams);
+  teams = _.sortBy(teams, function(team) {
+    return team.name;
+  });
   var listOption = [];
   for (var i = 0; i < teams.length; i++) {
     var option = [];
@@ -96,71 +115,62 @@ function launchFeeback() {
   });
 }
 
-function validateEmail() {
-  var isValid = false;
-  var ids = $('#feedback_cc').val();
-  if (ids === '' || ids.indexOf('/') == -1) {
-    isValid = true;
-  }
-  if (ids !== '') {
-    ids = ids.split(',');
-    $.each(ids, function(index, item) {
-      if (item.length > 1 && item !== ' ') {
-        item = item.replace(/^\s\s*/, '').replace(/\s*$/, '');
-        if (item.indexOf('/') > 0) {
-          valCount += 1;
-          getEmail(item);
-        } else {
-          if (ccIds.indexOf(item) == -1) {
-            ccIds.push(item);
-          }
-        }
-      }
-    });
-  }
-  return isValid;
-}
-
-
-//TODO remove ?
-function getEmail(notesId) {
-  var facesRoot = 'https://faces.w3ibm.mybluemix.net/api/';
-  var facesFunc = 'find/?format=faces&q=notes/id:' + encodeURIComponent(notesId);
-  var facesURL = facesRoot + facesFunc;
-
-  $.ajax({
-    'global': false,
-    'cache': false,
-    'url': facesURL,
-    'timeout': 5000,
-    'jsonp': 'callback',
-    'scriptCharset': 'UTF-8',
-    'success': function(data) {
-      if (data.persons.length === 0) {
-        showMessagePopup('Your feedback could not be submitted because at least one of the cc email addresses is not in internet address or NotesID format.');
-        return false;
-      }
-      var facesPerson = data.persons[0].person;
-      if (facesPerson['notes-id'] == notesId) {
-        var emailId = facesPerson.email;
-        if (ccIds.indexOf(emailId) == -1) {
-          ccIds.push(emailId);
-        }
-        valCount--;
-        if (valCount <= 0 && !hasError) {
-          processFeedback();
-        }
-      } else {
-        hasError = true;
-        showMessagePopup('Your feedback could not be submitted because at least one of the cc email addresses is not in internet address or NotesID format.');
-        return false;
-      }
-    },
-    'error': function(data, status, error) {
-      valCount--;
-      hasError = true;
-      showMessagePopup(status);
-      return false;
+function setSelectOptions(elementId, listOption, firstOption, lastOption, selectedOption) {
+  console.log('setSelectOptions');
+  $('#' + elementId).empty();
+  var selectedText = '';
+  var option = document.createElement('option');
+  if (firstOption != undefined) {
+    option.setAttribute('value', firstOption[0]);
+    if (firstOption[0] == selectedOption || firstOption[1] == selectedOption) {
+      option.setAttribute('selected', 'selected');
+      selectedText = firstOption[1];
     }
-  });
+    option.appendChild(document.createTextNode(firstOption[1]));
+    $('#' + elementId).append(option);
+
+  } else {
+    option.setAttribute('value', '');
+    if (selectedOption == '' || selectedOption == null) {
+      option.setAttribute('selected', 'selected');
+      selectedText = 'Select one';
+    }
+    option.appendChild(document.createTextNode('Select one'));
+    $('#' + elementId).append(option);
+  }
+
+  if (listOption != undefined) {
+    for (var i = 0; i < listOption.length; i++) {
+      option = document.createElement('option');
+      if (listOption[i][0] == selectedOption || listOption[i][1] == selectedOption) {
+        option.setAttribute('value', listOption[i][0]);
+        option.setAttribute('selected', 'selected');
+        option.appendChild(document.createTextNode(listOption[i][1]));
+        selectedText = listOption[i][1];
+      } else {
+        option.setAttribute('value', listOption[i][0]);
+        option.appendChild(document.createTextNode(listOption[i][1]));
+      }
+
+      $('#' + elementId).append(option);
+    }
+  }
+
+  if (lastOption != undefined) {
+    option = document.createElement('option');
+    option.setAttribute('value', lastOption[0]);
+    if (lastOption[0] == selectedOption || lastOption[1] == selectedOption) {
+      option.setAttribute('selected', 'selected');
+      selectedText = lastOption[1];
+    }
+    option.appendChild(document.createTextNode(lastOption[1]));
+    $('#' + elementId).append(option);
+
+  }
+  //IBMCore.common.widget.selectlist.init("#" + elementId);
+  //$("#" + elementId).trigger("change");
+  //alert("defaulting value to : " + selectedText);
+  $('#select2-' + elementId + '-container').text(selectedText);
+  $('#select2-' + elementId + '-container').attr('title', selectedText);
+  $('#' + elementId).attr('aria-label',elementId);
 }

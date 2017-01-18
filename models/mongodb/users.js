@@ -145,13 +145,11 @@ var users = {
       var team = require('./teams'); // declaring locally to avoid cyclic issues causing method not found
       team.getUserTeamsByUserId(userId)
         .then(function(teams) {
-          // console.log(teamId, teams);
           var isMember = false;
           _.each(teams, function(team){
             if (_.isEqual((team).toString(), teamId.toString()))
               isMember = true;
           });
-          // console.log(isMember);
           return resolve(isMember);
         })
         .catch( /* istanbul ignore next */ function(err) {
@@ -169,7 +167,6 @@ var users = {
       promiseArray.push(users.isTeamMember(userId, teamId));
       Promise.all(promiseArray)
         .then(function(results){
-          // console.log(results);
           var systemAccess = 'none';
           var userAccess = 'none';
           var teamAccess = false;
@@ -225,7 +222,6 @@ var users = {
         newUser.location.site = user.location.site || null;
         newUser.location.timezone = user.location.timezone || null;
       }
-      // console.log('creating user ', newUser);
       User.create(newUser)
       // getUserFromFaces(newUser.email)
       //   .then(function(facesInfo){

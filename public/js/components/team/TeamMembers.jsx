@@ -195,7 +195,7 @@ var TeamMembers = React.createClass({
         $('#memberListAction').val('').change();
     } else if (action == 'update') {
       if ($('input[name="member"]:checked').length > 1) {
-        showMessagePopup('Only one member can be selected for update.');
+        alert('Only one member can be selected for update.');
         $('#memberListAction').val('').change();
 
       } else {

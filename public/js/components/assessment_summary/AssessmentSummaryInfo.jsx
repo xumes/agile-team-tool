@@ -1,6 +1,6 @@
 var React = require('react');
 var api = require('../api.jsx');
-var utils = require('../../utils');
+var utils = require('../utils.jsx');
 var _  = require('underscore');
 var displayType = {'display': 'none'};
 

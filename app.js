@@ -20,7 +20,6 @@ var favicon = require('serve-favicon');
 var helmet = require('helmet');
 var httpProxy = require('http-proxy');
 var bundle = require('./bundle');
-var initCloudant = require('./cloudant/init');
 var cors = require('cors');
 
 /* istanbul ignore if */
@@ -31,7 +30,6 @@ var cors = require('cors');
     console.log(settings);
   }
   console.log('\n');
-  initCloudant.init();
 });
 */
 
