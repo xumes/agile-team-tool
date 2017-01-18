@@ -1,5 +1,6 @@
 var _ = require('underscore');
 var React = require('react');
+var utils = require('../utils.jsx');
 
 var TeamErrorValidationHandler = React.createClass({
   getInitialState: function() {
@@ -25,16 +26,17 @@ var TeamErrorValidationHandler = React.createClass({
   handleErrors: function() {
     var errors = this.state.errors;
     var formFields = this.state.formFields;
+    console.log(errors,formFields);
     var msg = '';
     var msgList = [];
     var frmList = [];
     // find all db related errors
     _.each(formFields, function(f) {
       if (frmList.indexOf(f.id) == -1)
-        clearFieldErrorHighlight(f.id);
+        utils.clearFieldErrorHighlight(f.id);
 
       if (!_.isEmpty(errors) && !_.isEmpty(errors[f.field])) {
-        setFieldErrorHighlight(f.id);
+        utils.setFieldErrorHighlight(f.id);
         if (msgList.indexOf(f.field) == -1) {
           msgList.push(f.field);
           frmList.push(f.id);
@@ -51,29 +53,7 @@ var TeamErrorValidationHandler = React.createClass({
       }
     });
     if (msg != '')
-      showMessagePopup(msg);
-  },
-  setFieldErrorHighlight: function(id) {
-    var borderColor = 'red';
-    var backgroundColor = '';
-    if ($('#' + id).is('select')) {
-      $($('#select2-' + id + '-container').parent()).css('border-color', borderColor);
-      $($('#select2-' + id + '-container').parent()).css('background', backgroundColor);
-    } else {
-      $('#' + id).css('background', backgroundColor);
-      $('#' + id).css('border-color', borderColor);
-    }
-  },
-  clearFieldErrorHighlight: function(id) {
-    var borderColor = '';
-    var backgroundColor = '';
-    if ($('#' + id).is('select')) {
-      $($('#select2-' + id + '-container').parent()).css('border-color', borderColor);
-      $($('#select2-' + id + '-container').parent()).css('background', backgroundColor);
-    } else {
-      $('#' + id).css('background', backgroundColor);
-      $('#' + id).css('border-color', borderColor);
-    }
+      alert(msg);
   },
   render: function() {
     return(

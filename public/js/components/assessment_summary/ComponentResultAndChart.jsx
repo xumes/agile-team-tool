@@ -1,6 +1,6 @@
 var React = require('react');
 var api = require('../api.jsx');
-var utils = require('../../utils');
+var utils = require('../utils.jsx');
 var ProjectComponent = require('./ProjectComponent.jsx');
 var ComponentResultItem = require('./ComponentResultItem.jsx');
 var OverallResultItem = require('./OverallResultItem.jsx');
@@ -82,7 +82,7 @@ var ComponentResultAndChart = React.createClass({
           // var aSubmitDate = a['submittedDate'].split(' ')[0].replace(/-/g, '/') + ' ' + a['submittedDate'].split(' ')[1];
           // var bSubmitDate = b['submittedDate'].split(' ')[0].replace(/-/g, '/') + ' ' + b['submittedDate'].split(' ')[1];
           var aSubmitDate = a['submittedDate'];
-          var bSubmitDate = b['submittedDate'];          
+          var bSubmitDate = b['submittedDate'];
           if (new Date(bSubmitDate).getTime() == new Date(aSubmitDate).getTime()) {
             return 1;
           } else {

@@ -1,7 +1,0 @@
-{
-	"index": {
-		"fields": ["parent_team_id"]
-	},
-	"name": "parent-team-index",
-	"type": "json"
-}

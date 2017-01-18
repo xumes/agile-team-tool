@@ -1,12 +1,12 @@
 var Promise = require('bluebird');
 var _ = require('underscore');
 var moment = require('moment');
+var utils = require('../utils.jsx');
 
 module.exports.teamAssessmentListHander = function(teamId, teamAssessments, teamAccess) {
   $('#gotoAssesmentList').attr('disabled', 'disabled');
 
   var allowAccess = teamAccess;
-  //var listOption = getAssessmentDropdownList(sortAssessments(teamAssessments));
   var listOption = assessmentDropdownList(teamAssessments);
 
   var draftExist = false;
@@ -47,7 +47,7 @@ module.exports.teamAssessmentListHander = function(teamId, teamAssessments, team
     listOption = newOption;
   }
 
-  setSelectOptions('gotoAssesmentList', listOption, null, null, null);
+  utils.setSelectOptions('gotoAssesmentList', listOption, null, null, null);
   IBMCore.common.widget.selectlist.init('#gotoAssesmentList');
 
   $('#gotoAssesmentList').removeAttr('disabled');

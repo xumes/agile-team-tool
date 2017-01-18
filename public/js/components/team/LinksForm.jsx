@@ -3,7 +3,7 @@ var api = require('../api.jsx');
 var _ = require('underscore');
 var LinksButtonCtl = require('./LinksButtonCtl.jsx');
 var LinksSelectDropdown = require('./LinksSelectDropdown.jsx');
-var utils = require('../../utils');
+var utils = require('../utils.jsx');
 
 var LinksForm = React.createClass({
 

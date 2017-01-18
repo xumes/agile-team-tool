@@ -12,10 +12,11 @@ var TeamLastUpdate = require('./TeamLastUpdate.jsx');
 var ModalLinkLabelForm = require('./ModalLinkLabelForm.jsx');
 var api = require('../api.jsx');
 var update = require('immutability-helper');
+var utils = require('../utils.jsx');
 
 var TeamPage = React.createClass({
   getInitialState: function() {
-    var urlParams = getJsonParametersFromUrl();
+    var urlParams = utils.getJsonParametersFromUrl();
     var id =  _.isEmpty(urlParams) || _.isEmpty(urlParams.id) ? 'new' : urlParams.id;
     return {
       defaultTeam: id,
@@ -29,6 +30,7 @@ var TeamPage = React.createClass({
       this.getSelectedTeam(this.state.defaultTeam);
   },
   showHideSection: function(id) {
+    console.log('showHideSection:' + id);
     if ($('#' + id + ' a').hasClass('ibm-show-active')) {
       $('#' + id + ' a').removeClass('ibm-show-active');
       $('#' + id + ' h2').removeClass('ibm-showing');

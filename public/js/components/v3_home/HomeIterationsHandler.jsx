@@ -287,8 +287,8 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAcc
 
   }
 
-  var teamMemMax = getMax(teamMemCountArr);
-  var fteMax = getMax(fteCountArr);
+  var teamMemMax = Math.max.apply(Math, teamMemCountArr);
+  var fteMax = Math.max.apply(Math, fteCountArr);
   var yMax = Math.max(teamMemMax, fteMax);
   if (yMax <= 12) {
     yMax = 12;

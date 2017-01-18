@@ -1,3 +1,4 @@
+'use strict';
 var settings = require('../../settings');
 var util = require('../../helpers/util');
 var loggers = require('../../middleware/logger');
@@ -6,7 +7,7 @@ var action, authType;
 module.exports = function(app, includes) {
   var render = includes.render;
 
-  showLogin = function(req, res) {
+  var showLogin = function(req, res) {
     authType = settings.authType;
     if (authType === 'ldap-login') {
       action = '/auth';
@@ -15,7 +16,7 @@ module.exports = function(app, includes) {
     else if (authType === 'saml') {
       return res.redirect('/auth/saml/ibm');
     }
-    json = {
+    var json = {
       'pageTitle': 'Login',
       'action': action,
       'authType': authType
@@ -43,7 +44,7 @@ module.exports = function(app, includes) {
   };
 
   /* istanbul ignore next */
-  authSaml = function(req, res, next) {
+  var authSaml = function(req, res, next) {
     passportAuth = includes.passport.authenticate('w3-saml', function(err, user, info) {
       if (err) {
         loggers.get('auth').error('Unable to login via SAML err=', err);

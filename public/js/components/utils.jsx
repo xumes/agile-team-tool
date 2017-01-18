@@ -86,12 +86,14 @@ module.exports.showDateDDMMYYYYV2 = function(formatDate, withoutSpacing) {
 
 module.exports.showDateMMDDYYYY = function(formatDate) {
   var date = new Date(formatDate.replace(/-/g, '/'));
-  var month = date.getUTCMonth() + 1;
-  month = month.toString().length < 2 ? '0' + month.toString() : month.toString();
-  var day = date.getUTCDate();
-  day = day.toString().length < 2 ? '0' + day.toString() : day.toString();
-  var newDateFormate = month + '/' + day + '/' + date.getUTCFullYear();
-  return newDateFormate;
+  return moment.utc(date).format('MM/DD/YYYY');
+
+  // var month = date.getUTCMonth() + 1;
+  // month = month.toString().length < 2 ? '0' + month.toString() : month.toString();
+  // var day = date.getUTCDate();
+  // day = day.toString().length < 2 ? '0' + day.toString() : day.toString();
+  // var newDateFormate = month + '/' + day + '/' + date.getUTCFullYear();
+  // return newDateFormate;
 };
 
 module.exports.showDateUTC = function(formatDate) {
@@ -100,3 +102,71 @@ module.exports.showDateUTC = function(formatDate) {
   var utcTime = moment.utc(formatDate).format('MMM DD, YYYY, HH:mm (z)');
   return utcTime;
 };
+
+/**
+ * Updates the HTML select element options based on the values passed in the parameter.
+ *
+ * @param elementId - HTML select element id
+ * @param listOption - array of [value, description] options
+ * @param firstOption - [value, description] to show as the first option
+ * @param lastOption - [value, description] to show as the last option
+ * @param selectedOption - value or description of the selected option to default
+ */
+module.exports.setSelectOptions = function(elementId, listOption, firstOption, lastOption, selectedOption) {
+  $('#' + elementId).empty();
+  var selectedText = '';
+  var option = document.createElement('option');
+  if (firstOption != undefined) {
+    option.setAttribute('value', firstOption[0]);
+    if (firstOption[0] == selectedOption || firstOption[1] == selectedOption) {
+      option.setAttribute('selected', 'selected');
+      selectedText = firstOption[1];
+    }
+    option.appendChild(document.createTextNode(firstOption[1]));
+    $('#' + elementId).append(option);
+
+  } else {
+    option.setAttribute('value', '');
+    if (selectedOption == '' || selectedOption == null) {
+      option.setAttribute('selected', 'selected');
+      selectedText = 'Select one';
+    }
+    option.appendChild(document.createTextNode('Select one'));
+    $('#' + elementId).append(option);
+  }
+
+  if (listOption != undefined) {
+    for (var i = 0; i < listOption.length; i++) {
+      option = document.createElement('option');
+      if (listOption[i][0] == selectedOption || listOption[i][1] == selectedOption) {
+        option.setAttribute('value', listOption[i][0]);
+        option.setAttribute('selected', 'selected');
+        option.appendChild(document.createTextNode(listOption[i][1]));
+        selectedText = listOption[i][1];
+      } else {
+        option.setAttribute('value', listOption[i][0]);
+        option.appendChild(document.createTextNode(listOption[i][1]));
+      }
+
+      $('#' + elementId).append(option);
+    }
+  }
+
+  if (lastOption != undefined) {
+    option = document.createElement('option');
+    option.setAttribute('value', lastOption[0]);
+    if (lastOption[0] == selectedOption || lastOption[1] == selectedOption) {
+      option.setAttribute('selected', 'selected');
+      selectedText = lastOption[1];
+    }
+    option.appendChild(document.createTextNode(lastOption[1]));
+    $('#' + elementId).append(option);
+
+  }
+  //IBMCore.common.widget.selectlist.init("#" + elementId);
+  //$("#" + elementId).trigger("change");
+  //alert("defaulting value to : " + selectedText);
+  $('#select2-' + elementId + '-container').text(selectedText);
+  $('#select2-' + elementId + '-container').attr('title', selectedText);
+  $('#' + elementId).attr('aria-label',elementId);
+}
