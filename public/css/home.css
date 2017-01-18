@@ -1798,9 +1798,122 @@ body {
   cursor: pointer;
 }
 
-/*.home-assessment-summary-btn > button {
+.team-member-add-block {
+  position: fixed;
+  left: 39%;
+  top: 21%;
+  width: 22vw;
+  height: 30.93vw;
+  min-width: 281.6px;
+  min-height: 417.6px;
+  background-color: #FFFFFF;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.16);
+}
+
+.team-member-add-block-header {
   position: relative;
-  left: 10%;
-  width: 80%;
-  height: 80%;
+  background-color: #4178BE;
+  height: 10%;
+  width: 100%;
+}
+.team-member-add-block-header > h {
+  position: relative;
+  float: left;
+  top: 35%;
+  left: 5%;
+  font-family: "HelvNeue Bold for IBM";
+  font-size: 1.5em;
+  color: #FFFFFF;
+}
+.team-member-add-block-header > span {
+  position: relative;
+  float: right;
+  top: 35%;
+  right: 5%;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 2em;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+
+.typeahead-results {
+  z-index: 1040 !important;
+  width: 20% !important;
+  min-width: 250px;
+}
+
+.team-member-add-block-content {
+  position: relative;
+  float: left;
+  height: 70%;
+  width: 100%;
+}
+
+.team-member-add-block-content-name {
+  position: relative;
+  float: left;
+  height: 20%;
+  width: 90%;
+  left: 5%;
+  top: 10%;
+}
+
+.team-member-add-block-content-name > label {
+  position: relative;
+  float: left;
+  height: 50%;
+  width: 100%;
+  font-family: "HelvNeue Medium for IBM";
+  font-size: 1.4em;
+  line-height: 1.8em;
+  color: #323232;
+}
+
+.team-member-add-block-content-name > input {
+  position: relative;
+  float: left;
+  height: 50%;
+  width: 100%;
+  border: 0.1em solid #777677;
+  text-indent: 1em;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.4em;
+  line-height: 1.8em;
+  color: #5A5A5A;
+}
+
+.team-member-add-block-content-role {
+  position: relative;
+  float: left;
+  height: 30%;
+  width: 90%;
+  left: 5%;
+  top: 20%;
+}
+
+.team-member-add-block-content-role > label {
+  position: relative;
+  float: left;
+  height: 33%;
+  width: 100%;
+  font-family: "HelvNeue Medium for IBM";
+  font-size: 1.4em;
+  line-height: 1.8em;
+  color: #323232;
+}
+
+.team-member-add-block-content-role > div {
+  position: relative;
+  float: left;
+  height: 33%;
+  width: 100%;
+}
+
+/*.team-member-add-block-content-role .Select-control {
+  border: 0.1em solid #777677 !important;
+  border-radius: 0% !important;
+}
+.team-member-add-block-content-role > div span {
+  padding: 0;
 }*/

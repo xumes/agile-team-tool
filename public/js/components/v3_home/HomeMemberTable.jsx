@@ -2,9 +2,13 @@ var React = require('react');
 var api = require('../api.jsx');
 var _ = require('underscore');
 var InlineSVG = require('svg-inline-react');
+var Modal = require('react-overlays').Modal;
 
 
 var HomeMemberTable = React.createClass({
+  getInitialState: function() {
+    return { showModal: false };
+  },
   componentDidMount: function() {
     this.initialAll();
     $('.team-member-table-content-role > div > select').change(this.changeMemberHandler);
@@ -12,6 +16,23 @@ var HomeMemberTable = React.createClass({
     $('.team-member-table-content-awk > div > select').change(this.changeMemberHandler);
   },
   componentDidUpdate: function() {
+    FacesTypeAhead.init(
+      $('#teamMemberName'), {
+        key: 'ciodashboard;agileteamtool@us.ibm.com',
+        resultsAlign: 'left',
+        showMoreResults: false,
+        faces: {
+          headerLabel: 'People',
+          onclick: function(person) {
+            self.state.facesPerson = person;
+            return person['name'];
+          }
+        },
+        topsearch: {
+          headerLabel: 'w3 Results',
+          enabled: false
+        }
+      });
     this.initialAll();
   },
 
@@ -19,6 +40,7 @@ var HomeMemberTable = React.createClass({
     $('.team-member-table-content-role > div > select').select2();
     $('.team-member-table-content-allocation > div > select').select2();
     $('.team-member-table-content-awk > div > select').select2();
+    $('#teamMemberRoleSelect').select2({'width':'100%', 'height':'100%'});
     this.hoverBlock('team-member-table-content-role');
     // this.hoverBlock('team-member-table-content-location');
     this.hoverBlock('team-member-table-content-allocation');
@@ -134,6 +156,12 @@ var HomeMemberTable = React.createClass({
         console.log(err);
       });
   },
+  showAddTeamTable: function() {
+    this.setState({ showModal: true });
+  },
+  hideAddTeamTable: function() {
+    this.setState({ showModal: false });
+  },
   toTitleCase: function(str) {
     if (_.isEmpty(str)) return '';
     var strArray = str.toUpperCase().split(',');
@@ -147,10 +175,36 @@ var HomeMemberTable = React.createClass({
 
   render: function() {
     var self = this;
+    var backdropStyle = {
+      top: 0, bottom: 0, left: 0, right: 0,
+      zIndex: 'auto',
+      backgroundColor: '#000',
+      opacity: 0.5,
+      width: '100%',
+      height: '100%'
+    };
+    var modalStyle = {
+      position: 'fixed',
+      width: '100%',
+      height: '100%',
+      zIndex: 1040,
+      top: 0, bottom: 0, left: 0, right: 0,
+    };
     if (self.props.loadDetailTeam.team == undefined) {
       return null;
     } else {
       team = self.props.loadDetailTeam.team;
+      var allocationArray = Array.from(Array(101).keys())
+      var allocationSelection = allocationArray.map(function(a){
+        return (
+          <option key={a} value={a}>{a}%</option>
+        )
+      });
+      var roleSelection = self.props.roles.map(function(r){
+        return (
+          <option key={r} value={r}>{r}</option>
+        )
+      });
       if (team.members == null || team.members.length == 0) {
         var teamMembers = null;
       } else {
@@ -199,17 +253,6 @@ var HomeMemberTable = React.createClass({
               deletBtn = null;
               addTeamBtnStyle = true;
             }
-            var allocationArray = Array.from(Array(101).keys())
-            var allocationSelection = allocationArray.map(function(a){
-              return (
-                <option key={a} value={a}>{a}%</option>
-              )
-            });
-            var roleSelection = self.props.roles.map(function(r){
-              return (
-                <option key={r} value={r}>{r}</option>
-              )
-            });
             return (
               <div key={blockId} id={blockId} class={blockClass}>
                 <div id={nameId} style={{'width':'29.8%'}}>
@@ -293,6 +336,29 @@ var HomeMemberTable = React.createClass({
               <button type='button' class='ibm-btn-sec ibm-btn-blue-50' disabled={addTeamBtnStyle} onClick={self.showAddTeamTable}>Add Team Member</button>
             </div>
           </div>
+          <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={this.hideAddTeamTable}>
+            <div class='team-member-add-block'>
+              <div class='team-member-add-block-header'>
+                <h>Add Team Member</h>
+                <span>X</span>
+              </div>
+              <div class='team-member-add-block-content'>
+                <div class='team-member-add-block-content-name'>
+                  <label for='teamMemberName'>Name</label>
+                  <input type='text' placeholder='Ex: Name or Email Adress' size='50' id='teamMemberName' name='teamMemberName' ref='teamMemberName' aria-label='team member' role='combobox' onChange={this.memberNameChange} onBlur={this.memberNameBlur}/>
+                </div>
+                <div class='team-member-add-block-content-role'>
+                  <label for='teamMemberRole'>Role</label>
+                  <div>
+                    <select id='teamMemberRoleSelect' defaultValue='psr'>
+                      <option key='psr' value='psr'>Please select a role</option>
+                      {roleSelection}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Modal>
         </div>
       )
     }
