@@ -770,13 +770,21 @@ body {
 }
 
 .team-member-table-content-role > div,
-.team-member-table-content-allocation > div,
+.team-member-table-content-allocation > div {
+  position: relative;
+  float: left;
+  left: 5%;
+  top: 10%;
+  width: 90%;
+  display: none;
+}
+
 .team-member-table-content-awk > div {
   position: relative;
   float: left;
   left: 5%;
   top: 10%;
-  width: 80%
+  width: 70%;
   display: none;
 }
 
@@ -1852,7 +1860,7 @@ body {
 .team-member-add-block-content-name {
   position: relative;
   float: left;
-  height: 20%;
+  height: 22%;
   width: 90%;
   left: 5%;
   top: 10%;
@@ -1861,7 +1869,7 @@ body {
 .team-member-add-block-content-name > label {
   position: relative;
   float: left;
-  height: 50%;
+  height: 45%;
   width: 100%;
   font-family: "HelvNeue Medium for IBM";
   font-size: 1.4em;
@@ -1872,7 +1880,7 @@ body {
 .team-member-add-block-content-name > input {
   position: relative;
   float: left;
-  height: 50%;
+  height: 54% !important;
   width: 100%;
   border: 0.1em solid #777677;
   text-indent: 1em;

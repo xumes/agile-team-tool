@@ -37,10 +37,10 @@ var HomeMemberTable = React.createClass({
   },
 
   initialAll: function() {
-    $('.team-member-table-content-role > div > select').select2();
-    $('.team-member-table-content-allocation > div > select').select2();
-    $('.team-member-table-content-awk > div > select').select2();
-    $('#teamMemberRoleSelect').select2({'width':'100%', 'height':'100%'});
+    $('.team-member-table-content-role > div > select').select2({'width':'100%'});
+    $('.team-member-table-content-allocation > div > select').select2({'width':'100%'});
+    $('.team-member-table-content-awk > div > select').select2({'width':'100%'});
+    $('#teamMemberRoleSelect').select2({'width':'100%'});
     this.hoverBlock('team-member-table-content-role');
     // this.hoverBlock('team-member-table-content-location');
     this.hoverBlock('team-member-table-content-allocation');
