@@ -1,6 +1,7 @@
 var React = require('react');
 var api = require('../api.jsx');
 var _ = require('underscore');
+var HomeAddMember = require('./HomeAddMember.jsx');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
 
@@ -16,23 +17,6 @@ var HomeMemberTable = React.createClass({
     $('.team-member-table-content-awk > div > select').change(this.changeMemberHandler);
   },
   componentDidUpdate: function() {
-    FacesTypeAhead.init(
-      $('#teamMemberName'), {
-        key: 'ciodashboard;agileteamtool@us.ibm.com',
-        resultsAlign: 'left',
-        showMoreResults: false,
-        faces: {
-          headerLabel: 'People',
-          onclick: function(person) {
-            self.state.facesPerson = person;
-            return person['name'];
-          }
-        },
-        topsearch: {
-          headerLabel: 'w3 Results',
-          enabled: false
-        }
-      });
     this.initialAll();
   },
 
@@ -40,7 +24,6 @@ var HomeMemberTable = React.createClass({
     $('.team-member-table-content-role > div > select').select2({'width':'100%'});
     $('.team-member-table-content-allocation > div > select').select2({'width':'100%'});
     $('.team-member-table-content-awk > div > select').select2({'width':'100%'});
-    $('#teamMemberRoleSelect').select2({'width':'100%'});
     this.hoverBlock('team-member-table-content-role');
     // this.hoverBlock('team-member-table-content-location');
     this.hoverBlock('team-member-table-content-allocation');
@@ -336,28 +319,8 @@ var HomeMemberTable = React.createClass({
               <button type='button' class='ibm-btn-sec ibm-btn-blue-50' disabled={addTeamBtnStyle} onClick={self.showAddTeamTable}>Add Team Member</button>
             </div>
           </div>
-          <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={this.hideAddTeamTable}>
-            <div class='team-member-add-block'>
-              <div class='team-member-add-block-header'>
-                <h>Add Team Member</h>
-                <span>X</span>
-              </div>
-              <div class='team-member-add-block-content'>
-                <div class='team-member-add-block-content-name'>
-                  <label for='teamMemberName'>Name</label>
-                  <input type='text' placeholder='Ex: Name or Email Adress' size='50' id='teamMemberName' name='teamMemberName' ref='teamMemberName' aria-label='team member' role='combobox' onChange={this.memberNameChange} onBlur={this.memberNameBlur}/>
-                </div>
-                <div class='team-member-add-block-content-role'>
-                  <label for='teamMemberRole'>Role</label>
-                  <div>
-                    <select id='teamMemberRoleSelect' defaultValue='psr'>
-                      <option key='psr' value='psr'>Please select a role</option>
-                      {roleSelection}
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAddTeamTable}>
+            <HomeAddMember roleSelection={roleSelection} hideAddTeamTable={self.hideAddTeamTable}/>
           </Modal>
         </div>
       )
