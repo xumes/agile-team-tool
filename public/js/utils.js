@@ -100,3 +100,10 @@ module.exports.showDateUTC = function(formatDate) {
   var utcTime = moment.utc(formatDate).format('MMM DD, YYYY, HH:mm (z)');
   return utcTime;
 };
+
+module.exports.toLowerCase = function(s) {
+  if (typeof(s) === 'string') {
+    return s.toLowerCase();
+  }
+  return s;
+};

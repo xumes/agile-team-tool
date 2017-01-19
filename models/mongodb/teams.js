@@ -58,7 +58,7 @@ var LinkSchema = new Schema({
   linkLabel: {
     type: String,
     required: [true, 'URL link label is required.'],
-    validate: validators.matches({message: 'URL link label is required.'}, /^(?!.*(Select label|Other...))/ig)
+    validate: validators.matches({message: 'URL link label is required.'}, /^(?!.*(Select label|-1|Other...))/ig)
   },
   linkUrl: {
     type: String,
