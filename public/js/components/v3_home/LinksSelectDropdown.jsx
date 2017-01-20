@@ -8,16 +8,13 @@ var LinksSelectDropdown = React.createClass({
       self.props.updateStateLinkLabel(this.value);
     });
   },
-  onchangeLinkLabel: function() {
-    console.log('onchangeLinkLabel..');
-  },
   render: function() {
     var self = this;
     return (
       <p class="ibm-form-elem-grp">
         <label>Link Name</label>
         <span>
-          <select name='link_label' class='implabel' id='link_label' value={self.props.linkLabel}>
+          <select name='link_label' class='implabel' id='link_label' value={self.props.linkLabel} onChange={self.props.onchangeLinkLabel} >
             {self.props.linkLabelOption}
           </select>
           <span id='link_label_error' class='ibm-item-note'></span>

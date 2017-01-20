@@ -4,6 +4,8 @@ var InlineSVG = require('svg-inline-react');
 var _ = require('underscore');
 var ReactModal = require('react-modal');
 var teamApi = require('./TeamApi.jsx');
+var LinksSelectDropdown = require('./LinksSelectDropdown.jsx');
+var utils = require('../../utils.js');
 
 var HomeBookmark = React.createClass({
   getInitialState: function() {
@@ -12,6 +14,7 @@ var HomeBookmark = React.createClass({
       linkId: '',
       linkUrl: '',
       linkLabel: '',
+      link_otherLabel: '',
       isChecked: false,
       showOtherlabel: false
     }
@@ -19,14 +22,11 @@ var HomeBookmark = React.createClass({
   componentDidMount:function() {
     var self = this;
     self.linkHoverHandler();
-    $('.implabel').select2();
-    $('.ReactModalPortal').css('display', 'none');
-    $('#link_label').change(self.onchangeLinkLabel);
+    self.setState({showModal: false});
     teamApi.fetchTeamLinkLabels()
       .then(function(result) {
         var linkLabels = self.state.initSelectLabel;
         if (!_.isEmpty(result)) {
-          console.log('res:',result);
           var linkLabels = [{id: '-1', text: 'Select label'}];
           _.each(result, function(label) {
             linkLabels.push({id: label, text: label});
@@ -42,7 +42,6 @@ var HomeBookmark = React.createClass({
   },
   componentDidUpdate: function(prevProps, prevState) {
     this.linkHoverHandler();
-    $('.implabel').select2();
   },
   linkHoverHandler: function() {
     var self = this;
@@ -66,9 +65,7 @@ var HomeBookmark = React.createClass({
   },
   showTeamLinkModal: function(id) {
     var self = this;
-    console.log('showTeamLinkModal:',id);
-    // $('.implabel').select2();
-    $('.ReactModalPortal').css('display', 'block');
+    self.setState({showModal: true});
     var defaultSelectData = self.state.initSelectLabel;
     if(id) {
       self.setState({modalTitle: 'Important Link Edit'});
@@ -77,13 +74,18 @@ var HomeBookmark = React.createClass({
       var linkIds2 = _.pluck(defaultSelectData, 'id');
       var diffLinks = _.difference(linkIds1, linkIds2);
       var selectData = [];
+      var tmpselectData = [];
       var isChecked = false;
       if (diffLinks.length > 0) {
         _.each(diffLinks, function(tmp){
-          selectData.push({id: tmp, text: tmp});
+          tmpselectData.push({id: tmp, text: tmp});
         });
       }
-      selectData = defaultSelectData.concat(selectData);
+      tmpselectData = defaultSelectData.concat(tmpselectData);
+      var selectData = [];
+      _.each(_.uniq(_.pluck(tmpselectData, 'text'), utils.toLowerCase), function(txt) {
+        selectData.push(_.findWhere(tmpselectData, {text: txt}));
+      });
       var linkLabelOption = selectData.map(function(row, idx){
         return <option value={row.id} key={idx}>{row.text}</option>
       });
@@ -96,7 +98,6 @@ var HomeBookmark = React.createClass({
             isChecked = true;
           }
           $('select[name="link_label"]').val(label);
-          // $('select[name="link_label"]').change(self.onchangeLinkLabel);
           self.setState({linkId: id});
           self.setState({linkUrl: url});
           self.setState({linkLabel: label});
@@ -117,12 +118,36 @@ var HomeBookmark = React.createClass({
     }
   },
   hideTeamLinkModal: function() {
-    $('.implabel').select2();
-    $('.ReactModalPortal').css('display', 'none');
+    this.setState({showModal: false});
     this.setState({showOtherlabel: false});
   },
-  deleteLink: function() {
-    console.log('delete...');
+  deleteTeamLink: function(id) {
+    console.log('deleteTeamLink:',id);
+    var self = this;
+    var team_id = self.props.loadDetailTeam.team._id;
+    var linkData = [];
+    if (id) {
+      linkData.push({id: id});
+      var updateData = {
+        teamId: team_id,
+        links: linkData
+      };
+      teamApi.deleteLink(updateData)
+        .then(function(loadTeamResult) {
+          var newLinkResult = loadTeamResult['links'];
+          self.props.updateTeamLink(team_id, newLinkResult);
+          return newLinkResult;
+        })
+        .catch(function(err){
+          if (err.responseJSON !== undefined && err.responseJSON['error'] !== undefined) {
+            var error = err.responseJSON['error'];
+            alert(error);
+          } else {
+            alert(err);
+          }
+          console.log('[deleteTeamLink] Error:', JSON.stringify(err));
+        });
+    }
   },
   onchangeLinkLabel: function(event) {
     var selectVal = event.target.value;
@@ -133,7 +158,6 @@ var HomeBookmark = React.createClass({
       this.setState({showOtherlabel: false});
     }
     $('select[name="link_label"]').val(selectVal);
-    // $('select[name="link_label"]').change(this.onchangeLinkLabel);
     this.setState({linkLabel: selectVal});
   },
   onchangeLinkUrl: function(event) {
@@ -142,17 +166,16 @@ var HomeBookmark = React.createClass({
   },
   saveTeamLinkModal: function(event) {
     var self = this;
-    var team_id = this.props.loadDetailTeam.team._id;
-    var links = this.props.loadDetailTeam.team.links;
-    var link_url = $('#link_url').val();
-    var link_label = $('#link_label').val();
+    var team_id = self.props.loadDetailTeam.team._id;
+    var links = self.props.loadDetailTeam.team.links;
+    var link_url = $('#link_url').val().trim();
+    var link_label = $('#link_label').val().trim();
     var link_type = $('#link_type').is(':checked') == true ? 'iteration': null;
     var insertmode = true;
     if (self.state.showOtherlabel) {
       var link_label = $('#link_otherlabel').val();
     }
-    self.setState({showOtherlabel: false});
-    var link_id = this.state.linkId;
+    var link_id = self.state.linkId;
     console.log('saveTeamLinkModal..');
     console.log('link_type:',link_type);
     console.log('BEFORE links:',links);
@@ -187,20 +210,11 @@ var HomeBookmark = React.createClass({
       teamId: team_id,
       links: linkData
     };
-    console.log('updateData:',updateData);
+    console.log('updated links:', updateData);
     teamApi.updateLink(updateData)
       .then(function(loadTeamResult) {
-        // $('#UpdateCancelLinkGrp_'+id).hide();
-        // $('#DeleteLinkGrp_'+id).show();
-        // utils.clearLinkAndSelectFieldErrorHighlight();
-        // if (action === 'onEdit') {
-          // self.props.removeOnEditModeLinkIds();
-        // }
         var newLinkResult = loadTeamResult['links'];
-        // self.props.updateLink(teamId, newLinkResult);
-        // self.props.resetNumChildLinks();
-        console.log('loadTeamResult:',loadTeamResult);
-        console.log('newLinkResult:',newLinkResult);
+        self.setState({showOtherlabel: false});
         self.props.updateTeamLink(team_id, newLinkResult);
         self.hideTeamLinkModal();
         return loadTeamResult;
@@ -208,13 +222,83 @@ var HomeBookmark = React.createClass({
       .catch(function(err){
         if (err.responseJSON !== undefined && err.responseJSON['error'] !== undefined) {
           var error = err.responseJSON['error'];
-          // var result = self.handleTeamLinksValidationErrors(error);
-          alert(result);
+          self.handleTeamLinksValidationErrors(error);
         } else {
-          alert(err);
+          console.log('err:',err);
+          if (err['statusText'] != undefined) {
+            alert(err['statusText']);
+          } else {
+            alert(err);
+          }
         }
-        console.log('[updateLink] Error:', JSON.stringify(err));
       });
+  },
+  clearTeamLinkErrorField: function(errorField) {
+    if (errorField == 'linkUrl') {
+      $('#link_url').removeClass('ibm-field-error');
+      $('#link_url_error').removeClass('ibm-alert-link');
+      $('#link_url_error').html('');
+    }
+    if (errorField == 'linkLabel') {
+      $('#select2-link_label-container').removeClass('ibm-field-error');
+      $('#link_label_error').removeClass('ibm-alert-link');
+      $('#link_label_error').html('');
+    }
+    if (errorField == 'otherLinkLabel') {
+      $('#select2-link_label-container').removeClass('ibm-field-error');
+      $('#link_label_error').removeClass('ibm-alert-link');
+      $('#link_label_error').html('');
+    }
+    if (errorField == 'both') {
+      $('#link_url, #select2-link_label-container, #link_otherlabel').removeClass('ibm-field-error');
+      $('#link_url_error, #link_label_error, #link_otherlabel_error').removeClass('ibm-alert-link');
+      $('#link_url_error, #link_label_error, #link_otherlabel_error').html('');
+    }
+  },
+  setTeamLinkErrorField: function(errorField, errorMsg) {
+    if (errorField == 'linkUrl') {
+      $('#link_url').addClass('ibm-field-error');
+      $('#link_url_error').addClass('ibm-alert-link');
+      $('#link_url_error').html(errorMsg);
+    }
+    if (errorField == 'linkLabel') {
+      $('#select2-link_label-container').addClass('ibm-field-error');
+      $('#link_label_error').addClass('ibm-alert-link');
+      $('#link_label_error').html(errorMsg);
+    }
+    if (errorField == 'otherLinkLabel') {
+      this.clearTeamLinkErrorField('linkLabel');
+      $('#link_otherlabel').addClass('ibm-field-error');
+      $('#link_otherlabel_error').addClass('ibm-alert-link');
+      $('#link_otherlabel_error').html(errorMsg);
+    }
+  },
+  handleTeamLinksValidationErrors: function(err) {
+    var self = this;
+    console.log('handleTeamLinksValidationErrors err:', JSON.stringify(err));
+    self.clearTeamLinkErrorField('both');
+    err.links.forEach(function(klinkStr, iddx) {
+      // check linkUrl value e.g. abcd is not a valid url.
+      if (klinkStr['linkUrl']) {
+        self.setTeamLinkErrorField('linkUrl', klinkStr['linkUrl']);
+      }
+
+      if (klinkStr['linkLabel']) {
+        var selectValue = self.state.linkLabel;
+        if (selectValue) {
+          selectValue = selectValue.toLowerCase();
+          if (selectValue === '-1') { // Select label
+            self.setTeamLinkErrorField('linkLabel', klinkStr['linkLabel']);
+          } else if (selectValue === 'other...') { // Other...
+            self.setTeamLinkErrorField('otherLinkLabel', klinkStr['linkLabel']);
+          } else {
+            self.setTeamLinkErrorField('linkLabel', klinkStr['linkLabel']);
+          }
+        } else {
+          self.setTeamLinkErrorField('linkLabel', klinkStr['linkLabel']);
+        }
+      }
+    });
   },
   onchangeType: function() {
     this.setState({
@@ -223,10 +307,24 @@ var HomeBookmark = React.createClass({
       console.log(this.state);
     }.bind(this));
   },
+  updateStateLinkLabel: function(label) {
+    console.log('updateStateLinkLabel label:', label);
+    this.setState({linkLabel: label});
+    if (label) {
+      var label = label.toLowerCase();
+      if (label == 'other...') {
+        this.setState({showOtherlabel: true});
+        this.clearTeamLinkErrorField('otherLinkLabel');
+      } else {
+        this.setState({showOtherlabel: false});
+      }
+    }
+  },
   render: function() {
     var self = this;
     var isShowOtherlabel = self.state.showOtherlabel;
     var showOtherlabelStyle = {'display': 'none'};
+    var iterSpecificLink = [];
     if (isShowOtherlabel) {
       showOtherlabelStyle = {'display': 'block'};
     }
@@ -242,13 +340,29 @@ var HomeBookmark = React.createClass({
                   <InlineSVG onClick={self.showTeamLinkModal.bind(null, link.id)} src={require('../../../img/Att-icons/att-icons_edit.svg')}></InlineSVG>
               </span>
               <span style={{'display':'none','marginLeft':'3%'}}>
-                  <InlineSVG onClick={self.deleteLink} src={require('../../../img/Att-icons/att-icons_delete.svg')}></InlineSVG>
+                  <InlineSVG onClick={self.deleteTeamLink.bind(null, link.id)} src={require('../../../img/Att-icons/att-icons_delete.svg')}></InlineSVG>
               </span>
             </div>
           );
         }
       });
-
+      var teamIterLinks = this.props.loadDetailTeam.team.links.map(function(link){
+        if (link && link.type == 'iteration') {
+          iterSpecificLink.push(link);
+          return (
+            <div key={link.id} id={link.id}>
+              <div style={{'display':'none'}}></div>
+              <a href={link.linkUrl} title={link.linkUrl}>{link.linkLabel}</a>
+              <span style={{'display':'none'}}>
+                  <InlineSVG onClick={self.showTeamLinkModal.bind(null, link.id)} src={require('../../../img/Att-icons/att-icons_edit.svg')}></InlineSVG>
+              </span>
+              <span style={{'display':'none','marginLeft':'3%'}}>
+                  <InlineSVG onClick={self.deleteTeamLink.bind(null, link.id)} src={require('../../../img/Att-icons/att-icons_delete.svg')}></InlineSVG>
+              </span>
+            </div>
+          );
+        }
+      });
     } else {
       teamLinks = null;
     }
@@ -264,6 +378,8 @@ var HomeBookmark = React.createClass({
           </div>
           <div class='home-team-header-bookmark-scroll'>
             {teamLinks}
+            {(iterSpecificLink !== undefined && iterSpecificLink.length > 0) ? <div class='iterspecific'><span class='caption'>Iteration specific links</span></div> : ''}
+            {teamIterLinks}
           </div>
           <div class='home-team-header-bookmark-btns'>
             <p class='ibm-btn-row ibm-button-link' style={{'position':'relative','top':'15%','right':'5%','float':'right'}}>
@@ -285,43 +401,38 @@ var HomeBookmark = React.createClass({
                 <span class="glyphicon glyphicon-xs glyphicon-remove" aria-hidden="true"></span>
               </button>
             </header>
-          <section aria-label="Modal body content" class="modal-body" role="main">
-            <form class="ibm-row-form">
-              <p class="ibm-form-elem-grp">
-                <label>Link Name</label>
-                <span>
-                  <select name='link_label' class='implabel' id='link_label' value={self.state.linkLabel} onChange={self.onchangeLinkLabel} >
-                    {self.state.linkLabelOption}
-                  </select>
-                </span>
-              </p>
+            <section aria-label="Modal body content" class="modal-body" role="main">
+              <form class="ibm-row-form">
+                <LinksSelectDropdown updateStateLinkLabel={self.updateStateLinkLabel} linkLabel={self.state.linkLabel} linkLabelOption={self.state.linkLabelOption} onchangeLinkLabel={self.onchangeLinkLabel} />
 
-              <p style={showOtherlabelStyle}>
-                <label>Enter Link Name</label>
-                <span class="ibm-input-group">
-                  <input name='link_otherlabel' id='link_otherlabel' type='text' class='implink' />
-                </span>
-              </p>
+                <p style={showOtherlabelStyle}>
+                  <label>Enter Link Name</label>
+                  <span class="ibm-input-group">
+                    <input name='link_otherlabel' id='link_otherlabel' type='text' class='implink' />
+                    <span id='link_otherlabel_error' class='ibm-item-note'></span>
+                  </span>
+                </p>
 
-              <p>
-                <label>Link URL Address</label>
-                <span>
-                  <input name='link_url' id='link_url' type='text' class='implink' value={self.state.linkUrl} onChange={self.onchangeLinkUrl}/>
-                </span>
-              </p>
+                <p>
+                  <label>Link URL Address</label>
+                  <span>
+                    <input name='link_url' id='link_url' type='text' class='implink' value={self.state.linkUrl} onChange={self.onchangeLinkUrl}/>
+                    <span id='link_url_error' class='ibm-item-note'></span>
+                  </span>
+                </p>
 
-              <p class="ibm-form-elem-grp">
-                <span class="ibm-input-group">
-                  <input name='link_type' id='link_type' type='checkbox' value='yes' class='ibm-styled-checkbox' checked={self.state.isChecked} onChange={self.onchangeType} /> <label for="link_type" class="lblRoman">Iteration Specific Link</label>
-                </span>
-              </p>
-              <input name='link_id' id='link_id' type='hidden' value='{self.state.link_id}' />
-            </form>
-          </section>
-          <footer aria-label="Modal footer content" class="modal-footer" role="contentinfo">
-            <button class="btn btn-primary modal-ok" onClick={self.saveTeamLinkModal} >Save</button>
-            <button class="btn btn-secondary modal-close" onClick={self.hideTeamLinkModal}>Cancel</button>
-          </footer>
+                <p class="ibm-form-elem-grp">
+                  <span class="ibm-input-group">
+                    <input name='link_type' id='link_type' type='checkbox' value='yes' class='ibm-styled-checkbox' checked={self.state.isChecked} onChange={self.onchangeType} /> <label for="link_type" class="lblRoman">Iteration Specific Link</label>
+                  </span>
+                </p>
+                <input name='link_id' id='link_id' type='hidden' value='{self.state.link_id}' />
+              </form>
+            </section>
+            <footer aria-label="Modal footer content" class="modal-footer" role="contentinfo">
+              <button class="btn btn-primary modal-ok" onClick={self.saveTeamLinkModal} >Save</button>
+              <button class="btn btn-secondary modal-close" onClick={self.hideTeamLinkModal}>Cancel</button>
+            </footer>
         </ReactModal>
       </div>
     );
