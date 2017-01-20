@@ -1815,7 +1815,7 @@ body {
   min-width: 281.6px;
   min-height: 417.6px;
   background-color: #FFFFFF;
-  box-shadow: 0 0 10px 0 rgba(0,0,0,0.16);
+  box-shadow: 0 0 1em 0 rgba(0,0,0,0.16);
 }
 
 .team-member-add-block-header {
