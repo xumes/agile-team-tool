@@ -31,23 +31,23 @@ var HomeContent = React.createClass({
     }
   },
 
-  handleResize: function(e) {
-    $(Highcharts.charts).each(function(i,chart) {
-      if (chart == null) return;
-      if ($('#' + $(chart.container).attr('id')).length > 0) {
-        var height = chart.renderTo.clientHeight;
-        var width = chart.renderTo.clientWidth;
-        chart.setSize(width, height);
-      }
-    });
-  },
+  // handleResize: function(e) {
+  //   $(Highcharts.charts).each(function(i,chart) {
+  //     if (chart == null) return;
+  //     if ($('#' + $(chart.container).attr('id')).length > 0) {
+  //       var height = chart.renderTo.clientHeight;
+  //       var width = chart.renderTo.clientWidth;
+  //       chart.setSize(width, height);
+  //     }
+  //   });
+  // },
 
   componentDidMount: function() {
-    window.addEventListener('resize', this.handleResize);
+    window.addEventListener('resize', this.props.handleChartResize);
   },
 
   componentWillUnmount: function() {
-    window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener('resize', this.props.handleChartResize);
   },
 
   showFilter: function() {
