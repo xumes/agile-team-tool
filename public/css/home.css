@@ -1220,13 +1220,20 @@ body {
   font-size: 1.6em;
 }
 
-.home-iter-selection-block > select {
+.home-iter-selection-block > .iter-select {
+  position: relative;
+  float: left;
+  width: 80%;
+  height: 100%;
+}
+
+/*.home-iter-selection-block > select {
   position: relative;
   float: left;
   display: inline-block;
   width: 80%;
   height: 100%;
-}
+}*/
 
 .home-iter-add-btn-block {
   position: relative;
@@ -1234,7 +1241,7 @@ body {
   float: right;
   width: 13%;
   height: 70%;
-  top: 13%;
+  min-height: 40px;
 }
 
 .home-iter-add-btn-block > i > svg {
@@ -1359,7 +1366,7 @@ body {
 
 .home-iter-content-sub {
   position: relative;
-  width: 70%;
+  width: 75%;
   float: left;
   display: inline-block;
   font-family: "HelvNeue Roman for IBM";

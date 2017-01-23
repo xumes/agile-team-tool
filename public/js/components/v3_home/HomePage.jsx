@@ -118,6 +118,7 @@ var HomePage = React.createClass({
   },
 
   iterChangeHandler: function(e) {
+    console.log(e);
     this.setState({'selectedIter': e.target.value.toString()});
   },
 

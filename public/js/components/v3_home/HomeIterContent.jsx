@@ -27,7 +27,7 @@ var HomeIterContent = React.createClass({
   componentDidUpdate: function() {
     var self = this;
     if (!($('#homeIterSelection').hasClass('select2-hidden-accessible'))) {
-      $('#homeIterSelection').select2();
+      $('#homeIterSelection').select2({'width': '100%'});
       $('#homeIterSelection').change(self.props.iterChangeHandler);
     }
     _.each($('.home-iter-content-point'), function(blk){
@@ -149,9 +149,11 @@ var HomeIterContent = React.createClass({
           <div>
             <div class='home-iter-title'>Iteration Overview</div>
             <div class='home-iter-selection-block'>
-              <select defaultValue={defIterId} id='homeIterSelection'>
-                {iterations}
-              </select>
+              <div class='iter-select'>
+                <select defaultValue={defIterId} id='homeIterSelection'>
+                  {iterations}
+                </select>
+              </div>
               <div class='home-iter-add-btn-block'>
                 <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
               </div>
