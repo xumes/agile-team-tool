@@ -320,7 +320,7 @@ var HomeMemberTable = React.createClass({
             </div>
           </div>
           <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAddTeamTable}>
-            <HomeAddMember roleSelection={roleSelection} hideAddTeamTable={self.hideAddTeamTable}/>
+            <HomeAddMember realodTeamMembers={self.props.realodTeamMembers} loadDetailTeam={self.props.loadDetailTeam} roleSelection={roleSelection} hideAddTeamTable={self.hideAddTeamTable}/>
           </Modal>
         </div>
       )

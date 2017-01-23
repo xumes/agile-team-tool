@@ -41,12 +41,88 @@ var HomeAddMember = React.createClass({
     $('#teamMemberName').text(person.name);
   },
 
+  nameInputOnChangeHandler: function() {
+    facesPerson = {};
+  },
+
+  addTeamMemberHandler: function() {
+    var self = this;
+    if (_.isEmpty(facesPerson)) {
+      alert('Cannot find this person on faces.');
+    } else if ($('#teamMemberRoleSelect').val() == 'psr') {
+      alert('Please select a role.');
+    } else if ($('#teamMemberRoleSelect').val() == 'Other...' && $('#otherRole').val() == '') {
+      alert('Please fill the role description.');
+    } else {
+      if (_.isEmpty(facesPerson.uid)) {
+        alert('Cannot find this person on faces.');
+      } else {
+        if (!self.props.loadDetailTeam.access) {
+          alert('You don\'t have access to add team memeber for this team.');
+        } else {
+          var isMemberExist = false;
+          isMemberExist = _.find(self.props.loadDetailTeam.team.members, function(m){
+            if (m.userId == facesPerson.uid.toUpperCase()) {
+              return true;
+            }
+          })
+          if (isMemberExist) {
+            alert('This person is already in your team.');
+          } else {
+            $('.team-member-add-block-footer > p > a').prop('disabled', true);
+            var newTeamMembers = [];
+            var newUsers = [];
+            api.getUsersInfo([facesPerson.uid])
+              .then(function(users){
+                if (_.isEmpty(users)) {
+                  var newUser = {
+                    'userId': facesPerson.uid.toUpperCase(),
+                    'email': facesPerson.email.toLowerCase(),
+                    'name': facesPerson.name,
+                    'location': {
+                      'site': facesPerson.location.toLowerCase(),
+                      'timezone': null
+                    }
+                  };
+                  return api.createUser(newUser);
+                } else {
+                  return users[0];
+                }
+              })
+              .then(function(result){
+                var ntm = {
+                  'userId': result.userId,
+                  'name': result.name,
+                  'email': result.email,
+                  'role': $('#teamMemberRoleSelect').val() == 'Other...'?$('#otherRole').val():$('#teamMemberRoleSelect').val(),
+                  'allocation': $('#teamMemberAllocationSelect').val()
+                };
+                newTeamMembers = JSON.parse(JSON.stringify(self.props.loadDetailTeam.team.members));
+                newUsers = JSON.parse(JSON.stringify(self.props.loadDetailTeam.members));
+                newTeamMembers.push(ntm);
+                newUsers.push(result);
+                return api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newTeamMembers);
+              })
+              .then(function(result){
+                self.props.realodTeamMembers(newTeamMembers, newUsers);
+                $('.team-member-add-block-footer > p > a').prop('disabled', false);
+                self.props.hideAddTeamTable();
+              })
+              .catch(function(err){
+                console.log(err);
+                return;
+              });
+          }
+        }
+      }
+    }
+  },
+
   roleHandler: function(e) {
     if (e.target.value == 'Other...') {
       $('.team-member-add-block-content-allocation').css('top','20%');
       $('.team-member-add-block-content-awk').css('top','20%');
       $('#otherRole').fadeIn();
-      console.log('other');
     } else {
       $('.team-member-add-block-content-allocation').css('top','5%');
       $('.team-member-add-block-content-awk').css('top','5%');
@@ -71,7 +147,7 @@ var HomeAddMember = React.createClass({
         <div class='team-member-add-block-content'>
           <div class='team-member-add-block-content-name'>
             <label for='teamMemberName'>Name</label>
-            <input type='text' placeholder='Ex: Name or Email Adress' size='50' id='teamMemberName' name='teamMemberName' ref='teamMemberName' aria-label='team member' role='combobox'/>
+            <input type='text' placeholder='Ex: Name or Email Adress' size='50' id='teamMemberName' name='teamMemberName' ref='teamMemberName' aria-label='team member' role='combobox' onChange={self.nameInputOnChangeHandler}/>
           </div>
           <div class='team-member-add-block-content-role'>
             <label for='teamMemberRole'>Role</label>
@@ -105,7 +181,7 @@ var HomeAddMember = React.createClass({
         </div>
         <div class='team-member-add-block-footer'>
           <p class='ibm-btn-row ibm-button-link' style={{'position':'relative','top':'30%','right':'5%','float':'right'}}>
-            <a class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50'>Add</a>
+            <a class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50' onClick={self.addTeamMemberHandler}>Add</a>
             <a class='ibm-btn-sec ibm-btn-small ibm-btn-blue-50' onClick={self.props.hideAddTeamTable}>Cancel</a>
           </p>
         </div>

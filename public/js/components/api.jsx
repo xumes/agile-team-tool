@@ -494,3 +494,19 @@ module.exports.fetchTeamMemberRoles = function () {
     });
   });
 };
+
+module.exports.createUser = function(newUser) {
+  return new Promise(function(resolve, reject) {
+    var url = '/api/users/create';
+    var req = $.ajax({
+      type: 'POST',
+      url: url,
+      contentType: 'application/json',
+      data: JSON.stringify(newUser)
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
