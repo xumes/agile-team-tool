@@ -302,7 +302,7 @@ body {
 
 .home-nav-div {
   width: 30%;
-  height: 100%;
+  height: 200%;
   background-color: #F7F7F7;
   position: relative;
   float: left;
@@ -322,7 +322,7 @@ body {
 .home-nav-tab {
   width : 89%;
   left: 5.5%;
-  height: 14.2%;
+  height: 7.1%;
   background-color: #F7F7F7;
   /*display: flex;*/
   position: relative;
@@ -394,8 +394,8 @@ body {
   margin: 10% 3.4% 0 3.4%;*/
   width: 89%;
   left: 5.5%;
-  top: 6%;
-  height: 70%;
+  top: 3.1%;
+  height: 85%;
 }
 
 .nano-content {
