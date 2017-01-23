@@ -1,5 +1,6 @@
 var React = require('react');
 var api = require('../api.jsx');
+var utils = require('../utils.jsx');
 
 var TeamForm = React.createClass({
   getInitialState: function() {
@@ -11,7 +12,7 @@ var TeamForm = React.createClass({
 
   componentDidMount: function() {
     var self = this;
-    var urlParams = getJsonParametersFromUrl();
+    var urlParams = utils.getJsonParametersFromUrl();
     var teamId =  _.isEmpty(urlParams) || _.isEmpty(urlParams.id) ? '' : urlParams.id;
     var assessId = _.isEmpty(urlParams) || _.isEmpty(urlParams.assessId) ? null : urlParams.assessId;
     api.getSquadTeams({name:1})

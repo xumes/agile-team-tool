@@ -1,5 +1,5 @@
 var React = require('react');
-var utils = require('../../utils');
+var utils = require('../utils.jsx');
 
 var LastUpdateSection = React.createClass({
   render: function() {

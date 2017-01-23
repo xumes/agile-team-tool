@@ -5,7 +5,7 @@ var _ = require('underscore');
 var ReactModal = require('react-modal');
 var teamApi = require('./TeamApi.jsx');
 var LinksSelectDropdown = require('./LinksSelectDropdown.jsx');
-var utils = require('../../utils.js');
+var utils = require('../utils.jsx');
 
 var HomeBookmark = React.createClass({
   getInitialState: function() {
@@ -389,7 +389,7 @@ var HomeBookmark = React.createClass({
           </div>
         </div>
 
-        <ReactModal 
+        <ReactModal
            isOpen={this.state.showModal}
            className="att-modal"
            overlayClassName="att-modal-overlay"

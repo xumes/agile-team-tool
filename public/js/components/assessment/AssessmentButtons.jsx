@@ -3,7 +3,7 @@ var api = require('../api.jsx');
 var templates = require('./AssessmentUpdateDocs.jsx');
 var _ = require('underscore');
 var moment = require('moment');
-var newestTemplateVersion = 'ag_ref_atma_components_v06';
+var newestTemplateVersion = 'ag_ref_atma_components_v07';
 
 var AssessmentButtons = React.createClass({
   componentDidMount: function() {

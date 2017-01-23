@@ -1,6 +1,7 @@
 var Promise = require('bluebird');
 var _ = require('underscore');
 var moment = require('moment');
+var utils = require('../utils.jsx');
 
 module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAccess) {
   $('#gotoIterationList').attr('disabled', 'disabled');
@@ -119,7 +120,7 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAcc
     });
   }
 
-  setSelectOptions('gotoIterationList', listOption, null, null, null);
+  utils.setSelectOptions('gotoIterationList', listOption, null, null, null);
   IBMCore.common.widget.selectlist.init('#gotoIterationList');
 
   // charts
@@ -287,8 +288,8 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAcc
 
   }
 
-  var teamMemMax = getMax(teamMemCountArr);
-  var fteMax = getMax(fteCountArr);
+  var teamMemMax = Math.max.apply(Math, teamMemCountArr);
+  var fteMax = Math.max.apply(Math, fteCountArr);
   var yMax = Math.max(teamMemMax, fteMax);
   if (yMax <= 12) {
     yMax = 12;
@@ -1615,7 +1616,7 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
   defectsEndSeries.data = [];
 
   var deploySeries = new Object();
-  deploySeries.name = 'Deployments per iteration';
+  deploySeries.name = 'Deployments';
   deploySeries.data = [];
 
   var clientStatSeries = new Object();
@@ -1788,16 +1789,17 @@ function setRefreshDate(timestamp) {
 }
 
 function showDateDDMMMYYYY(formatDate) {
-  if (formatDate == null || formatDate == '') return '';
-  var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return moment.utc(formatDate).format('DD MMM YYYY');
+//  if (formatDate == null || formatDate == '') return '';
+//  var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-  var date = new Date(formatDate);
-  var day = date.getDate();
-  day = day.toString().length < 2 ? '0' + day.toString() : day.toString();
-  var monthIndex = date.getMonth();
-  var year = date.getFullYear();
+//  var date = new Date(formatDate);
+//  var day = date.getDate();
+//  day = day.toString().length < 2 ? '0' + day.toString() : day.toString();
+//  var monthIndex = date.getMonth();
+//  var year = date.getFullYear();
 
-  return (day + monthNames[monthIndex] + year);
+//  return (day + monthNames[monthIndex] + year);
 }
 
 function sortMMMYYYY(iterations) {

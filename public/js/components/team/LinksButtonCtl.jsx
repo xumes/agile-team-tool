@@ -1,7 +1,7 @@
 var React = require('react');
 var api = require('../api.jsx');
 var teamApi = require('./TeamApi.jsx');
-var utils = require('../../utils');
+var utils = require('../utils.jsx');
 
 var LinksButtonCtl = React.createClass({
   componentDidMount: function() {

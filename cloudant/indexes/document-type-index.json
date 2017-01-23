@@ -1,7 +1,0 @@
-{
-  "index": {
-    "fields": ["type"]
-  },
-  "name": "document-type-index",
-  "type": "json"
-}

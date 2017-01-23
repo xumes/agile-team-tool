@@ -4,17 +4,6 @@ module.exports = function(app, includes) {
   var render = includes.render;
 
   /* instabul ingore next */
-  showHome = function(req, res) {
-    var json = {
-      'pageTitle': 'Home',
-      'googleAnalyticsKey': settings.googleAnalyticsKey,
-      'ibmNPSKey': settings.ibmNPSKey,
-      'environment': settings.environment
-    };
-    render(req, res, 'home', json);
-  };
-
-  /* instabul ingore next */
   showSSOLogoutPage = function(req, res) {
     var json = {
       'pageTitle': 'Logout',

@@ -1,3 +1,4 @@
+'use strict';
 var settings = require('../../settings');
 
 module.exports = function(app, includes) {
@@ -9,22 +10,7 @@ module.exports = function(app, includes) {
     'environment': settings.environment
   };
 
-  var showIteration = function(req, res) {
-    render(req, res, 'iteration', json);
-  };
-
-  var showIterationReact = function(req, res) {
-    render(req, res, 'v2_iteration', json);
-  };
-
-  app.get('/iteration', includes.middleware.auth.requireLoginWithRedirect, function(req, res) {
-    if (settings.mongoURL == undefined || _.isEmpty(settings.mongoURL))
-      showIteration(req, res);
-    else
-      showIterationReact(req, res);
-  });
-
-  app.get('/_v2_iteration', includes.middleware.auth.requireLoginWithRedirect, function(req, res) {
+  app.get(['/iteration'], includes.middleware.auth.requireLoginWithRedirect, function(req, res) {
     render(req, res, 'v2_iteration', json);
   });
 };

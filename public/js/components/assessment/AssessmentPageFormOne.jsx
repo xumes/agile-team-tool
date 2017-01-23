@@ -4,6 +4,7 @@ var TeamSquadForm = require('./AssessmentTeamSquad.jsx');
 var api = require('../api.jsx');
 var _ = require('underscore');
 var moment = require('moment');
+var utils = require('../utils.jsx');
 
 var AssessmentPageFormOne = React.createClass({
   componentDidUpdate: function() {
@@ -14,7 +15,7 @@ var AssessmentPageFormOne = React.createClass({
     $('select[name="assessmentSelectList"]').select2();
     $('select[name="assessmentSelectList"]').change(this.props.assessmentChangeHandler);
     var self = this;
-    var urlParams = getJsonParametersFromUrl();
+    var urlParams = utils.getJsonParametersFromUrl();
     var teamId =  _.isEmpty(urlParams) || _.isEmpty(urlParams.id) ? '' : urlParams.id;
     var assessId = _.isEmpty(urlParams) || _.isEmpty(urlParams.assessId) ? null : urlParams.assessId;
     if (assessId != null) {

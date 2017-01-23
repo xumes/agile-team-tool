@@ -1,6 +1,6 @@
 var React = require('react');
 var api = require('../api.jsx');
-var utils = require('../../utils');
+var utils = require('../utils.jsx');
 var ActionPlanComponent = require('./ActionPlanComponent.jsx');
 var LastUpdateSection = require('./LastUpdateSection.jsx');
 var DebugSection = require('./DebugSection.jsx');
@@ -79,7 +79,7 @@ var AssessmentProgressForm = React.createClass({
 
     if (response && response.error) {
       var errors = response.error.errors;
-      if (errors){        
+      if (errors){
         var popupMsg = '';
         if (_.isObject(errors)) {
           _.each(errors, function(err, attr) {

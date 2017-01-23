@@ -1,3 +1,4 @@
+'use strict';
 var settings = require('../../settings');
 
 module.exports = function(app, includes) {
@@ -10,18 +11,7 @@ module.exports = function(app, includes) {
     'environment': settings.environment
   };
 
-  showAssessmentProgress = function(req, res) {
-    render(req, res, 'progress', json);
-  };
-
-  showAssessmentProgressReact = function(req, res) {
+  app.get(['/progress'], includes.middleware.auth.requireLoginWithRedirect, function(req, res) {
     render(req, res, 'v2_progress', json);
-  };
-
-  app.get('/progress', includes.middleware.auth.requireLoginWithRedirect, function(req, res) {
-    if (settings.mongoURL == undefined || _.isEmpty(settings.mongoURL))
-      showAssessmentProgress(req, res);
-    else
-      showAssessmentProgressReact(req, res);
   });
 };

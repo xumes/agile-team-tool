@@ -7,7 +7,6 @@ var teamModel = require('./teams.js');
 var iterationModel = require('./iterations.js');
 //var teamScoreModel = require('../teamscore.js');
 var assessmentModel = require('./assessments.js');
-var userLocations = require('./data/userLocations.js');
 var userTimezone = require('./data/uniqueUserTimezone.js');
 var moment = require('moment');
 var util = require('../../helpers/util');
