@@ -1,4 +1,5 @@
 var Promise = require('bluebird');
+var _ = require('underscore');
 Promise.config({
   warnings: false
 });
@@ -452,6 +453,56 @@ module.exports.getTeamAssessments = function(teamId, assessId) {
     var req = $.ajax({
       type: 'GET',
       url: url,
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.modifyTeamMembers = function(teamId, newMembers) {
+  return new Promise(function(resolve, reject){
+    var data = {
+      '_id' : teamId,
+      'members': newMembers
+    };
+    var url = '/api/teams/members';
+    var req = $.ajax({
+      type: 'PUT',
+      contentType: 'application/json',
+      data: JSON.stringify(data),
+      url: url,
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.fetchTeamMemberRoles = function () {
+  return new Promise(function(resolve, reject) {
+    var url = '/api/teams/roles';
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.createUser = function(newUser) {
+  return new Promise(function(resolve, reject) {
+    var url = '/api/users/create';
+    var req = $.ajax({
+      type: 'POST',
+      url: url,
+      contentType: 'application/json',
+      data: JSON.stringify(newUser)
     }).done(function(data){
       resolve(data);
     }).fail(function(err){

@@ -215,7 +215,7 @@ var HomeTeamHeader = React.createClass({
               </div>
             </div>
           </div>
-          <HomeMemberTable loadDetailTeam={self.props.loadDetailTeam} showTeamTable={self.showTeamTable}/>
+          <HomeMemberTable loadDetailTeam={self.props.loadDetailTeam} showTeamTable={self.showTeamTable} realodTeamMembers={self.props.realodTeamMembers} roles={self.props.roles}/>
         </div>
       )
     }

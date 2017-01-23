@@ -13,10 +13,23 @@ var HomeAseSummary = require('./HomeAseSummary.jsx');
 
 var HomeContent = React.createClass({
   shouldComponentUpdate: function(nextProps, nextState) {
-    if (nextProps.loadDetailTeam == this.props.loadDetailTeam) {
+    // if (nextProps.loadDetailTeam == this.props.loadDetailTeam) {
+    //   return false;
+    // } else {
+    //   return true;
+    // }
+    if (_.isEmpty(this.props.loadDetailTeam) && _.isEmpty(nextProps.loadDetailTeam)) {
       return false;
+    } else if (_.isEmpty(this.props.loadDetailTeam) && !_.isEmpty(nextProps.loadDetailTeam)) {
+      return true
     } else {
-      return true;
+      if (nextProps.loadDetailTeam.team && nextProps.loadDetailTeam.team.members && this.props.loadDetailTeam.team.members != nextProps.loadDetailTeam.team.members) {
+        return true;
+      } else if (nextProps.loadDetailTeam.team && nextProps.loadDetailTeam.team.links && this.props.loadDetailTeam.team.links != nextProps.loadDetailTeam.team.links){
+        return true;
+      } else {
+        return false;
+      }
     }
   },
 
@@ -57,7 +70,7 @@ var HomeContent = React.createClass({
         <HomeSpinner id={'contentSpinner'}/>
         <div id='bodyContent' style={{'height':'100%','width':'100%'}}>
           <HomeHighlightBox />
-          <HomeTeamHeader loadDetailTeam={this.props.loadDetailTeam} selectedTeamChanged={this.props.selectedTeamChanged} tabClickedHandler={this.props.tabClickedHandler} updateTeamLink={this.props.updateTeamLink}/>
+          <HomeTeamHeader loadDetailTeam={this.props.loadDetailTeam} selectedTeamChanged={this.props.selectedTeamChanged} tabClickedHandler={this.props.tabClickedHandler} updateTeamLink={this.props.updateTeamLink} realodTeamMembers={this.props.realodTeamMembers} roles={this.props.roles}/>
           <HomeAseSummary loadDetailTeam={this.props.loadDetailTeam} />
           <div class='home-trends-block'>
             <div class='home-trends-block-title'>

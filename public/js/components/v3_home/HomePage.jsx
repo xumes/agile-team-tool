@@ -19,8 +19,20 @@ var HomePage = React.createClass({
       selectedTeam: '',
       newTeams: new Object(),
       loadDetailTeam: new Object(),
-      selectedIter: ''
+      selectedIter: '',
+      roles: []
     }
+  },
+
+  componentWillMount: function() {
+    var self = this;
+    api.fetchTeamMemberRoles()
+      .then(function(roles){
+        self.setState({'roles': roles});
+      })
+      .catch(function(err){
+        console.log(err);
+      });
   },
 
   componentDidMount: function() {
@@ -33,12 +45,17 @@ var HomePage = React.createClass({
   },
 
   handleResize: function() {
-    var fontSize = (window.innerHeight/windowSize['height']) * (window.innerWidth/windowSize['width']) * windowSize['fontSize'];
-    windowSize['height'] = window.innerHeight;
-    windowSize['width'] = window.innerWidth;
-    windowSize['fontSize'] = fontSize;
-    var changeSize = fontSize*100 + '%';
-    $('html').css('font-size', changeSize);
+    if (window.innerWidth >= 1280) {
+      var fontSize = (window.innerWidth/windowSize['width']) * windowSize['fontSize'];
+      // windowSize['height'] = window.innerHeight;
+      // windowSize['width'] = window.innerWidth;
+      // windowSize['fontSize'] = fontSize;
+      var changeSize = fontSize*100 + '%';
+      $('html').css('font-size', changeSize);
+    } else {
+      changeSize = windowSize['fontSize']*100 + '%';
+      $('html').css('font-size', changeSize);
+    }
   },
 
   selectedTeamChanged: function(team) {
@@ -59,12 +76,14 @@ var HomePage = React.createClass({
     if (team.team.type != 'squad') {
       $('#homeNavDiv').show();
       $('#homeNavDiv').css('left','0');
+      $('#homeNavDiv').css('top','-130%');
       $('#iterContent').hide();
-      $('#mainContent').css('left', '30.5%');
+      $('#mainContent').css('left', '28.5%');
       $('#hideNavBtn').hide();
     } else {
       $('#homeNavDiv').hide();
-      $('#homeNavDiv').css('left','-500px');
+      $('#homeNavDiv').css('left','-6%');
+      $('#homeNavDiv').css('top','-203%');
       $('#iterContent').show();
       $('#mainContent').css('left', '0');
       $('#hideNavBtn').show();
@@ -151,7 +170,7 @@ var HomePage = React.createClass({
     $('#homeNavDiv').show();
     $('.home-nav-show-btn').prop('disabled',true);
     $('#homeNavDiv').animate({
-      left: '+=500',
+      left: '-3.2%',
     },200,function(){
       $('.home-nav-show-btn').prop('disabled',false);
     });
@@ -170,6 +189,16 @@ var HomePage = React.createClass({
       });
       self.setState({loadDetailTeam: updatedLinkData});
     }
+  },
+
+  realodTeamMembers: function(members, membersContent) {
+    var self = this;
+    // var newTeam = this.state.loadDetailTeam;
+    var newTeam = JSON.parse(JSON.stringify(this.state.loadDetailTeam));
+    newTeam.team.members = members;
+    newTeam.members = membersContent;
+    self.setState({'loadDetailTeam': newTeam}, function(){
+    });
   },
 
   render: function() {
@@ -198,14 +227,16 @@ var HomePage = React.createClass({
       <div style={pageStyle}>
         <div class='ibm-columns' style={columnsStyle}>
           <div id='mainContent' class='ibm-col-6-4' style={sectionTwoStyle}>
-            <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler} updateTeamLink={this.updateTeamLink} />
+            <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler} updateTeamLink={this.updateTeamLink} realodTeamMembers={this.realodTeamMembers} roles={this.state.roles}/>
           </div>
           <div id='iterContent' class='ibm-col-6-2' style={sectionOneStyle}>
             <HomeIterContent loadDetailTeam={this.state.loadDetailTeam} selectedIter={this.state.selectedIter} iterChangeHandler={this.iterChangeHandler}/>
           </div>
         </div>
         <div id='homeNavShowBtnDiv' class='home-nav-show-btn-div'>
-          <InlineSVG class='home-nav-show-btn' src={src} onClick={this.showHomeNav}></InlineSVG>
+          <div class='home-nav-show-btn'>
+            <InlineSVG src={src} onClick={this.showHomeNav}></InlineSVG>
+          </div>
           <div class='home-nav-show-text'>
             Teams
           </div>
