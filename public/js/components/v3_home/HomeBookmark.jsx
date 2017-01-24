@@ -335,7 +335,7 @@ var HomeBookmark = React.createClass({
           return (
             <div key={link.id} id={link.id}>
               <div style={{'display':'none'}}></div>
-              <a href={link.linkUrl} title={link.linkUrl}>{link.linkLabel}</a>
+              <a href={link.linkUrl} title={link.linkUrl} target='_blank'>{link.linkLabel}</a>
               <span style={{'display':'none'}}>
                   <InlineSVG onClick={self.showTeamLinkModal.bind(null, link.id)} src={require('../../../img/Att-icons/att-icons_edit.svg')}></InlineSVG>
               </span>
@@ -352,7 +352,7 @@ var HomeBookmark = React.createClass({
           return (
             <div key={link.id} id={link.id}>
               <div style={{'display':'none'}}></div>
-              <a href={link.linkUrl} title={link.linkUrl}>{link.linkLabel}</a>
+              <a href={link.linkUrl} title={link.linkUrl} target='_blank'>{link.linkLabel}</a>
               <span style={{'display':'none'}}>
                   <InlineSVG onClick={self.showTeamLinkModal.bind(null, link.id)} src={require('../../../img/Att-icons/att-icons_edit.svg')}></InlineSVG>
               </span>

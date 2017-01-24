@@ -2016,7 +2016,8 @@ body {
 
 /* BEGIN: ReactModal */
 .att-modal {
-  width: 320px;
+  /*width: 320px;*/
+  width: 20.3%;
   background-color: #fff;
   position: absolute;
   top: 50%;
@@ -2063,16 +2064,33 @@ body {
 
 /* BEGIN: Important Link section */
 .att-modal .implabel {
-  width: 279px;
+/* width: 279px;*/
+  width: 90%;
 }
 
 .att-modal .implink {
-  width: 279px;
+/* width: 279px;*/
+  width: 90%;
 }
 
-.att-modal input, .att-modal p, .att-modal span, .att-modal select {
+/*.att-modal input, .att-modal p, .att-modal span, .att-modal select {
   font-size: 10.5pt;
   padding: 0px;
+}*/
+.att-modal input {
+  font-size: 1.12em;
+}
+
+.att-modal select {
+  font-size: 1.10em;
+}
+
+.att-modal span, .att-modal p, .att-modal select {
+  padding: 0px;
+}
+
+.att-modal p {
+  font-size: 10.21pt;
 }
 
 .att-modal .ibm-row-form p {
@@ -2082,16 +2100,22 @@ body {
 .att-modal .ibm-row-form label {
   font-family: "HelvNeue Medium for IBM";
   color: #323232;
-  font-size: 14px;
-  line-height: 18px;
+  /*font-size: 14px;*/
+  font-size: 1.1em;
+  /*line-height: 18px;*/
+  line-height: 1em;
   outline: none;
 }
 
 .att-modal .ibm-row-form .lblRoman {
   font-family: "HelvNeue Roman for IBM";
-  line-height: 22px;
+  /*line-height: 22px;*/
+  line-height: 1.7em;
 }
 
+.att-modal .ibm-row-form .lblRoman {
+  /*padding-top: 1.8%;*/
+}
 .glyphicon {
   font-family: "UX1 Glyphicons";
   font-size: 14px;
@@ -2106,7 +2130,6 @@ body {
   background-color: #eee;
   font-family: "HelvNeue Medium for IBM";
   font-size: 1.4em;
-  line-height: 18px;
   text-align: left;
 }
 
@@ -2117,7 +2140,8 @@ body {
 .iterspecific span.caption {
   left: 1% !important;
   padding-left: 11px;
-  padding-top: 10px;
+  /*padding-top: 10px;*/
+  padding-top: 3.5%;
   width: 99% !important;
 }
 
@@ -2132,7 +2156,7 @@ body {
 }*/
 
 .att-modal label {
-  max-width: 100%;
+  max-width: 90%;
 }
 
 
@@ -2166,17 +2190,20 @@ body {
 }
 
 .att-modal .modal-footer .btn + .btn {
-  margin-left: 10px;
+  /*margin-left: 10px;*/
+  margin-left:4%;
   margin-bottom: 0;
 }
 
 .att-modal .modal-title {
   color: #ffffff;
   display: inline-block;
-  font-size: 15px;
+  /*font-size: 15px;*/
+  font-size: 1.5em;
   font-weight: bold;
-  line-height: 44px;
+  /*line-height: 44px;*/
   font-family: "HelvNeue Bold for IBM" !important;
+  padding-top: 3%;
 }
 
 .att-modal .modal-header .close { /* line 13835 */
@@ -2215,21 +2242,23 @@ body {
     color: #fff }
 
 .att-modal .modal-title {
-  line-height: 44px;
+  line-height: 1.8em;
   margin: 0;
+  padding-left: 1em;
+  padding-top: 4.28%;
 }
 
+
 .att-modal .modal-header {
+  /*padding: 0 20px;*/
+  /*height: 44px;*/
   background-color: #4178BE;
-  padding: 0 20px;
-  height: 44px;
+  height: 14%;
   min-height: initial;
   border: none;
-}
-
-.att-modal .modal-header {
+  width: 100%;
+  float: left;
   border-bottom: 1px solid #e0e0e0;
-  padding: 0 20px;
 }
 
 .att-modal .modal-header .close {
@@ -2286,7 +2315,7 @@ body {
 .att-modal button.close {
   position: absolute;
   right: 16px;
-  top: 0; }
+  top: 1.5%; }
   .att-modal button.close:hover span,
   .att-modal button.close:focus span {
     border-color: #777677; opacity: 1;}
@@ -2352,8 +2381,11 @@ body {
 }
 
 .att-modal .modal-body {
-  padding: 30px 20px;
+  /*padding: 30px 20px;*/
+  padding: 9.5% 6.5%;
   position: relative;
+  float: left;
+  width: 97%;
 }
 
 article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
@@ -2372,21 +2404,20 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   border-radius: 0;
   border-width: 2px !important ;
   font-family: "Helvetica Neue Roman for IBM",Helvetica,Arial,sans-serif;
-  font-size: 14px;
-  height: 30px;
-  line-height: 26px;
-  padding: 0 20px;
-}
-
-.att-modal .btn {
+  /*height: 30px;*/
+  height: 2.85em;
+  /*padding: 0 20px;*/
+  padding: 0 7.2%;
   -moz-user-select: none;
   background-image: none;
   border: 1px solid transparent;
   cursor: pointer;
   display: inline-block;
-  font-size: 14px;
+  /*font-size: 14px;*/
+  font-size: 1.25em;
   font-weight: normal;
-  line-height: 18px;
+  /*line-height: 18px;*/
+  line-height: 1em;
   margin-bottom: 0;
   text-align: center;
   vertical-align: middle;
