@@ -309,6 +309,7 @@ body {
   top: -203%;
   left: -6%;
   z-index: 11;
+  /*box-shadow: 0.1em 0.3em 0.4em 0 rgba(0,0,0,0.22);*/
 }
 
 .home-nav-tab-div {
