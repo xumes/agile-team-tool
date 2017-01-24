@@ -104,7 +104,6 @@ var HomeAddIteration = React.createClass({
   },
 
   showMessagePopup: function(message) {
-    console.log('process notification: '+message);
     alert(message);
   },
 
@@ -265,13 +264,9 @@ getIterationErrorPopup: function(errors) {
           data['endDate'] = new Date(self.state.iterationEndDate);
           api.addIteration(data)
             .then(function(result) {
-              console.log('clear errors');
               self.clearHighlightedIterErrors();
-              console.log('notify user');
               self.showMessagePopup('You have successfully added Iteration information.');
-              console.log('update list');
               self.props.iterListHandler();
-              console.log('close popup');
               self.close();            
             })
             .catch(function(err){

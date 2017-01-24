@@ -2057,7 +2057,7 @@ body {
 }
 
 .popup-title > h1 {
-  width: 73.44%;
+  width: 89%;
   height: 45%;  
   font-size: 1.5em;
   font-family: "HelvNeue Bold for IBM";
@@ -2069,7 +2069,7 @@ body {
 }
 
 .popup-title > h2 {
-  width: 4.49%;
+  width: 4%;
   height: 2.78%;
   position: relative;
   
@@ -2079,7 +2079,6 @@ body {
   color: #FFFFFF;
   cursor: pointer;
   margin-top: 4%;
-  margin-left: 10%;
   margin-right: 7%;
 }
 
@@ -2087,7 +2086,6 @@ body {
   color: #4D4D4D;
   margin: 7%;
   position: relative;
-  width: 85%;
 }
 
 .home-iter-main-section {
