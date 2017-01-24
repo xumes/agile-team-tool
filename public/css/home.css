@@ -957,13 +957,13 @@ body {
   position: relative;
   left: 0.5%;
   width: 100%;
-  height: 350%;
+  height: 150%;
 }
 
 .home-trends-block-title {
   float: left;
   width: 100%;
-  height: 2.7%;
+  height: 5.4%;
 }
 
 .home-trends-block-title > h1 {
@@ -1009,11 +1009,19 @@ body {
   width: 3%;
 }
 
+.home-trends-overflow {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 94.6%;
+  overflow: scroll;
+}
+
 #iterationSection, #assessmentSection{
   float: left;
   position: relative;
   width: 100%;
-  height: 46%;
+  height: 105.8%;
 }
 
 .home-chart {
@@ -2024,6 +2032,106 @@ body {
   float: left;
   height: 20%;
   width: 100%;
+}
+
+.agile-tool-footer {
+  position: relative;
+  float: left;
+  top: 102%;
+  height: 50%;
+  width: 100%;
+  background-color: #F7F7F7;
+}
+
+.att-footer-links {
+  position: relative;
+  float: left;
+  top: 20%;
+  height: 60%;
+  width: 100%;
+}
+
+.att-footer-links .learn-links, .att-footer-links .discover-links, .att-footer-links .superfriends-links {
+  position: relative;
+  float: left;
+  height: 100%;
+  left: 2.5%;
+  width: 15.8%;
+}
+
+
+
+.att-footer-links h4 {
+  position: relative;
+  float: left;
+  width: 100%;
+  font-family: "HelvNeue Bold for IBM";
+  font-size: 1.8em;
+}
+
+.att-footer-links ul {
+  position: relative;
+  float: left;
+  padding-top: 5%;
+}
+
+.att-footer-links li {
+  padding-bottom: 15%;
+  padding-left: 0;
+}
+
+.att-footer-links a {
+  font-family: "HelvNeue Light for IBM";
+  font-size: 1.6em;
+  color: #464646;
+}
+
+.att-footer-bottom {
+  border-top: 0.1em solid #464646;
+  position: relative;
+  float: left;
+  width: 95%;
+  top: 20%;
+  height: 20%;
+  left: 2.5%;
+}
+
+.footer-bottom-links {
+  position: relative;
+  float: left;
+  width: 80%;
+  height: 100%;
+}
+.footer-bottom-links ul {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 60%;
+  top: 40%;
+}
+.footer-bottom-links li {
+  position: relative;
+  float: left;
+  padding-left: 2%;
+  display: inline-block;
+}
+.footer-bottom-links a {
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.8em;
+  color: #777677;
+}
+.footer-bottom-image {
+  position: relative;
+  float: left;
+  width: 20%;
+  height: 100%;
+}
+.footer-bottom-image img {
+  position: relative;
+  width: 80%;
+  height: 80%;
+  left: 20%;
+  top: 10%;
 }
 /*.team-member-add-block-content-role .Select-control {
   border: 0.1em solid #777677 !important;

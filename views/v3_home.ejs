@@ -27,8 +27,9 @@
     </div>
   </div>
 
-  <div id="app-content" style='height: 100%; background-color: white;'>
+  <div id="app-content" style='height: 100%; background-color: white; position: relative; float: left;'>
   </div>
+  <%- include ./v3_footer.ejs %>
 
 
   <div id="ibm-related-content">
@@ -42,6 +43,12 @@
 
 <script type="text/javascript" src="js/team-accessibility-fix.js?v=<%=Math.random()%>"></script>
 <script type="text/javascript" src="/dist/v3home.js"></script>
-
+<script>
+  IBMCore.common.util.config.set({
+       footer: {
+          type: "default"
+          }
+    });
+</script>
 </body>
 </html>

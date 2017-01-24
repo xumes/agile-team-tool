@@ -45,19 +45,19 @@ var HomeChartFilter = React.createClass({
           break;
         case 1:
           chartHeight = '98%';
-          secHeight = '11.5%';
+          secHeight = '26.45%';
           break;
         case 2:
           chartHeight = '48%';
-          secHeight = '23%';
+          secHeight = '52.9%';
           break;
         case 3:
           chartHeight = '31%';
-          secHeight = '34.5%';
+          secHeight = '79.35%';
           break;
         case 4:
           chartHeight = '23%';
-          secHeight = '46%';
+          secHeight = '105.8%';
           break;
       }
       $('#squad_team_scard > .container-body-col-2-1').css('height',chartHeight);
@@ -90,19 +90,19 @@ var HomeChartFilter = React.createClass({
           break;
         case 1:
           chartHeight = '98%';
-          secHeight = '11.5%';
+          secHeight = '26.45%';
           break;
         case 2:
           chartHeight = '48%';
-          secHeight = '23%';
+          secHeight = '52.9%';
           break;
         case 3:
           chartHeight = '31%';
-          secHeight = '34.5%';
+          secHeight = '79.35%';
           break;
         case 4:
           chartHeight = '23%';
-          secHeight = '46%';
+          secHeight = '105.8%';
           break;
       }
       $('#nsquad_team_scard > .container-body-col-2-1').css('height',chartHeight);
