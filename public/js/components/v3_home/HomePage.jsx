@@ -1,6 +1,6 @@
 var React = require('react');
 var api = require('../api.jsx');
-var Header = require('../Header.jsx');
+var HomeHeader = require('./HomeHeader.jsx');
 var HomeNav = require('./HomeNav.jsx');
 var HomeContent = require('./HomeContent.jsx');
 var HomeIterContent = require('./HomeIterContent.jsx');
@@ -263,6 +263,8 @@ var HomePage = React.createClass({
     var src = require('../../../img/Att-icons/att-icons-Chevron-right.svg');
     return (
       <div style={pageStyle}>
+        <HomeHeader/>
+
         <div class='ibm-columns' style={columnsStyle}>
           <div id='mainContent' class='ibm-col-6-4' style={sectionTwoStyle}>
             <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler} realodTeamMembers={this.realodTeamMembers} roles={this.state.roles} handleChartResize={this.handleChartResize}/>
