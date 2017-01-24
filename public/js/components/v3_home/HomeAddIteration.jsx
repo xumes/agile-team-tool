@@ -13,7 +13,6 @@ var initData = {
   'teamId':'',
   'memberCount':'',
   'memberFte':'',
-  'defectsStartBal':'',
   'storyPointsDelivered':'',
   'committedStoryPoints':'',
   'deliveredStories':'',
