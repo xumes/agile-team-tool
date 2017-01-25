@@ -16,6 +16,21 @@ body {
   height: 100%
 }
 
+/*p, input, textarea, span, select, table, .ibm-data-table caption {
+    font-size: 1.05em;
+    padding: 0 0 0.5em;
+}
+ul, ol {
+    line-height: 1rem;
+    padding-bottom: 0px;
+}
+body, input, textarea, select, table {
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    font-size: 16px;
+    font-family: 'HelveticaNeueETW01-55Rg', sans-serif !important;
+}*/
+
 /* Matts dank spinner */
 /* The Modal (background) */
 /* Clear Loading */
@@ -2477,7 +2492,7 @@ body {
 .agile-tool-footer {
   position: relative;
   float: left;
-  top: 102%;
+  top: 107%;
   height: 50%;
   width: 100%;
   background-color: #F7F7F7;
