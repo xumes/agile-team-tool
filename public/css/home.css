@@ -2432,7 +2432,6 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 /* btn */
 .att-modal .btn-primary {
   background-color: #4178be;
-  border-color: #4178be;
   color: #ffffff;
 }
 
@@ -2450,7 +2449,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   cursor: pointer;
   display: inline-block;
   /*font-size: 14px;*/
-  font-size: 1.25em;
+  font-size: 1.27em;
   font-weight: normal;
   /*line-height: 18px;*/
   line-height: 1em;
@@ -2483,7 +2482,6 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 .att-modal .btn-primary:hover, .att-modal .btn-primary:focus, .att-modal .btn-primary.focus, .att-modal .btn-primary:active, 
   .att-modal .btn-primary.active, .open > .btn-primary.dropdown-toggle {
     background-color: #325c80;
-    border-color: #325c80;
     color: #ffffff;
 }
 
