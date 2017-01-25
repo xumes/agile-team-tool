@@ -2016,20 +2016,27 @@ body {
 
 /* BEGIN: ReactModal */
 .att-modal {
-  /*width: 320px;*/
-  width: 20.3%;
-  background-color: #fff;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  margin:0 auto !important;
-  z-index: 12;
-  box-shadow:0 0 10px rgba(0, 0, 0, 0.16);
   background-clip: padding-box;
-  border: none;
+  background-color: #fff;
+  border: medium none;
   border-radius: 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.16);
+  left: 50%;
   line-height: 18px;
+  margin: 0 auto !important;
+  position: absolute;
+  top: 51%;
+  transform: translate(-50%, -50%);
+  width: inherit;
+  z-index: 12;
+}
+
+.modal-wrapper {
+  width: 30em;
+}
+
+.teamlink-modal {
+  height: 30%;
 }
 
 .att-modal-overlay {
@@ -2065,12 +2072,12 @@ body {
 /* BEGIN: Important Link section */
 .att-modal .implabel {
 /* width: 279px;*/
-  width: 90%;
+  width: 100%;
 }
 
 .att-modal .implink {
 /* width: 279px;*/
-  width: 90%;
+  width: 100%;
 }
 
 /*.att-modal input, .att-modal p, .att-modal span, .att-modal select {
@@ -2081,8 +2088,8 @@ body {
   font-size: 1.12em;
 }
 
-.att-modal select {
-  font-size: 1.10em;
+.att-modal select, .att-modal .select2-container--default {
+width: 100% !important;
 }
 
 .att-modal span, .att-modal p, .att-modal select {
@@ -2093,8 +2100,13 @@ body {
   font-size: 10.21pt;
 }
 
+.att-modal .ibm-row-form {
+  padding-top: 1%;
+}
+
 .att-modal .ibm-row-form p {
   margin-bottom: 8.3%;
+  width: 100%;
 }
 
 .att-modal .ibm-row-form label {
@@ -2186,7 +2198,8 @@ body {
 
 .att-modal .modal-footer {
   border: medium none;
-  padding: 10px 20px;
+  /*padding: 10px 20px;*/
+  padding: 4% 5%;
 }
 
 .att-modal .modal-footer .btn + .btn {
@@ -2258,7 +2271,6 @@ body {
   border: none;
   width: 100%;
   float: left;
-  border-bottom: 1px solid #e0e0e0;
 }
 
 .att-modal .modal-header .close {
@@ -2380,12 +2392,36 @@ body {
   content: "\e604";
 }
 
+
+
 .att-modal .modal-body {
   /*padding: 30px 20px;*/
-  padding: 9.5% 6.5%;
+  padding: 9.5% 6.5% 1%;
   position: relative;
   float: left;
-  width: 97%;
+  /*width: 97%;*/
+  width: 87%;
+}
+
+/* responsive teamlinks modal */
+@media only screen and (max-width: 579px) {
+  .att-modal form.ibm-column-form p, .att-modal form.ibm-row-form p {
+    padding-bottom: 1%;
+  }
+  .att-modal {
+    top: 45%;
+  }
+  .att-modal .btn {
+    width: 90%;
+    margin-top: 1em;
+  }
+  .att-modal .btn {
+    margin-right: 5%;
+  }
+}
+
+.clearboth {
+  clear: both;
 }
 
 article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
@@ -2407,7 +2443,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   /*height: 30px;*/
   height: 2.85em;
   /*padding: 0 20px;*/
-  padding: 0 7.2%;
+  padding: 0 7%;
   -moz-user-select: none;
   background-image: none;
   border: 1px solid transparent;

@@ -394,6 +394,7 @@ var HomeBookmark = React.createClass({
            className="att-modal"
            overlayClassName="att-modal-overlay"
            contentLabel="Important links modal">
+           <div class='modal-wrapper'>
             <header role="banner" class="modal-header" aria-labelledby="x1ModalTitle">
               <h3 id="x1ModalTitle" class="modal-title">{self.state.modalTitle}</h3>
               <button type="button" class="close" onClick={self.hideTeamLinkModal} aria-label="Close modal" title="Close modal">
@@ -429,10 +430,12 @@ var HomeBookmark = React.createClass({
                 <input name='link_id' id='link_id' type='hidden' value='{self.state.link_id}' />
               </form>
             </section>
+            <div class='clearboth'></div>
             <footer aria-label="Modal footer content" class="modal-footer" role="contentinfo">
               <button class="btn btn-primary modal-ok" onClick={self.saveTeamLinkModal} >Save</button>
               <button class="btn btn-secondary modal-close" onClick={self.hideTeamLinkModal}>Cancel</button>
             </footer>
+           </div>
         </ReactModal>
       </div>
     );
