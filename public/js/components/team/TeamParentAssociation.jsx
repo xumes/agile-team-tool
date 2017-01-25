@@ -36,6 +36,7 @@ var TeamParentAssociation = React.createClass({
           return teamApi.getSelectableParents(currentTeamId);
         })
         .then(function(result) {
+          result = _.sortBy(result, 'name');
           var returnResult = {
             currentParentId: currentParentId,
             selectableParents: result,
