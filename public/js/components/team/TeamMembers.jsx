@@ -110,7 +110,9 @@ var TeamMembers = React.createClass({
   memberRoleChangeHandler: function(e) {
     var role = e.currentTarget.value || $('#memberRoleSelectList option:selected').val();
     if (role.indexOf('Other...') != -1) {
-      this.state.selectedMember.role = role;
+      if (_.isEmpty(this.state.selectedMember.role)){
+        this.state.selectedMember.role = role;
+      }
       $('#otherRoleDescSection').show();
       $('#otherRoleDesc').removeAttr('disabled');
       $('#otherRoleDesc').val('');
