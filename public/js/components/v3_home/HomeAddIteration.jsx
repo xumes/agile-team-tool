@@ -52,13 +52,18 @@ var HomeAddIteration = React.createClass({
     if (this.state.c_name && this.props.loadDetailTeam.iterations.length > 0) {
       this.startDateChange(new moment(this.props.loadDetailTeam.iterations[0].endDate).add(1,'day'));
     }
-    this.setState({name: name, c_name: true});
+    this.setState({
+      name: name, 
+      c_name: true, 
+      c_stories_op_committed:false,
+      c_stories_dev_committed:false,
+      c_stories_op_delivered:false,
+      c_stories_dev_delivered: false});
     
   },
 
   close: function(){
     this.reset();
-    this.setState({c_name: true});
     this.props.onClose();
   },
 
