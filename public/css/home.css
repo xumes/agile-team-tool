@@ -1078,7 +1078,7 @@ body {
 }
 
 .home-chart-filter-arrow {
-  height: 20%;
+  height: 15%;
   width: 5%;
   display: inline-block;
   float: left;
@@ -1096,9 +1096,18 @@ body {
   fill: #4178BE;
 }
 
-.home-chart-filter-title {
-  height: 20%;
+.home-chart-filter-content-block {
+  position: relative;
   width: 95%;
+  height: 100%;
+  float:left;
+  /*background-color: #FFFFFF;
+  box-shadow: 0 0 1em 0 rgba(0,0,0,0.16);*/
+}
+
+.home-chart-filter-title {
+  height: 15%;
+  width: 100%;
   background-color: #4178BE;
   display: inline-block;
   float: left;
@@ -1131,12 +1140,20 @@ body {
   cursor: pointer;
 }
 
+.home-chart-filter-shadowbox {
+  position: relative;
+  height: 85%;
+  width: 100%;
+  float: left;
+  box-shadow: 0 0 1em 0 rgba(0,0,0,0.16);
+}
+
 .home-chart-filter-content {
-  height: 60%;
-  width: 95%;
+  height: 70.6%;
+  width: 100%;
   background-color: #FFFFFF;
   position: relative;
-  left: 5%;
+  /*left: 5%;*/
   /*box-shadow:  2px 2px 2px #C7C7C7;*/
   float: left;
 }
@@ -1145,6 +1162,49 @@ body {
   height: 20%;
   width: 100%;
 }*/
+
+.home-chart-filter-select-block {
+  position: relative;
+  float: left;
+  width: 50%;
+  height: 18%;
+}
+
+.home-chart-filter-checkbox {
+  position: relative;
+  float: left;
+  width: 12%;
+  height: 57%;
+  top: 35%;
+  left: 10%;
+  background-color: #FFFFFF;
+  border: 0.1em solid #777677;
+  cursor: pointer;
+}
+.home-chart-filter-checkbox > div {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+.home-chart-filter-checkbox svg {
+  position: relative;
+  left: 5%;
+  width: 90%;
+  height: auto;
+}
+
+.home-chart-filter-checkbox-title {
+  position: relative;
+  float: left;
+  top: 40%;
+  left: 15%;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.2em;
+  line-height: 1.4em;
+  color: #323232;
+}
 
 .home-chart-filter-selected {
   position: relative;
@@ -1180,13 +1240,13 @@ body {
 }
 
 .home-chart-filter-btns {
-  height: 20%;
-  width: 95%;
+  height: 29.4%;
+  width: 100%;
   position: relative;
-  left: 5%;
+  /*left: 5%;*/
   float: left;
   background-color: #FFFFFF;
-  border-top: 0.1em solid #C7C7C7
+  /*border-top: 0.1em solid #C7C7C7;*/
 }
 
 #iterContent > div {
@@ -2167,11 +2227,11 @@ body {
 
 .popup-title > h1 {
   width: 89%;
-  height: 45%;  
+  height: 45%;
   font-size: 1.5em;
   font-family: "HelvNeue Bold for IBM";
   line-height: 1.19em;
-  color: #FFFFFF;  
+  color: #FFFFFF;
   position: relative;
   margin-left: 7%;
 }
@@ -2179,7 +2239,7 @@ body {
 .popup-title > h2 {
   width: 4%;
   height: 2.78%;
-  position: relative;  
+  position: relative;
   font-size: 1.5em;
   font-family: "HelvNeue Bold for IBM";
   line-height: 1.19em;
