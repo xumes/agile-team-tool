@@ -2053,6 +2053,7 @@ body {
   height: 8.49%;
   width: 100%;
   background-color: #4178BE;;
+  padding-top: 4%;
   display: flex;
 }
 
@@ -2064,21 +2065,18 @@ body {
   line-height: 1.19em;
   color: #FFFFFF;  
   position: relative;
-  margin-top: 4%;
   margin-left: 7%;
 }
 
 .popup-title > h2 {
   width: 4%;
   height: 2.78%;
-  position: relative;
-  
+  position: relative;  
   font-size: 1.5em;
   font-family: "HelvNeue Bold for IBM";
   line-height: 1.19em;
   color: #FFFFFF;
   cursor: pointer;
-  margin-top: 4%;
   margin-right: 7%;
 }
 
@@ -2098,7 +2096,7 @@ body {
 }
 
 .home-iter-sub-section {
-  font-family: "HelvNeue Medium for IBM";
+  font-family: "HelvNeue Roman for IBM";
   font-size: 1.2em;
   font-weight: normal;
   line-height: 1.4em;
@@ -2106,30 +2104,51 @@ body {
   text-align: left;
 }
 
+.home-iter-sub-section-delivered {
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.1em;
+  font-weight: normal;
+  line-height: 1.3em;
+  color: #323232;
+  text-align: left;
+}
+
+.home-iter-subdetail-section {
+  font-family: "HelvNeue Bold for IBM";
+  font-size: 1.2em;
+  font-weight: normal;
+  line-height: 1.4em;
+  color: #5A5A5A;
+  text-align: left;
+}
+
 .home-iter-date {
-  width: 90%;
-  height: 6.76%;
+  width: 80%;
   border: 0.1em solid #777677;
   font-size: 1.4em;
+  line-height: 1.8em;
+  color: #5A5A5A;
   padding: 2%;
 }
 
 .home-iter-text-field {
-  font-size: 1.4em;
   width: 95%;
   border: 0.1em solid #777677;
+  font-family: "HelvNeue Medium for IBM";
+  font-size: 1.4em;
+  line-height: 0.8em;
+  color: #5A5A5A;
   padding: 2%;
 }
 
 .home-iter-category {
   display: flex;
   width: 100%;
-  color: #5A5A5A;
 }
 
 .home-iter-cal-btn-block {
   position: relative;
-  width: 25%;
+  width: 15%;
   cursor:pointer;
   margin-top: 1%;
 }

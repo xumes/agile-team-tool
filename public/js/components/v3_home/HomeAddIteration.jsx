@@ -314,27 +314,27 @@ getIterationErrorPopup: function(errors) {
               </div>
               <div style={{'marginTop':'5%'}}>
                 <p className='home-iter-main-section'>Copy/Import From Last Iteration: </p>
-                <div class='home-iter-category' id='importName'>             
+                <div class='home-iter-category'>             
                   <input id='cname' type='checkbox' checked={this.state.c_name} onChange={this.copyNameChange}/>
                   <label for='cname' className='home-iter-sub-section'>Name</label>
                 </div>
               </div >
               <div style={{'marginTop':'2%'}}>
-                <p className='home-iter-sub-section'>Stories/Cards (For Operations) from: </p>
+                <p className='home-iter-subdetail-section'>Stories/Cards (For Operations) from: </p>
                 <div class='home-iter-category'>             
-                  <input aria-label='Select action' id='cname' type='checkbox' checked={this.state.c_stories_op_committed} onChange={this.copyOpCommStories}/>
-                  <label for='cname' className='home-iter-sub-section'>Committed</label>
-                  <input aria-label='Select action' id='cname' type='checkbox' checked={this.state.c_stories_op_delivered} style={{'marginLeft':'5%'}} onChange={this.copyOpDelStories}/>
-                  <label for='cname' className='home-iter-sub-section'>Delivered (into Committed)</label>
+                  <input id='cstoriesopcom' type='checkbox' checked={this.state.c_stories_op_committed} onChange={this.copyOpCommStories}/>
+                  <label for='cstoriesopcom' className='home-iter-sub-section'>Committed</label>
+                  <input id='cstoriesopdel' type='checkbox' checked={this.state.c_stories_op_delivered} style={{'marginLeft':'5%'}} onChange={this.copyOpDelStories}/>
+                  <label for='cstoriesopdel'> <span className='home-iter-sub-section'>Delivered </span> <span className='home-iter-sub-section-delivered'>(into Committed)</span></label>
                 </div>
               </div >
               <div style={{'marginTop':'2%'}}>
-                <p className='home-iter-sub-section'>Story Points (For Development) from: </p>
+                <p className='home-iter-subdetail-section'>Story Points (For Development) from: </p>
                 <div className='home-iter-category'>          
-                  <input style={{'fontSize': '1.4em'}}aria-label='Select action' id='cname' type='checkbox' checked={this.state.c_stories_dev_committed} onChange={this.copyDevCommStories}/>
-                  <label for='cname' className='home-iter-sub-section'>Committed</label>
-                  <input aria-label='Select action' id='cname' type='checkbox' checked={this.state.c_stories_dev_delivered} style={{'marginLeft':'5%'}} onChange={this.copyDevDelStories}/>
-                  <label for='cname' className='home-iter-sub-section'>Delivered (into Committed)</label>
+                  <input id='cstoriesdevcom' type='checkbox' checked={this.state.c_stories_dev_committed} onChange={this.copyDevCommStories}/>
+                  <label for='cstoriesdevcom' className='home-iter-sub-section'>Committed</label>
+                  <input id='cstoriesdevdel' type='checkbox' checked={this.state.c_stories_dev_delivered} style={{'marginLeft':'5%'}} onChange={this.copyDevDelStories}/>
+                  <label for='cstoriesdevdel'> <span className='home-iter-sub-section'>Delivered </span> <span className='home-iter-sub-section-delivered'>(into Committed)</span></label>
                 </div>
               </div > 
               <div style={{'marginTop':'5%'}}>
