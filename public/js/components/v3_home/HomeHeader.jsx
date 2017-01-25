@@ -15,9 +15,6 @@ var HomeHeader = React.createClass({
           <div>IBM</div>&nbsp;<div>Agile Team Tool</div>&nbsp;
           <div>{siteEnv}</div>
         </div>
-        <div class='header-logo'>
-          <InlineSVG class='header-ibm-logo' src={require('../../../img/Att-icons/att-icons-IBM_logo.svg')}></InlineSVG>
-        </div>
         <div class="header-menu">
           <div class="header-menu-dropdown">
             <InlineSVG class='header-menu-icon' src={require('../../../img/Att-icons/att-icons_Profile.svg')}></InlineSVG>
@@ -88,6 +85,9 @@ var HomeHeader = React.createClass({
                 <a href="javascript: launchApiKey();">API Key Generation</a>
               </li>
             </ul>
+          </div>
+          <div class='header-logo'>
+            <InlineSVG class='header-ibm-logo' src={require('../../../img/Att-icons/att-icons-IBM_logo.svg')}></InlineSVG>
           </div>
         </div>
       </div>
