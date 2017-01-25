@@ -3,7 +3,7 @@ var InlineSVG = require('svg-inline-react');
 
 var HomeHeader = React.createClass({
   render: function() {
-    var userName = user.ldap.givenName[0] || user.ldap.preferredFirstName || user.ldap.hrFirstName;
+    var userName = user.ldap.preferredFirstName || user.ldap.hrFirstName;
     var callupName = user.ldap.callupName || userName;
     var userImage = '//images.w3ibm.mybluemix.net/image/'+user.ldap.uid.toUpperCase();
     var siteEnv = '';

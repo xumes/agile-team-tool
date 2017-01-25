@@ -2077,12 +2077,81 @@ body, input, textarea, select, table {
   position: relative;
   float: left;
   left: 0.5%;
+  top: 1%;
   z-index: 7;
   background-color: #EFF9FF;
   width: 100%;
   height: 10%;
 }
 
+.home-assessment-summary-header-title {
+  position: relative;
+  float: left;
+  width: 30%;
+  height: 50%;
+  top: 25%;
+}
+
+.home-assessment-summary-header-title > h1 {
+  font-family: "HelvNeue Light for IBM";
+  font-size: 2.2em;
+  line-height: 2em;
+  color: #62B2EF;
+  padding: 0;
+}
+
+.home-assessment-summary-header-btn {
+  position: relative;
+  float: right;
+  width: 20%;
+  height: 50%;
+  top: 25%;
+}
+.home-assessment-summary-header-btn > button {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+  font-size: 1.4em;
+  line-height: 0.8em;
+  font-family: "Helvetica Neue LT W1G";
+}
+
+.home-assessment-summary-header-status {
+  position: relative;
+  float: right;
+  width: 18%;
+  height: 50%;
+  top: 25%;
+  right: 2%;
+}
+
+.home-assessment-summary-header-status > div {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 50%;
+}
+.home-assessment-summary-header-status > div > h1 {
+  position: relative;
+  float: left;
+  text-align: left;
+  font-family: "HelvNeue Light for IBM";
+  font-size: 1.2em;
+  line-height: 1.4em;
+  color: #777677;
+  padding: 0;
+}
+.home-assessment-summary-header-status > div > h2 {
+  position: relative;
+  float: right;
+  text-align: right;
+  font-family: "Helvetica Neue";
+  font-size: 1.2em;
+  line-height: 1.3em;
+  color: #777677;
+  padding: 0;
+}
 .home-assessment-summary-content {
   position: relative;
   float: left;
@@ -2090,15 +2159,15 @@ body, input, textarea, select, table {
   width: 96%;
   height: 100%;
 }
-.home-assessment-summary-content:not(:last-child) {
-  border-bottom: 0.1em solid #C7C7C7;
+.home-assessment-summary-content:last-child {
+  border-top: 0.1em solid #7CC7FF;
 }
 
 .home-assessment-summary-title {
   position: relative;
   float: left;
   top: 10%;
-  width: 25%;
+  width: 30%;
   height: 100%;
 }
 
@@ -2108,9 +2177,9 @@ body, input, textarea, select, table {
   width: 100%;
   height: 50%;
   font-family: "Helvetica Neue";
-  font-size: 1.8em;
+  font-size: 1.6em;
   font-weight: 300;
-  line-height: 2.2em;
+  line-height: 2.5em;
   color: #5A5A5A;
   padding: 0;
 }
@@ -2122,15 +2191,15 @@ body, input, textarea, select, table {
   height: 50%;
   font-family: "Helvetica Neue";
   font-size: 1.2em;
-  font-weight: 300;
-  color: #5A5A5A;
+  color: #777677;
+  line-height: 0.5em;
   padding: 0;
 }
 
 .home-assessment-summary-ponts {
   position: relative;
   float: left;
-  width: 50%;
+  width: 70%;
   height: 100%;
 }
 
@@ -2146,7 +2215,7 @@ body, input, textarea, select, table {
   position: relative;
   float: left;
   top: 25%;
-  width: 2%;
+  width: 1%;
   height: 50%;
 }
 
@@ -2164,7 +2233,7 @@ body, input, textarea, select, table {
   float: left;
   z-index: 3;
   left: 31%;
-  width: 1%;
+  width: 0.5%;
   height: 50%;
   top: 25%;
 }
@@ -2178,9 +2247,9 @@ body, input, textarea, select, table {
   position: relative;
   float: right;
   /*left: 96%;*/
-  top: 25%;
-  width: 3%;
-  height: 50%;
+  top: 32.5%;
+  width: 1.5%;
+  height: 35%;
   background-color: #5596E6;
 }
 
@@ -2197,10 +2266,10 @@ body, input, textarea, select, table {
 }
 
 .home-assessment-summary-ponts-block > .dash {
-  position: absolute;
-  left: 2%;
+  position: relative;
+  left: 1%;
   z-index: 1;
-  width: 95%;
+  width: 97.5%;
   height: 1%;
   top: 47%;
   border-bottom: 0.1em dotted;
@@ -2208,9 +2277,9 @@ body, input, textarea, select, table {
 
 .home-assessment-summary-ponts-block > .line {
   position: absolute;
-  left: 2%;
+  left: 1%;
   z-index: 2;
-  width: 95%;
+  /*width: 95%;*/
   height: 1%;
   top: 47%;
   border-bottom: 0.1em solid #5596E6;
@@ -2221,7 +2290,7 @@ body, input, textarea, select, table {
   z-index: 3;
   /*left: 96%;*/
   top: 25%;
-  width: 3%;
+  width: 1.5%;
   height: 50%;
 }
 
