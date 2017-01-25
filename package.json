@@ -50,6 +50,7 @@
     "react": "^15.3.2",
     "react-datepicker": "^0.33.0",
     "react-dom": "^15.3.2",
+    "react-modal": "^1.6.5",
     "react-overlays": "^0.6.10",
     "react-select": "^1.0.0-rc.2",
     "react-tooltip": "^3.2.1",

@@ -82,8 +82,10 @@ var HomeContent = React.createClass({
               </div>
               <HomeChartFilter loadDetailTeam={this.props.loadDetailTeam} showFilter={this.showFilter}/>
             </div>
-            <HomeIterSection loadDetailTeam={this.props.loadDetailTeam}/>
-            <HomeAseSection loadDetailTeam={this.props.loadDetailTeam}/>
+            <div class='home-trends-overflow'>
+              <HomeIterSection loadDetailTeam={this.props.loadDetailTeam}/>
+              <HomeAseSection loadDetailTeam={this.props.loadDetailTeam}/>
+            </div>
           </div>
         </div>
       </div>

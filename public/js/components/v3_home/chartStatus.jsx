@@ -14,7 +14,7 @@ module.exports.chartStatus = {
     },
     'charts': {
       'chartHeight': '98%',
-      'secHeight': '11.5%'
+      'secHeight': '26.45%'
     }
   },
   'nonSquad': {
@@ -31,7 +31,7 @@ module.exports.chartStatus = {
     },
     'charts': {
       'chartHeight': '98%',
-      'secHeight': '11.5%'
+      'secHeight': '26.45%'
     }
   }
 };

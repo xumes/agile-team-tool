@@ -1207,13 +1207,13 @@ body {
   position: relative;
   left: 0.5%;
   width: 100%;
-  height: 350%;
+  height: 150%;
 }
 
 .home-trends-block-title {
   float: left;
   width: 100%;
-  height: 2.7%;
+  height: 5.4%;
 }
 
 .home-trends-block-title > h1 {
@@ -1259,11 +1259,19 @@ body {
   width: 3%;
 }
 
+.home-trends-overflow {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 94.6%;
+  overflow: scroll;
+}
+
 #iterationSection, #assessmentSection{
   float: left;
   position: relative;
   width: 100%;
-  height: 46%;
+  height: 105.8%;
 }
 
 .home-chart {
@@ -1320,7 +1328,7 @@ body {
 }
 
 .home-chart-filter-arrow {
-  height: 20%;
+  height: 15%;
   width: 5%;
   display: inline-block;
   float: left;
@@ -1338,9 +1346,18 @@ body {
   fill: #4178BE;
 }
 
-.home-chart-filter-title {
-  height: 20%;
+.home-chart-filter-content-block {
+  position: relative;
   width: 95%;
+  height: 100%;
+  float:left;
+  /*background-color: #FFFFFF;
+  box-shadow: 0 0 1em 0 rgba(0,0,0,0.16);*/
+}
+
+.home-chart-filter-title {
+  height: 15%;
+  width: 100%;
   background-color: #4178BE;
   display: inline-block;
   float: left;
@@ -1373,12 +1390,20 @@ body {
   cursor: pointer;
 }
 
+.home-chart-filter-shadowbox {
+  position: relative;
+  height: 85%;
+  width: 100%;
+  float: left;
+  box-shadow: 0 0 1em 0 rgba(0,0,0,0.16);
+}
+
 .home-chart-filter-content {
-  height: 60%;
-  width: 95%;
+  height: 70.6%;
+  width: 100%;
   background-color: #FFFFFF;
   position: relative;
-  left: 5%;
+  /*left: 5%;*/
   /*box-shadow:  2px 2px 2px #C7C7C7;*/
   float: left;
 }
@@ -1387,6 +1412,49 @@ body {
   height: 20%;
   width: 100%;
 }*/
+
+.home-chart-filter-select-block {
+  position: relative;
+  float: left;
+  width: 50%;
+  height: 18%;
+}
+
+.home-chart-filter-checkbox {
+  position: relative;
+  float: left;
+  width: 12%;
+  height: 57%;
+  top: 35%;
+  left: 10%;
+  background-color: #FFFFFF;
+  border: 0.1em solid #777677;
+  cursor: pointer;
+}
+.home-chart-filter-checkbox > div {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+.home-chart-filter-checkbox svg {
+  position: relative;
+  left: 5%;
+  width: 90%;
+  height: auto;
+}
+
+.home-chart-filter-checkbox-title {
+  position: relative;
+  float: left;
+  top: 40%;
+  left: 15%;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.2em;
+  line-height: 1.4em;
+  color: #323232;
+}
 
 .home-chart-filter-selected {
   position: relative;
@@ -1422,13 +1490,13 @@ body {
 }
 
 .home-chart-filter-btns {
-  height: 20%;
-  width: 95%;
+  height: 29.4%;
+  width: 100%;
   position: relative;
-  left: 5%;
+  /*left: 5%;*/
   float: left;
   background-color: #FFFFFF;
-  border-top: 0.1em solid #C7C7C7
+  /*border-top: 0.1em solid #C7C7C7;*/
 }
 
 #iterContent > div {
@@ -2275,6 +2343,106 @@ body {
   height: 20%;
   width: 100%;
 }
+
+.agile-tool-footer {
+  position: relative;
+  float: left;
+  top: 102%;
+  height: 50%;
+  width: 100%;
+  background-color: #F7F7F7;
+}
+
+.att-footer-links {
+  position: relative;
+  float: left;
+  top: 20%;
+  height: 60%;
+  width: 100%;
+}
+
+.att-footer-links .learn-links, .att-footer-links .discover-links, .att-footer-links .superfriends-links {
+  position: relative;
+  float: left;
+  height: 100%;
+  left: 2.5%;
+  width: 15.8%;
+}
+
+
+
+.att-footer-links h4 {
+  position: relative;
+  float: left;
+  width: 100%;
+  font-family: "HelvNeue Bold for IBM";
+  font-size: 1.8em;
+}
+
+.att-footer-links ul {
+  position: relative;
+  float: left;
+  padding-top: 5%;
+}
+
+.att-footer-links li {
+  padding-bottom: 15%;
+  padding-left: 0;
+}
+
+.att-footer-links a {
+  font-family: "HelvNeue Light for IBM";
+  font-size: 1.6em;
+  color: #464646;
+}
+
+.att-footer-bottom {
+  border-top: 0.1em solid #464646;
+  position: relative;
+  float: left;
+  width: 95%;
+  top: 20%;
+  height: 20%;
+  left: 2.5%;
+}
+
+.footer-bottom-links {
+  position: relative;
+  float: left;
+  width: 80%;
+  height: 100%;
+}
+.footer-bottom-links ul {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 60%;
+  top: 40%;
+}
+.footer-bottom-links li {
+  position: relative;
+  float: left;
+  padding-left: 2%;
+  display: inline-block;
+}
+.footer-bottom-links a {
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.8em;
+  color: #777677;
+}
+.footer-bottom-image {
+  position: relative;
+  float: left;
+  width: 20%;
+  height: 100%;
+}
+.footer-bottom-image img {
+  position: relative;
+  width: 80%;
+  height: 80%;
+  left: 20%;
+  top: 10%;
+}
 /*.team-member-add-block-content-role .Select-control {
   border: 0.1em solid #777677 !important;
   border-radius: 0% !important;
@@ -2282,3 +2450,150 @@ body {
 .team-member-add-block-content-role > div span {
   padding: 0;
 }*/
+
+.home-iter-popup {
+  width: 23%;
+
+  background-color: #FFFFFF;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin:0 auto !important;
+  z-index: 12;
+  box-shadow:0 0 10px rgba(0, 0, 0, 0.16);
+  background-clip: padding-box;
+  border: none;
+  border-radius: 0;
+}
+
+.popup-title {
+  height: 8.49%;
+  width: 100%;
+  background-color: #4178BE;;
+  padding-top: 4%;
+  display: flex;
+}
+
+.popup-title > h1 {
+  width: 89%;
+  height: 45%;
+  font-size: 1.5em;
+  font-family: "HelvNeue Bold for IBM";
+  line-height: 1.19em;
+  color: #FFFFFF;
+  position: relative;
+  margin-left: 7%;
+}
+
+.popup-title > h2 {
+  width: 4%;
+  height: 2.78%;
+  position: relative;
+  font-size: 1.5em;
+  font-family: "HelvNeue Bold for IBM";
+  line-height: 1.19em;
+  color: #FFFFFF;
+  cursor: pointer;
+  margin-right: 7%;
+}
+
+.home-iter-add-content {
+  color: #4D4D4D;
+  margin: 7%;
+  position: relative;
+}
+
+.home-iter-main-section {
+  font-family: "HelvNeue Medium for IBM";
+  font-size: 1.4em;
+  font-weight: normal;
+  line-height: 1.8em;
+  color: #323232;
+  text-align: left;
+}
+
+.home-iter-sub-section {
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.2em;
+  font-weight: normal;
+  line-height: 1.4em;
+  color: #323232;
+  text-align: left;
+}
+
+.home-iter-sub-section-delivered {
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.1em;
+  font-weight: normal;
+  line-height: 1.3em;
+  color: #323232;
+  text-align: left;
+}
+
+.home-iter-subdetail-section {
+  font-family: "HelvNeue Bold for IBM";
+  font-size: 1.2em;
+  font-weight: normal;
+  line-height: 1.4em;
+  color: #5A5A5A;
+  text-align: left;
+}
+
+.home-iter-date {
+  width: 80%;
+  border: 0.1em solid #777677;
+  font-size: 1.4em;
+  line-height: 1.8em;
+  color: #5A5A5A;
+  padding: 2%;
+}
+
+.home-iter-text-field {
+  width: 95%;
+  border: 0.1em solid #777677;
+  font-family: "HelvNeue Medium for IBM";
+  font-size: 1.4em;
+  line-height: 0.8em;
+  color: #5A5A5A;
+  padding: 2%;
+}
+
+.home-iter-category {
+  display: flex;
+  width: 100%;
+}
+
+.home-iter-cal-btn-block {
+  position: relative;
+  width: 15%;
+  cursor:pointer;
+  margin-top: 1%;
+}
+
+.home-iter-cal-btn-block > i > svg {
+  width: 80%;
+  position: relative;
+  margin-left: 25%;
+}
+
+.home-iter-new-dates{
+  display: flex;
+}
+
+.popup-btns {
+  width: 100%;
+  float: left;
+  background-color: #FFFFFF;
+  margin-top: 7%;
+}
+
+.att-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.50);
+  z-index: 11;
+}

@@ -45,16 +45,6 @@ function teamNamesHandler(teams) {
 }
 
 function submitFeedback() {
-  valCount = 0;
-  hasError = false;
-  ccIds = [];
-  var result = validateEmail();
-  if (result) {
-    processFeedback();
-  }
-}
-
-function processFeedback() {
   $('#feeback_submit').attr('disabled', 'disabled');
   $('#sendFeedback').css('cursor', 'progress');
   $.ajax({
