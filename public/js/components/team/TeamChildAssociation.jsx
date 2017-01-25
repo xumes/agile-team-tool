@@ -51,6 +51,7 @@ var TeamChildAssociation = React.createClass({
       Promise.all(promiseArray)
         .then(function(results){
           currentTeamId = selectedTeam.team._id;
+          results[1] = _.sortBy(results[1], 'name');
           var returnObject = {
             'access': selectedTeam.access,
             'currentTeamId': selectedTeam.team._id,
