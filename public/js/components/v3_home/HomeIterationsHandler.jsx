@@ -1,6 +1,7 @@
 var Promise = require('bluebird');
 var _ = require('underscore');
 var moment = require('moment');
+var Utils = require('../utils.jsx');
 
 module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAccess) {
   $('#gotoIterationList').attr('disabled', 'disabled');
@@ -119,7 +120,7 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAcc
     });
   }
 
-  setSelectOptions('gotoIterationList', listOption, null, null, null);
+  Utils.setSelectOptions('gotoIterationList', listOption, null, null, null);
   IBMCore.common.widget.selectlist.init('#gotoIterationList');
 
   // charts

@@ -2,7 +2,7 @@
 <html lang="en-US">
 <head>
 
-  <%- include ./header/header_meta.ejs %>
+  <%- include ./header/v3_header_meta.ejs %>
   <link href="/css/home.css" rel="stylesheet" type="text/css">
   <link href="/dist/styles.css" rel="stylesheet" />
   <script src="//cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.4.0/clipboard.min.js"></script>
@@ -21,12 +21,9 @@
 
 </head>
 
+<div id="warningBar" class='agile-header-warning'></div>
+
 <body id="ibm-com" class="ibm-type" onload="getSiteStatus();">
-  <div id ='agile-home-header'>
-    <div id='agile-home-header-title'>
-      <h>IBM Agile Team Tool</h>
-    </div>
-  </div>
 
   <div id="app-content" style='width: 100%; height: 100%; background-color: white; position: relative; float: left;'>
   </div>
@@ -44,12 +41,9 @@
 
 <script type="text/javascript" src="js/team-accessibility-fix.js?v=<%=Math.random()%>"></script>
 <script type="text/javascript" src="/dist/v3home.js"></script>
-<script>
-  IBMCore.common.util.config.set({
-       footer: {
-          type: "default"
-          }
-    });
-</script>
+
+<% include ./v3_feedback.ejs %>
+<% include ./v3_apiKeyPopup.ejs %>
+
 </body>
 </html>

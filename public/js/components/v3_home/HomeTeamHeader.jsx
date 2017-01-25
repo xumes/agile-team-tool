@@ -141,7 +141,8 @@ var HomeTeamHeader = React.createClass({
         var faceImages = team.members.map(function(member, index){
           if (index < 9) {
             var faceImageId = 'faceImage_' + index;
-            var src = 'http://dpev027.innovate.ibm.com:10000/image/' + member.userId.toUpperCase();
+            //var src = 'http://dpev027.innovate.ibm.com:10000/image/' + member.userId.toUpperCase();
+            var src = 'http://images.w3ibm.mybluemix.net/image/' + member.userId.toUpperCase();
             return (
               <div key={faceImageId} class='home-header-image'>
                 <a class='ibm-padding-content' style={{'padding': '0', 'borderRadius': '50%'}} title={member.name}>
@@ -182,14 +183,12 @@ var HomeTeamHeader = React.createClass({
             </div>
           </div>
           <div class='home-team-header-hierarchy'>
-            <tr id='Hierarchy'>
-              <td>
+            <span id='Hierarchy'>
                 {teamHierarchy}
                 <div class='hierarchy-lastteam'>
                   {teamHierarchy2}
                 </div>
-              </td>
-            </tr>
+            </span>
           </div>
           <div class='home-team-header-btns-div'>
             <div class='home-team-header-btns' onClick={self.showBookmark}>

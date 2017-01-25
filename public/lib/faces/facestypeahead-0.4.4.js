@@ -1633,8 +1633,9 @@ var TypeAhead = function (inputBox, settings) {
 
     // img.src = [settings.faces.imageHost, ':', port, '/image/', user.uid, '.jpg?s=', imageSize].join('');
     // HCD
-    img.src = [settings.faces.imageHost, ':', '/image/', user.uid, '.jpg?s=', imageSize].join('');
+    img.src = [settings.faces.imageHost, '/image/', user.uid, '.jpg?s=', imageSize].join('');
     img.setAttribute('alt', user.name);
+    img.setAttribute('style', 'border-radius: 50%');
     fragment.appendChild(img);
 
     name.appendChild(document.createTextNode(user.name));
