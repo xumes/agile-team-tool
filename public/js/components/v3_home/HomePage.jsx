@@ -238,6 +238,19 @@ var HomePage = React.createClass({
     });
   },
 
+  reloadTeamIterations: function() {
+    var self = this;
+    api.getIterations(self.state.loadDetailTeam.team._id)
+      .then(function(iterations){
+        var teamDetail = JSON.parse(JSON.stringify(self.state.loadDetailTeam));
+        teamDetail.iterations = iterations;
+        self.setState({'loadDetailTeam': teamDetail, 'selectedIter': ''});
+      })
+      .catch(function(err){
+        console.log(err);
+      });      
+  },
+
   render: function() {
     var pageStyle = {
       'width': '100%',
@@ -268,7 +281,7 @@ var HomePage = React.createClass({
             <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler} realodTeamMembers={this.realodTeamMembers} roles={this.state.roles} handleChartResize={this.handleChartResize}/>
           </div>
           <div id='iterContent' class='ibm-col-6-2' style={sectionOneStyle}>
-            <HomeIterContent loadDetailTeam={this.state.loadDetailTeam} selectedIter={this.state.selectedIter} iterChangeHandler={this.iterChangeHandler}/>
+            <HomeIterContent loadDetailTeam={this.state.loadDetailTeam} selectedIter={this.state.selectedIter} iterChangeHandler={this.iterChangeHandler} iterListHandler={this.reloadTeamIterations}/>
           </div>
         </div>
         <div id='homeNavShowBtnDiv' class='home-nav-show-btn-div'>

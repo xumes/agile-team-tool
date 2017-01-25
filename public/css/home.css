@@ -2140,3 +2140,150 @@ body {
 .team-member-add-block-content-role > div span {
   padding: 0;
 }*/
+
+.home-iter-popup {
+  width: 23%;
+
+  background-color: #FFFFFF;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin:0 auto !important;
+  z-index: 12;
+  box-shadow:0 0 10px rgba(0, 0, 0, 0.16);
+  background-clip: padding-box;
+  border: none;
+  border-radius: 0;
+}
+
+.popup-title {
+  height: 8.49%;
+  width: 100%;
+  background-color: #4178BE;;
+  padding-top: 4%;
+  display: flex;
+}
+
+.popup-title > h1 {
+  width: 89%;
+  height: 45%;  
+  font-size: 1.5em;
+  font-family: "HelvNeue Bold for IBM";
+  line-height: 1.19em;
+  color: #FFFFFF;  
+  position: relative;
+  margin-left: 7%;
+}
+
+.popup-title > h2 {
+  width: 4%;
+  height: 2.78%;
+  position: relative;  
+  font-size: 1.5em;
+  font-family: "HelvNeue Bold for IBM";
+  line-height: 1.19em;
+  color: #FFFFFF;
+  cursor: pointer;
+  margin-right: 7%;
+}
+
+.home-iter-add-content {
+  color: #4D4D4D;
+  margin: 7%;
+  position: relative;
+}
+
+.home-iter-main-section {
+  font-family: "HelvNeue Medium for IBM";
+  font-size: 1.4em;
+  font-weight: normal;
+  line-height: 1.8em;
+  color: #323232;
+  text-align: left;
+}
+
+.home-iter-sub-section {
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.2em;
+  font-weight: normal;
+  line-height: 1.4em;
+  color: #323232;
+  text-align: left;
+}
+
+.home-iter-sub-section-delivered {
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.1em;
+  font-weight: normal;
+  line-height: 1.3em;
+  color: #323232;
+  text-align: left;
+}
+
+.home-iter-subdetail-section {
+  font-family: "HelvNeue Bold for IBM";
+  font-size: 1.2em;
+  font-weight: normal;
+  line-height: 1.4em;
+  color: #5A5A5A;
+  text-align: left;
+}
+
+.home-iter-date {
+  width: 80%;
+  border: 0.1em solid #777677;
+  font-size: 1.4em;
+  line-height: 1.8em;
+  color: #5A5A5A;
+  padding: 2%;
+}
+
+.home-iter-text-field {
+  width: 95%;
+  border: 0.1em solid #777677;
+  font-family: "HelvNeue Medium for IBM";
+  font-size: 1.4em;
+  line-height: 0.8em;
+  color: #5A5A5A;
+  padding: 2%;
+}
+
+.home-iter-category {
+  display: flex;
+  width: 100%;
+}
+
+.home-iter-cal-btn-block {
+  position: relative;
+  width: 15%;
+  cursor:pointer;
+  margin-top: 1%;
+}
+
+.home-iter-cal-btn-block > i > svg {
+  width: 80%;
+  position: relative;
+  margin-left: 25%;
+}
+
+.home-iter-new-dates{
+  display: flex;
+}
+
+.popup-btns {
+  width: 100%;
+  float: left;
+  background-color: #FFFFFF;
+  margin-top: 7%;
+}
+
+.att-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.50);
+  z-index: 11;
+}
