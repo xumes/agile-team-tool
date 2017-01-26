@@ -902,7 +902,7 @@ body, input, textarea, select, table {
 .hierarchy-lastteam {
   font-family: "HelvNeue Roman for IBM";
   display: inline;
-  font-size: 1.4em;
+  font-size: 1.1em;
   color: #EFF9FF;
   border-bottom: 0.1em solid #EFF9FF;
 }
@@ -2162,10 +2162,14 @@ body, input, textarea, select, table {
   width: 96%;
   height: 100%;
 }
-.home-assessment-summary-content:last-child {
+.last-summary-content {
   top: 0.1%;
   border-top: 0.1em solid #7CC7FF;
 }
+/*.home-assessment-summary-content:last-child {
+  top: 0.1%;
+  border-top: 0.1em solid #7CC7FF;
+}*/
 
 .home-assessment-summary-title {
   position: relative;

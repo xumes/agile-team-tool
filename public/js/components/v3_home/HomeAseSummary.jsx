@@ -15,13 +15,19 @@ var HomeAseSummary = React.createClass({
           var contentHeight = 100/(self.props.loadDetailTeam.assessments[0].componentResults.length + 1) + '%';
           $('.home-assessment-summary').css('height',summaryHeight);
           $('.home-assessment-summary-content').css('height',contentHeight);
+          if (self.props.loadDetailTeam.assessments[0].componentResults.length == 1) {
+            $('.home-assessment-summary').css('background-position','150% 80%');
+          } else if (self.props.loadDetailTeam.assessments[0].componentResults.length == 2) {
+            $('.home-assessment-summary').css('background-position','150% 100%');
+          }
         } else {
           summaryHeight = '10%';
           contentHeight = '100%';
           $('.home-assessment-summary').css('height',summaryHeight);
           $('.home-assessment-summary-content').css('height',contentHeight);
+          $('.home-assessment-summary').css('background-position','150% 70%');
         }
-
+        $('.home-assessment-summary').show();
       }
     }
   },
@@ -49,9 +55,14 @@ var HomeAseSummary = React.createClass({
           } else {
             assessmentName = 'Leadership & Collaboration - Oprations';
           }
+          if (index == 0) {
+            var assessClass = 'home-assessment-summary-content';
+          } else {
+            assessClass = 'home-assessment-summary-content last-summary-content';
+          }
           var lineWidth = (assessment.currentScore)/4 * 95 + '%'
           return (
-            <div key={assessKey} class='home-assessment-summary-content'>
+            <div key={assessKey} class={assessClass}>
               <div class='home-assessment-summary-title'>
                 <h1>{assessmentName}</h1>
                 <h2>{assessSubmit}</h2>

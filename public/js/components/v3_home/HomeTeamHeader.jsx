@@ -198,12 +198,12 @@ var HomeTeamHeader = React.createClass({
               </div>
             </div>
             <HomeBookmark loadDetailTeam={self.props.loadDetailTeam} showBookmark={self.showBookmark}/>
-            <div class='home-team-header-btns' onClick={self.showAssessments} id='homeHeaderAseBtn'>
+            {/*<div class='home-team-header-btns' onClick={self.showAssessments} id='homeHeaderAseBtn'>
               <InlineSVG class='home-team-header-btn-img' src={require('../../../img/Att-icons/att-icons_main-nav-maturity.svg')}></InlineSVG>
               <div class='home-team-header-btn-title'>
                 <h>Maturity Assessment</h>
               </div>
-            </div>
+            </div>*/}
             <div class='home-team-header-btns2'>
               <InlineSVG onClick={self.showTeamTable} class='home-team-header-btn-img2' src={require('../../../img/Att-icons/att-icons_main-nav-team.svg')}></InlineSVG>
               <div class='home-team-header-btn-title2'>
