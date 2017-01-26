@@ -244,6 +244,20 @@ var HomePage = React.createClass({
     }
   },
 
+  updateTeamDetails: function(teamId, data) {
+    var self = this;
+    var currentTeam = self.state.loadDetailTeam;
+    console.log('updateTeamDetails...')
+    console.log('current team details:', currentTeam);
+    if (teamId === currentTeam.team._id) {
+      var updatedTeam = update(currentTeam, {
+        team: {$set: data}
+      });
+      console.log('updated team details:', updatedTeam);
+      self.setState({loadDetailTeam: updatedTeam});
+    }
+  },
+
   realodTeamMembers: function(members, membersContent) {
     var self = this;
     // var newTeam = this.state.loadDetailTeam;
@@ -296,7 +310,7 @@ var HomePage = React.createClass({
 
         <div class='ibm-columns' style={columnsStyle}>
           <div id='mainContent' class='ibm-col-6-4' style={sectionTwoStyle}>
-            <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler} realodTeamMembers={this.realodTeamMembers} roles={this.state.roles} handleChartResize={this.handleChartResize}/>
+            <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler} realodTeamMembers={this.realodTeamMembers} roles={this.state.roles} handleChartResize={this.handleChartResize} updateTeamDetails={this.updateTeamDetails} />
           </div>
           <div id='iterContent' class='ibm-col-6-2' style={sectionOneStyle}>
             <HomeIterContent loadDetailTeam={this.state.loadDetailTeam} selectedIter={this.state.selectedIter} iterChangeHandler={this.iterChangeHandler} iterListHandler={this.reloadTeamIterations}/>

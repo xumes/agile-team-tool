@@ -3183,6 +3183,13 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
     url("../fonts/helvetica-neue-bold.ttf") format("truetype");
 }
 
+/* BEGIN: Team description Modal section */
+.att-modal .txtarea {
+  padding-top: 1.1%;
+  width: 100%;
+}
+/* END: Team description Modal section */
+
 .home-iter-popup {
   width: 23%;
 
