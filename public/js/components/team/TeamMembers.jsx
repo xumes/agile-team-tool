@@ -263,7 +263,7 @@ var TeamMembers = React.createClass({
           });
         });
     } else if (e.target.id == 'updateMemberBtn') {
-      var member = self.state.selectedMember;
+      var member = _.clone(self.state.selectedMember);
       member.role = $('#memberRoleSelectList').val() == 'Other...' ? $('#otherRoleDesc').val() : $('#memberRoleSelectList').val();
       member.allocation = $('#memberAllocation').val();
       var teamMembers = self.state.teamMembers;
@@ -280,12 +280,16 @@ var TeamMembers = React.createClass({
           self.props.sectionUpdateHandler(result);
         })
         .catch(function(err) {
+          var member = self.state.selectedMember;          
+          var teamMembers = self.state.teamMembers;
+          teamMembers[self.state.selectedIndex[0]] = member;
           var map = self.state.formError.map;
           self.setState({
             formError: {
               error: err,
               map: map
-            }
+            },
+            teamMembers:teamMembers
           });
         });
     }
