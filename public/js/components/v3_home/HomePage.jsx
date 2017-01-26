@@ -247,13 +247,10 @@ var HomePage = React.createClass({
   updateTeamDetails: function(teamId, data) {
     var self = this;
     var currentTeam = self.state.loadDetailTeam;
-    console.log('updateTeamDetails...')
-    console.log('current team details:', currentTeam);
     if (teamId === currentTeam.team._id) {
       var updatedTeam = update(currentTeam, {
         team: {$set: data}
       });
-      console.log('updated team details:', updatedTeam);
       self.setState({loadDetailTeam: updatedTeam});
     }
   },

@@ -8,16 +8,17 @@ var HomeTeamDescription = React.createClass({
   getInitialState: function() {
     return {
       showModal: false,
-      teamId: '',
       teamName: '',
-      teamDesc: '',
-      formError: ''
+      teamDesc: ''
     }
+  },
+  setTeamDetails: function() {
+    this.setState({teamName: this.props.teamName});
+    this.setState({teamDesc: this.props.teamDescription});
   },
   componentDidMount: function() {
     this.setState({modalTitle: 'Team Description Edit'});
-    this.setState({teamName: this.props.teamName});
-    this.setState({teamDesc: this.props.teamDescription});
+    this.setTeamDetails();
     this.updatePosition();
   },
   componentDidUpdate: function() {
@@ -51,10 +52,9 @@ var HomeTeamDescription = React.createClass({
   saveTeamDescModal: function() {
     var self = this;
     var team_id = self.props.loadDetailTeam.team._id;
-    var links = self.props.loadDetailTeam.team.links;
     var team = self.props.loadDetailTeam.team;
     team.name = self.state.teamName;
-    team.description =  self.state.teamDesc;
+    team.description = self.state.teamDesc;
     console.log('saveTeamDescModal...');
     teamApi.putTeam(JSON.stringify(team))
       .then(function(result) {
@@ -63,10 +63,9 @@ var HomeTeamDescription = React.createClass({
         self.hideTeamDescModal();
       })
       .catch(function(err) {
-        console.log('err:',err);
+        console.log('saveTeamDescModal err:',err);
         if (err.responseJSON !== undefined && err.responseJSON['errors'] !== undefined) {
           var error = err.responseJSON['errors'];
-          console.log('error:',error);
           self.handleTeamDescValidationErrors(error);
         } else if (err.responseJSON !== undefined && err.responseJSON['error'] !== undefined) {
           alert(err.responseJSON['error']);
@@ -91,6 +90,7 @@ var HomeTeamDescription = React.createClass({
     this.setState({showModal: true});
   },
   hideTeamDescModal: function() {
+    this.setTeamDetails();
     this.setState({showModal: false});
   },
   render: function() {
@@ -146,7 +146,6 @@ var HomeTeamDescription = React.createClass({
                   </span>
                 </p>
 
-                <input name='team_id' id='team_id' type='hidden' value='{self.state.teamId}' />
               </form>
             </section>
             <div class='clearboth'></div>
