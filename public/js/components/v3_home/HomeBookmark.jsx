@@ -3,7 +3,6 @@ var api = require('../api.jsx');
 var InlineSVG = require('svg-inline-react');
 var _ = require('underscore');
 var ReactModal = require('react-modal');
-var teamApi = require('./TeamApi.jsx');
 var LinksSelectDropdown = require('./LinksSelectDropdown.jsx');
 var utils = require('../utils.jsx');
 
@@ -23,7 +22,7 @@ var HomeBookmark = React.createClass({
     var self = this;
     self.linkHoverHandler();
     self.setState({showModal: false});
-    teamApi.fetchTeamLinkLabels()
+    api.fetchTeamLinkLabels()
       .then(function(result) {
         var linkLabels = self.state.initSelectLabel;
         if (!_.isEmpty(result)) {
@@ -132,7 +131,7 @@ var HomeBookmark = React.createClass({
         teamId: team_id,
         links: linkData
       };
-      teamApi.deleteLink(updateData)
+      api.deleteLink(updateData)
         .then(function(loadTeamResult) {
           var newLinkResult = loadTeamResult['links'];
           self.props.updateTeamLink(team_id, newLinkResult);
@@ -177,8 +176,7 @@ var HomeBookmark = React.createClass({
     }
     var link_id = self.state.linkId;
     console.log('saveTeamLinkModal..');
-    console.log('link_type:',link_type);
-    console.log('BEFORE links:',links);
+    console.log('current links:',links);
 
     var linkData = [];
     _.each(links, function(link){
@@ -210,10 +208,10 @@ var HomeBookmark = React.createClass({
       teamId: team_id,
       links: linkData
     };
-    console.log('updated links:', updateData);
-    teamApi.updateLink(updateData)
+    api.updateLink(updateData)
       .then(function(loadTeamResult) {
         var newLinkResult = loadTeamResult['links'];
+        console.log('updated links:', newLinkResult);
         self.setState({showOtherlabel: false});
         self.props.updateTeamLink(team_id, newLinkResult);
         self.hideTeamLinkModal();

@@ -2,7 +2,6 @@ var React = require('react');
 var api = require('../api.jsx');
 var InlineSVG = require('svg-inline-react');
 var ReactModal = require('react-modal');
-var teamApi = require('./TeamApi.jsx');
 
 var HomeTeamDescription = React.createClass({
   getInitialState: function() {
@@ -56,9 +55,10 @@ var HomeTeamDescription = React.createClass({
     team.name = self.state.teamName;
     team.description = self.state.teamDesc;
     console.log('saveTeamDescModal...');
-    teamApi.putTeam(JSON.stringify(team))
+    api.putTeam(JSON.stringify(team))
       .then(function(result) {
         self.clearTeamDescValidationErrors();
+        console.log('saveTeamDescModal result:', result);
         self.props.updateTeamDetails(team_id, result);
         self.hideTeamDescModal();
       })
