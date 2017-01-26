@@ -1,7 +1,7 @@
 var React = require('react');
 var api = require('../api.jsx');
 var HomeIterChart = require('./HomeIterChart.jsx');
-var iteationHandler = require('./HomeIterationsHandler.jsx');
+var iterationHandler = require('./HomeIterationsHandler.jsx');
 var HomeFallBox = require('./HomeFallBox.jsx');
 var HomeSnapshotPull = require('./HomeSnapshotPull.jsx');
 
@@ -22,7 +22,7 @@ var HomeIterSection = React.createClass({
       var teamId = this.props.loadDetailTeam.team._id;
       var iterationData = this.props.loadDetailTeam.iterations;
       var teamAccess = this.props.loadDetailTeam.access;
-      iteationHandler.squadIterationsHandler(teamId, iterationData, teamAccess);
+      iterationHandler.squadIterationsHandler(teamId, iterationData, teamAccess);
     } else {
       $('#contentSpinner').hide();
       $('#bodyContent').show();
@@ -30,10 +30,27 @@ var HomeIterSection = React.createClass({
       var teamId = this.props.loadDetailTeam.team._id;
       var teamName = this.props.loadDetailTeam.team.name;
       var snapshotData = this.props.loadDetailTeam.snapshot;
-      iteationHandler.iterationSnapshotHandler(teamId, teamName, snapshotData);
+      iterationHandler.iterationSnapshotHandler(teamId, teamName, snapshotData);
     }
   },
+  refreshSnapshot: function() {
+    if($('#' + 'iterationSection' + ' .agile-section-title').hasClass('ibm-showing')) {
+      $('#' + 'iterationSection' + ' .agile-section-title').addClass('ibm-showing');
+      $('#' + 'iterationSection' + ' .agile-section-title a').addClass('ibm-show-active');
+      $('#' + 'iterationSection' + ' div.ibm-container-body').css('display','block');
+    }
+      var teamId = this.props.loadDetailTeam.team._id;
+      var teamName = this.props.loadDetailTeam.team.name;
+      api.getTeamSnapshots(teamId)
+      .then(function(result) {
+        $('#contentSpinner').hide();
+        $('#bodyContent').show();
+        $('#snapshotPull').show();
+        var snapshotData = result;
 
+        iterationHandler.iterationSnapshotHandler(teamId, teamName, snapshotData);
+      })
+  },
   expandCollapseSection: function(id) {
     if($('#' + id + ' .agile-section-title').hasClass('ibm-showing')) {
       $('#' + id + ' .agile-section-title').removeClass('ibm-showing');
@@ -56,7 +73,7 @@ var HomeIterSection = React.createClass({
     };
     return (
       <div data-widget='showhide' data-type='panel' class='ibm-show-hide' id='iterationSection'>
-        <HomeSnapshotPull />
+        <HomeSnapshotPull refreshSnapshot={this.refreshSnapshot} />
         <h2 class='agile-section-title ibm-showing' data-open='true' id='agile-section-title'>
           <a href='#show-hide' class='ibm-show-active' title='Expand/Collapse' onClick={this.expandCollapseSection.bind(null, 'iterationSection')}>
             Iteration trends
