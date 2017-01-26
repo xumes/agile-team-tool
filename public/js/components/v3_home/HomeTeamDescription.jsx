@@ -87,6 +87,7 @@ var HomeTeamDescription = React.createClass({
     this.setState({teamDesc: desc});
   },
   showTeamDescModal: function() {
+    this.setTeamDetails();
     this.setState({showModal: true});
   },
   hideTeamDescModal: function() {
