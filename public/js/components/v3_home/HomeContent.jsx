@@ -33,23 +33,23 @@ var HomeContent = React.createClass({
     }
   },
 
-  handleResize: function(e) {
-    $(Highcharts.charts).each(function(i,chart) {
-      if (chart == null) return;
-      if ($('#' + $(chart.container).attr('id')).length > 0) {
-        var height = chart.renderTo.clientHeight;
-        var width = chart.renderTo.clientWidth;
-        chart.setSize(width, height);
-      }
-    });
-  },
+  // handleResize: function(e) {
+  //   $(Highcharts.charts).each(function(i,chart) {
+  //     if (chart == null) return;
+  //     if ($('#' + $(chart.container).attr('id')).length > 0) {
+  //       var height = chart.renderTo.clientHeight;
+  //       var width = chart.renderTo.clientWidth;
+  //       chart.setSize(width, height);
+  //     }
+  //   });
+  // },
 
   componentDidMount: function() {
-    window.addEventListener('resize', this.handleResize);
+    window.addEventListener('resize', this.props.handleChartResize);
   },
 
   componentWillUnmount: function() {
-    window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener('resize', this.props.handleChartResize);
   },
 
   showFilter: function() {
@@ -84,8 +84,10 @@ var HomeContent = React.createClass({
               </div>
               <HomeChartFilter loadDetailTeam={this.props.loadDetailTeam} showFilter={this.showFilter}/>
             </div>
-            <HomeIterSection loadDetailTeam={this.props.loadDetailTeam}/>
-            <HomeAseSection loadDetailTeam={this.props.loadDetailTeam}/>
+            <div class='home-trends-overflow'>
+              <HomeIterSection loadDetailTeam={this.props.loadDetailTeam}/>
+              <HomeAseSection loadDetailTeam={this.props.loadDetailTeam}/>
+            </div>
           </div>
         </div>
       </div>

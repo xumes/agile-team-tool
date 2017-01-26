@@ -1,6 +1,6 @@
 var React = require('react');
 var api = require('../api.jsx');
-var Header = require('../Header.jsx');
+var HomeHeader = require('./HomeHeader.jsx');
 var HomeNav = require('./HomeNav.jsx');
 var HomeContent = require('./HomeContent.jsx');
 var HomeIterContent = require('./HomeIterContent.jsx');
@@ -45,17 +45,67 @@ var HomePage = React.createClass({
   },
 
   handleResize: function() {
-    if (window.innerWidth >= 1280) {
+    var self = this;
+    if (window.innerWidth >= 1280 && window.innerWidth < 1900) {
+      $('html').css('width', '100vw');
+      $('html').css('height', '56.25vw');
+      $('#homeNavShowBtnDiv').show();
+      $('.ibm-columns').css('width', '96.6%');
+      $('.ibm-columns').css('left', '0');
+      $('#homeNavDiv').css('width', '30%');
       var fontSize = (window.innerWidth/windowSize['width']) * windowSize['fontSize'];
-      // windowSize['height'] = window.innerHeight;
-      // windowSize['width'] = window.innerWidth;
-      // windowSize['fontSize'] = fontSize;
       var changeSize = fontSize*100 + '%';
+      if (!_.isEmpty(self.state.loadDetailTeam)) {
+        if (self.state.loadDetailTeam.team.type == 'squad') {
+          $('#homeNavDiv').hide();
+          $('#homeNavDiv').css('left','-6%');
+          $('#homeNavDiv').css('top','-205.4%');
+          $('#iterContent').show();
+          $('#mainContent').css('left', '0');
+          $('#hideNavBtn').show();
+        } else {
+          $('#homeNavDiv').show();
+          $('#homeNavDiv').css('left','0');
+          $('#homeNavDiv').css('top','-130%');
+          $('#iterContent').hide();
+          $('#mainContent').css('left', '28.5%');
+          $('#hideNavBtn').hide();
+        }
+      }
       $('html').css('font-size', changeSize);
+    } else if (window.innerWidth >= 1900) {
+      $('html').css('width', '100vw');
+      $('html').css('height', '0.375vw');
+      fontSize = (1280/windowSize['width']) * windowSize['fontSize'];
+      $('.ibm-columns').css('width', '72.7%');
+      $('.ibm-columns').css('left', '24.3%');
+      $('#homeNavShowBtnDiv').hide();
+      $('#homeNavDiv').css('width', '25%');
+      $('#homeNavDiv').css('left', '-73%');
+      $('#homeNavDiv').css('top', '-100%');
+      $('#homeNavDiv').show();
+      $('#hideNavBtn').hide();
+
+      $('#iterContent').show();
+      $('#mainContent').css('left', '0');
+      changeSize = fontSize*100 + '%';
+      $('html').css('font-size', changeSize);
+      self.handleChartResize();
     } else {
       changeSize = windowSize['fontSize']*100 + '%';
       $('html').css('font-size', changeSize);
     }
+  },
+
+  handleChartResize: function(e) {
+    $(Highcharts.charts).each(function(i,chart) {
+      if (chart == null) return;
+      if ($('#' + $(chart.container).attr('id')).length > 0) {
+        var height = chart.renderTo.clientHeight;
+        var width = chart.renderTo.clientWidth;
+        chart.setSize(width, height);
+      }
+    });
   },
 
   selectedTeamChanged: function(team) {
@@ -69,24 +119,27 @@ var HomePage = React.createClass({
   },
 
   iterChangeHandler: function(e) {
+    console.log(e);
     this.setState({'selectedIter': e.target.value.toString()});
   },
 
   loadDetailTeamChanged: function(team) {
-    if (team.team.type != 'squad') {
-      $('#homeNavDiv').show();
-      $('#homeNavDiv').css('left','0');
-      $('#homeNavDiv').css('top','-130%');
-      $('#iterContent').hide();
-      $('#mainContent').css('left', '28.5%');
-      $('#hideNavBtn').hide();
-    } else {
-      $('#homeNavDiv').hide();
-      $('#homeNavDiv').css('left','-6%');
-      $('#homeNavDiv').css('top','-203%');
-      $('#iterContent').show();
-      $('#mainContent').css('left', '0');
-      $('#hideNavBtn').show();
+    if (window.innerWidth < 1900) {
+      if (team.team.type != 'squad') {
+        $('#homeNavDiv').show();
+        $('#homeNavDiv').css('left','0');
+        $('#homeNavDiv').css('top','-130%');
+        $('#iterContent').hide();
+        $('#mainContent').css('left', '28.5%');
+        $('#hideNavBtn').hide();
+      } else {
+        $('#homeNavDiv').hide();
+        $('#homeNavDiv').css('left','-6%');
+        $('#homeNavDiv').css('top','-205.4%');
+        $('#iterContent').show();
+        $('#mainContent').css('left', '0');
+        $('#hideNavBtn').show();
+      }
     }
     $('.home-chart-filter-block').hide();
     this.setState({'loadDetailTeam': team, 'selectedIter': ''});
@@ -170,7 +223,7 @@ var HomePage = React.createClass({
     $('#homeNavDiv').show();
     $('.home-nav-show-btn').prop('disabled',true);
     $('#homeNavDiv').animate({
-      left: '-3.2%',
+      left: '-2%',
     },200,function(){
       $('.home-nav-show-btn').prop('disabled',false);
     });
@@ -201,12 +254,26 @@ var HomePage = React.createClass({
     });
   },
 
+  reloadTeamIterations: function() {
+    var self = this;
+    api.getIterations(self.state.loadDetailTeam.team._id)
+      .then(function(iterations){
+        var teamDetail = JSON.parse(JSON.stringify(self.state.loadDetailTeam));
+        teamDetail.iterations = iterations;
+        self.setState({'loadDetailTeam': teamDetail, 'selectedIter': ''});
+      })
+      .catch(function(err){
+        console.log(err);
+      });      
+  },
+
   render: function() {
     var pageStyle = {
       'width': '100%',
       'height': '100%'
     }
     var columnsStyle = {
+      'position': 'relative',
       'width': '96.6%',
       'padding': '0',
       'margin': '0 1.7%',
@@ -222,15 +289,17 @@ var HomePage = React.createClass({
       'height': '100%',
       'position': 'relative'
     }
-    var src = require('../../../img/Att-icons/att-icons_expand.svg');
+    var src = require('../../../img/Att-icons/att-icons-Chevron-right.svg');
     return (
       <div style={pageStyle}>
+        <HomeHeader/>
+
         <div class='ibm-columns' style={columnsStyle}>
           <div id='mainContent' class='ibm-col-6-4' style={sectionTwoStyle}>
-            <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler} updateTeamLink={this.updateTeamLink} realodTeamMembers={this.realodTeamMembers} roles={this.state.roles}/>
+            <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler} realodTeamMembers={this.realodTeamMembers} roles={this.state.roles} handleChartResize={this.handleChartResize}/>
           </div>
           <div id='iterContent' class='ibm-col-6-2' style={sectionOneStyle}>
-            <HomeIterContent loadDetailTeam={this.state.loadDetailTeam} selectedIter={this.state.selectedIter} iterChangeHandler={this.iterChangeHandler}/>
+            <HomeIterContent loadDetailTeam={this.state.loadDetailTeam} selectedIter={this.state.selectedIter} iterChangeHandler={this.iterChangeHandler} iterListHandler={this.reloadTeamIterations}/>
           </div>
         </div>
         <div id='homeNavShowBtnDiv' class='home-nav-show-btn-div'>
@@ -240,9 +309,12 @@ var HomePage = React.createClass({
           <div class='home-nav-show-text'>
             Teams
           </div>
+          <div class='home-nav-show-btn2'>
+            <InlineSVG src={src} onClick={this.showHomeNav}></InlineSVG>
+          </div>
         </div>
         <div id='homeNavDiv' class='home-nav-div' hidden='true'>
-          <HomeNav loadDetailTeamChanged={this.loadDetailTeamChanged} selectedTeam={this.state.selectedTeam} selectedTeamChanged={this.selectedTeamChanged} newTeams={this.state.newTeams} newTeamsChanged={this.newTeamsChanged} tabClickedHandler={this.tabClickedHandler}/>
+          <HomeNav loadDetailTeam={this.state.loadDetailTeam} loadDetailTeamChanged={this.loadDetailTeamChanged} selectedTeam={this.state.selectedTeam} selectedTeamChanged={this.selectedTeamChanged} newTeams={this.state.newTeams} newTeamsChanged={this.newTeamsChanged} tabClickedHandler={this.tabClickedHandler}/>
         </div>
       </div>
     )

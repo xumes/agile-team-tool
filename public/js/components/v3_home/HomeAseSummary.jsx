@@ -11,8 +11,8 @@ var HomeAseSummary = React.createClass({
 
       } else {
         if (self.props.loadDetailTeam.assessments != undefined && self.props.loadDetailTeam.assessments.length > 0) {
-          var summaryHeight = self.props.loadDetailTeam.assessments[0].componentResults.length * 10 + '%';
-          var contentHeight = 100/self.props.loadDetailTeam.assessments[0].componentResults.length + '%';
+          var summaryHeight = (self.props.loadDetailTeam.assessments[0].componentResults.length + 1) * 9 + '%';
+          var contentHeight = 100/(self.props.loadDetailTeam.assessments[0].componentResults.length + 1) + '%';
           $('.home-assessment-summary').css('height',summaryHeight);
           $('.home-assessment-summary-content').css('height',contentHeight);
         } else {
@@ -32,21 +32,29 @@ var HomeAseSummary = React.createClass({
     } else {
       if (self.props.loadDetailTeam != undefined && self.props.loadDetailTeam.assessments != undefined && self.props.loadDetailTeam.assessments.length > 0) {
         var submitDate = '(Last Submitted ' + moment(self.props.loadDetailTeam.assessments[0].submittedDate).format('MMM DD, YYYY') + ')';
+        var updateDate = moment(self.props.loadDetailTeam.assessments[0].updateDate).format('MMM DD YYYY');
+        if (self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Submitted') {
+          var assessType = 'Submitted';
+          var assessSubmit = null;
+        } else {
+          assessType = 'In Draft';
+          assessSubmit = 'Draft Shown';
+        }
         var assessContent = self.props.loadDetailTeam.assessments[0].componentResults.map(function(assessment, index){
           var assessKey = 'assess_'+index;
           if (assessment.componentName == 'Team Agile Leadership and Collaboration - Projects') {
-            var assessmentName = ' Project';
+            var assessmentName = 'Leadership & Collaboration - Project';
           } else if (assessment.componentName == 'Team Delivery') {
-            assessmentName = ' DevOps';
+            assessmentName = 'Delivery (Dev Ops)';
           } else {
-            assessmentName = ' Operations';
+            assessmentName = 'Leadership & Collaboration - Oprations';
           }
-          var lineWidth = (assessment.currentScore-1)/3 * 95 + '%'
+          var lineWidth = (assessment.currentScore)/4 * 95 + '%'
           return (
             <div key={assessKey} class='home-assessment-summary-content'>
               <div class='home-assessment-summary-title'>
-                <h1>Assessment:{assessmentName}</h1>
-                <h2>{submitDate}</h2>
+                <h1>{assessmentName}</h1>
+                <h2>{assessSubmit}</h2>
               </div>
               <div class='home-assessment-summary-ponts'>
                 <div class='home-assessment-summary-ponts-block'>
@@ -77,26 +85,46 @@ var HomeAseSummary = React.createClass({
                   <h1 style={{'left':'0%','textAlign':'right'}}>Scaling</h1>
                 </div>
               </div>
-              <div class='home-assessment-summary-btn'>
-                <button type='button' class='ibm-btn-pri ibm-btn-blue-50'>Update Action Plan</button>
-              </div>
             </div>
           );
         });
+        return (
+          <div class='home-assessment-summary' style={{'display':'none'}}>
+            <div class='home-assessment-summary-content'>
+              <div class='home-assessment-summary-header-title'>
+                <h1>Agile Maturity Overview</h1>
+              </div>
+              <div class='home-assessment-summary-header-btn'>
+                <button type='button' class='ibm-btn-pri ibm-btn-blue-50'>Work with Assessment</button>
+              </div>
+              <div class='home-assessment-summary-header-status'>
+                <div>
+                  <h1>Current Status:</h1>
+                  <h2>{assessType}</h2>
+                </div>
+                <div>
+                  <h1>Last Opened:</h1>
+                  <h2>{updateDate}</h2>
+                </div>
+              </div>
+            </div>
+            {assessContent}
+          </div>
+        )
       } else {
-        assessContent = (
-          <div class='home-assessment-summary-content'>
-            <h1>
-              No Assessment Info
-            </h1>
+        return (
+          <div class='home-assessment-summary' style={{'display':'none'}}>
+            <div class='home-assessment-summary-content'>
+              <div class='home-assessment-summary-header-title'>
+                <h1>Agile Maturity Overview</h1>
+              </div>
+              <div class='home-assessment-summary-header-btn'>
+                <button type='button' class='ibm-btn-pri ibm-btn-blue-50'>Add New Assessment</button>
+              </div>
+            </div>
           </div>
         )
       }
-      return (
-        <div class='home-assessment-summary' style={{'display':'none'}}>
-          {assessContent}
-        </div>
-      )
     }
   }
 });
