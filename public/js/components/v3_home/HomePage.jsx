@@ -126,13 +126,16 @@ var HomePage = React.createClass({
     if (window.innerWidth < 1900) {
       if (team.team.type != 'squad') {
         $('#homeNavDiv').show();
+        $('#homeNavDiv').css('box-shadow', '');
         $('#homeNavDiv').css('left','0');
         $('#homeNavDiv').css('top','-130%');
         $('#iterContent').hide();
         $('#mainContent').css('left', '28.5%');
         $('#hideNavBtn').hide();
+
       } else {
         $('#homeNavDiv').hide();
+        $('#homeNavDiv').css('box-shadow', '0.1em 0.3em 0.4em 0 rgba(0,0,0,0.22)');
         $('#homeNavDiv').css('left','-6%');
         $('#homeNavDiv').css('top','-205.4%');
         $('#iterContent').show();

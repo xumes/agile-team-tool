@@ -2104,7 +2104,7 @@ body, input, textarea, select, table {
   background-color: #EFF9FF;
   width: 100%;
   height: 10%;
-  background-image: url(../img/header-bg-art.svg);
+  background-image: url('../img/header-bg-art.svg');
   background-repeat: no-repeat;
   background-position: 150% 100%;
 }
@@ -2320,7 +2320,7 @@ body, input, textarea, select, table {
   z-index: 3;
   /*left: 96%;*/
   top: 25%;
-  width: 1.5%;
+  width: 2%;
   height: 50%;
 }
 
@@ -2592,7 +2592,7 @@ body, input, textarea, select, table {
   position: relative;
   float: left;
   top: 107%;
-  height: 50%;
+  height: 40%;
   width: 100%;
   background-color: #F7F7F7;
 }
@@ -2686,6 +2686,20 @@ body, input, textarea, select, table {
   height: 80%;
   left: 20%;
   top: 10%;
+}
+.footer-image {
+  position: relative;
+  float: right;
+  width: 15.8%;
+  height: 50%;
+  right: 2%;
+  top: -18%;
+}
+.footer-image img {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
 }
 /*.team-member-add-block-content-role .Select-control {
   border: 0.1em solid #777677 !important;

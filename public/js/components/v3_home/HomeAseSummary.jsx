@@ -53,7 +53,7 @@ var HomeAseSummary = React.createClass({
           } else if (assessment.componentName == 'Team Delivery') {
             assessmentName = 'Delivery (Dev Ops)';
           } else {
-            assessmentName = 'Leadership & Collaboration - Oprations';
+            assessmentName = 'Leadership & Collaboration - Operation';
           }
           if (index == 0) {
             var assessClass = 'home-assessment-summary-content';
