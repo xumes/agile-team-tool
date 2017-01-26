@@ -325,9 +325,12 @@ module.exports.getRootTeams = function(uid) {
                   if (compareTeam.path == null) {
                     comparePath = ',' + compareTeam.pathId + ',';
                   } else {
-                    comparePath = compareTeam.path;
+                    comparePath = compareTeam.path + compareTeam.pathId + ',';
                   }
                   if (team.path.indexOf(comparePath) >= 0) {
+                    // console.log(team.pathId);
+                    // console.log(team.path);
+                    // console.log(comparePath);
                     return tempTeams.push(team.pathId);
                   }
                 }
@@ -354,7 +357,6 @@ module.exports.getRootTeams = function(uid) {
               returnTeams.push(newTeam);
             }
           });
-          // console.log(returnTeams);
           resolve(returnTeams);
         })
         .catch( /* istanbul ignore next */ function(err){
