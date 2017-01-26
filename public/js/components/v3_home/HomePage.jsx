@@ -91,7 +91,7 @@ var HomePage = React.createClass({
       $('html').css('font-size', changeSize);
       self.handleChartResize();
     } else {
-      changeSize = windowSize['fontSize']*100 + '%';
+      changeSize = 1280/1440 * windowSize['fontSize']*100 + '%';
       $('html').css('font-size', changeSize);
     }
   },
@@ -248,7 +248,7 @@ var HomePage = React.createClass({
       })
       .catch(function(err){
         console.log(err);
-      });      
+      });
   },
 
   render: function() {

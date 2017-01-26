@@ -920,12 +920,16 @@ body, input, textarea, select, table {
   width: 20%;
   height: 100%;
   display: inline-block;
-  cursor: pointer;
+  /*cursor: pointer;*/
   float: left;
 }
 
+.home-team-header-btns svg {
+  cursor: pointer;
+}
+
 .home-team-header-btns2 {
-  width: 60%;
+  width: 80%;
   height: 100%;
   display: inline-block;
 }
@@ -938,7 +942,7 @@ body, input, textarea, select, table {
 }
 .home-team-header-btn-img2 {
   display: inline-block;
-  width: 10%;
+  width: 8%;
   height: 100%;
   cursor: pointer;
   float: left;
@@ -970,7 +974,9 @@ body, input, textarea, select, table {
 }
 
 .home-team-header-btn-title2 {
-  width: 5%;
+  position: relative;
+  left: 1%;
+  width: 2%;
   height: 100%;
   font-family: "HelvNeue Light for IBM";
   font-size: 4.5em;
@@ -980,8 +986,24 @@ body, input, textarea, select, table {
   float: left;
 }
 
+.home-team-header-btn-title3 {
+  position: relative;
+  top: 10%;
+  left: 1%;
+  width: 8%;
+  height: 100%;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.4em;
+  font-weight: 100;
+  color: #FFFFFF;
+  display: inline-block;
+  float: left;
+}
+
 .home-team-header-members-div {
-  width: 85%;
+  position: relative;
+  left: 2%;
+  width: 60%;
   height: 100%;
   display: inline-block;
   float: left;
