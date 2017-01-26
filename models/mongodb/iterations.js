@@ -287,7 +287,7 @@ var IterationExport = {
           '$lte': moment(new Date(endkey)).format(dateFormat)
         };
       }
-      Iteration.find(qReq).exec()
+      Iteration.find(qReq).sort('endDate').exec()
         .then(function(body) {
           loggers.get('model-iteration').verbose('getCompletedIterationsByKey() - '+body.length+' Completed Iteration docs obtained');
           resolve(body);
