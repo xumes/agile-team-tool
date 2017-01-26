@@ -1,7 +1,7 @@
 var React = require('react');
 var api = require('../api.jsx');
 var HomeIterChart = require('./HomeIterChart.jsx');
-var iteationHandler = require('./HomeIterationsHandler.jsx');
+var iterationHandler = require('./HomeIterationsHandler.jsx');
 var HomeFallBox = require('./HomeFallBox.jsx');
 var HomeSnapshotPull = require('./HomeSnapshotPull.jsx');
 
@@ -22,7 +22,7 @@ var HomeIterSection = React.createClass({
       var teamId = this.props.loadDetailTeam.team._id;
       var iterationData = this.props.loadDetailTeam.iterations;
       var teamAccess = this.props.loadDetailTeam.access;
-      iteationHandler.squadIterationsHandler(teamId, iterationData, teamAccess);
+      iterationHandler.squadIterationsHandler(teamId, iterationData, teamAccess);
     } else {
       $('#contentSpinner').hide();
       $('#bodyContent').show();
@@ -30,7 +30,7 @@ var HomeIterSection = React.createClass({
       var teamId = this.props.loadDetailTeam.team._id;
       var teamName = this.props.loadDetailTeam.team.name;
       var snapshotData = this.props.loadDetailTeam.snapshot;
-      iteationHandler.iterationSnapshotHandler(teamId, teamName, snapshotData);
+      iterationHandler.iterationSnapshotHandler(teamId, teamName, snapshotData);
     }
   },
   refreshSnapshot: function() {
@@ -48,7 +48,7 @@ var HomeIterSection = React.createClass({
         $('#snapshotPull').show();
         var snapshotData = result;
 
-        iteationHandler.iterationSnapshotHandler(teamId, teamName, snapshotData);
+        iterationHandler.iterationSnapshotHandler(teamId, teamName, snapshotData);
       })
   },
   expandCollapseSection: function(id) {
