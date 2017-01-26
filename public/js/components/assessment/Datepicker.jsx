@@ -10,11 +10,7 @@ var Datepicker = React.createClass({
     } else {
       $('#submitDatePicker').prop('disabled',true);
     }
-    if (this.props.submittedDate == null) {
-      $('#submitDatePicker').val('');
-    } else {
-      $('#submitDatePicker').datepicker('setDate', new Date(this.props.submittedDate));
-    }
+    
   },
   componentDidMount: function() {
     // $('#datepicker').datepicker();
@@ -30,23 +26,23 @@ var Datepicker = React.createClass({
   render: function() {
     var enableDatepicker = this.props.enableDatepicker;
     var selectFieldWidth = {'width':'300px'};
-    return(
-      <input type='text' id='submitDatePicker' readOnly='readonly' placeholder='Optional assessment date' size='30' disabled='true'/>
-    )
-    // if(enableDatepicker){
-    //   return (
-    //     <DatePicker dateFormat='DDMMMYYYY' id='submitDatePicker' selected={this.props.submittedDate} onChange={this.props.dateChangeHandler} size='44' />
-    //   );
-    // } else {
-    //   if (this.props.submittedDate == null) {
-    //     var startDate = 'Optional assessment date'
-    //   } else {
-    //     startDate = moment(this.props.submittedDate).format('DDMMMYYYY');
-    //   }
-    //   return (
-    //     <input type='text' class='ibm-date-picker hasDatepicker' name='assessmentDate' id='assessmentDate' size='44' value='' readOnly='readonly' placeholder={startDate} style={selectFieldWidth} disabled='disabled' />
-    //   );
-    // }
+    //return(
+      //<input type='text' id='submitDatePicker' readOnly='readonly' placeholder='Optional assessment date' size='30' disabled='true'/>
+    //)
+     if(enableDatepicker){
+       return (
+         <DatePicker dateFormat='DDMMMYYYY' id='submitDatePicker' placeholderText='Optional assessment date' className='assessmentDate' selected={this.props.submittedDate != null ?moment.utc(this.props.submittedDate): null} onChange={this.props.dateChangeHandler} size='44' fixedHeight/>
+       );
+     } else {
+       if (this.props.submittedDate == null) {
+         var startDate = 'Optional assessment date'
+       } else {
+         startDate = moment(this.props.submittedDate).format('DDMMMYYYY');
+       }
+       return (
+         <input type='text' class='ibm-date-picker hasDatepicker' name='assessmentDate' id='assessmentDate' size='44' value='' readOnly='readonly' placeholder={startDate} style={selectFieldWidth} disabled='disabled' />
+       );
+     }
   }
 });
 
