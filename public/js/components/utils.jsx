@@ -169,4 +169,4 @@ module.exports.setSelectOptions = function(elementId, listOption, firstOption, l
   $('#select2-' + elementId + '-container').text(selectedText);
   $('#select2-' + elementId + '-container').attr('title', selectedText);
   $('#' + elementId).attr('aria-label',elementId);
-}
+};
