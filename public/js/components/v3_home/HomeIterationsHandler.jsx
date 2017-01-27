@@ -349,13 +349,13 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
     noData: {
       style: {
         fontWeight: 'normal',
-        fontSize: '12px',
+        fontSize: '1em',
         color: '#303030'
       }
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -372,7 +372,7 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
       tickmarkPlacement: 'on',
       labels: {
         style: {
-          'fontSize': '9px'
+          'fontSize': '.75em'
         },
         formatter: function() {
           if (typeof this.value === 'string' && this.value.indexOf('*') >= 0) {
@@ -427,7 +427,7 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
       align: 'center',
       y: 8,
       style: {
-        fontSize: '12px',
+        fontSize: '1em',
         color: 'orange'
       }
     },
@@ -486,13 +486,13 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
     noData: {
       style: {
         fontWeight: 'normal',
-        fontSize: '12px',
+        fontSize: '1em',
         color: '#303030'
       }
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -502,7 +502,7 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
     xAxis: {
       labels: {
         style: {
-          'fontSize': '9px'
+          'fontSize': '.75em'
         },
         formatter: function() {
           if (typeof this.value === 'string' && this.value.indexOf('*') >= 0) {
@@ -566,7 +566,7 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
       y: 10,
       x: 20,
       style: {
-        fontSize: '12px',
+        fontSize: '1em',
         color: '#8CD211'
       }
     },
@@ -617,13 +617,13 @@ function loadBarChartParent(id, title, categories, columnSeries, yMax) {
     noData: {
       style: {
         fontWeight: 'normal',
-        fontSize: '12px',
+        fontSize: '1em',
         color: '#303030'
       }
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -637,7 +637,7 @@ function loadBarChartParent(id, title, categories, columnSeries, yMax) {
     //   y: 12,
     //   x: 28,
     //   style: {
-    //     fontSize: '12px',
+    //     fontSize: '1em',
     //     color: 'orange'
     //   }
     // },
@@ -656,7 +656,7 @@ function loadBarChartParent(id, title, categories, columnSeries, yMax) {
     xAxis: {
       labels: {
         style: {
-          'fontSize': '9px'
+          'fontSize': '.75em'
         }
       },
       title: {
@@ -722,13 +722,13 @@ function loadPiePizzaChart(id, title, seriesObj, subtitle) {
     noData: {
       style: {
         fontWeight: 'normal',
-        fontSize: '12px',
+        fontSize: '1em',
         color: '#303030'
       }
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -743,7 +743,7 @@ function loadPiePizzaChart(id, title, seriesObj, subtitle) {
             return this.point.y;
           },
           style: {
-            textShadow: 'px 1px contrast, -1px -1px contrast, -1px 1px contrast, 1px -1px contrast'
+            textShadow: '1px 1px contrast, -1px -1px contrast, -1px 1px contrast, 1px -1px contrast'
           },
           distance: -15
         }
@@ -773,7 +773,7 @@ function loadPiePizzaChart(id, title, seriesObj, subtitle) {
       y: -135,
       x: 30,
       style: {
-        fontSize: '10px',
+        fontSize: '.75em',
         //color : 'orange',
         fontWeight: 'bold'
       }
@@ -804,13 +804,13 @@ function loadChartMultiChart(id, title, type, categories, yAxisLabel, xAxisLabel
     noData: {
       style: {
         fontWeight: 'normal',
-        fontSize: '12px',
+        fontSize: '1em',
         color: '#303030'
       }
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -820,7 +820,7 @@ function loadChartMultiChart(id, title, type, categories, yAxisLabel, xAxisLabel
     xAxis: {
       labels: {
         style: {
-          'fontSize': '9px'
+          'fontSize': '.75em'
         },
         formatter: function() {
           if (typeof this.value === 'string' && this.value.indexOf('*') >= 0) {
@@ -922,13 +922,13 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
     noData: {
       style: {
         fontWeight: 'normal',
-        fontSize: '12px',
+        fontSize: '1em',
         color: '#303030'
       }
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -938,7 +938,7 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
     xAxis: {
       labels: {
         style: {
-          'fontSize': '9px'
+          'fontSize': '.75em'
         },
         formatter: function() {
           if (typeof this.value === 'string' && this.value.indexOf('*') >= 0) {
@@ -1109,13 +1109,13 @@ function loadLineChartParent(id, title, categories, yAxisLabel, xAxisLabel, line
     noData: {
       style: {
         fontWeight: 'normal',
-        fontSize: '12px',
+        fontSize: '1em',
         color: '#303030'
       }
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -1125,7 +1125,7 @@ function loadLineChartParent(id, title, categories, yAxisLabel, xAxisLabel, line
     xAxis: {
       labels: {
         style: {
-          'fontSize': '9px'
+          'fontSize': '.75em'
         }
       },
       title: {
@@ -1175,7 +1175,7 @@ function loadLineChartParent(id, title, categories, yAxisLabel, xAxisLabel, line
     //   y: 15,
     //   x: 30,
     //   style: {
-    //     fontSize: '12px',
+    //     fontSize: '1em',
     //     color: 'orange'
     //   }
     // },
@@ -1210,13 +1210,13 @@ function loadMultiDefectDeployChartParent(id, categories, columnSeries1, columnS
     noData: {
       style: {
         fontWeight: 'normal',
-        fontSize: '12px',
+        fontSize: '1em',
         color: '#303030'
       }
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -1226,7 +1226,7 @@ function loadMultiDefectDeployChartParent(id, categories, columnSeries1, columnS
     xAxis: {
       labels: {
         style: {
-          'fontSize': '9px'
+          'fontSize': '.75em'
         }
       },
       title: {
@@ -1284,7 +1284,7 @@ function loadMultiDefectDeployChartParent(id, categories, columnSeries1, columnS
     //   y: 15,
     //   x: 30,
     //   style: {
-    //     fontSize: '12px',
+    //     fontSize: '1em',
     //     color: 'orange'
     //   }
     // },
@@ -1365,13 +1365,13 @@ function loadMultiLineChartParent(id, title, categories, yAxisLabel, xAxisLabel,
     noData: {
       style: {
         fontWeight: 'normal',
-        fontSize: '12px',
+        fontSize: '1em',
         color: '#303030'
       }
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -1381,7 +1381,7 @@ function loadMultiLineChartParent(id, title, categories, yAxisLabel, xAxisLabel,
     xAxis: {
       labels: {
         style: {
-          'fontSize': '9px'
+          'fontSize': '.75em'
         }
       },
       title: {
@@ -1443,7 +1443,7 @@ function loadMultiLineChartParent(id, title, categories, yAxisLabel, xAxisLabel,
     //   y: 15,
     //   x: 20,
     //   style: {
-    //     fontSize: '12px',
+    //     fontSize: '1em',
     //     color: 'orange'
     //   }
     // },
@@ -1480,14 +1480,14 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
     noData: {
       style: {
         fontWeight: 'normal',
-        fontSize: '12px',
+        fontSize: '1em',
         color: '#303030'
       }
     },
 
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -1497,7 +1497,7 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
     xAxis: {
       labels: {
         style: {
-          'fontSize': '9px'
+          'fontSize': '.75em'
         },
         formatter: function() {
           if (typeof this.value === 'string' && this.value.indexOf('*') >= 0) {

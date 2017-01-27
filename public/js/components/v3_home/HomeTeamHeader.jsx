@@ -142,7 +142,7 @@ var HomeTeamHeader = React.createClass({
           if (index < 9) {
             var faceImageId = 'faceImage_' + index;
             //var src = 'http://dpev027.innovate.ibm.com:10000/image/' + member.userId.toUpperCase();
-            var src = 'http://images.w3ibm.mybluemix.net/image/' + member.userId.toUpperCase();
+            var src = '//images.w3ibm.mybluemix.net/image/' + member.userId.toUpperCase();
             return (
               <div key={faceImageId} class='home-header-image'>
                 <a class='ibm-padding-content' style={{'padding': '0', 'borderRadius': '50%'}} title={member.name}>

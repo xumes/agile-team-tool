@@ -102,7 +102,7 @@ var HomeIterContent = React.createClass({
     $('#'+id).html(iterData[id]);
     $('#'+id).prop('contenteditable', 'false');
   },
-  
+
   showAddIteration: function() {
     if (!this.state.createIteration)
       this.setState({createIteration: true});
@@ -114,7 +114,7 @@ var HomeIterContent = React.createClass({
 
   render: function() {
     var self = this;
-    selectedIter = new Object();    
+    selectedIter = new Object();
     if (_.isEmpty(self.props.loadDetailTeam) || self.props.loadDetailTeam.team.type != 'squad') {
       return null;
     } else {
@@ -173,7 +173,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-add-btn-block' onClick={this.showAddIteration} style={{'cursor':'pointer'}}>
                 <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
               </div>
-            </div>            
+            </div>
             <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={self.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
             <div class='home-iter-last-update-block'>
               <div class='home-iter-last-update-title'>Last updated</div>

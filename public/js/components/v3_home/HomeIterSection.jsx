@@ -70,10 +70,10 @@ var HomeIterSection = React.createClass({
       'createBtnTitle': 'Create iteration'
     };
     return (
-      <div data-widget='showhide' data-type='panel' class='ibm-show-hide' id='iterationSection'>
+      <div id='iterationSection'>
         <HomeFallBox component={iterationFallBoxComponents}/>
         <div style={{'height':'100%'}} class='ibm-container-body'>
-          <div id='nsquad_team_scard' style={{'display':'none', 'height':'100%'}}>
+          <div id='nsquad_team_scard' style={{'display':'none', 'height':'100%', 'position':'relative', 'top':'1%'}}>
             <HomeIterChart id={'pvelocityChart'} />
             <HomeIterChart id={'pthroughputChart'} />
             <HomeIterChart id={'pdefectsChart'} />
@@ -82,7 +82,7 @@ var HomeIterSection = React.createClass({
             <HomeIterChart id={'piePizzaChart'} />
             <HomeIterChart id={'pstatisfactionChart'} />
           </div>
-          <div id='squad_team_scard' style={{'display':'none','height':'100%'}}>
+          <div id='squad_team_scard' style={{'display':'none','height':'100%', 'position':'relative', 'top':'1%'}}>
             <HomeIterChart id={'velocityChart'} />
             <HomeIterChart id={'throughputChart'} />
             <HomeIterChart id={'defectsChart'} />
