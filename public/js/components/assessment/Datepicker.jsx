@@ -37,7 +37,7 @@ var Datepicker = React.createClass({
        if (this.props.submittedDate == null) {
          var startDate = 'Optional assessment date'
        } else {
-         startDate = moment(this.props.submittedDate).format('DDMMMYYYY');
+         startDate = moment.utc(this.props.submittedDate).format('DDMMMYYYY');
        }
        return (
          <input type='text' class='ibm-date-picker hasDatepicker' name='assessmentDate' id='assessmentDate' size='44' value='' readOnly='readonly' placeholder={startDate} style={selectFieldWidth} disabled='disabled' />
