@@ -71,7 +71,7 @@ var AssessmentPageFormTwo = React.createClass({
         }
       }
     }
-    // var assessmentDate = null;
+    // var assessmentDate = null;  
     // if (this.state.submittedDate != null) {
     //   assessmentDate = this.state.submittedDate;
     // } else {
