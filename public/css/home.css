@@ -902,7 +902,7 @@ body, input, textarea, select, table {
 .hierarchy-lastteam {
   font-family: "HelvNeue Roman for IBM";
   display: inline;
-  font-size: 1.1em;
+  font-size: 1.4em;
   color: #EFF9FF;
   border-bottom: 0.1em solid #EFF9FF;
 }
@@ -2387,7 +2387,7 @@ body, input, textarea, select, table {
   font-family: "HelvNeue Roman for IBM";
   font-size: 1.6em;
   color: #FFFFFF;
-  line-height: 3em;
+  line-height: 2.5em;
   cursor: pointer;
 }
 
@@ -2757,9 +2757,9 @@ body, input, textarea, select, table {
   content: "\e604";
 }
 
-.glyphicon, .checkbox input[type="checkbox"] + span::after, 
-.checkbox-inline input[type="checkbox"] + span::after, 
-.switch input[type="checkbox"] + span, .switch-inline input[type="checkbox"] + span, 
+.glyphicon, .checkbox input[type="checkbox"] + span::after,
+.checkbox-inline input[type="checkbox"] + span::after,
+.switch input[type="checkbox"] + span, .switch-inline input[type="checkbox"] + span,
 .breadcrumb > li + li::before, .alert::before, .alert-dismissable .close::before, .alert-dismissible .close::before {
   color: #777677;
   font-family: "UX1 Glyphicons";
@@ -2859,7 +2859,7 @@ width: 100% !important;
 /* END: Important Link Modal */
 
 /* line 4642 */
-/*label { 
+/*label {
   color: #323232;
   font-family: "Helvetica Neue for IBM",Helvetica,Arial,sans-serif;
   font-weight: 500;
@@ -2933,13 +2933,13 @@ width: 100% !important;
   .att-modal .modal-header .close:focus input[type="checkbox"] + span::after,
   .att-modal .modal-header .close:focus .checkbox-inline input[type="checkbox"] + span::after,
   .att-modal .checkbox-inline .modal-header .close:focus input[type="checkbox"] + span::after,
-  .att-modal .modal-header .close:focus .switch input[type="checkbox"] + span, 
+  .att-modal .modal-header .close:focus .switch input[type="checkbox"] + span,
   .att-modal .switch .modal-header .close:focus input[type="checkbox"] + span,
   .att-modal .modal-header .close:focus .switch-inline input[type="checkbox"] + span,
   .att-modal .switch-inline .modal-header .close:focus input[type="checkbox"] + span,
   .att-modal .modal-header .close:focus .breadcrumb > li + li:before,
   .att-modal .modal-header .close:focus .alert:before,
-  .att-modal .modal-header .close:focus .alert-dismissable .close:before, 
+  .att-modal .modal-header .close:focus .alert-dismissable .close:before,
   .att-modal .alert-dismissable .modal-header .close:focus .close:before,
   .att-modal .modal-header .close:focus .alert-dismissible .close:before,
   .att-modal .alert-dismissible .att-modal .modal-header .close:focus .close:before {
@@ -3178,7 +3178,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   border-color: #4178BE;
   color: #4178BE; }
 
-.att-modal .btn-primary:hover, .att-modal .btn-primary:focus, .att-modal .btn-primary.focus, .att-modal .btn-primary:active, 
+.att-modal .btn-primary:hover, .att-modal .btn-primary:focus, .att-modal .btn-primary.focus, .att-modal .btn-primary:active,
   .att-modal .btn-primary.active, .open > .btn-primary.dropdown-toggle {
     background-color: #325c80;
     color: #ffffff;
@@ -3201,9 +3201,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 @font-face {
   font-family: "HelvNeue Roman for IBM";
   font-style: normal;
-  src: url("../fonts/helvetica-neue-roman.eot?") format("eot"), 
-    url("../fonts/helvetica-neue-roman.woff2") format("woff2"), 
-    url("../fonts/helvetica-neue-roman.woff") format("woff"), 
+  src: url("../fonts/helvetica-neue-roman.eot?") format("eot"),
+    url("../fonts/helvetica-neue-roman.woff2") format("woff2"),
+    url("../fonts/helvetica-neue-roman.woff") format("woff"),
     url("../fonts/helvetica-neue-roman.ttf") format("truetype");
 }
 
@@ -3211,9 +3211,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-family: "HelvNeue Medium for IBM";
   font-style: normal;
   font-weight: 500;
-  src: url("../fonts/helvetica-neue-medium.eot?") format("eot"), 
-    url("../fonts/helvetica-neue-medium.woff2") format("woff2"), 
-    url("../fonts/helvetica-neue-medium.woff") format("woff"), 
+  src: url("../fonts/helvetica-neue-medium.eot?") format("eot"),
+    url("../fonts/helvetica-neue-medium.woff2") format("woff2"),
+    url("../fonts/helvetica-neue-medium.woff") format("woff"),
     url("../fonts/helvetica-neue-medium.ttf") format("truetype");
 }
 
@@ -3221,9 +3221,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-family: "HelvNeue Bold for IBM";
   font-style: normal;
   font-weight: 700;
-  src: url("../fonts/helvetica-neue-bold.eot?") format("eot"), 
-    url("../fonts/helvetica-neue-bold.woff2") format("woff2"), 
-    url("../fonts/helvetica-neue-bold.woff") format("woff"), 
+  src: url("../fonts/helvetica-neue-bold.eot?") format("eot"),
+    url("../fonts/helvetica-neue-bold.woff2") format("woff2"),
+    url("../fonts/helvetica-neue-bold.woff") format("woff"),
     url("../fonts/helvetica-neue-bold.ttf") format("truetype");
 }
 
