@@ -59,12 +59,16 @@ var LinkSchema = new Schema({
   linkLabel: {
     type: String,
     required: [true, 'URL link label is required.'],
-    validate: validators.matches({message: 'URL link label is required.'}, /^(?!.*(Select label|Other...))/ig)
+    validate: validators.matches({message: 'URL link label is required.'}, /^(?!.*(Select label|-1|Other...))/ig)
   },
   linkUrl: {
     type: String,
     required: [true, 'URL is required.'],
     validate: validators.isURL({message: errURLInvalidMsg})
+  },
+  type: {
+    type: String,
+    default: null
   }
 },{_id : false});
 
@@ -1312,10 +1316,12 @@ module.exports.modifyImportantLinks = function(teamId, user, links) {
         if (!pattern.test(url)) {
           url = 'http://' + url;
         }
+        obj.type = data.type;
         obj.linkLabel = data.linkLabel;
         obj.linkUrl = url;
         tmpLinks.push(obj);
       });
+      console.log('modifyImportantLinks tmpLinks:',tmpLinks);
       var updateTeam = {
         'links': tmpLinks,
         'updatedByUserId': userId,

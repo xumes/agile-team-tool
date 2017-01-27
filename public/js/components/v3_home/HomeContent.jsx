@@ -25,6 +25,8 @@ var HomeContent = React.createClass({
     } else {
       if (nextProps.loadDetailTeam.team && nextProps.loadDetailTeam.team.members && this.props.loadDetailTeam.team.members != nextProps.loadDetailTeam.team.members) {
         return true;
+      } else if (nextProps.loadDetailTeam.team && nextProps.loadDetailTeam.team.links && this.props.loadDetailTeam.team.links != nextProps.loadDetailTeam.team.links){
+        return true;
       } else {
         return false;
       }
@@ -68,7 +70,7 @@ var HomeContent = React.createClass({
         <HomeSpinner id={'contentSpinner'}/>
         <div id='bodyContent' style={{'height':'100%','width':'100%'}}>
           <HomeHighlightBox />
-          <HomeTeamHeader loadDetailTeam={this.props.loadDetailTeam} selectedTeamChanged={this.props.selectedTeamChanged} tabClickedHandler={this.props.tabClickedHandler} realodTeamMembers={this.props.realodTeamMembers} roles={this.props.roles}/>
+          <HomeTeamHeader loadDetailTeam={this.props.loadDetailTeam} selectedTeamChanged={this.props.selectedTeamChanged} tabClickedHandler={this.props.tabClickedHandler} updateTeamLink={this.props.updateTeamLink} realodTeamMembers={this.props.realodTeamMembers} roles={this.props.roles} updateTeamDetails={this.props.updateTeamDetails} />
           <HomeAseSummary loadDetailTeam={this.props.loadDetailTeam} />
           <div class='home-trends-block'>
             <div class='home-trends-block-title'>

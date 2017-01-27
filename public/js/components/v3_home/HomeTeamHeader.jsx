@@ -179,7 +179,7 @@ var HomeTeamHeader = React.createClass({
               <div class='home-team-header-teamname-btn'>
                 <InlineSVG class='home-team-header-teamname-btn-img' src={require('../../../img/Att-icons/att-icons_team-settings-21.svg')}></InlineSVG>
               </div>
-              <HomeTeamDescription teamName={teamName} teamDescription={teamDescription} showDescriptionBlock={self.showDescriptionBlock}/>
+              <HomeTeamDescription teamName={teamName} teamDescription={teamDescription} showDescriptionBlock={self.showDescriptionBlock} loadDetailTeam={self.props.loadDetailTeam} updateTeamDetails={self.props.updateTeamDetails} />
             </div>
           </div>
           <div class='home-team-header-hierarchy'>
@@ -197,7 +197,7 @@ var HomeTeamHeader = React.createClass({
                 <h>Team Bookmarks</h>
               </div>
             </div>
-            <HomeBookmark loadDetailTeam={self.props.loadDetailTeam} showBookmark={self.showBookmark}/>
+            <HomeBookmark loadDetailTeam={self.props.loadDetailTeam} showBookmark={self.showBookmark} updateTeamLink={self.props.updateTeamLink} />
             {/*<div class='home-team-header-btns' onClick={self.showAssessments} id='homeHeaderAseBtn'>
               <InlineSVG class='home-team-header-btn-img' src={require('../../../img/Att-icons/att-icons_main-nav-maturity.svg')}></InlineSVG>
               <div class='home-team-header-btn-title'>
