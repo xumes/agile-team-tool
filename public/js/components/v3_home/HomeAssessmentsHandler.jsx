@@ -193,7 +193,7 @@ function plotAssessmentSeries(teamAssessments) {
       },
       title: {
         style: {
-          fontFamily: 'HelvNeue Light for IBM',
+          fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
           fontSize: '1.3em',
           color: '#5A5A5A'
         },
@@ -203,7 +203,7 @@ function plotAssessmentSeries(teamAssessments) {
       xAxis: {
         labels: {
           style: {
-            'fontSize': '9px'
+            'fontSize': '.75em'
           }
         },
         categories: chartData['categories'],
@@ -218,7 +218,7 @@ function plotAssessmentSeries(teamAssessments) {
         },
         labels: {
           style: {
-            'fontSize': '9px'
+            'fontSize': '.75em'
           }
         },
         endOnTick: false,
@@ -308,21 +308,23 @@ function plotAssessment(index, chartData) {
   $('#' + spiderData['prefixId'] + '_SpiderChart').highcharts({
     chart: {
       polar: true,
-      type: 'line', width: 380,
-      events: {
-        load: function() {
-          var text = this.renderer.text('Select an overall score on the adjacent graph to view practice results.', 25, 307)
-            .css({
-              width: '450px',
-              color: '#222'
-            }).add();
-        }
+      type: 'line', width: 380
+    },
+
+    subtitle: {
+      text: 'Select an overall score on the adjacent graph to view practice results.',
+      verticalAlign: 'bottom',
+      align: 'center',
+      y: 8,
+      style: {
+        fontSize: '1em',
+        color: '#5a5a5a'
       }
     },
 
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -334,7 +336,7 @@ function plotAssessment(index, chartData) {
       labels: {
         style: {
           'whiteSpace': 'nowrap',
-          'fontSize': '10px'
+          'fontSize': '.75em'
         },
         formatter: function() {
           var text = this.value;
@@ -351,7 +353,7 @@ function plotAssessment(index, chartData) {
     yAxis: {
       labels: {
         style: {
-          'fontSize': '9px'
+          'fontSize': '.75em'
         },
         enabled: false
       },
@@ -399,7 +401,7 @@ function plotAssessment(index, chartData) {
 }
 
 function createChartSection(prefixId, count) {
-  var margintop = 'top: ' + count*2 + '%';
+  var margintop = 'top: 0%';// + count*2 + '%';
   var mainDiv = document.createElement('div');
   mainDiv.setAttribute('class', 'container-body-columns-ase');
   // mainDiv.setAttribute('style', margintop);
@@ -543,13 +545,13 @@ function loadBarAssessmentEvaluation(id, asOfDate, categories, seriesObj1, serie
     noData: {
       style: {
         fontWeight: 'normal',
-        fontSize: '12px',
+        fontSize: '1em',
         color: '#303030'
       }
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -569,7 +571,7 @@ function loadBarAssessmentEvaluation(id, asOfDate, categories, seriesObj1, serie
     xAxis: {
       labels: {
         style: {
-          'fontSize': '9px'
+          'fontSize': '.75em'
         }
       },
       title: {
@@ -662,13 +664,13 @@ function loadLineMaturityTrend(id, categories, seriesObj1, seriesObj2, seriesObj
     noData: {
       style: {
         fontWeight: 'normal',
-        fontSize: '12px',
+        fontSize: '1em',
         color: '#303030'
       }
     },
     title: {
       style: {
-        fontFamily: 'HelvNeue Light for IBM',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -689,7 +691,7 @@ function loadLineMaturityTrend(id, categories, seriesObj1, seriesObj2, seriesObj
     xAxis: {
       labels: {
         style: {
-          'fontSize': '9px'
+          'fontSize': '.75em'
         }
       },
       title: {
