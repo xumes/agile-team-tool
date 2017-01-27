@@ -7,29 +7,21 @@ html {
   min-height: 720px;
   max-width: 1920px;
   max-height: 1080px;
-  font-size: 62.5%;
   background-color: white;
 }
 
 body {
-  font-size: 1em;
-  height: 100%
+  height: 100%;
 }
 
-/*p, input, textarea, span, select, table, .ibm-data-table caption {
-    font-size: 1.05em;
-    padding: 0 0 0.5em;
+input, select, textarea {
+  color: #323232;
+  font-size: 1.6em;
 }
-ul, ol {
-    line-height: 1rem;
-    padding-bottom: 0px;
+
+.select2, .select2-results ul li {
+  font-size: 1.6em;
 }
-body, input, textarea, select, table {
-    -webkit-text-size-adjust: 100%;
-    -moz-text-size-adjust: 100%;
-    font-size: 16px;
-    font-family: 'HelveticaNeueETW01-55Rg', sans-serif !important;
-}*/
 
 /* Matts dank spinner */
 /* The Modal (background) */
@@ -161,12 +153,16 @@ body, input, textarea, select, table {
     transform: rotate(-360deg); } }
 /* spinner end */
 
+button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
+  font-size: 1.3em !important;
+}
+
 #newTeamTree ul.ibm-twisty > li.ibm-active > a.ibm-twisty-trigger,
 #newTeamTree ul.ibm-twisty > li a.ibm-twisty-trigger,
 #newTeamTree ul.ibm-twisty > li a.agile-team-link {
   color: #4D4D4D;
   font-size: 1.6em;
-  font-family: "Helvetica Neue";
+  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-weight: 300;
   line-height: 3.0em;
 }
@@ -176,7 +172,7 @@ body, input, textarea, select, table {
 #newSearchTree ul.ibm-twisty > li a.agile-team-link {
   color: #4D4D4D;
   font-size: 1.6em;
-  font-family: "Helvetica Neue";
+  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-weight: 300;
   line-height: 3.0em;
 }
@@ -200,7 +196,7 @@ body, input, textarea, select, table {
 
 #newTeamTree a::before,
 #newSearchTree a::before {
-  font-size: 1.6em;
+  font-size: 1.3em;
   font-weight: 300;
   color: #3B6DAA;
 }
@@ -223,11 +219,13 @@ body, input, textarea, select, table {
   font-size: 1.1em;
   /*font-weight: 300;*/
   color: #4D4D4D;
-  padding: 0;
 }
 
 .agile-team-selected > .agile-team-title {
   border-bottom: 0.15em solid #008ABF;
+  padding-bottom: 2%;
+  position: relative;
+  left: 2%;
 }
 
 /*#newSearchTree a.agile-team-link {
@@ -266,7 +264,7 @@ body, input, textarea, select, table {
   background-repeat: no-repeat;
   background-size: 90% 90%;
   background-position: center;
-  width: 6%;
+  width: 7%;
 }
 
 #newSearchTree a.trigger-squad::before {
@@ -400,18 +398,18 @@ body, input, textarea, select, table {
 
 .header-title > div {
   display: inline-block;
-  font-family: "HelvRegularIBM","Helvetica Neue",Arial,sans-serif;
+  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   position: relative;
   top: 25%;
 }
 
 .header-title > div ~ div {
-  font-family: "HelvBoldIBM","Helvetica Neue",Arial,sans-serif;
+  font-family: "HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
 }
 
 .header-title div:last-child {
   color: #e71d32;
-  font-family: "HelvRegularIBM","Helvetica Neue",Arial,sans-serif;
+  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
 }
 
 .header-logo {
@@ -691,7 +689,7 @@ body, input, textarea, select, table {
   -webkit-transform: rotate(90deg);
   transform: rotate(90deg);
   font-size: 1.6em;
-  font-family: "HelvNeue Light for IBM";
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   color: #5A5A5A;
 }
 
@@ -743,7 +741,7 @@ body, input, textarea, select, table {
 }
 
 .home-nav-tab-item > h {
-  font-family: "Helvetica Neue";
+  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2em;
   text-align: left;
   padding-top: 0;
@@ -829,7 +827,7 @@ body, input, textarea, select, table {
 
 .home-team-header-teamname {
   display: inline;
-  font-family: "Helvetica Neue";
+  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 3em;
   font-weight: 300;
   color: #323232;
@@ -886,7 +884,7 @@ body, input, textarea, select, table {
 }
 
 .hierarchy-link {
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   display:inline;
   padding-left:0px;
   font-size: 1.4em;
@@ -894,13 +892,13 @@ body, input, textarea, select, table {
 }
 
 .hierarchy-mark {
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   color: #EFF9FF;
 }
 
 .hierarchy-lastteam {
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM""HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   display: inline;
   font-size: 1.1em;
   color: #EFF9FF;
@@ -963,7 +961,7 @@ body, input, textarea, select, table {
 .home-team-header-btn-title {
   width: 50%;
   height: 100%;
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   color: #FFFFFF;
   position: relative;
@@ -978,12 +976,13 @@ body, input, textarea, select, table {
   left: 1%;
   width: 2%;
   height: 100%;
-  font-family: "HelvNeue Light for IBM";
-  font-size: 4.5em;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 5em;
   font-weight: 100;
   color: #FFFFFF;
-  display: inline-block;
+  position: relative;
   float: left;
+  top: -20%;
 }
 
 .home-team-header-btn-title3 {
@@ -1007,6 +1006,8 @@ body, input, textarea, select, table {
   height: 100%;
   display: inline-block;
   float: left;
+  position: relative;
+  top: 10%;
 }
 
 .home-team-header-members-div > div {
@@ -1040,7 +1041,7 @@ body, input, textarea, select, table {
   height: 680%;
   padding: 0;
   /*background-color: red;*/
-  position: relative;;;
+  position: relative;;
   top: 52%;
   z-index: 9;
 }
@@ -1059,7 +1060,7 @@ body, input, textarea, select, table {
   position: relative;
   top: 35%;
   left: 2%;
-  font-family: "HelvNeue Light for IBM";
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.5em;
   color: #4178BE;
 }
@@ -1069,7 +1070,7 @@ body, input, textarea, select, table {
   top: 35%;
   right: 2%;
   float: right;
-  font-family: "HelvNeue Light for IBM";
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 3em;
   color: #C7C7C7;
   cursor: pointer;
@@ -1099,7 +1100,7 @@ body, input, textarea, select, table {
   top: 32%;
   left: 8%;
   height: 45%;
-  font-family: "HelvNeue Bold for IBM";
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   /*line-height: 18px;*/
   color: #323232;
@@ -1146,7 +1147,7 @@ body, input, textarea, select, table {
 
 .team-member-table-content-block1 > div > div > h,
 .team-member-table-content-block2 > div > div > h {
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   color: #5A5A5A;
   padding: 0;
@@ -1156,7 +1157,7 @@ body, input, textarea, select, table {
 
 .team-member-table-content-block1 > div > div > h1,
 .team-member-table-content-block2 > div > div > h1 {
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   color: #325C80;
   padding: 0;
@@ -1170,7 +1171,7 @@ body, input, textarea, select, table {
   top: 25%;
   left: 5%;
   height: 45%;
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   color: #5A5A5A;
 }
@@ -1246,7 +1247,7 @@ body, input, textarea, select, table {
 }
 
 .team-member-table-add-btn > h {
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   text-align: center;
   color: #4178BE;
@@ -1299,7 +1300,7 @@ body, input, textarea, select, table {
   position: relative;
   top: 35%;
   left: 5%;
-  font-family: "HelvNeue Bold for IBM";
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.5em;
   color: #FFFFFF;
   display: inline-block;
@@ -1311,7 +1312,7 @@ body, input, textarea, select, table {
   position: relative;
   top: 40%;
   right: 5%;
-  font-family: "HelvNeue Light for IBM";
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2em;
   color: #FFFFFF;
   display: inline-block;
@@ -1346,7 +1347,7 @@ body, input, textarea, select, table {
   width: 100%;
   float: left;
   display: inline-block;
-  font-family: "HelvNeue Bold for IBM";
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   color: #464646;
   padding: 0;
@@ -1356,7 +1357,7 @@ body, input, textarea, select, table {
   position: relative;
   float: left;
   height: 70%;
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   line-height: 1.6em;
   color: #464646;
@@ -1389,7 +1390,7 @@ body, input, textarea, select, table {
   position: relative;
   top: 60%;
   padding: 0;
-  font-family: "HelvNeue Light for IBM";
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.5em;
   color: #734098;
 }
@@ -1411,14 +1412,14 @@ body, input, textarea, select, table {
   position: relative;
   top: 60%;
   left: 38%;
-  font-family: "HelvNeue Light for IBM";
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.1em;
   color: #777677;
   padding: 0;
 }
 
 .home-trends-block-title > div {
-  display: inline-block;;
+  display: inline-block;
   float: right;
   position: relative;
   top: 45%;
@@ -1438,7 +1439,7 @@ body, input, textarea, select, table {
   float: left;
   position: relative;
   width: 100%;
-  height: 105.8%;
+  height: 100%;
 }
 
 .home-chart {
@@ -1459,23 +1460,22 @@ body, input, textarea, select, table {
 
 .container-body-col-2-1 {
   position: relative;
-  width: 47%;
+  width: 47.5%;
   height: 23%;
   display: block;
   float: left;
   border: 0.1em solid #C7C7C7;
-  margin-left: 1%;
-  margin-top: 2%;
+  margin: 1.5% 1.5% 0% 0%;
 }
 
 .container-body-col-2-2 {
   position: relative;
-  width: 47%;
+  width: 47.5%;
   height: 100%;
   display: block;
   float: left;
   border: 0.1em solid #C7C7C7;
-  margin-left: 1%;
+  margin: 1.5% 1.5% 0% 0%;
 }
 
 .container-body-col-2-1 > div, .container-body-col-2-2 > div  {
@@ -1484,6 +1484,7 @@ body, input, textarea, select, table {
   height: 96%;
   top: 2%;
   left: 2%;
+  margin-bottom: 1%;
 }
 
 .home-chart-filter-block {
@@ -1535,7 +1536,7 @@ body, input, textarea, select, table {
   position: relative;
   top: 35%;
   left: 5%;
-  font-family: "HelvNeue Bold for IBM";
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.5em;
   color: #FFFFFF;
   display: inline-block;
@@ -1548,7 +1549,7 @@ body, input, textarea, select, table {
   position: relative;
   top: 40%;
   right: 5%;
-  font-family: "HelvNeue Light for IBM";
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2em;
   color: #FFFFFF;
   display: inline-block;
@@ -1632,7 +1633,7 @@ body, input, textarea, select, table {
   border: 0.1em solid #7CC7FF;
   height: 16%;
   width: 37.5%;
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
   line-height: 2em;
   color: #323232;
@@ -1648,7 +1649,7 @@ body, input, textarea, select, table {
   border: 0.1em solid #00B4A0;
   height: 16%;
   width: 37.5%;
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
   line-height: 2em;
   color: #323232;
@@ -1677,7 +1678,7 @@ body, input, textarea, select, table {
   top: 4%;
   width: 90%;
   height: 2%;
-  font-family: "HelvNeue Light for IBM";
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.5em;
   color: #734098;
 }
@@ -1689,7 +1690,7 @@ body, input, textarea, select, table {
   top: 5%;
   width: 90%;
   height: 2%;
-  font-family: "HelvNeue Light for IBM";
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.0em;
   color: #000000;
 }
@@ -1702,7 +1703,7 @@ body, input, textarea, select, table {
   top: 4.5%;
   width: 90%;
   height: 3%;
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
 }
 
@@ -1750,7 +1751,7 @@ body, input, textarea, select, table {
   width: 40%;
   display: inline-block;
   float: left;
-  font-family: "Helvetica Neue LT W1G";
+  font-family: "Helvetica Neue LT W1G","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   line-height: 1.8em;
   color: #323232;
@@ -1764,7 +1765,7 @@ body, input, textarea, select, table {
   width: 40%;
   display: inline-block;
   float: right;
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.3em;
   text-align: right;
   line-height: 1.6em;
@@ -1838,7 +1839,7 @@ body, input, textarea, select, table {
   position: relative;
   width: 100%;
   float: left;
-  font-family: "HelvNeue Medium for IBM";
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   line-height: 1.9em;
   color: #5A5A5A;
@@ -1855,7 +1856,7 @@ body, input, textarea, select, table {
   width: 75%;
   float: left;
   display: inline-block;
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   text-align: left;
   line-height: 1.6em;
@@ -1869,7 +1870,7 @@ body, input, textarea, select, table {
   height: 70%;
   float: right;
   display: inline-block;
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   text-align: right;
   line-height: 1.6em;
@@ -1884,7 +1885,7 @@ body, input, textarea, select, table {
   height: 70%;
   float: right;
   display: inline-block;
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   text-align: right;
   line-height: 1.6em;
@@ -2004,7 +2005,7 @@ body, input, textarea, select, table {
   position: relative;
   top: 35%;
   left: 5%;
-  font-family: "HelvNeue Bold for IBM";
+  font-family: "HelvNeue Bold for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.5em;
   color: #FFFFFF;
   display: inline-block;
@@ -2016,7 +2017,7 @@ body, input, textarea, select, table {
   position: relative;
   top: 40%;
   right: 5%;
-  font-family: "HelvNeue Light for IBM";
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2em;
   color: #FFFFFF;
   display: inline-block;
@@ -2051,7 +2052,7 @@ body, input, textarea, select, table {
 }
 
 .home-team-header-bookmark-scroll > div > a {
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   color: #4178BE;
   padding: 0;
@@ -2139,7 +2140,9 @@ body, input, textarea, select, table {
   height: 100%;
   font-size: 1.4em;
   line-height: 0.8em;
-  font-family: "Helvetica Neue LT W1G";
+  font-family: "Helvetica Neue LT W1G","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .home-assessment-summary-header-status {
@@ -2206,7 +2209,7 @@ body, input, textarea, select, table {
   float: left;
   width: 100%;
   height: 50%;
-  font-family: "Helvetica Neue";
+  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   font-weight: 300;
   line-height: 2.5em;
@@ -2219,7 +2222,7 @@ body, input, textarea, select, table {
   float: left;
   width: 100%;
   height: 50%;
-  font-family: "Helvetica Neue";
+  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
   color: #777677;
   line-height: 0.5em;
@@ -2335,7 +2338,7 @@ body, input, textarea, select, table {
   float: left;
   width: 25%;
   height: 100%;
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.3em;
   line-height: 0.5em;
   color: #5A5A5A;
@@ -2363,7 +2366,7 @@ body, input, textarea, select, table {
   position: relative;
   width: 100%;
   height: 100%;
-  font-family: "Helvetica Neue";
+  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.8em;
   font-weight: 300;
   line-height: 4em;
@@ -2384,8 +2387,8 @@ body, input, textarea, select, table {
   height: 75%;
   border-radius: 50%;
   border: 0.1em solid #FFFFFF;
-  font-family: "HelvNeue Roman for IBM";
-  font-size: 1.6em;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.3em;
   color: #FFFFFF;
   line-height: 3em;
   cursor: pointer;
@@ -2414,7 +2417,7 @@ body, input, textarea, select, table {
   float: left;
   top: 35%;
   left: 5%;
-  font-family: "HelvNeue Bold for IBM";
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.5em;
   color: #FFFFFF;
 }
@@ -2423,7 +2426,7 @@ body, input, textarea, select, table {
   float: right;
   top: 35%;
   right: 5%;
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2em;
   color: #FFFFFF;
   cursor: pointer;
@@ -2456,7 +2459,7 @@ body, input, textarea, select, table {
   float: left;
   height: 45%;
   width: 100%;
-  font-family: "HelvNeue Medium for IBM";
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   line-height: 1.8em;
   color: #323232;
@@ -2470,7 +2473,7 @@ body, input, textarea, select, table {
   border: 0.1em solid #777677;
   text-indent: 1em;
   padding: 0;
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   line-height: 1.8em;
   color: #5A5A5A;
@@ -2490,7 +2493,7 @@ body, input, textarea, select, table {
   float: left;
   height: 45%;
   width: 100%;
-  font-family: "HelvNeue Medium for IBM";
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   line-height: 1.8em;
   color: #323232;
@@ -2520,7 +2523,7 @@ body, input, textarea, select, table {
   border: 0.1em solid #777677;
   text-indent: 1em;
   padding: 0;
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   line-height: 1.8em;
   color: #5A5A5A;
@@ -2541,7 +2544,7 @@ body, input, textarea, select, table {
   float: left;
   height: 45%;
   width: 100%;
-  font-family: "HelvNeue Medium for IBM";
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   line-height: 1.8em;
   color: #323232;
@@ -2568,7 +2571,7 @@ body, input, textarea, select, table {
   float: left;
   height: 45%;
   width: 100%;
-  font-family: "HelvNeue Medium for IBM";
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   line-height: 1.8em;
   color: #323232;
