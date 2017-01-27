@@ -808,7 +808,7 @@ body, input, textarea, select, table {
   background-color: #7CC7FF;
   background-image: url('../img/header-bg-art.svg');
   background-repeat: no-repeat;
-  background-position: 150% 50%;
+  background-position: 150% 25%;
 }
 
 .home-team-header-title {
@@ -902,7 +902,7 @@ body, input, textarea, select, table {
 .hierarchy-lastteam {
   font-family: "HelvNeue Roman for IBM";
   display: inline;
-  font-size: 1.4em;
+  font-size: 1.1em;
   color: #EFF9FF;
   border-bottom: 0.1em solid #EFF9FF;
 }
@@ -920,12 +920,16 @@ body, input, textarea, select, table {
   width: 20%;
   height: 100%;
   display: inline-block;
-  cursor: pointer;
+  /*cursor: pointer;*/
   float: left;
 }
 
+.home-team-header-btns svg {
+  cursor: pointer;
+}
+
 .home-team-header-btns2 {
-  width: 60%;
+  width: 80%;
   height: 100%;
   display: inline-block;
 }
@@ -938,7 +942,7 @@ body, input, textarea, select, table {
 }
 .home-team-header-btn-img2 {
   display: inline-block;
-  width: 10%;
+  width: 8%;
   height: 100%;
   cursor: pointer;
   float: left;
@@ -970,7 +974,9 @@ body, input, textarea, select, table {
 }
 
 .home-team-header-btn-title2 {
-  width: 5%;
+  position: relative;
+  left: 1%;
+  width: 2%;
   height: 100%;
   font-family: "HelvNeue Light for IBM";
   font-size: 4.5em;
@@ -980,8 +986,24 @@ body, input, textarea, select, table {
   float: left;
 }
 
+.home-team-header-btn-title3 {
+  position: relative;
+  top: 10%;
+  left: 1%;
+  width: 8%;
+  height: 100%;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.4em;
+  font-weight: 100;
+  color: #FFFFFF;
+  display: inline-block;
+  float: left;
+}
+
 .home-team-header-members-div {
-  width: 85%;
+  position: relative;
+  left: 2%;
+  width: 60%;
   height: 100%;
   display: inline-block;
   float: left;
@@ -2082,6 +2104,9 @@ body, input, textarea, select, table {
   background-color: #EFF9FF;
   width: 100%;
   height: 10%;
+  background-image: url('../img/header-bg-art.svg');
+  background-repeat: no-repeat;
+  background-position: 150% 100%;
 }
 
 .home-assessment-summary-header-title {
@@ -2159,9 +2184,14 @@ body, input, textarea, select, table {
   width: 96%;
   height: 100%;
 }
-.home-assessment-summary-content:last-child {
+.last-summary-content {
+  top: 0.1%;
   border-top: 0.1em solid #7CC7FF;
 }
+/*.home-assessment-summary-content:last-child {
+  top: 0.1%;
+  border-top: 0.1em solid #7CC7FF;
+}*/
 
 .home-assessment-summary-title {
   position: relative;
@@ -2233,7 +2263,7 @@ body, input, textarea, select, table {
   float: left;
   z-index: 3;
   left: 31%;
-  width: 0.5%;
+  width: 0.8%;
   height: 50%;
   top: 25%;
 }
@@ -2290,7 +2320,7 @@ body, input, textarea, select, table {
   z-index: 3;
   /*left: 96%;*/
   top: 25%;
-  width: 1.5%;
+  width: 2%;
   height: 50%;
 }
 
@@ -2562,7 +2592,7 @@ body, input, textarea, select, table {
   position: relative;
   float: left;
   top: 107%;
-  height: 50%;
+  height: 40%;
   width: 100%;
   background-color: #F7F7F7;
 }
@@ -2656,6 +2686,20 @@ body, input, textarea, select, table {
   height: 80%;
   left: 20%;
   top: 10%;
+}
+.footer-image {
+  position: relative;
+  float: right;
+  width: 15.8%;
+  height: 50%;
+  right: 2%;
+  top: -18%;
+}
+.footer-image img {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
 }
 /*.team-member-add-block-content-role .Select-control {
   border: 0.1em solid #777677 !important;

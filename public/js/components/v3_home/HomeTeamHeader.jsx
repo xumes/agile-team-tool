@@ -191,21 +191,24 @@ var HomeTeamHeader = React.createClass({
             </span>
           </div>
           <div class='home-team-header-btns-div'>
-            <div class='home-team-header-btns' onClick={self.showBookmark}>
-              <InlineSVG class='home-team-header-btn-img' src={require('../../../img/Att-icons/att-icons_main-nav-bookmark.svg')}></InlineSVG>
+            <div class='home-team-header-btns'>
+              <InlineSVG class='home-team-header-btn-img' onClick={self.showBookmark} src={require('../../../img/Att-icons/att-icons_main-nav-bookmark.svg')}></InlineSVG>
               <div class='home-team-header-btn-title'>
                 <h>Team Bookmarks</h>
               </div>
             </div>
-            <HomeBookmark loadDetailTeam={self.props.loadDetailTeam} showBookmark={self.showBookmark} updateTeamLink={self.props.updateTeamLink}/>
-            <div class='home-team-header-btns' onClick={self.showAssessments} id='homeHeaderAseBtn'>
+            <HomeBookmark loadDetailTeam={self.props.loadDetailTeam} showBookmark={self.showBookmark} updateTeamLink={self.props.updateTeamLink} />
+            {/*<div class='home-team-header-btns' onClick={self.showAssessments} id='homeHeaderAseBtn'>
               <InlineSVG class='home-team-header-btn-img' src={require('../../../img/Att-icons/att-icons_main-nav-maturity.svg')}></InlineSVG>
               <div class='home-team-header-btn-title'>
                 <h>Maturity Assessment</h>
               </div>
-            </div>
+            </div>*/}
             <div class='home-team-header-btns2'>
               <InlineSVG onClick={self.showTeamTable} class='home-team-header-btn-img2' src={require('../../../img/Att-icons/att-icons_main-nav-team.svg')}></InlineSVG>
+              <div class='home-team-header-btn-title3'>
+                <h>Team Members</h>
+              </div>
               <div class='home-team-header-btn-title2'>
                 <h>}</h>
               </div>

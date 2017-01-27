@@ -386,7 +386,7 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
         currData[monthIndex].totalDefectsStartBal = currData[monthIndex].totalDefects + defectsStartBal;
         currData[monthIndex].totalDefects = currData[monthIndex].totalDefects + defects;
         currData[monthIndex].totalDefectsClosed = currData[monthIndex].totalDefects + defectsClosed;
-        currData[monthIndex].totalDefectsEndBal = currData[monthIndex].totalDefectsEndBal + defectsEndBal;
+        currData[monthIndex].totalDefectsEndBal = defectsEndBal;
         currData[monthIndex].totalDplymts = currData[monthIndex].totalDplymts + dplymnts;
 
         if (teamStat > 0) {
