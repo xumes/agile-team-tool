@@ -397,10 +397,10 @@ div.ibm-rule {
   margin: 7px 0 5px;
 }
 
-p , input, textarea, span, select, table,.ibm-data-table caption {
+/*p , input, textarea, span, select, table,.ibm-data-table caption {
   font-size: 10.5pt;
   padding: 0 0 5px;
-}
+}*/
 
 textarea[disabled] {
   background-color: #ececec;
