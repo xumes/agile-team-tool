@@ -1,4 +1,3 @@
-'use strict';
 var settings = require('../../settings');
 var util = require('../../helpers/util');
 var loggers = require('../../middleware/logger');
@@ -53,7 +52,7 @@ module.exports = function(app, includes) {
         //return res.send(user);
         util.queryLDAP(user.nameID)
           .then(function(result) {
-            ldapObject = typeof result === 'string' ? JSON.parse(result) : result;
+            var ldapObject = typeof result === 'string' ? JSON.parse(result) : result;
 
             if (!(_.isEmpty(ldapObject['ldap']))) {
               req.session['email'] = ldapObject['ldap']['preferredIdentity']; //ldapObject['shortEmail'];
