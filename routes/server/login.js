@@ -45,7 +45,7 @@ module.exports = function(app, includes) {
 
   /* istanbul ignore next */
   var authSaml = function(req, res, next) {
-    passportAuth = includes.passport.authenticate('w3-saml', function(err, user, info) {
+    var passportAuth = includes.passport.authenticate('w3-saml', function(err, user, info) {
       if (err) {
         loggers.get('auth').error('Unable to login via SAML err=', err);
       }
