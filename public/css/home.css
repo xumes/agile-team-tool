@@ -23,6 +23,10 @@ input, select, textarea {
   font-size: 1.6em;
 }
 
+ul>li::before, ol>li::before {
+  content: '';
+}
+
 /* Matts dank spinner */
 /* The Modal (background) */
 /* Clear Loading */
@@ -982,7 +986,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   color: #FFFFFF;
   position: relative;
   float: left;
-  top: -20%;
+  top: 0%;
 }
 
 .home-team-header-btn-title3 {
@@ -2384,7 +2388,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   position: relative;
   left: 5%;
   width: 90%;
-  height: 75%;
+  height: 70%;
   border-radius: 50%;
   border: 0.1em solid #FFFFFF;
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
@@ -2633,7 +2637,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .att-footer-links li {
-  padding-bottom: 15%;
+  padding-bottom: 5%;
   padding-left: 0;
 }
 
@@ -2641,6 +2645,12 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   font-family: "HelvNeue Light for IBM";
   font-size: 1.6em;
   color: #464646;
+}
+
+.att-footer-links a:hover {
+  text-decoration: none !important;
+  cursor: pointer;
+  color: #4178be;
 }
 
 .att-footer-bottom {
