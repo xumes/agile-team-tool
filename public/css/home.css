@@ -3242,6 +3242,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .att-modal .txtarea {
   padding-top: 1.1%;
   width: 100%;
+  font-size: 1.2em;
 }
 /* END: Team description Modal section */
 
