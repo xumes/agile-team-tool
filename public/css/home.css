@@ -2782,12 +2782,20 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   width: 100%;
 }
 
+.implink {
+  font-size: 1.25em;
+}
+
 /*.att-modal input, .att-modal p, .att-modal span, .att-modal select {
   font-size: 10.5pt;
   padding: 0px;
 }*/
 .att-modal input {
   font-size: 1.12em;
+}
+
+.att-modal .select2 {
+  font-size: 1.26em;
 }
 
 .att-modal select, .att-modal .select2-container--default {
@@ -3234,6 +3242,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .att-modal .txtarea {
   padding-top: 1.1%;
   width: 100%;
+  font-size: 1.2em;
 }
 /* END: Team description Modal section */
 
