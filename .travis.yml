@@ -1,4 +1,5 @@
 language: node_js
+sudo: required
 node_js:
 - 4.4.7
 branches:
@@ -8,14 +9,23 @@ branches:
 before_install:
 - gem update --system 1.8.30
 install:
+# Start our servers
+- docker run -d --name redis -p 6379:6379 redis
+- docker run -d --name mongo -p 27017:27017 mongo:3.2.8
+- echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+- sudo apt-get update
+- sudo apt-get install -y mongodb-org-tools
 - npm install
 - npm install -g gulp
 - chmod +x bin/deploy.sh
+# Import test database
+- curl -sL https://ibm.box.com/shared/static/qg39as43e5d8toa466l3ixyz0i2ttoyr.gz > agiletool_stage.tar.gz
+- tar -xf agiletool_stage.tar.gz
+- mongorestore -h localhost --port 27017 --db agiletool_stage agiletool_stage
 script:
-- export
 - gulp test
 services:
-- redis-server
+- docker
 deploy:
   provider: script
   script: bin/deploy.sh

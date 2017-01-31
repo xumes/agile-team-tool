@@ -18,7 +18,7 @@ module.exports = {
     url: process.env.cloudantURL || 'https://user:pass@user.cloudant.com',
     dbName: process.env.cloudantDb || 'localDb'
   },
-  mongoURL: process.env.mongoURL || '',
+  mongoURL: process.env.mongoURL || 'mongodb://localhost/agiletool_stage',
   saml: {
     path: '/auth/saml/ibm/callback',
     identifierFormat: 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
