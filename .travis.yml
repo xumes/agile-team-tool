@@ -12,6 +12,7 @@ install:
 - npm install -g gulp
 - chmod +x bin/deploy.sh
 script:
+- export
 - gulp test
 services:
 - redis-server
