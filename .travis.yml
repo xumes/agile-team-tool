@@ -28,7 +28,7 @@ services:
 - docker
 deploy:
   provider: script
-  script: bin/deploy.sh
+  script: echo "Deployment disabled"
   skip_cleanup: true
 notifications:
   slack:

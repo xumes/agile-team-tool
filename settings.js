@@ -56,7 +56,7 @@ if (module.exports.mongoURL && module.exports.mongoURL != '') {
       }
     }
   };
-  mongoose.connect(mongo.exports.mongoURL, mongoOptions);
+  mongoose.connect(module.exports.mongoURL, mongoOptions);
   loggers.get('init').info('Connecting to mongoDB');
   module.exports.mongoose = mongoose;
 }
