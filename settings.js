@@ -41,7 +41,7 @@ module.exports = {
   ibmNPSKey: process.env.ibmNPSKey || ''
 };
 
-if (mongo.exports.mongoURL && mongo.exports.mongoURL != '') {
+if (module.exports.mongoURL && module.exports.mongoURL != '') {
   var mongoOptions = {
     'server': {
       'socketOptions': {
