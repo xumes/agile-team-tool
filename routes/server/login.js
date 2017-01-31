@@ -1,4 +1,3 @@
-'use strict';
 var settings = require('../../settings');
 var util = require('../../helpers/util');
 var loggers = require('../../middleware/logger');
@@ -45,7 +44,7 @@ module.exports = function(app, includes) {
 
   /* istanbul ignore next */
   var authSaml = function(req, res, next) {
-    passportAuth = includes.passport.authenticate('w3-saml', function(err, user, info) {
+    var passportAuth = includes.passport.authenticate('w3-saml', function(err, user, info) {
       if (err) {
         loggers.get('auth').error('Unable to login via SAML err=', err);
       }
@@ -53,7 +52,7 @@ module.exports = function(app, includes) {
         //return res.send(user);
         util.queryLDAP(user.nameID)
           .then(function(result) {
-            ldapObject = typeof result === 'string' ? JSON.parse(result) : result;
+            var ldapObject = typeof result === 'string' ? JSON.parse(result) : result;
 
             if (!(_.isEmpty(ldapObject['ldap']))) {
               req.session['email'] = ldapObject['ldap']['preferredIdentity']; //ldapObject['shortEmail'];
