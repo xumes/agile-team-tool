@@ -3,6 +3,8 @@ var loggers = require('./middleware/logger');
 
 mongoose.Promise = require('bluebird');
 
+console.log('Debug: ', process.env.mongoURL);
+
 module.exports = {
   dbUrl: process.env.dbUrl || 'test.cloudant.com',
   ldapAuthURL: process.env.ldapAuthURL || 'http://ifundit-dp.tap.ibm.com:3004',
@@ -41,7 +43,7 @@ module.exports = {
   ibmNPSKey: process.env.ibmNPSKey || ''
 };
 
-if (module.exports.mongoURL && module.exports.mongoURL != '') {
+if (process.env.mongoURL && process.env.mongoURL != '') {
   var mongoOptions = {
     'server': {
       'socketOptions': {
@@ -56,8 +58,8 @@ if (module.exports.mongoURL && module.exports.mongoURL != '') {
       }
     }
   };
-  mongoose.connect(module.exports.mongoURL, mongoOptions);
-  loggers.get('init').info('Using MongoDB and connecting to', module.exports.mongoURL);
+  mongoose.connect(process.env.mongoURL, mongoOptions);
+  loggers.get('init').info('Connecting to mongoDB');
   module.exports.mongoose = mongoose;
 }
 else {
