@@ -49,7 +49,7 @@ var HomeNavTab = React.createClass({
   },
   hideAddTeamModal: function() {
     var self = this;
-    console.log ("IN HERE - HideAddTeamModal");
+
     $('.implabel').select2();
     self.setState({showModal:  false });
     self.setState({showOtherlabel: false});
@@ -58,7 +58,7 @@ var HomeNavTab = React.createClass({
   render: function() {
     var addBtnStyle = this.props.loadDetailTeam.access?'block':'none';     
     var self = this;
-    console.log("HERE finish declaring self");
+    
     var backdropStyle = {
       top: 0, bottom: 0, left: 0, right: 0,
       zIndex: 'auto',
@@ -104,8 +104,8 @@ var HomeNavTab = React.createClass({
         </div>
         <HomeSearchField />
 
-        <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAddTeamTable}>
-          <HomeAddTeam hideAddTeamModel={self.hideAddTeamModel} />
+        <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAddTeamModal}>
+          <HomeAddTeam hideAddTeamModal={self.hideAddTeamModal} loadDetailTeam={self.props.loadDetailTeam}/>
         </Modal>
 
       </nav>

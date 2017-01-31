@@ -3417,7 +3417,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   top: 100%;
   left: 8%;
   font-family: "HelvNeue Roman for IBM";
-  font-size: 3.0em;
+  font-size: 2.5em;
 }
 .new-team-creation-add-block-header > span {
   position: relative;
