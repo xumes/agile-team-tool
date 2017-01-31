@@ -2,8 +2,14 @@ var React = require('react');
 var api = require('../api.jsx');
 var InlineSVG = require('svg-inline-react');
 var HomeSearchField = require('./HomeSearchField.jsx');
+var HomeAddTeam = require('./HomeAddTeam.jsx');
+var Modal = require('react-overlays').Modal;
 
 var HomeNavTab = React.createClass({
+  getInitialState: function() {
+    return { showModal: false };
+  },
+
   myTeamsClicked: function() {
     if ($('#myTeams').attr('data-state') != 'open') {
       this.props.tabClicked('mytab');
@@ -33,9 +39,42 @@ var HomeNavTab = React.createClass({
       $('#homeNavDiv').hide();
     });
   },
+  addTeamModal: function(id) {
+    var self = this;
+    console.log('add Team Modal:',id);
+    self.setState({showModal:  true });
+    if(id) {
+      self.setState({modalTitle: 'New Team Information'});
+    }
+  },
+  hideAddTeamModal: function() {
+    var self = this;
+    console.log ("IN HERE - HideAddTeamModal");
+    $('.implabel').select2();
+    self.setState({showModal:  false });
+    self.setState({showOtherlabel: false});
+  },
 
   render: function() {
-    var addBtnStyle = this.props.loadDetailTeam.access?'block':'none';
+    var addBtnStyle = this.props.loadDetailTeam.access?'block':'none';     
+    var self = this;
+    console.log("HERE finish declaring self");
+    var backdropStyle = {
+      top: 0, bottom: 0, left: 0, right: 0,
+      zIndex: 'auto',
+      backgroundColor: '#000',
+      opacity: 0.5,
+      width: '100%',
+      height: '100%'
+    };
+    var modalStyle = {
+      position: 'fixed',
+      width: '100%',
+      height: '100%',
+      zIndex: 1040,
+      top: 0, bottom: 0, left: 0, right: 0,
+    };
+
     return (
       <nav class='home-nav-tab' >
         <div class='home-nav-tab-div'>
@@ -56,7 +95,7 @@ var HomeNavTab = React.createClass({
               <InlineSVG src={require('../../../img/Att-icons/att-icons-Chevron-left.svg')}></InlineSVG>
             </div>
             <div class='home-nav-tab-buttons-item' style={{'display': addBtnStyle}}>
-              <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
+              <InlineSVG onClick={this.addTeamModal}  src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
             </div>
             <div id='navSearchBtn' class='home-nav-tab-buttons-item' onClick={this.showSearch} style={{'right': '10%'}}>
               <InlineSVG src={require('../../../img/Att-icons/att-icons_search.svg')}></InlineSVG>
@@ -64,6 +103,11 @@ var HomeNavTab = React.createClass({
           </div>
         </div>
         <HomeSearchField />
+
+        <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAddTeamTable}>
+          <HomeAddTeam hideAddTeamModel={self.hideAddTeamModel} />
+        </Modal>
+
       </nav>
     )
   }
