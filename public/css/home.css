@@ -519,7 +519,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   border-bottom: 0.1em solid #ffffff;
   font-size: 1.5em !important;
   font-weight: bold;
-  padding-top: 2em;
+  padding-top: 1em;
   padding-bottom: .5em;
   width: 90%;
 }
@@ -527,7 +527,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 .header-menu-help-block li:first-child div {
   font-size: 1.5em !important;
   font-weight: normal;
-  padding-top: 2em;
+  padding-top: 1em;
   padding-bottom: .5em;
   width: 90%;
 }
