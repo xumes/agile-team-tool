@@ -1,68 +1,47 @@
 var React = require('react');
 var api = require('../api.jsx');
 var _ = require('underscore');
+var InlineSVG = require('svg-inline-react');
+var HomeAddTeamNameModal = require('./HomeAddTeamNameModal.jsx');
 
 var HomeAddTeam = React.createClass({
-  componentDidUpdate: function() {
+  getInitialState: function() {
+    return {
+      showTeamNameModal: false,
+      showTeamTypeModal: false,
+      showTeamMemberModal: false,
+      showTeamMemberRoleModal: false
+     };
   },
-  componentDidMount: function() {
-    var self = this;
-  },
-  componentWillUnmount: function() {
-  },
-  addTeamHandler: function() {
-    var self = this;
-    if ($('#newTeamName').val() == '') {
-        alert('Please fill in a new team name.');
-    } else {          
-        api.fetchTeamNames()
-         .then(function(teams) {
-            var isTeamExist = false;
-            isTeamExist = _.find(teams, function(m){
-              if (m.name == $('#newTeamName').val()) {
-                console.log('in team exist = true');  
-                return true;
-              }
-            })
 
-            if (isTeamExist) {
-              alert('This team name already exists. Please enter a different team name.');
-            } else {
-              alert('Proceed forward.');
-            }
-         });
-    }
+  addTeamModal: function() {
+    this.setState({showTeamNameModal:  true })
+  },
+
+  hideAddTeamModal: function() {
+    this.setState({showTeamNameModal:  false })
   },
 
   render: function () {
     var self = this;
+    var addBtnStyle = self.props.access?'block':'none';
 
     return (
-      <div class='new-team-creation-add-block'>
-       <div class='new-team-creation-add-block-header'>
-          <h>New Team Creation</h>
-             <span onClick={self.props.hideAddTeamModal}>X</span>
-       </div>
-       <p/>
-       <div class='new-team-creation-add-block-content'>
-         <div class='new-team-creation-add-block-content-name'>
-           <label for='newTeamName'>Team Name</label>
-            <input type='text' size='30' id='newTeamName' name='newTeamName' aria-label='team name' ref='newTeamName'/>            
-          </div>
-          <p/>
-          <div class='new-team-creation-add-block-content-description'>
-           <label for='newTeamDescription'>Team Description</label>
-            <textarea type='textarea' rows='15' id='newTeamDescription' name='newTeamDescription' ref='newTeamDescription' aria-label='new team description' role='combobox'/>
-          </div>
+      <div>
+        <div class='home-nav-tab-buttons-item' style={{'display': addBtnStyle}}>
+          <InlineSVG onClick={this.addTeamModal}  src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
         </div>
 
-        <div class='new-team-creation-add-block-footer'>
-          <p class='ibm-btn-row ibm-button-link' style={{'position':'relative','top':'15%','right':'42%','float':'right'}}>
-            <a class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50' onClick={self.addTeamHandler}>Next</a>
-          </p>
-       </div>             
-      </div>
+        <HomeAddTeamNameModal showModal={this.state.showTeamNameModal} closeWindow={self.hideAddTeamModal} />
 
+        {/*
+        <HomeAddTeamTypeModal showModal={this.state.showTeamNameModal} closeWindow={self.hideAddTeamModal} />
+
+        <HomeAddTeamMemberModal showModal={this.state.showTeamNameModal} closeWindow={self.hideAddTeamModal} />
+
+        <HomeAddTeamMemberRoleModal showModal={this.state.showTeamNameModal} closeWindow={self.hideAddTeamModal} />
+        */}
+      </div>
     )
   }
 });
