@@ -211,7 +211,8 @@ var HomeMemberTable = React.createClass({
             });
             var mLocation = self.toTitleCase(member.location.site);
             //var src = 'http://dpev027.innovate.ibm.com:10000/image/' + member.userId.toUpperCase();
-            var src = '//images.w3ibm.mybluemix.net/image/' + member.userId.toUpperCase();
+            // var src = '//images.w3ibm.mybluemix.net/image/' + member.userId.toUpperCase();
+            var src = '//faces-cache.mybluemix.net/image/' + member.userId.toUpperCase();
             var blockColor = {
               'backgroundColor': '#FFFFFF'
             }
