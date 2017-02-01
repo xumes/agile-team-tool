@@ -825,7 +825,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 17%;
   position: relative;
   top: 30%;
-  left: 1.5%;
+  left: 0.6%;
 }
 
 .home-team-header-teamname-div {
@@ -890,7 +890,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   width: 100%;
   position: relative;
   top: 35%;
-  left: 2%;
+  left: 1%;
 }
 
 .hierarchy-link {
@@ -921,7 +921,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   width: 95%;
   position: relative;
   top: 48%;
-  left: 2%;
+  left: 1%;
 }
 
 .home-team-header-btns {
@@ -1047,7 +1047,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 #teamMemberTable {
-  width: 100%;
+  width: 99.8%;
   height: 680%;
   padding: 0;
   /*background-color: red;*/
@@ -1069,7 +1069,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 32.5%;
   position: relative;
   top: 35%;
-  left: 2%;
+  left: 1%;
   font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.5em;
   color: #4178BE;
@@ -1077,13 +1077,27 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 
 .team-member-table-close-btn {
   position: relative;
-  top: 35%;
-  right: 2%;
+  width: 4%;
+  height: 50%;
+  top: 40%;
+  right: 1%;
   float: right;
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
-  font-size: 3em;
-  color: #C7C7C7;
   cursor: pointer;
+}
+
+.team-member-table-close-btn svg {
+  position: relative;
+  float: left;
+  left: 40%;
+  width: 100%;
+  height: auto;
+}
+
+.team-member-table-block {
+  position: relative;
+  background-color: #FFFFFF;
+  width: 100%;
+  height: 94;
 }
 
 .team-member-table {
@@ -1233,14 +1247,32 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .team-member-table-footer-block {
+  position: relative;
+  float: left;
   width: 100%;
   height: 5.3%;
   background-color: #FFFFFF;
-  border: 0.1em solid #C7C7C7;
+  border-left: 0.1em solid #C7C7C7;
+  border-right: 0.1em solid #C7C7C7;
+  border-bottom: 0.1em solid #C7C7C7;
   box-shadow: 0 0.2em 0.4em #C7C7C7;
 }
 
-.team-member-table-footer-block > button {
+.team-member-table-footer-block > div {
+  position: relative;
+  float: left;
+}
+
+.team-member-table-footer {
+  position: relative;
+  float: left;
+  width: 98%;
+  left: 1%;
+  height: 100%;
+  border-top: 0.1em solid #C7C7C7;
+}
+
+.team-member-table-footer > button {
   position: relative;
   top: 20%;
   left: 8%;
