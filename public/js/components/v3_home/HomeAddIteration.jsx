@@ -342,7 +342,7 @@ getIterationErrorPopup: function(errors) {
               </div >
               <div className='home-iter-main' style={{'width':'100%'}}>
                 <p className='home-iter-main-section' style={{'lineHeight': '0%'}}>Iteration Dates</p>
-                <div style={{'display':'flex', 'marginTop': '3%'}} id='iterationDates'>
+                <div style={{'display':'flex', 'marginTop': '2%'}} id='iterationDates'>
                   <DatePicker onChange={this.startDateChange} selected={this.state.iterationStartDate} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='iterationStartDate' />} disabled={false} ref='iterationStartDate' fixedHeight/>
                   <p style={{'marginLeft':'5%', 'marginRight':'5%'}} className='home-iter-main-section'> to </p>
                   <DatePicker onChange={this.endDateChange} selected={this.state.iterationEndDate} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='iterationEndDate' />} disabled={false} ref='iterationEndDate' fixedHeight/>
