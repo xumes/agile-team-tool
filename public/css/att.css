@@ -1378,6 +1378,10 @@ font-family:'BodoniMTW01-BookItalic';
   max-width: 300px;
 }
 
+.assessmentDate{
+  width: 300px;
+}
+
 /* Header
 ========================================================================================*/
 #header {
