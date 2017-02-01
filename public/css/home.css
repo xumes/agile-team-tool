@@ -837,7 +837,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 
 .home-team-header-teamname {
   display: inline;
-  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
   font-size: 3em;
   font-weight: 300;
   color: #323232;
@@ -2400,7 +2400,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.3em;
   color: #FFFFFF;
-  line-height: 2.5em;
+  line-height: 2.7em;
   cursor: pointer;
 }
 
