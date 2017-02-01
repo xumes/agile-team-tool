@@ -166,9 +166,11 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 #newTeamTree ul.ibm-twisty > li a.agile-team-link {
   color: #4D4D4D;
   font-size: 1.6em;
-  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  /*font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";*/
+  font-family: "Helvetica Neue";
+  line-height: 1.5em;
+  margin-bottom: 1.5em;
   font-weight: 300;
-  line-height: 3.0em;
 }
 
 #newSearchTree ul.ibm-twisty > li.ibm-active > a.ibm-twisty-trigger,
@@ -176,9 +178,11 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 #newSearchTree ul.ibm-twisty > li a.agile-team-link {
   color: #4D4D4D;
   font-size: 1.6em;
-  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  /*font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";*/
+  font-family: "Helvetica Neue";
+  line-height: 1.5em;
+  margin-bottom: 1.5em;
   font-weight: 300;
-  line-height: 3.0em;
 }
 
 #newTeamTree, #newSearchTree {
@@ -223,11 +227,13 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   font-size: 1.1em;
   /*font-weight: 300;*/
   color: #4D4D4D;
+  position: relative;
+  left: 2%;
 }
 
 .agile-team-selected > .agile-team-title {
   border-bottom: 0.15em solid #008ABF;
-  padding-bottom: 2%;
+  /*padding-bottom: 2%;*/
   position: relative;
   left: 2%;
 }
@@ -3372,7 +3378,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   text-align: center;
   font-family: "HelvNeue Roman for IBM";
   border: 0.1em solid #777677;
-  
+
 }
 
 .home-iter-text-field {
@@ -3431,7 +3437,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   border: 0.1em solid #777677;
   cursor: pointer;
   margin-left: 0;
-  -webkit-appearance: none;  
+  -webkit-appearance: none;
 }
 
 .home-iter-sub-section > input[type="checkbox"]:checked {
