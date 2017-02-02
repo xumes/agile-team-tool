@@ -1,8 +1,3 @@
-var mongoose = require('mongoose');
-var loggers = require('./middleware/logger');
-
-mongoose.Promise = require('bluebird');
-
 module.exports = {
   dbUrl: process.env.dbUrl || 'test.cloudant.com',
   ldapAuthURL: process.env.ldapAuthURL || 'http://ifundit-dp.tap.ibm.com:3004',
@@ -38,8 +33,17 @@ module.exports = {
   googleHost: 'maps.googleapis.com',
   googleApiKey: process.env.googleAPIKey || 'AIzaSyAF2vwg6z-pH4xC7Ac1eMcpR9mVG-A2u7Y',
   facesURL: 'https://faces.tap.ibm.com/api/',
-  ibmNPSKey: process.env.ibmNPSKey || ''
+  ibmNPSKey: process.env.ibmNPSKey || '',
+  sentry: {
+    dsn: process.env.sentryDSN || '',
+    publicDSN: process.env.sentryPublicDSN || ''
+  }
 };
+
+var loggers = require('./middleware/logger');
+var mongoose = require('mongoose');
+
+mongoose.Promise = require('bluebird');
 
 if (module.exports.mongoURL && module.exports.mongoURL != '') {
   var mongoOptions = {
