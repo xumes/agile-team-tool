@@ -20,7 +20,7 @@ input, select, textarea {
 }
 
 .select2, .select2-results ul li {
-  font-size: 1.6em;
+  font-size: 1.4em;
 }
 
 ul>li::before, ol>li::before {
