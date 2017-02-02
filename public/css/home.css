@@ -3522,7 +3522,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .new-team-creation-add-block-content-name > input {
   position: relative;
   float: left;
-  height: 45% !important;
+  height: 40% !important;
   width: 50%;
   border: 0.1em solid #777677;
   text-indent: 0.5em;
@@ -3540,7 +3540,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 8%;
   top: 16%;
 }
-
 .new-team-creation-add-block-content-description > label {
   position: relative;
   float: left;
@@ -3551,7 +3550,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   line-height: 1.8em;
   color: #323232;
 }
-
 .new-team-creation-add-block-content-description > textarea {
   position: relative;
   float: left;
@@ -3565,29 +3563,31 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   line-height: 1.8em;
   color: #5A5A5A;
 }
-.new-team-creation-add-block-footer {
-  position: relative;
-  float: left;
-  height: 20%;
-  width: 100%;
-}
 .new-team-creation-add-note-section {
   position: relative;
-  left: 9%;
+  left: 8%;
   float: left;
-  height: 70%;
+  height: 0%;
   width: 100%;
+  top: -3%;
+
 }
 .new-team-creation-add-note-section-notetext {
   position: relative;
   float: left;
-  height: 40%;
+  height: 0%;
   width: 100%;
   font-family: "HelvNeue light for IBM";
   font-size: 1.2em;
   font-weight: normal;
   line-height: 1.4em;
   color: #323232;
+}
+.new-team-creation-add-block-footer {
+  position: relative;
+  float: left;
+  height: 20%;
+  width: 100%;
 }
 
 /** New Team Creation - End */

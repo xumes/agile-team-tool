@@ -47,6 +47,9 @@ var HomeAddTeamNameModal = React.createClass({
       zIndex: 1040,
       top: 0, bottom: 0, left: 0, right: 0,
     };
+    var noteStyle = {
+       color: '#4178BE'
+    };
     console.log(self.props);
     return (
       <div>
@@ -57,13 +60,13 @@ var HomeAddTeamNameModal = React.createClass({
               <h>New Team Creation</h>
                  <span onClick={self.props.closeWindow}>X</span>
            </div>
-           <p/>
+           
            <div class='new-team-creation-add-block-content'>
              <div class='new-team-creation-add-block-content-name'>
                <label for='newTeamName'>Team Name</label>
                 <input type='text' size='30' id='newTeamName' name='newTeamName' aria-label='team name' ref='newTeamName'/>
               </div>
-              <p/>
+              
               <div class='new-team-creation-add-block-content-description'>
                <label for='newTeamDescription'>Team Description</label>
                 <textarea type='textarea' rows='15' id='newTeamDescription' name='newTeamDescription' ref='newTeamDescription' aria-label='new team description' role='combobox'/>
@@ -71,11 +74,14 @@ var HomeAddTeamNameModal = React.createClass({
             </div>
             
             <div class='new-team-creation-add-note-section'>
-             <label class='new-team-creation-add-note-section-notetext' for='teamNotes'>NOTE: To join the existing team, click the "All Teams" tab, find the team and click "request to join".</label>
+             <label class='new-team-creation-add-note-section-notetext' for='teamNotes-label'><span style={noteStyle}>NOTE: </span>
+             To join the existing team, click the "All Teams" tab, find the team and click "request to join".
+             </label>
+             
             </div>
 
             <div class='new-team-creation-add-block-footer'>
-              <p class='ibm-btn-row ibm-button-link' style={{'position':'relative','top':'15%','right':'42%','float':'right'}}>
+              <p class='ibm-btn-row ibm-button-link' style={{'position':'relative','top':'40%','right':'45%','float':'right'}}>
                 <a class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50' onClick={self.addTeamHandler}>Next</a>
               </p>
            </div>
