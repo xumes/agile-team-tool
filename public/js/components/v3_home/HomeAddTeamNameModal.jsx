@@ -23,7 +23,8 @@ var HomeAddTeamNameModal = React.createClass({
             if (isTeamExist) {
               alert('This team name already exists. Please enter a different team name.');
             } else {
-              alert('Proceed forward.');
+              // alert('Proceed forward.');
+              self.props.updateStep('showTeamTypeSelection'); // Proceed to next screen -Selecting team type (parent or squad team)
             }
          });
     }
