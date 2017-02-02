@@ -14,11 +14,11 @@ var HomeAddTeam = React.createClass({
      };
   },
 
-  addTeamModal: function() {
+  addTeamNameModal: function() {
     this.setState({showTeamNameModal:  true })
   },
 
-  hideAddTeamModal: function() {
+  hideAddTeamNameModal: function() {
     this.setState({showTeamNameModal:  false })
   },
 
@@ -29,10 +29,10 @@ var HomeAddTeam = React.createClass({
     return (
       <div>
         <div class='home-nav-tab-buttons-item' style={{'display': addBtnStyle}}>
-          <InlineSVG onClick={this.addTeamModal}  src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
+          <InlineSVG onClick={this.addTeamNameModal}  src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
         </div>
 
-        <HomeAddTeamNameModal showModal={this.state.showTeamNameModal} closeWindow={self.hideAddTeamModal} />
+        <HomeAddTeamNameModal showModal={this.state.showTeamNameModal} closeWindow={self.hideAddTeamNameModal} />
 
         {/*
         <HomeAddTeamTypeModal showModal={this.state.showTeamNameModal} closeWindow={self.hideAddTeamModal} />

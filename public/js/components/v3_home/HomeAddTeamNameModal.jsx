@@ -67,7 +67,11 @@ var HomeAddTeamNameModal = React.createClass({
               <div class='new-team-creation-add-block-content-description'>
                <label for='newTeamDescription'>Team Description</label>
                 <textarea type='textarea' rows='15' id='newTeamDescription' name='newTeamDescription' ref='newTeamDescription' aria-label='new team description' role='combobox'/>
-              </div>
+              </div> 
+            </div>
+            
+            <div class='new-team-creation-add-note-section'>
+             <label class='new-team-creation-add-note-section-notetext' for='teamNotes'>NOTE: To join the existing team, click the "All Teams" tab, find the team and click "request to join".</label>
             </div>
 
             <div class='new-team-creation-add-block-footer'>

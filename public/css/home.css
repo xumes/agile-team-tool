@@ -1787,8 +1787,6 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 3%;
 }
 
-.home-iter-last-update-title {
-  position: relative;
   height: 100%;
   width: 40%;
   display: inline-block;
@@ -3521,7 +3519,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   line-height: 1.8em;
   color: #323232;
 }
-
 .new-team-creation-add-block-content-name > input {
   position: relative;
   float: left;
@@ -3573,6 +3570,24 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   height: 20%;
   width: 100%;
+}
+.new-team-creation-add-note-section {
+  position: relative;
+  left: 9%;
+  float: left;
+  height: 70%;
+  width: 100%;
+}
+.new-team-creation-add-note-section-notetext {
+  position: relative;
+  float: left;
+  height: 40%;
+  width: 100%;
+  font-family: "HelvNeue light for IBM";
+  font-size: 1.2em;
+  font-weight: normal;
+  line-height: 1.4em;
+  color: #323232;
 }
 
 /** New Team Creation - End */
