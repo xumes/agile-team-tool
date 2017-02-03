@@ -32,8 +32,8 @@ var HomeAddIteration = React.createClass({
       c_name:true,
       c_stories_op_committed:false,
       c_stories_dev_committed:false,
-      c_stories_op_delivered:false,
-      c_stories_dev_delivered: false
+      c_stories_op_delivered:true,
+      c_stories_dev_delivered: true
     }
   },
 
@@ -48,7 +48,7 @@ var HomeAddIteration = React.createClass({
   },
 
   reset: function(){
-    var name = this.props.loadDetailTeam.iterations[0].name + '(copy)';
+    var name = this.props.loadDetailTeam.iterations[0].name + ' (copy)';
     if (this.state.c_name && this.props.loadDetailTeam.iterations.length > 0) {
       this.startDateChange(new moment(this.props.loadDetailTeam.iterations[0].endDate).add(1,'day'));
     }
@@ -57,8 +57,8 @@ var HomeAddIteration = React.createClass({
       c_name: true, 
       c_stories_op_committed:false,
       c_stories_dev_committed:false,
-      c_stories_op_delivered:false,
-      c_stories_dev_delivered: false});
+      c_stories_op_delivered:true,
+      c_stories_dev_delivered: true});
     
   },
 
@@ -320,31 +320,53 @@ getIterationErrorPopup: function(errors) {
                 <input className='home-iter-text-field' id='iterationName' value={this.state.name} onChange={this.nameChange} type='text'/>
               </div>
               <div className='home-iter-main'>
-                <p className='home-iter-main-section' style={{'lineHeight': '0%'}}>Copy/Import From Last Iteration: </p>
-                <div className='home-iter-sub-section'>             
-                  <input id='cname' type='checkbox' checked={this.state.c_name} onChange={this.copyNameChange}/>
-                  <label for='cname' className='home-iter-sub-section-category'>Name</label>
+                <p className='home-iter-main-section' style={{'lineHeight': '0%'}}>Copy/Import From Last Iteration </p>
+                <div className='home-iter-sub-section'>
+                  <div class="checkbox">
+                    <label for="cname">
+                      <input type="checkbox" checked={this.state.c_name} onChange={this.copyNameChange} id="cname"/>
+                      <span className='home-iter-sub-section-category'>Name</span>
+                    </label>
+                  </div>
                 </div>
                 <p className='home-iter-subdetail-section' style={{'lineHeight': '0%'}}>Stories/Cards (For Operations) from: </p>
-                <div className='home-iter-sub-section'>             
-                  <input id='cstoriesopcom' type='checkbox' checked={this.state.c_stories_op_committed} onChange={this.copyOpCommStories} className='home-iter-checkbox'/>
-                  <label for='cstoriesopcom' className='home-iter-sub-section-category'>Committed</label>
-                  <input id='cstoriesopdel' type='checkbox' checked={this.state.c_stories_op_delivered} style={{'marginLeft':'5%'}} onChange={this.copyOpDelStories} className='home-iter-checkbox'/>
-                  <label for='cstoriesopdel'> <span className='home-iter-sub-section-category'>Delivered </span> <span className='home-iter-sub-section-delivered'>(into Committed)</span></label>
+                <div className='home-iter-sub-section'>
+                  <div class="checkbox">
+                    <label for="cstoriesopcom" style={{'display':'flex'}}>
+                      <input type="checkbox" checked={this.state.c_stories_op_committed} onChange={this.copyOpCommStories} id="cstoriesopcom"/>
+                      <span className='home-iter-sub-section-category'>Committed</span>
+                    </label>
+                  </div>
+                  <span style={{'paddingLeft':'10%'}}/>
+                  <div class="checkbox" >
+                    <label for="cstoriesopdel" style={{'display':'flex'}}>
+                      <input type="checkbox" checked={this.state.c_stories_op_delivered} onChange={this.copyOpDelStories} id="cstoriesopdel"/>
+                      <span className='home-iter-sub-section-category' style={{'marginRight': '0.1em'}}>Delivered </span><span className='home-iter-sub-section-delivered'>(into Committed)</span>
+                    </label>
+                  </div>
                 </div>
                 <p className='home-iter-subdetail-section' style={{'lineHeight': '0%'}}>Story Points (For Development) from: </p>
-                <div className='home-iter-sub-section'>          
-                  <input id='cstoriesdevcom' type='checkbox' checked={this.state.c_stories_dev_committed} onChange={this.copyDevCommStories} className='home-iter-checkbox'/>
-                  <label for='cstoriesdevcom' className='home-iter-sub-section-category'>Committed</label>
-                  <input id='cstoriesdevdel' type='checkbox' checked={this.state.c_stories_dev_delivered} style={{'marginLeft':'5%'}} onChange={this.copyDevDelStories} className='home-iter-checkbox'/>
-                  <label for='cstoriesdevdel'> <span className='home-iter-sub-section-category'>Delivered </span> <span className='home-iter-sub-section-delivered'>(into Committed)</span></label>
+                <div className='home-iter-sub-section'>
+                  <div class="checkbox">
+                    <label for="cstoriesdevcom">
+                      <input type="checkbox" checked={this.state.c_stories_dev_committed} onChange={this.copyDevCommStories} id="cstoriesdevcom"/>
+                      <span className='home-iter-sub-section-category'>Committed</span>
+                    </label>
+                  </div>
+                  <span style={{'paddingLeft':'10%'}}/>
+                  <div class="checkbox" >
+                    <label for="cstoriesdevdel" style={{'display':'flex','textAlign':'center'}}>
+                      <input type="checkbox" checked={this.state.c_stories_dev_delivered} onChange={this.copyDevDelStories} id="cstoriesdevdel"/>
+                      <span className='home-iter-sub-section-category' style={{'marginRight': '0.1em'}}>Delivered </span> <span className='home-iter-sub-section-delivered'>(into Committed)</span>
+                    </label>
+                  </div>
                 </div>
               </div >
               <div className='home-iter-main' style={{'width':'100%'}}>
                 <p className='home-iter-main-section' style={{'lineHeight': '0%'}}>Iteration Dates</p>
                 <div style={{'display':'flex', 'marginTop': '2%'}} id='iterationDates'>
                   <DatePicker onChange={this.startDateChange} selected={this.state.iterationStartDate} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='iterationStartDate' />} disabled={false} ref='iterationStartDate' fixedHeight/>
-                  <p style={{'marginLeft':'5%', 'marginRight':'5%'}} className='home-iter-main-section'> to </p>
+                  <p style={{'marginLeft':'5%', 'marginRight':'5%'}} className='home-iter-date-range'> to </p>
                   <DatePicker onChange={this.endDateChange} selected={this.state.iterationEndDate} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='iterationEndDate' />} disabled={false} ref='iterationEndDate' fixedHeight/>
                 </div>
               </div>
