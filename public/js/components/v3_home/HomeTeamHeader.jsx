@@ -3,6 +3,7 @@ var api = require('../api.jsx');
 var HomeMemberTable = require('./HomeMemberTable.jsx');
 var HomeBookmark = require('./HomeBookmark.jsx');
 var HomeTeamDescription = require('./HomeTeamDescription.jsx');
+var HomeTeamSetup = require('./HomeTeamSetup.jsx');
 var InlineSVG = require('svg-inline-react');
 var Promise = require('bluebird');
 var _ = require('underscore');
@@ -10,6 +11,9 @@ var teamName = ''
 var teamType = ''
 
 var HomeTeamHeader = React.createClass({
+  getInitialState: function() {
+    return { showModal: false };
+  },
   componentWillUpdate: function(nextProps, nextState){
     // if (nextProps.loadDetailTeam.type == 'squad') {
     //   teamType = 'Squad: ';
@@ -177,10 +181,9 @@ var HomeTeamHeader = React.createClass({
               <div class='home-team-header-teamname-btn' id='homeHeaderDesBtn' onClick={self.showDescriptionBlock}>
                 <InlineSVG class='home-team-header-teamname-btn-img' src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
               </div>
-              <div class='home-team-header-teamname-btn'>
-                <InlineSVG class='home-team-header-teamname-btn-img' src={require('../../../img/Att-icons/att-icons_team-settings-21.svg')}></InlineSVG>
-              </div>
               <HomeTeamDescription teamName={teamName} teamDescription={teamDescription} showDescriptionBlock={self.showDescriptionBlock} loadDetailTeam={self.props.loadDetailTeam} updateTeamDetails={self.props.updateTeamDetails} />
+
+              <HomeTeamSetup loadDetailTeam={self.props.loadDetailTeam} selectedTeamChanged={self.props.selectedTeamChanged} />
             </div>
           </div>
           <div class='home-team-header-hierarchy'>

@@ -14,9 +14,12 @@ body {
   height: 100%;
 }
 
-input, select, textarea {
-  color: #323232;
+textarea {
   font-size: 1.6em;
+}
+
+input, select {
+  font-size: 1em;
 }
 
 .select2, .select2-results ul li {
@@ -25,6 +28,10 @@ input, select, textarea {
 
 ul>li::before, ol>li::before {
   content: '';
+}
+
+button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
+  font-size: 1.3em;
 }
 
 /* Matts dank spinner */
@@ -156,10 +163,6 @@ ul>li::before, ol>li::before {
     -o-transform: rotate(-360deg);
     transform: rotate(-360deg); } }
 /* spinner end */
-
-button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
-  font-size: 1.3em !important;
-}
 
 #newTeamTree ul.ibm-twisty > li.ibm-active > a.ibm-twisty-trigger,
 #newTeamTree ul.ibm-twisty > li a.ibm-twisty-trigger,
@@ -965,7 +968,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }*/
 
 .home-team-header-btn-img2 path, .home-team-header-btn-img2 rect, .home-team-header-btn-img2 polygon, .home-team-header-btn-img2 circle{
-  fill: #FFFFFF
+  fill: #FFFFFF;
 }
 
 .home-team-header-btn-title {
@@ -3055,20 +3058,24 @@ width: 100% !important;
   color: #777677;
   text-shadow: none;
   opacity: 0.2;
-  filter: alpha(opacity=20); }
-  .att-modal .close:hover, .att-modal .close:focus { /* 11055 */
-    color: #777677;
-    text-decoration: none;
-    cursor: pointer;
-    opacity: 0.5;
-    filter: alpha(opacity=50); }
+  filter: alpha(opacity=20);
+}
+
+.att-modal .close:hover, .att-modal .close:focus { /* 11055 */
+  color: #777677;
+  text-decoration: none;
+  cursor: pointer;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
 
 .att-modal button.close { /* 11062 */
   padding: 0;
   cursor: pointer;
   background: transparent;
   border: 0;
-  -webkit-appearance: none; }
+  -webkit-appearance: none;
+}
 
 
 .att-modal .close { /* line 13225 */
@@ -3076,29 +3083,38 @@ width: 100% !important;
   font-size: inherit;
   line-height: inherit;
   opacity: 1;
-  filter: alpha(opacity=100); }
-  .att-modal .close:hover, .close:focus { /* line 13231 */
-    opacity: 1;
-    color: #fff;
-    filter: alpha(opacity=100); }
+  filter: alpha(opacity=100);
+}
+
+.att-modal .close:hover, .close:focus { /* line 13231 */
+  opacity: 1;
+  color: #fff;
+  filter: alpha(opacity=100);
+}
 
 .att-modal button.close {
   position: absolute;
   right: 16px;
-  top: 1.5%; }
-  .att-modal button.close:hover span,
-  .att-modal button.close:focus span {
-    border-color: #777677; opacity: 1;}
-  .att-modal button.close .glyphicon, .att-modal button.close .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox button.close input[type="checkbox"] + span::after, .att-modal button.close
-  .checkbox-inline input[type="checkbox"] + span::after,
-  .att-modal .checkbox-inline button.close input[type="checkbox"] + span::after, .att-modal button.close .switch input[type="checkbox"] + span, .att-modal .switch button.close input[type="checkbox"] + span, .att-modal button.close
-  .switch-inline input[type="checkbox"] + span,
-  .att-modal .switch-inline button.close input[type="checkbox"] + span, .att-modal button.close .breadcrumb > li + li:before, .att-modal button.close .alert:before, .att-modal button.close .alert-dismissable .close:before, .att-modal .alert-dismissable button.close .close:before, .att-modal button.close
-  .att-modal .alert-dismissible .close:before,
-  .att-modal .alert-dismissible button.close .close:before {
-    border: 1px solid transparent;
-    padding: 3px;
-    color: #777677; }
+  /*top: 1.5%;*/
+}
+
+.att-modal button.close:hover span, .att-modal button.close:focus span {
+  border: none;;
+  /*border-color: #777677;*/
+  opacity: 1;
+}
+
+.att-modal button.close .glyphicon, .att-modal button.close .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox button.close input[type="checkbox"] + span::after, .att-modal button.close
+.checkbox-inline input[type="checkbox"] + span::after,
+.att-modal .checkbox-inline button.close input[type="checkbox"] + span::after, .att-modal button.close .switch input[type="checkbox"] + span, .att-modal .switch button.close input[type="checkbox"] + span, .att-modal button.close
+.switch-inline input[type="checkbox"] + span,
+.att-modal .switch-inline button.close input[type="checkbox"] + span, .att-modal button.close .breadcrumb > li + li:before, .att-modal button.close .alert:before, .att-modal button.close .alert-dismissable .close:before, .att-modal .alert-dismissable button.close .close:before, .att-modal button.close
+.att-modal .alert-dismissible .close:before,
+.att-modal .alert-dismissible button.close .close:before {
+  border: 1px solid transparent;
+  padding: 3px;
+  color: #777677;
+}
 
 .att-modal button.close {
   background: transparent none repeat scroll 0 0;
@@ -3487,3 +3503,300 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .home-iter-sub-section > input[type="checkbox"]:focus {
     outline:none;
 }
+
+.home-modal-block {
+  background-color: #ffffff;
+  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.16);
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.6em;
+}
+
+.home-modal-block-header {
+  background-color: #4178be;
+  font-size: inherit;
+  height: 10%;
+  position: relative;
+  width: 100%;
+}
+
+.home-modal-block-header > h {
+  color: #ffffff;
+  font-size: inherit;
+  font-family: "HelvNeue Bold for IBM";
+  height: 100%;
+  padding-left: 1em;
+  position: relative;
+  top: 25%;
+}
+
+.home-modal-block-content {
+  font-size: inherit;
+  height: 75%;
+  padding-left: 1em;
+  position: relative;
+}
+
+.home-modal-block-footer {
+  display: inline-block;
+  font-size: inherit;
+  height: 10%;
+  padding-left: 1em;
+  position: relative;
+}
+
+.home-modal-block-footer .ibm-btn-small {
+  font-size: 1.6em !important;
+}
+
+.home-modal-block-close-btn {
+  cursor: pointer;
+  display: inline-block;
+  float: right;
+  height: inherit;
+  position: relative;
+  top: 27%;
+  width: 6%;
+}
+
+.team-setup-squad-block {
+  display: inline-block;
+  font-size: inherit;
+  height: 65%;
+  width: 100%;
+}
+
+.team-setup-squad-block .team-setup-squad-icon {
+  display: inline-block;
+  padding: 3em 0 0 2em;
+  position: relative;
+  width: 25%;
+}
+
+.team-setup-squad-block .team-setup-squad-content {
+  display: inline-block;
+  font-size: inherit;
+  height: inherit;
+  left: 45%;
+  position: absolute;
+  width: 53%;
+}
+
+.team-setup-squad-content > label {
+  display: inline-block;
+  position: absolute;
+  top: 15%;
+  width: 100%;
+}
+
+.team-setup-squad-content > select, .team-setup-squad-content > span {
+  font-size: inherit;
+  position: absolute;
+  top: 27%;
+  width: 95%;
+}
+
+.team-setup-squad-content > div {
+  font-size: inherit;
+  height: 55%;
+  position: absolute;
+  top: 50%;
+  width: 100%;
+}
+
+.team-setup-squad-content > div > h {
+  color: #777677;
+  font-size: 1.2em;
+  position: absolute;
+  top: 50%;
+  transform: translate(0px, -50%);
+}
+
+.home-modal-block-content > p {
+  color: #5a5a5a;
+  font-size: inherit;
+  line-height: 1.3em;
+  padding: 1.25em 1em;
+}
+
+.home-modal-block-close-btn svg, .team-setup-squad-icon svg {
+  height: inherit;
+  width: inherit;
+}
+
+.home-modal-block-close-btn polygon {
+  fill: #ffffff;
+  opacity: 1;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-arrow-top {
+  display: inline-block;
+  left: 40%;
+  position: absolute;
+  top: 10%;
+  width: 3%;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-arrow-top .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -490%;
+  position: absolute;
+  top: 39%;
+  width: 500%;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-arrow-bottom {
+  display: inline-block;
+  left: 40%;
+  position: absolute;
+  top: 48%;
+  width: 3%;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-arrow-bottom .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -190%;
+  position: absolute;
+  top: 39%;
+  width: 200%;
+}
+
+.team-setup-squad-icon-arrow-top polygon, .team-setup-squad-icon-arrow-bottom polygon,
+.team-setup-icon-arrow-top polygon, .team-setup-icon-arrow-middle polygon, .team-setup-icon-arrow-bottom polygon {
+  fill: #b3b3b3 !important;
+}
+
+.team-setup-icon svg circle:first-of-type, .team-setup-icon svg circle:last-of-type {
+  fill: #8cc63f !important;
+}
+
+.team-setup-block {
+  display: inline-block;
+  font-size: inherit;
+  height: 100%;
+  width: 100%;
+}
+
+.team-setup-block .team-setup-icon {
+  display: inline-block;
+  padding: 3em 0 0 2em;
+  position: relative;
+  width: 25%;
+}
+
+.team-setup-block .team-setup-icon-arrow-top {
+  display: inline-block;
+  left: 40%;
+  position: absolute;
+  top: 10%;
+  width: 3%;
+}
+
+.team-setup-block .team-setup-icon-arrow-top .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -490%;
+  position: absolute;
+  top: 39%;
+  width: 500%;
+}
+
+.team-setup-block .team-setup-icon-arrow-middle {
+  display: inline-block;
+  left: 40%;
+  position: absolute;
+  top: 36%;
+  width: 3%;
+}
+
+.team-setup-block .team-setup-icon-arrow-middle .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -490%;
+  position: absolute;
+  top: 40%;
+  width: 500%;
+}
+
+.team-setup-block .team-setup-icon-arrow-bottom {
+  display: inline-block;
+  left: 40%;
+  position: absolute;
+  top: 62%;
+  width: 3%;
+}
+
+.team-setup-block .team-setup-icon-arrow-bottom .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -190%;
+  position: absolute;
+  top: 41%;
+  width: 200%;
+}
+
+.team-setup-block .team-setup-content {
+  display: inline-block;
+  font-size: inherit;
+  height: inherit;
+  left: 45%;
+  position: absolute;
+  width: 53%;
+}
+
+.team-setup-content > select:first-of-type, .team-setup-content > span:first-of-type {
+  font-size: inherit;
+  position: absolute;
+  top: 6%;
+  width: 95%;
+}
+
+.team-setup-content > select:last-of-type, .team-setup-content > span:last-of-type {
+  font-size: inherit;
+  position: absolute;
+  top: 58%;
+  width: 95%;
+}
+
+.team-setup-content > div {
+  font-size: inherit;
+  height: 35%;
+  position: absolute;
+  top: 20%;
+  width: 95%;
+}
+
+.team-setup-content > div > h {
+  color: #777677;
+  font-size: 1.2em;
+  position: absolute;
+  top: 50%;
+  transform: translate(0px, -50%);
+}
+
+.team-setup-children {
+  border: 1px solid #b3b3b3 !important;
+  height: 25% !important;
+  overflow-y: auto;
+  top: 71% !important;
+}
+
+.team-setup-children > p {
+  display: inline-block;
+  font-size: inherit;
+  height: 33%;
+  line-height: 1.3em;
+  overflow: hidden;
+  padding: 0.3em 0.25em 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 87%;
+}
+
+.team-setup-children-remove-icon {
+  display: inline-block;
+  float: right;
+  left: 91%;
+  position: absolute;
+  width: 7%;
+}
+

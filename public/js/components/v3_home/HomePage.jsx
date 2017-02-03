@@ -109,6 +109,7 @@ var HomePage = React.createClass({
   },
 
   selectedTeamChanged: function(team) {
+    console.log('selectedTeamChanged');
     this.setState({'selectedTeam': team});
   },
   newTeamsChanged: function(teams) {
