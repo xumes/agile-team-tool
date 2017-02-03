@@ -22,15 +22,15 @@ var HomeHeader = React.createClass({
             <InlineSVG class='header-menu-icon-chev' src={require('../../../img/Att-icons/att-icons-Chevron-down.svg')}></InlineSVG>
             <InlineSVG class='header-menu-icon-chev-hide' src={require('../../../img/Att-icons/att-icons-Chevron-down.svg')}></InlineSVG>
             <ul class="header-menu-profile-block">
-              <li>
+              <li style={{'display':'none'}}>
                 <div>Manage user profile</div>
               </li>
-              <li>
+              <li style={{'display':'none'}}>
                 <img src={userImage}/>
                 <div>{callupName}</div>
               </li>
               <li>
-                <div class="header-menu-icon-api">
+                <div class="header-menu-icon-api" style={{'paddingTop':'1em'}}>
                   <a href="javascript: launchApiKey();">
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_api.svg')}></InlineSVG>
                     <div>API Key Generation</div>

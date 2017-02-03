@@ -211,7 +211,8 @@ var HomeMemberTable = React.createClass({
             });
             var mLocation = self.toTitleCase(member.location.site);
             //var src = 'http://dpev027.innovate.ibm.com:10000/image/' + member.userId.toUpperCase();
-            var src = '//images.w3ibm.mybluemix.net/image/' + member.userId.toUpperCase();
+            // var src = '//images.w3ibm.mybluemix.net/image/' + member.userId.toUpperCase();
+            var src = '//faces-cache.mybluemix.net/image/' + member.userId.toUpperCase();
             var blockColor = {
               'backgroundColor': '#FFFFFF'
             }
@@ -239,11 +240,13 @@ var HomeMemberTable = React.createClass({
             }
             return (
               <div key={blockId} id={blockId} class={blockClass}>
-                <div id={nameId} style={{'width':'29.8%'}}>
-                  <div style={{'width':'28.6%','height':'100%','display':'inline-block','float':'left'}}>
-                    <img src={src}></img>
+                <div style={{'width':'1%','backgroundColor':'#FFFFFF'}}>
+                </div>
+                <div id={nameId} style={{'width':'28.8%'}}>
+                  <div style={{'width':'25.6%','height':'100%','display':'inline-block','float':'left'}}>
+                    <img style={{'position':'relative', 'top':'17%'}} src={src}></img>
                   </div>
-                  <div style={{'width':'71.4%','height':'50%','display':'inline-block','float':'left','position':'relative','top':'25%'}}>
+                  <div style={{'width':'74.4%','height':'50%','display':'inline-block','float':'left','position':'relative','top':'25%'}}>
                     <h>{member.name}</h>
                     <br/>
                     <h1>{member.email}</h1>
@@ -260,7 +263,7 @@ var HomeMemberTable = React.createClass({
                 <div class='team-member-table-content-location' id={locationId} style={{'width':'21.9%'}}>
                   <h>{mLocation}</h>
                 </div>
-                <div class='team-member-table-content-allocation' id={allocationId} style={{'width':'13.3%'}}>
+                <div class='team-member-table-content-allocation' id={allocationId} style={{'width':'11.3%'}}>
                   <h>{memberDetail.allocation+'%'}</h>
                   <div>
                     <select id={'allocation_select_' + idx} defaultValue={memberDetail.allocation}>
@@ -268,7 +271,7 @@ var HomeMemberTable = React.createClass({
                     </select>
                   </div>
                 </div>
-                <div class='team-member-table-content-awk' id={awkId} style={{'width':'15.7%'}}>
+                <div class='team-member-table-content-awk' id={awkId} style={{'width':'16.7%'}}>
                   <h>Full time</h>
                   <div>
                     <select id={'awk_select_' + idx} defaultValue='Full Time'>
@@ -277,6 +280,8 @@ var HomeMemberTable = React.createClass({
                     </select>
                   </div>
                   {deletBtn}
+                </div>
+                <div style={{'width':'1%','backgroundColor':'#FFFFFF'}}>
                 </div>
               </div>
             )
@@ -287,11 +292,15 @@ var HomeMemberTable = React.createClass({
         <div id='teamMemberTable' style={{'display':'none'}}>
           <div class='team-member-table-title-div'>
             <h class='team-member-table-title'>Team Details</h>
-            <h class='team-member-table-close-btn' onClick={self.props.showTeamTable}>X</h>
+            <div class='team-member-table-close-btn' onClick={self.props.showTeamTable}>
+              <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
+            </div>
           </div>
           <div class='team-member-table' id='memberTable'>
             <div class='team-member-table-header-block'>
-              <div style={{'width':'29.6%'}}>
+              <div style={{'width':'1%','backgroundColor':'#FFFFFF'}}>
+              </div>
+              <div style={{'width':'28.6%'}}>
                 <h>Name</h>
               </div>
               <div style={{'width':'0.2%','backgroundColor':'#FFFFFF'}}>
@@ -306,18 +315,22 @@ var HomeMemberTable = React.createClass({
               </div>
               <div style={{'width':'0.2%','backgroundColor':'#FFFFFF'}}>
               </div>
-              <div style={{'width':'13.1%'}}>
+              <div style={{'width':'11.1%'}}>
                 <h>Allocation</h>
               </div>
               <div style={{'width':'0.2%','backgroundColor':'#FFFFFF'}}>
               </div>
-              <div style={{'width':'15.7%'}}>
+              <div style={{'width':'16.7%'}}>
                 <h>Avg. work week</h>
+              </div>
+              <div style={{'width':'1%','backgroundColor':'#FFFFFF'}}>
               </div>
             </div>
             {teamMembers}
             <div class='team-member-table-footer-block'>
-              <button type='button' class='ibm-btn-sec ibm-btn-blue-50' disabled={addTeamBtnStyle} onClick={self.showAddTeamTable}>Add Team Member</button>
+              <div class='team-member-table-footer'>
+                <button type='button' class='ibm-btn-sec ibm-btn-blue-50' disabled={addTeamBtnStyle} onClick={self.showAddTeamTable}>Add Team Member</button>
+              </div>
             </div>
           </div>
           <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAddTeamTable}>
