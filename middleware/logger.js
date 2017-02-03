@@ -39,7 +39,7 @@ _.map(loggers, function(logger) {
       'level': logLevel,
       'class': 'raven.handlers.logging.SentryHandler',
       'dsn': settings.sentry.dsn
-    }
+    };
   }
 
   winston.loggers.add(logger, transports);
