@@ -1,9 +1,12 @@
 var winston = require('winston');
 var settings = require('../settings');
+var _ = require('underscore');
 
 var logLevel = process.env.logLevel || 'verbose';
 var logColors = process.env.logColors == 'true';
 
+var loggers = ['init', 'auth', 'api', 'models', 'model-teams', 'model-users', 'model-iteration',
+  'model-snapshot', 'model-apikeys', 'cache'];
 
 if (process.env.isGulpTest) {
   logLevel = process.env.logLevel || 'NONE';
@@ -22,148 +25,25 @@ if (settings.sentry.dsn) {
   winston.info('Sentry logging enabled');
 }
 
-// Refactor this
-winston.loggers.add('init', {
-  console: {
-    level: logLevel,
-    colorize: true,
-    label: 'init'
-  },
-  sentry: {
-    'level': logLevel,
-    'class': 'raven.handlers.logging.SentryHandler',
-    'dsn': settings.sentry.dsn
-  }
-});
+_.map(loggers, function(logger) {
+  var transports = {
+    console: {
+      level: logLevel,
+      colorize: true,
+      label: 'init'
+    }
+  };
 
-winston.loggers.add('auth', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'auth'
-  },
-  sentry: {
-    'level': logLevel,
-    'class': 'raven.handlers.logging.SentryHandler',
-    'dsn': settings.sentry.dsn
+  if (!process.env.isGulpTest && settings.sentry.dsn) {
+    transports['sentry'] = {
+      'level': logLevel,
+      'class': 'raven.handlers.logging.SentryHandler',
+      'dsn': settings.sentry.dsn
+    }
   }
-});
 
-winston.loggers.add('api', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'api'
-  },
-  sentry: {
-    'level': logLevel,
-    'class': 'raven.handlers.logging.SentryHandler',
-    'dsn': settings.sentry.dsn
-  }
-});
+  winston.loggers.add(logger, transports);
 
-winston.loggers.add('models', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'models'
-  },
-  sentry: {
-    'level': logLevel,
-    'class': 'raven.handlers.logging.SentryHandler',
-    'dsn': settings.sentry.dsn
-  }
-});
-
-winston.loggers.add('model-teams', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'model-teams'
-  },
-  sentry: {
-    'level': logLevel,
-    'class': 'raven.handlers.logging.SentryHandler',
-    'dsn': settings.sentry.dsn
-  }
-});
-
-winston.loggers.add('model-users', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'model-users'
-  },
-  sentry: {
-    'level': logLevel,
-    'class': 'raven.handlers.logging.SentryHandler',
-    'dsn': settings.sentry.dsn
-  }
-});
-
-winston.loggers.add('model-iteration', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'model-iteration'
-  },
-  sentry: {
-    'level': logLevel,
-    'class': 'raven.handlers.logging.SentryHandler',
-    'dsn': settings.sentry.dsn
-  }
-});
-
-winston.loggers.add('model-apiKeys', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'model-apiKeys'
-  },
-  sentry: {
-    'level': logLevel,
-    'class': 'raven.handlers.logging.SentryHandler',
-    'dsn': settings.sentry.dsn
-  }
-});
-
-winston.loggers.add('model-sanpshot', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'model-sanpshot'
-  },
-  sentry: {
-    'level': logLevel,
-    'class': 'raven.handlers.logging.SentryHandler',
-    'dsn': settings.sentry.dsn
-  }
-});
-
-winston.loggers.add('model-apikeys', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'model-apikeys'
-  },
-  sentry: {
-    'level': logLevel,
-    'class': 'raven.handlers.logging.SentryHandler',
-    'dsn': settings.sentry.dsn
-  }
-});
-
-winston.loggers.add('cache', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'cache'
-  },
-  sentry: {
-    'level': logLevel,
-    'class': 'raven.handlers.logging.SentryHandler',
-    'dsn': settings.sentry.dsn
-  }
 });
 
 module.exports = winston.loggers;
