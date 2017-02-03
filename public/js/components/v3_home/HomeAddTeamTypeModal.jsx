@@ -60,14 +60,13 @@ var HomeAddTeamTypeModal = React.createClass({
         <div class='new-team-creation-add-block'>
           <div class='new-team-creation-add-block-header'>
             <h>New Team Creation</h>
-            <span onClick={self.props.closeWindow}>X</span>
+            <span class='close-ico'><InlineSVG onClick={self.props.closeWindow} src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG></span>
           </div>
           <div class='new-team-creation-add-block-content'>
             <div class='new-team-creation-add-block-content-mid'>
               <h3 class="lblstyle2">I am creating a...</h3>
               <HomeTeamTypeRadioOptions onchangeTeamtypeRadio={self.onchangeTeamtypeRadio} selparent1Style={selparent1Style} populateTeamNames={populateTeamNames} />
             </div>
-
             <div class='footer-note'><strong class="note1">NOTE:</strong>&nbsp;To join an existing team, click the "All teams" tab, find the team and click "request to join"</div>
           </div>
           <HomeTeamTypeFooter updateStep={self.props.updateStep} selectedteamType={self.state.selectedteamType} />

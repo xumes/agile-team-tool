@@ -3640,7 +3640,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .optbox-1 {
   float: left;
-  width: 10em;
+  width: 11em;
 }
 
 .rpad {
@@ -3686,6 +3686,13 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   right: 0;
 }
 
+.reactbootstrap-modal .close-ico {
+  padding-top: 0.1em;
+  position: absolute;
+  right: 1%;
+  width: 1.5em;
+}
+
 .reactbootstrap-backdrop {
   top: 0;
   bottom: 0;
@@ -3727,8 +3734,13 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   .optbox-1 {
     float: none !important;
     margin: 0 auto !important;
-    width: 8em !important;
+    width: 13em !important;
     margin-bottom: 1.5em !important;
+  }
+
+  .optsel-1 {
+    float: none;
+    margin: 0 auto !important;
   }
 
   .footer-note {
@@ -3748,7 +3760,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   .optbox-1 {
     float: none !important;
     margin: 0 auto !important;
-    width: 8em !important;
+    width: 13em !important;
     margin-bottom: 3em !important;
   }
 
