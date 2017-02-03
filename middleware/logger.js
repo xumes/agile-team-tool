@@ -41,7 +41,6 @@ _.map(loggers, function(logger) {
       'dsn': settings.sentry.dsn
     };
   }
-
   winston.loggers.add(logger, transports);
 
 });
