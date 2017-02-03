@@ -283,7 +283,7 @@ getIterationErrorPopup: function(errors) {
   copyNameChange: function(e){
     var copyName = '';
     if (e.target.checked && this.props.loadDetailTeam.iterations.length > 0) {
-        copyName = this.props.loadDetailTeam.iterations[0].name + '(copy)';
+        copyName = this.props.loadDetailTeam.iterations[0].name + ' (copy)';
     }
     this.setState({name: copyName, c_name: e.target.checked})
   },
@@ -373,8 +373,8 @@ getIterationErrorPopup: function(errors) {
                 
               <div className='popup-btns'>
                 <p class='ibm-btn-row ibm-button-link' style={{'position':'relative','float':'right'}}>
-                  <a onClick={this.processIteration} class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50'>Add</a>
-                  <a onClick={this.close} class='ibm-btn-sec ibm-btn-small ibm-btn-blue-50'>Cancel</a>
+                  <a onClick={this.processIteration} class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50' style={{'padding':'4%'}}>Add</a>
+                  <a onClick={this.close} class='ibm-btn-sec ibm-btn-small ibm-btn-blue-50' style={{'padding':'4%'}}>Cancel</a>
                 </p>
               </div>
           </div>

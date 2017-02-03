@@ -3486,8 +3486,8 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   }
 
   .checkbox input[type="checkbox"] + span::before {
-    width: 2em;
-    height: 2em;
+    width: 1.7em;
+    height: 1.7em;
     display: inline-block;
     position: relative;
     background-color: transparent;
@@ -3503,5 +3503,5 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 0.1em;
   color: #4178BE;
   font-weight: bold;
-  font-size: 1.9em;
+  font-size: 1.6em;
 }
