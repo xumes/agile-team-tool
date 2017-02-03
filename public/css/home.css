@@ -3716,7 +3716,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .footer-btn {
   text-align: center;
-  top: 15%;
+  top: 35%;
   position: relative;
 }
 
@@ -3728,8 +3728,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 85%;
 }
 
-
-@media screen and (max-width:320px) {}
 @media screen and (min-width:321px) and (max-width:639px) {
   .optbox-1 {
     float: none !important;
@@ -3782,9 +3780,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
     width: 7em !important;
   }
 }
-@media screen and (min-width:1280px) and (max-width:1599px) {}
-@media screen and (min-width:1600px) {}
-@media screen and (min-width:1920px) {}
+
 /* END: TeamType Selection Modal */
 
 .home-iter-sub-section > input[type="checkbox"] {

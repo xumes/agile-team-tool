@@ -28,35 +28,26 @@ var HomeAddTeamTypeModal = React.createClass({
 
   componentDidMount: function() {
     this.getTeamNames();
-  },
-
-  onchangeTeamtypeRadio: function(event) {
-    var selectVal = event.target.value;
-    console.log('onchangeTeamtypeRadio selectVal:', selectVal);
-    $('#btn-teamtypeselect').prop('disabled', false);
-    if (selectVal == 'squadteam') {
-      this.setState({selparentList: 'block'});
-    } else {
-      this.setState({selparentList: 'none'});
-    }
-    this.setState({selectedteamType: selectVal});
-  },
-
-  hideTeamTypeSelModal: function() {
-    this.setState({teamTypeSelModal: false});
+    this.setState({selectedteamType: ''});
+    this.setState({selparentList: 'none'});
   },
 
   render: function() {
     var self = this;
     var addBtnStyle = this.props.loadDetailTeam.access?'block':'none';
-    var selparent1Style = {'display': this.state.selparentList};
+    var selectedteamType = this.props.selectedteamType;
+
+    var selparent1Style = {'display': 'none'};
+    if (selectedteamType == 'squadteam') {
+      selparent1Style = {'display': 'block'};
+    }
     var populateTeamNames = this.state.teamNames.map(function(item) {
       return (
         <option key={item._id} value={item._id}>{item.name}</option>
-      )
+      );
     });
     return (
-      <Modal aria-labelledby='modal-label' className='reactbootstrap-modal' backdropClassName='reactbootstrap-backdrop' show={self.props.showModal} >
+      <Modal aria-labelledby='modal-label' className='reactbootstrap-modal' backdropClassName='reactbootstrap-backdrop' show={self.props.showModal}>
         <div class='new-team-creation-add-block'>
           <div class='new-team-creation-add-block-header'>
             <h>New Team Creation</h>
@@ -65,11 +56,11 @@ var HomeAddTeamTypeModal = React.createClass({
           <div class='new-team-creation-add-block-content'>
             <div class='new-team-creation-add-block-content-mid'>
               <h3 class="lblstyle2">I am creating a...</h3>
-              <HomeTeamTypeRadioOptions onchangeTeamtypeRadio={self.onchangeTeamtypeRadio} selparent1Style={selparent1Style} populateTeamNames={populateTeamNames} />
+              <HomeTeamTypeRadioOptions onchangeTeamtypeRadio={self.props.onchangeTeamtypeRadio} onchangeParentTeamDropdown={self.props.onchangeParentTeamDropdown} selparent1Style={selparent1Style} populateTeamNames={populateTeamNames} selectedteamType={self.state.selectedteamType} />
             </div>
             <div class='footer-note'><strong class="note1">NOTE:</strong>&nbsp;To join an existing team, click the "All teams" tab, find the team and click "request to join"</div>
           </div>
-          <HomeTeamTypeFooter updateStep={self.props.updateStep} selectedteamType={self.state.selectedteamType} />
+          <HomeTeamTypeFooter updateStep={self.props.updateStep} selectedteamType={selectedteamType} />
         </div>
       </Modal>
     )

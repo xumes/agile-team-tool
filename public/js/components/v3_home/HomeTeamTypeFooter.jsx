@@ -12,8 +12,6 @@ var HomeTeamTypeFooter = React.createClass({
     var self = this;
     var type = self.props.selectedteamType;
     var step;
-    console.log('t:', type);
-
     if (type === 'parentteam') {
       step = 'showParentChildTeamHierarchy';
     }

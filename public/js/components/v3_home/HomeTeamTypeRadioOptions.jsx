@@ -7,16 +7,12 @@ var HomeTeamTypeRadioOptions = React.createClass({
   componentDidMount: function() {
     $("span[data-widget=tooltip]").tooltip();
     $(".selparent").select2();
+    $("#selparent-1").change(this.props.onchangeParentTeamDropdown);
   },
 
   render: function() {
     var selparent1Style = this.props.selparent1Style;
-    console.log('selparent1Style:',selparent1Style)
-    if (selparent1Style && selparent1Style.display == 'block') {
-      $('#steam').prop('checked', true);
-    } else {
-      $('#steam').prop('checked', false);
-    }
+
     return (
       <div class="midcontent">
         <div class="optbox-1 rpad">
