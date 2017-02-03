@@ -15,6 +15,12 @@
 </script>
 <% } %>
 
+<% if (typeof(sentryPublicDSN) !== 'undefined' && sentryPublicDSN != '') { %>
+<script src="https://cdn.ravenjs.com/3.9.1/raven.min.js" crossorigin="anonymous"></script>
+<script>
+  Raven.config('<%= sentryPublicDSN %>').install();
+</script>
+<% } %>
 
 <% if (ibmNPSKey != '') { %>
 <script>

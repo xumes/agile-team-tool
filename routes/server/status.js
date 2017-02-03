@@ -10,7 +10,8 @@ module.exports = function(app, includes) {
       'googleAnalyticsKey': settings.googleAnalyticsKey,
       'message': 'You have succesfully logged out, please close this browser window.',
       'ibmNPSKey': settings.ibmNPSKey,
-      'environment': settings.environment
+      'environment': settings.environment,
+      'sentryPublicDSN': settings.sentry.publicDSN
     };
     render(req, res, 'status', json);
   };

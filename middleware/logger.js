@@ -1,99 +1,48 @@
 var winston = require('winston');
+var settings = require('../settings');
+var _ = require('underscore');
 
 var logLevel = process.env.logLevel || 'verbose';
 var logColors = process.env.logColors == 'true';
 
+var loggers = ['init', 'auth', 'api', 'models', 'model-teams', 'model-users', 'model-iteration',
+  'model-snapshot', 'model-apikeys', 'cache'];
+
 if (process.env.isGulpTest) {
-  var logLevel = process.env.logLevel || 'NONE';
-  var logColors = true;
+  logLevel = process.env.logLevel || 'NONE';
+  logColors = true;
 }
 
-winston.loggers.add('init', {
-  console: {
-    level: logLevel,
-    colorize: true,
-    label: 'init'
-  }
-});
+winston.logLevel = logLevel;
 
-winston.loggers.add('auth', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'auth'
-  }
-});
+if (settings.sentry.dsn) {
+  //Setting up Sentry
+  var sentryOptions = {
+    dsn: settings.sentry.dsn
+  };
+  winston.transports.Sentry = require('winston-sentry');
+  winston.add(winston.transports.Sentry, sentryOptions);
+  winston.info('Sentry logging enabled');
+}
 
-winston.loggers.add('api', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'api'
-  }
-});
+_.map(loggers, function(logger) {
+  var transports = {
+    console: {
+      level: logLevel,
+      colorize: true,
+      label: 'init'
+    }
+  };
 
-winston.loggers.add('models', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'models'
+  if (!process.env.isGulpTest && settings.sentry.dsn) {
+    transports['sentry'] = {
+      'level': logLevel,
+      'class': 'raven.handlers.logging.SentryHandler',
+      'dsn': settings.sentry.dsn
+    };
   }
-});
+  winston.loggers.add(logger, transports);
 
-winston.loggers.add('model-teams', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'model-teams'
-  }
-});
-
-winston.loggers.add('model-users', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'model-users'
-  }
-});
-
-winston.loggers.add('model-iteration', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'model-iteration'
-  }
-});
-
-winston.loggers.add('model-apiKeys', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'model-apiKeys'
-  }
-});
-
-winston.loggers.add('model-sanpshot', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'model-sanpshot'
-  }
-});
-
-winston.loggers.add('model-apikeys', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'model-apikeys'
-  }
-});
-
-winston.loggers.add('cache', {
-  console: {
-    level: logLevel,
-    colorize: logColors,
-    label: 'cache'
-  }
 });
 
 module.exports = winston.loggers;
