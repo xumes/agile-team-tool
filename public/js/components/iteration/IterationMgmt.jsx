@@ -135,8 +135,14 @@ var IterationMgmt = React.createClass({
   teamMemCount: function () {
     var count = 0;
     var currentTeam = this.getTeamInfo();
+    var tmArr = [];
     if (!_.isEmpty(currentTeam) && currentTeam.members) {
-      count = currentTeam.members.length;
+      $.each(currentTeam.members, function(key, member) {
+        if (tmArr.indexOf(member.userId) == -1) {
+          count++;
+          tmArr.push(member.userId);
+        }
+      });
     }
     return count;
   },
