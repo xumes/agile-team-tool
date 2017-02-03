@@ -16,7 +16,7 @@ module.exports = {
     url: process.env.cloudantURL || 'https://user:pass@user.cloudant.com',
     dbName: process.env.cloudantDb || 'localDb'
   },
-  mongoURL: process.env.mongoURL || '',
+  mongoURL: process.env.mongoURL || 'mongodb://localhost/agiletool_stage',
   saml: {
     path: '/auth/saml/ibm/callback',
     identifierFormat: 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
@@ -57,7 +57,7 @@ if (module.exports.mongoURL && module.exports.mongoURL != '') {
     }
   };
   mongoose.connect(module.exports.mongoURL, mongoOptions);
-  loggers.get('init').info('Using MongoDB and connecting to', module.exports.mongoURL);
+  loggers.get('init').info('Connecting to mongoDB');
   module.exports.mongoose = mongoose;
 }
 else {
