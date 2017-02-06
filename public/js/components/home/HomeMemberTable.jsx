@@ -9,14 +9,14 @@ var HomeMemberTable = React.createClass({
     var self = this;
     if (self.props.loadDetailTeam.team != undefined && self.props.loadDetailTeam.members != undefined && self.props.loadDetailTeam.members.length > 0) {
       $('#teamMemberTable').show();
-      var members = _.sortBy(self.props.loadDetailTeam.members, function(member){
+      var members = _.sortBy(self.props.loadDetailTeam.team.members, function(member){
         return member.name.toLowerCase();
       });
       var team = self.props.loadDetailTeam.team;
-      self.updateMemberTable(members, team);
+      self.updateMemberTable(members, team,self.props.loadDetailTeam.members);
     } else {
       $('#teamMemberTable').show();
-      self.updateMemberTable(null, null);
+      self.updateMemberTable(null, null,null);
     }
   },
 
@@ -31,24 +31,23 @@ var HomeMemberTable = React.createClass({
     }
   },
 
-  updateMemberTable: function(members, team) {
+  updateMemberTable: function(members, team, memberUserCollection) {
     var self = this;
     if (members != null && team != null) {
       var j = 0;
       _.each(members, function(member){
-        var memberDetail = _.find(team.members, function(m){
-          if (m.userId == member.userId) {
-            return {
-              'role': m.role,
-              'allocation': m.allocation
-            }
-          }
-        });
-        var mLocation = self.toTitleCase(member.location.site);
+       var memberUserCollectionDetail = _.find(memberUserCollection, function(m) {     
+         if (m.userId == member.userId) {
+           return {
+            'mLocation': m.location.site 
+           }
+         }
+       });
+        var mLocation = self.toTitleCase(memberUserCollectionDetail.location.site);
         var row = "<tr><td id='name_" + j + "'>" + member.name + '</td>';
-        row = row + '<td>' + memberDetail.allocation + '</td>';
+        row = row + '<td>' + member.allocation + '</td>';
         row = row + "<td id='location_ref_" + j + "'>" + mLocation + "</div></td>";
-        row = row + '<td>' + memberDetail.role + '</td>';
+        row = row + '<td>' + member.role + '</td>';
         row = row + '</tr>';
         $('#membersList').append(row);
         j++;

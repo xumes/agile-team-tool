@@ -8,7 +8,8 @@ module.exports = function(app, includes) {
     'pageTitle': 'Maturity Assessment',
     'googleAnalyticsKey': settings.googleAnalyticsKey,
     'ibmNPSKey': settings.ibmNPSKey,
-    'environment': settings.environment
+    'environment': settings.environment,
+    'sentryPublicDSN': settings.sentry.publicDSN
   };
 
   app.get(['/assessment'], includes.middleware.auth.requireLoginWithRedirect, function(req, res) {

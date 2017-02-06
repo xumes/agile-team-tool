@@ -1,8 +1,3 @@
-var mongoose = require('mongoose');
-var loggers = require('./middleware/logger');
-
-mongoose.Promise = require('bluebird');
-
 module.exports = {
   dbUrl: process.env.dbUrl || 'test.cloudant.com',
   ldapAuthURL: process.env.ldapAuthURL || 'http://ifundit-dp.tap.ibm.com:3004',
@@ -16,7 +11,7 @@ module.exports = {
     url: process.env.cloudantURL || 'https://user:pass@user.cloudant.com',
     dbName: process.env.cloudantDb || 'localDb'
   },
-  mongoURL: process.env.mongoURL || '',
+  mongoURL: process.env.mongoURL || 'mongodb://localhost/agiletool_stage',
   saml: {
     path: '/auth/saml/ibm/callback',
     identifierFormat: 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
@@ -38,8 +33,17 @@ module.exports = {
   googleHost: 'maps.googleapis.com',
   googleApiKey: process.env.googleAPIKey || 'AIzaSyAF2vwg6z-pH4xC7Ac1eMcpR9mVG-A2u7Y',
   facesURL: 'https://faces.tap.ibm.com/api/',
-  ibmNPSKey: process.env.ibmNPSKey || ''
+  ibmNPSKey: process.env.ibmNPSKey || '',
+  sentry: {
+    dsn: process.env.sentryDSN || '',
+    publicDSN: process.env.sentryPublicDSN || ''
+  }
 };
+
+var loggers = require('./middleware/logger');
+var mongoose = require('mongoose');
+
+mongoose.Promise = require('bluebird');
 
 if (module.exports.mongoURL && module.exports.mongoURL != '') {
   var mongoOptions = {
@@ -57,7 +61,7 @@ if (module.exports.mongoURL && module.exports.mongoURL != '') {
     }
   };
   mongoose.connect(module.exports.mongoURL, mongoOptions);
-  loggers.get('init').info('Using MongoDB and connecting to', module.exports.mongoURL);
+  loggers.get('init').info('Connecting to mongoDB');
   module.exports.mongoose = mongoose;
 }
 else {
