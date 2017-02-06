@@ -161,6 +161,34 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   font-size: 1.3em !important;
 }
 
+.expand-image {
+  position: relative;
+  float: left;
+  width: 2.2em;
+  height: 100%;
+}
+
+.expand-image img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  left: 0.5em;
+}
+
+.squad-image {
+  position: relative;
+  float: left;
+  width: 2.2em;
+  height: 100%;
+}
+
+.squad-image img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  left: 0.5em;
+}
+
 #newTeamTree ul.ibm-twisty > li.ibm-active > a.ibm-twisty-trigger,
 #newTeamTree ul.ibm-twisty > li a.ibm-twisty-trigger,
 #newTeamTree ul.ibm-twisty > li a.agile-team-link {
@@ -217,8 +245,8 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 #newTeamTree a.agile-team-link,
 #newSearchTree a.agile-team-link {
   display: inherit;
-  margin-left: 8.0%;
-  margin-right: 8.0%;
+  /*margin-left: 8.0%;
+  margin-right: 8.0%;*/
   padding-left: 0;
   cursor: pointer;
 }
@@ -228,14 +256,14 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   /*font-weight: 300;*/
   color: #4D4D4D;
   position: relative;
-  left: 2%;
+  left: 0.65em;
 }
 
 .agile-team-selected > .agile-team-title {
   border-bottom: 0.15em solid #008ABF;
   /*padding-bottom: 2%;*/
   position: relative;
-  left: 2%;
+  left: 0.65em;
 }
 
 /*#newSearchTree a.agile-team-link {
@@ -270,19 +298,19 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   width: 100%;
 }
 #newTeamTree a.trigger-squad::before {
-  background-image: url('../img/Att-icons/att-icons_tribe.svg');
+  /*background-image: url('../img/Att-icons/att-icons_tribe.svg');
   background-repeat: no-repeat;
   background-size: 90% 90%;
   background-position: center;
-  width: 7%;
+  width: 7%;*/
 }
 
 #newSearchTree a.trigger-squad::before {
-  background-image: url('../img/Att-icons/att-icons_tribe.svg');
+  /*background-image: url('../img/Att-icons/att-icons_tribe.svg');
   background-repeat: no-repeat;
   background-size: 80% 80%;
   background-position: center;
-  width: 6%;
+  width: 6%;*/
 }
 
 
@@ -656,6 +684,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   left: -0.2%;
   z-index: 10;
   box-shadow: 0.2em 0.2em 2em #000000;
+  cursor: pointer;
 }
 
 .home-nav-show-btn {
@@ -665,7 +694,6 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 10%;
   top: -327%;
   left: 20%;
-  cursor: pointer;
 }
 
 .home-nav-show-btn2 {
@@ -675,7 +703,6 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 10%;
   top: -265%;
   left: 20%;
-  cursor: pointer;
 }
 
 .home-nav-show-btn > i, .home-nav-show-btn2 > i {
@@ -3432,7 +3459,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   line-height: 1.8em;
   color: #5A5A5A;
   text-align: center;
-  font-family: "HelvNeue Roman for IBM";  
+  font-family: "HelvNeue Roman for IBM";
 }
 
 .home-iter-category {
