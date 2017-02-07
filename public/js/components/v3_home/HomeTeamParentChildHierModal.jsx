@@ -4,7 +4,7 @@ var _ = require('underscore');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
 
-var HomeAddTeamNameModal = React.createClass({
+var HomeTeamParentChildHierModal = React.createClass({
   addTeamHandler: function() {
     var self = this;
     if ($('#newTeamName').val() == '') {
@@ -27,7 +27,6 @@ var HomeAddTeamNameModal = React.createClass({
               //alert('Proceed forward.');
               console.log('ready to call close window');
               self.props.closeWindow();
-              self.props.showParentChildHierModal();
             }
          });
     }
@@ -66,7 +65,7 @@ var HomeAddTeamNameModal = React.createClass({
            
            <div class='new-team-creation-add-block-content'>
              <div class='new-team-creation-add-block-content-name'>
-               <label for='newTeamName'>Team Name</label>
+               <label for='newTeamName'>2nd SCREEN</label>
                 <input type='text' size='30' id='newTeamName' name='newTeamName' aria-label='team name' ref='newTeamName'/>
               </div>
               
@@ -94,4 +93,4 @@ var HomeAddTeamNameModal = React.createClass({
     )
   }
 });
-module.exports = HomeAddTeamNameModal;
+module.exports = HomeTeamParentChildHierModal;

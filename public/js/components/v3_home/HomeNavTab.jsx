@@ -42,7 +42,7 @@ var HomeNavTab = React.createClass({
       <nav class='home-nav-tab' >
         <div class='home-nav-tab-div'>
           <div class='home-nav-tab-list' role='tablist' >
-              <li class='home-nav-tab-item' id='myTeams' role='tab' data-state={'open'} tabIndex='0' onClick={this.myTeamsClicked}>
+              <li class='home-nav-tab-item' id='myTeams' role='tab' data-state={'open'} onClick={this.myTeamsClicked}>
                 <h>
                   My Teams
                 </h>

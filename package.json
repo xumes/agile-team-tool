@@ -47,6 +47,7 @@
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "passport-saml": "^0.15.0",
+    "raven": "^1.1.1",
     "react": "^15.3.2",
     "react-datepicker": "^0.33.0",
     "react-dom": "^15.3.2",
@@ -66,7 +67,8 @@
     "validate.js": "^0.10.0",
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.16.2",
-    "winston": "^2.2.0"
+    "winston": "^2.2.0",
+    "winston-sentry": "^0.1.5"
   },
   "devDependencies": {
     "babel-core": "^6.17.0",
