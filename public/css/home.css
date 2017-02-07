@@ -261,6 +261,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 
 .agile-team-selected > .agile-team-title {
   border-bottom: 0.15em solid #008ABF;
+  font-family: "HelvNeue Medium for IBM";
   /*padding-bottom: 2%;*/
   position: relative;
   left: 0.65em;
@@ -825,7 +826,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   margin: 10% 3.4% 0 3.4%;*/
   width: 89%;
   left: 5.5%;
-  top: 3.1%;
+  /*top: 3.1%;*/
   height: 85%;
 }
 
@@ -3323,7 +3324,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 @media only screen and (min-width: 1800px){
   .popup-title{
-    font-size: 15px;                
+    font-size: 15px;
   }
 
   .popup-btns, .home-iter-main, .home-iter-date, .home-iter-new-dates, p.home-iter-date-range, .home-iter-sub-section-category, .checkbox {
