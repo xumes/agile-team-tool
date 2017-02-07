@@ -807,7 +807,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 
 .home-nav-tab-buttons-item {
   position: relative;
-  height: 70%;
+  height: 90%;
   width: 20%;
   padding: 0;
   display: inline-block;
@@ -852,7 +852,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   width: 90%;
   height: 17%;
   position: relative;
-  top: 30%;
+  top: 32%;
   left: 0.6%;
 }
 
