@@ -33,6 +33,22 @@ var HomeTeamTree = React.createClass({
     $('.nano').nanoScroller();
     self.initHilightTeam();
     // self.loadTeamInAllTeams(selectedTeam);
+    if (self.props.newTeams.tab == 'myteams') {
+      console.log('ssss');
+      if (_.isUndefined(self.props.newTeams.data.teams)) {
+        return null;
+      } else {
+        if(self.props.newTeams.data.teams.length == 1 && self.props.newTeams.data.teams[0].type != 'squad') {
+          api.getChildrenTeams(self.props.newTeams.data.teams[0].pathId)
+            .then(function(results){
+              console.log(results);
+            })
+            .catch(function(err){
+              console.log(err);
+            });
+        }
+      }
+    }
   },
 
   triggerTeam: function(teamId) {
@@ -324,6 +340,7 @@ var HomeTeamTree = React.createClass({
         $('.nano').nanoScroller({
           scrollTo: $('#link_' + path[path.length-1])
         });
+        $('.home-team-nav').css('top','3.1%');
       })
       .catch(function(err){
         $('#navSpinner').hide();

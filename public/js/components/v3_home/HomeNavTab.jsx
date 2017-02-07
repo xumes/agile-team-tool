@@ -7,12 +7,14 @@ var HomeNavTab = React.createClass({
   myTeamsClicked: function() {
     if ($('#myTeams').attr('data-state') != 'open') {
       this.props.tabClicked('mytab');
+      $('.home-team-nav').css('top','0');
     }
   },
 
   allTeamsClicked: function() {
     if ($('#allTeams').attr('data-state') != 'open') {
       this.props.tabClicked('alltab');
+      $('.home-team-nav').css('top','3.1%');
     }
   },
 
