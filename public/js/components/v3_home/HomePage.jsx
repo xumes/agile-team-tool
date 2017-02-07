@@ -60,6 +60,7 @@ var HomePage = React.createClass({
           $('#homeNavDiv').hide();
           $('#homeNavDiv').css('left','-6%');
           $('#homeNavDiv').css('top','-205.4%');
+          $('#homeNavDiv').css('box-shadow', 'rgba(0, 0, 0, 0.219608) 0.1em 0.3em 0.4em 0px');
           $('#iterContent').show();
           $('#mainContent').css('left', '0');
           $('#hideNavBtn').show();
@@ -67,6 +68,7 @@ var HomePage = React.createClass({
           $('#homeNavDiv').show();
           $('#homeNavDiv').css('left','0');
           $('#homeNavDiv').css('top','-130%');
+          $('#homeNavDiv').css('box-shadow', '');
           $('#iterContent').hide();
           $('#mainContent').css('left', '28.5%');
           $('#hideNavBtn').hide();
@@ -83,6 +85,7 @@ var HomePage = React.createClass({
       $('#homeNavDiv').css('width', '25%');
       $('#homeNavDiv').css('left', '-73%');
       $('#homeNavDiv').css('top', '-100%');
+      $('#homeNavDiv').css('box-shadow', '');
       $('#homeNavDiv').show();
       $('#hideNavBtn').hide();
 
@@ -317,15 +320,15 @@ var HomePage = React.createClass({
             <HomeIterContent loadDetailTeam={this.state.loadDetailTeam} selectedIter={this.state.selectedIter} iterChangeHandler={this.iterChangeHandler} iterListHandler={this.reloadTeamIterations}/>
           </div>
         </div>
-        <div id='homeNavShowBtnDiv' class='home-nav-show-btn-div'>
+        <div id='homeNavShowBtnDiv' class='home-nav-show-btn-div' onClick={this.showHomeNav}>
           <div class='home-nav-show-btn'>
-            <InlineSVG src={src} onClick={this.showHomeNav}></InlineSVG>
+            <InlineSVG src={src}></InlineSVG>
           </div>
           <div class='home-nav-show-text'>
             Teams
           </div>
           <div class='home-nav-show-btn2'>
-            <InlineSVG src={src} onClick={this.showHomeNav}></InlineSVG>
+            <InlineSVG src={src}></InlineSVG>
           </div>
         </div>
         <div id='homeNavDiv' class='home-nav-div' hidden='true'>

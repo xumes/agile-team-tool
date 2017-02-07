@@ -357,7 +357,9 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
     var nowTime = moment().endOf('month').format(dateFormat);
     _.each(iterationDocs, function(iterationDoc){
       var iterDate = moment(iterationDoc['endDate']).format(dateFormat);
-      var monthDiff = Math.floor(moment(nowTime).diff(moment(iterDate), 'months', true));
+      // var monthDiff = Math.floor(moment(nowTime).diff(moment(iterDate), 'months', true));
+      // console.log(monthDiff);
+      var monthDiff = calMonthDiff(moment(iterDate), moment(nowTime));
       if (monthDiff < 0 || monthDiff > iterationMonth || _.isNaN(monthDiff)) {
         var msg = 'iteationDoc: ' + iterationDoc._id + ' end date is not correct';
         console.log(msg);
@@ -540,13 +542,19 @@ function getSquadsData() {
               };
             } else {
               var allocationScore = 0;
+              var memCount = 0;
+              var tmArr = [];
               _.each(team.members, function(member){
+                if (tmArr.indexOf(member.userId) == -1) {
+                  memCount++;
+                  tmArr.push(member.userId);
+                }
                 if (_.isNumber(member.allocation)) {
                   allocationScore = allocationScore + member.allocation;
                 }
               });
               squadTeams[team._id] = {
-                'teamCnt': team.members.length,
+                'teamCnt': memCount,
                 'teamFTE': allocationScore / 100.0
               };
             }
@@ -814,6 +822,14 @@ function timeDiff(date1, date2) {
   var d2 = moment(date2, dateFormat);
   var time = moment(d1).diff(d2);
   return time;
+};
+
+function calMonthDiff(d1, d2) {
+  var months;
+  months = (d2.year() - d1.year()) * 12;
+  months -= d1.month();
+  months += d2.month();
+  return months;
 };
 
 /**
