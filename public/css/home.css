@@ -3592,6 +3592,197 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 /** New Team Creation - End */
 
+/* BEGIN: TeamType Selection Modal */
+.lblstyle2 {
+  font-size: 2em;
+  margin-top: 1em;
+  font-family: "HelvNeue Light for IBM";
+}
+
+.midcontent {
+  width: 70%;
+  margin: 0 auto;
+  padding-bottom: 7em;
+  margin-top: 1.5em;
+}
+
+.curTeam {
+  height: 2em;
+  background-color: #B2D1E2;
+  padding: 3em 0 3em 0;
+  font-size: 1.3em;
+}
+
+.reactbootstrap-modal .select2 {
+  font-size: 1.4em;
+}
+
+#selparent-1 {
+  width: 20em !important;
+}
+
+.teamtypeSel, .modal-wrapper2 {
+  width: 65em;
+}
+
+.modal-title2 {
+  padding-top: 4% !important;
+}
+
+.pad2 {
+  padding: 0 4em 2.5em 4em;
+}
+
+.lbl {
+  font-size: 1.3em;
+  line-height: 1.6em;
+}
+
+.optbox-1 {
+  float: left;
+  width: 11em;
+}
+
+.rpad {
+  margin-right: 15em;
+}
+
+.optsel-1 {
+  width: 22em;
+  float: right;
+  margin-top: 1em;
+}
+
+.floatr {
+  float: right;
+}
+
+.pteam-bg {
+  width: 60%;
+  padding-left: 3em;
+}
+
+.note1 {
+  color: #7BA3FA;
+}
+
+.btn2 {
+  text-align: center;
+  margin-top: 2em;
+}
+
+.glyicoblack::before {
+  color:#000;
+}
+
+.reactbootstrap-modal {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 1040;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.reactbootstrap-modal .close-ico {
+  padding-top: 0.1em;
+  position: absolute;
+  right: 1%;
+  width: 1.5em;
+}
+
+.reactbootstrap-backdrop {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 'auto';
+  background-color: #000;
+  opacity: 0.5;
+  width: 100%;
+  height: 100%;
+}
+
+.new-team-creation-add-block-content-mid {
+  position: relative;
+  float: left;
+  height: 22%;
+  width: 90%;
+  left: 8%;
+  top: 15%;
+}
+
+.footer-btn {
+  text-align: center;
+  top: 35%;
+  position: relative;
+}
+
+.footer-note {
+  float: left;
+  font-size: 1.3em;
+  margin-top: 16.5em;
+  margin-left: 4em;
+  width: 85%;
+}
+
+@media screen and (min-width:321px) and (max-width:639px) {
+  .optbox-1 {
+    float: none !important;
+    margin: 0 auto !important;
+    width: 13em !important;
+    margin-bottom: 1.5em !important;
+  }
+
+  .optsel-1 {
+    float: none;
+    margin: 0 auto !important;
+  }
+
+  .footer-note {
+    margin-top: 24em;
+  }
+
+  .footer-btn {
+    top:50%;
+  }
+
+  .new-team-creation-add-block {
+    height: 55em;
+  }
+}
+
+@media screen and (min-width:640px) and (max-width:959px) {
+  .optbox-1 {
+    float: none !important;
+    margin: 0 auto !important;
+    width: 13em !important;
+    margin-bottom: 3em !important;
+  }
+
+  .new-team-creation-add-block {
+    height: 60em;
+  }
+
+  .footer-note {
+    margin-top: 26em;
+  }
+
+  .footer-btn {
+    top:40%;
+  }
+}
+
+@media screen and (min-width:960px) and (max-width:1279px) {
+  .optbox-1 {
+    width: 7em !important;
+  }
+}
+
+/* END: TeamType Selection Modal */
+
 .home-iter-sub-section > input[type="checkbox"] {
   width: 6.25%;
   height: 6.25%;
@@ -3620,3 +3811,4 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .home-iter-sub-section > input[type="checkbox"]:focus {
     outline:none;
 }
+
