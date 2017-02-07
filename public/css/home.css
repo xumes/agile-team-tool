@@ -820,6 +820,10 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 100%;
 }
 
+#hideNavBtn svg g{
+  fill: #3b6caa;
+}
+
 .home-team-nav {
   position: relative;
   /*width : 93.2%;
