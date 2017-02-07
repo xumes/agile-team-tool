@@ -1,5 +1,6 @@
 var settings     = require('./settings');
 var loggers      = require('./middleware/logger');
+var Raven        = require('raven');
 
 // Make sure New Relic is loaded first
 if (process.env.newRelicKey && process.env.newRelicKey != '') {
@@ -22,18 +23,13 @@ var httpProxy = require('http-proxy');
 var bundle = require('./bundle');
 var cors = require('cors');
 
-/* istanbul ignore if */
-/*require('fs').readFile('./art', 'utf8', function(err, art) {
-  console.log(art);
-  loggers.get('init').info('Configuration Settings:');
-  if (process.env.TRAVIS != 'true') {
-    console.log(settings);
-  }
-  console.log('\n');
-});
-*/
-
 var app = express();
+
+if (settings.sentry.dsn) {
+  Raven.config(settings.sentry.dsn).install();
+  app.use(Raven.requestHandler());
+}
+
 app.use(favicon(__dirname + '/public/img/favicon.ico'));
 
 // view engine setup
@@ -101,6 +97,11 @@ if (process.env.NODE_ENV !== 'production') {
  * Error Handlers
  */
 /* istanbul ignore next */
+
+if (settings.sentry.dsn) {
+  app.use(Raven.errorHandler());
+}
+
 process.on('uncaughtException', function(err) {
   console.error((new Date).toUTCString() + ' uncaughtException:', err.message);
   console.error(err.stack);

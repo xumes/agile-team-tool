@@ -83,8 +83,18 @@ var HomeTeamInfo = React.createClass({
         teamLinks = null;
       }
       if (team.members != undefined) {
-        var teamMemNumber = team.members.length;
-        var teamFTE = this.teamMemFTE(team.members);
+        var teamMemNumber = 0;
+        var teamFTE = 0;
+        var tmArr = [];
+        $.each(team.members, function(key, member) {
+           if (tmArr.indexOf(member.userId) == -1) {
+            teamMemNumber++;
+            tmArr.push(member.userId);
+           }
+          });
+
+        teamFTE = this.teamMemFTE(team.members);
+
       } else {
         teamMemNumber = 0;
         teamFTE = 0;

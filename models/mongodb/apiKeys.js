@@ -1,9 +1,9 @@
 var Promise = require('bluebird');
 var uuid = require('node-uuid');
+var config = require('../../settings');
 var loggers = require('../../middleware/logger');
 var moment = require('moment');
 var _ = require('underscore');
-var config = require('../../settings');
 var mongoose = config.mongoose;
 var Schema   = require('mongoose').Schema;
 

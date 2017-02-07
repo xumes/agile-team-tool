@@ -540,13 +540,19 @@ function getSquadsData() {
               };
             } else {
               var allocationScore = 0;
+              var memCount = 0;
+              var tmArr = [];
               _.each(team.members, function(member){
+                if (tmArr.indexOf(member.userId) == -1) {
+                  memCount++;
+                  tmArr.push(member.userId);
+                }
                 if (_.isNumber(member.allocation)) {
                   allocationScore = allocationScore + member.allocation;
                 }
               });
               squadTeams[team._id] = {
-                'teamCnt': team.members.length,
+                'teamCnt': memCount,
                 'teamFTE': allocationScore / 100.0
               };
             }

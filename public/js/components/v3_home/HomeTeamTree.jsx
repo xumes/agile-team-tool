@@ -3,6 +3,7 @@ var api = require('../api.jsx');
 var HomeSpinner = require('./HomeSpinner.jsx');
 var _ = require('underscore');
 var Promise = require('bluebird');
+var InlineSVG = require('svg-inline-react');
 var clickedTeamId = '';
 
 var HomeTeamTree = React.createClass({
@@ -39,9 +40,11 @@ var HomeTeamTree = React.createClass({
     if ($('#' + teamId).hasClass('ibm-active')) {
       self.highlightParents(teamId);
       self.collapseParentTeam(teamId);
+      $('#' + teamId + ' > a > .expand-image > img').attr('src', '../../../img/Att-icons/att-icons_+.svg');
     } else {
       self.removeHighlightParents(teamId);
       self.expandParentTeam(teamId);
+      $('#' + teamId + ' > a > .expand-image > img').attr('src', '../../../img/Att-icons/att-icons_-.svg');
     }
   },
 
@@ -184,7 +187,7 @@ var HomeTeamTree = React.createClass({
       _.each(teams, function(team){
         if (team.docStatus != 'delete') {
           $('#main_' + teamId).append(self.createSubSection(team));
-          var trigger = $('#' + team.pathId).find('a.ibm-twisty-trigger');
+          var trigger = $('#' + team.pathId).find('a.twisty-trigger');
           trigger.attr('title', 'Expand/Collapse').on('click', function() {
             self.triggerTeam(team.pathId);
           });
@@ -196,6 +199,7 @@ var HomeTeamTree = React.createClass({
       })
       $('#' + teamId).attr('data-open', 'true');
       $('#' + teamId).addClass('ibm-active');
+      $('#' + teamId + ' > a > .expand-image > img').attr('src', '../../../img/Att-icons/att-icons_-.svg');
       $('#body_' + teamId).css('display', 'block');
       $('.nano').nanoScroller();
     }
@@ -348,6 +352,8 @@ var HomeTeamTree = React.createClass({
         if ($('#' + path).length > 0) {
           if (!$('#' + path).hasClass('ibm-active')) {
             $('#' + path).addClass('ibm-active');
+            // console.log(path);
+            // $('#' + path + ' > a > .expand-image > img').attr('src', '../../../img/Att-icons/att-icons_-.svg');
           }
           $('#body_' + path).css('display','block');
         }
@@ -376,11 +382,16 @@ var HomeTeamTree = React.createClass({
 
   createSubSection: function(team) {
     var extraClass = '';
+    var hiddenExpand = 'block';
+    var hiddenSquad = 'none';
     if (team.type == 'squad') {
       extraClass = extraClass + 'agile-team-squad';
+      hiddenExpand = 'none';
+      hiddenSquad = 'block';
     }
     if (!team.hasChild) {
       extraClass = extraClass + ' agile-team-standalone';
+      hiddenExpand = 'none';
     }
     var li = document.createElement('li');
     li.setAttribute('data-open', 'false');
@@ -392,13 +403,29 @@ var HomeTeamTree = React.createClass({
     spanLink.setAttribute('class', 'ibm-access');
     spanLink.appendChild(document.createTextNode(team.name));
 
+
+    var spanImageLink1 = document.createElement('img');
+    spanImageLink1.setAttribute('src', '../../../img/Att-icons/att-icons_+.svg');
+    var spanImageLink2 = document.createElement('img');
+    spanImageLink2.setAttribute('src', '../../../img/Att-icons/att-icons_tribe.svg');
+    var spanImageDiv1 = document.createElement('div');
+    spanImageDiv1.setAttribute('class', 'expand-image');
+    spanImageDiv1.setAttribute('style', 'display: ' + hiddenExpand);
+    var spanImageDiv2 = document.createElement('div');
+    spanImageDiv2.setAttribute('class', 'squad-image');
+    spanImageDiv2.setAttribute('style', 'display: ' + hiddenSquad);
+    spanImageDiv1.appendChild(spanImageLink1);
+    spanImageDiv2.appendChild(spanImageLink2);
+
     var span = document.createElement('a');
     if (team.type == 'squad') {
-      span.setAttribute('class', 'ibm-twisty-trigger trigger-squad');
+      span.setAttribute('class', 'trigger-squad');
     } else {
-      span.setAttribute('class', 'ibm-twisty-trigger');
+      span.setAttribute('class', 'twisty-trigger');
     }
     span.setAttribute('href', '#toggle');
+    span.appendChild(spanImageDiv1);
+    span.appendChild(spanImageDiv2);
     span.appendChild(spanLink);
     li.appendChild(span);
 
@@ -449,10 +476,14 @@ var HomeTeamTree = React.createClass({
           var objectId = team._id;
           if (team.type == 'squad') {
             var isSquad = 'agile-team-link agile-team-standalone agile-team-squad';
-            var triggerClass =  'ibm-twisty-trigger trigger-squad';
+            var triggerClass =  'trigger-squad';
+            var hiddenExpand = 'none';
+            var hiddenSquad = 'block';
           } else {
             isSquad = 'agile-team-link agile-team-standalone';
-            triggerClass =  'ibm-twisty-trigger';
+            triggerClass =  'twisty-trigger';
+            hiddenExpand = 'block';
+            hiddenSquad = 'none';
           }
           if (team.hasChild == false) {
             var hasChild = 'agile-team-standalone';
@@ -464,6 +495,12 @@ var HomeTeamTree = React.createClass({
           return (
             <li class={hasChild} key={objectId} data-open='false' id={teamId}>
               <a class={triggerClass} href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, teamId)}>
+                <div class='expand-image' style={{'display': hiddenExpand}}>
+                  <img src={'../../../img/Att-icons/att-icons_+.svg'}></img>
+                </div>
+                <div class='squad-image' style={{'display': hiddenSquad}}>
+                  <img src={'../../../img/Att-icons/att-icons_tribe.svg'}></img>
+                </div>
                 <span class='ibm-access'>{label}</span>
               </a>
               <a class={isSquad} title={title} id={linkId} onClick={self.loadDetails.bind(null, teamId)}><span class='agile-team-title'>{label}</span></a>
@@ -484,16 +521,23 @@ var HomeTeamTree = React.createClass({
           var objectId = team._id;
           if (team.type == 'squad') {
             var isSquad = 'agile-team-link agile-team-standalone agile-team-squad';
-            var triggerClass =  'ibm-twisty-trigger trigger-squad';
+            var triggerClass =  'trigger-squad';
+            var hiddenExpand = 'none';
+            var hiddenSquad = 'block';
           } else {
             isSquad = 'agile-team-link agile-team-standalone';
-            triggerClass = 'ibm-twisty-trigger';
+            triggerClass = 'twisty-trigger';
+            hiddenExpand = 'block';
+            hiddenSquad = 'none';
           }
           var teamDesc = (team.description == null)?'No description specified':team.description;
           var title = teamDesc;
           return (
             <li class='agile-team-standalone' key={objectId} data-open='false' id={teamId}>
               <a class={triggerClass} href='#toggle' title='Expand/Collapse'>
+                <div class='squad-image' style={{'display': hiddenSquad}}>
+                  <img src={'../../../img/Att-icons/att-icons_tribe.svg'}></img>
+                </div>
                 <span class='ibm-access'>{label}</span>
               </a>
               <a class={isSquad} title={title} id={linkId} onClick={self.loadDetails.bind(null,teamId)}><span class='agile-team-title'>{label}</span></a>
@@ -515,7 +559,10 @@ var HomeTeamTree = React.createClass({
               <ul class='ibm-twisty  ibm-widget-processed' id='newTeamTreeMain'>
                 {myteams}
                 <li data-open='true' id='agteamstandalone' class='ibm-active'>
-                  <a class='ibm-twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, 'agteamstandalone')}>
+                  <a class='twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, 'agteamstandalone')}>
+                    <div class='expand-image'>
+                      <img src={'../../../img/Att-icons/att-icons_-.svg'}></img>
+                    </div>
                     <span class='ibm-access'>Standalone Teams</span>
                   </a>
                   <a class='agile-team-link'><span class='agile-team-title'>Standalone Teams</span></a>
@@ -546,7 +593,10 @@ var HomeTeamTree = React.createClass({
         var title = teamDesc;
         return (
           <li data-open='false' id={teamId} key={objectId}>
-            <a class='ibm-twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, teamId)}>
+            <a class='twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, teamId)}>
+              <div class='expand-image'>
+                <img src={'../../../img/Att-icons/att-icons_+.svg'}></img>
+              </div>
               <span class='ibm-access'>{label}</span>
             </a>
             <a class='agile-team-link' title={title} id={linkId} onClick={self.loadDetails.bind(null,teamId)}>
@@ -564,7 +614,10 @@ var HomeTeamTree = React.createClass({
             <ul class='ibm-twisty ' id='main_'>
               {allteams}
               <li data-open='false' id='agteamstandalone'>
-                <a class='ibm-twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, 'agteamstandalone')}>
+                <a class='twisty-trigger' href='#toggle' title='Expand/Collapse' onClick={self.triggerTeam.bind(null, 'agteamstandalone')}>
+                  <div class='expand-image'>
+                    <img src={'../../../img/Att-icons/att-icons_+.svg'}></img>
+                  </div>
                   <span class='ibm-access'>Standalone Teams</span>
                 </a>
                 <a class='agile-team-link' title='View Standalone Teams information'>

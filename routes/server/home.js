@@ -7,7 +7,8 @@ module.exports = function(app, includes) {
     'pageTitle': 'Home',
     'googleAnalyticsKey': settings.googleAnalyticsKey,
     'ibmNPSKey': settings.ibmNPSKey,
-    'environment': settings.environment
+    'environment': settings.environment,
+    'sentryPublicDSN': settings.sentry.publicDSN
   };
 
   app.get(['/', '/home'], includes.middleware.auth.requireLoginWithRedirect, function(req, res) {

@@ -63,9 +63,15 @@ var IterationCommitment = React.createClass({
 
   teamMemCount: function () {
     var count = 0;
+    var tmArr = [];
     var currentTeam = this.props.selectedTeamInfo();
     if (!_.isEmpty(currentTeam) && currentTeam.members) {
-      count = currentTeam.members.length;
+      $.each(currentTeam.members, function(key, member) {
+        if (tmArr.indexOf(member.userId) == -1) {
+          count++;
+          tmArr.push(member.userId);
+        }
+      });
     }
     return count;
   },
