@@ -3321,6 +3321,25 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 /* END: Team description Modal section */
 
+@media only screen and (min-width: 1800px){
+  .popup-title{
+    font-size: 15px;                
+  }
+
+  .popup-btns, .home-iter-main, .home-iter-date, .home-iter-new-dates, p.home-iter-date-range, .home-iter-sub-section-category, .checkbox {
+    font-size: 14px;
+  }
+
+  span.home-iter-sub-section-delivered {
+    font-size: 12px;
+  }
+
+  .home-iter-cal-btn-block > i > svg{
+    height: 28px;
+    width: 28px;
+  }
+}
+
 .home-iter-popup {
   width: 25%;
   background-color: #FFFFFF;
@@ -3334,6 +3353,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   background-clip: padding-box;
   border: none;
   border-radius: 0;
+  max-width: 600px;
 }
 
 .popup-title {
