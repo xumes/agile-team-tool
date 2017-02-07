@@ -372,7 +372,9 @@ var HomeBookmark = React.createClass({
         <div class='home-team-header-bookmark-content'>
           <div class='home-team-header-bookmark-title'>
             <h>Important Links</h>
-            <h1 onClick={self.props.showBookmark}>X</h1>
+            <div onClick={self.props.showBookmark}>
+              <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
+            </div>
           </div>
           <div class='home-team-header-bookmark-scroll'>
             {teamLinks}
