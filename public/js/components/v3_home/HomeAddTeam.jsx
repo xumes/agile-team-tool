@@ -3,7 +3,7 @@ var api = require('../api.jsx');
 var _ = require('underscore');
 var InlineSVG = require('svg-inline-react');
 var HomeAddTeamNameModal = require('./HomeAddTeamNameModal.jsx');
-var HomeTeamParentChildHierModal = require('./HomeAddTeamNameModal.jsx');
+var HomeTeamParentChildHierModal = require('./HomeTeamParentChildHierModal.jsx');
 var HomeAddTeamTypeModal = require('./HomeAddTeamTypeModal.jsx');
 
 var HomeAddTeam = React.createClass({
@@ -46,7 +46,7 @@ var HomeAddTeam = React.createClass({
     } else if (step == 'showMemberTeamRole') {
       this.setState({showTeamMemberRoleModal: true});
     } else if (step == 'showParentChildTeamHierarchy') {
-      this.setState({showTeamHierarchyModal: true});
+      this.setState({showTeamParentChildHierModal: true});
     }
   },
 
@@ -66,6 +66,7 @@ var HomeAddTeam = React.createClass({
     this.setState({showTeamMemberModal: false});
     this.setState({showTeamMemberRoleModal: false});
     this.setState({showTeamHierarchyModal: false});
+    this.setState({showTeamParentChildHierModal: false});
   },
 
   onchangeTeamtypeRadio: function(event) {
@@ -138,8 +139,7 @@ var HomeAddTeam = React.createClass({
 
         <HomeAddTeamNameModal showModal={this.state.showTeamNameModal} closeWindow={self.hideAddTeamNameModal} updateStep={self.updateStep} setTeamObj={self.setTeamObj} getTeamObj={getTeamObj} changeHandlerTeamName={self.changeHandlerTeamName} changeHandlerTeamDesc={self.changeHandlerTeamDesc} newTeam={self.state.newTeam} updateTeam={this.updateTeam}/>
         <HomeAddTeamTypeModal showModal={this.state.showTeamTypeModal} closeWindow={self.hideTeamTypeModal} loadDetailTeam={self.props.loadDetailTeam} updateStep={self.updateStep} newTeamObj={self.state.newTeamObj} onchangeTeamtypeRadio={self.onchangeTeamtypeRadio} selectedteamType={self.state.selectedteamType} onchangeParentTeamDropdown={self.onchangeParentTeamDropdown} />
-        
-        <HomeTeamParentChildHierModal showModal={this.state.showTeamParentChildHierModal} closeWindow={self.hideTeamParentChildHierModal} newTeam={self.state.newTeam} updateTeam={this.updateTeam}/>
+        <HomeTeamParentChildHierModal showModal={this.state.showTeamParentChildHierModal} closeWindow={self.hideTeamParentChildHierModal} newTeam={self.state.newTeam} updateTeam={this.updateTeam} getTeamObj={getTeamObj} />
 
         {/*
         <HomeAddTeamTypeModal showModal={this.state.showTeamNameModal} closeWindow={self.hideAddTeamModal} />
