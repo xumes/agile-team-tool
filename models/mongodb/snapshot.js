@@ -948,11 +948,12 @@ var snapshot = {
       var squadAssessments = {};
       var squadsCalResultsByIter = {};
       var squadsCalResultsByAsse = {};
+      var nonSquadCalResults = {};
       promiseArray.push(getIterationDocs(startTime, endTime));
       promiseArray.push(getSubmittedAssessments());
       promiseArray.push(getAllSquads());
       promiseArray.push(getSquadsData());
-      promiseArray.push(snapshotModel.remove({}));
+      // promiseArray.push(snapshotModel.remove({}));
       Promise.all(promiseArray)
         .then(function(results){
           squadIterationDocs = results[0];
@@ -992,7 +993,9 @@ var snapshot = {
           });
           return Promise.all(promiseArray4);
         })
-        .then(function(nonSquadCalResults){
+        .then(function(result){
+          nonSquadCalResults = result;
+          return snapshotModel.remove({});
           // var query = {'teamId': Schema.Types.ObjectId};
           // var update = {
           //   '$set': {
@@ -1013,8 +1016,11 @@ var snapshot = {
           //   update['$set'].pathId = nonSquadCalResult.pathId;
           //   promiseArray4.push(snapshotModel.update(query, update, options));
           // });
-          return snapshotModel.collection.insert(nonSquadCalResults);
+          // return snapshotModel.collection.insert(nonSquadCalResults);
           //return Promise.all(promiseArray4);
+        })
+        .then(function(){
+          return snapshotModel.collection.insert(nonSquadCalResults);
         })
         .then(function(results){
           if (results) {
