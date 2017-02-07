@@ -3321,9 +3321,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 /* END: Team description Modal section */
 
-@media only screen and (max-width: 600px){
+@media only screen and (min-width: 1800px){
   .popup-title{
-    font-size: 15px;
+    font-size: 15px;                
   }
 
   .popup-btns, .home-iter-main, .home-iter-date, .home-iter-new-dates, p.home-iter-date-range, .home-iter-sub-section-category, .checkbox {
