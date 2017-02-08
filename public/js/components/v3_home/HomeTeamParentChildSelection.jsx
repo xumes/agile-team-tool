@@ -5,6 +5,7 @@ var InlineSVG = require('svg-inline-react');
 
 var HomeTeamParentChildSelection = React.createClass({
   componentDidMount: function() {
+    $("select").select2(); 
    },
 
   render: function() {
