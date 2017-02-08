@@ -161,6 +161,34 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   font-size: 1.3em !important;
 }
 
+.expand-image {
+  position: relative;
+  float: left;
+  width: 2.2em;
+  height: 100%;
+}
+
+.expand-image img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  left: 0.5em;
+}
+
+.squad-image {
+  position: relative;
+  float: left;
+  width: 2.2em;
+  height: 100%;
+}
+
+.squad-image img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  left: 0.5em;
+}
+
 #newTeamTree ul.ibm-twisty > li.ibm-active > a.ibm-twisty-trigger,
 #newTeamTree ul.ibm-twisty > li a.ibm-twisty-trigger,
 #newTeamTree ul.ibm-twisty > li a.agile-team-link {
@@ -217,8 +245,8 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 #newTeamTree a.agile-team-link,
 #newSearchTree a.agile-team-link {
   display: inherit;
-  margin-left: 8.0%;
-  margin-right: 8.0%;
+  /*margin-left: 8.0%;
+  margin-right: 8.0%;*/
   padding-left: 0;
   cursor: pointer;
 }
@@ -228,14 +256,15 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   /*font-weight: 300;*/
   color: #4D4D4D;
   position: relative;
-  left: 2%;
+  left: 0.65em;
 }
 
 .agile-team-selected > .agile-team-title {
   border-bottom: 0.15em solid #008ABF;
+  font-family: "HelvNeue Medium for IBM";
   /*padding-bottom: 2%;*/
   position: relative;
-  left: 2%;
+  left: 0.65em;
 }
 
 /*#newSearchTree a.agile-team-link {
@@ -270,19 +299,19 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   width: 100%;
 }
 #newTeamTree a.trigger-squad::before {
-  background-image: url('../img/Att-icons/att-icons_tribe.svg');
+  /*background-image: url('../img/Att-icons/att-icons_tribe.svg');
   background-repeat: no-repeat;
   background-size: 90% 90%;
   background-position: center;
-  width: 7%;
+  width: 7%;*/
 }
 
 #newSearchTree a.trigger-squad::before {
-  background-image: url('../img/Att-icons/att-icons_tribe.svg');
+  /*background-image: url('../img/Att-icons/att-icons_tribe.svg');
   background-repeat: no-repeat;
   background-size: 80% 80%;
   background-position: center;
-  width: 6%;
+  width: 6%;*/
 }
 
 
@@ -656,6 +685,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   left: -0.2%;
   z-index: 10;
   box-shadow: 0.2em 0.2em 2em #000000;
+  cursor: pointer;
 }
 
 .home-nav-show-btn {
@@ -665,7 +695,6 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 10%;
   top: -327%;
   left: 20%;
-  cursor: pointer;
 }
 
 .home-nav-show-btn2 {
@@ -675,7 +704,6 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 10%;
   top: -265%;
   left: 20%;
-  cursor: pointer;
 }
 
 .home-nav-show-btn > i, .home-nav-show-btn2 > i {
@@ -798,7 +826,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   margin: 10% 3.4% 0 3.4%;*/
   width: 89%;
   left: 5.5%;
-  top: 3.1%;
+  /*top: 3.1%;*/
   height: 85%;
 }
 
@@ -3292,6 +3320,25 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 /* END: Team description Modal section */
 
+@media only screen and (min-width: 1800px){
+  .popup-title{
+    font-size: 15px;
+  }
+
+  .popup-btns, .home-iter-main, .home-iter-date, .home-iter-new-dates, p.home-iter-date-range, .home-iter-sub-section-category, .checkbox {
+    font-size: 14px;
+  }
+
+  span.home-iter-sub-section-delivered {
+    font-size: 12px;
+  }
+
+  .home-iter-cal-btn-block > i > svg{
+    height: 28px;
+    width: 28px;
+  }
+}
+
 .home-iter-popup {
   width: 25%;
   background-color: #FFFFFF;
@@ -3305,6 +3352,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   background-clip: padding-box;
   border: none;
   border-radius: 0;
+  max-width: 600px;
 }
 
 .popup-title {
@@ -3430,7 +3478,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   line-height: 1.8em;
   color: #5A5A5A;
   text-align: center;
-  font-family: "HelvNeue Roman for IBM";  
+  font-family: "HelvNeue Roman for IBM";
 }
 
 .home-iter-category {
@@ -3736,6 +3784,23 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 85%;
 }
 
+.footer-note-add-team-name {
+  float: left;
+  font-size: 1.3em;
+  margin-top: 13.5em;
+  margin-left: 4em;
+  width: 85%;
+}
+
+.top-note-parent-child-hierarchy {
+  float: left;
+  font-size: 1.25em;
+  margin-top: 0.6em;
+  margin-left: 0.22em;
+  width: 85%;
+}
+
+
 @media screen and (min-width:321px) and (max-width:639px) {
   .optbox-1 {
     float: none !important;
@@ -3790,6 +3855,117 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 /* END: TeamType Selection Modal */
+/* BEGIN: Parent / Child Team Hierarchy Selection Modal */
+.new-team-parent-child-hierarchy-note-section {
+  position: relative;
+  left: 0%;
+  float: left;
+  height: 0%;
+  width: 100%;
+  top: -3%;
+
+}
+.new-team-parent-child-hierarchy-note-section-notetext {
+  position: relative;
+  float: left;
+  height: 0%;
+  width: 100%;
+  font-family: "HelvNeue medium for IBM";
+  font-size: 1.2em;
+  font-weight: normal;
+  line-height: 1.4em;
+  color: #323232;
+}
+
+.pncteam-midcontent {
+  width: 80%;
+  margin: 0 auto;
+  padding-bottom: 7em;
+  margin-top: 6em;
+}
+
+.pncteam-bg {
+  width: 80%;
+  padding-left: 0.5em;
+}
+
+.team-parent-child-hierarchy-p > .line1 {
+  position: absolute;
+  left: 23%;
+  z-index: 2;
+  /*width: 95%;*/
+  height: 10%;
+  top: 88%;
+  border-bottom: 0.2em solid #777677;
+}
+
+.pointer-arrow-right-parent {
+  position: absolute;
+  bottom: 9%;
+  left: 45%;
+  height: 2%;
+  width: 2%;
+}
+
+.pointer-arrow-right-parent  polygon{
+  fill: #777677;
+}
+
+.team-parent-child-hierarchy-p > .line2 {
+  position: absolute;
+  left: 23%;
+  z-index: 2;
+  /*width: 95%;*/
+  height: 10%;
+  top: 178%;
+  border-bottom: 0.2em solid #777677;
+}
+
+.pointer-arrow-right-current {
+  position: absolute;
+  bottom: -81%;
+  left: 45%;
+  height: 2%;
+  width: 2%;
+}
+
+.pointer-arrow-right-current  polygon{
+  fill: #777677;
+}
+
+.team-parent-child-hierarchy-p > .line3 {
+  position: absolute;
+  left: 30%;
+  z-index: 2;
+  /*width: 95%;*/
+  height: 10%;
+  top: 265%;
+  border-bottom: 0.2em solid #777677;
+}
+
+.pointer-arrow-right-child {
+  position: absolute;
+  bottom: -171%;
+  left: 45%;
+  height: 2%;
+  width: 2%;
+}
+
+.pointer-arrow-right-child  polygon{
+  fill: #777677;
+}
+
+.optsel-parent {
+  position: absolute;  
+  bottom: -12%;
+  left: 50%;  
+  width: 22em;
+  float: right;
+  margin-top: 1em;
+}
+
+
+/* END: Parent / Child Team Hierarchy Selection Modal */
 
 .home-iter-sub-section > input[type="checkbox"] {
   width: 6.25%;

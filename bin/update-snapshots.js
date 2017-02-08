@@ -1,3 +1,4 @@
+require('../settings');
 var schedule = require('node-schedule');
 var snapshot = require('../models/mongodb/snapshot');
 var workerLogger = require('../middleware/logger').get('worker');

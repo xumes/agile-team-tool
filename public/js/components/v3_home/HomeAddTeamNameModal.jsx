@@ -3,6 +3,8 @@ var api = require('../api.jsx');
 var _ = require('underscore');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
+var HomeTeamNameFooter = require('./HomeTeamNameFooter.jsx');
+
 
 var HomeAddTeamNameModal = React.createClass({
   addTeamHandler: function() {
@@ -23,12 +25,6 @@ var HomeAddTeamNameModal = React.createClass({
             if (isTeamExist) {
               alert('This team name already exists. Please enter a different team name.');
             } else {
-              //JEAN's Code here
-              self.props.updateTeam($('#newTeamName').val(), $('#newTeamDescription').val());
-              self.props.closeWindow();
-//              self.props.showParentChildHierModal();
-
-              //Arman's code here
               self.props.updateStep('showTeamTypeSelection'); // Proceed to next screen -Selecting team type (parent or squad team)
               console.log('Proceed to Team type(parent or squad team) selection modal..');
               self.props.setTeamObj({name: self.props.getTeamObj().name, description: self.props.getTeamObj().description});
@@ -64,19 +60,13 @@ var HomeAddTeamNameModal = React.createClass({
                 <label for='newTeamDescription'>Team Description</label>
                 <textarea type='textarea' rows='15' id='newTeamDescription' name='newTeamDescription' ref='newTeamDescription' value={teamObj.description} onChange={self.props.changeHandlerTeamDesc} aria-label='new team description' role='combobox'/>
               </div>
+              
+              <div class='footer-note-add-team-name'><strong class="note1">NOTE:</strong>&nbsp;To join an existing team, click the "All teams" tab, find the team and click "request to join"</div>
+
             </div>
 
-            <div class='new-team-creation-add-note-section'>
-             <label class='new-team-creation-add-note-section-notetext' for='teamNotes-label'><span style={noteStyle}>NOTE: </span>
-             To join the existing team, click the "All Teams" tab, find the team and click "request to join".
-             </label>
-            </div>
+            <HomeTeamNameFooter updateStep={self.addTeamHandler} />
 
-            <div class='new-team-creation-add-block-footer'>
-              <p class='ibm-btn-row ibm-button-link' class='footer-btn'>
-                <button class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50' onClick={self.addTeamHandler}>Next</button>
-              </p>
-            </div>
           </div>
         </Modal>
       </div>
