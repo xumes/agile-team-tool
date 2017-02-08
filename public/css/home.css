@@ -3967,6 +3967,164 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 /* END: Parent / Child Team Hierarchy Selection Modal */
 
+/* BEGIN: AddTeam Member Modal */
+.new-team-creation-addteam-member {
+  background-color: #ffffff;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.16);
+  height: 30.93vw;
+  left: 25%;
+  min-height: 417.6px;
+  min-width: 50em;
+  position: fixed;
+  top: 21%;
+  width: 44vw;
+}
+
+.new-team-creation-addteam-member .tbl-results {
+  width: 53em;
+  height: 10em;
+}
+
+.new-team-creation-addteam-member .tbl-members {
+  width: 100%;
+}
+
+.new-team-creation-addteam-member .tbl-members td {
+  font-size: 1.3em;
+  padding: 0.3em;
+}
+
+.new-team-creation-addteam-member .tbl-members thead .name {
+  width: 1em;
+  border: 1px solid;
+  display: block;
+  height: 2em;
+  float: left;
+  margin-left: 2em;
+}
+
+.new-team-creation-addteam-member .tbl-members thead .email {
+  width: 3em;
+  border: 1px solid;
+  display: block;
+  height: 2em;
+  float: left;
+  margin-left: 2em;
+}
+
+.new-team-creation-addteam-member .tbl-members thead .location {
+  width: 3em;
+  border: 1px solid;
+  display: block;
+  height: 2em;
+  float: left;
+  margin-left: 2em;
+}
+
+.new-team-creation-addteam-member .tbl-members td.h-delete {
+  border-bottom:1px solid #000;
+}
+
+.new-team-creation-addteam-member .tbl-members td.row-delete {
+  padding:0.5em;
+  width: 2em;
+}
+
+.new-team-creation-addteam-member .tbl-members tbody td {
+  border-bottom: 1px solid #ccc;
+  vertical-align: middle;
+}
+
+.new-team-creation-addteam-member .tbl-members tbody td.name {
+  width: 11.6em;
+}
+
+.new-team-creation-addteam-member .tbl-members tbody td.email {
+  width: 10.8em;
+  background-color: #F2F2F2;
+}
+
+.new-team-creation-addteam-member .tbl-members tbody td.email span.email {
+  padding-left: 1em;
+}
+
+.new-team-creation-addteam-member .tbl-members tbody td.location span.location {
+  padding-left: 1em;
+}
+
+.new-team-creation-addteam-member .tbl-members tbody td.location {
+  width: 15em;
+}
+
+.new-team-creation-addteam-member .tbl-members .delete-ico {
+  width: 1.6em;
+  cursor: pointer;
+  position: absolute;
+}
+
+.new-team-creation-addteam-member .heading {
+  font-weight: bold;
+  border-bottom: 0.1em solid #000;
+}
+
+.new-team-creation-addteam-member .btn-addmember {
+  cursor: pointer;
+  float: right;
+  margin-left: 1em;
+  width: 2.5em;
+  margin-top: 0.7em;
+}
+
+.new-team-creation-addteam-member .col1 {
+  box-sizing: border-box;
+  float: left;
+  margin: 0;
+  min-height: 1px;
+  width: 32em;
+}
+
+.new-team-creation-addteam-member .ibm-row-form .frmlabel {
+  font-size: 1.4em;
+}
+
+.new-team-creation-addteam-member .col2 {
+  box-sizing: border-box;
+  float: right;
+  margin: 0;
+  min-height: 1px;
+  width: 19em;
+}
+
+.new-team-creation-addteam-member .note2 {
+  float: left;
+  margin-left: 0.2em;
+}
+
+.new-team-creation-addteam-member .note2 strong, .new-team-creation-addteam-member .note2 p {
+  font-size: 1.4em;
+}
+
+.new-team-creation-addteam-member .new-team-creation-add-block-pad {
+  float: left;
+  margin-top: 5em;
+  margin-right: 5em;
+  margin-bottom: 0;
+  margin-left: 5em;
+}
+
+.new-team-creation-addteam-member .new-team-creation-addteam-member-footer {
+  position: relative;
+  float: left;
+  height: 20%;
+  width: 100%;
+  margin-top: 4em;
+}
+
+.new-team-creation-addteam-member .footer-btn button {
+  margin-right: 1.5%;
+}
+/* END: AddTeam Member Modal */
+
 .home-iter-sub-section > input[type="checkbox"] {
   width: 6.25%;
   height: 6.25%;

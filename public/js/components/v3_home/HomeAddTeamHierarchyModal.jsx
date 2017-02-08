@@ -9,30 +9,17 @@ var HomeTeamParentChildSelection = require('./HomeTeamParentChildSelection.jsx')
 var HomeAddTeamHierarchyModal = React.createClass({
   getInitialState: function() {
     return {
-      selparentList: 'none',
-      teamNames: []
+      selparentList: 'none'
     }
   },
 
-  getTeamNames: function() {
-    var self = this;
-    return api.fetchTeamNames()
-      .then(function(teams) {
-        self.setState({
-          teamNames: teams
-        })
-      });
-  },
-
   componentDidMount: function() {
-    this.getTeamNames();
     this.setState({selparentList: 'none'});
   },
 
   addTeamHandler: function() {
     var self = this;
   },
-
 
   render: function () {
     var self = this;
@@ -41,8 +28,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
        color: '#4178BE'
     };
 
-    var populateTeamNames = this.state.teamNames.map(function(item) {
-     console.log('In here populateTeamName: ');
+    var populateTeamNames = this.props.teamNames.map(function(item) {
      return (
       <option key={item._id} value={item._id}>{item.name}</option>
      ) ;
