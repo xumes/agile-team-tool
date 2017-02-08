@@ -11,6 +11,8 @@ var HomeTeamTypeFooter = React.createClass({
   render: function() {
     var self = this;
     var type = self.props.selectedteamType;
+    var curStep = self.props.currentStep;
+    console.log('curStep:',curStep);
     var step;
     if (type === 'parentteam') {
       step = 'showParentChildTeamHierarchy';
@@ -19,11 +21,11 @@ var HomeTeamTypeFooter = React.createClass({
       step = 'showAddTeamMembers';
     }
     return (
-    <div class='new-team-creation-add-block-footer'>
-      <p class='ibm-btn-row ibm-button-link' class='footer-btn'>
-        <button class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50' id='btn-teamtypeselect' onClick={this.props.updateStep.bind(null, step)}>Next</button>
-      </p>
-    </div>
+      <div class='new-team-creation-add-block-footer'>
+        <p class='ibm-btn-row ibm-button-link' class='footer-btn'>
+          <button class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50' id='btn-teamtypeselect' onClick={this.props.updateStep.bind(null, step)}>Next</button>
+        </p>
+      </div>
     );
   }
 });

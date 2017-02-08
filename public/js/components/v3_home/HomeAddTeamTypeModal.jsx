@@ -11,23 +11,11 @@ var HomeAddTeamTypeModal = React.createClass({
     return {
       teamTypeSelModal: true,
       selectedteamType: '',
-      selparentList: 'none',
-      teamNames: []
+      selparentList: 'none'
     }
   },
 
-  getTeamNames: function() {
-    var self = this;
-    return api.fetchTeamNames()
-      .then(function(teams) {
-        self.setState({
-          teamNames: teams
-        })
-      });
-  },
-
   componentDidMount: function() {
-    this.getTeamNames();
     this.setState({selectedteamType: ''});
     this.setState({selparentList: 'none'});
   },
@@ -41,7 +29,7 @@ var HomeAddTeamTypeModal = React.createClass({
     if (selectedteamType == 'squadteam') {
       selparent1Style = {'display': 'block'};
     }
-    var populateTeamNames = this.state.teamNames.map(function(item) {
+    var populateTeamNames = this.props.teamNames.map(function(item) {
       return (
         <option key={item._id} value={item._id}>{item.name}</option>
       );
@@ -60,7 +48,7 @@ var HomeAddTeamTypeModal = React.createClass({
             </div>
             <div class='footer-note'><strong class="note1">NOTE:</strong>&nbsp;To join an existing team, click the "All teams" tab, find the team and click "request to join"</div>
           </div>
-          <HomeTeamTypeFooter updateStep={self.props.updateStep} selectedteamType={selectedteamType} />
+          <HomeTeamTypeFooter updateStep={self.props.updateStep} selectedteamType={selectedteamType} currentStep={self.props.currentStep} />
         </div>
       </Modal>
     )
