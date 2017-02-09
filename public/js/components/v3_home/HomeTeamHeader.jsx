@@ -183,7 +183,7 @@ var HomeTeamHeader = React.createClass({
               </div>
               <HomeTeamDescription teamName={teamName} teamDescription={teamDescription} showDescriptionBlock={self.showDescriptionBlock} loadDetailTeam={self.props.loadDetailTeam} updateTeamDetails={self.props.updateTeamDetails} />
 
-              <HomeTeamSetup loadDetailTeam={self.props.loadDetailTeam} selectedTeamChanged={self.props.selectedTeamChanged} />
+              <HomeTeamSetup loadDetailTeam={self.props.loadDetailTeam} selectedTeamChanged={self.props.selectedTeamChanged} tabClickedHandler={self.props.tabClickedHandler}/>
             </div>
           </div>
           <div class='home-team-header-hierarchy'>
