@@ -3894,21 +3894,8 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 23%;
   z-index: 2;
   /*width: 95%;*/
-  height: 10%;
-  top: 88%;
-  border-bottom: 0.2em solid #777677;
-}
-
-.pointer-arrow-right-parent {
-  position: absolute;
-  bottom: 9%;
-  left: 45%;
-  height: 2%;
-  width: 2%;
-}
-
-.pointer-arrow-right-parent  polygon{
-  fill: #777677;
+  height: 20%;
+  top: 80%;
 }
 
 .team-parent-child-hierarchy-p > .line2 {
@@ -3917,8 +3904,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   z-index: 2;
   /*width: 95%;*/
   height: 10%;
-  top: 178%;
-  border-bottom: 0.2em solid #777677;
+  top: 160%;
 }
 
 .pointer-arrow-right-current {
@@ -3935,12 +3921,11 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .team-parent-child-hierarchy-p > .line3 {
   position: absolute;
-  left: 30%;
+  left: 25%;
   z-index: 2;
   /*width: 95%;*/
   height: 10%;
-  top: 265%;
-  border-bottom: 0.2em solid #777677;
+  top: 256%;
 }
 
 .pointer-arrow-right-child {
@@ -3957,13 +3942,44 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .optsel-parent {
   position: absolute;  
-  bottom: -12%;
+  bottom: -28%;
   left: 50%;  
   width: 22em;
   float: right;
   margin-top: 1em;
 }
 
+.pc-hier-selparent{
+  font-family: "Helvetica Neue";
+}
+
+.optsel-child {
+  position: absolute;  
+  bottom: -200%;
+  left: 50%;  
+  width: 22em;
+  float: right;
+  margin-top: 1em;
+}
+
+.curteam-block {
+  position: absolute;  
+  bottom: -116%;
+  left: 50%;  
+  height: 2.3em;
+  width: 14.9em;
+  float: right;
+  margin-top: 1em;
+  background-color: #b2d1e2;
+  font-family: "Helvetica Neue";
+  font-size: 1.4em;
+  font-weight: normal;
+  line-height: 1.4em;
+  text-align: left;
+  color: #526566;
+  padding-top: 0.7em;
+  padding-left: 0.9em;
+}
 
 /* END: Parent / Child Team Hierarchy Selection Modal */
 

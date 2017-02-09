@@ -9,24 +9,33 @@ var HomeTeamParentChildSelection = require('./HomeTeamParentChildSelection.jsx')
 var HomeAddTeamHierarchyModal = React.createClass({
   getInitialState: function() {
     return {
-      selparentList: 'none'
+      selparentList: 'none',
+      defaultParentObjects: [
+        {name: 'Parent of my currently selected team', id: 'parentOfSelected'},
+        {name: 'Peer of my currently selected team', id: 'peerOfSelected'}
+      ]
     }
   },
 
   componentDidMount: function() {
     this.setState({selparentList: 'none'});
   },
-
   addTeamHandler: function() {
     var self = this;
   },
 
   render: function () {
     var self = this;
-
     var noteStyle = {
        color: '#4178BE'
     };
+
+   var populateDefaultParentOption = this.state.defaultParentObjects.map(function(item) {
+     console.log ('IN Populate default Parent Option');
+     return ( 
+      <option key={item._id} value={item._id}>{item.name}</option>
+     ) ;
+    });
 
     var populateTeamNames = this.props.teamNames.map(function(item) {
      return (
@@ -46,15 +55,11 @@ var HomeAddTeamHierarchyModal = React.createClass({
 
           <div class='new-team-creation-add-block-content'>
             <div class='new-team-creation-add-block-content-mid'>
-
               <div class='top-note-parent-child-hierarchy'>Please choose the parent team, if any, "above" your team as well as the childrean beneath.</div>
-
-              <HomeTeamParentChildSelection onchangeParentHierchSel={self.props.onchangeParentHierchSel} populateTeamNames={populateTeamNames}/>
-
-
+              <HomeTeamParentChildSelection onchangeParentHierchSel={self.props.onchangeParentHierchSel} populateTeamNames={populateTeamNames} populateDefaultParentOption={populateDefaultParentOption}/>
             </div>
           </div>
-
+          
           <HomeTeamHierarchyFooter updateStep={self.addTeamHandler} />  
 
         </div>   
