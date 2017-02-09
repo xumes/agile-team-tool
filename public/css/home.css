@@ -3846,27 +3846,33 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .team-setup-children {
   border: 1px solid #b3b3b3 !important;
   height: 25% !important;
-  overflow-y: auto;
+  overflow-y: auto !important;
   top: 71% !important;
 }
 
 .team-setup-children > p {
+  cursor: pointer;
   display: inline-block;
   font-size: inherit;
-  height: 33%;
-  line-height: 1.3em;
   overflow: hidden;
-  padding: 0.3em 0.25em 0;
-  text-overflow: ellipsis;
+  padding: 0.3em 0.2em 0;
   white-space: nowrap;
-  width: 87%;
+  width: 95%;
+}
+
+.team-setup-children > p > h {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.2em 0;
+  position: relative;
+  text-overflow: ellipsis;
+  width: 90%;
 }
 
 .team-setup-children-remove-icon {
   display: inline-block;
-  float: right;
-  left: 91%;
-  position: absolute;
-  width: 7%;
+  left: 3%;
+  position: relative;
+  top: -9%;
+  width: 8%;
 }
-
