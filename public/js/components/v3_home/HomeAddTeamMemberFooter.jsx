@@ -7,7 +7,6 @@ var HomeAddTeamMemberFooter = React.createClass({
 
   render: function() {
     var self = this;
-    var type = self.props.selectedteamType;
 
     return (
       <div class='new-team-creation-addteam-member-footer'>

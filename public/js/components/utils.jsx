@@ -170,3 +170,14 @@ module.exports.setSelectOptions = function(elementId, listOption, firstOption, l
   $('#select2-' + elementId + '-container').attr('title', selectedText);
   $('#' + elementId).attr('aria-label',elementId);
 };
+
+module.exports.toTitleCase = function(str) {
+  if (_.isEmpty(str)) return '';
+  var strArray = str.toUpperCase().split(',');
+  if (strArray.length < 3) {
+    return str.toUpperCase();
+  } else {
+    strArray[0] = strArray[0].replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    return strArray.join(', ');
+  }
+}

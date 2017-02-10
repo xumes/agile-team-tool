@@ -6,7 +6,7 @@ var InlineSVG = require('svg-inline-react');
 var HomeTeamTypeRadioOptions = React.createClass({
   componentDidMount: function() {
     $("span[data-widget=tooltip]").tooltip();
-    $(".selparent").select2();
+    $("#selparent-1").select2();
     $("#selparent-1").change(this.props.onchangeParentTeamDropdown);
   },
 

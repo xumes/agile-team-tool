@@ -51,7 +51,7 @@ var HomeAddTeamTypeModal = React.createClass({
           <HomeTeamTypeFooter updateStep={self.props.updateStep} selectedteamType={selectedteamType} currentStep={self.props.currentStep} />
         </div>
       </Modal>
-    )
+    );
   }
 });
 

@@ -4029,12 +4029,13 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .new-team-creation-addteam-member .tbl-members thead .location {
-  width: 3em;
+/*  width: 3em;
   border: 1px solid;
   display: block;
   height: 2em;
   float: left;
   margin-left: 2em;
+  border:1px solid red;*/
 }
 
 .new-team-creation-addteam-member .tbl-members td.h-delete {
@@ -4078,6 +4079,15 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: absolute;
 }
 
+.new-team-creation-addteam-member .tbl-members-data {
+  height: 10em;
+  width: 100%;
+  overflow-y: scroll;
+  position: absolute;
+}
+
+.dataTables_empty {text-align: center; display: block;}
+
 .new-team-creation-addteam-member .heading {
   font-weight: bold;
   border-bottom: 0.1em solid #000;
@@ -4101,6 +4111,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .new-team-creation-addteam-member .ibm-row-form .frmlabel {
   font-size: 1.4em;
+  display: inline;
 }
 
 .new-team-creation-addteam-member .col2 {

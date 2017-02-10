@@ -3,24 +3,100 @@ var api = require('../api.jsx');
 var _ = require('underscore');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
+var utils = require('../utils.jsx');
 var HomeAddTeamMemberFooter = require('./HomeAddTeamMemberFooter.jsx');
+var HomeAddTeamMemberFaces = require('./HomeAddTeamMemberFaces.jsx');
+var HomeAddTeamMemberTable = require('./HomeAddTeamMemberTable.jsx');
 
 var HomeAddTeamMemberModal = React.createClass({
+  getInitialState: function() {
+    return {
+      facesPerson: new Object(),
+      facesPersonFullName: '',
+      teamMembers: [],
+      userMembers: []
+    };
+  },
+
   componentDidMount: function() {
-    jQuery('#csvfile').fileinput();
-    jQuery('#tbl-members-data').scrollable();
+    var self = this;
+    $('#csvfile').fileinput();
+    $('#tbl-members-data').scrollable();
+    self.setState({facesPersonFullName: ''});
   },
 
   componentDidUpdate: function(prevProps, prevState) {
-    jQuery('#csvfile').fileinput();
-    jQuery('#tbl-members-data').scrollable();
+    var self = this;
+    $('#csvfile').fileinput();
+    // $('#tbl-members-data').scrollable();
+  },
+
+  addTeamMember: function() {
+    var self = this;
+    var teamMemberData = [];
+    // var member = {
+    //   name: $('#teamMemberName').val(),
+    //   role:  $('#memberRoleSelectList').val() == 'Other...' ? $('#otherRoleDesc').val() : $('#memberRoleSelectList').val(),
+    //   allocation: $('#memberAllocation').val(),
+    //   userId: self.state.facesPerson.uid ? self.state.facesPerson.uid.toUpperCase() : null,
+    //   email: self.state.facesPerson.email ? self.state.facesPerson.email.toLowerCase() : null,
+    //   location: {
+    //     site: self.state.facesPerson.location ? self.state.facesPerson.location.toLowerCase() : null
+    //   }
+    // }
+
+    var member = {
+      name: self.state.facesPersonFullName,
+      userId: self.state.facesPerson.uid ? self.state.facesPerson.uid.toUpperCase() : null,
+      email: self.state.facesPerson.email ? self.state.facesPerson.email.toLowerCase() : null,
+      location: {
+        site: self.state.facesPerson.location ? self.state.facesPerson.location.toLowerCase() : null
+      }
+    }
+
+    // onced added to the Table, lets clear the txtfield automatically
+    $('#txtTeamMemberName').val('');
+    var teamMembers = self.state.teamMembers;
+    teamMembers.push(member);
+    // remove duplicate user by email
+    _.each(_.uniq(_.pluck(teamMembers, 'email'), utils.toLowerCase), function(value) {
+      teamMemberData.push(_.findWhere(teamMembers, {email: value}));
+    });
+
+    console.log('Added member:', teamMemberData);
+    self.setState({teamMembers: teamMemberData});
+  },
+
+  deleteTeamMember: function(email) {
+    var updatedMember = [];
+    console.log('deleteTeamMember email:', email);
+    console.log('deleteTeamMember before:', this.state.teamMembers);
+
+    updatedMember = _.filter(this.state.teamMembers, function(ls) {
+      if (ls['email'] === email)
+        return false;
+      else
+        return true;
+    });
+
+    this.setState({teamMembers: updatedMember});
+    console.log('deleteTeamMember after:', updatedMember);
+  },
+
+  changeHandlerFacesFullname: function(value) {
+    this.setState({facesPersonFullName: value});
+  },
+
+  updateFacesObj: function(obj) {
+    console.log('HomeAddTeamMemberModal updateFacesObj:', obj);
+    this.setState({facesPerson: obj});
   },
 
   render: function() {
     var self = this;
     var teamObj = this.props.getTeamObj();
-    console.log('HomeAddTeamMemberModal newTeamObj:', teamObj);
-    console.log('HomeAddTeamMemberModal selectedParentTeam:', this.props.selectedParentTeam);
+    // console.log('HomeAddTeamMemberModal newTeamObj:', teamObj);
+    // console.log('HomeAddTeamMemberModal selectedParentTeam:', this.props.selectedParentTeam);
     var addBtnStyle = this.props.loadDetailTeam.access?'block':'none';
     var selectedteamType = this.props.selectedteamType;
     return (
@@ -35,11 +111,7 @@ var HomeAddTeamMemberModal = React.createClass({
                 <div class='new-team-creation-add-block-content-mid2'>
                   <form class="ibm-row-form">
                     <div class='col1'>
-                      <label for='txtmember' class='frmlabel'>Add Team Members manually</label>
-                      <input type='text' name='txtmember' id='txtmember' size='32' placeholder='ex. John Smith or smith@xx.ibm.com' />
-                      <div class='btn-addmember'>
-                        <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
-                      </div>
+                      <HomeAddTeamMemberFaces addTeamMember={self.addTeamMember} updateFacesObj={self.updateFacesObj} changeHandlerFacesFullname={self.changeHandlerFacesFullname} />
                     </div>
 
                     <div class='col2'>
@@ -56,36 +128,7 @@ var HomeAddTeamMemberModal = React.createClass({
                     </span>
 
                     <div class='tbl-results'>
-                      <table class='tbl-members' >
-                        <thead>
-                          <tr>
-                            <td class='h-delete'>&nbsp;</td>
-                            <td class='heading'>Name</td>
-                            <td class='heading'>Email</td>
-                            <td class='heading'>Location</td>
-                          </tr>
-                        </thead>
-                        <tbody class='tbl-members-data' id='tbl-members-data' data-widget="scrollable" data-height="100">
-                            <tr>
-                              <td class='row-delete'><div class='delete-ico'><InlineSVG src={require('../../../img/Att-icons/att-icons_delete-redbg.svg')}></InlineSVG></div>&nbsp;&nbsp;</td>
-                              <td class='name'>JohnDoeUser1</td>
-                              <td class='email'><span class='email'>JohnDoeUser1@ph.ibm.com</span></td>
-                              <td class='location'><span class='location'>CEBU PH</span></td>
-                            </tr>
-                            <tr>
-                              <td class='row-delete'><div class='delete-ico'><InlineSVG src={require('../../../img/Att-icons/att-icons_delete-redbg.svg')}></InlineSVG></div>&nbsp;&nbsp;</td>
-                              <td class='name'>JohnDoeUser2</td>
-                              <td class='email'><span class='email'>JohnDoeUser2@ph.ibm.com</span></td>
-                              <td class='location'><span class='location'>CEBU PH</span></td>
-                            </tr>
-                            <tr>
-                              <td class='row-delete'><div class='delete-ico'><InlineSVG src={require('../../../img/Att-icons/att-icons_delete-redbg.svg')}></InlineSVG></div>&nbsp;&nbsp;</td>
-                              <td class='name'>JohnDoeUser3</td>
-                              <td class='email'><span class='email'>JohnDoeUser3@ph.ibm.com</span></td>
-                              <td class='location'><span class='location'>CEBU PH</span></td>
-                            </tr>                                                        
-                        </tbody>
-                      </table>
+                      <HomeAddTeamMemberTable teamMembers={self.state.teamMembers} deleteTeamMember={self.deleteTeamMember} />
                     </div>
                   </form>
 
