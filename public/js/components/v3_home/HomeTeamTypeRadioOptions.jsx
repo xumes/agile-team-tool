@@ -8,11 +8,20 @@ var HomeTeamTypeRadioOptions = React.createClass({
     $("span[data-widget=tooltip]").tooltip();
     $("#selparent-1").select2();
     $("#selparent-1").change(this.props.onchangeParentTeamDropdown);
+    var selectedParentTeam = this.props.selectedParentTeam;
+    $("#selparent-1").val(selectedParentTeam.value);
+    $('#select2-selparent-1-container').text(selectedParentTeam.text);
   },
 
   render: function() {
-    var selparent1Style = this.props.selparent1Style;
-
+    var selectedteamType = this.props.selectedteamType;
+    var selparent1Style = {'display': 'none'};
+    if (selectedteamType == 'squadteam') {
+      selparent1Style = {'display': 'block'};
+      $('#steam').prop('checked', true).trigger('change');
+    } else {
+      $('#steam').prop('checked', false).trigger('change');
+    }
     return (
       <div class="midcontent">
         <div class="optbox-1 rpad">

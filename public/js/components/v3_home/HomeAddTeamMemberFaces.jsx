@@ -27,28 +27,6 @@ var HomeAddTeamMemberFaces = React.createClass({
       });
   },
 
-  componentDidUpdate: function(prevProps, prevState) {
-    var self = this;
-    FacesTypeAhead.init(
-      $('#txtTeamMemberName'), {
-        key: 'ciodashboard;agileteamtool@us.ibm.com',
-        resultsAlign: 'left',
-        showMoreResults: false,
-        faces: {
-          headerLabel: 'People',
-          onclick: function(person) {
-            self.props.updateFacesObj(person);
-            self.props.changeHandlerFacesFullname(person['name']);
-            return person['name'];
-          }
-        },
-        topsearch: {
-          headerLabel: 'w3 Results',
-          enabled: false
-        }
-      });
-  },
-
   render: function() {
     var self = this;
     return (
@@ -58,6 +36,7 @@ var HomeAddTeamMemberFaces = React.createClass({
         <div class='btn-addmember'>
           <InlineSVG onClick={self.props.addTeamMember} src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
         </div>
+        <span id='txtTeamMemberNameError' class='ibm-item-note'></span>
       </div>
     );
   }

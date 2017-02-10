@@ -12,13 +12,11 @@ var HomeAddTeamMemberTable = React.createClass({
 
   render: function() {
     var self = this;
-    console.log('total:', self.props.teamMembers.length);
     var teamMemberList = self.props.teamMembers.map(function(member) {
       var memberId = member.userId;
       var memberName = member.name;
       var memberEmail = member.email;
       var memberLocation = (member && member.location.site) ? utils.toTitleCase(member.location.site) : '';
-      console.log('memberName:',memberName,' memberId:',memberId);
       return (
         <tr key={memberId}>
           <td class='row-delete'><div class='delete-ico'><InlineSVG onClick={self.props.deleteTeamMember.bind(null, memberEmail)} src={require('../../../img/Att-icons/att-icons_delete-redbg.svg')}></InlineSVG></div>&nbsp;&nbsp;</td>

@@ -24,11 +24,7 @@ var HomeAddTeamTypeModal = React.createClass({
     var self = this;
     var addBtnStyle = this.props.loadDetailTeam.access?'block':'none';
     var selectedteamType = this.props.selectedteamType;
-
-    var selparent1Style = {'display': 'none'};
-    if (selectedteamType == 'squadteam') {
-      selparent1Style = {'display': 'block'};
-    }
+    var selectedParentTeam = this.props.selectedParentTeam;
     var populateTeamNames = this.props.teamNames.map(function(item) {
       return (
         <option key={item._id} value={item._id}>{item.name}</option>
@@ -44,7 +40,7 @@ var HomeAddTeamTypeModal = React.createClass({
           <div class='new-team-creation-add-block-content'>
             <div class='new-team-creation-add-block-content-mid'>
               <h3 class="lblstyle2">I am creating a...</h3>
-              <HomeTeamTypeRadioOptions onchangeTeamtypeRadio={self.props.onchangeTeamtypeRadio} onchangeParentTeamDropdown={self.props.onchangeParentTeamDropdown} selparent1Style={selparent1Style} populateTeamNames={populateTeamNames} selectedteamType={self.state.selectedteamType} />
+              <HomeTeamTypeRadioOptions onchangeTeamtypeRadio={self.props.onchangeTeamtypeRadio} onchangeParentTeamDropdown={self.props.onchangeParentTeamDropdown} populateTeamNames={populateTeamNames} selectedteamType={selectedteamType} selectedParentTeam={selectedParentTeam} />
             </div>
             <div class='footer-note'><strong class="note1">NOTE:</strong>&nbsp;To join an existing team, click the "All teams" tab, find the team and click "request to join"</div>
           </div>

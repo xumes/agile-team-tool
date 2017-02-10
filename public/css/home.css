@@ -4122,6 +4122,16 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 19em;
 }
 
+.new-team-creation-addteam-member .csvblock {
+  margin-top:1.5em;
+}
+
+.new-team-creation-addteam-member #txtTeamMemberNameError {
+  float: left;
+  font-size: 1.3em;
+  line-height: 1em;
+}
+
 .new-team-creation-addteam-member .note2 {
   float: left;
   margin-left: 0.2em;

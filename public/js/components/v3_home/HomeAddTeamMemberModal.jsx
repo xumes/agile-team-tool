@@ -12,9 +12,7 @@ var HomeAddTeamMemberModal = React.createClass({
   getInitialState: function() {
     return {
       facesPerson: new Object(),
-      facesPersonFullName: '',
-      teamMembers: [],
-      userMembers: []
+      facesPersonFullName: ''
     };
   },
 
@@ -28,12 +26,13 @@ var HomeAddTeamMemberModal = React.createClass({
   componentDidUpdate: function(prevProps, prevState) {
     var self = this;
     $('#csvfile').fileinput();
-    // $('#tbl-members-data').scrollable();
+    $('#tbl-members-data').scrollable();
   },
 
   addTeamMember: function() {
     var self = this;
     var teamMemberData = [];
+    var member = $('#txtTeamMemberName').val().trim();
     // var member = {
     //   name: $('#teamMemberName').val(),
     //   role:  $('#memberRoleSelectList').val() == 'Other...' ? $('#otherRoleDesc').val() : $('#memberRoleSelectList').val(),
@@ -44,43 +43,48 @@ var HomeAddTeamMemberModal = React.createClass({
     //     site: self.state.facesPerson.location ? self.state.facesPerson.location.toLowerCase() : null
     //   }
     // }
+    if (member !== '') {
+      $('#txtTeamMemberNameError').removeClass('ibm-alert-link');
+      $('#txtTeamMemberNameError').html('');
+      var member = {
+          name: self.state.facesPersonFullName,
+          userId: self.state.facesPerson.uid ? self.state.facesPerson.uid.toUpperCase() : null,
+          email: self.state.facesPerson.email ? self.state.facesPerson.email.toLowerCase() : null,
+          location: {
+            site: self.state.facesPerson.location ? self.state.facesPerson.location.toLowerCase() : null
+          }
+        }
 
-    var member = {
-      name: self.state.facesPersonFullName,
-      userId: self.state.facesPerson.uid ? self.state.facesPerson.uid.toUpperCase() : null,
-      email: self.state.facesPerson.email ? self.state.facesPerson.email.toLowerCase() : null,
-      location: {
-        site: self.state.facesPerson.location ? self.state.facesPerson.location.toLowerCase() : null
-      }
+        // onced added to the Table, clear the txtfield automatically
+        $('#txtTeamMemberName').val('');
+        var teamMembers = self.props.teamMembers;
+        teamMembers.push(member);
+        // remove duplicate user by email
+        _.each(_.uniq(_.pluck(teamMembers, 'email'), utils.toLowerCase), function(value) {
+          teamMemberData.push(_.findWhere(teamMembers, {email: value}));
+        });
+
+        console.log('Added member:', teamMemberData);
+        self.props.setTeamMember(teamMemberData);
+    } else {
+      $('#txtTeamMemberNameError').addClass('ibm-alert-link');
+      $('#txtTeamMemberNameError').html('Member name is required.');
     }
-
-    // onced added to the Table, lets clear the txtfield automatically
-    $('#txtTeamMemberName').val('');
-    var teamMembers = self.state.teamMembers;
-    teamMembers.push(member);
-    // remove duplicate user by email
-    _.each(_.uniq(_.pluck(teamMembers, 'email'), utils.toLowerCase), function(value) {
-      teamMemberData.push(_.findWhere(teamMembers, {email: value}));
-    });
-
-    console.log('Added member:', teamMemberData);
-    self.setState({teamMembers: teamMemberData});
   },
 
   deleteTeamMember: function(email) {
+    var self = this;
     var updatedMember = [];
-    console.log('deleteTeamMember email:', email);
-    console.log('deleteTeamMember before:', this.state.teamMembers);
-
-    updatedMember = _.filter(this.state.teamMembers, function(ls) {
+    console.log('deleteTeamMember before:', this.props.teamMembers);
+    updatedMember = _.filter(this.props.teamMembers, function(ls) {
       if (ls['email'] === email)
         return false;
       else
         return true;
     });
 
-    this.setState({teamMembers: updatedMember});
     console.log('deleteTeamMember after:', updatedMember);
+    self.props.setTeamMember(updatedMember);
   },
 
   changeHandlerFacesFullname: function(value) {
@@ -88,15 +92,12 @@ var HomeAddTeamMemberModal = React.createClass({
   },
 
   updateFacesObj: function(obj) {
-    console.log('HomeAddTeamMemberModal updateFacesObj:', obj);
     this.setState({facesPerson: obj});
   },
 
   render: function() {
     var self = this;
     var teamObj = this.props.getTeamObj();
-    // console.log('HomeAddTeamMemberModal newTeamObj:', teamObj);
-    // console.log('HomeAddTeamMemberModal selectedParentTeam:', this.props.selectedParentTeam);
     var addBtnStyle = this.props.loadDetailTeam.access?'block':'none';
     var selectedteamType = this.props.selectedteamType;
     return (
@@ -122,19 +123,21 @@ var HomeAddTeamMemberModal = React.createClass({
                     </div>
 
                     <div class='clearboth'></div>
-                    <label for="csvfile" class='frmlabel'>Upload a CSV file:</label>
-                    <span>
-                      <input id="csvfile" type="file" data-widget="fileinput" data-multiple="false" />
-                    </span>
+                    <div class='csvblock'>
+                      <label for="csvfile" class='frmlabel'>Upload a CSV file:</label>
+                      <span>
+                        <input id="csvfile" type="file" data-widget="fileinput" data-multiple="false" />
+                      </span>
+                    </div>
 
                     <div class='tbl-results'>
-                      <HomeAddTeamMemberTable teamMembers={self.state.teamMembers} deleteTeamMember={self.deleteTeamMember} />
+                      <HomeAddTeamMemberTable teamMembers={self.props.teamMembers} deleteTeamMember={self.deleteTeamMember} />
                     </div>
                   </form>
 
                 </div>
               </div>
-              <HomeAddTeamMemberFooter updateStep={self.props.updateStep} currentStep={self.props.currentStep} selectedteamType={selectedteamType} />
+              <HomeAddTeamMemberFooter updateStep={self.props.updateStep} currentStep={self.props.currentStep} selectedteamType={selectedteamType} updateTeam={self.props.updateTeam} />
             </div>
         </div>
       </Modal>
