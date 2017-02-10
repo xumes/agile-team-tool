@@ -88,6 +88,16 @@ module.exports = function(app, includes) {
     }
   };
 
+  createUser = function(req, res) {
+    Users.create(req.body)
+    .then(function(result) {
+      res.status(200).send(result);
+    })
+    .catch(function(err) {
+      res.status(404).send(err);
+    });
+  };
+
   // //TODO: Refactor this and store in the database
   // getRoles = function(req, res) {
   //   var roles = [{
@@ -134,4 +144,5 @@ module.exports = function(app, includes) {
 
   app.post('/api/users/info', [includes.middleware.auth.requireLogin], getUsersInfo);
   app.get('/api/users/activeInfo', [includes.middleware.auth.requireLogin], getActiveUserInfo);
+  app.post('/api/users/create', [includes.middleware.auth.requireLogin], createUser);
 };

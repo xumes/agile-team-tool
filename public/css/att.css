@@ -397,10 +397,10 @@ div.ibm-rule {
   margin: 7px 0 5px;
 }
 
-p , input, textarea, span, select, table,.ibm-data-table caption {
+/*p , input, textarea, span, select, table,.ibm-data-table caption {
   font-size: 10.5pt;
   padding: 0 0 5px;
-}
+}*/
 
 textarea[disabled] {
   background-color: #ececec;
@@ -426,7 +426,7 @@ textarea[disabled] {
   padding-left: 20px !important;
 }
 
-.agile-section-title a::before, 
+.agile-section-title a::before,
 .squad-sections .ibm-show-hide h2 a::before,
 .agile-assessment a.ibm-twisty-trigger::before,
 .agile-maturity .agile-summary a::before {
@@ -555,16 +555,16 @@ textarea[disabled] {
   cursor: pointer;
 }
 
-.agile-team-parent-selected {
+#teamTree .agile-team-parent-selected {
   background-color: #c0e6ff;
 }
 
-.agile-team-selected {
+#teamTree .agile-team-selected {
   font-weight: bold;
   background-color: #5aaafa;
 }
 
-.agile-team-squad, #teamTree li.agile-team-squad a::after, #teamTree a.agile-team-squad::after,  #teamTable a.agile-team-squad::after, #searchTree a.agile-team-squad::after{
+#teamTree .agile-team-squad, #teamTree li.agile-team-squad a::after, #teamTree a.agile-team-squad::after,  #teamTable a.agile-team-squad::after, #searchTree a.agile-team-squad::after{
   content: " * ";
   color: red;
 }
@@ -1191,12 +1191,10 @@ li #allTeams {
 /*blockquote, q {
   quotes: none;
 }
-
 blockquote:before, blockquote:after, q:before, q:after {
   content: '';
   content: none;
 }
-
 table {
   border-collapse: collapse;
   border-spacing: 0;
@@ -1245,7 +1243,6 @@ img {
 /*p {
   padding: 0 0 15px 0;
 }
-
 section:after {
   content: ".";
   display: block;
@@ -1255,15 +1252,12 @@ section:after {
   clear: both;
   visibility: hidden;
 }
-
 section {
   display: inline-block;
 }
-
 * html section {
   height: 1%;
 }
-
 section {
   display: block;
 }*/
@@ -1415,10 +1409,10 @@ header nav ul li a:hover {
   opacity: 0.75;
 }
 
-input[type='text'] {
+/*input[type='text'] {
   line-height: 2.5rem !important;
   height: 2.5rem !important;
-}
+}*/
 
 .ibm-alternate {
   border-color: #e0e0e0 !important;

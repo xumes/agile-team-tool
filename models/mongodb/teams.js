@@ -65,12 +65,16 @@ var LinkSchema = new Schema({
   linkLabel: {
     type: String,
     required: [true, 'URL link label is required.'],
-    validate: validators.matches({message: 'URL link label is required.'}, /^(?!.*(Select label|Other...))/ig)
+    validate: validators.matches({message: 'URL link label is required.'}, /^(?!.*(Select label|-1|Other...))/ig)
   },
   linkUrl: {
     type: String,
     required: [true, 'URL is required.'],
     validate: validators.isURL({message: errURLInvalidMsg})
+  },
+  type: {
+    type: String,
+    default: null
   }
 },{_id : false});
 
@@ -353,7 +357,8 @@ module.exports.getRootTeams = function(uid) {
                 'path': team.path,
                 'pathId': team.pathId,
                 'hasChild': null,
-                'docStatus': team.docStatus
+                'docStatus': team.docStatus,
+                'description': (!_.isEmpty(team.description)) ? team.description : null
               };
               if (uniquePaths.indexOf(','+team.pathId+',') >= 0) {
                 newTeam.hasChild = true;
@@ -642,7 +647,7 @@ module.exports.getChildrenByPathId = function(pathId) {
               'pathId': team.pathId,
               'hasChild': null,
               'description': team.description,
-              'docStatus': team.docStatus
+              'docStatus': team.docStatus,
             };
             if (uniquePaths.indexOf(','+team.pathId+',') >= 0) {
               newTeam.hasChild = true;
@@ -1318,10 +1323,12 @@ module.exports.modifyImportantLinks = function(teamId, user, links) {
         if (!pattern.test(url)) {
           url = 'http://' + url;
         }
+        obj.type = data.type;
         obj.linkLabel = data.linkLabel;
         obj.linkUrl = url;
         tmpLinks.push(obj);
       });
+      console.log('modifyImportantLinks tmpLinks:',tmpLinks);
       var updateTeam = {
         'links': tmpLinks,
         'updatedByUserId': userId,
@@ -1646,6 +1653,66 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, user) {
     }
   });
 };
+
+// module.exports.getDesigner = function() {
+//   return new Promise(function(resolve, reject){
+//     var designer = [];
+//     // var dlist = ['Designer', 'UX Designer', 'UX Visual Designer', 'FE Developer', 'Lead designer'];
+//     // var dlist = ['Developer'];
+//     // var regex = new RegExp(',agileandtalentdomain-1753,');
+//     // Team.find({'path': regex, 'docStatus': {$ne:'delete'}}).exec()
+//     //   .then(function(teams){
+//     //     _.each(teams, function(team){
+//     //       _.each(team.members, function(member){
+//     //         if (dlist.indexOf(member.role) >= 0) {
+//     //           var pd = {
+//     //             'name': member.name,
+//     //             'id': member.userId,
+//     //             'email': member.email,
+//     //             'role': member.role
+//     //           };
+//     //           var dup = false;
+//     //           _.find(designer, function(d){
+//     //             if (d.id == pd.id) {
+//     //               dup = true;
+//     //               return;
+//     //             }
+//     //           });
+//     //           if (!dup) {
+//     //             designer.push(pd);
+//     //           }
+//     //         }
+//     //       });
+//     //     });
+//     //     resolve(designer);
+//     //   })
+//     //   .catch(function(err){
+//     //     reject(err);
+//     //   });
+//     var allPath = [];
+//     Team.find({'docStatus': {$ne:'delete'}}).exec()
+//       .then(function(teams){
+//         var pps = [];
+//         allPath = _.uniq(_.pluck(teams, 'pathId'));
+//         _.each(teams, function(team){
+//           if (team.path != null) {
+//             var parray = (team.path.substring(1, team.path.length-1)).split(',');
+//             if (parray.length > 0) {
+//               _.each(parray, function(a){
+//                 if (allPath.indexOf(a) < 0) {
+//                   pps.push(a);
+//                 }
+//               });
+//             }
+//           }
+//         });
+//         resolve(pps);
+//       })
+//       .catch(function(err){
+//         reject(err);
+//       });
+//   });
+// };
 
 module.exports.removeAssociation = function(childTeamId, user) {
   return new Promise(function(resolve, reject){

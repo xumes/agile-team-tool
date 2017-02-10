@@ -1,4 +1,5 @@
 var Promise = require('bluebird');
+var _ = require('underscore');
 Promise.config({
   warnings: false
 });
@@ -12,6 +13,20 @@ function clearRequests() {
     requests[i].abort();
   requests.length = 0;
 }
+
+module.exports.getFaceImage = function(uid) {
+  return new Promise(function(resolve, reject){
+    var url = 'http://dpev027.innovate.ibm.com:10000/image/' + encodeURIComponent(uid.toUpperCase());
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
 
 module.exports.getSystemStatus = function(data) {
   return new Promise(function(resolve, reject){
@@ -367,13 +382,13 @@ module.exports.searchTeamIteration = function(teamId, startDate, enddate, limit,
       url += '&startdate=' + startDate;
     }
     if (!_.isEmpty(enddate)) {
-      url += '&enddate=' + enddate
+      url += '&enddate=' + enddate;
     }
     if (!isNaN(limit)) {
-      url += '&limit=' + limit
+      url += '&limit=' + limit;
     }
     if (!isNaN(status)) {
-      url += '&status=' + status
+      url += '&status=' + status;
     }
     var req = $.ajax({
       type: 'GET',
@@ -438,6 +453,215 @@ module.exports.getTeamAssessments = function(teamId, assessId) {
     var req = $.ajax({
       type: 'GET',
       url: url,
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.modifyTeamMembers = function(teamId, newMembers) {
+  return new Promise(function(resolve, reject){
+    var data = {
+      '_id' : teamId,
+      'members': newMembers
+    };
+    var url = '/api/teams/members';
+    var req = $.ajax({
+      type: 'PUT',
+      contentType: 'application/json',
+      data: JSON.stringify(data),
+      url: url,
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.fetchTeamMemberRoles = function () {
+  return new Promise(function(resolve, reject) {
+    var url = '/api/teams/roles';
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.createUser = function(newUser) {
+  return new Promise(function(resolve, reject) {
+    var url = '/api/users/create';
+    var req = $.ajax({
+      type: 'POST',
+      url: url,
+      contentType: 'application/json',
+      data: JSON.stringify(newUser)
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.deleteTeam = function(data) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/teams';
+    var req = $.ajax({
+      type: 'DELETE',
+      contentType: 'application/json',
+      url: url,
+      data: data
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.getSelectableParents = function(teamId) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/teams/lookup/parents/' + encodeURIComponent(teamId);
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      return resolve(data);
+    }).fail(function(err){
+      return reject(err);
+    });
+  });
+};
+
+module.exports.putTeam = function(data) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/teams';
+    var req = $.ajax({
+      type: 'PUT',
+      contentType: 'application/json',
+      url: url,
+      data: data
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.postTeam = function(data) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/teams';
+    var req = $.ajax({
+      type: 'POST',
+      contentType: 'application/json',
+      url: url,
+      data: data
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.associateTeam = function(parentTeamId, childTeamId) {
+  return new Promise(function(resolve, reject) {
+    var requestData = {
+      'parentTeamId': parentTeamId,
+      'childTeamId': childTeamId
+    };
+    var url = '/api/teams/associates';
+    var req = $.ajax({
+      type: 'PUT',
+      contentType: 'application/json',
+      data: JSON.stringify(requestData),
+      url: url
+    }).done(function(data){
+      return resolve(data);
+    }).fail(function(err){
+      return reject(err);
+    });
+  });
+};
+
+module.exports.removeAssociation = function(childTeamId) {
+  return new Promise(function(resolve, reject) {
+    var requestData = {
+      'childTeamId': childTeamId
+    };
+    var url = '/api/teams/removeassociation';
+    var req = $.ajax({
+      type: 'PUT',
+      contentType: 'application/json',
+      data: JSON.stringify(requestData),
+      url: url
+    }).done(function(data){
+      return resolve(data);
+    }).fail(function(err){
+      return reject(err);
+    });
+  });
+};
+
+module.exports.getSelectableChildren = function(teamId) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/teams/lookup/children/' + encodeURIComponent(teamId);
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      return resolve(data);
+    }).fail(function(err){
+      return reject(err);
+    });
+  });
+};
+
+module.exports.fetchTeamLinkLabels = function() {
+  return new Promise(function(resolve, reject) {
+    $.get('/api/teams/linklabels')
+      .complete(function(data) {
+        resolve(data);
+      })
+      .fail(function(err) {
+        reject(new Error('Unable to fetch link labels'));
+      });
+  });
+};
+
+module.exports.deleteLink = function(data) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/teams/links';
+    var req = $.ajax({
+      type: 'DELETE',
+      url: url,
+      contentType: 'application/json',
+      data: JSON.stringify(data)
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.updateLink = function(data) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/teams/links';
+    var req = $.ajax({
+      type: 'PUT',
+      url: url,
+      contentType: 'application/json',
+      data: JSON.stringify(data)
     }).done(function(data){
       resolve(data);
     }).fail(function(err){
