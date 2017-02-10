@@ -47,6 +47,12 @@ var MemberSchema = new Schema({
     type: String,
     default: null
     //required: [true, 'Member email is required.'] // allow for BP profiles that does not have email
+  },
+  workTime: {
+    type: Number,
+    default: 100,
+    min: [0, 'Work time must be between 0 and 100.'],
+    max: [100, 'Work time must be between 0 and 100.']
   }
 },{_id : false});
 
@@ -988,7 +994,8 @@ module.exports.modifyTeamMembers = function(teamId, user, newMembers) { //TODO t
         allocation: member.allocation,
         role: member.role,
         userId: member.userId,
-        email: member.email
+        email: member.email,
+        workTime: member.workTime
       });
     });
     for (var i=0; i<updatedMembers.length; i++) {
