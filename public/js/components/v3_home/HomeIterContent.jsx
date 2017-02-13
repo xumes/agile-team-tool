@@ -11,7 +11,7 @@ var iterData = {
   memberFte : '',
   committedStories : '',
   deliveredStories : '',
-  commitedStoryPoints : '',
+  committedStoryPoints : '',
   storyPointsDelivered : '',
   deployments : '',
   defectsStartBal : '',
@@ -205,6 +205,9 @@ var HomeIterContent = React.createClass({
       case 'memberChanged':
         selectedIter['memberChanged'] = $('#memberChanged').val();
         break;
+      default:
+        selectedIter[id] = $('#'+id).html();
+        break;
     }
     this.props.updateTeamIteration(selectedIter);
   },
@@ -290,7 +293,7 @@ var HomeIterContent = React.createClass({
         iterData.personDaysAvailable = (defIter.personDaysAvailable == null) ? '' : defIter.personDaysAvailable;
         iterData.committedStories = (defIter.committedStories == null) ? '' : defIter.committedStories;
         iterData.deliveredStories = (defIter.deliveredStories == null) ? '' : defIter.deliveredStories;
-        iterData.commitedStoryPoints = (defIter.commitedStoryPoints == null) ? '' : defIter.commitedStoryPoints;
+        iterData.committedStoryPoints = (defIter.committedStoryPoints == null) ? '' : defIter.committedStoryPoints;
         iterData.storyPointsDelivered = (defIter.storyPointsDelivered == null) ? '' : defIter.storyPointsDelivered;
         iterData.deployments = (defIter.deployments == null) ? '' : defIter.deployments;
         iterData.defectsStartBal = (defIter.defectsStartBal == null) ? '' : defIter.defectsStartBal;
@@ -420,11 +423,11 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Story points committed</div>
-                <div id='commitedStoryPoints' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.commitedStoryPoints}</div>
-                  <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'commitedStoryPoints')}>
+                <div id='committedStoryPoints' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.committedStoryPoints}</div>
+                  <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'committedStoryPoints')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                   </div>
-                  <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'commitedStoryPoints')}>
+                  <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'committedStoryPoints')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                   </div>
               </div>

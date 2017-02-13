@@ -6,6 +6,7 @@ var HomeContent = require('./HomeContent.jsx');
 var HomeIterContent = require('./HomeIterContent.jsx');
 var InlineSVG = require('svg-inline-react');
 var update = require('immutability-helper');
+var utils = require('../utils.jsx');
 var windowSize = {
   'height': 768,
   'width': 1440,
@@ -293,19 +294,22 @@ var HomePage = React.createClass({
     var self = this;
     api.updateIteration(iteration)
       .then(function(result){
+        return api.getIterationInfo(iteration._id);
+      })
+      .then(function(result){
         var teamDetail = JSON.parse(JSON.stringify(self.state.loadDetailTeam));
         _.find(teamDetail.iterations, function(data, index){
           if (data._id === iteration._id){
-            teamDetail.iterations[index] = iteration;
+            teamDetail.iterations[index] = result;
             return data;
           }
         })
         self.setState({'loadDetailTeam': teamDetail});
       })
       .catch(function(err){
-        console.log(err);
+        utils.handleIterationErrors(err);
       });
-  },
+  },  
 
   render: function() {
     var pageStyle = {

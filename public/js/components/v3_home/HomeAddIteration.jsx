@@ -6,6 +6,7 @@ var moment = require('moment');
 var business = require('moment-business');
 var DatePicker = require('react-datepicker');
 var CustomDate = require('./CustomDatePicker.jsx');
+var utils = require('../utils.jsx');
 
 var initData = {
   'startDate':null,
@@ -75,8 +76,8 @@ var HomeAddIteration = React.createClass({
     var selectedStartDate = moment.utc(date);
     var selectedEndDate = moment.utc(this.state.iterationEndDate);
     if (selectedStartDate <= selectedEndDate) {
-      this.clearFieldErrorHighlight('iterationStartDate');
-      this.clearFieldErrorHighlight('iterationEndDate');
+      utils.clearFieldErrorHighlight('startDate');
+      utils.clearFieldErrorHighlight('endDate');
     }
 
     selectedEndDate = selectedStartDate.add(13,'day');
@@ -87,8 +88,8 @@ var HomeAddIteration = React.createClass({
     var selectedStartDate = moment.utc(this.state.iterationStartDate);
     var selectedEndDate = moment.utc(date);
     if (selectedEndDate >= selectedStartDate) {
-      this.clearFieldErrorHighlight('iterationStartDate');
-      this.clearFieldErrorHighlight('iterationEndDate');
+      utils.clearFieldErrorHighlight('startDate');
+      utils.clearFieldErrorHighlight('endDate');
     }
     this.setState({iterationEndDate: selectedEndDate});
   },
@@ -108,93 +109,6 @@ var HomeAddIteration = React.createClass({
         var resetData = _.clone(initData);
         this.setState({iteration:resetData, enableFields: false, readOnlyAccess: false, addBtnDisable: true});
       }
-    }
-  },
-
-  showMessagePopup: function(message) {
-    alert(message);
-  },
-
-  handleIterationErrors:function (errorResponse, operation) {
-    var errorlist = '';
-    var response = errorResponse.responseJSON;
-
-    if (response && response.error) {
-      var errors = response.error.errors;
-      if (errors){
-        // Return iteration errors as String
-        errorlist = this.getIterationErrorPopup(errors);
-        if (!_.isEmpty(errorlist)) {
-          this.showMessagePopup(errorlist);
-          if (operation === 'add') {
-            this.setState({addBtnDisable: false});
-          } else if (operation === 'update') {
-            this.setState({updateBtnDisable: false});
-          }
-        }
-      }
-      else {
-        this.showMessagePopup(response.error);
-      }
-    }
-},
-
-getIterationErrorPopup: function(errors) {
-  var errorLists = '';
-  // Model fields/Form element field
-  var fields = {
-    'name': 'iterationName',
-    'startDate': 'iterationStartDate',
-    'endDate': 'iterationEndDate'
-  };
-
-  Object.keys(fields).forEach(function(mdlField, index) {
-    var frmElement = fields[mdlField];
-    if (errors[mdlField]) {
-      if (frmElement) {
-        setFieldErrorHighlight(frmElement);
-      }
-      errorLists = errorLists + errors[mdlField].message + '\n';
-    } else {
-      if (frmElement) {
-        this.clearFieldErrorHighlight(frmElement);
-      }
-    }
-  });
-    return errorLists;
-  },
-
-  setFieldErrorHighlight: function (id) {
-    if ($('#' + value).is('select')) {
-      $($('#select2-' + id + '-container').parent()).css('border-color', invalidBorder);
-      $($('#select2-' + id + '-container').parent()).css('background', invalidBackground);
-    }
-    else {
-      $('#' + id).css('border-color', invalidBorder);
-      $('#' + id).css('background', invalidBackground);
-    }
-  },
-
-  clearHighlightedIterErrors: function () {
-    var fields = [
-      'iterationName',
-      'iterationStartDate',
-      'iterationEndDate'
-    ];
-
-    for (j = 0; j < fields.length; j++) {
-      this.clearFieldErrorHighlight(fields[j]);
-    }
-  },
-
-  clearFieldErrorHighlight: function (id) {
-    if ($('#' + id).is('select')) {
-      $($('#select2-' + id + '-container').parent()).css('border-color', '');
-      $($('#select2-' + id + '-container').parent()).css('background', '');
-    }
-    else {
-      $('#' + id).css('border-color', '');
-      $('#' + id).css('background', '');
     }
   },
 
@@ -286,7 +200,7 @@ getIterationErrorPopup: function(errors) {
       if (data != undefined) {
         var jsonData = data;
         if (jsonData.type != undefined && jsonData.type.toLowerCase() != 'squad') {
-          self.showMessagePopup('Team information has been changed to non squad.  Iteration information cannot be entered for non squad teams.');
+          alert('Team information has been changed to non squad.  Iteration information cannot be entered for non squad teams.');
           self.updateIterationInfo('clearIteration');
           return;
         }
@@ -306,13 +220,13 @@ getIterationErrorPopup: function(errors) {
           data['personDaysAvailable'] = availability;
           api.addIteration(data)
             .then(function(result) {
-              self.clearHighlightedIterErrors();
-              self.showMessagePopup('You have successfully added Iteration information.');
+              utils.clearHighlightedIterErrors();
+              alert('You have successfully added Iteration information.');
               self.props.iterListHandler();
               self.close();            
             })
             .catch(function(err){
-              self.handleIterationErrors(err, 'add');
+              utils.handleIterationErrors(err);
             });
       }
     });
@@ -355,7 +269,7 @@ getIterationErrorPopup: function(errors) {
             <div class='home-iter-add-content'>
               <div className='home-iter-main'>
                 <label className='home-iter-main-section'>Iteration Name</label>
-                <input className='home-iter-text-field' id='iterationName' value={this.state.name} onChange={this.nameChange} type='text'/>
+                <input className='home-iter-text-field' id='name' value={this.state.name} onChange={this.nameChange} type='text'/>
               </div>
               <div className='home-iter-main'>
                 <p className='home-iter-main-section' style={{'lineHeight': '0%'}}>Copy/Import From Last Iteration </p>
@@ -403,9 +317,9 @@ getIterationErrorPopup: function(errors) {
               <div className='home-iter-main' style={{'width':'100%'}}>
                 <p className='home-iter-main-section' style={{'lineHeight': '0%'}}>Iteration Dates</p>
                 <div style={{'display':'flex', 'marginTop': '2%'}} id='iterationDates'>
-                  <DatePicker onChange={this.startDateChange} selected={this.state.iterationStartDate} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='iterationStartDate' />} disabled={false} ref='iterationStartDate' fixedHeight/>
+                  <DatePicker onChange={this.startDateChange} selected={this.state.iterationStartDate} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='startDate' />} disabled={false} ref='iterationStartDate' fixedHeight/>
                   <p style={{'marginLeft':'5%', 'marginRight':'5%'}} className='home-iter-date-range'> to </p>
-                  <DatePicker onChange={this.endDateChange} selected={this.state.iterationEndDate} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='iterationEndDate' />} disabled={false} ref='iterationEndDate' fixedHeight/>
+                  <DatePicker onChange={this.endDateChange} selected={this.state.iterationEndDate} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='endDate' />} disabled={false} ref='iterationEndDate' fixedHeight/>
                 </div>
               </div>
                 
