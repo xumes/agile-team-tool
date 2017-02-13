@@ -26,10 +26,16 @@ var HomeTeamDescription = React.createClass({
   updatePosition: function() {
     var self = this;
     setTimeout(function(){
-      if (self.props.teamName.length > 35) {
-        var divLength = $('#homeHeaderDesBtn').position().left/$('.home-team-header').width() * 100 + 10 + '%';
+      // if (self.props.teamName.length > 35) {
+      //   var divLength = $('#homeHeaderDesBtn').position().left/$('.home-team-header').width() * 100 + 10 + '%';
+      // } else {
+      //   divLength = $('#homeHeaderDesBtn').position().left/$('.home-team-header').width() * 100 + 6 + '%';
+      // }
+      var headerLength = $('.home-team-header').width() * 0.9;
+      if (self.props.loadDetailTeam.team.type != 'squad') {
+        var divLength = $('#teamName').width()/headerLength * 100 + 5 + '%';
       } else {
-        divLength = $('#homeHeaderDesBtn').position().left/$('.home-team-header').width() * 100 + 6 + '%';
+        divLength = ($('#teamName').width() + $('.home-team-header-img-div').width())/headerLength * 100 + 5 + '%';
       }
       $('.home-team-header-description-div').css('left', divLength);
     },1000);
@@ -103,7 +109,9 @@ var HomeTeamDescription = React.createClass({
         </div>
         <div class='home-team-header-description-title'>
           <h>Team Description</h>
-          <h1 onClick={self.props.showDescriptionBlock}>X</h1>
+          <div onClick={self.props.showDescriptionBlock}>
+            <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
+          </div>
         </div>
         <div class='home-team-header-description-content'>
           <div>

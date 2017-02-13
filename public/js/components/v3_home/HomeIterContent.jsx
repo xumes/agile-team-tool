@@ -49,7 +49,7 @@ var HomeIterContent = React.createClass({
       $('.home-iter-content-point').addClass('home-iter-content-point-hover');
       $('.home-iter-content-point home-iter-member-change').on('click', function() {
         setTimeout(function() {
-          document.execCommand('selectAll', false, null)
+          document.execCommand('selectAll', false, null);
         }, 0);
       });
       $('.home-iter-content-point').keypress(function(e){
