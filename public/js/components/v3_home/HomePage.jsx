@@ -46,6 +46,11 @@ var HomePage = React.createClass({
 
   handleResize: function() {
     var self = this;
+    setTimeout(function() {
+      var height = $('.home-team-header-members-div').height()*0.9;
+      $('.home-header-image').css({'width': height+'px', 'height': height+'px'});
+      $('.home-team-header-member-image').css({'width': height*0.9+'px', 'height': height*0.9+'px'});
+    }, 0);
     if (window.innerWidth >= 1280 && window.innerWidth < 1900) {
       $('html').css('width', '100vw');
       $('html').css('height', '56.25vw');
