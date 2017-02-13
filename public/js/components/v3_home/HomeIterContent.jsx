@@ -156,7 +156,7 @@ var HomeIterContent = React.createClass({
       availability += (allocation * avgWorkWeek * maxWorkDays);
     });
 
-    return availability;
+    return availability.toFixed(1);
   },
 
   isWithinIteration: function(starDate,endDate){
@@ -218,7 +218,7 @@ var HomeIterContent = React.createClass({
         selectedIter.teamAvailability = this.getOptimumAvailability(maxWorkDays);
       }
       selectedIter.personDaysUnavailable = $('#personDaysUnavailable').text();
-      selectedIter.personDaysAvailable = selectedIter.teamAvailability - selectedIter.personDaysUnavailable;
+      selectedIter.personDaysAvailable = (selectedIter.teamAvailability - selectedIter.personDaysUnavailable).toFixed(1);
     }
     return selectedIter;
   },
