@@ -36,6 +36,7 @@
     "lucene-query-generator": "^0.2.0",
     "mocha": "^2.5.3",
     "moment": "^2.14.1",
+    "moment-business": "^3.0.1",
     "moment-timezone": "^0.5.5",
     "mongodb": "2.2.12",
     "mongoose": "4.7.2",

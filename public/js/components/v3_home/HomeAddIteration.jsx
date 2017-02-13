@@ -3,6 +3,7 @@ var api = require('../api.jsx');
 var InlineSVG = require('svg-inline-react');
 var ReactModal = require('react-modal');
 var moment = require('moment');
+var business = require('moment-business');
 var DatePicker = require('react-datepicker');
 var CustomDate = require('./CustomDatePicker.jsx');
 
@@ -16,7 +17,10 @@ var initData = {
   'storyPointsDelivered':'',
   'committedStoryPoints':'',
   'deliveredStories':'',
-  'committedStories':''
+  'committedStories':'',
+  'teamAvailability':'',
+  'personDaysUnavailable':'',
+  'personDaysAvailable':''
 };
 
 var invalidBorder = '#f00';
@@ -153,7 +157,7 @@ getIterationErrorPopup: function(errors) {
       errorLists = errorLists + errors[mdlField].message + '\n';
     } else {
       if (frmElement) {
-        clearFieldErrorHighlight(frmElement);
+        this.clearFieldErrorHighlight(frmElement);
       }
     }
   });
@@ -246,6 +250,35 @@ getIterationErrorPopup: function(errors) {
     }
   },
 
+  getTeamMembers : function(team){
+    var teamMembers = [];
+    if (!_.isEmpty(team) && team.members) {
+      _.each(team.members, function(member) {
+        var temp = _.find(teamMembers, function(item){
+          if( item.userId === member.userId)
+            return item;
+        });
+        if (temp === undefined) {
+          teamMembers.push(member);
+        }
+      });
+    }
+    return teamMembers;
+  },
+
+  getOptimumAvailability: function(maxWorkDays){
+    var team = this.props.loadDetailTeam.team;
+    var members = this.getTeamMembers(team);
+    var availability = 0;
+    var self = this;
+    _.each(members, function(member){
+      var allocation =  member.allocation/100;
+      var avgWorkWeek = self.numericValue(member.workTime)/100;
+      availability += (allocation * avgWorkWeek * maxWorkDays);
+    });
+    return availability;
+  },
+
   processIteration: function () {
     var self =this;
     api.loadTeam(self.props.loadDetailTeam.team._id)
@@ -266,6 +299,11 @@ getIterationErrorPopup: function(errors) {
           data['name'] = self.state.name;
           data['startDate'] = new Date(self.state.iterationStartDate);
           data['endDate'] = new Date(self.state.iterationEndDate);
+          var maxWorkDays = business.weekDays(moment(self.state.iterationStartDate),moment(self.state.iterationEndDate));
+          var availability = self.getOptimumAvailability(maxWorkDays);
+          data['teamAvailability'] = availability;
+          data['personDaysUnavailable'] = '';
+          data['personDaysAvailable'] = availability;
           api.addIteration(data)
             .then(function(result) {
               self.clearHighlightedIterErrors();

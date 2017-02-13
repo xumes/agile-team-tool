@@ -3,6 +3,7 @@ var api = require('../api.jsx');
 var InlineSVG = require('svg-inline-react');
 var _ = require('underscore');
 var moment = require('moment');
+var business = require('moment-business');
 var HomeAddIteration = require('./HomeAddIteration.jsx');
 var selectedIter = new Object();
 var iterData = {
@@ -27,7 +28,8 @@ var iterData = {
 var HomeIterContent = React.createClass({
   getInitialState: function() {
     return {
-      createIteration: false
+      createIteration: false,
+      showMemberDropdown: false
     }
   },
   componentDidUpdate: function() {
@@ -45,7 +47,7 @@ var HomeIterContent = React.createClass({
     });
     if (self.props.loadDetailTeam.access) {
       $('.home-iter-content-point').addClass('home-iter-content-point-hover');
-      $('.home-iter-content-point').on('click', function() {
+      $('.home-iter-content-point home-iter-member-change').on('click', function() {
         setTimeout(function() {
           document.execCommand('selectAll', false, null)
         }, 0);
@@ -84,17 +86,32 @@ var HomeIterContent = React.createClass({
     $('#'+e.target.id).css('background-color', '#FFFFFF').css('border', '0.1em solid #4178BE');
     $('#'+e.target.id).prop('contenteditable', 'true');
   },
+  memberChangeClickHandler: function(e) {
+    var self = this;
+    _.each($('.home-iter-content-point'), function(blk){
+      if (blk.id != '') {
+        self.cancelChange(blk.id);
+      }
+    });
+    $('#'+e.target.id).parent().children('.home-iter-content-btn').css('display','inline-block')
+    this.setState({showMemberDropdown:true});
+  },
   saveBtnClickHandler: function(id) {
     this.saveIter(id);
+    if (!this.showMemberDropdown)
+      this.setState({showMemberDropdown:false});
   },
   cancelBtnClickHandler: function(id) {
     this.cancelChange(id);
+    if (!this.showMemberDropdown)
+      this.setState({showMemberDropdown:false});
   },
   saveIter: function(id) {
     iterData[id] = $('#'+id).html()
     $('#'+id).parent().children('.home-iter-content-btn').css('display','none')
     $('#'+id).css('background-color', '').css('border', '');
     $('#'+id).prop('contenteditable', 'false');
+    this.recalculate(id);
   },
   cancelChange: function(id) {
     $('#'+id).parent().children('.home-iter-content-btn').css('display','none')
@@ -110,6 +127,128 @@ var HomeIterContent = React.createClass({
 
   closeIteration: function(){
     this.setState({createIteration: false});
+  },
+
+  getTeamMembers : function(team){
+    var teamMembers = [];
+    if (!_.isEmpty(team) && team.members) {
+      _.each(team.members, function(member) {
+        var temp = _.find(teamMembers, function(item){
+          if( item.userId === member.userId)
+            return item;
+        });
+        if (temp === undefined) {
+          teamMembers.push(member);
+        }
+      });
+    }
+    return teamMembers;
+  },
+
+  getOptimumAvailability: function(maxWorkDays){
+    var team = this.props.loadDetailTeam.team;
+    var members = this.getTeamMembers(team);
+    var availability = 0;
+    var self = this;
+    _.each(members, function(member){
+      var allocation =  member.allocation/100;
+      var avgWorkWeek = self.numericValue(member.workTime)/100;
+      availability += (allocation * avgWorkWeek * maxWorkDays);
+    });
+
+    return availability;
+  },
+
+  isWithinIteration: function(starDate,endDate){
+    var currDate = moment(new Date(), 'YYYY-MM-DD').utc();
+    var endDate = moment(endDate, 'YYYY-MM-DD');
+    var starDate = moment(starDate, 'YYYY-MM-DD');
+    
+    return currDate.isBetween(starDate,endDate, null, "[]");
+  },
+
+  recalculate: function(id){
+    var selectedIter;
+    var self = this;
+    if (self.props.selectedIter != '') {
+       var iteration = _.find(self.props.loadDetailTeam.iterations, function(iter){
+          if (iter._id.toString() == self.props.selectedIter) {
+            return iter;
+          }
+        });
+        if (iteration != undefined){
+          selectedIter = _.clone(iteration);
+        }
+    }
+    else {
+      selectedIter = _.clone(self.props.loadDetailTeam.iterations[0]);
+    }
+    switch (id){
+      case 'personDaysUnavailable':
+        selectedIter = this.updateAvailability(selectedIter);
+        selectedIter[id] = $('#'+id).html();
+        break;
+      case 'defectsStartBal':
+      case 'defects':
+      case 'defectsClosed':
+        selectedIter = this.updateDefect(selectedIter);
+        selectedIter[id] = $('#'+id).html();
+        break;
+      case 'deliveredStories':
+        this.updateStories(selectedIter);
+        selectedIter[id] = $('#'+id).html();
+        break;
+      case 'storyPointsDelivered':
+        this.updateStoryPoints(selectedIter);
+        selectedIter[id] = $('#'+id).html();
+        break;
+      case 'memberChanged':
+        selectedIter['memberChanged'] = $('#memberChanged').val();
+        break;
+    }
+    this.props.updateTeamIteration(selectedIter);
+  },
+
+  updateAvailability: function(selectedIter){
+    if (selectedIter.personDaysUnavailable != $('#personDaysUnavailable').text()){
+      var isAllowed = this.isWithinIteration(selectedIter.startDate,selectedIter.endDate);
+      if (isAllowed){
+        //recalculate team availability only if current date is within iteration
+        var maxWorkDays = business.weekDays(moment(selectedIter.startDate, 'YYYY-MM-DD'),moment(selectedIter.endDate, 'YYYY-MM-DD'));
+        selectedIter.teamAvailability = this.getOptimumAvailability(maxWorkDays);
+      }
+      selectedIter.personDaysUnavailable = $('#personDaysUnavailable').text();
+      selectedIter.personDaysAvailable = selectedIter.teamAvailability - selectedIter.personDaysUnavailable;
+    }
+    return selectedIter;
+  },
+
+  updateDefect : function(selectedIter){
+    var openDefects = this.numericValue($('#defectsStartBal').text());
+    var newDefects = this.numericValue($('#defects').text());
+    var closedDefects = this.numericValue($('#defectsClosed').text());
+    var defectsEndBal = openDefects + newDefects - closedDefects;
+      
+    selectedIter['defectsEndBal'] = defectsEndBal;
+    return selectedIter;
+  },
+
+  updateStories: function(selectedIter){
+    $('#storiesDays').text((this.numericValue($('#deliveredStories').text())/this.numericValue(selectedIter.personDaysAvailable)).toFixed(1));
+  },
+
+  updateStoryPoints: function(selectedIter){
+    $('#storyPointsDays').text((this.numericValue($('#storyPointsDelivered').text())/this.numericValue(selectedIter.personDaysAvailable)).toFixed(1));
+  },
+
+  numericValue:function(data) {
+    var value = parseInt(data);
+    if (!isNaN(value)) {
+      return value;
+    }
+    else {
+      return 0;
+    }
   },
 
   render: function() {
@@ -140,12 +279,15 @@ var HomeIterContent = React.createClass({
         });
         var lastUpdatedBy = defIter.updatedBy;
         var lastUpdateTime = moment(defIter.updateDate).format('MMM DD YYYY');
-        if (defIter.memberChanged) {
+        if (_.isEqual(defIter.memberChanged,true) || _.isEqual(defIter.memberChanged,'true')) {
           iterData.memberChanged = 'Yes';
         } else {
           iterData.memberChanged = 'No';
         }
         iterData.memberFte = (defIter.memberFte == null) ? '' : defIter.memberFte;
+        iterData.teamAvailability = (defIter.teamAvailability == null) ? '' : defIter.teamAvailability;
+        iterData.personDaysUnavailable = (defIter.personDaysUnavailable == null) ? '' : defIter.personDaysUnavailable;
+        iterData.personDaysAvailable = (defIter.personDaysAvailable == null) ? '' : defIter.personDaysAvailable;
         iterData.committedStories = (defIter.committedStories == null) ? '' : defIter.committedStories;
         iterData.deliveredStories = (defIter.deliveredStories == null) ? '' : defIter.deliveredStories;
         iterData.commitedStoryPoints = (defIter.commitedStoryPoints == null) ? '' : defIter.commitedStoryPoints;
@@ -160,7 +302,22 @@ var HomeIterContent = React.createClass({
         iterData.clientSatisfaction = (defIter.clientSatisfaction == null) ? '' : defIter.clientSatisfaction;
         iterData.teamSatisfaction = (defIter.teamSatisfaction == null) ? '' : defIter.teamSatisfaction;
         iterData.comment = (defIter.comment == null) ? '' : defIter.comment;
+        storiesDays = (this.numericValue(iterData.deliveredStories)/this.numericValue(iterData.personDaysAvailable)).toFixed(1);
+        storyPointsDays = (this.numericValue(iterData.storyPointsDelivered)/this.numericValue(iterData.personDaysAvailable)).toFixed(1);
         var access = self.props.loadDetailTeam.access;
+        var memberChangeDropdown;
+        if (this.state.showMemberDropdown){
+          memberChangeDropdown = 
+            (<div className='home-iter-member-change'>
+               <select id='memberChanged' defaultValue={defIter.memberChanged}>
+                 <option key='Yes' value={true}>Yes</option>
+                 <option key='No' value={false}>No</option>
+              </select>
+            </div>)
+        }
+        else {
+          memberChangeDropdown = (<div id='memberChanged' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.memberChangeClickHandler:''}>{iterData.memberChanged}</div>)
+        }
         return (
           <div>
             <div class='home-iter-title'>Iteration Overview</div>
@@ -190,24 +347,24 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Optimum team availability (In days)</div>
-                <div id='optimumPoint' class='home-iter-content-point-uneditable'></div>
+                <div id='optimumPoint' class='home-iter-content-point-uneditable'>{iterData.teamAvailability}</div>
                   <div class='home-iter-locked-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_locked.svg')}></InlineSVG>
                   </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Person days unavailable</div>
-                <div id='memberFte' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.memberFte}</div>
-                <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'memberFte')}>
+                <div id='personDaysUnavailable' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.personDaysUnavailable}</div>
+                <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'personDaysUnavailable')}>
                   <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                 </div>
-                <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'memberFte')}>
+                <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'personDaysUnavailable')}>
                   <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                 </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Was there a team member change?</div>
-                <div id='memberChanged' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.memberChanged}</div>
+                {memberChangeDropdown}
                   <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'memberChanged')}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                   </div>
@@ -217,7 +374,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Person days available</div>
-                <div id='personDays' class='home-iter-content-point-uneditable'></div>
+                <div id='personDays' class='home-iter-content-point-uneditable'>{iterData.personDaysAvailable}</div>
                   <div class='home-iter-locked-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_locked.svg')}></InlineSVG>
                   </div>
@@ -250,7 +407,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '25%'}}>
                 <div class='home-iter-content-sub'>Stories per person days</div>
-                <div id='storiesDays' class='home-iter-content-point-uneditable'></div>
+                <div id='storiesDays' class='home-iter-content-point-uneditable'>{storiesDays}</div>
                   <div class='home-iter-locked-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_locked.svg')}></InlineSVG>
                   </div>
@@ -293,7 +450,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Story points per person days</div>
-                <div id='storyPointsDays' class='home-iter-content-point-uneditable'></div>
+                <div id='storyPointsDays' class='home-iter-content-point-uneditable'>{storyPointsDays}</div>
                   <div class='home-iter-locked-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_locked.svg')}></InlineSVG>
                   </div>
@@ -336,12 +493,9 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub'>Closing balance</div>
-                <div id='defectsEndBal' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.defectsEndBal}</div>
-                  <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'defectsEndBal')}>
-                    <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
-                  </div>
-                  <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'defectsEndBal')}>
-                    <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
+                <div id='defectsEndBal' class='home-iter-content-point-uneditable'>{iterData.defectsEndBal}</div>
+                  <div class='home-iter-locked-btn'>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_locked.svg')}></InlineSVG>
                   </div>
               </div>
             </div>
