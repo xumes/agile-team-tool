@@ -171,7 +171,6 @@ var HomeIterContent = React.createClass({
     switch (id){
       case 'personDaysUnavailable':
         selectedIter = this.updateAvailability(selectedIter);
-        selectedIter[id] = $('#'+id).val();
         break;
       case 'defectsStartBal':
         openDefects = this.numericValue($('#defectsStartBal').val());
