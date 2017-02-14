@@ -13,7 +13,8 @@ var HomeAddTeamHierarchyModal = React.createClass({
       defaultParentObjects: [
         {name: 'Parent of my currently selected team', id: 'parentOfSelected'},
         {name: 'Peer of my currently selected team', id: 'peerOfSelected'}
-      ]
+      ],
+      i: []
     }
   },
 
@@ -36,22 +37,22 @@ var HomeAddTeamHierarchyModal = React.createClass({
      return ( 
       <option key={item._id} value={item._id}>{item.name}</option>
      ) ;
-    });
+   });
 
-    var populateParentTeamNames = this.props.selectableParents.map(function(item) {
+   var populateParentTeamNames = this.props.teamNames.map(function(item) {
      return ( 
       <option key={item._id} value={item._id}>{item.name}</option>
      ) ;
-    });
+   });
 
-    var populateChildrenTeamNames = this.props.teamNames.map(function(item) {
+   var populateChildrenTeamNames = this.props.teamNames.map(function(item) {
      return (
       <option key={item._id} value={item._id}>{item.name}</option>
       ) ;
-    });
+   });
 
 
-    return (
+  return (
       <div>
         <Modal aria-labelledby='modal-label' className='reactbootstrap-modal' backdropClassName='reactbootstrap-backdrop' show={self.props.showModal} onHide={self.props.closeWindow}>
         <div class='new-team-creation-add-block'>
@@ -64,7 +65,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
           <div class='new-team-creation-add-block-content'>
             <div class='new-team-creation-add-block-content-mid'>
               <div class='top-note-parent-child-hierarchy'>Please choose the parent team, if any, "above" your team as well as the childrean beneath.</div>
-              <HomeTeamParentChildSelection onchangeParentHierchSel={self.props.onchangeParentHierchSel} onchangeChildHierchSel={self.props.onchangeChildHierchSel} populateParentTeamNames={populateParentTeamNames} populateChildrenTeamNames={populateChildrenTeamNames} populateDefaultParentOption={populateDefaultParentOption}/>
+              <HomeTeamParentChildSelection  populateParentTeamNames={populateParentTeamNames} populateChildrenTeamNames={populateChildrenTeamNames} populateDefaultParentOption={populateDefaultParentOption} teamNames={self.props.teamNames}onchangeParentTeamDropdown={self.props.onchangeParentTeamDropdown} onchangeChildTeamList={this.props.onchangeChildTeamList}/>
             </div>
           </div>
           

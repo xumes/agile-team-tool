@@ -4073,7 +4073,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .team-hier-children > p {
   cursor: pointer;
   display: inline-block;
-  font-size: inherit;
+  font-size: 1.3em;
   overflow: hidden;
   padding: 0.3em 0.2em 0;
   white-space: nowrap;
@@ -4087,7 +4087,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: relative;
   text-overflow: ellipsis;
   width: 90%;
-  left: 4.5%;
+  left: 3%;
 }
 
 .team-hier-children-remove-icon {
