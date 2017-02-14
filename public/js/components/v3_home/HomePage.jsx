@@ -117,7 +117,6 @@ var HomePage = React.createClass({
   },
 
   selectedTeamChanged: function(team) {
-    console.log('selectedTeamChanged');
     this.setState({'selectedTeam': team});
   },
   newTeamsChanged: function(teams) {
@@ -128,7 +127,6 @@ var HomePage = React.createClass({
   },
 
   iterChangeHandler: function(e) {
-    console.log(e);
     this.setState({'selectedIter': e.target.value.toString()});
   },
 
@@ -182,12 +180,12 @@ var HomePage = React.createClass({
   },
 
   tabClickedHandler: function(tab, pathId) {
-
     var self = this;
+    tab = tab || self.state.newTeams.tab
     self.tabClickedStart();
     $('#allTeams').attr('data-state','');
     $('#myTeams').attr('data-state','open');
-    if (tab == 'mytab') {
+    if (tab == 'myteams') {
       $('#searchFieldDiv').hide();
       $('#navSearchBtn').hide();
       api.getMyTeams()
@@ -196,7 +194,7 @@ var HomePage = React.createClass({
           'tab': 'myteams',
           'data': data
         };
-        self.setState({'newTeams': newData});
+        self.setState({'newTeams': newData, 'selectedTeam': pathId || self.state.selectedTeam});
         // self.setState({'searchTeamSelected': ''});
         $('#searchCancel').click();
         return null;
@@ -218,8 +216,7 @@ var HomePage = React.createClass({
           'tab': 'allteams',
           'data': data
         };
-        self.setState({'newTeams': newData});
-        console.log('done');
+        self.setState({'newTeams': newData, 'selectedTeam': pathId || self.state.selectedTeam});
         return null;
       })
       .catch(function(err){

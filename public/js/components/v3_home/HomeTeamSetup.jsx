@@ -3,7 +3,6 @@ var api = require('../api.jsx');
 var _ = require('underscore');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
-var HomeSpinner = require('./HomeSpinner.jsx');
 var currentTeamId = '';
 var currentParentId = '';
 var currentChildren = [];
@@ -22,21 +21,8 @@ var HomeTeamSetup = React.createClass({
       childCount: 0
     }
   },
-  componentDidMount: function() {
-    var self = this;
-    console.log('componentWillUpdate ');
-    //self.selectListInit(self.props.loadDetailTeam);
-  },
-  componentWillUpdate: function(nextProps, nextState) {
-    var self = this;
-    console.log('componentWillUpdate ', nextProps, nextState);
-    if (!_.isEmpty(nextProps.loadDetailTeam) && !_.isEqual(currentTeamId, nextProps.loadDetailTeam.team._id)) {
-      //self.selectListInit(nextProps.loadDetailTeam);
-    }
-  },
   componentDidUpdate: function(prevProps, prevState) {
     var self = this;
-    console.log('componentDidUpate',prevProps, prevState);
 
     if (!self.state.showParentSetup) {
       $('#childSelectList').val('').change();
@@ -44,12 +30,8 @@ var HomeTeamSetup = React.createClass({
   },
   selectListInit: function(loadDetailTeam) {
     var self = this;
-    return new Promise(function(resolve, reject){
-      console.log('selectListInit',loadDetailTeam);
-      if (_.isEmpty(loadDetailTeam) || _.isEqual(currentTeamId, loadDetailTeam.team._id)) {
-        console.log('selectListInit team already loaded ' ,currentTeamId, loadDetailTeam.team._id, loadDetailTeam.team.name);
-        return resolve(self.state);
-      }
+    return new Promise(function(resolve, reject) {
+
       var promiseArray = [];
       allowTeamTypeChange = false;
       if (!_.isEqual('squad', loadDetailTeam.type) || (loadDetailTeam.iterations.length == 0 && loadDetailTeam.assessments.length == 0))
@@ -73,10 +55,13 @@ var HomeTeamSetup = React.createClass({
             });
             _.sortBy(results[2], 'name');
           }
-          currentChildren = children;
+          currentChildren = _.clone(children);
           currentTeamId = loadDetailTeam.team._id;
           if (loadDetailTeam.team.path != null) {
             currentParentId = loadDetailTeam.hierarchy[loadDetailTeam.hierarchy.length - 1]._id;
+            selectableChildren = _.reject(selectableChildren, function(team) {
+              return team._id == loadDetailTeam.hierarchy[0]._id && !_.isEqual('squad', team.type);
+            });
           } else {
             currentParentId = '';
           }
@@ -96,27 +81,82 @@ var HomeTeamSetup = React.createClass({
         });
     });
   },
+  parentSelectHandler: function(e) {
+    var self = this;
+    if (self.state.showTreeSetup) {
+      var selectedParent = $('#parentSelectList option:selected').val();
+      if (!_.isEmpty(selectedParent)) {
+        var parentTeam = _.find(self.state.selectableParents, function(team) {
+          if (team._id == selectedParent) return team;
+        });
+        /*
+        var childTeam = _.find(self.state.children, function(team) {
+          if (team._id == selectedParent) return team;
+        })
+        if (!_.isEmpty(childTeam) && _.isEqual(childTeam._id, parentTeam._id)) {
+          alert(parentTeam.name + ' cannot be both a parent and a child.');
+          $('#parentSelectList').val('').change();
+          return;
+        }
+        */
+        _.each(self.state.children, function(childTeam) {
+          console.log(childTeam, childTeam.path);
+          if (_.isEqual(childTeam._id, parentTeam._id)) {
+            alert(parentTeam.name + ' cannot be both a parent and a child.');
+            $('#parentSelectList').val('').change();
+            return;
+          }
+          if (!_.isEmpty(parentTeam.path)) {
+            var rootPathId = parentTeam.path.split(',')[1];
+            if (_.isEqual(rootPathId, childTeam.pathId)) {
+              alert(parentTeam.name + ' cannot be your parent team since it is reporting to '+childTeam.name+', that is already listed as your child team.');
+              $('#parentSelectList').val('').change();
+              return;
+            }
+          }
+        })
+      }
+    }
+  },
   childSelectHandler: function(e) {
     var self = this;
+    var selectedParent = self.state.showParentSetup ? $('#squadParentSelectList option:selected').val() : $('#parentSelectList option:selected').val();
     var selectedChild = $('#childSelectList option:selected').val();
     if (!_.isEmpty(selectedChild)) {
       var childTeam = _.find(self.state.selectableChildren, function(team) {
         if (team._id == selectedChild) return team;
       })
+      if (_.isEqual(selectedParent, selectedChild)) {
+        alert(childTeam.name + ' cannot be both a parent and a child.');
+        $('#childSelectList').val('').change();
+        return;
+      }
+      if (!_.isEmpty(selectedParent)) {
+        var parentTeam = _.find(self.state.selectableParents, function(team) {
+          if (team._id == selectedParent) return team;
+        });
+        if (!_.isEmpty(parentTeam.path)) {
+          var rootPathId = parentTeam.path.split(',')[1];
+          if (_.isEqual(rootPathId, childTeam.pathId)) {
+            alert(childTeam.name + ' cannot be added as a child since your current parent team, '+parentTeam.name+', is reporting to it.');
+            $('#childSelectList').val('').change();
+            return;
+          }
+        }
+      }
       if ($('.team-setup-children p#'+selectedChild).length > 0) {
         alert(childTeam.name + ' is already listed.');
+        $('#childSelectList').val('').change();
         return;
       }
       var children = self.state.children;
       children.push(childTeam);
       children = _.sortBy(children, 'name');
-
       self.setState({children:children});
     }
   },
   childDeleteHandler: function(id) {
     var self = this;
-    console.log('childDeleteHandler',id);
     var children = self.state.children;
     children = _.filter(children, function(team) {
       return !_.isEqual(id, team._id);
@@ -126,8 +166,6 @@ var HomeTeamSetup = React.createClass({
   },
   show: function() {
     var self = this;
-    console.log('onShow');
-
     if (self.state.showParentSetup) {
       $('#teamParentSetupBlock select').select2({'dropdownParent':$('#teamParentSetupBlock')});
       $('#squadParentSelectList').val(currentParentId).change();
@@ -135,16 +173,15 @@ var HomeTeamSetup = React.createClass({
     } else if (self.state.showTreeSetup) {
       $('#teamTreeSetupBlock select').select2({'dropdownParent':$('#teamTreeSetupBlock')});
       $('#parentSelectList').val(currentParentId).change();
+      $('#parentSelectList').change(self.parentSelectHandler);
       $('#childSelectList').val('').change();
       $('#childSelectList').change(self.childSelectHandler);
     }
   },
   showTeamSetup: function() {
     var self = this;
-    console.log('showTeamSetup',allowTeamTypeChange,self.props.loadDetailTeam);
     self.selectListInit(self.props.loadDetailTeam)
       .then(function(result) {
-        console.log('showTeamSetup allowTeamTypeChange',allowTeamTypeChange, result);
         if (!allowTeamTypeChange)
           self.setState({
             showParentSetup: true,
@@ -165,7 +202,6 @@ var HomeTeamSetup = React.createClass({
      });
   },
   hideTeamSetup: function() {
-    console.log('hideTeamSetup');
     if (!allowTeamTypeChange)
       this.setState({ showParentSetup: false });
     else
@@ -178,29 +214,36 @@ var HomeTeamSetup = React.createClass({
     this.setState({ showConfirmModal: false });
   },
   deleteTeam: function() {
-    console.log('team needs to be deleted here', this.props);
-    if (!_.isEmpty(currentParentId))
-      this.props.tabClickedHandler('mytab', currentParentId);
-    else
-      this.props.selectedTeamChanged(currentParentId);
-    this.setState({ showParentSetup: false, showConfirmModal: false });
+    var self = this
+    var team = self.props.loadDetailTeam.team;
+    api.deleteTeam(JSON.stringify(team))
+      .then(function(result) {
+        //alert('You have successfully deleted the team.');
+        self.props.tabClickedHandler('','');
+      })
+      .catch(function(err) {
+        alert(err);
+        console.log(err);
+      });
+    this.setState({
+      showParentSetup: false,
+      showTreeSetup: false,
+      showConfirmModal: false
+    });
+
   },
   updateTeamSetup: function() {
     var self = this;
-    console.log('team needs to be updated here', this.props);
-
-    var promiseArray = [];
-    // if squad, check if need to change type first
     var team = self.props.loadDetailTeam.team;
-    if (allowTeamTypeChange) {
-      if (!_.isEqual('squad', team.type) && self.state.children.length != self.state.childCount) {
-        team.type = 'squad';
-        promiseArray.push(api.putTeam(JSON.stringify(team)));
-      }
-    }
+    var promiseArray = [];
+
+    //TODO: try Promoise.seq or Promise.each for sequential updates.
+
     // check for any parent update
-    var newParentId = $('#squadParentSelectList option:selected').val() || $('#parentSelectList option:selected').val();
+    var newParentId = self.state.showParentSetup ? $('#squadParentSelectList option:selected').val() : $('#parentSelectList option:selected').val();
     if (!_.isEqual(currentParentId, newParentId)) {
+      currentParentId = newParentId;
+      //console.log('parent update detected', currentParentId, newParentId);
       if (newParentId != '')
         promiseArray.push(api.associateTeam(newParentId, team._id));
       else
@@ -208,69 +251,72 @@ var HomeTeamSetup = React.createClass({
     }
 
     // check for any child update
+    //console.log(currentChildren, self.state.children);
     _.each(currentChildren, function(childTeam) {
       var team = _.find(self.state.children, function(team) {
         if (team._id == childTeam._id)
           return team;
       });
-      if (_.isEmpty(team))
+      if (_.isEmpty(team)) {
+        //console.log('removed child detected', childTeam);
         promiseArray.push(api.removeAssociation(childTeam._id));
+      }
     })
-    _.each(self.state.children, function(F) {
+    _.each(self.state.children, function(childTeam) {
       var team = _.find(currentChildren, function(team) {
         if (team._id == childTeam._id)
           return team;
       });
-      if (_.isEmpty(team))
+      if (_.isEmpty(team)) {
+        //console.log('add child detected', team);
         promiseArray.push(api.associateTeam(currentTeamId, childTeam._id));
+      }
     });
 
-    Promise.all(promiseArray)
-      .then(function(results) {
-        console.log(resuts);
-        self.props.selectedTeamChanged(team.pathId);
-        self.hideTeamSetup();
-        return null;
-      })
-      .catch(function(err) {
-        console.log(err);
-        return err;
-      });
+    // if squad, check if need to change type first
+    var teamTypeUpdated = false;
+    if (allowTeamTypeChange) {
+      if (_.isEqual('squad', team.type) && self.state.children.length > 0) {
+        //console.log('team type update detected', self.state);
+        team.type = null;
+        promiseArray.push(api.putTeam(JSON.stringify(team)));
+      }
+      teamTypeUpdated = true;
+    }
 
-  /*
-    if (currentParentId != '') {
-      api.associateTeam(newParentId, self.props.loadDetailTeam.team._id)
+    if (teamTypeUpdated) {
+      api.putTeam(JSON.stringify(team))
+        .then(function(result) {
+          return Promise.all(promiseArray);
+        })
         .then(function(results) {
-          self.props.selectedTeamChanged(self.props.loadDetailTeam.team.pathId);
-          self.setState({ showParentSetup: false });
-          return result;
+          if (results.length > 0) {
+            self.props.tabClickedHandler('',team.pathId);
+          }
+          self.hideTeamSetup();
+          return null;
         })
         .catch(function(err) {
-          alert(err);
+          console.log(err);
           return err;
         });
     } else {
-      if (currentParentId == '' && _.isEqual(currentParentId, newParentId)) {
-        alert('No Parent team association to remove.');
-        return;
-      }
-      api.removeAssociation(self.props.loadDetailTeam.team._id)
+      Promise.all(promiseArray)
         .then(function(results) {
-          currentParentId = '';
-          self.props.selectedTeamChanged(self.props.loadDetailTeam.team.pathId);
-          self.setState({ showParentSetup: false });
-          return result;
+          if (results.length > 0) {
+            self.props.tabClickedHandler('',team.pathId);
+          }
+          self.hideTeamSetup();
+          return null;
         })
         .catch(function(err) {
-          alert(err);
+          console.log(err);
           return err;
         });
     }
-    */
   },
 
   render: function() {
-    console.log('render');//, this.state, selectableParents, selectableChildren, children);
     var self = this;
     var backdropStyle = {
       top: 0, bottom: 0, left: 0, right: 0,
@@ -300,24 +346,20 @@ var HomeTeamSetup = React.createClass({
     var childOptions = null;
     if (self.state.selectableChildren.length > 0) {
       var childOptions = self.state.selectableChildren.map(function(item, index) {
-        /*var disabled = _.find(self.state.children, function(team) {
-          if (_.isEqual(item._id, team._id)) return 'disabled';
-        });*/
-        var disabled = '';
         return (
-          <option key={index} value={item._id} disabled={disabled}>{item.name}</option>
+          <option key={index} value={item._id} >{item.name}</option>
         )
       });
     }
 
-    console.log('children.length', self.state.children.length);
+    //console.log('children.length', self.state.children.length);
     var childTeams = null;
     if (self.state.children.length > 0) {
       childTeams = self.state.children.map(function(item, index) {
         return (
           <p key={index} id={item._id}>
             <h title={item.name}>{item.name}</h>
-            <InlineSVG class='team-setup-children-remove-icon' src={require('../../../img/Att-icons/att-icons_remove.svg')} onClick={self.childDeleteHandler.bind(null, item._id)}></InlineSVG>
+            <InlineSVG class='team-setup-children-remove-icon' src={require('../../../img/Att-icons/att-icons_remove.svg')} onClick={!self.props.loadDetailTeam.access ? '' : self.childDeleteHandler.bind(null, item._id)}></InlineSVG>
           </p>
         )
       });
@@ -335,8 +377,6 @@ var HomeTeamSetup = React.createClass({
         <div class='home-team-header-teamname-btn' onClick={self.showTeamSetup}>
           <InlineSVG class='home-team-header-teamname-btn-img' src={require('../../../img/Att-icons/att-icons_team-settings-21.svg')}></InlineSVG>
         </div>
-
-        <HomeSpinner id={'navSpinner'}/>
 
         <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showParentSetup} onHide={self.hideTeamSetup}  onShow={self.show}>
           <div class='home-modal-block' style={{'height':'425px', 'width':'500px'}} id='teamParentSetupBlock'>
@@ -388,7 +428,7 @@ var HomeTeamSetup = React.createClass({
         <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showTreeSetup} onHide={self.hideTeamSetup}  onShow={self.show}>
           <div class='home-modal-block' style={{'height':'425px', 'width':'500px'}} id='teamTreeSetupBlock'>
             <div class='home-modal-block-header'>
-              <h>Team Setup XYZ</h>
+              <h>Team Setup</h>
               <div class='home-modal-block-close-btn' onClick={self.hideTeamSetup}>
                 <InlineSVG title='Close' src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
               </div>
@@ -422,7 +462,7 @@ var HomeTeamSetup = React.createClass({
                     <option key='cdef' value=''>Select one</option>
                     {childOptions}
                   </select>
-                  <div class='team-setup-children'>
+                  <div class='team-setup-children' style={!self.props.loadDetailTeam.access ? {'backgroundColor' : '#ececec'} : {'backgroundColor' : 'inherit'}}>
                     {childTeams}
                   </div>
                 </div>

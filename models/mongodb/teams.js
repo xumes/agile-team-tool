@@ -446,7 +446,7 @@ module.exports.getSelectableParents = function(teamId) {
           {type:{$ne:'squad'}, path: regEx, docStatus:{$ne:'delete'}},
           {type:{$ne:'squad'}, path: {$eq:null}, docStatus:{$ne:'delete'}, _id: {$ne:teamId}}
         ]
-      },{_id:1,name:2});
+      },{_id:1,name:2,pathId:3,path:4});
     })
     .then(function(result){
       resolve(result);
@@ -463,7 +463,7 @@ module.exports.getSelectableChildren = function(teamId) {
     if (_.isEmpty(teamId))
       return reject({'error':'Team ID is required.'});
     else
-      Team.find({_id: {$ne: teamId}, path:null, docStatus:{$ne:'delete'}}).exec()
+      Team.find({_id: {$ne: teamId}, path:null, docStatus:{$ne:'delete'}},{_id:1,name:2,pathId:3,path:4})
         .then(function(result) {
           resolve(result);
         })

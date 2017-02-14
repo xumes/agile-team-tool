@@ -164,10 +164,6 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
     transform: rotate(-360deg); } }
 /* spinner end */
 
-button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
-  font-size: 1.3em !important;
-}
-
 .expand-image {
   position: relative;
   float: left;
