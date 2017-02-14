@@ -22,13 +22,15 @@ var HomeAddTeam = React.createClass({
       newTeamDescription: '',
       selectedParentTeam: '',
       currentStep: '',
+      selectableParents: [],
       teamNames: [],
       teamMembers: []
-     };
+    };
   },
 
   componentDidMount: function() {
     this.getTeamNames();
+    this.selectListInit();
   },
 
   addTeamNameModal: function() {
@@ -135,9 +137,16 @@ var HomeAddTeam = React.createClass({
   onchangeParentHierchSel: function(event) {
     var selectVal = event.target.value;
     console.log('HomeAddTeam onchangeParentHierchSel selectVal:', selectVal);
-    $('#btn-teamaddparentchildhier').prop('disabled', false);
-    //this.setState({selparentList: 'block'});
+    $("#pc-hier-selChild").prop('disabled', false);
+    //$('#imgSvg').children().css('fill', '#b3b3b3');  //change color on the parent and children nodes
   },
+ 
+  onchangeChildHierchSel: function(event) {
+    var selectVal = event.target.value;
+    console.log('HomeAddTeam onchangeChildHierchSel selectVal:', selectVal);
+    $('#btn-teamaddparentchildhier').prop('disabled', false);
+  },
+
 
   getTeamNames: function() {
     var self = this;
@@ -170,6 +179,30 @@ var HomeAddTeam = React.createClass({
     // }
   },
 
+  selectListInit: function() {
+    var self = this;
+    return new Promise(function(resolve, reject){
+      console.log('selectListInit');
+      var promiseArray = [];
+
+      promiseArray.push(api.getNonSquadTeams());
+      console.log('after getNonsquad team in API. what is in promiseArray: '+JSON.stringify(promiseArray));
+
+      Promise.all(promiseArray)
+        .then(function(results) {
+          var selectableParents = _.sortBy(results[0], 'name');
+          self.setState({
+            selectableParents: selectableParents
+          })
+          return true;
+        })
+        .catch(function(err){
+          console.log(err);
+          return reject(err);
+        });
+    });
+  },
+
   render: function () {
     var self = this;
     var addBtnStyle = self.props.access?'block':'none';
@@ -190,6 +223,10 @@ var HomeAddTeam = React.createClass({
         <HomeAddTeamTypeModal showModal={this.state.showTeamTypeModal} closeWindow={self.hideTeamTypeModal} loadDetailTeam={self.props.loadDetailTeam} updateStep={self.updateStep} newTeamObj={self.state.newTeamObj} onchangeTeamtypeRadio={self.onchangeTeamtypeRadio} selectedParentTeam={self.state.selectedParentTeam} selectedteamType={self.state.selectedteamType} onchangeParentTeamDropdown={self.onchangeParentTeamDropdown} teamNames={self.state.teamNames} currentStep={self.state.currentStep} />
         <HomeAddTeamHierarchyModal showModal={this.state.showTeamHierarchyModal} closeWindow={self.hideTeamHierarchyModal}  updateStep={self.updateStep} setTeamObj={self.setTeamObj} getTeamObj={getTeamObj} onchangeParentHierchSel={self.onchangeParentHierchSel} onchangeParentTeamDropdown={self.onchangeParentTeamDropdown} teamNames={self.state.teamNames} />
         <HomeAddTeamMemberModal showModal={this.state.showTeamMemberModal} closeWindow={self.hideTeamMemberModal} loadDetailTeam={self.props.loadDetailTeam} updateStep={self.updateStep} getTeamObj={getTeamObj} selectedteamType={self.state.selectedteamType} currentStep={self.state.currentStep} teamMembers={self.state.teamMembers} setTeamMember={self.setTeamMember} updateTeam={self.updateTeam} />
+        <HomeAddTeamTypeModal showModal={this.state.showTeamTypeModal} closeWindow={self.hideTeamTypeModal} loadDetailTeam={self.props.loadDetailTeam} updateStep={self.updateStep} newTeamObj={self.state.newTeamObj} onchangeTeamtypeRadio={self.onchangeTeamtypeRadio} selectedteamType={self.state.selectedteamType} onchangeParentTeamDropdown={self.onchangeParentTeamDropdown} teamNames={self.state.teamNames} />
+        <HomeAddTeamHierarchyModal showModal={this.state.showTeamHierarchyModal} closeWindow={self.hideTeamHierarchyModal}  updateStep={self.updateStep} setTeamObj={self.setTeamObj} getTeamObj={getTeamObj} onchangeParentHierchSel={self.onchangeParentHierchSel} onchangeChildHierchSel={self.onchangeChildHierchSel} onchangeParentTeamDropdown={self.onchangeParentTeamDropdown} teamNames={self.state.teamNames} selectableParents={self.state.selectableParents} />
+        <HomeAddTeamMemberModal showModal={this.state.showTeamMemberModal} closeWindow={self.hideTeamMemberModal} loadDetailTeam={self.props.loadDetailTeam} updateStep={self.updateStep} getTeamObj={getTeamObj} selectedteamType={self.state.selectedteamType} currentStep={self.state.currentStep} />
+
         {/*
         <HomeAddTeamTypeModal showModal={this.state.showTeamNameModal} closeWindow={self.hideAddTeamModal} />
 

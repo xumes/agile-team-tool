@@ -280,6 +280,7 @@ module.exports.searchTeamWithName = function(string) {
 
 //using for snapshot roll up data, get all non squads
 module.exports.getNonSquadTeams = function(proj) {
+  console.log ('in getNonSquadTeams in Modal:');
   return Team.find({type: {$ne:'squad'}, docStatus:{$ne:'delete'}}).select(proj).exec();
 };
 

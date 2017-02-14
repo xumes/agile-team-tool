@@ -20,6 +20,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
   componentDidMount: function() {
     this.setState({selparentList: 'none'});
   },
+
   addTeamHandler: function() {
     var self = this;
   },
@@ -37,11 +38,18 @@ var HomeAddTeamHierarchyModal = React.createClass({
      ) ;
     });
 
-    var populateTeamNames = this.props.teamNames.map(function(item) {
-     return (
+    var populateParentTeamNames = this.props.selectableParents.map(function(item) {
+     return ( 
       <option key={item._id} value={item._id}>{item.name}</option>
      ) ;
     });
+
+    var populateChildrenTeamNames = this.props.teamNames.map(function(item) {
+     return (
+      <option key={item._id} value={item._id}>{item.name}</option>
+      ) ;
+    });
+
 
     return (
       <div>
@@ -56,7 +64,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
           <div class='new-team-creation-add-block-content'>
             <div class='new-team-creation-add-block-content-mid'>
               <div class='top-note-parent-child-hierarchy'>Please choose the parent team, if any, "above" your team as well as the childrean beneath.</div>
-              <HomeTeamParentChildSelection onchangeParentHierchSel={self.props.onchangeParentHierchSel} populateTeamNames={populateTeamNames} populateDefaultParentOption={populateDefaultParentOption}/>
+              <HomeTeamParentChildSelection onchangeParentHierchSel={self.props.onchangeParentHierchSel} onchangeChildHierchSel={self.props.onchangeChildHierchSel} populateParentTeamNames={populateParentTeamNames} populateChildrenTeamNames={populateChildrenTeamNames} populateDefaultParentOption={populateDefaultParentOption}/>
             </div>
           </div>
           

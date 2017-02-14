@@ -3891,20 +3891,20 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .team-parent-child-hierarchy-p > .line1 {
   position: absolute;
-  left: 23%;
+  left: 18%;
   z-index: 2;
   /*width: 95%;*/
   height: 20%;
-  top: 80%;
+  top: 63%;
 }
 
 .team-parent-child-hierarchy-p > .line2 {
   position: absolute;
-  left: 23%;
+  left: 18%;
   z-index: 2;
   /*width: 95%;*/
   height: 10%;
-  top: 160%;
+  top: 145%;
 }
 
 .pointer-arrow-right-current {
@@ -3921,11 +3921,11 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .team-parent-child-hierarchy-p > .line3 {
   position: absolute;
-  left: 25%;
+  left: 18%;
   z-index: 2;
   /*width: 95%;*/
   height: 10%;
-  top: 256%;
+  top: 235%;
 }
 
 .pointer-arrow-right-child {
@@ -3941,10 +3941,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .optsel-parent {
-  position: absolute;  
-  bottom: -28%;
-  left: 50%;  
-  width: 22em;
+  position: absolute;
+  bottom: -13%;
+  left: 45%;
+  width: 25em;
   float: right;
   margin-top: 1em;
 }
@@ -3955,19 +3955,19 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .optsel-child {
   position: absolute;  
-  bottom: -200%;
-  left: 50%;  
-  width: 22em;
+  bottom: -176%;
+  left: 45%;  
+  width: 25.5em;
   float: right;
   margin-top: 1em;
 }
 
 .curteam-block {
   position: absolute;  
-  bottom: -116%;
-  left: 50%;  
+  bottom: -93%;
+  left: 45%;  
   height: 2.3em;
-  width: 14.9em;
+  width: 17.1em;
   float: right;
   margin-top: 1em;
   background-color: #b2d1e2;
@@ -3980,6 +3980,165 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   padding-top: 0.7em;
   padding-left: 0.9em;
 }
+
+.list-child {
+  border: 1px solid #b3b3b3 !important;
+  height: 25% !important;
+  overflow-y: auto !important;
+  top: 71% !important;
+}
+
+.list-child > p {
+  cursor: pointer;
+  display: inline-block;
+  font-size: inherit;
+  overflow: hidden;
+  padding: 0.3em 0.2em 0;
+  white-space: nowrap;
+  width: 95%;
+}
+
+.list-child > p > h {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.2em 0;
+  position: relative;
+  text-overflow: ellipsis;
+  width: 90%;
+}
+
+.list-child-remove-icon {
+  display: inline-block;
+  left: 3%;
+  position: relative;
+  top: -9%;
+  width: 8%;
+}
+
+
+
+
+
+.home-modal-block-content > p {
+  color: #5a5a5a;
+  font-size: inherit;
+  line-height: 1.3em;
+  padding: 1.25em 1em;
+}
+
+.home-modal-block-close-btn svg, .team-setup-squad-icon svg {
+  height: inherit;
+  width: inherit;
+}
+
+.home-modal-block-close-btn polygon {
+  fill: #ffffff;
+  opacity: 1;
+}
+
+.team-tier-block {
+  display: inline-block;
+  font-size: inherit;
+  height: 100%;
+  width: 100%;
+}
+
+.team-hier-block .team-setup-icon-hier {
+  display: inline-block;
+  padding: 2.3em 0 0 2em;
+  position: relative;
+  width: 16%;
+}
+
+.team-setup-icon-hier svg circle:first-of-type {
+  fill: #8cc63f !important;
+}
+
+.team-setup-icon-hier svg circle:last-of-type,.team-setup-icon-hier svg circle:nth-last-child(2) {
+  fill: #8cc63f !important;
+}
+
+.team-hier-children {
+  border: 1px solid #b3b3b3 !important;
+  overflow-y: auto !important;
+  top: 274% !important;
+  display: inline-block;
+  font-size: inherit;
+  left: 45%;
+  position: absolute;
+  width: 44.5%;
+  height: 125%;
+}
+
+.team-hier-children > p {
+  cursor: pointer;
+  display: inline-block;
+  font-size: inherit;
+  overflow: hidden;
+  padding: 0.3em 0.2em 0;
+  white-space: nowrap;
+  width: 95%;
+}
+
+.team-hier-children > p > h {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.2em 0;
+  position: relative;
+  text-overflow: ellipsis;
+  width: 90%;
+  left: 4.5%;
+}
+
+.team-hier-children-remove-icon {
+  display: inline-block;
+  left: 3%;
+  position: relative;
+  top: -9%;
+  width: 8%;
+}
+
+
+.team-hier-block .team-hier-content {
+  display: inline-block;
+  font-size: inherit;
+  height: inherit;
+  left: 50%;
+  position: absolute;
+  width: 40%;
+}
+
+.team-hier-content > select:first-of-type, .team-hier-content > span:first-of-type {
+  font-size: inherit;
+  position: absolute;
+  top: 6%;
+  width: 95%;
+}
+
+.team-hier-content > select:last-of-type, .team-hier-content > span:last-of-type {
+  font-size: inherit;
+  position: absolute;
+  top: 58%;
+  width: 95%;
+}
+
+.team-hier-content > div {
+  font-size: inherit;
+  height: 35%;
+  position: absolute;
+  top: 20%;
+  width: 95%;
+}
+
+.team-hier-content > div > h {
+  color: #777677;
+  font-size: 1.2em;
+  position: absolute;
+  top: 50%;
+  transform: translate(0px, -50%);
+}
+
+
 
 /* END: Parent / Child Team Hierarchy Selection Modal */
 
