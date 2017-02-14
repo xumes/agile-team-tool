@@ -138,6 +138,18 @@ var IterationSchema = {
     type: Number,
     default: null
   },
+  teamAvailability: {
+    type: Number,
+    default: null
+  },
+  personDaysUnavailable: {
+    type: Number,
+    default: null
+  },
+  personDaysAvailable: {
+    type: Number,
+    default: null
+  }
 };
 
 function isIterationNumExist(iterationName, iterData, docId) {

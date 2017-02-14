@@ -3629,3 +3629,27 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-weight: bold;
   font-size: 1.6em;
 }
+
+.iter-member-change > div {
+  position: relative;
+  float: left;
+  left: 5%;
+  top: 10%;
+  display: block;
+  
+}
+
+.home-iter-member-change {
+  position: relative;
+  right: 10%;
+  width: 12%;
+  height: 70%;
+  float: right;
+  display: inline-block;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1em;
+  text-align: right;
+  line-height: 1.2em;
+  color: #4178BE;
+  cursor: pointer;
+}
