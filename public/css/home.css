@@ -1283,14 +1283,50 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   display: block;
 }
 
-.team-member-table-content-role > div,
-.team-member-table-content-allocation > div {
+.team-member-table-content-role > div {
   position: relative;
   float: left;
   left: 5%;
   top: 10%;
   width: 90%;
   display: none;
+}
+
+.team-member-table-content-allocation > div {
+  position: relative;
+  float: left;
+  left: 5%;
+  top: 10%;
+  width: 90%;
+  height: 45%;
+  display: none;
+}
+
+.team-member-table-content-allocation > div > input {
+  position: relative;
+  float: left;
+  width: 50%;
+  height: 100%;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  background-color: rgb(255, 255, 255);
+  border: 0.1em solid #aaa;
+}
+
+.member-table-allocation-btn {
+  position: relative;
+  float: left;
+  width: 20%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.member-table-allocation-btn svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
 }
 
 .team-member-table-content-awk > div {
