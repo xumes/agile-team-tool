@@ -359,6 +359,19 @@ module.exports = function(app, includes) {
       });
   };
 
+  //
+  getNonSquadTeams = function(req, res) {
+    var filter = req.query.filter;
+    filter = _.isEmpty(filter) ? null : JSON.parse(decodeURI(filter));
+    teamModel.getNonSquadTeams(null, filter)
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
+  };
+
   //checked
   getTeamHierarchy = function(req, res) {
     teamModel.getTeamHierarchy(req.params.path)
@@ -415,6 +428,9 @@ module.exports = function(app, includes) {
 
   // get all squad team
   app.get('/api/teams/squads', [includes.middleware.auth.requireLogin], getSquadTeams);
+
+  // get all non squad team
+  app.get('/api/teams/nonsquads', [includes.middleware.auth.requireLogin], getNonSquadTeams);
 
   // get team doc by team name
   app.get('/api/teams/names/:teamName?', [includes.middleware.auth.requireLogin], getByTeamName);

@@ -2,6 +2,7 @@ var React = require('react');
 var api = require('../api.jsx');
 var InlineSVG = require('svg-inline-react');
 var HomeSearchField = require('./HomeSearchField.jsx');
+var HomeAddTeam = require('./HomeAddTeam.jsx');
 
 var HomeNavTab = React.createClass({
   myTeamsClicked: function() {
@@ -37,7 +38,8 @@ var HomeNavTab = React.createClass({
   },
 
   render: function() {
-    var addBtnStyle = this.props.loadDetailTeam.access?'block':'none';
+    var self = this;
+
     return (
       <nav class='home-nav-tab' >
         <div class='home-nav-tab-div'>
@@ -57,12 +59,13 @@ var HomeNavTab = React.createClass({
             <div id='hideNavBtn' class='home-nav-tab-buttons-item' onClick={this.homeNavHide} style={{'left': '5%'}}>
               <InlineSVG src={require('../../../img/Att-icons/att-icons-Chevron-left.svg')}></InlineSVG>
             </div>
-            <div class='home-nav-tab-buttons-item' style={{'display': addBtnStyle}}>
-              <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
-            </div>
+
+            <HomeAddTeam access={self.props.loadDetailTeam.access} loadDetailTeam={self.props.loadDetailTeam} />
+
             <div id='navSearchBtn' class='home-nav-tab-buttons-item' onClick={this.showSearch} style={{'right': '10%'}}>
               <InlineSVG src={require('../../../img/Att-icons/att-icons_search.svg')}></InlineSVG>
             </div>
+
           </div>
         </div>
         <HomeSearchField />

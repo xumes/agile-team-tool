@@ -18,17 +18,19 @@ var HomeMemberTable = React.createClass({
   },
   componentDidUpdate: function() {
     this.initialAll();
+    /* update change*/
   },
 
   initialAll: function() {
     $('.team-member-table-content-role > div > select').select2({'width':'100%'});
     $('.team-member-table-content-allocation > div > select').select2({'width':'100%'});
-    $('.team-member-table-content-awk > div > select').select2({'width':'100%'});
+    $('.team-member-table-content-awk > div > select').select2({'width':'99%'});
     this.hoverBlock('team-member-table-content-role');
-    // this.hoverBlock('team-member-table-content-location');
+    this.hoverBlock('team-member-table-content-location');
     this.hoverBlock('team-member-table-content-allocation');
     this.hoverBlock('team-member-table-content-awk');
     this.onClickBlock('team-member-table-content-role');
+    this.onClickBlock('team-member-table-content-location');
     this.onClickBlock('team-member-table-content-allocation');
     this.onClickBlock('team-member-table-content-awk');
   },
@@ -41,8 +43,12 @@ var HomeMemberTable = React.createClass({
       $('.' + block).click(function(){
         $('.team-member-table-content-role > h').css('display','');
         $('.team-member-table-content-role > div').css('display','none');
+        $('.team-member-table-content-location > h').css('display','');
+        // $('.team-member-table-content-location input').val('');
+        $('.team-member-table-content-location > .modify-field').css('display','none');
         $('.team-member-table-content-allocation > h').css('display','');
-        $('.team-member-table-content-allocation > div').css('display','none');
+        // $('.team-member-table-content-allocation input').val('');
+        $('.team-member-table-content-allocation > .modify-field').css('display','none');
         $('.team-member-table-content-awk > h').css('display','');
         $('.team-member-table-content-awk > div').css('display','none');
         $(this).find('h').css('display', 'none');
@@ -156,6 +162,86 @@ var HomeMemberTable = React.createClass({
     }
   },
 
+  saveAllocation: function(allocationId) {
+    var self = this;
+    var newMembers = [];
+    var allocationValue = $('#' + allocationId + ' input').val();
+    console.log(allocationValue);
+    if (allocationValue < 0 || allocationValue > 100 || allocationValue == '') {
+      alert('Allocation value should be between 0 and 100.');
+    } else {
+      $('#' + allocationId + ' > h').html(allocationValue + '%');
+      var blockId = 'name_' + allocationId.substring(11, allocationId.length);
+      var memberEmail = $('#' + blockId + ' > div > h1').html();
+      $('#' + allocationId + ' > .modify-field').css('display','none');
+      $('#' + allocationId + ' > h').css('display','');
+      $('#' + allocationId + ' input').val('');
+      _.each(self.props.loadDetailTeam.team.members, function(member){
+        if (member.email != memberEmail) {
+          newMembers.push(member);
+        } else {
+          var pm = JSON.parse(JSON.stringify(member));
+          pm['allocation'] = allocationValue;
+          newMembers.push(pm);
+        }
+      });
+      api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
+        .then(function(results){
+          _.each(self.props.loadDetailTeam.team.members, function(member){
+            if (member.email == memberEmail) {
+              member['allocation'] = allocationValue;
+            }
+          });
+        })
+        .catch(function(err){
+          console.log(err);
+        });
+    }
+  },
+
+  cancelAllocationChange: function(allocationId) {
+    $('#' + allocationId + ' > .modify-field').css('display','none');
+    $('#' + allocationId + ' > h').css('display','');
+    $('#' + allocationId + ' input').val('');
+  },
+
+  saveLocation: function(locationId) {
+    var self = this;
+    var locationValue = $('#' + locationId + ' input').val();
+    if (locationValue == '') {
+      alert('Location info cannot be empty.');
+    } else {
+      $('#' + locationId + ' > h').html(locationValue);
+      var blockId = 'name_' + locationId.substring(9, locationId.length);
+      var memberEmail = $('#' + blockId + ' > div > h1').html();
+      $('#' + locationId + ' > .modify-field').css('display','none');
+      $('#' + locationId + ' > h').css('display','');
+      $('#' + locationId + ' input').val('');
+      var memberId = _.find(self.props.loadDetailTeam.members, function(member){
+        if (member.email == memberEmail) {
+          return member.userId;
+        }
+      });
+      if (!_.isEmpty(memberId)) {
+
+      }
+    }
+  },
+
+  cancelLocationChange: function(locationId) {
+    $('#' + locationId + ' > .modify-field').css('display','none');
+    $('#' + locationId + ' > h').css('display','');
+    $('#' + locationId + ' input').val('');
+  },
+
+  wholeNumCheck: function(e) {
+    var pattern = /^\d*$/;
+    if (e.charCode >= 32 && e.charCode < 127 &&  !pattern.test(String.fromCharCode(e.charCode)))
+    {
+      e.preventDefault();
+    }
+  },
+
   render: function() {
     var self = this;
     var backdropStyle = {
@@ -262,13 +348,29 @@ var HomeMemberTable = React.createClass({
                 </div>
                 <div class='team-member-table-content-location' id={locationId} style={{'width':'21.9%'}}>
                   <h>{mLocation}</h>
+                  <div class='modify-field'>
+                    <input type='text' placeholder='Ex: Somers,NY,USA'></input>
+                    <div class='save-btn' onClick={self.saveLocation.bind(null, locationId)}>
+                      <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
+                    </div>
+                    <div class='cancel-btn' style={{'left':'2%'}} onClick={self.cancelLocationChange.bind(null, locationId)}>
+                      <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
+                    </div>
+                  </div>
                 </div>
                 <div class='team-member-table-content-allocation' id={allocationId} style={{'width':'11.3%'}}>
                   <h>{memberDetail.allocation+'%'}</h>
-                  <div>
-                    <select id={'allocation_select_' + idx} defaultValue={memberDetail.allocation}>
+                  <div class='modify-field'>
+                    {/*<select id={'allocation_select_' + idx} defaultValue={memberDetail.allocation}>
                       {allocationSelection}
-                    </select>
+                    </select>*/}
+                    <input type='text' placeholder='Ex:50' min='0' max='100' maxLength='3' onKeyPress={self.wholeNumCheck}></input>
+                    <div class='save-btn' onClick={self.saveAllocation.bind(null, allocationId)}>
+                      <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
+                    </div>
+                    <div class='cancel-btn' style={{'left':'5%'}} onClick={self.cancelAllocationChange.bind(null, allocationId)}>
+                      <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
+                    </div>
                   </div>
                 </div>
                 <div class='team-member-table-content-awk' id={awkId} style={{'width':'16.7%'}}>

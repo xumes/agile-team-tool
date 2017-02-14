@@ -1044,7 +1044,6 @@ var snapshot = {
         .then(function(rollUpData) {
           if (_.isEmpty(rollUpData))
             rollUpData = new snapshotModel();
-          console.log(rollUpData);
           resolve(rollUpData);
         })
         .catch( /* istanbul ignore next */ function(err) {

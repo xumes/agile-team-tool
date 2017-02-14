@@ -170,3 +170,87 @@ module.exports.setSelectOptions = function(elementId, listOption, firstOption, l
   $('#select2-' + elementId + '-container').attr('title', selectedText);
   $('#' + elementId).attr('aria-label',elementId);
 };
+
+module.exports.handleIterationErrors = function (errorResponse) {
+    var errorlist = '';
+    var response = errorResponse.responseJSON;
+
+    if (response && response.error) {
+      var errors = response.error.errors;
+      if (errors){
+        // Return iteration errors as String
+        errorlist = this.getIterationErrorPopup(errors);
+        if (!_.isEmpty(errorlist)) {
+          alert(errorlist);
+        }
+      }
+      else {
+        this.setFieldErrorHighlight(response.error.path);
+        alert(response.error.message);
+      }
+    }
+};
+
+ module.exports.getIterationErrorPopup = function(errors) {
+  var errorLists = '';
+  var self = this;
+  // Model fields/Form element field
+  var fields = [
+    'name',
+    'startDate',
+    'endDate',
+    'committedStories',
+    'committedStoryPoints',
+    'personDaysUnavailable',
+    'deliveredStories',
+    'storyPointsDelivered',
+    'deployments',
+    'defectsStartBal',
+    'defects',
+    'defectsClosed',
+    'defectsEndBal',
+    'cycleTimeWIP',
+    'cycleTimeInBacklog',
+    'memberChanged',
+    'clientSatisfaction',
+    'teamSatisfaction'
+  ];
+
+  _.each(fields, function(mdlField, index) {
+    if (errors[mdlField]) {
+      self.setFieldErrorHighlight(mdlField);
+      errorLists = errorLists + errors[mdlField].message + '\n';
+    } else {
+      self.clearFieldErrorHighlight(mdlField);
+    }
+  });
+    return errorLists;
+  };
+
+module.exports.clearHighlightedIterErrors = function () {
+  var self = this;
+  var fields = [
+      'name',
+      'startDate',
+      'endDate',
+      'committedStories',
+      'committedStoryPoints',
+      'personDaysUnavailable',
+      'deliveredStories',
+      'storyPointsDelivered',
+      'deployments',
+      'defectsStartBal',
+      'defects',
+      'defectsClosed',
+      'defectsEndBal',
+      'cycleTimeWIP',
+      'cycleTimeInBacklog',
+      'memberChanged',
+      'clientSatisfaction',
+      'teamSatisfaction'
+    ];
+
+    _.each(fields, function(field, index) {
+      self.clearFieldErrorHighlight(field);
+    });
+  };

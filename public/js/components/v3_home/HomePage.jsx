@@ -6,6 +6,7 @@ var HomeContent = require('./HomeContent.jsx');
 var HomeIterContent = require('./HomeIterContent.jsx');
 var InlineSVG = require('svg-inline-react');
 var update = require('immutability-helper');
+var utils = require('../utils.jsx');
 var windowSize = {
   'height': 768,
   'width': 1440,
@@ -287,6 +288,27 @@ var HomePage = React.createClass({
       });
   },
 
+  updateTeamIteration: function(iteration) {
+    var self = this;
+    api.updateIteration(iteration)
+      .then(function(result){
+        return api.getIterationInfo(iteration._id);
+      })
+      .then(function(result){
+        var teamDetail = JSON.parse(JSON.stringify(self.state.loadDetailTeam));
+        _.find(teamDetail.iterations, function(data, index){
+          if (data._id === iteration._id){
+            teamDetail.iterations[index] = result;
+            return data;
+          }
+        })
+        self.setState({'loadDetailTeam': teamDetail});
+      })
+      .catch(function(err){
+        utils.handleIterationErrors(err);
+      });
+  },  
+
   render: function() {
     var pageStyle = {
       'width': '100%',
@@ -319,7 +341,7 @@ var HomePage = React.createClass({
             <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler} realodTeamMembers={this.realodTeamMembers} roles={this.state.roles} handleChartResize={this.handleChartResize} updateTeamLink={this.updateTeamLink} updateTeamDetails={this.updateTeamDetails} />
           </div>
           <div id='iterContent' class='ibm-col-6-2' style={sectionOneStyle}>
-            <HomeIterContent loadDetailTeam={this.state.loadDetailTeam} selectedIter={this.state.selectedIter} iterChangeHandler={this.iterChangeHandler} iterListHandler={this.reloadTeamIterations}/>
+            <HomeIterContent loadDetailTeam={this.state.loadDetailTeam} selectedIter={this.state.selectedIter} iterChangeHandler={this.iterChangeHandler} iterListHandler={this.reloadTeamIterations} updateTeamIteration={this.updateTeamIteration}/>
           </div>
         </div>
         <div id='homeNavShowBtnDiv' class='home-nav-show-btn-div' onClick={this.showHomeNav}>
