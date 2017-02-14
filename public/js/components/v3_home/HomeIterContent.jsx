@@ -120,7 +120,7 @@ var HomeIterContent = React.createClass({
     } else {
       var iterations = null;
       var defIterId = '';
-      if (self.props.loadDetailTeam.iterations.length > 0) {
+      if (!_.isEmpty(self.props.loadDetailTeam.iterations) && self.props.loadDetailTeam.iterations.length > 0) {
         iterations = self.props.loadDetailTeam.iterations.map(function(iter){
           iterName =iter.name + ' (' + moment(iter.startDate).format('DD MMM YYYY') + ' - ' + moment(iter.endDate).format('DD MMM YYYY') + ')';
           return (
