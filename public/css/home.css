@@ -1953,8 +1953,6 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 3%;
 }
 
-.home-iter-last-update-title {
-  position: relative;
   height: 100%;
   width: 40%;
   display: inline-block;
@@ -3655,6 +3653,829 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   background-color: #FFFFFF;
   margin-top: 7%;
+}
+/** New Team Creation - Begin */
+/**/
+.new-team-creation-add-block {
+  position: fixed;
+  left: 25%;
+  top: 21%;
+  width: 44vw;
+  height: 30.93vw;
+  min-width: 281.6px;
+  min-height: 417.6px;
+  background-color: #FFFFFF;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.16);
+}
+
+.new-team-creation-add-block-header {
+  position: relative;
+  height: 10%;
+  width: 100%;
+}
+.new-team-creation-add-block-header > h {
+  position: relative;
+  float: left;
+  top: 100%;
+  left: 8%;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 2.5em;
+}
+.new-team-creation-add-block-header > span {
+  position: relative;
+  float: right;
+  top: 35%;
+  right: 5%;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 2em;
+  cursor: pointer;
+}
+
+.new-team-creation-add-block-content {
+  position: relative;
+  float: left;
+  height: 70%;
+  width: 100%;
+}
+
+.new-team-creation-add-block-content-name {
+  position: relative;
+  float: left;
+  height: 22%;
+  width: 90%;
+  left: 8%;
+  top: 15%;
+}
+
+.new-team-creation-add-block-content-name > label {
+  position: relative;
+  float: left;
+  height: 40%;
+  width: 50%;
+  font-family: "HelvNeue Medium for IBM";
+  font-size: 1.4em;
+  line-height: 1.8em;
+  color: #323232;
+}
+.new-team-creation-add-block-content-name > input {
+  position: relative;
+  float: left;
+  height: 40% !important;
+  width: 50%;
+  border: 0.1em solid #777677;
+  text-indent: 0.5em;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.4em;
+  line-height: 1.8em;
+  color: #5A5A5A;
+}
+.new-team-creation-add-block-content-description {
+  position: relative;
+  float: left;
+  height: 22%;
+  width: 90%;
+  left: 8%;
+  top: 16%;
+}
+.new-team-creation-add-block-content-description > label {
+  position: relative;
+  float: left;
+  height: 40%;
+  width: 90%;
+  font-family: "HelvNeue Medium for IBM";
+  font-size: 1.4em;
+  line-height: 1.8em;
+  color: #323232;
+}
+.new-team-creation-add-block-content-description > textarea {
+  position: relative;
+  float: left;
+  height: 190% !important;
+  width: 90%;
+  border: 0.1em solid #777677;
+  text-indent: 0.5em;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.4em;
+  line-height: 1.8em;
+  color: #5A5A5A;
+}
+.new-team-creation-add-note-section {
+  position: relative;
+  left: 8%;
+  float: left;
+  height: 0%;
+  width: 100%;
+  top: -3%;
+
+}
+.new-team-creation-add-note-section-notetext {
+  position: relative;
+  float: left;
+  height: 0%;
+  width: 100%;
+  font-family: "HelvNeue light for IBM";
+  font-size: 1.2em;
+  font-weight: normal;
+  line-height: 1.4em;
+  color: #323232;
+}
+.new-team-creation-add-block-footer {
+  position: relative;
+  float: left;
+  height: 20%;
+  width: 100%;
+}
+
+/** New Team Creation - End */
+
+
+/* BEGIN: TeamType Selection Modal */
+.lblstyle2 {
+  font-size: 2em;
+  margin-top: 1em;
+  font-family: "HelvNeue Light for IBM";
+}
+
+.midcontent {
+  width: 70%;
+  margin: 0 auto;
+  padding-bottom: 7em;
+  margin-top: 1.5em;
+}
+
+.curTeam {
+  height: 2em;
+  background-color: #B2D1E2;
+  padding: 3em 0 3em 0;
+  font-size: 1.3em;
+}
+
+.reactbootstrap-modal .select2 {
+  font-size: 1.4em;
+}
+
+#selparent-1 {
+  width: 20em !important;
+}
+
+.teamtypeSel, .modal-wrapper2 {
+  width: 65em;
+}
+
+.modal-title2 {
+  padding-top: 4% !important;
+}
+
+.pad2 {
+  padding: 0 4em 2.5em 4em;
+}
+
+.lbl {
+  font-size: 1.3em;
+  line-height: 1.6em;
+}
+
+.optbox-1 {
+  float: left;
+  width: 11em;
+}
+
+.rpad {
+  margin-right: 15em;
+}
+
+.optsel-1 {
+  width: 22em;
+  float: right;
+  margin-top: 1em;
+}
+
+.floatr {
+  float: right;
+}
+
+.pteam-bg {
+  width: 60%;
+  padding-left: 3em;
+}
+
+.note1 {
+  color: #7BA3FA;
+}
+
+.btn2 {
+  text-align: center;
+  margin-top: 2em;
+}
+
+.glyicoblack::before {
+  color:#000;
+}
+
+.reactbootstrap-modal {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 1040;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.reactbootstrap-modal .close-ico {
+  padding-top: 0.1em;
+  position: absolute;
+  right: 1%;
+  width: 1.5em;
+}
+
+.reactbootstrap-backdrop {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 'auto';
+  background-color: #000;
+  opacity: 0.5;
+  width: 100%;
+  height: 100%;
+}
+
+.new-team-creation-add-block-content-mid {
+  position: relative;
+  float: left;
+  height: 22%;
+  width: 90%;
+  left: 8%;
+  top: 15%;
+}
+
+.footer-btn {
+  text-align: center;
+  top: 35%;
+  position: relative;
+}
+
+.footer-note {
+  float: left;
+  font-size: 1.3em;
+  margin-top: 16.5em;
+  margin-left: 4em;
+  width: 85%;
+}
+
+.footer-note-add-team-name {
+  float: left;
+  font-size: 1.3em;
+  margin-top: 13.5em;
+  margin-left: 4em;
+  width: 85%;
+}
+
+.top-note-parent-child-hierarchy {
+  float: left;
+  font-size: 1.25em;
+  margin-top: 0.6em;
+  margin-left: 0.22em;
+  width: 85%;
+}
+
+
+@media screen and (min-width:321px) and (max-width:639px) {
+  .optbox-1 {
+    float: none !important;
+    margin: 0 auto !important;
+    width: 13em !important;
+    margin-bottom: 1.5em !important;
+  }
+
+  .optsel-1 {
+    float: none;
+    margin: 0 auto !important;
+  }
+
+  .footer-note {
+    margin-top: 24em;
+  }
+
+  .footer-btn {
+    top:50%;
+  }
+
+  .new-team-creation-add-block {
+    height: 55em;
+  }
+}
+
+@media screen and (min-width:640px) and (max-width:959px) {
+  .optbox-1 {
+    float: none !important;
+    margin: 0 auto !important;
+    width: 13em !important;
+    margin-bottom: 3em !important;
+  }
+
+  .new-team-creation-add-block {
+    height: 60em;
+  }
+
+  .footer-note {
+    margin-top: 26em;
+  }
+
+  .footer-btn {
+    top:40%;
+  }
+}
+
+@media screen and (min-width:960px) and (max-width:1279px) {
+  .optbox-1 {
+    width: 7em !important;
+  }
+}
+
+/* END: TeamType Selection Modal */
+/* BEGIN: Parent / Child Team Hierarchy Selection Modal */
+.new-team-parent-child-hierarchy-note-section {
+  position: relative;
+  left: 0%;
+  float: left;
+  height: 0%;
+  width: 100%;
+  top: -3%;
+
+}
+.new-team-parent-child-hierarchy-note-section-notetext {
+  position: relative;
+  float: left;
+  height: 0%;
+  width: 100%;
+  font-family: "HelvNeue medium for IBM";
+  font-size: 1.2em;
+  font-weight: normal;
+  line-height: 1.4em;
+  color: #323232;
+}
+
+.pncteam-midcontent {
+  width: 80%;
+  margin: 0 auto;
+  padding-bottom: 7em;
+  margin-top: 6em;
+}
+
+.pncteam-bg {
+  width: 80%;
+  padding-left: 0.5em;
+}
+
+.team-parent-child-hierarchy-p > .line1 {
+  position: absolute;
+  left: 18%;
+  z-index: 2;
+  /*width: 95%;*/
+  height: 20%;
+  top: 63%;
+}
+
+.team-parent-child-hierarchy-p > .line2 {
+  position: absolute;
+  left: 18%;
+  z-index: 2;
+  /*width: 95%;*/
+  height: 10%;
+  top: 145%;
+}
+
+.pointer-arrow-right-current {
+  position: absolute;
+  bottom: -81%;
+  left: 45%;
+  height: 2%;
+  width: 2%;
+}
+
+.pointer-arrow-right-current  polygon{
+  fill: #777677;
+}
+
+.team-parent-child-hierarchy-p > .line3 {
+  position: absolute;
+  left: 18%;
+  z-index: 2;
+  /*width: 95%;*/
+  height: 10%;
+  top: 235%;
+}
+
+.pointer-arrow-right-child {
+  position: absolute;
+  bottom: -171%;
+  left: 45%;
+  height: 2%;
+  width: 2%;
+}
+
+.pointer-arrow-right-child  polygon{
+  fill: #777677;
+}
+
+.optsel-parent {
+  position: absolute;
+  bottom: -13%;
+  left: 45%;
+  width: 25em;
+  float: right;
+  margin-top: 1em;
+}
+
+.pc-hier-selparent{
+  font-family: "Helvetica Neue";
+}
+
+.optsel-child {
+  position: absolute;  
+  bottom: -176%;
+  left: 45%;  
+  width: 25.5em;
+  float: right;
+  margin-top: 1em;
+}
+
+.curteam-block {
+  position: absolute;  
+  bottom: -93%;
+  left: 45%;  
+  height: 2.3em;
+  width: 17.1em;
+  float: right;
+  margin-top: 1em;
+  background-color: #b2d1e2;
+  font-family: "Helvetica Neue";
+  font-size: 1.4em;
+  font-weight: normal;
+  line-height: 1.4em;
+  text-align: left;
+  color: #526566;
+  padding-top: 0.7em;
+  padding-left: 0.9em;
+}
+
+.list-child {
+  border: 1px solid #b3b3b3 !important;
+  height: 25% !important;
+  overflow-y: auto !important;
+  top: 71% !important;
+}
+
+.list-child > p {
+  cursor: pointer;
+  display: inline-block;
+  font-size: inherit;
+  overflow: hidden;
+  padding: 0.3em 0.2em 0;
+  white-space: nowrap;
+  width: 95%;
+}
+
+.list-child > p > h {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.2em 0;
+  position: relative;
+  text-overflow: ellipsis;
+  width: 90%;
+}
+
+.list-child-remove-icon {
+  display: inline-block;
+  left: 3%;
+  position: relative;
+  top: -9%;
+  width: 8%;
+}
+
+
+
+
+
+.home-modal-block-content > p {
+  color: #5a5a5a;
+  font-size: inherit;
+  line-height: 1.3em;
+  padding: 1.25em 1em;
+}
+
+.home-modal-block-close-btn svg, .team-setup-squad-icon svg {
+  height: inherit;
+  width: inherit;
+}
+
+.home-modal-block-close-btn polygon {
+  fill: #ffffff;
+  opacity: 1;
+}
+
+.team-tier-block {
+  display: inline-block;
+  font-size: inherit;
+  height: 100%;
+  width: 100%;
+}
+
+.team-hier-block .team-setup-icon-hier {
+  display: inline-block;
+  padding: 2.3em 0 0 2em;
+  position: relative;
+  width: 16%;
+}
+
+.team-setup-icon-hier svg circle:first-of-type {
+  fill: #8cc63f !important;
+}
+
+.team-setup-icon-hier svg circle:last-of-type,.team-setup-icon-hier svg circle:nth-last-child(2) {
+  fill: #8cc63f !important;
+}
+
+.team-hier-children {
+  border: 1px solid #b3b3b3 !important;
+  overflow-y: auto !important;
+  top: 274% !important;
+  display: inline-block;
+  font-size: inherit;
+  left: 45%;
+  position: absolute;
+  width: 44.5%;
+  height: 125%;
+}
+
+.team-hier-children > p {
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1.3em;
+  overflow: hidden;
+  padding: 0.3em 0.2em 0;
+  white-space: nowrap;
+  width: 95%;
+}
+
+.team-hier-children > p > h {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.2em 0;
+  position: relative;
+  text-overflow: ellipsis;
+  width: 90%;
+  left: 3%;
+}
+
+.team-hier-children-remove-icon {
+  display: inline-block;
+  left: 3%;
+  position: relative;
+  top: -9%;
+  width: 8%;
+}
+
+
+.team-hier-block .team-hier-content {
+  display: inline-block;
+  font-size: inherit;
+  height: inherit;
+  left: 50%;
+  position: absolute;
+  width: 40%;
+}
+
+.team-hier-content > select:first-of-type, .team-hier-content > span:first-of-type {
+  font-size: inherit;
+  position: absolute;
+  top: 6%;
+  width: 95%;
+}
+
+.team-hier-content > select:last-of-type, .team-hier-content > span:last-of-type {
+  font-size: inherit;
+  position: absolute;
+  top: 58%;
+  width: 95%;
+}
+
+.team-hier-content > div {
+  font-size: inherit;
+  height: 35%;
+  position: absolute;
+  top: 20%;
+  width: 95%;
+}
+
+.team-hier-content > div > h {
+  color: #777677;
+  font-size: 1.2em;
+  position: absolute;
+  top: 50%;
+  transform: translate(0px, -50%);
+}
+
+
+
+/* END: Parent / Child Team Hierarchy Selection Modal */
+
+/* BEGIN: AddTeam Member Modal */
+.new-team-creation-addteam-member {
+  background-color: #ffffff;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.16);
+  height: 30.93vw;
+  left: 25%;
+  min-height: 417.6px;
+  min-width: 50em;
+  position: fixed;
+  top: 21%;
+  width: 44vw;
+}
+
+.new-team-creation-addteam-member .tbl-results {
+  /**width: 53em;**/
+  height: 10em;
+  margin-top: 5em;
+}
+
+.new-team-creation-addteam-member .tbl-members {
+  width: 100%;
+}
+
+.new-team-creation-addteam-member .tbl-members td {
+  font-size: 1.3em;
+  padding: 0.3em;
+}
+
+.new-team-creation-addteam-member .tbl-members thead .name {
+  width: 1em;
+  border: 1px solid;
+  display: block;
+  height: 2em;
+  float: left;
+  margin-left: 2em;
+}
+
+.new-team-creation-addteam-member .tbl-members thead .email {
+  width: 3em;
+  border: 1px solid;
+  display: block;
+  height: 2em;
+  float: left;
+  margin-left: 2em;
+}
+
+.new-team-creation-addteam-member .tbl-members thead .location {
+/*  width: 3em;
+  border: 1px solid;
+  display: block;
+  height: 2em;
+  float: left;
+  margin-left: 2em;
+  border:1px solid red;*/
+}
+
+.new-team-creation-addteam-member .tbl-members td.h-delete {
+  border-bottom:1px solid #000;
+}
+
+.new-team-creation-addteam-member .tbl-members td.row-delete {
+  padding:0.5em;
+  width: 2em;
+}
+
+.new-team-creation-addteam-member .tbl-members tbody td {
+  border-bottom: 1px solid #ccc;
+  vertical-align: middle;
+}
+
+.new-team-creation-addteam-member .tbl-members tbody td.name {
+  width: 11.6em;
+}
+
+.new-team-creation-addteam-member .tbl-members tbody td.email {
+  width: 10.8em;
+  background-color: #F2F2F2;
+}
+
+.new-team-creation-addteam-member .tbl-members tbody td.email span.email {
+  padding-left: 1em;
+}
+
+.new-team-creation-addteam-member .tbl-members tbody td.location span.location {
+  padding-left: 1em;
+}
+
+.new-team-creation-addteam-member .tbl-members tbody td.location {
+  width: 15em;
+}
+
+.new-team-creation-addteam-member .tbl-members .delete-ico {
+  width: 1.6em;
+  cursor: pointer;
+  position: absolute;
+}
+
+.new-team-creation-addteam-member .tbl-members-data {
+  height: 13em;
+  width: 100%;
+  overflow-y: scroll;
+  position: absolute;
+}
+
+.dataTables_empty {text-align: center; display: block;}
+
+.new-team-creation-addteam-member .heading {
+  font-weight: bold;
+  border-bottom: 0.1em solid #000;
+}
+
+.new-team-creation-addteam-member .btn-addmember {
+  cursor: pointer;
+  float: right;
+  margin-left: 1em;
+  width: 2.5em;
+  margin-top: 0.7em;
+}
+
+.new-team-creation-addteam-member .col1 {
+  box-sizing: border-box;
+  float: left;
+  margin: 0;
+  min-height: 1px;
+  width: 32em;
+}
+
+.new-team-creation-addteam-member .ibm-row-form .frmlabel {
+  font-size: 1.4em;
+  display: inline;
+}
+
+.new-team-creation-addteam-member .col2 {
+  box-sizing: border-box;
+  float: right;
+  margin: 0;
+  min-height: 1px;
+  width: 19em;
+}
+
+.new-team-creation-addteam-member .csvblock {
+  margin-top:1.5em;
+}
+
+.new-team-creation-addteam-member #txtTeamMemberNameError {
+  float: left;
+  font-size: 1.3em;
+  line-height: 1em;
+}
+
+.new-team-creation-addteam-member .note2 {
+  float: left;
+  margin-left: 0.2em;
+}
+
+.new-team-creation-addteam-member .note2 strong, .new-team-creation-addteam-member .note2 p {
+  font-size: 1.4em;
+}
+
+.new-team-creation-addteam-member .new-team-creation-add-block-pad {
+  float: left;
+  margin-top: 5em;
+  margin-right: 5em;
+  margin-bottom: 0;
+  margin-left: 5em;
+}
+
+.new-team-creation-addteam-member .new-team-creation-addteam-member-footer {
+  position: relative;
+  float: left;
+  height: 20%;
+  width: 100%;
+  margin-top: 6em;
+}
+
+.new-team-creation-addteam-member .footer-btn button {
+  margin-right: 1.5%;
+}
+/* END: AddTeam Member Modal */
+
+.home-iter-sub-section > input[type="checkbox"] {
+  width: 6.25%;
+  height: 6.25%;
+  min-height: 1.2em;
+  min-width: 1.2em;
+  vertical-align: middle;
+  background-color: #FFFFFF;
+  border: 0.1em solid #777677;
+  cursor: pointer;
+  margin-left: 0;
+  -webkit-appearance: none;
 }
 
 .checkbox {

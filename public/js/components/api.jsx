@@ -67,6 +67,19 @@ module.exports.getSquadTeams = function (filter) {
   });
 };
 
+module.exports.getNonSquadTeams = function (filter) {
+  var filter = typeof filter != 'undefined' ? encodeURI(JSON.stringify(filter)) : '';
+  return new Promise(function(resolve, reject) {
+    $.get('/api/teams/nonsquads?filter=' + filter)
+      .complete(function(data) {
+        resolve(data);
+      })
+      .fail(function(err) {
+        reject(new Error('Unable to fetch non squad teams'));
+      });
+  });
+};
+
 module.exports.searchTeams = function (keyword) {
   return new Promise(function(resolve, reject){
     clearRequests();
