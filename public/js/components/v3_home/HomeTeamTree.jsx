@@ -4,6 +4,7 @@ var HomeSpinner = require('./HomeSpinner.jsx');
 var _ = require('underscore');
 var Promise = require('bluebird');
 var InlineSVG = require('svg-inline-react');
+var selectedTeam = '';
 var clickedTeamId = '';
 
 var HomeTeamTree = React.createClass({
@@ -31,6 +32,7 @@ var HomeTeamTree = React.createClass({
     $('#newSearchTree').hide();
     $('#newTeamTree').show();
     $('.nano').nanoScroller();
+    //console.log('componentDidUpdate',self.props);
     self.initHilightTeam();
     // self.loadTeamInAllTeams(selectedTeam);
     if (self.props.newTeams.tab == 'myteams') {
@@ -38,6 +40,11 @@ var HomeTeamTree = React.createClass({
         return null;
       } else {
         if(self.props.newTeams.data.teams.length == 1 && self.props.newTeams.data.teams[0].type != 'squad') {
+          if ($('#newTeamTree a.agile-team-selected').length > 0) {
+            self.expandParentTeam(self.props.newTeams.data.teams[0].pathId);
+            return null;
+          }
+          /*
           api.getChildrenTeams(self.props.newTeams.data.teams[0].pathId)
             .then(function(results){
               if (results.length > 0) {
@@ -47,6 +54,7 @@ var HomeTeamTree = React.createClass({
             .catch(function(err){
               console.log(err);
             });
+          */
         }
       }
     }
@@ -102,6 +110,8 @@ var HomeTeamTree = React.createClass({
 
   initHilightTeam: function() {
     var self = this;
+    selectedTeam = self.props.selectedTeam || selectedTeam;
+    //console.log('initHilightTeam', selectedTeam);
     if (selectedTeam == '') {
       if ($('#newTeamTree li')[0]) {
         if (($('#newTeamTree li')[0]).id) {
@@ -129,6 +139,43 @@ var HomeTeamTree = React.createClass({
       }
     } else {
       if ($('#myTeams').attr('data-state') == 'open') {
+        var path = [];
+        var availablePath = [];
+        api.loadTeamDetails(selectedTeam)
+          .then(function(team){
+            if (team != null) {
+              if (team.path != null) {
+                path = (team.path.substring(1,team.path.length-1)).split(',');
+              }
+              path.push(team.pathId);
+              var promiseArray = [];
+
+              _.each(path, function(pathId){
+                if (($.find('#' + pathId)).length > 0 || pathId == 'agteamstandalone') {
+                  availablePath.push(pathId);
+                  promiseArray.push(api.getChildrenTeams(pathId));
+                }
+              });
+
+              return Promise.all(promiseArray);
+            } else {
+              return Promise.reject('no team found');
+            }
+          })
+          .then(function(results){
+            for (var i = 0; i < results.length; i++) {
+              self.appendChildTeams(results[i], availablePath[i]);
+            }
+            self.loadDetails(selectedTeam);
+            $('#navSpinner').hide();
+            $('#newTeamTree').show();
+            $('.nano').nanoScroller();
+            $('.nano').nanoScroller({
+              scrollTo: $('#link_' + selectedTeam)
+            });
+          });
+
+        /*
         if (($.find('#' + selectedTeam)).length > 0) {
           self.highlightTeam(selectedTeam);
           self.loadDetails(selectedTeam);
@@ -165,6 +212,7 @@ var HomeTeamTree = React.createClass({
             $('#teamMemberTable').hide();
           }
         }
+        */
       } else {
         self.loadTeamInAllTeams(selectedTeam);
       }
@@ -175,10 +223,10 @@ var HomeTeamTree = React.createClass({
   expandParentTeam: function(teamId) {
     var self = this;
     if (teamId != null) {
-      if ($('#' + teamId).attr('data-open') == 'false') {
+      if ($('#' + teamId).attr('data-open') == 'false' || $('#body_'+teamId+' li').length == 0) {
         //var objectId = $('#' + teamId).children('span').html();
         //getChildrenTeams(parentId, false);
-        if (clickedTeamId != teamId) {
+        if (clickedTeamId != teamId || $('#body_'+teamId+' li').length == 0) {
           clickedTeamId = teamId;
           api.getChildrenTeams(teamId)
           .then(function(teams){
@@ -200,6 +248,7 @@ var HomeTeamTree = React.createClass({
   appendChildTeams: function(teams, teamId) {
     var self = this;
     if (!_.isEmpty(teams)) {
+      $('#main_' + teamId).remove();
       $('#body_' + teamId).append(self.createMainTwistySection('main_' + teamId, ''));
       _.each(teams, function(team){
         if (team.docStatus != 'delete') {
@@ -234,7 +283,7 @@ var HomeTeamTree = React.createClass({
     $('.nano').nanoScroller();
     self.highlightTeam(teamId);
     var objectId = $('#' + teamId).children('span').html();
-    // console.log('ooo:',objectId);
+    //console.log('ooo:',teamId,objectId);
     $('#contentSpinner').show();
     $('#bodyContent').hide();
     $('#snapshotPull').hide();
