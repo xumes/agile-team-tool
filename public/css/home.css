@@ -1283,26 +1283,90 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   display: block;
 }
 
+#teamMemberTable .select2-container,
+#teamMemberTable .select2-selection,
+#teamMemberTable .select2-selection--single,
+#teamMemberTable .select2-selection__rendered,
+#teamMemberTable .select2-selection__arrow{
+  height: 100%;
+}
+
+#teamMemberTable .select2-selection__rendered {
+  line-height: 2.3em;
+}
+
+#teamMemberTable .select2-selection__arrow  b {
+  top: 30% !important;
+}
+
 .team-member-table-content-role > div {
   position: relative;
   float: left;
   left: 5%;
   top: 10%;
   width: 90%;
+  height: 40%;
   display: none;
 }
 
-.team-member-table-content-allocation > div {
+.team-member-table-content-location > .modify-field {
   position: relative;
   float: left;
   left: 5%;
   top: 10%;
   width: 90%;
-  height: 45%;
+  height: 40%;
   display: none;
 }
 
-.team-member-table-content-allocation > div > input {
+.team-member-table-content-location > .modify-field > input {
+  position: relative;
+  float: left;
+  width: 78%;
+  height: 100%;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  background-color: rgb(255, 255, 255);
+  border: 0.1em solid #aaa;
+}
+
+.team-member-table-content-location > .modify-field > .save-btn,
+.team-member-table-content-location > .modify-field > .cancel-btn {
+  position: relative;
+  float: left;
+  width: 10%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.team-member-table-content-location > .modify-field > .save-btn,
+.team-member-table-content-location > .modify-field > .cancel-btn {
+  position: relative;
+  float: left;
+  width: 10%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.team-member-table-content-location > .modify-field svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+.team-member-table-content-allocation > .modify-field {
+  position: relative;
+  float: left;
+  left: 5%;
+  top: 10%;
+  width: 90%;
+  height: 40%;
+  display: none;
+}
+
+.team-member-table-content-allocation > .modify-field > input {
   position: relative;
   float: left;
   width: 50%;
@@ -1314,7 +1378,8 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   border: 0.1em solid #aaa;
 }
 
-.member-table-allocation-btn {
+.team-member-table-content-allocation > .modify-field > .save-btn,
+.team-member-table-content-allocation > .modify-field > .cancel-btn{
   position: relative;
   float: left;
   width: 20%;
@@ -1322,7 +1387,8 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   cursor: pointer;
 }
 
-.member-table-allocation-btn svg {
+.team-member-table-content-allocation > .modify-field > .save-btn svg,
+.team-member-table-content-allocation > .modify-field > .cancel-btn svg {
   position: relative;
   float: left;
   width: 100%;
@@ -1335,6 +1401,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   left: 5%;
   top: 10%;
   width: 70%;
+  height: 40%;
   display: none;
 }
 
@@ -3636,7 +3703,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 5%;
   top: 10%;
   display: block;
-  
+
 }
 
 .home-iter-member-change {
