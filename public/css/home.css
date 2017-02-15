@@ -3720,3 +3720,13 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   color: #4178BE;
   cursor: pointer;
 }
+
+.__react_component_tooltip{
+  background: rgb(236, 236, 236) !important;
+  color: rgb(50, 50, 50) !important;
+  padding: 1em !important;
+  font-size: 8.5pt !important;
+  line-height: 20px !important;
+  display: block !important;
+  max-width: 300px;
+}
