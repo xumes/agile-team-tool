@@ -34,7 +34,6 @@ var HomeTeamTree = React.createClass({
     self.initHilightTeam();
     // self.loadTeamInAllTeams(selectedTeam);
     if (self.props.newTeams.tab == 'myteams') {
-      console.log('ssss');
       if (_.isUndefined(self.props.newTeams.data.teams)) {
         return null;
       } else {

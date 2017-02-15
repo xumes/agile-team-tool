@@ -24,6 +24,11 @@ var HomeTeamHeader = React.createClass({
     } else {
       $('#homeHeaderAseBtn').hide();
     }
+    setTimeout(function() {
+      var height = $('.home-team-header-members-div').height()*0.9;
+      $('.home-header-image').css({'width':height+'px','height':height+'px'});
+      $('.home-team-header-member-image').css({'width': height*0.9+'px', 'height': height*0.9+'px'});
+    }, 0);
   },
   componentDidUpdate: function() {
     if (this.props.loadDetailTeam.team != undefined && this.props.loadDetailTeam.team.type == 'squad') {
@@ -31,6 +36,12 @@ var HomeTeamHeader = React.createClass({
     } else {
       $('#homeHeaderAseBtn').hide();
     }
+    setTimeout(function() {
+      var height = $('.home-team-header-members-div').height()*0.9;
+      $('.home-header-image').css({'width':height+'px','height':height+'px'});
+      $('.home-team-header-member-image').css({'width': height*0.9+'px', 'height': height*0.9+'px'});
+    }, 0);
+
   },
   findTeamInAllTeams: function(pathId) {
     selectedTeam = pathId;
@@ -146,9 +157,7 @@ var HomeTeamHeader = React.createClass({
             var src = '//faces-cache.mybluemix.net/image/' + member.userId.toUpperCase();
             return (
               <div key={faceImageId} class='home-header-image'>
-                <a class='ibm-padding-content' style={{'padding': '0', 'borderRadius': '50%'}} title={member.name}>
-                  <img id={faceImageId} class='home-team-header-member-image' src={src}></img>
-                </a>
+                <a title={member.name}><img id={faceImageId} class='home-team-header-member-image' src={src}></img></a>
               </div>
             )
           } else if (index == 9) {

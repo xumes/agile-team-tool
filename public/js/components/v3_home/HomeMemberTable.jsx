@@ -156,6 +156,21 @@ var HomeMemberTable = React.createClass({
     }
   },
 
+  validateAllocation: function(e) {
+    console.log(e.key);
+    if (e.key=='Enter') {
+      console.log(e);
+    }
+  },
+
+  wholeNumCheck: function(e) {
+    var pattern = /^\d*$/;
+    if (e.charCode >= 32 && e.charCode < 127 &&  !pattern.test(String.fromCharCode(e.charCode)))
+    {
+      e.preventDefault();
+    }
+  },
+
   render: function() {
     var self = this;
     var backdropStyle = {
@@ -266,9 +281,16 @@ var HomeMemberTable = React.createClass({
                 <div class='team-member-table-content-allocation' id={allocationId} style={{'width':'11.3%'}}>
                   <h>{memberDetail.allocation+'%'}</h>
                   <div>
-                    <select id={'allocation_select_' + idx} defaultValue={memberDetail.allocation}>
+                    {/*<select id={'allocation_select_' + idx} defaultValue={memberDetail.allocation}>
                       {allocationSelection}
-                    </select>
+                    </select>*/}
+                    <input type='text' placeholder='Ex:50' min='0' max='100' maxLength='3' onKeyPress={self.wholeNumCheck}></input>
+                    <div class='member-table-allocation-btn'>
+                      <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
+                    </div>
+                    <div class='member-table-allocation-btn' style={{'left':'5%'}}>
+                      <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
+                    </div>
                   </div>
                 </div>
                 <div class='team-member-table-content-awk' id={awkId} style={{'width':'16.7%'}}>
