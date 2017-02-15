@@ -11,7 +11,7 @@ var HomeTeamHierarchyFooter = React.createClass({
   render: function() {
     var self = this;
     var type = self.props.selectedteamType;
-    var step;
+    var step = 'showAddTeamMembers';
     return (
     <div class='new-team-creation-add-block-footer'>
       <p class='ibm-btn-row ibm-button-link' class='footer-btn'>

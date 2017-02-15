@@ -25,7 +25,7 @@ var HomeAddTeamMemberTable = React.createClass({
 
       return (
         <tr key={key}>
-          <td class='row-delete'><div class='delete-ico'><InlineSVG onClick={self.props.deleteTeamMember.bind(null, memberEmail)} src={require('../../../img/Att-icons/att-icons_delete-redbg.svg')}></InlineSVG></div>&nbsp;&nbsp;</td>
+          <td class='row-delete'><div class='delete-ico'><InlineSVG onClick={self.props.deleteTeamMember.bind(null, memberEmail)} src={require('../../../img/Att-icons/att-icons_remove.svg')}></InlineSVG></div>&nbsp;&nbsp;</td>
           <td class='name'>{memberName}</td>
           <td class='email'><span class='email'>{memberEmail}</span></td>
           <td class='location'><span class='location'>{memberLocation}</span></td>

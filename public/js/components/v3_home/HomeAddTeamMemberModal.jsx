@@ -19,7 +19,7 @@ var HomeAddTeamMemberModal = React.createClass({
   componentDidMount: function() {
     var self = this;
     $('#csvfile').fileinput();
-    $('#tbl-members-data').scrollable();
+    // $('#tbl-members-data').scrollable(); // it wont work..table becomes messy!
     self.setState({facesPersonFullName: ''});
   },
 
@@ -77,12 +77,8 @@ var HomeAddTeamMemberModal = React.createClass({
     var updatedMember = [];
     console.log('deleteTeamMember before:', this.props.teamMembers);
     updatedMember = _.filter(this.props.teamMembers, function(ls) {
-      if (ls['email'] === email)
-        return false;
-      else
-        return true;
+      return !_.isEqual(ls['email'], email);
     });
-
     console.log('deleteTeamMember after:', updatedMember);
     self.props.setTeamMember(updatedMember);
   },
@@ -123,12 +119,6 @@ var HomeAddTeamMemberModal = React.createClass({
                     </div>
 
                     <div class='clearboth'></div>
-                    <div class='csvblock'>
-                      <label for="csvfile" class='frmlabel'>Upload a CSV file:</label>
-                      <span>
-                        <input id="csvfile" type="file" data-widget="fileinput" data-multiple="false" />
-                      </span>
-                    </div>
 
                     <div class='tbl-results'>
                       <HomeAddTeamMemberTable teamMembers={self.props.teamMembers} deleteTeamMember={self.deleteTeamMember} />

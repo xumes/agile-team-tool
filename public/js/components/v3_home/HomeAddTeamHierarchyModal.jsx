@@ -69,7 +69,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
             </div>
           </div>
           
-          <HomeTeamHierarchyFooter updateStep={self.addTeamHandler} />  
+          <HomeTeamHierarchyFooter updateStep={self.props.updateStep} />
 
         </div>   
         </Modal>
