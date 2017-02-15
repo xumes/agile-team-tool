@@ -68,6 +68,7 @@ var HomeAddTeam = React.createClass({
     } else if (step == 'showTeamName') {
       this.setState({showTeamNameModal: true});
       this.setState({currentStep: 'showTeamName'});
+      this.setState({selectedteamType: ''});
     }
   },
 
@@ -170,10 +171,12 @@ var HomeAddTeam = React.createClass({
     var selectedParent = self.state.selectedParentTeam;
     var newTeamObj = self.state.newTeamObj;
     var selectedteamType = self.state.selectedteamType;
+    var selectedChildTeams = self.state.selectedChildTeams;
     console.log('HomeAddTeam updateTeam...');
     console.log('team name/description:', newTeamObj);
     console.log('added members:', addedMembers);
     console.log('selectedParent:', selectedParent);
+    console.log('selectedChildTeams:', selectedChildTeams);
     console.log('selectedteamType:', selectedteamType);
     // var obj = {
     //   name: newTeamObj.name,
