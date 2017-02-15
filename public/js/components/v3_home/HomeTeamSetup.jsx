@@ -375,7 +375,7 @@ var HomeTeamSetup = React.createClass({
     return (
       <div style={{'height': '100%'}} id='teamSetupBlock'>
         <div class='home-team-header-teamname-btn' onClick={self.showTeamSetup}>
-          <InlineSVG class='home-team-header-teamname-btn-img' src={require('../../../img/Att-icons/att-icons_team-settings-21.svg')}></InlineSVG>
+          <InlineSVG class='home-team-header-teamname-btn-img' src={require('../../../img/Att-icons/att-icons_team-settings-open.svg')}></InlineSVG>
         </div>
 
         <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showParentSetup} onHide={self.hideTeamSetup}  onShow={self.show}>
