@@ -13,12 +13,18 @@ var HomeAddTeamMemberTable = React.createClass({
   render: function() {
     var self = this;
     var teamMemberList = self.props.teamMembers.map(function(member) {
-      var memberId = member.userId;
+      var key = (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase();
       var memberName = member.name;
       var memberEmail = member.email;
-      var memberLocation = (member && member.location.site) ? utils.toTitleCase(member.location.site) : '';
+      var memberLocation = '';
+      if (member && member.location.site) {
+        memberLocation = utils.toTitleCase(member.location.site);
+      } else if (member && member.location) {
+        memberLocation = utils.toTitleCase(member.location);
+      }
+
       return (
-        <tr key={memberId}>
+        <tr key={key}>
           <td class='row-delete'><div class='delete-ico'><InlineSVG onClick={self.props.deleteTeamMember.bind(null, memberEmail)} src={require('../../../img/Att-icons/att-icons_delete-redbg.svg')}></InlineSVG></div>&nbsp;&nbsp;</td>
           <td class='name'>{memberName}</td>
           <td class='email'><span class='email'>{memberEmail}</span></td>
@@ -36,7 +42,7 @@ var HomeAddTeamMemberTable = React.createClass({
             <td class='heading' style={{textAlign:'center'}}><span class='location'>Location</span></td>
           </tr>
         </thead>
-        <tbody class='tbl-members-data' id='tbl-members-data'>
+        <tbody class='tbl-members-data'>
           {self.props.teamMembers.length != 0  ? teamMemberList : <tr style={{display:'block'}}><td colSpan='4' class='dataTables_empty'>No data available</td></tr>}
         </tbody>
       </table>

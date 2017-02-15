@@ -4158,6 +4158,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .new-team-creation-addteam-member .tbl-results {
   width: 53em;
   height: 10em;
+  margin-top: 1em;
 }
 
 .new-team-creation-addteam-member .tbl-members {
