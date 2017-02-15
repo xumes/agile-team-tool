@@ -65,9 +65,13 @@ var HomeAddIteration = React.createClass({
       name: name, 
       c_name: true, 
       c_stories_op_committed:false,
+      c_stories_op_committed_disabled: true,
       c_stories_dev_committed:false,
+      c_stories_dev_committed_disabled: true,
       c_stories_op_delivered:true,
-      c_stories_dev_delivered: true});
+      c_stories_op_delivered_disabled: false,
+      c_stories_dev_delivered: true,
+      c_stories_dev_delivered_disabled: false});
     
   },
 
