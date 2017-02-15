@@ -36,9 +36,13 @@ var HomeAddIteration = React.createClass({
       name: '',
       c_name:true,
       c_stories_op_committed:false,
+      c_stories_op_committed_disabled: false,
       c_stories_dev_committed:false,
+      c_stories_dev_committed_disabled: false,
       c_stories_op_delivered:true,
-      c_stories_dev_delivered: true
+      c_stories_op_delivered_disabled: false,
+      c_stories_dev_delivered: true,
+      c_stories_dev_delivered_disabled: false
     }
   },
 
@@ -61,9 +65,13 @@ var HomeAddIteration = React.createClass({
       name: name, 
       c_name: true, 
       c_stories_op_committed:false,
+      c_stories_op_committed_disabled: true,
       c_stories_dev_committed:false,
+      c_stories_dev_committed_disabled: true,
       c_stories_op_delivered:true,
-      c_stories_dev_delivered: true});
+      c_stories_op_delivered_disabled: false,
+      c_stories_dev_delivered: true,
+      c_stories_dev_delivered_disabled: false});
     
   },
 
@@ -241,19 +249,19 @@ var HomeAddIteration = React.createClass({
   },
 
   copyOpCommStories: function(e){
-    this.setState({c_stories_op_committed : e.target.checked});
+    this.setState({c_stories_op_committed : e.target.checked, c_stories_op_delivered_disabled: e.target.checked});
   },
 
   copyOpDelStories: function(e){
-    this.setState({c_stories_op_delivered : e.target.checked});
+    this.setState({c_stories_op_delivered : e.target.checked, c_stories_op_committed_disabled: e.target.checked});
   },
 
   copyDevCommStories: function(e){
-    this.setState({c_stories_dev_committed : e.target.checked});
+    this.setState({c_stories_dev_committed : e.target.checked, c_stories_dev_delivered_disabled: e.target.checked});
   },
 
   copyDevDelStories: function(e){
-    this.setState({c_stories_dev_delivered: e.target.checked});
+    this.setState({c_stories_dev_delivered: e.target.checked, c_stories_dev_committed_disabled: e.target.checked});
   },
   
   render: function() {
@@ -285,14 +293,14 @@ var HomeAddIteration = React.createClass({
                 <div className='home-iter-sub-section'>
                   <div class="checkbox">
                     <label for="cstoriesopcom" style={{'display':'flex'}}>
-                      <input type="checkbox" checked={this.state.c_stories_op_committed} onChange={this.copyOpCommStories} id="cstoriesopcom"/>
+                      <input type="checkbox" checked={this.state.c_stories_op_committed} onChange={this.copyOpCommStories} id="cstoriesopcom" disabled={this.state.c_stories_op_committed_disabled}/>
                       <span className='home-iter-sub-section-category'>Committed</span>
                     </label>
                   </div>
                   <span style={{'paddingLeft':'10%'}}/>
                   <div class="checkbox" >
                     <label for="cstoriesopdel" style={{'display':'flex'}}>
-                      <input type="checkbox" checked={this.state.c_stories_op_delivered} onChange={this.copyOpDelStories} id="cstoriesopdel"/>
+                      <input type="checkbox" checked={this.state.c_stories_op_delivered} onChange={this.copyOpDelStories} id="cstoriesopdel" disabled={this.state.c_stories_op_delivered_disabled}/>
                       <span className='home-iter-sub-section-category' style={{'marginRight': '0.1em'}}>Delivered </span><span className='home-iter-sub-section-delivered'>(into Committed)</span>
                     </label>
                   </div>
@@ -301,14 +309,14 @@ var HomeAddIteration = React.createClass({
                 <div className='home-iter-sub-section'>
                   <div class="checkbox">
                     <label for="cstoriesdevcom">
-                      <input type="checkbox" checked={this.state.c_stories_dev_committed} onChange={this.copyDevCommStories} id="cstoriesdevcom"/>
+                      <input type="checkbox" checked={this.state.c_stories_dev_committed} onChange={this.copyDevCommStories} id="cstoriesdevcom" disabled={this.state.c_stories_dev_committed_disabled}/>
                       <span className='home-iter-sub-section-category'>Committed</span>
                     </label>
                   </div>
                   <span style={{'paddingLeft':'10%'}}/>
                   <div class="checkbox" >
                     <label for="cstoriesdevdel" style={{'display':'flex','textAlign':'center'}}>
-                      <input type="checkbox" checked={this.state.c_stories_dev_delivered} onChange={this.copyDevDelStories} id="cstoriesdevdel"/>
+                      <input type="checkbox" checked={this.state.c_stories_dev_delivered} onChange={this.copyDevDelStories} id="cstoriesdevdel" disabled={this.state.c_stories_dev_delivered_disabled}/>
                       <span className='home-iter-sub-section-category' style={{'marginRight': '0.1em'}}>Delivered </span> <span className='home-iter-sub-section-delivered'>(into Committed)</span>
                     </label>
                   </div>
