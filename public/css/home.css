@@ -2118,7 +2118,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   width: 5%;
   height: 60%;
   cursor: pointer;
-  display: none;
+  display: inline-block;
 }
 .home-iter-content-btn > i > svg {
   width: 100%;
