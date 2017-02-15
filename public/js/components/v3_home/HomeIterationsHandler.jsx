@@ -1581,6 +1581,7 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
 }
 
 module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotData) {
+  if (_.isEmpty(snapshotData)) return;
   var teamIterations = snapshotData.iterationData;
   var nonsquadScore = (snapshotData.teamMemberData)[0];
   var timestamp = snapshotData.lastUpdate;
@@ -1741,32 +1742,33 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
 
   var pData = [];
   var pDataObj = new Object();
-  pDataObj.name = 'Teams < 5 members';
-  pDataObj.y = curTeamstat.teamsLt5 == 0 ? null : curTeamstat.teamsLt5;
-  pDataObj.tc = curTeamstat.tcLt5;
-  pDataObj.fte = curTeamstat.fteLt5.toFixed(1);
-  pDataObj.color = '#D3D3D3';
-  pData.push(pDataObj);
+  if (!_.isEmpty(curTeamstat)) {
+    pDataObj.name = 'Teams < 5 members';
+    pDataObj.y = curTeamstat.teamsLt5 == 0 ? null : curTeamstat.teamsLt5;
+    pDataObj.tc = curTeamstat.tcLt5;
+    pDataObj.fte = curTeamstat.fteLt5.toFixed(1);
+    pDataObj.color = '#D3D3D3';
+    pData.push(pDataObj);
 
-  pDataObj = new Object();
-  pDataObj.name = 'Teams 5-12 members';
-  pDataObj.y = curTeamstat.teams5to12 == 0 ? null : curTeamstat.teams5to12;
-  pDataObj.tc = curTeamstat.tc5to12;
-  pDataObj.fte = curTeamstat.fte5to12.toFixed(1);
-  pDataObj.color = '#8CD211';
-  pDataObj.dataLabels = {color: 'black'};
-  pData.push(pDataObj);
+    pDataObj = new Object();
+    pDataObj.name = 'Teams 5-12 members';
+    pDataObj.y = curTeamstat.teams5to12 == 0 ? null : curTeamstat.teams5to12;
+    pDataObj.tc = curTeamstat.tc5to12;
+    pDataObj.fte = curTeamstat.fte5to12.toFixed(1);
+    pDataObj.color = '#8CD211';
+    pDataObj.dataLabels = {color: 'black'};
+    pData.push(pDataObj);
 
-  pDataObj = new Object();
-  pDataObj.name = 'Teams > 12 members';
-  pDataObj.y = curTeamstat.teamsGt12 == 0 ? null : curTeamstat.teamsGt12;
-  pDataObj.tc = curTeamstat.tcGt12;
-  pDataObj.fte = curTeamstat.fteGt12.toFixed(1);
-  pDataObj.color = '#808080';
-  pData.push(pDataObj);
+    pDataObj = new Object();
+    pDataObj.name = 'Teams > 12 members';
+    pDataObj.y = curTeamstat.teamsGt12 == 0 ? null : curTeamstat.teamsGt12;
+    pDataObj.tc = curTeamstat.tcGt12;
+    pDataObj.fte = curTeamstat.fteGt12.toFixed(1);
+    pDataObj.color = '#808080';
+    pData.push(pDataObj);
+  }
 
-
-  var totTeamCnt = curTeamstat.teamsLt5 + curTeamstat.teams5to12 + curTeamstat.teamsGt12;
+  var totTeamCnt = _.isEmpty(curTeamstat) ? 0 : curTeamstat.teamsLt5 + curTeamstat.teams5to12 + curTeamstat.teamsGt12;
   var cenTitle = 'Total team count:<br>' + totTeamCnt;
 
   var pizYMax = 100;

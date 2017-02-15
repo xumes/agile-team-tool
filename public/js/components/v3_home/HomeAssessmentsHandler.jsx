@@ -429,6 +429,8 @@ function createChartSection(prefixId, count) {
 }
 
 module.exports.assessmentParentRollup = function(snapshotData){
+  if (_.isEmpty(snapshotData)) return;
+
   var assessmentData = snapshotData.assessmentData;
   var date = moment(snapshotData.lastUpdate).format('DD MMM YYYY');
   //set div min height
