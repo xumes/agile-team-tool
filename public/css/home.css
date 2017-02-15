@@ -1956,6 +1956,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 3%;
 }
 
+.home-iter-last-update-title{
   height: 100%;
   width: 40%;
   display: inline-block;
@@ -4113,18 +4114,18 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .optsel-child {
-  position: absolute;  
+  position: absolute;
   bottom: -176%;
-  left: 45%;  
+  left: 45%;
   width: 25.5em;
   float: right;
   margin-top: 1em;
 }
 
 .curteam-block {
-  position: absolute;  
+  position: absolute;
   bottom: -93%;
-  left: 45%;  
+  left: 45%;
   height: 2.3em;
   width: 17.1em;
   float: right;
