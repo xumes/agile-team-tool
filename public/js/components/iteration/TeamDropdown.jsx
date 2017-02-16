@@ -13,26 +13,28 @@ var TeamDropdown = React.createClass({
 
   componentWillMount: function() {
     var self = this;
-    api.getSquadTeams()
+    var teamId = self.props.iteration.teamId;
+    api.getSquadTeams({name:1})
       .then(function(teams) {
-        var selectedTeamInfo;
-        var teamId = self.props.iteration.teamId;
-        if (teams != undefined && teams.length > 0 &&
-        teamId != undefined && teamId != ''){
-          selectedTeamInfo = _.find(teams, {_id:teamId});
-        }
-        self.setState({teamNames: teams, teamInfo: selectedTeamInfo});
-        if (teamId != undefined && teamId != ''){
-          return api.isUserAllowed(self.props.iteration.teamId);
-        }
-        else {
-          return null;
-        }
+        self.setState({teamNames: teams});
+        if (teamId != undefined && teamId != '')
+          return api.isUserAllowed(teamId);
+        else
+          return;
     })
     .then(function(result){
       if (result != null){
-        return self.props.readOnlyAccess(!result);
+        self.props.readOnlyAccess(!result);
+        return api.loadTeam(teamId);
       }
+      else
+        return;
+    })
+    .then(function(result){
+      if (result != null)
+        self.setState({teamInfo: result});
+      else
+        return;
     })
     .catch(function(err){
       console.log('[team-componentWillMount] error:'+JSON.stringify(err));
@@ -56,9 +58,11 @@ var TeamDropdown = React.createClass({
     if (!_.isEmpty(teamId)){
       api.isUserAllowed(teamId)
         .then(function(result) {
-          var selectedTeamInfo = _.find(self.state.teamNames, {_id:teamId});
-          self.setState({teamInfo: selectedTeamInfo});
           self.props.teamChangeHandler(teamId, result);
+          return api.loadTeam(teamId);
+        })
+        .then(function(result){
+          self.setState({teamInfo: result});          
         })
         .catch(function(err){
           console.log('[team change] error:'+JSON.stringify(err), err);
