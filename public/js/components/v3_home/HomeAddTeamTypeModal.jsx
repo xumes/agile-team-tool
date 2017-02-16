@@ -38,6 +38,7 @@ var HomeAddTeamTypeModal = React.createClass({
       $('#parentSelectList').val(self.props.selectedParentTeam._id).change();
     else
       $('#parentSelectList').val('').change();
+    $("#teamTypeBlock span[data-widget=tooltip]").tooltip();
   },
 
   changeTypeHandler: function(event) {
@@ -71,8 +72,16 @@ var HomeAddTeamTypeModal = React.createClass({
     var self = this;
     console.log('render team type',this.props.newTeamObj);
     var displayParents = {display: 'none'};
-    if (!_.isEmpty(self.props.newTeamObj) && _.isEqual('squad', this.props.newTeamObj.type))
-      displayParents = {display: 'block'};
+    var parentTeamChecked = '';
+    var squadTeamChecked = '';
+    if (!_.isEmpty(self.props.newTeamObj)) {
+      if (_.isEqual('squad', this.props.newTeamObj.type)) {
+        displayParents = {display: 'block'};
+        squadTeamChecked = 'checked';
+      } else if (this.props.newTeamObj.type == null) {
+        parentTeamChecked = 'checked';
+      }
+    }
     var populateTeamNames = self.props.selectableParents.map(function(item) {
       return (
         <option key={item._id} value={item._id}>{item.name}</option>
@@ -93,7 +102,7 @@ var HomeAddTeamTypeModal = React.createClass({
               <div class="midcontent">
                 <div class="optbox">
                   <span class="ibm-radio-wrapper obtbox-radio">
-                    <input class="ibm-styled-radio" id="pteam" name="teamtype" type="radio" value="parentTeam" onChange={self.changeTypeHandler} />
+                    <input class="ibm-styled-radio" id="pteam" name="teamtype" type="radio" value="parentTeam" checked={parentTeamChecked} onChange={self.changeTypeHandler} defaultValue={this.props.newTeamObj.type == null}/>
                     <label for="pteam" class="ibm-field-label lbl"><span data-widget="tooltip" title="A parent team, also known as a domain, subdomain, or tribe, is a team who oversees numerous teams below them and would have 'Roll up' data from each of those teams.">Parent team</span></label>
                   </span>
                   <div class="pteam-bg">
@@ -103,7 +112,7 @@ var HomeAddTeamTypeModal = React.createClass({
 
                 <div class="optbox">
                   <span class="ibm-radio-wrapper obtbox-radio">
-                    <input class="ibm-styled-radio" id="steam" name="teamtype" type="radio" value="squadTeam" onChange={self.changeTypeHandler} />
+                    <input class="ibm-styled-radio" id="steam" name="teamtype" type="radio" value="squadTeam"  checked={squadTeamChecked} onChange={self.changeTypeHandler} />
                     <label for="steam" class="ibm-field-label lbl"><span data-widget="tooltip" title="Typically, a squad is a team that uses Agile frameworks like Scrum or Kanban to deliver outcomes. Still not sure if you are a squad? If your team does not have any other teams organized below it, then it would be a squad.">Squad team</span></label>
                   </span>
                   <div class="pteam-bg">
@@ -112,7 +121,7 @@ var HomeAddTeamTypeModal = React.createClass({
 
                   <div class='optbox-select' style={displayParents}>
                     <select name="parentSelectList" id="parentSelectList" style={{width: '100%'}}>
-                      <option>Select parent team (optional)</option>
+                      <option value=''>Select parent team (optional)</option>
                       {populateTeamNames}
                     </select>
                   </div>

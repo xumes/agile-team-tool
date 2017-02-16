@@ -12,26 +12,30 @@ var HomeAddTeamMemberTable = React.createClass({
 
   render: function() {
     var self = this;
-    var teamMemberList = self.props.teamMembers.map(function(member) {
-      var key = (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase();
-      var memberName = member.name;
-      var memberEmail = member.email;
-      var memberLocation = '';
-      if (member && member.location.site) {
-        memberLocation = utils.toTitleCase(member.location.site);
-      } else if (member && member.location) {
-        memberLocation = utils.toTitleCase(member.location);
-      }
+    var teamMemberList = null;
+    if (!_.isEmpty(self.props.newTeamObj) && !_.isEmpty(self.props.newTeamObj.members)) {
+      teamMemberList = self.props.newTeamObj.members.map(function(member) {
+        var key = (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase();
+        var memberName = member.name;
+        var memberEmail = member.email;
+        var memberUserId = member.userId;
+        var memberLocation = '';
+        if (member && member.location.site) {
+          memberLocation = utils.toTitleCase(member.location.site);
+        } else if (member && member.location) {
+          memberLocation = utils.toTitleCase(member.location);
+        }
 
-      return (
-        <tr key={key}>
-          <td class='row-delete'><div class='delete-ico'><InlineSVG onClick={self.props.deleteTeamMember.bind(null, memberEmail)} src={require('../../../img/Att-icons/att-icons_remove.svg')}></InlineSVG></div>&nbsp;&nbsp;</td>
-          <td class='name'>{memberName}</td>
-          <td class='email'><span class='email'>{memberEmail}</span></td>
-          <td class='location'><span class='location'>{memberLocation}</span></td>
-        </tr>
-      );
-    });
+        return (
+          <tr key={key}>
+            <td class='row-delete'><div class='delete-ico'><InlineSVG onClick={self.props.deleteTeamMember.bind(null, memberUserId)} src={require('../../../img/Att-icons/att-icons_remove.svg')}></InlineSVG></div>&nbsp;&nbsp;</td>
+            <td class='name'>{memberName}</td>
+            <td class='email'><span class='email'>{memberEmail}</span></td>
+            <td class='location'><span class='location'>{memberLocation}</span></td>
+          </tr>
+        );
+      });
+    }
     return(
       <table class='tbl-members' >
         <thead>
@@ -43,7 +47,7 @@ var HomeAddTeamMemberTable = React.createClass({
           </tr>
         </thead>
         <tbody class='tbl-members-data'>
-          {self.props.teamMembers.length != 0  ? teamMemberList : <tr style={{display:'block'}}><td colSpan='4' class='dataTables_empty'>No data available</td></tr>}
+          {!_.isEmpty(teamMemberList)  ? teamMemberList : <tr style={{display:'block'}}><td colSpan='4' class='dataTables_empty'>No data available</td></tr>}
         </tbody>
       </table>
     );

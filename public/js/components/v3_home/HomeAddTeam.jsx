@@ -122,10 +122,10 @@ var HomeAddTeam = React.createClass({
 
         <HomeAddTeamTypeModal activeWindow={this.state.screenStatus['showTeamTypeModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamType={self.setTeamType} selectableParents={self.state.selectableParents} setSelectableParents={self.setSelectableParents}  selectedParentTeam={self.state.selectedParentTeam} setSelectedParentTeam={self.setSelectedParentTeam} />
 
+        <HomeAddTeamMemberModal activeWindow={this.state.screenStatus['showTeamMemberModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamMember={self.setTeamMember}  />
+
         {/*
         //TODO, needs only to pass newTeamObj as the container object of the new team related data, and only relevant setter functions that will update the object.
-        <HomeAddTeamMemberModal showModal={this.state.showTeamMemberModal} closeWindow={self.closeWindow} loadDetailTeam={self.props.loadDetailTeam} updateStep={self.updateStep} getTeamObj={getTeamObj} selectedteamType={self.state.selectedteamType} currentStep={self.state.currentStep} teamMembers={self.closeWindow} setTeamMember={self.setTeamMember} updateTeam={self.updateTeam} />
-
         <HomeAddTeamHierarchyModal showModal={this.state.showTeamHierarchyModal} closeWindow={self.hideTeamHierarchyModal}  updateStep={self.updateStep} setTeamObj={self.setTeamObj} getTeamObj={getTeamObj} onchangeParentTeamDropdown={self.onchangeParentTeamDropdown} teamNames={self.state.teamNames} selectableParents={self.state.selectableParents} onchangeChildTeamList={self.onchangeChildTeamList}/>
 
         <HomeAddTeamMemberRoleModal showModal={this.state.showTeamNameModal} closeWindow={self.hideAddTeamModal} />

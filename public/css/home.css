@@ -3643,14 +3643,15 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 /**/
 .new-team-creation-add-block {
   position: fixed;
-  left: 25%;
-  top: 21%;
+  left: 50%;
+  top: 50%;
   width: 44vw;
   height: 30.93vw;
   min-width: 281.6px;
   min-height: 417.6px;
   background-color: #FFFFFF;
   box-shadow: 0 0 10px 0 rgba(0,0,0,0.16);
+   transform: translate(-50%, -50%);
 }
 
 .new-team-creation-add-block-header {
@@ -4294,12 +4295,13 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   background-color: #ffffff;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.16);
   height: 30.93vw;
-  left: 25%;
+  left: 50%;
   min-height: 417.6px;
   min-width: 50em;
   position: fixed;
-  top: 21%;
+  top: 50%;
   width: 44vw;
+  transform: translate(-50%, -50%);
 }
 
 .new-team-creation-addteam-member .tbl-results {

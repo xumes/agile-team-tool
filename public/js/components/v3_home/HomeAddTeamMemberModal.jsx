@@ -4,7 +4,7 @@ var _ = require('underscore');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
 var utils = require('../utils.jsx');
-var HomeAddTeamMemberFooter = require('./HomeAddTeamMemberFooter.jsx');
+var HomeAddTeamFooterButtons  = require('./HomeAddTeamFooterButtons.jsx');
 var HomeAddTeamMemberFaces = require('./HomeAddTeamMemberFaces.jsx');
 var HomeAddTeamMemberTable = require('./HomeAddTeamMemberTable.jsx');
 
@@ -12,7 +12,12 @@ var HomeAddTeamMemberModal = React.createClass({
   getInitialState: function() {
     return {
       facesPerson: new Object(),
-      facesPersonFullName: ''
+      buttonOptions: {
+        prevScreen: '',
+        prevDisabled: '',
+        nextScreen: 'showTeamMemberRoleModal',
+        nextDisabled: 'disabled'
+      }
     };
   },
 
@@ -21,6 +26,19 @@ var HomeAddTeamMemberModal = React.createClass({
     $('#csvfile').fileinput();
     // $('#tbl-members-data').scrollable(); // it wont work..table becomes messy!
     self.setState({facesPersonFullName: ''});
+  },
+
+  componentWillUpdate: function(nextProps, nextState) {
+    var self = this;
+    if (!self.props.activeWindow && nextProps.activeWindow) {
+      var buttonOptions = self.state.buttonOptions;
+      buttonOptions.prevScreen = _.isEqual('squad', self.props.newTeamObj.type) ? 'showTeamTypeModal' : 'showTeamHierarchyModal';
+      if (!_.isEmpty(self.props.newTeamObj) && !_.isEmpty(self.props.newTeamObj.members))
+        buttonOptions.nextDisabled = '';
+      else
+        buttonOptions.nextDisabled = 'disabled';
+      self.setState({ buttonOptions: buttonOptions });
+    }
   },
 
   componentDidUpdate: function(prevProps, prevState) {
@@ -32,59 +50,59 @@ var HomeAddTeamMemberModal = React.createClass({
   addTeamMember: function() {
     var self = this;
     var teamMemberData = [];
-    var member = $('#txtTeamMemberName').val().trim();
-    // var member = {
-    //   name: $('#teamMemberName').val(),
-    //   role:  $('#memberRoleSelectList').val() == 'Other...' ? $('#otherRoleDesc').val() : $('#memberRoleSelectList').val(),
-    //   allocation: $('#memberAllocation').val(),
-    //   userId: self.state.facesPerson.uid ? self.state.facesPerson.uid.toUpperCase() : null,
-    //   email: self.state.facesPerson.email ? self.state.facesPerson.email.toLowerCase() : null,
-    //   location: {
-    //     site: self.state.facesPerson.location ? self.state.facesPerson.location.toLowerCase() : null
-    //   }
-    // }
-    if (member !== '') {
+    //var member = $('#txtTeamMemberName').val().trim();
+    if (!_.isEmpty(self.state.facesPerson)) {
       $('#txtTeamMemberNameError').removeClass('ibm-alert-link');
       $('#txtTeamMemberNameError').html('');
-      var member = {
-          name: self.state.facesPersonFullName,
-          userId: self.state.facesPerson.uid ? self.state.facesPerson.uid.toUpperCase() : null,
-          email: self.state.facesPerson.email ? self.state.facesPerson.email.toLowerCase() : null,
-          location: {
-            site: self.state.facesPerson.location ? self.state.facesPerson.location.toLowerCase() : null
-          }
-        }
+        var member = {
+            name: self.state.facesPerson.name,
+            userId: self.state.facesPerson.uid ? self.state.facesPerson.uid.toUpperCase() : null,
+            email: self.state.facesPerson.email ? self.state.facesPerson.email.toLowerCase() : null,
+            location: {
+              site: self.state.facesPerson.location ? self.state.facesPerson.location.toLowerCase() : null
+            }
+          };
 
         // onced added to the Table, clear the txtfield automatically
         $('#txtTeamMemberName').val('');
-        var teamMembers = self.props.teamMembers;
-        teamMembers.push(member);
+        var members = [];
+        if (!_.isEmpty(self.props.newTeamObj) && !_.isEmpty(self.props.newTeamObj.members))
+          members = self.props.newTeamObj.members;
+        members.push(member);
+
         // remove duplicate user by email
-        _.each(_.uniq(_.pluck(teamMembers, 'email'), utils.toLowerCase), function(value) {
-          teamMemberData.push(_.findWhere(teamMembers, {email: value}));
+        _.each(_.uniq(_.pluck(members, 'userId'), utils.toLowerCase), function(value) {
+          teamMemberData.push(_.findWhere(members, {userId: value}));
         });
 
         console.log('Added member:', teamMemberData);
         self.props.setTeamMember(teamMemberData);
+
+        if (!_.isEmpty(teamMemberData)) {
+          var buttonOptions = self.state.buttonOptions;
+          buttonOptions.nextDisabled = '';
+          self.setState({ buttonOptions: buttonOptions });
+        }
     } else {
       $('#txtTeamMemberNameError').addClass('ibm-alert-link');
       $('#txtTeamMemberNameError').html('Member name is required.');
     }
   },
 
-  deleteTeamMember: function(email) {
+  deleteTeamMember: function(userId) {
     var self = this;
     var updatedMember = [];
     console.log('deleteTeamMember before:', this.props.teamMembers);
     updatedMember = _.filter(this.props.teamMembers, function(ls) {
-      return !_.isEqual(ls['email'], email);
+      return !_.isEqual(ls['userId'], userId);
     });
     console.log('deleteTeamMember after:', updatedMember);
     self.props.setTeamMember(updatedMember);
-  },
-
-  changeHandlerFacesFullname: function(value) {
-    this.setState({facesPersonFullName: value});
+    if (_.isEmpty(teamMemberData)) {
+      var buttonOptions = self.state.buttonOptions;
+      buttonOptions.nextDisabled = 'disabled';
+      self.setState({ buttonOptions: buttonOptions });
+    }
   },
 
   updateFacesObj: function(obj) {
@@ -93,11 +111,9 @@ var HomeAddTeamMemberModal = React.createClass({
 
   render: function() {
     var self = this;
-    var teamObj = this.props.getTeamObj();
-    var addBtnStyle = this.props.loadDetailTeam.access?'block':'none';
-    var selectedteamType = this.props.selectedteamType;
+    var teamObj = self.props.newTeamObj;
     return (
-      <Modal aria-labelledby='modal-label' className='reactbootstrap-modal' backdropClassName='reactbootstrap-backdrop' show={self.props.showModal}>
+      <Modal aria-labelledby='modal-label' className='reactbootstrap-modal' backdropClassName='reactbootstrap-backdrop' show={self.props.activeWindow}>
         <div class='new-team-creation-addteam-member'>
             <div class='new-team-creation-add-block-header'>
               <h>Add Team Members</h>
@@ -121,13 +137,14 @@ var HomeAddTeamMemberModal = React.createClass({
                     <div class='clearboth'></div>
 
                     <div class='tbl-results'>
-                      <HomeAddTeamMemberTable teamMembers={self.props.teamMembers} deleteTeamMember={self.deleteTeamMember} />
+                      <HomeAddTeamMemberTable newTeamObj={self.props.newTeamObj} deleteTeamMember={self.deleteTeamMember} />
                     </div>
                   </form>
 
                 </div>
               </div>
-              <HomeAddTeamMemberFooter updateStep={self.props.updateStep} currentStep={self.props.currentStep} selectedteamType={selectedteamType} updateTeam={self.props.updateTeam} />
+
+              <HomeAddTeamFooterButtons buttonOptions={self.state.buttonOptions} openWindow={self.props.openWindow} />
             </div>
         </div>
       </Modal>
