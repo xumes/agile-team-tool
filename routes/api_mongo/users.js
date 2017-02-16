@@ -88,6 +88,16 @@ module.exports = function(app, includes) {
     }
   };
 
+  updateUser = function(req, res) {
+    Users.updateUser(req.body)
+    .then(function(result) {
+      res.status(200).send(result);
+    })
+    .catch(function(err) {
+      res.status(404).send(err);
+    });
+  };
+
   createUser = function(req, res) {
     Users.create(req.body)
     .then(function(result) {
@@ -144,5 +154,6 @@ module.exports = function(app, includes) {
 
   app.post('/api/users/info', [includes.middleware.auth.requireLogin], getUsersInfo);
   app.get('/api/users/activeInfo', [includes.middleware.auth.requireLogin], getActiveUserInfo);
+  app.put('/api/users/', [includes.middleware.auth.requireLogin], updateUser);
   app.post('/api/users/create', [includes.middleware.auth.requireLogin], createUser);
 };

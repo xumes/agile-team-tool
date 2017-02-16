@@ -14,7 +14,7 @@ var HomeMemberTable = React.createClass({
     this.initialAll();
     $('.team-member-table-content-role > div > select').change(this.changeMemberHandler);
     $('.team-member-table-content-allocation > div > select').change(this.changeMemberHandler);
-    $('.team-member-table-content-awk > div > select').change(this.changeMemberHandler);
+    $('.team-member-table-content-awk > div > div > select').change(this.changeAwkHandler);
   },
   componentDidUpdate: function() {
     this.initialAll();
@@ -24,7 +24,7 @@ var HomeMemberTable = React.createClass({
   initialAll: function() {
     $('.team-member-table-content-role > div > select').select2({'width':'100%'});
     $('.team-member-table-content-allocation > div > select').select2({'width':'100%'});
-    $('.team-member-table-content-awk > div > select').select2({'width':'99%'});
+    $('.team-member-table-content-awk > div > div > select').select2({'width':'99%'});
     this.hoverBlock('team-member-table-content-role');
     this.hoverBlock('team-member-table-content-location');
     this.hoverBlock('team-member-table-content-allocation');
@@ -50,9 +50,9 @@ var HomeMemberTable = React.createClass({
         // $('.team-member-table-content-allocation input').val('');
         $('.team-member-table-content-allocation > .modify-field').css('display','none');
         $('.team-member-table-content-awk > h').css('display','');
-        $('.team-member-table-content-awk > div').css('display','none');
+        $('.team-member-table-content-awk > .modify-field').css('display','none');
         $(this).find('h').css('display', 'none');
-        $(this).find('div').css('display', 'block');
+        $(this).find('.modify-field').css('display', 'block');
       });
     }
   },
@@ -217,13 +217,14 @@ var HomeMemberTable = React.createClass({
       $('#' + locationId + ' > .modify-field').css('display','none');
       $('#' + locationId + ' > h').css('display','');
       $('#' + locationId + ' input').val('');
-      var memberId = _.find(self.props.loadDetailTeam.members, function(member){
+      var newMember = _.find(self.props.loadDetailTeam.members, function(member){
         if (member.email == memberEmail) {
-          return member.userId;
+          return member;
         }
       });
-      if (!_.isEmpty(memberId)) {
-
+      if (!_.isEmpty(newMember)) {
+        newMember['location']['site'] = locationValue.toLowerCase();
+        api.updateUser(newMember);
       }
     }
   },
@@ -232,6 +233,95 @@ var HomeMemberTable = React.createClass({
     $('#' + locationId + ' > .modify-field').css('display','none');
     $('#' + locationId + ' > h').css('display','');
     $('#' + locationId + ' input').val('');
+  },
+
+  changeAwkHandler: function(e) {
+    // console.log(e.target.id.substring(11, e.target.id.length));
+    var self = this;
+    var newMembers = [];
+    var awkId = 'awk_' + e.target.id.substring(11, e.target.id.length);
+    if (e.target.value == 'other') {
+      $('#' + awkId + ' .input-field').show();
+    } else {
+      $('#' + awkId + ' .input-field > input').val('');
+      $('#' + awkId + ' .input-field').hide();
+      if (e.target.value == 100) {
+        $('#' + awkId + ' > h').html('Full Time');
+      } else {
+        $('#' + awkId + ' > h').html('Half Time');
+      }
+      $('#' + awkId + ' .modify-field').hide();
+      $('#' + awkId + ' > h').show();
+      var blockId = 'name_' + e.target.id.substring(11, e.target.id.length);
+      var memberEmail = $('#' + blockId + ' > div > h1').html();
+      _.each(self.props.loadDetailTeam.team.members, function(member){
+        if (member.email != memberEmail) {
+          newMembers.push(member);
+        } else {
+          var pm = JSON.parse(JSON.stringify(member));
+          pm['workTime'] = e.target.value;
+          newMembers.push(pm);
+        }
+      });
+      api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
+        .then(function(results){
+          _.each(self.props.loadDetailTeam.team.members, function(member){
+            if (member.email == memberEmail) {
+              member['workTime'] = e.target.value;
+            }
+          });
+        })
+        .catch(function(err){
+          console.log(err);
+        });
+    }
+  },
+
+  saveAwk: function(awkId) {
+    var self = this;
+    var newMembers = [];
+    var awkValue = $('#' + awkId + ' input').val();
+    if (awkValue > 100 || awkValue < 0 || awkValue == '') {
+      alert('Averge work per week should be between 0 to 100.');
+    } else {
+      if (awkValue == 100) {
+        $('#' + awkId + ' > h').html('Full Time');
+      } else if (awkValue == 50) {
+        $('#' + awkId + ' > h').html('Half Time');
+      } else {
+        $('#' + awkId + ' > h').html(awkValue + '%');
+      }
+      $('#' + awkId + ' .modify-field').hide();
+      $('#' + awkId + ' > h').show();
+      var blockId = 'name_' + awkId.substring(4, awkId.length);
+      var memberEmail = $('#' + blockId + ' > div > h1').html();
+      _.each(self.props.loadDetailTeam.team.members, function(member){
+        if (member.email != memberEmail) {
+          newMembers.push(member);
+        } else {
+          var pm = JSON.parse(JSON.stringify(member));
+          pm['workTime'] = awkValue;
+          newMembers.push(pm);
+        }
+      });
+      api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
+        .then(function(results){
+          _.each(self.props.loadDetailTeam.team.members, function(member){
+            if (member.email == memberEmail) {
+              member['workTime'] = awkValue;
+            }
+          });
+        })
+        .catch(function(err){
+          console.log(err);
+        });
+    }
+  },
+
+  cancelAwkChange: function(awkId) {
+    $('#' + awkId + ' > .modify-field').css('display','none');
+    $('#' + awkId + ' > h').css('display','');
+    $('#' + awkId + ' input').val('');
   },
 
   wholeNumCheck: function(e) {
@@ -291,7 +381,8 @@ var HomeMemberTable = React.createClass({
               if (m.userId == member.userId) {
                 return {
                   'role': m.role,
-                  'allocation': m.allocation
+                  'allocation': m.allocation,
+                  'workTime': m.workTime
                 }
               }
             });
@@ -323,6 +414,16 @@ var HomeMemberTable = React.createClass({
             } else {
               deletBtn = null;
               addTeamBtnStyle = true;
+            }
+            var awkValue = 'Full Time';
+            if (_.isNumber(memberDetail.workTime)) {
+              if (memberDetail.workTime == 50) {
+                awkValue = 'Half Time';
+              } else if (memberDetail.workTime == 100) {
+                awkValue = 'Full Time';
+              } else {
+                awkValue = memberDetail.workTime + '%';
+              }
             }
             return (
               <div key={blockId} id={blockId} class={blockClass}>
@@ -374,12 +475,24 @@ var HomeMemberTable = React.createClass({
                   </div>
                 </div>
                 <div class='team-member-table-content-awk' id={awkId} style={{'width':'16.7%'}}>
-                  <h>Full time</h>
-                  <div>
-                    <select id={'awk_select_' + idx} defaultValue='Full Time'>
-                      <option key='Full Time' value='Full Time'>Full Time</option>
-                      <option key='Part Time' value='Part Time'>Part Time</option>
-                    </select>
+                  <h>{awkValue}</h>
+                  <div class='modify-field'>
+                    <div class='dropdown-list'>
+                      <select id={'awk_select_' + idx} defaultValue='Full Time'>
+                        <option key='100' value='100'>Full Time</option>
+                        <option key='50' value='50'>Half Time</option>
+                        <option key='other' value='other'>Other</option>
+                      </select>
+                    </div>
+                    <div class='input-field'>
+                      <input type='text' placeholder='Ex:50' min='0' max='100' maxLength='3' onKeyPress={self.wholeNumCheck}></input>
+                      <div class='save-btn' onClick={self.saveAwk.bind(null, awkId)}>
+                        <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
+                      </div>
+                      <div class='cancel-btn' style={{'left':'5%'}} onClick={self.cancelAwkChange.bind(null, awkId)}>
+                        <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
+                      </div>
+                    </div>
                   </div>
                   {deletBtn}
                 </div>

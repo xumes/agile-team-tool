@@ -681,4 +681,20 @@ module.exports.updateLink = function(data) {
       reject(err);
     });
   });
-}
+};
+
+module.exports.updateUser = function(data) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/users';
+    var req = $.ajax({
+      type: 'PUT',
+      url: url,
+      contentType: 'application/json',
+      data: JSON.stringify(data)
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
