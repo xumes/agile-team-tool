@@ -7,7 +7,7 @@ var HomeAddTeam = require('./HomeAddTeam.jsx');
 var HomeNavTab = React.createClass({
   myTeamsClicked: function() {
     if ($('#myTeams').attr('data-state') != 'open') {
-      this.props.tabClicked('mytab');
+      this.props.tabClicked('myteams');
       $('.home-team-nav').css('top','0');
     }
   },

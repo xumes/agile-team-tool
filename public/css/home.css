@@ -14,9 +14,12 @@ body {
   height: 100%;
 }
 
-input, select, textarea {
-  color: #323232;
+textarea {
   font-size: 1.6em;
+}
+
+input, select {
+  font-size: 1em;
 }
 
 .select2, .select2-results ul li {
@@ -25,6 +28,10 @@ input, select, textarea {
 
 ul>li::before, ol>li::before {
   content: '';
+}
+
+button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
+  font-size: 1.3em;
 }
 
 /* Matts dank spinner */
@@ -156,10 +163,6 @@ ul>li::before, ol>li::before {
     -o-transform: rotate(-360deg);
     transform: rotate(-360deg); } }
 /* spinner end */
-
-button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
-  font-size: 1.3em !important;
-}
 
 .expand-image {
   position: relative;
@@ -997,7 +1000,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }*/
 
 .home-team-header-btn-img2 path, .home-team-header-btn-img2 rect, .home-team-header-btn-img2 polygon, .home-team-header-btn-img2 circle{
-  fill: #FFFFFF
+  fill: #FFFFFF;
 }
 
 .home-team-header-btn-title {
@@ -1953,6 +1956,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 3%;
 }
 
+.home-iter-last-update-title{
   height: 100%;
   width: 40%;
   display: inline-block;
@@ -3202,6 +3206,7 @@ width: 100% !important;
   opacity: 0.2;
   filter: alpha(opacity=20);
 }
+
 .att-modal .close:hover, .att-modal .close:focus { /* 11055 */
   color: #777677;
   text-decoration: none;
@@ -4077,18 +4082,18 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .optsel-child {
-  position: absolute;  
+  position: absolute;
   bottom: -176%;
-  left: 45%;  
+  left: 45%;
   width: 25.5em;
   float: right;
   margin-top: 1em;
 }
 
 .curteam-block {
-  position: absolute;  
+  position: absolute;
   bottom: -93%;
-  left: 45%;  
+  left: 45%;
   height: 2.3em;
   width: 17.1em;
   float: right;
@@ -4517,3 +4522,317 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   color: #4178BE;
   cursor: pointer;
 }
+
+.__react_component_tooltip{
+  background: rgb(236, 236, 236) !important;
+  color: rgb(50, 50, 50) !important;
+  padding: 1em !important;
+  font-size: 8.5pt !important;
+  line-height: 20px !important;
+  display: block !important;
+  max-width: 300px;
+}
+
+.home-modal-block {
+  background-color: #ffffff;
+  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.16);
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.6em;
+}
+
+.home-modal-block-header {
+  background-color: #4178be;
+  font-size: inherit;
+  height: 10%;
+  position: relative;
+  width: 100%;
+}
+
+.home-modal-block-header > h {
+  color: #ffffff;
+  font-size: inherit;
+  font-family: "HelvNeue Bold for IBM";
+  height: 100%;
+  padding-left: 1em;
+  position: relative;
+  top: 25%;
+}
+
+.home-modal-block-content {
+  font-size: inherit;
+  height: 75%;
+  padding-left: 1em;
+  position: relative;
+}
+
+.home-modal-block-footer {
+  display: inline-block;
+  font-size: inherit;
+  height: 10%;
+  padding-left: 1em;
+  position: relative;
+}
+
+.home-modal-block-footer .ibm-btn-small {
+  font-size: 1.6em !important;
+}
+
+.home-modal-block-close-btn {
+  cursor: pointer;
+  display: inline-block;
+  float: right;
+  height: inherit;
+  position: relative;
+  top: 27%;
+  width: 6%;
+}
+
+.team-setup-squad-block {
+  display: inline-block;
+  font-size: inherit;
+  height: 65%;
+  width: 100%;
+}
+
+.team-setup-squad-block .team-setup-squad-icon {
+  display: inline-block;
+  padding: 3em 0 0 2em;
+  position: relative;
+  width: 25%;
+}
+
+.team-setup-squad-block .team-setup-squad-content {
+  display: inline-block;
+  font-size: inherit;
+  height: inherit;
+  left: 45%;
+  position: absolute;
+  width: 53%;
+}
+
+.team-setup-squad-content > label {
+  display: inline-block;
+  position: absolute;
+  top: 15%;
+  width: 100%;
+}
+
+.team-setup-squad-content > select, .team-setup-squad-content > span {
+  font-size: inherit;
+  position: absolute;
+  top: 27%;
+  width: 95%;
+}
+
+.team-setup-squad-content > div {
+  font-size: inherit;
+  height: 55%;
+  position: absolute;
+  top: 50%;
+  width: 100%;
+}
+
+.team-setup-squad-content > div > h {
+  color: #777677;
+  font-size: 1.2em;
+  position: absolute;
+  top: 50%;
+  transform: translate(0px, -50%);
+}
+
+.home-modal-block-content > p {
+  color: #5a5a5a;
+  font-size: inherit;
+  line-height: 1.3em;
+  padding: 1.25em 1em;
+}
+
+.home-modal-block-close-btn svg, .team-setup-squad-icon svg {
+  height: inherit;
+  width: inherit;
+}
+
+.home-modal-block-close-btn polygon {
+  fill: #ffffff;
+  opacity: 1;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-arrow-top {
+  display: inline-block;
+  left: 40%;
+  position: absolute;
+  top: 10%;
+  width: 3%;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-arrow-top .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -490%;
+  position: absolute;
+  top: 39%;
+  width: 500%;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-arrow-bottom {
+  display: inline-block;
+  left: 40%;
+  position: absolute;
+  top: 48%;
+  width: 3%;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-arrow-bottom .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -190%;
+  position: absolute;
+  top: 39%;
+  width: 200%;
+}
+
+.team-setup-squad-icon-arrow-top polygon, .team-setup-squad-icon-arrow-bottom polygon,
+.team-setup-icon-arrow-top polygon, .team-setup-icon-arrow-middle polygon, .team-setup-icon-arrow-bottom polygon {
+  fill: #b3b3b3 !important;
+}
+
+.team-setup-icon svg circle:first-of-type, .team-setup-icon svg circle:last-of-type {
+  fill: #8cc63f !important;
+}
+
+.team-setup-block {
+  display: inline-block;
+  font-size: inherit;
+  height: 100%;
+  width: 100%;
+}
+
+.team-setup-block .team-setup-icon {
+  display: inline-block;
+  padding: 3em 0 0 2em;
+  position: relative;
+  width: 25%;
+}
+
+.team-setup-block .team-setup-icon-arrow-top {
+  display: inline-block;
+  left: 40%;
+  position: absolute;
+  top: 10%;
+  width: 3%;
+}
+
+.team-setup-block .team-setup-icon-arrow-top .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -490%;
+  position: absolute;
+  top: 39%;
+  width: 500%;
+}
+
+.team-setup-block .team-setup-icon-arrow-middle {
+  display: inline-block;
+  left: 40%;
+  position: absolute;
+  top: 36%;
+  width: 3%;
+}
+
+.team-setup-block .team-setup-icon-arrow-middle .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -490%;
+  position: absolute;
+  top: 40%;
+  width: 500%;
+}
+
+.team-setup-block .team-setup-icon-arrow-bottom {
+  display: inline-block;
+  left: 40%;
+  position: absolute;
+  top: 62%;
+  width: 3%;
+}
+
+.team-setup-block .team-setup-icon-arrow-bottom .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -190%;
+  position: absolute;
+  top: 41%;
+  width: 200%;
+}
+
+.team-setup-block .team-setup-content {
+  display: inline-block;
+  font-size: inherit;
+  height: inherit;
+  left: 45%;
+  position: absolute;
+  width: 53%;
+}
+
+.team-setup-content > select:first-of-type, .team-setup-content > span:first-of-type {
+  font-size: inherit;
+  position: absolute;
+  top: 6%;
+  width: 95%;
+}
+
+.team-setup-content > select:last-of-type, .team-setup-content > span:last-of-type {
+  font-size: inherit;
+  position: absolute;
+  top: 58%;
+  width: 95%;
+}
+
+.team-setup-content > div {
+  font-size: inherit;
+  height: 35%;
+  position: absolute;
+  top: 20%;
+  width: 95%;
+}
+
+.team-setup-content > div > h {
+  color: #777677;
+  font-size: 1.2em;
+  position: absolute;
+  top: 50%;
+  transform: translate(0px, -50%);
+}
+
+.team-setup-children {
+  border: 1px solid #b3b3b3 !important;
+  height: 25% !important;
+  overflow-y: auto !important;
+  top: 71% !important;
+}
+
+.team-setup-children > p {
+  cursor: pointer;
+  display: inline-block;
+  font-size: inherit;
+  overflow: hidden;
+  padding: 0.3em 0.2em 0;
+  white-space: nowrap;
+  width: 95%;
+}
+
+.team-setup-children > p > h {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.2em 0;
+  position: relative;
+  text-overflow: ellipsis;
+  width: 90%;
+}
+
+.team-setup-children-remove-icon {
+  display: inline-block;
+  left: 3%;
+  position: relative;
+  top: -9%;
+  width: 8%;
+}
+
