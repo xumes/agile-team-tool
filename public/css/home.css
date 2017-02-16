@@ -712,6 +712,8 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 .home-nav-show-btn > i, .home-nav-show-btn2 > i {
   position: relative;
   float: left;
+  height: 100%;
+  width: 100%;
 }
 .home-nav-show-btn svg, .home-nav-show-btn2 svg{
   width: 100%;
@@ -1028,6 +1030,13 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   position: relative;
   float: left;
   top: 0%;
+}
+
+.home-team-header-btn-title2 > h {
+  position: relative;
+  float: left;
+  height: 100%;
+  width: 100%;
 }
 
 .home-team-header-btn-title3 {
@@ -1636,6 +1645,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   top: 45%;
   right: 2.5%;
   width: 3%;
+  height: 50%;
 }
 
 .home-trends-overflow {
@@ -4835,4 +4845,3 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   top: -9%;
   width: 8%;
 }
-

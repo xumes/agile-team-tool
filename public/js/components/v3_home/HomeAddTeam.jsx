@@ -144,7 +144,7 @@ var HomeAddTeam = React.createClass({
   onchangeParentHierchSel: function(event) {
     console.log('HomeAddTeam onchangeParentHierchSel selectedParent:', selectedParent);
   },
- 
+
   //onchangeChildHierchSel: function(event) {
   //  var selectVal = event.target.value;
   //  console.log('HomeAddTeam onchangeChildHierchSel selectVal:', selectVal);
@@ -219,7 +219,7 @@ var HomeAddTeam = React.createClass({
       return obj;
     };
     return (
-      <div>
+      <div style={{'height': '100%'}}>
         <div class='home-nav-tab-buttons-item' style={{'display': addBtnStyle}}>
           <InlineSVG onClick={this.addTeamNameModal} src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
         </div>
