@@ -10,229 +10,123 @@ var HomeAddTeamMemberModal = require('./HomeAddTeamMemberModal.jsx');
 var HomeAddTeam = React.createClass({
   getInitialState: function() {
     return {
-      showTeamNameModal: false,
-      showTeamTypeModal: false,
-      showTeamMemberModal: false,
-      showTeamMemberRoleModal: false,
-      showTeamHierarchyModal: false,
+      screenStatus: {
+        showTeamNameModal: {active: false},
+        showTeamTypeModal: {active: false},
+        showTeamHierarchyModal: {active: false},
+        showTeamMemberModal: {active: false},
+        showTeamMemberRoleModal: {active: false}
+      },
+      screenPropKey: [
+        'showTeamNameModal',
+        'showTeamTypeModal',
+        'showTeamHierarchyModal',
+        'showTeamMemberModal',
+        'showTeamMemberRoleModal'
+      ],
+      currentScreen: 'showTeamNameModal',
       newTeamObj: {},
-      selparentList: 'none',
-      selectedteamType: '',
-      newTeamName: '',
-      newTeamDescription: '',
-      selectedParentTeam: '',
-      currentStep: '',
       selectableParents: [],
-      teamNames: [],
-      teamMembers: [],
+      selectedParentTeam: {},
       selectedChildTeams: []
     };
   },
 
-  componentDidMount: function() {
-    this.getTeamNames();
-    this.selectListInit();
+  createNewTeam: function() {
+    this.setState({ newTeamObj: {} });
+    this.openWindow('showTeamNameModal');
   },
 
-  addTeamNameModal: function() {
-    this.clearFormFields();
-    this.setState({showTeamNameModal: true});
-  },
-
-  hideAddTeamNameModal: function() {
-    console.log('in hideAddTeamNameModal');
-    this.setState({showTeamNameModal:  false })
-  },
-
-  hideTeamHierarchyModal: function() {
-    this.setState({showTeamHierarchyModal: false});
-//    this.setState({selectedteamType: ''});
-  },
-
-  updateStep: function(step) {
+  openWindow: function(screenName) {
     var self = this;
-    console.log('HomeAddTeam updateStep:', step);
-    this.hideAllTeamCreateModal();
-    if (step == 'showTeamTypeSelection') {
-      this.setState({showTeamTypeModal: true});
-      this.setState({currentStep: 'showTeamTypeSelection'});
-    } else if (step == 'showAddTeamMembers') {
-      this.setState({showTeamMemberModal: true});
-      this.setState({currentStep: 'showAddTeamMembers'});
-    } else if (step == 'showTeamMemberRole') {
-      this.setState({showTeamMemberRoleModal: true});
-      this.setState({currentStep: 'showTeamMemberRole'});
-    } else if (step == 'showParentChildTeamHierarchy') {
-      this.setState({showTeamHierarchyModal: true});
-      this.setState({currentStep: 'showParentChildTeamHierarchy'});
-    } else if (step == 'showTeamName') {
-      this.setState({showTeamNameModal: true});
-      this.setState({currentStep: 'showTeamName'});
-      this.setState({selectedteamType: ''});
-    }
-  },
-
-  setTeamObj: function(value) {
-    console.log('HomeAddTeam newTeamObj:', JSON.stringify(value));
-    var obj = {
-      name: value.name,
-      description: value.description
-    }
-    this.setState({newTeamObj: obj});
-  },
-
-  hideTeamTypeModal: function() {
-    this.setState({showTeamTypeModal: false});
-    this.setState({selectedteamType: ''});
-  },
-
-  hideTeamMemberModal: function() {
-    this.setState({showTeamMemberModal: false});
-  },
-
-  hideAllTeamCreateModal: function() {
-    this.setState({showTeamNameModal: false});
-    this.setState({showTeamTypeModal: false});
-    this.setState({showTeamMemberModal: false});
-    this.setState({showTeamMemberRoleModal: false});
-    this.setState({showTeamHierarchyModal: false});
-  },
-
-  onchangeTeamtypeRadio: function(event) {
-    var selectVal = event.target.value;
-    console.log('HomeAddTeam onchangeTeamtypeRadio selectVal:', selectVal);
-    $('#btn-teamtypeselect').prop('disabled', false);
-    if (selectVal == 'squadteam') {
-      this.setState({selparentList: 'block'});
-    } else {
-      this.setState({selparentList: 'none'});
-    }
-    this.setState({selectedteamType: selectVal});
-  },
-
-  onchangeParentTeamDropdown: function(event) {
-    var selectVal = event.target.value;
-    var selectText = $('#' + event.target.id + ' option:selected').text();
-    var obj = {
-      value: selectVal,
-      text: selectText
-    }
-    this.setState({selectedParentTeam: obj});
-    console.log('in onchange parent team dropdown'+JSON.stringify(this.state.selectedParentTeam));
-  },
-
-  onchangeChildTeamList: function(childTeamList) {
-     console.log('in onchangeChildTeamList and childTeamList is: '+JSON.stringify(childTeamList));
-  },
-
-  changeHandlerTeamName: function(event) {
-    $('#btn-teamadd').prop('disabled', false);
-    this.setState({newTeamName: event.target.value});
-  },
-
-  changeHandlerTeamDesc: function(event) {
-    this.setState({newTeamDescription: event.target.value});
-  },
-
-  clearFormFields: function() {
-    this.setState({newTeamName: ''});
-    this.setState({newTeamDescription: ''});
-    this.setState({selectedteamType: ''});
-    this.setState({selectedParentTeam: ''});
-  },
-
-  onchangeParentHierchSel: function(event) {
-    console.log('HomeAddTeam onchangeParentHierchSel selectedParent:', selectedParent);
-  },
- 
-  //onchangeChildHierchSel: function(event) {
-  //  var selectVal = event.target.value;
-  //  console.log('HomeAddTeam onchangeChildHierchSel selectVal:', selectVal);
-  //  $('#btn-teamaddparentchildhier').prop('disabled', false);
-  //},
-
-  getTeamNames: function() {
-    var self = this;
-    return api.fetchTeamNames()
-      .then(function(teams) {
-        self.setState({
-          teamNames: teams
-        });
+    screenName = screenName || self.state.currentScreen;
+    console.log('openWindow', screenName, self.state);
+    if (screenName != '' && self.state.screenPropKey.indexOf(screenName) != -1) {
+      var screenStatus = self.state.screenStatus;
+      var currentScreen = self.state.currentScreen;
+      for(var key in screenStatus) {
+        if (key != screenName)
+          screenStatus[key].active = false;
+        else
+          screenStatus[key].active = true;
+      }
+      self.setState({
+        screenStatus : screenStatus,
+        currentScreen: screenName
       });
+    }
   },
 
-  setTeamMember: function(data) {
-    this.setState({teamMembers: data});
-  },
-
-  updateTeam: function() {
+  closeWindow: function() {
     var self = this;
-    var addedMembers = self.state.teamMembers;
-    var selectedParent = self.state.selectedParentTeam;
-    var newTeamObj = self.state.newTeamObj;
-    var selectedteamType = self.state.selectedteamType;
-    var selectedChildTeams = self.state.selectedChildTeams;
-    console.log('HomeAddTeam updateTeam...');
-    console.log('team name/description:', newTeamObj);
-    console.log('added members:', addedMembers);
-    console.log('selectedParent:', selectedParent);
-    console.log('selectedChildTeams:', selectedChildTeams);
-    console.log('selectedteamType:', selectedteamType);
-    // var obj = {
-    //   name: newTeamObj.name,
-    //   description: newTeamObj.name
-    // }
+    var screenName = self.state.currentScreen;
+    console.log('closeWindow', screenName, self.state);
+    if (screenName != '' && self.state.screenPropKey.indexOf(screenName) != -1) {
+      var screenStatus = self.state.screenStatus;
+      screenStatus[screenName].active = false;
+      self.setState({screenStatus : screenStatus});
+    }
   },
 
-  selectListInit: function() {
-    var self = this;
-    return new Promise(function(resolve, reject){
-      console.log('selectListInit');
-      var promiseArray = [];
+  setTeamNameDesc: function(name, description) {
+    var team = this.state.newTeamObj;
+    team.name = name;
+    team.description = description;
+    this.setState({ newTeamObj: team });
+  },
 
-      promiseArray.push(api.getNonSquadTeams());
-      console.log('after getNonsquad team in API. what is in promiseArray: '+JSON.stringify(promiseArray));
+  setSelectableParents: function(teams) {
+    this.setState({ selectableParents: teams });
+  },
 
-      Promise.all(promiseArray)
-        .then(function(results) {
-          var selectableParents = _.sortBy(results[0], 'name');
-          self.setState({
-            selectableParents: selectableParents
-          })
-          return true;
-        })
-        .catch(function(err){
-          console.log(err);
-          return reject(err);
-        });
-    });
+  setTeamType: function(type) {
+    var team = this.state.newTeamObj;
+    team.type = type;
+    console.log('setTeamType', team);
+    this.setState({ newTeamObj: team });
+  },
+
+  setTeamMember: function(members) {
+    var team = this.state.newTeamObj;
+    team.members = members;
+    this.setState({ newTeamObj: team });
+  },
+
+  setSelectedParentTeam: function(team) {
+    this.setState({ selectedParentTeam: team });
+  },
+
+  setSelectedChildTeams: function(teams) {
+    this.setState({ selectedChildTeams: teams });
+  },
+
+  saveTeam: function() {
+    /*
+    api.postTeam() // save team
+    api.associateTeam() // parent
+    api.associateTeam() // children
+    */
   },
 
   render: function () {
     var self = this;
     var addBtnStyle = self.props.access?'block':'none';
-    var getTeamObj = function() {
-      var obj = {
-        name: self.state.newTeamName || '',
-        description: self.state.newTeamDescription || ''
-      }
-      return obj;
-    };
+
     return (
       <div>
         <div class='home-nav-tab-buttons-item' style={{'display': addBtnStyle}}>
-          <InlineSVG onClick={this.addTeamNameModal} src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
+          <InlineSVG onClick={self.createNewTeam} src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
         </div>
 
-        <HomeAddTeamNameModal showModal={this.state.showTeamNameModal} closeWindow={self.hideAddTeamNameModal} updateStep={self.updateStep} setTeamObj={self.setTeamObj} getTeamObj={getTeamObj} changeHandlerTeamName={self.changeHandlerTeamName} changeHandlerTeamDesc={self.changeHandlerTeamDesc} />
-        <HomeAddTeamTypeModal showModal={this.state.showTeamTypeModal} closeWindow={self.hideTeamTypeModal} loadDetailTeam={self.props.loadDetailTeam} updateStep={self.updateStep} newTeamObj={self.state.newTeamObj} onchangeTeamtypeRadio={self.onchangeTeamtypeRadio} selectedParentTeam={self.state.selectedParentTeam} selectedteamType={self.state.selectedteamType} onchangeParentTeamDropdown={self.onchangeParentTeamDropdown} teamNames={self.state.teamNames} currentStep={self.state.currentStep} />
-        <HomeAddTeamMemberModal showModal={this.state.showTeamMemberModal} closeWindow={self.hideTeamMemberModal} loadDetailTeam={self.props.loadDetailTeam} updateStep={self.updateStep} getTeamObj={getTeamObj} selectedteamType={self.state.selectedteamType} currentStep={self.state.currentStep} teamMembers={self.state.teamMembers} setTeamMember={self.setTeamMember} updateTeam={self.updateTeam} />
-        <HomeAddTeamHierarchyModal showModal={this.state.showTeamHierarchyModal} closeWindow={self.hideTeamHierarchyModal}  updateStep={self.updateStep} setTeamObj={self.setTeamObj} getTeamObj={getTeamObj} onchangeParentTeamDropdown={self.onchangeParentTeamDropdown} teamNames={self.state.teamNames} selectableParents={self.state.selectableParents} onchangeChildTeamList={self.onchangeChildTeamList}/>
+        <HomeAddTeamNameModal activeWindow={this.state.screenStatus['showTeamNameModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamNameDesc={self.setTeamNameDesc} />
+
+        <HomeAddTeamTypeModal activeWindow={this.state.screenStatus['showTeamTypeModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamType={self.setTeamType} selectableParents={self.state.selectableParents} setSelectableParents={self.setSelectableParents}  selectedParentTeam={self.state.selectedParentTeam} setSelectedParentTeam={self.setSelectedParentTeam} />
 
         {/*
-        <HomeAddTeamTypeModal showModal={this.state.showTeamNameModal} closeWindow={self.hideAddTeamModal} />
+        //TODO, needs only to pass newTeamObj as the container object of the new team related data, and only relevant setter functions that will update the object.
+        <HomeAddTeamMemberModal showModal={this.state.showTeamMemberModal} closeWindow={self.closeWindow} loadDetailTeam={self.props.loadDetailTeam} updateStep={self.updateStep} getTeamObj={getTeamObj} selectedteamType={self.state.selectedteamType} currentStep={self.state.currentStep} teamMembers={self.closeWindow} setTeamMember={self.setTeamMember} updateTeam={self.updateTeam} />
 
-        <HomeAddTeamMemberModal showModal={this.state.showTeamNameModal} closeWindow={self.hideAddTeamModal} />
+        <HomeAddTeamHierarchyModal showModal={this.state.showTeamHierarchyModal} closeWindow={self.hideTeamHierarchyModal}  updateStep={self.updateStep} setTeamObj={self.setTeamObj} getTeamObj={getTeamObj} onchangeParentTeamDropdown={self.onchangeParentTeamDropdown} teamNames={self.state.teamNames} selectableParents={self.state.selectableParents} onchangeChildTeamList={self.onchangeChildTeamList}/>
 
         <HomeAddTeamMemberRoleModal showModal={this.state.showTeamNameModal} closeWindow={self.hideAddTeamModal} />
         */}

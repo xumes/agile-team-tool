@@ -3,46 +3,69 @@ var api = require('../api.jsx');
 var _ = require('underscore');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
-var HomeTeamNameFooter = require('./HomeTeamNameFooter.jsx');
-
+var HomeAddTeamFooterButtons = require('./HomeAddTeamFooterButtons.jsx');
 
 var HomeAddTeamNameModal = React.createClass({
-  addTeamHandler: function() {
+  getInitialState: function() {
+    return {
+      teams: [],
+      buttonOptions: {
+        prevScreen: '',
+        prevDisabled: 'disabled',
+        nextScreen: 'showTeamTypeModal',
+        nextDisabled: 'disabled'
+      }
+    };
+  },
+  componentWillUpdate: function(nextProps, nextState) {
     var self = this;
-    if ($('#newTeamName').val() == '') {
-        alert('Please fill in a new team name.');
-    } else {
-        api.fetchTeamNames()
-         .then(function(teams) {
-            var isTeamExist = false;
-            isTeamExist = _.find(teams, function(m){
-              if (m.name == $('#newTeamName').val()) {
-                console.log('in team exist = true');
-                return true;
-              }
-            });
-
-            if (isTeamExist) {
-              alert('This team name already exists. Please enter a different team name.');
-            } else {
-              self.props.updateStep('showTeamTypeSelection'); // Proceed to next screen -Selecting team type (parent or squad team)
-              console.log('Proceed to Team type(parent or squad team) selection modal..');
-              self.props.setTeamObj({name: self.props.getTeamObj().name, description: self.props.getTeamObj().description});
-            }
-         });
+    // make sure to get the latest team names on focus of this screen
+    if (!self.props.activeWindow && nextProps.activeWindow) {
+      api.fetchTeamNames()
+        .then(function(teams) {
+          self.setState({teams : teams});
+        });
     }
   },
+  nameUpdate: function() {
+    var self = this;
+    console.log('nameUpdate');
+    var newTeamName = self.refs.newTeamName.value.toLowerCase().replace(/[^a-z0-9]/g, '');
+    var team = _.find(self.state.teams, function(team) {
+      var strippedName = team.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (_.isEqual(strippedName, newTeamName)) return team;
+    });
+    var hasError = false;
+    if (!_.isEmpty(team)) {
+      // TODO: actual implem should be message on screen, not alert
+      alert('This team name already exists. Please enter a different team name.');
+      hasError = true;
+    }
 
+    if (hasError || _.isEmpty(newTeamName)) {
+      var buttonOptions = self.state.buttonOptions;
+      buttonOptions.nextDisabled = 'disabled';
+      self.setState({ buttonOptions: buttonOptions });
+    } else {
+      var buttonOptions = self.state.buttonOptions;
+      buttonOptions.nextDisabled = '';
+      self.setState({ buttonOptions: buttonOptions });
+      self.props.setTeamNameDesc(self.refs.newTeamName.value, self.refs.newTeamDescription.value);
+    }
+  },
+  descriptionUpdate: function() {
+    var self = this;
+    console.log('descriptionUpdate');
+    self.props.setTeamNameDesc(self.refs.newTeamName.value, self.refs.newTeamDescription.value);
+  },
   render: function () {
     var self = this;
     var noteStyle = {
        color: '#4178BE'
     };
-    // console.log(self.props);
-    var teamObj = self.props.getTeamObj();
     return (
       <div>
-        <Modal aria-labelledby='modal-label' className='reactbootstrap-modal' backdropClassName='reactbootstrap-backdrop' show={self.props.showModal} onHide={self.props.closeWindow}>
+        <Modal aria-labelledby='modal-label' className='reactbootstrap-modal' backdropClassName='reactbootstrap-backdrop' show={self.props.activeWindow} onHide={self.props.closeWindow}>
 
           <div class='new-team-creation-add-block'>
             <div class='new-team-creation-add-block-header'>
@@ -52,20 +75,19 @@ var HomeAddTeamNameModal = React.createClass({
 
             <div class='new-team-creation-add-block-content ibm-row-form1'>
               <div class='new-team-creation-add-block-content-name'>
-               <label for='newTeamName'>Team Name</label>
-                <input type='text' size='30' id='newTeamName' name='newTeamName' aria-label='team name' ref='newTeamName' value={teamObj.name} onChange={self.props.changeHandlerTeamName} />
-              </div>
-
-              <div class='new-team-creation-add-block-content-description'>
-                <label for='newTeamDescription'>Team Description</label>
-                <textarea type='textarea' rows='15' id='newTeamDescription' name='newTeamDescription' ref='newTeamDescription' value={teamObj.description} onChange={self.props.changeHandlerTeamDesc} aria-label='new team description' role='combobox'/>
-              </div>
-              
-              <div class='footer-note-add-team-name'><strong class="note1">NOTE:</strong>&nbsp;To join an existing team, click the "All teams" tab, find the team and click "request to join"</div>
-
+              <label for='newTeamName'>Team Name</label>
+              <input type='text' size='30' id='newTeamName' name='newTeamName' aria-label='team name' ref='newTeamName' onBlur={self.nameUpdate} defaultValue={self.props.newTeamObj.name}/>
             </div>
 
-            <HomeTeamNameFooter updateStep={self.addTeamHandler} />
+            <div class='new-team-creation-add-block-content-description'>
+              <label for='newTeamDescription'>Team Description</label>
+              <textarea type='textarea' rows='15' id='newTeamDescription' name='newTeamDescription' ref='newTeamDescription' onBlur={self.descriptionUpdate}  defaultValue={self.props.newTeamObj.description} />
+            </div>
+
+            <div class='footer-note-add-team-name'><strong class="note1">NOTE:</strong>&nbsp;To join an existing team, click the "All teams" tab, find the team and click "request to join"</div>
+          </div>
+
+          <HomeAddTeamFooterButtons buttonOptions={self.state.buttonOptions} openWindow={self.props.openWindow} />
 
           </div>
         </Modal>
