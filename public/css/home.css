@@ -1032,11 +1032,19 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   top: 0%;
 }
 
-.home-team-header-btn-title2 > h {
+/*.home-team-header-btn-title2 > h {
   position: relative;
   float: left;
   height: 100%;
   width: 100%;
+}*/
+
+.home-team-header-btn-title2 svg {
+  fill: #FFFFFF;
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 95%;
 }
 
 .home-team-header-btn-title3 {
@@ -1525,8 +1533,8 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   position: relative;
   float: right;
   width: 10%;
-  height: auto;
-  top: 40%;
+  height: 70%;
+  top: 30%;
   right: 5%;
   cursor: pointer;
 }
@@ -2195,8 +2203,8 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 .home-team-header-bookmark-arrow-img svg {
   position: relative;
   width: 120%;
-  height: auto;
-  top: 30%;
+  height: 100%;
+  /*top: 30%;*/
   right: 25%;
 }
 
@@ -2236,8 +2244,8 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   position: relative;
   float: right;
   width: 10%;
-  height: auto;
-  top: 40%;
+  height: 70%;
+  top: 32%;
   right: 5%;
   cursor: pointer;
 }

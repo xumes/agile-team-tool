@@ -219,8 +219,8 @@ var HomeAddTeam = React.createClass({
       return obj;
     };
     return (
-      <div style={{'height': '100%'}}>
-        <div class='home-nav-tab-buttons-item' style={{'display': addBtnStyle}}>
+      <div class='home-nav-tab-buttons-item' style={{'display': addBtnStyle}}>
+        <div style={{'width':'100%','height':'100%'}}>
           <InlineSVG onClick={this.addTeamNameModal} src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
         </div>
 
