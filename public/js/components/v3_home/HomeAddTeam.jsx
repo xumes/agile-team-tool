@@ -6,6 +6,7 @@ var HomeAddTeamNameModal = require('./HomeAddTeamNameModal.jsx');
 var HomeAddTeamHierarchyModal = require('./HomeAddTeamHierarchyModal.jsx');
 var HomeAddTeamTypeModal = require('./HomeAddTeamTypeModal.jsx');
 var HomeAddTeamMemberModal = require('./HomeAddTeamMemberModal.jsx');
+var HomeAddTeamMemberRole = require('./HomeAddTeamMemberRole.jsx');
 
 var HomeAddTeam = React.createClass({
   getInitialState: function() {
@@ -28,8 +29,24 @@ var HomeAddTeam = React.createClass({
       newTeamObj: {},
       selectableParents: [],
       selectedParentTeam: {},
-      selectedChildTeams: []
+      selectedChildTeams: [],
+      teamNames: [],
+      teamMembers: []
     };
+  },
+
+  componentDidMount: function() {
+    this.getTeamNames();
+  },
+
+  getTeamNames: function() {
+    var self = this;
+    return api.fetchTeamNames()
+      .then(function(teams) {
+        self.setState({
+          teamNames: teams
+        });
+      });
   },
 
   createNewTeam: function() {
@@ -108,6 +125,21 @@ var HomeAddTeam = React.createClass({
     */
   },
 
+  onchangeParentTeamDropdown: function(event) {
+    var selectVal = event.target.value;
+    var selectText = $('#' + event.target.id + ' option:selected').text();
+    var obj = {
+      value: selectVal,
+      text: selectText
+    }
+    this.setState({selectedParentTeam: obj});
+    console.log('in onchange parent team dropdown'+JSON.stringify(this.state.selectedParentTeam));
+  },
+
+  onchangeChildTeamList: function(childTeamList) {
+     console.log('in onchangeChildTeamList and childTeamList is: '+JSON.stringify(childTeamList));
+  },
+
   render: function () {
     var self = this;
     var addBtnStyle = self.props.access?'block':'none';
@@ -123,6 +155,8 @@ var HomeAddTeam = React.createClass({
         <HomeAddTeamTypeModal activeWindow={this.state.screenStatus['showTeamTypeModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamType={self.setTeamType} selectableParents={self.state.selectableParents} setSelectableParents={self.setSelectableParents}  selectedParentTeam={self.state.selectedParentTeam} setSelectedParentTeam={self.setSelectedParentTeam} />
 
         <HomeAddTeamMemberModal activeWindow={this.state.screenStatus['showTeamMemberModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamMember={self.setTeamMember}  />
+
+        <HomeAddTeamMemberRole activeWindow={this.state.screenStatus['showTeamMemberRoleModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamMember={self.setTeamMember} roles={self.props.roles} />
 
         {/*
         //TODO, needs only to pass newTeamObj as the container object of the new team related data, and only relevant setter functions that will update the object.

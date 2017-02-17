@@ -4380,7 +4380,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .new-team-creation-addteam-member .tbl-members-data {
   height: 13em;
   width: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   position: absolute;
 }
 
@@ -4451,7 +4451,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   margin-top: 5em;
   margin-right: 5em;
   margin-bottom: 0;
-  margin-left: 5em;
+  margin-left: 3.5em;
 }
 
 .new-team-creation-addteam-member .new-team-creation-addteam-member-footer {
@@ -4466,6 +4466,49 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   margin-right: 1.5%;
 }
 /* END: AddTeam Member Modal */
+
+/* BEGIN: AddTeamMember Role, Allocation Modal */
+#addTeamMemberRoleBlock .desc {
+  font-size: 1.3em;
+}
+
+#addTeamMemberRoleBlock .tbl-members-role-data {
+  height: 18em;
+  width: 100%;
+  overflow-y: auto;
+  position: absolute;
+}
+
+#addTeamMemberRoleBlock .tbl-memberRole-results {
+  height: 10em;
+  margin-top: 1em;
+}
+
+#addTeamMemberRoleBlock .tbl-memberRole-results td {
+  font-size: 1.3em;
+}
+
+#addTeamMemberRoleBlock .tbl-memberRole-results tbody td.location {
+  width: 10em;
+  background-color: #F2F2F2;
+}
+
+#addTeamMemberRoleBlock .tbl-memberRole-results tbody td.role {
+  width: 13em;
+}
+
+#addTeamMemberRoleBlock .tbl-memberRole-results tbody td.allocation {
+  width: 10em;
+}
+
+#addTeamMemberRoleBlock .tbl-memberRole-results td.role > .select2 {
+  width: 100% !important;
+}
+
+#addTeamMemberRoleBlock .tbl-memberRole-results td.allocation > .select2 {
+  width: 88% !important;
+}
+/* END: AddTeamMember Role, Allocation Modal */
 
 .home-iter-sub-section > input[type="checkbox"] {
   width: 6.25%;
