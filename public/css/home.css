@@ -1319,14 +1319,59 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   top: 30% !important;
 }
 
-.team-member-table-content-role > div {
+.team-member-table-content-role > .modify-field {
   position: relative;
   float: left;
   left: 5%;
   top: 10%;
   width: 90%;
-  height: 40%;
+  height: 80%;
   display: none;
+}
+
+.team-member-table-content-role > .modify-field >.dropdown-list {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 45%;
+}
+
+.team-member-table-content-role > .modify-field > .input-field {
+  position: relative;
+  float: left;
+  top: 10%;
+  width: 100%;
+  height: 45%;
+  display: none;
+}
+
+.team-member-table-content-role > .modify-field > .input-field > input {
+  position: relative;
+  float: left;
+  width: 70%;
+  height: 100%;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  background-color: rgb(255, 255, 255);
+  border: 0.1em solid #aaa;
+}
+
+.team-member-table-content-role > .modify-field > .input-field > .save-btn,
+.team-member-table-content-role > .modify-field > .input-field > .cancel-btn{
+  position: relative;
+  float: left;
+  width: 12%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.team-member-table-content-role > .modify-field > .input-field > .save-btn svg,
+.team-member-table-content-role > .modify-field > .input-field >.cancel-btn svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
 }
 
 .team-member-table-content-location > .modify-field {
