@@ -197,8 +197,8 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 #newTeamTree ul.ibm-twisty > li a.agile-team-link {
   color: #4D4D4D;
   font-size: 1.6em;
-  /*font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";*/
-  font-family: "Helvetica Neue";
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  /*font-family: "Helvetica Neue";*/
   line-height: 1.5em;
   margin-bottom: 1.5em;
   font-weight: 300;
@@ -209,8 +209,8 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 #newSearchTree ul.ibm-twisty > li a.agile-team-link {
   color: #4D4D4D;
   font-size: 1.6em;
-  /*font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";*/
-  font-family: "Helvetica Neue";
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  /*font-family: "Helvetica Neue";*/
   line-height: 1.5em;
   margin-bottom: 1.5em;
   font-weight: 300;
@@ -264,7 +264,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 
 .agile-team-selected > .agile-team-title {
   border-bottom: 0.15em solid #008ABF;
-  font-family: "HelvNeue Medium for IBM";
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   /*padding-bottom: 2%;*/
   position: relative;
   left: 0.65em;
@@ -2909,7 +2909,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   position: relative;
   float: left;
   width: 100%;
-  font-family: "HelvNeue Bold for IBM";
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.8em;
 }
 
@@ -2925,7 +2925,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .att-footer-links a {
-  font-family: "HelvNeue Light for IBM";
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   color: #464646;
 }
@@ -2966,7 +2966,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   display: inline-block;
 }
 .footer-bottom-links a {
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.8em;
   color: #777677;
 }
