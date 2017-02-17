@@ -265,3 +265,10 @@ module.exports.toTitleCase = function(str) {
     return strArray.join(', ');
   }
 }
+
+module.exports.toLowerCase = function(str) {
+  if (_.isEmpty(str)) return str;
+  if (str) {
+    return str.toLowerCase();
+  }
+}

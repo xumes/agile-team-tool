@@ -3,10 +3,10 @@ var api = require('../api.jsx');
 var _ = require('underscore');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
-var utils = require('../utils.jsx');
 var HomeAddTeamFooterButtons  = require('./HomeAddTeamFooterButtons.jsx');
 var HomeAddTeamMemberFaces = require('./HomeAddTeamMemberFaces.jsx');
 var HomeAddTeamMemberTable = require('./HomeAddTeamMemberTable.jsx');
+var utils = require('../utils.jsx');
 
 var HomeAddTeamMemberModal = React.createClass({
   getInitialState: function() {
@@ -23,7 +23,6 @@ var HomeAddTeamMemberModal = React.createClass({
 
   componentDidMount: function() {
     var self = this;
-    $('#csvfile').fileinput();
     // $('#tbl-members-data').scrollable(); // it wont work..table becomes messy!
     self.setState({facesPersonFullName: ''});
   },
@@ -39,12 +38,6 @@ var HomeAddTeamMemberModal = React.createClass({
         buttonOptions.nextDisabled = 'disabled';
       self.setState({ buttonOptions: buttonOptions });
     }
-  },
-
-  componentDidUpdate: function(prevProps, prevState) {
-    var self = this;
-    $('#csvfile').fileinput();
-    $('#tbl-members-data').scrollable();
   },
 
   addTeamMember: function() {
@@ -120,7 +113,7 @@ var HomeAddTeamMemberModal = React.createClass({
               <span class='close-ico'><InlineSVG onClick={self.props.closeWindow} src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG></span>
             </div>
             <div class='new-team-creation-add-block-pad'>
-              <div class='new-team-creation-add-block-content'>
+              <div class='new-team-creation-add-block-content' style={{'marginBottom': '6.1em'}} >
                 <div class='new-team-creation-add-block-content-mid2'>
                   <form class="ibm-row-form">
                     <div class='col1'>

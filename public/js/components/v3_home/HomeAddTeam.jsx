@@ -6,6 +6,7 @@ var HomeAddTeamNameModal = require('./HomeAddTeamNameModal.jsx');
 var HomeAddTeamHierarchyModal = require('./HomeAddTeamHierarchyModal.jsx');
 var HomeAddTeamTypeModal = require('./HomeAddTeamTypeModal.jsx');
 var HomeAddTeamMemberModal = require('./HomeAddTeamMemberModal.jsx');
+var HomeAddTeamMemberRole = require('./HomeAddTeamMemberRole.jsx');
 
 var HomeAddTeam = React.createClass({
   getInitialState: function() {
@@ -29,8 +30,24 @@ var HomeAddTeam = React.createClass({
       selectableParents: [],
       selectableChildren: [],
       selectedParentTeam: {},
-      selectedChildTeams: []
+      selectedChildTeams: [],
+      teamNames: [],
+      teamMembers: []
     };
+  },
+
+  componentDidMount: function() {
+    this.getTeamNames();
+  },
+
+  getTeamNames: function() {
+    var self = this;
+    return api.fetchTeamNames()
+      .then(function(teams) {
+        self.setState({
+          teamNames: teams
+        });
+      });
   },
 
   createNewTeam: function() {
@@ -114,6 +131,21 @@ var HomeAddTeam = React.createClass({
     */
   },
 
+  onchangeParentTeamDropdown: function(event) {
+    var selectVal = event.target.value;
+    var selectText = $('#' + event.target.id + ' option:selected').text();
+    var obj = {
+      value: selectVal,
+      text: selectText
+    }
+    this.setState({selectedParentTeam: obj});
+    console.log('in onchange parent team dropdown'+JSON.stringify(this.state.selectedParentTeam));
+  },
+
+  onchangeChildTeamList: function(childTeamList) {
+     console.log('in onchangeChildTeamList and childTeamList is: '+JSON.stringify(childTeamList));
+  },
+
   render: function () {
     var self = this;
     var addBtnStyle = self.props.access?'block':'none';
@@ -136,6 +168,7 @@ var HomeAddTeam = React.createClass({
         selectableChildren={self.state.selectableChildren}
         />
 
+        <HomeAddTeamMemberRole activeWindow={this.state.screenStatus['showTeamMemberRoleModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamMember={self.setTeamMember} roles={self.props.roles} />
 
         {/*
          onchangeParentTeamDropdown={self.onchangeParentTeamDropdown} teamNames={self.state.teamNames} selectableParents={self.state.selectableParents} onchangeChildTeamList={self.onchangeChildTeamList}/>
