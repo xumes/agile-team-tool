@@ -13,8 +13,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
       defaultParentObjects: [
         {name: 'Parent of my currently selected team', id: 'parentOfSelected'},
         {name: 'Peer of my currently selected team', id: 'peerOfSelected'}
-      ],
-      i: []
+      ]
     }
   },
 
@@ -33,7 +32,6 @@ var HomeAddTeamHierarchyModal = React.createClass({
     };
 
    var populateDefaultParentOption = this.state.defaultParentObjects.map(function(item) {
-     console.log ('IN Populate default Parent Option');
      return ( 
       <option key={item._id} value={item._id}>{item.name}</option>
      ) ;
@@ -46,11 +44,10 @@ var HomeAddTeamHierarchyModal = React.createClass({
    });
 
    var populateChildrenTeamNames = this.props.teamNames.map(function(item) {
-     return (
+    return (
       <option key={item._id} value={item._id}>{item.name}</option>
-      ) ;
+     );
    });
-
 
   return (
       <div>
@@ -65,13 +62,13 @@ var HomeAddTeamHierarchyModal = React.createClass({
           <div class='new-team-creation-add-block-content'>
             <div class='new-team-creation-add-block-content-mid'>
               <div class='top-note-parent-child-hierarchy'>Please choose the parent team, if any, "above" your team as well as the childrean beneath.</div>
-              <HomeTeamParentChildSelection  populateParentTeamNames={populateParentTeamNames} populateChildrenTeamNames={populateChildrenTeamNames} populateDefaultParentOption={populateDefaultParentOption} teamNames={self.props.teamNames}onchangeParentTeamDropdown={self.props.onchangeParentTeamDropdown} onchangeChildTeamList={this.props.onchangeChildTeamList}/>
+                <HomeTeamParentChildSelection  populateParentTeamNames={populateParentTeamNames} populateChildrenTeamNames={populateChildrenTeamNames} populateDefaultParentOption={populateDefaultParentOption} teamNames={self.props.teamNames} onchangeParentTeamDropdown={self.props.onchangeParentTeamDropdown} onchangeChildTeamList={this.props.onchangeChildTeamList}/>
             </div>
           </div>
           
           <HomeTeamHierarchyFooter updateStep={self.props.updateStep} />
 
-        </div>   
+        </div>
         </Modal>
       </div>
     )

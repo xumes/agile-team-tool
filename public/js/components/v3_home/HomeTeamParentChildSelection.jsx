@@ -7,36 +7,52 @@ var HomeTeamParentChildSelection = React.createClass({
   getInitialState: function() {
     return {
       children: [],
-      childCount: 0
+      childCount: 0,
+      teamNames: []
     }
   },
 
   componentDidMount: function() {
-    $("#pc-hier-selChild").prop('disabled', true);
+    $("#pc-hier-selChild").prop('disabled', false);  
     $("#pc-hier-selparent").select2(); 
     $("#pc-hier-selChild").select2(); 
     //$("#pc-hier-selparent").change(this.props.onchangeParentHierchSel);
-   // $("#pc-hier-selChild").change(this.props.onchangeChildHierchSel);
-   $("#pc-hier-selparent").change(this.parentSelectHandler);
+    // $("#pc-hier-selChild").change(this.props.onchangeChildHierchSel);
+    $("#pc-hier-selparent").change(this.parentSelectHandler);
     $("#pc-hier-selChild").change(this.childSelectHandler);
-   },
+    this.selectListInit();
+  },
 
-   parentSelectHandler: function(e){
-     $("#pc-hier-selChild").prop('disabled', false);
-     console.log ('In parent select handler. Value is:  '+$("#pc-hier-selparent").val());
-     this.props.onchangeParentTeamDropdown(e);
-   },
+  parentSelectHandler: function(e){
+    var self=this;
+    $("#pc-hier-selChild").prop('disabled', false);
+    this.props.onchangeParentTeamDropdown(e);
 
-   childDeleteHandler: function(id) {
-     var self = this;
-     console.log('childDeleteHandler',id);
-     var children = self.state.children;
-     children = _.filter(children, function(team) {
+    var selectVal = e.target.value;
+    var selectText = $('#' + e.target.id + ' option:selected').text();
+    console.log('ParentSelectHandler - selectVal: '+ selectVal);
+    console.log('ParentSelectHandler - selectText: '+ selectText);
+
+    var filteredTeam = [];
+    filteredTeam = _.filter(this.props.teamNames, function(team) {
+      return !_.isEqual(team._id, selectVal);
+    });
+
+    self.setState({teamNames: filteredTeam});
+    console.log('this.state.teamNames is: '+ this.state.teamNames.length);
+
+  },
+
+  childDeleteHandler: function(id) {
+    var self = this;
+    console.log('childDeleteHandler',id);
+    var children = self.state.children;
+    children = _.filter(children, function(team) {
        return !_.isEqual(id, team._id);
-     });
-     self.setState({children:children});
-     this.props.onchangeChildTeamList(this.state.children);
-   },
+    });
+    self.setState({children:children});
+    this.props.onchangeChildTeamList(this.state.children);
+  },
 
   childSelectHandler: function(e) {
     var self = this;         
@@ -56,10 +72,17 @@ var HomeTeamParentChildSelection = React.createClass({
       children.push(childTeam);
       children = _.sortBy(children, 'name');
 
-      self.setState({children:children});           
+      self.setState({children:children});
       this.props.onchangeChildTeamList(this.state.children);
     }
   },
+
+  selectListInit: function() {
+    var self = this;
+    self.setState({teamNames: this.props.teamNames});
+    //console.log('In selectListIntit: '+   this.state.teamNames.length);
+  },
+
 
   render: function() {        
     var self = this;
@@ -74,7 +97,14 @@ var HomeTeamParentChildSelection = React.createClass({
           <InlineSVG class='list-child-remove-icon' src={require('../../../img/Att-icons/att-icons_remove.svg')} onClick={self.childDeleteHandler.bind(null, item._id)}></InlineSVG> </p>
         )
     });
- 
+
+    var populateChildrenTeamNames = null;
+    populateChildrenTeamNames = this.state.teamNames.map(function(item) {
+     return (
+       <option key={item._id} value={item._id}>{item.name}</option>
+      );
+    });
+
     return (
 
       <div class='home-modal-block-content'>
@@ -95,10 +125,9 @@ var HomeTeamParentChildSelection = React.createClass({
              </div>
 
              <div class="optsel-parent" style={selparent1Style} >     
-               <select name="pc-hier-selparent" id="pc-hier-selparent" class="pc-hier-selparent" onChange={this.props.onchangeParentHierchSel}>
+               <select name="pc-hier-selparent" id="pc-hier-selparent" class="pc-hier-selparent">
                 <option key='NA' value='NA'>Select parent team</option>
                 <option key='NoParent' value='NoParent'>Top tier / No Parent Above / Not Listed</option>
-                 {this.props.populateDefaultParentOption}
                  {this.props.populateParentTeamNames}
                 </select>
             </div>
@@ -106,10 +135,10 @@ var HomeTeamParentChildSelection = React.createClass({
             <div class="curteam-block">Current Team (being made)</div>
 
              <div class="optsel-child" style={selparent1Style} >     
-               <select name="pc-hier-selChild" id="pc-hier-selChild" class="pc-hier-selChild" onChange={this.props.onchangeChildHierchSel}>
+               <select name="pc-hier-selChild" id="pc-hier-selChild" class="pc-hier-selChild">
                 <option value='NA'>Add children team(s)</option>
                 <option value='NoChild'>Not Listed</option>
-                 {this.props.populateChildrenTeamNames}
+                 {populateChildrenTeamNames}
                 </select>
             </div>                
 

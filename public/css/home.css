@@ -4158,9 +4158,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 8%;
 }
 
-
-
-
+.optsel-child .select2-container--default {
+  width: 100% !important;
+}
 
 .home-modal-block-content > p {
   color: #5a5a5a;
