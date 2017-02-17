@@ -14,9 +14,12 @@ body {
   height: 100%;
 }
 
-input, select, textarea {
-  color: #323232;
+textarea {
   font-size: 1.6em;
+}
+
+input, select {
+  font-size: 1em;
 }
 
 .select2, .select2-results ul li {
@@ -25,6 +28,10 @@ input, select, textarea {
 
 ul>li::before, ol>li::before {
   content: '';
+}
+
+button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
+  font-size: 1.3em;
 }
 
 /* Matts dank spinner */
@@ -156,10 +163,6 @@ ul>li::before, ol>li::before {
     -o-transform: rotate(-360deg);
     transform: rotate(-360deg); } }
 /* spinner end */
-
-button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
-  font-size: 1.3em !important;
-}
 
 .expand-image {
   position: relative;
@@ -997,7 +1000,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }*/
 
 .home-team-header-btn-img2 path, .home-team-header-btn-img2 rect, .home-team-header-btn-img2 polygon, .home-team-header-btn-img2 circle{
-  fill: #FFFFFF
+  fill: #FFFFFF;
 }
 
 .home-team-header-btn-title {
@@ -1953,6 +1956,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 3%;
 }
 
+.home-iter-last-update-title{
   height: 100%;
   width: 40%;
   display: inline-block;
@@ -2990,12 +2994,10 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 
 /* BEGIN: Important Link section */
 .att-modal .implabel {
-/* width: 279px;*/
   width: 100%;
 }
 
 .att-modal .implink {
-/* width: 279px;*/
   width: 100%;
 }
 
@@ -3003,10 +3005,6 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   font-size: 1.25em;
 }
 
-/*.att-modal input, .att-modal p, .att-modal span, .att-modal select {
-  font-size: 10.5pt;
-  padding: 0px;
-}*/
 .att-modal input {
   font-size: 1.12em;
 }
@@ -3039,22 +3037,16 @@ width: 100% !important;
 .att-modal .ibm-row-form label {
   font-family: "HelvNeue Medium for IBM";
   color: #323232;
-  /*font-size: 14px;*/
   font-size: 1.1em;
-  /*line-height: 18px;*/
   line-height: 1em;
   outline: none;
 }
 
 .att-modal .ibm-row-form .lblRoman {
   font-family: "HelvNeue Roman for IBM";
-  /*line-height: 22px;*/
   line-height: 1.7em;
 }
 
-.att-modal .ibm-row-form .lblRoman {
-  /*padding-top: 1.8%;*/
-}
 .glyphicon {
   font-family: "UX1 Glyphicons";
   font-size: 14px;
@@ -3079,25 +3071,15 @@ width: 100% !important;
 .iterspecific span.caption {
   left: 1% !important;
   padding-left: 11px;
-  /*padding-top: 10px;*/
   padding-top: 3.5%;
   width: 99% !important;
 }
 
 /* END: Important Link Modal */
 
-/* line 4642 */
-/*label {
-  color: #323232;
-  font-family: "Helvetica Neue for IBM",Helvetica,Arial,sans-serif;
-  font-weight: 500;
-  margin: 0 10px 10px 0;
-}*/
-
 .att-modal label {
   max-width: 90%;
 }
-
 
 .att-modal .modal-header::after {
   clear: both;
@@ -3125,12 +3107,10 @@ width: 100% !important;
 
 .att-modal .modal-footer {
   border: medium none;
-  /*padding: 10px 20px;*/
   padding: 4% 5%;
 }
 
 .att-modal .modal-footer .btn + .btn {
-  /*margin-left: 10px;*/
   margin-left:4%;
   margin-bottom: 0;
 }
@@ -3138,48 +3118,51 @@ width: 100% !important;
 .att-modal .modal-title {
   color: #ffffff;
   display: inline-block;
-  /*font-size: 15px;*/
   font-size: 1.5em;
   font-weight: bold;
-  /*line-height: 44px;*/
   font-family: "HelvNeue Bold for IBM" !important;
   padding-top: 3%;
 }
 
 .att-modal .modal-header .close { /* line 13835 */
   line-height: 44px;
-  margin: 0; }
-  .att-modal .modal-header .close:hover .glyphicon, .att-modal .modal-header .close:hover .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox .modal-header .close:hover input[type="checkbox"] + span::after, .att-modal .modal-header .close:hover
-  .att-modal .checkbox-inline input[type="checkbox"] + span::after,
-  .att-modal .checkbox-inline .modal-header .close:hover input[type="checkbox"] + span::after, .att-modal .modal-header .close:hover .switch input[type="checkbox"] + span, .att-modal .switch .modal-header .close:hover input[type="checkbox"] + span, .att-modal .modal-header .close:hover
-  .switch-inline input[type="checkbox"] + span,
-  .att-modal .switch-inline .modal-header .close:hover input[type="checkbox"] + span, .att-modal .modal-header .close:hover .breadcrumb > li + li:before, .att-modal .modal-header .close:hover .alert:before, .att-modal .modal-header .close:hover .alert-dismissable .close:before, .att-modal .alert-dismissable .modal-header .close:hover .close:before, .att-modal .modal-header .close:hover
-  .att-modal .alert-dismissible .close:before,
-  .att-modal .alert-dismissible .modal-header .close:hover .close:before,
-  .att-modal .modal-header .close:focus .glyphicon,
-  .att-modal .modal-header .close:focus .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox
-  .att-modal .modal-header .close:focus input[type="checkbox"] + span::after,
-  .att-modal .modal-header .close:focus .checkbox-inline input[type="checkbox"] + span::after,
-  .att-modal .checkbox-inline .modal-header .close:focus input[type="checkbox"] + span::after,
-  .att-modal .modal-header .close:focus .switch input[type="checkbox"] + span,
-  .att-modal .switch .modal-header .close:focus input[type="checkbox"] + span,
-  .att-modal .modal-header .close:focus .switch-inline input[type="checkbox"] + span,
-  .att-modal .switch-inline .modal-header .close:focus input[type="checkbox"] + span,
-  .att-modal .modal-header .close:focus .breadcrumb > li + li:before,
-  .att-modal .modal-header .close:focus .alert:before,
-  .att-modal .modal-header .close:focus .alert-dismissable .close:before,
-  .att-modal .alert-dismissable .modal-header .close:focus .close:before,
-  .att-modal .modal-header .close:focus .alert-dismissible .close:before,
-  .att-modal .alert-dismissible .att-modal .modal-header .close:focus .close:before {
-    border-color: #FFFFFF; }
-  .att-modal .modal-header .close .glyphicon, .att-modal .modal-header .close .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox .modal-header .close input[type="checkbox"] + span::after, .att-modal .modal-header .close
-  .att-modal .checkbox-inline input[type="checkbox"] + span::after,
-  .att-modal .checkbox-inline .modal-header .close input[type="checkbox"] + span::after, .att-modal .modal-header .close .switch input[type="checkbox"] + span, .att-modal .switch .modal-header .close input[type="checkbox"] + span, .att-modal .modal-header .close
-  .att-modal .switch-inline input[type="checkbox"] + span,
-  .att-modal .switch-inline .modal-header .close input[type="checkbox"] + span, .att-modal .modal-header .close .breadcrumb > li + li:before, .att-modal .modal-header .close .alert:before, .att-modal .modal-header .close .alert-dismissable .close:before, .att-modal .alert-dismissable .modal-header .close .close:before, .att-modal .modal-header .close
-  .att-modal .alert-dismissible .close:before,
-  .att-modal .alert-dismissible .modal-header .close .close:before {
-    color: #fff }
+  margin: 0;
+}
+
+.att-modal .modal-header .close:hover .glyphicon, .att-modal .modal-header .close:hover .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox .modal-header .close:hover input[type="checkbox"] + span::after, .att-modal .modal-header .close:hover
+.att-modal .checkbox-inline input[type="checkbox"] + span::after,
+.att-modal .checkbox-inline .modal-header .close:hover input[type="checkbox"] + span::after, .att-modal .modal-header .close:hover .switch input[type="checkbox"] + span, .att-modal .switch .modal-header .close:hover input[type="checkbox"] + span, .att-modal .modal-header .close:hover
+.switch-inline input[type="checkbox"] + span,
+.att-modal .switch-inline .modal-header .close:hover input[type="checkbox"] + span, .att-modal .modal-header .close:hover .breadcrumb > li + li:before, .att-modal .modal-header .close:hover .alert:before, .att-modal .modal-header .close:hover .alert-dismissable .close:before, .att-modal .alert-dismissable .modal-header .close:hover .close:before, .att-modal .modal-header .close:hover
+.att-modal .alert-dismissible .close:before,
+.att-modal .alert-dismissible .modal-header .close:hover .close:before,
+.att-modal .modal-header .close:focus .glyphicon,
+.att-modal .modal-header .close:focus .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox
+.att-modal .modal-header .close:focus input[type="checkbox"] + span::after,
+.att-modal .modal-header .close:focus .checkbox-inline input[type="checkbox"] + span::after,
+.att-modal .checkbox-inline .modal-header .close:focus input[type="checkbox"] + span::after,
+.att-modal .modal-header .close:focus .switch input[type="checkbox"] + span,
+.att-modal .switch .modal-header .close:focus input[type="checkbox"] + span,
+.att-modal .modal-header .close:focus .switch-inline input[type="checkbox"] + span,
+.att-modal .switch-inline .modal-header .close:focus input[type="checkbox"] + span,
+.att-modal .modal-header .close:focus .breadcrumb > li + li:before,
+.att-modal .modal-header .close:focus .alert:before,
+.att-modal .modal-header .close:focus .alert-dismissable .close:before,
+.att-modal .alert-dismissable .modal-header .close:focus .close:before,
+.att-modal .modal-header .close:focus .alert-dismissible .close:before,
+.att-modal .alert-dismissible .att-modal .modal-header .close:focus .close:before {
+  border-color: #FFFFFF;
+}
+
+.att-modal .modal-header .close .glyphicon, .att-modal .modal-header .close .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox .modal-header .close input[type="checkbox"] + span::after, .att-modal .modal-header .close
+.att-modal .checkbox-inline input[type="checkbox"] + span::after,
+.att-modal .checkbox-inline .modal-header .close input[type="checkbox"] + span::after, .att-modal .modal-header .close .switch input[type="checkbox"] + span, .att-modal .switch .modal-header .close input[type="checkbox"] + span, .att-modal .modal-header .close
+.att-modal .switch-inline input[type="checkbox"] + span,
+.att-modal .switch-inline .modal-header .close input[type="checkbox"] + span, .att-modal .modal-header .close .breadcrumb > li + li:before, .att-modal .modal-header .close .alert:before, .att-modal .modal-header .close .alert-dismissable .close:before, .att-modal .alert-dismissable .modal-header .close .close:before, .att-modal .modal-header .close
+.att-modal .alert-dismissible .close:before,
+.att-modal .alert-dismissible .modal-header .close .close:before {
+  color: #fff;
+}
 
 .att-modal .modal-title {
   line-height: 1.8em;
@@ -3188,10 +3171,7 @@ width: 100% !important;
   padding-top: 4.28%;
 }
 
-
 .att-modal .modal-header {
-  /*padding: 0 20px;*/
-  /*height: 44px;*/
   background-color: #4178BE;
   height: 14%;
   min-height: initial;
@@ -3224,50 +3204,61 @@ width: 100% !important;
   color: #777677;
   text-shadow: none;
   opacity: 0.2;
-  filter: alpha(opacity=20); }
-  .att-modal .close:hover, .att-modal .close:focus { /* 11055 */
-    color: #777677;
-    text-decoration: none;
-    cursor: pointer;
-    opacity: 0.5;
-    filter: alpha(opacity=50); }
+  filter: alpha(opacity=20);
+}
+
+.att-modal .close:hover, .att-modal .close:focus { /* 11055 */
+  color: #777677;
+  text-decoration: none;
+  cursor: pointer;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
 
 .att-modal button.close { /* 11062 */
   padding: 0;
   cursor: pointer;
   background: transparent;
   border: 0;
-  -webkit-appearance: none; }
-
+  -webkit-appearance: none;
+}
 
 .att-modal .close { /* line 13225 */
   float: right;
   font-size: inherit;
   line-height: inherit;
   opacity: 1;
-  filter: alpha(opacity=100); }
-  .att-modal .close:hover, .close:focus { /* line 13231 */
-    opacity: 1;
-    color: #fff;
-    filter: alpha(opacity=100); }
+  filter: alpha(opacity=100);
+}
+
+.att-modal .close:hover, .close:focus { /* line 13231 */
+  opacity: 1;
+  color: #fff;
+  filter: alpha(opacity=100);
+}
 
 .att-modal button.close {
   position: absolute;
   right: 16px;
-  top: 1.5%; }
-  .att-modal button.close:hover span,
-  .att-modal button.close:focus span {
-    border-color: #777677; opacity: 1;}
-  .att-modal button.close .glyphicon, .att-modal button.close .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox button.close input[type="checkbox"] + span::after, .att-modal button.close
-  .checkbox-inline input[type="checkbox"] + span::after,
-  .att-modal .checkbox-inline button.close input[type="checkbox"] + span::after, .att-modal button.close .switch input[type="checkbox"] + span, .att-modal .switch button.close input[type="checkbox"] + span, .att-modal button.close
-  .switch-inline input[type="checkbox"] + span,
-  .att-modal .switch-inline button.close input[type="checkbox"] + span, .att-modal button.close .breadcrumb > li + li:before, .att-modal button.close .alert:before, .att-modal button.close .alert-dismissable .close:before, .att-modal .alert-dismissable button.close .close:before, .att-modal button.close
-  .att-modal .alert-dismissible .close:before,
-  .att-modal .alert-dismissible button.close .close:before {
-    border: 1px solid transparent;
-    padding: 3px;
-    color: #777677; }
+  top: 1.5%;
+}
+
+.att-modal button.close:hover span,
+.att-modal button.close:focus span {
+  border-color: #777677;
+  opacity: 1;
+}
+.att-modal button.close .glyphicon, .att-modal button.close .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox button.close input[type="checkbox"] + span::after, .att-modal button.close
+.checkbox-inline input[type="checkbox"] + span::after,
+.att-modal .checkbox-inline button.close input[type="checkbox"] + span::after, .att-modal button.close .switch input[type="checkbox"] + span, .att-modal .switch button.close input[type="checkbox"] + span, .att-modal button.close
+.switch-inline input[type="checkbox"] + span,
+.att-modal .switch-inline button.close input[type="checkbox"] + span, .att-modal button.close .breadcrumb > li + li:before, .att-modal button.close .alert:before, .att-modal button.close .alert-dismissable .close:before, .att-modal .alert-dismissable button.close .close:before, .att-modal button.close
+.att-modal .alert-dismissible .close:before,
+.att-modal .alert-dismissible button.close .close:before {
+  border: 1px solid transparent;
+  padding: 3px;
+  color: #777677;
+}
 
 .att-modal button.close {
   background: transparent none repeat scroll 0 0;
@@ -3319,14 +3310,10 @@ width: 100% !important;
   content: "\e604";
 }
 
-
-
 .att-modal .modal-body {
-  /*padding: 30px 20px;*/
   padding: 9.5% 6.5% 1%;
   position: relative;
   float: left;
-  /*width: 97%;*/
   width: 87%;
 }
 
@@ -3366,19 +3353,15 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   border-radius: 0;
   border-width: 2px !important ;
   font-family: "Helvetica Neue Roman for IBM",Helvetica,Arial,sans-serif;
-  /*height: 30px;*/
   height: 2.85em;
-  /*padding: 0 20px;*/
   padding: 0 7%;
   -moz-user-select: none;
   background-image: none;
   border: 1px solid transparent;
   cursor: pointer;
   display: inline-block;
-  /*font-size: 14px;*/
   font-size: 1.27em;
   font-weight: normal;
-  /*line-height: 18px;*/
   line-height: 1em;
   margin-bottom: 0;
   text-align: center;
@@ -3390,7 +3373,8 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 .att-modal .btn-cancel {
   background-color: #FFFFFF;
   border-color: #4178BE;
-  color: #4178BE; }
+  color: #4178BE;
+}
 
 
 .att-modal .btn-secondary:hover, .att-modal .btn-secondary:focus, .att-modal .btn-secondary.focus, .att-modal .btn-secondary:active, .btn-secondary.active,
@@ -3404,12 +3388,13 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 .btn-cancel.dropdown-toggle {
   background-color: #eef4fc;
   border-color: #4178BE;
-  color: #4178BE; }
+  color: #4178BE;
+}
 
 .att-modal .btn-primary:hover, .att-modal .btn-primary:focus, .att-modal .btn-primary.focus, .att-modal .btn-primary:active,
-  .att-modal .btn-primary.active, .open > .btn-primary.dropdown-toggle {
-    background-color: #325c80;
-    color: #ffffff;
+.att-modal .btn-primary.active, .open > .btn-primary.dropdown-toggle {
+  background-color: #325c80;
+  color: #ffffff;
 }
 
 button, html input[type="button"], input[type="reset"], input[type="submit"] {
@@ -3658,14 +3643,15 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 /**/
 .new-team-creation-add-block {
   position: fixed;
-  left: 25%;
-  top: 21%;
+  left: 50%;
+  top: 50%;
   width: 44vw;
   height: 30.93vw;
   min-width: 281.6px;
   min-height: 417.6px;
   background-color: #FFFFFF;
   box-shadow: 0 0 10px 0 rgba(0,0,0,0.16);
+   transform: translate(-50%, -50%);
 }
 
 .new-team-creation-add-block-header {
@@ -3677,7 +3663,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: relative;
   float: left;
   top: 100%;
-  left: 8%;
+  left: 5%;
   font-family: "HelvNeue Roman for IBM";
   font-size: 2.5em;
 }
@@ -3799,9 +3785,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .midcontent {
-  width: 70%;
-  margin: 0 auto;
-  padding-bottom: 7em;
   margin-top: 1.5em;
 }
 
@@ -3840,6 +3823,28 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .optbox-1 {
   float: left;
   width: 11em;
+}
+
+.midcontent .optbox {
+  display: inline-block;
+  position: relative;
+  width: 50%;
+}
+
+.ibm-radio-wrapper.obtbox-radio {
+  left: 30%;
+  position: relative;
+}
+.midcontent .optbox .pteam-bg {
+  left: 25%;
+  position: absolute;
+  width: 40%;
+}
+
+.midcontent .optbox-select {
+  position: absolute;
+  top: 12em;
+  width: 100%;
 }
 
 .rpad {
@@ -3909,7 +3914,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   height: 22%;
   width: 90%;
-  left: 8%;
+  left: 5%;
   top: 15%;
 }
 
@@ -4085,7 +4090,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .optsel-parent {
   position: absolute;
-  bottom: -13%;
+  bottom: -43%;
   left: 45%;
   width: 25em;
   float: right;
@@ -4097,20 +4102,100 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .optsel-child {
-  position: absolute;  
-  bottom: -176%;
-  left: 45%;  
-  width: 25.5em;
+  position: absolute;
+  bottom: -202%;
+  left: 45%;
+  width: 25em;
   float: right;
   margin-top: 1em;
 }
 
+.team-hier-children {
+  border: 1px solid #b3b3b3 !important;
+  overflow-y: auto !important;
+  top: 300% !important;
+  display: inline-block;
+  font-size: inherit;
+  left: 45%;
+  position: absolute;
+  width: 43.5%;
+  height: 190%;
+}
+
+.team-hier-children > p {
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1.3em;
+  overflow: hidden;
+  padding: 0.3em 0.2em 0;
+  white-space: nowrap;
+  width: 95%;
+}
+
+.team-hier-children > p > h {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.2em 0;
+  position: relative;
+  text-overflow: ellipsis;
+  width: 90%;
+  left: 3%;
+}
+
+.team-hier-children-remove-icon {
+  display: inline-block;
+  left: 3%;
+  position: relative;
+  top: -9%;
+  width: 8%;
+}
+
+
+.team-hier-block .team-hier-content {
+  display: inline-block;
+  font-size: inherit;
+  height: inherit;
+  left: 50%;
+  position: absolute;
+  width: 40%;
+}
+
+.team-hier-content > select:first-of-type, .team-hier-content > span:first-of-type {
+  font-size: inherit;
+  position: absolute;
+  top: 6%;
+  width: 95%;
+}
+
+.team-hier-content > select:last-of-type, .team-hier-content > span:last-of-type {
+  font-size: inherit;
+  position: absolute;
+  top: 58%;
+  width: 95%;
+}
+
+.team-hier-content > div {
+  font-size: inherit;
+  height: 35%;
+  position: absolute;
+  top: 20%;
+  width: 95%;
+}
+
+.team-hier-content > div > h {
+  color: #777677;
+  font-size: 1.2em;
+  position: absolute;
+  top: 50%;
+  transform: translate(0px, -50%);
+}
+
 .curteam-block {
-  position: absolute;  
-  bottom: -93%;
-  left: 45%;  
+  position: absolute;
+  bottom: -125%;
+  left: 45%;
   height: 2.3em;
-  width: 17.1em;
+  width: 16.9em;
   float: right;
   margin-top: 1em;
   background-color: #b2d1e2;
@@ -4201,85 +4286,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   fill: #8cc63f !important;
 }
 
-.team-hier-children {
-  border: 1px solid #b3b3b3 !important;
-  overflow-y: auto !important;
-  top: 274% !important;
-  display: inline-block;
-  font-size: inherit;
-  left: 45%;
-  position: absolute;
-  width: 44.5%;
-  height: 125%;
-}
-
-.team-hier-children > p {
-  cursor: pointer;
-  display: inline-block;
-  font-size: 1.3em;
-  overflow: hidden;
-  padding: 0.3em 0.2em 0;
-  white-space: nowrap;
-  width: 95%;
-}
-
-.team-hier-children > p > h {
-  display: inline-block;
-  overflow: hidden;
-  padding: 0.2em 0;
-  position: relative;
-  text-overflow: ellipsis;
-  width: 90%;
-  left: 3%;
-}
-
-.team-hier-children-remove-icon {
-  display: inline-block;
-  left: 3%;
-  position: relative;
-  top: -9%;
-  width: 8%;
-}
-
-
-.team-hier-block .team-hier-content {
-  display: inline-block;
-  font-size: inherit;
-  height: inherit;
-  left: 50%;
-  position: absolute;
-  width: 40%;
-}
-
-.team-hier-content > select:first-of-type, .team-hier-content > span:first-of-type {
-  font-size: inherit;
-  position: absolute;
-  top: 6%;
-  width: 95%;
-}
-
-.team-hier-content > select:last-of-type, .team-hier-content > span:last-of-type {
-  font-size: inherit;
-  position: absolute;
-  top: 58%;
-  width: 95%;
-}
-
-.team-hier-content > div {
-  font-size: inherit;
-  height: 35%;
-  position: absolute;
-  top: 20%;
-  width: 95%;
-}
-
-.team-hier-content > div > h {
-  color: #777677;
-  font-size: 1.2em;
-  position: absolute;
-  top: 50%;
-  transform: translate(0px, -50%);
-}
 
 
 
@@ -4290,16 +4296,16 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   background-color: #ffffff;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.16);
   height: 30.93vw;
-  left: 25%;
+  left: 50%;
   min-height: 417.6px;
   min-width: 50em;
   position: fixed;
-  top: 21%;
+  top: 50%;
   width: 44vw;
+  transform: translate(-50%, -50%);
 }
 
 .new-team-creation-addteam-member .tbl-results {
-  /**width: 53em;**/
   height: 10em;
   margin-top: 5em;
 }
@@ -4329,16 +4335,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 2em;
   float: left;
   margin-left: 2em;
-}
-
-.new-team-creation-addteam-member .tbl-members thead .location {
-/*  width: 3em;
-  border: 1px solid;
-  display: block;
-  height: 2em;
-  float: left;
-  margin-left: 2em;
-  border:1px solid red;*/
 }
 
 .new-team-creation-addteam-member .tbl-members td.h-delete {
@@ -4389,7 +4385,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: absolute;
 }
 
-.dataTables_empty {text-align: center; display: block;}
+.dataTables_empty {
+  text-align: center;
+  display: block;
+}
 
 .new-team-creation-addteam-member .heading {
   font-weight: bold;
@@ -4409,7 +4408,11 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   margin: 0;
   min-height: 1px;
-  width: 32em;
+  width: 29em;
+}
+
+.new-team-creation-addteam-member .col1 #txtTeamMemberName {
+  font-size: 1.4em;
 }
 
 .new-team-creation-addteam-member .ibm-row-form .frmlabel {
@@ -4541,3 +4544,317 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   color: #4178BE;
   cursor: pointer;
 }
+
+.__react_component_tooltip{
+  background: rgb(236, 236, 236) !important;
+  color: rgb(50, 50, 50) !important;
+  padding: 1em !important;
+  font-size: 8.5pt !important;
+  line-height: 20px !important;
+  display: block !important;
+  max-width: 300px;
+}
+
+.home-modal-block {
+  background-color: #ffffff;
+  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.16);
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.6em;
+}
+
+.home-modal-block-header {
+  background-color: #4178be;
+  font-size: inherit;
+  height: 10%;
+  position: relative;
+  width: 100%;
+}
+
+.home-modal-block-header > h {
+  color: #ffffff;
+  font-size: inherit;
+  font-family: "HelvNeue Bold for IBM";
+  height: 100%;
+  padding-left: 1em;
+  position: relative;
+  top: 25%;
+}
+
+.home-modal-block-content {
+  font-size: inherit;
+  height: 75%;
+  padding-left: 1em;
+  position: relative;
+}
+
+.home-modal-block-footer {
+  display: inline-block;
+  font-size: inherit;
+  height: 10%;
+  padding-left: 1em;
+  position: relative;
+}
+
+.home-modal-block-footer .ibm-btn-small {
+  font-size: 1.6em !important;
+}
+
+.home-modal-block-close-btn {
+  cursor: pointer;
+  display: inline-block;
+  float: right;
+  height: inherit;
+  position: relative;
+  top: 27%;
+  width: 6%;
+}
+
+.team-setup-squad-block {
+  display: inline-block;
+  font-size: inherit;
+  height: 65%;
+  width: 100%;
+}
+
+.team-setup-squad-block .team-setup-squad-icon {
+  display: inline-block;
+  padding: 3em 0 0 2em;
+  position: relative;
+  width: 25%;
+}
+
+.team-setup-squad-block .team-setup-squad-content {
+  display: inline-block;
+  font-size: inherit;
+  height: inherit;
+  left: 45%;
+  position: absolute;
+  width: 53%;
+}
+
+.team-setup-squad-content > label {
+  display: inline-block;
+  position: absolute;
+  top: 15%;
+  width: 100%;
+}
+
+.team-setup-squad-content > select, .team-setup-squad-content > span {
+  font-size: inherit;
+  position: absolute;
+  top: 27%;
+  width: 95%;
+}
+
+.team-setup-squad-content > div {
+  font-size: inherit;
+  height: 55%;
+  position: absolute;
+  top: 50%;
+  width: 100%;
+}
+
+.team-setup-squad-content > div > h {
+  color: #777677;
+  font-size: 1.2em;
+  position: absolute;
+  top: 50%;
+  transform: translate(0px, -50%);
+}
+
+.home-modal-block-content > p {
+  color: #5a5a5a;
+  font-size: inherit;
+  line-height: 1.3em;
+  padding: 1.25em 1em;
+}
+
+.home-modal-block-close-btn svg, .team-setup-squad-icon svg {
+  height: inherit;
+  width: inherit;
+}
+
+.home-modal-block-close-btn polygon {
+  fill: #ffffff;
+  opacity: 1;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-arrow-top {
+  display: inline-block;
+  left: 40%;
+  position: absolute;
+  top: 10%;
+  width: 3%;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-arrow-top .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -490%;
+  position: absolute;
+  top: 39%;
+  width: 500%;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-arrow-bottom {
+  display: inline-block;
+  left: 40%;
+  position: absolute;
+  top: 48%;
+  width: 3%;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-arrow-bottom .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -190%;
+  position: absolute;
+  top: 39%;
+  width: 200%;
+}
+
+.team-setup-squad-icon-arrow-top polygon, .team-setup-squad-icon-arrow-bottom polygon,
+.team-setup-icon-arrow-top polygon, .team-setup-icon-arrow-middle polygon, .team-setup-icon-arrow-bottom polygon {
+  fill: #b3b3b3 !important;
+}
+
+.team-setup-icon svg circle:first-of-type, .team-setup-icon svg circle:last-of-type {
+  fill: #8cc63f !important;
+}
+
+.team-setup-block {
+  display: inline-block;
+  font-size: inherit;
+  height: 100%;
+  width: 100%;
+}
+
+.team-setup-block .team-setup-icon {
+  display: inline-block;
+  padding: 3em 0 0 2em;
+  position: relative;
+  width: 25%;
+}
+
+.team-setup-block .team-setup-icon-arrow-top {
+  display: inline-block;
+  left: 40%;
+  position: absolute;
+  top: 10%;
+  width: 3%;
+}
+
+.team-setup-block .team-setup-icon-arrow-top .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -490%;
+  position: absolute;
+  top: 39%;
+  width: 500%;
+}
+
+.team-setup-block .team-setup-icon-arrow-middle {
+  display: inline-block;
+  left: 40%;
+  position: absolute;
+  top: 36%;
+  width: 3%;
+}
+
+.team-setup-block .team-setup-icon-arrow-middle .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -490%;
+  position: absolute;
+  top: 40%;
+  width: 500%;
+}
+
+.team-setup-block .team-setup-icon-arrow-bottom {
+  display: inline-block;
+  left: 40%;
+  position: absolute;
+  top: 62%;
+  width: 3%;
+}
+
+.team-setup-block .team-setup-icon-arrow-bottom .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -190%;
+  position: absolute;
+  top: 41%;
+  width: 200%;
+}
+
+.team-setup-block .team-setup-content {
+  display: inline-block;
+  font-size: inherit;
+  height: inherit;
+  left: 45%;
+  position: absolute;
+  width: 53%;
+}
+
+.team-setup-content > select:first-of-type, .team-setup-content > span:first-of-type {
+  font-size: inherit;
+  position: absolute;
+  top: 6%;
+  width: 95%;
+}
+
+.team-setup-content > select:last-of-type, .team-setup-content > span:last-of-type {
+  font-size: inherit;
+  position: absolute;
+  top: 58%;
+  width: 95%;
+}
+
+.team-setup-content > div {
+  font-size: inherit;
+  height: 35%;
+  position: absolute;
+  top: 20%;
+  width: 95%;
+}
+
+.team-setup-content > div > h {
+  color: #777677;
+  font-size: 1.2em;
+  position: absolute;
+  top: 50%;
+  transform: translate(0px, -50%);
+}
+
+.team-setup-children {
+  border: 1px solid #b3b3b3 !important;
+  height: 25% !important;
+  overflow-y: auto !important;
+  top: 71% !important;
+}
+
+.team-setup-children > p {
+  cursor: pointer;
+  display: inline-block;
+  font-size: inherit;
+  overflow: hidden;
+  padding: 0.3em 0.2em 0;
+  white-space: nowrap;
+  width: 95%;
+}
+
+.team-setup-children > p > h {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.2em 0;
+  position: relative;
+  text-overflow: ellipsis;
+  width: 90%;
+}
+
+.team-setup-children-remove-icon {
+  display: inline-block;
+  left: 3%;
+  position: relative;
+  top: -9%;
+  width: 8%;
+}
+

@@ -16,7 +16,8 @@ function clearRequests() {
 
 module.exports.getFaceImage = function(uid) {
   return new Promise(function(resolve, reject){
-    var url = 'http://dpev027.innovate.ibm.com:10000/image/' + encodeURIComponent(uid.toUpperCase());
+    //var url = 'http://dpev027.innovate.ibm.com:10000/image/' + encodeURIComponent(uid.toUpperCase());
+    var url = '//faces-cache.mybluemix.net/image/' + encodeURIComponent(uid.toUpperCase());
     var req = $.ajax({
       type: 'GET',
       url: url

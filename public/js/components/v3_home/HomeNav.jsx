@@ -43,7 +43,7 @@ var HomeNav = React.createClass({
 
   componentDidMount: function() {
     var self = this;
-    self.props.tabClickedHandler('mytab');
+    self.props.tabClickedHandler('myteams');
     $('#nameSearchField').on('input',function() {
       var inputText = $('#nameSearchField').val();
       if (inputText.length > 1 && inputText != ' ') {

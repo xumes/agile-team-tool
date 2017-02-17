@@ -8,6 +8,10 @@ var HomeTeamParentChildSelection = React.createClass({
     return {
       children: [],
       childCount: 0,
+      defaultParentObjects: [
+        {name: 'Parent of my currently selected team', id: 'parentOfSelected'},
+        {name: 'Peer of my currently selected team', id: 'peerOfSelected'}
+      ],
       teamNames: []
     }
   },
@@ -20,48 +24,85 @@ var HomeTeamParentChildSelection = React.createClass({
     // $("#pc-hier-selChild").change(this.props.onchangeChildHierchSel);
     $("#pc-hier-selparent").change(this.parentSelectHandler);
     $("#pc-hier-selChild").change(this.childSelectHandler);
+
+    var buttonOptions = this.props.buttonOptions;
+    buttonOptions.prevDisabled = '';
+    buttonOptions.prevScreen = 'showTeamTypeModal';
+    buttonOptions.nextDisabled = '';
+    buttonOptions.nextScreen = 'showTeamMemberModal';
+    this.props.setButtonOptions(buttonOptions);
+
     this.selectListInit();
   },
 
-  parentSelectHandler: function(e){
-    var self=this;
-    $("#pc-hier-selChild").prop('disabled', false);
-    this.props.onchangeParentTeamDropdown(e);
+  componentWillUpdate: function(nextProps, nextState) {
+    var self = this;
+    // make sure to get the latest team names on focus of this screen
+    if (!self.props.activeWindow && nextProps.activeWindow) {
+      api.getNonSquadTeams()
+        .then(function(teams) {
+          var selectableParents = _.sortBy(teams, 'name');
+          self.props.setSelectableParents(selectableParents);
+        });      
+    }
+  },
 
-    var selectVal = e.target.value;
-    var selectText = $('#' + e.target.id + ' option:selected').text();
-    console.log('ParentSelectHandler - selectVal: '+ selectVal);
-    console.log('ParentSelectHandler - selectText: '+ selectText);
+  show: function() {
+    var self = this;
+    console.log('show',self.props.selectedParentTeam);
+    $('#pc-hier-selparent').select2({'dropdownParent':$('#pc-hier-selparent')});
+    $('#pc-hier-selparent').change(self.parentSelectHandler);
+    if (!_.isEmpty(self.props.selectedParentTeam))
+      $('#pc-hier-selparent').val(self.props.selectedParentTeam._id).change();
+    else
+      $('#pc-hier-selparent').val('').change();
+//    $("#teamTypeBlock span[data-widget=tooltip]").tooltip();
+  },
+
+  parentSelectHandler: function(e){
+    var self = this;
+    var selectedValue = e.target.value;
+    
+    var team = _.find(self.props.selectableParents, function(team) {
+      if (_.isEqual(selectedValue,team._id)) return team;
+    });
+    self.props.setSelectedParentTeam(team);
 
     var filteredTeam = [];
-    filteredTeam = _.filter(this.props.teamNames, function(team) {
-      return !_.isEqual(team._id, selectVal);
+    filteredTeam = _.filter(this.state.teamNames, function(team) {
+      return !_.isEqual(team._id, selectedValue);
     });
-
     self.setState({teamNames: filteredTeam});
-    console.log('this.state.teamNames is: '+ this.state.teamNames.length);
-
   },
 
   childDeleteHandler: function(id) {
     var self = this;
-    console.log('childDeleteHandler',id);
+    console.log('childDeleteHandler',id);    
     var children = self.state.children;
     children = _.filter(children, function(team) {
        return !_.isEqual(id, team._id);
     });
     self.setState({children:children});
-    this.props.onchangeChildTeamList(this.state.children);
+//    this.props.onchangeChildTeamList(this.state.children);
   },
 
   childSelectHandler: function(e) {
     var self = this;         
     console.log('childSelectHandler');
+    var selectedValue = e.target.value;
+    /*if (!_.isEmpty(selectedValue)) {
+      var buttonOptions = self.props.buttonOptions;
+      buttonOptions.nextDisabled = '';
+      buttonOptions.nextScreen = 'showTeamMemberModal';
+      self.props.setButtonOptions(buttonOptions);
+    }
+    */
+
     $('#btn-teamaddparentchildhier').prop('disabled', false);
 
     var selectedChild = $('#pc-hier-selChild option:selected').val();
     if (!_.isEmpty(selectedChild)) {
-      var childTeam = _.find(self.props.teamNames, function(team) {
+      var childTeam = _.find(self.state.teamNames, function(team) {
         if (team._id == selectedChild) return team;
       })
       if ($('.team-hier-children p#'+selectedChild).length > 0) {
@@ -73,14 +114,21 @@ var HomeTeamParentChildSelection = React.createClass({
       children = _.sortBy(children, 'name');
 
       self.setState({children:children});
-      this.props.onchangeChildTeamList(this.state.children);
+//      this.props.onchangeChildTeamList(this.state.children);
     }
   },
 
   selectListInit: function() {
     var self = this;
-    self.setState({teamNames: this.props.teamNames});
-    //console.log('In selectListIntit: '+   this.state.teamNames.length);
+    //self.setState({teamNames: this.props.teamNames});
+    console.log('In selectListIntit: '+   this.state.teamNames.length);
+    api.fetchTeamNames()
+      .then(function(teams) {
+        var selectableChildren = _.sortBy(teams, 'name');
+          console.log('In HomeTeamParentChildSelection: before selectableChildren:'+selectableChildren.length);
+          self.setState({teamNames: selectableChildren});
+          });
+
   },
 
 
@@ -105,7 +153,20 @@ var HomeTeamParentChildSelection = React.createClass({
       );
     });
 
-    return (
+   var populateParentTeamNames = this.props.selectableParents.map(function(item) {
+     return ( 
+      <option key={item._id} value={item._id}>{item.name}</option>
+     ) ;
+   });
+
+   var populateDefaultParentOption = this.state.defaultParentObjects.map(function(item) {
+     return ( 
+      <option key={item._id} value={item._id}>{item.name}</option>
+     ) ;
+   });
+
+
+   return (
 
       <div class='home-modal-block-content'>
          <div class='team-hier-block'>
@@ -128,7 +189,7 @@ var HomeTeamParentChildSelection = React.createClass({
                <select name="pc-hier-selparent" id="pc-hier-selparent" class="pc-hier-selparent">
                 <option key='NA' value='NA'>Select parent team</option>
                 <option key='NoParent' value='NoParent'>Top tier / No Parent Above / Not Listed</option>
-                 {this.props.populateParentTeamNames}
+                 {populateParentTeamNames}
                 </select>
             </div>
 

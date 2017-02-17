@@ -10,7 +10,7 @@ var HomeAddMember = React.createClass({
   },
   componentDidMount: function() {
     var self = this;
-    $('#teamMemberRoleSelect').select2({'width':'100%'});
+    $('#teamMemberRoleSelect').select2({'width':'100%', 'dropdownParent':$('#addMemberBlock')});
     $('#teamMemberRoleSelect').change(self.roleHandler);
     $('#teamMemberAllocationSelect').select2({'width':'100%'});
     $('#teamMemberAwkSelect').select2({'width':'100%'});
@@ -139,7 +139,7 @@ var HomeAddMember = React.createClass({
       )
     });
     return (
-      <div class='team-member-add-block'>
+      <div class='team-member-add-block' id='addMemberBlock'>
         <div class='team-member-add-block-header'>
           <h>Add Team Member</h>
           <span onClick={self.props.hideAddTeamTable}>X</span>
