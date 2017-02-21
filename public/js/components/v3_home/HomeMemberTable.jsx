@@ -53,6 +53,10 @@ var HomeMemberTable = React.createClass({
         $('.team-member-table-content-awk > .modify-field').css('display','none');
         $(this).find('h').css('display', 'none');
         $(this).find('.modify-field').css('display', 'block');
+        var uid = $(this).find('input')[0].id;
+        setTimeout(function(){
+          $('#'+uid).focus();
+        },0)
       });
     }
   },
@@ -169,6 +173,10 @@ var HomeMemberTable = React.createClass({
     var roleId = 'role_' + e.target.id.substring(12, e.target.id.length);
     if (e.target.value == 'Other...') {
       $('#' + roleId + ' .input-field').show();
+      setTimeout( function() {
+        $('#r_' + roleId).focus();
+      }, 0);
+      $('#' + roleId + ' .input-field > input').focus();
     } else if (e.target.value == 'Select a role') {
       $('#' + roleId + ' .input-field > input').val('');
       $('#' + roleId + ' .input-field').hide();
@@ -234,7 +242,7 @@ var HomeMemberTable = React.createClass({
       });
   },
 
-  cancleRoleChange: function(roleId) {
+  cancelRoleChange: function(roleId) {
     $('#' + roleId + ' > .modify-field').css('display','none');
     $('#' + roleId + ' > h').css('display','');
     $('#' + roleId + ' input').val('');
@@ -320,6 +328,9 @@ var HomeMemberTable = React.createClass({
     var awkId = 'awk_' + e.target.id.substring(11, e.target.id.length);
     if (e.target.value == 'other') {
       $('#' + awkId + ' .input-field').show();
+      setTimeout( function() {
+        $('#w_' + awkId).focus();
+      }, 0);
     } else {
       $('#' + awkId + ' .input-field > input').val('');
       $('#' + awkId + ' .input-field').hide();
@@ -403,10 +414,45 @@ var HomeMemberTable = React.createClass({
   },
 
   wholeNumCheck: function(e) {
+    var self = this;
     var pattern = /^\d*$/;
-    if (e.charCode >= 32 && e.charCode < 127 &&  !pattern.test(String.fromCharCode(e.charCode)))
+    if (e.charCode == 13) {
+      self.keyPressCheck(e);
+    } else if (e.charCode >= 32 && e.charCode < 127 &&  !pattern.test(String.fromCharCode(e.charCode)))
     {
       e.preventDefault();
+    }
+  },
+
+  keyPressCheck: function(e) {
+    var self = this;
+    if (e.charCode == 13) {
+      switch (e.target.id.substring(0,1)) {
+        case 'l': self.saveLocation(e.target.id.substring(2,e.target.id.length));
+          break;
+        case 'a': self.saveAllocation(e.target.id.substring(2,e.target.id.length));
+          break;
+        case 'w': self.saveAwk(e.target.id.substring(2,e.target.id.length));
+          break;
+        case 'r': self.saveRole(e.target.id.substring(2,e.target.id.length));
+          break;
+      }
+    }
+  },
+
+  escPressCheck: function(e) {
+    var self = this;
+    if (e.keyCode == 27) {
+      switch (e.target.id.substring(0,1)) {
+        case 'l': self.cancelLocationChange(e.target.id.substring(2,e.target.id.length));
+          break;
+        case 'a': self.cancelAllocationChange(e.target.id.substring(2,e.target.id.length));
+          break;
+        case 'w': self.cancelAwkChange(e.target.id.substring(2,e.target.id.length));
+          break;
+        case 'r': self.cancelRoleChange(e.target.id.substring(2,e.target.id.length));
+          break;
+      }
     }
   },
 
@@ -526,11 +572,11 @@ var HomeMemberTable = React.createClass({
                       </select>
                     </div>
                     <div class='input-field'>
-                      <input type='text' placeholder='Ex: Developer'></input>
+                      <input type='text' id={'r_'+roleId} placeholder='Ex: Developer' onKeyPress={self.keyPressCheck} onKeyUp={self.escPressCheck}></input>
                       <div class='save-btn' onClick={self.saveRole.bind(null, roleId)}>
                         <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                       </div>
-                      <div class='cancel-btn' style={{'left':'5%'}} onClick={self.cancleRoleChange.bind(null, roleId)}>
+                      <div class='cancel-btn' style={{'left':'5%'}} onClick={self.cancelRoleChange.bind(null, roleId)}>
                         <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                       </div>
                     </div>
@@ -539,7 +585,7 @@ var HomeMemberTable = React.createClass({
                 <div class='team-member-table-content-location' id={locationId} style={{'width':'21.9%'}}>
                   <h>{mLocation}</h>
                   <div class='modify-field'>
-                    <input type='text' placeholder='Ex: Somers,NY,USA'></input>
+                    <input type='text' id={'l_'+locationId} placeholder='Ex: Somers,NY,USA' onKeyPress={self.keyPressCheck} onKeyUp={self.escPressCheck}></input>
                     <div class='save-btn' onClick={self.saveLocation.bind(null, locationId)}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
@@ -554,7 +600,7 @@ var HomeMemberTable = React.createClass({
                     {/*<select id={'allocation_select_' + idx} defaultValue={memberDetail.allocation}>
                       {allocationSelection}
                     </select>*/}
-                    <input type='text' placeholder='Ex:50' min='0' max='100' maxLength='3' onKeyPress={self.wholeNumCheck}></input>
+                    <input type='text' id={'a_'+allocationId} placeholder='Ex:50' min='0' max='100' maxLength='3' onKeyPress={self.wholeNumCheck} onKeyUp={self.escPressCheck}></input>
                     <div class='save-btn' onClick={self.saveAllocation.bind(null, allocationId)}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
@@ -574,7 +620,7 @@ var HomeMemberTable = React.createClass({
                       </select>
                     </div>
                     <div class='input-field'>
-                      <input type='text' placeholder='Ex:50' min='0' max='100' maxLength='3' onKeyPress={self.wholeNumCheck}></input>
+                      <input type='text' id={'w_'+awkId} placeholder='Ex:50' min='0' max='100' maxLength='3' onKeyPress={self.wholeNumCheck} onKeyUp={self.escPressCheck}></input>
                       <div class='save-btn' onClick={self.saveAwk.bind(null, awkId)}>
                         <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                       </div>
