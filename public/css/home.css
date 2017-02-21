@@ -2062,6 +2062,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 .home-iter-add-btn-block > i > svg {
   width: auto;
   height: 100%;
+  pointer-events: none;
 }
 
 .home-iter-last-update-block {
