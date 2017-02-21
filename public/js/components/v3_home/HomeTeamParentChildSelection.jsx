@@ -18,12 +18,17 @@ var HomeTeamParentChildSelection = React.createClass({
 
   componentDidMount: function() {
     $("#pc-hier-selChild").prop('disabled', false);  
-    $("#pc-hier-selparent").select2(); 
-    $("#pc-hier-selChild").select2(); 
+  //$("#pc-hier-selparent").select2(); 
+  //$("#pc-hier-selChild").select2(); 
     //$("#pc-hier-selparent").change(this.props.onchangeParentHierchSel);
     // $("#pc-hier-selChild").change(this.props.onchangeChildHierchSel);
+    $('#pc-hier-selparent').select2({'dropdownParent':$('#pc-hier-selparent')});
     $("#pc-hier-selparent").change(this.parentSelectHandler);
-    $("#pc-hier-selChild").change(this.childSelectHandler);
+    if (!_.isEmpty(self.props.selectedParentTeam))
+      $('#pc-hier-selparent').val(self.props.selectedParentTeam._id).change();
+    else
+      $('#pc-hier-selparent').val('').change();
+  //  $("#pc-hier-selChild").change(this.childSelectHandler);
 
     var buttonOptions = this.props.buttonOptions;
     buttonOptions.prevDisabled = '';
@@ -50,12 +55,12 @@ var HomeTeamParentChildSelection = React.createClass({
   show: function() {
     var self = this;
     console.log('show',self.props.selectedParentTeam);
-    $('#pc-hier-selparent').select2({'dropdownParent':$('#pc-hier-selparent')});
-    $('#pc-hier-selparent').change(self.parentSelectHandler);
-    if (!_.isEmpty(self.props.selectedParentTeam))
-      $('#pc-hier-selparent').val(self.props.selectedParentTeam._id).change();
-    else
-      $('#pc-hier-selparent').val('').change();
+    //$('#pc-hier-selparent').select2({'dropdownParent':$('#pc-hier-selparent')});
+    //$('#pc-hier-selparent').change(self.parentSelectHandler);
+    //if (!_.isEmpty(self.props.selectedParentTeam))
+    //  $('#pc-hier-selparent').val(self.props.selectedParentTeam._id).change();
+    //else
+    //  $('#pc-hier-selparent').val('').change();
 //    $("#teamTypeBlock span[data-widget=tooltip]").tooltip();
   },
 
@@ -167,7 +172,6 @@ var HomeTeamParentChildSelection = React.createClass({
 
 
    return (
-
       <div class='home-modal-block-content'>
          <div class='team-hier-block'>
            <div class='team-setup-icon-hier'>

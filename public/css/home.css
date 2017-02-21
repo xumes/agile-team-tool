@@ -4043,7 +4043,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   z-index: 2;
   /*width: 95%;*/
   height: 20%;
-  top: 63%;
+  top: 95%;
 }
 
 .team-parent-child-hierarchy-p > .line2 {
@@ -4052,7 +4052,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   z-index: 2;
   /*width: 95%;*/
   height: 10%;
-  top: 145%;
+  top: 198%;
 }
 
 .pointer-arrow-right-current {
@@ -4069,11 +4069,11 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .team-parent-child-hierarchy-p > .line3 {
   position: absolute;
-  left: 18%;
+  left: 20%;
   z-index: 2;
   /*width: 95%;*/
   height: 10%;
-  top: 235%;
+  top: 310%;
 }
 
 .pointer-arrow-right-child {
@@ -4090,7 +4090,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .optsel-parent {
   position: absolute;
-  bottom: -43%;
+  bottom: -85%;
   left: 45%;
   width: 25em;
   float: right;
@@ -4101,9 +4101,14 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-family: "Helvetica Neue";
 }
 
+.pc-hier-selparent > .select2-container > .select2-dropdown > .select2-search > input{
+  font-family: "Helvetica Neue";
+  font-size: 6em;
+}
+
 .optsel-child {
   position: absolute;
-  bottom: -202%;
+  bottom: -255%;
   left: 45%;
   width: 25em;
   float: right;
@@ -4113,7 +4118,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .team-hier-children {
   border: 1px solid #b3b3b3 !important;
   overflow-y: auto !important;
-  top: 300% !important;
+  top: 354% !important;
   display: inline-block;
   font-size: inherit;
   left: 45%;
@@ -4192,9 +4197,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .curteam-block {
   position: absolute;
-  bottom: -125%;
+  bottom: -179%;
   left: 45%;
-  height: 2.3em;
+  height: 2.8em;
   width: 16.9em;
   float: right;
   margin-top: 1em;
