@@ -29,6 +29,7 @@ var HomePage = React.createClass({
     var self = this;
     api.fetchTeamMemberRoles()
       .then(function(roles){
+        roles.unshift('Select a role');
         self.setState({'roles': roles});
       })
       .catch(function(err){
@@ -307,7 +308,7 @@ var HomePage = React.createClass({
       .catch(function(err){
         utils.handleIterationErrors(err);
       });
-  },  
+  },
 
   render: function() {
     var pageStyle = {

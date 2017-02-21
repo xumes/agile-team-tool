@@ -12,8 +12,8 @@ var HomeMemberTable = React.createClass({
   },
   componentDidMount: function() {
     this.initialAll();
-    $('.team-member-table-content-role > div > select').change(this.changeMemberHandler);
-    $('.team-member-table-content-allocation > div > select').change(this.changeMemberHandler);
+    $('.team-member-table-content-role > div > div > select').change(this.changeRoleHandler);
+    // $('.team-member-table-content-allocation > div > select').change(this.changeMemberHandler);
     $('.team-member-table-content-awk > div > div > select').change(this.changeAwkHandler);
   },
   componentDidUpdate: function() {
@@ -22,8 +22,8 @@ var HomeMemberTable = React.createClass({
   },
 
   initialAll: function() {
-    $('.team-member-table-content-role > div > select').select2({'width':'100%'});
-    $('.team-member-table-content-allocation > div > select').select2({'width':'100%'});
+    $('.team-member-table-content-role > div > div > select').select2({'width':'100%'});
+    // $('.team-member-table-content-allocation > div > select').select2({'width':'100%'});
     $('.team-member-table-content-awk > div > div > select').select2({'width':'99%'});
     this.hoverBlock('team-member-table-content-role');
     this.hoverBlock('team-member-table-content-location');
@@ -42,7 +42,7 @@ var HomeMemberTable = React.createClass({
     if (this.props.loadDetailTeam.access) {
       $('.' + block).click(function(){
         $('.team-member-table-content-role > h').css('display','');
-        $('.team-member-table-content-role > div').css('display','none');
+        $('.team-member-table-content-role > .modify-field').css('display','none');
         $('.team-member-table-content-location > h').css('display','');
         // $('.team-member-table-content-location input').val('');
         $('.team-member-table-content-location > .modify-field').css('display','none');
@@ -102,49 +102,50 @@ var HomeMemberTable = React.createClass({
         });
     }
   },
-  changeMemberHandler: function(e) {
-    var self = this;
-    var newMembers = [];
-    if (e.target.id.indexOf('role') >= 0) {
-      var blockId = 'name_' + e.target.id.substring(12, e.target.id.length);
-      $('#role_' + e.target.id.substring(12, e.target.id.length) + ' > h').html(e.target.value);
-      $('#role_' + e.target.id.substring(12, e.target.id.length) + ' > h').css('display','');
-      $('#role_' + e.target.id.substring(12, e.target.id.length) + ' > div').css('display','none');
-    } else if (e.target.id.indexOf('allocation') >= 0) {
-      blockId = 'name_' + e.target.id.substring(18, e.target.id.length);
-      $('#allocation_' + e.target.id.substring(18, e.target.id.length) + ' > h').html(e.target.value + '%');
-      $('#allocation_' + e.target.id.substring(18, e.target.id.length) + ' > h').css('display','');
-      $('#allocation_' + e.target.id.substring(18, e.target.id.length) + ' > div').css('display','none');
+  // changeMemberHandler: function(e) {
+  //   var self = this;
+  //   var newMembers = [];
+  //   if (e.target.id.indexOf('role') >= 0) {
+  //     var blockId = 'name_' + e.target.id.substring(12, e.target.id.length);
+  //     $('#role_' + e.target.id.substring(12, e.target.id.length) + ' > h').html(e.target.value);
+  //     $('#role_' + e.target.id.substring(12, e.target.id.length) + ' > h').css('display','');
+  //     $('#role_' + e.target.id.substring(12, e.target.id.length) + ' > div').css('display','none');
+  //   } else if (e.target.id.indexOf('allocation') >= 0) {
+  //     blockId = 'name_' + e.target.id.substring(18, e.target.id.length);
+  //     $('#allocation_' + e.target.id.substring(18, e.target.id.length) + ' > h').html(e.target.value + '%');
+  //     $('#allocation_' + e.target.id.substring(18, e.target.id.length) + ' > h').css('display','');
+  //     $('#allocation_' + e.target.id.substring(18, e.target.id.length) + ' > div').css('display','none');
+  //
+  //   } else {
+  //     blockId = 'name_' + e.target.id.substring(11, e.target.id.length);
+  //     $('#awk_' + e.target.id.substring(12, e.target.id.length) + ' > h').html(e.target.value);
+  //     $('#awk_' + e.target.id.substring(12, e.target.id.length) + ' > h').css('display','');
+  //     $('#awk_' + e.target.id.substring(12, e.target.id.length) + ' > div').css('display','none');
+  //   }
+  //   var memberEmail = $('#' + blockId + ' > div > h1').html();
+  //   _.each(self.props.loadDetailTeam.team.members, function(member){
+  //     if (member.email != memberEmail) {
+  //       newMembers.push(member);
+  //     } else {
+  //       var pm = JSON.parse(JSON.stringify(member));
+  //       if (e.target.id.indexOf('role') >= 0) {
+  //         pm['role'] = e.target.value;
+  //       } else if (e.target.id.indexOf('allocation') >= 0) {
+  //         pm['allocation'] = e.target.value;
+  //       } else {
+  //       }
+  //       newMembers.push(pm);
+  //     }
+  //   });
+  //   api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
+  //     .then(function(results){
+  //       // console.log(results);
+  //     })
+  //     .catch(function(err){
+  //       console.log(err);
+  //     });
+  // },
 
-    } else {
-      blockId = 'name_' + e.target.id.substring(11, e.target.id.length);
-      $('#awk_' + e.target.id.substring(12, e.target.id.length) + ' > h').html(e.target.value);
-      $('#awk_' + e.target.id.substring(12, e.target.id.length) + ' > h').css('display','');
-      $('#awk_' + e.target.id.substring(12, e.target.id.length) + ' > div').css('display','none');
-    }
-    var memberEmail = $('#' + blockId + ' > div > h1').html();
-    _.each(self.props.loadDetailTeam.team.members, function(member){
-      if (member.email != memberEmail) {
-        newMembers.push(member);
-      } else {
-        var pm = JSON.parse(JSON.stringify(member));
-        if (e.target.id.indexOf('role') >= 0) {
-          pm['role'] = e.target.value;
-        } else if (e.target.id.indexOf('allocation') >= 0) {
-          pm['allocation'] = e.target.value;
-        } else {
-        }
-        newMembers.push(pm);
-      }
-    });
-    api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
-      .then(function(results){
-        // console.log(results);
-      })
-      .catch(function(err){
-        console.log(err);
-      });
-  },
   showAddTeamTable: function() {
     this.setState({ showModal: true });
   },
@@ -160,6 +161,83 @@ var HomeMemberTable = React.createClass({
       strArray[0] = strArray[0].replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
       return strArray.join(', ');
     }
+  },
+
+  changeRoleHandler: function(e) {
+    var self = this;
+    var newMembers = [];
+    var roleId = 'role_' + e.target.id.substring(12, e.target.id.length);
+    if (e.target.value == 'Other...') {
+      $('#' + roleId + ' .input-field').show();
+    } else if (e.target.value == 'Select a role') {
+      $('#' + roleId + ' .input-field > input').val('');
+      $('#' + roleId + ' .input-field').hide();
+    } else {
+      $('#' + roleId + ' .input-field > input').val('');
+      $('#' + roleId + ' .input-field').hide();
+      $('#' + roleId + ' > h').html(e.target.value);
+      $('#' + roleId + ' .modify-field').hide();
+      $('#' + roleId + ' > h').show();
+      var blockId = 'name_' + e.target.id.substring(12, e.target.id.length);
+      var memberEmail = $('#' + blockId + ' > div > h1').html();
+      _.each(self.props.loadDetailTeam.team.members, function(member){
+        if (member.email != memberEmail) {
+          newMembers.push(member);
+        } else {
+          var pm = JSON.parse(JSON.stringify(member));
+          pm['role'] = e.target.value;
+          newMembers.push(pm);
+        }
+      });
+      api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
+        .then(function(results){
+          _.each(self.props.loadDetailTeam.team.members, function(member){
+            if (member.email == memberEmail) {
+              member['role'] = e.target.value;
+            }
+          });
+        })
+        .catch(function(err){
+          console.log(err);
+        });
+    }
+  },
+
+  saveRole: function(roleId) {
+    var self = this;
+    var newMembers = [];
+    var roleValue = $('#' + roleId + ' input').val();
+    $('#' + roleId + ' > h').html(roleValue);
+    $('#' + roleId + ' .modify-field').hide();
+    $('#' + roleId + ' > h').show();
+    var blockId = 'name_' + roleId.substring(5, roleId.length);
+    var memberEmail = $('#' + blockId + ' > div > h1').html();
+    _.each(self.props.loadDetailTeam.team.members, function(member){
+      if (member.email != memberEmail) {
+        newMembers.push(member);
+      } else {
+        var pm = JSON.parse(JSON.stringify(member));
+        pm['role'] = roleValue;
+        newMembers.push(pm);
+      }
+    });
+    api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
+      .then(function(results){
+        _.each(self.props.loadDetailTeam.team.members, function(member){
+          if (member.email == memberEmail) {
+            member['role'] = roleValue;
+          }
+        });
+      })
+      .catch(function(err){
+        console.log(err);
+      });
+  },
+
+  cancleRoleChange: function(roleId) {
+    $('#' + roleId + ' > .modify-field').css('display','none');
+    $('#' + roleId + ' > h').css('display','');
+    $('#' + roleId + ' input').val('');
   },
 
   saveAllocation: function(allocationId) {
@@ -356,7 +434,7 @@ var HomeMemberTable = React.createClass({
       var allocationArray = Array.from(Array(101).keys())
       var allocationSelection = allocationArray.map(function(a){
         return (
-          <option key={a} value={a}>{a}%</option>
+          <option key={a} value={a}>{a+'%'}</option>
         )
       });
       var roleSelection = self.props.roles.map(function(r){
@@ -441,10 +519,21 @@ var HomeMemberTable = React.createClass({
                 </div>
                 <div class='team-member-table-content-role' id={roleId} style={{'width':'19.3%'}}>
                   <h>{memberDetail.role}</h>
-                  <div>
-                    <select id={'role_select_' + idx} defaultValue={memberDetail.role}>
-                      {roleSelection}
-                    </select>
+                  <div class='modify-field'>
+                    <div class='dropdown-list'>
+                      <select id={'role_select_' + idx} defaultValue='Select a role'>
+                        {roleSelection}
+                      </select>
+                    </div>
+                    <div class='input-field'>
+                      <input type='text' placeholder='Ex: Developer'></input>
+                      <div class='save-btn' onClick={self.saveRole.bind(null, roleId)}>
+                        <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
+                      </div>
+                      <div class='cancel-btn' style={{'left':'5%'}} onClick={self.cancleRoleChange.bind(null, roleId)}>
+                        <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class='team-member-table-content-location' id={locationId} style={{'width':'21.9%'}}>
