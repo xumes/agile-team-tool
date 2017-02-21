@@ -97,11 +97,11 @@ var HomeAddTeam = React.createClass({
     this.setState({ selectableParents: teams });
   },
 
-/*  setSelectableChildren: function(teams) {
+  setSelectableChildren: function(teams) {
     this.setState({ selectableChildren: teams });
     console.log('In HomeAddTeam: '+selectableChildren.length);    
   },
-*/
+
   setTeamType: function(type) {
     var team = this.state.newTeamObj;
     team.type = type;
@@ -117,10 +117,12 @@ var HomeAddTeam = React.createClass({
 
   setSelectedParentTeam: function(team) {
     this.setState({ selectedParentTeam: team });
+    console.log('Parent team is: '+JSON.stringify(this.state.selectedParentTeam));
   },
 
   setSelectedChildTeams: function(teams) {
     this.setState({ selectedChildTeams: teams });
+    console.log('Children teams are: '+JSON.stringify(this.state.selectedChildTeams));
   },
 
   saveTeam: function() {
@@ -142,10 +144,6 @@ var HomeAddTeam = React.createClass({
     console.log('in onchange parent team dropdown'+JSON.stringify(this.state.selectedParentTeam));
   },
 
-  onchangeChildTeamList: function(childTeamList) {
-     console.log('in onchangeChildTeamList and childTeamList is: '+JSON.stringify(childTeamList));
-  },
-
   render: function () {
     var self = this;
     var addBtnStyle = self.props.access?'block':'none';
@@ -165,7 +163,7 @@ var HomeAddTeam = React.createClass({
         <HomeAddTeamHierarchyModal activeWindow={this.state.screenStatus['showTeamHierarchyModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} 
         newTeamObj={self.state.newTeamObj} 
         setSelectableParents={self.setSelectableParents} selectableParents={self.state.selectableParents} selectedParentTeam={self.state.selectedParentTeam} setSelectedParentTeam={self.setSelectedParentTeam} 
-        selectableChildren={self.state.selectableChildren}
+        selectableChildren={self.state.selectableChildren} setSelectedChildTeams={self.setSelectedChildTeams}
         />
 
         <HomeAddTeamMemberRole activeWindow={this.state.screenStatus['showTeamMemberRoleModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamMember={self.setTeamMember} roles={self.props.roles} />

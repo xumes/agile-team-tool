@@ -15,6 +15,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
         nextScreen: 'showTeamMemberModal',
         nextDisabled: 'disabled'
       },
+
       selparentList: 'none',
       children: [],
       childCount: 0,
@@ -22,27 +23,16 @@ var HomeAddTeamHierarchyModal = React.createClass({
         {name: 'Parent of my currently selected team', id: 'parentOfSelected'},
         {name: 'Peer of my currently selected team', id: 'peerOfSelected'}
       ],
+      teamNamesAll: [],
       teamNames: []
     }
   },
 
   componentDidMount: function() {
     this.setState({selparentList: 'none'});
-    $("#pc-hier-selChild").prop('disabled', false);  
-  //$("#pc-hier-selparent").select2();
-  //$("#pc-hier-selChild").select2(); 
-    //$("#pc-hier-selparent").change(this.props.onchangeParentHierchSel);
-    // $("#pc-hier-selChild").change(this.props.onchangeChildHierchSel);
-  //  $("#pc-hier-selChild").change(this.childSelectHandler);
-
-    var buttonOptions = this.state.buttonOptions;
-    buttonOptions.prevDisabled = '';
-    buttonOptions.prevScreen = 'showTeamTypeModal';
-    buttonOptions.nextDisabled = '';
-    buttonOptions.nextScreen = 'showTeamMemberModal';
-    this.setButtonOptions(buttonOptions);
-
     this.selectListInit();    
+    this.setState({teamNames: this.state.teamNamesAll}); //teamNames will change during selection is made
+    console.log('TeamNames - '+this.state.teamNames.length);
   },
 
   setButtonOptions: function(buttonOptions) {
@@ -60,10 +50,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
       $('#pc-hier-selparent').val(self.props.selectedParentTeam._id).change();
 
     $('#optsel-child select').select2({'dropdownParent':$('#optsel-child')});
-    $('#pc-hier-selChildren').change(self.childSelectHandler);
-
-   $('#optsel-parent select2-search input').select2({'font-size:1.4em;':$('#optsel-parent')});
- 
+    $('#pc-hier-selfChild').change(self.childSelectHandler);
 
 //    $("#teamTypeBlock span[data-widget=tooltip]").tooltip();
   },
@@ -71,31 +58,30 @@ var HomeAddTeamHierarchyModal = React.createClass({
   selectListInit: function() {
     var self = this;
     //self.setState({teamNames: this.props.teamNames});
-    console.log('In selectListIntit: '+   this.state.teamNames.length);
-    api.fetchTeamNames()
+    api.getAllTeams()
       .then(function(teams) {
         var selectableChildren = _.sortBy(teams, 'name');
           console.log('In HomeTeamParentChildSelection: before selectableChildren:'+selectableChildren.length);
-          self.setState({teamNames: selectableChildren});
+          self.setState({teamNamesAll: selectableChildren});
           });
-
   },
-
 
   parentSelectHandler: function(e){
     var self = this;
     var selectedValue = e.target.value;
-    
+    console.log('parentSelectHandler');    
     var team = _.find(self.props.selectableParents, function(team) {
       if (_.isEqual(selectedValue,team._id)) return team;
     });
     self.props.setSelectedParentTeam(team);
 
     var filteredTeam = [];
-    filteredTeam = _.filter(this.state.teamNames, function(team) {
+    filteredTeam = _.filter(this.state.teamNamesAll, function(team) {  //use master teamName list to refresh teamNames
       return !_.isEqual(team._id, selectedValue);
     });
     self.setState({teamNames: filteredTeam});
+
+    disableField = '';
   },
 
   childDeleteHandler: function(id) {
@@ -106,24 +92,23 @@ var HomeAddTeamHierarchyModal = React.createClass({
        return !_.isEqual(id, team._id);
     });
     self.setState({children:children});
-//    this.props.onchangeChildTeamList(this.state.children);
+    console.log('calling setSelectedChildTeams');
+    this.props.setSelectedChildTeams(this.state.children);
+
   },
 
   childSelectHandler: function(e) {
     var self = this;         
     console.log('childSelectHandler');
     var selectedValue = e.target.value;
-    /*if (!_.isEmpty(selectedValue)) {
-      var buttonOptions = self.props.buttonOptions;
+    if (!_.isEmpty(selectedValue)) {
+      var buttonOptions = self.state.buttonOptions;
       buttonOptions.nextDisabled = '';
       buttonOptions.nextScreen = 'showTeamMemberModal';
-      self.props.setButtonOptions(buttonOptions);
+      self.setState({ buttonOptions: buttonOptions });
     }
-    */
 
-    $('#btn-teamaddparentchildhier').prop('disabled', false);
-
-    var selectedChild = $('#pc-hier-selChild option:selected').val();
+    var selectedChild = $('#pc-hier-selfChild option:selected').val();
     if (!_.isEmpty(selectedChild)) {
       var childTeam = _.find(self.state.teamNames, function(team) {
         if (team._id == selectedChild) return team;
@@ -137,7 +122,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
       children = _.sortBy(children, 'name');
 
       self.setState({children:children});
-//      this.props.onchangeChildTeamList(this.state.children);
+      this.props.setSelectedChildTeams(this.state.children);
     }
   },
   
@@ -151,6 +136,8 @@ var HomeAddTeamHierarchyModal = React.createClass({
     var selparent1Style = {'display': 'block'};
 
     var childTeams = null;
+
+    var disableField = 'disabled';
 
     childTeams = this.state.children.map(function(item, index) {
       return (
@@ -180,9 +167,6 @@ var HomeAddTeamHierarchyModal = React.createClass({
    });
 
 
-
-
-
   return (
     <div>
       <Modal aria-labelledby='modal-label' className='reactbootstrap-modal' backdropClassName='reactbootstrap-backdrop' show={self.props.activeWindow} onShow={self.show}>
@@ -210,7 +194,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
                     <div class='line2' style={{'width':150}}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_arrow-thin-grey.svg')}></InlineSVG>
                     </div>
-                    <div class='line3' style={{'width':145}}>
+                    <div class='line3' style={{'width':143}}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_arrow-thin-grey.svg')}></InlineSVG>
                     </div>
 
@@ -225,7 +209,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
                     <div class="curteam-block">Current Team (being made)</div>
 
                     <div class="optsel-child" style={selparent1Style} id="optsel-child">     
-                      <select name="pc-hier-selChild" id="pc-hier-selChild" class="pc-hier-selChild">                          
+                      <select name="pc-hier-selfChild" id="pc-hier-selfChild" class="pc-hier-selfChild" disabled={self.disableField} >                          
                         <option value='NA'>Add children team(s)</option>
                         <option value='NoChild'>Not Listed</option>
                         {populateChildrenTeamNames}

@@ -4097,13 +4097,8 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   margin-top: 1em;
 }
 
-.pc-hier-selparent{
-  font-family: "Helvetica Neue";
-}
-
-.pc-hier-selparent > .select2-container > .select2-dropdown > .select2-search > input{
-  font-family: "Helvetica Neue";
-  font-size: 6em;
+.pc-hier-selparent .select2-search__field input {
+  font-size: 1.4em !important;
 }
 
 .optsel-child {
@@ -4290,8 +4285,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .team-setup-icon-hier svg circle:last-of-type,.team-setup-icon-hier svg circle:nth-last-child(2) {
   fill: #8cc63f !important;
 }
-
-
 
 
 /* END: Parent / Child Team Hierarchy Selection Modal */
