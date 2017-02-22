@@ -135,6 +135,20 @@ module.exports.getAllTeams = function() {
   });
 };
 
+module.exports.getAllRootTeamsSquadNonSquad = function() {
+  return new Promise(function(resolve, reject){
+    var url = '/api/teams/lookup/allrootteamssquadnonsquad';
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
 module.exports.getChildrenTeams = function(pathId) {
   return new Promise(function(resolve, reject){
     if (pathId == 'agteamstandalone') {

@@ -391,6 +391,29 @@ module.exports.getRootTeams = function(uid) {
 };
 
 /**
+ * Get all root teams - regardless if it is squad or non-squad
+ * @param user email
+ * @return array of root teams
+ */
+module.exports.getAllRootTeamsSquadNonSquad = function() {
+  return new Promise(function(resolve, reject){
+    return Promise.join(
+      Team.find({path: null, docStatus:{$ne:'delete'}}).sort('pathId').exec(),
+      getAllUniquePaths(),
+      function(rootedTeams, uniquePaths) {
+        uniquePaths = uniquePaths.join(',');
+        //indexOf is faster than match apparently
+        var res = _.filter(rootedTeams, function(team){
+          return uniquePaths.indexOf(','+team.pathId+',') >= 0;
+        });
+        resolve(res);
+      });
+
+  });
+
+};
+
+/**
  * If email is empty, get all standalone teams. Otherwise, get all user's standalone teams.
  * standalone teams are non-squad teams without chiilren and parent, and squad team without parent.
  * @param user email

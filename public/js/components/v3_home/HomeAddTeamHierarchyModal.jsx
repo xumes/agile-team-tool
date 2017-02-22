@@ -32,7 +32,6 @@ var HomeAddTeamHierarchyModal = React.createClass({
     this.setState({selparentList: 'none'});
     this.selectListInit();    
     this.setState({teamNames: this.state.teamNamesAll}); //teamNames will change during selection is made
-    console.log('TeamNames - '+this.state.teamNames.length);
   },
 
   setButtonOptions: function(buttonOptions) {
@@ -58,11 +57,12 @@ var HomeAddTeamHierarchyModal = React.createClass({
   selectListInit: function() {
     var self = this;
     //self.setState({teamNames: this.props.teamNames});
-    api.getAllTeams()
+    console.log('selectListInit');
+    api.getAllRootTeamsSquadNonSquad()
       .then(function(teams) {
         var selectableChildren = _.sortBy(teams, 'name');
-          console.log('In HomeTeamParentChildSelection: before selectableChildren:'+selectableChildren.length);
           self.setState({teamNamesAll: selectableChildren});
+
           });
   },
 
@@ -80,7 +80,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
       return !_.isEqual(team._id, selectedValue);
     });
     self.setState({teamNames: filteredTeam});
-
+console.log('finishing parentSelectHandler: ');
     disableField = '';
   },
 
