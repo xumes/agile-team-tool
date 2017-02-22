@@ -684,7 +684,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   min-height: 216.32px;
   background-color: #F7F7F7;
   position: relative;
-  top: -100%;
+  top: -99.9%;
   left: -0.2%;
   z-index: 10;
   box-shadow: 0.2em 0.2em 2em #000000;
@@ -740,10 +740,10 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   width: 30%;
   height: 200%;
   background-color: #F7F7F7;
-  position: relative;
+  position: absolute;;
   float: left;
-  top: -203%;
-  left: -6%;
+  top: 6.3%;
+  left: 0;
   z-index: 11;
   /*box-shadow: 0.1em 0.3em 0.4em 0 rgba(0,0,0,0.22);*/
 }
@@ -1127,8 +1127,8 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 680%;
   padding: 0;
   /*background-color: red;*/
-  position: relative;;
-  top: 52%;
+  position: absolute;
+  top: 100%;
   z-index: 9;
 }
 
@@ -1760,7 +1760,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   float: left;
   width: 100%;
   height: 94.6%;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 #iterationSection, #assessmentSection{

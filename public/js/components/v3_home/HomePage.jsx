@@ -64,8 +64,10 @@ var HomePage = React.createClass({
       if (!_.isEmpty(self.state.loadDetailTeam)) {
         if (self.state.loadDetailTeam.team.type == 'squad') {
           $('#homeNavDiv').hide();
-          $('#homeNavDiv').css('left','-6%');
-          $('#homeNavDiv').css('top','-205.4%');
+          // $('#homeNavDiv').css('left','-6%');
+          $('#homeNavDiv').css('left','0');
+          // $('#homeNavDiv').css('top','-205.4%');
+          $('#homeNavDiv').css('top','6.3%');
           $('#homeNavDiv').css('box-shadow', 'rgba(0, 0, 0, 0.219608) 0.1em 0.3em 0.4em 0px');
           $('#iterContent').show();
           $('#mainContent').css('left', '0');
@@ -73,7 +75,8 @@ var HomePage = React.createClass({
         } else {
           $('#homeNavDiv').show();
           $('#homeNavDiv').css('left','0');
-          $('#homeNavDiv').css('top','-130%');
+          // $('#homeNavDiv').css('top','-130%');
+          $('#homeNavDiv').css('top','6.3%');
           $('#homeNavDiv').css('box-shadow', '');
           $('#iterContent').hide();
           $('#mainContent').css('left', '28.5%');
@@ -89,8 +92,8 @@ var HomePage = React.createClass({
       $('.ibm-columns').css('left', '24.3%');
       $('#homeNavShowBtnDiv').hide();
       $('#homeNavDiv').css('width', '25%');
-      $('#homeNavDiv').css('left', '-73%');
-      $('#homeNavDiv').css('top', '-100%');
+      $('#homeNavDiv').css('left', '1.4%');
+      $('#homeNavDiv').css('top', '6.3%');
       $('#homeNavDiv').css('box-shadow', '');
       $('#homeNavDiv').show();
       $('#hideNavBtn').hide();
@@ -137,7 +140,8 @@ var HomePage = React.createClass({
         $('#homeNavDiv').show();
         $('#homeNavDiv').css('box-shadow', '');
         $('#homeNavDiv').css('left','0');
-        $('#homeNavDiv').css('top','-130%');
+        // $('#homeNavDiv').css('top','-130%');
+        $('#homeNavDiv').css('top','6.3%');
         $('#iterContent').hide();
         $('#mainContent').css('left', '28.5%');
         $('#hideNavBtn').hide();
@@ -145,8 +149,10 @@ var HomePage = React.createClass({
       } else {
         $('#homeNavDiv').hide();
         $('#homeNavDiv').css('box-shadow', '0.1em 0.3em 0.4em 0 rgba(0,0,0,0.22)');
-        $('#homeNavDiv').css('left','-6%');
-        $('#homeNavDiv').css('top','-205.4%');
+        // $('#homeNavDiv').css('left','-6%');
+        $('#homeNavDiv').css('left','0');
+        // $('#homeNavDiv').css('top','-205.4%');
+        $('#homeNavDiv').css('top','6.3%');
         $('#iterContent').show();
         $('#mainContent').css('left', '0');
         $('#hideNavBtn').show();
@@ -233,7 +239,7 @@ var HomePage = React.createClass({
     $('#homeNavDiv').show();
     $('.home-nav-show-btn').prop('disabled',true);
     $('#homeNavDiv').animate({
-      left: '-2%',
+      left: '0',
     },200,function(){
       $('.home-nav-show-btn').prop('disabled',false);
     });
