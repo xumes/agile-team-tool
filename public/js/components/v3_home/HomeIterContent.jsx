@@ -327,14 +327,16 @@ var HomeIterContent = React.createClass({
         iterData.clientSatisfaction = (defIter.clientSatisfaction == null) ? '' : defIter.clientSatisfaction;
         iterData.teamSatisfaction = (defIter.teamSatisfaction == null) ? '' : defIter.teamSatisfaction;
         iterData.comment = (defIter.comment == null) ? '' : defIter.comment;
-        storiesDays = (this.numericValue(iterData.deliveredStories)/this.numericValue(iterData.personDaysAvailable)).toFixed(1);
-        storyPointsDays = (this.numericValue(iterData.storyPointsDelivered)/this.numericValue(iterData.personDaysAvailable)).toFixed(1);
+        storiesDays = this.numericValue(iterData.deliveredStories)/this.numericValue(iterData.personDaysAvailable);
+        storiesDays = !isFinite(storiesDays) ? '0.0': storiesDays.toFixed(1);
+        storyPointsDays = this.numericValue(iterData.storyPointsDelivered)/this.numericValue(iterData.personDaysAvailable);
+        storyPointsDays = !isFinite(storyPointsDays) ? '0.0': storyPointsDays.toFixed(1);
         var access = self.props.loadDetailTeam.access;
         
         return (
           <div>
             <div class='home-iter-title'>Iteration Overview</div>
-            <Tooltip html={true}/>
+            <Tooltip html={true} type="light"/>
             <div class='home-iter-selection-block'>
               <div class='iter-select'>
                 <select value={defIterId} id='homeIterSelection' onChange={this.props.iterChangeHandler}>
@@ -591,10 +593,10 @@ var HomeIterContent = React.createClass({
 
             <div class='home-iter-cyclage-block'>
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
-                <div class='home-iter-content-title'>Cyclage</div>
+                <div class='home-iter-content-title'>Cycle Time</div>
               </div>
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
-                <div class='home-iter-content-sub' data-tip='Work in Progress; for each story delivered in this iteration, how long did it take to go from being worked on (planned for this iteration) to production delivery? Put the average number of work days in this field.'>WIP Cycle Time (In days)</div>
+                <div class='home-iter-content-sub' data-tip='Work in Progress; for each story delivered in this iteration, how long did it take to go from being worked on (planned for this iteration) to production delivery? Put the average number of work days in this field.'>Time in WIP (In days)</div>
                 {this.state.selectedField === 'cycleTimeWIP'?
                   <input id='cycleTimeWIP' class='home-iter-content-point' onKeyPress={this.decimalNumCheck} onBlur={this.roundOff} defaultValue={iterData.cycleTimeWIP} onPaste={this.paste} />:
                   <div id='cycleTimeWIP' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.cycleTimeWIP}</div>
@@ -611,7 +613,7 @@ var HomeIterContent = React.createClass({
                 }
               </div>
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
-                <div class='home-iter-content-sub' data-tip='For each story delivered in this iteration how long was it in your backlog before it was planned for this iteration? Put the average number of work days in this field.'>Backlog Cycle Time (In days)</div>
+                <div class='home-iter-content-sub' data-tip='For each story delivered in this iteration how long was it in your backlog before it was planned for this iteration? Put the average number of work days in this field.'>Time in Backlog (In days)</div>
                 {this.state.selectedField === 'cycleTimeInBacklog'?
                   <input id='cycleTimeInBacklog' class='home-iter-content-point' onKeyPress={this.decimalNumCheck} onBlur={this.roundOff} defaultValue={iterData.cycleTimeInBacklog} onPaste={this.paste} />:
                   <div id='cycleTimeInBacklog' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.cycleTimeInBacklog}</div>

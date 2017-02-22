@@ -313,6 +313,17 @@ var HomePage = React.createClass({
 
   updateTeamIteration: function(iteration) {
     var self = this;
+    var forUpdate = _.clone(iteration);
+    var teamDetail = JSON.parse(JSON.stringify(self.state.loadDetailTeam));
+    _.find(teamDetail.iterations, function(data, index){
+      if (data._id === forUpdate._id){
+        teamDetail.iterations[index] = forUpdate;
+        return data;
+      }
+    });
+    
+    self.setState({'loadDetailTeam': teamDetail});
+
     api.updateIteration(iteration)
       .then(function(result){
         return api.getIterationInfo(iteration._id);
