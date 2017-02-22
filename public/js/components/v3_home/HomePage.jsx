@@ -83,6 +83,14 @@ var HomePage = React.createClass({
           $('#hideNavBtn').hide();
         }
       }
+      var backgroundImageY = $('.home-assessment-summary').css('background-position-y');
+      if (backgroundImageY == '85%') {
+        $('.home-assessment-summary').css('background-position-y','100%');
+      } else if (backgroundImageY == '63%') {
+        $('.home-assessment-summary').css('background-position-y','70%');
+      } else if (backgroundImageY == '72%') {
+        $('.home-assessment-summary').css('background-position-y','80%');
+      }
       $('html').css('font-size', changeSize);
     } else if (window.innerWidth >= 1900) {
       $('html').css('width', '100vw');
@@ -95,6 +103,15 @@ var HomePage = React.createClass({
       $('#homeNavDiv').css('left', '1.4%');
       $('#homeNavDiv').css('top', '6.3%');
       $('#homeNavDiv').css('box-shadow', '');
+
+      var backgroundImageY = $('.home-assessment-summary').css('background-position-y');
+      if (backgroundImageY == '100%') {
+        $('.home-assessment-summary').css('background-position-y','85%');
+      } else if (backgroundImageY == '70%') {
+        $('.home-assessment-summary').css('background-position-y','63%');
+      } else if (backgroundImageY == '80%') {
+        $('.home-assessment-summary').css('background-position-y','72%');
+      }
       $('#homeNavDiv').show();
       $('#hideNavBtn').hide();
 

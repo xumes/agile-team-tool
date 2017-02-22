@@ -362,7 +362,7 @@ var HomeBookmark = React.createClass({
         }
       });
     } else {
-      teamLinks = null;
+      teamLinks = (<div class='no-link-block'>No links have been added.</div>);
     }
     return (
       <div id='teamBookmark' class='team-bookmark-block' style={{'display':'none'}}>

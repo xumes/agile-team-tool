@@ -853,6 +853,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   background-color: #7CC7FF;
   background-image: url('../img/header-bg-art.svg');
   background-repeat: no-repeat;
+  background-size: 60%;
   background-position: 150% 25%;
 }
 
@@ -2375,6 +2376,18 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   border-bottom: 0.1em solid #E0E0E0;
 }
 
+.home-team-header-bookmark-scroll > .no-link-block {
+  position: relative;
+  width: 100%;
+  height: 10%;
+  top: 40%;
+  text-align: center;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  color: #777677;
+  border-bottom: 0;
+}
+
 .home-team-header-bookmark-scroll > div > div {
   position: relative;
   /*left: 1%;*/
@@ -2440,6 +2453,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 10%;
   background-image: url('../img/header-bg-art.svg');
   background-repeat: no-repeat;
+  background-size: 60%;
   background-position: 150% 100%;
 }
 
