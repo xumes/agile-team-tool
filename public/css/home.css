@@ -4649,6 +4649,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
     font-size: 12px !important;
     line-height: 14px !important;
     color: #5A5A5A !important;
+    padding:10px 15px !important;
 }
 
 .__react_component_tooltip.type-light {
