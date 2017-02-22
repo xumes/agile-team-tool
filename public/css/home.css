@@ -4641,14 +4641,18 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   cursor: pointer;
 }
 
-.__react_component_tooltip{
-  background: rgb(236, 236, 236) !important;
-  color: rgb(50, 50, 50) !important;
-  padding: 1em !important;
-  font-size: 8.5pt !important;
-  line-height: 20px !important;
-  display: block !important;
-  max-width: 300px;
+.__react_component_tooltip {
+    width: 234px !important;
+    background-color: #FFFFFF !important;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.16) !important;
+    font-family: "HelvNeue Roman for IBM" !important;
+    font-size: 12px !important;
+    line-height: 14px !important;
+    color: #5A5A5A !important;
+}
+
+.__react_component_tooltip.type-light {
+    border-top: 4px solid #4178BE !important;
 }
 
 .home-modal-block {

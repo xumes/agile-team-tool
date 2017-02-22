@@ -336,7 +336,7 @@ var HomeIterContent = React.createClass({
         return (
           <div>
             <div class='home-iter-title'>Iteration Overview</div>
-            <Tooltip html={true}/>
+            <Tooltip html={true} type="light"/>
             <div class='home-iter-selection-block'>
               <div class='iter-select'>
                 <select value={defIterId} id='homeIterSelection' onChange={this.props.iterChangeHandler}>
