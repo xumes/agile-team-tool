@@ -1,6 +1,7 @@
 var React = require('react');
 var api = require('../api.jsx');
 var _ = require('underscore');
+var ReactDOM = require('react-dom');
 var HomeAddMember = require('./HomeAddMember.jsx');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
@@ -19,6 +20,29 @@ var HomeMemberTable = React.createClass({
   componentDidUpdate: function() {
     this.initialAll();
     /* update change*/
+  },
+
+  componentWillMount: function() {
+    document.addEventListener('click', this.handleClick, false);
+  },
+
+  componentWillUnmount: function() {
+    document.removeEventListener('click', this.handleClick, false);
+  },
+
+  handleClick: function(e){
+    if(!ReactDOM.findDOMNode(this).contains(e.target)) {
+      $('.team-member-table-content-role > h').css('display','');
+      $('.team-member-table-content-role > .modify-field').css('display','none');
+      $('.team-member-table-content-location > h').css('display','');
+      // $('.team-member-table-content-location input').val('');
+      $('.team-member-table-content-location > .modify-field').css('display','none');
+      $('.team-member-table-content-allocation > h').css('display','');
+      // $('.team-member-table-content-allocation input').val('');
+      $('.team-member-table-content-allocation > .modify-field').css('display','none');
+      $('.team-member-table-content-awk > h').css('display','');
+      $('.team-member-table-content-awk > .modify-field').css('display','none');
+    }
   },
 
   initialAll: function() {
@@ -177,7 +201,7 @@ var HomeMemberTable = React.createClass({
         $('#r_' + roleId).focus();
       }, 0);
       $('#' + roleId + ' .input-field > input').focus();
-    } else if (e.target.value == 'Select a role') {
+    } else if (e.target.value == 'psr') {
       $('#' + roleId + ' .input-field > input').val('');
       $('#' + roleId + ' .input-field').hide();
     } else {
@@ -456,6 +480,10 @@ var HomeMemberTable = React.createClass({
     }
   },
 
+  // handleClick: function(e) {
+  //   console.log('aaa')
+  // },
+
   render: function() {
     var self = this;
     var backdropStyle = {
@@ -540,15 +568,15 @@ var HomeMemberTable = React.createClass({
               addTeamBtnStyle = true;
             }
             var awkValue = 'Full Time';
-            if (_.isNumber(memberDetail.workTime)) {
-              if (memberDetail.workTime == 50) {
-                awkValue = 'Half Time';
-              } else if (memberDetail.workTime == 100) {
-                awkValue = 'Full Time';
-              } else {
-                awkValue = memberDetail.workTime + '%';
-              }
+            // if (_.isNumber(memberDetail.workTime)) {
+            if (memberDetail.workTime == 50) {
+              awkValue = 'Half Time';
+            } else if (memberDetail.workTime == 100) {
+              awkValue = 'Full Time';
+            } else {
+              awkValue = memberDetail.workTime + '%';
             }
+            // }
             return (
               <div key={blockId} id={blockId} class={blockClass}>
                 <div style={{'width':'1%','backgroundColor':'#FFFFFF'}}>
@@ -568,6 +596,7 @@ var HomeMemberTable = React.createClass({
                   <div class='modify-field'>
                     <div class='dropdown-list'>
                       <select id={'role_select_' + idx} defaultValue='Select a role'>
+                        <option key='psr' value='psr'>Please select a role</option>
                         {roleSelection}
                       </select>
                     </div>
