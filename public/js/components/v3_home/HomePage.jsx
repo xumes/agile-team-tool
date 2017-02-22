@@ -97,10 +97,10 @@ var HomePage = React.createClass({
       $('html').css('height', '0.375vw');
       fontSize = (1280/windowSize['width']) * windowSize['fontSize'];
       $('.ibm-columns').css('width', '72.7%');
-      $('.ibm-columns').css('left', '24.3%');
+      $('.ibm-columns').css('left', '22.7%');
       $('#homeNavShowBtnDiv').hide();
-      $('#homeNavDiv').css('width', '25%');
-      $('#homeNavDiv').css('left', '1.4%');
+      $('#homeNavDiv').css('width', '22.5%');
+      $('#homeNavDiv').css('left', '2.4%');
       $('#homeNavDiv').css('top', '6.3%');
       $('#homeNavDiv').css('box-shadow', '');
 
