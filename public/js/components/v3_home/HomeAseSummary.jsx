@@ -16,16 +16,28 @@ var HomeAseSummary = React.createClass({
           $('.home-assessment-summary').css('height',summaryHeight);
           $('.home-assessment-summary-content').css('height',contentHeight);
           if (self.props.loadDetailTeam.assessments[0].componentResults.length == 1) {
-            $('.home-assessment-summary').css('background-position','150% 80%');
+            if (window.innerWidth < 1900) {
+              $('.home-assessment-summary').css('background-position','150% 80%');
+            } else {
+              $('.home-assessment-summary').css('background-position','150% 72%');
+            }
           } else if (self.props.loadDetailTeam.assessments[0].componentResults.length == 2) {
-            $('.home-assessment-summary').css('background-position','150% 100%');
+            if (window.innerWidth < 1900) {
+              $('.home-assessment-summary').css('background-position','150% 100%');
+            } else {
+              $('.home-assessment-summary').css('background-position','150% 85%');
+            }
           }
         } else {
           summaryHeight = '10%';
           contentHeight = '100%';
           $('.home-assessment-summary').css('height',summaryHeight);
           $('.home-assessment-summary-content').css('height',contentHeight);
-          $('.home-assessment-summary').css('background-position','150% 70%');
+          if (window.innerWidth < 1900) {
+            $('.home-assessment-summary').css('background-position','150% 70%');
+          } else {
+            $('.home-assessment-summary').css('background-position','150% 63%');
+          }
         }
         $('.home-assessment-summary').show();
       }
