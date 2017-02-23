@@ -20,6 +20,11 @@ var HomeMemberTable = React.createClass({
   componentDidUpdate: function() {
     this.initialAll();
     /* update change*/
+    $('.team-member-table-content-role > div > div > select').off('change');
+    $('.team-member-table-content-role > div > div > select').change(this.changeRoleHandler);
+    // $('.team-member-table-content-allocation > div > select').change(this.changeMemberHandler);
+    $('.team-member-table-content-awk > div > div > select').off('change');
+    $('.team-member-table-content-awk > div > div > select').change(this.changeAwkHandler);
   },
 
   componentWillMount: function() {
@@ -46,19 +51,36 @@ var HomeMemberTable = React.createClass({
   },
 
   initialAll: function() {
+    var self = this;
     $('.team-member-table-content-role > div > div > select').select2({'width':'100%'});
     // $('.team-member-table-content-allocation > div > select').select2({'width':'100%'});
     $('.team-member-table-content-awk > div > div > select').select2({'width':'99%'});
-    this.hoverBlock('team-member-table-content-role');
-    this.hoverBlock('team-member-table-content-location');
-    this.hoverBlock('team-member-table-content-allocation');
-    this.hoverBlock('team-member-table-content-awk');
-    this.hoverMainBlock('team-member-table-content-block1');
-    this.hoverMainBlock('team-member-table-content-block2');
-    this.onClickBlock('team-member-table-content-role');
-    this.onClickBlock('team-member-table-content-location');
-    this.onClickBlock('team-member-table-content-allocation');
-    this.onClickBlock('team-member-table-content-awk');
+    self.hoverBlock('team-member-table-content-role');
+    self.hoverBlock('team-member-table-content-location');
+    self.hoverBlock('team-member-table-content-allocation');
+    self.hoverBlock('team-member-table-content-awk');
+    self.hoverMainBlock('team-member-table-content-block1');
+    self.hoverMainBlock('team-member-table-content-block2');
+    self.onClickBlock('team-member-table-content-role');
+    self.onClickBlock('team-member-table-content-location');
+    self.onClickBlock('team-member-table-content-allocation');
+    self.onClickBlock('team-member-table-content-awk');
+    _.each(self.props.loadDetailTeam.team.members, function(member, index){
+      if(self.props.roles.indexOf(member.role) >= 0) {
+        $('#role_select_' + index).val(member.role).change();
+      } else {
+        $('#role_select_' + index).val('Other...').change();
+        $('#role_' + index + ' .input-field > input').val(member.role);
+        $('#role_' + index + ' .input-field').show();
+      }
+      if (member.workTime == 100 || member.workTime == 50) {
+        $('#awk_select_' + index).val(member.workTime).change();
+      } else {
+        $('#awk_select_' + index).val('other').change();
+        $('#awk_' + index + ' .input-field > input').val(member.workTime);
+        $('#awk_' + index + ' .input-field').show();
+      }
+    });
   },
 
   onClickBlock: function(block) {
@@ -218,6 +240,7 @@ var HomeMemberTable = React.createClass({
   },
 
   changeRoleHandler: function(e) {
+    console.log(e.target.value);
     var self = this;
     var newMembers = [];
     var roleId = 'role_' + e.target.id.substring(12, e.target.id.length);

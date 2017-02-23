@@ -1282,7 +1282,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   float: right;
   right: 10%;
   width: 15%;
-  height: 70%;
+  height: 100%;
   cursor: pointer;
   display: none;
   padding: 0;
@@ -1465,6 +1465,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   padding: 0;
   height: 50%;
+  color: black;
   top: 25%;
   left: 1%;
   width: 15%;
