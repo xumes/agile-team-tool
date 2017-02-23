@@ -149,7 +149,7 @@ var HomeIterContent = React.createClass({
       availability += (allocation * avgWorkWeek * maxWorkDays);
     });
 
-    return availability.toFixed(1);
+    return availability.toFixed(2);
   },
 
   isWithinIteration: function(starDate,endDate){
@@ -226,7 +226,7 @@ var HomeIterContent = React.createClass({
       var maxWorkDays = business.weekDays(moment(selectedIter.startDate, 'YYYY-MM-DD'),moment(selectedIter.endDate, 'YYYY-MM-DD'));
       selectedIter.teamAvailability = this.getOptimumAvailability(maxWorkDays);
     }
-    selectedIter.personDaysAvailable = (selectedIter.teamAvailability - selectedIter.personDaysUnavailable).toFixed(1);
+    selectedIter.personDaysAvailable = (selectedIter.teamAvailability - selectedIter.personDaysUnavailable).toFixed(2);
     return selectedIter;
   },
 
@@ -245,6 +245,16 @@ var HomeIterContent = React.createClass({
     }
     else {
       return 0;
+    }
+  },
+
+  float2Decimal:function(val) {
+    var value = parseFloat(val);
+    if (!isNaN(value)) {
+      return value.toFixed(2);
+    }
+    else {
+      return 0.00;
     }
   },
 
@@ -272,6 +282,14 @@ var HomeIterContent = React.createClass({
     var value = parseFloat(e.target.value);
     if (!isNaN(value)) {
       value = value.toFixed(1);
+      e.target.value = value;
+    }
+  },
+
+  roundOff2Decimal:function(e) {
+    var value = parseFloat(e.target.value);
+    if (!isNaN(value)) {
+      value = value.toFixed(2);
       e.target.value = value;
     }
   },
@@ -309,15 +327,22 @@ var HomeIterContent = React.createClass({
         } else {
           iterData.memberChanged = 'No';
         }
-        if (defIter.status === 'Completed' && !isFinite(iterData.teamAvailability)){
+        
+        if (defIter.status === 'Completed' && _.isNull(defIter.teamAvailability)){
           iterData.teamAvailability = 'N/A';
           iterData.personDaysUnavailable = 'N/A';
           iterData.personDaysAvailable = 'N/A';
+          storiesDays = 'N/A';
+          storyPointsDays = 'N/A';
         }
         else{
-          iterData.teamAvailability = defIter.teamAvailability.toFixed(2);
-          iterData.personDaysUnavailable = defIter.personDaysUnavailable.toFixed(2);
-          iterData.personDaysAvailable = defIter.personDaysAvailable.toFixed(1);
+          iterData.teamAvailability = !_.isNull(defIter.teamAvailability)? this.float2Decimal(defIter.teamAvailability): '0.00';
+          iterData.personDaysUnavailable = !_.isNull(defIter.personDaysUnavailable)? this.float2Decimal(defIter.personDaysUnavailable): '0.00';
+          iterData.personDaysAvailable = !_.isNull(defIter.personDaysAvailable)? this.float2Decimal(defIter.personDaysAvailable) : '0.00' ;
+          storiesDays = this.float2Decimal(defIter.deliveredStories)/this.float2Decimal(iterData.personDaysAvailable);
+          storiesDays = !isFinite(storiesDays) ? '0.0': storiesDays.toFixed(1);
+          storyPointsDays = this.float2Decimal(defIter.storyPointsDelivered)/this.float2Decimal(iterData.personDaysAvailable);
+          storyPointsDays = !isFinite(storyPointsDays) ? '0.0': storyPointsDays.toFixed(1);
         }
         iterData.memberFte = (defIter.memberFte == null) ? '' : defIter.memberFte;
         iterData.committedStories = (defIter.committedStories == null) ? '0' : defIter.committedStories;
@@ -334,10 +359,7 @@ var HomeIterContent = React.createClass({
         iterData.clientSatisfaction = (defIter.clientSatisfaction == null) ? '0.0' : defIter.clientSatisfaction;
         iterData.teamSatisfaction = (defIter.teamSatisfaction == null) ? '0.0' : defIter.teamSatisfaction;
         iterData.comment = (defIter.comment == null) ? '' : defIter.comment;
-        storiesDays = this.numericValue(iterData.deliveredStories)/this.numericValue(iterData.personDaysAvailable);
-        storiesDays = !isFinite(storiesDays) ? '0.0': storiesDays.toFixed(1);
-        storyPointsDays = this.numericValue(iterData.storyPointsDelivered)/this.numericValue(iterData.personDaysAvailable);
-        storyPointsDays = !isFinite(storyPointsDays) ? '0.0': storyPointsDays.toFixed(1);
+        
         var access = self.props.loadDetailTeam.access;
         
         return (
@@ -372,13 +394,13 @@ var HomeIterContent = React.createClass({
                 <div class='home-iter-content-sub' data-tip='The calculated number of ‘person days’ available for this iteration based on team member’s allocation %, Full Time/Part Time/ Half time status and the length of the iteration.'>Optimum team availability (In days)</div>
                 <div id='optimumPoint' class='home-iter-content-point-uneditable'>{iterData.teamAvailability}</div>
                 <div class='home-iter-team-availability'>
-                  <InlineSVG src={require('../../../img/Att-icons/att-icons_team-reset.svg')}></InlineSVG>
+                  <InlineSVG src={require('../../../img/Att-icons/att-icons_team-reset.svg')} data-tip='Reset your Sprint Availability based on your current Team Member structure.'></InlineSVG>
                 </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='The number of person days team members will be unavailable to work on team deliverables due to holidays, vacation/leave, education, illness.'>Person days unavailable</div>
                 {this.state.selectedField === 'personDaysUnavailable'?
-                  <input id='personDaysUnavailable' class='home-iter-content-point' onKeyPress={this.decimalNumCheck} onBlur={this.roundOff} defaultValue={iterData.personDaysUnavailable} onPaste={this.paste} />:
+                  <input id='personDaysUnavailable' class='home-iter-content-point' onKeyPress={this.decimalNumCheck} onBlur={this.roundOff2Decimal} defaultValue={iterData.personDaysUnavailable} onPaste={this.paste} />:
                   <div id='personDaysUnavailable' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.personDaysUnavailable}</div>
                 }
                 {this.state.selectedField === 'personDaysUnavailable'?
