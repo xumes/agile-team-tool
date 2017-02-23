@@ -4097,7 +4097,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   margin-top: 1em;
 }
 
-.pc-hier-selparent .select2-search__field input {
+.select2-search__field {
   font-size: 1.4em !important;
 }
 

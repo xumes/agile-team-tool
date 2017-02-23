@@ -83,6 +83,8 @@ var HomeAddTeam = React.createClass({
       var screenStatus = self.state.screenStatus;
       screenStatus[screenName].active = false;
       self.setState({screenStatus : screenStatus});
+      self.setState({selectedParentTeam:{}});
+      self.setState({selectedChildTeams : []});  //why doesn't this reset?
     }
   },
 
@@ -163,7 +165,7 @@ var HomeAddTeam = React.createClass({
         <HomeAddTeamHierarchyModal activeWindow={this.state.screenStatus['showTeamHierarchyModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} 
         newTeamObj={self.state.newTeamObj} 
         setSelectableParents={self.setSelectableParents} selectableParents={self.state.selectableParents} selectedParentTeam={self.state.selectedParentTeam} setSelectedParentTeam={self.setSelectedParentTeam} 
-        selectableChildren={self.state.selectableChildren} setSelectedChildTeams={self.setSelectedChildTeams}
+        selectableChildren={self.state.selectableChildren} setSelectedChildTeams={self.setSelectedChildTeams} selectedChildTeams={self.state.selectedChildTeams}
         />
 
         <HomeAddTeamMemberRole activeWindow={this.state.screenStatus['showTeamMemberRoleModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamMember={self.setTeamMember} roles={self.props.roles} />

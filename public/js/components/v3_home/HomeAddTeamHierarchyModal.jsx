@@ -17,7 +17,6 @@ var HomeAddTeamHierarchyModal = React.createClass({
       },
 
       selparentList: 'none',
-      children: [],
       childCount: 0,
       defaultParentObjects: [
         {name: 'Parent of my currently selected team', id: 'parentOfSelected'},
@@ -40,7 +39,6 @@ var HomeAddTeamHierarchyModal = React.createClass({
 
   show: function() {
     var self = this;
-    console.log('show',self.props.selectedParentTeam);   
  
     $('#optsel-parent select').select2({'dropdownParent':$('#optsel-parent')});
     $('#pc-hier-selparent').change(self.parentSelectHandler);
@@ -56,14 +54,14 @@ var HomeAddTeamHierarchyModal = React.createClass({
 
   selectListInit: function() {
     var self = this;
-    //self.setState({teamNames: this.props.teamNames});
     console.log('selectListInit');
     api.getAllRootTeamsSquadNonSquad()
       .then(function(teams) {
         var selectableChildren = _.sortBy(teams, 'name');
           self.setState({teamNamesAll: selectableChildren});
+          });             
 
-          });
+    self.props.setSelectedChildTeams(this.state.teamNamesAll);      
   },
 
   parentSelectHandler: function(e){
@@ -80,20 +78,16 @@ var HomeAddTeamHierarchyModal = React.createClass({
       return !_.isEqual(team._id, selectedValue);
     });
     self.setState({teamNames: filteredTeam});
-console.log('finishing parentSelectHandler: ');
     disableField = '';
   },
 
   childDeleteHandler: function(id) {
     var self = this;
-    console.log('childDeleteHandler',id);    
-    var children = self.state.children;
-    children = _.filter(children, function(team) {
+    var children = [];
+    children = _.filter(self.props.selectedChildTeams, function(team) {
        return !_.isEqual(id, team._id);
     });
-    self.setState({children:children});
-    console.log('calling setSelectedChildTeams');
-    this.props.setSelectedChildTeams(this.state.children);
+    this.props.setSelectedChildTeams(children);
 
   },
 
@@ -117,16 +111,13 @@ console.log('finishing parentSelectHandler: ');
         //alert(childTeam.name + ' is already listed.');
         return;
       }
-      var children = self.state.children;
+      var children = self.props.selectedChildTeams;
       children.push(childTeam);
       children = _.sortBy(children, 'name');
-
-      self.setState({children:children});
-      this.props.setSelectedChildTeams(this.state.children);
+      self.props.setSelectedChildTeams(children);
     }
   },
   
-
   render: function () {
     var self = this;
     var noteStyle = {
@@ -134,12 +125,9 @@ console.log('finishing parentSelectHandler: ');
     };
 
     var selparent1Style = {'display': 'block'};
-
-    var childTeams = null;
-
     var disableField = 'disabled';
-
-    childTeams = this.state.children.map(function(item, index) {
+    var childTeams = null;
+    childTeams = self.props.selectedChildTeams.map(function(item, index) {
       return (
          <p key={index} id={item._id}>
           <h title={item.name}>{item.name}</h>
@@ -165,7 +153,6 @@ console.log('finishing parentSelectHandler: ');
       <option key={item._id} value={item._id}>{item.name}</option>
      ) ;
    });
-
 
   return (
     <div>
