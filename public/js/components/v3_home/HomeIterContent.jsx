@@ -309,23 +309,30 @@ var HomeIterContent = React.createClass({
         } else {
           iterData.memberChanged = 'No';
         }
+        if (defIter.status === 'Completed' && !isFinite(iterData.teamAvailability)){
+          iterData.teamAvailability = 'N/A';
+          iterData.personDaysUnavailable = 'N/A';
+          iterData.personDaysAvailable = 'N/A';
+        }
+        else{
+          iterData.teamAvailability = defIter.teamAvailability.toFixed(2);
+          iterData.personDaysUnavailable = defIter.personDaysUnavailable.toFixed(2);
+          iterData.personDaysAvailable = defIter.personDaysAvailable.toFixed(1);
+        }
         iterData.memberFte = (defIter.memberFte == null) ? '' : defIter.memberFte;
-        iterData.teamAvailability = (defIter.teamAvailability == null) ? '' : defIter.teamAvailability;
-        iterData.personDaysUnavailable = (defIter.personDaysUnavailable == null) ? '' : defIter.personDaysUnavailable;
-        iterData.personDaysAvailable = (defIter.personDaysAvailable == null) ? '' : defIter.personDaysAvailable;
-        iterData.committedStories = (defIter.committedStories == null) ? '' : defIter.committedStories;
-        iterData.deliveredStories = (defIter.deliveredStories == null) ? '' : defIter.deliveredStories;
-        iterData.committedStoryPoints = (defIter.committedStoryPoints == null) ? '' : defIter.committedStoryPoints;
-        iterData.storyPointsDelivered = (defIter.storyPointsDelivered == null) ? '' : defIter.storyPointsDelivered;
-        iterData.deployments = (defIter.deployments == null) ? '' : defIter.deployments;
-        iterData.defectsStartBal = (defIter.defectsStartBal == null) ? '' : defIter.defectsStartBal;
-        iterData.defects = (defIter.defects == null) ? '' : defIter.defects;
-        iterData.defectsClosed = (defIter.defectsClosed == null) ? '' : defIter.defectsClosed;
-        iterData.defectsEndBal = (defIter.defectsEndBal == null) ? '' : defIter.defectsEndBal;
-        iterData.cycleTimeWIP = (defIter.cycleTimeWIP == null) ? '' : defIter.cycleTimeWIP;
-        iterData.cycleTimeInBacklog = (defIter.cycleTimeInBacklog == null) ? '' : defIter.cycleTimeInBacklog;
-        iterData.clientSatisfaction = (defIter.clientSatisfaction == null) ? '' : defIter.clientSatisfaction;
-        iterData.teamSatisfaction = (defIter.teamSatisfaction == null) ? '' : defIter.teamSatisfaction;
+        iterData.committedStories = (defIter.committedStories == null) ? '0' : defIter.committedStories;
+        iterData.deliveredStories = (defIter.deliveredStories == null) ? '0' : defIter.deliveredStories;
+        iterData.committedStoryPoints = (defIter.committedStoryPoints == null) ? '0' : defIter.committedStoryPoints;
+        iterData.storyPointsDelivered = (defIter.storyPointsDelivered == null) ? '0' : defIter.storyPointsDelivered;
+        iterData.deployments = (defIter.deployments == null) ? '0' : defIter.deployments;
+        iterData.defectsStartBal = (defIter.defectsStartBal == null) ? '0' : defIter.defectsStartBal;
+        iterData.defects = (defIter.defects == null) ? '0' : defIter.defects;
+        iterData.defectsClosed = (defIter.defectsClosed == null) ? '0' : defIter.defectsClosed;
+        iterData.defectsEndBal = (defIter.defectsEndBal == null) ? '0' : defIter.defectsEndBal;
+        iterData.cycleTimeWIP = (defIter.cycleTimeWIP == null) ? '0.0' : defIter.cycleTimeWIP;
+        iterData.cycleTimeInBacklog = (defIter.cycleTimeInBacklog == null) ? '0.0' : defIter.cycleTimeInBacklog;
+        iterData.clientSatisfaction = (defIter.clientSatisfaction == null) ? '0.0' : defIter.clientSatisfaction;
+        iterData.teamSatisfaction = (defIter.teamSatisfaction == null) ? '0.0' : defIter.teamSatisfaction;
         iterData.comment = (defIter.comment == null) ? '' : defIter.comment;
         storiesDays = this.numericValue(iterData.deliveredStories)/this.numericValue(iterData.personDaysAvailable);
         storiesDays = !isFinite(storiesDays) ? '0.0': storiesDays.toFixed(1);
@@ -364,9 +371,9 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='The calculated number of ‘person days’ available for this iteration based on team member’s allocation %, Full Time/Part Time/ Half time status and the length of the iteration.'>Optimum team availability (In days)</div>
                 <div id='optimumPoint' class='home-iter-content-point-uneditable'>{iterData.teamAvailability}</div>
-                  <div class='home-iter-locked-btn'>
-                    <InlineSVG src={require('../../../img/Att-icons/att-icons_locked.svg')} data-tip={lockMessage}></InlineSVG>
-                  </div>
+                <div class='home-iter-team-availability'>
+                  <InlineSVG src={require('../../../img/Att-icons/att-icons_team-reset.svg')}></InlineSVG>
+                </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='The number of person days team members will be unavailable to work on team deliverables due to holidays, vacation/leave, education, illness.'>Person days unavailable</div>
