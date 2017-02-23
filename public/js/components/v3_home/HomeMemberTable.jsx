@@ -18,12 +18,10 @@ var HomeMemberTable = React.createClass({
     $('.team-member-table-content-awk > div > div > select').change(this.changeAwkHandler);
   },
   componentDidUpdate: function() {
-    this.initialAll();
-    /* update change*/
     $('.team-member-table-content-role > div > div > select').off('change');
-    $('.team-member-table-content-role > div > div > select').change(this.changeRoleHandler);
-    // $('.team-member-table-content-allocation > div > select').change(this.changeMemberHandler);
     $('.team-member-table-content-awk > div > div > select').off('change');
+    this.initialAll();
+    $('.team-member-table-content-role > div > div > select').change(this.changeRoleHandler);
     $('.team-member-table-content-awk > div > div > select').change(this.changeAwkHandler);
   },
 
@@ -37,16 +35,27 @@ var HomeMemberTable = React.createClass({
 
   handleClick: function(e){
     if(!ReactDOM.findDOMNode(this).contains(e.target) || e.target.id == 'teamMemberTableTitle') {
-      $('.team-member-table-content-role > h').css('display','');
+      $('.team-member-table-content-role > h').css('display','block');
+      $('.team-member-table-content-role > h').removeClass('team-member-table-content-block-hide');
       $('.team-member-table-content-role > .modify-field').css('display','none');
-      $('.team-member-table-content-location > h').css('display','');
+      $('.team-member-table-content-role > .modify-field').removeClass('team-member-table-content-block-show');
+
+      $('.team-member-table-content-location > h').css('display','block');
+      $('.team-member-table-content-location > h').removeClass('team-member-table-content-block-hide');
       // $('.team-member-table-content-location input').val('');
       $('.team-member-table-content-location > .modify-field').css('display','none');
-      $('.team-member-table-content-allocation > h').css('display','');
+      $('.team-member-table-content-location > .modify-field').removeClass('team-member-table-content-block-show');
+
+      $('.team-member-table-content-allocation > h').css('display','block');
+      $('.team-member-table-content-allocation > h').removeClass('team-member-table-content-block-hide');
       // $('.team-member-table-content-allocation input').val('');
       $('.team-member-table-content-allocation > .modify-field').css('display','none');
-      $('.team-member-table-content-awk > h').css('display','');
+      $('.team-member-table-content-allocation > .modify-field').removeClass('team-member-table-content-block-show');
+
+      $('.team-member-table-content-awk > h').css('display','block');
+      $('.team-member-table-content-awk > h').removeClass('team-member-table-content-block-hide');
       $('.team-member-table-content-awk > .modify-field').css('display','none');
+      $('.team-member-table-content-awk > .modify-field').removeClass('team-member-table-content-block-show');
     }
   },
 
@@ -68,6 +77,8 @@ var HomeMemberTable = React.createClass({
     _.each(self.props.loadDetailTeam.team.members, function(member, index){
       if(self.props.roles.indexOf(member.role) >= 0) {
         $('#role_select_' + index).val(member.role).change();
+        $('#role_' + index + ' .input-field > input').val('');
+        $('#role_' + index + ' .input-field').hide();
       } else {
         $('#role_select_' + index).val('Other...').change();
         $('#role_' + index + ' .input-field > input').val(member.role);
@@ -75,6 +86,8 @@ var HomeMemberTable = React.createClass({
       }
       if (member.workTime == 100 || member.workTime == 50) {
         $('#awk_select_' + index).val(member.workTime).change();
+        $('#awk_' + index + ' .input-field > input').val('');
+        $('#awk_' + index + ' .input-field').hide();
       } else {
         $('#awk_select_' + index).val('other').change();
         $('#awk_' + index + ' .input-field > input').val(member.workTime);
@@ -89,18 +102,28 @@ var HomeMemberTable = React.createClass({
     $('.' + block).off('click');
     if (this.props.loadDetailTeam.access) {
       $('.' + block).click(function(){
-        $('.team-member-table-content-role > h').css('display','');
+        $('.team-member-table-content-role > h').css('display','block');
+        $('.team-member-table-content-role > h').removeClass('team-member-table-content-block-hide');
         $('.team-member-table-content-role > .modify-field').css('display','none');
-        $('.team-member-table-content-location > h').css('display','');
+        $('.team-member-table-content-role > .modify-field').removeClass('team-member-table-content-block-show');
+        $('.team-member-table-content-location > h').css('display','block');
+        $('.team-member-table-content-location > h').removeClass('team-member-table-content-block-hide');
         // $('.team-member-table-content-location input').val('');
         $('.team-member-table-content-location > .modify-field').css('display','none');
-        $('.team-member-table-content-allocation > h').css('display','');
+        $('.team-member-table-content-location > .modify-field').removeClass('team-member-table-content-block-show');
+        $('.team-member-table-content-allocation > h').css('display','block');
+        $('.team-member-table-content-allocation > h').removeClass('team-member-table-content-block-hide');
         // $('.team-member-table-content-allocation input').val('');
         $('.team-member-table-content-allocation > .modify-field').css('display','none');
-        $('.team-member-table-content-awk > h').css('display','');
+        $('.team-member-table-content-allocation > .modify-field').removeClass('team-member-table-content-block-show');
+        $('.team-member-table-content-awk > h').css('display','block');
+        $('.team-member-table-content-awk > h').removeClass('team-member-table-content-block-hide');
         $('.team-member-table-content-awk > .modify-field').css('display','none');
-        $(this).find('h').css('display', 'none');
-        $(this).find('.modify-field').css('display', 'block');
+        $('.team-member-table-content-awk > .modify-field').removeClass('team-member-table-content-block-show');
+        // $(this).find('h').css('display', 'none');
+        // $(this).find('.modify-field').css('display', 'block');
+        $(this).find('h').addClass('team-member-table-content-block-hide');
+        $(this).find('.modify-field').addClass('team-member-table-content-block-show');
         var uid = $(this).find('input')[0].id;
         setTimeout(function(){
           $('#'+uid).focus();
@@ -112,18 +135,24 @@ var HomeMemberTable = React.createClass({
   },
 
   hoverBlock: function(block) {
-    $('.' + block + ' > h').unbind('mouseenter mouseleave');
+    $('.' + block).unbind('mouseenter mouseleave');
     if (this.props.loadDetailTeam.access) {
-      $('.' + block + ' > h').hover(function(){
-        $(this).css('border','0.1em solid');
-        $(this).css('background-color','#FFFFFF');
-        $(this).css('padding-top','0.2em');
-        $(this).css('cursor','pointer');
+      $('.' + block).hover(function(){
+        // $(this).css('border','0.1em solid');
+        // $(this).css('background-color','#FFFFFF');
+        // $(this).css('padding-top','0.2em');
+        // $(this).css('cursor','pointer');
+        var blockId = $(this)[0].id;
+        $('#' + blockId + ' > h').css('display', 'none');
+        $('#' + blockId + ' > .modify-field').css('display','block');
       }, function(){
-        $(this).css('border','');
-        $(this).css('background-color','');
-        $(this).css('padding-top','0');
-        $(this).css('cursor','default');
+        // $(this).css('border','');
+        // $(this).css('background-color','');
+        // $(this).css('padding-top','0');
+        // $(this).css('cursor','default');
+        var blockId = $(this)[0].id;
+        $('#' + blockId + ' > h').css('display', 'block');
+        $('#' + blockId + ' > .modify-field').css('display','none');
       });
     }
   },
@@ -133,14 +162,14 @@ var HomeMemberTable = React.createClass({
     if (this.props.loadDetailTeam.access) {
       $('.' + block).hover(function(){
         var blockId = $(this)[0].id;
-        var roleB = $('#' + blockId + ' > .team-member-table-content-role > h').css('display');
-        var locationB = $('#' + blockId + ' > .team-member-table-content-location > h').css('display');
-        var allocationB = $('#' + blockId + ' > .team-member-table-content-allocation > h').css('display');
-        var awkB = $('#' + blockId + ' > .team-member-table-content-awk > h').css('display');
-        if (roleB != 'none' && locationB != 'none' && allocationB != 'none' && awkB != 'none') {
-          $('#' + blockId + ' > .team-member-table-content-awk > span').css('display', 'block');
-        } else {
+        var roleB = $('#' + blockId + ' > .team-member-table-content-role > h').hasClass('team-member-table-content-block-hide');
+        var locationB = $('#' + blockId + ' > .team-member-table-content-location > h').hasClass('team-member-table-content-block-hide');
+        var allocationB = $('#' + blockId + ' > .team-member-table-content-allocation > h').hasClass('team-member-table-content-block-hide');
+        var awkB = $('#' + blockId + ' > .team-member-table-content-awk > h').hasClass('team-member-table-content-block-hide');
+        if (roleB || locationB || allocationB || awkB) {
           $('#' + blockId + ' > .team-member-table-content-awk > span').css('display', 'none');
+        } else {
+          $('#' + blockId + ' > .team-member-table-content-awk > span').css('display', 'block');
         }
       }, function(){
         var blockId = $(this)[0].id;
@@ -240,7 +269,6 @@ var HomeMemberTable = React.createClass({
   },
 
   changeRoleHandler: function(e) {
-    console.log(e.target.value);
     var self = this;
     var newMembers = [];
     var roleId = 'role_' + e.target.id.substring(12, e.target.id.length);
@@ -257,8 +285,8 @@ var HomeMemberTable = React.createClass({
       $('#' + roleId + ' .input-field > input').val('');
       $('#' + roleId + ' .input-field').hide();
       $('#' + roleId + ' > h').html(e.target.value);
-      $('#' + roleId + ' .modify-field').hide();
-      $('#' + roleId + ' > h').show();
+      $('#' + roleId + ' .modify-field').removeClass('team-member-table-content-block-show');
+      $('#' + roleId + ' > h').removeClass('team-member-table-content-block-hide');
       var blockId = 'name_' + e.target.id.substring(12, e.target.id.length);
       var memberEmail = $('#' + blockId + ' > div > h1').html();
       _.each(self.props.loadDetailTeam.team.members, function(member){
@@ -289,8 +317,8 @@ var HomeMemberTable = React.createClass({
     var newMembers = [];
     var roleValue = $('#' + roleId + ' input').val();
     $('#' + roleId + ' > h').html(roleValue);
-    $('#' + roleId + ' .modify-field').hide();
-    $('#' + roleId + ' > h').show();
+    $('#' + roleId + ' .modify-field').removeClass('team-member-table-content-block-show');
+    $('#' + roleId + ' > h').removeClass('team-member-table-content-block-hide');
     var blockId = 'name_' + roleId.substring(5, roleId.length);
     var memberEmail = $('#' + blockId + ' > div > h1').html();
     _.each(self.props.loadDetailTeam.team.members, function(member){
@@ -316,8 +344,8 @@ var HomeMemberTable = React.createClass({
   },
 
   cancelRoleChange: function(roleId) {
-    $('#' + roleId + ' > .modify-field').css('display','none');
-    $('#' + roleId + ' > h').css('display','');
+    $('#' + roleId + ' > .modify-field').removeClass('team-member-table-content-block-show');
+    $('#' + roleId + ' > h').removeClass('team-member-table-content-block-hide');
     $('#' + roleId + ' input').val('');
   },
 
@@ -325,15 +353,14 @@ var HomeMemberTable = React.createClass({
     var self = this;
     var newMembers = [];
     var allocationValue = $('#' + allocationId + ' input').val();
-    console.log(allocationValue);
     if (allocationValue < 0 || allocationValue > 100 || allocationValue == '') {
       alert('Allocation value should be between 0 and 100.');
     } else {
       $('#' + allocationId + ' > h').html(allocationValue + '%');
       var blockId = 'name_' + allocationId.substring(11, allocationId.length);
       var memberEmail = $('#' + blockId + ' > div > h1').html();
-      $('#' + allocationId + ' > .modify-field').css('display','none');
-      $('#' + allocationId + ' > h').css('display','');
+      $('#' + allocationId + ' > .modify-field').removeClass('team-member-table-content-block-show');
+      $('#' + allocationId + ' > h').removeClass('team-member-table-content-block-hide');
       $('#' + allocationId + ' input').val('');
       _.each(self.props.loadDetailTeam.team.members, function(member){
         if (member.email != memberEmail) {
@@ -359,8 +386,8 @@ var HomeMemberTable = React.createClass({
   },
 
   cancelAllocationChange: function(allocationId) {
-    $('#' + allocationId + ' > .modify-field').css('display','none');
-    $('#' + allocationId + ' > h').css('display','');
+    $('#' + allocationId + ' > .modify-field').removeClass('team-member-table-content-block-show');
+    $('#' + allocationId + ' > h').removeClass('team-member-table-content-block-hide');
     $('#' + allocationId + ' input').val('');
   },
 
@@ -373,8 +400,8 @@ var HomeMemberTable = React.createClass({
       $('#' + locationId + ' > h').html(locationValue);
       var blockId = 'name_' + locationId.substring(9, locationId.length);
       var memberEmail = $('#' + blockId + ' > div > h1').html();
-      $('#' + locationId + ' > .modify-field').css('display','none');
-      $('#' + locationId + ' > h').css('display','');
+      $('#' + locationId + ' > .modify-field').removeClass('team-member-table-content-block-show');
+      $('#' + locationId + ' > h').removeClass('team-member-table-content-block-hide');
       $('#' + locationId + ' input').val('');
       var newMember = _.find(self.props.loadDetailTeam.members, function(member){
         if (member.email == memberEmail) {
@@ -389,8 +416,8 @@ var HomeMemberTable = React.createClass({
   },
 
   cancelLocationChange: function(locationId) {
-    $('#' + locationId + ' > .modify-field').css('display','none');
-    $('#' + locationId + ' > h').css('display','');
+    $('#' + locationId + ' > .modify-field').removeClass('team-member-table-content-block-show');
+    $('#' + locationId + ' > h').removeClass('team-member-table-content-block-hide');
     $('#' + locationId + ' input').val('');
   },
 
@@ -412,8 +439,8 @@ var HomeMemberTable = React.createClass({
       } else {
         $('#' + awkId + ' > h').html('Half Time');
       }
-      $('#' + awkId + ' .modify-field').hide();
-      $('#' + awkId + ' > h').show();
+      $('#' + awkId + ' .modify-field').removeClass('team-member-table-content-block-show');
+      $('#' + awkId + ' > h').removeClass('team-member-table-content-block-hide');
       var blockId = 'name_' + e.target.id.substring(11, e.target.id.length);
       var memberEmail = $('#' + blockId + ' > div > h1').html();
       _.each(self.props.loadDetailTeam.team.members, function(member){
@@ -453,8 +480,8 @@ var HomeMemberTable = React.createClass({
       } else {
         $('#' + awkId + ' > h').html(awkValue + '%');
       }
-      $('#' + awkId + ' .modify-field').hide();
-      $('#' + awkId + ' > h').show();
+      $('#' + awkId + ' .modify-field').removeClass('team-member-table-content-block-show');
+      $('#' + awkId + ' > h').removeClass('team-member-table-content-block-hide');
       var blockId = 'name_' + awkId.substring(4, awkId.length);
       var memberEmail = $('#' + blockId + ' > div > h1').html();
       _.each(self.props.loadDetailTeam.team.members, function(member){
@@ -481,8 +508,8 @@ var HomeMemberTable = React.createClass({
   },
 
   cancelAwkChange: function(awkId) {
-    $('#' + awkId + ' > .modify-field').css('display','none');
-    $('#' + awkId + ' > h').css('display','');
+    $('#' + awkId + ' .modify-field').removeClass('team-member-table-content-block-show');
+    $('#' + awkId + ' > h').removeClass('team-member-table-content-block-hide');
     $('#' + awkId + ' input').val('');
   },
 

@@ -1272,6 +1272,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   top: 25%;
   left: 5%;
   height: 45%;
+  float: left;
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   color: #5A5A5A;
@@ -1302,6 +1303,14 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 .team-member-table-content-block2:hover > .team-member-table-content-awk > span
  {
   /*display: block;*/
+}
+
+.team-member-table-content-block-show {
+  display: block !important;
+}
+
+.team-member-table-content-block-hide {
+  display: none !important;
 }
 
 #teamMemberTable .select2-container,
