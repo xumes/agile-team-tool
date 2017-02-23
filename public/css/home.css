@@ -2259,6 +2259,20 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: auto;
 }
 
+.home-iter-team-availability {
+  position: relative;
+  display: inline-block;
+  float: right;
+  top: 15%;
+  right: -8.5%;
+  width: 5%;
+  height: 60%;
+}
+.home-iter-locked-btn > i > svg {
+  width: 100%;
+  height: auto;
+}
+
 .home-iter-comment-test {
   width: 100%;
   height: 80%;
@@ -4708,6 +4722,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
     line-height: 14px !important;
     color: #5A5A5A !important;
     padding:10px 15px !important;
+    opacity:1 !important;
 }
 
 .__react_component_tooltip.type-light {
