@@ -31,7 +31,7 @@ var HomeMemberTable = React.createClass({
   },
 
   handleClick: function(e){
-    if(!ReactDOM.findDOMNode(this).contains(e.target)) {
+    if(!ReactDOM.findDOMNode(this).contains(e.target) || e.target.id == 'teamMemberTableTitle') {
       $('.team-member-table-content-role > h').css('display','');
       $('.team-member-table-content-role > .modify-field').css('display','none');
       $('.team-member-table-content-location > h').css('display','');
@@ -53,6 +53,8 @@ var HomeMemberTable = React.createClass({
     this.hoverBlock('team-member-table-content-location');
     this.hoverBlock('team-member-table-content-allocation');
     this.hoverBlock('team-member-table-content-awk');
+    this.hoverMainBlock('team-member-table-content-block1');
+    this.hoverMainBlock('team-member-table-content-block2');
     this.onClickBlock('team-member-table-content-role');
     this.onClickBlock('team-member-table-content-location');
     this.onClickBlock('team-member-table-content-allocation');
@@ -80,7 +82,9 @@ var HomeMemberTable = React.createClass({
         var uid = $(this).find('input')[0].id;
         setTimeout(function(){
           $('#'+uid).focus();
-        },0)
+        },0);
+        var blockId = $('#'+$(this)[0].id).parents()[0].id;
+        $('#' + blockId + ' > .team-member-table-content-awk > span').css('display', 'none');
       });
     }
   },
@@ -101,6 +105,28 @@ var HomeMemberTable = React.createClass({
       });
     }
   },
+
+  hoverMainBlock: function(block) {
+    $('.' + block).unbind('mouseenter mouseleave');
+    if (this.props.loadDetailTeam.access) {
+      $('.' + block).hover(function(){
+        var blockId = $(this)[0].id;
+        var roleB = $('#' + blockId + ' > .team-member-table-content-role > h').css('display');
+        var locationB = $('#' + blockId + ' > .team-member-table-content-location > h').css('display');
+        var allocationB = $('#' + blockId + ' > .team-member-table-content-allocation > h').css('display');
+        var awkB = $('#' + blockId + ' > .team-member-table-content-awk > h').css('display');
+        if (roleB != 'none' && locationB != 'none' && allocationB != 'none' && awkB != 'none') {
+          $('#' + blockId + ' > .team-member-table-content-awk > span').css('display', 'block');
+        } else {
+          $('#' + blockId + ' > .team-member-table-content-awk > span').css('display', 'none');
+        }
+      }, function(){
+        var blockId = $(this)[0].id;
+        $('#' + blockId + ' > .team-member-table-content-awk > span').css('display', 'none');
+      });
+    }
+  },
+
   delTeamMemberHandler: function(idx) {
     var self = this;
     var blockId = 'name_' + idx;
@@ -601,7 +627,7 @@ var HomeMemberTable = React.createClass({
                       </select>
                     </div>
                     <div class='input-field'>
-                      <input type='text' id={'r_'+roleId} placeholder='Ex: Developer' onKeyPress={self.keyPressCheck} onKeyUp={self.escPressCheck}></input>
+                      <input type='text' id={'r_'+roleId} placeholder='Developer' onKeyPress={self.keyPressCheck} onKeyUp={self.escPressCheck}></input>
                       <div class='save-btn' onClick={self.saveRole.bind(null, roleId)}>
                         <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                       </div>
@@ -614,7 +640,7 @@ var HomeMemberTable = React.createClass({
                 <div class='team-member-table-content-location' id={locationId} style={{'width':'21.9%'}}>
                   <h>{mLocation}</h>
                   <div class='modify-field'>
-                    <input type='text' id={'l_'+locationId} placeholder='Ex: Somers,NY,USA' onKeyPress={self.keyPressCheck} onKeyUp={self.escPressCheck}></input>
+                    <input type='text' id={'l_'+locationId} placeholder='Somers,NY,USA' onKeyPress={self.keyPressCheck} onKeyUp={self.escPressCheck}></input>
                     <div class='save-btn' onClick={self.saveLocation.bind(null, locationId)}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
@@ -629,7 +655,8 @@ var HomeMemberTable = React.createClass({
                     {/*<select id={'allocation_select_' + idx} defaultValue={memberDetail.allocation}>
                       {allocationSelection}
                     </select>*/}
-                    <input type='text' id={'a_'+allocationId} placeholder='Ex:50' min='0' max='100' maxLength='3' onKeyPress={self.wholeNumCheck} onKeyUp={self.escPressCheck}></input>
+                    <input type='text' id={'a_'+allocationId} placeholder='50' min='0' max='100' maxLength='3' onKeyPress={self.wholeNumCheck} onKeyUp={self.escPressCheck}></input>
+                    <h1>%</h1>
                     <div class='save-btn' onClick={self.saveAllocation.bind(null, allocationId)}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
@@ -649,11 +676,12 @@ var HomeMemberTable = React.createClass({
                       </select>
                     </div>
                     <div class='input-field'>
-                      <input type='text' id={'w_'+awkId} placeholder='Ex:50' min='0' max='100' maxLength='3' onKeyPress={self.wholeNumCheck} onKeyUp={self.escPressCheck}></input>
+                      <input type='text' id={'w_'+awkId} placeholder='50' min='0' max='100' maxLength='3' onKeyPress={self.wholeNumCheck} onKeyUp={self.escPressCheck}></input>
+                      <h1>%</h1>
                       <div class='save-btn' onClick={self.saveAwk.bind(null, awkId)}>
                         <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                       </div>
-                      <div class='cancel-btn' style={{'left':'5%'}} onClick={self.cancelAwkChange.bind(null, awkId)}>
+                      <div class='cancel-btn' style={{'left':'2%'}} onClick={self.cancelAwkChange.bind(null, awkId)}>
                         <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                       </div>
                     </div>
@@ -669,7 +697,7 @@ var HomeMemberTable = React.createClass({
       }
       return (
         <div id='teamMemberTable' style={{'display':'none'}}>
-          <div class='team-member-table-title-div'>
+          <div id='teamMemberTableTitle' class='team-member-table-title-div'>
             <h class='team-member-table-title'>Team Details</h>
             <div class='team-member-table-close-btn' onClick={self.props.showTeamTable}>
               <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
