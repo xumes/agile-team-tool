@@ -83,13 +83,13 @@ var HomePage = React.createClass({
           $('#hideNavBtn').hide();
         }
       }
-      var backgroundImageY = $('.home-assessment-summary').css('background-position-y');
-      if (backgroundImageY == '85%') {
-        $('.home-assessment-summary').css('background-position-y','100%');
-      } else if (backgroundImageY == '63%') {
-        $('.home-assessment-summary').css('background-position-y','70%');
-      } else if (backgroundImageY == '72%') {
-        $('.home-assessment-summary').css('background-position-y','80%');
+      var backgroundImageP = $('.home-assessment-summary').css('background-position');
+      if (backgroundImageP == '150% 85%') {
+        $('.home-assessment-summary').css('background-position','150% 100%');
+      } else if (backgroundImageP == '150% 63%') {
+        $('.home-assessment-summary').css('background-position','150% 70%');
+      } else if (backgroundImageP == '150% 72%') {
+        $('.home-assessment-summary').css('background-position','150% 80%');
       }
       $('html').css('font-size', changeSize);
     } else if (window.innerWidth >= 1900) {
@@ -97,20 +97,20 @@ var HomePage = React.createClass({
       $('html').css('height', '0.375vw');
       fontSize = (1280/windowSize['width']) * windowSize['fontSize'];
       $('.ibm-columns').css('width', '72.7%');
-      $('.ibm-columns').css('left', '24.3%');
+      $('.ibm-columns').css('left', '22.7%');
       $('#homeNavShowBtnDiv').hide();
-      $('#homeNavDiv').css('width', '25%');
-      $('#homeNavDiv').css('left', '1.4%');
+      $('#homeNavDiv').css('width', '22.5%');
+      $('#homeNavDiv').css('left', '2.4%');
       $('#homeNavDiv').css('top', '6.3%');
       $('#homeNavDiv').css('box-shadow', '');
 
-      var backgroundImageY = $('.home-assessment-summary').css('background-position-y');
-      if (backgroundImageY == '100%') {
-        $('.home-assessment-summary').css('background-position-y','85%');
-      } else if (backgroundImageY == '70%') {
-        $('.home-assessment-summary').css('background-position-y','63%');
-      } else if (backgroundImageY == '80%') {
-        $('.home-assessment-summary').css('background-position-y','72%');
+      var backgroundImageP = $('.home-assessment-summary').css('background-position');
+      if (backgroundImageP == '150% 100%') {
+        $('.home-assessment-summary').css('background-position','150% 85%');
+      } else if (backgroundImageP == '150% 70%') {
+        $('.home-assessment-summary').css('background-position','150% 63%');
+      } else if (backgroundImageP == '150% 80%') {
+        $('.home-assessment-summary').css('background-position','150% 72%');
       }
       $('#homeNavDiv').show();
       $('#hideNavBtn').hide();
@@ -321,7 +321,7 @@ var HomePage = React.createClass({
         return data;
       }
     });
-    
+
     self.setState({'loadDetailTeam': teamDetail});
 
     api.updateIteration(iteration)
