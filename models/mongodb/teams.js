@@ -97,6 +97,10 @@ var TeamSchema = new Schema({
     type: String,
     default: null
   },
+  category: {
+    type: String,
+    default: null
+  },
   description: {
     type: String,
     default: null
@@ -1143,6 +1147,7 @@ module.exports.updateTeam = function(teamDoc, user) {
     // updatedDoc.pathId = newPathId;
     updatedDoc.description = teamDoc.description;
     updatedDoc.type = teamDoc.type;
+    updatedDoc.category = teamDoc.category;
     updatedDoc.updatedByUserId = userId;
     updatedDoc.updatedBy = userEmail;
     updatedDoc.updateDate = new Date(moment.utc());
@@ -1550,6 +1555,7 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, user) {
           var hasChildAccess = results[1];
           var parentTeam = results[2];
           var childTeam = results[3];
+          console.log('parentTeam',parentTeam);
           if (_.isEmpty(parentTeam)) {
             return Promise.reject({
               errors: {
