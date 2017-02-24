@@ -66,7 +66,12 @@ module.exports = function(app, includes) {
                   loggers.get('auth').error('Unable to authenticate email=%s, err=%s', user.nameID, err);
                   return res.send('Unable to login to the site');
                 } else {
-                  res.redirect('/');
+                  if (req.session && req.session.returnTo) {
+                    var url = req.session.returnTo;
+                    delete req.session.returnTo;
+                    res.redirect(url);
+                  } else
+                    res.redirect('/');
                 }
 
               });
