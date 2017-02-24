@@ -1281,7 +1281,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 .team-member-table-content-awk > span {
   position: relative;
   float: right;
-  right: 10%;
+  right: 5%;
   width: 15%;
   height: 100%;
   cursor: pointer;
@@ -1376,6 +1376,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   width: 12%;
   height: 100%;
   cursor: pointer;
+  display: none;
 }
 
 .team-member-table-content-role > .modify-field > .input-field > .save-btn svg,
@@ -1417,6 +1418,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   width: 10%;
   height: 100%;
   cursor: pointer;
+  display: none;
 }
 
 .team-member-table-content-location > .modify-field svg {
@@ -1457,6 +1459,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   width: 20%;
   height: 100%;
   cursor: pointer;
+  display: none;
 }
 
 .team-member-table-content-allocation > .modify-field > .save-btn svg,
@@ -1527,6 +1530,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   width: 18%;
   height: 100%;
   cursor: pointer;
+  display: none;
 }
 
 .team-member-table-content-awk > .modify-field > .input-field > .save-btn svg,
