@@ -2267,6 +2267,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   right: -8.5%;
   width: 5%;
   height: 60%;
+  cursor: pointer;
 }
 .home-iter-locked-btn > i > svg {
   width: 100%;
