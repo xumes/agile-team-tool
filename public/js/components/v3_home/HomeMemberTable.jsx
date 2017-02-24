@@ -18,8 +18,11 @@ var HomeMemberTable = React.createClass({
     $('.team-member-table-content-awk > div > div > select').change(this.changeAwkHandler);
   },
   componentDidUpdate: function() {
+    $('.team-member-table-content-role > div > div > select').off('change');
+    $('.team-member-table-content-awk > div > div > select').off('change');
     this.initialAll();
-    /* update change*/
+    $('.team-member-table-content-role > div > div > select').change(this.changeRoleHandler);
+    $('.team-member-table-content-awk > div > div > select').change(this.changeAwkHandler);
   },
 
   componentWillMount: function() {
@@ -31,32 +34,96 @@ var HomeMemberTable = React.createClass({
   },
 
   handleClick: function(e){
-    if(!ReactDOM.findDOMNode(this).contains(e.target)) {
-      $('.team-member-table-content-role > h').css('display','');
+    var self = this;
+    if(!ReactDOM.findDOMNode(this).contains(e.target) || e.target.id == 'teamMemberTableTitle' || e.target.id == 'teamMemberTableFooter') {
+      _.each(self.props.loadDetailTeam.team.members, function(member, index){
+        if ($('#role_' + index + ' .save-btn').css('display') == 'block') {
+          if ($('#role_' + index + ' input').attr('placeholder') != $('#role_' + index + ' input').val()) {
+            self.saveRole('role_' + index);
+          } else {
+            self.cancelChange('role_' + index);
+          }
+        } else if ($('#location_' + index + ' .save-btn').css('display') == 'block') {
+          if ($('#location_' + index + ' input').attr('placeholder') != $('#location_' + index + ' input').val()) {
+            self.saveRole('location_' + index);
+          } else {
+            self.cancelChange('location_' + index);
+          }
+        } else if ($('#allocation' + index + ' .save-btn').css('display') == 'block') {
+          if ($('#allocation' + index + ' input').attr('placeholder') != $('#allocation' + index + ' input').val()) {
+            self.saveRole('allocation' + index);
+          } else {
+            self.cancelChange('allocation' + index);
+          }
+        } else {
+          if ($('#awk' + index + ' input').attr('placeholder') != $('#awk' + index + ' input').val()) {
+            self.saveRole('awk' + index);
+          } else {
+            self.cancelChange('awk' + index);
+          }
+        }
+      });
+      $('.save-btn').hide();
+      $('.cancel-btn').hide();
+      $('.team-member-table-content-role > h').css('display','block');
+      $('.team-member-table-content-role > h').removeClass('team-member-table-content-block-hide');
       $('.team-member-table-content-role > .modify-field').css('display','none');
-      $('.team-member-table-content-location > h').css('display','');
+      $('.team-member-table-content-role > .modify-field').removeClass('team-member-table-content-block-show');
+
+      $('.team-member-table-content-location > h').css('display','block');
+      $('.team-member-table-content-location > h').removeClass('team-member-table-content-block-hide');
       // $('.team-member-table-content-location input').val('');
       $('.team-member-table-content-location > .modify-field').css('display','none');
-      $('.team-member-table-content-allocation > h').css('display','');
+      $('.team-member-table-content-location > .modify-field').removeClass('team-member-table-content-block-show');
+
+      $('.team-member-table-content-allocation > h').css('display','block');
+      $('.team-member-table-content-allocation > h').removeClass('team-member-table-content-block-hide');
       // $('.team-member-table-content-allocation input').val('');
       $('.team-member-table-content-allocation > .modify-field').css('display','none');
-      $('.team-member-table-content-awk > h').css('display','');
+      $('.team-member-table-content-allocation > .modify-field').removeClass('team-member-table-content-block-show');
+
+      $('.team-member-table-content-awk > h').css('display','block');
+      $('.team-member-table-content-awk > h').removeClass('team-member-table-content-block-hide');
       $('.team-member-table-content-awk > .modify-field').css('display','none');
+      $('.team-member-table-content-awk > .modify-field').removeClass('team-member-table-content-block-show');
     }
   },
 
   initialAll: function() {
+    var self = this;
     $('.team-member-table-content-role > div > div > select').select2({'width':'100%'});
     // $('.team-member-table-content-allocation > div > select').select2({'width':'100%'});
     $('.team-member-table-content-awk > div > div > select').select2({'width':'99%'});
-    this.hoverBlock('team-member-table-content-role');
-    this.hoverBlock('team-member-table-content-location');
-    this.hoverBlock('team-member-table-content-allocation');
-    this.hoverBlock('team-member-table-content-awk');
-    this.onClickBlock('team-member-table-content-role');
-    this.onClickBlock('team-member-table-content-location');
-    this.onClickBlock('team-member-table-content-allocation');
-    this.onClickBlock('team-member-table-content-awk');
+    self.hoverBlock('team-member-table-content-role');
+    self.hoverBlock('team-member-table-content-location');
+    self.hoverBlock('team-member-table-content-allocation');
+    self.hoverBlock('team-member-table-content-awk');
+    self.hoverMainBlock('team-member-table-content-block1');
+    self.hoverMainBlock('team-member-table-content-block2');
+    self.onClickBlock('team-member-table-content-role');
+    self.onClickBlock('team-member-table-content-location');
+    self.onClickBlock('team-member-table-content-allocation');
+    self.onClickBlock('team-member-table-content-awk');
+    _.each(self.props.loadDetailTeam.team.members, function(member, index){
+      if(self.props.roles.indexOf(member.role) >= 0) {
+        $('#role_select_' + index).val(member.role).change();
+        $('#role_' + index + ' .input-field > input').val('');
+        $('#role_' + index + ' .input-field').hide();
+      } else {
+        $('#role_select_' + index).val('Other...').change();
+        $('#role_' + index + ' .input-field > input').val(member.role);
+        $('#role_' + index + ' .input-field').show();
+      }
+      if (member.workTime == 100 || member.workTime == 50) {
+        $('#awk_select_' + index).val(member.workTime).change();
+        $('#awk_' + index + ' .input-field > input').val('');
+        $('#awk_' + index + ' .input-field').hide();
+      } else {
+        $('#awk_select_' + index).val('other').change();
+        $('#awk_' + index + ' .input-field > input').val(member.workTime);
+        $('#awk_' + index + ' .input-field').show();
+      }
+    });
   },
 
   onClickBlock: function(block) {
@@ -65,42 +132,86 @@ var HomeMemberTable = React.createClass({
     $('.' + block).off('click');
     if (this.props.loadDetailTeam.access) {
       $('.' + block).click(function(){
-        $('.team-member-table-content-role > h').css('display','');
+        $('.save-btn').hide();
+        $('.cancel-btn').hide();
+        $('.team-member-table-content-role > h').css('display','block');
+        $('.team-member-table-content-role > h').removeClass('team-member-table-content-block-hide');
         $('.team-member-table-content-role > .modify-field').css('display','none');
-        $('.team-member-table-content-location > h').css('display','');
+        $('.team-member-table-content-role > .modify-field').removeClass('team-member-table-content-block-show');
+        $('.team-member-table-content-location > h').css('display','block');
+        $('.team-member-table-content-location > h').removeClass('team-member-table-content-block-hide');
         // $('.team-member-table-content-location input').val('');
         $('.team-member-table-content-location > .modify-field').css('display','none');
-        $('.team-member-table-content-allocation > h').css('display','');
+        $('.team-member-table-content-location > .modify-field').removeClass('team-member-table-content-block-show');
+        $('.team-member-table-content-allocation > h').css('display','block');
+        $('.team-member-table-content-allocation > h').removeClass('team-member-table-content-block-hide');
         // $('.team-member-table-content-allocation input').val('');
         $('.team-member-table-content-allocation > .modify-field').css('display','none');
-        $('.team-member-table-content-awk > h').css('display','');
+        $('.team-member-table-content-allocation > .modify-field').removeClass('team-member-table-content-block-show');
+        $('.team-member-table-content-awk > h').css('display','block');
+        $('.team-member-table-content-awk > h').removeClass('team-member-table-content-block-hide');
         $('.team-member-table-content-awk > .modify-field').css('display','none');
-        $(this).find('h').css('display', 'none');
-        $(this).find('.modify-field').css('display', 'block');
+        $('.team-member-table-content-awk > .modify-field').removeClass('team-member-table-content-block-show');
+        // $(this).find('h').css('display', 'none');
+        // $(this).find('.modify-field').css('display', 'block');
+        $(this).find('h').addClass('team-member-table-content-block-hide');
+        $(this).find('.modify-field').addClass('team-member-table-content-block-show');
+        $(this).find('.save-btn').show();
+        $(this).find('.cancel-btn').show();
         var uid = $(this).find('input')[0].id;
         setTimeout(function(){
           $('#'+uid).focus();
-        },0)
+        },0);
+        var blockId = $('#'+$(this)[0].id).parents()[0].id;
+        $('#' + blockId + ' > .team-member-table-content-awk > span').css('display', 'none');
       });
     }
   },
 
   hoverBlock: function(block) {
-    $('.' + block + ' > h').unbind('mouseenter mouseleave');
+    $('.' + block).unbind('mouseenter mouseleave');
     if (this.props.loadDetailTeam.access) {
-      $('.' + block + ' > h').hover(function(){
-        $(this).css('border','0.1em solid');
-        $(this).css('background-color','#FFFFFF');
-        $(this).css('padding-top','0.2em');
-        $(this).css('cursor','pointer');
+      $('.' + block).hover(function(){
+        // $(this).css('border','0.1em solid');
+        // $(this).css('background-color','#FFFFFF');
+        // $(this).css('padding-top','0.2em');
+        // $(this).css('cursor','pointer');
+        var blockId = $(this)[0].id;
+        $('#' + blockId + ' > h').css('display', 'none');
+        $('#' + blockId + ' > .modify-field').css('display','block');
       }, function(){
-        $(this).css('border','');
-        $(this).css('background-color','');
-        $(this).css('padding-top','0');
-        $(this).css('cursor','default');
+        // $(this).css('border','');
+        // $(this).css('background-color','');
+        // $(this).css('padding-top','0');
+        // $(this).css('cursor','default');
+        var blockId = $(this)[0].id;
+        $('#' + blockId + ' > h').css('display', 'block');
+        $('#' + blockId + ' > .modify-field').css('display','none');
       });
     }
   },
+
+  hoverMainBlock: function(block) {
+    $('.' + block).unbind('mouseenter mouseleave');
+    if (this.props.loadDetailTeam.access) {
+      $('.' + block).hover(function(){
+        var blockId = $(this)[0].id;
+        var roleB = $('#' + blockId + ' > .team-member-table-content-role > h').hasClass('team-member-table-content-block-hide');
+        var locationB = $('#' + blockId + ' > .team-member-table-content-location > h').hasClass('team-member-table-content-block-hide');
+        var allocationB = $('#' + blockId + ' > .team-member-table-content-allocation > h').hasClass('team-member-table-content-block-hide');
+        var awkB = $('#' + blockId + ' > .team-member-table-content-awk > h').hasClass('team-member-table-content-block-hide');
+        if (roleB || locationB || allocationB || awkB) {
+          $('#' + blockId + ' > .team-member-table-content-awk > span').css('display', 'none');
+        } else {
+          $('#' + blockId + ' > .team-member-table-content-awk > span').css('display', 'block');
+        }
+      }, function(){
+        var blockId = $(this)[0].id;
+        $('#' + blockId + ' > .team-member-table-content-awk > span').css('display', 'none');
+      });
+    }
+  },
+
   delTeamMemberHandler: function(idx) {
     var self = this;
     var blockId = 'name_' + idx;
@@ -201,15 +312,22 @@ var HomeMemberTable = React.createClass({
         $('#r_' + roleId).focus();
       }, 0);
       $('#' + roleId + ' .input-field > input').focus();
+      $('#' + roleId + ' .save-btn').show();
+      $('#' + roleId + ' .cancel-btn').show();
     } else if (e.target.value == 'psr') {
       $('#' + roleId + ' .input-field > input').val('');
       $('#' + roleId + ' .input-field').hide();
+      $('#' + roleId + ' .save-btn').hide();
+      $('#' + roleId + ' .cancel-btn').hide();
     } else {
       $('#' + roleId + ' .input-field > input').val('');
       $('#' + roleId + ' .input-field').hide();
+      $('#' + roleId + ' .save-btn').hide();
+      $('#' + roleId + ' .cancel-btn').hide();
       $('#' + roleId + ' > h').html(e.target.value);
-      $('#' + roleId + ' .modify-field').hide();
-      $('#' + roleId + ' > h').show();
+      $('#' + roleId + ' input').attr('placeholder', e.target.value);
+      $('#' + roleId + ' .modify-field').removeClass('team-member-table-content-block-show');
+      $('#' + roleId + ' > h').removeClass('team-member-table-content-block-hide');
       var blockId = 'name_' + e.target.id.substring(12, e.target.id.length);
       var memberEmail = $('#' + blockId + ' > div > h1').html();
       _.each(self.props.loadDetailTeam.team.members, function(member){
@@ -239,53 +357,81 @@ var HomeMemberTable = React.createClass({
     var self = this;
     var newMembers = [];
     var roleValue = $('#' + roleId + ' input').val();
-    $('#' + roleId + ' > h').html(roleValue);
-    $('#' + roleId + ' .modify-field').hide();
-    $('#' + roleId + ' > h').show();
-    var blockId = 'name_' + roleId.substring(5, roleId.length);
-    var memberEmail = $('#' + blockId + ' > div > h1').html();
-    _.each(self.props.loadDetailTeam.team.members, function(member){
-      if (member.email != memberEmail) {
-        newMembers.push(member);
-      } else {
-        var pm = JSON.parse(JSON.stringify(member));
-        pm['role'] = roleValue;
-        newMembers.push(pm);
-      }
-    });
-    api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
-      .then(function(results){
-        _.each(self.props.loadDetailTeam.team.members, function(member){
-          if (member.email == memberEmail) {
-            member['role'] = roleValue;
-          }
-        });
-      })
-      .catch(function(err){
-        console.log(err);
+    if (roleValue == '') {
+      alert('Role cannot be empty.');
+    } else {
+      $('#' + roleId + ' > h').html(roleValue);
+      $('#' + roleId + ' input').attr('placeholder', roleValue);
+      $('#' + roleId + ' .save-btn').hide();
+      $('#' + roleId + ' .cancel-btn').hide();
+      $('#' + roleId + ' .modify-field').removeClass('team-member-table-content-block-show');
+      $('#' + roleId + ' > h').removeClass('team-member-table-content-block-hide');
+      var blockId = 'name_' + roleId.substring(5, roleId.length);
+      var memberEmail = $('#' + blockId + ' > div > h1').html();
+      _.each(self.props.loadDetailTeam.team.members, function(member){
+        if (member.email != memberEmail) {
+          newMembers.push(member);
+        } else {
+          var pm = JSON.parse(JSON.stringify(member));
+          pm['role'] = roleValue;
+          newMembers.push(pm);
+        }
       });
+      api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
+        .then(function(results){
+          _.each(self.props.loadDetailTeam.team.members, function(member){
+            if (member.email == memberEmail) {
+              member['role'] = roleValue;
+            }
+          });
+        })
+        .catch(function(err){
+          console.log(err);
+        });
+    }
   },
 
-  cancelRoleChange: function(roleId) {
-    $('#' + roleId + ' > .modify-field').css('display','none');
-    $('#' + roleId + ' > h').css('display','');
-    $('#' + roleId + ' input').val('');
+  cancelChange: function(blockId) {
+    var self = this;
+    if (blockId.indexOf('role') >= 0) {
+      if (self.props.roles.indexOf($('#' + blockId + ' input').attr('placeholder'))>=0) {
+        $('#' + blockId + ' select').val($('#' + blockId + ' input').attr('placeholder')).change();
+        $('#' + blockId + ' input').val('');
+      } else {
+        $('#' + blockId + ' input').val($('#' + blockId + ' input').attr('placeholder'));
+      }
+    } else if (blockId.indexOf('awk') >= 0) {
+      if ($('#' + blockId + ' input').attr('placeholder') == 100 || $('#' + blockId + ' input').attr('placeholder') == 50) {
+        $('#' + blockId + ' select').val($('#' + blockId + ' input').attr('placeholder')).change();
+        $('#' + blockId + ' input').val('');
+      } else {
+        $('#' + blockId + ' input').val($('#' + blockId + ' input').attr('placeholder'));
+      }
+    } else {
+      $('#' + blockId + ' input').val($('#' + blockId + ' input').attr('placeholder'));
+    }
+    $('#' + blockId + ' > .modify-field').removeClass('team-member-table-content-block-show');
+    $('#' + blockId + ' > h').removeClass('team-member-table-content-block-hide');
+    $('#' + blockId + ' .save-btn').hide();
+    $('#' + blockId + ' .cancel-btn').hide();
   },
 
   saveAllocation: function(allocationId) {
     var self = this;
     var newMembers = [];
     var allocationValue = $('#' + allocationId + ' input').val();
-    console.log(allocationValue);
     if (allocationValue < 0 || allocationValue > 100 || allocationValue == '') {
       alert('Allocation value should be between 0 and 100.');
     } else {
       $('#' + allocationId + ' > h').html(allocationValue + '%');
       var blockId = 'name_' + allocationId.substring(11, allocationId.length);
       var memberEmail = $('#' + blockId + ' > div > h1').html();
-      $('#' + allocationId + ' > .modify-field').css('display','none');
-      $('#' + allocationId + ' > h').css('display','');
-      $('#' + allocationId + ' input').val('');
+      $('#' + allocationId + ' > .modify-field').removeClass('team-member-table-content-block-show');
+      $('#' + allocationId + ' > h').removeClass('team-member-table-content-block-hide');
+      $('#' + allocationId + ' input').val(allocationValue);
+      $('#' + allocationId + ' input').attr('placeholder', allocationValue);
+      $('#' + allocationId + ' .save-btn').hide();
+      $('#' + allocationId + ' .cancel-btn').hide();
       _.each(self.props.loadDetailTeam.team.members, function(member){
         if (member.email != memberEmail) {
           newMembers.push(member);
@@ -309,12 +455,6 @@ var HomeMemberTable = React.createClass({
     }
   },
 
-  cancelAllocationChange: function(allocationId) {
-    $('#' + allocationId + ' > .modify-field').css('display','none');
-    $('#' + allocationId + ' > h').css('display','');
-    $('#' + allocationId + ' input').val('');
-  },
-
   saveLocation: function(locationId) {
     var self = this;
     var locationValue = $('#' + locationId + ' input').val();
@@ -324,9 +464,12 @@ var HomeMemberTable = React.createClass({
       $('#' + locationId + ' > h').html(locationValue);
       var blockId = 'name_' + locationId.substring(9, locationId.length);
       var memberEmail = $('#' + blockId + ' > div > h1').html();
-      $('#' + locationId + ' > .modify-field').css('display','none');
-      $('#' + locationId + ' > h').css('display','');
-      $('#' + locationId + ' input').val('');
+      $('#' + locationId + ' > .modify-field').removeClass('team-member-table-content-block-show');
+      $('#' + locationId + ' > h').removeClass('team-member-table-content-block-hide');
+      $('#' + locationId + ' input').val(locationValue);
+      $('#' + locationId + ' input').attr('placeholder', locationValue);
+      $('#' + locationId + ' .save-btn').hide();
+      $('#' + locationId + ' .cancel-btn').hide();
       var newMember = _.find(self.props.loadDetailTeam.members, function(member){
         if (member.email == memberEmail) {
           return member;
@@ -339,12 +482,6 @@ var HomeMemberTable = React.createClass({
     }
   },
 
-  cancelLocationChange: function(locationId) {
-    $('#' + locationId + ' > .modify-field').css('display','none');
-    $('#' + locationId + ' > h').css('display','');
-    $('#' + locationId + ' input').val('');
-  },
-
   changeAwkHandler: function(e) {
     // console.log(e.target.id.substring(11, e.target.id.length));
     var self = this;
@@ -355,16 +492,20 @@ var HomeMemberTable = React.createClass({
       setTimeout( function() {
         $('#w_' + awkId).focus();
       }, 0);
+      $('#' + awkId + ' .save-btn').show();
+      $('#' + awkId + ' .cancel-btn').show();
     } else {
-      $('#' + awkId + ' .input-field > input').val('');
+      $('#' + awkId + ' input').attr('placeholder', e.target.value);
       $('#' + awkId + ' .input-field').hide();
+      $('#' + awkId + ' .save-btn').hide();
+      $('#' + awkId + ' .cancel-btn').hide();
       if (e.target.value == 100) {
         $('#' + awkId + ' > h').html('Full Time');
       } else {
         $('#' + awkId + ' > h').html('Half Time');
       }
-      $('#' + awkId + ' .modify-field').hide();
-      $('#' + awkId + ' > h').show();
+      $('#' + awkId + ' .modify-field').removeClass('team-member-table-content-block-show');
+      $('#' + awkId + ' > h').removeClass('team-member-table-content-block-hide');
       var blockId = 'name_' + e.target.id.substring(11, e.target.id.length);
       var memberEmail = $('#' + blockId + ' > div > h1').html();
       _.each(self.props.loadDetailTeam.team.members, function(member){
@@ -404,8 +545,11 @@ var HomeMemberTable = React.createClass({
       } else {
         $('#' + awkId + ' > h').html(awkValue + '%');
       }
-      $('#' + awkId + ' .modify-field').hide();
-      $('#' + awkId + ' > h').show();
+      $('#' + awkId + ' input').attr('placeholder', awkValue);
+      $('#' + awkId + ' .save-btn').hide();
+      $('#' + awkId + ' .cancel-btn').hide();
+      $('#' + awkId + ' .modify-field').removeClass('team-member-table-content-block-show');
+      $('#' + awkId + ' > h').removeClass('team-member-table-content-block-hide');
       var blockId = 'name_' + awkId.substring(4, awkId.length);
       var memberEmail = $('#' + blockId + ' > div > h1').html();
       _.each(self.props.loadDetailTeam.team.members, function(member){
@@ -429,12 +573,6 @@ var HomeMemberTable = React.createClass({
           console.log(err);
         });
     }
-  },
-
-  cancelAwkChange: function(awkId) {
-    $('#' + awkId + ' > .modify-field').css('display','none');
-    $('#' + awkId + ' > h').css('display','');
-    $('#' + awkId + ' input').val('');
   },
 
   wholeNumCheck: function(e) {
@@ -467,16 +605,17 @@ var HomeMemberTable = React.createClass({
   escPressCheck: function(e) {
     var self = this;
     if (e.keyCode == 27) {
-      switch (e.target.id.substring(0,1)) {
-        case 'l': self.cancelLocationChange(e.target.id.substring(2,e.target.id.length));
-          break;
-        case 'a': self.cancelAllocationChange(e.target.id.substring(2,e.target.id.length));
-          break;
-        case 'w': self.cancelAwkChange(e.target.id.substring(2,e.target.id.length));
-          break;
-        case 'r': self.cancelRoleChange(e.target.id.substring(2,e.target.id.length));
-          break;
-      }
+      self.cancelChange(e.target.id.substring(2,e.target.id.length));
+      // switch (e.target.id.substring(0,1)) {
+      //   case 'l': self.cancelLocationChange(e.target.id.substring(2,e.target.id.length));
+      //     break;
+      //   case 'a': self.cancelAllocationChange(e.target.id.substring(2,e.target.id.length));
+      //     break;
+      //   case 'w': self.cancelAwkChange(e.target.id.substring(2,e.target.id.length));
+      //     break;
+      //   case 'r': self.cancelChange(e.target.id.substring(2,e.target.id.length));
+      //     break;
+      // }
     }
   },
 
@@ -568,13 +707,16 @@ var HomeMemberTable = React.createClass({
               addTeamBtnStyle = true;
             }
             var awkValue = 'Full Time';
+            var awkPlaceHolder = 100;
             // if (_.isNumber(memberDetail.workTime)) {
             if (memberDetail.workTime == 50) {
               awkValue = 'Half Time';
+              awkPlaceHolder = 50;
             } else if (memberDetail.workTime == 100) {
               awkValue = 'Full Time';
             } else {
               awkValue = memberDetail.workTime + '%';
+              awkPlaceHolder = memberDetail.workTime;
             }
             // }
             return (
@@ -601,11 +743,11 @@ var HomeMemberTable = React.createClass({
                       </select>
                     </div>
                     <div class='input-field'>
-                      <input type='text' id={'r_'+roleId} placeholder='Ex: Developer' onKeyPress={self.keyPressCheck} onKeyUp={self.escPressCheck}></input>
+                      <input type='text' id={'r_'+roleId} placeholder={memberDetail.role} onKeyPress={self.keyPressCheck} onKeyUp={self.escPressCheck}></input>
                       <div class='save-btn' onClick={self.saveRole.bind(null, roleId)}>
                         <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                       </div>
-                      <div class='cancel-btn' style={{'left':'5%'}} onClick={self.cancelRoleChange.bind(null, roleId)}>
+                      <div class='cancel-btn' style={{'left':'5%'}} onClick={self.cancelChange.bind(null, roleId)}>
                         <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                       </div>
                     </div>
@@ -614,11 +756,11 @@ var HomeMemberTable = React.createClass({
                 <div class='team-member-table-content-location' id={locationId} style={{'width':'21.9%'}}>
                   <h>{mLocation}</h>
                   <div class='modify-field'>
-                    <input type='text' id={'l_'+locationId} placeholder='Ex: Somers,NY,USA' onKeyPress={self.keyPressCheck} onKeyUp={self.escPressCheck}></input>
+                    <input type='text' id={'l_'+locationId} placeholder={mLocation} onKeyPress={self.keyPressCheck} onKeyUp={self.escPressCheck} defaultValue={mLocation}></input>
                     <div class='save-btn' onClick={self.saveLocation.bind(null, locationId)}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
-                    <div class='cancel-btn' style={{'left':'2%'}} onClick={self.cancelLocationChange.bind(null, locationId)}>
+                    <div class='cancel-btn' style={{'left':'2%'}} onClick={self.cancelChange.bind(null, locationId)}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                     </div>
                   </div>
@@ -629,11 +771,12 @@ var HomeMemberTable = React.createClass({
                     {/*<select id={'allocation_select_' + idx} defaultValue={memberDetail.allocation}>
                       {allocationSelection}
                     </select>*/}
-                    <input type='text' id={'a_'+allocationId} placeholder='Ex:50' min='0' max='100' maxLength='3' onKeyPress={self.wholeNumCheck} onKeyUp={self.escPressCheck}></input>
+                    <input type='text' id={'a_'+allocationId} placeholder={memberDetail.allocation} min='0' max='100' maxLength='3' onKeyPress={self.wholeNumCheck} onKeyUp={self.escPressCheck} defaultValue={memberDetail.allocation}></input>
+                    <h1>%</h1>
                     <div class='save-btn' onClick={self.saveAllocation.bind(null, allocationId)}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
-                    <div class='cancel-btn' style={{'left':'5%'}} onClick={self.cancelAllocationChange.bind(null, allocationId)}>
+                    <div class='cancel-btn' style={{'left':'5%'}} onClick={self.cancelChange.bind(null, allocationId)}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                     </div>
                   </div>
@@ -649,11 +792,12 @@ var HomeMemberTable = React.createClass({
                       </select>
                     </div>
                     <div class='input-field'>
-                      <input type='text' id={'w_'+awkId} placeholder='Ex:50' min='0' max='100' maxLength='3' onKeyPress={self.wholeNumCheck} onKeyUp={self.escPressCheck}></input>
+                      <input type='text' id={'w_'+awkId} placeholder={awkPlaceHolder} min='0' max='100' maxLength='3' onKeyPress={self.wholeNumCheck} onKeyUp={self.escPressCheck}></input>
+                      <h1>%</h1>
                       <div class='save-btn' onClick={self.saveAwk.bind(null, awkId)}>
                         <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                       </div>
-                      <div class='cancel-btn' style={{'left':'5%'}} onClick={self.cancelAwkChange.bind(null, awkId)}>
+                      <div class='cancel-btn' style={{'left':'2%'}} onClick={self.cancelChange.bind(null, awkId)}>
                         <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                       </div>
                     </div>
@@ -669,7 +813,7 @@ var HomeMemberTable = React.createClass({
       }
       return (
         <div id='teamMemberTable' style={{'display':'none'}}>
-          <div class='team-member-table-title-div'>
+          <div id='teamMemberTableTitle' class='team-member-table-title-div'>
             <h class='team-member-table-title'>Team Details</h>
             <div class='team-member-table-close-btn' onClick={self.props.showTeamTable}>
               <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
@@ -707,7 +851,7 @@ var HomeMemberTable = React.createClass({
             </div>
             {teamMembers}
             <div class='team-member-table-footer-block'>
-              <div class='team-member-table-footer'>
+              <div id='teamMemberTableFooter' class='team-member-table-footer'>
                 <button type='button' class='ibm-btn-sec ibm-btn-blue-50' disabled={addTeamBtnStyle} onClick={self.showAddTeamTable}>Add Team Member</button>
               </div>
             </div>
