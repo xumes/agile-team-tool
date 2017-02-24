@@ -47,7 +47,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
       $('#pc-hier-selparent').val(self.props.selectedParentTeam._id).change();
 
     $('#optsel-child select').select2({'dropdownParent':$('#optsel-child')});
-    $('#pc-hier-selfChild').change(self.childSelectHandler);
+    $('#pc-hier-selChild').change(self.childSelectHandler);
 
 //    $("#teamTypeBlock span[data-widget=tooltip]").tooltip();
   },
@@ -71,6 +71,24 @@ var HomeAddTeamHierarchyModal = React.createClass({
     var team = _.find(self.props.selectableParents, function(team) {
       if (_.isEqual(selectedValue,team._id)) return team;
     });
+
+    _.each(self.props.selectedChildTeams, function(childTeam) {
+        console.log(childTeam, childTeam.path);
+        if (_.isEqual(childTeam._id, team._id)) {
+          alert(team.name + ' cannot be both a parent and a child.');
+          $('#pc-hier-selparent').val('').change();
+          return;
+        }
+        if (!_.isEmpty(team.path)) {
+          var rootPathId = team.path.split(',')[1];
+          if (_.isEqual(rootPathId, childTeam.pathId)) {
+            alert(team.name + ' cannot be your parent team since it is reporting to '+childTeam.name+', that is already listed as your child team.');
+            $('#parentSelectList').val('').change();
+            return;
+          }
+        }
+      })
+
     self.props.setSelectedParentTeam(team);
 
     var filteredTeam = [];
@@ -101,16 +119,38 @@ var HomeAddTeamHierarchyModal = React.createClass({
       buttonOptions.nextScreen = 'showTeamMemberModal';
       self.setState({ buttonOptions: buttonOptions });
     }
-
-    var selectedChild = $('#pc-hier-selfChild option:selected').val();
+    
+    var selectedParent = $('#pc-hier-selparent option:selected').val();
+    var selectedChild = $('#pc-hier-selChild option:selected').val();
     if (!_.isEmpty(selectedChild)) {
       var childTeam = _.find(self.state.teamNames, function(team) {
         if (team._id == selectedChild) return team;
-      })
-      if ($('.team-hier-children p#'+selectedChild).length > 0) {
-        //alert(childTeam.name + ' is already listed.');
+      })          
+      if (_.isEqual(selectedParent, selectedChild)) {
+        alert(childTeam.name + ' cannot be both a parent and a child.');
+        $('#pc-hier-selChild').val('').change();
         return;
       }
+      if (!_.isEmpty(selectedParent)) {
+        var parentTeam = _.find(self.props.selectableParents, function(team) {
+          if (team._id == selectedParent) return team;
+        });
+        console.log('Parent team is: '+parentTeam);
+        if (!_.isEmpty(parentTeam.path)) {
+          var rootPathId = parentTeam.path.split(',')[1];
+          if (_.isEqual(rootPathId, childTeam.pathId)) {
+            alert(childTeam.name + ' cannot be added as a child since your current parent team, '+parentTeam.name+', is reporting to it.');
+            $('#pc-hier-selChild').val('').change();
+            return;
+          }
+        }
+      }      
+      if ($('.team-hier-children p#'+selectedChild).length > 0) {
+        alert(childTeam.name + ' is already listed.');
+        $('#pc-hier-selChild').val('').change();
+        return;
+      }
+
       var children = self.props.selectedChildTeams;
       children.push(childTeam);
       children = _.sortBy(children, 'name');
@@ -196,7 +236,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
                     <div class="curteam-block">Current Team (being made)</div>
 
                     <div class="optsel-child" style={selparent1Style} id="optsel-child">     
-                      <select name="pc-hier-selfChild" id="pc-hier-selfChild" class="pc-hier-selfChild" disabled={self.disableField} >                          
+                      <select name="pc-hier-selChild" id="pc-hier-selChild" class="pc-hier-selChild" disabled={self.disableField} >                          
                         <option value='NA'>Add children team(s)</option>
                         <option value='NoChild'>Not Listed</option>
                         {populateChildrenTeamNames}

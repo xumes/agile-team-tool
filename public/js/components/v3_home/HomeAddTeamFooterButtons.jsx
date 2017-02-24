@@ -14,6 +14,13 @@ var HomeAddTeamFooterButtons = React.createClass({
     console.log('nextBtnHandler', self.props.buttonOptions.nextScreen);
     self.props.openWindow(self.props.buttonOptions.nextScreen);
   },
+  finishBtnHandler: function() {
+    var self = this;
+    console.log('finishBtnHandler');
+    self.props.saveTeam();
+    //self.props.closeWindow();
+  },
+
   render: function() {
     var self = this;
     console.log('render HomeAddTeamFooterButtons', self.props);

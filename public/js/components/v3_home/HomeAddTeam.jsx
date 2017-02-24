@@ -128,6 +128,7 @@ var HomeAddTeam = React.createClass({
   },
 
   saveTeam: function() {
+    console.log('new team is:'+ JSON.stringify(this.state.newTeamObj));
     /*
     api.postTeam() // save team
     api.associateTeam() // parent
@@ -168,10 +169,9 @@ var HomeAddTeam = React.createClass({
         selectableChildren={self.state.selectableChildren} setSelectedChildTeams={self.setSelectedChildTeams} selectedChildTeams={self.state.selectedChildTeams}
         />
 
-        <HomeAddTeamMemberRole activeWindow={this.state.screenStatus['showTeamMemberRoleModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamMember={self.setTeamMember} roles={self.props.roles} />
+        <HomeAddTeamMemberRole activeWindow={this.state.screenStatus['showTeamMemberRoleModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamMember={self.setTeamMember} roles={self.props.roles} saveTeam={self.saveTeam}/>
 
         {/*
-         onchangeParentTeamDropdown={self.onchangeParentTeamDropdown} teamNames={self.state.teamNames} selectableParents={self.state.selectableParents} onchangeChildTeamList={self.onchangeChildTeamList}/>
 
         //TODO, needs only to pass newTeamObj as the container object of the new team related data, and only relevant setter functions that will update the object.
         <HomeAddTeamHierarchyModal showModal={this.state.showTeamHierarchyModal} closeWindow={self.hideTeamHierarchyModal}  updateStep={self.updateStep} setTeamObj={self.setTeamObj} getTeamObj={getTeamObj} onchangeParentTeamDropdown={self.onchangeParentTeamDropdown} teamNames={self.state.teamNames} selectableParents={self.state.selectableParents} onchangeChildTeamList={self.onchangeChildTeamList}/>
