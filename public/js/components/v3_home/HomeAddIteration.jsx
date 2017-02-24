@@ -187,10 +187,11 @@ var HomeAddIteration = React.createClass({
     var self = this;
     _.each(members, function(member){
       var allocation =  member.allocation/100;
-      var avgWorkWeek = self.numericValue(member.workTime)/100;
+      var avgWorkWeek = (member.workTime != null ? self.numericValue(member.workTime) : 100 )/100;
       availability += (allocation * avgWorkWeek * maxWorkDays);
     });
-    return availability;
+
+    return availability.toFixed(2);
   },
 
   processIteration: function () {
