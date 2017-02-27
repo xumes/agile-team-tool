@@ -396,22 +396,10 @@ module.exports.getRootTeams = function(uid) {
  * @return array of root teams
  */
 module.exports.getAllRootTeamsSquadNonSquad = function() {
-  return new Promise(function(resolve, reject){
-    return Promise.join(
-      Team.find({path: null, docStatus:{$ne:'delete'}}).sort('pathId').exec(),
-      getAllUniquePaths(),
-      function(rootedTeams, uniquePaths) {
-        uniquePaths = uniquePaths.join(',');
-        //indexOf is faster than match apparently
-        var res = _.filter(rootedTeams, function(team){
-          return uniquePaths.indexOf(','+team.pathId+',') >= 0;
-        });
-        resolve(res);
-      });
-
-  });
-
+  console.log ('In getAllRootTeamsSquadNonSquad:');
+  return Team.find({path: null, docStatus:{$ne:'delete'}}).sort('pathId').exec();
 };
+
 
 /**
  * If email is empty, get all standalone teams. Otherwise, get all user's standalone teams.

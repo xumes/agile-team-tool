@@ -84,7 +84,7 @@ var HomeAddTeam = React.createClass({
       screenStatus[screenName].active = false;
       self.setState({screenStatus : screenStatus});
       self.setState({selectedParentTeam:{}});
-      self.setState({selectedChildTeams : []});  //why doesn't this reset?
+      self.setState({selectedChildTeams : []});
     }
   },
 
@@ -101,7 +101,6 @@ var HomeAddTeam = React.createClass({
 
   setSelectableChildren: function(teams) {
     this.setState({ selectableChildren: teams });
-    console.log('In HomeAddTeam: '+selectableChildren.length);    
   },
 
   setTeamType: function(type) {
@@ -119,16 +118,15 @@ var HomeAddTeam = React.createClass({
 
   setSelectedParentTeam: function(team) {
     this.setState({ selectedParentTeam: team });
-    console.log('Parent team is: '+JSON.stringify(this.state.selectedParentTeam));
   },
 
   setSelectedChildTeams: function(teams) {
     this.setState({ selectedChildTeams: teams });
-    console.log('Children teams are: '+JSON.stringify(this.state.selectedChildTeams));
   },
 
   saveTeam: function() {
     console.log('new team is:'+ JSON.stringify(this.state.newTeamObj));
+
     /*
     api.postTeam() // save team
     api.associateTeam() // parent
@@ -164,9 +162,8 @@ var HomeAddTeam = React.createClass({
         <HomeAddTeamMemberModal activeWindow={this.state.screenStatus['showTeamMemberModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamMember={self.setTeamMember}  />
 
         <HomeAddTeamHierarchyModal activeWindow={this.state.screenStatus['showTeamHierarchyModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} 
-        newTeamObj={self.state.newTeamObj} 
-        setSelectableParents={self.setSelectableParents} selectableParents={self.state.selectableParents} selectedParentTeam={self.state.selectedParentTeam} setSelectedParentTeam={self.setSelectedParentTeam} 
-        selectableChildren={self.state.selectableChildren} setSelectedChildTeams={self.setSelectedChildTeams} selectedChildTeams={self.state.selectedChildTeams}
+        selectableParents={self.state.selectableParents} selectedParentTeam={self.state.selectedParentTeam} setSelectedParentTeam={self.setSelectedParentTeam} 
+        setSelectableChildren={self.setSelectableChildren}  selectableChildren={self.state.selectableChildren} setSelectedChildTeams={self.setSelectedChildTeams} selectedChildTeams={self.state.selectedChildTeams}
         />
 
         <HomeAddTeamMemberRole activeWindow={this.state.screenStatus['showTeamMemberRoleModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamMember={self.setTeamMember} roles={self.props.roles} saveTeam={self.saveTeam}/>
