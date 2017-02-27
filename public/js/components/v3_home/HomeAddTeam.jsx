@@ -89,8 +89,10 @@ var HomeAddTeam = React.createClass({
 
   resetTeamHierarchy: function(){
     var self = this;
-    self.setState({selectedParentTeam:{}});
-    self.setState({selectedChildTeams : []});
+    self.setState({
+      selectedParentTeam : {},
+      selectedChildTeams : []
+    })
   },
 
   setTeamNameDesc: function(name, description) {
