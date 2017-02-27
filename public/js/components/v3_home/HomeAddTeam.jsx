@@ -92,7 +92,7 @@ var HomeAddTeam = React.createClass({
     self.setState({
       selectedParentTeam : {},
       selectedChildTeams : []
-    })
+    });
   },
 
   setTeamNameDesc: function(name, description) {
