@@ -133,9 +133,15 @@ var HomeAddIteration = React.createClass({
 
   teamMemCount: function () {
     var count = 0;
+    var tmArr = [];
     var currentTeam = this.props.loadDetailTeam.team;
     if (!_.isEmpty(currentTeam) && currentTeam.members) {
-      count = currentTeam.members.length;
+       $.each(currentTeam.members, function(key, member) {
+        if (tmArr.indexOf(member.userId) == -1) {
+          count++;
+          tmArr.push(member.userId);
+        }
+      });
     }
     return count;
   },
@@ -180,20 +186,7 @@ var HomeAddIteration = React.createClass({
     return teamMembers;
   },
 
-  getOptimumAvailability: function(maxWorkDays){
-    var team = this.props.loadDetailTeam.team;
-    var members = this.getTeamMembers(team);
-    var availability = 0;
-    var self = this;
-    _.each(members, function(member){
-      var allocation =  member.allocation/100;
-      var avgWorkWeek = (member.workTime != null ? self.numericValue(member.workTime) : 100 )/100;
-      availability += (allocation * avgWorkWeek * maxWorkDays);
-    });
-
-    return availability.toFixed(2);
-  },
-
+  
   processIteration: function () {
     var self =this;
     api.loadTeam(self.props.loadDetailTeam.team._id)
@@ -206,29 +199,34 @@ var HomeAddIteration = React.createClass({
           return;
         }
 
-          var data = _.clone(initData);
-          data = self.populateCopyData(data);
-          data.memberCount = self.teamMemCount();
-          data.memberFte = self.teamMemFTE();
-          data['teamId'] = self.props.loadDetailTeam.team._id;
-          data['name'] = self.state.name;
-          data['startDate'] = new Date(self.state.iterationStartDate);
-          data['endDate'] = new Date(self.state.iterationEndDate);
-          var maxWorkDays = business.weekDays(moment(self.state.iterationStartDate),moment(self.state.iterationEndDate));
-          var availability = self.getOptimumAvailability(maxWorkDays);
-          data['teamAvailability'] = availability;
-          data['personDaysUnavailable'] = '';
-          data['personDaysAvailable'] = availability;
-          api.addIteration(data)
-            .then(function(result) {
+        var maxWorkDays = business.weekDays(moment(self.state.iterationStartDate),moment(self.state.iterationEndDate));
+        utils.getOptimumAvailability(maxWorkDays, self.props.loadDetailTeam.team._id)
+          .then(function(availability){
+            var data = _.clone(initData);
+            data = self.populateCopyData(data);
+            data.memberCount = self.teamMemCount();
+            data.memberFte = self.teamMemFTE();
+            data['teamId'] = self.props.loadDetailTeam.team._id;
+            data['name'] = self.state.name;
+            data['startDate'] = new Date(self.state.iterationStartDate);
+            data['endDate'] = new Date(self.state.iterationEndDate);
+            data['teamAvailability'] = availability;
+            data['personDaysUnavailable'] = '';
+            data['personDaysAvailable'] = availability;
+            return data;
+          })
+          .then(function(data){
+            return api.addIteration(data);
+          })
+          .then(function(result) {
               utils.clearHighlightedIterErrors();
               alert('You have successfully added Iteration information.');
               self.props.iterListHandler();
-              self.close();            
-            })
-            .catch(function(err){
-              utils.handleIterationErrors(err);
-            });
+              self.close();       
+          })
+          .catch(function(err){
+            utils.handleIterationErrors(err);
+          });
       }
     });
   },

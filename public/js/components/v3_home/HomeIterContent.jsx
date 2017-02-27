@@ -6,6 +6,7 @@ var moment = require('moment');
 var business = require('moment-business');
 var HomeAddIteration = require('./HomeAddIteration.jsx');
 var Tooltip = require('react-tooltip');
+var utils = require('../utils.jsx');
 var selectedIter = new Object();
 var lockMessage = 'This value is automatically calculated and can’t be updated directly.';
 var clientSatisfactionTT = 'Please indicate the satisfaction level of your client(s) with the results of this iteration using the following scale:' +
@@ -120,37 +121,7 @@ var HomeIterContent = React.createClass({
 
   closeIteration: function(){
     this.setState({createIteration: false});
-  },
-
-  getTeamMembers : function(team){
-    var teamMembers = [];
-    if (!_.isEmpty(team) && team.members) {
-      _.each(team.members, function(member) {
-        var temp = _.find(teamMembers, function(item){
-          if( item.userId === member.userId)
-            return item;
-        });
-        if (temp === undefined) {
-          teamMembers.push(member);
-        }
-      });
-    }
-    return teamMembers;
-  },
-
-  getOptimumAvailability: function(maxWorkDays){
-    var team = this.props.loadDetailTeam.team;
-    var members = this.getTeamMembers(team);
-    var availability = 0;
-    var self = this;
-    _.each(members, function(member){
-      var allocation =  member.allocation/100;
-      var avgWorkWeek = (member.workTime != null ? self.numericValue(member.workTime) : 100 )/100;
-      availability += (allocation * avgWorkWeek * maxWorkDays);
-    });
-
-    return availability.toFixed(2);
-  },
+  },  
 
   isWithinIteration: function(starDate,endDate){
     var currDate = moment(new Date(), 'YYYY-MM-DD').utc();
@@ -186,23 +157,23 @@ var HomeIterContent = React.createClass({
         selectedIter = this.updateAvailability(selectedIter);
         break;
       case 'defectsStartBal':
-        openDefects = this.numericValue($('#defectsStartBal').val());
-        newDefects = this.numericValue($('#defects').text());
-        closedDefects = this.numericValue($('#defectsClosed').text());
+        openDefects = utils.numericValue($('#defectsStartBal').val());
+        newDefects = utils.numericValue($('#defects').text());
+        closedDefects = utils.numericValue($('#defectsClosed').text());
         defectsEndBal = openDefects + newDefects - closedDefects;
         selectedIter['defectsEndBal'] = defectsEndBal;
         break;
       case 'defects':
-        openDefects = this.numericValue($('#defectsStartBal').text());
-        newDefects = this.numericValue($('#defects').val());
-        closedDefects = this.numericValue($('#defectsClosed').text());
+        openDefects = utils.numericValue($('#defectsStartBal').text());
+        newDefects = utils.numericValue($('#defects').val());
+        closedDefects = utils.numericValue($('#defectsClosed').text());
         defectsEndBal = openDefects + newDefects - closedDefects;
         selectedIter['defectsEndBal'] = defectsEndBal;
         break;
       case 'defectsClosed':
-        openDefects = this.numericValue($('#defectsStartBal').text());
-        newDefects = this.numericValue($('#defects').text());
-        closedDefects = this.numericValue($('#defectsClosed').val());
+        openDefects = utils.numericValue($('#defectsStartBal').text());
+        newDefects = utils.numericValue($('#defects').text());
+        closedDefects = utils.numericValue($('#defectsClosed').val());
         defectsEndBal = openDefects + newDefects - closedDefects;
         selectedIter['defectsEndBal'] = defectsEndBal;
         selectedIter[id] = $('#'+id).val();
@@ -224,28 +195,25 @@ var HomeIterContent = React.createClass({
     if (isAllowed){
       //recalculate team availability only if current date is within iteration
       var maxWorkDays = business.weekDays(moment(selectedIter.startDate, 'YYYY-MM-DD'),moment(selectedIter.endDate, 'YYYY-MM-DD'));
-      selectedIter.teamAvailability = this.getOptimumAvailability(maxWorkDays);
+     utils.getOptimumAvailability(maxWorkDays, selectedIter.teamId)
+     .then(function(result){
+        selectedIter.teamAvailability = result;
+        return;
+     })
+     .catch(function(err){
+       console.log(err);
+     });
     }
     selectedIter.personDaysAvailable = (selectedIter.teamAvailability - selectedIter.personDaysUnavailable).toFixed(2);
     return selectedIter;
   },
 
   updateStories: function(selectedIter){
-    $('#storiesDays').text((this.numericValue($('#deliveredStories').val())/this.numericValue(selectedIter.personDaysAvailable)).toFixed(1));
+    $('#storiesDays').text((utils.numericValue($('#deliveredStories').val())/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1));
   },
 
   updateStoryPoints: function(selectedIter){
-    $('#storyPointsDays').text((this.numericValue($('#storyPointsDelivered').val())/this.numericValue(selectedIter.personDaysAvailable)).toFixed(1));
-  },
-
-  numericValue:function(data) {
-    var value = parseInt(data);
-    if (!isNaN(value)) {
-      return value;
-    }
-    else {
-      return 0;
-    }
+    $('#storyPointsDays').text((utils.numericValue($('#storyPointsDelivered').val())/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1));
   },
 
   float2Decimal:function(val) {
@@ -292,6 +260,37 @@ var HomeIterContent = React.createClass({
       value = value.toFixed(2);
       e.target.value = value;
     }
+  },
+
+  resetTeamAvailability: function(){
+    
+    var self = this;
+    if (self.props.selectedIter != '') {
+       var iteration = _.find(self.props.loadDetailTeam.iterations, function(iter){
+          if (iter._id.toString() == self.props.selectedIter) {
+            return iter;
+          }
+        });
+        if (iteration != undefined){
+          selectedIter = _.clone(iteration);
+        }
+    }
+    else {
+      selectedIter = _.clone(self.props.loadDetailTeam.iterations[0]);
+    }
+    var maxWorkDays = business.weekDays(moment(selectedIter.startDate, 'YYYY-MM-DD'),moment(selectedIter.endDate, 'YYYY-MM-DD'));
+    utils.getOptimumAvailability(maxWorkDays, selectedIter.teamId)
+    .then(function(result){
+      if (confirm('You are about to overwrite the contents of ‘Optimum team availability’ with '+result+'.  Do you want to continue?')){
+        selectedIter.teamAvailability = result;
+        selectedIter.personDaysAvailable = (selectedIter.teamAvailability - self.float2Decimal(selectedIter.personDaysUnavailable)).toFixed(2);
+        self.props.updateTeamIteration(selectedIter);
+        self.setState({selectedField:''});
+      }
+    })
+    .catch(function(err){
+      console.log(err);
+    });    
   },
 
   render: function() {
@@ -394,7 +393,7 @@ var HomeIterContent = React.createClass({
                 <div class='home-iter-content-sub' data-tip='The calculated number of ‘person days’ available for this iteration based on team member’s allocation %, Full Time/Part Time/ Half time status and the length of the iteration.'>Optimum team availability (In days)</div>
                 <div id='optimumPoint' class='home-iter-content-point-uneditable'>{iterData.teamAvailability}</div>
                 <div class='home-iter-team-availability'>
-                  <InlineSVG src={require('../../../img/Att-icons/att-icons_team-reset.svg')} data-tip='Reset your Sprint Availability based on your current Team Member structure.'></InlineSVG>
+                  <InlineSVG src={require('../../../img/Att-icons/att-icons_team-reset.svg')} data-tip='Reset your Sprint Availability based on your current Team Member structure.' onClick={this.resetTeamAvailability}></InlineSVG>
                 </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>

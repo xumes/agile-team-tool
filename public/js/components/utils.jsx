@@ -1,6 +1,7 @@
 /* Helper functions that can be shared to other components */
 var _ = require('underscore');
 var moment = require('moment');
+var api = require('./api.jsx');
 
 module.exports.setPrefixHttp = function(url) {
   var pattern = /^((http|https):\/\/)/;
@@ -264,4 +265,50 @@ module.exports.toTitleCase = function(str) {
     strArray[0] = strArray[0].replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     return strArray.join(', ');
   }
-}
+};
+
+module.exports.numericValue = function(data) {
+    var value = parseInt(data);
+    if (!isNaN(value)) {
+      return value;
+    }
+    else {
+      return 0;
+    }
+  };
+
+module.exports.getOptimumAvailability = function(maxWorkDays, teamId){
+  var self = this;
+  return new Promise(function(resolve, reject){
+    api.loadTeam(teamId)
+      .then(function(team){
+        var members = self.getTeamMembers(team);
+        var availability = 0;      
+        _.each(members, function(member){
+          var allocation =  member.allocation/100;
+          var avgWorkWeek = (member.workTime != null ? self.numericValue(member.workTime) : 100 )/100;
+          availability += (allocation * avgWorkWeek * maxWorkDays);
+        });
+        return resolve(availability.toFixed(2));
+      })
+      .catch(function(err){
+        return reject(err);
+      });
+   });
+  };
+
+module.exports.getTeamMembers = function(team){
+    var teamMembers = [];
+    if (!_.isEmpty(team) && team.members) {
+      _.each(team.members, function(member) {
+        var temp = _.find(teamMembers, function(item){
+          if( item.userId === member.userId)
+            return item;
+        });
+        if (temp === undefined) {
+          teamMembers.push(member);
+        }
+      });
+    }
+    return teamMembers;
+  };
