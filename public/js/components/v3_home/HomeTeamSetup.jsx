@@ -3,7 +3,6 @@ var api = require('../api.jsx');
 var _ = require('underscore');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
-var currentCategory = '';
 var currentParentId = '';
 var currentChildren = [];
 var allowTeamTypeChange = false;
@@ -57,8 +56,6 @@ var HomeTeamSetup = React.createClass({
             _.sortBy(results[2], 'name');
           }
           currentChildren = _.clone(children);
-          if (loadDetailTeam.team.category != null)
-            currentCategory = loadDetailTeam.team.category;
 
           if (loadDetailTeam.team.path != null) {
             currentParentId = loadDetailTeam.hierarchy[loadDetailTeam.hierarchy.length - 1]._id;
@@ -82,9 +79,6 @@ var HomeTeamSetup = React.createClass({
           return reject(err);
         });
     });
-  },
-  categorySelectHandler: function(e) {
-    currentCategory = e.currentTarget.value;
   },
   parentSelectHandler: function(e) {
     var self = this;
@@ -179,8 +173,6 @@ var HomeTeamSetup = React.createClass({
     var self = this;
     if (self.state.showParentSetup) {
       $('#teamParentSetupBlock select').select2({'dropdownParent':$('#teamParentSetupBlock')});
-      $('#assessType').change(self.categorySelectHandler);
-      $('#assessType').val(currentCategory).change();
       $('#squadParentSelectList').change(self.parentSelectHandler);
       $('#squadParentSelectList').val(currentParentId).change();
 
@@ -256,10 +248,8 @@ var HomeTeamSetup = React.createClass({
     if (allowTeamTypeChange) {
       if (_.isEqual('squad', team.type) && (self.state.revertAsSquad || self.state.children.length > 0)) {
         currentTeam.type = null;
-        currentTeam.category = null;
       } else if (!_.isEqual('squad', team.type) && self.state.revertAsSquad) {
         currentTeam.type = 'squad';
-        currentTeam.category = _.isEmpty(currentCategory) ? null : currentCategory;
       }
     }
     api.putTeam(JSON.stringify(currentTeam))
@@ -387,7 +377,7 @@ var HomeTeamSetup = React.createClass({
         </div>
 
         <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showParentSetup} onHide={self.hideTeamSetup}  onShow={self.show}>
-          <div class='home-modal-block' style={{'height':'38em', 'width':'35em'}} id='teamParentSetupBlock'>
+          <div class='home-modal-block' style={{'height':'28em', 'width':'35em'}} id='teamParentSetupBlock'>
             <div class='home-modal-block-header'>
               <h>Team Setup</h>
               <div class='home-modal-block-close-btn' onClick={self.hideTeamSetup}>
@@ -397,29 +387,6 @@ var HomeTeamSetup = React.createClass({
 
             <div class='home-modal-block-content'>
               <div class='team-setup-squad-block'>
-                <div class='team-setup-squad-assess'>
-                  <p class='assess-type'>
-                    <label>Primary Team Type</label>
-                    <select id='assessType' name='assessType' disabled={!self.props.loadDetailTeam.access} defaultValue={currentCategory}>
-                      <option value=''>Select One</option>
-                      <option value='Project'>Project Delivery</option>
-                      <option value='Operations'>Operations</option>
-                      <option value='Operations'>Both</option>
-                    </select>
-                  </p>
-                  {/*
-                  <p class='assess-delivery'>
-                    <label>Delivers Software</label>
-                    <select id='assessDelivery' name='assessDelivery' disabled={!self.props.loadDetailTeam.access} defaultValue={''}>
-                      <option value='Yes'>Yes</option>
-                      <option value='No'>No</option>
-                    </select>
-                  </p>
-                  */}
-                  <p class='assess-note'>
-                    Operations teams support a repeatable process that delivers value to the customer.  Unlike a project, it normally has no definite start and end date.  Operation examples include recruitment, budgeting, call centers, supply chain and software operations.
-                  </p>
-                </div>
                 <div class='team-setup-squad-icon'>
                   <h>Hierarchy</h>
                   <InlineSVG src={require('../../../img/Att-icons/att-icons_teamsetup.svg')}></InlineSVG>
@@ -460,7 +427,7 @@ var HomeTeamSetup = React.createClass({
                 </div>
               </div>
             </div>
-            <div class='home-modal-block-footer ibm-btn-row' style={{'width':'95%'}}>
+            <div class='home-modal-block-footer ibm-btn-row' style={{'width':'95%','top':'-2%'}}>
               <div style={{'float':'left'}}>
                 <button class=' ibm-btn-sec ibm-btn-small ibm-btn-blue-50' onClick={self.confirmDelete} id='deleteBtn' disabled={!self.props.loadDetailTeam.access} >Delete Team</button>
               </div>
@@ -531,7 +498,7 @@ var HomeTeamSetup = React.createClass({
                 </div>
               </div>
             </div>
-            <div class='home-modal-block-footer ibm-btn-row' style={{'width':'95%'}}>
+            <div class='home-modal-block-footer ibm-btn-row' style={{'width':'95%', 'top':'4%'}}>
               <div style={{'float':'left'}}>
                 <button class=' ibm-btn-sec ibm-btn-small ibm-btn-blue-50' onClick={self.confirmDelete} id='deleteBtn' disabled={!self.props.loadDetailTeam.access} >Delete Team</button>
               </div>
@@ -544,7 +511,7 @@ var HomeTeamSetup = React.createClass({
         </Modal>
 
         <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showConfirmModal} onHide={self.hideConfirmDialog}  >
-          <div class='home-modal-block' style={{'height':'15em', 'width':'25em'}}>
+          <div class='home-modal-block' style={{'height':'16em', 'width':'25em'}}>
             <div class='home-modal-block-header' style={{'backgroundColor':'#d0021b'}}>
               <h>Warning!</h>
               <div class='home-modal-block-close-btn' onClick={self.hideConfirmDialog}>
@@ -555,7 +522,7 @@ var HomeTeamSetup = React.createClass({
               <p>This will permanently delete your team and remove it from all child or parent associations!</p>
               <p>Are you sure you want to continue?</p>
             </div>
-            <div class='home-modal-block-footer ibm-btn-row' style={{'width':'93%'}}>
+            <div class='home-modal-block-footer ibm-btn-row' style={{'width':'93%','top':'5%'}}>
               <div style={{'float':'right'}}>
                 <button class=' ibm-btn-pri ibm-btn-small ibm-btn-red-50' style={{'marginRight':'.5em','background':'#d0021b none repeat scroll 0 0','borderColor':'#d0021b'}} onClick={self.deleteTeam} id='updateBtn' ref='updateBtn'>Delete</button>
                 <button class=' ibm-btn-pri ibm-btn-small ibm-btn-blue-50' onClick={self.hideConfirmDialog} id='cancelBtn'>Cancel</button>
