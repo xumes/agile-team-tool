@@ -4487,17 +4487,30 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-size: 1.3em;
 }
 
-#addTeamMemberRoleBlock .tbl-memberRole-results tbody td.location {
-  width: 10em;
+#addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_name, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_name {
+  width: 7em;
+}
+
+#addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_location, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_location{
+  width: 7em;
+  background: none;
+}
+#addTeamMemberRoleBlock .tbl-memberRole-results td.r_location {
   background-color: #F2F2F2;
 }
 
-#addTeamMemberRoleBlock .tbl-memberRole-results tbody td.role {
-  width: 13em;
+#addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_role, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_role {
+  width: 10em;
 }
 
-#addTeamMemberRoleBlock .tbl-memberRole-results tbody td.allocation {
+#addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_allocation, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_allocation {
+  /*width: 10em;*/
+  vertical-align: top;
+}
+
+#addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_workweek, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_workweek {
   width: 10em;
+  vertical-align: top;
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results td.role > .select2 {
@@ -4507,6 +4520,43 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 #addTeamMemberRoleBlock .tbl-memberRole-results td.allocation > .select2 {
   width: 88% !important;
 }
+
+#addTeamMemberRoleBlock .Select-value, .Select--multi .Select-value,
+#addTeamMemberRoleBlock .Select-option, #addTeamMemberRoleBlock .otherTxt,
+#addTeamMemberRoleBlock .Select .select-input input {
+  font-size: 1.4em !important;
+  color: #333;
+}
+
+#addTeamMemberRoleBlock .custom-field-other {
+  margin-top: 0.5em;
+}
+
+#addTeamMemberRoleBlock .custom-field-other .input-field {
+  float: left;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  height: 100%;
+  padding: 0.2em;
+  position: relative;
+  text-indent: 0.5em;
+  width: 65%;
+  line-height: 1.5em;
+}
+
+#addTeamMemberRoleBlock .save-btn, #addTeamMemberRoleBlock .cancel-btn {
+  cursor: pointer;
+  float: left;
+  position: relative;
+  width: 14%;
+  left: 0.5em;
+}
+
+#addTeamMemberRoleBlock .cancel-btn {
+  left: 0.9em;
+}
+
+
 /* END: AddTeamMember Role, Allocation Modal */
 
 .home-iter-sub-section > input[type="checkbox"] {
