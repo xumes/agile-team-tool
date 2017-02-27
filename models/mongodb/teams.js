@@ -271,7 +271,7 @@ module.exports.searchTeamWithName = function(string) {
       '$regex': new RegExp('.*' + string.toLowerCase() + '.*', 'i')
     }, docStatus:{$ne:'delete'}
   };
-  return Team.find(searchQuery).sort('pathId').exec();
+  return Team.find(searchQuery).sort('name').exec();
 };
 
 //using for snapshot roll up data, get all non squads
@@ -357,6 +357,7 @@ module.exports.getRootTeams = function(uid) {
               returnTeams.push(newTeam);
             }
           });
+          returnTeams = _.sortBy(returnTeams, 'name');
           resolve(returnTeams);
         })
         .catch( /* istanbul ignore next */ function(err){
@@ -372,6 +373,7 @@ module.exports.getRootTeams = function(uid) {
         var res = _.filter(rootedTeams, function(team){
           return uniquePaths.indexOf(','+team.pathId+',') >= 0;
         });
+        res = _.sortBy(res, 'name');
         resolve(res);
       });
     }
@@ -403,6 +405,7 @@ module.exports.getStandalone = function(uid) {
       var res = _.filter(rootedTeams, function(team){
         return uniquePaths.indexOf(','+team.pathId+',') < 0;
       });
+      res = _.sortBy(res, 'name');
       return res;
     });
   } else {
@@ -415,6 +418,7 @@ module.exports.getStandalone = function(uid) {
       var res = _.filter(rootedTeams, function(team){
         return uniquePaths.indexOf(','+team.pathId+',') < 0;
       });
+      res = _.sortBy(res, 'name');
       return res;
     });
   }
@@ -645,6 +649,7 @@ module.exports.getChildrenByPathId = function(pathId) {
             }
             returnTeams.push(newTeam);
           });
+          returnTeams = _.sortBy(returnTeams, 'name');
           resolve(returnTeams);
         })
         .catch( /* istanbul ignore next */ function(err){
@@ -697,6 +702,7 @@ module.exports.getAllChildrenOnPath = function(path) {
           });
           returnArray.push(returnTeams);
         });
+        returnTeams = _.sortBy(returnTeams, 'name');
         resolve(returnArray);
       })
       .catch( /* istanbul ignore next */ function(err){
