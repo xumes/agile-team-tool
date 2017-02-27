@@ -4366,10 +4366,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 8%;
 }
 
-
-
-
-
 .home-modal-block-content > p {
   color: #5a5a5a;
   font-size: inherit;
@@ -4792,7 +4788,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .home-modal-block-content {
   font-size: inherit;
-  height: 83%;
+  height: 80%;
   position: relative;
 }
 
@@ -4822,35 +4818,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-size: 0.9em;
   height: 100%;
   width: 100%;
-}
-
-.team-setup-squad-block .team-setup-squad-assess {
-  font-size: inherit;
-  padding: 0 1em 0;
-}
-
-.team-setup-squad-assess > p {
-  font-size: inherit;
-  line-height: 1.3em;
-  padding: 1em 1em 0;
-  text-align: justify;
-}
-
-.team-setup-squad-assess > p.assess-type  {
-  white-space: nowrap;
-}
-
-.team-setup-squad-assess .assess-type > label, .assess-delivery > label {
-  display: inline-block;
-  font-weight: bold;
-  width: 37%;
-}
-
-.team-setup-squad-assess .assess-type > select:first-of-type, .team-setup-squad-assess .assess-type > span:first-of-type,
-.team-setup-squad-assess .assess-delivery > select:first-of-type, .team-setup-squad-assess  .assess-delivery > span:first-of-type  {
-  display: inline-block;
-  font-size: inherit;
-  width: 63%;
 }
 
 .team-setup-squad-block .squad-note {
@@ -4887,14 +4854,14 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .team-setup-squad-block .team-setup-squad-icon-change {
   left: 27%;
   position: absolute;
-  top: 65%;
+  top: 53%;
   width: 5%;
 }
 
 .team-setup-squad-block .team-setup-squad-content {
   display: inline-block;
   font-size: inherit;
-  height: 70%;
+  height: 95%;
   left: 39%;
   position: absolute;
   width: 59%;
@@ -4904,8 +4871,8 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: inline-block;
   font-size: inherit;
   position: relative;
-  width: 95%;
   top: 12%;
+  width: 95%;
 }
 
 .team-setup-squad-content .squad-parent > select:first-of-type, .team-setup-squad-content .squad-parent > span:first-of-type {
@@ -4918,7 +4885,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .team-setup-squad-content .squad-name {
   display: inline-block;
   font-size: inherit;
-  height: 32%;
+  height: 33%;
   position: relative;
   top: 15%;
   width: 95%;
@@ -4936,7 +4903,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: inline-block;
   font-size: inherit;
   position: relative;
-  top: 15%;
+  top: 17%;
   width: 95%;
 }
 
@@ -4971,7 +4938,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: inline-block;
   left: 35%;
   position: absolute;
-  top: 38%;
+  top: 13%;
   width: 2%;
 }
 
@@ -4987,7 +4954,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: inline-block;
   left: 35%;
   position: absolute;
-  top: 62%;
+  top: 47%;
   width: 2%;
 }
 
@@ -5003,7 +4970,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: inline-block;
   left: 35%;
   position: absolute;
-  top: 76%;
+  top: 68%;
   width: 2%;
 }
 
@@ -5011,7 +4978,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   border-bottom: 0.1em solid #b3b3b3;
   left: -105%;
   position: absolute;
-  top: 40%;
+  top: 35%;
   width: 115%;
 }
 
@@ -5049,7 +5016,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: inline-block;
   left: -5%;
   position: relative;
-  top: 16%;
+  top: 16.5%;
   width: 5%;
 }
 
@@ -5073,7 +5040,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: inline-block;
   left: 33%;
   position: absolute;
-  top: 31%;
+  top: 32%;
   width: 2%;
 }
 
@@ -5089,7 +5056,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: inline-block;
   left: 33%;
   position: absolute;
-  top: 48%;
+  top: 49%;
   width: 2%;
 }
 
@@ -5117,11 +5084,12 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   top: 7%;
   width: 95%;
 }
+
 .team-setup-content .team-setup-name {
   font-size: inherit;
-  height: 21%;
+  height: 22%;
   position: absolute;
-  top: 21%;
+  top: 22%;
   width: 95%;
 }
 
@@ -5138,7 +5106,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-size: inherit;
   height: 34%;
   position: absolute;
-  top: 47%;
+  top: 48%;
   width: 95%;
 }
 
@@ -5176,7 +5144,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   padding: 0.2em 0;
   position: relative;
   text-overflow: ellipsis;
-  width: 90%;
+  width: 98%;
 }
 
 .team-setup-children-remove-icon {
@@ -5191,7 +5159,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: inline-block;
   font-size: inherit;
   position: absolute;
-  top: 80%;
+  top: 82%;
   width: 95%;
 }
 
