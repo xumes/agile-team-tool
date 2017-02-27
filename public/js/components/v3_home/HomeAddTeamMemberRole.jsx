@@ -1,12 +1,15 @@
 var React = require('react');
+var ReactDOM = require('react-dom');
 var api = require('../api.jsx');
 var _ = require('underscore');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
 var HomeAddTeamFooterButtons = require('./HomeAddTeamFooterButtons.jsx');
 var utils = require('../utils.jsx');
-// var HomeAddTeamMemberRoleTable = require('./HomeAddTeamMemberRoleTable.jsx');
-// var HomeAddTeamMemberRoleFooter = require('./HomeAddTeamMemberRoleFooter.jsx');
+var Select = require('react-select');
+var HomeAddTeamDropdownRole = require('./HomeAddTeamDropdownRole.jsx');
+var HomeAddTeamDropdownAllocation = require('./HomeAddTeamDropdownAllocation.jsx');
+var HomeAddTeamDropdownWorkTime = require('./HomeAddTeamDropdownWorkTime.jsx');
 
 var HomeAddTeamMemberRole = React.createClass({
   getInitialState: function() {
@@ -16,14 +19,107 @@ var HomeAddTeamMemberRole = React.createClass({
         prevDisabled: '',
         nextScreen: '',
         nextDisabled: ''  //TODO: disabled
-      }
+      },
+      defaultRoles: []
     }
   },
 
-  show: function() {
-    $('#addTeamMemberRoleBlock select').select2({'dropdownParent':$('#addTeamMemberRoleBlock')});
+  componentDidMount: function() {
+    var self = this;
+    var tmproles = self.props.roles;
+    console.log('componentDidMount defaultRoles:',tmproles);
+    self.setState({defaultRoles: tmproles});
   },
 
+  componentDidUpdate: function() {
+    var self = this;
+    var tmproles = self.props.roles;
+    console.log('componentDidUpdate defaultRoles:',tmproles);
+
+    // self.setState({defaultRoles: tmproles});
+  },
+  show: function() {
+    // $('#addTeamMemberRoleBlock select').select2({'dropdownParent':$('#addTeamMemberRoleBlock')});
+    var self = this;
+    var tmproles = self.props.roles;
+    console.log('componentDidUpdate defaultRoles:',tmproles);
+
+    self.setState({defaultRoles: tmproles});
+  },
+
+  roleHandler: function(ref, data) {
+    var self = this;
+    var uid;
+    var selectVal = data['value'];
+    var updatedMember = [];
+
+    uid = ref.selrole.props['data-uid'];
+    console.log('uid:', uid);
+    var memberList = self.props.newTeamObj.members.map(function(member){
+      var obj = {};
+      obj.name = member.name;
+      obj.email = member.email;
+      obj.userId = member.userId;
+      obj.location = member.location || '';
+      obj.role = member.role || '';
+      obj.allocation = member.allocation || 100;
+      obj.workTime = member.workTime || 'Full Time';
+      if (member.userId === uid) {
+        obj.role = selectVal;
+      }
+      updatedMember.push(obj);
+    });
+
+    var tmproles = self.state.defaultRoles;
+    // when selecting the 'Other...' option
+    if (!_.contains(tmproles, selectVal)) {
+      var tmp = self.state.defaultRoles;
+      tmp.push(selectVal);
+      self.setState({defaultRoles: tmp});
+    }
+
+    self.props.setTeamMember(updatedMember);
+    console.log('changeHandler updatedMember:');
+    console.dir(updatedMember);
+    var buttonOptions = self.state.buttonOptions;
+    buttonOptions.nextDisabled = '';
+    self.setState({buttonOptions: buttonOptions});
+  },
+
+  allocHandler: function(ref, data) {
+    var self = this;
+    var uid;
+    var selectVal = data['value'];
+    var updatedMember = [];
+
+    uid = ref.selalloc.props['data-uid'];
+    console.log('uid:', uid);
+    var memberList = self.props.newTeamObj.members.map(function(member){
+      var obj = {};
+      obj.name = member.name;
+      obj.email = member.email;
+      obj.userId = member.userId;
+      obj.location = member.location || '';
+      obj.role = member.role || '';
+      obj.allocation = member.allocation || 100;
+      obj.workTime = member.workTime || 'Full Time';
+      if (member.userId === uid) {
+        obj.allocation = selectVal;
+      }
+      updatedMember.push(obj);
+    });
+
+    self.props.setTeamMember(updatedMember);
+    console.log('changeHandler updatedMember:');
+    console.dir(updatedMember);
+    var buttonOptions = self.state.buttonOptions;
+    buttonOptions.nextDisabled = '';
+    self.setState({buttonOptions: buttonOptions});
+  },
+
+  workTimeHandler: function(ref, data) {
+
+  },
   render: function() {
     var self = this;
     var teamMemberList = null;
@@ -34,36 +130,26 @@ var HomeAddTeamMemberRole = React.createClass({
         var memberEmail = member.email;
         var memberUserId = member.userId;
         var memberLocation = '';
+        var memberRole = member.role;
+        var memberAlloc = member.allocation;
+        var memberWorkTime = member.workTime;
         if (member && member.location.site) {
           memberLocation = utils.toTitleCase(member.location.site);
         } else if (member && member.location) {
           memberLocation = utils.toTitleCase(member.location);
         }
-        var allocationArray = Array.from(Array(101).keys());
-        var allocationSelection = allocationArray.map(function(a){
-          return (
-            <option key={a} value={a}>{a}%</option>
-          );
-        });
-        var roleSelection = self.props.roles.map(function(r){
-          return (
-            <option key={r} value={r}>{r}</option>
-          );
-        });
         return (
           <tr key={key}>
-            <td class='name'>{memberName}</td>
-            <td class='location'>{memberLocation}</td>
-            <td class='role'>
-              <select class='selrole' >
-                <option>Select role</option>
-                {roleSelection}
-              </select>
+            <td class='r_name'>{memberName}</td>
+            <td class='r_location'>{memberLocation}</td>
+            <td class='r_role'>
+              <HomeAddTeamDropdownRole newTeamObj={self.props.newTeamObj} memberUserId={memberUserId} roles={self.state.defaultRoles} setTeamMember={self.props.setTeamMember} memberRole={memberRole} roleHandler={self.roleHandler} />
             </td>
-            <td class='allocation'>
-              <select class='selalloc' >
-                {allocationSelection}
-              </select>
+            <td class='r_allocation'>
+              <HomeAddTeamDropdownAllocation newTeamObj={self.props.newTeamObj} memberUserId={memberUserId} setTeamMember={self.props.setTeamMember} memberAlloc={memberAlloc} allocHandler={self.allocHandler} />
+            </td>
+            <td class='r_workweek'>
+              <HomeAddTeamDropdownWorkTime newTeamObj={self.props.newTeamObj} memberUserId={memberUserId} setTeamMember={self.props.setTeamMember} memberWorkTime={memberWorkTime} workTimeHandler={self.workTimeHandler} />
             </td>
           </tr>
         );
@@ -85,10 +171,11 @@ var HomeAddTeamMemberRole = React.createClass({
                     <table class='tbl-members' >
                       <thead>
                         <tr>
-                          <td class='heading' style={{textAlign:'left'}}>Name</td>
-                          <td class='heading' style={{textAlign:'center'}}>Location</td>
-                          <td class='heading' style={{textAlign:'center'}}>Role</td>
-                          <td class='heading' style={{textAlign:'center'}}>Allocation</td>
+                          <td class='heading r_name' style={{textAlign:'left'}}>Name</td>
+                          <td class='heading r_location' style={{textAlign:'center'}}>Location</td>
+                          <td class='heading r_role' style={{textAlign:'center'}}>Role</td>
+                          <td class='heading r_allocation' style={{textAlign:'center'}}>Allocation</td>
+                          <td class='heading r_workweek' style={{textAlign:'center'}}>Avg. Work Week</td>
                         </tr>
                       </thead>
                       <tbody class='tbl-members-role-data'>
