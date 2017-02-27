@@ -4,7 +4,6 @@ var _ = require('underscore');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
 var HomeAddTeamFooterButtons = require('./HomeAddTeamFooterButtons.jsx');
-var HomeTeamParentChildSelection = require('./HomeTeamParentChildSelection.jsx');
 
 var HomeAddTeamHierarchyModal = React.createClass({
   getInitialState: function() {
@@ -21,16 +20,26 @@ var HomeAddTeamHierarchyModal = React.createClass({
       defaultParentObjects: [
         {name: 'Parent of my currently selected team', id: 'parentOfSelected'},
         {name: 'Peer of my currently selected team', id: 'peerOfSelected'}
-      ],
-      teamNamesAll: [],
-      teamNames: []
+      ]
     }
   },
 
-  componentDidMount: function() {
-    this.setState({selparentList: 'none'});
-    this.selectListInit();    
-    this.setState({teamNames: this.state.teamNamesAll}); //teamNames will change during selection is made
+  componentWillUpdate: function(nextProps, nextState) {
+    var self = this;
+    // make sure to get the latest team names on focus of this screen
+    console.log('componentWillUpdate');
+    if (!self.props.activeWindow && nextProps.activeWindow) {
+      this.selectListInit();
+    }
+  },
+
+  selectListInit: function(){
+    var self=this;
+    api.getAllRootTeamsSquadNonSquad()
+      .then(function(teams) {
+        var selectableChildren = _.sortBy(teams, 'name');
+        self.props.setSelectableChildren(selectableChildren);
+      });                 
   },
 
   setButtonOptions: function(buttonOptions) {
@@ -48,54 +57,41 @@ var HomeAddTeamHierarchyModal = React.createClass({
 
     $('#optsel-child select').select2({'dropdownParent':$('#optsel-child')});
     $('#pc-hier-selChild').change(self.childSelectHandler);
-
 //    $("#teamTypeBlock span[data-widget=tooltip]").tooltip();
-  },
-
-  selectListInit: function() {
-    var self = this;
-    console.log('selectListInit');
-    api.getAllRootTeamsSquadNonSquad()
-      .then(function(teams) {
-        var selectableChildren = _.sortBy(teams, 'name');
-          self.setState({teamNamesAll: selectableChildren});
-          });             
-
-    self.props.setSelectedChildTeams(this.state.teamNamesAll);      
   },
 
   parentSelectHandler: function(e){
     var self = this;
     var selectedValue = e.target.value;
     console.log('parentSelectHandler');    
-    var team = _.find(self.props.selectableParents, function(team) {
-      if (_.isEqual(selectedValue,team._id)) return team;
+    var teamSelected = _.find(self.props.selectableParents, function(teamSelected) {
+      if (_.isEqual(selectedValue,teamSelected._id)) return teamSelected;
     });
 
     _.each(self.props.selectedChildTeams, function(childTeam) {
-        console.log(childTeam, childTeam.path);
         if (_.isEqual(childTeam._id, team._id)) {
-          alert(team.name + ' cannot be both a parent and a child.');
+          alert(teamSelected.name + ' cannot be both a parent and a child.');
           $('#pc-hier-selparent').val('').change();
           return;
         }
-        if (!_.isEmpty(team.path)) {
-          var rootPathId = team.path.split(',')[1];
+        if (!_.isEmpty(teamSelected.path)) {
+          var rootPathId = teamSelected.path.split(',')[1];
           if (_.isEqual(rootPathId, childTeam.pathId)) {
-            alert(team.name + ' cannot be your parent team since it is reporting to '+childTeam.name+', that is already listed as your child team.');
+            alert(teamSelected.name + ' cannot be your parent team since it is reporting to '+childTeam.name+', that is already listed as your child team.');
             $('#parentSelectList').val('').change();
             return;
           }
         }
       })
 
-    self.props.setSelectedParentTeam(team);
+    self.props.setSelectedParentTeam(teamSelected);
 
     var filteredTeam = [];
-    filteredTeam = _.filter(this.state.teamNamesAll, function(team) {  //use master teamName list to refresh teamNames
+    this.selectListInit();
+    filteredTeam = _.filter(self.props.selectableChildren, function(team) {  //use master teamName list to refresh teamNames
       return !_.isEqual(team._id, selectedValue);
     });
-    self.setState({teamNames: filteredTeam});
+    self.props.setSelectableChildren(filteredTeam);
     disableField = '';
   },
 
@@ -105,7 +101,8 @@ var HomeAddTeamHierarchyModal = React.createClass({
     children = _.filter(self.props.selectedChildTeams, function(team) {
        return !_.isEqual(id, team._id);
     });
-    this.props.setSelectedChildTeams(children);
+    if (children != undefined)
+      this.props.setSelectedChildTeams(children);
 
   },
 
@@ -122,29 +119,32 @@ var HomeAddTeamHierarchyModal = React.createClass({
     
     var selectedParent = $('#pc-hier-selparent option:selected').val();
     var selectedChild = $('#pc-hier-selChild option:selected').val();
-    if (!_.isEmpty(selectedChild)) {
-      var childTeam = _.find(self.state.teamNames, function(team) {
+    if (selectedChild != 'NA' && selectedChild != 'NoChild' && !_.isEmpty(selectedChild)) {
+      var childTeam = _.find(self.props.selectableChildren, function(team) {
         if (team._id == selectedChild) return team;
-      })          
+      })   
+
       if (_.isEqual(selectedParent, selectedChild)) {
         alert(childTeam.name + ' cannot be both a parent and a child.');
         $('#pc-hier-selChild').val('').change();
         return;
       }
-      if (!_.isEmpty(selectedParent)) {
+
+      if (selectedParent != 'NoParent' && selectedParent != 'NA' && !_.isEmpty(selectedParent)) {
         var parentTeam = _.find(self.props.selectableParents, function(team) {
           if (team._id == selectedParent) return team;
         });
-        console.log('Parent team is: '+parentTeam);
-        if (!_.isEmpty(parentTeam.path)) {
-          var rootPathId = parentTeam.path.split(',')[1];
+
+      if (parentTeam!=undefined && !_.isEmpty(parentTeam.path)) {
+        var rootPathId = parentTeam.path.split(',')[1];
           if (_.isEqual(rootPathId, childTeam.pathId)) {
             alert(childTeam.name + ' cannot be added as a child since your current parent team, '+parentTeam.name+', is reporting to it.');
             $('#pc-hier-selChild').val('').change();
             return;
           }
-        }
+        }        
       }      
+ 
       if ($('.team-hier-children p#'+selectedChild).length > 0) {
         alert(childTeam.name + ' is already listed.');
         $('#pc-hier-selChild').val('').change();
@@ -175,8 +175,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
         )
     });
 
-    var populateChildrenTeamNames = null;
-    populateChildrenTeamNames = this.state.teamNames.map(function(item) {
+    var populateChildrenTeamNames = this.props.selectableChildren.map(function(item) {
      return (
        <option key={item._id} value={item._id}>{item.name}</option>
       );
@@ -227,7 +226,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
 
                     <div class="optsel-parent" style={selparent1Style} id="optsel-parent">     
                       <select name="pc-hier-selparent" id="pc-hier-selparent" class="pc-hier-selparent">
-                        <option key='NA' value='NA' selected>Select parent team</option>
+                        <option key='NA' value='NA' selected>Select parent team</option>  
                         <option key='NoParent' value='NoParent'>Top tier / No Parent Above / Not Listed</option>
                         {populateParentTeamNames}
                       </select>

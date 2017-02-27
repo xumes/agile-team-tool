@@ -18,7 +18,7 @@ var HomeAddTeamMemberRole = React.createClass({
         prevScreen: 'showTeamMemberModal',
         prevDisabled: '',
         nextScreen: '',
-        nextDisabled: 'disabled'
+        nextDisabled: ''  //TODO: disabled
       },
       defaultRoles: []
     }
