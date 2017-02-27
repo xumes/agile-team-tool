@@ -83,9 +83,14 @@ var HomeAddTeam = React.createClass({
       var screenStatus = self.state.screenStatus;
       screenStatus[screenName].active = false;
       self.setState({screenStatus : screenStatus});
-      self.setState({selectedParentTeam:{}});
-      self.setState({selectedChildTeams : []});
+      this.resetTeamHierarchy();
     }
+  },
+
+  resetTeamHierarchy: function(){
+    var self = this;
+    self.setState({selectedParentTeam:{}});
+    self.setState({selectedChildTeams : []});
   },
 
   setTeamNameDesc: function(name, description) {
