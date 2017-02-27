@@ -163,56 +163,39 @@ var HomeTeamTree = React.createClass({
             }
           })
           .then(function(results){
-            for (var i = 0; i < results.length; i++) {
-              self.appendChildTeams(results[i], availablePath[i]);
-            }
-            self.loadDetails(selectedTeam);
-            $('#navSpinner').hide();
-            $('#newTeamTree').show();
-            $('.nano').nanoScroller();
-            $('.nano').nanoScroller({
-              scrollTo: $('#link_' + selectedTeam)
-            });
-          });
-
-        /*
-        if (($.find('#' + selectedTeam)).length > 0) {
-          self.highlightTeam(selectedTeam);
-          self.loadDetails(selectedTeam);
-        } else {
-          if ($('#newTeamTree li')[0]) {
-            if (($('#newTeamTree li')[0]).id) {
-              if (($('#newTeamTree li')[0]).id != 'agteamstandalone') {
-                selectedTeam = ($('#newTeamTree li')[0]).id;
-                self.highlightTeam(selectedTeam);
-                self.loadDetails(selectedTeam);
-              } else {
-                if (selectedTeam == ($('#newTeamTree li')[1]).id) {
-                  selectedTeam = ($('#newTeamTree li')[1]).id;
-                  self.highlightTeam(selectedTeam);
-                  self.loadDetails(selectedTeam);
+            if (($.find('#' + selectedTeam)).length > 0) {
+              for (var i = 0; i < results.length; i++) {
+                self.appendChildTeams(results[i], availablePath[i]);
+              }
+              self.loadDetails(selectedTeam);
+              $('#navSpinner').hide();
+              $('#newTeamTree').show();
+              $('.nano').nanoScroller();
+              $('.nano').nanoScroller({
+                scrollTo: $('#link_' + selectedTeam)
+              });
+            } else {
+              if ($('#newTeamTree li')[0]) {
+                if (($('#newTeamTree li')[0]).id) {
+                  if (($('#newTeamTree li')[0]).id != 'agteamstandalone') {
+                    selectedTeam = ($('#newTeamTree li')[0]).id;
+                    self.highlightTeam(selectedTeam);
+                    self.loadDetails(selectedTeam);
+                  } else {
+                    if (selectedTeam == ($('#newTeamTree li')[1]).id) {
+                      selectedTeam = ($('#newTeamTree li')[1]).id;
+                      self.highlightTeam(selectedTeam);
+                      self.loadDetails(selectedTeam);
+                    } else {
+                      selectedTeam = '';
+                    }
+                  }
                 } else {
                   selectedTeam = '';
                 }
               }
-            } else {
-              selectedTeam = '';
             }
-          } else {
-            selectedTeam = '';
-            $('#bodyContent').hide();
-            $('#snapshotPull').hide();
-            //$('#iterationFallBox').hide();
-            $('#squad_team_scard').hide();
-            $('#nsquad_team_scard').hide();
-            //$('#assessmentFallBox').hide();
-            $('#nsquad_assessment_card').hide();
-            $('#squad_assessment_card').hide();
-            $('#membersList').empty();
-            $('#teamMemberTable').hide();
-          }
-        }
-        */
+          });
       } else {
         self.loadTeamInAllTeams(selectedTeam);
       }
