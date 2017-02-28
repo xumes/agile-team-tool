@@ -22,12 +22,6 @@ var HomeAddTeamDropdownRole = React.createClass({
       this.props.roleHandler(this.refs, data);
     }
   },
-  // onchangeRole: function(event) {
-  //   var self = this;
-  //   var val = event.target.value
-  //   // console.log('val ', val)
-  //   self.setState({customRole: val});
-  // },
   saveRole: function(uid) {
     console.log('saveRole..', uid);
     var other = $('#wrapper-role-'+uid + ' #input-field').val();
@@ -60,6 +54,7 @@ var HomeAddTeamDropdownRole = React.createClass({
           value={memberRole}
           options={options}
           clearable={false}
+          placeholder='Select Role'
           onChange={self.roleHandler} />
         <div class='custom-field-other' style={isOtherStyle}>
           <input id='input-field' type='text' ref='other' name='other' size='10' class='input-field' />

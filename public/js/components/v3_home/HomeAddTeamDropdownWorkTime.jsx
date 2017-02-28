@@ -39,7 +39,7 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
     var avgworkweekArray = ['Full Time', 'Half Time', 'Other'];
     avgworkweekArray.map(function(v) {
       selavgworkweek.push({value: v, label: v});
-    });  
+    });
 
     var isOtherStyle = (self.state.showOther) ? {'display': 'block'} : {'display': 'none'};
     return(

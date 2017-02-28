@@ -164,7 +164,7 @@ var HomeAddTeam = React.createClass({
 
         <HomeAddTeamNameModal activeWindow={this.state.screenStatus['showTeamNameModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamNameDesc={self.setTeamNameDesc} />
 
-        <HomeAddTeamTypeModal activeWindow={this.state.screenStatus['showTeamTypeModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamType={self.setTeamType} selectableParents={self.state.selectableParents} setSelectableParents={self.setSelectableParents}  selectedParentTeam={self.state.selectedParentTeam} setSelectedParentTeam={self.setSelectedParentTeam} />
+        <HomeAddTeamTypeModal activeWindow={this.state.screenStatus['showTeamTypeModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamType={self.setTeamType} selectableParents={self.state.selectableParents} setSelectableParents={self.setSelectableParents}  selectedParentTeam={self.state.selectedParentTeam} setSelectedParentTeam={self.setSelectedParentTeam} setTeamMember={self.setTeamMember} />
 
         <HomeAddTeamMemberModal activeWindow={this.state.screenStatus['showTeamMemberModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamMember={self.setTeamMember}  />
 

@@ -29,6 +29,23 @@ var HomeAddTeamTypeModal = React.createClass({
     }
   },
 
+  setDefaultMember: function() {
+    var self = this;
+    api.getUsersInfo(user.ldap.uid)
+      .then(function(result){
+        console.log('setDefaultMember getUsersInfo:', result);
+        var data = {
+          userId: user.ldap.uid,
+          email: user.ldap.emailAddress,
+          name: user.ldap.hrFirstName + ' ' + user.ldap.hrLastName,
+          role: _.isEqual(self.props.newTeamObj.type, 'squad') ? 'Iteration Manager' : 'Team Lead',
+          allocation: 100,
+          location: result[0].location || ''
+        };
+        self.props.setTeamMember([data]);
+      });
+  },
+
   show: function() {
     var self = this;
     console.log('show',self.props.selectedParentTeam);
@@ -55,6 +72,7 @@ var HomeAddTeamTypeModal = React.createClass({
       buttonOptions.nextScreen = _.isEqual('squadTeam', selectedValue) ? 'showTeamMemberModal' : 'showTeamHierarchyModal';
       self.setState({ buttonOptions: buttonOptions });
     }
+    self.setDefaultMember();
   },
 
   parentSelectHandler: function(event) {
