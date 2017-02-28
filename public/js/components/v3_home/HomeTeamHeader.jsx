@@ -224,7 +224,7 @@ var HomeTeamHeader = React.createClass({
                 <h>Team Members</h>
               </div>
               <div class='home-team-header-btn-title2'>
-                <h>}</h>
+                <InlineSVG src={require('../../../img/Att-icons/att_icons_curly-bracket-right.svg')}></InlineSVG>
               </div>
               <div class='home-team-header-members-div'>
                 {faceImages}

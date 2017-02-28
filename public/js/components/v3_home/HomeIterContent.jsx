@@ -6,6 +6,7 @@ var moment = require('moment');
 var business = require('moment-business');
 var HomeAddIteration = require('./HomeAddIteration.jsx');
 var Tooltip = require('react-tooltip');
+var utils = require('../utils.jsx');
 var selectedIter = new Object();
 var lockMessage = 'This value is automatically calculated and can’t be updated directly.';
 var clientSatisfactionTT = 'Please indicate the satisfaction level of your client(s) with the results of this iteration using the following scale:' +
@@ -120,37 +121,7 @@ var HomeIterContent = React.createClass({
 
   closeIteration: function(){
     this.setState({createIteration: false});
-  },
-
-  getTeamMembers : function(team){
-    var teamMembers = [];
-    if (!_.isEmpty(team) && team.members) {
-      _.each(team.members, function(member) {
-        var temp = _.find(teamMembers, function(item){
-          if( item.userId === member.userId)
-            return item;
-        });
-        if (temp === undefined) {
-          teamMembers.push(member);
-        }
-      });
-    }
-    return teamMembers;
-  },
-
-  getOptimumAvailability: function(maxWorkDays){
-    var team = this.props.loadDetailTeam.team;
-    var members = this.getTeamMembers(team);
-    var availability = 0;
-    var self = this;
-    _.each(members, function(member){
-      var allocation =  member.allocation/100;
-      var avgWorkWeek = (member.workTime != null ? self.numericValue(member.workTime) : 100 )/100;
-      availability += (allocation * avgWorkWeek * maxWorkDays);
-    });
-
-    return availability.toFixed(1);
-  },
+  },  
 
   isWithinIteration: function(starDate,endDate){
     var currDate = moment(new Date(), 'YYYY-MM-DD').utc();
@@ -186,23 +157,23 @@ var HomeIterContent = React.createClass({
         selectedIter = this.updateAvailability(selectedIter);
         break;
       case 'defectsStartBal':
-        openDefects = this.numericValue($('#defectsStartBal').val());
-        newDefects = this.numericValue($('#defects').text());
-        closedDefects = this.numericValue($('#defectsClosed').text());
+        openDefects = utils.numericValue($('#defectsStartBal').val());
+        newDefects = utils.numericValue($('#defects').text());
+        closedDefects = utils.numericValue($('#defectsClosed').text());
         defectsEndBal = openDefects + newDefects - closedDefects;
         selectedIter['defectsEndBal'] = defectsEndBal;
         break;
       case 'defects':
-        openDefects = this.numericValue($('#defectsStartBal').text());
-        newDefects = this.numericValue($('#defects').val());
-        closedDefects = this.numericValue($('#defectsClosed').text());
+        openDefects = utils.numericValue($('#defectsStartBal').text());
+        newDefects = utils.numericValue($('#defects').val());
+        closedDefects = utils.numericValue($('#defectsClosed').text());
         defectsEndBal = openDefects + newDefects - closedDefects;
         selectedIter['defectsEndBal'] = defectsEndBal;
         break;
       case 'defectsClosed':
-        openDefects = this.numericValue($('#defectsStartBal').text());
-        newDefects = this.numericValue($('#defects').text());
-        closedDefects = this.numericValue($('#defectsClosed').val());
+        openDefects = utils.numericValue($('#defectsStartBal').text());
+        newDefects = utils.numericValue($('#defects').text());
+        closedDefects = utils.numericValue($('#defectsClosed').val());
         defectsEndBal = openDefects + newDefects - closedDefects;
         selectedIter['defectsEndBal'] = defectsEndBal;
         selectedIter[id] = $('#'+id).val();
@@ -224,27 +195,34 @@ var HomeIterContent = React.createClass({
     if (isAllowed){
       //recalculate team availability only if current date is within iteration
       var maxWorkDays = business.weekDays(moment(selectedIter.startDate, 'YYYY-MM-DD'),moment(selectedIter.endDate, 'YYYY-MM-DD'));
-      selectedIter.teamAvailability = this.getOptimumAvailability(maxWorkDays);
+     utils.getOptimumAvailability(maxWorkDays, selectedIter.teamId)
+     .then(function(result){
+        selectedIter.teamAvailability = result;
+        return;
+     })
+     .catch(function(err){
+       console.log(err);
+     });
     }
-    selectedIter.personDaysAvailable = (selectedIter.teamAvailability - selectedIter.personDaysUnavailable).toFixed(1);
+    selectedIter.personDaysAvailable = (selectedIter.teamAvailability - selectedIter.personDaysUnavailable).toFixed(2);
     return selectedIter;
   },
 
   updateStories: function(selectedIter){
-    $('#storiesDays').text((this.numericValue($('#deliveredStories').val())/this.numericValue(selectedIter.personDaysAvailable)).toFixed(1));
+    $('#storiesDays').text((utils.numericValue($('#deliveredStories').val())/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1));
   },
 
   updateStoryPoints: function(selectedIter){
-    $('#storyPointsDays').text((this.numericValue($('#storyPointsDelivered').val())/this.numericValue(selectedIter.personDaysAvailable)).toFixed(1));
+    $('#storyPointsDays').text((utils.numericValue($('#storyPointsDelivered').val())/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1));
   },
 
-  numericValue:function(data) {
-    var value = parseInt(data);
+  float2Decimal:function(val) {
+    var value = parseFloat(val);
     if (!isNaN(value)) {
-      return value;
+      return value.toFixed(2);
     }
     else {
-      return 0;
+      return 0.00;
     }
   },
 
@@ -274,6 +252,45 @@ var HomeIterContent = React.createClass({
       value = value.toFixed(1);
       e.target.value = value;
     }
+  },
+
+  roundOff2Decimal:function(e) {
+    var value = parseFloat(e.target.value);
+    if (!isNaN(value)) {
+      value = value.toFixed(2);
+      e.target.value = value;
+    }
+  },
+
+  resetTeamAvailability: function(){
+    
+    var self = this;
+    if (self.props.selectedIter != '') {
+       var iteration = _.find(self.props.loadDetailTeam.iterations, function(iter){
+          if (iter._id.toString() == self.props.selectedIter) {
+            return iter;
+          }
+        });
+        if (iteration != undefined){
+          selectedIter = _.clone(iteration);
+        }
+    }
+    else {
+      selectedIter = _.clone(self.props.loadDetailTeam.iterations[0]);
+    }
+    var maxWorkDays = business.weekDays(moment(selectedIter.startDate, 'YYYY-MM-DD'),moment(selectedIter.endDate, 'YYYY-MM-DD'));
+    utils.getOptimumAvailability(maxWorkDays, selectedIter.teamId)
+    .then(function(result){
+      if (confirm('You are about to overwrite the contents of ‘Optimum team availability’ with '+result+'.  Do you want to continue?')){
+        selectedIter.teamAvailability = result;
+        selectedIter.personDaysAvailable = (selectedIter.teamAvailability - self.float2Decimal(selectedIter.personDaysUnavailable)).toFixed(2);
+        self.props.updateTeamIteration(selectedIter);
+        self.setState({selectedField:''});
+      }
+    })
+    .catch(function(err){
+      console.log(err);
+    });    
   },
 
   render: function() {
@@ -309,32 +326,45 @@ var HomeIterContent = React.createClass({
         } else {
           iterData.memberChanged = 'No';
         }
+        
+        if (defIter.status === 'Completed' && _.isNull(defIter.teamAvailability)){
+          iterData.teamAvailability = 'N/A';
+          iterData.personDaysUnavailable = 'N/A';
+          iterData.personDaysAvailable = 'N/A';
+          storiesDays = 'N/A';
+          storyPointsDays = 'N/A';
+        }
+        else{
+          iterData.teamAvailability = !_.isNull(defIter.teamAvailability)? this.float2Decimal(defIter.teamAvailability): '0.00';
+          iterData.personDaysUnavailable = !_.isNull(defIter.personDaysUnavailable)? this.float2Decimal(defIter.personDaysUnavailable): '0.00';
+          iterData.personDaysAvailable = !_.isNull(defIter.personDaysAvailable)? this.float2Decimal(defIter.personDaysAvailable) : '0.00' ;
+          storiesDays = this.float2Decimal(defIter.deliveredStories)/this.float2Decimal(iterData.personDaysAvailable);
+          storiesDays = !isFinite(storiesDays) ? '0.0': storiesDays.toFixed(1);
+          storyPointsDays = this.float2Decimal(defIter.storyPointsDelivered)/this.float2Decimal(iterData.personDaysAvailable);
+          storyPointsDays = !isFinite(storyPointsDays) ? '0.0': storyPointsDays.toFixed(1);
+        }
         iterData.memberFte = (defIter.memberFte == null) ? '' : defIter.memberFte;
-        iterData.teamAvailability = (defIter.teamAvailability == null) ? '' : defIter.teamAvailability;
-        iterData.personDaysUnavailable = (defIter.personDaysUnavailable == null) ? '' : defIter.personDaysUnavailable;
-        iterData.personDaysAvailable = (defIter.personDaysAvailable == null) ? '' : defIter.personDaysAvailable;
-        iterData.committedStories = (defIter.committedStories == null) ? '' : defIter.committedStories;
-        iterData.deliveredStories = (defIter.deliveredStories == null) ? '' : defIter.deliveredStories;
-        iterData.committedStoryPoints = (defIter.committedStoryPoints == null) ? '' : defIter.committedStoryPoints;
-        iterData.storyPointsDelivered = (defIter.storyPointsDelivered == null) ? '' : defIter.storyPointsDelivered;
-        iterData.deployments = (defIter.deployments == null) ? '' : defIter.deployments;
-        iterData.defectsStartBal = (defIter.defectsStartBal == null) ? '' : defIter.defectsStartBal;
-        iterData.defects = (defIter.defects == null) ? '' : defIter.defects;
-        iterData.defectsClosed = (defIter.defectsClosed == null) ? '' : defIter.defectsClosed;
-        iterData.defectsEndBal = (defIter.defectsEndBal == null) ? '' : defIter.defectsEndBal;
-        iterData.cycleTimeWIP = (defIter.cycleTimeWIP == null) ? '' : defIter.cycleTimeWIP;
-        iterData.cycleTimeInBacklog = (defIter.cycleTimeInBacklog == null) ? '' : defIter.cycleTimeInBacklog;
-        iterData.clientSatisfaction = (defIter.clientSatisfaction == null) ? '' : defIter.clientSatisfaction;
-        iterData.teamSatisfaction = (defIter.teamSatisfaction == null) ? '' : defIter.teamSatisfaction;
+        iterData.committedStories = (defIter.committedStories == null) ? '0' : defIter.committedStories;
+        iterData.deliveredStories = (defIter.deliveredStories == null) ? '0' : defIter.deliveredStories;
+        iterData.committedStoryPoints = (defIter.committedStoryPoints == null) ? '0' : defIter.committedStoryPoints;
+        iterData.storyPointsDelivered = (defIter.storyPointsDelivered == null) ? '0' : defIter.storyPointsDelivered;
+        iterData.deployments = (defIter.deployments == null) ? '0' : defIter.deployments;
+        iterData.defectsStartBal = (defIter.defectsStartBal == null) ? '0' : defIter.defectsStartBal;
+        iterData.defects = (defIter.defects == null) ? '0' : defIter.defects;
+        iterData.defectsClosed = (defIter.defectsClosed == null) ? '0' : defIter.defectsClosed;
+        iterData.defectsEndBal = (defIter.defectsEndBal == null) ? '0' : defIter.defectsEndBal;
+        iterData.cycleTimeWIP = (defIter.cycleTimeWIP == null) ? '0.0' : defIter.cycleTimeWIP;
+        iterData.cycleTimeInBacklog = (defIter.cycleTimeInBacklog == null) ? '0.0' : defIter.cycleTimeInBacklog;
+        iterData.clientSatisfaction = (defIter.clientSatisfaction == null) ? '0.0' : defIter.clientSatisfaction;
+        iterData.teamSatisfaction = (defIter.teamSatisfaction == null) ? '0.0' : defIter.teamSatisfaction;
         iterData.comment = (defIter.comment == null) ? '' : defIter.comment;
-        storiesDays = (this.numericValue(iterData.deliveredStories)/this.numericValue(iterData.personDaysAvailable)).toFixed(1);
-        storyPointsDays = (this.numericValue(iterData.storyPointsDelivered)/this.numericValue(iterData.personDaysAvailable)).toFixed(1);
+        
         var access = self.props.loadDetailTeam.access;
         
         return (
           <div>
             <div class='home-iter-title'>Iteration Overview</div>
-            <Tooltip html={true}/>
+            <Tooltip html={true} type="light"/>
             <div class='home-iter-selection-block'>
               <div class='iter-select'>
                 <select value={defIterId} id='homeIterSelection' onChange={this.props.iterChangeHandler}>
@@ -362,14 +392,14 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='The calculated number of ‘person days’ available for this iteration based on team member’s allocation %, Full Time/Part Time/ Half time status and the length of the iteration.'>Optimum team availability (In days)</div>
                 <div id='optimumPoint' class='home-iter-content-point-uneditable'>{iterData.teamAvailability}</div>
-                  <div class='home-iter-locked-btn'>
-                    <InlineSVG src={require('../../../img/Att-icons/att-icons_locked.svg')} data-tip={lockMessage}></InlineSVG>
-                  </div>
+                <div class='home-iter-team-availability'>
+                  <InlineSVG src={require('../../../img/Att-icons/att-icons_team-reset.svg')} data-tip='Reset your Sprint Availability based on your current Team Member structure.' onClick={this.resetTeamAvailability}></InlineSVG>
+                </div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='The number of person days team members will be unavailable to work on team deliverables due to holidays, vacation/leave, education, illness.'>Person days unavailable</div>
                 {this.state.selectedField === 'personDaysUnavailable'?
-                  <input id='personDaysUnavailable' class='home-iter-content-point' onKeyPress={this.decimalNumCheck} onBlur={this.roundOff} defaultValue={iterData.personDaysUnavailable} onPaste={this.paste} />:
+                  <input id='personDaysUnavailable' class='home-iter-content-point' onKeyPress={this.decimalNumCheck} onBlur={this.roundOff2Decimal} defaultValue={iterData.personDaysUnavailable} onPaste={this.paste} />:
                   <div id='personDaysUnavailable' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.personDaysUnavailable}</div>
                 }
                 {this.state.selectedField === 'personDaysUnavailable'?
@@ -591,10 +621,10 @@ var HomeIterContent = React.createClass({
 
             <div class='home-iter-cyclage-block'>
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
-                <div class='home-iter-content-title'>Cyclage</div>
+                <div class='home-iter-content-title'>Cycle Time</div>
               </div>
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
-                <div class='home-iter-content-sub' data-tip='Work in Progress; for each story delivered in this iteration, how long did it take to go from being worked on (planned for this iteration) to production delivery? Put the average number of work days in this field.'>WIP Cycle Time (In days)</div>
+                <div class='home-iter-content-sub' data-tip='Work in Progress; for each story delivered in this iteration, how long did it take to go from being worked on (planned for this iteration) to production delivery? Put the average number of work days in this field.'>Time in WIP (In days)</div>
                 {this.state.selectedField === 'cycleTimeWIP'?
                   <input id='cycleTimeWIP' class='home-iter-content-point' onKeyPress={this.decimalNumCheck} onBlur={this.roundOff} defaultValue={iterData.cycleTimeWIP} onPaste={this.paste} />:
                   <div id='cycleTimeWIP' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.cycleTimeWIP}</div>
@@ -611,7 +641,7 @@ var HomeIterContent = React.createClass({
                 }
               </div>
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
-                <div class='home-iter-content-sub' data-tip='For each story delivered in this iteration how long was it in your backlog before it was planned for this iteration? Put the average number of work days in this field.'>Backlog Cycle Time (In days)</div>
+                <div class='home-iter-content-sub' data-tip='For each story delivered in this iteration how long was it in your backlog before it was planned for this iteration? Put the average number of work days in this field.'>Time in Backlog (In days)</div>
                 {this.state.selectedField === 'cycleTimeInBacklog'?
                   <input id='cycleTimeInBacklog' class='home-iter-content-point' onKeyPress={this.decimalNumCheck} onBlur={this.roundOff} defaultValue={iterData.cycleTimeInBacklog} onPaste={this.paste} />:
                   <div id='cycleTimeInBacklog' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.cycleTimeInBacklog}</div>

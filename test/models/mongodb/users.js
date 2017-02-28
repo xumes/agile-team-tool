@@ -281,6 +281,23 @@ describe('Users model [isUserAllowed]', function() {
   });
 });
 
+describe('Users model [update]', function() {
+  it('return fail for updateing a user without userId', function(done){
+    users.updateUser({})
+      .catch(function(err) {
+        expect(err).to.be.a('object');
+        done();
+      });
+  });
+  it('return successful for updateing a user', function(done){
+    users.updateUser(testUser)
+      .then(function(result) {
+        expect(result).to.be.a('object');
+        done();
+      });
+  });
+});
+
 describe('Users model [delete]', function() {
   it('return successful for deleting a user', function(done) {
     users.deleteUser(testUser.userId)

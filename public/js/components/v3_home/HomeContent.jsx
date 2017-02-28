@@ -65,6 +65,14 @@ var HomeContent = React.createClass({
     }
   },
   render: function() {
+    var partialName = 'Partial Data';
+    if (this.props.loadDetailTeam.team) {
+      if (this.props.loadDetailTeam.team.type == 'squad') {
+        partialName = 'Team Change';
+      } else {
+        partialName = 'Partial Data';
+      }
+    }
     return (
       <div style={{'width': '100%', 'height': '100%'}}>
         <HomeSpinner id={'contentSpinner'}/>
@@ -78,7 +86,9 @@ var HomeContent = React.createClass({
               <span></span>
               <h4>&nbsp;/&nbsp;</h4>
               <h4 style={{'color':'#FFA501'}}>---</h4>
-              <h4>&nbsp;Partial data</h4>
+              <h4>&nbsp;/&nbsp;</h4>
+              <h4 style={{'color':'#FFA501'}}>*</h4>
+              <h4 id='partialName'>&nbsp;{partialName}</h4>
               <div onClick={this.showFilter} style={{'cursor':'pointer'}}>
                 <InlineSVG src={require('../../../img/Att-icons/att-icons_filter.svg')}></InlineSVG>
               </div>

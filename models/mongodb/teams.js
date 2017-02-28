@@ -1561,6 +1561,7 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, user) {
           var hasChildAccess = results[1];
           var parentTeam = results[2];
           var childTeam = results[3];
+          console.log('parentTeam',parentTeam);
           if (_.isEmpty(parentTeam)) {
             return Promise.reject({
               errors: {

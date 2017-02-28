@@ -240,6 +240,22 @@ var users = {
         });
     });
   },
+
+  updateUser: function(userInfo) {
+    return new Promise(function(resolve, reject){
+      if (_.isEmpty(userInfo.userId)) {
+        reject({'error':'missing user ID.'});
+      } else {
+        User.findOneAndUpdate({'userId': userInfo.userId}, {'$set': userInfo})
+          .then(function(result){
+            resolve(result);
+          })
+          .catch( /* istanbul ignore next */ function(err){
+            reject({'error':err});
+          });
+      }
+    });
+  },
   //
   // bulkUpdateUsers: function(updateUsers) {
   //   return new Promise(function(resolve, reject) {

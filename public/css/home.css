@@ -197,8 +197,8 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 #newTeamTree ul.ibm-twisty > li a.agile-team-link {
   color: #4D4D4D;
   font-size: 1.6em;
-  /*font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";*/
-  font-family: "Helvetica Neue";
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  /*font-family: "Helvetica Neue";*/
   line-height: 1.5em;
   margin-bottom: 1.5em;
   font-weight: 300;
@@ -209,8 +209,8 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 #newSearchTree ul.ibm-twisty > li a.agile-team-link {
   color: #4D4D4D;
   font-size: 1.6em;
-  /*font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";*/
-  font-family: "Helvetica Neue";
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  /*font-family: "Helvetica Neue";*/
   line-height: 1.5em;
   margin-bottom: 1.5em;
   font-weight: 300;
@@ -264,7 +264,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 
 .agile-team-selected > .agile-team-title {
   border-bottom: 0.15em solid #008ABF;
-  font-family: "HelvNeue Medium for IBM";
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   /*padding-bottom: 2%;*/
   position: relative;
   left: 0.65em;
@@ -506,16 +506,14 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .header-menu-icon {
-  clear: both;
   display: inline-block;
   height: 70%;
   padding: 0 0.25em 0 1em;
   position: relative;
-  top: 15%;
+  top: 20%;
 }
 
 .header-menu-label {
-  clear: both;
   color: #ffffff;
   display: inline-block;
   padding: .75em .25em 0 .25em;
@@ -524,7 +522,6 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .header-menu-icon-chev {
-  clear: both;
   display: inline-block;
   height: 45%;
   padding: 0 .25em;
@@ -533,7 +530,6 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .header-menu-icon-chev-hide {
-  clear: both;
   display: none;
   height: 45%;
   padding: 0 .25em;
@@ -684,7 +680,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   min-height: 216.32px;
   background-color: #F7F7F7;
   position: relative;
-  top: -100%;
+  top: -99.9%;
   left: -0.2%;
   z-index: 10;
   box-shadow: 0.2em 0.2em 2em #000000;
@@ -712,6 +708,8 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 .home-nav-show-btn > i, .home-nav-show-btn2 > i {
   position: relative;
   float: left;
+  height: 100%;
+  width: 100%;
 }
 .home-nav-show-btn svg, .home-nav-show-btn2 svg{
   width: 100%;
@@ -738,10 +736,10 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   width: 30%;
   height: 200%;
   background-color: #F7F7F7;
-  position: relative;
+  position: absolute;;
   float: left;
-  top: -203%;
-  left: -6%;
+  top: 6.3%;
+  left: 0;
   z-index: 11;
   /*box-shadow: 0.1em 0.3em 0.4em 0 rgba(0,0,0,0.22);*/
 }
@@ -851,6 +849,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   background-color: #7CC7FF;
   background-image: url('../img/header-bg-art.svg');
   background-repeat: no-repeat;
+  background-size: 60%;
   background-position: 150% 25%;
 }
 
@@ -1030,6 +1029,21 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   top: 0%;
 }
 
+/*.home-team-header-btn-title2 > h {
+  position: relative;
+  float: left;
+  height: 100%;
+  width: 100%;
+}*/
+
+.home-team-header-btn-title2 svg {
+  fill: #FFFFFF;
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 95%;
+}
+
 .home-team-header-btn-title3 {
   position: relative;
   top: 10%;
@@ -1110,8 +1124,8 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 680%;
   padding: 0;
   /*background-color: red;*/
-  position: relative;;
-  top: 52%;
+  position: absolute;
+  top: 100%;
   z-index: 9;
 }
 
@@ -1254,6 +1268,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   top: 25%;
   left: 5%;
   height: 45%;
+  float: left;
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   color: #5A5A5A;
@@ -1262,9 +1277,9 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 .team-member-table-content-awk > span {
   position: relative;
   float: right;
-  right: 10%;
+  right: 5%;
   width: 15%;
-  height: 70%;
+  height: 100%;
   cursor: pointer;
   display: none;
   padding: 0;
@@ -1283,7 +1298,15 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 .team-member-table-content-block1:hover > .team-member-table-content-awk > span,
 .team-member-table-content-block2:hover > .team-member-table-content-awk > span
  {
-  display: block;
+  /*display: block;*/
+}
+
+.team-member-table-content-block-show {
+  display: block !important;
+}
+
+.team-member-table-content-block-hide {
+  display: none !important;
 }
 
 #teamMemberTable .select2-container,
@@ -1302,14 +1325,62 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   top: 30% !important;
 }
 
-.team-member-table-content-role > div {
+.team-member-table-content-role > .modify-field {
   position: relative;
   float: left;
   left: 5%;
   top: 10%;
   width: 90%;
-  height: 40%;
+  height: 80%;
   display: none;
+}
+
+.team-member-table-content-role > .modify-field >.dropdown-list {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 45%;
+}
+
+.team-member-table-content-role > .modify-field > .input-field {
+  position: relative;
+  float: left;
+  top: 10%;
+  width: 100%;
+  height: 45%;
+  display: none;
+}
+
+.team-member-table-content-role > .modify-field > .input-field > input {
+  position: relative;
+  float: left;
+  width: 70%;
+  height: 100%;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  text-indent: 0.5em;
+  background-color: rgb(255, 255, 255);
+  border: 0.1em solid #aaa;
+}
+
+.team-member-table-content-role > .modify-field > .input-field > .save-btn,
+.team-member-table-content-role > .modify-field > .input-field > .cancel-btn{
+  position: relative;
+  float: left;
+  left: 3%;
+  width: 12%;
+  height: 100%;
+  cursor: pointer;
+  display: none;
+}
+
+.team-member-table-content-role > .modify-field > .input-field > .save-btn svg,
+.team-member-table-content-role > .modify-field > .input-field >.cancel-btn svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
 }
 
 .team-member-table-content-location > .modify-field {
@@ -1330,6 +1401,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   padding: 0;
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
+  text-indent: 0.5em;
   background-color: rgb(255, 255, 255);
   border: 0.1em solid #aaa;
 }
@@ -1338,18 +1410,11 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 .team-member-table-content-location > .modify-field > .cancel-btn {
   position: relative;
   float: left;
+  left: 1%;
   width: 10%;
   height: 100%;
   cursor: pointer;
-}
-
-.team-member-table-content-location > .modify-field > .save-btn,
-.team-member-table-content-location > .modify-field > .cancel-btn {
-  position: relative;
-  float: left;
-  width: 10%;
-  height: 100%;
-  cursor: pointer;
+  display: none;
 }
 
 .team-member-table-content-location > .modify-field svg {
@@ -1372,11 +1437,12 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 .team-member-table-content-allocation > .modify-field > input {
   position: relative;
   float: left;
-  width: 50%;
+  width: 42%;
   height: 100%;
   padding: 0;
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
+  text-indent: 0.5em;
   background-color: rgb(255, 255, 255);
   border: 0.1em solid #aaa;
 }
@@ -1385,9 +1451,11 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 .team-member-table-content-allocation > .modify-field > .cancel-btn{
   position: relative;
   float: left;
+  left: 3%;
   width: 20%;
   height: 100%;
   cursor: pointer;
+  display: none;
 }
 
 .team-member-table-content-allocation > .modify-field > .save-btn svg,
@@ -1398,7 +1466,88 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 100%;
 }
 
-.team-member-table-content-awk > div {
+.team-member-table-content-allocation > .modify-field > h1 {
+  position: relative;
+  float: left;
+  font-size: 1.6em;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  padding: 0;
+  height: 50%;
+  color: black;
+  top: 25%;
+  left: 1%;
+  width: 15%;
+}
+
+.team-member-table-content-awk > .modify-field {
+  position: relative;
+  float: left;
+  left: 5%;
+  top: 10%;
+  width: 70%;
+  height: 80%;
+  display: none;
+}
+
+.team-member-table-content-awk > .modify-field > .dropdown-list {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 45%;
+}
+
+.team-member-table-content-awk > .modify-field > .input-field {
+  position: relative;
+  float: left;
+  top: 10%;
+  width: 100%;
+  height: 45%;
+  display: none;
+}
+
+.team-member-table-content-awk > .modify-field > .input-field > input {
+  position: relative;
+  float: left;
+  width: 45%;
+  height: 100%;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  text-indent: 0.5em;
+  background-color: rgb(255, 255, 255);
+  border: 0.1em solid #aaa;
+}
+
+.team-member-table-content-awk > .modify-field > .input-field > .save-btn,
+.team-member-table-content-awk > .modify-field > .input-field > .cancel-btn{
+  position: relative;
+  float: left;
+  left: 1%;
+  width: 18%;
+  height: 100%;
+  cursor: pointer;
+  display: none;
+}
+
+.team-member-table-content-awk > .modify-field > .input-field > .save-btn svg,
+.team-member-table-content-awk > .modify-field > .input-field >.cancel-btn svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+.team-member-table-content-awk > .modify-field > .input-field > h1 {
+  position: relative;
+  float: left;
+  font-size: 1.6em;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  padding: 0;
+  height: 50%;
+  top: 25%;
+  left: 1%;
+  width: 15%;
+}
+/*.team-member-table-content-awk > div {
   position: relative;
   float: left;
   left: 5%;
@@ -1406,7 +1555,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   width: 70%;
   height: 40%;
   display: none;
-}
+}*/
 
 .team-member-table-footer-block {
   position: relative;
@@ -1516,8 +1665,8 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   position: relative;
   float: right;
   width: 10%;
-  height: auto;
-  top: 40%;
+  height: 70%;
+  top: 30%;
   right: 5%;
   cursor: pointer;
 }
@@ -1636,6 +1785,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   top: 45%;
   right: 2.5%;
   width: 3%;
+  height: 50%;
 }
 
 .home-trends-overflow {
@@ -1643,7 +1793,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   float: left;
   width: 100%;
   height: 94.6%;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 #iterationSection, #assessmentSection{
@@ -1945,6 +2095,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 .home-iter-add-btn-block > i > svg {
   width: auto;
   height: 100%;
+  pointer-events: none;
 }
 
 .home-iter-last-update-block {
@@ -2140,6 +2291,21 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: auto;
 }
 
+.home-iter-team-availability {
+  position: relative;
+  display: inline-block;
+  float: right;
+  top: 15%;
+  right: -8.5%;
+  width: 5%;
+  height: 60%;
+  cursor: pointer;
+}
+.home-iter-locked-btn > i > svg {
+  width: 100%;
+  height: auto;
+}
+
 .home-iter-comment-test {
   width: 100%;
   height: 80%;
@@ -2185,8 +2351,8 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 .home-team-header-bookmark-arrow-img svg {
   position: relative;
   width: 120%;
-  height: auto;
-  top: 30%;
+  height: 100%;
+  /*top: 30%;*/
   right: 25%;
 }
 
@@ -2226,8 +2392,8 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   position: relative;
   float: right;
   width: 10%;
-  height: auto;
-  top: 40%;
+  height: 70%;
+  top: 32%;
   right: 5%;
   cursor: pointer;
 }
@@ -2256,6 +2422,18 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 20%;
   width: 100%;
   border-bottom: 0.1em solid #E0E0E0;
+}
+
+.home-team-header-bookmark-scroll > .no-link-block {
+  position: relative;
+  width: 100%;
+  height: 10%;
+  top: 40%;
+  text-align: center;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  color: #777677;
+  border-bottom: 0;
 }
 
 .home-team-header-bookmark-scroll > div > div {
@@ -2323,6 +2501,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 10%;
   background-image: url('../img/header-bg-art.svg');
   background-repeat: no-repeat;
+  background-size: 60%;
   background-position: 150% 100%;
 }
 
@@ -2647,6 +2826,27 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   cursor: pointer;
 }
 
+.team-member-add-block-header > .close-btn {
+  position: relative;
+  float: right;
+  top: 40%;
+  width: 10%;
+  height: 70%;
+  right: 5%;
+  cursor: pointer;
+}
+
+.team-member-add-block-header > .close-btn svg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.team-member-add-block-header > .close-btn svg g {
+  fill: #FFFFFF;
+  opacity: 1;
+}
+
 .typeahead-results {
   z-index: 1040 !important;
   width: 20% !important;
@@ -2796,7 +2996,30 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   position: relative;
   float: left;
   height: 55%;
-  width: 100%;
+  width: 60%;
+}
+
+.team-member-add-block-content-awk > .awk-input {
+  position: relative;
+  float: left;
+  left: 5%;
+  height: 56%;
+  width: 35%;
+}
+
+.team-member-add-block-content-awk > .awk-input  > input {
+  position: relative;
+  float: left;
+  height: 100% !important;
+  width: 99.9%;
+  border: 0.1em solid #777677;
+  text-indent: 1em;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 1.8em;
+  color: #5A5A5A;
+  display: none;
 }
 
 .team-member-add-block-footer {
@@ -2837,7 +3060,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   position: relative;
   float: left;
   width: 100%;
-  font-family: "HelvNeue Bold for IBM";
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.8em;
 }
 
@@ -2853,7 +3076,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .att-footer-links a {
-  font-family: "HelvNeue Light for IBM";
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   color: #464646;
 }
@@ -2894,7 +3117,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   display: inline-block;
 }
 .footer-bottom-links a {
-  font-family: "HelvNeue Roman for IBM";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.8em;
   color: #777677;
 }
@@ -4636,14 +4859,20 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   cursor: pointer;
 }
 
-.__react_component_tooltip{
-  background: rgb(236, 236, 236) !important;
-  color: rgb(50, 50, 50) !important;
-  padding: 1em !important;
-  font-size: 8.5pt !important;
-  line-height: 20px !important;
-  display: block !important;
-  max-width: 300px;
+.__react_component_tooltip {
+    width: 234px !important;
+    background-color: #FFFFFF !important;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.16) !important;
+    font-family: "HelvNeue Roman for IBM" !important;
+    font-size: 12px !important;
+    line-height: 14px !important;
+    color: #5A5A5A !important;
+    padding:10px 15px !important;
+    opacity:1 !important;
+}
+
+.__react_component_tooltip.type-light {
+    border-top: 4px solid #4178BE !important;
 }
 
 .home-modal-block {
@@ -4659,7 +4888,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .home-modal-block-header {
   background-color: #4178be;
   font-size: inherit;
-  height: 10%;
+  height: 2.5em;
   position: relative;
   width: 100%;
 }
@@ -4676,21 +4905,19 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .home-modal-block-content {
   font-size: inherit;
-  height: 75%;
-  padding-left: 1em;
+  height: 80%;
   position: relative;
 }
 
 .home-modal-block-footer {
   display: inline-block;
   font-size: inherit;
-  height: 10%;
-  padding-left: 1em;
+  padding: 0 1em;
   position: relative;
 }
 
 .home-modal-block-footer .ibm-btn-small {
-  font-size: 1.6em !important;
+  font-size: 1.5 !important;
 }
 
 .home-modal-block-close-btn {
@@ -4705,55 +4932,106 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .team-setup-squad-block {
   display: inline-block;
-  font-size: inherit;
-  height: 65%;
+  font-size: 0.9em;
+  height: 100%;
   width: 100%;
+}
+
+.team-setup-squad-block .squad-note {
+  display: inline-block;
+  font-size: inherit;
+  padding: 2em 1em;
+  position: relative;
+}
+
+.team-setup-squad-block .squad-note > p {
+  font-size: inherit;
+  line-height: 1.3em;
+  padding: 1em 1em 0;
+  text-align: justify;
 }
 
 .team-setup-squad-block .team-setup-squad-icon {
   display: inline-block;
-  padding: 3em 0 0 2em;
+  font-size: inherit;
+  padding: 0 0 0 4em;
   position: relative;
-  width: 25%;
+  width: 22%;
+}
+
+.team-setup-squad-icon > h {
+  display: inline-block;
+  font-size: inherit;
+  font-weight: bold;
+  left: -2em;
+  padding: 1em 0 0.5em;
+  position: relative;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-change {
+  left: 27%;
+  position: absolute;
+  top: 53%;
+  width: 5%;
 }
 
 .team-setup-squad-block .team-setup-squad-content {
   display: inline-block;
   font-size: inherit;
-  height: inherit;
-  left: 45%;
+  height: 95%;
+  left: 39%;
   position: absolute;
-  width: 53%;
+  width: 59%;
 }
 
-.team-setup-squad-content > label {
+.team-setup-squad-content .squad-parent {
   display: inline-block;
-  position: absolute;
-  top: 15%;
-  width: 100%;
-}
-
-.team-setup-squad-content > select, .team-setup-squad-content > span {
   font-size: inherit;
-  position: absolute;
-  top: 27%;
+  position: relative;
+  top: 12%;
   width: 95%;
 }
 
-.team-setup-squad-content > div {
+.team-setup-squad-content .squad-parent > select:first-of-type, .team-setup-squad-content .squad-parent > span:first-of-type {
   font-size: inherit;
-  height: 55%;
-  position: absolute;
-  top: 50%;
-  width: 100%;
+  position: relative;
+  padding-top: 0.25em;
+  width: 99%;
 }
 
-.team-setup-squad-content > div > h {
+.team-setup-squad-content .squad-name {
+  display: inline-block;
+  font-size: inherit;
+  height: 33%;
+  position: relative;
+  top: 15%;
+  width: 95%;
+}
+
+.team-setup-squad-content .squad-name > h {
   color: #777677;
   font-size: 1.2em;
   position: absolute;
   top: 50%;
   transform: translate(0px, -50%);
+}
+
+.team-setup-squad-content .squad-add-child {
+  display: inline-block;
+  font-size: inherit;
+  position: relative;
+  top: 17%;
+  width: 95%;
+}
+
+.team-setup-squad-content .squad-add-child > a {
+  cursor: pointer;
+}
+
+.team-setup-squad-content .squad-add-child > p {
+  font-size: inherit;
+  padding-top: 0.25em;
+  text-align: justify;
 }
 
 .home-modal-block-content > p {
@@ -4775,37 +5053,60 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .team-setup-squad-block .team-setup-squad-icon-arrow-top {
   display: inline-block;
-  left: 40%;
+  left: 35%;
   position: absolute;
-  top: 10%;
-  width: 3%;
+  top: 13%;
+  width: 2%;
 }
 
 .team-setup-squad-block .team-setup-squad-icon-arrow-top .line {
   border-bottom: 0.1em solid #b3b3b3;
   left: -490%;
   position: absolute;
-  top: 39%;
+  top: 36%;
   width: 500%;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-arrow-middle {
+  display: inline-block;
+  left: 35%;
+  position: absolute;
+  top: 47%;
+  width: 2%;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-arrow-middle .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -105%;
+  position: absolute;
+  top: 34%;
+  width: 115%;
 }
 
 .team-setup-squad-block .team-setup-squad-icon-arrow-bottom {
   display: inline-block;
-  left: 40%;
+  left: 35%;
   position: absolute;
-  top: 48%;
-  width: 3%;
+  top: 68%;
+  width: 2%;
 }
 
 .team-setup-squad-block .team-setup-squad-icon-arrow-bottom .line {
   border-bottom: 0.1em solid #b3b3b3;
-  left: -190%;
+  left: -105%;
   position: absolute;
-  top: 39%;
-  width: 200%;
+  top: 35%;
+  width: 115%;
 }
 
-.team-setup-squad-icon-arrow-top polygon, .team-setup-squad-icon-arrow-bottom polygon,
+.team-setup-squad-note {
+  position: absolute;
+  left: -70%;
+  top: 70%;
+  font-size: inherit;
+}
+
+.team-setup-squad-icon-arrow-top polygon, .team-setup-squad-icon-arrow-middle polygon, .team-setup-squad-icon-arrow-bottom polygon,
 .team-setup-icon-arrow-top polygon, .team-setup-icon-arrow-middle polygon, .team-setup-icon-arrow-bottom polygon {
   fill: #b3b3b3 !important;
 }
@@ -4816,98 +5117,100 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .team-setup-block {
   display: inline-block;
-  font-size: inherit;
+  font-size: 0.9em;
   height: 100%;
   width: 100%;
 }
 
 .team-setup-block .team-setup-icon {
   display: inline-block;
-  padding: 3em 0 0 2em;
+  padding: 3em 0 0 4em;
   position: relative;
-  width: 25%;
+  width: 22%;
+}
+
+.team-setup-block .team-setup-icon-child {
+  display: inline-block;
+  left: -5%;
+  position: relative;
+  top: 16.5%;
+  width: 5%;
 }
 
 .team-setup-block .team-setup-icon-arrow-top {
   display: inline-block;
-  left: 40%;
+  left: 33%;
   position: absolute;
-  top: 10%;
-  width: 3%;
+  top: 8%;
+  width: 2%;
 }
 
 .team-setup-block .team-setup-icon-arrow-top .line {
   border-bottom: 0.1em solid #b3b3b3;
-  left: -490%;
+  left: -550%;
   position: absolute;
-  top: 39%;
-  width: 500%;
+  top: 35%;
+  width: 560%;
 }
 
 .team-setup-block .team-setup-icon-arrow-middle {
   display: inline-block;
-  left: 40%;
+  left: 33%;
   position: absolute;
-  top: 36%;
-  width: 3%;
+  top: 32%;
+  width: 2%;
 }
 
 .team-setup-block .team-setup-icon-arrow-middle .line {
   border-bottom: 0.1em solid #b3b3b3;
-  left: -490%;
+  left: -160%;
   position: absolute;
-  top: 40%;
-  width: 500%;
+  top: 34%;
+  width: 170%;
 }
 
 .team-setup-block .team-setup-icon-arrow-bottom {
   display: inline-block;
-  left: 40%;
+  left: 33%;
   position: absolute;
-  top: 62%;
-  width: 3%;
+  top: 49%;
+  width: 2%;
 }
 
 .team-setup-block .team-setup-icon-arrow-bottom .line {
   border-bottom: 0.1em solid #b3b3b3;
-  left: -190%;
+  left: -160%;
   position: absolute;
-  top: 41%;
-  width: 200%;
+  top: 36%;
+  width: 170%;
 }
 
 .team-setup-block .team-setup-content {
   display: inline-block;
   font-size: inherit;
   height: inherit;
-  left: 45%;
+  left: 37%;
   position: absolute;
-  width: 53%;
+  width: 61%;
 }
 
-.team-setup-content > select:first-of-type, .team-setup-content > span:first-of-type {
+.team-setup-content .team-setup-parent-select {
+  display: inline-block;
   font-size: inherit;
   position: absolute;
-  top: 6%;
+  top: 7%;
   width: 95%;
 }
 
-.team-setup-content > select:last-of-type, .team-setup-content > span:last-of-type {
+.team-setup-content .team-setup-name {
   font-size: inherit;
+  height: 22%;
   position: absolute;
-  top: 58%;
+  top: 22%;
   width: 95%;
 }
 
-.team-setup-content > div {
-  font-size: inherit;
-  height: 35%;
-  position: absolute;
-  top: 20%;
-  width: 95%;
-}
-
-.team-setup-content > div > h {
+.team-setup-content .team-setup-name > h {
   color: #777677;
   font-size: 1.2em;
   position: absolute;
@@ -4915,11 +5218,31 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   transform: translate(0px, -50%);
 }
 
+.team-setup-content .team-setup-child-select {
+  display: inline-block;
+  font-size: inherit;
+  height: 34%;
+  position: absolute;
+  top: 48%;
+  width: 95%;
+}
+
+.team-setup-content .team-setup-parent-select > select:first-of-type, .team-setup-content .team-setup-parent-select > span:first-of-type,
+.team-setup-content .team-setup-child-select > select:first-of-type, .team-setup-content .team-setup-child-select > span:first-of-type {
+  font-size: inherit;
+  position: relative;
+  padding-top: 0.25em;
+  width: 99%;
+}
+
 .team-setup-children {
   border: 1px solid #b3b3b3 !important;
-  height: 25% !important;
+  font-size: inherit;
+  height: 50%;
   overflow-y: auto !important;
-  top: 71% !important;
+  position: relative;
+  top: 0.5em;
+  width: 99%;
 }
 
 .team-setup-children > p {
@@ -4927,7 +5250,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: inline-block;
   font-size: inherit;
   overflow: hidden;
-  padding: 0.3em 0.2em 0;
+  padding: 0 0.2em;
   white-space: nowrap;
   width: 95%;
 }
@@ -4938,14 +5261,40 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   padding: 0.2em 0;
   position: relative;
   text-overflow: ellipsis;
-  width: 90%;
+  width: 98%;
 }
 
 .team-setup-children-remove-icon {
   display: inline-block;
   left: 3%;
   position: relative;
-  top: -9%;
-  width: 8%;
+  top: -10%;
+  width: 6%;
 }
 
+.team-setup-squad-revert {
+  display: inline-block;
+  font-size: inherit;
+  position: absolute;
+  top: 82%;
+  width: 95%;
+}
+
+.team-setup-squad-revert .team-setup-revert-icon {
+  display: inline-block;
+  height: 100%;
+  padding-right: 0.5em;
+  width: 5%;
+}
+
+.team-setup-squad-revert > a {
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.team-setup-squad-revert > p {
+  font-size: inherit;
+  padding-left: 1.75em;
+  padding-top: 0.25em;
+  text-align: justify;
+}

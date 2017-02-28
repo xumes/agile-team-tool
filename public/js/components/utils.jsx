@@ -1,6 +1,7 @@
 /* Helper functions that can be shared to other components */
 var _ = require('underscore');
 var moment = require('moment');
+var api = require('./api.jsx');
 
 module.exports.setPrefixHttp = function(url) {
   var pattern = /^((http|https):\/\/)/;
@@ -172,26 +173,26 @@ module.exports.setSelectOptions = function(elementId, listOption, firstOption, l
 };
 
 module.exports.handleIterationErrors = function (errorResponse) {
-    var errorlist = '';
-    var response = errorResponse.responseJSON;
+  var errorlist = '';
+  var response = errorResponse.responseJSON;
 
-    if (response && response.error) {
-      var errors = response.error.errors;
-      if (errors){
+  if (response && response.error) {
+    var errors = response.error.errors;
+    if (errors){
         // Return iteration errors as String
-        errorlist = this.getIterationErrorPopup(errors);
-        if (!_.isEmpty(errorlist)) {
-          alert(errorlist);
-        }
-      }
-      else {
-        this.setFieldErrorHighlight(response.error.path);
-        alert(response.error.message);
+      errorlist = this.getIterationErrorPopup(errors);
+      if (!_.isEmpty(errorlist)) {
+        alert(errorlist);
       }
     }
+    else {
+      this.setFieldErrorHighlight(response.error.path);
+      alert(response.error.message);
+    }
+  }
 };
 
- module.exports.getIterationErrorPopup = function(errors) {
+module.exports.getIterationErrorPopup = function(errors) {
   var errorLists = '';
   var self = this;
   // Model fields/Form element field
@@ -224,36 +225,36 @@ module.exports.handleIterationErrors = function (errorResponse) {
       self.clearFieldErrorHighlight(mdlField);
     }
   });
-    return errorLists;
-  };
+  return errorLists;
+};
 
 module.exports.clearHighlightedIterErrors = function () {
   var self = this;
   var fields = [
-      'name',
-      'startDate',
-      'endDate',
-      'committedStories',
-      'committedStoryPoints',
-      'personDaysUnavailable',
-      'deliveredStories',
-      'storyPointsDelivered',
-      'deployments',
-      'defectsStartBal',
-      'defects',
-      'defectsClosed',
-      'defectsEndBal',
-      'cycleTimeWIP',
-      'cycleTimeInBacklog',
-      'memberChanged',
-      'clientSatisfaction',
-      'teamSatisfaction'
-    ];
+    'name',
+    'startDate',
+    'endDate',
+    'committedStories',
+    'committedStoryPoints',
+    'personDaysUnavailable',
+    'deliveredStories',
+    'storyPointsDelivered',
+    'deployments',
+    'defectsStartBal',
+    'defects',
+    'defectsClosed',
+    'defectsEndBal',
+    'cycleTimeWIP',
+    'cycleTimeInBacklog',
+    'memberChanged',
+    'clientSatisfaction',
+    'teamSatisfaction'
+  ];
 
-    _.each(fields, function(field, index) {
-      self.clearFieldErrorHighlight(field);
-    });
-  };
+  _.each(fields, function(field, index) {
+    self.clearFieldErrorHighlight(field);
+  });
+};
 
 module.exports.toTitleCase = function(str) {
   if (_.isEmpty(str)) return '';
@@ -264,11 +265,57 @@ module.exports.toTitleCase = function(str) {
     strArray[0] = strArray[0].replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     return strArray.join(', ');
   }
-}
+};
 
 module.exports.toLowerCase = function(str) {
   if (_.isEmpty(str)) return str;
   if (str) {
     return str.toLowerCase();
   }
-}
+};
+
+module.exports.numericValue = function(data) {
+  var value = parseInt(data);
+  if (!isNaN(value)) {
+    return value;
+  }
+  else {
+    return 0;
+  }
+};
+
+module.exports.getOptimumAvailability = function(maxWorkDays, teamId){
+  var self = this;
+  return new Promise(function(resolve, reject){
+    api.loadTeam(teamId)
+      .then(function(team){
+        var members = self.getTeamMembers(team);
+        var availability = 0;
+        _.each(members, function(member){
+          var allocation =  member.allocation/100;
+          var avgWorkWeek = (member.workTime != null ? self.numericValue(member.workTime) : 100 )/100;
+          availability += (allocation * avgWorkWeek * maxWorkDays);
+        });
+        return resolve(availability.toFixed(2));
+      })
+      .catch(function(err){
+        return reject(err);
+      });
+  });
+};
+
+module.exports.getTeamMembers = function(team){
+  var teamMembers = [];
+  if (!_.isEmpty(team) && team.members) {
+    _.each(team.members, function(member) {
+      var temp = _.find(teamMembers, function(item){
+        if ( item.userId === member.userId)
+          return item;
+      });
+      if (temp === undefined) {
+        teamMembers.push(member);
+      }
+    });
+  }
+  return teamMembers;
+};

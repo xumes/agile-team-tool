@@ -1,6 +1,8 @@
 var React = require('react');
 var api = require('../api.jsx');
 var _ = require('underscore');
+var InlineSVG = require('svg-inline-react');
+
 var facesPerson = {};
 
 var HomeAddMember = React.createClass({
@@ -14,6 +16,7 @@ var HomeAddMember = React.createClass({
     $('#teamMemberRoleSelect').change(self.roleHandler);
     $('#teamMemberAllocationSelect').select2({'width':'100%'});
     $('#teamMemberAwkSelect').select2({'width':'100%'});
+    $('#teamMemberAwkSelect').change(self.changeAwkHandler);
     FacesTypeAhead.init(
       $('#teamMemberName'), {
         key: 'ciodashboard;agileteamtool@us.ibm.com',
@@ -95,7 +98,8 @@ var HomeAddMember = React.createClass({
                   'name': result.name,
                   'email': result.email,
                   'role': $('#teamMemberRoleSelect').val() == 'Other...'?$('#otherRole').val():$('#teamMemberRoleSelect').val(),
-                  'allocation': $('#teamMemberAllocationSelect').val()
+                  'allocation': $('#teamMemberAllocationSelect').val(),
+                  'workTime': $('#teamMemberAwkSelect').val() == 'other'?$('#otherAwk').val():$('#teamMemberAwkSelect').val()
                 };
                 newTeamMembers = JSON.parse(JSON.stringify(self.props.loadDetailTeam.team.members));
                 newUsers = JSON.parse(JSON.stringify(self.props.loadDetailTeam.members));
@@ -123,10 +127,34 @@ var HomeAddMember = React.createClass({
       $('.team-member-add-block-content-allocation').css('top','20%');
       $('.team-member-add-block-content-awk').css('top','20%');
       $('#otherRole').fadeIn();
+      setTimeout( function() {
+        $('#otherRole').focus();
+      }, 0);
     } else {
       $('.team-member-add-block-content-allocation').css('top','5%');
       $('.team-member-add-block-content-awk').css('top','5%');
       $('#otherRole').fadeOut();
+    }
+  },
+
+  changeAwkHandler: function(e) {
+    var self = this;
+    if (e.target.value == 'other') {
+      $('#otherAwk').fadeIn();
+      setTimeout( function() {
+        $('#otherAwk').focus();
+      }, 0);
+    } else {
+      $('#otherAwk').fadeOut();
+    }
+  },
+
+  wholeNumCheck: function(e) {
+    var self = this;
+    var pattern = /^\d*$/;
+    if (e.charCode >= 32 && e.charCode < 127 &&  !pattern.test(String.fromCharCode(e.charCode)))
+    {
+      e.preventDefault();
     }
   },
 
@@ -142,7 +170,9 @@ var HomeAddMember = React.createClass({
       <div class='team-member-add-block' id='addMemberBlock'>
         <div class='team-member-add-block-header'>
           <h>Add Team Member</h>
-          <span onClick={self.props.hideAddTeamTable}>X</span>
+          <div class='close-btn' onClick={self.props.hideAddTeamTable}>
+            <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
+          </div>
         </div>
         <div class='team-member-add-block-content'>
           <div class='team-member-add-block-content-name'>
@@ -173,9 +203,13 @@ var HomeAddMember = React.createClass({
             <label for='teamMemberAwk'>Average Work Week</label>
             <div class='awk-select'>
               <select id='teamMemberAwkSelect' defaultValue='Full Time'>
-                <option key='Full Time' value='Full Time'>Full Time</option>
-                <option key='Part Time' value='Part Time'>Part Time</option>
+                <option key='Full Time' value='100'>Full Time</option>
+                <option key='Half Time' value='50'>Half Time</option>
+                <option key='other' value='other'>Other</option>
               </select>
+            </div>
+            <div class='awk-input'>
+              <input type='text' id='otherAwk' placeholder='Ex:50' min='0' max='100' maxLength='3' onKeyPress={self.wholeNumCheck}></input>
             </div>
           </div>
         </div>
