@@ -384,10 +384,10 @@ var HomeIterContent = React.createClass({
         iterData.defects = (defIter.defects == null) ? '0' : defIter.defects;
         iterData.defectsClosed = (defIter.defectsClosed == null) ? '0' : defIter.defectsClosed;
         iterData.defectsEndBal = (defIter.defectsEndBal == null) ? '0' : defIter.defectsEndBal;
-        iterData.cycleTimeWIP = (defIter.cycleTimeWIP == null) ? '0.0' : defIter.cycleTimeWIP;
-        iterData.cycleTimeInBacklog = (defIter.cycleTimeInBacklog == null) ? '0.0' : defIter.cycleTimeInBacklog;
-        iterData.clientSatisfaction = (defIter.clientSatisfaction == null) ? '0.0' : defIter.clientSatisfaction;
-        iterData.teamSatisfaction = (defIter.teamSatisfaction == null) ? '0.0' : defIter.teamSatisfaction;
+        iterData.cycleTimeWIP = (defIter.cycleTimeWIP == null) ? '0.0' : defIter.cycleTimeWIP.toFixed(1);
+        iterData.cycleTimeInBacklog = (defIter.cycleTimeInBacklog == null) ? '0.0' : defIter.cycleTimeInBacklog.toFixed(1);
+        iterData.clientSatisfaction = (defIter.clientSatisfaction == null) ? '0.0' : defIter.clientSatisfaction.toFixed(1);
+        iterData.teamSatisfaction = (defIter.teamSatisfaction == null) ? '0.0' : defIter.teamSatisfaction.toFixed(1);
         iterData.comment = (defIter.comment == null) ? '' : defIter.comment;
 
         var access = self.props.loadDetailTeam.access;
