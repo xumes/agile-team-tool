@@ -4743,9 +4743,8 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: right;
   display: inline-block;
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
-  font-size: 1em;
+  font-size: 1.7em;
   text-align: right;
-  line-height: 1.2em;
   color: #4178BE;
   cursor: pointer;
 }

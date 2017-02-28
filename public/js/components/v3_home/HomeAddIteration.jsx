@@ -270,7 +270,7 @@ var HomeAddIteration = React.createClass({
   render: function() {
       return (
         <div>
-         <ReactModal isOpen={this.props.isOpen} onRequestClose={this.close} className='home-iter-popup' overlayClassName='att-modal-overlay' shouldCloseOnOverlayClick={false} contentLabel='Add Iteration'>
+         <ReactModal isOpen={this.props.isOpen} onRequestClose={this.close} className='home-iter-popup' overlayClassName='att-modal-overlay' contentLabel='Add Iteration'>
             <div class='popup-title'>
               <h1>Add New Iteration</h1>
               <div onClick={this.close}>
