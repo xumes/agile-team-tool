@@ -4296,7 +4296,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   z-index: 2;
   /*width: 95%;*/
   height: 10%;
-  top: 310%;
+  top: 300%;
 }
 
 .pointer-arrow-right-child {
@@ -4326,7 +4326,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .optsel-child {
   position: absolute;
-  bottom: -255%;
+  bottom: -240%;
   left: 45%;
   width: 25em;
   float: right;
@@ -4336,13 +4336,13 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .team-hier-children {
   border: 1px solid #b3b3b3 !important;
   overflow-y: auto !important;
-  top: 354% !important;
+  top: 340% !important;
   display: inline-block;
   font-size: inherit;
   left: 45%;
   position: absolute;
   width: 43.5%;
-  height: 190%;
+  height: 180%;
 }
 
 .team-hier-children > p {
@@ -4415,7 +4415,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .curteam-block {
   position: absolute;
-  bottom: -179%;
+  bottom: -170%;
   left: 45%;
   height: 2.8em;
   width: 16.9em;
