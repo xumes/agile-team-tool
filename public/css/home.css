@@ -4163,6 +4163,15 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 85%;
 }
 
+.error-dup-team-name {
+  float: left;
+  font-size: 1.3em;
+  margin-top: 0.3em;
+  margin-left: 2em;
+  width: 40%;
+  color: red;
+}
+
 .top-note-parent-child-hierarchy {
   float: left;
   font-size: 1.25em;

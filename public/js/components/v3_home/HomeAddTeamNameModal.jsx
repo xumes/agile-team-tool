@@ -9,6 +9,9 @@ var HomeAddTeamNameModal = React.createClass({
   getInitialState: function() {
     return {
       teams: [],
+      showStyle: {
+        'display': 'none'
+      },
       buttonOptions: {
         prevScreen: '',
         prevDisabled: 'disabled',
@@ -38,18 +41,18 @@ var HomeAddTeamNameModal = React.createClass({
     var hasError = false;
     if (!_.isEmpty(team)) {
       // TODO: actual implem should be message on screen, not alert
-      alert('This team name already exists. Please enter a different team name.');
+      //alert('This team name already exists. Please enter a different team name.');
       hasError = true;
     }
 
     if (hasError || _.isEmpty(newTeamName)) {
       var buttonOptions = self.state.buttonOptions;
       buttonOptions.nextDisabled = 'disabled';
-      self.setState({ buttonOptions: buttonOptions });
+      self.setState({ buttonOptions: buttonOptions, showStyle: {'display': 'inline'} });
     } else {
       var buttonOptions = self.state.buttonOptions;
       buttonOptions.nextDisabled = '';
-      self.setState({ buttonOptions: buttonOptions });
+      self.setState({ buttonOptions: buttonOptions, showStyle: {'display': 'none'} });
       self.props.setTeamNameDesc(self.refs.newTeamName.value, self.refs.newTeamDescription.value);
     }
   },
@@ -72,18 +75,19 @@ var HomeAddTeamNameModal = React.createClass({
               <h>New Team Creation</h>
               <span class='close-ico'><InlineSVG onClick={self.props.closeWindow} src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG></span>
             </div>
-
+            
             <div class='new-team-creation-add-block-content ibm-row-form1'>
               <div class='new-team-creation-add-block-content-name'>
               <label for='newTeamName'>Team Name</label>
               <input type='text' size='30' id='newTeamName' name='newTeamName' aria-label='team name' ref='newTeamName' onChange={self.nameUpdate} defaultValue={self.props.newTeamObj.name}/>
+              <div class='error-dup-team-name'><span style={this.state.showStyle}>This team name is already used</span></div>
             </div>
 
             <div class='new-team-creation-add-block-content-description'>
               <label for='newTeamDescription'>Team Description</label>
               <textarea type='textarea' rows='15' id='newTeamDescription' name='newTeamDescription' ref='newTeamDescription' onBlur={self.descriptionUpdate}  defaultValue={self.props.newTeamObj.description} />
             </div>
-
+            
             <div class='footer-note-add-team-name'><strong class="note1">NOTE:</strong>&nbsp;To join an existing team, click the "All teams" tab, find the team and click "request to join"</div>
           </div>
 
