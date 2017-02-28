@@ -13,6 +13,8 @@ var HomeAddTeamDropdownRole = React.createClass({
   roleHandler: function(data) {
     if (data.value && (data.value.toLowerCase() === 'other...')) {
       var uid = this.refs.selrole.props['data-uid'];
+      var p = this.refs.selrole.props;
+      console.log('roleHandler p ',p);
       $('#wrapper-role-'+uid + ' .Select-value').html('Other...');
       $('.Select-placeholder').html('Other...');
       $('.Select-placeholder').addClass('otherTxt');
@@ -24,7 +26,7 @@ var HomeAddTeamDropdownRole = React.createClass({
   },
   saveRole: function(uid) {
     console.log('saveRole..', uid);
-    var other = $('#wrapper-role-'+uid + ' #input-field').val();
+    var other = $('#wrapper-role-'+uid + ' > .role-other > #input-field').val();
     if (_.isEmpty(other)) {
       alert('Role cannot be empty.');
     } else {
@@ -32,8 +34,14 @@ var HomeAddTeamDropdownRole = React.createClass({
       this.props.roleHandler(this.refs, obj);
     }
   },
-  cancelRole: function(uid) {
-    console.log('cancelRole..', uid);
+  cancelRole: function(uid, prevdata) {
+    if (_.isUndefined(prevdata)){
+      $('#wrapper-role-'+uid + ' .Select-control .Select-value').html('Select Role');
+      $('#wrapper-role-'+uid + ' .Select-control .Select-placeholder').html('Select Role');
+    } else {
+      $('#wrapper-role-'+uid + ' .Select-control .Select-value').html(prevdata);
+      $('#wrapper-role-'+uid + ' .Select-control .Select-placeholder').html(prevdata);
+    }
     this.setState({showOther: false});
   },
   render: function() {
@@ -45,6 +53,7 @@ var HomeAddTeamDropdownRole = React.createClass({
       options.push({value: v, label: v});
     });
     var isOtherStyle = (self.state.showOther) ? {'display': 'block'} : {'display': 'none'};
+    console.log('HomeAddTeamDropdownRole isOtherStyle..', isOtherStyle);
     return(
       <div key={memberUserId} id={'wrapper-role-'+memberUserId}>
         <Select
@@ -56,12 +65,12 @@ var HomeAddTeamDropdownRole = React.createClass({
           clearable={false}
           placeholder='Select Role'
           onChange={self.roleHandler} />
-        <div class='custom-field-other' style={isOtherStyle}>
+        <div class='custom-field-other role-other' style={isOtherStyle}>
           <input id='input-field' type='text' ref='other' name='other' size='10' class='input-field' />
-          <div class='save-btn' onClick={self.saveRole.bind(null, memberUserId)}>
+          <div class='r_save-btn' onClick={self.saveRole.bind(null, memberUserId)}>
             <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
           </div>
-          <div class='cancel-btn' onClick={self.cancelRole.bind(null, memberUserId)}>
+          <div class='r_cancel-btn' onClick={self.cancelRole.bind(null, memberUserId, memberRole)}>
             <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
           </div>
         </div>

@@ -53,7 +53,9 @@ var HomeAddTeamMemberModal = React.createClass({
             email: self.state.facesPerson.email ? self.state.facesPerson.email.toLowerCase() : null,
             location: {
               site: self.state.facesPerson.location ? self.state.facesPerson.location.toLowerCase() : null
-            }
+            },
+            allocation: 100,
+            workTime: 100
           };
 
         // onced added to the Table, clear the txtfield automatically
@@ -85,13 +87,14 @@ var HomeAddTeamMemberModal = React.createClass({
   deleteTeamMember: function(userId) {
     var self = this;
     var updatedMember = [];
-    console.log('deleteTeamMember before:', this.props.teamMembers);
-    updatedMember = _.filter(this.props.teamMembers, function(ls) {
+    var members = self.props.newTeamObj.members;
+    console.log('deleteTeamMember before:', members);
+    updatedMember = _.filter(members, function(ls) {
       return !_.isEqual(ls['userId'], userId);
     });
     console.log('deleteTeamMember after:', updatedMember);
     self.props.setTeamMember(updatedMember);
-    if (_.isEmpty(teamMemberData)) {
+    if (_.isEmpty(updatedMember)) {
       var buttonOptions = self.state.buttonOptions;
       buttonOptions.nextDisabled = 'disabled';
       self.setState({ buttonOptions: buttonOptions });

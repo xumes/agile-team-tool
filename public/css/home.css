@@ -4711,11 +4711,11 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_name, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_name {
-  width: 7em;
+  width: 8em;
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_location, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_location{
-  width: 7em;
+  width: 8em;
   background: none;
 }
 #addTeamMemberRoleBlock .tbl-memberRole-results td.r_location {
@@ -4723,16 +4723,16 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_role, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_role {
-  width: 10em;
+  width: 11em;
+  vertical-align: top;
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_allocation, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_allocation {
-  /*width: 10em;*/
   vertical-align: top;
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_workweek, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_workweek {
-  width: 10em;
+  width: 7em;
   vertical-align: top;
 }
 
@@ -4749,10 +4749,27 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 #addTeamMemberRoleBlock .Select .select-input input {
   font-size: 1.4em !important;
   color: #333 !important;
+  cursor: pointer;
 }
 
 #addTeamMemberRoleBlock .custom-field-other {
   margin-top: 0.5em;
+}
+
+#addTeamMemberRoleBlock .custom-field-other h1 {
+  float: left;
+  font-size: 1.5em;
+  left: 1em;
+  line-height: 1.7em;
+  margin-left: 0.5em;
+}
+
+#addTeamMemberRoleBlock .custom-field-other .input-field {
+  width: 65%;
+}
+
+#addTeamMemberRoleBlock .custom-field-other .wt {
+  width: 22%;
 }
 
 #addTeamMemberRoleBlock .custom-field-other .input-field {
@@ -4763,22 +4780,34 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   padding: 0.2em;
   position: relative;
   text-indent: 0.5em;
-  width: 65%;
   line-height: 1.5em;
 }
 
-#addTeamMemberRoleBlock .save-btn, #addTeamMemberRoleBlock .cancel-btn {
+#addTeamMemberRoleBlock .r_role .r_save-btn, #addTeamMemberRoleBlock .r_role .r_cancel-btn,
+#addTeamMemberRoleBlock .r_workweek .r_save-btn, #addTeamMemberRoleBlock .r_workweek .r_cancel-btn {
   cursor: pointer;
   float: left;
   position: relative;
-  width: 14%;
+  display: block;
+}
+
+#addTeamMemberRoleBlock .r_role .r_save-btn, #addTeamMemberRoleBlock .r_role .r_cancel-btn {
+  width: 13%;
   left: 0.5em;
 }
 
-#addTeamMemberRoleBlock .cancel-btn {
+#addTeamMemberRoleBlock .r_workweek .r_save-btn, #addTeamMemberRoleBlock .r_workweek .r_cancel-btn {
+  width: 20%;
+  left: 0.5em;
+}
+
+#addTeamMemberRoleBlock .r_role .r_cancel-btn {
   left: 0.9em;
 }
 
+#addTeamMemberRoleBlock .r_workweek .r_cancel-btn {
+  left: 0.9em;
+}
 
 /* END: AddTeamMember Role, Allocation Modal */
 

@@ -40,7 +40,8 @@ var HomeAddTeamTypeModal = React.createClass({
           name: user.ldap.hrFirstName + ' ' + user.ldap.hrLastName,
           role: _.isEqual(self.props.newTeamObj.type, 'squad') ? 'Iteration Manager' : 'Team Lead',
           allocation: 100,
-          location: result[0].location || ''
+          location: result[0].location || '',
+          workTime: 100
         };
         self.props.setTeamMember([data]);
       });

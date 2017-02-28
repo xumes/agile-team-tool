@@ -130,15 +130,6 @@ var HomeAddTeam = React.createClass({
   setSelectedChildTeams: function(teams) {
     this.setState({ selectedChildTeams: teams });
   },
-<<<<<<< HEAD
-=======
-
-  //onchangeChildHierchSel: function(event) {
-  //  var selectVal = event.target.value;
-  //  console.log('HomeAddTeam onchangeChildHierchSel selectVal:', selectVal);
-  //  $('#btn-teamaddparentchildhier').prop('disabled', false);
-  //},
->>>>>>> 55e2af5d454791cabe196d2f8ea8388b3353645f
 
   saveTeam: function() {
     console.log('new team is:'+ JSON.stringify(this.state.newTeamObj));
@@ -166,15 +157,9 @@ var HomeAddTeam = React.createClass({
     var addBtnStyle = self.props.access?'block':'none';
 
     return (
-<<<<<<< HEAD
       <div>
         <div class='home-nav-tab-buttons-item' style={{'display': addBtnStyle}}>
           <InlineSVG onClick={self.createNewTeam} src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
-=======
-      <div class='home-nav-tab-buttons-item' style={{'display': addBtnStyle}}>
-        <div style={{'width':'100%','height':'100%'}}>
-          <InlineSVG onClick={this.addTeamNameModal} src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
->>>>>>> 55e2af5d454791cabe196d2f8ea8388b3353645f
         </div>
 
         <HomeAddTeamNameModal activeWindow={this.state.screenStatus['showTeamNameModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamNameDesc={self.setTeamNameDesc} />

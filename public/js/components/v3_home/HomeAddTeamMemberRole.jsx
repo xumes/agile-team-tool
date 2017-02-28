@@ -25,7 +25,12 @@ var HomeAddTeamMemberRole = React.createClass({
         nextScreen: '',
         nextDisabled: ''  //TODO: disabled
       },
-      defaultRoles: []
+      defaultRoles: [],
+      defaultWorkTime: {
+        'Full Time': 100,
+        'Half Time': 50,
+        'Other': -1
+      }
     }
   },
 
@@ -93,6 +98,16 @@ var HomeAddTeamMemberRole = React.createClass({
       }
     }
 
+    if (type === OPTSELECT.AVGWORKWEEK) {
+      var tmpworkweek = self.state.defaultWorkTime;
+      if (!_.contains(tmpworkweek, selectVal)) {
+        var obj = {};
+        obj[selectVal] = selectVal;
+        var tmp = _.extend(tmpworkweek, obj);
+        self.setState({defaultWorkTime: tmp});
+      }
+    }
+
     self.props.setTeamMember(updatedMember);
     console.log('changeHandler updatedMember:');
     console.dir(updatedMember);
@@ -130,7 +145,7 @@ var HomeAddTeamMemberRole = React.createClass({
               <HomeAddTeamDropdownAllocation newTeamObj={self.props.newTeamObj} memberUserId={memberUserId} setTeamMember={self.props.setTeamMember} memberAlloc={memberAlloc} allocHandler={self.selectHandler} />
             </td>
             <td class='r_workweek'>
-              <HomeAddTeamDropdownWorkTime newTeamObj={self.props.newTeamObj} memberUserId={memberUserId} setTeamMember={self.props.setTeamMember} memberWorkTime={memberWorkTime} workTimeHandler={self.selectHandler} />
+              <HomeAddTeamDropdownWorkTime newTeamObj={self.props.newTeamObj} memberUserId={memberUserId} defaultWorkTime={self.state.defaultWorkTime} setTeamMember={self.props.setTeamMember} memberWorkTime={memberWorkTime} workTimeHandler={self.selectHandler} />
             </td>
           </tr>
         );
