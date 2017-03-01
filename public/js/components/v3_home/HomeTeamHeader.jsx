@@ -86,6 +86,8 @@ var HomeTeamHeader = React.createClass({
     var self = this;
     if ($('#teamMemberTable').css('display') == 'none') {
       $('.home-team-header-btn-img2').unbind('mouseenter mouseleave');
+      $('#homeTeamHeaderMemberBtn' + ' svg > path').css('fill', '#325C80');
+      $('#homeTeamHeaderMemberBtn' + ' h').css('color', '#325C80');
       $('#teamMemberTable').fadeIn();
     } else {
       self.hoverOnBtn('home-team-header-btn-img2');
@@ -103,6 +105,8 @@ var HomeTeamHeader = React.createClass({
     var self = this;
     if ($('#teamBookmark').css('display') == 'none') {
       $('.home-team-header-btn-img').unbind('mouseenter mouseleave');
+      $('#homeTeamHeaderBookmarkBtn' + ' svg > path').css('fill', '#325C80');
+      $('#homeTeamHeaderBookmarkBtn' + ' h').css('color', '#325C80');
       $('#teamBookmark').fadeIn();
     } else {
       self.hoverOnBtn('home-team-header-btn-img');
