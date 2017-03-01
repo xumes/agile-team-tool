@@ -53,18 +53,28 @@ var HomeAddIteration = React.createClass({
   },
 
   reset: function(){
-    var name = this.props.loadDetailTeam.iterations[0].name + ' (copy)';
-    if (this.state.c_name && this.props.loadDetailTeam.iterations.length > 0) {
+    if (this.props.loadDetailTeam.iterations.length > 0){
+      var name = this.props.loadDetailTeam.iterations[0].name + ' (copy)';
       this.startDateChange(new moment(this.props.loadDetailTeam.iterations[0].endDate).add(1,'day'));
+      this.setState({
+        name: name, 
+        c_name: true, 
+        c_stories_op_committed:false,
+        c_stories_dev_committed:false,
+        c_stories_op_delivered:true,
+        c_stories_dev_delivered: true});
     }
-    this.setState({
-      name: name, 
-      c_name: true, 
+    else {
+      this.setState({
+      name: '', 
+      c_name: false, 
       c_stories_op_committed:false,
       c_stories_dev_committed:false,
-      c_stories_op_delivered:true,
-      c_stories_dev_delivered: true});
-    
+      c_stories_op_delivered:false,
+      c_stories_dev_delivered: false,
+      iterationStartDate: null,
+      iterationEndDate: null});
+    }
   },
 
   close: function(){

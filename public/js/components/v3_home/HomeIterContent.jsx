@@ -240,6 +240,16 @@ var HomeIterContent = React.createClass({
     }
   },
 
+  float1Decimal:function(val) {
+    var value = parseFloat(val);
+    if (!isNaN(value)) {
+      return value.toFixed(1);
+    }
+    else {
+      return 0.0;
+    }
+  },
+
   wholeNumberCheck: function(e){
     var pattern = /^\d*$/;
     if (e.charCode >= 32 && e.charCode < 127 &&  !pattern.test(String.fromCharCode(e.charCode)))
@@ -341,6 +351,7 @@ var HomeIterContent = React.createClass({
     } else {
       var iterations = null;
       var defIterId = '';
+      var access = this.props.loadDetailTeam.access;
       if (!_.isEmpty(self.props.loadDetailTeam.iterations) && self.props.loadDetailTeam.iterations.length > 0) {
         iterations = self.props.loadDetailTeam.iterations.map(function(iter){
           iterName =iter.name + ' (' + moment(iter.startDate).format('DD MMM YYYY') + ' - ' + moment(iter.endDate).format('DD MMM YYYY') + ')';
@@ -375,30 +386,28 @@ var HomeIterContent = React.createClass({
           storyPointsDays = !isFinite(storyPointsDays) ? '0.0': storyPointsDays.toFixed(1);
         }
         iterData.memberFte = (defIter.memberFte == null) ? '' : defIter.memberFte;
-        iterData.committedStories = (defIter.committedStories == null) ? '0' : defIter.committedStories;
-        iterData.deliveredStories = (defIter.deliveredStories == null) ? '0' : defIter.deliveredStories;
-        iterData.committedStoryPoints = (defIter.committedStoryPoints == null) ? '0' : defIter.committedStoryPoints;
-        iterData.storyPointsDelivered = (defIter.storyPointsDelivered == null) ? '0' : defIter.storyPointsDelivered;
-        iterData.deployments = (defIter.deployments == null) ? '0' : defIter.deployments;
-        iterData.defectsStartBal = (defIter.defectsStartBal == null) ? '0' : defIter.defectsStartBal;
-        iterData.defects = (defIter.defects == null) ? '0' : defIter.defects;
-        iterData.defectsClosed = (defIter.defectsClosed == null) ? '0' : defIter.defectsClosed;
-        iterData.defectsEndBal = (defIter.defectsEndBal == null) ? '0' : defIter.defectsEndBal;
-        iterData.cycleTimeWIP = (defIter.cycleTimeWIP == null) ? '0.0' : defIter.cycleTimeWIP.toFixed(1);
-        iterData.cycleTimeInBacklog = (defIter.cycleTimeInBacklog == null) ? '0.0' : defIter.cycleTimeInBacklog.toFixed(1);
-        iterData.clientSatisfaction = (defIter.clientSatisfaction == null) ? '0.0' : defIter.clientSatisfaction.toFixed(1);
-        iterData.teamSatisfaction = (defIter.teamSatisfaction == null) ? '0.0' : defIter.teamSatisfaction.toFixed(1);
+        iterData.committedStories = utils.numericValue(defIter.committedStories);
+        iterData.deliveredStories = utils.numericValue(defIter.deliveredStories);
+        iterData.committedStoryPoints =utils.numericValue(defIter.committedStoryPoints);
+        iterData.storyPointsDelivered = utils.numericValue(defIter.storyPointsDelivered);
+        iterData.deployments = utils.numericValue(defIter.deployments);
+        iterData.defectsStartBal = utils.numericValue(defIter.defectsStartBal);
+        iterData.defects = utils.numericValue(defIter.defects);
+        iterData.defectsClosed = utils.numericValue(defIter.defectsClosed);
+        iterData.defectsEndBal = utils.numericValue(defIter.defectsEndBal);
+        iterData.cycleTimeWIP = _.isNull(defIter.cycleTimeWIP) || _.isUndefined(defIter.cycleTimeWIP) ? '0.0' : this.float1Decimal(defIter.cycleTimeWIP);
+        iterData.cycleTimeInBacklog = _.isNull(defIter.cycleTimeInBacklog) || _.isUndefined(defIter.cycleTimeInBacklog) ? '0.0' : this.float1Decimal(defIter.cycleTimeInBacklog);
+        iterData.clientSatisfaction = _.isNull(defIter.clientSatisfaction) || _.isUndefined(defIter.clientSatisfaction) ? '0.0' : this.float1Decimal(defIter.clientSatisfaction);
+        iterData.teamSatisfaction = _.isNull(defIter.teamSatisfaction) || _.isUndefined(defIter.teamSatisfaction) ? '0.0' : this.float1Decimal(defIter.teamSatisfaction);
         iterData.comment = (defIter.comment == null) ? '' : defIter.comment;
 
-        var access = self.props.loadDetailTeam.access;
-        
         return (
           <div>
             <div class='home-iter-title'>Iteration Overview</div>
             <Tooltip html={true} type="light"/>
             <div class='home-iter-selection-block'>
               <div class='iter-select'>
-                <select value={defIterId} id='homeIterSelection' onChange={this.props.iterChangeHandler}>
+                <select value={defIter._id} id='homeIterSelection' onChange={this.props.iterChangeHandler}>
                   {iterations}
                 </select>
               </div>
@@ -739,7 +748,18 @@ var HomeIterContent = React.createClass({
         return (
           <div>
             <div class='home-iter-title'>Iteration Overview</div>
-            <div class='home-no-iter-info'>No iterations</div>
+            <Tooltip html={true} type="light"/>
+            <div class='home-iter-selection-block'>
+              <div class='iter-select'>
+                <select value={0} id='homeIterSelection'>
+                  <option key={0} value={0}>{'No iteration results'}</option>
+                </select>
+              </div>
+              <div class='home-iter-add-btn-block' onClick={access?this.showAddIteration:''} style={{'cursor':'pointer'}}>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')} data-tip='Create New Iteration'></InlineSVG>
+              </div>
+            </div>
+            <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={this.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
           </div>
         )
       }
