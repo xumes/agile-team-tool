@@ -53,6 +53,7 @@ var HomeTeamHeader = React.createClass({
   },
 
   hoverOnBtn: function(blockId) {
+    var self = this;
     if (blockId == 'home-team-header-btn-img') {
       var subBlockId = 'homeTeamHeaderBookmarkBtn';
     } else {
@@ -62,6 +63,11 @@ var HomeTeamHeader = React.createClass({
     $('#' + subBlockId + ' h').css('color', '#FFFFFF');
     $('.' + blockId).unbind('mouseenter mouseleave');
     $('.' + blockId).hover(function(){
+      if (blockId == 'home-team-header-btn-img') {
+        self.showBookmark();
+      } else {
+        self.showTeamTable();
+      }
       $('#' + subBlockId + ' svg > path').css('fill', '#325C80');
       $('#' + subBlockId + ' h').css('color', '#325C80');
     },function(){
