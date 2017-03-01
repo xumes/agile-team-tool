@@ -17,10 +17,16 @@ var HomeHeader = React.createClass({
         </div>
         <div class="header-menu">
           <div class="header-menu-dropdown">
-            <InlineSVG class='header-menu-icon' src={require('../../../img/Att-icons/att-icons_Profile.svg')}></InlineSVG>
+            <div class='header-menu-icon'>
+              <InlineSVG src={require('../../../img/Att-icons/att-icons_Profile.svg')}></InlineSVG>
+            </div>
             <div class='header-menu-label'>{userName}</div>
-            <InlineSVG class='header-menu-icon-chev' src={require('../../../img/Att-icons/att-icons-Chevron-down.svg')}></InlineSVG>
-            <InlineSVG class='header-menu-icon-chev-hide' src={require('../../../img/Att-icons/att-icons-Chevron-down.svg')}></InlineSVG>
+            <div class='header-menu-icon-chev'>
+              <InlineSVG src={require('../../../img/Att-icons/att-icons-Chevron-down.svg')}></InlineSVG>
+            </div>
+            <div class='header-menu-icon-chev-hide'>
+              <InlineSVG src={require('../../../img/Att-icons/att-icons-Chevron-down.svg')}></InlineSVG>
+            </div>
             <ul class="header-menu-profile-block">
               <li style={{'display':'none'}}>
                 <div>Manage user profile</div>
@@ -48,10 +54,16 @@ var HomeHeader = React.createClass({
             </ul>
           </div>
           <div class="header-menu-dropdown">
-            <InlineSVG class='header-menu-icon' src={require('../../../img/Att-icons/att-icons_question.svg')}></InlineSVG>
+            <div class='header-menu-icon'>
+              <InlineSVG src={require('../../../img/Att-icons/att-icons_question.svg')}></InlineSVG>
+            </div>
             <div class='header-menu-label'>Help</div>
-            <InlineSVG class='header-menu-icon-chev' src={require('../../../img/Att-icons/att-icons-Chevron-down.svg')}></InlineSVG>
-            <InlineSVG class='header-menu-icon-chev-hide' src={require('../../../img/Att-icons/att-icons-Chevron-down.svg')}></InlineSVG>
+            <div class='header-menu-icon-chev'>
+              <InlineSVG src={require('../../../img/Att-icons/att-icons-Chevron-down.svg')}></InlineSVG>
+            </div>
+            <div class='header-menu-icon-chev-hide'>
+              <InlineSVG src={require('../../../img/Att-icons/att-icons-Chevron-down.svg')}></InlineSVG>
+            </div>
             <ul class="header-menu-help-block">
               <li>
                 <div>How to:</div>
