@@ -423,6 +423,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 
 .agile-home-header {
   background-color: #323232;
+  display: block;
   color: #ffffff;
   font-size: 1.5em !important;
   height: 6.2%;
@@ -456,16 +457,14 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 
 .header-logo {
   display: inline-block;
-  height: 100%;
   padding: 0 0.75em 0 1em;
   position: relative;
 }
 
 .header-ibm-logo {
   display: inline-block;
-  height: 65%;
   position: relative;
-  top: 10%;
+  top: .5em;
 }
 
 .header-menu {
@@ -485,6 +484,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   line-height: 2em;
   color: #FFFFFF;
   font-size: 1.5em;
+  padding-right: 2em;
 }
 
 .header-menu li::before {
@@ -492,13 +492,13 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .header-menu-dropdown {
-  clear: both;
   cursor: pointer;
   display: inline-block;
   height: 100%;
   padding: 0 1em 0 0;
   position: relative;
   white-space: nowrap;
+  width: initial;
 }
 
 .header-menu-dropdown:hover .header-menu-profile-block, .header-menu-dropdown:hover .header-menu-help-block {
@@ -507,10 +507,9 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 
 .header-menu-icon {
   display: inline-block;
-  height: 70%;
   padding: 0 0.25em 0 1em;
   position: relative;
-  top: 20%;
+  top: 10%;
 }
 
 .header-menu-label {
@@ -523,18 +522,16 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 
 .header-menu-icon-chev {
   display: inline-block;
-  height: 45%;
   padding: 0 .25em;
   position: relative;
-  top: 5%;
+  top: 10%;
 }
 
 .header-menu-icon-chev-hide {
   display: none;
-  height: 45%;
   padding: 0 .25em;
   position: relative;
-  top: 5%;
+  top: 10%;
 }
 
 .header-menu-profile-block {
@@ -545,7 +542,6 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   position: absolute;
   display: none;
   top: 100%;
-  width: 180%;
   z-index: 10;
 }
 
@@ -639,14 +635,18 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   position: absolute;
   display: none;
   top: 100%;
-  left: -105%;
-  width: 205%;
+  left: -100%;
+  width: calc(100%*2);
   z-index: 10;
 }
 
 .agile-home-header svg {
-  width: inherit;
-  height: inherit;
+  height: 20px;
+  width: 20px;
+}
+
+.agile-home-header .header-ibm-logo svg {
+  width: 50px !important;
 }
 
 .agile-home-header path, .agile-home-header polygon {
@@ -4852,6 +4852,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .team-setup-squad-block .team-setup-squad-icon-change {
   left: 27%;
+  height: 23%;
   position: absolute;
   top: 53%;
   width: 5%;
@@ -4863,6 +4864,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 95%;
   left: 39%;
   position: absolute;
+  top: 0;
   width: 59%;
 }
 
@@ -4935,6 +4937,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .team-setup-squad-block .team-setup-squad-icon-arrow-top {
   display: inline-block;
+  height: 3%;
   left: 35%;
   position: absolute;
   top: 13%;
@@ -4951,6 +4954,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .team-setup-squad-block .team-setup-squad-icon-arrow-middle {
   display: inline-block;
+  height: 3%;
   left: 35%;
   position: absolute;
   top: 47%;
@@ -4967,6 +4971,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .team-setup-squad-block .team-setup-squad-icon-arrow-bottom {
   display: inline-block;
+  height: 3%;
   left: 35%;
   position: absolute;
   top: 68%;
@@ -5013,6 +5018,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .team-setup-block .team-setup-icon-child {
   display: inline-block;
+  height: 19%;
   left: -5%;
   position: relative;
   top: 16.5%;
@@ -5021,6 +5027,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .team-setup-block .team-setup-icon-arrow-top {
   display: inline-block;
+  height: 3%;
   left: 33%;
   position: absolute;
   top: 8%;
@@ -5037,6 +5044,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .team-setup-block .team-setup-icon-arrow-middle {
   display: inline-block;
+  height: 3%;
   left: 33%;
   position: absolute;
   top: 32%;
@@ -5053,6 +5061,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .team-setup-block .team-setup-icon-arrow-bottom {
   display: inline-block;
+  height: 3%;
   left: 33%;
   position: absolute;
   top: 49%;
@@ -5103,7 +5112,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .team-setup-content .team-setup-child-select {
   display: inline-block;
   font-size: inherit;
-  height: 34%;
+  height: 32%;
   position: absolute;
   top: 48%;
   width: 95%;
@@ -5131,6 +5140,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   cursor: pointer;
   display: inline-block;
   font-size: inherit;
+  height: 28%;
   overflow: hidden;
   padding: 0 0.2em;
   white-space: nowrap;
@@ -5139,24 +5149,26 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .team-setup-children > p > h {
   display: inline-block;
+  height: 100%;
   overflow: hidden;
   padding: 0.2em 0;
   position: relative;
   text-overflow: ellipsis;
-  width: 98%;
+  width: 94%;
 }
 
 .team-setup-children-remove-icon {
   display: inline-block;
-  left: 3%;
+  height: 100%;
   position: relative;
-  top: -10%;
+  top: -25%;
   width: 6%;
 }
 
 .team-setup-squad-revert {
   display: inline-block;
   font-size: inherit;
+  height: 20%;
   position: absolute;
   top: 82%;
   width: 95%;
@@ -5166,11 +5178,13 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: inline-block;
   height: 100%;
   padding-right: 0.5em;
-  width: 5%;
+  width: 8%;
 }
 
 .team-setup-squad-revert > a {
   cursor: pointer;
+  height: 20%;
+  vertical-align: middle;
   white-space: nowrap;
 }
 
