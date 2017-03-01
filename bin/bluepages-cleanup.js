@@ -11,7 +11,7 @@ schedule.scheduleJob('* * 2 * *', function() {
   var queryUser = function(user) {
     return new Promise(function(resolve) {
       var bluepagesURL = process.env.bluepagesURL;
-      var requestURL = bluepagesURL + '/id/' + user.email + '/email';
+      var requestURL = bluepagesURL + '/id/' + user.userId + '/id';
       request(requestURL, function(err, response, body) {
         if (response.statusCode == 404 && body.message == 'Unable to find record') {
           user.remove();
