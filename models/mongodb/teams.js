@@ -276,7 +276,7 @@ module.exports.searchTeamWithName = function(string) {
       .then(function(result) {
         result = _.sortBy(result, function(team) {
           return team.name.toLowerCase();
-        })
+        });
         resolve(result);
       })
       .catch( /* istanbul ignore next */ function(err) {
