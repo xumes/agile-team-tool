@@ -119,6 +119,7 @@ var HomeAddTeamMemberRole = React.createClass({
   },
 
   updateButtonOptions: function() {
+    var self = this;
     var buttonOptions = self.state.buttonOptions;
     buttonOptions.nextDisabled = '';
     self.setState({buttonOptions: buttonOptions});
