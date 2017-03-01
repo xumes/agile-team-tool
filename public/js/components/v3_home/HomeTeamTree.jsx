@@ -118,7 +118,7 @@ var HomeTeamTree = React.createClass({
           if (($('#newTeamTree li')[0]).id != 'agteamstandalone') {
             selectedTeam = ($('#newTeamTree li')[0]).id;
           } else {
-            if (selectedTeam == ($('#newTeamTree li')[1]).id) {
+            if (selectedTeam != ($('#newTeamTree li')[1]).id) {
               selectedTeam = ($('#newTeamTree li')[1]).id;
             }
           }
