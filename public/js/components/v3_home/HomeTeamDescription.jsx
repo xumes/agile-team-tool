@@ -65,7 +65,7 @@ var HomeTeamDescription = React.createClass({
       .then(function(result) {
         self.clearTeamDescValidationErrors();
         self.hideTeamDescModal();
-        self.props.tabClickedHandler('', result.pathId);
+        self.props.updateTeamDetails(team_id, result);
       })
       .catch(function(err) {
         console.log('saveTeamDescModal err:',err);

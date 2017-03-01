@@ -277,6 +277,34 @@ var HomePage = React.createClass({
     }
   },
 
+  updateTeamDetails: function(teamId, data) {
+    var self = this;
+    var currentTeam = self.state.loadDetailTeam;
+    if (teamId === currentTeam.team._id) {
+      var updatedTeam = update(currentTeam, {
+        team: {$set: data}
+      });
+      self.setState({loadDetailTeam: updatedTeam});
+
+      // front end sort
+      console.log(updatedTeam.team.pathId,updatedTeam.team.name);
+      $('#'+updatedTeam.team.pathId+ ' > a > span.agile-team-title').html(updatedTeam.team.name);
+      var li = $('#'+updatedTeam.team.pathId).parent('ul').children('li');
+      var liSorted = _.sortBy(li,function(element){
+        var name = $('#'+ element.id + ' > a > span.agile-team-title').html();
+        console.log($('#'+ element.id + ' > a > span.agile-team-title'));
+        return name.toLowerCase();
+      });
+      _.each(liSorted, function(element) {
+        $('#'+updatedTeam.team.pathId).parent('ul').append(element);
+      });
+      $('.nano').nanoScroller();
+      $('.nano').nanoScroller({
+        scrollTo: $('#link_'+updatedTeam.team.pathId)
+      });
+    }
+  },
+
   realodTeamMembers: function(members, membersContent) {
     var self = this;
     // var newTeam = this.state.loadDetailTeam;
@@ -350,7 +378,7 @@ var HomePage = React.createClass({
 
         <div class='ibm-columns' style={columnsStyle}>
           <div id='mainContent' class='ibm-col-6-4' style={sectionTwoStyle}>
-            <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler} realodTeamMembers={this.realodTeamMembers} roles={this.state.roles} handleChartResize={this.handleChartResize} updateTeamLink={this.updateTeamLink} />
+            <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler} realodTeamMembers={this.realodTeamMembers} roles={this.state.roles} handleChartResize={this.handleChartResize} updateTeamLink={this.updateTeamLink} updateTeamDetails={this.updateTeamDetails} />
           </div>
           <div id='iterContent' class='ibm-col-6-2' style={sectionOneStyle}>
             <HomeIterContent loadDetailTeam={this.state.loadDetailTeam} selectedIter={this.state.selectedIter} iterChangeHandler={this.iterChangeHandler} iterListHandler={this.reloadTeamIterations} updateTeamIteration={this.updateTeamIteration}/>
