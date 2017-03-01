@@ -6,18 +6,15 @@ var _ = require('underscore');
 var HomeAddTeamDropdownRole = React.createClass({
   getInitialState: function() {
     return {
-      showOther: false,
-      customRole: ''
+      showOther: false
     }
   },
   roleHandler: function(data) {
     if (data.value && (data.value.toLowerCase() === 'other...')) {
       var uid = this.refs.selrole.props['data-uid'];
       var p = this.refs.selrole.props;
-      console.log('roleHandler p ',p);
-      $('#wrapper-role-'+uid + ' .Select-value').html('Other...');
-      $('.Select-placeholder').html('Other...');
-      $('.Select-placeholder').addClass('otherTxt');
+      $('#wrapper-role-'+uid + ' .Select-placeholder').addClass('otherTxt');
+      this.updateSelectValue(uid, 'Other...');
       this.setState({showOther: true});
     } else {
       this.setState({showOther: false});
@@ -36,13 +33,15 @@ var HomeAddTeamDropdownRole = React.createClass({
   },
   cancelRole: function(uid, prevdata) {
     if (_.isUndefined(prevdata)){
-      $('#wrapper-role-'+uid + ' .Select-control .Select-value').html('Select Role');
-      $('#wrapper-role-'+uid + ' .Select-control .Select-placeholder').html('Select Role');
+      this.updateSelectValue(uid, 'Select Role');
     } else {
-      $('#wrapper-role-'+uid + ' .Select-control .Select-value').html(prevdata);
-      $('#wrapper-role-'+uid + ' .Select-control .Select-placeholder').html(prevdata);
+      this.updateSelectValue(uid, prevdata);
     }
     this.setState({showOther: false});
+  },
+  updateSelectValue: function(uid, value) {
+    $('#wrapper-role-'+uid + ' .Select-control .Select-value').html(value);
+    $('#wrapper-role-'+uid + ' .Select-control .Select-placeholder').html(value);
   },
   render: function() {
     var self = this;

@@ -64,9 +64,9 @@ var HomeAddTeamMemberRole = React.createClass({
       uid = ref.selavgworkweek.props['data-uid'];
       type = OPTSELECT.AVGWORKWEEK;
     }
-    console.log('selectHandler uid:',uid);
-    console.log('selectHandler type:',type);
-    console.log('selectHandler selectVal:',selectVal);
+    console.log('HomeAddTeamMemberRole selectHandler uid:',uid);
+    console.log('HomeAddTeamMemberRole selectHandler type:',type);
+    console.log('HomeAddTeamMemberRole selectHandler selectVal:',selectVal);
     var memberList = self.props.newTeamObj.members.map(function(member){
       var obj = {};
       obj.name = member.name;
@@ -109,11 +109,42 @@ var HomeAddTeamMemberRole = React.createClass({
     }
 
     self.props.setTeamMember(updatedMember);
-    console.log('changeHandler updatedMember:');
-    console.dir(updatedMember);
+    console.log('HomeAddTeamMemberRole selectHandler updatedMember:', updatedMember);
+    self.updateButtonOptions();
+  },
+
+  onclickEditInPlace: function(uid) {
+    $('#data-edit-inplace-location-'+uid).hide();
+    $('#edit-inplace-location-'+uid).show();
+  },
+
+  updateButtonOptions: function() {
     var buttonOptions = self.state.buttonOptions;
     buttonOptions.nextDisabled = '';
     self.setState({buttonOptions: buttonOptions});
+  },
+
+  editInPlaceSaveLocation: function(uid) {
+    var self = this;
+    var updatedMember = [];
+    var value = $('#txtedit-inplace-location-'+uid).val().trim();
+    var memberList = self.props.newTeamObj.members.map(function(member){
+      var obj = {};
+      obj = _.clone(member);
+      if (member.userId === uid) {
+        obj.location = value;
+      }
+      updatedMember.push(obj);
+    });
+    self.props.setTeamMember(updatedMember);
+    console.log('editInPlaceSaveLocation updatedMember:',updatedMember);
+    $('#edit-inplace-location-'+uid).hide();
+    self.updateButtonOptions();
+  },
+
+  editInPlaceCancelLocation: function(uid, prevdata) {
+    $('#data-edit-inplace-location-'+uid).html(prevdata).show();
+    $('#edit-inplace-location-'+uid).hide();
   },
 
   render: function() {
@@ -137,7 +168,20 @@ var HomeAddTeamMemberRole = React.createClass({
         return (
           <tr key={key}>
             <td class='r_name'>{memberName}</td>
-            <td class='r_location'>{memberLocation}</td>
+            <td class='r_location'>
+              <div class='data-edit-inplace' id={'data-edit-inplace-location-'+memberUserId} onClick={self.onclickEditInPlace.bind(null, memberUserId)}>{memberLocation}</div>
+              <div class='edit-inplace-field' style={{'display': 'none'}} id={'edit-inplace-location-'+memberUserId}>
+                <input type='text' name='edit-inplace-location' id={'txtedit-inplace-location-'+memberUserId} class='edit-inplace-location' defaultValue={memberLocation} />
+                <div class='edit-inplace-btns'>
+                  <div class='r_cancel-btn' onClick={self.editInPlaceCancelLocation.bind(null, memberUserId, memberLocation)}>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
+                  </div>
+                  <div class='r_save-btn' onClick={self.editInPlaceSaveLocation.bind(null, memberUserId)}>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
+                  </div>
+                </div>
+              </div>
+            </td>
             <td class='r_role'>
               <HomeAddTeamDropdownRole newTeamObj={self.props.newTeamObj} memberUserId={memberUserId} roles={self.state.defaultRoles} setTeamMember={self.props.setTeamMember} memberRole={memberRole} roleHandler={self.selectHandler} />
             </td>
