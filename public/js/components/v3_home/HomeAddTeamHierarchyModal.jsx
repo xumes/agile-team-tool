@@ -57,7 +57,6 @@ var HomeAddTeamHierarchyModal = React.createClass({
 
     $('#optsel-child select').select2({'dropdownParent':$('#optsel-child')});
     $('#pc-hier-selChild').change(self.childSelectHandler);
-//    $("#teamTypeBlock span[data-widget=tooltip]").tooltip();
   },
 
   parentSelectHandler: function(e){

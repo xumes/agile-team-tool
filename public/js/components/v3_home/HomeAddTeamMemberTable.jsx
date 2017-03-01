@@ -40,7 +40,7 @@ var HomeAddTeamMemberTable = React.createClass({
       <table class='tbl-members' >
         <thead>
           <tr>
-            <td class='h-delete'>&nbsp;</td>
+            <td class='heading'>&nbsp;</td>
             <td class='heading' style={{textAlign:'left'}}>Name</td>
             <td class='heading' style={{textAlign:'center'}}>Email</td>
             <td class='heading' style={{textAlign:'center'}}><span class='location'>Location</span></td>
