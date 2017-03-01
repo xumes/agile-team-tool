@@ -64,9 +64,8 @@ var HomeTeamDescription = React.createClass({
     api.putTeam(JSON.stringify(team))
       .then(function(result) {
         self.clearTeamDescValidationErrors();
-        console.log('saveTeamDescModal result:', result);
-        self.props.updateTeamDetails(team_id, result);
         self.hideTeamDescModal();
+        self.props.tabClickedHandler('', result.pathId);
       })
       .catch(function(err) {
         console.log('saveTeamDescModal err:',err);
@@ -122,7 +121,7 @@ var HomeTeamDescription = React.createClass({
               {self.props.teamDescription}
             </p>
           </div>
-          <button type='button' class='ibm-btn-sec ibm-btn-blue-50 ibm-btn-small' onClick={self.showTeamDescModal}>Edit</button>
+          <button type='button' class='ibm-btn-sec ibm-btn-blue-50 ibm-btn-small' onClick={self.showTeamDescModal} disabled={!self.props.loadDetailTeam.access}>Edit</button>
         </div>
         <ReactModal
            isOpen={this.state.showModal}
