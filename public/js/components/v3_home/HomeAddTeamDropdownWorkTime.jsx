@@ -13,9 +13,8 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
     console.log('workTimeHandler data,', data);
     if (data.value && (data.value === -1)) {
       var uid = this.refs.selavgworkweek.props['data-uid'];
-      $('#wrapper-worktime-'+uid + ' .Select-value').html('Other...');
-      $('.Select-placeholder').html('Other...');
-      $('.Select-placeholder').addClass('otherTxt');
+      this.updateSelectValue(uid, 'Other...');
+      $('#wrapper-worktime-'+uid + ' .Select-control .Select-placeholder').addClass('otherTxt');
       this.setState({showOther: true});
     } else {
       this.setState({showOther: false});
@@ -44,13 +43,16 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
     });
 
     if (_.isUndefined(prevdata)){
-      $('#wrapper-worktime-'+uid + ' .Select-control .Select-value').html('Select...');
-      $('#wrapper-worktime-'+uid + ' .Select-control .Select-placeholder').html('Select...');
+      self.updateSelectValue(uid, 'Select...');
     } else {
-      $('#wrapper-worktime-'+uid + ' .Select-control .Select-value').html(prevdata);
-      $('#wrapper-worktime-'+uid + ' .Select-control .Select-placeholder').html(prevdata);
+      self.updateSelectValue(uid, prevdata);
     }
     this.setState({showOther: false});
+  },
+
+  updateSelectValue: function(uid, value) {
+    $('#wrapper-worktime-'+uid + ' .Select-control .Select-value').html(value);
+    $('#wrapper-worktime-'+uid + ' .Select-control .Select-placeholder').html(value);
   },
 
   render: function() {
@@ -63,10 +65,6 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
     });
 
     var isOtherStyle = (self.state.showOther) ? {'display': 'block'} : {'display': 'none'};
-    console.log('HomeAddTeamDropdownWorkTime defaultWorkTime..', self.props.defaultWorkTime);
-    console.log('HomeAddTeamDropdownWorkTime memberWorkTime..', memberWorkTime);
-    console.log('HomeAddTeamDropdownWorkTime selavgworkweek..', selavgworkweek);
-    console.log('HomeAddTeamDropdownWorkTime isOtherStyle..', isOtherStyle);
     return(
       <div key={memberUserId} id={'wrapper-worktime-'+memberUserId}>
         <Select

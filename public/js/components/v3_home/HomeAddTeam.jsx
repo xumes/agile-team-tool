@@ -85,6 +85,9 @@ var HomeAddTeam = React.createClass({
       self.setState({screenStatus : screenStatus});
       this.resetTeamHierarchy();
     }
+
+    // if the Window is close then lets clear the newTeamObj state variable.
+    this.setState({newTeamObj: {}});
   },
 
   resetTeamHierarchy: function(){
@@ -176,9 +179,9 @@ var HomeAddTeam = React.createClass({
     var addBtnStyle = self.props.access?'block':'none';
 
     return (
-      <div>
-        <div class='home-nav-tab-buttons-item' style={{'display': addBtnStyle}}>
-          <InlineSVG onClick={self.createNewTeam} src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
+      <div class='home-nav-tab-buttons-item' style={{'display': 'block'}}>
+        <div style={{'width':'100%','height':'100%'}}>
+          <InlineSVG onClick={this.createNewTeam} src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
         </div>
 
         <HomeAddTeamNameModal activeWindow={this.state.screenStatus['showTeamNameModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamNameDesc={self.setTeamNameDesc} />
