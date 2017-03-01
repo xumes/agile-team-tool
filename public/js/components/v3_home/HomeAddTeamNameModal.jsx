@@ -45,10 +45,14 @@ var HomeAddTeamNameModal = React.createClass({
       hasError = true;
     }
 
-    if (hasError || _.isEmpty(newTeamName)) {
+    if (hasError ) {
       var buttonOptions = self.state.buttonOptions;
       buttonOptions.nextDisabled = 'disabled';
       self.setState({ buttonOptions: buttonOptions, showStyle: {'display': 'inline'} });
+    } else if (_.isEmpty(newTeamName)) {
+      var buttonOptions = self.state.buttonOptions;
+      buttonOptions.nextDisabled = 'disabled';
+      self.setState({ buttonOptions: buttonOptions, showStyle: {'display': 'none'} });      
     } else {
       var buttonOptions = self.state.buttonOptions;
       buttonOptions.nextDisabled = '';
@@ -80,12 +84,21 @@ var HomeAddTeamNameModal = React.createClass({
               <div class='new-team-creation-add-block-content-name'>
               <label for='newTeamName'>Team Name</label>
               <input type='text' size='30' id='newTeamName' name='newTeamName' aria-label='team name' ref='newTeamName' onChange={self.nameUpdate} defaultValue={self.props.newTeamObj.name}/>
-              <div class='error-dup-team-name'><span style={this.state.showStyle}>This team name is already used</span></div>
+              <div class='error-dup-team-name'>
+                <span style={this.state.showStyle}>
+                  <span class='alert-icon'>
+                    <InlineSVG src={require('../../../img/Att-icons/att-icons_alert.svg')}></InlineSVG>
+                  </span>
+                  <span class='alert-text'>
+                    This team name is already used
+                  </span>
+                </span>
+              </div>
             </div>
 
             <div class='new-team-creation-add-block-content-description'>
               <label for='newTeamDescription'>Team Description</label>
-              <textarea type='textarea' rows='15' id='newTeamDescription' name='newTeamDescription' ref='newTeamDescription' onBlur={self.descriptionUpdate}  defaultValue={self.props.newTeamObj.description} />
+              <textarea type='textarea' rows='15' id='newTeamDescription' name='newTeamDescription' ref='newTeamDescription' onChange={self.descriptionUpdate}  defaultValue={self.props.newTeamObj.description} />
             </div>
             
             <div class='footer-note-add-team-name'><strong class="note1">NOTE:</strong>&nbsp;To join an existing team, click the "All teams" tab, find the team and click "request to join"</div>

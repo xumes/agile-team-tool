@@ -12,7 +12,7 @@ var HomeAddTeamTypeModal = React.createClass({
         prevScreen: 'showTeamNameModal',
         prevDisabled: '',
         nextScreen: 'showTeamHierarchyModal',
-        nextDisabled: 'disabled'
+        nextDisabled: ''
       }
     }
   },
