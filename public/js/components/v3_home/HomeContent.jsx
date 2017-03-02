@@ -9,7 +9,7 @@ var HomeTeamInfo = require('./HomeTeamInfo.jsx');
 var HomeMemberTable = require('./HomeMemberTable.jsx');
 var InlineSVG = require('svg-inline-react');
 var HomeChartFilter = require('./HomeChartFilter.jsx');
-var HomeAseSummary = require('./HomeAseSummary.jsx');
+var HomeAseSummary = require('./HomeAseSummary2.jsx');
 
 var HomeContent = React.createClass({
   shouldComponentUpdate: function(nextProps, nextState) {

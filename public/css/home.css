@@ -2497,31 +2497,455 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   top: 1%;
   z-index: 7;
   background-color: #EFF9FF;
-  width: 100%;
-  height: 10%;
+  border: 0.1em solid #7CC7FF;
+  width: 99.8%;
+  height: 29%;
   background-image: url('../img/header-bg-art.svg');
   background-repeat: no-repeat;
   background-size: 60%;
   background-position: 150% 100%;
 }
 
-.home-assessment-summary-header-title {
+.home-assessment-summary > div {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 33.3%;
+}
+
+.home-assessment-summary > .main-content {
+  position: relative;
+  float: left;
+  left: 1.8%;
+  width: 68.2%;
+  height: 100%;
+}
+
+.home-assessment-summary > .main-content > div {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 33.3%;
+}
+
+.home-assessment-summary > .main-content > div > div {
+  position: relative;
+  float: left;
+  width: 97%;
+  height: 100%;
+}
+
+.home-assessment-summary > .main-content > div > .middle-line {
+  border-bottom: 0.1em solid #7CC7FF;
+}
+
+.home-assessment-summary > .main-content > div > .content-title {
+  position: relative;
+  float: left;
+  width: 35%;
+  height: 50%;
+  top: 25%;
+}
+
+.home-assessment-summary > .main-content > div > .content-title > h1 {
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 2.2em;
+  line-height: 1.8em;
+  color: #62B2EF;
+  padding: 0;
+}
+
+.home-assessment-summary > .main-content > div > .submit-date {
+  position: relative;
+  float: left;
+  width: 50%;
+  left: 2%;
+  height: 20%;
+  top: 37%;
+}
+
+.home-assessment-summary > .main-content > div > .submit-date > h1 {
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 1.2em;
+  font-weight: 500;
+  line-height: 1.4em;
+  color: #5A5A5A;
+}
+
+.home-assessment-summary > .main-content > div > div > .summary-title {
+  position: relative;
+  float: left;
+  top: 15%;
+  width: 36%;
+  height: 85%;
+}
+
+.home-assessment-summary > .main-content > div > div > .summary-ponts {
+  position: relative;
+  float: left;
+  left: 2%;
+  width: 62%;
+  height: 100%;
+}
+
+.home-assessment-summary > .main-content > div > div > .summary-ponts > .points-block {
+  position: relative;
+  float: left;
+  top: 12%;
+  width: 100%;
+  height: 45%;
+}
+
+.points-block > .arrow-right {
+  position: relative;
+  float: left;
+  width: 2%;
+  height: 100%;
+  z-index: 3;
+}
+
+.arrow-right > i > svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+.arrow-right > i > svg polygon{
+  fill: black;
+}
+
+.points-block > .dot {
+  position: relative;
+  float: left;
+  z-index: 3;
+  left: 31%;
+  width: 1.5%;
+  height: 100%;
+}
+
+.dot > i > svg {
+  height: 100%;
+  width: 100%;
+}
+
+.points-block > .arrow-end {
+  position: relative;
+  float: right;
+  /*left: 96%;*/
+  z-index: 3;
+  width: 3%;
+  height: 40%;
+  top: 30%;
+  background-color: #5596E6;
+}
+
+.arrow-end > i > svg {
+  position: relative;
+  top: 16.7%;
+  left: 16.7%;
+  height: 66.7%;
+  width: 66.7%;
+}
+
+.arrow-end > i > svg polygon{
+  fill: white;
+}
+
+.points-block > .dash {
+  position: relative;
+  left: 1%;
+  z-index: 1;
+  width: 97.5%;
+  height: 1%;
+  top: 47%;
+  border-bottom: 0.1em dotted;
+}
+
+.points-block > .line {
+  position: absolute;
+  left: 1%;
+  z-index: 2;
+  /*width: 95%;*/
+  height: 1%;
+  top: 47%;
+  border-bottom: 0.1em solid #5596E6;
+}
+
+.points-block > .current-dot {
+  position: absolute;
+  z-index: 4;
+  /*left: 96%;*/
+  top: 25%;
+  width: 4%;
+  height: 50%;
+  cursor: pointer;
+}
+
+.current-dot > i > svg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.points-block > h1 {
+  position: relative;
+  float: left;
+  width: 25%;
+  height: 100%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.3em;
+  line-height: 0.5em;
+  color: #5A5A5A;
+  padding: 0;
+}
+
+.home-assessment-summary > .main-content > div > div > .summary-title > h1 {
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 1.8em;
+  line-height: 1.8em;
+  color: #5A5A5A;
+  padding: 0;
+}
+
+.home-assessment-summary > .select-content-bg {
+  position: relative;
+  float: left;
+  width: 26.5%;
+  height: 100%;
+  left: 1.8%;
+  background-color: #FFFFFF;
+  border-left: 0.1em solid #7CC7FF;
+  border-right: 0.1em solid #7CC7FF;
+  opacity: 0.5;
+}
+
+.home-assessment-summary > .select-content {
+  position: absolute;
+  left: 70%;
+  width: 26.7%;
+  height: 100%;
+}
+
+.home-assessment-summary > .select-content > .select-box {
+  position: relative;
+  float: left;
+  left: 15%;
+  top: 5%;
+  width: 70%;
+  height: 15%;
+  background-color: #EFF9FF;
+}
+
+.home-assessment-summary > .select-content > .select-box > .select2 {
+  height: 100%;
+}
+
+.home-assessment-summary > .select-content > .select-box > .select2 .select2-selection {
+  height: 100%;
+  outline: none;
+  background-color: #EFF9FF;
+}
+
+.home-assessment-summary > .select-content > .select-box > .select2 .select2-selection__rendered {
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1em;
+  line-height: 2.5em;
+  color: #777677;
+}
+
+.home-assessment-summary > .select-content > .select-box > .select2 b {
+  top: 1.8em;
+}
+
+.home-assessment-summary > .select-content > .review-box {
+  position: relative;
+  float: left;
+  width: 70%;
+  left: 15%;
+  top: 13%;
+  height: 40%;
+}
+
+.home-assessment-summary > .select-content > .review-box > h1 {
+  position: relative;
+  text-align: center;
+  float: left;
+  width: 100%;
+  height: 20%;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 1.4em;
+  font-weight: 500;
+  color: #5A5A5A;
+  padding: 0;
+}
+
+.home-assessment-summary > .select-content > .review-box > button {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 40%;
+  font-size: 1.4em;
+  line-height: 0.8em;
+}
+
+.home-assessment-summary > .select-content > .review-box > h2,
+.home-assessment-summary > .select-content > .draft-box > h2
+{
+  position: relative;
+  float: left;
+  text-align: left;
+  width: 50%;
+  height: 20%;
+  font-size: 1.1em;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  color: #999999;
+  padding: 0;
+}
+
+.home-assessment-summary > .select-content > .draft-box {
+  position: relative;
+  float: left;
+  width: 70%;
+  left: 15%;
+  top: 10%;
+  height: 40%;
+}
+
+.home-assessment-summary > .select-content > .draft-box > h1 {
+  position: relative;
+  text-align: center;
+  float: left;
+  width: 102%;
+  height: 20%;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 1.4em;
+  font-weight: 500;
+  color: #5A5A5A;
+  padding: 0;
+}
+
+.home-assessment-summary > .select-content > .draft-box > button {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 40%;
+  font-size: 1.4em;
+  line-height: 0.8em;
+}
+
+.home-assessment-summary > div > .first-title {
   position: relative;
   float: left;
   width: 30%;
   height: 50%;
   top: 25%;
+  left: 1.8%;
 }
 
-.home-assessment-summary-header-title > h1 {
-  font-family: "HelvNeue Light for IBM";
+.home-assessment-summary > div > .last-opened {
+  position: relative;
+  float: right;
+  width: 20%;
+  height: 20%;
+  top: 40%;
+  right: 5%;
+}
+
+.home-assessment-summary > div > .last-opened > h1 {
+  position: relative;
+  float: left;
+  left: 10%;
+  width: 45%;
+  height: 100%;
+  font-size: 1.2em;
+  line-height: 1.5em;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Arial","sans-serif";
+  color: #777677;
+  padding: 0;
+}
+
+.home-assessment-summary > div > .last-opened > h2 {
+  position: relative;
+  float: left;
+  left: 10%;
+  width: 50%;
+  height: 100%;
+  font-size: 1.2em;
+  line-height: 1.3em;
+  font-weight: 500;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  color: #777677;
+  padding: 0;
+}
+
+.home-assessment-summary > div > .first-title > h1 {
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.2em;
   line-height: 2em;
   color: #62B2EF;
   padding: 0;
 }
 
-.home-assessment-summary-header-btn {
+.home-assessment-summary > div > .second-title {
+  position: relative;
+  float: left;
+  width: 50%;
+  height: 90%;
+  top: 5%;
+  left: 1.5%;
+}
+
+.home-assessment-summary > div > .second-title > h1 {
+  position: relative;
+  float: left;
+  height: 100%;
+  font-family: "Helvetica Neue LT W1G","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 4.0em;
+  line-height: 1.5em;
+  color: #734098;
+  padding: 0;
+}
+
+.home-assessment-summary > div > .third-title {
+  position: relative;
+  float: left;
+  width: 70%;
+  height: 45%;
+  left: 1.5%;
+}
+
+.home-assessment-summary > div > .third-title > h1 {
+  position: relative;
+  float: left;
+  height: 50%;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  color: #777677;
+  padding: 0;
+}
+
+.home-assessment-summary > div > .start-btn {
+  position: relative;
+  float: right;
+  height: 40%;
+  width: 20%;
+  right: 5%;
+}
+
+.home-assessment-summary > div > .start-btn > button {
+  position: relative;
+  float: left;
+  height: 100%;
+  width: 100%;
+  font-family: "Helvetica Neue LT W1G","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 0em;
+}
+
+
+
+/*.home-assessment-summary-header-btn {
   position: relative;
   float: right;
   width: 20%;
@@ -2586,10 +3010,10 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   top: 0.1%;
   border-top: 0.1em solid #7CC7FF;
 }
-/*.home-assessment-summary-content:last-child {
+.home-assessment-summary-content:last-child {
   top: 0.1%;
   border-top: 0.1em solid #7CC7FF;
-}*/
+}
 
 .home-assessment-summary-title {
   position: relative;
@@ -2639,107 +3063,6 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 50%;
 }
 
-.home-assessment-summary-ponts-block > .arrow-right {
-  position: relative;
-  float: left;
-  top: 25%;
-  width: 1%;
-  height: 50%;
-}
-
-.arrow-right > i > svg {
-  height: 100%;
-  width: 100%;
-}
-
-.arrow-right > i > svg polygon{
-  fill: black;
-}
-
-.home-assessment-summary-ponts-block > .dot {
-  position: relative;
-  float: left;
-  z-index: 3;
-  left: 31%;
-  width: 0.8%;
-  height: 50%;
-  top: 25%;
-}
-
-.dot > i > svg {
-  height: 100%;
-  width: 100%;
-}
-
-.home-assessment-summary-ponts-block > .arrow-end {
-  position: relative;
-  float: right;
-  /*left: 96%;*/
-  top: 32.5%;
-  width: 1.5%;
-  height: 35%;
-  background-color: #5596E6;
-}
-
-.arrow-end > i > svg {
-  position: relative;
-  top: 16.7%;
-  left: 16.7%;
-  height: 66.7%;
-  width: 66.7%;
-}
-
-.arrow-end > i > svg polygon{
-  fill: white;
-}
-
-.home-assessment-summary-ponts-block > .dash {
-  position: relative;
-  left: 1%;
-  z-index: 1;
-  width: 97.5%;
-  height: 1%;
-  top: 47%;
-  border-bottom: 0.1em dotted;
-}
-
-.home-assessment-summary-ponts-block > .line {
-  position: absolute;
-  left: 1%;
-  z-index: 2;
-  /*width: 95%;*/
-  height: 1%;
-  top: 47%;
-  border-bottom: 0.1em solid #5596E6;
-}
-
-.home-assessment-summary-ponts-block > .current-dot {
-  position: absolute;
-  z-index: 3;
-  /*left: 96%;*/
-  top: 25%;
-  width: 2%;
-  height: 50%;
-}
-
-.current-dot > i > svg {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.home-assessment-summary-ponts-block > h1 {
-  position: relative;
-  float: left;
-  width: 25%;
-  height: 100%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
-  font-size: 1.3em;
-  line-height: 0.5em;
-  color: #5A5A5A;
-  padding: 0;
-}
-
 .home-assessment-summary-btn {
   position: relative;
   float: right;
@@ -2768,7 +3091,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   color: #5A5A5A;
   padding: 0;
   text-align: center;
-}
+}*/
 
 .home-header-image {
   position: relative;
@@ -2790,6 +3113,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 
 .team-member-add-block {
   position: fixed;
+  outline: none;
   left: 39%;
   top: 21%;
   width: 22vw;
