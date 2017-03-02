@@ -156,7 +156,7 @@ var HomeAddTeamMemberRole = React.createClass({
     self.props.setTeamMember(updatedMember);
     console.log('editInPlaceSaveLocation updatedMember:',updatedMember);
     $('#edit-inplace-location-'+uid).hide();
-    self.updateButtonOptions();
+    self.enableFinishButton();
   },
 
   editInPlaceCancelLocation: function(uid, prevdata) {
