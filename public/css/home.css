@@ -4879,6 +4879,33 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   background-color: rgb(255, 255, 255);
 }
 
+#addTeamMemberRoleBlock .Select-control, #addTeamMemberRoleBlock .Select--multi .Select-value {
+  border: 0.1em solid #333 !important;
+  border-radius: 0% !important;
+}
+
+#addTeamMemberRoleBlock .Select-option:last-child {
+  border-radius: 0% !important;
+}
+
+#addTeamMemberRoleBlock .Select-menu {
+  border: 0.1em solid #333 !important;
+}
+
+#addTeamMemberRoleBlock .Select-option.is-selected {
+  background-color: #ddd !important;
+}
+
+#addTeamMemberRoleBlock .Select-option.is-focused {
+  background-color: #333 !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+#addTeamMemberRoleBlock .is-focused:not(.is-open) > .Select-control {
+  box-shadow: none !important;
+}
+
 /* END: AddTeamMember Role, Allocation Modal */
 
 .home-iter-sub-section > input[type="checkbox"] {
