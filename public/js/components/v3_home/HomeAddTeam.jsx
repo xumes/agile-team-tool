@@ -146,34 +146,34 @@ var HomeAddTeam = React.createClass({
         return result;
       })
       .then(function(result) {
-
-       //if there is parent:
-       if (!_.isEmpty(self.state.selectedParentTeam))
-       {
+         //if there is parent:
+         if (!_.isEmpty(self.state.selectedParentTeam))
+         {
           console.log('There is a parent - do association');
           api.associateTeam(self.state.selectedParentTeam._id, currentTeam._id)
            .then(function(result) {
              console.log('after associate parents: ');
            })
-       }
-       //if there is child(ren):
-       if (!_.isEmpty(self.state.selectedChildTeams)&& self.state.selectedChildTeams.length >0)
-       {
-         console.log('There are children... prepare to associate');
-         _.each(self.state.selectedChildTeams, function(childTeam) {
-           console.log('Pushing on promiseArray - childTeam id:'+childTeam._id);
-           promiseArray.push(api.associateTeam(currentTeam._id, childTeam._id));
-          });
+         }
+         return result;
+      })
+      .then (function(result) {
+        //if there is child(ren):
+         if (!_.isEmpty(self.state.selectedChildTeams)&& self.state.selectedChildTeams.length >0)
+         {
+           console.log('There are children... prepare to associate');
+           _.each(self.state.selectedChildTeams, function(childTeam) {
+             console.log('Pushing on promiseArray - childTeam id:'+childTeam._id);
+             promiseArray.push(api.associateTeam(currentTeam._id, childTeam._id));
+            });
 
-          if (promiseArray.length > 0)
-            Promise.all(promiseArray);
+            if (promiseArray.length > 0)
+              Promise.all(promiseArray);
  
-          console.log('Finish associate children - ');
-       }
-
-       self.closeWindow();
-       alert('You have successfully added this team. ');
-      
+            console.log('Finish associate children - ');
+         }
+         self.closeWindow();
+         alert('You have successfully added this team. ');
       })
       .catch(function(err) {
         alert(err);
