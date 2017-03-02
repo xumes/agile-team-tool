@@ -14,11 +14,12 @@ var auth = {
   },
 
   requireLoginWithRedirect: function(req, res, next) {
-    if (req.path == '/auth' || req.path == '/auth/saml/ibm/callback')
+    if (req.path == '/auth' || req.path == '/auth/saml/ibm/callback') {
       return next();
-    else if (_.isEmpty(req.user))
+    } else if (_.isEmpty(req.user)) {
+      req.session.returnTo = req.originalUrl;
       return res.redirect('/login');
-    else
+    } else
       return next();
   },
 
