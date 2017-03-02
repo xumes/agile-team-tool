@@ -20,6 +20,16 @@ var HomeAddTeamNameModal = React.createClass({
       }
     };
   },
+  componentWillReceiveProps: function(newProps) {
+    if (_.isEmpty(newProps.newTeamObj.name)) {
+      this.disableNextButton();
+    }
+  },
+  disableNextButton: function() {
+    var buttonOptions = this.state.buttonOptions;
+    buttonOptions.nextDisabled = 'disabled';
+    this.setState({buttonOptions: buttonOptions, showStyle: {'display': 'none'}});
+  },
   componentWillUpdate: function(nextProps, nextState) {
     var self = this;
     // make sure to get the latest team names on focus of this screen
