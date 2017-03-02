@@ -53,6 +53,7 @@ var HomeTeamHeader = React.createClass({
   },
 
   hoverOnBtn: function(blockId) {
+    var self = this;
     if (blockId == 'home-team-header-btn-img') {
       var subBlockId = 'homeTeamHeaderBookmarkBtn';
     } else {
@@ -62,6 +63,11 @@ var HomeTeamHeader = React.createClass({
     $('#' + subBlockId + ' h').css('color', '#FFFFFF');
     $('.' + blockId).unbind('mouseenter mouseleave');
     $('.' + blockId).hover(function(){
+      if (blockId == 'home-team-header-btn-img') {
+        self.showBookmark();
+      } else {
+        self.showTeamTable();
+      }
       $('#' + subBlockId + ' svg > path').css('fill', '#325C80');
       $('#' + subBlockId + ' h').css('color', '#325C80');
     },function(){
@@ -86,6 +92,8 @@ var HomeTeamHeader = React.createClass({
     var self = this;
     if ($('#teamMemberTable').css('display') == 'none') {
       $('.home-team-header-btn-img2').unbind('mouseenter mouseleave');
+      $('#homeTeamHeaderMemberBtn' + ' svg > path').css('fill', '#325C80');
+      $('#homeTeamHeaderMemberBtn' + ' h').css('color', '#325C80');
       $('#teamMemberTable').fadeIn();
     } else {
       self.hoverOnBtn('home-team-header-btn-img2');
@@ -103,6 +111,8 @@ var HomeTeamHeader = React.createClass({
     var self = this;
     if ($('#teamBookmark').css('display') == 'none') {
       $('.home-team-header-btn-img').unbind('mouseenter mouseleave');
+      $('#homeTeamHeaderBookmarkBtn' + ' svg > path').css('fill', '#325C80');
+      $('#homeTeamHeaderBookmarkBtn' + ' h').css('color', '#325C80');
       $('#teamBookmark').fadeIn();
     } else {
       self.hoverOnBtn('home-team-header-btn-img');

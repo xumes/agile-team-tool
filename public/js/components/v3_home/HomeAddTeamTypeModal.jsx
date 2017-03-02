@@ -12,8 +12,23 @@ var HomeAddTeamTypeModal = React.createClass({
         prevScreen: 'showTeamNameModal',
         prevDisabled: '',
         nextScreen: 'showTeamHierarchyModal',
-        nextDisabled: ''
+        nextDisabled: 'disabled'
       }
+    }
+  },
+
+  componentDidMount: function() {
+    this.setDefaultMember();
+  },
+
+  componentWillReceiveProps: function(newProps) {
+    if (newProps.newTeamObj && _.isUndefined(newProps.newTeamObj.type)) {
+      this.props.setTeamType(null);
+      console.log('HomeAddTeamTypeModal componentWillReceiveProps type ',newProps.newTeamObj.type)
+      var buttonOptions = this.state.buttonOptions;
+      buttonOptions.nextDisabled = '';
+      this.setState({buttonOptions: buttonOptions});
+      this.setDefaultMember();
     }
   },
 
@@ -33,7 +48,6 @@ var HomeAddTeamTypeModal = React.createClass({
     var self = this;
     api.getUsersInfo(user.ldap.uid)
       .then(function(result){
-        console.log('setDefaultMember getUsersInfo:', result);
         var data = {
           userId: user.ldap.uid,
           email: user.ldap.emailAddress,
@@ -43,6 +57,7 @@ var HomeAddTeamTypeModal = React.createClass({
           location: result[0].location || '',
           workTime: 100
         };
+        console.log('setDefaultMember data:', data);
         self.props.setTeamMember([data]);
       });
   },

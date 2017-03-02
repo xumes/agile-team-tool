@@ -25,6 +25,8 @@ var HomeAddTeamMemberModal = React.createClass({
     var self = this;
     // $('#tbl-members-data').scrollable(); // it wont work..table becomes messy!
     self.setState({facesPersonFullName: ''});
+    self.disableNextButton();
+    self.setDefaultMember();
   },
 
   componentWillUpdate: function(nextProps, nextState) {
@@ -74,9 +76,7 @@ var HomeAddTeamMemberModal = React.createClass({
         self.props.setTeamMember(teamMemberData);
 
         if (!_.isEmpty(teamMemberData)) {
-          var buttonOptions = self.state.buttonOptions;
-          buttonOptions.nextDisabled = '';
-          self.setState({ buttonOptions: buttonOptions });
+          self.enableNextButton();
         }
     } else {
       $('#txtTeamMemberNameError').addClass('ibm-alert-link');
@@ -95,14 +95,42 @@ var HomeAddTeamMemberModal = React.createClass({
     console.log('deleteTeamMember after:', updatedMember);
     self.props.setTeamMember(updatedMember);
     if (_.isEmpty(updatedMember)) {
-      var buttonOptions = self.state.buttonOptions;
-      buttonOptions.nextDisabled = 'disabled';
-      self.setState({ buttonOptions: buttonOptions });
+      self.disableNextButton();
     }
   },
 
   updateFacesObj: function(obj) {
     this.setState({facesPerson: obj});
+  },
+
+  disableNextButton: function() {
+    var buttonOptions = this.state.buttonOptions;
+    buttonOptions.nextDisabled = 'disabled';
+    this.setState({buttonOptions: buttonOptions});
+  },
+
+  enableNextButton: function() {
+    var buttonOptions = this.state.buttonOptions;
+    buttonOptions.nextDisabled = '';
+    this.setState({buttonOptions: buttonOptions});
+  },
+
+  setDefaultMember: function() {
+    var self = this;
+    api.getUsersInfo(user.ldap.uid)
+      .then(function(result){
+        console.log('setDefaultMember getUsersInfo:', result);
+        var data = {
+          userId: user.ldap.uid,
+          email: user.ldap.emailAddress,
+          name: user.ldap.hrFirstName + ' ' + user.ldap.hrLastName,
+          role: _.isEqual(self.props.newTeamObj.type, 'squad') ? 'Iteration Manager' : 'Team Lead',
+          allocation: 100,
+          location: result[0].location || '',
+          workTime: 100
+        };
+        self.props.setTeamMember([data]);
+      });
   },
 
   render: function() {
