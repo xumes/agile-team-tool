@@ -383,8 +383,8 @@ var HomeBookmark = React.createClass({
           </div>
           <div class='home-team-header-bookmark-btns'>
             <p class='ibm-btn-row ibm-button-link' style={{'position':'relative','top':'15%','right':'5%','float':'right'}}>
-              <a class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50' onClick={self.showTeamLinkModal.bind(null, null)}>Add New Link</a>
-              <a class='ibm-btn-sec ibm-btn-small ibm-btn-blue-50' onClick={self.props.showBookmark}>Cancel</a>
+              <button class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50' onClick={self.showTeamLinkModal.bind(null, null)} disabled={!self.props.loadDetailTeam.access}>Add New Link</button>
+              <button class='ibm-btn-sec ibm-btn-small ibm-btn-blue-50' onClick={self.props.showBookmark}>Cancel</button>
             </p>
           </div>
         </div>

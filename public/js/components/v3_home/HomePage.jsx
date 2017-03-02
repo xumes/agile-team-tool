@@ -285,6 +285,23 @@ var HomePage = React.createClass({
         team: {$set: data}
       });
       self.setState({loadDetailTeam: updatedTeam});
+
+      // front end sort
+      console.log(updatedTeam.team.pathId,updatedTeam.team.name);
+      $('#'+updatedTeam.team.pathId+ ' > a > span.agile-team-title').html(updatedTeam.team.name);
+      var li = $('#'+updatedTeam.team.pathId).parent('ul').children('li');
+      var liSorted = _.sortBy(li,function(element){
+        var name = $('#'+ element.id + ' > a > span.agile-team-title').html();
+        console.log($('#'+ element.id + ' > a > span.agile-team-title'));
+        return name.toLowerCase();
+      });
+      _.each(liSorted, function(element) {
+        $('#'+updatedTeam.team.pathId).parent('ul').append(element);
+      });
+      $('.nano').nanoScroller();
+      $('.nano').nanoScroller({
+        scrollTo: $('#link_'+updatedTeam.team.pathId)
+      });
     }
   },
 
