@@ -83,7 +83,6 @@ var HomeAddTeamNameModal = React.createClass({
     return (
       <div>
         <Modal aria-labelledby='modal-label' className='reactbootstrap-modal' backdropClassName='reactbootstrap-backdrop' show={self.props.activeWindow} onHide={self.props.closeWindow}>
-
           <div class='new-team-creation-add-block'>
             <div class='new-team-creation-add-block-header'>
               <h>New Team Creation</h>
@@ -91,18 +90,20 @@ var HomeAddTeamNameModal = React.createClass({
             </div>
             
             <div class='new-team-creation-add-block-content ibm-row-form1'>
-              <div class='new-team-creation-add-block-content-name'>
-              <label for='newTeamName'>Team Name</label>
-              <input type='text' size='30' id='newTeamName' name='newTeamName' aria-label='team name' ref='newTeamName' onChange={self.nameUpdate} defaultValue={self.props.newTeamObj.name}/>
-              <div class='error-dup-team-name'>
-                <span style={this.state.showStyle}>
-                  <span class='alert-icon'>
-                    <InlineSVG src={require('../../../img/Att-icons/att-icons_alert.svg')}></InlineSVG>
+              <div class='new-team-creation-add-block-content-name-wrapper'>
+                <div class='new-team-creation-add-block-content-name'>
+                <label for='newTeamName'>Team Name</label>
+                <input type='text' size='30' id='newTeamName' name='newTeamName' aria-label='team name' ref='newTeamName' onChange={self.nameUpdate} defaultValue={self.props.newTeamObj.name}/>
+                <div class='error-dup-team-name'>
+                  <span style={this.state.showStyle}>
+                    <span class='alert-icon'>
+                      <InlineSVG src={require('../../../img/Att-icons/att-icons_alert.svg')}></InlineSVG>
+                    </span>
+                    <span class='alert-text'>
+                      This team name is already used
+                    </span>
                   </span>
-                  <span class='alert-text'>
-                    This team name is already used
-                  </span>
-                </span>
+                </div>
               </div>
             </div>
 
@@ -115,7 +116,6 @@ var HomeAddTeamNameModal = React.createClass({
           </div>
 
           <HomeAddTeamFooterButtons buttonOptions={self.state.buttonOptions} openWindow={self.props.openWindow} />
-
           </div>
         </Modal>
       </div>

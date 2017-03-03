@@ -138,38 +138,36 @@ var HomeAddTeamMemberModal = React.createClass({
     var teamObj = self.props.newTeamObj;
     return (
       <Modal aria-labelledby='modal-label' className='reactbootstrap-modal' backdropClassName='reactbootstrap-backdrop' show={self.props.activeWindow}>
-        <div class='new-team-creation-addteam-member'>
-            <div class='new-team-creation-add-block-header'>
-              <h>Add Team Members</h>
-              <span class='close-ico'><InlineSVG onClick={self.props.closeWindow} src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG></span>
-            </div>
-            <div class='new-team-creation-add-block-pad'>
-              <div class='new-team-creation-add-block-content' style={{'marginBottom': '6.1em'}} >
-                <div class='new-team-creation-add-block-content-mid2'>
-                  <form class="ibm-row-form">
-                    <div class='col1'>
-                      <HomeAddTeamMemberFaces addTeamMember={self.addTeamMember} updateFacesObj={self.updateFacesObj} changeHandlerFacesFullname={self.changeHandlerFacesFullname} />
-                    </div>
-
-                    <div class='col2'>
-                      <div class='note2'>
-                        <strong class="note1">NOTE:</strong>
-                        <p>You will be able to customize your team members locations, allocations and roles next.</p>
-                      </div>
-                    </div>
-
-                    <div class='clearboth'></div>
-
-                    <div class='tbl-results'>
-                      <HomeAddTeamMemberTable newTeamObj={self.props.newTeamObj} deleteTeamMember={self.deleteTeamMember} />
-                    </div>
-                  </form>
-
+        <div class='new-team-creation-add-block new-team-creation-addteam-member' id='addTeamMemberBlock'>
+          <div class='new-team-creation-add-block-header'>
+            <h>Add Team Members</h>
+            <span class='close-ico'><InlineSVG onClick={self.props.closeWindow} src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG></span>
+          </div>
+          <div class='new-team-creation-add-block-content'>
+            <div class='new-team-creation-add-block-content-mid'>
+              <form class="ibm-row-form">
+                <div class='col1'>
+                  <HomeAddTeamMemberFaces addTeamMember={self.addTeamMember} updateFacesObj={self.updateFacesObj} changeHandlerFacesFullname={self.changeHandlerFacesFullname} />
                 </div>
-              </div>
 
-              <HomeAddTeamFooterButtons buttonOptions={self.state.buttonOptions} openWindow={self.props.openWindow} />
+                <div class='col2'>
+                  <div class='note2'>
+                    <strong class="note1">NOTE:</strong>
+                    <p>You will be able to customize your team members locations, allocations and roles next.</p>
+                  </div>
+                </div>
+
+                <div class='clearboth'></div>
+
+                <div class='tbl-results'>
+                  <HomeAddTeamMemberTable newTeamObj={self.props.newTeamObj} deleteTeamMember={self.deleteTeamMember} />
+                </div>
+              </form>
+
             </div>
+          </div>
+
+          <HomeAddTeamFooterButtons buttonOptions={self.state.buttonOptions} openWindow={self.props.openWindow} />
         </div>
       </Modal>
     );

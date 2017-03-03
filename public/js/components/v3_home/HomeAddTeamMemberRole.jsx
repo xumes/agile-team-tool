@@ -215,36 +215,34 @@ var HomeAddTeamMemberRole = React.createClass({
 
     return (
       <Modal aria-labelledby='modal-label' className='reactbootstrap-modal' backdropClassName='reactbootstrap-backdrop' show={self.props.activeWindow} onShow={self.show}>
-        <div class='new-team-creation-addteam-member' id='addTeamMemberRoleBlock'>
-            <div class='new-team-creation-add-block-header'>
-              <h>Team Member Roles and Time Allocations</h>
-              <span class='close-ico'><InlineSVG onClick={self.props.closeWindow} src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG></span>
-            </div>
-            <div class='new-team-creation-add-block-pad'>
-              <div class='new-team-creation-add-block-content' style={{'marginBottom': '15em'}}>
-                <div class='new-team-creation-add-block-content-mid2'>
-                  <p class='desc'>Edit the location, role and time allocation of each team member from dropdowns provided.</p>
-                  <div class='tbl-memberRole-results'>
-                    <table class='tbl-members' >
-                      <thead>
-                        <tr>
-                          <td class='heading r_name' style={{textAlign:'left'}}>Name</td>
-                          <td class='heading r_location' style={{textAlign:'center'}}>Location</td>
-                          <td class='heading r_role' style={{textAlign:'center'}}>Role</td>
-                          <td class='heading r_allocation' style={{textAlign:'center'}}>Allocation</td>
-                          <td class='heading r_workweek' style={{textAlign:'center'}}>Avg. Work Week</td>
-                        </tr>
-                      </thead>
-                      <tbody class='tbl-members-role-data'>
-                        {self.props.newTeamObj && self.props.newTeamObj.members && self.props.newTeamObj.members.length != 0  ? teamMemberList : <tr style={{display:'block'}}><td colSpan='4' class='dataTables_empty'>No data available</td></tr>}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+        <div class='new-team-creation-add-block new-team-creation-addteam-member' id='addTeamMemberRoleBlock'>
+          <div class='new-team-creation-add-block-header'>
+            <h>Team Member Roles and Time Allocations</h>
+            <span class='close-ico'><InlineSVG onClick={self.props.closeWindow} src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG></span>
+          </div>
+          <div class='new-team-creation-add-block-content'>
+            <div class='new-team-creation-add-block-content-mid'>
+              <p class='desc'>Edit the location, role and time allocation of each team member from dropdowns provided.</p>
+              <div class='tbl-memberRole-results'>
+                <table class='tbl-members' >
+                  <thead>
+                    <tr>
+                      <td class='heading r_name' style={{textAlign:'left'}}>Name</td>
+                      <td class='heading r_location' style={{textAlign:'center'}}>Location</td>
+                      <td class='heading r_role' style={{textAlign:'center'}}>Role</td>
+                      <td class='heading r_allocation' style={{textAlign:'center'}}>Allocation</td>
+                      <td class='heading r_workweek' style={{textAlign:'center'}}>Avg. Work Week</td>
+                    </tr>
+                  </thead>
+                  <tbody class='tbl-members-role-data'>
+                    {self.props.newTeamObj && self.props.newTeamObj.members && self.props.newTeamObj.members.length != 0  ? teamMemberList : <tr style={{display:'block'}}><td colSpan='4' class='dataTables_empty'>No data available</td></tr>}
+                  </tbody>
+                </table>
               </div>
-
-              <HomeAddTeamFooterButtons buttonOptions={self.state.buttonOptions} openWindow={self.props.openWindow} saveTeam={self.props.saveTeam} />
             </div>
+          </div>
+
+          <HomeAddTeamFooterButtons buttonOptions={self.state.buttonOptions} openWindow={self.props.openWindow} saveTeam={self.props.saveTeam} />
         </div>
       </Modal>
     );
