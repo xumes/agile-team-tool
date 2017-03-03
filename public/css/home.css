@@ -4299,7 +4299,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .team-parent-child-hierarchy-p > .line1 {
   position: absolute;
   left: 18%;
-  z-index: 2;
   /*width: 95%;*/
   height: 20%;
   top: 95%;

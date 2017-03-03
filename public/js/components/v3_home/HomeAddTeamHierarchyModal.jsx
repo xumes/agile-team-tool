@@ -170,7 +170,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
       return (
          <p key={index} id={item._id}>
           <h title={item.name}>{item.name}</h>
-          <InlineSVG class='list-child-remove-icon' src={require('../../../img/Att-icons/att-icons_remove.svg')} onClick={self.childDeleteHandler.bind(null, item._id)}></InlineSVG> </p>
+          <InlineSVG class='list-child-remove-icon' src={require('../../../img/Att-icons/att-icons_delete.svg')} onClick={self.childDeleteHandler.bind(null, item._id)}></InlineSVG> </p>
         )
     });
 
@@ -210,7 +210,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
                 <div class='team-hier-block'>
                   <div class='team-setup-icon-hier'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_parent+squad.svg')}></InlineSVG>
-                   </div>
+                  </div>
 
                    <div class='team-parent-child-hierarchy-p'>  
                      <div class='line1' style={{'width':150}}>
