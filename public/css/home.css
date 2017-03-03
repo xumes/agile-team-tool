@@ -2677,7 +2677,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   z-index: 4;
   /*left: 96%;*/
   top: 25%;
-  width: 4%;
+  width: 3%;
   height: 50%;
   cursor: pointer;
 }
@@ -2784,12 +2784,14 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   position: relative;
   float: left;
   width: 100%;
-  height: 40%;
+  height: 35%;
   font-size: 1.4em;
   line-height: 0.8em;
+  padding: 0;
 }
 
 .home-assessment-summary > .select-content > .review-box > h2,
+.home-assessment-summary > .select-content > .review-box > h3,
 .home-assessment-summary > .select-content > .draft-box > h2
 {
   position: relative;
@@ -2814,9 +2816,8 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 
 .home-assessment-summary > .select-content > .draft-box > h1 {
   position: relative;
-  text-align: center;
   float: left;
-  width: 102%;
+  width: 105%;
   height: 20%;
   font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
   font-size: 1.4em;
@@ -2829,9 +2830,10 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   position: relative;
   float: left;
   width: 100%;
-  height: 40%;
+  height: 35%;
   font-size: 1.4em;
   line-height: 0.8em;
+  padding: 0;
 }
 
 .home-assessment-summary > div > .first-title {
