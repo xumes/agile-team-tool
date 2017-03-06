@@ -13,6 +13,7 @@ schedule.scheduleJob('* * 2 * *', function() {
       var bluepagesURL = process.env.bluepagesURL;
       var requestURL = bluepagesURL + '/id/' + user.userId + '/uid';
       request(requestURL, function(err, response, body) {
+        var body = JSON.parse(body) ; // if the body is STRING, try to parse it
         if (response.statusCode == 404 && body.message == 'Unable to find record') {
           user.remove();
           workerLogger.info('User', user.email, 'unable to get Bluepages record');
