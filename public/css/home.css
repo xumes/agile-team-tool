@@ -5299,3 +5299,234 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   padding-top: 0.25em;
   text-align: justify;
 }
+
+.assessment-popover-block {
+  position: fixed;
+  float: left;
+  outline: none;
+  top: 10%;
+  left: 10%;
+  width: 80vw;
+  height: 53.36vw;
+  min-width: 1024px;
+  min-height: 576px;
+  background-color: #FFFFFF;
+  box-shadow: 0 0.2em 0.4em 0 rgba(0,0,0,0.18);
+  overflow: auto;
+}
+
+.assessment-popover-block > .assessment-title {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 5%;
+  background-color: #4178BE;
+}
+
+.assessment-popover-block > .assessment-title > h1 {
+  position: relative;
+  float: left;
+  left: 2%;
+  top: 30%;
+  color: #FFFFFF;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.5em;
+  padding: 0;
+}
+
+.assessment-popover-block > .assessment-title > div {
+  position: relative;
+  float: right;
+  width: 3%;
+  height: 50%;
+  top: 30%;
+  cursor: pointer;
+  right: 0.5%;
+}
+
+.assessment-popover-block > .assessment-title > div svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: auto;
+}
+
+.assessment-popover-block > .assessment-title > div svg g {
+  fill: #FFFFFF;
+  opacity: 1;
+}
+
+.assessment-popover-block > .assessment-header {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 15%;
+}
+
+.assessment-popover-block > .assessment-header > .header-title {
+  position: relative;
+  float: left;
+  width: 48%;
+  left: 2%;
+  height: 100%;
+  margin-left: 0;
+}
+
+.assessment-popover-block > .assessment-header > .header-title > h1 {
+  position: relative;
+  float: left;
+  top: 35%;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 2.2em;
+  font-weight: 300;
+  color: #734098;
+  padding: 0;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status {
+  position: relative;
+  float: left;
+  left: 2%;
+  width: 48%;
+  height: 100%;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-title {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 50%;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-title > h1 {
+  position: relative;
+  float: left;
+  top: 70%;
+  height: 28%;
+  text-align: center;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  color: #777677;
+  border-bottom: 0.1em solid #777677;
+  padding: 0;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 50%;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector {
+  position: relative;
+  float: left;
+  width: 19%;
+  height: 40%;
+  top: 10%;
+  font-size: 1em;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector > .select2 {
+  height: 100%;
+  font-size: 1em;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector > .select2 .select2-selection {
+  height: 100%;
+  outline: none;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector > .select2 .select2-selection__rendered {
+  height: 100%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 1.8em;
+  color: #777677;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector > .select2 .select2-selection__arrow {
+  height: 100%;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector > .select2 b {
+  top: 1.6em;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .submit-date-selector {
+  position: relative;
+  float: left;
+  left: 7%;
+  width: 25%;
+  height: 40%;
+  top: 10%;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .submit-date-selector > h1 {
+  display: inline-block;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 2.0em;
+  color: black;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .submit-date-selector > h2 {
+  display: inline-block;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 2.0em;
+  color: #4178BE;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .last-updated-by {
+  position: relative;
+  float: left;
+  left: 8%;
+  width: 30%;
+  height: 40%;
+  top: 10%;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .last-updated-by > h1 {
+  position: relative;
+  float: left;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 2.0em;
+  color: black;
+}
+
+.assessment-popover-block > .lc-header {
+  position: relative;
+  float: left;
+  left: 2%;
+  width: 96%;
+  height: 5%;
+  border-bottom: 0.1em solid #C7C7C7;
+}
+
+.assessment-popover-block > .lc-header > .header-title {
+  position: relative;
+  float: left;
+  top: 50%;
+  width: 20%;
+  height: 50%;
+  margin: 0;
+}
+
+.assessment-popover-block > .lc-header > .header-title > h1 {
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  color: #5A5A5A;
+  padding: 0;
+}
+
+.assessment-popover-block > .agile-maturity {
+  position: relative;
+  float: left;
+  width: 96%;
+  left: 2%;
+}
