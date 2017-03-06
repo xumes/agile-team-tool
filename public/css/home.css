@@ -1614,14 +1614,14 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   float: left;
   /*position: relative;*/
   /*left: -3%;*/
-  top: -25%;
+  top: -10%;
   /*display: inline-block;*/
   z-index: 10;
   width: 40%;
   height: 700%;
 }
 .home-team-header-description-arrow {
-  height: 20%;
+  height: 5em;
   width: 5%;
   display: inline-block;
   float: left;
@@ -1641,7 +1641,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   fill: #4178BE;
 }
 .home-team-header-description-title {
-  height: 20%;
+  height: 5em;
   width: 95%;
   background-color: #4178BE;
   display: inline-block;
@@ -1667,7 +1667,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   width: 10%;
   height: 70%;
   top: 30%;
-  right: 5%;
+  right: 1%;
   cursor: pointer;
 }
 
@@ -1698,7 +1698,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   left: 10%;
   width: 80%;
   height: 60%;
-  display: inline-block;
+  display: block;
 }
 
 .home-team-header-description-content > div > h1 {
@@ -1728,7 +1728,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   float: right;
   position: relative;
   right: 10%;
-  top: 10%;
+  top: 15%;
 }
 
 .home-trends-block {
@@ -2333,13 +2333,10 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   z-index: 10;
   float: left;
   width: 35%;
-  height: 700%;
-  /*background-color: #FFFFFF;
-  box-shadow: 0 0 10px 0 rgba(0,0,0,0.16);*/
 }
 
 .home-team-header-bookmark-arrow {
-  height: 14%;
+  height: 5em;
   width: 5%;
   display: inline-block;
   float: left;
@@ -2369,7 +2366,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .home-team-header-bookmark-title {
-  height: 14%;
+  height: 5em;
   width: 100%;
   background-color: #4178BE;
   display: inline-block;
@@ -2377,15 +2374,15 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .home-team-header-bookmark-title > h {
-  height: 50%;
   position: relative;
-  top: 35%;
+  top: 50%;
   left: 5%;
   font-family: "HelvNeue Bold for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   color: #FFFFFF;
   display: inline-block;
   float: left;
+  transform: translate(0%, -50%);
 }
 
 .home-team-header-bookmark-title > div {
@@ -2394,7 +2391,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   width: 10%;
   height: 70%;
   top: 32%;
-  right: 5%;
+  right: 1%;
   cursor: pointer;
 }
 
@@ -2411,29 +2408,33 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 
 .home-team-header-bookmark-scroll {
   position: relative;
-  height: 66%;
   width: 100%;
   float: left;
-  overflow: auto;
   border-bottom: 0.1em solid #E0E0E0;
+  overflow-x: auto;
 }
 
 .home-team-header-bookmark-scroll > div {
-  height: 20%;
+  height: 4.5em;
   width: 100%;
   border-bottom: 0.1em solid #E0E0E0;
 }
 
 .home-team-header-bookmark-scroll > .no-link-block {
-  position: relative;
-  width: 100%;
-  height: 10%;
-  top: 40%;
-  text-align: center;
+  border-bottom: 0 none;
+  color: #777677;
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
-  color: #777677;
-  border-bottom: 0;
+  height: 10em;
+  position: relative;
+  text-align: center;
+}
+
+.no-link-block > h {
+  display: inline-block;
+  position: relative;
+  top: 50%;
+  transform: translate(0px, -50%);
 }
 
 .home-team-header-bookmark-scroll > div > div {
@@ -2451,28 +2452,29 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   color: #4178BE;
   padding: 0;
   position: relative;
-  top: 35%;
+  top: 50%;
   left: 5%;
   float: left;
-  width: 50%;
+  width: 73%;
   cursor: pointer;
+  transform: translate(0%, -50%);
 }
 
 .home-team-header-bookmark-scroll > div > span {
   position: relative;
   width: 8%;
-  height: 80%;
-  top: 10%;
+  height: 50%;
+  top: 50%;
   left: 29%;
   float: left;
   cursor: pointer;
+  transform: translate(0%,-50%);
 }
 
 .home-team-header-bookmark-scroll > div > span > i > svg{
   position: relative;
   width: 100%;
   height: auto;
-  top: 20%;
   left: 0;
 }
 
@@ -2486,7 +2488,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 .home-team-header-bookmark-btns {
   position: relative;
   float: left;
-  height: 20%;
+  height: 6em;
   width: 100%;
 }
 
@@ -3177,10 +3179,6 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   z-index: 12;
 }
 
-.modal-wrapper {
-  width: 30em;
-}
-
 .teamlink-modal {
   height: 30%;
 }
@@ -3194,25 +3192,6 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   background-color: rgba(0, 0, 0, 0.50);
   z-index: 11;
 }
-
-.att-modal .x1-ui-modal.modal button.close .glyphicon {
-  font-size: inherit;
-  color: #FFF;
-}
-
-.att-modal .glyphicon-remove::before {
-  content: "\e604";
-}
-
-.glyphicon, .checkbox input[type="checkbox"] + span::after,
-.checkbox-inline input[type="checkbox"] + span::after,
-.switch input[type="checkbox"] + span, .switch-inline input[type="checkbox"] + span,
-.breadcrumb > li + li::before, .alert::before, .alert-dismissable .close::before, .alert-dismissible .close::before {
-  color: #777677;
-  font-family: "UX1 Glyphicons";
-  font-size: 16px;
-}
-
 /* END: ReactModal */
 
 /* BEGIN: Important Link section */
@@ -3229,11 +3208,11 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .att-modal input {
-  font-size: 1.12em;
+  font-size: 1em;
 }
 
 .att-modal .select2 {
-  font-size: 1.26em;
+  font-size: inherit;
 }
 
 .att-modal select, .att-modal .select2-container--default {
@@ -3248,36 +3227,20 @@ width: 100% !important;
   font-size: 10.21pt;
 }
 
-.att-modal .ibm-row-form {
-  padding-top: 1%;
-}
-
 .att-modal .ibm-row-form p {
-  margin-bottom: 8.3%;
+  padding-top: 8.3%;
   width: 100%;
 }
 
 .att-modal .ibm-row-form label {
   font-family: "HelvNeue Medium for IBM";
   color: #323232;
-  font-size: 1.1em;
-  line-height: 1em;
-  outline: none;
+  font-size: 1em;
 }
 
 .att-modal .ibm-row-form .lblRoman {
   font-family: "HelvNeue Roman for IBM";
   line-height: 1.7em;
-}
-
-.glyphicon {
-  font-family: "UX1 Glyphicons";
-  font-size: 14px;
-}
-
-.glyphicon-remove::before {
-  content: "\e604";
-  color: #fff;
 }
 
 .iterspecific {
@@ -3300,37 +3263,22 @@ width: 100% !important;
 
 /* END: Important Link Modal */
 
+
+.att-modal .modal-header {
+  background-color: #4178be;
+  font-size: 1em;
+  height: 4em;
+  position: relative;
+}
+
 .att-modal label {
   max-width: 90%;
 }
 
-.att-modal .modal-header::after {
-  clear: both;
-}
-
-.att-modal .modal-header::before, .att-modal .modal-header::after {
-  content: " ";
-  display: table;
-}
-
-.att-modal .modal-footer::before, .att-modal .modal-footer::after {
-  content: " ";
-  display: table;
-}
-
-.att-modal .modal-footer::after {
-  clear: both;
-}
-
-.att-modal .modal-footer {
-  border-top: 1px solid #e0e0e0;
-  padding: 30px 20px;
-  text-align: right;
-}
-
 .att-modal .modal-footer {
   border: medium none;
-  padding: 4% 5%;
+  padding: 2em 2.5em;
+  text-align: right;
 }
 
 .att-modal .modal-footer .btn + .btn {
@@ -3338,74 +3286,27 @@ width: 100% !important;
   margin-bottom: 0;
 }
 
-.att-modal .modal-title {
+.att-modal .modal-header .modal-title {
   color: #ffffff;
-  display: inline-block;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.5em;
-  font-weight: bold;
-  font-family: "HelvNeue Bold for IBM" !important;
-  padding-top: 3%;
+  padding: 0 0 0 1.5em;
+  position: relative;
+  top: 25%;
 }
 
-.att-modal .modal-header .close { /* line 13835 */
-  line-height: 44px;
-  margin: 0;
+.att-modal .modal-header .close-btn {
+  cursor: pointer;
+  display: inline-block;
+  float: right;
+  height: 50%;
+  position: relative;
+  top: 25%;
+  width: 8%;
 }
 
-.att-modal .modal-header .close:hover .glyphicon, .att-modal .modal-header .close:hover .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox .modal-header .close:hover input[type="checkbox"] + span::after, .att-modal .modal-header .close:hover
-.att-modal .checkbox-inline input[type="checkbox"] + span::after,
-.att-modal .checkbox-inline .modal-header .close:hover input[type="checkbox"] + span::after, .att-modal .modal-header .close:hover .switch input[type="checkbox"] + span, .att-modal .switch .modal-header .close:hover input[type="checkbox"] + span, .att-modal .modal-header .close:hover
-.switch-inline input[type="checkbox"] + span,
-.att-modal .switch-inline .modal-header .close:hover input[type="checkbox"] + span, .att-modal .modal-header .close:hover .breadcrumb > li + li:before, .att-modal .modal-header .close:hover .alert:before, .att-modal .modal-header .close:hover .alert-dismissable .close:before, .att-modal .alert-dismissable .modal-header .close:hover .close:before, .att-modal .modal-header .close:hover
-.att-modal .alert-dismissible .close:before,
-.att-modal .alert-dismissible .modal-header .close:hover .close:before,
-.att-modal .modal-header .close:focus .glyphicon,
-.att-modal .modal-header .close:focus .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox
-.att-modal .modal-header .close:focus input[type="checkbox"] + span::after,
-.att-modal .modal-header .close:focus .checkbox-inline input[type="checkbox"] + span::after,
-.att-modal .checkbox-inline .modal-header .close:focus input[type="checkbox"] + span::after,
-.att-modal .modal-header .close:focus .switch input[type="checkbox"] + span,
-.att-modal .switch .modal-header .close:focus input[type="checkbox"] + span,
-.att-modal .modal-header .close:focus .switch-inline input[type="checkbox"] + span,
-.att-modal .switch-inline .modal-header .close:focus input[type="checkbox"] + span,
-.att-modal .modal-header .close:focus .breadcrumb > li + li:before,
-.att-modal .modal-header .close:focus .alert:before,
-.att-modal .modal-header .close:focus .alert-dismissable .close:before,
-.att-modal .alert-dismissable .modal-header .close:focus .close:before,
-.att-modal .modal-header .close:focus .alert-dismissible .close:before,
-.att-modal .alert-dismissible .att-modal .modal-header .close:focus .close:before {
-  border-color: #FFFFFF;
-}
-
-.att-modal .modal-header .close .glyphicon, .att-modal .modal-header .close .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox .modal-header .close input[type="checkbox"] + span::after, .att-modal .modal-header .close
-.att-modal .checkbox-inline input[type="checkbox"] + span::after,
-.att-modal .checkbox-inline .modal-header .close input[type="checkbox"] + span::after, .att-modal .modal-header .close .switch input[type="checkbox"] + span, .att-modal .switch .modal-header .close input[type="checkbox"] + span, .att-modal .modal-header .close
-.att-modal .switch-inline input[type="checkbox"] + span,
-.att-modal .switch-inline .modal-header .close input[type="checkbox"] + span, .att-modal .modal-header .close .breadcrumb > li + li:before, .att-modal .modal-header .close .alert:before, .att-modal .modal-header .close .alert-dismissable .close:before, .att-modal .alert-dismissable .modal-header .close .close:before, .att-modal .modal-header .close
-.att-modal .alert-dismissible .close:before,
-.att-modal .alert-dismissible .modal-header .close .close:before {
-  color: #fff;
-}
-
-.att-modal .modal-title {
-  line-height: 1.8em;
-  margin: 0;
-  padding-left: 1em;
-  padding-top: 4.28%;
-}
-
-.att-modal .modal-header {
-  background-color: #4178BE;
-  height: 14%;
-  min-height: initial;
-  border: none;
-  width: 100%;
-  float: left;
-}
-
-.att-modal .modal-header .close {
-  line-height: 44px;
-  margin: 0;
+.modal-header .close-btn svg polygon {
+  fill: #ffffff;
 }
 
 .att-modal .sr-only { /* line 8732 */
@@ -3419,84 +3320,8 @@ width: 100% !important;
   border: 0;
 }
 
-.att-modal .close { /* 11046 */
-  float: right;
-  font-size: 21px;
-  font-weight: normal;
-  line-height: 1;
-  color: #777677;
-  text-shadow: none;
-  opacity: 0.2;
-  filter: alpha(opacity=20);
-}
-
-.att-modal .close:hover, .att-modal .close:focus { /* 11055 */
-  color: #777677;
-  text-decoration: none;
-  cursor: pointer;
-  opacity: 0.5;
-  filter: alpha(opacity=50);
-}
-
-.att-modal button.close { /* 11062 */
-  padding: 0;
-  cursor: pointer;
-  background: transparent;
-  border: 0;
-  -webkit-appearance: none;
-}
-
-.att-modal .close { /* line 13225 */
-  float: right;
-  font-size: inherit;
-  line-height: inherit;
-  opacity: 1;
-  filter: alpha(opacity=100);
-}
-
-.att-modal .close:hover, .close:focus { /* line 13231 */
-  opacity: 1;
-  color: #fff;
-  filter: alpha(opacity=100);
-}
-
-.att-modal button.close {
-  position: absolute;
-  right: 16px;
-  top: 1.5%;
-}
-
-.att-modal button.close:hover span,
-.att-modal button.close:focus span {
-  border-color: #777677;
-  opacity: 1;
-}
-.att-modal button.close .glyphicon, .att-modal button.close .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox button.close input[type="checkbox"] + span::after, .att-modal button.close
-.checkbox-inline input[type="checkbox"] + span::after,
-.att-modal .checkbox-inline button.close input[type="checkbox"] + span::after, .att-modal button.close .switch input[type="checkbox"] + span, .att-modal .switch button.close input[type="checkbox"] + span, .att-modal button.close
-.switch-inline input[type="checkbox"] + span,
-.att-modal .switch-inline button.close input[type="checkbox"] + span, .att-modal button.close .breadcrumb > li + li:before, .att-modal button.close .alert:before, .att-modal button.close .alert-dismissable .close:before, .att-modal .alert-dismissable button.close .close:before, .att-modal button.close
-.att-modal .alert-dismissible .close:before,
-.att-modal .alert-dismissible button.close .close:before {
-  border: 1px solid transparent;
-  padding: 3px;
-  color: #777677;
-}
-
-.att-modal button.close {
-  background: transparent none repeat scroll 0 0;
-  border: 0 none;
-  cursor: pointer;
-  padding: 0;
-}
-
 .att-modal button {
   overflow: visible;
-}
-
-.x1-ui-modal.modal button.close .glyphicon {
-  color: #fff;
-  font-size: inherit;
 }
 
 .att-modal .sr-only {
@@ -3510,34 +3335,8 @@ width: 100% !important;
   width: 1px;
 }
 
-.att-modal .modal-header .close .glyphicon, .att-modal .modal-header .close .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox .modal-header .close input[type="checkbox"] + span::after, .att-modal .modal-header .close .checkbox-inline input[type="checkbox"] + span::after, .att-modal .checkbox-inline .modal-header .close input[type="checkbox"] + span::after, .att-modal .modal-header .close .switch input[type="checkbox"] + span, .att-modal .switch .modal-header .close input[type="checkbox"] + span, .att-modal .modal-header .close .switch-inline input[type="checkbox"] + span, .att-modal .switch-inline .modal-header .close input[type="checkbox"] + span, .att-modal .modal-header .close .breadcrumb > li + li::before, .att-modal .modal-header .close .alert::before, .att-modal .modal-header .close .alert-dismissable .close::before, .att-modal .alert-dismissable .modal-header .close .close::before, .att-modal .modal-header .close .alert-dismissible .close::before, .att-modal .alert-dismissible .modal-header .close .close::before {
-  color: #fff;
-}
-
-/* Line 13242 */
-.att-modal button.close .glyphicon, .att-modal button.close .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox button.close input[type="checkbox"] + span::after, .att-modal button.close .checkbox-inline input[type="checkbox"] + span::after, .att-modal .checkbox-inline button.close input[type="checkbox"] + span::after, .att-modal button.close .switch input[type="checkbox"] + span, .att-modal .switch button.close input[type="checkbox"] + span, .att-modal button.close .switch-inline input[type="checkbox"] + span, .att-modal .switch-inline button.close input[type="checkbox"] + span, .att-modal button.close .breadcrumb > li + li::before, .att-modal button.close .alert::before, .att-modal button.close .alert-dismissable .close::before, .att-modal .alert-dismissable button.close .close::before, .att-modal button.close .alert-dismissible .close::before, .att-modal .alert-dismissible button.close .close::before {
-  border: 1px solid transparent;
-  padding: 3px;
-}
-
-.glyphicon-xs, .breadcrumb > li + li::before, .alert-dismissable .close::before, .alert-dismissible .close::before {
-  font-size: 14px;
-}
-
-.glyphicon, .checkbox input[type="checkbox"] + span::after, .checkbox-inline input[type="checkbox"] + span::after, .switch input[type="checkbox"] + span, .switch-inline input[type="checkbox"] + span, .breadcrumb > li + li::before, .alert::before, .alert-dismissable .close::before, .alert-dismissible .close::before {
-  font-family: "UX1 Glyphicons";
-  font-size: 16px;
-}
-
-.glyphicon-remove::before {
-  content: "\e604";
-}
-
 .att-modal .modal-body {
-  padding: 9.5% 6.5% 1%;
-  position: relative;
-  float: left;
-  width: 87%;
+  padding: 0 2.5em;
 }
 
 /* responsive teamlinks modal */
@@ -3599,21 +3398,6 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   color: #4178BE;
 }
 
-
-.att-modal .btn-secondary:hover, .att-modal .btn-secondary:focus, .att-modal .btn-secondary.focus, .att-modal .btn-secondary:active, .btn-secondary.active,
-.open > .btn-secondary.dropdown-toggle,
-.btn-cancel:hover,
-.btn-cancel:focus,
-.btn-cancel.focus,
-.btn-cancel:active,
-.btn-cancel.active,
-.open >
-.btn-cancel.dropdown-toggle {
-  background-color: #eef4fc;
-  border-color: #4178BE;
-  color: #4178BE;
-}
-
 .att-modal .btn-primary:hover, .att-modal .btn-primary:focus, .att-modal .btn-primary.focus, .att-modal .btn-primary:active,
 .att-modal .btn-primary.active, .open > .btn-primary.dropdown-toggle {
   background-color: #325c80;
@@ -3627,13 +3411,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 /*
  * Font style
  */
-@font-face {
-  font-family: "UX1 Glyphicons";
-  font-style: normal;
-  font-weight: normal;
-  src: url("../fonts/ux1-glyphicons.woff") format("woff");
-}
-
 @font-face {
   font-family: "HelvNeue Roman for IBM";
   font-style: normal;
@@ -3666,8 +3443,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 /* BEGIN: Team description Modal section */
 .att-modal .txtarea {
   padding-top: 1.1%;
+  height: 7em;
   width: 100%;
-  font-size: 1.2em;
+  font-size: 1em;
+  resize: none;
 }
 /* END: Team description Modal section */
 

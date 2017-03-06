@@ -50,13 +50,13 @@ var HomeBookmark = React.createClass({
           $('#'+link.id).css('background-color','rgba(85,150,230,0.12)');
           $('#'+link.id+' > div').css('display','block');
           $('#'+link.id+' > a').css('left','4%');
-          $('#'+link.id+' > span').css('left','28%');
+          $('#'+link.id+' > span').css('left','3%');
           $('#'+link.id+' > span').css('display','block');
         }, function(){
           $('#'+link.id).css('background-color','#FFFFFF');
           $('#'+link.id+' > div').css('display','none');
           $('#'+link.id+' > a').css('left','5%');
-          $('#'+link.id+' > span').css('left','29%');
+          $('#'+link.id+' > span').css('left','3%');
           $('#'+link.id+' > span').css('display','none');
         });
       });
@@ -64,6 +64,7 @@ var HomeBookmark = React.createClass({
   },
   showTeamLinkModal: function(id) {
     var self = this;
+    self.props.showBookmark();
     self.setState({showModal: true});
     var defaultSelectData = self.state.initSelectLabel;
     if(id) {
@@ -97,10 +98,12 @@ var HomeBookmark = React.createClass({
             isChecked = true;
           }
           $('select[name="link_label"]').val(label);
-          self.setState({linkId: id});
-          self.setState({linkUrl: url});
-          self.setState({linkLabel: label});
-          self.setState({isChecked: isChecked});
+          self.setState({
+            linkId: id,
+            linkUrl: url,
+            linkLabel: label,
+            isChecked: isChecked
+          });
         }
         self.setState({linkLabelOption: linkLabelOption});
       });
@@ -108,17 +111,21 @@ var HomeBookmark = React.createClass({
       var linkLabelOption = defaultSelectData.map(function(row, idx){
         return <option value={row.id} key={idx}>{row.text}</option>
       });
-      self.setState({linkLabelOption: linkLabelOption});
-      self.setState({linkId: ''});
-      self.setState({linkUrl: ''});
-      self.setState({linkLabel: ''});
-      self.setState({isChecked: false});
-      self.setState({modalTitle: 'Important Link Add'});
+      self.setState({
+        linkLabelOption: linkLabelOption,
+        linkId: '',
+        linkUrl: '',
+        linkLabel: '',
+        isChecked: false,
+        modalTitle: 'Important Link Add'
+      });
     }
   },
   hideTeamLinkModal: function() {
-    this.setState({showModal: false});
-    this.setState({showOtherlabel: false});
+    this.setState({
+      showModal: false,
+      showOtherlabel: false
+    });
   },
   deleteTeamLink: function(id) {
     console.log('deleteTeamLink:',id);
@@ -330,10 +337,13 @@ var HomeBookmark = React.createClass({
     if (this.props.loadDetailTeam.team !=null && this.props.loadDetailTeam.team.links != null && this.props.loadDetailTeam.team.links.length > 0) {
       var teamLinks = this.props.loadDetailTeam.team.links.map(function(link){
         if (link && link.type != 'iteration') {
+          var linkLabel = link.linkLabel;
+          if (linkLabel && linkLabel.length > 30)
+            linkLabel = linkLabel.substr(0,30)+'...';
           return (
             <div key={link.id} id={link.id}>
               <div style={{'display':'none'}}></div>
-              <a href={link.linkUrl} title={link.linkUrl} target='_blank'>{link.linkLabel}</a>
+              <a href={link.linkUrl} title={link.linkUrl} target='_blank'>{linkLabel}</a>
               <span style={{'display':'none'}}>
                   <InlineSVG onClick={self.showTeamLinkModal.bind(null, link.id)} src={require('../../../img/Att-icons/att-icons_edit.svg')}></InlineSVG>
               </span>
@@ -362,7 +372,7 @@ var HomeBookmark = React.createClass({
         }
       });
     } else {
-      teamLinks = (<div class='no-link-block'>No links have been added.</div>);
+      teamLinks = (<div class='no-link-block'><h>No links have been added.</h></div>);
     }
     return (
       <div id='teamBookmark' class='team-bookmark-block' style={{'display':'none'}}>
@@ -392,15 +402,16 @@ var HomeBookmark = React.createClass({
         <ReactModal
            isOpen={this.state.showModal}
            className="att-modal"
+           onRequestClose={this.hideTeamLinkModal}
            overlayClassName="att-modal-overlay"
+           shouldCloseOnOverlayClick={true}
            contentLabel="Important links modal">
-           <div class='modal-wrapper'>
+           <div class='modal-wrapper' style={{'minHeight':'32em', 'width':'36em'}}>
             <header role="banner" class="modal-header" aria-labelledby="x1ModalTitle">
-              <h3 id="x1ModalTitle" class="modal-title">{self.state.modalTitle}</h3>
-              <button type="button" class="close" onClick={self.hideTeamLinkModal} aria-label="Close modal" title="Close modal">
-                <span class="sr-only">Close modal</span>
-                <span class="glyphicon glyphicon-xs glyphicon-remove" aria-hidden="true"></span>
-              </button>
+              <h id="x1ModalTitle" class="modal-title">{self.state.modalTitle}</h>
+              <div class='close-btn' onClick={self.hideTeamLinkModal}>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
+              </div>
             </header>
             <section aria-label="Modal body content" class="modal-body" role="main">
               <form class="ibm-row-form">
@@ -421,13 +432,14 @@ var HomeBookmark = React.createClass({
                     <span id='link_url_error' class='ibm-item-note'></span>
                   </span>
                 </p>
-
+                {/*
                 <p class="ibm-form-elem-grp">
                   <span class="ibm-input-group">
                     <input name='link_type' id='link_type' type='checkbox' value='yes' class='ibm-styled-checkbox' checked={self.state.isChecked} onChange={self.onchangeType} /> <label for="link_type" class="lblRoman">Iteration Specific Link</label>
                   </span>
                 </p>
                 <input name='link_id' id='link_id' type='hidden' value='{self.state.link_id}' />
+                */}
               </form>
             </section>
             <div class='clearboth'></div>

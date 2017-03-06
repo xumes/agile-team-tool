@@ -66,13 +66,6 @@ var HomeTeamHeader = React.createClass({
       $('#teamMemberTable').fadeOut();
     }
   },
-  showDescriptionBlock: function() {
-    if ($('.home-team-header-description-div').css('display') == 'none') {
-      $('.home-team-header-description-div').fadeIn();
-    } else {
-      $('.home-team-header-description-div').fadeOut();
-    }
-  },
   showBookmark: function() {
     if ($('#teamBookmark').css('display') == 'none') {
       $('#teamBookmark').fadeIn();
@@ -187,9 +180,6 @@ var HomeTeamHeader = React.createClass({
             </div>
             <div class='home-team-header-teamname-div'>
               <h class='home-team-header-teamname' style={{'fontSize': teamNameFontSize, 'lineHeight': teamNameFontLingHeight}} id="teamName">{teamName}</h>
-              <div class='home-team-header-teamname-btn' id='homeHeaderDesBtn' onClick={self.showDescriptionBlock}>
-                <InlineSVG class='home-team-header-teamname-btn-img' src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
-              </div>
 
               <HomeTeamDescription teamName={teamName} teamDescription={teamDescription} showDescriptionBlock={self.showDescriptionBlock} loadDetailTeam={self.props.loadDetailTeam} updateTeamDetails={self.props.updateTeamDetails} />
 
