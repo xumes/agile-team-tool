@@ -33,11 +33,9 @@ var HomeMemberTable = React.createClass({
 
   updateMemberTable: function(members, team, memberUserCollection) {
     var self = this;
-    console.log('member count: '+members.length);
     if (members != null && team != null) {
       var j = 0;
       _.each(members, function(member){
-       console.log('loop - '+j);
        var memberUserCollectionDetail = _.find(memberUserCollection, function(m) {     
          if (m.userId == member.userId) {
            return {
