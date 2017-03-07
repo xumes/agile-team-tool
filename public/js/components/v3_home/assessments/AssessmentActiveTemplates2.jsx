@@ -37,11 +37,11 @@ var AssessmentActiveTemplates = React.createClass({
       var containerId = 'atma';
       var componentId = containerId + '_' + self.props.assessTemplateId;
       return (
-        <ul class='ibm-twisty agile-assessment ibm-widget-processed' id={containerId} data-widget='twisty'>
-          <li key={componentId} id={componentId}>
+        <div class='ibm-twisty agile-assessment ibm-widget-processed' id={containerId} data-widget='twisty'>
+          <div key={componentId} id={componentId}>
             <AssessmentTemplatePrinciple principles={self.props.assessTemplate.principles} componentId={componentId} expandComponent={self.expandComponent}/>
-          </li>
-        </ul>
+          </div>
+        </div>
       );
     }
   }

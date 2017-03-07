@@ -5529,4 +5529,147 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   width: 96%;
   left: 2%;
+  font-size: 1.2em;
+}
+
+.assessment-popover-block > .agile-maturity div {
+  position: relative;
+  float: left;
+  width: 100%;
+}
+
+.assessment-popover-block > .agile-maturity .ibm-twisty-trigger {
+  font-size: 1.4em;
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  color: black !important;
+  padding: 0.5em 0 0.5em 2em !important;
+}
+.assessment-popover-block > .agile-maturity .ibm-twisty-trigger:hover {
+  text-decoration: none !important;
+}
+
+.assessment-popover-block > .agile-maturity > div > div > div > div > a{
+  background-color: #C0E6FF;
+}
+
+.assessment-popover-block > .agile-maturity span {
+  float: right;
+  color: red;
+}
+
+/*.assessment-popover-block > .agile-maturity caption,
+.assessment-popover-block > .agile-maturity tbody,
+.assessment-popover-block > .agile-maturity tbody li {
+  display: block;
+  position: relative;
+  font-size: 1.2em;
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  color: black;
+}
+
+.assessment-popover-block > .agile-maturity thead {
+  font-size: 1.2em;
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  color: black;
+  border-bottom: 0.1em solid black;
+  line-height: 2.0em;
+  display: block;
+  position: relative;
+}
+
+.assessment-popover-block > .agile-maturity table {
+  display: block;
+  width: 100%;
+}
+.assessment-popover-block > .agile-maturity tr {
+  display: block;
+}*/
+
+.assessment-popover-block > .agile-maturity .ibm-twisty-body {
+  margin-left: 2.8em;
+  float: left;
+  position: relative;
+  width: 97.3%;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table {
+  position: relative;
+  width: 100%;
+  float: left;
+  /*font-size: 1.2em;
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";*/
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-summary {
+  position: relative;
+  width: 100%;
+  font-size: 1.2em;
+  float: left;
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-header {
+  position: relative;
+  width: 100%;
+  float: left;
+  padding: 0.5em 0 0.5em 0;
+  border-bottom: 0.1em solid #5A5A5A;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-header > div {
+  position: relative;;
+  float: left;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-header > div > h1 {
+  position: relative;
+  float: left;
+  font-size: 1.2em;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  padding: 0;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-body {
+  position: relative;
+  width: 100%;
+  float: left;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-body > .agile-table-level {
+  position: relative;
+  width: 100%;
+  float: left;
+  display: flex;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-body > .agile-table-level > div {
+  position: relative;
+  float: left;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-body > .agile-table-level > div {
+  position: relative;
+  float: left;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-body > .agile-table-level > div h1 {
+  position: relative;
+  float: left;
+  font-size: 1.2em;
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  padding: 0;
+
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-body > .agile-table-level:nth-child(even) {
+  background-color: #ECECEC;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-body > .agile-table-level .agile-table-criteria:nth-child(1) {
+  padding-top: 0.5em;
+}
+
+.agile-question-opt {
+  text-align: center;
+  vertical-align: middle;
 }

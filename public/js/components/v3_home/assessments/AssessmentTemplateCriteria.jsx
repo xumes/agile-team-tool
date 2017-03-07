@@ -11,13 +11,15 @@ var AssessmentTemplateCriteria = React.createClass({
         var criteriaId = self.props.levelId + '_cri_' + count;
         count ++ ;
         return (
-          <li key={criteriaId} id={criteriaId}>
-            {c}
-          </li>
+          <div key={criteriaId} id={criteriaId} style={{'paddingBottom':'0.5em'}} class='agile-table-criteria'>
+            <h1>
+              {c}
+            </h1>
+          </div>
         );
       });
       return (
-        <ul>{criterias}</ul>
+        <div>{criterias}</div>
       );
     }
   }

@@ -14,16 +14,16 @@ var AssessmentTemplatePrinciple = React.createClass({
         var principleId = principleMainId + '_' + count;
         count ++ ;
         return (
-          <li key={principleId} id={principleId} data-open='true' class='ibm-active'>
+          <div key={principleId} id={principleId} data-open='true' class='ibm-active'>
             <a class='ibm-twisty-trigger' style={{'cursor':'pointer'}} onClick={self.props.expandComponent.bind(null, principleId)}>{principle.name}</a>
             <div class='ibm-twisty-body' style={{'display':'block'}}><AssessmentTemplatePractice practices={principle.practices} principleId={principleId} expandComponent={self.props.expandComponent}/></div>
-          </li>
+          </div>
         )
       });
       return (
-        <ul class='ibm-twisty agile-principle' id={principleMainId}>
+        <div class='ibm-twisty agile-principle' id={principleMainId}>
           {principles}
-        </ul>
+        </div>
       )
     }
   }

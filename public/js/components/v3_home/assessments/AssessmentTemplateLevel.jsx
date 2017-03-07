@@ -97,62 +97,66 @@ var AssessmentTemplateLevel = React.createClass({
         }
         count ++ ;
         return (
-          <tr key={levelId} id={levelId}>
-            <td>{level.name}</td>
-            <td>
+          <div key={levelId} id={levelId} class='agile-table-level'>
+            <div style={{'width': '15%'}}>
+              <h1 style={{'padding': '0.5em 0 0.5em 0'}}>{level.name}</h1>
+            </div>
+            <div style={{'width': '72%'}}>
               <AssessmentTemplateCriteria criterias={level.criteria} levelId={levelId}/>
-            </td>
-            <td id={levelCurrId} class='agile-question-opt ibm-background-cool-gray-20'>
-              <div class='iradio_square-blue curr' role='radio' aria-checked='false' aria-disabled='false' aria-label='Maturity level' style={{'position': 'relative'}}>
+            </div>
+            <div style={{'width': '6.5%'}} id={levelCurrId} class='agile-question-opt ibm-background-cool-gray-20'>
+              <div class='iradio_square-blue curr' role='radio' aria-checked='false' aria-disabled='false' aria-label='Maturity level' style={{'position': 'relative', 'width': '22px','left':'25%'}}>
                 <input type='radio' name={levelCurrId} value={clickValue} aria-label={clickValue} style={currStyle}/>
                 <ins class='iCheck-helper' style={currStyle} onClick={self.currClickHandler.bind(null, [practiceId, levelCurrId, clickValue])}></ins>
               </div>
-            </td>
-            <td id={levelTargId} class='agile-question-opt ibm-background-cool-gray-20'>
-              <div class='iradio_square-blue targ' role='radio' aria-checked='false' aria-disabled='false' aria-label='Maturity level' style={{'position': 'relative'}}>
+            </div>
+            <div style={{'width': '6.5%'}} id={levelTargId} class='agile-question-opt ibm-background-cool-gray-20'>
+              <div class='iradio_square-blue targ' role='radio' aria-checked='false' aria-disabled='false' aria-label='Maturity level' style={{'position': 'relative', 'width': '22px','left':'25%'}}>
                 <input type='radio' name={levelTargId} value={clickValue} aria-label={clickValue} style={currStyle}/>
                 <ins class='iCheck-helper' style={currStyle} onClick={self.targClickHandler.bind(null, [practiceId, levelTargId, clickValue])}></ins>
               </div>
-            </td>
+            </div>
             {/*<td></td>*/}
-          </tr>
+          </div>
         )
       });
       var currTT = "Your team's current maturity level.";
       var targTT = "Your team's targets for the next 90 days.  Choose the practices that the team agrees will have the most impact.";
       return (
-        <table class='ibm-data-table ibm-altrows agile-practice' width='100%' summary='Maturity assessment level and description for the identified practice.'>
-          <caption>{this.props.description}</caption>
-            <thead>
-              <tr>
-                <th scope='col' width='15%'>Maturity level</th>
-                <th scope='col' width='75%'></th>
-                <th scope='col' width='7%' id={levelMainId+'th_curr'} style={{'left': '-1%', 'textAlign': 'center', 'position': 'relative'}}>
-                  Current
+        <div class='agile-table' summary='Maturity assessment level and description for the identified practice.'>
+          <div class='agile-table-summary'>{this.props.description}</div>
+            <div class='agile-table-header'>
+                <div style={{'width': '15%'}}>
+                  <h1>Maturity level</h1>
+                </div>
+                <div style={{'width': '7%', 'left': '72%'}} id={levelMainId+'th_curr'}>
+                  <h1>
+                    {'Current'}
+                  </h1>
                   <a class='ibm-information-link' data-widget='tooltip' style={{'cursor': 'default', 'position': 'relative', 'left': '5%', 'top': '0%', 'display': 'inline'}} title={currTT}>
                     <span class='ibm-access'>Tooltip</span>
                   </a>
-                </th>
-                <th scope='col' width='7%' id={levelMainId+'th_targ'} style={{'textAlign': 'center'}}>
-                  Target
+                </div>
+                <div style={{'width': '7%', 'left': '72%'}} id={levelMainId+'th_targ'}>
+                  <h1>
+                    {'Target'}
+                  </h1>
                   <a class='ibm-information-link' data-widget='tooltip' style={{'cursor': 'default', 'position': 'relative', 'left': '5%', 'top': '0%', 'display': 'inline'}} title={targTT}>
                     <span class='ibm-access'>Tooltip</span>
                   </a>
-                </th>
-                {/*<th scope='col' width='10%' id={levelMainId+'th_ind'} style={{'textAlign': 'center', 'display':'none'}}></th>*/}
-              </tr>
-            </thead>
-            <tbody>
+                </div>
+            </div>
+            <div class='agile-table-body'>
               {levels}
-              <tr id={levelMainId + 'tbtr_action'}>
+{/*              <tr id={levelMainId + 'tbtr_action'}>
                 <td id={levelMainId + 'td_action'} colSpan='5'>How do we get better? (Action plan item; 350 char limit)
                   <br />
                   <textarea style={{'width': '1120px', 'margin': '0px', 'height': '69px'}} cols='350' rows='3' aria-label='Action plan item' maxLength='350' id={levelMainId + 'action'}>
                   </textarea>
                 </td>
-              </tr>
-            </tbody>
-        </table>
+              </tr>*/}
+            </div>
+        </div>
       )
     }
   }
