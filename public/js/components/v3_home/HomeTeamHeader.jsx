@@ -106,7 +106,7 @@ var HomeTeamHeader = React.createClass({
   },
   showTeamTable: function() {
     $('#teamMemberTable').attr('data-open', 'true');
-    $('#teamMemberTable').trigger('mouseenter');
+    $('.home-team-header-btn-img2').trigger('mouseenter');
   },
   closeTeamTable: function() {
     $('#teamMemberTable').attr('data-open', 'false');
@@ -114,7 +114,7 @@ var HomeTeamHeader = React.createClass({
   },
   showBookmark: function() {
     $('#teamBookmark').attr('data-open', 'true');
-    $('#teamBookmark').trigger('mouseenter');
+    $('.home-team-header-btn-img').trigger('mouseenter');
   },
   closeBookmark: function() {
     $('#teamBookmark').attr('data-open', 'false');
