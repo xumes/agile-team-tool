@@ -59,7 +59,8 @@ var AssessmentSummaryInfo = React.createClass({
     var indStatus = self.state.assessInfo['assessorStatus'];
     var assessorUserId = self.state.assessInfo['assessorUserId'];
     var selfStatus = self.state.assessInfo['assessmentStatus'];
-    var assessmentDt = utils.showDateDDMMYYYYV2(self.state.assessInfo['submittedDate'], true);
+    //var assessmentDt = utils.showDateDDMMYYYYV2(self.state.assessInfo['submittedDate'], true);
+    var assessmentDt = moment.utc(self.state.assessInfo['submittedDate']).format('DDMMMYYYY');
     var indDt = self.state.assessInfo['assessedDate'];
     var displayType = {'display': 'none'};
 
