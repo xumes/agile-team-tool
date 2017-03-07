@@ -7,12 +7,12 @@ var HomeMemberTable = React.createClass({
   },
   componentDidUpdate: function() {
     var self = this;
-    if (self.props.loadDetailTeam.team != undefined && self.props.loadDetailTeam.members != undefined && self.props.loadDetailTeam.members.length > 0) {
+    if (self.props.loadDetailTeam.team != undefined && self.props.loadDetailTeam.team.members != undefined && self.props.loadDetailTeam.team.members.length > 0) {
       $('#teamMemberTable').show();
       var members = _.sortBy(self.props.loadDetailTeam.team.members, function(member){
         return member.name.toLowerCase();
       });
-      var team = self.props.loadDetailTeam.team;
+      var team = self.props.loadDetailTeam.team;      
       self.updateMemberTable(members, team,self.props.loadDetailTeam.members);
     } else {
       $('#teamMemberTable').show();
