@@ -23,8 +23,11 @@ var HomeTeamSetup = React.createClass({
   },
   componentDidUpdate: function(prevProps, prevState) {
     var self = this;
+    if (self.state.showParentSetup) {
+      $('#squadParentSelectList').val(self.state.parentId).change();
 
-    if (!self.state.showParentSetup) {
+    } else if (self.state.showTreeSetup) {
+      $('#parentSelectList').val(self.state.parentId).change();
       $('#childSelectList').val('').change();
     }
   },
@@ -71,6 +74,23 @@ var HomeTeamSetup = React.createClass({
             parentId: currentParentId,
             children: children
           };
+
+          if (_.isEqual('squad', self.props.loadDetailTeam.type))
+            self.setState({
+              showParentSetup: true,
+              selectableParents: returnNewState.selectableParents,
+              selectableChildren: returnNewState.selectableChildren,
+              parentId: returnNewState.parentId,
+              children: returnNewState.children
+            });
+          else
+            self.setState({
+              showTreeSetup: true,
+              selectableParents: returnNewState.selectableParents,
+              selectableChildren: returnNewState.selectableChildren,
+              parentId: returnNewState.parentId,
+              children: returnNewState.children
+            });
 
           return resolve(returnNewState);
         })
@@ -174,23 +194,27 @@ var HomeTeamSetup = React.createClass({
     if (self.state.showParentSetup) {
       $('#teamParentSetupBlock select').select2({'dropdownParent':$('#teamParentSetupBlock')});
       $('#squadParentSelectList').change(self.parentSelectHandler);
-      $('#squadParentSelectList').val(currentParentId).change();
 
     } else if (self.state.showTreeSetup) {
       $('#teamTreeSetupBlock select').select2({'dropdownParent':$('#teamTreeSetupBlock')});
       $('#parentSelectList').change(self.parentSelectHandler);
-      $('#parentSelectList').val(currentParentId).change();
       $('#childSelectList').change(self.childSelectHandler);
-      $('#childSelectList').val('').change();
     }
   },
   showTeamSetup: function() {
     var self = this;
+    self.selectListInit(self.props.loadDetailTeam);
+    if (_.isEqual('squad', self.props.loadDetailTeam.type))
+      self.setState({ showParentSetup: true });
+    else
+      self.setState({ showTreeSetup: true });
+
+    /*
     self.selectListInit(self.props.loadDetailTeam)
       .then(function(result) {
         if (_.isEqual('squad', self.props.loadDetailTeam.type))
           self.setState({
-            showParentSetup: true,
+            //showParentSetup: true,
             selectableParents: result.selectableParents,
             selectableChildren: result.selectableChildren,
             parentId: result.parentId,
@@ -198,7 +222,7 @@ var HomeTeamSetup = React.createClass({
           });
         else
           self.setState({
-            showTreeSetup: true,
+            //showTreeSetup: true,
             selectableParents: result.selectableParents,
             selectableChildren: result.selectableChildren,
             parentId: result.parentId,
@@ -208,6 +232,7 @@ var HomeTeamSetup = React.createClass({
       .catch(function(err) {
         console.log(err);
      });
+     */
   },
   hideTeamSetup: function() {
     this.setState({
@@ -259,7 +284,6 @@ var HomeTeamSetup = React.createClass({
       })
       .then(function(result) {
         // check for any parent update
-        console.log('parent update',currentParentId, self.state.parentId);
         if (!_.isEqual(currentParentId, self.state.parentId)) {
           if (currentParentId != '')
             return api.associateTeam(currentParentId, currentTeam._id);
@@ -409,8 +433,8 @@ var HomeTeamSetup = React.createClass({
                 <div class='team-setup-squad-content'>
                   <div class='squad-parent'>
                     <label for='squadParentSelectList'>Parent Team</label>
-                    <select id='squadParentSelectList' name='squadParentSelectListA' disabled={!self.props.loadDetailTeam.access} defaultValue={currentParentId}>
-                      <option key='pdef' value=''>No parent team</option>
+                    <select id='squadParentSelectList' name='squadParentSelectListA' disabled={!self.props.loadDetailTeam.access} value={self.state.parentId}>
+                      <option key='pdef' value=''>No Team Associated/Available</option>
                       {parentOptions}
                     </select>
                   </div>
@@ -419,7 +443,7 @@ var HomeTeamSetup = React.createClass({
                   </div>
                   <div class='squad-add-child'>
                     <a onClick={self.changeTypeHandler} style={showAdd}>Add Child Team</a>
-                    <p style={showAdd}>Note: Your team will no longer be a squad team, therefore no iteration or assessment data can be recorded or enetered</p>
+                    <p style={showAdd}>Note: Your team will no longer be a squad team, therefore no iteration or assessment data can be recorded or entered.</p>
                   </div>
                 </div>
                 <div class='squad-note' style={showNote}>
@@ -470,8 +494,8 @@ var HomeTeamSetup = React.createClass({
                 <div class='team-setup-content'>
                   <div class='team-setup-parent-select'>
                     <label for='parentSelectList'>Parent Team</label>
-                    <select id='parentSelectList' name='parentSelectList' disabled={!self.props.loadDetailTeam.access} defaultValue={currentParentId}>
-                      <option key='pdef' value=''>No parent team</option>
+                    <select id='parentSelectList' name='parentSelectList' disabled={!self.props.loadDetailTeam.access} value={self.state.parentId}>
+                      <option key='pdef' value=''>No Team Associated/Available</option>
                       {parentOptions}
                     </select>
                   </div>
@@ -479,7 +503,7 @@ var HomeTeamSetup = React.createClass({
                     <h>{self.props.loadDetailTeam.team.name}</h>
                   </div>
                   <div class='team-setup-child-select'>
-                    <label for='childSelectList'>Associate Child Team</label>
+                    <label for='childSelectList'>Associated Child Teams</label>
                     <select id='childSelectList' name='childSelectList' disabled={!self.props.loadDetailTeam.access}>
                       <option key='cdef' value=''>Select a Child Team</option>
                       {childOptions}
@@ -489,8 +513,10 @@ var HomeTeamSetup = React.createClass({
                     </div>
                   </div>
                   <div class='team-setup-squad-revert'>
+                    <div class='team-setup-revert-icon' onClick={self.changeTypeHandler}>
+                      <InlineSVG src={require('../../../img/Att-icons/att-icons_revert.svg')}></InlineSVG>
+                    </div>
                     <a onClick={self.changeTypeHandler} style={showAdd}>
-                      <InlineSVG class='team-setup-revert-icon' src={require('../../../img/Att-icons/att-icons_revert.svg')}></InlineSVG>
                       Revert to a Squad Team
                     </a>
                     <p>Note: All child teams will be disassociated with your team and removed!  Your team will be able to enter and record Iteration or Assessment data.</p>

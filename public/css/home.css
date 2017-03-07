@@ -4905,6 +4905,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .home-modal-block-footer .ibm-btn-small {
   font-size: 1.5 !important;
+  margin-bottom: 0px;
 }
 
 .home-modal-block-close-btn {
@@ -4932,9 +4933,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .team-setup-squad-block .squad-note > p {
-  font-size: inherit;
+  color: #777677;
+  font-size: .8em;
   line-height: 1.3em;
-  padding: 1em 1em 0;
+  padding: 2em 1em 0;
   text-align: justify;
 }
 
@@ -4956,10 +4958,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .team-setup-squad-block .team-setup-squad-icon-change {
-  left: 27%;
+  left: 27.25%;
   height: 23%;
   position: absolute;
-  top: 53%;
+  top: 52%;
   width: 5%;
 }
 
@@ -4977,7 +4979,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: inline-block;
   font-size: inherit;
   position: relative;
-  top: 12%;
+  top: 13%;
   width: 95%;
 }
 
@@ -4998,7 +5000,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .team-setup-squad-content .squad-name > h {
-  color: #777677;
+  color: #464646;
   font-size: 1.2em;
   position: absolute;
   top: 50%;
@@ -5018,7 +5020,8 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .team-setup-squad-content .squad-add-child > p {
-  font-size: inherit;
+  color: #777677;
+  font-size: .8em;
   padding-top: 0.25em;
   text-align: justify;
 }
@@ -5046,15 +5049,15 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 35%;
   position: absolute;
   top: 13%;
-  width: 2%;
+  width: 1.4%;
 }
 
 .team-setup-squad-block .team-setup-squad-icon-arrow-top .line {
   border-bottom: 0.1em solid #b3b3b3;
-  left: -490%;
+  left: -640%;
   position: absolute;
-  top: 36%;
-  width: 500%;
+  top: 50%;
+  width: 650%;
 }
 
 .team-setup-squad-block .team-setup-squad-icon-arrow-middle {
@@ -5063,14 +5066,14 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 35%;
   position: absolute;
   top: 47%;
-  width: 2%;
+  width: 1.4%;
 }
 
 .team-setup-squad-block .team-setup-squad-icon-arrow-middle .line {
   border-bottom: 0.1em solid #b3b3b3;
   left: -105%;
   position: absolute;
-  top: 34%;
+  top: 50%;
   width: 115%;
 }
 
@@ -5079,15 +5082,15 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 3%;
   left: 35%;
   position: absolute;
-  top: 68%;
-  width: 2%;
+  top: 67%;
+  width: 1.4%;
 }
 
 .team-setup-squad-block .team-setup-squad-icon-arrow-bottom .line {
   border-bottom: 0.1em solid #b3b3b3;
   left: -105%;
   position: absolute;
-  top: 35%;
+  top: 50%;
   width: 115%;
 }
 
@@ -5136,15 +5139,15 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 33%;
   position: absolute;
   top: 8%;
-  width: 2%;
+  width: 1.4%;
 }
 
 .team-setup-block .team-setup-icon-arrow-top .line {
   border-bottom: 0.1em solid #b3b3b3;
-  left: -550%;
+  left: -790%;
   position: absolute;
-  top: 35%;
-  width: 560%;
+  top: 38%;
+  width: 800%;
 }
 
 .team-setup-block .team-setup-icon-arrow-middle {
@@ -5153,15 +5156,15 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 33%;
   position: absolute;
   top: 32%;
-  width: 2%;
+  width: 1.4%;
 }
 
 .team-setup-block .team-setup-icon-arrow-middle .line {
   border-bottom: 0.1em solid #b3b3b3;
-  left: -160%;
+  left: -220%;
   position: absolute;
-  top: 34%;
-  width: 170%;
+  top: 39%;
+  width: 230%;
 }
 
 .team-setup-block .team-setup-icon-arrow-bottom {
@@ -5169,16 +5172,16 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 3%;
   left: 33%;
   position: absolute;
-  top: 49%;
-  width: 2%;
+  top: 48.5%;
+  width: 1.4%;
 }
 
 .team-setup-block .team-setup-icon-arrow-bottom .line {
   border-bottom: 0.1em solid #b3b3b3;
-  left: -160%;
+  left: -220%;
   position: absolute;
-  top: 36%;
-  width: 170%;
+  top: 41%;
+  width: 230%;
 }
 
 .team-setup-block .team-setup-content {
@@ -5207,7 +5210,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .team-setup-content .team-setup-name > h {
-  color: #777677;
+  color: #464646;
   font-size: 1.2em;
   position: absolute;
   top: 50%;
@@ -5219,7 +5222,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-size: inherit;
   height: 32%;
   position: absolute;
-  top: 48%;
+  top: 48.5%;
   width: 95%;
 }
 
@@ -5275,28 +5278,29 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-size: inherit;
   height: 20%;
   position: absolute;
-  top: 82%;
+  top: 81%;
   width: 95%;
 }
 
 .team-setup-squad-revert .team-setup-revert-icon {
   display: inline-block;
-  height: 100%;
+  height: 15%;
   padding-right: 0.5em;
-  width: 8%;
+  position: relative;
+  width: 5%;
 }
 
 .team-setup-squad-revert > a {
   cursor: pointer;
-  height: 20%;
+  height: 25%;
   vertical-align: middle;
   white-space: nowrap;
 }
 
 .team-setup-squad-revert > p {
-  font-size: inherit;
-  padding-left: 1.75em;
-  padding-top: 0.25em;
+  color: #777677;
+  font-size: .8em;
+  padding-left: 2em;
   text-align: justify;
 }
 
