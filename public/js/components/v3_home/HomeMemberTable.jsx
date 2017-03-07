@@ -815,7 +815,7 @@ var HomeMemberTable = React.createClass({
         <div id='teamMemberTable' style={{'display':'none'}}>
           <div id='teamMemberTableTitle' class='team-member-table-title-div'>
             <h class='team-member-table-title'>Team Details</h>
-            <div class='team-member-table-close-btn' onClick={self.props.showTeamTable}>
+            <div class='team-member-table-close-btn' onClick={self.props.closeTeamTable}>
               <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
             </div>
           </div>

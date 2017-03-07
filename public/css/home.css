@@ -2328,7 +2328,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 
 .team-bookmark-block {
   position: absolute;
-  left:6%;
+  left:5.5%;
   display: inline-block;
   z-index: 10;
   float: left;
