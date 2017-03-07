@@ -64,7 +64,7 @@ var HomeBookmark = React.createClass({
   },
   showTeamLinkModal: function(id) {
     var self = this;
-    self.props.showBookmark();
+    self.props.closeBookmark();
     self.setState({showModal: true});
     var defaultSelectData = self.state.initSelectLabel;
     if(id) {
@@ -85,6 +85,10 @@ var HomeBookmark = React.createClass({
       var selectData = [];
       _.each(_.uniq(_.pluck(tmpselectData, 'text'), utils.toLowerCase), function(txt) {
         selectData.push(_.findWhere(tmpselectData, {text: txt}));
+      });
+      selectData = _.sortBy(selectData, function(item) {
+        if (item.text == 'Other...') return 'zzzzz';
+        else return item.text.toLowerCase();
       });
       var linkLabelOption = selectData.map(function(row, idx){
         return <option value={row.id} key={idx}>{row.text}</option>
@@ -382,7 +386,7 @@ var HomeBookmark = React.createClass({
         <div class='home-team-header-bookmark-content'>
           <div class='home-team-header-bookmark-title'>
             <h>Important Links</h>
-            <div onClick={self.props.showBookmark}>
+            <div onClick={self.props.closeBookmark}>
               <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
             </div>
           </div>
@@ -394,7 +398,7 @@ var HomeBookmark = React.createClass({
           <div class='home-team-header-bookmark-btns'>
             <p class='ibm-btn-row ibm-button-link' style={{'position':'relative','top':'15%','right':'5%','float':'right'}}>
               <button class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50' onClick={self.showTeamLinkModal.bind(null, null)} disabled={!self.props.loadDetailTeam.access}>Add New Link</button>
-              <button class='ibm-btn-sec ibm-btn-small ibm-btn-blue-50' onClick={self.props.showBookmark}>Cancel</button>
+              <button class='ibm-btn-sec ibm-btn-small ibm-btn-blue-50' onClick={self.props.closeBookmark}>Cancel</button>
             </p>
           </div>
         </div>
