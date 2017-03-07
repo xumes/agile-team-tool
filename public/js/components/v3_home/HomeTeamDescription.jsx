@@ -20,7 +20,6 @@ var HomeTeamDescription = React.createClass({
       }
     });
     $('.home-team-header-teamname-div').bind('mouseenter mouseleave', function() {
-      console.log('mouseenter home-team-header');
       if ($('.home-team-header-description-div').css('display') != 'none') {
         $('.home-team-header-description-div').fadeOut();
       }

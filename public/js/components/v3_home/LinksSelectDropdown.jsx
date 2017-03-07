@@ -2,7 +2,9 @@ var React = require('react');
 var LinksSelectDropdown = React.createClass({
   componentDidMount:function() {
     var self = this;
-    $('#link_label').select2();
+    $('#link_label').select2({
+      minimumResultsForSearch: -1
+    });
     // workaround for the onchange event
     $(document.body).on('change', '#link_label', function(){
       self.props.updateStateLinkLabel(this.value);
