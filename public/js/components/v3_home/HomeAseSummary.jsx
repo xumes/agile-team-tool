@@ -2,50 +2,29 @@ var React = require('react');
 var api = require('../api.jsx');
 var moment = require('moment');
 var InlineSVG = require('svg-inline-react');
+var Modal = require('react-overlays').Modal;
+var AssessmentPopover = require('./assessments/AssessmentPopover.jsx');
 
 var HomeAseSummary = React.createClass({
-  // componentDidUpdate: function() {
-  //   var self = this;
-  //   if (self.props.loadDetailTeam != undefined) {
-  //     if (self.props.loadDetailTeam.type == '') {
-  //
-  //     } else {
-  //       if (self.props.loadDetailTeam.assessments != undefined && self.props.loadDetailTeam.assessments.length > 0) {
-  //         var summaryHeight = (self.props.loadDetailTeam.assessments[0].componentResults.length + 1) * 9 + '%';
-  //         var contentHeight = 100/(self.props.loadDetailTeam.assessments[0].componentResults.length + 1) + '%';
-  //         $('.home-assessment-summary').css('height',summaryHeight);
-  //         $('.home-assessment-summary-content').css('height',contentHeight);
-  //         if (self.props.loadDetailTeam.assessments[0].componentResults.length == 1) {
-  //           if (window.innerWidth < 1900) {
-  //             $('.home-assessment-summary').css('background-position','150% 80%');
-  //           } else {
-  //             $('.home-assessment-summary').css('background-position','150% 72%');
-  //           }
-  //         } else if (self.props.loadDetailTeam.assessments[0].componentResults.length == 2) {
-  //           if (window.innerWidth < 1900) {
-  //             $('.home-assessment-summary').css('background-position','150% 100%');
-  //           } else {
-  //             $('.home-assessment-summary').css('background-position','150% 85%');
-  //           }
-  //         }
-  //       } else {
-  //         summaryHeight = '10%';
-  //         contentHeight = '100%';
-  //         $('.home-assessment-summary').css('height',summaryHeight);
-  //         $('.home-assessment-summary-content').css('height',contentHeight);
-  //         if (window.innerWidth < 1900) {
-  //           $('.home-assessment-summary').css('background-position','150% 70%');
-  //         } else {
-  //           $('.home-assessment-summary').css('background-position','150% 63%');
-  //         }
-  //       }
-  //       $('.home-assessment-summary').show();
-  //     }
-  //   }
-  // },
+  getInitialState: function() {
+    return {
+      showModal: false,
+      selectedAssessment: '',
+      activeTemplate: null,
+      assessTemplate: null
+    };
+  },
   componentDidMount: function() {
+    var self = this;
+    api.getAssessmentTemplate(null, 'active')
+      .then(function(assessmentTemplates) {
+        self.setState({
+          activeTemplate: assessmentTemplates[0]
+        });
+      });
   },
   componentDidUpdate: function() {
+    var self = this;
     if (window.innerWidth < 1900) {
       $('.home-assessment-summary').css('background-position','150% 100%');
     } else {
@@ -56,6 +35,15 @@ var HomeAseSummary = React.createClass({
     $('#pAsseSelect').off('change');
     $('#pAsseSelect').select2({'width':'100%'});
     $('#pAsseSelect').change(this.assessmentChangeHandler);
+    if (self.props.loadDetailTeam != undefined && self.props.loadDetailTeam.assessments != undefined && self.props.loadDetailTeam.assessments.length > 0 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft') {
+      api.getTemplateByVersion(self.props.loadDetailTeam.assessments[0].version)
+        .then(function(template){
+          self.state.assessTemplate = template;
+        })
+        .catch(function(err){
+          console.log(err);
+        })
+    }
   },
   assessmentChangeHandler: function(e) {
     var self = this;
@@ -93,8 +81,31 @@ var HomeAseSummary = React.createClass({
       $(assessId + ' > div > .summary-ponts .current-dot').css('left',lineWidth);
     });
   },
+  showAssessmentPopover: function() {
+    this.setState({ showModal: true });
+  },
+  hideAssessmentPopover: function() {
+    this.setState({ showModal: false });
+  },
   render: function() {
     var self = this;
+    var backdropStyle = {
+      top: 0, bottom: 0, left: 0, right: 0,
+      zIndex: 'auto',
+      backgroundColor: '#000',
+      opacity: 0.5,
+      width: '100%',
+      height: '100%'
+    };
+    var modalStyle = {
+      position: 'fixed',
+      width: '100%',
+      height: '100%',
+      minWidth: '1280px',
+      minHeight: '720px',
+      zIndex: 1040,
+      top: 0, bottom: 0, left: 0, right: 0,
+    };
     if (self.props.loadDetailTeam.type != 'squad') {
       return null;
     } else {
@@ -105,6 +116,7 @@ var HomeAseSummary = React.createClass({
       if (self.props.loadDetailTeam != undefined && self.props.loadDetailTeam.assessments != undefined && self.props.loadDetailTeam.assessments.length > 0) {
         if (self.props.loadDetailTeam.assessments.length == 1 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft') {
           var updateDate = moment(self.props.loadDetailTeam.assessments[0].updateDate).format('DD MMM YYYY');
+          self.state.selectedAssessment = self.props.loadDetailTeam.assessments[0]._id.toString();
           return (
             <div class='home-assessment-summary' style={{'display':'none'}}>
               <div>
@@ -127,9 +139,12 @@ var HomeAseSummary = React.createClass({
                   <h1>{'minutes to complete the assessment and we will give you an idea of where your team rates.'}</h1>
                 </div>
                 <div class='start-btn'>
-                  <button type='button' class='ibm-btn-pri ibm-btn-blue-50' disabled={haveAccess}>{'Continue Assessment'}</button>
+                  <button type='button' onClick={self.showAssessmentPopover} class='ibm-btn-pri ibm-btn-blue-50' disabled={haveAccess}>{'Continue Assessment'}</button>
                 </div>
               </div>
+              <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAssessmentPopover}>
+                <div>22222</div>
+              </Modal>
             </div>
           )
         } else {
@@ -142,6 +157,7 @@ var HomeAseSummary = React.createClass({
             hasDraft = false;
             draftUpdateDate = '';
           }
+          self.state.selectedAssessment = tempAssess._id.toString();
           var defaultId = tempAssess._id.toString();
           var submitDate = '(Averaging last submitted: ' + moment(tempAssess.submittedDate).format('DD MMM YYYY') + ')';
           var updateDate = moment(tempAssess.updateDate).format('DD MMM YYYY');
@@ -252,11 +268,14 @@ var HomeAseSummary = React.createClass({
                 </div>
                 <div class='draft-box'>
                   <h1>{'Or show your improvement!'}</h1>
-                  <button type='button' class={hasDraft?'ibm-btn-sec ibm-btn-blue-50':'ibm-btn-pri ibm-btn-blue-50'} disabled={haveAccess}>{hasDraft?'Work with Draft':'Create New Assessment'}</button>
+                  <button type='button' onClick={self.showAssessmentPopover} class={hasDraft?'ibm-btn-sec ibm-btn-blue-50':'ibm-btn-pri ibm-btn-blue-50'} disabled={haveAccess}>{hasDraft?'Work with Draft':'Create New Assessment'}</button>
                   <h2 hidden={hasDraft?false:true}>{'Last Updated:'}</h2>
                   <h2 style={{'textAlign':'right'}} hidden={hasDraft?false:true}>{draftUpdateDate}</h2>
                 </div>
               </div>
+              <Modal aria-labelledby='modal-label' tabIndex='10' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAssessmentPopover}>
+                <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate = {self.state.assessTemplate}/>
+              </Modal>
             </div>
           )
         }
