@@ -39,7 +39,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
       .then(function(teams) {
         var selectableChildren = _.sortBy(teams, 'name');
         self.props.setSelectableChildren(selectableChildren);
-      });                 
+      });
   },
 
   setButtonOptions: function(buttonOptions) {
@@ -224,8 +224,8 @@ var HomeAddTeamHierarchyModal = React.createClass({
                     </div>
 
                     <div class="optsel-parent" style={selparent1Style} id="optsel-parent">     
-                      <select name="pc-hier-selparent" id="pc-hier-selparent" class="pc-hier-selparent">
-                        <option key='NA' value='NA' selected>Select parent team</option>  
+                      <select name="pc-hier-selparent" id="pc-hier-selparent" class="pc-hier-selparent" defaultValue='NA'>
+                        <option key='NA' value='NA'>Select parent team</option>
                         <option key='NoParent' value='NoParent'>Top tier / Not Listed</option>
                         {populateParentTeamNames}
                       </select>
@@ -233,13 +233,13 @@ var HomeAddTeamHierarchyModal = React.createClass({
 
                     <div class="curteam-block">Current Team (being made)</div>
 
-                    <div class="optsel-child" style={selparent1Style} id="optsel-child">     
-                      <select name="pc-hier-selChild" id="pc-hier-selChild" class="pc-hier-selChild" disabled={self.disableField} >                          
+                    <div class="optsel-child" style={selparent1Style} id="optsel-child">
+                      <select name="pc-hier-selChild" id="pc-hier-selChild" class="pc-hier-selChild" disabled={self.disableField} defaultValue='NA'>
                         <option value='NA'>Add children team(s)</option>
                         <option value='NoChild'>Not Listed</option>
                         {populateChildrenTeamNames}
                       </select>
-                    </div>                
+                    </div>
 
                     <div>
                       <div class='team-hier-children'>

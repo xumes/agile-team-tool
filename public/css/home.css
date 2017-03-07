@@ -4199,7 +4199,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 50%;
   top: 50%;
   max-width: 63rem;
-  min-width: 57rem;
+  min-width: 63rem;
   height: 14vw;
   min-height: 43rem;
   background-color: #FFFFFF;
