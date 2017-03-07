@@ -43,7 +43,10 @@ var HomeMemberTable = React.createClass({
            }
          }
        });
-        var mLocation = self.toTitleCase(memberUserCollectionDetail.location.site);
+        var mLocation = '';
+        if (memberUserCollectionDetail != undefined)
+          mLocation = self.toTitleCase(memberUserCollectionDetail.location.site);
+
         var row = "<tr><td id='name_" + j + "'>" + member.name + '</td>';
         row = row + '<td>' + member.allocation + '</td>';
         row = row + "<td id='location_ref_" + j + "'>" + mLocation + "</div></td>";
