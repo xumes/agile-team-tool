@@ -4,7 +4,8 @@ module.exports = function(app, includes) {
 
   app.post('/auth', includes.passport.authenticate('ldap-login', {
     successRedirect: '/',
-    failureRedirect: '/login'
+    failureRedirect: '/login',
+    successReturnToOrRedirect: true
   }));
 
   app.get('/logout', function(req, res) {

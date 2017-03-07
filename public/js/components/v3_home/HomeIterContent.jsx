@@ -43,10 +43,24 @@ var HomeIterContent = React.createClass({
   getInitialState: function() {
     return {
       createIteration: false,
-      selectedField:''
+      selectedField:'',
+      selectedIter: new Object()
     }
   },
-  componentDidUpdate: function() {
+  componentDidMount: function(){
+    var data = this.getSelectedIteration();
+    if (data != null){
+      this.setState({selectedIter: data});
+    }
+  },
+  
+  componentDidUpdate: function(prevProps, prevState) {
+    var data = this.getSelectedIteration();
+    if (!_.isEqual(data, this.state.selectedIter)){
+      if ((data != null && data != undefined) && ((data._id != this.state.selectedIter._id) )){
+        this.setState({selectedIter: data});
+      }
+    }
     var self = this;
     if (!($('#homeIterSelection').hasClass('select2-hidden-accessible'))) {
            $('#homeIterSelection').select2({'width': '100%'});
@@ -107,7 +121,7 @@ var HomeIterContent = React.createClass({
   saveIter: function(id) {
     var iterationData = this.recalculate(id);
     this.props.updateTeamIteration(iterationData);
-    this.setState({selectedField:''});
+    this.setState({selectedField:'', selectedIter:iterationData});
     
   },
   cancelChange: function(id) {
@@ -226,6 +240,16 @@ var HomeIterContent = React.createClass({
     }
   },
 
+  float1Decimal:function(val) {
+    var value = parseFloat(val);
+    if (!isNaN(value)) {
+      return value.toFixed(1);
+    }
+    else {
+      return 0.0;
+    }
+  },
+
   wholeNumberCheck: function(e){
     var pattern = /^\d*$/;
     if (e.charCode >= 32 && e.charCode < 127 &&  !pattern.test(String.fromCharCode(e.charCode)))
@@ -251,6 +275,7 @@ var HomeIterContent = React.createClass({
     if (!isNaN(value)) {
       value = value.toFixed(1);
       e.target.value = value;
+      this.saveBtnClickHandler(e.target.id);
     }
   },
 
@@ -259,12 +284,14 @@ var HomeIterContent = React.createClass({
     if (!isNaN(value)) {
       value = value.toFixed(2);
       e.target.value = value;
+      this.saveBtnClickHandler(e.target.id);
     }
   },
 
   resetTeamAvailability: function(){
     
     var self = this;
+    var selectedIter;
     if (self.props.selectedIter != '') {
        var iteration = _.find(self.props.loadDetailTeam.iterations, function(iter){
           if (iter._id.toString() == self.props.selectedIter) {
@@ -293,21 +320,10 @@ var HomeIterContent = React.createClass({
     });    
   },
 
-  render: function() {
+  getSelectedIteration: function(){
     var self = this;
-    selectedIter = new Object();
-    if (_.isEmpty(self.props.loadDetailTeam) || self.props.loadDetailTeam.team.type != 'squad') {
-      return null;
-    } else {
-      var iterations = null;
-      var defIterId = '';
+    var defIterId = null;
       if (!_.isEmpty(self.props.loadDetailTeam.iterations) && self.props.loadDetailTeam.iterations.length > 0) {
-        iterations = self.props.loadDetailTeam.iterations.map(function(iter){
-          iterName =iter.name + ' (' + moment(iter.startDate).format('DD MMM YYYY') + ' - ' + moment(iter.endDate).format('DD MMM YYYY') + ')';
-          return (
-            <option key={iter._id} value={iter._id}>{iterName}</option>
-          )
-        });
         if (self.props.selectedIter != '') {
           defIterId = self.props.selectedIter;
         } else {
@@ -315,10 +331,36 @@ var HomeIterContent = React.createClass({
         }
         var defIter = _.find(self.props.loadDetailTeam.iterations, function(iter){
           if (iter._id.toString() == defIterId) {
-            selectedIter = iter;
             return iter;
           }
         });
+      }
+    return defIter;
+  },
+
+  handleChange: function(e){    
+    var temp = _.clone(this.state.selectedIter);
+    temp[e.target.id] = e.target.value;
+    this.setState({selectedIter:temp});
+  },
+
+  render: function() {
+    var self = this;
+    if (_.isEmpty(self.props.loadDetailTeam) || self.props.loadDetailTeam.team.type != 'squad') {
+      return null;
+    } else {
+      var iterations = null;
+      var defIterId = '';
+      var access = this.props.loadDetailTeam.access;
+      if (!_.isEmpty(self.props.loadDetailTeam.iterations) && self.props.loadDetailTeam.iterations.length > 0) {
+        iterations = self.props.loadDetailTeam.iterations.map(function(iter){
+          iterName =iter.name + ' (' + moment(iter.startDate).format('DD MMM YYYY') + ' - ' + moment(iter.endDate).format('DD MMM YYYY') + ')';
+          return (
+            <option key={iter._id} value={iter._id}>{iterName}</option>
+          )
+        });
+        
+        var defIter = this.state.selectedIter;
         var lastUpdatedBy = defIter.updatedBy;
         var lastUpdateTime = moment(defIter.updateDate).format('MMM DD YYYY');
         if (_.isEqual(defIter.memberChanged,true) || _.isEqual(defIter.memberChanged,'true')) {
@@ -326,7 +368,7 @@ var HomeIterContent = React.createClass({
         } else {
           iterData.memberChanged = 'No';
         }
-        
+
         if (defIter.status === 'Completed' && _.isNull(defIter.teamAvailability)){
           iterData.teamAvailability = 'N/A';
           iterData.personDaysUnavailable = 'N/A';
@@ -344,34 +386,32 @@ var HomeIterContent = React.createClass({
           storyPointsDays = !isFinite(storyPointsDays) ? '0.0': storyPointsDays.toFixed(1);
         }
         iterData.memberFte = (defIter.memberFte == null) ? '' : defIter.memberFte;
-        iterData.committedStories = (defIter.committedStories == null) ? '0' : defIter.committedStories;
-        iterData.deliveredStories = (defIter.deliveredStories == null) ? '0' : defIter.deliveredStories;
-        iterData.committedStoryPoints = (defIter.committedStoryPoints == null) ? '0' : defIter.committedStoryPoints;
-        iterData.storyPointsDelivered = (defIter.storyPointsDelivered == null) ? '0' : defIter.storyPointsDelivered;
-        iterData.deployments = (defIter.deployments == null) ? '0' : defIter.deployments;
-        iterData.defectsStartBal = (defIter.defectsStartBal == null) ? '0' : defIter.defectsStartBal;
-        iterData.defects = (defIter.defects == null) ? '0' : defIter.defects;
-        iterData.defectsClosed = (defIter.defectsClosed == null) ? '0' : defIter.defectsClosed;
-        iterData.defectsEndBal = (defIter.defectsEndBal == null) ? '0' : defIter.defectsEndBal;
-        iterData.cycleTimeWIP = (defIter.cycleTimeWIP == null) ? '0.0' : defIter.cycleTimeWIP;
-        iterData.cycleTimeInBacklog = (defIter.cycleTimeInBacklog == null) ? '0.0' : defIter.cycleTimeInBacklog;
-        iterData.clientSatisfaction = (defIter.clientSatisfaction == null) ? '0.0' : defIter.clientSatisfaction;
-        iterData.teamSatisfaction = (defIter.teamSatisfaction == null) ? '0.0' : defIter.teamSatisfaction;
+        iterData.committedStories = utils.numericValue(defIter.committedStories);
+        iterData.deliveredStories = utils.numericValue(defIter.deliveredStories);
+        iterData.committedStoryPoints =utils.numericValue(defIter.committedStoryPoints);
+        iterData.storyPointsDelivered = utils.numericValue(defIter.storyPointsDelivered);
+        iterData.deployments = utils.numericValue(defIter.deployments);
+        iterData.defectsStartBal = utils.numericValue(defIter.defectsStartBal);
+        iterData.defects = utils.numericValue(defIter.defects);
+        iterData.defectsClosed = utils.numericValue(defIter.defectsClosed);
+        iterData.defectsEndBal = utils.numericValue(defIter.defectsEndBal);
+        iterData.cycleTimeWIP = _.isNull(defIter.cycleTimeWIP) || _.isUndefined(defIter.cycleTimeWIP) ? '0.0' : this.float1Decimal(defIter.cycleTimeWIP);
+        iterData.cycleTimeInBacklog = _.isNull(defIter.cycleTimeInBacklog) || _.isUndefined(defIter.cycleTimeInBacklog) ? '0.0' : this.float1Decimal(defIter.cycleTimeInBacklog);
+        iterData.clientSatisfaction = _.isNull(defIter.clientSatisfaction) || _.isUndefined(defIter.clientSatisfaction) ? '0.0' : this.float1Decimal(defIter.clientSatisfaction);
+        iterData.teamSatisfaction = _.isNull(defIter.teamSatisfaction) || _.isUndefined(defIter.teamSatisfaction) ? '0.0' : this.float1Decimal(defIter.teamSatisfaction);
         iterData.comment = (defIter.comment == null) ? '' : defIter.comment;
-        
-        var access = self.props.loadDetailTeam.access;
-        
+
         return (
           <div>
             <div class='home-iter-title'>Iteration Overview</div>
             <Tooltip html={true} type="light"/>
             <div class='home-iter-selection-block'>
               <div class='iter-select'>
-                <select value={defIterId} id='homeIterSelection' onChange={this.props.iterChangeHandler}>
+                <select value={defIter._id} id='homeIterSelection' onChange={this.props.iterChangeHandler}>
                   {iterations}
                 </select>
               </div>
-              <div class='home-iter-add-btn-block' onClick={this.showAddIteration} style={{'cursor':'pointer'}}>
+              <div class='home-iter-add-btn-block' onClick={access?this.showAddIteration:''} style={{'cursor':'pointer'}}>
                 <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')} data-tip='Create New Iteration'></InlineSVG>
               </div>
             </div>
@@ -417,7 +457,7 @@ var HomeIterContent = React.createClass({
                 <div class='home-iter-content-sub' data-tip='Indicate if there was a change to the team’s makeup during this iteration. Changes might include adding, replacing, removing members or changing a team member’s allocation % that you feel is significant enough to be noted.  Indicating a team change might help to explain a higher/lower team productivity when compared to other iterations.'>Was there a team change?</div>
                 {this.state.selectedField === 'memberChanged'?
                   <div className='home-iter-member-change'>
-                    <select id='memberChanged' defaultValue={defIter.memberChanged}>
+                    <select id='memberChanged' defaultValue={defIter.memberChanged} onBlur={this.saveBtnClickHandler.bind(null,'memberChanged')}>
                       <option key='Yes' value={true}>Yes</option>
                       <option key='No' value={false}>No</option>
                     </select>
@@ -451,7 +491,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '25%'}}>
                 <div class='home-iter-content-sub' data-tip='Primarily for Operations teams, this is the number of Stories, Cards or Tickets the team has committed to delivering as part of their iteration planning.'>Stories/Cards/Tickets-Committed</div>
                 {this.state.selectedField === 'committedStories'?
-                  <input id='committedStories' class='home-iter-content-point' onKeyPress={this.wholeNumberCheck} defaultValue={iterData.committedStories} onPaste={this.paste} />:
+                  <input id='committedStories' class='home-iter-content-point' onKeyPress={this.wholeNumberCheck} onBlur={this.saveBtnClickHandler.bind(null,'committedStories')} defaultValue={iterData.committedStories} onPaste={this.paste} />:
                   <div id='committedStories' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.committedStories}</div>
                 }
                 {this.state.selectedField === 'committedStories'?
@@ -468,7 +508,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '25%'}}>
                 <div class='home-iter-content-sub' data-tip='Primarily for Operations teams, this is the actual number of Stories, Cards or Tickets the team was able to deliver for this iteration period.'>Stories/Cards/Tickets-Delivered</div>
                 {this.state.selectedField === 'deliveredStories'?
-                  <input id='deliveredStories' class='home-iter-content-point' onKeyPress={this.wholeNumberCheck} defaultValue={iterData.deliveredStories} onPaste={this.paste} />:
+                  <input id='deliveredStories' class='home-iter-content-point' onKeyPress={this.wholeNumberCheck} onBlur={this.saveBtnClickHandler.bind(null,'deliveredStories')} defaultValue={iterData.deliveredStories} onPaste={this.paste} />:
                   <div id='deliveredStories' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.deliveredStories}</div>
                 }
                 {this.state.selectedField === 'deliveredStories'?
@@ -498,7 +538,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='Primarily for Delivery teams, this is the number of Story points the team has committed to delivering as part of their iteration planning.'>Story points committed</div>
                 {this.state.selectedField === 'committedStoryPoints'?
-                  <input id='committedStoryPoints' class='home-iter-content-point' onKeyPress={this.wholeNumberCheck} defaultValue={iterData.committedStoryPoints} onPaste={this.paste} />:
+                  <input id='committedStoryPoints' class='home-iter-content-point' onKeyPress={this.wholeNumberCheck} onBlur={this.saveBtnClickHandler.bind(null,'committedStoryPoints')} defaultValue={iterData.committedStoryPoints} onPaste={this.paste} />:
                   <div id='committedStoryPoints' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.committedStoryPoints}</div>
                 }
                 {this.state.selectedField === 'committedStoryPoints'?
@@ -515,7 +555,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='Primarily for Delivery teams, this is the actual number of Story points the team was able to deliver for this iteration period.'>Story points delivered</div>
                 {this.state.selectedField === 'storyPointsDelivered'?
-                  <input id='storyPointsDelivered' class='home-iter-content-point' onKeyPress={this.wholeNumberCheck} defaultValue={iterData.storyPointsDelivered} onPaste={this.paste} />:
+                  <input id='storyPointsDelivered' class='home-iter-content-point' onKeyPress={this.wholeNumberCheck} onBlur={this.saveBtnClickHandler.bind(null,'storyPointsDelivered')} defaultValue={iterData.storyPointsDelivered} onPaste={this.paste} />:
                   <div id='storyPointsDelivered' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.storyPointsDelivered}</div>
                 }
                 {this.state.selectedField === 'storyPointsDelivered'?
@@ -532,7 +572,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='The number of code drops moved to production for this iteration. (Ex. If 3 enhancements/defects went into production on a single ‘push’, this is one deployment.)'>Deployments this iteration</div>
                 {this.state.selectedField === 'deployments'?
-                  <input id='deployments' class='home-iter-content-point' onKeyPress={this.wholeNumberCheck} defaultValue={iterData.deployments} onPaste={this.paste} />:
+                  <input id='deployments' class='home-iter-content-point' onKeyPress={this.wholeNumberCheck} onBlur={this.saveBtnClickHandler.bind(null,'deployments')} defaultValue={iterData.deployments} onPaste={this.paste} />:
                   <div id='deployments' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.deployments}</div>
                 }
                 {this.state.selectedField === 'deployments'?
@@ -562,7 +602,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='This is the number of production defects your are starting out with in this iteration.  This is pre-populated from the closing balance of defects from the previous iteration.'>Opening balance</div>
                 {this.state.selectedField === 'defectsStartBal'?
-                  <input id='defectsStartBal' class='home-iter-content-point' onKeyPress={this.wholeNumberCheck} defaultValue={iterData.defectsStartBal} onPaste={this.paste} />:
+                  <input id='defectsStartBal' class='home-iter-content-point' onKeyPress={this.wholeNumberCheck} onBlur={this.saveBtnClickHandler.bind(null,'defectsStartBal')} defaultValue={iterData.defectsStartBal} onPaste={this.paste} />:
                   <div id='defectsStartBal' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.defectsStartBal}</div>
                 }
                 {this.state.selectedField === 'defectsStartBal'?
@@ -579,7 +619,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='This is the number of production defects discovered during this iteration.'>New this iteration</div>
                 {this.state.selectedField === 'defects'?
-                  <input id='defects' class='home-iter-content-point' onKeyPress={this.wholeNumberCheck} defaultValue={iterData.defects} onPaste={this.paste} />:
+                  <input id='defects' class='home-iter-content-point' onKeyPress={this.wholeNumberCheck} onBlur={this.saveBtnClickHandler.bind(null,'defects')} defaultValue={iterData.defects} onPaste={this.paste} />:
                   <div id='defects' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.defects}</div>
                 }
                 {this.state.selectedField === 'defects'?
@@ -596,7 +636,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='This is the number of production defects resolved during this iteration.  In some situations, depending on the type of team, this might also include defects transferred to another team.'>Resolved this iteration</div>
                 {this.state.selectedField === 'defectsClosed'?
-                  <input id='defectsClosed' class='home-iter-content-point' onKeyPress={this.wholeNumberCheck} defaultValue={iterData.defectsClosed} onPaste={this.paste} />:
+                  <input id='defectsClosed' class='home-iter-content-point' onKeyPress={this.wholeNumberCheck} onBlur={this.saveBtnClickHandler.bind(null,'defectsClosed')} defaultValue={iterData.defectsClosed} onPaste={this.paste} />:
                   <div id='defectsClosed' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.defectsClosed}</div>
                 }
                 {this.state.selectedField === 'defectsClosed'?
@@ -699,7 +739,7 @@ var HomeIterContent = React.createClass({
             </div>
             <div class='home-iter-comment-block'>
               <div class='home-iter-content-title' data-tip='Enter any comments you feel are relevant to this iteration.  Perhaps it was something unplanned that affected the team’s deliverables, either positively or negatively.'>Iteration Comments</div>
-              <textarea class='home-iter-comment-test' readOnly={!access}>{iterData.comment}</textarea>
+              <textarea class='home-iter-comment-test' readOnly={!access} value={iterData.comment} onBlur={this.saveBtnClickHandler.bind(null, 'comment')} onChange={this.handleChange}  id='comment'/>:
             </div>
           </div>
 
@@ -708,7 +748,18 @@ var HomeIterContent = React.createClass({
         return (
           <div>
             <div class='home-iter-title'>Iteration Overview</div>
-            <div class='home-no-iter-info'>No iterations</div>
+            <Tooltip html={true} type="light"/>
+            <div class='home-iter-selection-block'>
+              <div class='iter-select'>
+                <select value={0} id='homeIterSelection'>
+                  <option key={0} value={0}>{'No iteration results'}</option>
+                </select>
+              </div>
+              <div class='home-iter-add-btn-block' onClick={access?this.showAddIteration:''} style={{'cursor':'pointer'}}>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')} data-tip='Create New Iteration'></InlineSVG>
+              </div>
+            </div>
+            <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={this.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
           </div>
         )
       }

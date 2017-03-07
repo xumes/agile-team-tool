@@ -1614,14 +1614,14 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   float: left;
   /*position: relative;*/
   /*left: -3%;*/
-  top: -25%;
+  top: -10%;
   /*display: inline-block;*/
   z-index: 10;
   width: 40%;
   height: 700%;
 }
 .home-team-header-description-arrow {
-  height: 20%;
+  height: 5em;
   width: 5%;
   display: inline-block;
   float: left;
@@ -1641,7 +1641,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   fill: #4178BE;
 }
 .home-team-header-description-title {
-  height: 20%;
+  height: 5em;
   width: 95%;
   background-color: #4178BE;
   display: inline-block;
@@ -1667,7 +1667,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   width: 10%;
   height: 70%;
   top: 30%;
-  right: 5%;
+  right: 1%;
   cursor: pointer;
 }
 
@@ -1698,7 +1698,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   left: 10%;
   width: 80%;
   height: 60%;
-  display: inline-block;
+  display: block;
 }
 
 .home-team-header-description-content > div > h1 {
@@ -1728,7 +1728,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   float: right;
   position: relative;
   right: 10%;
-  top: 10%;
+  top: 15%;
 }
 
 .home-trends-block {
@@ -2328,18 +2328,15 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 
 .team-bookmark-block {
   position: absolute;
-  left:6%;
+  left:5.5%;
   display: inline-block;
   z-index: 10;
   float: left;
   width: 35%;
-  height: 700%;
-  /*background-color: #FFFFFF;
-  box-shadow: 0 0 10px 0 rgba(0,0,0,0.16);*/
 }
 
 .home-team-header-bookmark-arrow {
-  height: 14%;
+  height: 5em;
   width: 5%;
   display: inline-block;
   float: left;
@@ -2369,7 +2366,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .home-team-header-bookmark-title {
-  height: 14%;
+  height: 5em;
   width: 100%;
   background-color: #4178BE;
   display: inline-block;
@@ -2377,15 +2374,15 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .home-team-header-bookmark-title > h {
-  height: 50%;
   position: relative;
-  top: 35%;
+  top: 50%;
   left: 5%;
   font-family: "HelvNeue Bold for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   color: #FFFFFF;
   display: inline-block;
   float: left;
+  transform: translate(0%, -50%);
 }
 
 .home-team-header-bookmark-title > div {
@@ -2394,7 +2391,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   width: 10%;
   height: 70%;
   top: 32%;
-  right: 5%;
+  right: 1%;
   cursor: pointer;
 }
 
@@ -2411,29 +2408,33 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 
 .home-team-header-bookmark-scroll {
   position: relative;
-  height: 66%;
   width: 100%;
   float: left;
-  overflow: auto;
   border-bottom: 0.1em solid #E0E0E0;
+  overflow-x: auto;
 }
 
 .home-team-header-bookmark-scroll > div {
-  height: 20%;
+  height: 4.5em;
   width: 100%;
   border-bottom: 0.1em solid #E0E0E0;
 }
 
 .home-team-header-bookmark-scroll > .no-link-block {
-  position: relative;
-  width: 100%;
-  height: 10%;
-  top: 40%;
-  text-align: center;
+  border-bottom: 0 none;
+  color: #777677;
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
-  color: #777677;
-  border-bottom: 0;
+  height: 10em;
+  position: relative;
+  text-align: center;
+}
+
+.no-link-block > h {
+  display: inline-block;
+  position: relative;
+  top: 50%;
+  transform: translate(0px, -50%);
 }
 
 .home-team-header-bookmark-scroll > div > div {
@@ -2451,28 +2452,29 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   color: #4178BE;
   padding: 0;
   position: relative;
-  top: 35%;
+  top: 50%;
   left: 5%;
   float: left;
-  width: 50%;
+  width: 73%;
   cursor: pointer;
+  transform: translate(0%, -50%);
 }
 
 .home-team-header-bookmark-scroll > div > span {
   position: relative;
   width: 8%;
-  height: 80%;
-  top: 10%;
+  height: 50%;
+  top: 50%;
   left: 29%;
   float: left;
   cursor: pointer;
+  transform: translate(0%,-50%);
 }
 
 .home-team-header-bookmark-scroll > div > span > i > svg{
   position: relative;
   width: 100%;
   height: auto;
-  top: 20%;
   left: 0;
 }
 
@@ -2486,7 +2488,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 .home-team-header-bookmark-btns {
   position: relative;
   float: left;
-  height: 20%;
+  height: 6em;
   width: 100%;
 }
 
@@ -2497,31 +2499,457 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   top: 1%;
   z-index: 7;
   background-color: #EFF9FF;
-  width: 100%;
-  height: 10%;
+  border: 0.1em solid #7CC7FF;
+  width: 99.8%;
+  height: 29%;
   background-image: url('../img/header-bg-art.svg');
   background-repeat: no-repeat;
   background-size: 60%;
   background-position: 150% 100%;
 }
 
-.home-assessment-summary-header-title {
+.home-assessment-summary > div {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 33.3%;
+}
+
+.home-assessment-summary > .main-content {
+  position: relative;
+  float: left;
+  left: 1.8%;
+  width: 68.2%;
+  height: 100%;
+}
+
+.home-assessment-summary > .main-content > div {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 33.3%;
+}
+
+.home-assessment-summary > .main-content > div > div {
+  position: relative;
+  float: left;
+  width: 97%;
+  height: 100%;
+}
+
+.home-assessment-summary > .main-content > div > .middle-line {
+  border-bottom: 0.1em solid #7CC7FF;
+}
+
+.home-assessment-summary > .main-content > div > .content-title {
+  position: relative;
+  float: left;
+  width: 35%;
+  height: 50%;
+  top: 25%;
+}
+
+.home-assessment-summary > .main-content > div > .content-title > h1 {
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 2.2em;
+  line-height: 1.8em;
+  color: #62B2EF;
+  padding: 0;
+}
+
+.home-assessment-summary > .main-content > div > .submit-date {
+  position: relative;
+  float: left;
+  width: 50%;
+  left: 2%;
+  height: 20%;
+  top: 37%;
+}
+
+.home-assessment-summary > .main-content > div > .submit-date > h1 {
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 1.2em;
+  font-weight: 500;
+  line-height: 1.4em;
+  color: #5A5A5A;
+}
+
+.home-assessment-summary > .main-content > div > div > .summary-title {
+  position: relative;
+  float: left;
+  top: 15%;
+  width: 36%;
+  height: 85%;
+}
+
+.home-assessment-summary > .main-content > div > div > .summary-ponts {
+  position: relative;
+  float: left;
+  left: 2%;
+  width: 62%;
+  height: 100%;
+}
+
+.home-assessment-summary > .main-content > div > div > .summary-ponts > .points-block {
+  position: relative;
+  float: left;
+  top: 12%;
+  width: 100%;
+  height: 45%;
+}
+
+.points-block > .arrow-right {
+  position: relative;
+  float: left;
+  width: 2%;
+  height: 100%;
+  z-index: 3;
+}
+
+.arrow-right > i > svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+.arrow-right > i > svg polygon{
+  fill: black;
+}
+
+.points-block > .dot {
+  position: relative;
+  float: left;
+  z-index: 3;
+  left: 31%;
+  width: 1.5%;
+  height: 100%;
+}
+
+.dot > i > svg {
+  height: 100%;
+  width: 100%;
+}
+
+.points-block > .arrow-end {
+  position: relative;
+  float: right;
+  /*left: 96%;*/
+  z-index: 3;
+  width: 3%;
+  height: 40%;
+  top: 30%;
+  background-color: #5596E6;
+}
+
+.arrow-end > i > svg {
+  position: relative;
+  top: 16.7%;
+  left: 16.7%;
+  height: 66.7%;
+  width: 66.7%;
+}
+
+.arrow-end > i > svg polygon{
+  fill: white;
+}
+
+.points-block > .dash {
+  position: relative;
+  left: 1%;
+  z-index: 1;
+  width: 97.5%;
+  height: 1%;
+  top: 47%;
+  border-bottom: 0.1em dotted;
+}
+
+.points-block > .line {
+  position: absolute;
+  left: 1%;
+  z-index: 2;
+  /*width: 95%;*/
+  height: 1%;
+  top: 47%;
+  border-bottom: 0.1em solid #5596E6;
+}
+
+.points-block > .current-dot {
+  position: absolute;
+  z-index: 4;
+  /*left: 96%;*/
+  top: 25%;
+  width: 3%;
+  height: 50%;
+  cursor: pointer;
+}
+
+.current-dot > i > svg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.points-block > h1 {
+  position: relative;
+  float: left;
+  width: 25%;
+  height: 100%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.3em;
+  line-height: 0.5em;
+  color: #5A5A5A;
+  padding: 0;
+}
+
+.home-assessment-summary > .main-content > div > div > .summary-title > h1 {
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 1.8em;
+  line-height: 1.8em;
+  color: #5A5A5A;
+  padding: 0;
+}
+
+.home-assessment-summary > .select-content-bg {
+  position: relative;
+  float: left;
+  width: 26.5%;
+  height: 100%;
+  left: 1.8%;
+  background-color: #FFFFFF;
+  border-left: 0.1em solid #7CC7FF;
+  border-right: 0.1em solid #7CC7FF;
+  opacity: 0.5;
+}
+
+.home-assessment-summary > .select-content {
+  position: absolute;
+  left: 70%;
+  width: 26.7%;
+  height: 100%;
+}
+
+.home-assessment-summary > .select-content > .select-box {
+  position: relative;
+  float: left;
+  left: 15%;
+  top: 5%;
+  width: 70%;
+  height: 15%;
+  background-color: #EFF9FF;
+}
+
+.home-assessment-summary > .select-content > .select-box > .select2 {
+  height: 100%;
+}
+
+.home-assessment-summary > .select-content > .select-box > .select2 .select2-selection {
+  height: 100%;
+  outline: none;
+  background-color: #EFF9FF;
+}
+
+.home-assessment-summary > .select-content > .select-box > .select2 .select2-selection__rendered {
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1em;
+  line-height: 2.5em;
+  color: #777677;
+}
+
+.home-assessment-summary > .select-content > .select-box > .select2 b {
+  top: 1.8em;
+}
+
+.home-assessment-summary > .select-content > .review-box {
+  position: relative;
+  float: left;
+  width: 70%;
+  left: 15%;
+  top: 13%;
+  height: 40%;
+}
+
+.home-assessment-summary > .select-content > .review-box > h1 {
+  position: relative;
+  text-align: center;
+  float: left;
+  width: 100%;
+  height: 20%;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 1.4em;
+  font-weight: 500;
+  color: #5A5A5A;
+  padding: 0;
+}
+
+.home-assessment-summary > .select-content > .review-box > button {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 35%;
+  font-size: 1.4em;
+  line-height: 0.8em;
+  padding: 0;
+}
+
+.home-assessment-summary > .select-content > .review-box > h2,
+.home-assessment-summary > .select-content > .review-box > h3,
+.home-assessment-summary > .select-content > .draft-box > h2
+{
+  position: relative;
+  float: left;
+  text-align: left;
+  width: 50%;
+  height: 20%;
+  font-size: 1.1em;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  color: #999999;
+  padding: 0;
+}
+
+.home-assessment-summary > .select-content > .draft-box {
+  position: relative;
+  float: left;
+  width: 70%;
+  left: 15%;
+  top: 10%;
+  height: 40%;
+}
+
+.home-assessment-summary > .select-content > .draft-box > h1 {
+  position: relative;
+  float: left;
+  width: 105%;
+  height: 20%;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 1.4em;
+  font-weight: 500;
+  color: #5A5A5A;
+  padding: 0;
+}
+
+.home-assessment-summary > .select-content > .draft-box > button {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 35%;
+  font-size: 1.4em;
+  line-height: 0.8em;
+  padding: 0;
+}
+
+.home-assessment-summary > div > .first-title {
   position: relative;
   float: left;
   width: 30%;
   height: 50%;
   top: 25%;
+  left: 1.8%;
 }
 
-.home-assessment-summary-header-title > h1 {
-  font-family: "HelvNeue Light for IBM";
+.home-assessment-summary > div > .last-opened {
+  position: relative;
+  float: right;
+  width: 20%;
+  height: 20%;
+  top: 40%;
+  right: 5%;
+}
+
+.home-assessment-summary > div > .last-opened > h1 {
+  position: relative;
+  float: left;
+  left: 10%;
+  width: 45%;
+  height: 100%;
+  font-size: 1.2em;
+  line-height: 1.5em;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Arial","sans-serif";
+  color: #777677;
+  padding: 0;
+}
+
+.home-assessment-summary > div > .last-opened > h2 {
+  position: relative;
+  float: left;
+  left: 10%;
+  width: 50%;
+  height: 100%;
+  font-size: 1.2em;
+  line-height: 1.3em;
+  font-weight: 500;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  color: #777677;
+  padding: 0;
+}
+
+.home-assessment-summary > div > .first-title > h1 {
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.2em;
   line-height: 2em;
   color: #62B2EF;
   padding: 0;
 }
 
-.home-assessment-summary-header-btn {
+.home-assessment-summary > div > .second-title {
+  position: relative;
+  float: left;
+  width: 50%;
+  height: 90%;
+  top: 5%;
+  left: 1.5%;
+}
+
+.home-assessment-summary > div > .second-title > h1 {
+  position: relative;
+  float: left;
+  height: 100%;
+  font-family: "Helvetica Neue LT W1G","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 4.0em;
+  line-height: 1.5em;
+  color: #734098;
+  padding: 0;
+}
+
+.home-assessment-summary > div > .third-title {
+  position: relative;
+  float: left;
+  width: 70%;
+  height: 45%;
+  left: 1.5%;
+}
+
+.home-assessment-summary > div > .third-title > h1 {
+  position: relative;
+  float: left;
+  height: 50%;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  color: #777677;
+  padding: 0;
+}
+
+.home-assessment-summary > div > .start-btn {
+  position: relative;
+  float: right;
+  height: 40%;
+  width: 20%;
+  right: 5%;
+}
+
+.home-assessment-summary > div > .start-btn > button {
+  position: relative;
+  float: left;
+  height: 100%;
+  width: 100%;
+  font-family: "Helvetica Neue LT W1G","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 0em;
+}
+
+
+
+/*.home-assessment-summary-header-btn {
   position: relative;
   float: right;
   width: 20%;
@@ -2586,10 +3014,10 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   top: 0.1%;
   border-top: 0.1em solid #7CC7FF;
 }
-/*.home-assessment-summary-content:last-child {
+.home-assessment-summary-content:last-child {
   top: 0.1%;
   border-top: 0.1em solid #7CC7FF;
-}*/
+}
 
 .home-assessment-summary-title {
   position: relative;
@@ -2639,107 +3067,6 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 50%;
 }
 
-.home-assessment-summary-ponts-block > .arrow-right {
-  position: relative;
-  float: left;
-  top: 25%;
-  width: 1%;
-  height: 50%;
-}
-
-.arrow-right > i > svg {
-  height: 100%;
-  width: 100%;
-}
-
-.arrow-right > i > svg polygon{
-  fill: black;
-}
-
-.home-assessment-summary-ponts-block > .dot {
-  position: relative;
-  float: left;
-  z-index: 3;
-  left: 31%;
-  width: 0.8%;
-  height: 50%;
-  top: 25%;
-}
-
-.dot > i > svg {
-  height: 100%;
-  width: 100%;
-}
-
-.home-assessment-summary-ponts-block > .arrow-end {
-  position: relative;
-  float: right;
-  /*left: 96%;*/
-  top: 32.5%;
-  width: 1.5%;
-  height: 35%;
-  background-color: #5596E6;
-}
-
-.arrow-end > i > svg {
-  position: relative;
-  top: 16.7%;
-  left: 16.7%;
-  height: 66.7%;
-  width: 66.7%;
-}
-
-.arrow-end > i > svg polygon{
-  fill: white;
-}
-
-.home-assessment-summary-ponts-block > .dash {
-  position: relative;
-  left: 1%;
-  z-index: 1;
-  width: 97.5%;
-  height: 1%;
-  top: 47%;
-  border-bottom: 0.1em dotted;
-}
-
-.home-assessment-summary-ponts-block > .line {
-  position: absolute;
-  left: 1%;
-  z-index: 2;
-  /*width: 95%;*/
-  height: 1%;
-  top: 47%;
-  border-bottom: 0.1em solid #5596E6;
-}
-
-.home-assessment-summary-ponts-block > .current-dot {
-  position: absolute;
-  z-index: 3;
-  /*left: 96%;*/
-  top: 25%;
-  width: 2%;
-  height: 50%;
-}
-
-.current-dot > i > svg {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.home-assessment-summary-ponts-block > h1 {
-  position: relative;
-  float: left;
-  width: 25%;
-  height: 100%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
-  font-size: 1.3em;
-  line-height: 0.5em;
-  color: #5A5A5A;
-  padding: 0;
-}
-
 .home-assessment-summary-btn {
   position: relative;
   float: right;
@@ -2768,7 +3095,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   color: #5A5A5A;
   padding: 0;
   text-align: center;
-}
+}*/
 
 .home-header-image {
   position: relative;
@@ -2790,6 +3117,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 
 .team-member-add-block {
   position: fixed;
+  outline: none;
   left: 39%;
   top: 21%;
   width: 22vw;
@@ -3177,10 +3505,6 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   z-index: 12;
 }
 
-.modal-wrapper {
-  width: 30em;
-}
-
 .teamlink-modal {
   height: 30%;
 }
@@ -3194,25 +3518,6 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   background-color: rgba(0, 0, 0, 0.50);
   z-index: 11;
 }
-
-.att-modal .x1-ui-modal.modal button.close .glyphicon {
-  font-size: inherit;
-  color: #FFF;
-}
-
-.att-modal .glyphicon-remove::before {
-  content: "\e604";
-}
-
-.glyphicon, .checkbox input[type="checkbox"] + span::after,
-.checkbox-inline input[type="checkbox"] + span::after,
-.switch input[type="checkbox"] + span, .switch-inline input[type="checkbox"] + span,
-.breadcrumb > li + li::before, .alert::before, .alert-dismissable .close::before, .alert-dismissible .close::before {
-  color: #777677;
-  font-family: "UX1 Glyphicons";
-  font-size: 16px;
-}
-
 /* END: ReactModal */
 
 /* BEGIN: Important Link section */
@@ -3229,11 +3534,11 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .att-modal input {
-  font-size: 1.12em;
+  font-size: 1em;
 }
 
 .att-modal .select2 {
-  font-size: 1.26em;
+  font-size: inherit;
 }
 
 .att-modal select, .att-modal .select2-container--default {
@@ -3248,36 +3553,20 @@ width: 100% !important;
   font-size: 10.21pt;
 }
 
-.att-modal .ibm-row-form {
-  padding-top: 1%;
-}
-
 .att-modal .ibm-row-form p {
-  margin-bottom: 8.3%;
+  padding-top: 8.3%;
   width: 100%;
 }
 
 .att-modal .ibm-row-form label {
   font-family: "HelvNeue Medium for IBM";
   color: #323232;
-  font-size: 1.1em;
-  line-height: 1em;
-  outline: none;
+  font-size: 1em;
 }
 
 .att-modal .ibm-row-form .lblRoman {
   font-family: "HelvNeue Roman for IBM";
   line-height: 1.7em;
-}
-
-.glyphicon {
-  font-family: "UX1 Glyphicons";
-  font-size: 14px;
-}
-
-.glyphicon-remove::before {
-  content: "\e604";
-  color: #fff;
 }
 
 .iterspecific {
@@ -3300,37 +3589,22 @@ width: 100% !important;
 
 /* END: Important Link Modal */
 
+
+.att-modal .modal-header {
+  background-color: #4178be;
+  font-size: 1em;
+  height: 4em;
+  position: relative;
+}
+
 .att-modal label {
   max-width: 90%;
 }
 
-.att-modal .modal-header::after {
-  clear: both;
-}
-
-.att-modal .modal-header::before, .att-modal .modal-header::after {
-  content: " ";
-  display: table;
-}
-
-.att-modal .modal-footer::before, .att-modal .modal-footer::after {
-  content: " ";
-  display: table;
-}
-
-.att-modal .modal-footer::after {
-  clear: both;
-}
-
-.att-modal .modal-footer {
-  border-top: 1px solid #e0e0e0;
-  padding: 30px 20px;
-  text-align: right;
-}
-
 .att-modal .modal-footer {
   border: medium none;
-  padding: 4% 5%;
+  padding: 2em 2.5em;
+  text-align: right;
 }
 
 .att-modal .modal-footer .btn + .btn {
@@ -3338,74 +3612,27 @@ width: 100% !important;
   margin-bottom: 0;
 }
 
-.att-modal .modal-title {
+.att-modal .modal-header .modal-title {
   color: #ffffff;
-  display: inline-block;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.5em;
-  font-weight: bold;
-  font-family: "HelvNeue Bold for IBM" !important;
-  padding-top: 3%;
+  padding: 0 0 0 1.5em;
+  position: relative;
+  top: 25%;
 }
 
-.att-modal .modal-header .close { /* line 13835 */
-  line-height: 44px;
-  margin: 0;
+.att-modal .modal-header .close-btn {
+  cursor: pointer;
+  display: inline-block;
+  float: right;
+  height: 50%;
+  position: relative;
+  top: 25%;
+  width: 8%;
 }
 
-.att-modal .modal-header .close:hover .glyphicon, .att-modal .modal-header .close:hover .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox .modal-header .close:hover input[type="checkbox"] + span::after, .att-modal .modal-header .close:hover
-.att-modal .checkbox-inline input[type="checkbox"] + span::after,
-.att-modal .checkbox-inline .modal-header .close:hover input[type="checkbox"] + span::after, .att-modal .modal-header .close:hover .switch input[type="checkbox"] + span, .att-modal .switch .modal-header .close:hover input[type="checkbox"] + span, .att-modal .modal-header .close:hover
-.switch-inline input[type="checkbox"] + span,
-.att-modal .switch-inline .modal-header .close:hover input[type="checkbox"] + span, .att-modal .modal-header .close:hover .breadcrumb > li + li:before, .att-modal .modal-header .close:hover .alert:before, .att-modal .modal-header .close:hover .alert-dismissable .close:before, .att-modal .alert-dismissable .modal-header .close:hover .close:before, .att-modal .modal-header .close:hover
-.att-modal .alert-dismissible .close:before,
-.att-modal .alert-dismissible .modal-header .close:hover .close:before,
-.att-modal .modal-header .close:focus .glyphicon,
-.att-modal .modal-header .close:focus .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox
-.att-modal .modal-header .close:focus input[type="checkbox"] + span::after,
-.att-modal .modal-header .close:focus .checkbox-inline input[type="checkbox"] + span::after,
-.att-modal .checkbox-inline .modal-header .close:focus input[type="checkbox"] + span::after,
-.att-modal .modal-header .close:focus .switch input[type="checkbox"] + span,
-.att-modal .switch .modal-header .close:focus input[type="checkbox"] + span,
-.att-modal .modal-header .close:focus .switch-inline input[type="checkbox"] + span,
-.att-modal .switch-inline .modal-header .close:focus input[type="checkbox"] + span,
-.att-modal .modal-header .close:focus .breadcrumb > li + li:before,
-.att-modal .modal-header .close:focus .alert:before,
-.att-modal .modal-header .close:focus .alert-dismissable .close:before,
-.att-modal .alert-dismissable .modal-header .close:focus .close:before,
-.att-modal .modal-header .close:focus .alert-dismissible .close:before,
-.att-modal .alert-dismissible .att-modal .modal-header .close:focus .close:before {
-  border-color: #FFFFFF;
-}
-
-.att-modal .modal-header .close .glyphicon, .att-modal .modal-header .close .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox .modal-header .close input[type="checkbox"] + span::after, .att-modal .modal-header .close
-.att-modal .checkbox-inline input[type="checkbox"] + span::after,
-.att-modal .checkbox-inline .modal-header .close input[type="checkbox"] + span::after, .att-modal .modal-header .close .switch input[type="checkbox"] + span, .att-modal .switch .modal-header .close input[type="checkbox"] + span, .att-modal .modal-header .close
-.att-modal .switch-inline input[type="checkbox"] + span,
-.att-modal .switch-inline .modal-header .close input[type="checkbox"] + span, .att-modal .modal-header .close .breadcrumb > li + li:before, .att-modal .modal-header .close .alert:before, .att-modal .modal-header .close .alert-dismissable .close:before, .att-modal .alert-dismissable .modal-header .close .close:before, .att-modal .modal-header .close
-.att-modal .alert-dismissible .close:before,
-.att-modal .alert-dismissible .modal-header .close .close:before {
-  color: #fff;
-}
-
-.att-modal .modal-title {
-  line-height: 1.8em;
-  margin: 0;
-  padding-left: 1em;
-  padding-top: 4.28%;
-}
-
-.att-modal .modal-header {
-  background-color: #4178BE;
-  height: 14%;
-  min-height: initial;
-  border: none;
-  width: 100%;
-  float: left;
-}
-
-.att-modal .modal-header .close {
-  line-height: 44px;
-  margin: 0;
+.modal-header .close-btn svg polygon {
+  fill: #ffffff;
 }
 
 .att-modal .sr-only { /* line 8732 */
@@ -3419,84 +3646,8 @@ width: 100% !important;
   border: 0;
 }
 
-.att-modal .close { /* 11046 */
-  float: right;
-  font-size: 21px;
-  font-weight: normal;
-  line-height: 1;
-  color: #777677;
-  text-shadow: none;
-  opacity: 0.2;
-  filter: alpha(opacity=20);
-}
-
-.att-modal .close:hover, .att-modal .close:focus { /* 11055 */
-  color: #777677;
-  text-decoration: none;
-  cursor: pointer;
-  opacity: 0.5;
-  filter: alpha(opacity=50);
-}
-
-.att-modal button.close { /* 11062 */
-  padding: 0;
-  cursor: pointer;
-  background: transparent;
-  border: 0;
-  -webkit-appearance: none;
-}
-
-.att-modal .close { /* line 13225 */
-  float: right;
-  font-size: inherit;
-  line-height: inherit;
-  opacity: 1;
-  filter: alpha(opacity=100);
-}
-
-.att-modal .close:hover, .close:focus { /* line 13231 */
-  opacity: 1;
-  color: #fff;
-  filter: alpha(opacity=100);
-}
-
-.att-modal button.close {
-  position: absolute;
-  right: 16px;
-  top: 1.5%;
-}
-
-.att-modal button.close:hover span,
-.att-modal button.close:focus span {
-  border-color: #777677;
-  opacity: 1;
-}
-.att-modal button.close .glyphicon, .att-modal button.close .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox button.close input[type="checkbox"] + span::after, .att-modal button.close
-.checkbox-inline input[type="checkbox"] + span::after,
-.att-modal .checkbox-inline button.close input[type="checkbox"] + span::after, .att-modal button.close .switch input[type="checkbox"] + span, .att-modal .switch button.close input[type="checkbox"] + span, .att-modal button.close
-.switch-inline input[type="checkbox"] + span,
-.att-modal .switch-inline button.close input[type="checkbox"] + span, .att-modal button.close .breadcrumb > li + li:before, .att-modal button.close .alert:before, .att-modal button.close .alert-dismissable .close:before, .att-modal .alert-dismissable button.close .close:before, .att-modal button.close
-.att-modal .alert-dismissible .close:before,
-.att-modal .alert-dismissible button.close .close:before {
-  border: 1px solid transparent;
-  padding: 3px;
-  color: #777677;
-}
-
-.att-modal button.close {
-  background: transparent none repeat scroll 0 0;
-  border: 0 none;
-  cursor: pointer;
-  padding: 0;
-}
-
 .att-modal button {
   overflow: visible;
-}
-
-.x1-ui-modal.modal button.close .glyphicon {
-  color: #fff;
-  font-size: inherit;
 }
 
 .att-modal .sr-only {
@@ -3510,34 +3661,8 @@ width: 100% !important;
   width: 1px;
 }
 
-.att-modal .modal-header .close .glyphicon, .att-modal .modal-header .close .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox .modal-header .close input[type="checkbox"] + span::after, .att-modal .modal-header .close .checkbox-inline input[type="checkbox"] + span::after, .att-modal .checkbox-inline .modal-header .close input[type="checkbox"] + span::after, .att-modal .modal-header .close .switch input[type="checkbox"] + span, .att-modal .switch .modal-header .close input[type="checkbox"] + span, .att-modal .modal-header .close .switch-inline input[type="checkbox"] + span, .att-modal .switch-inline .modal-header .close input[type="checkbox"] + span, .att-modal .modal-header .close .breadcrumb > li + li::before, .att-modal .modal-header .close .alert::before, .att-modal .modal-header .close .alert-dismissable .close::before, .att-modal .alert-dismissable .modal-header .close .close::before, .att-modal .modal-header .close .alert-dismissible .close::before, .att-modal .alert-dismissible .modal-header .close .close::before {
-  color: #fff;
-}
-
-/* Line 13242 */
-.att-modal button.close .glyphicon, .att-modal button.close .checkbox input[type="checkbox"] + span::after, .att-modal .checkbox button.close input[type="checkbox"] + span::after, .att-modal button.close .checkbox-inline input[type="checkbox"] + span::after, .att-modal .checkbox-inline button.close input[type="checkbox"] + span::after, .att-modal button.close .switch input[type="checkbox"] + span, .att-modal .switch button.close input[type="checkbox"] + span, .att-modal button.close .switch-inline input[type="checkbox"] + span, .att-modal .switch-inline button.close input[type="checkbox"] + span, .att-modal button.close .breadcrumb > li + li::before, .att-modal button.close .alert::before, .att-modal button.close .alert-dismissable .close::before, .att-modal .alert-dismissable button.close .close::before, .att-modal button.close .alert-dismissible .close::before, .att-modal .alert-dismissible button.close .close::before {
-  border: 1px solid transparent;
-  padding: 3px;
-}
-
-.glyphicon-xs, .breadcrumb > li + li::before, .alert-dismissable .close::before, .alert-dismissible .close::before {
-  font-size: 14px;
-}
-
-.glyphicon, .checkbox input[type="checkbox"] + span::after, .checkbox-inline input[type="checkbox"] + span::after, .switch input[type="checkbox"] + span, .switch-inline input[type="checkbox"] + span, .breadcrumb > li + li::before, .alert::before, .alert-dismissable .close::before, .alert-dismissible .close::before {
-  font-family: "UX1 Glyphicons";
-  font-size: 16px;
-}
-
-.glyphicon-remove::before {
-  content: "\e604";
-}
-
 .att-modal .modal-body {
-  padding: 9.5% 6.5% 1%;
-  position: relative;
-  float: left;
-  width: 87%;
+  padding: 0 2.5em;
 }
 
 /* responsive teamlinks modal */
@@ -3599,21 +3724,6 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   color: #4178BE;
 }
 
-
-.att-modal .btn-secondary:hover, .att-modal .btn-secondary:focus, .att-modal .btn-secondary.focus, .att-modal .btn-secondary:active, .btn-secondary.active,
-.open > .btn-secondary.dropdown-toggle,
-.btn-cancel:hover,
-.btn-cancel:focus,
-.btn-cancel.focus,
-.btn-cancel:active,
-.btn-cancel.active,
-.open >
-.btn-cancel.dropdown-toggle {
-  background-color: #eef4fc;
-  border-color: #4178BE;
-  color: #4178BE;
-}
-
 .att-modal .btn-primary:hover, .att-modal .btn-primary:focus, .att-modal .btn-primary.focus, .att-modal .btn-primary:active,
 .att-modal .btn-primary.active, .open > .btn-primary.dropdown-toggle {
   background-color: #325c80;
@@ -3627,13 +3737,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 /*
  * Font style
  */
-@font-face {
-  font-family: "UX1 Glyphicons";
-  font-style: normal;
-  font-weight: normal;
-  src: url("../fonts/ux1-glyphicons.woff") format("woff");
-}
-
 @font-face {
   font-family: "HelvNeue Roman for IBM";
   font-style: normal;
@@ -3666,8 +3769,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 /* BEGIN: Team description Modal section */
 .att-modal .txtarea {
   padding-top: 1.1%;
+  height: 7em;
   width: 100%;
-  font-size: 1.2em;
+  font-size: 1em;
+  resize: none;
 }
 /* END: Team description Modal section */
 
@@ -4735,9 +4840,8 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: right;
   display: inline-block;
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
-  font-size: 1em;
+  font-size: 1.7em;
   text-align: right;
-  line-height: 1.2em;
   color: #4178BE;
   cursor: pointer;
 }
@@ -5194,4 +5298,235 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   padding-left: 1.75em;
   padding-top: 0.25em;
   text-align: justify;
+}
+
+.assessment-popover-block {
+  position: fixed;
+  float: left;
+  outline: none;
+  top: 10%;
+  left: 10%;
+  width: 80vw;
+  height: 53.36vw;
+  min-width: 1024px;
+  min-height: 576px;
+  background-color: #FFFFFF;
+  box-shadow: 0 0.2em 0.4em 0 rgba(0,0,0,0.18);
+  overflow: auto;
+}
+
+.assessment-popover-block > .assessment-title {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 5%;
+  background-color: #4178BE;
+}
+
+.assessment-popover-block > .assessment-title > h1 {
+  position: relative;
+  float: left;
+  left: 2%;
+  top: 30%;
+  color: #FFFFFF;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.5em;
+  padding: 0;
+}
+
+.assessment-popover-block > .assessment-title > div {
+  position: relative;
+  float: right;
+  width: 3%;
+  height: 50%;
+  top: 30%;
+  cursor: pointer;
+  right: 0.5%;
+}
+
+.assessment-popover-block > .assessment-title > div svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: auto;
+}
+
+.assessment-popover-block > .assessment-title > div svg g {
+  fill: #FFFFFF;
+  opacity: 1;
+}
+
+.assessment-popover-block > .assessment-header {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 15%;
+}
+
+.assessment-popover-block > .assessment-header > .header-title {
+  position: relative;
+  float: left;
+  width: 48%;
+  left: 2%;
+  height: 100%;
+  margin-left: 0;
+}
+
+.assessment-popover-block > .assessment-header > .header-title > h1 {
+  position: relative;
+  float: left;
+  top: 35%;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 2.2em;
+  font-weight: 300;
+  color: #734098;
+  padding: 0;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status {
+  position: relative;
+  float: left;
+  left: 2%;
+  width: 48%;
+  height: 100%;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-title {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 50%;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-title > h1 {
+  position: relative;
+  float: left;
+  top: 70%;
+  height: 28%;
+  text-align: center;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  color: #777677;
+  border-bottom: 0.1em solid #777677;
+  padding: 0;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 50%;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector {
+  position: relative;
+  float: left;
+  width: 19%;
+  height: 40%;
+  top: 10%;
+  font-size: 1em;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector > .select2 {
+  height: 100%;
+  font-size: 1em;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector > .select2 .select2-selection {
+  height: 100%;
+  outline: none;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector > .select2 .select2-selection__rendered {
+  height: 100%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 1.8em;
+  color: #777677;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector > .select2 .select2-selection__arrow {
+  height: 100%;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector > .select2 b {
+  top: 1.6em;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .submit-date-selector {
+  position: relative;
+  float: left;
+  left: 7%;
+  width: 25%;
+  height: 40%;
+  top: 10%;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .submit-date-selector > h1 {
+  display: inline-block;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 2.0em;
+  color: black;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .submit-date-selector > h2 {
+  display: inline-block;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 2.0em;
+  color: #4178BE;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .last-updated-by {
+  position: relative;
+  float: left;
+  left: 8%;
+  width: 30%;
+  height: 40%;
+  top: 10%;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .last-updated-by > h1 {
+  position: relative;
+  float: left;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 2.0em;
+  color: black;
+}
+
+.assessment-popover-block > .lc-header {
+  position: relative;
+  float: left;
+  left: 2%;
+  width: 96%;
+  height: 5%;
+  border-bottom: 0.1em solid #C7C7C7;
+}
+
+.assessment-popover-block > .lc-header > .header-title {
+  position: relative;
+  float: left;
+  top: 50%;
+  width: 20%;
+  height: 50%;
+  margin: 0;
+}
+
+.assessment-popover-block > .lc-header > .header-title > h1 {
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  color: #5A5A5A;
+  padding: 0;
+}
+
+.assessment-popover-block > .agile-maturity {
+  position: relative;
+  float: left;
+  width: 96%;
+  left: 2%;
 }

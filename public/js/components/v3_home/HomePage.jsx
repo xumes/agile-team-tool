@@ -285,6 +285,25 @@ var HomePage = React.createClass({
         team: {$set: data}
       });
       self.setState({loadDetailTeam: updatedTeam});
+
+      // front end sort
+      console.log(updatedTeam.team.pathId,updatedTeam.team.name);
+      $('#'+updatedTeam.team.pathId+ ' > a > span.agile-team-title').html(updatedTeam.team.name);
+      var li = $('#'+updatedTeam.team.pathId).parent('ul').children('li');
+      var liSorted = _.sortBy(li,function(element){
+        if (element.id == 'agteamstandalone')
+          return 'zzzzzzzzzz'
+
+        var name = $('#'+ element.id + ' > a > span.agile-team-title').html();
+        return name.toLowerCase();
+      });
+      _.each(liSorted, function(element) {
+        $('#'+updatedTeam.team.pathId).parent('ul').append(element);
+      });
+      $('.nano').nanoScroller();
+      $('.nano').nanoScroller({
+        scrollTo: $('#link_'+updatedTeam.team.pathId)
+      });
     }
   },
 
@@ -313,17 +332,6 @@ var HomePage = React.createClass({
 
   updateTeamIteration: function(iteration) {
     var self = this;
-    var forUpdate = _.clone(iteration);
-    var teamDetail = JSON.parse(JSON.stringify(self.state.loadDetailTeam));
-    _.find(teamDetail.iterations, function(data, index){
-      if (data._id === forUpdate._id){
-        teamDetail.iterations[index] = forUpdate;
-        return data;
-      }
-    });
-
-    self.setState({'loadDetailTeam': teamDetail});
-
     api.updateIteration(iteration)
       .then(function(result){
         return api.getIterationInfo(iteration._id);

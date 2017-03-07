@@ -371,7 +371,7 @@ var HomeTeamSetup = React.createClass({
     }
 
     return (
-      <div style={{'height': '100%'}} id='teamSetupBlock'>
+      <div style={{'height': '100%', 'display':'inline'}} id='teamSetupBlock'>
         <div class='home-team-header-teamname-btn' onClick={self.showTeamSetup}>
           <InlineSVG class='home-team-header-teamname-btn-img' src={require('../../../img/Att-icons/att-icons_team-settings-open.svg')}></InlineSVG>
         </div>

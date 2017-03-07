@@ -33,7 +33,9 @@ var HomeTeamHeader = React.createClass({
       $('.home-header-image').css({'width':height+'px','height':height+'px'});
       $('.home-team-header-member-image').css({'width': height*0.9+'px', 'height': height*0.9+'px'});
     }, 0);
+
   },
+
   componentDidUpdate: function() {
     if (this.props.loadDetailTeam.team != undefined && this.props.loadDetailTeam.team.type == 'squad') {
       $('#homeHeaderAseBtn').show();
@@ -46,7 +48,50 @@ var HomeTeamHeader = React.createClass({
       $('.home-team-header-member-image').css({'width': height*0.9+'px', 'height': height*0.9+'px'});
     }, 0);
 
+    $('.home-team-header-btn-img, #homeTeamHeaderBookmarkBtn, #teamBookmark, .home-team-header-btn-img2, #teamMemberTable').unbind('mouseenter mouseleave');
+    // bookmarks button
+    $('.home-team-header-btn-img').bind('mouseenter', function() {
+      if ($('#teamBookmark').css('display') == 'none') {
+        $('.home-team-header-btn-img svg > path').css('fill', '#325C80');
+        $('.home-team-header-btn-title h').css('color', '#325C80');
+        $('#teamBookmark').fadeIn();
+        $('#teamMemberTable').trigger('mouseleave');
+      }
+    });
+    $('#homeTeamHeaderBookmarkBtn, #teamBookmark').bind('mouseleave', function() {
+      if ($('#teamBookmark').css('display') != 'none' && $('#teamBookmark').attr('data-open') != 'true') {
+        $('.home-team-header-btn-img svg > path').css('fill', '#FFFFFF');
+        $('.home-team-header-btn-title h').css('color', '#FFFFFF');
+        $('#teamBookmark').fadeOut();
+      }
+    });
+    //members button
+    $('.home-team-header-btn-img2').bind('mouseenter', function() {
+      if ($('#teamMemberTable').css('display') == 'none') {
+        $('.home-team-header-btn-img2 svg > path').css('fill', '#325C80');
+        $('.home-team-header-btn-title3 h').css('color', '#325C80');
+        $('#teamMemberTable').fadeIn();
+        $('#teamBookmark').trigger('mouseleave');
+      }
+    });
+    $('#teamMemberTable').bind('mouseleave', function() {
+      if ($('#teamMemberTable').css('display') != 'none' && $('#teamMemberTable').attr('data-open') != 'true') {
+        $('.home-team-header-btn-img2 svg > path').css('fill', '#FFFFFF');
+        $('.home-team-header-btn-title3 h').css('color', '#FFFFFF');
+        $('#teamMemberTable').fadeOut();
+      }
+    });
+    // workaround handler for member button hover out
+    $('.home-nav-div, .home-team-header-teamname-div, .home-team-header-hierarchy, #iterContent').unbind('mouseenter');
+    $('.home-nav-div, .home-team-header-teamname-div, .home-team-header-hierarchy, #iterContent').bind('mouseenter', function() {
+      if ($('#teamMemberTable').css('display') != 'none' && $('#teamMemberTable').attr('data-open') != 'true') {
+        $('.home-team-header-btn-img2 svg > path').css('fill', '#FFFFFF');
+        $('.home-team-header-btn-title3 h').css('color', '#FFFFFF');
+        $('#teamMemberTable').fadeOut();
+      }
+    });
   },
+
   findTeamInAllTeams: function(pathId) {
     selectedTeam = pathId;
     this.props.tabClickedHandler('allteams', pathId);
@@ -60,25 +105,20 @@ var HomeTeamHeader = React.createClass({
      return (teamCount / 100);
   },
   showTeamTable: function() {
-    if ($('#teamMemberTable').css('display') == 'none') {
-      $('#teamMemberTable').fadeIn();
-    } else {
-      $('#teamMemberTable').fadeOut();
-    }
+    $('#teamMemberTable').attr('data-open', 'true');
+    $('.home-team-header-btn-img2').trigger('mouseenter');
   },
-  showDescriptionBlock: function() {
-    if ($('.home-team-header-description-div').css('display') == 'none') {
-      $('.home-team-header-description-div').fadeIn();
-    } else {
-      $('.home-team-header-description-div').fadeOut();
-    }
+  closeTeamTable: function() {
+    $('#teamMemberTable').attr('data-open', 'false');
+    $('#teamMemberTable').trigger('mouseleave');
   },
   showBookmark: function() {
-    if ($('#teamBookmark').css('display') == 'none') {
-      $('#teamBookmark').fadeIn();
-    } else {
-      $('#teamBookmark').fadeOut();
-    }
+    $('#teamBookmark').attr('data-open', 'true');
+    $('.home-team-header-btn-img').trigger('mouseenter');
+  },
+  closeBookmark: function() {
+    $('#teamBookmark').attr('data-open', 'false');
+    $('#teamBookmark').trigger('mouseleave');
   },
   showAssessments: function() {
     if ($('.home-assessment-summary').css('display') == 'none') {
@@ -187,9 +227,6 @@ var HomeTeamHeader = React.createClass({
             </div>
             <div class='home-team-header-teamname-div'>
               <h class='home-team-header-teamname' style={{'fontSize': teamNameFontSize, 'lineHeight': teamNameFontLingHeight}} id="teamName">{teamName}</h>
-              <div class='home-team-header-teamname-btn' id='homeHeaderDesBtn' onClick={self.showDescriptionBlock}>
-                <InlineSVG class='home-team-header-teamname-btn-img' src={require('../../../img/Att-icons/att-icons_info.svg')}></InlineSVG>
-              </div>
 
               <HomeTeamDescription teamName={teamName} teamDescription={teamDescription} showDescriptionBlock={self.showDescriptionBlock} loadDetailTeam={self.props.loadDetailTeam} updateTeamDetails={self.props.updateTeamDetails} />
 
@@ -205,20 +242,21 @@ var HomeTeamHeader = React.createClass({
             </span>
           </div>
           <div class='home-team-header-btns-div'>
-            <div class='home-team-header-btns'>
+            <div id='homeTeamHeaderBookmarkBtn' class='home-team-header-btns'>
               <InlineSVG class='home-team-header-btn-img' onClick={self.showBookmark} src={require('../../../img/Att-icons/att-icons_main-nav-bookmark.svg')}></InlineSVG>
               <div class='home-team-header-btn-title'>
                 <h>Team Bookmarks</h>
               </div>
+              <HomeBookmark loadDetailTeam={self.props.loadDetailTeam} closeBookmark={self.closeBookmark} updateTeamLink={self.props.updateTeamLink} />
             </div>
-            <HomeBookmark loadDetailTeam={self.props.loadDetailTeam} showBookmark={self.showBookmark} updateTeamLink={self.props.updateTeamLink} />
+
             {/*<div class='home-team-header-btns' onClick={self.showAssessments} id='homeHeaderAseBtn'>
               <InlineSVG class='home-team-header-btn-img' src={require('../../../img/Att-icons/att-icons_main-nav-maturity.svg')}></InlineSVG>
               <div class='home-team-header-btn-title'>
                 <h>Maturity Assessment</h>
               </div>
             </div>*/}
-            <div class='home-team-header-btns2'>
+            <div id='homeTeamHeaderMemberBtn' class='home-team-header-btns2'>
               <InlineSVG onClick={self.showTeamTable} class='home-team-header-btn-img2' src={require('../../../img/Att-icons/att-icons_main-nav-team.svg')}></InlineSVG>
               <div class='home-team-header-btn-title3'>
                 <h>Team Members</h>
@@ -231,7 +269,7 @@ var HomeTeamHeader = React.createClass({
               </div>
             </div>
           </div>
-          <HomeMemberTable loadDetailTeam={self.props.loadDetailTeam} showTeamTable={self.showTeamTable} realodTeamMembers={self.props.realodTeamMembers} roles={self.props.roles}/>
+          <HomeMemberTable loadDetailTeam={self.props.loadDetailTeam} closeTeamTable={self.closeTeamTable} realodTeamMembers={self.props.realodTeamMembers} roles={self.props.roles}/>
         </div>
       )
     }
