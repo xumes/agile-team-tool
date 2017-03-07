@@ -49,7 +49,9 @@ var HomeAddTeamDropdownRole = React.createClass({
     var memberRole = self.props.memberRole;
     var options = [];
     self.props.roles.map(function(v) {
-      options.push({value: v, label: v});
+      if (v) {
+        options.push({value: v, label: v});
+      }
     });
     var isOtherStyle = (self.state.showOther) ? {'display': 'block'} : {'display': 'none'};
     console.log('HomeAddTeamDropdownRole isOtherStyle..', isOtherStyle);

@@ -212,14 +212,14 @@ var HomeAddTeamHierarchyModal = React.createClass({
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_parent+squad.svg')}></InlineSVG>
                   </div>
 
-                   <div class='team-parent-child-hierarchy-p'>  
-                     <div class='line1' style={{'width':150}}>
+                  <div class='team-parent-child-hierarchy-p'>
+                    <div class='line1'>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_arrow-thin-grey.svg')} name="imgSvg"></InlineSVG>
                     </div>
-                    <div class='line2' style={{'width':150}}>
+                    <div class='line2'>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_arrow-thin-grey.svg')}></InlineSVG>
                     </div>
-                    <div class='line3' style={{'width':143}}>
+                    <div class='line3'>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_arrow-thin-grey.svg')}></InlineSVG>
                     </div>
 

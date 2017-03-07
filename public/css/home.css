@@ -4014,6 +4014,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
     height: 28px;
     width: 28px;
   }
+
+  .team-hier-children {
+    top: 20.5rem !important;
+  }
 }
 
 .home-iter-popup {
@@ -4196,8 +4200,8 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   top: 50%;
   max-width: 63rem;
   min-width: 57rem;
-  height: 20vw;
-  min-height: 42rem;
+  height: 14vw;
+  min-height: 43rem;
   background-color: #FFFFFF;
   box-shadow: 0 0 10px 0 rgba(0,0,0,0.16);
   transform: translate(-50%, -50%);
@@ -4491,7 +4495,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   font-size: 1.3em;
   margin-top: 17.2em;
-  width: 85%;
+  width: 87%;
   position: relative;
   left: 5.2%;
 }
@@ -4500,7 +4504,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   font-size: 1.3em;
   margin-top: 1.9rem;
-  width: 85%;
+  width: 87%;
   position: relative;
   left: 5.4%;
 }
@@ -4530,7 +4534,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-size: 1.25em;
   margin-top: 0.6em;
   margin-left: 0.22em;
-  width: 85%;
+  width: 100%;
 }
 
 
@@ -4622,21 +4626,69 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   padding-left: 0.5em;
 }
 
-.team-parent-child-hierarchy-p > .line1 {
+.team-parent-child-hierarchy-p > .line1, .team-parent-child-hierarchy-p > .line2,
+.team-parent-child-hierarchy-p > .line3 {
+/*  width: 14.8em;*/
+  height: 3em;
+}
+
+/* ================== */
+/* IE10 and IE11      */
+/* ================== */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .team-parent-child-hierarchy-p > .line1, .team-parent-child-hierarchy-p > .line2 {
+    left: 12% !important;
+    width: 21.5em !important;
+    height: 3.5em !important;
+  }
+
+  .team-parent-child-hierarchy-p > .line3 {
+    left: 18% !important;
+    top: 270% !important;
+    width: 16em !important;
+    height: 6em !important;
+  }
+
+  .optsel-child {
+    bottom: -255% !important;
+  }
+
+  .list-child-remove-icon {
+    top: -1% !important;
+    width: 1.8rem !important;
+    height: 2rem !important;
+  }
+
+  .team-hier-children > p {
+    padding: 0 !important;
+    height: 2em !important;
+    padding-right: 0.4em !important;
+  }
+
+}
+
+.team-hier-children > p {
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1.3em;
+  overflow: hidden;
+  padding: 0 0.2em 0;
+  white-space: nowrap;
+  width: 95%;
+}
+
+.team-parent-child-hierarchy-p > .line1, .team-parent-child-hierarchy-p > .line2 {
+  width: 19em;
+  left: 14%;
   position: absolute;
-  left: 18%;
-  /*width: 95%;*/
-  height: 20%;
-  top: 95%;
+}
+
+.team-parent-child-hierarchy-p > .line1 {
+  top: 3.8rem;
 }
 
 .team-parent-child-hierarchy-p > .line2 {
-  position: absolute;
-  left: 18%;
-  z-index: 2;
-  /*width: 95%;*/
-  height: 10%;
-  top: 198%;
+  top: 9.8rem;
 }
 
 .pointer-arrow-right-current {
@@ -4652,12 +4704,12 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .team-parent-child-hierarchy-p > .line3 {
+  height: 3em;
+  left: 18%;
   position: absolute;
-  left: 20%;
+  top: 16rem;
+  width: 16.5em;
   z-index: 2;
-  /*width: 95%;*/
-  height: 10%;
-  top: 300%;
 }
 
 .pointer-arrow-right-child {
@@ -4673,12 +4725,15 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .optsel-parent {
-  position: absolute;
-  bottom: -85%;
-  left: 45%;
-  width: 25em;
   float: right;
-  margin-top: 1em;
+  left: 45%;
+  position: absolute;
+  top: 3.8rem;
+  width: 25em;
+}
+
+.optsel-parent .select2-container--default {
+  width: 100%;
 }
 
 .select2-search__field {
@@ -4686,24 +4741,24 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .optsel-child {
-  position: absolute;
-  bottom: -240%;
-  left: 45%;
-  width: 25em;
   float: right;
+  left: 45%;
   margin-top: 1em;
+  position: absolute;
+  top: 14.2rem;
+  width: 25em;
 }
 
 .team-hier-children {
   border: 1px solid #b3b3b3 !important;
-  overflow-y: auto !important;
-  top: 340% !important;
   display: inline-block;
   font-size: inherit;
+  height: 134%;
   left: 45%;
+  overflow-y: auto !important;
   position: absolute;
+  top: 19.5rem;
   width: 43.5%;
-  height: 180%;
 }
 
 .team-hier-children > p {
@@ -4711,9 +4766,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: inline-block;
   font-size: 1.3em;
   overflow: hidden;
-  padding: 0.3em 0.2em 0;
+  padding: 0;
   white-space: nowrap;
-  width: 95%;
+  width: 97%;
 }
 
 .team-hier-children > p > h {
@@ -4775,22 +4830,19 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .curteam-block {
-  position: absolute;
-  bottom: -170%;
-  left: 45%;
-  height: 2.8em;
-  width: 16.9em;
-  float: right;
-  margin-top: 1em;
   background-color: #b2d1e2;
-  font-family: "Helvetica Neue";
+  color: #526566;
+  float: right;
+  font-family: inherit;
   font-size: 1.4em;
   font-weight: normal;
-  line-height: 1.4em;
-  text-align: left;
-  color: #526566;
-  padding-top: 0.7em;
-  padding-left: 0.9em;
+  left: 45%;
+  padding: 0.8em;
+  position: absolute;
+  text-align: center;
+  vertical-align: middle;
+  width: 16.3em;
+  top: 9.5rem;
 }
 
 .list-child {
@@ -4821,7 +4873,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .list-child-remove-icon {
   display: inline-block;
-  left: 3%;
+  left: 0;
   position: relative;
   top: -9%;
   width: 8%;
@@ -4857,7 +4909,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .team-hier-block .team-setup-icon-hier {
   display: inline-block;
-  padding: 2.3em 0 0 2em;
+  padding: 2em 0 0 2em;
   position: relative;
   width: 16%;
 }
@@ -4969,10 +5021,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .new-team-creation-addteam-member .btn-addmember {
   cursor: pointer;
   float: right;
-  margin-left: 1em;
-  width: 2.5em;
   height: 2.5em;
+  margin-left: 0.1em;
   margin-top: 0.7em;
+  width: 2.5em;
 }
 
 .new-team-creation-addteam-member .col1 {
@@ -4980,7 +5032,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   margin: 0;
   min-height: 1px;
-  width: 29em;
+  width: 28.2em;
 }
 
 .new-team-creation-addteam-member .col1 #txtTeamMemberName {
@@ -5051,7 +5103,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_name, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_name {
-  width: 8em;
+  width: 10em;
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_location, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_location{
@@ -5069,6 +5121,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_allocation, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_allocation {
+  width: 1em;
   vertical-align: top;
 }
 
