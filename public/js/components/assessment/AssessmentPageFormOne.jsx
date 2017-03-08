@@ -48,9 +48,12 @@ var AssessmentPageFormOne = React.createClass({
     if (this.props.assessment.squadAssessments.length > 0) {
       var assessments = _.sortBy(this.props.assessment.squadAssessments, function(assess){
         if (assess.assessmentStatus == 'Submitted') {
-           return 'aaa'+new Date(assess.submittedDate);
+//        return 'aaa'+new Date(assess.submittedDate);
+          return 'aaa'+assess.submittedDate;
         } else
-          return 'zzz'+new Date(assess.createDate);
+          console.log('In assessment sort: '+'zzz'+assess.createDate);
+//        return 'zzz'+new Date(assess.createDate);
+          return 'zzz'+assess.createDate;
       });
       assessments = assessments.reverse();
       var assessmentListsOption = assessments.map(function(item) {
