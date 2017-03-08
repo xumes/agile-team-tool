@@ -4802,8 +4802,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: right;
   height: 2.5em;
   margin-left: 0.1em;
-  margin-top: 0.7em;
+  margin-top: 0.5em;
   width: 2.5em;
+  padding-right: 0.2em;
 }
 
 .new-team-creation-addteam-member .col1 {

@@ -144,6 +144,8 @@ var HomeAddTeam = React.createClass({
     api.postTeam(JSON.stringify(self.state.newTeamObj))
       .then(function(result) {
         currentTeam = result;
+        console.log('saveTeam currentTeam.pathId:',currentTeam.pathId);
+        self.props.tabClickedHandler('',currentTeam.pathId);
         return result;
       })
       .then(function(result) {
