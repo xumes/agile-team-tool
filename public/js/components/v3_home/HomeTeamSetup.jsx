@@ -395,7 +395,7 @@ var HomeTeamSetup = React.createClass({
         showNote = {'display':' block'};
       else {
         if (!self.props.loadDetailTeam.access)
-          showAdd = {'display':'inline-block', 'pointerEvents':'none'};
+          showAdd = {'display':'inline-block', 'pointerEvents':'none', 'color' : '#C7C7C7'};
         else
           showAdd = {'display':'inline-block'};
       }
@@ -526,7 +526,7 @@ var HomeTeamSetup = React.createClass({
                     </div>
                   </div>
                   <div class='team-setup-squad-revert'>
-                    <div class='team-setup-revert-icon' onClick={self.changeTypeHandler}>
+                    <div class={self.props.loadDetailTeam.access ? 'team-setup-revert-icon' : 'team-setup-revert-icon disabled'} onClick={self.changeTypeHandler}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_revert.svg')}></InlineSVG>
                     </div>
                     <a onClick={self.changeTypeHandler} style={showAdd}>

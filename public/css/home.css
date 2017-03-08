@@ -34,10 +34,16 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   font-size: 1.3em;
 }
 
-input[disabled], input[class*="ibm-btn-"][class*="-pri"][disabled], input[disabled]:hover, input[class*="ibm-btn-"][class*="-pri"][disabled]:hover, button[disabled], button[class*="ibm-btn-"][class*="-pri"][disabled], button[disabled]:hover, button[class*="ibm-btn-"][class*="-pri"][disabled]:hover {
+input[disabled], input[class*="ibm-btn-"][class*="-pri"][disabled], input[disabled]:hover, input[class*="ibm-btn-"][class*="-pri"][disabled]:hover, button[disabled] {
   background-color: #FFFFFF;
   border: 2px solid #C7C7C7;
   color: #C7C7C7;
+  cursor: not-allowed;
+}
+
+button[class*="ibm-btn-"][class*="-pri"][disabled], button[disabled]:hover, button[class*="ibm-btn-"][class*="-pri"][disabled]:hover {
+  background-color: #EAEAEA;
+  color: #C0BFC0;
   cursor: not-allowed;
 }
 
@@ -5675,6 +5681,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   padding-right: 0.5em;
   position: relative;
   width: 5%;
+}
+
+.team-setup-revert-icon.disabled svg path {
+  fill: #C7C7C7;
 }
 
 .team-setup-squad-revert > a {
