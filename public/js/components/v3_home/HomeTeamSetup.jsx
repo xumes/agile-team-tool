@@ -371,12 +371,19 @@ var HomeTeamSetup = React.createClass({
     var childTeams = null;
     if (self.state.children.length > 0) {
       childTeams = self.state.children.map(function(item, index) {
-        return (
-          <p key={index} id={item._id}>
-            <h title={item.name}>{item.name}</h>
-            <InlineSVG class='team-setup-children-remove-icon' src={require('../../../img/Att-icons/att-icons_delete.svg')} onClick={!self.props.loadDetailTeam.access ? '' : self.childDeleteHandler.bind(null, item._id)}></InlineSVG>
-          </p>
-        )
+        if (!self.props.loadDetailTeam.access)
+          return (
+            <p key={index} id={item._id}>
+              <h title={item.name} style={{'width':'99%'}}>{item.name}</h>
+            </p>
+          )
+        else
+          return (
+            <p key={index} id={item._id}>
+              <h title={item.name}>{item.name}</h>
+              <InlineSVG class='team-setup-children-remove-icon' src={require('../../../img/Att-icons/att-icons_delete.svg')} onClick={!self.props.loadDetailTeam.access ? '' : self.childDeleteHandler.bind(null, item._id)}></InlineSVG>
+            </p>
+          )
       });
     }
 
@@ -393,7 +400,13 @@ var HomeTeamSetup = React.createClass({
           showAdd = {'display':'inline-block'};
       }
     }
-
+    var styleSetupChildren = {'backgroundColor' : 'inherit'}
+    if (!self.props.loadDetailTeam.access) {
+      styleSetupChildren = {
+        'color' : '#C7C7C7',
+        'border': '1px solid #C7C7C7 !important'
+      };
+    }
     return (
       <div style={{'height': '100%', 'display':'inline'}} id='teamSetupBlock'>
         <div class='home-team-header-teamname-btn' onClick={self.showTeamSetup}>
@@ -508,7 +521,7 @@ var HomeTeamSetup = React.createClass({
                       <option key='cdef' value=''>Select a Child Team</option>
                       {childOptions}
                     </select>
-                    <div class='team-setup-children' style={!self.props.loadDetailTeam.access ? {'backgroundColor' : '#ececec'} : {'backgroundColor' : 'inherit'}}>
+                    <div class='team-setup-children' style={styleSetupChildren}>
                       {childTeams}
                     </div>
                   </div>
