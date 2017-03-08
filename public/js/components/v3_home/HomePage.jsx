@@ -291,8 +291,10 @@ var HomePage = React.createClass({
       $('#'+updatedTeam.team.pathId+ ' > a > span.agile-team-title').html(updatedTeam.team.name);
       var li = $('#'+updatedTeam.team.pathId).parent('ul').children('li');
       var liSorted = _.sortBy(li,function(element){
+        if (element.id == 'agteamstandalone')
+          return 'zzzzzzzzzz'
+
         var name = $('#'+ element.id + ' > a > span.agile-team-title').html();
-        console.log($('#'+ element.id + ' > a > span.agile-team-title'));
         return name.toLowerCase();
       });
       _.each(liSorted, function(element) {
