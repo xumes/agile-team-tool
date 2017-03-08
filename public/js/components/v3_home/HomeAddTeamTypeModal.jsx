@@ -49,15 +49,14 @@ var HomeAddTeamTypeModal = React.createClass({
     api.getUsersInfo(user.ldap.uid)
       .then(function(result){
         var data = {
-          userId: user.ldap.uid,
-          email: user.ldap.emailAddress,
-          name: user.ldap.hrFirstName + ' ' + user.ldap.hrLastName,
+          userId: result[0].userId,
+          email: result[0].email,
+          name: result[0].name,
           role: _.isEqual(self.props.newTeamObj.type, 'squad') ? 'Iteration Manager' : 'Team Lead',
           allocation: 100,
           location: result[0].location || '',
           workTime: 100
         };
-        console.log('setDefaultMember data:', data);
         self.props.setTeamMember([data]);
       });
   },
