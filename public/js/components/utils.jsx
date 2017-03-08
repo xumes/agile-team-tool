@@ -79,7 +79,7 @@ module.exports.showDateDDMMYYYYV2 = function(formatDate, withoutSpacing) {
     if (withoutSpacing) {
       format = 'DDMMMYYYY';
     }
-    var newDateFormate = moment(formatDate).format(format);
+    var newDateFormate = moment.utc(formatDate).format(format);
     return newDateFormate;
   }
 };
