@@ -5240,19 +5240,31 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .__react_component_tooltip {
-    width: 234px !important;
-    background-color: #FFFFFF !important;
-    box-shadow: 0 0 10px 0 rgba(0,0,0,0.16) !important;
-    font-family: "HelvNeue Roman for IBM" !important;
-    font-size: 12px !important;
-    line-height: 14px !important;
-    color: #5A5A5A !important;
-    padding:10px 15px !important;
-    opacity:1 !important;
+  width: 234px !important;
+  background-color: #FFFFFF !important;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.16) !important;
+  font-family: "HelvNeue Roman for IBM" !important;
+  font-size: 12px !important;
+  line-height: 14px !important;
+  color: #5A5A5A !important;
+  padding:10px 15px !important;
+  opacity:1 !important;
 }
 
-.__react_component_tooltip.type-light {
-    border-top: 4px solid #4178BE !important;
+.__react_component_tooltip.type-light.place-top {
+  border-top: 4px solid #4178BE !important;
+}
+
+.__react_component_tooltip.type-light.place-right {
+  border-right: 4px solid #4178BE !important;
+}
+
+.__react_component_tooltip.type-light.place-bottom {
+  border-bottom: 4px solid #4178BE !important;
+}
+
+.__react_component_tooltip.type-light.place-left {
+  border-left: 4px solid #4178BE !important;
 }
 
 .home-modal-block {
