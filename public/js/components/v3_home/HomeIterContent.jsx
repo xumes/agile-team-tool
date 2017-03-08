@@ -390,7 +390,7 @@ var HomeIterContent = React.createClass({
       var access = this.props.loadDetailTeam.access;
       if (!_.isEmpty(self.props.loadDetailTeam.iterations) && self.props.loadDetailTeam.iterations.length > 0) {
         iterations = self.props.loadDetailTeam.iterations.map(function(iter){
-          iterName =iter.name + ' (' + moment(iter.startDate).format('DD MMM YYYY') + ' - ' + moment(iter.endDate).format('DD MMM YYYY') + ')';
+          iterName =iter.name;
           return (
             <option key={iter._id} value={iter._id}>{iterName}</option>
           )
