@@ -16,7 +16,6 @@ var HomeAddTeamMemberFaces = React.createClass({
           headerLabel: 'People',
           onclick: function(person) {
             self.props.updateFacesObj(person);
-            self.props.changeHandlerFacesFullname(person['name']);
             return person['name'];
           }
         },

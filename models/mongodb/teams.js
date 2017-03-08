@@ -393,6 +393,17 @@ module.exports.getRootTeams = function(uid) {
 };
 
 /**
+ * Get all root teams - regardless if it is squad or non-squad
+ * @param user email
+ * @return array of root teams
+ */
+module.exports.getAllRootTeamsSquadNonSquad = function() {
+  console.log ('In getAllRootTeamsSquadNonSquad:');
+  return Team.find({path: null, docStatus:{$ne:'delete'}}).sort('pathId').exec();
+};
+
+
+/**
  * If email is empty, get all standalone teams. Otherwise, get all user's standalone teams.
  * standalone teams are non-squad teams without chiilren and parent, and squad team without parent.
  * @param user email

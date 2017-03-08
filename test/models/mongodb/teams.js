@@ -574,6 +574,20 @@ describe('Team model [getSelectableChildren]', function() {
 //   });
 // });
 
+describe('Team model [getAllRootTeamsSquadNonSquad]', function() {
+  it('return all root teams (team with no parents) regardless if it is squad or non squad', function(done){
+    Teams.getAllRootTeamsSquadNonSquad()
+      .then(function(result){
+        expect(result).to.be.a('array');
+        done();
+      })
+      .catch(function(err) {
+        done();
+      });
+  });
+});
+
+
 describe('Team model [getChildrenByPathId]', function() {
   it('return empty by empty path id', function(done){
     Teams.getChildrenByPathId()

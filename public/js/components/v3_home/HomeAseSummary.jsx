@@ -136,7 +136,7 @@ var HomeAseSummary = React.createClass({
               <div>
                 <div class='third-title'>
                   <h1>{'Unfortunately drafts do not count towards your maturity assessment rating. Use a few more'}</h1>
-                  <h1>{'minutes to complete the assessment and we will give you an idea of where your team rates.'}</h1>
+                  <h1 style={{'top':'10%'}}>{'minutes to complete the assessment and we will give you an idea of where your team rates.'}</h1>
                 </div>
                 <div class='start-btn'>
                   <button type='button' onClick={self.showAssessmentPopover} class='ibm-btn-pri ibm-btn-blue-50' disabled={haveAccess}>{'Continue Assessment'}</button>
@@ -295,7 +295,7 @@ var HomeAseSummary = React.createClass({
             <div>
               <div class='third-title'>
                 <h1>{'The Agile Team Tool\'s purpose is to help you through the Agile Process.'}</h1>
-                <h1>{'Take the Agile Maturity Assessment often to see where your team should focus its efforts.'}</h1>
+                <h1 style={{'top':'10%'}}>{'Take the Agile Maturity Assessment often to see where your team should focus its efforts.'}</h1>
               </div>
               <div class='start-btn'>
                 <button type='button' class='ibm-btn-pri ibm-btn-blue-50' disabled={haveAccess}>{'Let\'s get started'}</button>

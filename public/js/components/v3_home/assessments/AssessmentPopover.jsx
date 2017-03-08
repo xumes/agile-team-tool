@@ -4,17 +4,26 @@ var _ = require('underscore');
 var moment = require('moment');
 var ReactDOM = require('react-dom');
 var InlineSVG = require('svg-inline-react');
+var AssessmentActiveTemplates = require('./AssessmentActiveTemplates2.jsx');
 
 var AssessmentPopover = React.createClass({
+  getInitialState: function() {
+    return {
+      lcAssessTemplate: {},
+      ddAssessTemplate: {}
+    };
+  },
   componentDidMount: function() {
     $('#assessmentTeamTypeSelector').select2({'width':'100%','dropdownParent':$('.assessment-popover-block')});
     $('#assessmentSoftwareTypeSelector').select2({'width':'100%','dropdownParent':$('.assessment-popover-block')});
   },
   render: function() {
     var self = this;
-    console.log(self.props.loadDetailTeam);
-    console.log(self.props.assessTemplate);
+    // console.log(self.props.loadDetailTeam);
+    // console.log(self.props.assessTemplate);
     var assessDraft = {};
+    var lcAssessTemplate = {};
+    var ddAssessTemplate = {};
     if (self.props.loadDetailTeam.assessments.length > 0 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft') {
       assessDraft = self.props.loadDetailTeam.assessments[0];
     }
@@ -27,10 +36,30 @@ var AssessmentPopover = React.createClass({
       var submitDate = 'On Submission';
       var lastUpdatedBy = 'On Submission';
       var lastUpdated = null;
+      if ($('#assessmentTeamTypeSelector').val() == 'p') {
+        self.state.lcAssessTemplate = self.props.assessTemplate.components[0];
+      } else {
+        self.state.lcAssessTemplate = self.props.assessTemplate.components[1];
+      }
+      if ($('#assessmentSoftwareTypeSelector').val() == 'y') {
+        self.state.ddAssessTemplate = self.props.assessTemplate.components[2];
+      } else {
+        self.state.ddAssessTemplate = {};
+      }
     } else {
       submitDate = moment.utc(assessDraft.submittedDate).format('DD MMM YYYY');
       lastUpdatedBy = assessDraft.updatedBy;
       lastUpdated = ' (' + moment.utc(assessDraft.updateDate).format('DD MMM YYYY') + ')';
+      if (assessDraft.type == 'Project') {
+        self.state.lcAssessTemplate = self.props.assessTemplate.components[0];
+      } else {
+        self.state.lcAssessTemplate = self.props.assessTemplate.components[1];
+      }
+      if (assessDraft.deliversSoftware) {
+        self.state.ddAssessTemplate = self.props.assessTemplate.components[2];
+      } else {
+        self.state.ddAssessTemplate = {};
+      }
     }
     return (
       <div tabIndex='1' class='assessment-popover-block'>
@@ -82,6 +111,7 @@ var AssessmentPopover = React.createClass({
           </div>
         </div>
         <div class='agile-maturity' id='assessmentContainer1'>
+          <AssessmentActiveTemplates assessTemplate={self.state.lcAssessTemplate} assessDraft={assessDraft} assessTemplateId={'0'}/>
         </div>
         <div class='lc-header'>
           <div class='header-title'>
@@ -89,6 +119,7 @@ var AssessmentPopover = React.createClass({
           </div>
         </div>
         <div class='agile-maturity' id='assessmentContainer2'>
+          <AssessmentActiveTemplates assessTemplate={self.state.ddAssessTemplate} assessDraft={assessDraft} assessTemplateId={'1'}/>
         </div>
       </div>
     )
