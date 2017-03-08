@@ -3892,7 +3892,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .popup-title > div {
   width: 10%;
   cursor: pointer;
-  margin-right: 4%;
+  margin-right: 3%;
 }
 
 .popup-title > div > i > svg {
