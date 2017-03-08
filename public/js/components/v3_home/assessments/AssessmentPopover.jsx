@@ -5,6 +5,7 @@ var moment = require('moment');
 var ReactDOM = require('react-dom');
 var InlineSVG = require('svg-inline-react');
 var AssessmentActiveTemplates = require('./AssessmentActiveTemplates2.jsx');
+var AssessmentButtons = require('./AssessmentButtons.jsx');
 
 var AssessmentPopover = React.createClass({
   getInitialState: function() {
@@ -111,7 +112,7 @@ var AssessmentPopover = React.createClass({
           </div>
         </div>
         <div class='agile-maturity' id='assessmentContainer1'>
-          <AssessmentActiveTemplates assessTemplate={self.state.lcAssessTemplate} assessDraft={assessDraft} assessTemplateId={'0'}/>
+          <AssessmentActiveTemplates assessTemplate={self.state.lcAssessTemplate} assessDraft={assessDraft} haveAccess={haveAccess} assessTemplateId={'0'}/>
         </div>
         <div class='lc-header'>
           <div class='header-title'>
@@ -119,8 +120,9 @@ var AssessmentPopover = React.createClass({
           </div>
         </div>
         <div class='agile-maturity' id='assessmentContainer2'>
-          <AssessmentActiveTemplates assessTemplate={self.state.ddAssessTemplate} assessDraft={assessDraft} assessTemplateId={'1'}/>
+          <AssessmentActiveTemplates assessTemplate={self.state.ddAssessTemplate} assessDraft={assessDraft} haveAccess={haveAccess} assessTemplateId={'1'}/>
         </div>
+        <AssessmentButtons assessDraft={assessDraft} haveAccess={haveAccess}/>
       </div>
     )
   }
