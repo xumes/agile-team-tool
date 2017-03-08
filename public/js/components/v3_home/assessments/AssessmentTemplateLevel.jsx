@@ -148,13 +148,13 @@ var AssessmentTemplateLevel = React.createClass({
             </div>
             <div class='agile-table-body'>
               {levels}
-{/*              <tr id={levelMainId + 'tbtr_action'}>
-                <td id={levelMainId + 'td_action'} colSpan='5'>How do we get better? (Action plan item; 350 char limit)
-                  <br />
-                  <textarea style={{'width': '1120px', 'margin': '0px', 'height': '69px'}} cols='350' rows='3' aria-label='Action plan item' maxLength='350' id={levelMainId + 'action'}>
+             <div id={levelMainId + 'tbtr_action'} class='agile-table-textarea'>
+                <div id={levelMainId + 'td_action'}>
+                  <h1>{'How do we get better? (Action plan item; 350 char limit)'}</h1>
+                  <textarea aria-label='Action plan item' maxLength='350' id={levelMainId + 'action'}>
                   </textarea>
-                </td>
-              </tr>*/}
+                </div>
+              </div>
             </div>
         </div>
       )

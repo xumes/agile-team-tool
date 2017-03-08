@@ -2,7 +2,7 @@ html {
   /*height: 100%;
   font-size: 62.5%;*/
   width: 100vw;
-  height: 66.67vw;
+  height: 56.49vw;
   min-width: 1280px;
   min-height: 720px;
   max-width: 1920px;
@@ -5304,10 +5304,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: fixed;
   float: left;
   outline: none;
-  top: 10%;
+  top: 6%;
   left: 10%;
   width: 80vw;
-  height: 53.36vw;
+  height: 45.2vw;
   min-width: 1024px;
   min-height: 576px;
   background-color: #FFFFFF;
@@ -5665,11 +5665,41 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   background-color: #ECECEC;
 }
 
+.assessment-popover-block > .agile-maturity .agile-table-body > .agile-table-level:nth-child(even):hover {
+  background-color: #7cc7ff;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-body > .agile-table-level:nth-child(odd):hover {
+  background-color: #c0e6ff;
+}
+
 .assessment-popover-block > .agile-maturity .agile-table-body > .agile-table-level .agile-table-criteria:nth-child(1) {
   padding-top: 0.5em;
 }
 
-.agile-question-opt {
+.assessment-popover-block > .agile-maturity .agile-question-opt {
   text-align: center;
   vertical-align: middle;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-textarea h1 {
+  position: relative;
+  float: left;
+  font-size: 1.2em;
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  padding: 0.5em 0 0.5em 0;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-textarea textarea {
+  position: relative;
+  float: left;
+  width: 98%;
+  left: 1%;
+  height: 6em;
+  font-size: 1.2em;
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  margin-bottom: 0.5em;
+}
+.assessment-popover-block > .agile-maturity .agile-table-textarea:hover {
+  background-color: #c0e6ff;
 }
