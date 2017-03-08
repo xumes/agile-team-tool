@@ -48,10 +48,12 @@ var HomeBookmark = React.createClass({
       _.each(self.props.loadDetailTeam.team.links, function(link){
         $('#'+link.id).hover(function(){
           $('#'+link.id).css('background-color','rgba(85,150,230,0.12)');
-          $('#'+link.id+' > div').css('display','block');
-          $('#'+link.id+' > a').css('left','4%');
-          $('#'+link.id+' > span').css('left','3%');
-          $('#'+link.id+' > span').css('display','block');
+          if (self.props.loadDetailTeam.access) {
+            $('#'+link.id+' > div').css('display','block');
+            $('#'+link.id+' > a').css('left','4%');
+            $('#'+link.id+' > span').css('left','3%');
+            $('#'+link.id+' > span').css('display','block');
+          }
         }, function(){
           $('#'+link.id).css('background-color','#FFFFFF');
           $('#'+link.id+' > div').css('display','none');
