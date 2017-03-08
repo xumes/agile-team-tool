@@ -33,8 +33,7 @@ var HomeTeamHeader = React.createClass({
       $('.home-header-image').css({'width':height+'px','height':height+'px'});
       $('.home-team-header-member-image').css({'width': height*0.9+'px', 'height': height*0.9+'px'});
     }, 0);
-    this.hoverOnBtn('home-team-header-btn-img');
-    this.hoverOnBtn('home-team-header-btn-img2');
+
   },
 
   componentDidUpdate: function() {
@@ -48,31 +47,48 @@ var HomeTeamHeader = React.createClass({
       $('.home-header-image').css({'width':height+'px','height':height+'px'});
       $('.home-team-header-member-image').css({'width': height*0.9+'px', 'height': height*0.9+'px'});
     }, 0);
-    this.hoverOnBtn('home-team-header-btn-img');
-    this.hoverOnBtn('home-team-header-btn-img2');
-  },
 
-  hoverOnBtn: function(blockId) {
-    var self = this;
-    if (blockId == 'home-team-header-btn-img') {
-      var subBlockId = 'homeTeamHeaderBookmarkBtn';
-    } else {
-      subBlockId = 'homeTeamHeaderMemberBtn';
-    }
-    $('#' + subBlockId + ' svg > path').css('fill', '#FFFFFF');
-    $('#' + subBlockId + ' h').css('color', '#FFFFFF');
-    $('.' + blockId).unbind('mouseenter mouseleave');
-    $('.' + blockId).hover(function(){
-      if (blockId == 'home-team-header-btn-img') {
-        self.showBookmark();
-      } else {
-        self.showTeamTable();
+    $('.home-team-header-btn-img, #homeTeamHeaderBookmarkBtn, #teamBookmark, .home-team-header-btn-img2, #teamMemberTable').unbind('mouseenter mouseleave');
+    // bookmarks button
+    $('.home-team-header-btn-img').bind('mouseenter', function() {
+      if ($('#teamBookmark').css('display') == 'none') {
+        $('.home-team-header-btn-img svg > path').css('fill', '#325C80');
+        $('.home-team-header-btn-title h').css('color', '#325C80');
+        $('#teamBookmark').fadeIn();
+        $('#teamMemberTable').trigger('mouseleave');
       }
-      $('#' + subBlockId + ' svg > path').css('fill', '#325C80');
-      $('#' + subBlockId + ' h').css('color', '#325C80');
-    },function(){
-      $('#' + subBlockId + ' svg > path').css('fill', '#FFFFFF');
-      $('#' + subBlockId + ' h').css('color', '#FFFFFF');
+    });
+    $('#homeTeamHeaderBookmarkBtn, #teamBookmark').bind('mouseleave', function() {
+      if ($('#teamBookmark').css('display') != 'none' && $('#teamBookmark').attr('data-open') != 'true') {
+        $('.home-team-header-btn-img svg > path').css('fill', '#FFFFFF');
+        $('.home-team-header-btn-title h').css('color', '#FFFFFF');
+        $('#teamBookmark').fadeOut();
+      }
+    });
+    //members button
+    $('.home-team-header-btn-img2').bind('mouseenter', function() {
+      if ($('#teamMemberTable').css('display') == 'none') {
+        $('.home-team-header-btn-img2 svg > path').css('fill', '#325C80');
+        $('.home-team-header-btn-title3 h').css('color', '#325C80');
+        $('#teamMemberTable').fadeIn();
+        $('#teamBookmark').trigger('mouseleave');
+      }
+    });
+    $('#teamMemberTable').bind('mouseleave', function() {
+      if ($('#teamMemberTable').css('display') != 'none' && $('#teamMemberTable').attr('data-open') != 'true') {
+        $('.home-team-header-btn-img2 svg > path').css('fill', '#FFFFFF');
+        $('.home-team-header-btn-title3 h').css('color', '#FFFFFF');
+        $('#teamMemberTable').fadeOut();
+      }
+    });
+    // workaround handler for member button hover out
+    $('.home-nav-div, .home-team-header-teamname-div, .home-team-header-hierarchy, #iterContent').unbind('mouseenter');
+    $('.home-nav-div, .home-team-header-teamname-div, .home-team-header-hierarchy, #iterContent').bind('mouseenter', function() {
+      if ($('#teamMemberTable').css('display') != 'none' && $('#teamMemberTable').attr('data-open') != 'true') {
+        $('.home-team-header-btn-img2 svg > path').css('fill', '#FFFFFF');
+        $('.home-team-header-btn-title3 h').css('color', '#FFFFFF');
+        $('#teamMemberTable').fadeOut();
+      }
     });
   },
 
@@ -89,28 +105,20 @@ var HomeTeamHeader = React.createClass({
      return (teamCount / 100);
   },
   showTeamTable: function() {
-    var self = this;
-    if ($('#teamMemberTable').css('display') == 'none') {
-      $('.home-team-header-btn-img2').unbind('mouseenter mouseleave');
-      $('#homeTeamHeaderMemberBtn' + ' svg > path').css('fill', '#325C80');
-      $('#homeTeamHeaderMemberBtn' + ' h').css('color', '#325C80');
-      $('#teamMemberTable').fadeIn();
-    } else {
-      self.hoverOnBtn('home-team-header-btn-img2');
-      $('#teamMemberTable').fadeOut();
-    }
+    $('#teamMemberTable').attr('data-open', 'true');
+    $('.home-team-header-btn-img2').trigger('mouseenter');
+  },
+  closeTeamTable: function() {
+    $('#teamMemberTable').attr('data-open', 'false');
+    $('#teamMemberTable').trigger('mouseleave');
   },
   showBookmark: function() {
-    var self = this;
-    if ($('#teamBookmark').css('display') == 'none') {
-      $('.home-team-header-btn-img').unbind('mouseenter mouseleave');
-      $('#homeTeamHeaderBookmarkBtn' + ' svg > path').css('fill', '#325C80');
-      $('#homeTeamHeaderBookmarkBtn' + ' h').css('color', '#325C80');
-      $('#teamBookmark').fadeIn();
-    } else {
-      self.hoverOnBtn('home-team-header-btn-img');
-      $('#teamBookmark').fadeOut();
-    }
+    $('#teamBookmark').attr('data-open', 'true');
+    $('.home-team-header-btn-img').trigger('mouseenter');
+  },
+  closeBookmark: function() {
+    $('#teamBookmark').attr('data-open', 'false');
+    $('#teamBookmark').trigger('mouseleave');
   },
   showAssessments: function() {
     if ($('.home-assessment-summary').css('display') == 'none') {
@@ -239,8 +247,9 @@ var HomeTeamHeader = React.createClass({
               <div class='home-team-header-btn-title'>
                 <h>Team Bookmarks</h>
               </div>
+              <HomeBookmark loadDetailTeam={self.props.loadDetailTeam} closeBookmark={self.closeBookmark} updateTeamLink={self.props.updateTeamLink} />
             </div>
-            <HomeBookmark loadDetailTeam={self.props.loadDetailTeam} showBookmark={self.showBookmark} updateTeamLink={self.props.updateTeamLink} />
+
             {/*<div class='home-team-header-btns' onClick={self.showAssessments} id='homeHeaderAseBtn'>
               <InlineSVG class='home-team-header-btn-img' src={require('../../../img/Att-icons/att-icons_main-nav-maturity.svg')}></InlineSVG>
               <div class='home-team-header-btn-title'>
@@ -260,7 +269,7 @@ var HomeTeamHeader = React.createClass({
               </div>
             </div>
           </div>
-          <HomeMemberTable loadDetailTeam={self.props.loadDetailTeam} showTeamTable={self.showTeamTable} realodTeamMembers={self.props.realodTeamMembers} roles={self.props.roles}/>
+          <HomeMemberTable loadDetailTeam={self.props.loadDetailTeam} closeTeamTable={self.closeTeamTable} realodTeamMembers={self.props.realodTeamMembers} roles={self.props.roles}/>
         </div>
       )
     }
