@@ -31,11 +31,14 @@ var HomeAseSummary = React.createClass({
       $('.home-assessment-summary').css('background-position','150% 85%');
     }
     $('.home-assessment-summary').show();
-    $('.home-assessment-summary .select2').remove();
+    if ($('.home-assessment-summary .select2').length > 0) {
+      $('.home-assessment-summary .select2').remove();
+    }
     $('#pAsseSelect').off('change');
     $('#pAsseSelect').select2({'width':'100%'});
     $('#pAsseSelect').change(this.assessmentChangeHandler);
     if (self.props.loadDetailTeam != undefined && self.props.loadDetailTeam.assessments != undefined && self.props.loadDetailTeam.assessments.length > 0 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft') {
+      console.log('running');
       api.getTemplateByVersion(self.props.loadDetailTeam.assessments[0].version)
         .then(function(template){
           self.state.assessTemplate = template;
@@ -43,6 +46,8 @@ var HomeAseSummary = React.createClass({
         .catch(function(err){
           console.log(err);
         })
+    } else {
+      self.state.assessTemplate = self.state.activeTemplate;
     }
   },
   assessmentChangeHandler: function(e) {

@@ -60,11 +60,11 @@ var HomeIterContent = React.createClass({
     var prev = this.getSelectedIteration();
     var next = this.getSelectedIteration(nextProps);
     if (!_.isEqual(this.props.loadDetailTeam.iterations, nextProps.loadDetailTeam.iterations) ||
-     !_.isEqual(prev, next)){      
+     !_.isEqual(prev, next)){
       this.setState({selectedIter: next});
     }
   },
-  
+
   componentDidUpdate: function(prevProps, prevState) {
     if (!_.isEmpty(this.state.selectedIter) && prevState.selectedIter._id != this.state.selectedIter._id
     || !_.isEqual(this.props.loadDetailTeam.iterations, prevProps.loadDetailTeam.iterations)){
@@ -74,7 +74,7 @@ var HomeIterContent = React.createClass({
     var self = this;
     $('select[id="homeIterSelection"]').select2();
     $('select[id="homeIterSelection"]').change(self.props.iterChangeHandler);
-    
+
     _.each($('.home-iter-content-point'), function(blk){
       if (blk.id != '') {
         $('#'+blk.id).parent().children('.home-iter-content-btn').css('display','none')
@@ -150,13 +150,13 @@ var HomeIterContent = React.createClass({
 
   closeIteration: function(){
     this.setState({createIteration: false, editIteration: false});
-  },  
+  },
 
   isWithinIteration: function(starDate,endDate){
     var currDate = moment(new Date(), 'YYYY-MM-DD').utc();
     var endDate = moment(endDate, 'YYYY-MM-DD');
     var starDate = moment(starDate, 'YYYY-MM-DD');
-    
+
     return currDate.isBetween(starDate,endDate, null, "[]");
   },
 
@@ -216,7 +216,7 @@ var HomeIterContent = React.createClass({
     }
 
     return selectedIter;
-   
+
   },
 
   updateAvailability: function(selectedIter){
@@ -304,7 +304,7 @@ var HomeIterContent = React.createClass({
   },
 
   resetTeamAvailability: function(){
-    
+
     var self = this;
     var selectedIter;
     if (self.props.selectedIter != '') {
@@ -332,7 +332,7 @@ var HomeIterContent = React.createClass({
     })
     .catch(function(err){
       console.log(err);
-    });    
+    });
   },
 
   getSelectedIteration: function(data){
@@ -367,7 +367,7 @@ var HomeIterContent = React.createClass({
     return defIter;
   },
 
-  handleChange: function(e){    
+  handleChange: function(e){
     var temp = _.clone(this.state.selectedIter);
     temp[e.target.id] = e.target.value;
     this.setState({selectedIter:temp});
@@ -377,7 +377,7 @@ var HomeIterContent = React.createClass({
     if (!_.isEqual(this.state.selectedIter, selectedIter)){
       this.setState({selectedIter:iterData});
     }
-    
+
   },
 
   render: function() {
@@ -454,7 +454,7 @@ var HomeIterContent = React.createClass({
               </div>
             </div>
             <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={self.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
-            
+
             <div class='home-iter-name-block' style={{'height':'5%'}}>
               <div class='home-iter-content-title' id='iteration-name'>{iterData.name}</div>
               <div class='home-iter-team-date' id='iteration-date'>{iterData.startDate} - {iterData.endDate}</div>
@@ -466,7 +466,7 @@ var HomeIterContent = React.createClass({
               </div>
             </div>
             <HomeEditIteration isOpen={this.state.editIteration} onClose={this.closeIteration} selectedIter={this.state.selectedIter} iterListHandler={this.props.iterListHandler}/>
-            
+
             <div class='home-iter-last-update-block'>
               <div class='home-iter-last-update-title'>Last updated</div>
               <div class='home-iter-last-update'>
@@ -475,7 +475,7 @@ var HomeIterContent = React.createClass({
                 {lastUpdateTime}
               </div>
             </div>
-            
+
             <div class='home-iter-sprint-block'>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-title'>Sprint Availability</div>
