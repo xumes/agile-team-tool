@@ -1053,6 +1053,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   left: 5%;
   display: inline-block;
   float: left;
+  cursor: pointer;
 }
 
 .home-team-header-btn-title2 {
@@ -1096,6 +1097,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   color: #FFFFFF;
   display: inline-block;
   float: left;
+  cursor: pointer;
 }
 
 .home-team-header-members-div {
