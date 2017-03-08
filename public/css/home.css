@@ -34,6 +34,40 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   font-size: 1.3em;
 }
 
+input[disabled], input[class*="ibm-btn-"][class*="-pri"][disabled], input[disabled]:hover, input[class*="ibm-btn-"][class*="-pri"][disabled]:hover, button[disabled], button[class*="ibm-btn-"][class*="-pri"][disabled], button[disabled]:hover, button[class*="ibm-btn-"][class*="-pri"][disabled]:hover {
+  background-color: #FFFFFF;
+  border: 2px solid #C7C7C7;
+  color: #C7C7C7;
+  cursor: not-allowed;
+}
+
+input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][class*="-sec"][disabled]:hover, button[class*="ibm-btn-"][class*="-sec"][disabled], button[class*="ibm-btn-"][class*="-sec"][disabled]:hover {
+  background-color: #fff;
+  border: 2px solid #C7C7C7;
+  color: #C7C7C7;
+}
+
+.select2-container--default.select2-container--disabled .select2-selection--single {
+  background-color: #fff;
+  color: #C7C7C7;
+  cursor: not-allowed;
+}
+
+.select2-container--default.select2-container--disabled .select2-selection--single {
+  cursor: not-allowed;
+}
+
+.select2-container--default.select2-container--disabled .select2-selection--single .select2-selection__rendered {
+  color: #C7C7C7;
+  border-color: #C7C7C7
+}
+
+.select2-container--default.select2-container--disabled .select2-selection {
+  box-shadow: 0 0 0 1px #C7C7C7 inset;
+}
+.select2-container--default.select2-container--disabled .select2-selection--single {
+  border-color: #C7C7C7;
+}
 /* Matts dank spinner */
 /* The Modal (background) */
 /* Clear Loading */
@@ -424,7 +458,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 .agile-home-header {
   background-color: #323232;
   display: block;
-  color: #ffffff;
+  color: #FFFFFF;
   font-size: 1.5em !important;
   height: 6.2%;
   width: 100%;
@@ -513,7 +547,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .header-menu-label {
-  color: #ffffff;
+  color: #FFFFFF;
   display: inline-block;
   padding: .75em .25em 0 .25em;
   position: relative;
@@ -546,7 +580,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .header-menu-profile-block li:first-child div {
-  border-bottom: 0.1em solid #ffffff;
+  border-bottom: 0.1em solid #FFFFFF;
   font-size: 1.5em !important;
   font-weight: bold;
   padding-top: 1em;
@@ -567,7 +601,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .header-menu-profile-block li:nth-child(2) img {
-  border: 1px solid #ffffff;
+  border: 1px solid #FFFFFF;
   border-radius: 60%;
   box-sizing: border-box;
   height: auto;
@@ -587,7 +621,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   content: "•" !important;
   margin-left: 0;
   margin-top: .7em;
-  color: #ffffff;
+  color: #FFFFFF;
 }
 
 .header-menu-help-block li:nth-child(2) a,
@@ -608,7 +642,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .header-menu-profile-block li:last-child {
-  border-top: 0.1em solid #ffffff;
+  border-top: 0.1em solid #FFFFFF;
   padding-top: 1em;
 }
 
@@ -3613,7 +3647,7 @@ width: 100% !important;
 }
 
 .att-modal .modal-header .modal-title {
-  color: #ffffff;
+  color: #FFFFFF;
   font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.5em;
   padding: 0 0 0 1.5em;
@@ -3632,7 +3666,7 @@ width: 100% !important;
 }
 
 .modal-header .close-btn svg polygon {
-  fill: #ffffff;
+  fill: #FFFFFF;
 }
 
 .att-modal .sr-only { /* line 8732 */
@@ -3694,7 +3728,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 /* btn */
 .att-modal .btn-primary {
   background-color: #4178be;
-  color: #ffffff;
+  color: #FFFFFF;
 }
 
 .att-modal .btn {
@@ -3727,7 +3761,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 .att-modal .btn-primary:hover, .att-modal .btn-primary:focus, .att-modal .btn-primary.focus, .att-modal .btn-primary:active,
 .att-modal .btn-primary.active, .open > .btn-primary.dropdown-toggle {
   background-color: #325c80;
-  color: #ffffff;
+  color: #FFFFFF;
 }
 
 button, html input[type="button"], input[type="reset"], input[type="submit"] {
@@ -4675,7 +4709,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-modal-block-close-btn polygon {
-  fill: #ffffff;
+  fill: #FFFFFF;
   opacity: 1;
 }
 
@@ -5147,7 +5181,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-modal-block {
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.16);
   left: 50%;
   position: absolute;
@@ -5165,7 +5199,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-modal-block-header > h {
-  color: #ffffff;
+  color: #FFFFFF;
   font-size: inherit;
   font-family: "HelvNeue Bold for IBM";
   height: 100%;
@@ -5323,7 +5357,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-modal-block-close-btn polygon {
-  fill: #ffffff;
+  fill: #FFFFFF;
   opacity: 1;
 }
 
