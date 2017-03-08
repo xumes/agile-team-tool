@@ -4,7 +4,7 @@ var _ = require('underscore');
 var moment = require('moment');
 var ReactDOM = require('react-dom');
 var InlineSVG = require('svg-inline-react');
-var AssessmentActiveTemplates = require('./AssessmentActiveTemplates2.jsx');
+var AssessmentActiveTemplates = require('./AssessmentActiveTemplates.jsx');
 var AssessmentButtons = require('./AssessmentButtons.jsx');
 
 var AssessmentPopover = React.createClass({
@@ -14,9 +14,31 @@ var AssessmentPopover = React.createClass({
       ddAssessTemplate: {}
     };
   },
+  componentWillMount: function() {
+  },
   componentDidMount: function() {
     $('#assessmentTeamTypeSelector').select2({'width':'100%','dropdownParent':$('.assessment-popover-block')});
     $('#assessmentSoftwareTypeSelector').select2({'width':'100%','dropdownParent':$('.assessment-popover-block')});
+    $('#assessmentTeamTypeSelector').change(this.ttChangeHandler);
+    $('#assessmentSoftwareTypeSelector').change(this.stChangeHandler);
+  },
+  componentDidUpdate: function() {
+  },
+  ttChangeHandler: function(e) {
+    var self = this;
+    if (e.target.value == 'Project') {
+      self.setState({lcAssessTemplate: self.props.assessTemplate.components[0]});
+    } else {
+      self.setState({lcAssessTemplate: self.props.assessTemplate.components[1]});
+    }
+  },
+  stChangeHandler: function(e) {
+    var self = this;
+    if (e.target.value == 'Yes') {
+      self.setState({ddAssessTemplate: self.props.assessTemplate.components[2]});
+    } else {
+      self.setState({ddAssessTemplate: {}});
+    }
   },
   render: function() {
     var self = this;
@@ -37,12 +59,14 @@ var AssessmentPopover = React.createClass({
       var submitDate = 'On Submission';
       var lastUpdatedBy = 'On Submission';
       var lastUpdated = null;
-      if ($('#assessmentTeamTypeSelector').val() == 'p') {
+      var assessType = $('#assessmentTeamTypeSelector').val() == undefined?'Project':$('#assessmentTeamTypeSelector').val();
+      var deliversSoftware = $('#assessmentSoftwareTypeSelector').val() == undefined?'Yes':$('#assessmentSoftwareTypeSelector').val();
+      if (assessType == 'Project') {
         self.state.lcAssessTemplate = self.props.assessTemplate.components[0];
       } else {
         self.state.lcAssessTemplate = self.props.assessTemplate.components[1];
       }
-      if ($('#assessmentSoftwareTypeSelector').val() == 'y') {
+      if (deliversSoftware == 'Yes') {
         self.state.ddAssessTemplate = self.props.assessTemplate.components[2];
       } else {
         self.state.ddAssessTemplate = {};
@@ -51,12 +75,14 @@ var AssessmentPopover = React.createClass({
       submitDate = moment.utc(assessDraft.submittedDate).format('DD MMM YYYY');
       lastUpdatedBy = assessDraft.updatedBy;
       lastUpdated = ' (' + moment.utc(assessDraft.updateDate).format('DD MMM YYYY') + ')';
-      if (assessDraft.type == 'Project') {
+      assessType = $('#assessmentTeamTypeSelector').val() == undefined?assessDraft.type:$('#assessmentTeamTypeSelector').val();
+      deliversSoftware = $('#assessmentSoftwareTypeSelector').val() == undefined?(assessDraft.deliversSoftware?'Yes':'No'):$('#assessmentSoftwareTypeSelector').val();
+      if (assessType == 'Project') {
         self.state.lcAssessTemplate = self.props.assessTemplate.components[0];
       } else {
         self.state.lcAssessTemplate = self.props.assessTemplate.components[1];
       }
-      if (assessDraft.deliversSoftware) {
+      if (deliversSoftware == 'Yes') {
         self.state.ddAssessTemplate = self.props.assessTemplate.components[2];
       } else {
         self.state.ddAssessTemplate = {};
@@ -83,15 +109,15 @@ var AssessmentPopover = React.createClass({
             </div>
             <div class='status-selection'>
               <div class='team-type-selector'>
-                <select id='assessmentTeamTypeSelector' disabled={haveAccess} defaultValue='p'>
-                  <option value='p'>{'Project'}</option>
-                  <option value='o'>{'Operations'}</option>
+                <select id='assessmentTeamTypeSelector' disabled={haveAccess} defaultValue={assessType}>
+                  <option value='Project'>{'Project'}</option>
+                  <option value='Operations'>{'Operations'}</option>
                 </select>
               </div>
               <div class='team-type-selector' style={{'left':'3%'}}>
-                <select id='assessmentSoftwareTypeSelector' disabled={haveAccess} defaultValue='y'>
-                  <option value='y'>{'Yes'}</option>
-                  <option value='n'>{'No'}</option>
+                <select id='assessmentSoftwareTypeSelector' disabled={haveAccess} defaultValue={deliversSoftware}>
+                  <option value='Yes'>{'Yes'}</option>
+                  <option value='No'>{'No'}</option>
                 </select>
               </div>
               <div class='submit-date-selector'>

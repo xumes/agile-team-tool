@@ -3,7 +3,7 @@ var _ = require('underscore');
 var AssessmentTemplateCriteria = require('./AssessmentTemplateCriteria.jsx');
 var AssessmentTemplateLevel = React.createClass({
   componentDidMount: function() {
-    $("a[data-widget='tooltip']").tooltip();
+    $('a[data-widget=\'tooltip\']').tooltip();
     $('.iradio_square-blue').hover(function(){
       if ($('input[type=\'radio\']').prop('disabled')) {
         return;
