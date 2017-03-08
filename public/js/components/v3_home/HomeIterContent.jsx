@@ -444,7 +444,7 @@ var HomeIterContent = React.createClass({
             <div class='home-iter-title'>Iteration Overview</div>
             <Tooltip html={true} type="light"/>
             <div class='home-iter-selection-block'>
-              <div class='iter-select'>
+              <div class='home-iter-select'>
                 <select value={defIter._id} id='homeIterSelection' onChange={this.props.iterChangeHandler} ref="homeIterSelection">
                   {iterations}
                 </select>
@@ -461,7 +461,7 @@ var HomeIterContent = React.createClass({
               <div class={access?'home-iter-edit-btn-block':'home-iter-edit-btn-block-disabled'} onClick={access?this.showEditIteration:''} style={access?{'cursor':'pointer'}:{'cursor':'default'}}>
                 <InlineSVG src={require('../../../img/Att-icons/att-icons_edit.svg')} data-tip='Edit Iteration Name/Date'></InlineSVG>
               </div>
-              <div class="ibm-rule ibm-alternate" style={{'width':'96%','marginTop':'1em'}}>
+              <div class="ibm-rule ibm-alternate ibm-gray-30" style={{'width':'96%','marginTop':'1.5em'}}>
                 <hr />
               </div>
             </div>
@@ -801,7 +801,7 @@ var HomeIterContent = React.createClass({
             <div class='home-iter-title'>Iteration Overview</div>
             <Tooltip html={true} type="light"/>
             <div class='home-iter-selection-block'>
-              <div class='iter-select'>
+              <div class='home-iter-select'>
                 <select value={0} id='homeIterSelection'>
                   <option key={0} value={0}>{'No iteration results'}</option>
                 </select>

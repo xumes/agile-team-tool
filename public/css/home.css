@@ -2066,38 +2066,45 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 3%;
 }
 
+.home-iter-name {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.8em;
+  line-height: 1.9em;
+  color: #5A5A5A;
+}
+
 .home-iter-team-date {
   position: relative;
-  width: 80%;
+  width: 100;
   display: inline-block;
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.3em;
   line-height: 1.6em;
-  color: #777677;
+  color: #5A5A5A;
 }
 .home-iter-selection-block {
   position: relative;
   left: 5%;
   float: left;
   top: 4.5%;
-  width: 90%;
+  width: 95%;
   height: 3%;
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
 }
 
-.iter-select {
+.home-iter-select {
   position: relative;
   float: left;
-  width: 95%;
+  width: 91%;
   height: 100%;
 }
 
-.homeIterSelection input, select, .homeIterSelection option{
-  width:96%;
-  font-size: 1.6em;
-  height: 2em;
-  max-width:97%;
+.home-iter-select > span > select2 select2-container select2-container--default{
+  width: 100% !important;
 }
 
 .memberChanged input, select, .memberChanged option{
@@ -2118,10 +2125,10 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   position: relative;
   display: inline-block;
   float: right;
-  width: 5%;
-  height: 60%;
-  min-height: 2.5em;
-  margin-top: 1%;
+  width: 8.2%;
+  height: 42%;
+  min-height: 2em;
+  margin-top: 2.3%;
 }
 
 .home-iter-add-btn-block > i > svg, .home-iter-add-btn-block-disabled > i > svg {
