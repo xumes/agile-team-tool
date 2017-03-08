@@ -34,6 +34,46 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   font-size: 1.3em;
 }
 
+input[disabled], input[class*="ibm-btn-"][class*="-pri"][disabled], input[disabled]:hover, input[class*="ibm-btn-"][class*="-pri"][disabled]:hover, button[disabled] {
+  background-color: #FFFFFF;
+  border: 2px solid #C7C7C7;
+  color: #C7C7C7;
+  cursor: not-allowed;
+}
+
+button[class*="ibm-btn-"][class*="-pri"][disabled], button[disabled]:hover, button[class*="ibm-btn-"][class*="-pri"][disabled]:hover {
+  background-color: #EAEAEA;
+  color: #C0BFC0;
+  cursor: not-allowed;
+}
+
+input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][class*="-sec"][disabled]:hover, button[class*="ibm-btn-"][class*="-sec"][disabled], button[class*="ibm-btn-"][class*="-sec"][disabled]:hover {
+  background-color: #fff;
+  border: 2px solid #C7C7C7;
+  color: #C7C7C7;
+}
+
+.select2-container--default.select2-container--disabled .select2-selection--single {
+  background-color: #fff;
+  color: #C7C7C7;
+  cursor: not-allowed;
+}
+
+.select2-container--default.select2-container--disabled .select2-selection--single {
+  cursor: not-allowed;
+}
+
+.select2-container--default.select2-container--disabled .select2-selection--single .select2-selection__rendered {
+  color: #C7C7C7;
+  border-color: #C7C7C7
+}
+
+.select2-container--default.select2-container--disabled .select2-selection {
+  box-shadow: 0 0 0 1px #C7C7C7 inset;
+}
+.select2-container--default.select2-container--disabled .select2-selection--single {
+  border-color: #C7C7C7;
+}
 /* Matts dank spinner */
 /* The Modal (background) */
 /* Clear Loading */
@@ -424,7 +464,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 .agile-home-header {
   background-color: #323232;
   display: block;
-  color: #ffffff;
+  color: #FFFFFF;
   font-size: 1.5em !important;
   height: 6.2%;
   width: 100%;
@@ -513,7 +553,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .header-menu-label {
-  color: #ffffff;
+  color: #FFFFFF;
   display: inline-block;
   padding: .75em .25em 0 .25em;
   position: relative;
@@ -546,7 +586,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .header-menu-profile-block li:first-child div {
-  border-bottom: 0.1em solid #ffffff;
+  border-bottom: 0.1em solid #FFFFFF;
   font-size: 1.5em !important;
   font-weight: bold;
   padding-top: 1em;
@@ -567,7 +607,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .header-menu-profile-block li:nth-child(2) img {
-  border: 1px solid #ffffff;
+  border: 1px solid #FFFFFF;
   border-radius: 60%;
   box-sizing: border-box;
   height: auto;
@@ -587,7 +627,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   content: "•" !important;
   margin-left: 0;
   margin-top: .7em;
-  color: #ffffff;
+  color: #FFFFFF;
 }
 
 .header-menu-help-block li:nth-child(2) a,
@@ -608,7 +648,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
 }
 
 .header-menu-profile-block li:last-child {
-  border-top: 0.1em solid #ffffff;
+  border-top: 0.1em solid #FFFFFF;
   padding-top: 1em;
 }
 
@@ -3674,7 +3714,7 @@ width: 100% !important;
 }
 
 .att-modal .modal-header .modal-title {
-  color: #ffffff;
+  color: #FFFFFF;
   font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.5em;
   padding: 0 0 0 1.5em;
@@ -3693,7 +3733,7 @@ width: 100% !important;
 }
 
 .modal-header .close-btn svg polygon {
-  fill: #ffffff;
+  fill: #FFFFFF;
 }
 
 .att-modal .sr-only { /* line 8732 */
@@ -3755,7 +3795,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 /* btn */
 .att-modal .btn-primary {
   background-color: #4178be;
-  color: #ffffff;
+  color: #FFFFFF;
 }
 
 .att-modal .btn {
@@ -3788,7 +3828,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 .att-modal .btn-primary:hover, .att-modal .btn-primary:focus, .att-modal .btn-primary.focus, .att-modal .btn-primary:active,
 .att-modal .btn-primary.active, .open > .btn-primary.dropdown-toggle {
   background-color: #325c80;
-  color: #ffffff;
+  color: #FFFFFF;
 }
 
 button, html input[type="button"], input[type="reset"], input[type="submit"] {
@@ -4744,7 +4784,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-modal-block-close-btn polygon {
-  fill: #ffffff;
+  fill: #FFFFFF;
   opacity: 1;
 }
 
@@ -5200,23 +5240,35 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .__react_component_tooltip {
-    width: 234px !important;
-    background-color: #FFFFFF !important;
-    box-shadow: 0 0 10px 0 rgba(0,0,0,0.16) !important;
-    font-family: "HelvNeue Roman for IBM" !important;
-    font-size: 12px !important;
-    line-height: 14px !important;
-    color: #5A5A5A !important;
-    padding:10px 15px !important;
-    opacity:1 !important;
+  width: 234px !important;
+  background-color: #FFFFFF !important;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.16) !important;
+  font-family: "HelvNeue Roman for IBM" !important;
+  font-size: 12px !important;
+  line-height: 14px !important;
+  color: #5A5A5A !important;
+  padding:10px 15px !important;
+  opacity:1 !important;
 }
 
-.__react_component_tooltip.type-light {
-    border-top: 4px solid #4178BE !important;
+.__react_component_tooltip.type-light.place-top {
+  border-top: 4px solid #4178BE !important;
+}
+
+.__react_component_tooltip.type-light.place-right {
+  border-right: 4px solid #4178BE !important;
+}
+
+.__react_component_tooltip.type-light.place-bottom {
+  border-bottom: 4px solid #4178BE !important;
+}
+
+.__react_component_tooltip.type-light.place-left {
+  border-left: 4px solid #4178BE !important;
 }
 
 .home-modal-block {
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.16);
   left: 50%;
   position: absolute;
@@ -5234,7 +5286,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-modal-block-header > h {
-  color: #ffffff;
+  color: #FFFFFF;
   font-size: inherit;
   font-family: "HelvNeue Bold for IBM";
   height: 100%;
@@ -5258,6 +5310,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .home-modal-block-footer .ibm-btn-small {
   font-size: 1.5 !important;
+  margin-bottom: 0px;
 }
 
 .home-modal-block-close-btn {
@@ -5285,9 +5338,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .team-setup-squad-block .squad-note > p {
-  font-size: inherit;
+  color: #777677;
+  font-size: .8em;
   line-height: 1.3em;
-  padding: 1em 1em 0;
+  padding: 2em 1em 0;
   text-align: justify;
 }
 
@@ -5309,10 +5363,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .team-setup-squad-block .team-setup-squad-icon-change {
-  left: 27%;
+  left: 27.25%;
   height: 23%;
   position: absolute;
-  top: 53%;
+  top: 52%;
   width: 5%;
 }
 
@@ -5330,7 +5384,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: inline-block;
   font-size: inherit;
   position: relative;
-  top: 12%;
+  top: 13%;
   width: 95%;
 }
 
@@ -5351,7 +5405,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .team-setup-squad-content .squad-name > h {
-  color: #777677;
+  color: #464646;
   font-size: 1.2em;
   position: absolute;
   top: 50%;
@@ -5371,7 +5425,8 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .team-setup-squad-content .squad-add-child > p {
-  font-size: inherit;
+  color: #777677;
+  font-size: .8em;
   padding-top: 0.25em;
   text-align: justify;
 }
@@ -5389,7 +5444,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-modal-block-close-btn polygon {
-  fill: #ffffff;
+  fill: #FFFFFF;
   opacity: 1;
 }
 
@@ -5399,15 +5454,15 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 35%;
   position: absolute;
   top: 13%;
-  width: 2%;
+  width: 1.4%;
 }
 
 .team-setup-squad-block .team-setup-squad-icon-arrow-top .line {
   border-bottom: 0.1em solid #b3b3b3;
-  left: -490%;
+  left: -640%;
   position: absolute;
-  top: 36%;
-  width: 500%;
+  top: 50%;
+  width: 650%;
 }
 
 .team-setup-squad-block .team-setup-squad-icon-arrow-middle {
@@ -5416,14 +5471,14 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 35%;
   position: absolute;
   top: 47%;
-  width: 2%;
+  width: 1.4%;
 }
 
 .team-setup-squad-block .team-setup-squad-icon-arrow-middle .line {
   border-bottom: 0.1em solid #b3b3b3;
   left: -105%;
   position: absolute;
-  top: 34%;
+  top: 50%;
   width: 115%;
 }
 
@@ -5432,15 +5487,15 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 3%;
   left: 35%;
   position: absolute;
-  top: 68%;
-  width: 2%;
+  top: 67%;
+  width: 1.4%;
 }
 
 .team-setup-squad-block .team-setup-squad-icon-arrow-bottom .line {
   border-bottom: 0.1em solid #b3b3b3;
   left: -105%;
   position: absolute;
-  top: 35%;
+  top: 50%;
   width: 115%;
 }
 
@@ -5489,15 +5544,15 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 33%;
   position: absolute;
   top: 8%;
-  width: 2%;
+  width: 1.4%;
 }
 
 .team-setup-block .team-setup-icon-arrow-top .line {
   border-bottom: 0.1em solid #b3b3b3;
-  left: -550%;
+  left: -790%;
   position: absolute;
-  top: 35%;
-  width: 560%;
+  top: 38%;
+  width: 800%;
 }
 
 .team-setup-block .team-setup-icon-arrow-middle {
@@ -5506,15 +5561,15 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 33%;
   position: absolute;
   top: 32%;
-  width: 2%;
+  width: 1.4%;
 }
 
 .team-setup-block .team-setup-icon-arrow-middle .line {
   border-bottom: 0.1em solid #b3b3b3;
-  left: -160%;
+  left: -220%;
   position: absolute;
-  top: 34%;
-  width: 170%;
+  top: 39%;
+  width: 230%;
 }
 
 .team-setup-block .team-setup-icon-arrow-bottom {
@@ -5522,16 +5577,16 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 3%;
   left: 33%;
   position: absolute;
-  top: 49%;
-  width: 2%;
+  top: 48.5%;
+  width: 1.4%;
 }
 
 .team-setup-block .team-setup-icon-arrow-bottom .line {
   border-bottom: 0.1em solid #b3b3b3;
-  left: -160%;
+  left: -220%;
   position: absolute;
-  top: 36%;
-  width: 170%;
+  top: 41%;
+  width: 230%;
 }
 
 .team-setup-block .team-setup-content {
@@ -5560,7 +5615,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .team-setup-content .team-setup-name > h {
-  color: #777677;
+  color: #464646;
   font-size: 1.2em;
   position: absolute;
   top: 50%;
@@ -5572,7 +5627,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-size: inherit;
   height: 32%;
   position: absolute;
-  top: 48%;
+  top: 48.5%;
   width: 95%;
 }
 
@@ -5628,28 +5683,33 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-size: inherit;
   height: 20%;
   position: absolute;
-  top: 82%;
+  top: 81%;
   width: 95%;
 }
 
 .team-setup-squad-revert .team-setup-revert-icon {
   display: inline-block;
-  height: 100%;
+  height: 15%;
   padding-right: 0.5em;
-  width: 8%;
+  position: relative;
+  width: 5%;
+}
+
+.team-setup-revert-icon.disabled svg path {
+  fill: #C7C7C7;
 }
 
 .team-setup-squad-revert > a {
   cursor: pointer;
-  height: 20%;
+  height: 25%;
   vertical-align: middle;
   white-space: nowrap;
 }
 
 .team-setup-squad-revert > p {
-  font-size: inherit;
-  padding-left: 1.75em;
-  padding-top: 0.25em;
+  color: #777677;
+  font-size: .8em;
+  padding-left: 2em;
   text-align: justify;
 }
 
