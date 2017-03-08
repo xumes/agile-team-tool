@@ -1597,6 +1597,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   left: 8%;
   border: 0.2em solid #4178BE;
   cursor: pointer;
+  margin-top: 0.5em;
 }
 
 .team-member-table-add-btn > h {
@@ -2056,23 +2057,60 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   color: #000000;
 }
 
+.home-iter-name-block {
+  position: relative;
+  left: 5%;
+  float: left;
+  top: 5%;
+  width: 95%;
+  height: 3%;
+}
 
+.home-iter-name {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.8em;
+  line-height: 1.9em;
+  color: #5A5A5A;
+}
+
+.home-iter-team-date {
+  position: relative;
+  width: 100;
+  display: inline-block;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.3em;
+  line-height: 1.6em;
+  color: #5A5A5A;
+}
 .home-iter-selection-block {
   position: relative;
   left: 5%;
   float: left;
   top: 4.5%;
-  width: 90%;
+  width: 95%;
   height: 3%;
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
 }
 
-.home-iter-selection-block > .iter-select {
+.home-iter-select {
   position: relative;
   float: left;
-  width: 80%;
+  width: 91%;
   height: 100%;
+}
+
+.home-iter-select > span > select2 select2-container select2-container--default{
+  width: 100% !important;
+}
+
+.memberChanged input, select, .memberChanged option{
+  width:100%;
+  height: 1.7em;
+  font-size: 0.9em;
 }
 
 /*.home-iter-selection-block > select {
@@ -2083,16 +2121,37 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   height: 100%;
 }*/
 
-.home-iter-add-btn-block {
+.home-iter-add-btn-block, .home-iter-add-btn-block-disabled {
   position: relative;
   display: inline-block;
   float: right;
-  width: 13%;
-  height: 70%;
-  min-height: 40px;
+  width: 8.2%;
+  height: 42%;
+  min-height: 2em;
+  margin-top: 2.3%;
 }
 
-.home-iter-add-btn-block > i > svg {
+.home-iter-add-btn-block > i > svg, .home-iter-add-btn-block-disabled > i > svg {
+  width: auto;
+  height: 100%;
+  pointer-events: none;
+}
+
+.home-iter-add-btn-block-disabled > i > svg polygon, .home-iter-add-btn-block-disabled > i > svg path {
+  fill: #C7C7C7;
+}
+
+.home-iter-edit-btn-block, .home-iter-edit-btn-block-disabled {
+  position: relative;
+  display: inline-block;
+  float: right;
+  width: 8%;
+  height: 20%;
+  min-height: 1.5em;
+  margin-top: -2.5em;
+}
+
+.home-iter-edit-btn-block > i > svg, .home-iter-edit-btn-block-disabled > i > svg {
   width: auto;
   height: 100%;
   pointer-events: none;
@@ -2237,6 +2296,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   line-height: 1.6em;
   color: #4178BE;
   cursor: pointer;
+  margin-left: -0.1em;
 }
 
 .home-iter-content-point-uneditable {
@@ -2267,7 +2327,7 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   display: inline-block;
   float: right;
   top: 5%;
-  right: -8.5%;
+  right: -9%;
   width: 5%;
   height: 60%;
   cursor: pointer;
@@ -2296,14 +2356,15 @@ button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
   display: inline-block;
   float: right;
   top: 15%;
-  right: -8.5%;
+  right: -7.5%;
   width: 5%;
-  height: 60%;
+  height: 50%;
   cursor: pointer;
 }
-.home-iter-locked-btn > i > svg {
-  width: 100%;
-  height: auto;
+
+.home-iter-team-availability-disabled > i > svg polygon, .home-iter-team-availability-disabled > i > svg path {
+  fill: #C7C7C7;
+  cursor: default;
 }
 
 .home-iter-comment-test {
@@ -3816,7 +3877,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .popup-title {
-  height: 8.49%;
+  height: 3em;
   width: 100%;
   background-color: #4178BE;
   padding-top: 4%;
@@ -3842,7 +3903,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .popup-title > div {
   width: 10%;
   cursor: pointer;
-  margin-right: 4%;
+  margin-right: 3%;
 }
 
 .popup-title > div > i > svg {
@@ -3897,6 +3958,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   color: #323232;
   display: inline-flex;
   align-items: center;
+  min-width: 10em;
 }
 
 .home-iter-subdetail-section {
@@ -3948,6 +4010,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .home-iter-cal-btn-block {
   position: relative;
   cursor:pointer;
+  width: 18%;
 }
 
 .home-iter-cal-btn-block > i > svg {
@@ -3965,11 +4028,17 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 5.79%;
 }
 
+.home-iter-main div .react-datepicker__input-container {
+  width: 45% !important;
+  height: 4em !important;
+}
+
 .popup-btns {
   width: 100%;
   float: left;
   background-color: #FFFFFF;
   margin-top: 7%;
+  padding-bottom: 3%;
 }
 /** New Team Creation - Begin */
 .new-team-creation-add-block, .new-team-creation-addteam-member {
@@ -5119,7 +5188,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .home-iter-member-change {
   position: relative;
   right: 10%;
-  width: 12%;
+  width: 13%;
   height: 70%;
   float: right;
   display: inline-block;
