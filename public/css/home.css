@@ -1906,6 +1906,14 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
   transform: rotate(180deg);
 }
+
+.home-chart-filter-arrow-right {
+  display: inline;
+  float: right;
+  height: 15%;
+  width: 5%;
+}
+
 .home-chart-filter-arrow-img svg {
   position: relative;
   right: 85%;
