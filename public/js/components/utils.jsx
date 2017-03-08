@@ -319,3 +319,45 @@ module.exports.getTeamMembers = function(team){
   }
   return teamMembers;
 };
+
+/**
+ * Return an array of unique errors
+ *
+ * @param Array of errors
+ */
+module.exports.returnUniqErrors = function(errors) {
+  var err = [];
+  _.each(_.uniq(errors), function(v) {
+    err.push(v);
+  });
+  return err;
+};
+
+/**
+ * Highlight the field that has an error
+ *
+ * @param type of the field (such as role, allocation)
+ * @param index
+ */
+module.exports.highlightErrorField = function(type, divIdx) {
+  var elem;
+  if (type == 'role') {
+    $('.tbl-memberRole-results .tbl-members td.r_role').each(function() {
+      var idx = parseInt($(this).attr('data-index'));
+      var divId = $(this).children('div').attr('id');
+      if (idx === divIdx) {
+        $('#' + divId +' .Select-placeholder').css('border', '1px solid red');
+      }
+    });
+  }
+
+  if (type == 'allocation') {
+    $('.tbl-memberRole-results .tbl-members td.r_allocation').each(function() {
+      var idx = parseInt($(this).attr('data-index'));
+      var divId = $(this).find('.Select-value');
+      if (idx === divIdx) {
+        $(this).find('.Select-value').css('border', '1px solid red');
+      }
+    });
+  }
+}

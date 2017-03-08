@@ -168,7 +168,7 @@ var HomeAddTeamMemberRole = React.createClass({
     var self = this;
     var teamMemberList = null;
     if (!_.isEmpty(self.props.newTeamObj) && !_.isEmpty(self.props.newTeamObj.members)) {
-      teamMemberList = self.props.newTeamObj.members.map(function(member) {
+      teamMemberList = self.props.newTeamObj.members.map(function(member,idx) {
         var key = (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase();
         var memberName = member.name;
         var memberEmail = member.email;
@@ -199,10 +199,10 @@ var HomeAddTeamMemberRole = React.createClass({
                 </div>
               </div>
             </td>
-            <td class='r_role'>
+            <td class='r_role' data-index={idx}>
               <HomeAddTeamDropdownRole newTeamObj={self.props.newTeamObj} memberUserId={memberUserId} roles={self.state.defaultRoles} setTeamMember={self.props.setTeamMember} memberRole={memberRole} roleHandler={self.selectHandler} />
             </td>
-            <td class='r_allocation'>
+            <td class='r_allocation' data-index={idx}>
               <HomeAddTeamDropdownAllocation newTeamObj={self.props.newTeamObj} memberUserId={memberUserId} setTeamMember={self.props.setTeamMember} memberAlloc={memberAlloc} allocHandler={self.selectHandler} />
             </td>
             <td class='r_workweek'>

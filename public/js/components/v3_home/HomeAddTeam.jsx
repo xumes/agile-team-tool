@@ -1,5 +1,6 @@
 var React = require('react');
 var api = require('../api.jsx');
+var utils = require('../utils.jsx');
 var _ = require('underscore');
 var InlineSVG = require('svg-inline-react');
 var HomeAddTeamNameModal = require('./HomeAddTeamNameModal.jsx');
@@ -176,7 +177,30 @@ var HomeAddTeam = React.createClass({
          alert('You have successfully added this team. ');
       })
       .catch(function(err) {
-        alert(err);
+        if (err) {
+          var str = '';
+          var err1 = [];
+          var err2 = [];
+          try {
+            if (err && err['responseJSON']) {
+              var tmperr = err['responseJSON']['errors'];
+              _.each(tmperr, function(e, idx, ls) {
+                var divIdx = parseInt(idx.match(/\d+/)[0], 10);
+                utils.highlightErrorField(e.path, divIdx);
+                err1.push(e['message']);
+              });
+              err2 = utils.returnUniqErrors(err1);
+              _.each(err2, function(s) {
+                str = str + ' ' + s + '\n';
+              });
+              alert(str);
+            } else {
+              alert(err);
+            }
+          } catch(e) {
+            console.log('e:', e);
+          }
+        }
         console.log(err);
       });
   },

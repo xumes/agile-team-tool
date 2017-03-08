@@ -29,6 +29,13 @@ var HomeAddTeamMemberModal = React.createClass({
     self.setDefaultMember();
   },
 
+  componentWillReceiveProps: function(newProps) {
+    // Empty the facesPerson to prevent from adding by clicking Add icon
+    if (newProps.activeWindow !== undefined && newProps.activeWindow === false) {
+      this.setState({facesPerson: {}});
+    }
+  },
+
   componentWillUpdate: function(nextProps, nextState) {
     var self = this;
     if (!self.props.activeWindow && nextProps.activeWindow) {
@@ -78,6 +85,7 @@ var HomeAddTeamMemberModal = React.createClass({
         if (!_.isEmpty(teamMemberData)) {
           self.enableNextButton();
         }
+        self.setState({facesPerson: {}});
     } else {
       $('#txtTeamMemberNameError').addClass('ibm-alert-link');
       $('#txtTeamMemberNameError').html('Member name is required.');

@@ -9,7 +9,12 @@ var HomeAddTeamDropdownAllocation = React.createClass({
   render: function() {
     var self = this;
     var memberUserId = self.props.memberUserId;
-    var memberAlloc = self.props.memberAlloc || 100;
+    var memberAlloc;
+    if (self.props.memberAlloc === 0) {
+      memberAlloc = 0;
+    } else {
+      memberAlloc = self.props.memberAlloc;
+    }
     var selallocOptions = [];
     var allocationArray = Array.from(Array(101).keys());
     allocationArray.map(function(v) {
