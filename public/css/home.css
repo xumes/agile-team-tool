@@ -4115,8 +4115,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   top: 100%;
   left: 5%;
-  font-family: "HelvNeue Roman for IBM";
-  font-size: 2.5em;
+  font-family: "HelvNeue Light for IBM";
+  font-size: 2.08em;
+  color: #323232;
 }
 .new-team-creation-add-block-header > span {
   position: relative;
@@ -4155,8 +4156,8 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   height: 40%;
   width: 50%;
-  font-family: "HelvNeue Medium for IBM";
-  font-size: 1.4em;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.33em;
   line-height: 1.8em;
   color: #323232;
 }
@@ -4186,8 +4187,8 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: relative;
   float: left;
   width: 90%;
-  font-family: "HelvNeue Medium for IBM";
-  font-size: 1.4em;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.33em;
   line-height: 1.8em;
   color: #323232;
 }
@@ -4405,6 +4406,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 87%;
   position: relative;
   left: 5.4%;
+  color: #4d4d4d
 }
 
 .error-dup-team-name {
