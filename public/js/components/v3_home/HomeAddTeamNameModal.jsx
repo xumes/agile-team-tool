@@ -123,7 +123,7 @@ var HomeAddTeamNameModal = React.createClass({
               <textarea type='textarea' rows='15' id='newTeamDescription' name='newTeamDescription' ref='newTeamDescription' onChange={self.descriptionUpdate}  defaultValue={self.props.newTeamObj.description} />
             </div>
             
-            <div class='footer-note-add-team-name'><strong class="note1">NOTE:</strong>&nbsp;To join an existing team, please contact the Teams Iteration Manager or Owner to be added to the team"</div>
+            <div class='footer-note-add-team-name'><strong class="note1">NOTE:</strong>&nbsp;To join an existing team, please contact the Iteration Manager or Owner to be added to the team</div>
           </div>
 
           <HomeAddTeamFooterButtons buttonOptions={self.state.buttonOptions} openWindow={self.props.openWindow} />
