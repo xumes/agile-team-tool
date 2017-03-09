@@ -2082,6 +2082,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 /*Iteration section start*/
 #iterContent > div {
   height: 100%;
+  cursor: default;
 }
 
 .home-iter-title {
