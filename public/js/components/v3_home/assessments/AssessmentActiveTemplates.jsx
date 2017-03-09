@@ -34,15 +34,19 @@ var AssessmentActiveTemplates = React.createClass({
           var practiceId = assessedComponent.practiceId - 1 - practiceTotal;
           var currLevelId = assessedComponent.currentScore - 1;
           var targLevelId = assessedComponent.targetScore - 1;
-          var currLevelName = assessedComponent.currentLevelName;
-          var targLevelName = assessedComponent.targetLevelName;
+          var currLevelName = assessedComponent.currentLevelName==''?'---':assessedComponent.currentLevelName;
+          var targLevelName = assessedComponent.targetLevelName==''?'---':assessedComponent.targetLevelName;
           var currAssessId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_td_curr_' + currLevelId;
           var targAssessId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_td_targ_' + targLevelId;
           var levelLabelId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_ans';
           var textAreaId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_action';
           $('#' + currAssessId + ' .iradio_square-blue.curr').addClass('checked');
           $('#' + targAssessId + ' .iradio_square-blue.targ').addClass('checked');
-          $('#' + levelLabelId).html('Current: ' + currLevelName + ' | Target: ' + targLevelName);
+          if (currLevelName == '---' && targLevelName == '---') {
+            $('#' + levelLabelId).html('Not answered');
+          } else {
+            $('#' + levelLabelId).html('Current: ' + currLevelName + ' | Target: ' + targLevelName);
+          }
           $('#' + textAreaId).val(assessedComponent.improveDescription);
         });
       }
