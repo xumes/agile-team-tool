@@ -46,18 +46,22 @@ var HomeAddTeamTypeModal = React.createClass({
 
   setDefaultMember: function() {
     var self = this;
-    api.getUsersInfo(user.ldap.uid)
-      .then(function(result){
+    var userId = user.ldap.uid.toUpperCase();
+    api.getUserFromFacesByUid(userId)
+      .then(function(result) {
         var data = {
-          userId: result[0].userId,
-          email: result[0].email,
-          name: result[0].name,
+          userId: userId,
+          email: result[0]['email'].toLowerCase(),
+          name: result[0]['name'],
           role: _.isEqual(self.props.newTeamObj.type, 'squad') ? 'Iteration Manager' : 'Team Lead',
           allocation: 100,
-          location: result[0].location || '',
+          location: {site: result[0]['location']},
           workTime: 100
         };
+        console.log('HomeAddTeamTypeModal setDefaultMember data:', data);
         self.props.setTeamMember([data]);
+      }).catch(function(err){
+        console.log(err);
       });
   },
 

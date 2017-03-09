@@ -26,7 +26,6 @@ var HomeAddTeamMemberModal = React.createClass({
     // $('#tbl-members-data').scrollable(); // it wont work..table becomes messy!
     self.setState({facesPersonFullName: ''});
     self.disableNextButton();
-    self.setDefaultMember();
   },
 
   componentWillReceiveProps: function(newProps) {
@@ -121,23 +120,6 @@ var HomeAddTeamMemberModal = React.createClass({
     var buttonOptions = this.state.buttonOptions;
     buttonOptions.nextDisabled = '';
     this.setState({buttonOptions: buttonOptions});
-  },
-
-  setDefaultMember: function() {
-    var self = this;
-    api.getUsersInfo(user.ldap.uid)
-      .then(function(result){
-        var data = {
-          userId: result[0].userId,
-          email: result[0].email,
-          name: result[0].name,
-          role: _.isEqual(self.props.newTeamObj.type, 'squad') ? 'Iteration Manager' : 'Team Lead',
-          allocation: 100,
-          location: result[0].location || '',
-          workTime: 100
-        };
-        self.props.setTeamMember([data]);
-      });
   },
 
   render: function() {
