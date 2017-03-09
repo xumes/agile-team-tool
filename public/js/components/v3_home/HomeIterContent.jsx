@@ -6,6 +6,7 @@ var moment = require('moment');
 var business = require('moment-business');
 var HomeAddIteration = require('./HomeAddIteration.jsx');
 var HomeEditIteration = require('./HomeEditIteration.jsx');
+var TeamResetPopup = require('./TeamResetPopup.jsx');
 var Tooltip = require('react-tooltip');
 var utils = require('../utils.jsx');
 var selectedIter = new Object();
@@ -45,6 +46,8 @@ var HomeIterContent = React.createClass({
     return {
       createIteration: false,
       editIteration: false,
+      resetTeamAvailability: false,
+      teamAvailability: null,
       selectedField:'',
       selectedIter: new Object()
     }
@@ -147,10 +150,14 @@ var HomeIterContent = React.createClass({
     if (!this.state.editIteration)
       this.setState({editIteration: true});
   },
-
+  
   closeIteration: function(){
     this.setState({createIteration: false, editIteration: false});
-  },  
+  },
+
+  closeResetPopup: function(){
+    this.setState({resetTeamAvailability: false});
+  },
 
   isWithinIteration: function(starDate,endDate){
     var currDate = moment(new Date(), 'YYYY-MM-DD').utc();
@@ -303,36 +310,28 @@ var HomeIterContent = React.createClass({
     }
   },
 
-  resetTeamAvailability: function(){
-    
-    var self = this;
-    var selectedIter;
-    if (self.props.selectedIter != '') {
-       var iteration = _.find(self.props.loadDetailTeam.iterations, function(iter){
-          if (iter._id.toString() == self.props.selectedIter) {
-            return iter;
-          }
-        });
-        if (iteration != undefined){
-          selectedIter = _.clone(iteration);
-        }
-    }
-    else {
-      selectedIter = _.clone(self.props.loadDetailTeam.iterations[0]);
-    }
+  checkRecentTeamAvailbility: function(){
+    var selectedIter = this.state.selectedIter;
     var maxWorkDays = business.weekDays(moment(selectedIter.startDate, 'YYYY-MM-DD'),moment(selectedIter.endDate, 'YYYY-MM-DD'));
+    var teamAvailability = null;
+    var self = this;
     utils.getOptimumAvailability(maxWorkDays, selectedIter.teamId)
     .then(function(result){
-      if (confirm('You are about to overwrite the contents of ‘Optimum team availability’ with '+result+'.  Do you want to continue?')){
-        selectedIter.teamAvailability = result;
-        selectedIter.personDaysAvailable = (selectedIter.teamAvailability - self.float2Decimal(selectedIter.personDaysUnavailable)).toFixed(2);
-        self.props.updateTeamIteration(selectedIter);
-        self.setState({selectedField:''});
+      if (!self.state.resetTeamAvailability){
+        self.setState({teamAvailability: result, resetTeamAvailability: true});
       }
     })
     .catch(function(err){
       console.log(err);
-    });    
+    });
+  },
+
+  resetSprintAvailability: function(){
+    var selectedIter = this.state.selectedIter;
+    selectedIter.teamAvailability = this.state.teamAvailability;
+    selectedIter.personDaysAvailable = (this.float2Decimal(selectedIter.teamAvailability) - this.float2Decimal(selectedIter.personDaysUnavailable)).toFixed(2);
+    this.props.updateTeamIteration(selectedIter);
+    this.setState({selectedField:''});
   },
 
   getSelectedIteration: function(data){
@@ -484,9 +483,10 @@ var HomeIterContent = React.createClass({
                 <div class='home-iter-content-sub' data-tip='The calculated number of ‘person days’ available for this iteration based on team member’s allocation %, Full Time/Part Time/ Half time status and the length of the iteration.'>Optimum team availability (In days)</div>
                 <div id='optimumPoint' class='home-iter-content-point-uneditable'>{iterData.teamAvailability}</div>
                 <div class={access?'home-iter-team-availability':'home-iter-team-availability-disabled'}>
-                  <InlineSVG src={require('../../../img/Att-icons/att-icons_team-reset.svg')} data-tip='Reset your Sprint Availability based on your current Team Member structure.' onClick={this.resetTeamAvailability}></InlineSVG>
+                  <InlineSVG src={require('../../../img/Att-icons/att-icons_team-reset.svg')} data-tip='Reset your Sprint Availability based on your current Team Member structure.' onClick={this.checkRecentTeamAvailbility}></InlineSVG>
                 </div>
               </div>
+              <TeamResetPopup isOpen={this.state.resetTeamAvailability} onClose={this.closeResetPopup} teamAvailability={this.state.teamAvailability} updateTeamAvailability={this.resetSprintAvailability}/>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='The number of person days team members will be unavailable to work on team deliverables due to holidays, vacation/leave, education, illness.'>Person days unavailable</div>
                 {this.state.selectedField === 'personDaysUnavailable'?
