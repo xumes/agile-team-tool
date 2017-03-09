@@ -5,6 +5,7 @@ var _ = require('underscore');
 var moment = require('moment');
 var business = require('moment-business');
 var HomeAddIteration = require('./HomeAddIteration.jsx');
+var HomeEditIteration = require('./HomeEditIteration.jsx');
 var Tooltip = require('react-tooltip');
 var utils = require('../utils.jsx');
 var selectedIter = new Object();
@@ -43,6 +44,7 @@ var HomeIterContent = React.createClass({
   getInitialState: function() {
     return {
       createIteration: false,
+      editIteration: false,
       selectedField:'',
       selectedIter: new Object()
     }
@@ -53,19 +55,26 @@ var HomeIterContent = React.createClass({
       this.setState({selectedIter: data});
     }
   },
-  
+
+  componentWillReceiveProps: function(nextProps){
+    var prev = this.getSelectedIteration();
+    var next = this.getSelectedIteration(nextProps);
+    if (!_.isEqual(this.props.loadDetailTeam.iterations, nextProps.loadDetailTeam.iterations) ||
+     !_.isEqual(prev, next)){
+      this.setState({selectedIter: next});
+    }
+  },
+
   componentDidUpdate: function(prevProps, prevState) {
-    var data = this.getSelectedIteration();
-    if (!_.isEqual(data, this.state.selectedIter)){
-      if ((data != null && data != undefined) && ((data._id != this.state.selectedIter._id) )){
+    if (!_.isEmpty(this.state.selectedIter) && prevState.selectedIter._id != this.state.selectedIter._id
+    || !_.isEqual(this.props.loadDetailTeam.iterations, prevProps.loadDetailTeam.iterations)){
+      var data = this.getSelectedIteration();
         this.setState({selectedIter: data});
-      }
     }
     var self = this;
-    if (!($('#homeIterSelection').hasClass('select2-hidden-accessible'))) {
-           $('#homeIterSelection').select2({'width': '100%'});
-      $('#homeIterSelection').change(self.props.iterChangeHandler);
-    }
+    $('select[id="homeIterSelection"]').select2();
+    $('select[id="homeIterSelection"]').change(self.props.iterChangeHandler);
+
     _.each($('.home-iter-content-point'), function(blk){
       if (blk.id != '') {
         $('#'+blk.id).parent().children('.home-iter-content-btn').css('display','none')
@@ -119,10 +128,11 @@ var HomeIterContent = React.createClass({
     this.cancelChange(id);
   },
   saveIter: function(id) {
-    var iterationData = this.recalculate(id);
-    this.props.updateTeamIteration(iterationData);
-    this.setState({selectedField:'', selectedIter:iterationData});
-    
+    if ($('#'+id).val() != this.state.selectedIter[id]){
+      var iterationData = this.recalculate(id);
+      this.props.updateTeamIteration(iterationData);
+      this.setState({selectedField:'', selectedIter:iterationData});
+    }
   },
   cancelChange: function(id) {
     this.setState({selectedField:''});
@@ -133,15 +143,20 @@ var HomeIterContent = React.createClass({
       this.setState({createIteration: true});
   },
 
+  showEditIteration: function() {
+    if (!this.state.editIteration)
+      this.setState({editIteration: true});
+  },
+
   closeIteration: function(){
-    this.setState({createIteration: false});
-  },  
+    this.setState({createIteration: false, editIteration: false});
+  },
 
   isWithinIteration: function(starDate,endDate){
     var currDate = moment(new Date(), 'YYYY-MM-DD').utc();
     var endDate = moment(endDate, 'YYYY-MM-DD');
     var starDate = moment(starDate, 'YYYY-MM-DD');
-    
+
     return currDate.isBetween(starDate,endDate, null, "[]");
   },
 
@@ -201,7 +216,7 @@ var HomeIterContent = React.createClass({
     }
 
     return selectedIter;
-   
+
   },
 
   updateAvailability: function(selectedIter){
@@ -275,7 +290,7 @@ var HomeIterContent = React.createClass({
     if (!isNaN(value)) {
       value = value.toFixed(1);
       e.target.value = value;
-      this.saveBtnClickHandler(e.target.id);
+      this.saveIter(e.target.id);
     }
   },
 
@@ -284,12 +299,12 @@ var HomeIterContent = React.createClass({
     if (!isNaN(value)) {
       value = value.toFixed(2);
       e.target.value = value;
-      this.saveBtnClickHandler(e.target.id);
+      this.saveIter(e.target.id);
     }
   },
 
   resetTeamAvailability: function(){
-    
+
     var self = this;
     var selectedIter;
     if (self.props.selectedIter != '') {
@@ -317,13 +332,27 @@ var HomeIterContent = React.createClass({
     })
     .catch(function(err){
       console.log(err);
-    });    
+    });
   },
 
-  getSelectedIteration: function(){
+  getSelectedIteration: function(data){
     var self = this;
     var defIterId = null;
-      if (!_.isEmpty(self.props.loadDetailTeam.iterations) && self.props.loadDetailTeam.iterations.length > 0) {
+    if (data != null){
+      if (!_.isEmpty(data.loadDetailTeam.iterations) && data.loadDetailTeam.iterations.length > 0) {
+        if (data.selectedIter != '') {
+          defIterId = data.selectedIter;
+        } else {
+          defIterId = data.loadDetailTeam.iterations[0]._id.toString();
+        }
+        var defIter = _.find(data.loadDetailTeam.iterations, function(iter){
+          if (iter._id.toString() == defIterId) {
+            return iter;
+          }
+        });
+      }
+    }
+    else if (!_.isEmpty(self.props.loadDetailTeam.iterations) && self.props.loadDetailTeam.iterations.length > 0) {
         if (self.props.selectedIter != '') {
           defIterId = self.props.selectedIter;
         } else {
@@ -338,10 +367,17 @@ var HomeIterContent = React.createClass({
     return defIter;
   },
 
-  handleChange: function(e){    
+  handleChange: function(e){
     var temp = _.clone(this.state.selectedIter);
     temp[e.target.id] = e.target.value;
     this.setState({selectedIter:temp});
+  },
+
+  updateSelectedIteration: function(iterData){
+    if (!_.isEqual(this.state.selectedIter, selectedIter)){
+      this.setState({selectedIter:iterData});
+    }
+
   },
 
   render: function() {
@@ -354,12 +390,11 @@ var HomeIterContent = React.createClass({
       var access = this.props.loadDetailTeam.access;
       if (!_.isEmpty(self.props.loadDetailTeam.iterations) && self.props.loadDetailTeam.iterations.length > 0) {
         iterations = self.props.loadDetailTeam.iterations.map(function(iter){
-          iterName =iter.name + ' (' + moment(iter.startDate).format('DD MMM YYYY') + ' - ' + moment(iter.endDate).format('DD MMM YYYY') + ')';
+          iterName =iter.name;
           return (
             <option key={iter._id} value={iter._id}>{iterName}</option>
           )
         });
-        
         var defIter = this.state.selectedIter;
         var lastUpdatedBy = defIter.updatedBy;
         var lastUpdateTime = moment(defIter.updateDate).format('MMM DD YYYY');
@@ -385,6 +420,9 @@ var HomeIterContent = React.createClass({
           storyPointsDays = this.float2Decimal(defIter.storyPointsDelivered)/this.float2Decimal(iterData.personDaysAvailable);
           storyPointsDays = !isFinite(storyPointsDays) ? '0.0': storyPointsDays.toFixed(1);
         }
+        iterData.name = defIter.name;
+        iterData.startDate = moment(defIter.startDate).format('DD MMM YYYY');
+        iterData.endDate = moment(defIter.endDate).format('DD MMM YYYY');
         iterData.memberFte = (defIter.memberFte == null) ? '' : defIter.memberFte;
         iterData.committedStories = utils.numericValue(defIter.committedStories);
         iterData.deliveredStories = utils.numericValue(defIter.deliveredStories);
@@ -406,16 +444,29 @@ var HomeIterContent = React.createClass({
             <div class='home-iter-title'>Iteration Overview</div>
             <Tooltip html={true} type="light"/>
             <div class='home-iter-selection-block'>
-              <div class='iter-select'>
-                <select value={defIter._id} id='homeIterSelection' onChange={this.props.iterChangeHandler}>
+              <div class='home-iter-select'>
+                <select value={defIter._id} id='homeIterSelection' onChange={this.props.iterChangeHandler} ref="homeIterSelection">
                   {iterations}
                 </select>
               </div>
-              <div class='home-iter-add-btn-block' onClick={access?this.showAddIteration:''} style={{'cursor':'pointer'}}>
+              <div class={access?'home-iter-add-btn-block':'home-iter-add-btn-block-disabled'} onClick={access?this.showAddIteration:''} style={access?{'cursor':'pointer'}:{'cursor':'default'}}>
                 <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')} data-tip='Create New Iteration'></InlineSVG>
               </div>
             </div>
             <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={self.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
+
+            <div class='home-iter-name-block' style={{'height':'5%'}}>
+              <div class='home-iter-content-title' id='iteration-name'>{iterData.name}</div>
+              <div class='home-iter-team-date' id='iteration-date'>{iterData.startDate} - {iterData.endDate}</div>
+              <div class={access?'home-iter-edit-btn-block':'home-iter-edit-btn-block-disabled'} onClick={access?this.showEditIteration:''} style={access?{'cursor':'pointer'}:{'cursor':'default'}}>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons_edit.svg')} data-tip='Edit Iteration Name/Date'></InlineSVG>
+              </div>
+              <div class="ibm-rule ibm-alternate ibm-gray-30" style={{'width':'96%','marginTop':'1.5em'}}>
+                <hr />
+              </div>
+            </div>
+            <HomeEditIteration isOpen={this.state.editIteration} onClose={this.closeIteration} selectedIter={this.state.selectedIter} iterListHandler={this.props.iterListHandler}/>
+
             <div class='home-iter-last-update-block'>
               <div class='home-iter-last-update-title'>Last updated</div>
               <div class='home-iter-last-update'>
@@ -432,7 +483,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='The calculated number of ‘person days’ available for this iteration based on team member’s allocation %, Full Time/Part Time/ Half time status and the length of the iteration.'>Optimum team availability (In days)</div>
                 <div id='optimumPoint' class='home-iter-content-point-uneditable'>{iterData.teamAvailability}</div>
-                <div class='home-iter-team-availability'>
+                <div class={access?'home-iter-team-availability':'home-iter-team-availability-disabled'}>
                   <InlineSVG src={require('../../../img/Att-icons/att-icons_team-reset.svg')} data-tip='Reset your Sprint Availability based on your current Team Member structure.' onClick={this.resetTeamAvailability}></InlineSVG>
                 </div>
               </div>
@@ -447,7 +498,7 @@ var HomeIterContent = React.createClass({
                     <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'personDaysUnavailable')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
-                    <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'personDaysUnavailable')}>
+                    <div class='home-iter-content-btn' style={{'right':'-19.1%'}} onClick={this.cancelBtnClickHandler.bind(null, 'personDaysUnavailable')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                     </div>
                   </div>:''
@@ -469,7 +520,7 @@ var HomeIterContent = React.createClass({
                     <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'memberChanged')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
-                    <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'memberChanged')}>
+                    <div class='home-iter-content-btn' style={{'right':'-19.1%'}} onClick={this.cancelBtnClickHandler.bind(null, 'memberChanged')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                     </div>
                   </div>:''
@@ -499,7 +550,7 @@ var HomeIterContent = React.createClass({
                     <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'committedStories')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
-                    <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'committedStories')}>
+                    <div class='home-iter-content-btn' style={{'right':'-19.1%'}} onClick={this.cancelBtnClickHandler.bind(null, 'committedStories')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                     </div>
                   </div>:''
@@ -516,7 +567,7 @@ var HomeIterContent = React.createClass({
                     <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'deliveredStories')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
-                    <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'deliveredStories')}>
+                    <div class='home-iter-content-btn' style={{'right':'-19.1%'}} onClick={this.cancelBtnClickHandler.bind(null, 'deliveredStories')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                     </div>
                   </div>:''
@@ -546,7 +597,7 @@ var HomeIterContent = React.createClass({
                     <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'committedStoryPoints')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
-                    <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'committedStoryPoints')}>
+                    <div class='home-iter-content-btn' style={{'right':'-19.1%'}} onClick={this.cancelBtnClickHandler.bind(null, 'committedStoryPoints')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                     </div>
                   </div>:''
@@ -563,7 +614,7 @@ var HomeIterContent = React.createClass({
                     <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'storyPointsDelivered')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
-                    <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'storyPointsDelivered')}>
+                    <div class='home-iter-content-btn' style={{'right':'-19.1%'}} onClick={this.cancelBtnClickHandler.bind(null, 'storyPointsDelivered')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                     </div>
                   </div>:''
@@ -580,7 +631,7 @@ var HomeIterContent = React.createClass({
                     <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'deployments')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
-                    <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'deployments')}>
+                    <div class='home-iter-content-btn' style={{'right':'-19.1%'}} onClick={this.cancelBtnClickHandler.bind(null, 'deployments')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                     </div>
                   </div>:''
@@ -610,7 +661,7 @@ var HomeIterContent = React.createClass({
                     <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'defectsStartBal')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
-                    <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'defectsStartBal')}>
+                    <div class='home-iter-content-btn' style={{'right':'-19.1%'}} onClick={this.cancelBtnClickHandler.bind(null, 'defectsStartBal')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                     </div>
                   </div>:''
@@ -627,7 +678,7 @@ var HomeIterContent = React.createClass({
                     <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'defects')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
-                    <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'defects')}>
+                    <div class='home-iter-content-btn' style={{'right':'-19.1%'}} onClick={this.cancelBtnClickHandler.bind(null, 'defects')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                     </div>
                   </div>:''
@@ -644,7 +695,7 @@ var HomeIterContent = React.createClass({
                     <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'defectsClosed')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
-                    <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'defectsClosed')}>
+                    <div class='home-iter-content-btn' style={{'right':'-19.1%'}} onClick={this.cancelBtnClickHandler.bind(null, 'defectsClosed')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                     </div>
                   </div>:''
@@ -674,7 +725,7 @@ var HomeIterContent = React.createClass({
                     <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'cycleTimeWIP')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
-                    <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'cycleTimeWIP')}>
+                    <div class='home-iter-content-btn' style={{'right':'-19.1%'}} onClick={this.cancelBtnClickHandler.bind(null, 'cycleTimeWIP')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                     </div>
                   </div>:''
@@ -691,7 +742,7 @@ var HomeIterContent = React.createClass({
                     <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'cycleTimeInBacklog')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
-                    <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'cycleTimeInBacklog')}>
+                    <div class='home-iter-content-btn' style={{'right':'-19.1%'}} onClick={this.cancelBtnClickHandler.bind(null, 'cycleTimeInBacklog')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                     </div>
                   </div>:''
@@ -713,7 +764,7 @@ var HomeIterContent = React.createClass({
                     <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'clientSatisfaction')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
-                    <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'clientSatisfaction')}>
+                    <div class='home-iter-content-btn' style={{'right':'-19.1%'}} onClick={this.cancelBtnClickHandler.bind(null, 'clientSatisfaction')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                     </div>
                   </div>:''
@@ -730,7 +781,7 @@ var HomeIterContent = React.createClass({
                     <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'teamSatisfaction')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
-                    <div class='home-iter-content-btn' style={{'right':'-19%'}} onClick={this.cancelBtnClickHandler.bind(null, 'teamSatisfaction')}>
+                    <div class='home-iter-content-btn' style={{'right':'-19.1%'}} onClick={this.cancelBtnClickHandler.bind(null, 'teamSatisfaction')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                     </div>
                   </div>:''
@@ -750,12 +801,12 @@ var HomeIterContent = React.createClass({
             <div class='home-iter-title'>Iteration Overview</div>
             <Tooltip html={true} type="light"/>
             <div class='home-iter-selection-block'>
-              <div class='iter-select'>
+              <div class='home-iter-select'>
                 <select value={0} id='homeIterSelection'>
                   <option key={0} value={0}>{'No iteration results'}</option>
                 </select>
               </div>
-              <div class='home-iter-add-btn-block' onClick={access?this.showAddIteration:''} style={{'cursor':'pointer'}}>
+              <div class={access?'home-iter-add-btn-block':'home-iter-add-btn-block-disabled'} onClick={access?this.showAddIteration:''} style={access?{'cursor':'pointer'}:{'cursor':'default'}}>
                 <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')} data-tip='Create New Iteration'></InlineSVG>
               </div>
             </div>

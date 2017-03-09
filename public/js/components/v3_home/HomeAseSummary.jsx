@@ -31,11 +31,14 @@ var HomeAseSummary = React.createClass({
       $('.home-assessment-summary').css('background-position','150% 85%');
     }
     $('.home-assessment-summary').show();
-    $('.home-assessment-summary .select2').remove();
+    if ($('.home-assessment-summary .select2').length > 0) {
+      $('.home-assessment-summary .select2').remove();
+    }
     $('#pAsseSelect').off('change');
     $('#pAsseSelect').select2({'width':'100%'});
     $('#pAsseSelect').change(this.assessmentChangeHandler);
     if (self.props.loadDetailTeam != undefined && self.props.loadDetailTeam.assessments != undefined && self.props.loadDetailTeam.assessments.length > 0 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft') {
+      console.log('running');
       api.getTemplateByVersion(self.props.loadDetailTeam.assessments[0].version)
         .then(function(template){
           self.state.assessTemplate = template;
@@ -43,6 +46,8 @@ var HomeAseSummary = React.createClass({
         .catch(function(err){
           console.log(err);
         })
+    } else {
+      self.state.assessTemplate = self.state.activeTemplate;
     }
   },
   assessmentChangeHandler: function(e) {
@@ -136,7 +141,7 @@ var HomeAseSummary = React.createClass({
               <div>
                 <div class='third-title'>
                   <h1>{'Unfortunately drafts do not count towards your maturity assessment rating. Use a few more'}</h1>
-                  <h1>{'minutes to complete the assessment and we will give you an idea of where your team rates.'}</h1>
+                  <h1 style={{'top':'10%'}}>{'minutes to complete the assessment and we will give you an idea of where your team rates.'}</h1>
                 </div>
                 <div class='start-btn'>
                   <button type='button' onClick={self.showAssessmentPopover} class='ibm-btn-pri ibm-btn-blue-50' disabled={haveAccess}>{'Continue Assessment'}</button>
@@ -295,7 +300,7 @@ var HomeAseSummary = React.createClass({
             <div>
               <div class='third-title'>
                 <h1>{'The Agile Team Tool\'s purpose is to help you through the Agile Process.'}</h1>
-                <h1>{'Take the Agile Maturity Assessment often to see where your team should focus its efforts.'}</h1>
+                <h1 style={{'top':'10%'}}>{'Take the Agile Maturity Assessment often to see where your team should focus its efforts.'}</h1>
               </div>
               <div class='start-btn'>
                 <button type='button' class='ibm-btn-pri ibm-btn-blue-50' disabled={haveAccess}>{'Let\'s get started'}</button>
