@@ -2449,7 +2449,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .home-iter-modal-block-content > p {
   color: #4D4D4D;
   font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
-  font-size: 1.18em;
+  font-size: 1.15em;
   line-height: 1.3em;
   padding: 1.25em 2em;
 }

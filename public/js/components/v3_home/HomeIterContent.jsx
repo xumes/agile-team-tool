@@ -63,14 +63,13 @@ var HomeIterContent = React.createClass({
     var prev = this.getSelectedIteration();
     var next = this.getSelectedIteration(nextProps);
     if (!_.isEqual(this.props.loadDetailTeam.iterations, nextProps.loadDetailTeam.iterations) ||
-     !_.isEqual(prev, next)){
+     !_.isEqual(prev, next) || !_.isEqual(this.props.selectedIter, nextProps.selectedIter)){
       this.setState({selectedIter: next});
     }
   },
 
   componentDidUpdate: function(prevProps, prevState) {
-    if (!_.isEmpty(this.state.selectedIter) && prevState.selectedIter._id != this.state.selectedIter._id
-    || !_.isEqual(this.props.loadDetailTeam.iterations, prevProps.loadDetailTeam.iterations)){
+    if (!_.isEqual(this.props.loadDetailTeam.iterations, prevProps.loadDetailTeam.iterations)){
       var data = this.getSelectedIteration();
         this.setState({selectedIter: data});
     }
