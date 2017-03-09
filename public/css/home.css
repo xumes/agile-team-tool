@@ -5894,13 +5894,14 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   color: black;
 }
 
-.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .submit-date-selector > h2 {
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .submit-date-selector h2 {
   display: inline-block;
   padding: 0;
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
   line-height: 2.0em;
   color: #4178BE;
+  cursor: pointer;
 }
 
 .assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .last-updated-by {

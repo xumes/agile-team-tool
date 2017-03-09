@@ -4,6 +4,8 @@ var _ = require('underscore');
 var moment = require('moment');
 var ReactDOM = require('react-dom');
 var InlineSVG = require('svg-inline-react');
+var DatePicker = require('react-datepicker');
+var AssessmentDatePicker = require('./AssessmentDatePicker.jsx');
 var AssessmentActiveTemplates = require('./AssessmentActiveTemplates.jsx');
 var AssessmentButtons = require('./AssessmentButtons.jsx');
 
@@ -12,7 +14,8 @@ var AssessmentPopover = React.createClass({
     return {
       lcAssessTemplate: {},
       ddAssessTemplate: {},
-      isUpdate: true
+      isUpdate: true,
+      submitDatePicker: moment.utc(new Date())
     };
   },
   componentWillMount: function() {
@@ -55,6 +58,9 @@ var AssessmentPopover = React.createClass({
     $('#assessmentContainer' + id + ' a.ibm-twisty-trigger').removeClass('expand');
     $('#assessmentContainer' + id + ' .ibm-twisty-body').css('display','none');
   },
+  changeDateHandler: function(e) {
+    $('#assessmentSubmitDateTitle').html(moment.utc(e).format('DD MMM YYYY') + ' (');
+  },
   render: function() {
     var self = this;
     var assessDraft = {};
@@ -86,6 +92,7 @@ var AssessmentPopover = React.createClass({
       }
     } else {
       submitDate = moment.utc(assessDraft.submittedDate).format('DD MMM YYYY');
+      self.state.submitDatePicker = moment.utc(assessDraft.submittedDate);
       lastUpdatedBy = assessDraft.updatedBy;
       lastUpdated = ' (' + moment.utc(assessDraft.updateDate).format('DD MMM YYYY') + ')';
       assessType = $('#assessmentTeamTypeSelector').val() == undefined?assessDraft.type:$('#assessmentTeamTypeSelector').val();
@@ -134,8 +141,8 @@ var AssessmentPopover = React.createClass({
                 </select>
               </div>
               <div class='submit-date-selector'>
-                <h1>{submitDate + ' ('}</h1>
-                <h2 style={{'cursor':haveAccess?'none':'pointer'}}>{'override'}</h2>
+                <h1 id='assessmentSubmitDateTitle'>{submitDate + ' ('}</h1>
+                <DatePicker onChange={self.changeDateHandler} selected={self.state.submitDatePicker} customInput={<AssessmentDatePicker haveAccess={haveAccess}/>}/>
                 <h1>{')'}</h1>
               </div>
               <div class='last-updated-by'>
