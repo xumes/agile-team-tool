@@ -50,7 +50,7 @@ var HomeTeamHeader = React.createClass({
 
     $('.home-team-header-btn-img, #homeTeamHeaderBookmarkBtn, #teamBookmark, .home-team-header-btn-img2, #teamMemberTable').unbind('mouseenter mouseleave');
     // bookmarks button
-    $('.home-team-header-btn-img').bind('mouseenter', function() {
+    $('.home-team-header-btn-img, .home-team-header-btn-title').bind('mouseenter', function() {
       if ($('#teamBookmark').css('display') == 'none') {
         $('.home-team-header-btn-img svg > path').css('fill', '#325C80');
         $('.home-team-header-btn-title h').css('color', '#325C80');
@@ -66,7 +66,7 @@ var HomeTeamHeader = React.createClass({
       }
     });
     //members button
-    $('.home-team-header-btn-img2').bind('mouseenter', function() {
+    $('.home-team-header-btn-img2, .home-team-header-btn-title3').bind('mouseenter', function() {
       if ($('#teamMemberTable').css('display') == 'none') {
         $('.home-team-header-btn-img2 svg > path').css('fill', '#325C80');
         $('.home-team-header-btn-title3 h').css('color', '#325C80');
@@ -244,7 +244,7 @@ var HomeTeamHeader = React.createClass({
           <div class='home-team-header-btns-div'>
             <div id='homeTeamHeaderBookmarkBtn' class='home-team-header-btns'>
               <InlineSVG class='home-team-header-btn-img' onClick={self.showBookmark} src={require('../../../img/Att-icons/att-icons_main-nav-bookmark.svg')}></InlineSVG>
-              <div class='home-team-header-btn-title'>
+              <div class='home-team-header-btn-title' onClick={self.showBookmark}>
                 <h>Team Bookmarks</h>
               </div>
               <HomeBookmark loadDetailTeam={self.props.loadDetailTeam} closeBookmark={self.closeBookmark} updateTeamLink={self.props.updateTeamLink} />
@@ -258,7 +258,7 @@ var HomeTeamHeader = React.createClass({
             </div>*/}
             <div id='homeTeamHeaderMemberBtn' class='home-team-header-btns2'>
               <InlineSVG onClick={self.showTeamTable} class='home-team-header-btn-img2' src={require('../../../img/Att-icons/att-icons_main-nav-team.svg')}></InlineSVG>
-              <div class='home-team-header-btn-title3'>
+              <div class='home-team-header-btn-title3' onClick={self.showTeamTable}>
                 <h>Team Members</h>
               </div>
               <div class='home-team-header-btn-title2'>
