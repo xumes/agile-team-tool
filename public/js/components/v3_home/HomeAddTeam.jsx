@@ -52,14 +52,13 @@ var HomeAddTeam = React.createClass({
   },
 
   createNewTeam: function() {
-    this.setState({ newTeamObj: {} });
+    this.setState({newTeamObj: {type: 'null'}});
     this.openWindow('showTeamNameModal');
   },
 
   openWindow: function(screenName) {
     var self = this;
     screenName = screenName || self.state.currentScreen;
-    console.log('openWindow', screenName, self.state);
     if (screenName != '' && self.state.screenPropKey.indexOf(screenName) != -1) {
       var screenStatus = self.state.screenStatus;
       var currentScreen = self.state.currentScreen;
@@ -79,7 +78,6 @@ var HomeAddTeam = React.createClass({
   closeWindow: function() {
     var self = this;
     var screenName = self.state.currentScreen;
-    console.log('closeWindow', screenName, self.state);
     if (screenName != '' && self.state.screenPropKey.indexOf(screenName) != -1) {
       var screenStatus = self.state.screenStatus;
       screenStatus[screenName].active = false;
@@ -117,7 +115,6 @@ var HomeAddTeam = React.createClass({
   setTeamType: function(type) {
     var team = this.state.newTeamObj;
     team.type = type;
-    console.log('setTeamType', team);
     this.setState({ newTeamObj: team });
   },
 
@@ -129,7 +126,6 @@ var HomeAddTeam = React.createClass({
 
   setSelectedParentTeam: function(team) {
     this.setState({ selectedParentTeam: team });
-    console.log('setting parent team: '+JSON.stringify(this.state.selectedParentTeam));
   },
 
   setSelectedChildTeams: function(teams) {
@@ -144,7 +140,6 @@ var HomeAddTeam = React.createClass({
     api.postTeam(JSON.stringify(self.state.newTeamObj))
       .then(function(result) {
         currentTeam = result;
-        console.log('saveTeam currentTeam.pathId:',currentTeam.pathId);
         self.props.tabClickedHandler('',currentTeam.pathId);
         return result;
       })
@@ -152,11 +147,9 @@ var HomeAddTeam = React.createClass({
          //if there is parent:
          if (!_.isEmpty(self.state.selectedParentTeam))
          {
-          console.log('There is a parent - do association');
           api.associateTeam(self.state.selectedParentTeam._id, currentTeam._id)
            .then(function(result) {
-             console.log('after associate parents: ');
-           })
+           });
          }
          return result;
       })
@@ -164,16 +157,12 @@ var HomeAddTeam = React.createClass({
         //if there is child(ren):
          if (!_.isEmpty(self.state.selectedChildTeams)&& self.state.selectedChildTeams.length >0)
          {
-           console.log('There are children... prepare to associate');
            _.each(self.state.selectedChildTeams, function(childTeam) {
-             console.log('Pushing on promiseArray - childTeam id:'+childTeam._id);
              promiseArray.push(api.associateTeam(currentTeam._id, childTeam._id));
             });
 
             if (promiseArray.length > 0)
               Promise.all(promiseArray);
- 
-            console.log('Finish associate children - ');
          }
          self.closeWindow();
          alert('You have successfully added this team. ');
@@ -215,7 +204,6 @@ var HomeAddTeam = React.createClass({
       text: selectText
     }
     this.setState({selectedParentTeam: obj});
-    console.log('in onchange parent team dropdown'+JSON.stringify(this.state.selectedParentTeam));
   },
 
   render: function () {
