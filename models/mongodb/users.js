@@ -79,6 +79,17 @@ var UserSchema = new Schema(userSchema);
 var User = mongoose.model('users', UserSchema);
 
 var users = {
+  getAllUsers: function() {
+    return new Promise(function(resolve, reject) {
+      User.find({}).exec()
+        .then(function(users) {
+          resolve(users);
+        })
+        .catch(/*istanbul ignore next */ function(err) {
+          reject({'error': err});
+        });
+    });
+  },
   getAdmins: function() {
     return new Promise(function(resolve, reject) {
       var query = {

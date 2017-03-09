@@ -6,14 +6,27 @@ var request = require('request');
 var Promise = require('bluebird');
 var workerLogger = require('../middleware/logger').get('worker');
 
-
 schedule.scheduleJob('* * 2 * *', function() {
   var queryUser = function(user) {
     return new Promise(function(resolve) {
       var bluepagesURL = process.env.bluepagesURL;
       var requestURL = bluepagesURL + '/id/' + user.userId + '/uid';
       request(requestURL, function(err, response, body) {
-        if (response.statusCode == 404 && body.message == 'Unable to find record') {
+        var json;
+        try {
+          json = JSON.parse(body) ; // if the body is STRING, try to parse it
+        }
+        catch (err) {
+          if (err.statusCode) {
+            msg.statusCode = err.statusCode;
+          } else {
+            msg.statusCode = 400;
+          }
+          msg.message = err;
+          reject(msg);
+        }
+
+        if (response.statusCode == 404 && json.message == 'Unable to find record') {
           user.remove();
           workerLogger.info('User', user.email, 'unable to get Bluepages record');
         }

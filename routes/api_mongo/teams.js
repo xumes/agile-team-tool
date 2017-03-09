@@ -292,6 +292,18 @@ module.exports = function(app, includes) {
       });
   };
 
+  //checked - test case is coded
+  getAllRootTeamsSquadNonSquad = function(req, res) {
+    teamModel.getAllRootTeamsSquadNonSquad()
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        res.status(400).send(err);
+      });
+  };
+
+
   //checked
   getChildrenByPathId = function(req, res) {
     teamModel.getChildrenByPathId(req.params.pathId)
@@ -464,6 +476,9 @@ module.exports = function(app, includes) {
 
   // get all root teams
   app.get('/api/teams/lookup/rootteams/:uid?', [includes.middleware.auth.requireLogin], getAllRootTeams);
+
+  // get all root teams - for both squad and non-squad
+  app.get('/api/teams/lookup/allrootteamssquadnonsquad', [includes.middleware.auth.requireLogin], getAllRootTeamsSquadNonSquad);
 
   // get all standalone teams
   app.get('/api/teams/lookup/standalone/:uid?', [includes.middleware.auth.requireLogin], getStandaloneTeams);

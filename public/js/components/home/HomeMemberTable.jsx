@@ -7,12 +7,12 @@ var HomeMemberTable = React.createClass({
   },
   componentDidUpdate: function() {
     var self = this;
-    if (self.props.loadDetailTeam.team != undefined && self.props.loadDetailTeam.members != undefined && self.props.loadDetailTeam.members.length > 0) {
+    if (self.props.loadDetailTeam.team != undefined && self.props.loadDetailTeam.team.members != undefined && self.props.loadDetailTeam.team.members.length > 0) {
       $('#teamMemberTable').show();
       var members = _.sortBy(self.props.loadDetailTeam.team.members, function(member){
         return member.name.toLowerCase();
       });
-      var team = self.props.loadDetailTeam.team;
+      var team = self.props.loadDetailTeam.team;      
       self.updateMemberTable(members, team,self.props.loadDetailTeam.members);
     } else {
       $('#teamMemberTable').show();
@@ -43,7 +43,10 @@ var HomeMemberTable = React.createClass({
            }
          }
        });
-        var mLocation = self.toTitleCase(memberUserCollectionDetail.location.site);
+        var mLocation = '';
+        if (memberUserCollectionDetail != undefined)
+          mLocation = self.toTitleCase(memberUserCollectionDetail.location.site);
+
         var row = "<tr><td id='name_" + j + "'>" + member.name + '</td>';
         row = row + '<td>' + member.allocation + '</td>';
         row = row + "<td id='location_ref_" + j + "'>" + mLocation + "</div></td>";

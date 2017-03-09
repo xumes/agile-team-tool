@@ -276,12 +276,23 @@ var createPathId = function(teamName) {
 */
 //using for search filter in home page, regular expression for team name
 module.exports.searchTeamWithName = function(string) {
-  var searchQuery = {
-    'name': {
-      '$regex': new RegExp('.*' + string.toLowerCase() + '.*', 'i')
-    }, docStatus:{$ne:'delete'}
-  };
-  return Team.find(searchQuery).sort('name').exec();
+  return new Promise(function(resolve, reject) {
+    var searchQuery = {
+      'name': {
+        '$regex': new RegExp('.*' + string.toLowerCase() + '.*', 'i')
+      }, docStatus:{$ne:'delete'}
+    };
+    Team.find(searchQuery)
+      .then(function(result) {
+        result = _.sortBy(result, function(team) {
+          return team.name.toLowerCase();
+        });
+        resolve(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        reject(err);
+      });
+  });
 };
 
 //using for snapshot roll up data, get all non squads
@@ -369,7 +380,9 @@ module.exports.getRootTeams = function(uid) {
               returnTeams.push(newTeam);
             }
           });
-          returnTeams = _.sortBy(returnTeams, 'name');
+          returnTeams = _.sortBy(returnTeams, function(team) {
+            return team.name.toLowerCase();
+          });
           resolve(returnTeams);
         })
         .catch( /* istanbul ignore next */ function(err){
@@ -385,12 +398,25 @@ module.exports.getRootTeams = function(uid) {
         var res = _.filter(rootedTeams, function(team){
           return uniquePaths.indexOf(','+team.pathId+',') >= 0;
         });
-        res = _.sortBy(res, 'name');
+        res = _.sortBy(res, function(team) {
+          return team.name.toLowerCase();
+        });
         resolve(res);
       });
     }
   });
 };
+
+/**
+ * Get all root teams - regardless if it is squad or non-squad
+ * @param user email
+ * @return array of root teams
+ */
+module.exports.getAllRootTeamsSquadNonSquad = function() {
+  console.log ('In getAllRootTeamsSquadNonSquad:');
+  return Team.find({path: null, docStatus:{$ne:'delete'}}).sort('pathId').exec();
+};
+
 
 /**
  * If email is empty, get all standalone teams. Otherwise, get all user's standalone teams.
@@ -417,7 +443,9 @@ module.exports.getStandalone = function(uid) {
       var res = _.filter(rootedTeams, function(team){
         return uniquePaths.indexOf(','+team.pathId+',') < 0;
       });
-      res = _.sortBy(res, 'name');
+      res = _.sortBy(res, function(team) {
+        return team.name.toLowerCase();
+      });
       return res;
     });
   } else {
@@ -430,7 +458,9 @@ module.exports.getStandalone = function(uid) {
       var res = _.filter(rootedTeams, function(team){
         return uniquePaths.indexOf(','+team.pathId+',') < 0;
       });
-      res = _.sortBy(res, 'name');
+      res = _.sortBy(res, function(team) {
+        return team.name.toLowerCase();
+      });
       return res;
     });
   }
@@ -661,7 +691,9 @@ module.exports.getChildrenByPathId = function(pathId) {
             }
             returnTeams.push(newTeam);
           });
-          returnTeams = _.sortBy(returnTeams, 'name');
+          returnTeams = _.sortBy(returnTeams, function(team) {
+            return team.name.toLowerCase();
+          });
           resolve(returnTeams);
         })
         .catch( /* istanbul ignore next */ function(err){
@@ -714,7 +746,9 @@ module.exports.getAllChildrenOnPath = function(path) {
           });
           returnArray.push(returnTeams);
         });
-        returnTeams = _.sortBy(returnTeams, 'name');
+        returnTeams = _.sortBy(returnTeams, function(team) {
+          return team.name.toLowerCase();
+        });
         resolve(returnArray);
       })
       .catch( /* istanbul ignore next */ function(err){

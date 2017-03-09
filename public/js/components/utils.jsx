@@ -80,7 +80,7 @@ module.exports.showDateDDMMYYYYV2 = function(formatDate, withoutSpacing) {
     if (withoutSpacing) {
       format = 'DDMMMYYYY';
     }
-    var newDateFormate = moment(formatDate).format(format);
+    var newDateFormate = moment.utc(formatDate).format(format);
     return newDateFormate;
   }
 };
@@ -173,26 +173,26 @@ module.exports.setSelectOptions = function(elementId, listOption, firstOption, l
 };
 
 module.exports.handleIterationErrors = function (errorResponse) {
-    var errorlist = '';
-    var response = errorResponse.responseJSON;
+  var errorlist = '';
+  var response = errorResponse.responseJSON;
 
-    if (response && response.error) {
-      var errors = response.error.errors;
-      if (errors){
+  if (response && response.error) {
+    var errors = response.error.errors;
+    if (errors){
         // Return iteration errors as String
-        errorlist = this.getIterationErrorPopup(errors);
-        if (!_.isEmpty(errorlist)) {
-          alert(errorlist);
-        }
-      }
-      else {
-        this.setFieldErrorHighlight(response.error.path);
-        alert(response.error.message);
+      errorlist = this.getIterationErrorPopup(errors);
+      if (!_.isEmpty(errorlist)) {
+        alert(errorlist);
       }
     }
+    else {
+      this.setFieldErrorHighlight(response.error.path);
+      alert(response.error.message);
+    }
+  }
 };
 
- module.exports.getIterationErrorPopup = function(errors) {
+module.exports.getIterationErrorPopup = function(errors) {
   var errorLists = '';
   var self = this;
   // Model fields/Form element field
@@ -225,36 +225,36 @@ module.exports.handleIterationErrors = function (errorResponse) {
       self.clearFieldErrorHighlight(mdlField);
     }
   });
-    return errorLists;
-  };
+  return errorLists;
+};
 
 module.exports.clearHighlightedIterErrors = function () {
   var self = this;
   var fields = [
-      'name',
-      'startDate',
-      'endDate',
-      'committedStories',
-      'committedStoryPoints',
-      'personDaysUnavailable',
-      'deliveredStories',
-      'storyPointsDelivered',
-      'deployments',
-      'defectsStartBal',
-      'defects',
-      'defectsClosed',
-      'defectsEndBal',
-      'cycleTimeWIP',
-      'cycleTimeInBacklog',
-      'memberChanged',
-      'clientSatisfaction',
-      'teamSatisfaction'
-    ];
+    'name',
+    'startDate',
+    'endDate',
+    'committedStories',
+    'committedStoryPoints',
+    'personDaysUnavailable',
+    'deliveredStories',
+    'storyPointsDelivered',
+    'deployments',
+    'defectsStartBal',
+    'defects',
+    'defectsClosed',
+    'defectsEndBal',
+    'cycleTimeWIP',
+    'cycleTimeInBacklog',
+    'memberChanged',
+    'clientSatisfaction',
+    'teamSatisfaction'
+  ];
 
-    _.each(fields, function(field, index) {
-      self.clearFieldErrorHighlight(field);
-    });
-  };
+  _.each(fields, function(field, index) {
+    self.clearFieldErrorHighlight(field);
+  });
+};
 
 module.exports.toTitleCase = function(str) {
   if (_.isEmpty(str)) return '';
@@ -267,15 +267,22 @@ module.exports.toTitleCase = function(str) {
   }
 };
 
+module.exports.toLowerCase = function(str) {
+  if (_.isEmpty(str)) return str;
+  if (str) {
+    return str.toLowerCase();
+  }
+};
+
 module.exports.numericValue = function(data) {
-    var value = parseInt(data);
-    if (!isNaN(value)) {
-      return value;
-    }
-    else {
-      return 0;
-    }
-  };
+  var value = parseInt(data);
+  if (!isNaN(value)) {
+    return value;
+  }
+  else {
+    return 0;
+  }
+};
 
 module.exports.getOptimumAvailability = function(maxWorkDays, teamId){
   var self = this;
@@ -283,7 +290,7 @@ module.exports.getOptimumAvailability = function(maxWorkDays, teamId){
     api.loadTeam(teamId)
       .then(function(team){
         var members = self.getTeamMembers(team);
-        var availability = 0;      
+        var availability = 0;
         _.each(members, function(member){
           var allocation =  member.allocation/100;
           var avgWorkWeek = (member.workTime != null ? self.numericValue(member.workTime) : 100 )/100;
@@ -294,21 +301,63 @@ module.exports.getOptimumAvailability = function(maxWorkDays, teamId){
       .catch(function(err){
         return reject(err);
       });
-   });
-  };
+  });
+};
 
 module.exports.getTeamMembers = function(team){
-    var teamMembers = [];
-    if (!_.isEmpty(team) && team.members) {
-      _.each(team.members, function(member) {
-        var temp = _.find(teamMembers, function(item){
-          if( item.userId === member.userId)
-            return item;
-        });
-        if (temp === undefined) {
-          teamMembers.push(member);
-        }
+  var teamMembers = [];
+  if (!_.isEmpty(team) && team.members) {
+    _.each(team.members, function(member) {
+      var temp = _.find(teamMembers, function(item){
+        if ( item.userId === member.userId)
+          return item;
       });
-    }
-    return teamMembers;
-  };
+      if (temp === undefined) {
+        teamMembers.push(member);
+      }
+    });
+  }
+  return teamMembers;
+};
+
+/**
+ * Return an array of unique errors
+ *
+ * @param Array of errors
+ */
+module.exports.returnUniqErrors = function(errors) {
+  var err = [];
+  _.each(_.uniq(errors), function(v) {
+    err.push(v);
+  });
+  return err;
+};
+
+/**
+ * Highlight the field that has an error
+ *
+ * @param type of the field (such as role, allocation)
+ * @param index
+ */
+module.exports.highlightErrorField = function(type, divIdx) {
+  var elem;
+  if (type == 'role') {
+    $('.tbl-memberRole-results .tbl-members td.r_role').each(function() {
+      var idx = parseInt($(this).attr('data-index'));
+      var divId = $(this).children('div').attr('id');
+      if (idx === divIdx) {
+        $('#' + divId +' .Select-placeholder').css('border', '1px solid red');
+      }
+    });
+  }
+
+  if (type == 'allocation') {
+    $('.tbl-memberRole-results .tbl-members td.r_allocation').each(function() {
+      var idx = parseInt($(this).attr('data-index'));
+      var divId = $(this).find('.Select-value');
+      if (idx === divIdx) {
+        $(this).find('.Select-value').css('border', '1px solid red');
+      }
+    });
+  }
+}
