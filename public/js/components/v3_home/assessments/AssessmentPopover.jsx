@@ -11,7 +11,8 @@ var AssessmentPopover = React.createClass({
   getInitialState: function() {
     return {
       lcAssessTemplate: {},
-      ddAssessTemplate: {}
+      ddAssessTemplate: {},
+      isUpdate: true
     };
   },
   componentWillMount: function() {
@@ -26,24 +27,36 @@ var AssessmentPopover = React.createClass({
   },
   ttChangeHandler: function(e) {
     var self = this;
-    if (e.target.value == 'Project') {
-      self.setState({lcAssessTemplate: self.props.assessTemplate.components[0]});
-    } else {
-      self.setState({lcAssessTemplate: self.props.assessTemplate.components[1]});
-    }
+    self.setState({isUpdate: false});
   },
   stChangeHandler: function(e) {
     var self = this;
-    if (e.target.value == 'Yes') {
-      self.setState({ddAssessTemplate: self.props.assessTemplate.components[2]});
-    } else {
-      self.setState({ddAssessTemplate: {}});
-    }
+    self.setState({isUpdate: false});
+  },
+  showBlock: function(id) {
+    $('#showBlockBtn' + id).hide();
+    $('#hideBlockBtn' + id).show();
+    $('#assessmentContainer' + id).show();
+  },
+  hideBlock: function(id) {
+    $('#showBlockBtn' + id).show();
+    $('#hideBlockBtn' + id).hide();
+    $('#assessmentContainer' + id).hide();
+  },
+  expandAll: function(id) {
+    $('#assessmentContainer' + id + ' a.ibm-twisty-trigger').parent().addClass('ibm-active');
+    $('#assessmentContainer' + id + ' a.ibm-twisty-trigger').removeClass('collapse');
+    $('#assessmentContainer' + id + ' a.ibm-twisty-trigger').addClass('expand');
+    $('#assessmentContainer' + id + ' .ibm-twisty-body').css('display','block');
+  },
+  collapseAll: function(id) {
+    $('#assessmentContainer' + id + ' a.ibm-twisty-trigger').parent().removeClass('ibm-active');
+    $('#assessmentContainer' + id + ' a.ibm-twisty-trigger').addClass('collapse');
+    $('#assessmentContainer' + id + ' a.ibm-twisty-trigger').removeClass('expand');
+    $('#assessmentContainer' + id + ' .ibm-twisty-body').css('display','none');
   },
   render: function() {
     var self = this;
-    // console.log(self.props.loadDetailTeam);
-    // console.log(self.props.assessTemplate);
     var assessDraft = {};
     var lcAssessTemplate = {};
     var ddAssessTemplate = {};
@@ -136,17 +149,41 @@ var AssessmentPopover = React.createClass({
           <div class='header-title'>
             <h1>{'Leadership and Collaboration'}</h1>
           </div>
+          <div class='hideBlock-btn' id='hideBlockBtn1' style={{'display':'block'}} onClick={self.hideBlock.bind(null, '1')}>
+            <InlineSVG src={require('../../../../img/Att-icons/att-icons_show.svg')}></InlineSVG>
+          </div>
+          <div class='showBlock-btn' id='showBlockBtn1' style={{'display':'none'}} onClick={self.showBlock.bind(null, '1')}>
+            <InlineSVG src={require('../../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
+          </div>
+          <div class='collapseall-btn' onClick={self.collapseAll.bind(null, '1')}>
+            <InlineSVG src={require('../../../../img/Att-icons/att-icons_collapseall.svg')}></InlineSVG>
+          </div>
+          <div class='expandall-btn' onClick={self.expandAll.bind(null, '1')}>
+            <InlineSVG src={require('../../../../img/Att-icons/att-icons_expandall.svg')}></InlineSVG>
+          </div>
         </div>
         <div class='agile-maturity' id='assessmentContainer1'>
-          <AssessmentActiveTemplates assessTemplate={self.state.lcAssessTemplate} assessDraft={assessDraft} haveAccess={haveAccess} assessTemplateId={'0'}/>
+          <AssessmentActiveTemplates assessTemplate={self.state.lcAssessTemplate} assessDraft={assessDraft} haveAccess={haveAccess} assessTemplateId={'0'} isUpdate={self.state.isUpdate}/>
         </div>
         <div class='lc-header'>
           <div class='header-title'>
             <h1>{'Delivery and DevOps'}</h1>
           </div>
+          <div class='hideBlock-btn' id='hideBlockBtn2' style={{'display':'block'}} onClick={self.hideBlock.bind(null, '2')}>
+            <InlineSVG src={require('../../../../img/Att-icons/att-icons_show.svg')}></InlineSVG>
+          </div>
+          <div class='showBlock-btn' id='showBlockBtn2' style={{'display':'none'}} onClick={self.showBlock.bind(null, '2')}>
+            <InlineSVG src={require('../../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
+          </div>
+          <div class='collapseall-btn' onClick={self.collapseAll.bind(null, '2')}>
+            <InlineSVG src={require('../../../../img/Att-icons/att-icons_collapseall.svg')}></InlineSVG>
+          </div>
+          <div class='expandall-btn' onClick={self.expandAll.bind(null, '2')}>
+            <InlineSVG src={require('../../../../img/Att-icons/att-icons_expandall.svg')}></InlineSVG>
+          </div>
         </div>
         <div class='agile-maturity' id='assessmentContainer2'>
-          <AssessmentActiveTemplates assessTemplate={self.state.ddAssessTemplate} assessDraft={assessDraft} haveAccess={haveAccess} assessTemplateId={'1'}/>
+          <AssessmentActiveTemplates assessTemplate={self.state.ddAssessTemplate} assessDraft={assessDraft} haveAccess={haveAccess} assessTemplateId={'1'} isUpdate={self.state.isUpdate}/>
         </div>
         <AssessmentButtons assessDraft={assessDraft} haveAccess={haveAccess}/>
       </div>

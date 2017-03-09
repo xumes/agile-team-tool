@@ -5947,6 +5947,37 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   padding: 0;
 }
 
+.assessment-popover-block > .lc-header > .expandall-btn,
+.assessment-popover-block > .lc-header > .collapseall-btn {
+  position: relative;
+  float: right;
+  margin-right: 1%;
+  top: 40%;
+  width: 2%;
+  height: 50%;
+  cursor: pointer;
+}
+
+.assessment-popover-block > .lc-header > .showBlock-btn,
+.assessment-popover-block > .lc-header > .hideBlock-btn {
+  position: relative;
+  float: right;
+  top: 15%;
+  width: 3%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.assessment-popover-block > .lc-header > .expandall-btn svg,
+.assessment-popover-block > .lc-header > .collapseall-btn svg,
+.assessment-popover-block > .lc-header > .showBlock-btn svg,
+.assessment-popover-block > .lc-header > .hideBlock-btn svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
 .assessment-popover-block > .agile-maturity {
   position: relative;
   float: left;
@@ -6127,6 +6158,48 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .assessment-popover-block > .agile-maturity .agile-table-textarea:hover {
   background-color: #c0e6ff;
+}
+
+.assessment-popover-block > .agile-maturity a.expand::before {
+  content: "\f340";
+  display: inline-block;
+  font-family: "icons-ibm-v9";
+  font-size: 1.4em;
+  line-height: 0.8em;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  left: 0.2em;
+  position: absolute;
+  text-decoration: none;
+  speak: none;
+  text-decoration: none;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+}
+
+.assessment-popover-block > .agile-maturity a.collapse::before {
+  content: "\f34d";
+  display: inline-block;
+  font-family: "icons-ibm-v9";
+  font-size: 1.4em;
+  line-height: 0.8em;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  left: 0.2em;
+  position: absolute;
+  text-decoration: none;
+  speak: none;
+  text-decoration: none;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
 }
 
 .assessment-popover-block > .assessment-btns {

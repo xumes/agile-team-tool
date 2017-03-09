@@ -38,7 +38,6 @@ var HomeAseSummary = React.createClass({
     $('#pAsseSelect').select2({'width':'100%'});
     $('#pAsseSelect').change(this.assessmentChangeHandler);
     if (self.props.loadDetailTeam != undefined && self.props.loadDetailTeam.assessments != undefined && self.props.loadDetailTeam.assessments.length > 0 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft') {
-      console.log('running');
       api.getTemplateByVersion(self.props.loadDetailTeam.assessments[0].version)
         .then(function(template){
           self.state.assessTemplate = template;
@@ -148,7 +147,7 @@ var HomeAseSummary = React.createClass({
                 </div>
               </div>
               <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAssessmentPopover}>
-                <div>22222</div>
+                <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate = {self.state.assessTemplate}/>
               </Modal>
             </div>
           )
@@ -303,9 +302,12 @@ var HomeAseSummary = React.createClass({
                 <h1 style={{'top':'10%'}}>{'Take the Agile Maturity Assessment often to see where your team should focus its efforts.'}</h1>
               </div>
               <div class='start-btn'>
-                <button type='button' class='ibm-btn-pri ibm-btn-blue-50' disabled={haveAccess}>{'Let\'s get started'}</button>
+                <button onClick={self.showAssessmentPopover} type='button' class='ibm-btn-pri ibm-btn-blue-50' disabled={haveAccess}>{'Let\'s get started'}</button>
               </div>
             </div>
+            <Modal aria-labelledby='modal-label' tabIndex='10' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAssessmentPopover}>
+              <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate = {self.state.assessTemplate}/>
+            </Modal>
           </div>
         )
       }
