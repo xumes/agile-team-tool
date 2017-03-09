@@ -23,6 +23,7 @@ var HomeAddTeamMemberRole = React.createClass({
         prevScreen: 'showTeamMemberModal',
         prevDisabled: '',
         nextScreen: '',
+        finishDisabled: 'disabled',
         nextDisabled: ''  //TODO: disabled
       },
       defaultRoles: [],
@@ -43,18 +44,17 @@ var HomeAddTeamMemberRole = React.createClass({
 
   disableFinishButton: function() {
     var buttonOptions = this.state.buttonOptions;
-    buttonOptions.nextDisabled = 'disabled';
+    buttonOptions.finishDisabled = 'disabled';
     this.setState({buttonOptions: buttonOptions});
   },
 
   enableFinishButton: function() {
     var buttonOptions = this.state.buttonOptions;
-    buttonOptions.nextDisabled = '';
+    buttonOptions.finishDisabled = '';
     this.setState({buttonOptions: buttonOptions});
   },
 
   show: function() {
-    // $('#addTeamMemberRoleBlock select').select2({'dropdownParent':$('#addTeamMemberRoleBlock')});
     var self = this;
     var tmproles = self.props.roles;
     var memRole = _.pluck(self.props.newTeamObj.members, 'role');
@@ -67,6 +67,7 @@ var HomeAddTeamMemberRole = React.createClass({
       });
       this.setState({defaultRoles: tmproles});
     }
+    self.disableFinishButton();
   },
 
   selectHandler: function(ref, data) {
