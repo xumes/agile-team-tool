@@ -1053,6 +1053,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   left: 5%;
   display: inline-block;
   float: left;
+  cursor: pointer;
 }
 
 .home-team-header-btn-title2 {
@@ -1096,6 +1097,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   color: #FFFFFF;
   display: inline-block;
   float: left;
+  cursor: pointer;
 }
 
 .home-team-header-members-div {
@@ -1906,6 +1908,14 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
   transform: rotate(180deg);
 }
+
+.home-chart-filter-arrow-right {
+  display: inline;
+  float: right;
+  height: 15%;
+  width: 5%;
+}
+
 .home-chart-filter-arrow-img svg {
   position: relative;
   right: 85%;
@@ -4105,8 +4115,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   top: 100%;
   left: 5%;
-  font-family: "HelvNeue Roman for IBM";
-  font-size: 2.5em;
+  font-family: "HelvNeue Light for IBM";
+  font-size: 2.08em;
+  color: #323232;
 }
 .new-team-creation-add-block-header > span {
   position: relative;
@@ -4145,8 +4156,8 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   height: 40%;
   width: 50%;
-  font-family: "HelvNeue Medium for IBM";
-  font-size: 1.4em;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.33em;
   line-height: 1.8em;
   color: #323232;
 }
@@ -4176,8 +4187,8 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: relative;
   float: left;
   width: 90%;
-  font-family: "HelvNeue Medium for IBM";
-  font-size: 1.4em;
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.33em;
   line-height: 1.8em;
   color: #323232;
 }
@@ -4395,6 +4406,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 87%;
   position: relative;
   left: 5.4%;
+  color: #4d4d4d
 }
 
 .error-dup-team-name {
