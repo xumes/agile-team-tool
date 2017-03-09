@@ -28,13 +28,30 @@ var AssessmentPopover = React.createClass({
   },
   componentDidUpdate: function() {
   },
-  ttChangeHandler: function(e) {
+  updateAssessmentPopover: function() {
     var self = this;
-    self.setState({isUpdate: false});
+    $('#assessmentTeamTypeSelector').off('change');
+    $('#assessmentSoftwareTypeSelector').off('change');
+    if (self.props.loadDetailTeam.assessments.length > 0 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft') {
+      $('#assessmentTeamTypeSelector').val(self.props.loadDetailTeam.assessments[0].type).change();
+      $('#assessmentSoftwareTypeSelector').val(self.props.loadDetailTeam.assessments[0].deliversSoftware?'Yes':'No').change();
+      $('#assessmentSubmitDateTitle').html(moment.utc(self.props.loadDetailTeam.assessments[0].submitDate).format('DD MMM YYYY'));
+      self.state.submitDatePicker = moment.utc(self.props.loadDetailTeam.assessments[0].submitDate);
+    } else {
+      $('#assessmentTeamTypeSelector').val('Project').change();
+      $('#assessmentSoftwareTypeSelector').val('Yes').change();
+      $('#assessmentSubmitDateTitle').html('On Submission');
+      self.state.submitDatePicker = moment.utc(new Date());
+    }
+    $('#assessmentTeamTypeSelector').change(this.ttChangeHandler);
+    $('#assessmentSoftwareTypeSelector').change(this.stChangeHandler);
+    self.setState({isUpdate: true});
+  },
+  ttChangeHandler: function(e) {
+    this.setState({isUpdate: false});
   },
   stChangeHandler: function(e) {
-    var self = this;
-    self.setState({isUpdate: false});
+    this.setState({isUpdate: false});
   },
   showBlock: function(id) {
     $('#showBlockBtn' + id).hide();
@@ -59,7 +76,7 @@ var AssessmentPopover = React.createClass({
     $('#assessmentContainer' + id + ' .ibm-twisty-body').css('display','none');
   },
   changeDateHandler: function(e) {
-    $('#assessmentSubmitDateTitle').html(moment.utc(e).format('DD MMM YYYY') + ' (');
+    $('#assessmentSubmitDateTitle').html(moment.utc(e).format('DD MMM YYYY'));
   },
   render: function() {
     var self = this;
@@ -91,8 +108,12 @@ var AssessmentPopover = React.createClass({
         self.state.ddAssessTemplate = {};
       }
     } else {
-      submitDate = moment.utc(assessDraft.submittedDate).format('DD MMM YYYY');
-      self.state.submitDatePicker = moment.utc(assessDraft.submittedDate);
+      if (assessDraft.submittedDate == '') {
+        submitDate = 'On Submisson';
+      } else {
+        submitDate = moment.utc(assessDraft.submittedDate).format('DD MMM YYYY');
+        self.state.submitDatePicker = moment.utc(assessDraft.submittedDate);
+      }
       lastUpdatedBy = assessDraft.updatedBy;
       lastUpdated = ' (' + moment.utc(assessDraft.updateDate).format('DD MMM YYYY') + ')';
       assessType = $('#assessmentTeamTypeSelector').val() == undefined?assessDraft.type:$('#assessmentTeamTypeSelector').val();
@@ -141,9 +162,10 @@ var AssessmentPopover = React.createClass({
                 </select>
               </div>
               <div class='submit-date-selector'>
-                <h1 id='assessmentSubmitDateTitle'>{submitDate + ' ('}</h1>
+                <h1 id='assessmentSubmitDateTitle'>{submitDate}</h1>
+                <h1 style={{'display':haveAccess?'none':'inline-block'}}>{' ('}</h1>
                 <DatePicker onChange={self.changeDateHandler} selected={self.state.submitDatePicker} customInput={<AssessmentDatePicker haveAccess={haveAccess}/>}/>
-                <h1>{')'}</h1>
+                <h1 style={{'display':haveAccess?'none':'inline-block'}}>{')'}</h1>
               </div>
               <div class='last-updated-by'>
                 <h1>{lastUpdatedBy}</h1>
@@ -192,7 +214,7 @@ var AssessmentPopover = React.createClass({
         <div class='agile-maturity' id='assessmentContainer2'>
           <AssessmentActiveTemplates assessTemplate={self.state.ddAssessTemplate} assessDraft={assessDraft} haveAccess={haveAccess} assessTemplateId={'1'} isUpdate={self.state.isUpdate}/>
         </div>
-        <AssessmentButtons assessDraft={assessDraft} haveAccess={haveAccess}/>
+        <AssessmentButtons loadDetailTeam={self.props.loadDetailTeam} assessDraft={assessDraft} haveAccess={haveAccess} updateAssessmentSummary={self.props.updateAssessmentSummary} updateAssessmentPopover={self.updateAssessmentPopover} hideAssessmentPopover={self.props.hideAssessmentPopover} />
       </div>
     )
   }
