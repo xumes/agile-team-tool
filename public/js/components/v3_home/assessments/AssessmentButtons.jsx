@@ -18,10 +18,10 @@ var AssessmentButtons = React.createClass({
     //var assessId = self.props.assessmentStatus.assessId;
     var teamId = self.props.loadDetailTeam.team._id;
     var submittedDate = $('#submitDatePicker').val();
-    if ($('#assessmentSubmitDateTitle').val() == 'On Submission') {
+    if ($('#assessmentSubmitDateTitle').html() == 'On Submission') {
       var submittedDate = ''
     } else {
-      submittedDate = new Date(moment.utc($('#assessmentSubmitDateTitle').val(), 'DD MMM YYYY'));
+      submittedDate = new Date(moment.utc($('#assessmentSubmitDateTitle').html(), 'DD MMM YYYY'));
     }
     var updateDoc = {
       'assessmentStatus' : 'Submitted',
@@ -86,10 +86,10 @@ var AssessmentButtons = React.createClass({
     var software = $('#assessmentSoftwareTypeSelector').val();
     // var assessId = self.props.assessmentStatus.assessId;
     var teamId = self.props.loadDetailTeam.team._id;
-    if ($('#assessmentSubmitDateTitle').val() == 'On Submission') {
+    if ($('#assessmentSubmitDateTitle').html() == 'On Submission') {
       var submittedDate = ''
     } else {
-      submittedDate = new Date(moment.utc($('#assessmentSubmitDateTitle').val(), 'DD MMM YYYY'));
+      submittedDate = new Date(moment.utc($('#assessmentSubmitDateTitle').html(), 'DD MMM YYYY'));
     }
     var updateDoc = {
       'assessmentStatus' : 'Draft',
