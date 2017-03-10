@@ -42,7 +42,6 @@ var HomeAddTeamNameModal = React.createClass({
   },
   nameUpdate: function() {
     var self = this;
-    console.log('nameUpdate');
     var newTeamName = self.refs.newTeamName.value.toLowerCase().replace(/[^a-z0-9]/g, '');
     var newTeamDesc = self.refs.newTeamDescription.value;
     var team = _.find(self.state.teams, function(team) {
@@ -72,7 +71,6 @@ var HomeAddTeamNameModal = React.createClass({
   },
   descriptionUpdate: function() {
     var self = this;
-    console.log('descriptionUpdate');
     self.props.setTeamNameDesc(self.refs.newTeamName.value, self.refs.newTeamDescription.value);
 
    if (_.isEmpty(self.refs.newTeamName.value) || _.isEmpty(self.refs.newTeamDescription.value)) {
