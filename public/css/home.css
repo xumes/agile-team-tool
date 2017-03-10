@@ -4092,16 +4092,16 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 /** New Team Creation - Begin */
 .new-team-creation-add-block, .new-team-creation-addteam-member {
+  background-color: #ffffff;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.16);
   display: block;
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  max-width: 63rem;
-  min-width: 63rem;
   height: 14vw;
+  left: 50%;
+  max-width: 68rem;
   min-height: 43rem;
-  background-color: #FFFFFF;
-  box-shadow: 0 0 10px 0 rgba(0,0,0,0.16);
+  min-width: 68rem;
+  position: fixed;
+  top: 50%;
   transform: translate(-50%, -50%);
 }
 
@@ -4874,12 +4874,12 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .new-team-creation-addteam-member .tbl-members tbody td.name {
-  width: 11.6em;
+  width: 17em;
 }
 
 .new-team-creation-addteam-member .tbl-members tbody td.email {
-  width: 10.8em;
-  background-color: #F2F2F2;
+  background-color: #f2f2f2;
+  width: 14.8em;
 }
 
 .new-team-creation-addteam-member .tbl-members tbody td.email span.email {
@@ -4891,7 +4891,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .new-team-creation-addteam-member .tbl-members tbody td.location {
-  width: 15em;
+  width: 22em;
 }
 
 .new-team-creation-addteam-member .tbl-members .delete-ico {
@@ -5008,7 +5008,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_location, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_location{
-  width: 8em;
+  width: 10em;
   background: none;
 }
 #addTeamMemberRoleBlock .tbl-memberRole-results td.r_location {
@@ -5017,17 +5017,17 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_role, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_role {
-  width: 11em;
+  width: 13em;
   vertical-align: top;
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_allocation, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_allocation {
-  width: 1em;
+  width: 5em;
   vertical-align: top;
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_workweek, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_workweek {
-  width: 7em;
+  width: 10em;
   vertical-align: top;
 }
 

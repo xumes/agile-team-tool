@@ -16,7 +16,8 @@ var HomeAddTeamMemberFaces = React.createClass({
           headerLabel: 'People',
           onclick: function(person) {
             self.props.updateFacesObj(person);
-            return person['name'];
+            self.props.addTeamMember();
+            // return person['name'];
           }
         },
         topsearch: {
@@ -32,9 +33,6 @@ var HomeAddTeamMemberFaces = React.createClass({
       <div>
         <label for='txtTeamMemberName' class='frmlabel'>Add Team Members manually</label>
         <input type='text' name='txtTeamMemberName' id='txtTeamMemberName' size='32' placeholder='ex. John Smith or smith@xx.ibm.com' onChange={self.props.changeHandlerFacesFullname} />
-        <div class='btn-addmember'>
-          <InlineSVG onClick={self.props.addTeamMember} src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
-        </div>
         <span id='txtTeamMemberNameError' class='ibm-item-note'></span>
       </div>
     );
