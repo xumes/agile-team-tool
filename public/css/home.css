@@ -1639,7 +1639,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   left: 8%;
   border: 0.2em solid #4178BE;
   cursor: pointer;
-  margin-top: 0.5em;
+  margin-top: 25%;
 }
 
 .team-member-table-add-btn > h {
@@ -2079,8 +2079,10 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   /*border-top: 0.1em solid #C7C7C7;*/
 }
 
+/*Iteration section start*/
 #iterContent > div {
   height: 100%;
+  cursor: default;
 }
 
 .home-iter-title {
@@ -2162,14 +2164,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   height: 1.7em;
   font-size: 0.9em;
 }
-
-/*.home-iter-selection-block > select {
-  position: relative;
-  float: left;
-  display: inline-block;
-  width: 80%;
-  height: 100%;
-}*/
 
 .home-iter-add-btn-block, .home-iter-add-btn-block-disabled {
   position: relative;
@@ -2363,10 +2357,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   color: #777677;
 }
 
-/*.home-iter-content-point:hover {
-  background-color: #FFFFFF;
-  border: 0.1em solid #4178BE;
-}*/
 .home-iter-content-point-hover:hover{
   background-color: #FFFFFF;
   border: 0.1em solid #4178BE;
@@ -2424,6 +2414,58 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   border: 0.1em solid #979797;
   background-color: #FFFFFF;
 }
+
+.home-iter-modal-block-header {
+  background-color: #4178be;
+  font-size: inherit;
+  height: 2.5em;
+  position: relative;
+  width: 100%;
+}
+
+.home-iter-modal-block-header > h {
+  color: #ffffff;
+  font-size: inherit;
+  font-family: "HelvNeue Bold for IBM";
+  height: 100%;
+  padding-left: 1.5em;
+  position: relative;
+  top: 25%;
+}
+
+.home-iter-modal-block-close-btn {
+  cursor: pointer;
+  display: inline-block;
+  float: right;
+  height: inherit;
+  position: relative;
+  top: 27%;
+  width: 6%;
+  padding-right:1.5em;
+}
+
+.home-iter-modal-block-close-btn i svg polygon {
+  stroke: #ffffff;
+}
+
+.home-iter-modal-block-close-btn g {
+  opacity: 1;
+}
+
+.home-iter-modal-block-content {
+  font-size: inherit;
+  height: 80%;
+  position: relative;
+}
+.home-iter-modal-block-content > p {
+  color: #4D4D4D;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 1.15em;
+  line-height: 1.3em;
+  padding: 1.25em 2em;
+}
+
+/*Iteration section end*/
 
 .home-team-header-bgimage-block {
   width: 50%;
