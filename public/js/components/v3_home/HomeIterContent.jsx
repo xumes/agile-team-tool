@@ -71,10 +71,12 @@ var HomeIterContent = React.createClass({
   componentDidUpdate: function(prevProps, prevState) {
     if (!_.isEqual(this.props.loadDetailTeam.iterations, prevProps.loadDetailTeam.iterations)){
       var data = this.getSelectedIteration();
-      this.setState({selectedIter: data});
+      this.setState({selectedIter: data}, function(){
+        $('select[id="homeIterSelection"]').select2();
+      });
     }
     var self = this;
-    $('select[id="homeIterSelection"]').select2();
+    
     $('select[id="homeIterSelection"]').change(self.iterationSelectChange);
 
     _.each($('.home-iter-content-point'), function(blk){
