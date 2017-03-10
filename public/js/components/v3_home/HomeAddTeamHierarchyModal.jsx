@@ -225,7 +225,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
 
                     <div class="optsel-parent" style={selparent1Style} id="optsel-parent">     
                       <select name="pc-hier-selparent" id="pc-hier-selparent" class="pc-hier-selparent" defaultValue='NA'>
-                        <option key='NA' value='NA'>Select parent team</option>
+                        <option key='NA' value='NA'>Select parent team (Optional)</option>
                         <option key='NoParent' value='NoParent'>Top tier / Not Listed</option>
                         {populateParentTeamNames}
                       </select>
