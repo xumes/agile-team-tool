@@ -13,15 +13,15 @@ var AssessmentButtons = React.createClass({
 
   submitAssess: function() {
     var self = this;
-    var assessType = $('#teamTypeSelectList').val();
-    var software = $('#softwareYesNo').val();
+    var assessType = $('#assessmentTeamTypeSelector').val();
+    var software = $('#assessmentSoftwareTypeSelector').val();
     //var assessId = self.props.assessmentStatus.assessId;
-    var teamId = $('select[name=\'teamSelectList\']').val();
+    var teamId = self.props.loadDetailTeam.team._id;
     var submittedDate = $('#submitDatePicker').val();
-    if ($('#submitDatePicker').val() == '') {
+    if ($('#assessmentSubmitDateTitle').html() == 'On Submission') {
       var submittedDate = ''
     } else {
-      submittedDate = new Date(moment.utc($('#submitDatePicker').val(), 'DDMMMYYYY'));
+      submittedDate = new Date(moment.utc($('#assessmentSubmitDateTitle').html(), 'DD MMM YYYY'));
     }
     var updateDoc = {
       'assessmentStatus' : 'Submitted',
@@ -58,20 +58,21 @@ var AssessmentButtons = React.createClass({
     if (checkedIsEmpty) {
       return alert('All assessment maturity practices need to be answered.  See highlighted practices in yellow.');
     }
-    if (_.isEmpty(self.props.assessment.assessment)) {
+    if (_.isEmpty(self.props.assessDraft)) {
       var req = api.addAssessment(updateDoc);
     } else {
-      updateDoc['_id'] = self.props.assessment.assessment._id;
+      updateDoc['_id'] = self.props.assessDraft._id;
       req = api.updateAssessment(updateDoc);
     }
     req.then(function(result){
+      if (_.isEmpty(self.props.assessDraft)) {
+        self.props.loadDetailTeam.assessments.unshift(result);
+      } else {
+        self.props.loadDetailTeam.assessments[0] = result;
+      }
+      self.props.updateAssessmentSummary();
+      self.props.hideAssessmentPopover();
       alert('Maturity assessment has been submitted.');
-      $('select[name=\'teamSelectList\']').val(self.props.assessment.teamId).change();
-      setTimeout(function(){
-        console.log(result._id);
-        $('select[name=\'assessmentSelectList\']').val(result._id).change();
-      },1500);
-
       return;
     }).catch(function(err){
       alert(err);
@@ -81,14 +82,14 @@ var AssessmentButtons = React.createClass({
 
   saveDraft: function() {
     var self = this;
-    var assessType = $('#teamTypeSelectList').val();
-    var software = $('#softwareYesNo').val();
+    var assessType = $('#assessmentTeamTypeSelector').val();
+    var software = $('#assessmentSoftwareTypeSelector').val();
     // var assessId = self.props.assessmentStatus.assessId;
-    var teamId = $('select[name=\'teamSelectList\']').val();
-    if ($('#submitDatePicker').val() == '') {
+    var teamId = self.props.loadDetailTeam.team._id;
+    if ($('#assessmentSubmitDateTitle').html() == 'On Submission') {
       var submittedDate = ''
     } else {
-      submittedDate = new Date(moment.utc($('#submitDatePicker').val(), 'DDMMMYYYY'));
+      submittedDate = new Date(moment.utc($('#assessmentSubmitDateTitle').html(), 'DD MMM YYYY'));
     }
     var updateDoc = {
       'assessmentStatus' : 'Draft',
@@ -115,20 +116,21 @@ var AssessmentButtons = React.createClass({
     if (p2N) {
       self.getUpdateDoc(1, p2N, checkedCurrs, checkedTargs, updateDoc);
     }
-    if (_.isEmpty(self.props.assessment.assessment)) {
+    if (_.isEmpty(self.props.assessDraft)) {
       var req = api.addAssessment(updateDoc);
     } else {
-      updateDoc['_id'] = self.props.assessment.assessment._id;
+      updateDoc['_id'] = self.props.assessDraft._id;
       req = api.updateAssessment(updateDoc);
     }
     req.then(function(result){
-      alert('Maturity assessment has been saved as draft.');
-      //$('select[name=\'teamSelectList\']').val(teamId).change();
-      if (_.isEmpty(self.props.assessment.assessment)) {
-        $('select[name=\'teamSelectList\']').val(self.props.assessment.teamId).change();
+      if (_.isEmpty(self.props.assessDraft)) {
+        self.props.loadDetailTeam.assessments.unshift(result);
       } else {
-        $('select[name=\'teamSelectList\']').val(self.props.assessment.teamId).change();
+        self.props.loadDetailTeam.assessments[0] = result;
       }
+      self.props.updateAssessmentSummary();
+      self.props.hideAssessmentPopover();
+      alert('Maturity assessment has been saved as draft.');
       return;
     }).catch(function(err){
       alert(err);
@@ -137,26 +139,28 @@ var AssessmentButtons = React.createClass({
   },
 
   cancelAssessment: function() {
-    if (this.props.assessment.assessment._id == null) {
-      $('select[name=\'assessmentSelectList\']').val('n').change();
-    } else {
-      $('select[name=\'assessmentSelectList\']').val(this.props.assessment.assessment._id).change();
+    if(confirm('You have requested to cancel all changes you made on this draft assessment.  All changes will be removed. Please confirm that you want to proceed with this cancel changes.')){
+      this.props.updateAssessmentPopover();
+      alert('Current changes have been cancelled.');
     }
-    alert('Current changes have been cancelled.');
   },
 
   deleteAssessment: function() {
     var self = this;
-    if (_.isEmpty(self.props.assessment.assessment) || self.props.assessment.assessment.assessmentStatus != 'Draft') {
-      alert('This assessment cannot be deleted.');
+    if (_.isEmpty(self.props.assessDraft) || self.props.assessDraft.assessmentStatus != 'Draft') {
+      alert('This assessment draft hasn\'t been saved, there is no necessary to delete it.');
     } else {
       if(confirm('You have requested to delete this draft assessment.  All saved progress will be deleted. Please confirm that you want to proceed with this delete.')){
-        api.deleteAssessment(self.props.assessment.assessment._id)
+        api.deleteAssessment(self.props.assessDraft._id)
           .then(function(result){
-            // $('select[name='assessmentSelectList'] option[value=' + self.props.assessmentStatus.assessId + ']').remove();
-            // $('select[name='assessmentSelectList']').val('').change();
-            $('select[name=\'teamSelectList\']').val(self.props.assessment.teamId).change();
-            alert('Your assessment has been deleted.');
+            _.find(self.props.loadDetailTeam.assessments, function(assess, idx){
+              if (assess._id.toString() == self.props.assessDraft._id.toString()) {
+                return self.props.loadDetailTeam.assessments.splice(idx, 1);
+              }
+            })
+            self.props.updateAssessmentSummary();
+            self.props.hideAssessmentPopover();
+            alert('Your assessment draft has been deleted.');
             return;
           })
           .catch(function(err){
