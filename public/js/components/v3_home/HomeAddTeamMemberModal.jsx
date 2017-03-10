@@ -26,7 +26,6 @@ var HomeAddTeamMemberModal = React.createClass({
     // $('#tbl-members-data').scrollable(); // it wont work..table becomes messy!
     self.setState({facesPersonFullName: ''});
     self.disableNextButton();
-    self.setDefaultMember();
   },
 
   componentWillReceiveProps: function(newProps) {
@@ -34,6 +33,7 @@ var HomeAddTeamMemberModal = React.createClass({
     if (newProps.activeWindow !== undefined && newProps.activeWindow === false) {
       this.setState({facesPerson: {}});
     }
+    this.isNextBtnDisable();
   },
 
   componentWillUpdate: function(nextProps, nextState) {
@@ -41,11 +41,17 @@ var HomeAddTeamMemberModal = React.createClass({
     if (!self.props.activeWindow && nextProps.activeWindow) {
       var buttonOptions = self.state.buttonOptions;
       buttonOptions.prevScreen = _.isEqual('squad', self.props.newTeamObj.type) ? 'showTeamTypeModal' : 'showTeamHierarchyModal';
-      if (!_.isEmpty(self.props.newTeamObj) && !_.isEmpty(self.props.newTeamObj.members))
-        buttonOptions.nextDisabled = '';
-      else
-        buttonOptions.nextDisabled = 'disabled';
       self.setState({ buttonOptions: buttonOptions });
+      self.isNextBtnDisable();
+    }
+  },
+
+  isNextBtnDisable: function() {
+    var self = this;
+    if (!_.isEmpty(self.props.newTeamObj) && !_.isEmpty(self.props.newTeamObj.members)) {
+      self.enableNextButton();
+    }else{
+      self.disableNextButton();
     }
   },
 
@@ -79,7 +85,6 @@ var HomeAddTeamMemberModal = React.createClass({
           teamMemberData.push(_.findWhere(members, {userId: value}));
         });
 
-        console.log('Added member:', teamMemberData);
         self.props.setTeamMember(teamMemberData);
 
         if (!_.isEmpty(teamMemberData)) {
@@ -96,11 +101,9 @@ var HomeAddTeamMemberModal = React.createClass({
     var self = this;
     var updatedMember = [];
     var members = self.props.newTeamObj.members;
-    console.log('deleteTeamMember before:', members);
     updatedMember = _.filter(members, function(ls) {
       return !_.isEqual(ls['userId'], userId);
     });
-    console.log('deleteTeamMember after:', updatedMember);
     self.props.setTeamMember(updatedMember);
     if (_.isEmpty(updatedMember)) {
       self.disableNextButton();
@@ -121,24 +124,6 @@ var HomeAddTeamMemberModal = React.createClass({
     var buttonOptions = this.state.buttonOptions;
     buttonOptions.nextDisabled = '';
     this.setState({buttonOptions: buttonOptions});
-  },
-
-  setDefaultMember: function() {
-    var self = this;
-    api.getUsersInfo(user.ldap.uid)
-      .then(function(result){
-        console.log('setDefaultMember getUsersInfo:', result);
-        var data = {
-          userId: user.ldap.uid,
-          email: user.ldap.emailAddress,
-          name: user.ldap.hrFirstName + ' ' + user.ldap.hrLastName,
-          role: _.isEqual(self.props.newTeamObj.type, 'squad') ? 'Iteration Manager' : 'Team Lead',
-          allocation: 100,
-          location: result[0].location || '',
-          workTime: 100
-        };
-        self.props.setTeamMember([data]);
-      });
   },
 
   render: function() {

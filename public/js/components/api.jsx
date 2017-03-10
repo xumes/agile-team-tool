@@ -713,3 +713,17 @@ module.exports.updateUser = function(data) {
     });
   });
 };
+
+module.exports.getUserFromFacesByUid = function(uid) {
+  return new Promise(function(resolve, reject){
+    var url = '//faces.tap.ibm.com/api/find/?limit=1&q=uid:' + encodeURIComponent(uid.toUpperCase());
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};

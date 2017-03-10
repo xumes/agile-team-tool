@@ -22,7 +22,6 @@ var HomeAddTeamDropdownRole = React.createClass({
     }
   },
   saveRole: function(uid) {
-    console.log('saveRole..', uid);
     var other = $('#wrapper-role-'+uid + ' > .role-other > #input-field').val();
     if (_.isEmpty(other)) {
       alert('Role cannot be empty.');
@@ -54,7 +53,6 @@ var HomeAddTeamDropdownRole = React.createClass({
       }
     });
     var isOtherStyle = (self.state.showOther) ? {'display': 'block'} : {'display': 'none'};
-    console.log('HomeAddTeamDropdownRole isOtherStyle..', isOtherStyle);
     return(
       <div key={memberUserId} id={'wrapper-role-'+memberUserId}>
         <Select

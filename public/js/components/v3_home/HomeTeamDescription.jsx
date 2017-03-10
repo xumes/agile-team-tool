@@ -172,8 +172,8 @@ var HomeTeamDescription = React.createClass({
               </section>
               <div class='clearboth'></div>
               <footer aria-label="Modal footer content" class="modal-footer" role="contentinfo">
-                <button class="btn btn-primary modal-ok" onClick={self.saveTeamDescModal} >Save</button>
-                <button class="btn btn-secondary modal-close" onClick={self.hideTeamDescModal}>Cancel</button>
+                <button class="btn ibm-btn-pri ibm-btn-small ibm-btn-blue-50" onClick={self.saveTeamDescModal} disabled={!self.props.loadDetailTeam.access}>Save</button>
+                <button class="btn ibm-btn-sec ibm-btn-small ibm-btn-blue-50 modal-close" onClick={self.hideTeamDescModal}>Cancel</button>
               </footer>
              </div>
           </ReactModal>

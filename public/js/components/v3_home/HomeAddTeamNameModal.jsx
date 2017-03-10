@@ -42,16 +42,15 @@ var HomeAddTeamNameModal = React.createClass({
   },
   nameUpdate: function() {
     var self = this;
-    console.log('nameUpdate');
     var newTeamName = self.refs.newTeamName.value.toLowerCase().replace(/[^a-z0-9]/g, '');
+    var newTeamDesc = self.refs.newTeamDescription.value;
     var team = _.find(self.state.teams, function(team) {
       var strippedName = team.name.toLowerCase().replace(/[^a-z0-9]/g, '');
       if (_.isEqual(strippedName, newTeamName)) return team;
     });
+
     var hasError = false;
     if (!_.isEmpty(team)) {
-      // TODO: actual implem should be message on screen, not alert
-      //alert('This team name already exists. Please enter a different team name.');
       hasError = true;
     }
 
@@ -59,7 +58,7 @@ var HomeAddTeamNameModal = React.createClass({
       var buttonOptions = self.state.buttonOptions;
       buttonOptions.nextDisabled = 'disabled';
       self.setState({ buttonOptions: buttonOptions, showStyle: {'display': 'inline'} });
-    } else if (_.isEmpty(newTeamName)) {
+    } else if (_.isEmpty(newTeamName) || _.isEmpty(newTeamDesc)) {
       var buttonOptions = self.state.buttonOptions;
       buttonOptions.nextDisabled = 'disabled';
       self.setState({ buttonOptions: buttonOptions, showStyle: {'display': 'none'} });      
@@ -72,8 +71,18 @@ var HomeAddTeamNameModal = React.createClass({
   },
   descriptionUpdate: function() {
     var self = this;
-    console.log('descriptionUpdate');
     self.props.setTeamNameDesc(self.refs.newTeamName.value, self.refs.newTeamDescription.value);
+
+   if (_.isEmpty(self.refs.newTeamName.value) || _.isEmpty(self.refs.newTeamDescription.value)) {
+      var buttonOptions = self.state.buttonOptions;
+      buttonOptions.nextDisabled = 'disabled';
+      self.setState({ buttonOptions: buttonOptions, showStyle: {'display': 'none'} });
+    } else {
+      var buttonOptions = self.state.buttonOptions;
+      buttonOptions.nextDisabled = '';
+      self.setState({ buttonOptions: buttonOptions, showStyle: {'display': 'none'} });
+      self.props.setTeamNameDesc(self.refs.newTeamName.value, self.refs.newTeamDescription.value);
+    }    
   },
   render: function () {
     var self = this;
@@ -93,7 +102,7 @@ var HomeAddTeamNameModal = React.createClass({
               <div class='new-team-creation-add-block-content-name-wrapper'>
                 <div class='new-team-creation-add-block-content-name'>
                 <label for='newTeamName'>Team Name</label>
-                <input type='text' size='30' id='newTeamName' name='newTeamName' aria-label='team name' ref='newTeamName' onChange={self.nameUpdate} defaultValue={self.props.newTeamObj.name}/>
+                <input type='text' size='30' id='newTeamName' name='newTeamName' aria-label='team name' maxLength = '75' ref='newTeamName' onChange={self.nameUpdate} defaultValue={self.props.newTeamObj.name}/>
                 <div class='error-dup-team-name'>
                   <span style={this.state.showStyle}>
                     <span class='alert-icon'>
@@ -112,7 +121,7 @@ var HomeAddTeamNameModal = React.createClass({
               <textarea type='textarea' rows='15' id='newTeamDescription' name='newTeamDescription' ref='newTeamDescription' onChange={self.descriptionUpdate}  defaultValue={self.props.newTeamObj.description} />
             </div>
             
-            <div class='footer-note-add-team-name'><strong class="note1">NOTE:</strong>&nbsp;To join an existing team, click the "All teams" tab, find the team and click "request to join"</div>
+            <div class='footer-note-add-team-name'><strong class="note1">NOTE:</strong>&nbsp;To join an existing team, please contact the Iteration Manager or Owner to be added to the team</div>
           </div>
 
           <HomeAddTeamFooterButtons buttonOptions={self.state.buttonOptions} openWindow={self.props.openWindow} />

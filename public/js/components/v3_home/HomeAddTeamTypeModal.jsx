@@ -22,12 +22,12 @@ var HomeAddTeamTypeModal = React.createClass({
   },
 
   componentWillReceiveProps: function(newProps) {
+    if (newProps.newTeamObj.type === 'null') {
+      this.disableNextButton();
+    }
+
     if (newProps.newTeamObj && _.isUndefined(newProps.newTeamObj.type)) {
       this.props.setTeamType(null);
-      console.log('HomeAddTeamTypeModal componentWillReceiveProps type ',newProps.newTeamObj.type)
-      var buttonOptions = this.state.buttonOptions;
-      buttonOptions.nextDisabled = '';
-      this.setState({buttonOptions: buttonOptions});
       this.setDefaultMember();
     }
   },
@@ -44,27 +44,34 @@ var HomeAddTeamTypeModal = React.createClass({
     }
   },
 
+  disableNextButton: function() {
+    var buttonOptions = this.state.buttonOptions;
+    buttonOptions.nextDisabled = 'disabled';
+    this.setState({buttonOptions: buttonOptions, showStyle: {'display': 'none'}});
+  },
+
   setDefaultMember: function() {
     var self = this;
-    api.getUsersInfo(user.ldap.uid)
-      .then(function(result){
+    var userId = user.ldap.uid.toUpperCase();
+    api.getUserFromFacesByUid(userId)
+      .then(function(result) {
         var data = {
-          userId: user.ldap.uid,
-          email: user.ldap.emailAddress,
-          name: user.ldap.hrFirstName + ' ' + user.ldap.hrLastName,
+          userId: userId,
+          email: result[0]['email'].toLowerCase(),
+          name: result[0]['name'],
           role: _.isEqual(self.props.newTeamObj.type, 'squad') ? 'Iteration Manager' : 'Team Lead',
           allocation: 100,
-          location: result[0].location || '',
+          location: {site: result[0]['location']},
           workTime: 100
         };
-        console.log('setDefaultMember data:', data);
         self.props.setTeamMember([data]);
+      }).catch(function(err){
+        console.log(err);
       });
   },
 
   show: function() {
     var self = this;
-    console.log('show',self.props.selectedParentTeam);
     $('#teamTypeBlock select').select2({'dropdownParent':$('#teamTypeBlock')});
     $('#parentSelectList').change(self.parentSelectHandler);
     if (!_.isEmpty(self.props.selectedParentTeam))
@@ -77,11 +84,11 @@ var HomeAddTeamTypeModal = React.createClass({
   changeTypeHandler: function(event) {
     var self = this;
     var selectedValue = event.target.value;
-    if (_.isEqual('squadTeam', selectedValue))
+    if (_.isEqual('squadTeam', selectedValue)) {
       self.props.setTeamType('squad');
-    else
+    } else {
       self.props.setTeamType(null);
-
+    }
     if (!_.isEmpty(selectedValue)) {
       var buttonOptions = self.state.buttonOptions;
       buttonOptions.nextDisabled = '';
@@ -94,28 +101,25 @@ var HomeAddTeamTypeModal = React.createClass({
   parentSelectHandler: function(event) {
     var self = this;
     var selectedValue = event.target.value;
-    console.log('parentSelectHandler', selectedValue);
     var team = _.find(self.props.selectableParents, function(team) {
       if (_.isEqual(selectedValue,team._id)) return team;
     });
-    console.log('parentSelectHandler', team);
     self.props.setSelectedParentTeam(team);
   },
 
   render: function() {
     var self = this;
-    console.log('render team type',this.props.newTeamObj);
     var displayParents = {display: 'none'};
     var parentTeamChecked = '';
     var squadTeamChecked = '';
-    if (!_.isEmpty(self.props.newTeamObj)) {
-      if (_.isEqual('squad', this.props.newTeamObj.type)) {
-        displayParents = {display: 'block'};
-        squadTeamChecked = 'checked';
-      } else if (this.props.newTeamObj.type == null) {
-        parentTeamChecked = 'checked';
-      }
+
+    if (self.props.newTeamObj.type == null) {
+      parentTeamChecked = 'checked';
+    } else if (self.props.newTeamObj.type == 'squad') {
+      squadTeamChecked = 'checked';
+      displayParents = {display: 'block'};
     }
+
     var populateTeamNames = self.props.selectableParents.map(function(item) {
       return (
         <option key={item._id} value={item._id}>{item.name}</option>
@@ -123,7 +127,7 @@ var HomeAddTeamTypeModal = React.createClass({
     });
 
     return (
-      <Modal aria-labelledby='modal-label' className='reactbootstrap-modal' backdropClassName='reactbootstrap-backdrop' show={self.props.activeWindow} onShow={self.show}>
+      <Modal aria-labelledby='modal-label' className='reactbootstrap-modal' backdropClassName='reactbootstrap-backdrop' show={self.props.activeWindow} onShow={self.show} >
         <div class='new-team-creation-add-block' id='teamTypeBlock'>
           <div class='new-team-creation-add-block-header'>
             <h>New Team Creation</h>
@@ -136,7 +140,7 @@ var HomeAddTeamTypeModal = React.createClass({
               <div class="midcontent">
                 <div class="optbox">
                   <span class="ibm-radio-wrapper obtbox-radio">
-                    <input class="ibm-styled-radio" id="pteam" name="teamtype" type="radio" defaultValue="parentTeam" checked={parentTeamChecked} onChange={self.changeTypeHandler} defaultValue={this.props.newTeamObj.type == null}/>
+                    <input class="ibm-styled-radio" id="pteam" name="teamtype" type="radio" defaultValue="parentTeam" checked={parentTeamChecked} onChange={self.changeTypeHandler}  />
                     <label for="pteam" class="ibm-field-label lbl"><span data-widget="tooltip" title="A parent team, also known as a domain, subdomain, or tribe, is a team who oversees numerous teams below them and would have 'Roll up' data from each of those teams.">Parent team</span></label>
                   </span>
                   <div class="pteam-bg">

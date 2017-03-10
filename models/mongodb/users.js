@@ -225,14 +225,17 @@ var users = {
         'name': user.name,
         'adminAccess': user.adminAccess || 'none',
         'location': {
-          'site': null,
-          'timezone': null
+          'site': user.location.site || null,
+          'timezone': user.location.timezone || null
         }
       };
       if (user.location != undefined && !_.isEmpty(user.location)) {
         newUser.location.site = user.location.site || null;
         newUser.location.timezone = user.location.timezone || null;
       }
+
+      console.log('create user:',user);
+      console.log('create newUser:',newUser);
       User.create(newUser)
       // getUserFromFaces(newUser.email)
       //   .then(function(facesInfo){

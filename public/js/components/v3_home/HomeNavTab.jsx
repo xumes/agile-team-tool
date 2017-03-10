@@ -60,7 +60,7 @@ var HomeNavTab = React.createClass({
               <InlineSVG src={require('../../../img/Att-icons/att-icons-Chevron-left.svg')}></InlineSVG>
             </div>
 
-            <HomeAddTeam access={self.props.loadDetailTeam.access} loadDetailTeam={self.props.loadDetailTeam} roles={self.props.roles} />
+            <HomeAddTeam access={self.props.loadDetailTeam.access} loadDetailTeam={self.props.loadDetailTeam} roles={self.props.roles} tabClickedHandler={self.props.tabClicked} />
 
             <div id='navSearchBtn' class='home-nav-tab-buttons-item' onClick={this.showSearch} style={{'right': '10%'}}>
               <InlineSVG src={require('../../../img/Att-icons/att-icons_search.svg')}></InlineSVG>

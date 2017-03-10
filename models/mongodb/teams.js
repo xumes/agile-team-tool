@@ -568,7 +568,8 @@ module.exports.createTeam = function(teamDoc, creator) {
         allocation: 0,
         role: _.isEqual(teamDoc.type, 'squad') ? 'Iteration Manager' : 'Team Lead',
         userId: creator ? creator['ldap']['uid'].toUpperCase() : '',
-        email: creator ? creator['shortEmail'].toLowerCase() : ''
+        email: creator ? creator['shortEmail'].toLowerCase() : '',
+        location: {site: teamDoc['location'], timezone:null}
       }];
     }
     var newTeam = {
@@ -589,7 +590,7 @@ module.exports.createTeam = function(teamDoc, creator) {
     Team.create(newTeamDoc)
       .then(function(result){
         teamDoc = result;
-        return self.createUsers(teamDoc.members);
+        return self.createUsers(newTeam.members);
       })
       .then(function() {
         resolve(teamDoc);
@@ -622,7 +623,7 @@ module.exports.createUsers = function(members) {
             });
             if (_.isEmpty(user)) {
               if (!_.isEmpty(member.location)) {
-                member.location.timezone = ulocation[member.location.site];
+                member.location.timezone = ulocation[member.location.site.toLowerCase()];
               }
               promiseArray.push(Users.create(member));
             }
