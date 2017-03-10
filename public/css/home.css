@@ -6352,7 +6352,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: fixed;
   float: left;
   outline: none;
-  top: 30%;
+  top: 20%;
   left: 37%;
   width: 26vw;
   height: 30vw;
