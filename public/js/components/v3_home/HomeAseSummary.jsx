@@ -319,7 +319,7 @@ var HomeAseSummary = React.createClass({
               </div>
             </div>
             <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showSetupModel} onHide={self.hideAssessmentSetupPopover}>
-              <AssessmentSetupPopover hideAssessmentSetupPopover={self.hideAssessmentSetupPopover}/>
+              <AssessmentSetupPopover hideAssessmentSetupPopover={self.hideAssessmentSetupPopover} showAssessmentPopover={self.showAssessmentPopover}/>
             </Modal>
             <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAssessmentPopover}>
               <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary}/>
