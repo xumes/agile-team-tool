@@ -15,12 +15,12 @@ var AssessmentTemplatePractice = React.createClass({
         var practiceAnsId = practiceId + '_ans';
         count ++ ;
         return (
-          <div key={practiceId} id={practiceId} data-open='true' class='ibm-active'>
-            <a class='ibm-twisty-trigger' style={{'cursor':'pointer'}} onClick={self.props.expandComponent.bind(null, practiceId)}>
+          <div key={practiceId} id={practiceId} data-open='true'>
+            <a class='ibm-twisty-trigger collapse' style={{'cursor':'pointer'}} onClick={self.props.expandComponent.bind(null, practiceId)}>
               {practice.name}
               <span id={practiceAnsId}>Not answered</span>
             </a>
-            <div class='ibm-twisty-body' style={{'display':'block'}}><AssessmentTemplateLevel levels={practice.levels} description={practice.description} practiceId={practiceId}/></div>
+            <div class='ibm-twisty-body' style={{'display':'none'}}><AssessmentTemplateLevel levels={practice.levels} description={practice.description} practiceId={practiceId}/></div>
           </div>
         )
       });

@@ -4,6 +4,8 @@ var _ = require('underscore');
 var moment = require('moment');
 var ReactDOM = require('react-dom');
 var InlineSVG = require('svg-inline-react');
+var DatePicker = require('react-datepicker');
+var AssessmentDatePicker = require('./AssessmentDatePicker.jsx');
 var AssessmentActiveTemplates = require('./AssessmentActiveTemplates.jsx');
 var AssessmentButtons = require('./AssessmentButtons.jsx');
 
@@ -11,7 +13,9 @@ var AssessmentPopover = React.createClass({
   getInitialState: function() {
     return {
       lcAssessTemplate: {},
-      ddAssessTemplate: {}
+      ddAssessTemplate: {},
+      isUpdate: true,
+      submitDatePicker: moment.utc(new Date())
     };
   },
   componentWillMount: function() {
@@ -24,26 +28,58 @@ var AssessmentPopover = React.createClass({
   },
   componentDidUpdate: function() {
   },
-  ttChangeHandler: function(e) {
+  updateAssessmentPopover: function() {
     var self = this;
-    if (e.target.value == 'Project') {
-      self.setState({lcAssessTemplate: self.props.assessTemplate.components[0]});
+    $('#assessmentTeamTypeSelector').off('change');
+    $('#assessmentSoftwareTypeSelector').off('change');
+    if (self.props.loadDetailTeam.assessments.length > 0 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft') {
+      $('#assessmentTeamTypeSelector').val(self.props.loadDetailTeam.assessments[0].type).change();
+      $('#assessmentSoftwareTypeSelector').val(self.props.loadDetailTeam.assessments[0].deliversSoftware?'Yes':'No').change();
+      $('#assessmentSubmitDateTitle').html(moment.utc(self.props.loadDetailTeam.assessments[0].submitDate).format('DD MMM YYYY'));
+      self.state.submitDatePicker = moment.utc(self.props.loadDetailTeam.assessments[0].submitDate);
     } else {
-      self.setState({lcAssessTemplate: self.props.assessTemplate.components[1]});
+      $('#assessmentTeamTypeSelector').val('Project').change();
+      $('#assessmentSoftwareTypeSelector').val('Yes').change();
+      $('#assessmentSubmitDateTitle').html('On Submission');
+      self.state.submitDatePicker = moment.utc(new Date());
     }
+    $('#assessmentTeamTypeSelector').change(this.ttChangeHandler);
+    $('#assessmentSoftwareTypeSelector').change(this.stChangeHandler);
+    self.setState({isUpdate: true});
+  },
+  ttChangeHandler: function(e) {
+    this.setState({isUpdate: false});
   },
   stChangeHandler: function(e) {
-    var self = this;
-    if (e.target.value == 'Yes') {
-      self.setState({ddAssessTemplate: self.props.assessTemplate.components[2]});
-    } else {
-      self.setState({ddAssessTemplate: {}});
-    }
+    this.setState({isUpdate: false});
+  },
+  showBlock: function(id) {
+    $('#showBlockBtn' + id).hide();
+    $('#hideBlockBtn' + id).show();
+    $('#assessmentContainer' + id).show();
+  },
+  hideBlock: function(id) {
+    $('#showBlockBtn' + id).show();
+    $('#hideBlockBtn' + id).hide();
+    $('#assessmentContainer' + id).hide();
+  },
+  expandAll: function(id) {
+    $('#assessmentContainer' + id + ' a.ibm-twisty-trigger').parent().addClass('ibm-active');
+    $('#assessmentContainer' + id + ' a.ibm-twisty-trigger').removeClass('collapse');
+    $('#assessmentContainer' + id + ' a.ibm-twisty-trigger').addClass('expand');
+    $('#assessmentContainer' + id + ' .ibm-twisty-body').css('display','block');
+  },
+  collapseAll: function(id) {
+    $('#assessmentContainer' + id + ' a.ibm-twisty-trigger').parent().removeClass('ibm-active');
+    $('#assessmentContainer' + id + ' a.ibm-twisty-trigger').addClass('collapse');
+    $('#assessmentContainer' + id + ' a.ibm-twisty-trigger').removeClass('expand');
+    $('#assessmentContainer' + id + ' .ibm-twisty-body').css('display','none');
+  },
+  changeDateHandler: function(e) {
+    $('#assessmentSubmitDateTitle').html(moment.utc(e).format('DD MMM YYYY'));
   },
   render: function() {
     var self = this;
-    // console.log(self.props.loadDetailTeam);
-    // console.log(self.props.assessTemplate);
     var assessDraft = {};
     var lcAssessTemplate = {};
     var ddAssessTemplate = {};
@@ -72,7 +108,12 @@ var AssessmentPopover = React.createClass({
         self.state.ddAssessTemplate = {};
       }
     } else {
-      submitDate = moment.utc(assessDraft.submittedDate).format('DD MMM YYYY');
+      if (assessDraft.submittedDate == '') {
+        submitDate = 'On Submisson';
+      } else {
+        submitDate = moment.utc(assessDraft.submittedDate).format('DD MMM YYYY');
+        self.state.submitDatePicker = moment.utc(assessDraft.submittedDate);
+      }
       lastUpdatedBy = assessDraft.updatedBy;
       lastUpdated = ' (' + moment.utc(assessDraft.updateDate).format('DD MMM YYYY') + ')';
       assessType = $('#assessmentTeamTypeSelector').val() == undefined?assessDraft.type:$('#assessmentTeamTypeSelector').val();
@@ -121,9 +162,10 @@ var AssessmentPopover = React.createClass({
                 </select>
               </div>
               <div class='submit-date-selector'>
-                <h1>{submitDate + ' ('}</h1>
-                <h2 style={{'cursor':haveAccess?'none':'pointer'}}>{'override'}</h2>
-                <h1>{')'}</h1>
+                <h1 id='assessmentSubmitDateTitle'>{submitDate}</h1>
+                <h1 style={{'display':haveAccess?'none':'inline-block'}}>{' ('}</h1>
+                <DatePicker onChange={self.changeDateHandler} selected={self.state.submitDatePicker} customInput={<AssessmentDatePicker haveAccess={haveAccess}/>}/>
+                <h1 style={{'display':haveAccess?'none':'inline-block'}}>{')'}</h1>
               </div>
               <div class='last-updated-by'>
                 <h1>{lastUpdatedBy}</h1>
@@ -136,19 +178,43 @@ var AssessmentPopover = React.createClass({
           <div class='header-title'>
             <h1>{'Leadership and Collaboration'}</h1>
           </div>
+          <div class='hideBlock-btn' id='hideBlockBtn1' style={{'display':'block'}} onClick={self.hideBlock.bind(null, '1')}>
+            <InlineSVG src={require('../../../../img/Att-icons/att-icons_show.svg')}></InlineSVG>
+          </div>
+          <div class='showBlock-btn' id='showBlockBtn1' style={{'display':'none'}} onClick={self.showBlock.bind(null, '1')}>
+            <InlineSVG src={require('../../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
+          </div>
+          <div class='collapseall-btn' onClick={self.collapseAll.bind(null, '1')}>
+            <InlineSVG src={require('../../../../img/Att-icons/att-icons_collapseall.svg')}></InlineSVG>
+          </div>
+          <div class='expandall-btn' onClick={self.expandAll.bind(null, '1')}>
+            <InlineSVG src={require('../../../../img/Att-icons/att-icons_expandall.svg')}></InlineSVG>
+          </div>
         </div>
         <div class='agile-maturity' id='assessmentContainer1'>
-          <AssessmentActiveTemplates assessTemplate={self.state.lcAssessTemplate} assessDraft={assessDraft} haveAccess={haveAccess} assessTemplateId={'0'}/>
+          <AssessmentActiveTemplates assessTemplate={self.state.lcAssessTemplate} assessDraft={assessDraft} haveAccess={haveAccess} assessTemplateId={'0'} isUpdate={self.state.isUpdate}/>
         </div>
         <div class='lc-header'>
           <div class='header-title'>
             <h1>{'Delivery and DevOps'}</h1>
           </div>
+          <div class='hideBlock-btn' id='hideBlockBtn2' style={{'display':'block'}} onClick={self.hideBlock.bind(null, '2')}>
+            <InlineSVG src={require('../../../../img/Att-icons/att-icons_show.svg')}></InlineSVG>
+          </div>
+          <div class='showBlock-btn' id='showBlockBtn2' style={{'display':'none'}} onClick={self.showBlock.bind(null, '2')}>
+            <InlineSVG src={require('../../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
+          </div>
+          <div class='collapseall-btn' onClick={self.collapseAll.bind(null, '2')}>
+            <InlineSVG src={require('../../../../img/Att-icons/att-icons_collapseall.svg')}></InlineSVG>
+          </div>
+          <div class='expandall-btn' onClick={self.expandAll.bind(null, '2')}>
+            <InlineSVG src={require('../../../../img/Att-icons/att-icons_expandall.svg')}></InlineSVG>
+          </div>
         </div>
         <div class='agile-maturity' id='assessmentContainer2'>
-          <AssessmentActiveTemplates assessTemplate={self.state.ddAssessTemplate} assessDraft={assessDraft} haveAccess={haveAccess} assessTemplateId={'1'}/>
+          <AssessmentActiveTemplates assessTemplate={self.state.ddAssessTemplate} assessDraft={assessDraft} haveAccess={haveAccess} assessTemplateId={'1'} isUpdate={self.state.isUpdate}/>
         </div>
-        <AssessmentButtons assessDraft={assessDraft} haveAccess={haveAccess}/>
+        <AssessmentButtons loadDetailTeam={self.props.loadDetailTeam} assessDraft={assessDraft} haveAccess={haveAccess} updateAssessmentSummary={self.props.updateAssessmentSummary} updateAssessmentPopover={self.updateAssessmentPopover} hideAssessmentPopover={self.props.hideAssessmentPopover} />
       </div>
     )
   }
