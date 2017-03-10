@@ -21,7 +21,6 @@ var AssessmentPopover = React.createClass({
   componentWillMount: function() {
   },
   componentDidMount: function() {
-    console.log(this.props.assessType, this.props.assessSoftware);
     $('#assessmentTeamTypeSelector').select2({'width':'100%','dropdownParent':$('.assessment-popover-block')});
     $('#assessmentSoftwareTypeSelector').select2({'width':'100%','dropdownParent':$('.assessment-popover-block')});
     $('#assessmentTeamTypeSelector').change(this.ttChangeHandler);
@@ -170,7 +169,7 @@ var AssessmentPopover = React.createClass({
               </div>
               <div class='last-updated-by'>
                 <h1>{lastUpdatedBy}</h1>
-                <h1>{lastUpdated}</h1>
+                <h1 style={{'marginTop':'-5%'}}>{lastUpdated}</h1>
               </div>
             </div>
           </div>
