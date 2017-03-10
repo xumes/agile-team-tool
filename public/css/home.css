@@ -2160,9 +2160,10 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .home-iter-select .select2-selection__rendered{
+  height: 2em!important;
   margin-top: -1.8%;
 }
-.home-iter-select .select2-selection--single{
+.home-iter-select .select2-selection--single, select2-homeIterSelection-container{
   height: 2em!important;
 }
 

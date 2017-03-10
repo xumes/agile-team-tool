@@ -317,13 +317,16 @@ var HomePage = React.createClass({
     });
   },
 
-  reloadTeamIterations: function() {
+  reloadTeamIterations: function(id) {
     var self = this;
     api.getIterations(self.state.loadDetailTeam.team._id)
       .then(function(iterations){
         var teamDetail = JSON.parse(JSON.stringify(self.state.loadDetailTeam));
         teamDetail.iterations = iterations;
-        self.setState({'loadDetailTeam': teamDetail, 'selectedIter': ''});
+        if (id != null && !_.isEmpty(id))
+          self.setState({'loadDetailTeam': teamDetail, 'selectedIter': id});
+        else
+          self.setState({'loadDetailTeam': teamDetail, 'selectedIter': ''});
       })
       .catch(function(err){
         console.log(err);

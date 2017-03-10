@@ -62,8 +62,8 @@ var HomeIterContent = React.createClass({
   componentWillReceiveProps: function(nextProps){
     var prev = this.getSelectedIteration();
     var next = this.getSelectedIteration(nextProps);
-    if (!_.isEqual(this.props.loadDetailTeam.iterations, nextProps.loadDetailTeam.iterations) ||
-     !_.isEqual(prev, next) || !_.isEqual(this.props.selectedIter, nextProps.selectedIter)){
+    if (nextProps.selectedIter != 'option_def' && (!_.isEqual(this.props.loadDetailTeam.iterations, nextProps.loadDetailTeam.iterations) ||
+    !_.isEqual(prev, next) || !_.isEqual(this.props.selectedIter, nextProps.selectedIter))){
       this.setState({selectedIter: next});
     }
   },
@@ -71,11 +71,11 @@ var HomeIterContent = React.createClass({
   componentDidUpdate: function(prevProps, prevState) {
     if (!_.isEqual(this.props.loadDetailTeam.iterations, prevProps.loadDetailTeam.iterations)){
       var data = this.getSelectedIteration();
-        this.setState({selectedIter: data});
+      this.setState({selectedIter: data});
     }
     var self = this;
     $('select[id="homeIterSelection"]').select2();
-    $('select[id="homeIterSelection"]').change(self.props.iterChangeHandler);
+    $('select[id="homeIterSelection"]').change(self.iterationSelectChange);
 
     _.each($('.home-iter-content-point'), function(blk){
       if (blk.id != '') {
@@ -116,7 +116,7 @@ var HomeIterContent = React.createClass({
   },
 
   iterationSelectChange: function(e){
-    if (!e.target.value == 'option_def'){
+    if (e.target.value != 'option_def'){
       this.props.iterChangeHandler(e);
     }
   },
@@ -174,21 +174,8 @@ var HomeIterContent = React.createClass({
   },
 
   recalculate: function(id){
-    var selectedIter;
+    var selectedIter = _.clone(this.state.selectedIter);
     var self = this;
-    if (self.props.selectedIter != '') {
-       var iteration = _.find(self.props.loadDetailTeam.iterations, function(iter){
-          if (iter._id.toString() == self.props.selectedIter) {
-            return iter;
-          }
-        });
-        if (iteration != undefined){
-          selectedIter = _.clone(iteration);
-        }
-    }
-    else {
-      selectedIter = _.clone(self.props.loadDetailTeam.iterations[0]);
-    }
     var openDefects;
     var newDefects;
     var closedDefects;
@@ -359,7 +346,12 @@ var HomeIterContent = React.createClass({
     }
     else if (!_.isEmpty(self.props.loadDetailTeam.iterations) && self.props.loadDetailTeam.iterations.length > 0) {
         if (self.props.selectedIter != '') {
-          defIterId = self.props.selectedIter;
+          if( self.props.selectedIter != 'option_def'){
+            defIterId = self.props.selectedIter;
+          }
+          else{
+            defIterId = this.state.selectedIter._id;
+          }
         } else {
           defIterId = self.props.loadDetailTeam.iterations[0]._id.toString();
         }
@@ -461,6 +453,7 @@ var HomeIterContent = React.createClass({
               <div class={access?'home-iter-edit-btn-block':'home-iter-edit-btn-block-disabled'} onClick={access?this.showEditIteration:''} style={access?{'cursor':'pointer'}:{'cursor':'default'}}>
                 <InlineSVG src={require('../../../img/Att-icons/att-icons_edit.svg')} data-tip='Edit Iteration Name/Date'></InlineSVG>
               </div>
+              <HomeEditIteration isOpen={this.state.editIteration} onClose={this.closeIteration} selectedIter={this.state.selectedIter} iterListHandler={this.props.iterListHandler}/>
             </div>
             <div class='home-iter-selection-block'>
               <div class='home-iter-select'>
