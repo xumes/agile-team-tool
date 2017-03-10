@@ -536,7 +536,7 @@ var HomeMemberTable = React.createClass({
     var newMembers = [];
     var awkValue = $('#' + awkId + ' input').val();
     if (awkValue > 100 || awkValue < 0 || awkValue == '') {
-      alert('Averge work per week should be between 0 to 100.');
+      alert('Average work per week should be between 0 to 100.');
     } else {
       if (awkValue == 100) {
         $('#' + awkId + ' > h').html('Full Time');

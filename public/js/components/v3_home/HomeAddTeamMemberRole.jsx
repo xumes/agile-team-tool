@@ -74,6 +74,7 @@ var HomeAddTeamMemberRole = React.createClass({
     var self = this;
     var uid;
     var selectVal = data['value'];
+    var selectLabel = data['label'];
     var updatedMember = [];
     var type;
 
@@ -126,7 +127,7 @@ var HomeAddTeamMemberRole = React.createClass({
       var tmpworkweek = self.state.defaultWorkTime;
       if (!_.contains(tmpworkweek, selectVal)) {
         var obj = {};
-        obj[selectVal] = selectVal;
+        obj[selectVal] = selectLabel;
         var tmp = _.extend(tmpworkweek, obj);
         self.setState({defaultWorkTime: tmp});
       }

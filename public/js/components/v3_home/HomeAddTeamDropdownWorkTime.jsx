@@ -5,7 +5,8 @@ var InlineSVG = require('svg-inline-react');
 var HomeAddTeamDropdownWorkTime = React.createClass({
   getInitialState: function() {
     return {
-      showOther: false
+      showOther: false,
+      defaultWorkTime: ['Full Time', 'Half Time', 'Other']
     }
   },
 
@@ -26,10 +27,14 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
     console.log('saveWorkTime..', uid);
     var other = parseInt($('#wrapper-worktime-'+uid + ' > .role-worktime > #input-field').val().trim());
     if (!other) {
-      alert('Work time cannot be empty.');
+      alert('Average work per week is required.');
     } else {
-      var obj = {'value': other, 'label': other};
-      this.props.workTimeHandler(this.refs, obj);
+      if (other > 100 || other < 0) {
+        alert('Average work per week should be between 0 to 100.');
+      } else {
+        var obj = {'value': other, 'label': other};
+        this.props.workTimeHandler(this.refs, obj);
+      }
     }
   },
 
@@ -61,9 +66,12 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
     var memberWorkTime = self.props.memberWorkTime || 100;
     var selavgworkweek = [];
     _.map(self.props.defaultWorkTime, function(k, v){
-      selavgworkweek.push({value: k, label: v});
+      if (!_.contains(self.state.defaultWorkTime, v)) {
+        selavgworkweek.push({value: k, label: v + '%'});
+      } else {
+        selavgworkweek.push({value: k, label: v});
+      }
     });
-
     var isOtherStyle = (self.state.showOther) ? {'display': 'block'} : {'display': 'none'};
     return(
       <div key={memberUserId} id={'wrapper-worktime-'+memberUserId}>
@@ -76,7 +84,7 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
           clearable={false}
           onChange={self.workTimeHandler} />
         <div class='custom-field-other role-worktime' style={isOtherStyle}>
-          <input id='input-field' type='text' ref='other' name='other' size='5' class='input-field wt' maxLength='3' /><h1>%</h1>
+          <input id='input-field' type='text' ref='other' name='other' size='5' class='input-field wt' maxLength='3' max='100' min='0' /><h1>%</h1>
           <div class='r_save-btn' onClick={self.saveWorkTime.bind(null, memberUserId)}>
             <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
           </div>
