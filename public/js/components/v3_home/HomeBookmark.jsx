@@ -450,8 +450,8 @@ var HomeBookmark = React.createClass({
             </section>
             <div class='clearboth'></div>
             <footer aria-label="Modal footer content" class="modal-footer" role="contentinfo">
-              <button class="btn btn-primary modal-ok" onClick={self.saveTeamLinkModal} >Save</button>
-              <button class="btn btn-secondary modal-close" onClick={self.hideTeamLinkModal}>Cancel</button>
+              <button class="btn ibm-btn-pri ibm-btn-small ibm-btn-blue-50" onClick={self.saveTeamLinkModal} disabled={!self.props.loadDetailTeam.access}>Save</button>
+              <button class="btn ibm-btn-sec ibm-btn-small ibm-btn-blue-50" onClick={self.hideTeamLinkModal}>Cancel</button>
             </footer>
            </div>
         </ReactModal>
