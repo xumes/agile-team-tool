@@ -2151,12 +2151,20 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .home-iter-select {
   position: relative;
   float: left;
-  width: 91%;
+  width: 90%;
   height: 100%;
 }
 
 .home-iter-select > span > select2 select2-container select2-container--default{
   width: 100% !important;
+}
+
+.home-iter-select .select2-selection__rendered{
+  height: 2em!important;
+  margin-top: -1.8%;
+}
+.home-iter-select .select2-selection--single, select2-homeIterSelection-container{
+  height: 2em!important;
 }
 
 .memberChanged input, select, .memberChanged option{
@@ -2169,10 +2177,10 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   display: inline-block;
   float: right;
-  width: 8.2%;
-  height: 42%;
-  min-height: 2em;
-  margin-top: 2.3%;
+  width: 9%;
+  height: 35%;
+  min-height: 1.5em;
+  margin-top: 1.3%;
 }
 
 .home-iter-add-btn-block > i > svg, .home-iter-add-btn-block-disabled > i > svg {
@@ -2189,10 +2197,10 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   display: inline-block;
   float: right;
-  width: 8%;
-  height: 20%;
+  width: 8.6%;
+  height: 23%;
   min-height: 1.5em;
-  margin-top: -2.5em;
+  margin-top: -5.5%;
 }
 
 .home-iter-edit-btn-block > i > svg, .home-iter-edit-btn-block-disabled > i > svg {
@@ -2208,6 +2216,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   top: 5%;
   width: 90%;
   height: 3%;
+  margin-bottom: 7%;
 }
 
 .home-iter-last-update-title{

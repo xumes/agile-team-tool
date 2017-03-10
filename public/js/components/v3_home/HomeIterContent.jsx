@@ -62,8 +62,8 @@ var HomeIterContent = React.createClass({
   componentWillReceiveProps: function(nextProps){
     var prev = this.getSelectedIteration();
     var next = this.getSelectedIteration(nextProps);
-    if (!_.isEqual(this.props.loadDetailTeam.iterations, nextProps.loadDetailTeam.iterations) ||
-     !_.isEqual(prev, next) || !_.isEqual(this.props.selectedIter, nextProps.selectedIter)){
+    if (nextProps.selectedIter != 'option_def' && (!_.isEqual(this.props.loadDetailTeam.iterations, nextProps.loadDetailTeam.iterations) ||
+    !_.isEqual(prev, next) || !_.isEqual(this.props.selectedIter, nextProps.selectedIter))){
       this.setState({selectedIter: next});
     }
   },
@@ -71,11 +71,11 @@ var HomeIterContent = React.createClass({
   componentDidUpdate: function(prevProps, prevState) {
     if (!_.isEqual(this.props.loadDetailTeam.iterations, prevProps.loadDetailTeam.iterations)){
       var data = this.getSelectedIteration();
-        this.setState({selectedIter: data});
+      this.setState({selectedIter: data});
     }
     var self = this;
     $('select[id="homeIterSelection"]').select2();
-    $('select[id="homeIterSelection"]').change(self.props.iterChangeHandler);
+    $('select[id="homeIterSelection"]').change(self.iterationSelectChange);
 
     _.each($('.home-iter-content-point'), function(blk){
       if (blk.id != '') {
@@ -114,6 +114,13 @@ var HomeIterContent = React.createClass({
       });
     }
   },
+
+  iterationSelectChange: function(e){
+    if (e.target.value != 'option_def'){
+      this.props.iterChangeHandler(e);
+    }
+  },
+
   iterBlockClickHandler: function(e) {
     var self = this;
     _.each($('.home-iter-content-point'), function(blk){
@@ -167,21 +174,8 @@ var HomeIterContent = React.createClass({
   },
 
   recalculate: function(id){
-    var selectedIter;
+    var selectedIter = _.clone(this.state.selectedIter);
     var self = this;
-    if (self.props.selectedIter != '') {
-       var iteration = _.find(self.props.loadDetailTeam.iterations, function(iter){
-          if (iter._id.toString() == self.props.selectedIter) {
-            return iter;
-          }
-        });
-        if (iteration != undefined){
-          selectedIter = _.clone(iteration);
-        }
-    }
-    else {
-      selectedIter = _.clone(self.props.loadDetailTeam.iterations[0]);
-    }
     var openDefects;
     var newDefects;
     var closedDefects;
@@ -352,7 +346,12 @@ var HomeIterContent = React.createClass({
     }
     else if (!_.isEmpty(self.props.loadDetailTeam.iterations) && self.props.loadDetailTeam.iterations.length > 0) {
         if (self.props.selectedIter != '') {
-          defIterId = self.props.selectedIter;
+          if( self.props.selectedIter != 'option_def'){
+            defIterId = self.props.selectedIter;
+          }
+          else{
+            defIterId = this.state.selectedIter._id;
+          }
         } else {
           defIterId = self.props.loadDetailTeam.iterations[0]._id.toString();
         }
@@ -386,6 +385,7 @@ var HomeIterContent = React.createClass({
       var iterations = null;
       var defIterId = '';
       var access = this.props.loadDetailTeam.access;
+      var defaultDisplay;
       if (!_.isEmpty(self.props.loadDetailTeam.iterations) && self.props.loadDetailTeam.iterations.length > 0) {
         iterations = self.props.loadDetailTeam.iterations.map(function(iter){
           iterName =iter.name;
@@ -393,6 +393,12 @@ var HomeIterContent = React.createClass({
             <option key={iter._id} value={iter._id}>{iterName}</option>
           )
         });
+        if (self.props.loadDetailTeam.iterations.length > 1){
+          defaultDisplay = 'Or select another iteration....';
+        }
+        else{
+          defaultDisplay = 'There are currently no other iterations';
+        }
         var defIter = this.state.selectedIter;
         var lastUpdatedBy = defIter.updatedBy;
         var lastUpdateTime = moment(defIter.updateDate).format('MMM DD YYYY');
@@ -441,31 +447,30 @@ var HomeIterContent = React.createClass({
           <div>
             <div class='home-iter-title'>Iteration Overview</div>
             <Tooltip html={true} type="light"/>
+            <div class='home-iter-name-block' style={{'height':'4.3%'}}>
+              <div class='home-iter-content-title' id='iteration-name'>{iterData.name}</div>
+              <div class='home-iter-team-date' id='iteration-date'>{iterData.startDate} - {iterData.endDate}</div>
+              <div class={access?'home-iter-edit-btn-block':'home-iter-edit-btn-block-disabled'} onClick={access?this.showEditIteration:''} style={access?{'cursor':'pointer'}:{'cursor':'default'}}>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons_edit.svg')} data-tip='Edit Iteration Name/Date'></InlineSVG>
+              </div>
+              <HomeEditIteration isOpen={this.state.editIteration} onClose={this.closeIteration} selectedIter={this.state.selectedIter} iterListHandler={this.props.iterListHandler}/>
+            </div>
             <div class='home-iter-selection-block'>
               <div class='home-iter-select'>
-                <select value={defIter._id} id='homeIterSelection' onChange={this.props.iterChangeHandler} ref="homeIterSelection">
+                <select value={'option_def'} id='homeIterSelection' onChange={this.iterationSelectChange} ref="homeIterSelection">
+                  <option key={'option_def'} value={'option_def'}>{defaultDisplay}</option>
                   {iterations}
                 </select>
               </div>
               <div class={access?'home-iter-add-btn-block':'home-iter-add-btn-block-disabled'} onClick={access?this.showAddIteration:''} style={access?{'cursor':'pointer'}:{'cursor':'default'}}>
                 <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')} data-tip='Create New Iteration'></InlineSVG>
               </div>
+              <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={self.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
             </div>
-            <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={self.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
-
-            <div class='home-iter-name-block' style={{'height':'5%'}}>
-              <div class='home-iter-content-title' id='iteration-name'>{iterData.name}</div>
-              <div class='home-iter-team-date' id='iteration-date'>{iterData.startDate} - {iterData.endDate}</div>
-              <div class={access?'home-iter-edit-btn-block':'home-iter-edit-btn-block-disabled'} onClick={access?this.showEditIteration:''} style={access?{'cursor':'pointer'}:{'cursor':'default'}}>
-                <InlineSVG src={require('../../../img/Att-icons/att-icons_edit.svg')} data-tip='Edit Iteration Name/Date'></InlineSVG>
-              </div>
-              <div class="ibm-rule ibm-alternate ibm-gray-30" style={{'width':'96%','marginTop':'1.5em'}}>
+            <div class='home-iter-last-update-block'>
+              <div class="ibm-rule ibm-alternate ibm-gray-30" style={{'width':'100%','marginTop':'0.1em'}}>
                 <hr />
               </div>
-            </div>
-            <HomeEditIteration isOpen={this.state.editIteration} onClose={this.closeIteration} selectedIter={this.state.selectedIter} iterListHandler={this.props.iterListHandler}/>
-
-            <div class='home-iter-last-update-block'>
               <div class='home-iter-last-update-title'>Last updated</div>
               <div class='home-iter-last-update'>
                 {lastUpdatedBy}
@@ -476,7 +481,7 @@ var HomeIterContent = React.createClass({
 
             <div class='home-iter-sprint-block'>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
-                <div class='home-iter-content-title'>Sprint Availability</div>
+                <div class='home-iter-content-title'>Iteration Availability</div>
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='The calculated number of ‘person days’ available for this iteration based on team member’s allocation %, Full Time/Part Time/ Half time status and the length of the iteration.'>Optimum team availability (In days)</div>
