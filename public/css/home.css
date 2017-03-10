@@ -6338,3 +6338,215 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 3%;
   color: #4178BE;
 }
+
+.assessment-setup-block {
+  position: fixed;
+  float: left;
+  outline: none;
+  top: 30%;
+  left: 37%;
+  width: 26vw;
+  height: 30vw;
+  min-width: 332px;
+  min-height: 384px;
+  background-color: #FFFFFF;
+  box-shadow: 0 0.2em 0.4em 0 rgba(0,0,0,0.18);
+  overflow: auto;
+}
+
+.assessment-setup-block > .setup-title {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 10%;
+  background-color: #4178BE;
+}
+
+.assessment-setup-block > .setup-title > h1 {
+  position: relative;
+  float: left;
+  left: 5%;
+  top: 30%;
+  color: #FFFFFF;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.5em;
+  padding: 0;
+}
+
+.assessment-setup-block > .setup-title > div {
+  position: relative;
+  float: right;
+  width: 10%;
+  height: 50%;
+  top: 30%;
+  cursor: pointer;
+  right: 0.5%;
+}
+
+.assessment-setup-block > .setup-title > div svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: auto;
+}
+
+.assessment-setup-block > .setup-title > div svg g {
+  fill: #FFFFFF;
+  opacity: 1;
+}
+
+.assessment-setup-block > .assessment-type-block {
+  position: relative;
+  float: left;
+  width: 90%;
+  left: 5%;
+  height: 40%;
+}
+
+.assessment-setup-block > .assessment-type-block > h1 {
+  position: relative;
+  float: left;
+  top: 15%;
+  width: 100%;
+  height: 10%;
+  padding: 0;
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  color: #323232;
+}
+
+.assessment-setup-block > .assessment-type-block > .assessment-select-block {
+  position: relative;
+  float: left;
+  top: 20%;
+  height: 20%;
+  width: 50%;
+}
+
+.assessment-setup-block > .assessment-type-block > .assessment-select-block > .select2 {
+  height: 100%;
+  font-size: 1em;
+}
+
+.assessment-setup-block > .assessment-type-block > .assessment-select-block > .select2 .select2-selection {
+  height: 100%;
+  outline: none;
+}
+
+.assessment-setup-block > .assessment-type-block > .assessment-select-block > .select2 .select2-selection__rendered {
+  height: 100%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 2.2em;
+  color: #777677;
+}
+
+.assessment-setup-block > .assessment-type-block > .assessment-select-block > .select2 .select2-selection__arrow {
+  height: 100%;
+}
+
+.assessment-setup-block > .assessment-type-block > .assessment-select-block > .select2 b {
+  top: 2.6em;
+}
+
+.assessment-setup-block > .assessment-type-block > h2 {
+  position: relative;
+  float: left;
+  width: 100%;
+  top: 25%;
+  padding: 0;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 1.4em;
+  color: #5A5A5A;
+}
+
+.assessment-setup-block > .assessment-software-block {
+  position: relative;
+  float: left;
+  width: 90%;
+  left: 5%;
+  top: 5%;
+  height: 20%;
+}
+
+.assessment-setup-block > .assessment-software-block > h1 {
+  position: relative;
+  float: left;
+  top: 20%;
+  width: 100%;
+  height: 20%;
+  padding: 0;
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  color: #323232;
+}
+
+.assessment-setup-block > .assessment-software-block > .assessment-select-block2 {
+  position: relative;
+  float: left;
+  width: 20%;
+  height: 40%;
+  top: 30%;
+}
+
+.assessment-setup-block > .assessment-software-block > h2 {
+  position: relative;
+  float: left;
+  top: 30%;
+  left: 5%;
+  width: 75%;
+  height: 40%;
+  padding: 0;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 1.4em;
+  color: #5A5A5A;
+}
+
+.assessment-setup-block > .assessment-software-block > .assessment-select-block2 > .select2 {
+  height: 100%;
+  font-size: 1em;
+}
+
+.assessment-setup-block > .assessment-software-block > .assessment-select-block2 > .select2 .select2-selection {
+  height: 100%;
+  outline: none;
+}
+
+.assessment-setup-block > .assessment-software-block > .assessment-select-block2 > .select2 .select2-selection__rendered {
+  height: 100%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 2.2em;
+  color: #777677;
+}
+
+.assessment-setup-block > .assessment-software-block > .assessment-select-block2 > .select2 .select2-selection__arrow {
+  height: 100%;
+}
+
+.assessment-setup-block > .assessment-software-block > .assessment-select-block2 > .select2 b {
+  top: 2.4em;
+}
+
+.assessment-setup-block > .assessment-setup-btns {
+  position: relative;
+  float: left;
+  height: 20%;
+  width: 90%;
+  left: 5%;
+  top: 10%;
+}
+
+.assessment-setup-block > .assessment-setup-btns > button {
+  position: relative;
+  float: right;
+  width: 30%;
+  top: 25%;
+  height: 40%;
+  min-width: 0;
+  font-size: 1.4em;
+  line-height: 0em;
+  text-align: center;
+}
