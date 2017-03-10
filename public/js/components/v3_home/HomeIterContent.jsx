@@ -71,10 +71,12 @@ var HomeIterContent = React.createClass({
   componentDidUpdate: function(prevProps, prevState) {
     if (!_.isEqual(this.props.loadDetailTeam.iterations, prevProps.loadDetailTeam.iterations)){
       var data = this.getSelectedIteration();
-      this.setState({selectedIter: data});
+      this.setState({selectedIter: data}, function(){
+        $('select[id="homeIterSelection"]').select2();
+      });
     }
     var self = this;
-    $('select[id="homeIterSelection"]').select2();
+    
     $('select[id="homeIterSelection"]').change(self.iterationSelectChange);
 
     _.each($('.home-iter-content-point'), function(blk){
@@ -105,6 +107,7 @@ var HomeIterContent = React.createClass({
       });
     } else {
       $('.home-iter-content-point').removeClass('home-iter-content-point-hover');
+      $('.home-iter-content-point').css('cursor','default');
       $('.home-iter-content-point').prop('onclick',null).off('click');
       $('.home-iter-content-point').keypress(function(e){
 
@@ -486,8 +489,8 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='The calculated number of ‘person days’ available for this iteration based on team member’s allocation %, Full Time/Part Time/ Half time status and the length of the iteration.'>Optimum team availability (In days)</div>
                 <div id='optimumPoint' class='home-iter-content-point-uneditable'>{iterData.teamAvailability}</div>
-                <div class={access?'home-iter-team-availability':'home-iter-team-availability-disabled'}>
-                  <InlineSVG src={require('../../../img/Att-icons/att-icons_team-reset.svg')} data-tip='Reset your Sprint Availability based on your current Team Member structure.' onClick={this.checkRecentTeamAvailbility}></InlineSVG>
+                <div class={access?'home-iter-team-availability':'home-iter-team-availability-disabled'} onClick={access?this.checkRecentTeamAvailbility:''} style={access?{'cursor':'pointer'}:{'cursor':'default'}}>
+                  <InlineSVG src={require('../../../img/Att-icons/att-icons_team-reset.svg')} data-tip='Reset your Sprint Availability based on your current Team Member structure.'></InlineSVG>
                 </div>
               </div>
               <TeamResetPopup isOpen={this.state.resetTeamAvailability} onClose={this.closeResetPopup} teamAvailability={this.state.teamAvailability} updateTeamAvailability={this.resetSprintAvailability}/>
