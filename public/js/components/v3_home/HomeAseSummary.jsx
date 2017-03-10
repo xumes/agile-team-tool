@@ -4,11 +4,13 @@ var moment = require('moment');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
 var AssessmentPopover = require('./assessments/AssessmentPopover.jsx');
+var AssessmentSetupPopover = require('./assessments/AssessmentSetupPopover.jsx');
 
 var HomeAseSummary = React.createClass({
   getInitialState: function() {
     return {
       showModal: false,
+      showSetupModel: false,
       selectedAssessment: '',
       activeTemplate: null,
       assessTemplate: null,
@@ -91,6 +93,12 @@ var HomeAseSummary = React.createClass({
   },
   hideAssessmentPopover: function() {
     this.setState({ showModal: false });
+  },
+  showAssessmentSetupPopover: function() {
+    this.setState({ showSetupModel: true });
+  },
+  hideAssessmentSetupPopover: function() {
+    this.setState({ showSetupModel: false });
   },
   updateAssessmentSummary: function() {
     this.setState({shouldUpdate:true});
@@ -307,10 +315,13 @@ var HomeAseSummary = React.createClass({
                 <h1 style={{'top':'10%'}}>{'Take the Agile Maturity Assessment often to see where your team should focus its efforts.'}</h1>
               </div>
               <div class='start-btn'>
-                <button onClick={self.showAssessmentPopover} type='button' class='ibm-btn-pri ibm-btn-blue-50' disabled={haveAccess}>{'Let\'s get started'}</button>
+                <button onClick={self.showAssessmentSetupPopover} type='button' class='ibm-btn-pri ibm-btn-blue-50' disabled={haveAccess}>{'Let\'s get started'}</button>
               </div>
             </div>
-            <Modal aria-labelledby='modal-label' tabIndex='10' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAssessmentPopover}>
+            <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showSetupModel} onHide={self.hideAssessmentSetupPopover}>
+              <AssessmentSetupPopover hideAssessmentSetupPopover={self.hideAssessmentSetupPopover} showAssessmentPopover={self.showAssessmentPopover}/>
+            </Modal>
+            <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAssessmentPopover}>
               <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary}/>
             </Modal>
           </div>
