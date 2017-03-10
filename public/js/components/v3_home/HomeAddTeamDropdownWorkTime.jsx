@@ -11,7 +11,6 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
   },
 
   workTimeHandler: function(data) {
-    console.log('workTimeHandler data,', data);
     if (data.value && (data.value === -1)) {
       var uid = this.refs.selavgworkweek.props['data-uid'];
       this.updateSelectValue(uid, 'Other...');
@@ -24,7 +23,6 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
   },
 
   saveWorkTime: function(uid) {
-    console.log('saveWorkTime..', uid);
     var other = parseInt($('#wrapper-worktime-'+uid + ' > .role-worktime > #input-field').val().trim());
     if (!other) {
       alert('Average work per week is required.');
@@ -40,7 +38,6 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
 
   cancelWorkTime: function(uid, prevdata) {
     var self = this;
-    console.log('cancelWorkTime ', prevdata)
     _.map(self.props.defaultWorkTime, function(k, v){
       if(prevdata === k){
         prevdata = v;

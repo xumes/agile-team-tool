@@ -6,24 +6,20 @@ var InlineSVG = require('svg-inline-react');
 var HomeAddTeamFooterButtons = React.createClass({
   backBtnHandler: function() {
     var self = this;
-    console.log('backBtnHandler', self.props.buttonOptions.prevScreen);
     self.props.openWindow(self.props.buttonOptions.prevScreen);
   },
   nextBtnHandler: function() {
     var self = this;
-    console.log('nextBtnHandler', self.props.buttonOptions.nextScreen);
     self.props.openWindow(self.props.buttonOptions.nextScreen);
   },
   finishBtnHandler: function() {
     var self = this;
-    console.log('finishBtnHandler');
     self.props.saveTeam();
     //self.props.closeWindow();
   },
 
   render: function() {
     var self = this;
-    console.log('render HomeAddTeamFooterButtons', self.props);
     if (self.props.buttonOptions.prevScreen == '') {
       return (
         <div class='new-team-creation-add-block-footer'>

@@ -88,10 +88,6 @@ var HomeAddTeamMemberRole = React.createClass({
       uid = ref.selavgworkweek.props['data-uid'];
       type = OPTSELECT.AVGWORKWEEK;
     }
-    console.log('HomeAddTeamMemberRole selectHandler member: ', self.props.newTeamObj.members);
-    console.log('HomeAddTeamMemberRole selectHandler uid:',uid);
-    console.log('HomeAddTeamMemberRole selectHandler type:',type);
-    console.log('HomeAddTeamMemberRole selectHandler selectVal:',selectVal);
     var memberList = self.props.newTeamObj.members.map(function(member){
       var obj = {};
       obj.name = member.name;
@@ -134,7 +130,6 @@ var HomeAddTeamMemberRole = React.createClass({
     }
 
     self.props.setTeamMember(updatedMember);
-    console.log('HomeAddTeamMemberRole selectHandler updatedMember:', updatedMember);
     this.enableFinishButton();
   },
 
@@ -156,7 +151,6 @@ var HomeAddTeamMemberRole = React.createClass({
       updatedMember.push(obj);
     });
     self.props.setTeamMember(updatedMember);
-    console.log('editInPlaceSaveLocation updatedMember:',updatedMember);
     $('#edit-inplace-location-'+uid).hide();
     self.enableFinishButton();
   },
