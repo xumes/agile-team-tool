@@ -225,8 +225,8 @@ var users = {
         'name': user.name,
         'adminAccess': user.adminAccess || 'none',
         'location': {
-          'site': user.location.site || null,
-          'timezone': user.location.timezone || null
+          'site': null,
+          'timezone': null
         }
       };
       if (user.location != undefined && !_.isEmpty(user.location)) {
@@ -234,8 +234,6 @@ var users = {
         newUser.location.timezone = user.location.timezone || null;
       }
 
-      console.log('create user:',user);
-      console.log('create newUser:',newUser);
       User.create(newUser)
       // getUserFromFaces(newUser.email)
       //   .then(function(facesInfo){

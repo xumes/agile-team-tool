@@ -35,52 +35,52 @@ var invalidUser = {
 };
 var testTeam = {
   'name': 'mongodb-test-team-01',
-  'members': {
+  'members': [{
     'name': 'test user',
     'role': 'Tester',
     'allocation': 100,
     'userId': testUser.userId,
     'email': testUser.email
-  },
+  }],
   'createdByUserId': testUser.userId,
   'createdBy': testUser.email
 };
 var testTeamParent = {
   'name': 'mongodb-test-team-parent',
   'type': '',
-  'members': {
+  'members': [{
     'name': 'test user',
     'role': 'Tester',
     'allocation': 100,
     'userId': testUser.userId,
     'email': testUser.email
-  },
+  }],
   'createdByUserId': testUser.userId,
   'createdBy': testUser.email
 };
 var testTeamChild = {
   'name': 'mongodb-test-team-child',
   'type': '',
-  'members': {
+  'members': [{
     'name': 'test user',
     'role': 'Tester',
     'allocation': 100,
     'userId': testUser.userId,
     'email': testUser.email
-  },
+  }],
   'createdByUserId': testUser.userId,
   'createdBy': testUser.email
 };
 var testTeamGChild = {
   'name': 'mongodb-test-team-gchild',
   'type': 'squad',
-  'members': {
+  'members': [{
     'name': 'test user',
     'role': 'Tester',
     'allocation': 100,
     'userId': testUser.userId,
     'email': testUser.email
-  },
+  }],
   'createdByUserId': testUser.userId,
   'createdBy': 'testuser@test.com'
 };
@@ -1050,4 +1050,3 @@ describe('Team model [getAllUserTeamsByUserId]', function() {
       });
   });
 });
-

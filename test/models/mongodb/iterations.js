@@ -40,13 +40,13 @@ var validIterationDoc = {
 var testTeam = {
   'name': 'mongodb-test-team-01',
   'type': 'squad',
-  'members': {
+  'members': [{
     'name': 'test user',
     'role': 'Tester',
     'allocation': 100,
     'userId': testUser.userId,
     'email': testUser.email
-  },
+  }],
   'createdByUserId': testUser.userId,
   'createdBy': testUser.email
 };
