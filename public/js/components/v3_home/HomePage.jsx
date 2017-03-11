@@ -369,7 +369,7 @@ var HomePage = React.createClass({
     var sectionOneStyle = {
       'width': '30.91%',
       'backgroundColor': '#F7F7F7',
-      'height': '200%'
+      'height': '205%'
     }
     var sectionTwoStyle = {
       'width': '69.09%',

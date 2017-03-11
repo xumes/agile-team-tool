@@ -8,69 +8,44 @@ var HomeAseSection = React.createClass({
   componentWillUpdate: function(nextProps, nextState) {
   },
   componentDidUpdate: function() {
-    if(!$('#' + 'assessmentSection' + ' .agile-section-title').hasClass('ibm-showing')) {
-      $('#' + 'assessmentSection' + ' .agile-section-title').addClass('ibm-showing');
-      $('#' + 'assessmentSection' + ' .agile-section-title a').addClass('ibm-show-active');
-      $('#' + 'assessmentSection' + ' div.ibm-container-body').css('display','block');
-    }
     if (this.props.loadDetailTeam.type == 'squad') {
-      //$('#assessmentFallBox').show();
       $('#squad_assessment_card').show();
       var teamId = this.props.loadDetailTeam.team._id;
       var assessmentData = this.props.loadDetailTeam.assessments;
       var teamAccess = this.props.loadDetailTeam.access;
-      assessmentHandler.teamAssessmentListHander(teamId, assessmentData, teamAccess);
+      assessmentHandler.plotAssessmentSeries(assessmentData);
+      this.props.assessmentGraphArea('squad_assessment_card')
     } else {
       $('#nsquad_assessment_card').show();
       var teamId = this.props.loadDetailTeam.team._id;
       var teamName = this.props.loadDetailTeam.team.name;
       var snapshotData = this.props.loadDetailTeam.snapshot;
+      this.props.assessmentGraphArea('nsquad_assessment_card');
       assessmentHandler.assessmentParentRollup(snapshotData);
     }
-  },
-  expandCollapseSection: function(id) {
-    if($('#' + id + ' .agile-section-title').hasClass('ibm-showing')) {
-      $('#' + id + ' .agile-section-title').removeClass('ibm-showing');
-      $('#' + id + ' .agile-section-title a').removeClass('ibm-show-active');
-      $('#' + id + ' div.ibm-container-body').css('display','none');
-    } else {
-      $('#' + id + ' .agile-section-title').addClass('ibm-showing');
-      $('#' + id + ' .agile-section-title a').addClass('ibm-show-active');
-      $('#' + id + ' div.ibm-container-body').css('display','block');
-    }
+    $(Highcharts.charts).each(function(i,chart) {
+      if (chart == null) return;
+      if ($('#' + $(chart.container).attr('id')).length > 0) {
+        var height = chart.renderTo.clientHeight;
+        var width = chart.renderTo.clientWidth;
+        chart.setSize(width, height);
+      }
+    });
   },
   render: function() {
-    var assessmentFallBoxComponents = {
-      'id': 'assessmentFallBox',
-      'selectId': 'gotoAssesmentList',
-      'label': 'Go to assessment:',
-      'goBtnId': 'GoAssesmentBtn',
-      'createBtnId': 'CreateAssesmentBtn',
-      'createBtnTitle': 'Create assessment'
-    };
     return (
       <div id='assessmentSection'>
-        {/*
-        <h2 class='agile-section-title ibm-showing' data-open='true' id='agile-section-title'>
-          <a href='#show-hide' class='ibm-show-active' onClick={this.expandCollapseSection.bind(null, 'assessmentSection')}>
-            Maturity assessment trends
-          </a>
-        </h2>
-        */}
-        <HomeFallBox component={assessmentFallBoxComponents} />
         <div style={{'height':'100%'}} class='ibm-container-body'>
+          <div id='squad_assessment_card' style={{'display': 'none', 'height':'100%', 'position':'relative', 'top':'1%'}} />
           <div id='nsquad_assessment_card' style={{'display': 'none', 'height':'100%', 'position':'relative', 'top':'1%'}}>
             <div class='container-body-columns-ase' style={{'height':'35%'}}>
-              <div id={'trend_Block'} class='container-body-col-2-2' >
-                <div id={'assessmentTrend'}></div>
+              <div class='container-body-col-2-2' >
+                <div id='assessmentTrend'></div>
               </div>
-              <div id={'eval_Block'} class='container-body-col-2-2' >
-                <div id={'assessmentEval'}></div>
+              <div class='container-body-col-2-2' >
+                <div id='assessmentEval'></div>
               </div>
             </div>
-          </div>
-          <div id='squad_assessment_card' style={{'display': 'none', 'height':'100%', 'position':'relative', 'top':'1%'}}>
-              <div id={'assessmentCharts'} style={{'height':'100%'}}></div>
           </div>
         </div>
       </div>

@@ -3,8 +3,8 @@ var _ = require('underscore');
 var moment = require('moment');
 var Utils = require('../utils.jsx');
 
-module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAccess) {
-  $('#gotoIterationList').attr('disabled', 'disabled');
+module.exports.squadIterationsHandler = function(teamId, teamIterations) {
+  var iterationURL = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=';
 
   var graphCategoryWithChange = [];
   var graphCategory = [];
@@ -78,16 +78,14 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAcc
   storyPointFTESeries.data = [];
 
   var cycleTimeBacklogSeries = new Object();
-  cycleTimeBacklogSeries.name = 'Cycle time in backlog';
+  cycleTimeBacklogSeries.name = 'Time in backlog';
   cycleTimeBacklogSeries.data = [];
 
   var cycleTimeWIPSeries = new Object();
-  cycleTimeWIPSeries.name = 'Cycle time in WIP';
+  cycleTimeWIPSeries.name = 'Time in WIP';
   cycleTimeWIPSeries.data = [];
 
   var series = [];
-  // var iterationURL = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=';
-  var iterationURL = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=';
 
   // Get last 6 iterations
   var crntIter = '';
@@ -120,8 +118,10 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAcc
     });
   }
 
-  Utils.setSelectOptions('gotoIterationList', listOption, null, null, null);
-  IBMCore.common.widget.selectlist.init('#gotoIterationList');
+  if (p6Iterations.length == 0) {
+    console.log('no iterations to show');
+    return;
+  }
 
   // charts
   for (var i = p6Iterations.length - 1; i > -1; i--) {
@@ -311,25 +311,8 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, teamAcc
   loadPizzaChart('pizzaChart', '2 Pizza Rule (Team Size)', 'line', graphCategory, 'Count', yMax, teamMemSeries, fteSeries, targetSeries, 'Points');
   loadMultiDefectDeployChart('defectsChart', graphCategory, defectsStartSeries, defectsSeries, defectsClosedSeries, defectsEndSeries, deploySeries);
   loadSatisfactionChart('statisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', teamSatSeries, clientSatSeries, 'Points', sMax);
-  loadChartMultiChart('unitCostChart', 'Stories / Story Points per FTE', 'line', graphCategory, 'Count', '', storyFTESeries, storyPointFTESeries, 'Points', true);
-  loadChartMultiChart('wipBacklogChart', 'Cycle Time in Backlog and WIP (in days)', 'line', graphCategory, 'Average days per story', '', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', true);
-
-  $('#GoIterationBtn').click(function() {
-    var iterID = encodeURIComponent($('#gotoIterationList option:selected').val());
-    var teamID = encodeURIComponent(teamId);
-    // window.location = 'iteration?id=' + teamID + '&iter=' + iterID;
-    window.location = 'iteration?id=' + teamID + '&iter=' + iterID;
-  });
-  $('#gotoIterationList').removeAttr('disabled');
-
-  $('#CreateIterationBtn').attr('disabled', 'disabled');
-  if (teamAccess) {
-    $('#CreateIterationBtn').removeAttr('disabled');
-    $('#CreateIterationBtn').click(function(e) {
-      // window.location = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=new';
-      window.location = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=new';
-    });
-  }
+  loadChartMultiChart('unitCostChart', 'Unit Cost per Person Day', 'line', graphCategory, 'Count', '', storyFTESeries, storyPointFTESeries, 'Points', true);
+  loadChartMultiChart('wipBacklogChart', 'Cycle Time (in days)', 'line', graphCategory, 'Average days per story', '', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', true);
 
   $('#squad_team_scard').show();
   redrawCharts('iterationSection');
@@ -1639,11 +1622,11 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
   teamStatSeries.data = [];
 
   var cycleTimeBacklogSeries = new Object();
-  cycleTimeBacklogSeries.name = 'Cycle time in backlog';
+  cycleTimeBacklogSeries.name = 'Time in backlog';
   cycleTimeBacklogSeries.data = [];
 
   var cycleTimeWIPSeries = new Object();
-  cycleTimeWIPSeries.name = 'Cycle time in WIP';
+  cycleTimeWIPSeries.name = 'Time in WIP';
   cycleTimeWIPSeries.data = [];
 
   var monthList = teamIterations;
@@ -1784,21 +1767,14 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
   loadLineChartParent('pvelocityChart', 'Velocity', graphCategory, 'Story points', '', velocitySeries, 'Points');
   loadLineChartParent('pthroughputChart', 'Throughput', graphCategory, 'Stories/tickets/cards', '', throughputSeries, 'Points');
   loadMultiDefectDeployChartParent('pdefectsChart', graphCategory, defectsStartSeries, defectsSeries, defectsClosedSeries, defectsEndSeries, deploySeries);
-  loadMultiLineChartParent('pwipBacklogChart', 'Cycle Time in Backlog and WIP (in days)', graphCategory, 'Average days per story', '', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', false);
+  loadMultiLineChartParent('pwipBacklogChart', 'Cycle Time (in days)', graphCategory, 'Average days per story', '', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', false);
   loadMultiLineChartParent('pstatisfactionChart', 'Client and Team Satisfaction', graphCategory, 'Rating', '', teamStatSeries, clientStatSeries, 'Points', false, ctsYMax);
   loadBarChartParent('pPizzaChart', 'Squad Team Size per Iteration', graphCategory, team5to12Ser, pizYMax);
   loadPiePizzaChart('piePizzaChart', '2 Pizza Rule (squad teams) - Current', pData, cenTitle);
 
-  setRefreshDate(timestamp);
   $('#nsquad_team_scard').show();
   redrawCharts('iterationSection');
 };
-
-function setRefreshDate(timestamp) {
-  //var myDate = new Date(timestamp*1000); // creates a date that represents the number of milliseconds after midnight GMT on Januray 1st 1970.
-  //$("#refreshDate").html(moment(myDate).format("DD-MMM-YYYY, hh:mm"));
-  $('#refreshDate').html(moment.utc(timestamp).format('MMM DD, YYYY, HH:mm (z)'));
-}
 
 function showDateDDMMMYYYY(formatDate) {
   if (formatDate == null || formatDate == '') return '';
@@ -1863,11 +1839,6 @@ function redrawCharts(section) {
 }
 
 function destroyIterationCharts() {
-  // var chartIds = ['velocityChart', 'throughputChart', 'pizzaChart', 'defectsChart', 'statisfactionChart', 'unitCostChart', 'pvelocityChart', 'pthroughputChart', 'pPizzaChart', 'pdefectsChart', 'piePizzaChart'];
-  // $.each(chartIds, function(index, id) {
-  //   if ($('#' + id).highcharts() != null)
-  //     $('#' + id).highcharts().destroy();
-  // });
   $(Highcharts.charts).each(function(i, chart) {
     if (chart == null) return;
 

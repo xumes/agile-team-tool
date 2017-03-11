@@ -48,7 +48,7 @@ var HomeTeamHeader = React.createClass({
       $('.home-team-header-member-image').css({'width': height*0.9+'px', 'height': height*0.9+'px'});
     }, 0);
 
-    $('.home-team-header-btn-img, #homeTeamHeaderBookmarkBtn, #teamBookmark, .home-team-header-btn-img2, #teamMemberTable').unbind('mouseenter mouseleave');
+    $('.home-team-header-btn-img, .home-team-header-btn-title, #teamBookmark, .home-team-header-btns, .home-team-header-btn-img2, .home-team-header-btn-title3, #teamMemberTable').unbind('mouseenter mouseleave');
     // bookmarks button
     $('.home-team-header-btn-img, .home-team-header-btn-title').bind('mouseenter', function() {
       if ($('#teamBookmark').css('display') == 'none') {
@@ -58,7 +58,7 @@ var HomeTeamHeader = React.createClass({
         $('#teamMemberTable').trigger('mouseleave');
       }
     });
-    $('#homeTeamHeaderBookmarkBtn, #teamBookmark').bind('mouseleave', function() {
+    $('#teamBookmark, .home-team-header-btns').bind('mouseleave', function() {
       if ($('#teamBookmark').css('display') != 'none' && $('#teamBookmark').attr('data-open') != 'true') {
         $('.home-team-header-btn-img svg > path').css('fill', '#FFFFFF');
         $('.home-team-header-btn-title h').css('color', '#FFFFFF');
