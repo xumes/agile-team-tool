@@ -37,7 +37,7 @@ var HomeIterSection = React.createClass({
     }
   },
   render: function() {
-    if (this.props.loadDetailTeam.team && (this.props.loadDetailTeam.iterations.length > 0 || this.props.loadDetailTeam.snapshot)) {
+    if (this.props.loadDetailTeam.team && ((this.props.loadDetailTeam.iterations && this.props.loadDetailTeam.iterations.length > 0) || this.props.loadDetailTeam.snapshot)) {
       return (
         <div id='iterationSection'>
           <div style={{'height':'100%'}} class='ibm-container-body'>
