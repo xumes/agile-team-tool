@@ -4,7 +4,6 @@ var moment = require('moment');
 var Utils = require('../utils.jsx');
 
 module.exports.plotAssessmentSeries = function(teamAssessments) {
-  console.log('plotAssessmentSeries');
   $('#squad_assessment_card').empty();
   destroyAssessmentCharts();
 
@@ -290,7 +289,6 @@ function plotAssessment(index, chartData) {
 }
 
 function createChartSection(prefixId, count) {
-  console.log('createChartSection', prefixId);
   var margintop = 'top: 0%';
   var mainDiv = document.createElement('div');
   mainDiv.setAttribute('class', 'container-body-columns-ase');

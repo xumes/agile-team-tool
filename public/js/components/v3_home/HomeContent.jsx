@@ -121,8 +121,6 @@ var HomeContent = React.createClass({
     $('.home-trends-overflow').nanoScroller();
   },
   assessmentGraphArea: function(sectionId) {
-    console.log('squad_assessment_card', $('#squad_assessment_card .container-body-columns-ase'));
-    console.log('nsquad_assessment_card', $('#nsquad_assessment_card .container-body-columns-ase'));
     var chartBlock = $('#'+sectionId+' .container-body-columns-ase');
     var chartLength = 0;
     _.each(chartBlock, function(block){

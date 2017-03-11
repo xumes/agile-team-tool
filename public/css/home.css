@@ -4193,7 +4193,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   top: 100%;
   left: 5%;
-  font-family: "HelvNeue Light for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.08em;
   color: #323232;
 }

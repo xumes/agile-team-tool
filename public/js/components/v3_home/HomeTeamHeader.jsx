@@ -51,7 +51,6 @@ var HomeTeamHeader = React.createClass({
     $('.home-team-header-btn-img, .home-team-header-btn-title, #teamBookmark, .home-team-header-btns, .home-team-header-btn-img2, .home-team-header-btn-title3, #teamMemberTable').unbind('mouseenter mouseleave');
     // bookmarks button
     $('.home-team-header-btn-img, .home-team-header-btn-title').bind('mouseenter', function() {
-      console.log('here');
       if ($('#teamBookmark').css('display') == 'none') {
         $('.home-team-header-btn-img svg > path').css('fill', '#325C80');
         $('.home-team-header-btn-title h').css('color', '#325C80');

@@ -33,7 +33,7 @@ var HomeIterSection = React.createClass({
           $('#'+key+'Chart_block').hide();
       });
       iterationHandler.iterationSnapshotHandler(teamId, teamName, snapshotData);
-      //this.props.iterationGraphArea('nsquad_team_scard');
+      this.props.iterationGraphArea('nsquad_team_scard');
     }
   },
   render: function() {
