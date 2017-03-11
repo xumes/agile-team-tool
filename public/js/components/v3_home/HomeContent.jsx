@@ -52,17 +52,119 @@ var HomeContent = React.createClass({
     window.removeEventListener('resize', this.props.handleChartResize);
   },
 
-  showFilter: function() {
-    if ($('.home-chart-filter-block').css('display') == 'none') {
-      if (this.props.loadDetailTeam.team.type == 'squad') {
-        $('.home-chart-filter-block').css('left', '32.5%');
-      } else {
-        $('.home-chart-filter-block').css('left', '-2.5%');
+  componentDidUpdate: function() {
+    $('.home-trends-overflow').nanoScroller();
+    var isSquad = this.props.loadDetailTeam.team.type == 'squad';
+    $('.home-trends-block-filter-img, .home-chart-filter-block, .home-trends-block-title').unbind('mouseenter mouseleave');
+    // filter button
+    $('.home-trends-block-filter-img').bind('mouseenter', function() {
+      if ($('.home-chart-filter-block').css('display') == 'none') {
+        if (isSquad) {
+          //$('.home-chart-filter-block').css('left', '77%');
+          $('.home-chart-filter-block').css('left', '32.5%');
+        } else {
+          //$('.home-chart-filter-block').css('left', '44%');
+          $('.home-chart-filter-block').css('left', '-2.5%');
+        }
+        $('.home-chart-filter-block').fadeIn();
       }
-      $('.home-chart-filter-block').fadeIn();
-    } else {
-      $('.home-chart-filter-block').fadeOut();
+    });
+    $('.home-chart-filter-block, .home-trends-block-title').bind('mouseleave', function() {
+      if ($('.home-chart-filter-block').css('display') != 'none' && $('.home-chart-filter-block').attr('data-open') != 'true') {
+        $('.home-chart-filter-block').fadeOut();
+      }
+    });
+  },
+  showFilter: function() {
+    $('.home-chart-filter-block').attr('data-open', 'true');
+    $('.home-chart-filter-block').trigger('mouseenter');
+  },
+  closeFilter: function() {
+    $('.home-chart-filter-block').attr('data-open', 'false');
+    $('.home-chart-filter-block').trigger('mouseleave');
+  },
+  iterationGraphArea: function(sectionId) {
+    var charts = $('#'+sectionId+' > .container-body-col-2-1');
+    var chartLength = 0;
+    _.each(charts, function(chart){
+      if ($('#'+chart.id).css('display') != 'none') {
+        chartLength++;
+      }
+    });
+
+    var chartHeight = '';
+    var secHeight = '';
+    switch (Math.floor((chartLength+1)/2)) {
+      case 0:
+        chartHeight = '0';
+        secHeight = '0';
+        break;
+      case 1:
+        chartHeight = '98%';
+        secHeight = '26.45%';
+        break;
+      case 2:
+        chartHeight = '48%';
+        secHeight = '52.9%';
+        break;
+      case 3:
+        chartHeight = '31%';
+        secHeight = '79.35%';
+        break;
+      case 4:
+        chartHeight = '23%';
+        secHeight = '105.8%';
+        break;
     }
+    $('#iterationSection').css('height',secHeight);
+    $('#'+sectionId+' > .container-body-col-2-1').css('height',chartHeight);
+    $('.home-trends-overflow').nanoScroller();
+  },
+  assessmentGraphArea: function(sectionId) {
+    console.log('squad_assessment_card', $('#squad_assessment_card .container-body-columns-ase'));
+    console.log('nsquad_assessment_card', $('#nsquad_assessment_card .container-body-columns-ase'));
+    var chartBlock = $('#'+sectionId+' .container-body-columns-ase');
+    var chartLength = 0;
+    _.each(chartBlock, function(block){
+      if ($('#'+block.id).css('display') != 'none') {
+        chartLength++;
+      }
+    });
+    var chartHeight = '';
+    var secHeight = '';
+    if (sectionId == 'nsquad_assessment_card') {
+      switch (chartLength) {
+        case 0:
+          chartHeight = '0';
+          secHeight = '0';
+          break;
+        default:
+          chartHeight = '70%';
+          secHeight = '50%';
+      }
+    } else {
+      switch (chartLength) {
+        case 0:
+          chartHeight = '0';
+          secHeight = '0';
+          break;
+        case 1:
+          chartHeight = '60%';
+          secHeight = '50%';
+          break;
+        case 2:
+          chartHeight = '40%';
+          secHeight = '70%';
+          break;
+        case 3:
+          chartHeight = '28%';
+          secHeight = '105%';
+          break;
+      }
+    }
+    $('#assessmentSection').css('height',secHeight);
+    $('#'+sectionId+' .container-body-columns-ase').css('height',chartHeight);
+    $('.home-trends-overflow').nanoScroller();
   },
   render: function() {
     var partialName = 'Partial Data';
@@ -89,14 +191,16 @@ var HomeContent = React.createClass({
               <h4>&nbsp;/&nbsp;</h4>
               <h4 style={{'color':'#FFA501'}}>*</h4>
               <h4 id='partialName'>&nbsp;{partialName}</h4>
-              <div onClick={this.showFilter} style={{'cursor':'pointer'}}>
+              <div class='home-trends-block-filter-img' onClick={this.showFilter} style={{'cursor':'pointer'}}>
                 <InlineSVG src={require('../../../img/Att-icons/att-icons_filter.svg')}></InlineSVG>
               </div>
-              <HomeChartFilter loadDetailTeam={this.props.loadDetailTeam} showFilter={this.showFilter}/>
+              <HomeChartFilter loadDetailTeam={this.props.loadDetailTeam} closeFilter={this.closeFilter} iterationGraphArea={this.iterationGraphArea} assessmentGraphArea={this.assessmentGraphArea}/>
             </div>
-            <div class='home-trends-overflow'>
-              <HomeIterSection loadDetailTeam={this.props.loadDetailTeam}/>
-              <HomeAseSection loadDetailTeam={this.props.loadDetailTeam}/>
+            <div class='home-trends-overflow nano'>
+              <div class='nano-content'>
+                <HomeIterSection loadDetailTeam={this.props.loadDetailTeam} iterationGraphArea={this.iterationGraphArea}/>
+                <HomeAseSection loadDetailTeam={this.props.loadDetailTeam} assessmentGraphArea={this.assessmentGraphArea}/>
+              </div>
             </div>
           </div>
         </div>
