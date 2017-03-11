@@ -732,7 +732,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   width: 60%;
   height: 10%;
-  top: -327%;
+  top: -344%;
   left: 20%;
 }
 
@@ -741,7 +741,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   width: 60%;
   height: 10%;
-  top: -265%;
+  top: -282%;
   left: 20%;
 }
 
@@ -762,7 +762,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .home-nav-show-text {
   position: relative;
   float: left;
-  top: -298%;
+  top: -315%;
   right: 18%;
   -ms-transform: rotate(90deg);
   -webkit-transform: rotate(90deg);
@@ -774,7 +774,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .home-nav-div {
   width: 30%;
-  height: 200%;
+  height: 205%;
   background-color: #F7F7F7;
   position: absolute;;
   float: left;
@@ -1979,6 +1979,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .home-chart-filter-title > div svg g {
   fill: #FFFFFF;
+  opacity: 1;
 }
 
 .home-chart-filter-title > h2 {
@@ -3549,7 +3550,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .agile-tool-footer {
   position: relative;
   float: left;
-  top: 107%;
+  top: 112%;
   height: 40%;
   width: 100%;
   background-color: #F7F7F7;
