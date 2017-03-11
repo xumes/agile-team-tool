@@ -48,7 +48,6 @@ var SysStatus = mongoose.model('sysStatus', sysStatusSchema);
 
 var system = {
   getTeamMemberRoles: function() {
-    console.log('getTeamMemberRoles');
     return new Promise(function(resolve, reject) {
       SysCollOptions.findOne({'collTag': 'team', 'collField': 'members.role'}).exec()
       .then(function(options){
