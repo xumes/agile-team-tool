@@ -1136,7 +1136,7 @@ function loadLineChartParent(id, title, categories, yAxisLabel, xAxisLabel, line
         for (var i=0;i < this.series.chart.series.length; i++) {
           if (this.series.chart.series[i].visible)
             formatResult += '<span style="color:' + this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>'
-            + this.series.chart.series[i].name + ' ' + yAxisLabel.toLowerCase() + ': '
+            + this.series.chart.series[i].name  + ': '
             + this.series.chart.series[i].data[point].y + '<br>';
         }
         formatResult += 'Squad teams: ' + this.point.totalSquad + '<br>' + 'Iterations: ' + this.point.totalCompleted;
@@ -1568,19 +1568,19 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
   var graphCategory = [];
 
   var velocitySeries = new Object();
-  velocitySeries.name = 'Planned';
+  velocitySeries.name = 'Delivered';
   velocitySeries.data = [];
 
   var commVelocitySeries = new Object();
-  commVelocitySeries.name = 'Delivered';
+  commVelocitySeries.name = 'Planned';
   commVelocitySeries.data = [];
 
   var throughputSeries = new Object();
-  throughputSeries.name = 'Planned';
+  throughputSeries.name = 'Delivered';
   throughputSeries.data = [];
 
   var commThroughputSeries = new Object();
-  commThroughputSeries.name = 'Delivered';
+  commThroughputSeries.name = 'Planned';
   commThroughputSeries.data = [];
 
   var teamLt5Ser = new Object();
