@@ -5,12 +5,14 @@ var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
 var AssessmentPopover = require('./assessments/AssessmentPopover.jsx');
 var AssessmentSetupPopover = require('./assessments/AssessmentSetupPopover.jsx');
+var AssessmentACPlanPopover = require('./assessments/AssessmentACPlanPopover.jsx');
 
 var HomeAseSummary = React.createClass({
   getInitialState: function() {
     return {
       showModal: false,
       showSetupModel: false,
+      showACPlanModel: false,
       selectedAssessment: '',
       activeTemplate: null,
       assessTemplate: null,
@@ -102,12 +104,17 @@ var HomeAseSummary = React.createClass({
   hideAssessmentSetupPopover: function() {
     this.setState({ showSetupModel: false });
   },
+  showAssessmentACPlanPopover: function() {
+    this.setState({ showACPlanModel: true });
+  },
+  hideAssessmentACPlanPopover: function() {
+    this.setState({ showACPlanModel: false });
+  },
   updateAssessmentSummary: function() {
     this.setState({shouldUpdate:true});
     this.state.shouldUpdate = false;
   },
   continueAssessmentDraft: function(type, software) {
-    console.log(type,software);
     this.state.type = type;
     this.state.software = software;
     this.showAssessmentPopover();
@@ -289,7 +296,7 @@ var HomeAseSummary = React.createClass({
                 </div>
                 <div class='review-box'>
                   <h1>{'Not sure what to do next?'}</h1>
-                  <button type='button' class={hasDraft?'ibm-btn-pri ibm-btn-blue-50':'ibm-btn-sec ibm-btn-blue-50'} disabled={haveAccess}>{'Review Action Plan'}</button>
+                  <button type='button' onClick={self.showAssessmentACPlanPopover} class={hasDraft?'ibm-btn-pri ibm-btn-blue-50':'ibm-btn-sec ibm-btn-blue-50'} disabled={haveAccess}>{'Review Action Plan'}</button>
                   <h2>{'Last Updated:'}</h2>
                   <h3 style={{'textAlign':'right'}}>{updateDate}</h3>
                 </div>
@@ -300,7 +307,10 @@ var HomeAseSummary = React.createClass({
                   <h2 style={{'textAlign':'right'}} hidden={hasDraft?false:true}>{draftUpdateDate}</h2>
                 </div>
               </div>
-              <Modal aria-labelledby='modal-label' tabIndex='10' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAssessmentPopover}>
+              <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showACPlanModel} onHide={self.hideAssessmentACPlanPopover}>
+                <AssessmentACPlanPopover hideAssessmentACPlanPopover={self.hideAssessmentACPlanPopover} loadDetailTeam={self.props.loadDetailTeam} tempAssess={tempAssess}/>
+              </Modal>
+              <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAssessmentPopover}>
                 <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary} assessType={self.state.type} assessSoftware={self.state.software}/>
               </Modal>
             </div>

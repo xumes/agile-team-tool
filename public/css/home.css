@@ -5932,6 +5932,15 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-size: 1em;
 }
 
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector > h1 {
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 2.0em;
+  color: #5A5A5A;
+  position: relative;
+}
+
 .assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector > .select2 {
   height: 100%;
   font-size: 1em;
@@ -6590,6 +6599,73 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-size: 1.4em;
   line-height: 0em;
   text-align: center;
+}
+
+.assessment-popover-block > .agile-summary {
+  position: relative;
+  float: left;
+  margin-top: 2%;
+  margin-bottom: 3%;
+  width: 96%;
+  left: 2%;
+}
+
+.assessment-popover-block > .agile-summary > .agile-summary-table {
+  position: relative;
+  float: left;
+  width: 48%;
+}
+
+.assessment-popover-block > .agile-summary > .agile-summary-table > .header-title {
+  position: relative;
+  float: left;
+  width: 100%;
+  margin: 0;
+  border-bottom: 0.1em solid #323232;
+}
+
+.assessment-popover-block > .agile-summary > .agile-summary-table > .header-title > h1 {
+  display: inline-block;
+  position: relative;
+  float: left;
+  padding: 0;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 2em;
+  text-align: left;
+  color: #323232;
+}
+
+.assessment-popover-block > .agile-summary > .agile-summary-table > .component-block {
+  position: relative;
+  float: left;
+  width: 100%;
+}
+
+.assessment-popover-block > .agile-summary > .agile-summary-table > .component-block:nth-child(odd) {
+  background-color: #EDEDED;
+}
+
+.assessment-popover-block > .agile-summary > .agile-summary-table > .component-block > div{
+  position: relative;
+  float: left;
+}
+
+.assessment-popover-block > .agile-summary > .agile-summary-table > .component-block > div > h1,
+.assessment-popover-block > .agile-summary > .agile-summary-table > .component-block > div > h2 {
+  display: inline-block;
+  position: relative;
+  float: left;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 2em;
+  text-align: left;
+  color: #323232;
+  cursor: pointer;
+}
+.assessment-popover-block > .agile-summary > .agile-summary-table > .component-block > div > h1:hover {
+  color: #4178BE;
 }
 
 .no-trends-message-block {
