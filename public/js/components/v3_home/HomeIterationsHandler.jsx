@@ -119,7 +119,6 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations) {
   }
 
   if (p6Iterations.length == 0) {
-    console.log('no iterations to show');
     return;
   }
 
@@ -1078,7 +1077,7 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
   });
 }
 
-function loadLineChartParent(id, title, categories, yAxisLabel, xAxisLabel, lineSeries, unit) {
+function loadLineChartParent(id, title, categories, yAxisLabel, xAxisLabel, lineSeries1, lineSeries2, unit) {
   new Highcharts.Chart({
     chart: {
       type: 'line',
@@ -1132,14 +1131,18 @@ function loadLineChartParent(id, title, categories, yAxisLabel, xAxisLabel, line
 
     tooltip: {
       formatter: function() {
-        if (this.point.totalSquad != undefined) {
-          return '<b>' + this.key + '<b><br>' + yAxisLabel + ': ' + this.point.y + '<br>' + 'Squad teams: ' + this.point.totalSquad + '<br>' + 'Iterations: ' + this.point.totalCompleted;
-        } else {
-          return '<b>' + this.key + '</b><br>' + yAxisLabel + ': ' + this.point.y + '<br>' + this.point.startDate + ' - ' + this.point.endDate;
+        var formatResult = '<b>' + this.key + '<b><br>';
+        var point = this.point.index;
+        for (var i=0;i < this.series.chart.series.length; i++) {
+          if (this.series.chart.series[i].visible)
+            formatResult += '<span style="color:' + this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>'
+            + this.series.chart.series[i].name + ' ' + yAxisLabel.toLowerCase() + ': '
+            + this.series.chart.series[i].data[point].y + '<br>';
         }
+        formatResult += 'Squad teams: ' + this.point.totalSquad + '<br>' + 'Iterations: ' + this.point.totalCompleted;
+        return formatResult;
       }
     },
-
     legend: {
       align: 'center',
       verticalAlign: 'bottom',
@@ -1151,22 +1154,16 @@ function loadLineChartParent(id, title, categories, yAxisLabel, xAxisLabel, line
       enabled: false
     },
 
-    // subtitle: {
-    //   text: '---Partial month',
-    //   verticalAlign: 'bottom',
-    //   align: 'center',
-    //   y: 15,
-    //   x: 30,
-    //   style: {
-    //     fontSize: '1em',
-    //     color: 'orange'
-    //   }
-    // },
-
     series: [{
-      showInLegend: false,
-      name: lineSeries.name,
-      data: lineSeries.data,
+      showInLegend: true,
+      name: lineSeries1.name,
+      data: lineSeries1.data,
+      zoneAxis: 'x',
+      zones: [{value: 4.1}, {dashStyle: 'dash', color: 'orange'}]
+    }, {
+      showInLegend: true,
+      name: lineSeries2.name,
+      data: lineSeries2.data,
       zoneAxis: 'x',
       zones: [{value: 4.1}, {dashStyle: 'dash', color: 'orange'}]
     }]
@@ -1571,12 +1568,20 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
   var graphCategory = [];
 
   var velocitySeries = new Object();
-  velocitySeries.name = teamName;
+  velocitySeries.name = 'Planned';
   velocitySeries.data = [];
 
+  var commVelocitySeries = new Object();
+  commVelocitySeries.name = 'Delivered';
+  commVelocitySeries.data = [];
+
   var throughputSeries = new Object();
-  throughputSeries.name = teamName;
+  throughputSeries.name = 'Planned';
   throughputSeries.data = [];
+
+  var commThroughputSeries = new Object();
+  commThroughputSeries.name = 'Delivered';
+  commThroughputSeries.data = [];
 
   var teamLt5Ser = new Object();
   teamLt5Ser.name = 'Teams <5 members';
@@ -1645,12 +1650,26 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
     vData.totalSquad = isNaN(parseInt(monthList[i].totalSquad)) ? 0 : parseInt(monthList[i].totalSquad);
     velocitySeries.data.push(vData);
 
+    var cvData = new Object();
+    cvData.name = monthList[i].month;
+    cvData.y = isNaN(parseInt(monthList[i].totalCommPoints)) ? 0 : parseInt(monthList[i].totalCommPoints);
+    cvData.totalCompleted = isNaN(parseInt(monthList[i].totalCompleted)) ? 0 : parseInt(monthList[i].totalCompleted);
+    cvData.totalSquad = isNaN(parseInt(monthList[i].totalSquad)) ? 0 : parseInt(monthList[i].totalSquad);
+    commVelocitySeries.data.push(cvData);
+
     var tData = new Object();
     tData.name = monthList[i].month;
     tData.y = isNaN(parseInt(monthList[i].totalStories)) ? 0 : parseInt(monthList[i].totalStories);
     tData.totalCompleted = isNaN(parseInt(monthList[i].totalCompleted)) ? 0 : parseInt(monthList[i].totalCompleted);
     tData.totalSquad = isNaN(parseInt(monthList[i].totalSquad)) ? 0 : parseInt(monthList[i].totalSquad);
     throughputSeries.data.push(tData);
+
+    var ctData = new Object();
+    ctData.name = monthList[i].month;
+    ctData.y = isNaN(parseInt(monthList[i].totalCommStories)) ? 0 : parseInt(monthList[i].totalCommStories);
+    ctData.totalCompleted = isNaN(parseInt(monthList[i].totalCompleted)) ? 0 : parseInt(monthList[i].totalCompleted);
+    ctData.totalSquad = isNaN(parseInt(monthList[i].totalSquad)) ? 0 : parseInt(monthList[i].totalSquad);
+    commThroughputSeries.data.push(ctData);
 
     var defData = new Object();
     defData.name = monthList[i].month;
@@ -1764,8 +1783,8 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
     ctsYMax = null;
   }
   destroyIterationCharts();
-  loadLineChartParent('pvelocityChart', 'Velocity', graphCategory, 'Story points', '', velocitySeries, 'Points');
-  loadLineChartParent('pthroughputChart', 'Throughput', graphCategory, 'Stories/tickets/cards', '', throughputSeries, 'Points');
+  loadLineChartParent('pvelocityChart', 'Velocity', graphCategory, 'Story points', '', commVelocitySeries, velocitySeries, 'Points');
+  loadLineChartParent('pthroughputChart', 'Throughput', graphCategory, 'Stories/tickets/cards', '', commThroughputSeries, throughputSeries, 'Points');
   loadMultiDefectDeployChartParent('pdefectsChart', graphCategory, defectsStartSeries, defectsSeries, defectsClosedSeries, defectsEndSeries, deploySeries);
   loadMultiLineChartParent('pwipBacklogChart', 'Cycle Time (in days)', graphCategory, 'Average days per story', '', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', false);
   loadMultiLineChartParent('pstatisfactionChart', 'Client and Team Satisfaction', graphCategory, 'Rating', '', teamStatSeries, clientStatSeries, 'Points', false, ctsYMax);
