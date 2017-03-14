@@ -88,7 +88,7 @@ var AssessmentACPlanPopover = React.createClass({
               <InlineSVG src={require('../../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
             </div>
           </div>
-          <AssessmentSummaryTable componentResult={componentResultLC} componentId={'1'}/>
+          <AssessmentSummaryTable loadDetailTeam={self.props.loadDetailTeam} componentResult={componentResultLC} assessType={assessType} componentId={'1'}/>
           <div class='lc-header'>
             <div class='header-title'>
               <h1>{'Delivery and DevOps'}</h1>
@@ -100,7 +100,7 @@ var AssessmentACPlanPopover = React.createClass({
               <InlineSVG src={require('../../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
             </div>
           </div>
-          <AssessmentSummaryTable componentResult={componentResultDD} componentId={'2'}/>
+          <AssessmentSummaryTable loadDetailTeam={self.props.loadDetailTeam} componentResult={componentResultDD} assessType={assessType} componentId={'2'}/>
         </div>
       )
     } else {

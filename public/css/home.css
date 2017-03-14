@@ -6676,6 +6676,13 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   color: #4178BE;
 }
 
+.assessment-popover-block > .agile-summary > .agile-summary-chart {
+  position: relative;
+  float: left;
+  width: 48%;
+  left: 4%;
+}
+
 .no-trends-message-block {
   height: 15em;
 }
