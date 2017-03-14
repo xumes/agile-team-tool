@@ -6646,6 +6646,14 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   background-color: #EDEDED;
 }
 
+.assessment-popover-block > .agile-summary > .agile-summary-table > .component-block:nth-child(even):hover {
+  background-color: #c0e6ff;
+}
+
+.assessment-popover-block > .agile-summary > .agile-summary-table > .component-block:nth-child(odd):hover {
+  background-color: #7cc7ff;
+}
+
 .assessment-popover-block > .agile-summary > .agile-summary-table > .component-block > div{
   position: relative;
   float: left;
