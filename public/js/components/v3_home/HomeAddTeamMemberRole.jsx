@@ -109,25 +109,25 @@ var HomeAddTeamMemberRole = React.createClass({
       updatedMember.push(obj);
     });
 
-    if (type === OPTSELECT.ROLE) {
-      var tmproles = self.state.defaultRoles;
-      // when selecting the 'Other...' option get the entered data.
-      if (!_.contains(tmproles, selectVal)) {
-        var tmp = self.state.defaultRoles;
-        tmp.push(selectVal);
-        self.setState({defaultRoles: tmp});
-      }
-    }
+    // if (type === OPTSELECT.ROLE) {
+    //   var tmproles = self.state.defaultRoles;
+    //   when selecting the 'Other...' option get the entered data.
+    //   if (!_.contains(tmproles, selectVal)) {
+    //     var tmp = self.state.defaultRoles;
+    //     tmp.push(selectVal);
+    //     self.setState({defaultRoles: tmp});
+    //   }
+    // }
 
-    if (type === OPTSELECT.AVGWORKWEEK) {
-      var tmpworkweek = self.state.defaultWorkTime;
-      if (!_.contains(tmpworkweek, selectVal)) {
-        var obj = {};
-        obj[selectVal] = selectLabel;
-        var tmp = _.extend(tmpworkweek, obj);
-        self.setState({defaultWorkTime: tmp});
-      }
-    }
+    // if (type === OPTSELECT.AVGWORKWEEK) {
+    //   var tmpworkweek = self.state.defaultWorkTime;
+    //   if (!_.contains(tmpworkweek, selectVal)) {
+    //     var obj = {};
+    //     obj[selectVal] = selectLabel;
+    //     var tmp = _.extend(tmpworkweek, obj);
+    //     self.setState({defaultWorkTime: tmp});
+    //   }
+    // }
 
     self.props.setTeamMember(updatedMember);
     this.enableFinishButton();

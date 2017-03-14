@@ -5089,6 +5089,23 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   cursor: pointer;
 }
 
+#addTeamMemberRoleBlock .data-team-role {
+  border: 1px solid #000;
+  font-size: 1.4em;
+  padding: 0.45em 0.5em 0.45em 0.6em;
+}
+
+#addTeamMemberRoleBlock .arrow-down {
+  height:0px;
+  width:0px;
+  border:none;
+  border-top:5px solid #999;
+  border-left:5px solid rgba(0,0,0,0);
+  border-right:5px solid rgba(0,0,0,0);
+  margin-top: 0.6em;
+  float: right;
+}
+
 #addTeamMemberRoleBlock .custom-field-other {
   margin-top: 0.5em;
 }

@@ -27,7 +27,6 @@ var HomeAddTeamHierarchyModal = React.createClass({
   componentWillUpdate: function(nextProps, nextState) {
     var self = this;
     // make sure to get the latest team names on focus of this screen
-    console.log('componentWillUpdate');
     if (!self.props.activeWindow && nextProps.activeWindow) {
       this.selectListInit();
     }
@@ -62,7 +61,6 @@ var HomeAddTeamHierarchyModal = React.createClass({
   parentSelectHandler: function(e){
     var self = this;
     var selectedValue = e.target.value;
-    console.log('parentSelectHandler');    
     var teamSelected = _.find(self.props.selectableParents, function(teamSelected) {
       if (_.isEqual(selectedValue,teamSelected._id)) return teamSelected;
     });
@@ -107,7 +105,6 @@ var HomeAddTeamHierarchyModal = React.createClass({
 
   childSelectHandler: function(e) {
     var self = this;         
-    console.log('childSelectHandler');
     var selectedValue = e.target.value;
     if (!_.isEmpty(selectedValue)) {
       var buttonOptions = self.state.buttonOptions;
