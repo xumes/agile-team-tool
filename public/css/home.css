@@ -5299,10 +5299,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   }
 
 .checkbox input[type="checkbox"]:checked + span::after {
-  content: "";
+  content: "✓";
   position: absolute;
   top: 0.25em;
-  left: 0.1em;
+  left: 0.2em;
   color: #4178BE;
   font-weight: bold;
   font-size: 1.6em;
