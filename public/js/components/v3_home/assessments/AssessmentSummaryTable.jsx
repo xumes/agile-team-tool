@@ -220,10 +220,10 @@ var AssessmentSummaryTable = React.createClass({
                 <h1 onClick={self.displayGraphHandler.bind(null, 'Overall')}>{'Overall'}</h1>
               </div>
               <div style={{'width':'15%'}}>
-                <h2>{self.props.componentResult.currentScore}</h2>
+                <h2>{self.props.componentResult.currentScore==null?0:self.props.componentResult.currentScore.toFixed(1)}</h2>
               </div>
               <div style={{'width':'15%'}}>
-                <h2>{self.props.componentResult.targetScore}</h2>
+                <h2>{self.props.componentResult.targetScore==null?0:self.props.componentResult.targetScore.toFixed(1)}</h2>
               </div>
             </div>
             {components}
