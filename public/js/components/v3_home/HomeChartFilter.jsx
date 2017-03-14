@@ -21,20 +21,20 @@ var HomeChartFilter = React.createClass({
     if (team.type == 'squad') {
       if (isShow) {
         $('#'+id+'Chart_block').show();
-        //chartStatus.squad.btns[key].show = true; // this is for auto-apply on click
+        chartStatus.squad.btns[id].show = true; // this is for auto-apply on click
       } else {
         $('#'+id+'Chart_block').hide();
-        //chartStatus.squad.btns[key].show = false; // this is for auto-apply on click
+        chartStatus.squad.btns[id].show = false; // this is for auto-apply on click
       }
       self.props.iterationGraphArea('squad_team_scard');
       self.props.assessmentGraphArea('squad_assessment_card');
     } else {
       if (isShow) {
         $('#'+id+'Chart_block').show();
-        //chartStatus.nonSquad.btns[key].show = true; // this is for auto-apply on click
+        chartStatus.nonSquad.btns[id].show = true; // this is for auto-apply on click
       } else {
         $('#'+id+'Chart_block').hide();
-        //chartStatus.nonSquad.btns[key].show = false; // this is for auto-apply on click
+        chartStatus.nonSquad.btns[id].show = false; // this is for auto-apply on click
       }
       self.props.iterationGraphArea('nsquad_team_scard');
       self.props.assessmentGraphArea('nsquad_assessment_card');
@@ -161,7 +161,7 @@ var HomeChartFilter = React.createClass({
       }
       var classArrow = self.props.loadDetailTeam.team.type == 'squad' ? 'home-chart-filter-arrow' : 'home-chart-filter-arrow-right';
       return (
-        <div class='home-chart-filter-block' style={{'display':'none','width':'32%','height':'400%','top':'35%'}}>
+        <div class='home-chart-filter-block' style={{'display':'none','width':'32%','height':'350%','top':'35%'}}>
           <div class={classArrow}>
             <InlineSVG class='home-chart-filter-arrow-img' src={require('../../../img/Att-icons/play-arrow.svg')}></InlineSVG>
           </div>
@@ -176,12 +176,14 @@ var HomeChartFilter = React.createClass({
               <div class='home-chart-filter-content'>
                 {btns}
               </div>
+              {/*
               <div class='home-chart-filter-btns'>
                 <p class='ibm-btn-row ibm-button-link' style={{'position':'relative','top':'10%','right':'5%','float':'right'}}>
                   <a onClick={self.applyChanges} class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50'>Apply</a>
                   <a onClick={self.cancelChanges} class='ibm-btn-sec ibm-btn-small ibm-btn-blue-50'>Cancel</a>
                 </p>
               </div>
+              */}
             </div>
           </div>
         </div>

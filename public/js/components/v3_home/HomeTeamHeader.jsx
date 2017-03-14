@@ -75,7 +75,7 @@ var HomeTeamHeader = React.createClass({
       }
     });
     $('#teamMemberTable').bind('mouseleave', function() {
-      if ($('#teamMemberTable').css('display') != 'none' && $('#teamMemberTable').attr('data-open') != 'true') {
+      if ($('#teamMemberTable').css('display') != 'none' && $('#teamMemberTable').attr('data-open') != 'true' && $('.modify-field.team-member-table-content-block-show').length == 0) {
         $('.home-team-header-btn-img2 svg > path').css('fill', '#FFFFFF');
         $('.home-team-header-btn-title3 h').css('color', '#FFFFFF');
         $('#teamMemberTable').fadeOut();
@@ -84,7 +84,7 @@ var HomeTeamHeader = React.createClass({
     // workaround handler for member button hover out
     $('.home-nav-div, .home-team-header-teamname-div, .home-team-header-hierarchy, #iterContent').unbind('mouseenter');
     $('.home-nav-div, .home-team-header-teamname-div, .home-team-header-hierarchy, #iterContent').bind('mouseenter', function() {
-      if ($('#teamMemberTable').css('display') != 'none' && $('#teamMemberTable').attr('data-open') != 'true') {
+      if ($('#teamMemberTable').css('display') != 'none' && $('#teamMemberTable').attr('data-open') != 'true' && $('.modify-field.team-member-table-content-block-show').length == 0) {
         $('.home-team-header-btn-img2 svg > path').css('fill', '#FFFFFF');
         $('.home-team-header-btn-title3 h').css('color', '#FFFFFF');
         $('#teamMemberTable').fadeOut();

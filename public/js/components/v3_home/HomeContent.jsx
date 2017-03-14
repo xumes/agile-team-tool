@@ -55,24 +55,25 @@ var HomeContent = React.createClass({
   componentDidUpdate: function() {
     $('.home-trends-overflow').nanoScroller();
     var isSquad = this.props.loadDetailTeam.team.type == 'squad';
-    $('.home-trends-block-filter-img, .home-chart-filter-block, .home-trends-block-title').unbind('mouseenter mouseleave');
+    $('.home-trends-block-filter-img, .home-chart-filter-block, .home-trends-block-title, .home-assessment-summary, .home-team-header').unbind('mouseenter mouseleave');
     // filter button
     $('.home-trends-block-filter-img').bind('mouseenter', function() {
       if ($('.home-chart-filter-block').css('display') == 'none') {
         if (isSquad) {
-          //$('.home-chart-filter-block').css('left', '77%');
           $('.home-chart-filter-block').css('left', '32.5%');
         } else {
-          //$('.home-chart-filter-block').css('left', '44%');
           $('.home-chart-filter-block').css('left', '-2.5%');
         }
         $('.home-chart-filter-block').fadeIn();
       }
     });
-    $('.home-chart-filter-block, .home-trends-block-title').bind('mouseleave', function() {
+    $('.home-chart-filter-block').bind('mouseleave', function() {
       if ($('.home-chart-filter-block').css('display') != 'none' && $('.home-chart-filter-block').attr('data-open') != 'true') {
         $('.home-chart-filter-block').fadeOut();
       }
+    });
+    $('.home-assessment-summary, .home-team-header').bind('mouseenter', function() {
+      $('.home-chart-filter-block').trigger('mouseleave');
     });
   },
   showFilter: function() {
