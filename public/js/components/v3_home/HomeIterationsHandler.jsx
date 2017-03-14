@@ -305,19 +305,19 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations) {
 
   destroyIterationCharts();
 
-  loadScoreChart('velocityChart', 'Velocity', 'line', graphCategoryWithChange, 'Story points', commVelocitySeries,  velocitySeries, 'Points', '', '* Indicates Team Change', true, true);
-  loadScoreChart('throughputChart', 'Throughput', 'line', graphCategoryWithChange, 'Stories/tickets/cards', commThroughputSeries, throughputSeries, 'Points', '', '* Indicates Team Change', true, true);
-  loadPizzaChart('pizzaChart', '2 Pizza Rule (Team Size)', 'line', graphCategory, 'Count', yMax, teamMemSeries, fteSeries, targetSeries, 'Points');
-  loadMultiDefectDeployChart('defectsChart', graphCategory, defectsStartSeries, defectsSeries, defectsClosedSeries, defectsEndSeries, deploySeries);
-  loadSatisfactionChart('statisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', teamSatSeries, clientSatSeries, 'Points', sMax);
-  loadChartMultiChart('unitCostChart', 'Unit Cost per Person Day', 'line', graphCategory, 'Count', '', storyFTESeries, storyPointFTESeries, 'Points', true);
-  loadChartMultiChart('wipBacklogChart', 'Cycle Time (in days)', 'line', graphCategory, 'Average days per story', '', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', true);
+  loadScoreChart('velocityChart', 'Velocity', 'line', graphCategoryWithChange, 'Story points',  velocitySeries, commVelocitySeries, 'Points', '', false);
+  loadScoreChart('throughputChart', 'Throughput', 'line', graphCategoryWithChange, 'Stories/tickets/cards', throughputSeries, commThroughputSeries, 'Points', '', false);
+  loadPizzaChart('pizzaChart', '2 Pizza Rule (Team Size)', 'line', graphCategory, 'Count', yMax, teamMemSeries, fteSeries, targetSeries, 'Points', false);
+  loadMultiDefectDeployChart('defectsChart', graphCategory, defectsStartSeries, defectsSeries, defectsClosedSeries, defectsEndSeries, deploySeries, false);
+  loadSatisfactionChart('statisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', teamSatSeries, clientSatSeries, 'Points', sMax, false);
+  loadChartMultiChart('unitCostChart', 'Unit Cost per Person Day', 'line', graphCategory, 'Count', '', storyFTESeries, storyPointFTESeries, 'Points', false);
+  loadChartMultiChart('wipBacklogChart', 'Cycle Time (in days)', 'line', graphCategory, 'Average days per story', '', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', false);
 
   $('#squad_team_scard').show();
   redrawCharts('iterationSection');
 };
 
-function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, seriesObj2, unit, text, subtitle, showLegend, pointClickable) {
+function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, seriesObj2, unit, text, pointClickable) {
   new Highcharts.Chart({
     chart: {
       type: type,
@@ -402,7 +402,7 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
     credits: {
       enabled: false
     },
-
+    /*
     subtitle: {
       text: subtitle,
       verticalAlign: 'bottom',
@@ -413,9 +413,9 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
         color: 'orange'
       }
     },
-
+    */
     series: [{
-      showInLegend: showLegend,
+      showInLegend: true,
       name: seriesObj1.name,
       data: seriesObj1.data,
       point: {
@@ -427,7 +427,7 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
         }
       }
     }, {
-      showInLegend: showLegend,
+      showInLegend: true,
       name: seriesObj2.name,
       data: seriesObj2.data,
       point: {
@@ -442,7 +442,7 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
   });
 }
 
-function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj1, seriesObj2, seriesObj3, unit) {
+function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj1, seriesObj2, seriesObj3, unit, pointClickable) {
   var plotBandOptions = null;
 
   if (seriesObj1.data.length > 0 || seriesObj2.data.length > 0 || seriesObj3.data.length > 0) {
@@ -565,7 +565,8 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
       point: {
         events: {
           click: function(e) {
-            window.location = e.point.iterURL;
+            if (pointClickable)
+              window.location = e.point.iterURL;
           }
         }
       }
@@ -577,7 +578,8 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
       point: {
         events: {
           click: function(e) {
-            window.location = e.point.iterURL;
+            if (pointClickable)
+              window.location = e.point.iterURL;
           }
         }
       }
@@ -884,7 +886,7 @@ function loadChartMultiChart(id, title, type, categories, yAxisLabel, xAxisLabel
   });
 }
 
-function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2, columnSeries3, columnSeries4, lineSeries) {
+function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2, columnSeries3, columnSeries4, lineSeries, pointClickable) {
   new Highcharts.Chart({
     chart: {
       type: 'column',
@@ -1010,7 +1012,8 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
       point: {
         events: {
           click: function(e) {
-            window.location = e.point.iterURL;
+            if (pointClickable)
+              window.location = e.point.iterURL;
           }
         }
       }
@@ -1024,7 +1027,8 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
       point: {
         events: {
           click: function(e) {
-            window.location = e.point.iterURL;
+            if (pointClickable)
+              window.location = e.point.iterURL;
           }
         }
       }
@@ -1039,7 +1043,8 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
       point: {
         events: {
           click: function(e) {
-            window.location = e.point.iterURL;
+            if (pointClickable)
+              window.location = e.point.iterURL;
           }
         }
       }
@@ -1053,7 +1058,8 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
       point: {
         events: {
           click: function(e) {
-            window.location = e.point.iterURL;
+            if (pointClickable)
+              window.location = e.point.iterURL;
           }
         }
       }
@@ -1069,7 +1075,8 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
       point: {
         events: {
           click: function(e) {
-            window.location = e.point.iterURL;
+            if (pointClickable)
+              window.location = e.point.iterURL;
           }
         }
       }
@@ -1446,7 +1453,7 @@ function loadMultiLineChartParent(id, title, categories, yAxisLabel, xAxisLabel,
   });
 }
 
-function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesObj1, seriesObj2, unit, yMax) {
+function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesObj1, seriesObj2, unit, yMax, pointClickable) {
   new Highcharts.Chart({
     chart: {
       type: type,
@@ -1541,7 +1548,8 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
       point: {
         events: {
           click: function(e) {
-            window.location = e.point.iterURL;
+            if (pointClickable)
+              window.location = e.point.iterURL;
           }
         }
       }
@@ -1552,7 +1560,8 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
       point: {
         events: {
           click: function(e) {
-            window.location = e.point.iterURL;
+            if (pointClickable)
+              window.location = e.point.iterURL;
           }
         }
       }
@@ -1783,8 +1792,8 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
     ctsYMax = null;
   }
   destroyIterationCharts();
-  loadLineChartParent('pvelocityChart', 'Velocity', graphCategory, 'Story points', '', commVelocitySeries, velocitySeries, 'Points');
-  loadLineChartParent('pthroughputChart', 'Throughput', graphCategory, 'Stories/tickets/cards', '', commThroughputSeries, throughputSeries, 'Points');
+  loadLineChartParent('pvelocityChart', 'Velocity', graphCategory, 'Story points', '', velocitySeries, commVelocitySeries, 'Points');
+  loadLineChartParent('pthroughputChart', 'Throughput', graphCategory, 'Stories/tickets/cards', '', throughputSeries, commThroughputSeries, 'Points');
   loadMultiDefectDeployChartParent('pdefectsChart', graphCategory, defectsStartSeries, defectsSeries, defectsClosedSeries, defectsEndSeries, deploySeries);
   loadMultiLineChartParent('pwipBacklogChart', 'Cycle Time (in days)', graphCategory, 'Average days per story', '', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', false);
   loadMultiLineChartParent('pstatisfactionChart', 'Client and Team Satisfaction', graphCategory, 'Rating', '', teamStatSeries, clientStatSeries, 'Points', false, ctsYMax);
