@@ -45,8 +45,8 @@ var AssessmentSummaryTable = React.createClass({
             if (assessmentsData[type]['Date'] == null) {
               assessmentsData[type]['Date'] = [];
             }
-            assessmentsData[type]['Overall']['current'].push(componentResult.currentScore);
-            assessmentsData[type]['Overall']['target'].push(componentResult.targetScore);
+            assessmentsData[type]['Overall']['current'].push(parseFloat(componentResult.currentScore==null?0:componentResult.currentScore.toFixed(1)));
+            assessmentsData[type]['Overall']['target'].push(parseFloat(componentResult.targetScore==null?0:componentResult.targetScore.toFixed(1)));
             assessmentsData[type]['Date'].push(moment.utc(assessment.submittedDate).format('DD MMM YYYY'));
             _.each(componentResult.assessedComponents, function(assessedComponent, idx2){
               switch (assessedComponent.practiceName) {
@@ -89,17 +89,19 @@ var AssessmentSummaryTable = React.createClass({
     } else {
       assessType = 'Team Delivery';
     }
-    var assessChartData = [
-      {
-        name: 'Target',
-        data: assessmentsData[assessType][title]['target']
-      },
-      {
-        name: 'Current',
-        data: assessmentsData[assessType][title]['current']
-      }
-    ];
-    self.loadResultChart('agileSummaryChart' + self.props.componentId, title, 'line', assessmentsData[assessType]['Date'], 'Maturity Level', assessChartData, null);
+    if (assessmentsData[assessType][title] != undefined) {
+      var assessChartData = [
+        {
+          name: 'Target',
+          data: assessmentsData[assessType][title]['target']
+        },
+        {
+          name: 'Current',
+          data: assessmentsData[assessType][title]['current']
+        }
+      ];
+      self.loadResultChart('agileSummaryChart' + self.props.componentId, title, 'line', assessmentsData[assessType]['Date'], 'Maturity Level', assessChartData, null);
+    }
   },
   /**
    * id - element id to where the graph will be inserted
