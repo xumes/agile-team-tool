@@ -233,6 +233,7 @@ var users = {
         newUser.location.site = user.location.site || null;
         newUser.location.timezone = user.location.timezone || null;
       }
+
       User.create(newUser)
       // getUserFromFaces(newUser.email)
       //   .then(function(facesInfo){

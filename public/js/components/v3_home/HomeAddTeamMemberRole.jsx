@@ -23,6 +23,7 @@ var HomeAddTeamMemberRole = React.createClass({
         prevScreen: 'showTeamMemberModal',
         prevDisabled: '',
         nextScreen: '',
+        finishDisabled: 'disabled',
         nextDisabled: ''  //TODO: disabled
       },
       defaultRoles: [],
@@ -43,18 +44,17 @@ var HomeAddTeamMemberRole = React.createClass({
 
   disableFinishButton: function() {
     var buttonOptions = this.state.buttonOptions;
-    buttonOptions.nextDisabled = 'disabled';
+    buttonOptions.finishDisabled = 'disabled';
     this.setState({buttonOptions: buttonOptions});
   },
 
   enableFinishButton: function() {
     var buttonOptions = this.state.buttonOptions;
-    buttonOptions.nextDisabled = '';
+    buttonOptions.finishDisabled = '';
     this.setState({buttonOptions: buttonOptions});
   },
 
   show: function() {
-    // $('#addTeamMemberRoleBlock select').select2({'dropdownParent':$('#addTeamMemberRoleBlock')});
     var self = this;
     var tmproles = self.props.roles;
     var memRole = _.pluck(self.props.newTeamObj.members, 'role');
@@ -67,12 +67,14 @@ var HomeAddTeamMemberRole = React.createClass({
       });
       this.setState({defaultRoles: tmproles});
     }
+    self.disableFinishButton();
   },
 
   selectHandler: function(ref, data) {
     var self = this;
     var uid;
     var selectVal = data['value'];
+    var selectLabel = data['label'];
     var updatedMember = [];
     var type;
 
@@ -86,10 +88,6 @@ var HomeAddTeamMemberRole = React.createClass({
       uid = ref.selavgworkweek.props['data-uid'];
       type = OPTSELECT.AVGWORKWEEK;
     }
-    console.log('HomeAddTeamMemberRole selectHandler member: ', self.props.newTeamObj.members);
-    console.log('HomeAddTeamMemberRole selectHandler uid:',uid);
-    console.log('HomeAddTeamMemberRole selectHandler type:',type);
-    console.log('HomeAddTeamMemberRole selectHandler selectVal:',selectVal);
     var memberList = self.props.newTeamObj.members.map(function(member){
       var obj = {};
       obj.name = member.name;
@@ -125,14 +123,13 @@ var HomeAddTeamMemberRole = React.createClass({
       var tmpworkweek = self.state.defaultWorkTime;
       if (!_.contains(tmpworkweek, selectVal)) {
         var obj = {};
-        obj[selectVal] = selectVal;
+        obj[selectVal] = selectLabel;
         var tmp = _.extend(tmpworkweek, obj);
         self.setState({defaultWorkTime: tmp});
       }
     }
 
     self.props.setTeamMember(updatedMember);
-    console.log('HomeAddTeamMemberRole selectHandler updatedMember:', updatedMember);
     this.enableFinishButton();
   },
 
@@ -154,7 +151,6 @@ var HomeAddTeamMemberRole = React.createClass({
       updatedMember.push(obj);
     });
     self.props.setTeamMember(updatedMember);
-    console.log('editInPlaceSaveLocation updatedMember:',updatedMember);
     $('#edit-inplace-location-'+uid).hide();
     self.enableFinishButton();
   },

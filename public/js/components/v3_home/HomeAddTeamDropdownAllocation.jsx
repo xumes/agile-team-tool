@@ -4,7 +4,16 @@ var Select = require('react-select');
 var HomeAddTeamDropdownAllocation = React.createClass({
 
   allocHandler: function(data) {
-    this.props.allocHandler(this.refs, data);
+    if (!data) {
+      alert('Member allocation is required.');
+    } else {
+      var alloc = parseInt(data.value) || 0;
+      if (alloc > 100 || alloc < 0) {
+        alert('Allocation should be between 0 to 100.');
+      } else {
+        this.props.allocHandler(this.refs, data);
+      }
+    }
   },
   render: function() {
     var self = this;

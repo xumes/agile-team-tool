@@ -38,8 +38,8 @@ var AssessmentPopover = React.createClass({
       $('#assessmentSubmitDateTitle').html(moment.utc(self.props.loadDetailTeam.assessments[0].submitDate).format('DD MMM YYYY'));
       self.state.submitDatePicker = moment.utc(self.props.loadDetailTeam.assessments[0].submitDate);
     } else {
-      $('#assessmentTeamTypeSelector').val('Project').change();
-      $('#assessmentSoftwareTypeSelector').val('Yes').change();
+      $('#assessmentTeamTypeSelector').val(self.props.assessType==undefined?'Project':self.props.assessType).change();
+      $('#assessmentSoftwareTypeSelector').val(self.props.assessSoftware==undefined?'Yes':self.props.assessSoftware).change();
       $('#assessmentSubmitDateTitle').html('On Submission');
       self.state.submitDatePicker = moment.utc(new Date());
     }
@@ -95,8 +95,8 @@ var AssessmentPopover = React.createClass({
       var submitDate = 'On Submission';
       var lastUpdatedBy = 'On Submission';
       var lastUpdated = null;
-      var assessType = $('#assessmentTeamTypeSelector').val() == undefined?'Project':$('#assessmentTeamTypeSelector').val();
-      var deliversSoftware = $('#assessmentSoftwareTypeSelector').val() == undefined?'Yes':$('#assessmentSoftwareTypeSelector').val();
+      var assessType = $('#assessmentTeamTypeSelector').val() == undefined?(self.props.assessType==undefined?'Project':self.props.assessType):$('#assessmentTeamTypeSelector').val();
+      var deliversSoftware = $('#assessmentSoftwareTypeSelector').val() == undefined?(self.props.assessSoftware==undefined?'Yes':self.props.assessSoftware):$('#assessmentSoftwareTypeSelector').val();
       if (assessType == 'Project') {
         self.state.lcAssessTemplate = self.props.assessTemplate.components[0];
       } else {
@@ -169,7 +169,7 @@ var AssessmentPopover = React.createClass({
               </div>
               <div class='last-updated-by'>
                 <h1>{lastUpdatedBy}</h1>
-                <h1>{lastUpdated}</h1>
+                <h1 style={{'marginTop':'-5%'}}>{lastUpdated}</h1>
               </div>
             </div>
           </div>

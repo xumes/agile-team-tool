@@ -36,13 +36,13 @@ var invalidUser = {
 
 var testTeam = {
   'name': 'mongodb-test-team-01',
-  'members': {
+  'members': [{
     'name': 'test user',
     'role': 'Tester',
     'allocation': 100,
     'userId': testUser.userId,
     'email': testUser.email
-  },
+  }],
   'createdByUserId': testUser.userId,
   'createdBy': testUser.email
 };
@@ -89,6 +89,7 @@ describe('Assessment model [addTeamAssessment] ', function() {
         return Teams.createTeam(testTeam, userSession);
       })
       .then(function(result){
+        console.log('4');
         newTeamId = result._id;
         done();
       })
