@@ -2191,7 +2191,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   margin-top: -1.8%;
 }
 .home-iter-select .select2-selection--single, select2-homeIterSelection-container{
-  height: 2em!important;
+  height: 2.2em!important;
 }
 
 .memberChanged input, select, .memberChanged option{
@@ -2205,9 +2205,9 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   display: inline-block;
   float: right;
   width: 9%;
-  height: 35%;
+  height: 36%;
   min-height: 1.5em;
-  margin-top: 1.3%;
+  margin-top: 1.8%;
 }
 
 .home-iter-add-btn-block > i > svg, .home-iter-add-btn-block-disabled > i > svg {
@@ -5299,10 +5299,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   }
 
 .checkbox input[type="checkbox"]:checked + span::after {
-  content: "";
+  content: "✓";
   position: absolute;
   top: 0.25em;
-  left: 0.1em;
+  left: 0.2em;
   color: #4178BE;
   font-weight: bold;
   font-size: 1.6em;
