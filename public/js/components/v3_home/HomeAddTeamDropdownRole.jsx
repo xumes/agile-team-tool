@@ -88,7 +88,7 @@ var HomeAddTeamDropdownRole = React.createClass({
     var memberUserId = self.props.memberUserId;
     var memberRole = self.props.memberRole || 'Select Role';
     var options = [];
-    self.props.roles.map(function(v) {
+    self.props.defaultRoles.map(function(v) {
       if (v) {
         options.push({value: v, label: v});
       }
@@ -96,7 +96,14 @@ var HomeAddTeamDropdownRole = React.createClass({
     var isOtherStyle = (self.state.showOther) ? {'display': 'block'} : {'display': 'none'};
     return(
       <div key={memberUserId} id={'wrapper-role-'+memberUserId} class='createteam-role-field'>
-        <div class='data-team-role'><span class='data'>{memberRole}</span><div class='arrow-down'></div></div>
+        <div class='data-team-role'>
+          <div class='Select-control2' >
+            <span class='Select-multi-value-wrapper data'>{memberRole}</span>
+            <span class='Select-arrow-zone2'>
+              <span class='Select-arrow2'></span>
+            </span>
+          </div>
+        </div>
         <div class='data-team-role-select' style={{'display':'none'}} >
           <Select
             name='select-role'

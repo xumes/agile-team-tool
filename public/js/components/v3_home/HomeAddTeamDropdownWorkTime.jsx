@@ -24,7 +24,7 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
     var self = this;
     $('.createteam-worktime-field').mouseover(function() {
       var blockId = $(this)[0].id;
-      var txt = $('#'+blockId + ' .data-team-role').html();
+      var txt = $('#'+blockId + ' .data-team-role .data').html();
       $('#'+blockId +' > div.data-team-role').css('display','none');
       $('#'+blockId +' > div.data-team-role-select').css('display','block');
       $('#'+blockId + ' .data-team-role-select .Select-value-label').html(txt);
@@ -33,7 +33,7 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
 
     $('.createteam-worktime-field').mouseleave(function() {
       var blockId = $(this)[0].id;
-      var txt = $('#'+blockId + ' .data-team-role').html();
+      var txt = $('#'+blockId + ' .data-team-role .data').html();
       $('#'+blockId +' > div.data-team-role').css('display','block');
       $('#'+blockId +' > div.data-team-role-select').css('display','none');
     });
@@ -51,7 +51,7 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
         input.focus();
         input[0].setSelectionRange(strLength, strLength);
       }, 10);
-      $('#wrapper-worktime-'+uid + ' .data-team-role').html('Other');
+      $('#wrapper-worktime-'+uid + ' .data-team-role .data').html('Other');
       $('#wrapper-worktime-'+uid + ' .custom-field-other #input-field').val(this.state.selectedAvgworkweek);
     } else {
       this.setState({showOther: false});
@@ -75,10 +75,10 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
 
   cancelWorkTime: function(uid) {
     if (_.isUndefined(this.state.selectedAvgworkweek)) {
-      $('#wrapper-worktime-'+uid+ ' .data-team-role').html('Select...');
+      $('#wrapper-worktime-'+uid+ ' .data-team-role .data').html('Select...');
       this.updateSelectValue(uid, 'Select...');
     } else {
-      $('#wrapper-worktime-'+uid+ ' .data-team-role').html(this.getAvgworkweekByLabel(this.state.selectedAvgworkweek));
+      $('#wrapper-worktime-'+uid+ ' .data-team-role .data').html(this.getAvgworkweekByLabel(this.state.selectedAvgworkweek));
       this.updateSelectValue(uid, this.state.selectedAvgworkweek);
     }
 
@@ -123,7 +123,14 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
     var isOtherStyle = (self.state.showOther) ? {'display': 'block'} : {'display': 'none'};
     return(
       <div key={memberUserId} id={'wrapper-worktime-'+memberUserId} class='createteam-worktime-field'>
-        <div class='data-team-role'><span class='data'>{memberWorkTimeLabel}</span><div class='arrow-down'></div></div>
+        <div class='data-team-role'>
+          <div class='Select-control2'>
+            <span class='Select-multi-value-wrapper data'>{memberWorkTimeLabel}</span>
+            <span class='Select-arrow-zone2'>
+              <span class='Select-arrow2'></span>
+            </span>
+          </div>
+        </div>
         <div class='data-team-role-select' style={{'display':'none'}}>
           <Select
             name='select-avgworkweek'

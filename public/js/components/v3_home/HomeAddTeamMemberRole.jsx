@@ -62,7 +62,7 @@ var HomeAddTeamMemberRole = React.createClass({
       var tmp = [];
       _.map(memRole, function(val){
         if (!_.contains(tmproles, val)) {
-          tmproles.push(val);
+          // tmproles.push(val);
         }
       });
       this.setState({defaultRoles: tmproles});
@@ -162,6 +162,7 @@ var HomeAddTeamMemberRole = React.createClass({
 
   render: function() {
     var self = this;
+    console.log('render from parent..')
     var teamMemberList = null;
     if (!_.isEmpty(self.props.newTeamObj) && !_.isEmpty(self.props.newTeamObj.members)) {
       teamMemberList = self.props.newTeamObj.members.map(function(member,idx) {
@@ -195,8 +196,8 @@ var HomeAddTeamMemberRole = React.createClass({
                 </div>
               </div>
             </td>
-            <td class='r_role' data-index={idx}>
-              <HomeAddTeamDropdownRole newTeamObj={self.props.newTeamObj} memberUserId={memberUserId} roles={self.state.defaultRoles} setTeamMember={self.props.setTeamMember} memberRole={memberRole} roleHandler={self.selectHandler} />
+            <td class='r_role' data-index={idx} id={'tdwrapper-role-'+memberUserId} >
+              <HomeAddTeamDropdownRole newTeamObj={self.props.newTeamObj} memberUserId={memberUserId} defaultRoles={self.state.defaultRoles} serverRoles={self.props.roles} setTeamMember={self.props.setTeamMember} memberRole={memberRole} roleHandler={self.selectHandler} />
             </td>
             <td class='r_allocation' data-index={idx}>
               <HomeAddTeamDropdownAllocation newTeamObj={self.props.newTeamObj} memberUserId={memberUserId} setTeamMember={self.props.setTeamMember} memberAlloc={memberAlloc} allocHandler={self.selectHandler} />

@@ -5059,7 +5059,8 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_role, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_role {
-  width: 13em;
+  width: 13.5em;
+  height: 2em;
   vertical-align: top;
 }
 
@@ -5069,7 +5070,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_workweek, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_workweek {
-  width: 10em;
+  width: 11em;
   vertical-align: top;
 }
 
@@ -5090,12 +5091,99 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 #addTeamMemberRoleBlock .data-team-role {
-  border: 1px solid #000;
   font-size: 1.4em;
-  padding: 0.45em 0.5em 0.45em 0.6em;
+  position: relative;
+  border-box: box-sizing;
+  background-color: #fff;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: #333;
+  cursor: default;
+  display: table;
+  height: 35px;
+  outline: medium none;
+  overflow: hidden;
+  position: relative;
+  width: 99%;
+  border: 1px solid #333;
 }
 
-#addTeamMemberRoleBlock .arrow-down {
+#addTeamMemberRoleBlock .Select-control2 {
+  background-color: #fff;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: #333;
+  cursor: default;
+  display: table;
+  height: 35px;
+  outline: medium none;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+#addTeamMemberRoleBlock .Select-arrow-zone2 {
+  cursor: pointer;
+  display: table-cell; /*table-cell*/
+  padding-right: 5px;
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  width: 25px;
+}
+
+#addTeamMemberRoleBlock .Select-arrow2 {
+  border-color: #999 transparent transparent;
+  border-style: solid;
+  border-width: 5px 5px 2.5px;
+  display: inline-block;
+  height: 0;
+  position: relative;
+  width: 0;
+}
+
+#addTeamMemberRoleBlock .data-team-role .data {
+  box-sizing: border-box;
+  font-size: 1.4em;
+  line-height: 34px;
+  margin-left: 0.5em;
+  outline: medium none;
+}
+
+#addTeamMemberRoleBlock .data-team-role .tmp1 {
+  font-size: 1em;
+}
+
+#addTeamMemberRoleBlock .data-team-role .dataxx {
+  bottom: 0;
+  left: 0;
+  line-height: 1.8em;
+  height: 36px;
+  display: table;
+  outline: medium none;
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
+  right: 0;
+  text-overflow: ellipsis;
+  top: 0;
+  white-space: nowrap;
+  border-spacing: 0;
+  box-sizing: border-box;
+  margin-left: 1em;
+}
+
+#addTeamMemberRoleBlock .arrow-zone {
+  cursor: pointer;
+  display: table-cell;
+  padding-right: 5px;
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  width: 25px;
+}
+
+/*#addTeamMemberRoleBlock .arrow-down {
   height:0px;
   width:0px;
   border:none;
@@ -5104,10 +5192,38 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   border-right:5px solid rgba(0,0,0,0);
   margin-top: 0.6em;
   float: right;
+}*/
+
+#addTeamMemberRoleBlock .createteam-role-field {
+  box-sizing: border-box;
+  position: relative;
+}
+
+#addTeamMemberRoleBlock .arrow-down {
+  border-top:5px solid #999;
+  border-left:5px solid rgba(0,0,0,0);
+  border-right:5px solid rgba(0,0,0,0);
+
+  border-image: none;
+  border-style: solid solid none;
+  border-width: 5px 5px medium;
+  float: right;
+  height: 0;
+  margin-right: 0.7em;
+  margin-top: 0.9em;
+  width: 0;
 }
 
 #addTeamMemberRoleBlock .custom-field-other {
   margin-top: 0.5em;
+}
+
+#addTeamMemberRoleBlock .border {
+  border: 1px solid #333;
+}
+
+#addTeamMemberRoleBlock .noborder {
+  border: 1px solid transparent;
 }
 
 #addTeamMemberRoleBlock .custom-field-other h1 {
@@ -5134,6 +5250,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   padding: 0.3em 0;
   position: relative;
   text-indent: 0.5em;
+  border: 1px solid #333;
 }
 
 #addTeamMemberRoleBlock .r_role .r_save-btn, #addTeamMemberRoleBlock .r_role .r_cancel-btn,
@@ -5231,6 +5348,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 #addTeamMemberRoleBlock .is-focused:not(.is-open) > .Select-control {
   box-shadow: none !important;
+}
+
+.Select-menu {
+  position: fixed !important;
 }
 
 /* END: AddTeamMember Role, Allocation Modal */
