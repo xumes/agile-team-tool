@@ -138,16 +138,19 @@ var HomeIterContent = React.createClass({
   checkChanges: function(event){
     if(event.keyCode == 9){
       event.preventDefault();
-      this.tabHandling(event.target.id);
+      this.tabHandling(event.target.id, event.shiftKey);
     }
   },
 
-  tabHandling: function(id){
+  tabHandling: function(id, reverse){
     var self = this;
     var next = _.indexOf(editIndexing, id);
       if (next != null){
         self.saveIter(id);
-        self.setState({selectedField:editIndexing[next+1]});        
+        if (reverse)
+          self.setState({selectedField:editIndexing[next-1]});
+        else
+          self.setState({selectedField:editIndexing[next+1]});
       }
       else{
         self.saveIter(id);
