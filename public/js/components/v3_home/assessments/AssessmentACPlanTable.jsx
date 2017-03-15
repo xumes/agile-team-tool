@@ -4,6 +4,8 @@ var _ = require('underscore');
 var moment = require('moment');
 var ReactDOM = require('react-dom');
 var InlineSVG = require('svg-inline-react');
+var DatePicker = require('react-datepicker');
+var AssessmentDatePicker = require('./AssessmentDatePicker.jsx');
 
 var AssessmentACPlanTable = React.createClass({
   componentDidMount: function() {
@@ -112,6 +114,9 @@ var AssessmentACPlanTable = React.createClass({
           </div>
         </div>
         {tableBlocks}
+        <div class='action-plan-add'>
+          <button type='button' id='addActionPlan' class='ibm-btn-sec ibm-btn-blue-50'>{'Add Action Item'}</button>
+        </div>
       </div>
     );
   }
