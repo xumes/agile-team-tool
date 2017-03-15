@@ -5070,7 +5070,8 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_workweek, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_workweek {
-  width: 11em;
+  width: 11.5em;
+  height: 3em;
   vertical-align: top;
 }
 
@@ -5104,7 +5105,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   outline: medium none;
   overflow: hidden;
   position: relative;
-  width: 99%;
+  width: 100%;
   border: 1px solid #333;
 }
 
@@ -5332,8 +5333,19 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   border-radius: 0% !important;
 }
 
-#addTeamMemberRoleBlock .Select-menu {
+#addTeamMemberRoleBlock .r_role .Select .Select-menu {
   border: 0.1em solid #333 !important;
+  width: 15.3em;
+}
+
+#addTeamMemberRoleBlock .r_allocation .Select .Select-menu {
+  border: 0.1em solid #333 !important;
+  width: 6em;
+}
+
+#addTeamMemberRoleBlock .r_workweek .Select .Select-menu {
+  border: 0.1em solid #333 !important;
+  width: 12.5em;
 }
 
 #addTeamMemberRoleBlock .Select-option.is-selected {
