@@ -443,7 +443,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .home-nav-search-field-cancel > i > svg path {
-  fill: #4D4D4D;
+  fill: #777677;
 }
 
 .agile-home-header div {
