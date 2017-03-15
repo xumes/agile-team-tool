@@ -617,7 +617,7 @@ var HomeTeamTree = React.createClass({
                   </a>
                   <a class='agile-team-link'><span class='agile-team-title'>Standalone Teams</span></a>
                   <span class='ibm-access'>agteamstandalone</span>
-                  <div class='ibm-twisty-boddy' id='body_agteamstandalone' style={{'display':'block'}}>
+                  <div class='ibm-twisty-body' id='body_agteamstandalone' style={{'display':'block'}}>
                     <ul class='ibm-twisty ' id='main_agteamstandalone'>
                       {standaloneTeams}
                     </ul>
