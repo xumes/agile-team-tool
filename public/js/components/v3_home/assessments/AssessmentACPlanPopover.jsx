@@ -5,6 +5,7 @@ var moment = require('moment');
 var ReactDOM = require('react-dom');
 var InlineSVG = require('svg-inline-react');
 var AssessmentSummaryTable = require('./AssessmentSummaryTable.jsx');
+var AssessmentACPlanTable = require('./AssessmentACPlanTable.jsx');
 
 var AssessmentACPlanPopover = React.createClass({
   componentDidMount: function() {
@@ -101,6 +102,18 @@ var AssessmentACPlanPopover = React.createClass({
             </div>
           </div>
           <AssessmentSummaryTable loadDetailTeam={self.props.loadDetailTeam} componentResult={componentResultDD} assessType={assessType} componentId={'2'}/>
+          <div class='lc-header'>
+            <div class='header-title'>
+              <h1>{'Action Plan'}</h1>
+            </div>
+            <div class='hideBlock-btn' id='hideBlockBtn3' style={{'display':'block'}} onClick={self.hideBlock.bind(null, '3')}>
+              <InlineSVG src={require('../../../../img/Att-icons/att-icons_show.svg')}></InlineSVG>
+            </div>
+            <div class='showBlock-btn' id='showBlockBtn3' style={{'display':'none'}} onClick={self.showBlock.bind(null, '3')}>
+              <InlineSVG src={require('../../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
+            </div>
+          </div>
+          <AssessmentACPlanTable loadDetailTeam={self.props.loadDetailTeam} tempAssess={self.props.tempAssess} componentId={'3'}/>
         </div>
       )
     } else {
