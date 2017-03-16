@@ -108,7 +108,7 @@ var HomeAddMember = React.createClass({
                 return api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newTeamMembers);
               })
               .then(function(result){
-                self.props.realodTeamMembers(newTeamMembers, newUsers);
+                self.props.reloadTeamMembers(newTeamMembers, newUsers);
                 $('.team-member-add-block-footer > p > a').prop('disabled', false);
                 self.props.hideAddTeamTable();
               })
