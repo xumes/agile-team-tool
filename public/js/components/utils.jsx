@@ -360,4 +360,4 @@ module.exports.highlightErrorField = function(type, divIdx) {
       }
     });
   }
-}
+};
