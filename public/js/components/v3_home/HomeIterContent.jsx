@@ -278,7 +278,10 @@ var HomeIterContent = React.createClass({
     var isAllowed = this.isWithinIteration(selectedIter.startDate,selectedIter.endDate);
     if (isAllowed){
       //recalculate team availability only if current date is within iteration
-      var maxWorkDays = business.weekDays(moment(selectedIter.startDate, 'YYYY-MM-DD'),moment(selectedIter.endDate, 'YYYY-MM-DD'));
+      var maxWorkDays = business.weekDays(moment.utc(selectedIter.startDate, 'YYYY-MM-DD'),moment.utc(selectedIter.endDate, 'YYYY-MM-DD'));
+     if (!business.isWeekendDay(moment.utc(selectedIter.endDate))){
+          maxWorkDays +=1;
+     }
      utils.getOptimumAvailability(maxWorkDays, selectedIter.teamId)
      .then(function(result){
         selectedIter.teamAvailability = result;
@@ -360,7 +363,10 @@ var HomeIterContent = React.createClass({
 
   checkRecentTeamAvailbility: function(){
     var selectedIter = this.state.selectedIter;
-    var maxWorkDays = business.weekDays(moment(selectedIter.startDate, 'YYYY-MM-DD'),moment(selectedIter.endDate, 'YYYY-MM-DD'));
+    var maxWorkDays = business.weekDays(moment.utc(selectedIter.startDate, 'YYYY-MM-DD'),moment.utc(selectedIter.endDate, 'YYYY-MM-DD'));
+    if (!business.isWeekendDay(moment.utc(selectedIter.endDate))){
+      maxWorkDays +=1;
+    }
     var teamAvailability = null;
     var self = this;
     utils.getOptimumAvailability(maxWorkDays, selectedIter.teamId)
@@ -480,8 +486,8 @@ var HomeIterContent = React.createClass({
           storyPointsDays = !isFinite(storyPointsDays) ? '0.0': storyPointsDays.toFixed(1);
         }
         iterData.name = defIter.name;
-        iterData.startDate = moment(defIter.startDate).format('DD MMM YYYY');
-        iterData.endDate = moment(defIter.endDate).format('DD MMM YYYY');
+        iterData.startDate = moment.utc(defIter.startDate).format('DD MMM YYYY');
+        iterData.endDate = moment.utc(defIter.endDate).format('DD MMM YYYY');
         iterData.memberFte = (defIter.memberFte == null) ? '' : defIter.memberFte;
         iterData.committedStories = utils.numericValue(defIter.committedStories);
         iterData.deliveredStories = utils.numericValue(defIter.deliveredStories);
@@ -500,8 +506,17 @@ var HomeIterContent = React.createClass({
 
         return (
           <div>
-            <div class='home-iter-title'>Iteration Overview</div>
-            <Tooltip html={true} type="light"/>            
+            <Tooltip html={true} type="light"/>
+            <div style={{'display':'inline'}}>
+              <div class='home-iter-title'>Iteration Overview</div>
+              <div style={{'display':'inline', 'width': '35%'}}>
+                <div class={access?'home-iter-add-btn-block':'home-iter-add-btn-block-disabled'} onClick={access?this.showAddIteration:''} style={access?{'cursor':'pointer'}:{'cursor':'default'}}>
+                  <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')} data-tip='Create New Iteration'></InlineSVG>
+                  <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={self.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
+                </div>
+                <span className="home-iter-add">New Iteration</span>
+              </div>
+            </div>            
             <div class='home-iter-name-block' style={{'height':'4.3%'}}>
               <div class='home-iter-name' id='iteration-name'>{iterData.name}</div>
               <div class='home-iter-team-date' id='iteration-date'>{iterData.startDate} - {iterData.endDate}</div>
@@ -517,10 +532,6 @@ var HomeIterContent = React.createClass({
                   {iterations}
                 </select>
               </div>
-              <div class={access?'home-iter-add-btn-block':'home-iter-add-btn-block-disabled'} onClick={access?this.showAddIteration:''} style={access?{'cursor':'pointer'}:{'cursor':'default'}}>
-                <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')} data-tip='Create New Iteration'></InlineSVG>
-              </div>
-              <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={self.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
             </div>
             <div class='home-iter-last-update-block'>
               <div class="ibm-rule ibm-alternate ibm-gray-30" style={{'width':'100%','marginTop':'0.1em'}}>

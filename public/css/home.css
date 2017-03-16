@@ -2117,7 +2117,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   left: 5%;
   float: left;
   top: 4%;
-  width: 90%;
+  width: 65%;
   height: 2%;
   font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.5em;
@@ -2134,6 +2134,16 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.0em;
   color: #000000;
+}
+
+.home-iter-add{
+font-family: "HelvNeue Roman for IBM";
+font-size: 16px;
+text-align: right;
+line-height: 19px;
+color: #4178BE;
+top: 4.4%;
+position: relative;
 }
 
 .home-iter-name-block {
@@ -2211,11 +2221,11 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .home-iter-add-btn-block, .home-iter-add-btn-block-disabled {
   position: relative;
   display: inline-block;
-  float: right;
-  width: 9%;
-  height: 36%;
+  float: left;
+  width: 6.4%;
+  height: 1.06%;
   min-height: 1.5em;
-  margin-top: 1.8%;
+  top: 4.5%;
 }
 
 .home-iter-add-btn-block > i > svg, .home-iter-add-btn-block-disabled > i > svg {
@@ -2233,7 +2243,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   display: inline-block;
   float: right;
-  width: 8.6%;
+  width: 9.5%;
   height: 23%;
   min-height: 1.5em;
   margin-top: -5.5%;
