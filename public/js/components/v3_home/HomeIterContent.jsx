@@ -507,11 +507,11 @@ var HomeIterContent = React.createClass({
         return (
           <div>
             <Tooltip html={true} type="light"/>
-            <div style={{'display':'inline'}}>
+            <div style={{'display':'inline','width':'100%'}}>
               <div class='home-iter-title'>Iteration Overview</div>
-              <div style={{'display':'inline', 'width': '35%'}}>
-                <div class={access?'home-iter-add-btn-block':'home-iter-add-btn-block-disabled'} onClick={access?this.showAddIteration:''} style={access?{'cursor':'pointer'}:{'cursor':'default'}}>
-                  <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')} data-tip='Create New Iteration'></InlineSVG>
+              <div data-tip='Create New Iteration' style={access?{'display':'inline','cursor':'pointer'}:{'display':'inline', 'cursor':'default'}} onClick={access?this.showAddIteration:''} >
+                <div class={access?'home-iter-add-btn-block':'home-iter-add-btn-block-disabled'}>
+                  <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
                   <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={self.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
                 </div>
                 <span className="home-iter-add">New Iteration</span>
