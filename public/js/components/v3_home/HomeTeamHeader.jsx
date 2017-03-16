@@ -269,7 +269,7 @@ var HomeTeamHeader = React.createClass({
               </div>
             </div>
           </div>
-          <HomeMemberTable loadDetailTeam={self.props.loadDetailTeam} closeTeamTable={self.closeTeamTable} realodTeamMembers={self.props.realodTeamMembers} roles={self.props.roles}/>
+          <HomeMemberTable loadDetailTeam={self.props.loadDetailTeam} closeTeamTable={self.closeTeamTable} reloadTeamMembers={self.props.reloadTeamMembers} roles={self.props.roles}/>
         </div>
       )
     }
