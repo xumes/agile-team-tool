@@ -2243,13 +2243,13 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   display: inline-block;
   float: right;
-  width: 9.5%;
-  height: 23%;
+  width: 10%;
+  height: 26%;
   min-height: 1.5em;
-  margin-top: -5.5%;
+  margin-top: -6.3%;
 }
 
-.home-iter-edit-btn-block > i > svg, .home-iter-edit-btn-block-disabled > i > svg {
+.home-iter-edit-btn-block > i > svg, .home-iter-edit-btn-block-disabled > i > svg { 
   width: auto;
   height: 100%;
   pointer-events: none;
