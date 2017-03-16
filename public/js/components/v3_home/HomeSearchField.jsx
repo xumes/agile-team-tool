@@ -29,7 +29,7 @@ var HomeSearchField = React.createClass({
     this.setState({'cancelBtnHide': 'none'});
     $('#newSearchTree').hide();
     $('#newTeamTree').show();
-    $('.nano').nanoScroller();
+    $('.home-team-nav').nanoScroller();
   },
 
   render: function() {
