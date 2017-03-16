@@ -18,24 +18,73 @@ var HomeAddTeamDropdownRole = React.createClass({
   componentDidUpdate: function() {
     this.init();
   },
-
   init: function() {
     var self = this;
-    $('.createteam-role-field').mouseover(function() {
-      var blockId = $(this)[0].id;
-      var txt = $('#'+blockId + ' .data-team-role .data').html();
-      $('#'+blockId +' > div.data-team-role').css('display','none');
-      $('#'+blockId +' > div.data-team-role-select').css('display','block');
-      $('#'+blockId + ' .data-team-role-select .Select-value-label').html(txt);
-      $('#'+blockId + ' .data-team-role-select .Select-placeholder').html(txt);
-    });
+    var serverRoles = _.clone(self.props.serverRoles);
 
-    $('.createteam-role-field').mouseleave(function() {
-      var blockId = $(this)[0].id;
-      var txt = $('#'+blockId + ' .data-team-role .data').html();
-      $('#'+blockId +' > div.data-team-role').css('display','block');
-      $('#'+blockId +' > div.data-team-role-select').css('display','none');
+    $('.tbl-members-role-data .createteam-role-field').unbind('mouseenter mouseleave');
+    $('.tbl-members-role-data .r_save-btn').click(self.saveRole);
+    $('.tbl-members-role-data .r_cancel-btn').click(self.cancelRole);
+    $('.tbl-members-role-data .createteam-role-field').hover(function(){
+        var blockId = $(this)[0].id;
+        var id = blockId.split('-')[2];
+        var txt = $('#'+blockId + ' .data-team-role .data').html();
+        txt = txt.replace(/&amp;/g, '&');
+        var showOther = self.state.showOther;
+        var hasClicked = $('#wrapper-role-'+id).hasClass('hasClicked');
+
+        if (txt === 'Select Role') {
+          self.hideCustomFieldOther(blockId);
+        } else {
+          // if the inputted data(e.g. CEO) dont exist in the array
+          if (!_.contains(serverRoles, txt)) {
+            if (hasClicked === false) {
+              self.displayOtherRoleSelect(blockId, txt);
+            } else {
+              $('#'+blockId + ' .custom-field-other').css('display','none');
+              self.displayOtherRoleSelect(blockId, txt);
+            }
+          } else {
+            // if the inputted data(e.g. Manager) was exist in array
+            if (_.contains(serverRoles, txt)) {
+              self.hideDataTeamRole(blockId);
+            }
+          }
+        }
+
+        $('#wrapper-role-'+id).removeClass('hasClicked');
+    }, function(){
+        var blockId = $(this)[0].id;
+        var id = blockId.split('-')[2];
+        var txt = $('#'+blockId + ' .data-team-role .data').html();
+        var hasClicked = $('#wrapper-role-'+id).hasClass('hasClicked');
+        // if the inputted data(e.g. CEO) dont exist in the array
+        if (!_.contains(serverRoles, txt)) {
+          if (hasClicked === false) {
+            $('#'+blockId + ' div.data-team-role').css('display','block');
+            $('#'+blockId + ' div.data-team-role-select').css('display','none');
+            $('#'+blockId + ' .custom-field-other').css('display','none');
+          }
+        }
     });
+  },
+  hideCustomFieldOther: function(blockId) {
+    $('#'+blockId + ' .custom-field-other').css('display','none');
+    $('#'+blockId + ' .data-team-role').css('display','none');
+    $('#'+blockId + ' .data-team-role-select').css('display','block');
+  },
+  hideDataTeamRole: function(blockId) {
+    $('#'+blockId + ' .data-team-role').css('display','none');
+    $('#'+blockId + ' .data-team-role-select').css('display','block');
+  },
+  displayOtherRoleSelect: function(blockId, txt) {
+    $('#'+blockId + ' .data-team-role').css('display','none');
+    $('#'+blockId + ' .data-team-role-select').css('display','block');
+    $('#'+blockId + ' .data-team-role-select .Select-value-label').html('Other...');
+    $('#'+blockId + ' .data-team-role-select .Select-placeholder').html('Other...');
+
+    $('#'+blockId + ' .custom-field-other').css('display','block');
+    $('#'+blockId + ' .custom-field-other .input-field').val(txt);
   },
   roleHandler: function(data) {
     if (data.value && (data.value.toLowerCase() === 'other...')) {
@@ -57,27 +106,34 @@ var HomeAddTeamDropdownRole = React.createClass({
     }
   },
   saveRole: function(uid) {
-    var other = $('#wrapper-role-'+uid + ' > .role-other > #input-field').val();
-    if (_.isEmpty(other)) {
-      alert('Role cannot be empty.');
-    } else {
-      var obj = {'value': other, 'label': other};
-      $('#wrapper-role-'+uid + ' > div.data-team-role .data').html(other);
-      $('#wrapper-role-'+uid + ' > div.data-team-role-select').css('display', 'none');
-      this.props.roleHandler(this.refs, obj);
-      this.setState({selectedRole: other});
-      this.updateSelectValue(uid, other);
+    if (typeof (uid) == 'string') {
+      var other = $('#wrapper-role-'+uid + ' .role-other > #input-field').val();
+      if (_.isEmpty(other)) {
+        alert('Role cannot be empty.');
+      } else {
+        var obj = {'value': other, 'label': other};
+        $('#wrapper-role-'+uid + ' > div.data-team-role .data').html(other);
+        $('#wrapper-role-'+uid + ' > div.data-team-role-select').css('display', 'none');
+        this.props.roleHandler(this.refs, obj);
+        this.setState({selectedRole: other}, function(){
+          $('#wrapper-role-'+uid).addClass('hasClicked');
+        });
+        this.updateSelectValue(uid, other);
+      }
     }
   },
   cancelRole: function(uid) {
-    if (_.isUndefined(this.state.selectedRole)) {
-      $('#wrapper-role-'+uid+ ' .data-team-role .data').html('Select Role');
-      this.updateSelectValue(uid, 'Select Role');
-    } else {
-      $('#wrapper-role-'+uid+ ' .data-team-role .data').html(this.state.selectedRole);
-      this.updateSelectValue(uid, this.state.selectedRole);
+    if (typeof (uid) == 'string') {
+      if (_.isUndefined(this.state.selectedRole)) {
+        $('#wrapper-role-'+uid+ ' .data-team-role .data').html('Select Role');
+        this.updateSelectValue(uid, 'Select Role');
+      } else {
+        $('#wrapper-role-'+uid+ ' .data-team-role .data').html(this.state.selectedRole);
+        $('#wrapper-role-'+uid + ' .custom-field-other').css('display','none');
+        this.updateSelectValue(uid, this.state.selectedRole);
+      }
+      this.setState({showOther: false});
     }
-    this.setState({showOther: false});
   },
   updateSelectValue: function(uid, value) {
     $('#wrapper-role-'+uid + ' .data-team-role-select .Select-control .Select-value').html(value);

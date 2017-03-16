@@ -136,64 +136,67 @@ var HomeAddTeam = React.createClass({
     var self = this;
     var currentTeam = {};
     var promiseArray = [];
+    console.log(' ')
+    console.log('saveTeam:')
+    console.dir(self.state.newTeamObj.members)
 
-    api.postTeam(JSON.stringify(self.state.newTeamObj))
-      .then(function(result) {
-        currentTeam = result;
-        self.props.tabClickedHandler('',currentTeam.pathId);
-        return result;
-      })
-      .then(function(result) {
-         //if there is parent:
-         if (!_.isEmpty(self.state.selectedParentTeam))
-         {
-          api.associateTeam(self.state.selectedParentTeam._id, currentTeam._id)
-           .then(function(result) {
-           });
-         }
-         return result;
-      })
-      .then (function(result) {
-        //if there is child(ren):
-         if (!_.isEmpty(self.state.selectedChildTeams)&& self.state.selectedChildTeams.length >0)
-         {
-           _.each(self.state.selectedChildTeams, function(childTeam) {
-             promiseArray.push(api.associateTeam(currentTeam._id, childTeam._id));
-            });
+    // api.postTeam(JSON.stringify(self.state.newTeamObj))
+    //   .then(function(result) {
+    //     currentTeam = result;
+    //     self.props.tabClickedHandler('',currentTeam.pathId);
+    //     return result;
+    //   })
+    //   .then(function(result) {
+    //      //if there is parent:
+    //      if (!_.isEmpty(self.state.selectedParentTeam))
+    //      {
+    //       api.associateTeam(self.state.selectedParentTeam._id, currentTeam._id)
+    //        .then(function(result) {
+    //        });
+    //      }
+    //      return result;
+    //   })
+    //   .then (function(result) {
+    //     //if there is child(ren):
+    //      if (!_.isEmpty(self.state.selectedChildTeams)&& self.state.selectedChildTeams.length >0)
+    //      {
+    //        _.each(self.state.selectedChildTeams, function(childTeam) {
+    //          promiseArray.push(api.associateTeam(currentTeam._id, childTeam._id));
+    //         });
 
-            if (promiseArray.length > 0)
-              Promise.all(promiseArray);
-         }
-         self.closeWindow();
-         alert('You have successfully added this team. ');
-      })
-      .catch(function(err) {
-        if (err) {
-          var str = '';
-          var err1 = [];
-          var err2 = [];
-          try {
-            if (err && err['responseJSON']) {
-              var tmperr = err['responseJSON']['errors'];
-              _.each(tmperr, function(e, idx, ls) {
-                var divIdx = parseInt(idx.match(/\d+/)[0], 10);
-                utils.highlightErrorField(e.path, divIdx);
-                err1.push(e['message']);
-              });
-              err2 = utils.returnUniqErrors(err1);
-              _.each(err2, function(s) {
-                str = str + ' ' + s + '\n';
-              });
-              alert(str);
-            } else {
-              alert(err);
-            }
-          } catch(e) {
-            console.log('e:', e);
-          }
-        }
-        console.log(err);
-      });
+    //         if (promiseArray.length > 0)
+    //           Promise.all(promiseArray);
+    //      }
+    //      self.closeWindow();
+    //      alert('You have successfully added this team. ');
+    //   })
+    //   .catch(function(err) {
+    //     if (err) {
+    //       var str = '';
+    //       var err1 = [];
+    //       var err2 = [];
+    //       try {
+    //         if (err && err['responseJSON']) {
+    //           var tmperr = err['responseJSON']['errors'];
+    //           _.each(tmperr, function(e, idx, ls) {
+    //             var divIdx = parseInt(idx.match(/\d+/)[0], 10);
+    //             utils.highlightErrorField(e.path, divIdx);
+    //             err1.push(e['message']);
+    //           });
+    //           err2 = utils.returnUniqErrors(err1);
+    //           _.each(err2, function(s) {
+    //             str = str + ' ' + s + '\n';
+    //           });
+    //           alert(str);
+    //         } else {
+    //           alert(err);
+    //         }
+    //       } catch(e) {
+    //         console.log('e:', e);
+    //       }
+    //     }
+    //     console.log(err);
+    //   });
   },
 
   onchangeParentTeamDropdown: function(event) {

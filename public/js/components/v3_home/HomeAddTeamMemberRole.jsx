@@ -162,7 +162,6 @@ var HomeAddTeamMemberRole = React.createClass({
 
   render: function() {
     var self = this;
-    console.log('render from parent..')
     var teamMemberList = null;
     if (!_.isEmpty(self.props.newTeamObj) && !_.isEmpty(self.props.newTeamObj.members)) {
       teamMemberList = self.props.newTeamObj.members.map(function(member,idx) {
@@ -202,7 +201,7 @@ var HomeAddTeamMemberRole = React.createClass({
             <td class='r_allocation' data-index={idx}>
               <HomeAddTeamDropdownAllocation newTeamObj={self.props.newTeamObj} memberUserId={memberUserId} setTeamMember={self.props.setTeamMember} memberAlloc={memberAlloc} allocHandler={self.selectHandler} />
             </td>
-            <td class='r_workweek'>
+            <td class='r_workweek' data-index={idx} id={'tdwrapper-avgworkweek-'+memberUserId}>
               <HomeAddTeamDropdownWorkTime newTeamObj={self.props.newTeamObj} memberUserId={memberUserId} defaultWorkTime={self.state.defaultWorkTime} setTeamMember={self.props.setTeamMember} memberWorkTime={memberWorkTime} workTimeHandler={self.selectHandler} />
             </td>
           </tr>

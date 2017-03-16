@@ -14,6 +14,7 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
   componentDidMount: function() {
     var memberWorkTime = this.props.memberWorkTime || 100;
     this.setState({selectedAvgworkweek: memberWorkTime});
+    this.init();
   },
 
   componentDidUpdate: function() {
@@ -22,28 +23,72 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
 
   init: function() {
     var self = this;
-    $('.createteam-worktime-field').mouseover(function() {
-      var blockId = $(this)[0].id;
-      var txt = $('#'+blockId + ' .data-team-role .data').html();
-      $('#'+blockId +' > div.data-team-role').css('display','none');
-      $('#'+blockId +' > div.data-team-role-select').css('display','block');
-      $('#'+blockId + ' .data-team-role-select .Select-value-label').html(txt);
-      $('#'+blockId + ' .data-team-role-select .Select-placeholder').html(txt);
-    });
+    var defaultWorkTime = _.clone(self.state.defaultWorkTime);
 
-    $('.createteam-worktime-field').mouseleave(function() {
+    $('.tbl-members-role-data .createteam-worktime-field').unbind('mouseenter mouseleave');
+    $('.tbl-members-role-data .r_save-btn').click(self.saveWorkTime);
+    $('.tbl-members-role-data .r_cancel-btn').click(self.cancelWorkTime);
+    $('.tbl-members-role-data .createteam-worktime-field').hover(function(){
       var blockId = $(this)[0].id;
+      var id = blockId.split('-')[2];
       var txt = $('#'+blockId + ' .data-team-role .data').html();
-      $('#'+blockId +' > div.data-team-role').css('display','block');
-      $('#'+blockId +' > div.data-team-role-select').css('display','none');
+      var hasClicked = $('#wrapper-worktime-'+id).hasClass('hasClicked');
+
+      // if the inputted data(e.g. 11%) dont exist in the array
+      if (!_.contains(defaultWorkTime, txt)) {
+        if (hasClicked === false) {
+          self.displayOtherRoleSelect(blockId, txt);
+        } else {
+          $('#'+blockId + ' .custom-field-other').css('display','none');
+          self.displayOtherRoleSelect(blockId, txt);
+        }
+      } else {
+        // if the inputted data(e.g. Full Time) was exist in the array
+        if (_.contains(defaultWorkTime, txt)) {
+          self.hideDataTeamRole(blockId);
+        }
+      }
+
+      $('#wrapper-worktime-'+id).removeClass('hasClicked');
+    }, function(){
+      var blockId = $(this)[0].id;
+      var id = blockId.split('-')[2];
+      var txt = $('#'+blockId + ' .data-team-role .data').html();
+      var hasClicked = $('#wrapper-worktime-'+id).hasClass('hasClicked');
+        // if the inputted data(e.g. 11%) dont exist in the array
+        if (!_.contains(defaultWorkTime, txt)) {
+          if (hasClicked === false) {
+            $('#'+blockId + ' div.data-team-role').css('display','block');
+            $('#'+blockId + ' div.data-team-role-select').css('display','none');
+            $('#'+blockId + ' .custom-field-other').css('display','none');
+          }
+        }
     });
   },
+  hideCustomFieldOther: function(blockId) {
+    $('#'+blockId + ' .custom-field-other').css('display','none');
+    $('#'+blockId + ' .data-team-role').css('display','none');
+    $('#'+blockId + ' .data-team-role-select').css('display','block');
+  },
+  hideDataTeamRole: function(blockId) {
+    $('#'+blockId + ' .data-team-role').css('display','none');
+    $('#'+blockId + ' .data-team-role-select').css('display','block');
+  },
+  displayOtherRoleSelect: function(blockId, txt) {
+    txt = parseInt(txt);
+    $('#'+blockId + ' .data-team-role').css('display','none');
+    $('#'+blockId + ' .data-team-role-select').css('display','block');
+    $('#'+blockId + ' .data-team-role-select .Select-value-label').html('Other...');
+    $('#'+blockId + ' .data-team-role-select .Select-placeholder').html('Other...');
 
+    $('#'+blockId + ' .custom-field-other').css('display','block');
+    $('#'+blockId + ' .custom-field-other .input-field').val(txt);
+  },
   workTimeHandler: function(data) {
     if (data.value && (data.value === -1)) {
       var uid = this.refs.selavgworkweek.props['data-uid'];
+      $('#wrapper-worktime-'+uid + ' .Select-placeholder').addClass('otherTxt');
       this.updateSelectValue(uid, 'Other');
-      $('#wrapper-worktime-'+uid + ' .Select-control .Select-placeholder').addClass('otherTxt');
       this.setState({showOther: true});
       window.setTimeout(function(){
         var input = $('#wrapper-worktime-'+uid + ' .input-field');
@@ -58,31 +103,37 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
       this.props.workTimeHandler(this.refs, data);
     }
   },
-
   saveWorkTime: function(uid) {
-    var other = parseInt($('#wrapper-worktime-'+uid + ' > .role-worktime > #input-field').val().trim());
-    if (!other) {
-      alert('Average work per week is required.');
-    } else {
-      if (other > 100 || other < 0) {
-        alert('Average work per week should be between 0 to 100.');
+    if (typeof (uid) == 'string') {
+      var other = parseInt($('#wrapper-worktime-'+uid + ' .role-worktime > #input-field').val().trim());
+      if (!other) {
+        alert('Average work per week is required.');
       } else {
-        var obj = {'value': other, 'label': other};
-        this.props.workTimeHandler(this.refs, obj);
+        if (other > 100 || other < 0) {
+          alert('Average work per week should be between 0 to 100.');
+        } else {
+          var obj = {'value': other, 'label': other};
+          this.props.workTimeHandler(this.refs, obj);
+          this.setState({selectedAvgworkweek: other}, function(){
+            $('#wrapper-worktime-'+uid).addClass('hasClicked');
+          });
+        }
       }
     }
   },
 
   cancelWorkTime: function(uid) {
-    if (_.isUndefined(this.state.selectedAvgworkweek)) {
-      $('#wrapper-worktime-'+uid+ ' .data-team-role .data').html('Select...');
-      this.updateSelectValue(uid, 'Select...');
-    } else {
-      $('#wrapper-worktime-'+uid+ ' .data-team-role .data').html(this.getAvgworkweekByLabel(this.state.selectedAvgworkweek));
-      this.updateSelectValue(uid, this.state.selectedAvgworkweek);
+    if (typeof (uid) == 'string') {
+      if (_.isUndefined(this.state.selectedAvgworkweek)) {
+        $('#wrapper-worktime-'+uid+ ' .data-team-role .data').html('Select...');
+        this.updateSelectValue(uid, 'Select...');
+      } else {
+        $('#wrapper-worktime-'+uid+ ' .data-team-role .data').html(this.getAvgworkweekByLabel(this.state.selectedAvgworkweek));
+        $('#wrapper-worktime-'+uid + ' .custom-field-other').css('display','none');
+        this.updateSelectValue(uid, this.state.selectedAvgworkweek);
+      }
+      this.setState({showOther: false});
     }
-
-    this.setState({showOther: false});
   },
 
   getAvgworkweekByLabel: function(value) {

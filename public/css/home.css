@@ -5050,7 +5050,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_location, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_location{
-  width: 10em;
+  width: 12em;
   background: none;
 }
 #addTeamMemberRoleBlock .tbl-memberRole-results td.r_location {
@@ -5059,13 +5059,16 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_role, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_role {
-  width: 13.5em;
+  width: 14em;
   height: 2em;
+  padding-left: 0.1em;
+  padding-right: 0.1em;
   vertical-align: top;
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_allocation, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_allocation {
   width: 5em;
+  padding-left: 0.2em;
   vertical-align: top;
 }
 
@@ -5254,6 +5257,11 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   border: 1px solid #333;
 }
 
+#addTeamMemberRoleBlock .createteam-worktime-field, #addTeamMemberRoleBlock .createteam-role-field {
+  float: left;
+  width: 100%;
+}
+
 #addTeamMemberRoleBlock .r_role .r_save-btn, #addTeamMemberRoleBlock .r_role .r_cancel-btn,
 #addTeamMemberRoleBlock .r_workweek .r_save-btn, #addTeamMemberRoleBlock .r_workweek .r_cancel-btn {
   cursor: pointer;
@@ -5306,6 +5314,11 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 #addTeamMemberRoleBlock .r_role .r_save-btn, #addTeamMemberRoleBlock .r_role .r_cancel-btn {
   left: 0.5em;
+  top: 0.5em;
+}
+
+#addTeamMemberRoleBlock .r_workweek .r_save-btn, #addTeamMemberRoleBlock .r_workweek .r_cancel-btn {
+  top: 0.5em;
 }
 
 #addTeamMemberRoleBlock .r_role .r_cancel-btn {
