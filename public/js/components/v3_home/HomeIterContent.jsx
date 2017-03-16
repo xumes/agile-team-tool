@@ -183,7 +183,8 @@ var HomeIterContent = React.createClass({
   },
   saveIter: function(id) {
     var iterationData = _.clone(this.state.selectedIter);
-    if (this.refs[id].value !== 'N/A' && this.refs[id].value !== this.state.selectedIter[id].toString()){
+    var selectedValue = this.state.selectedIter[id] !== null?this.state.selectedIter[id].toString():'';
+    if (this.refs[id].value !== 'N/A' && this.refs[id].value !== selectedValue){
       iterationData = this.recalculate(id);
       this.props.updateTeamIteration(iterationData);
       this.setState({selectedIter:iterationData});
@@ -455,7 +456,7 @@ var HomeIterContent = React.createClass({
         }
         var defIter = this.state.selectedIter;
         var lastUpdatedBy = defIter.updatedBy;
-        var lastUpdateTime = moment(defIter.updateDate).format('MMM DD YYYY');
+        var lastUpdateTime = moment(defIter.updateDate).format('DD MMM YYYY');
         if (_.isEqual(defIter.memberChanged,true) || _.isEqual(defIter.memberChanged,'true')) {
           iterData.memberChanged = 'Yes';
         } else {
@@ -500,9 +501,9 @@ var HomeIterContent = React.createClass({
         return (
           <div>
             <div class='home-iter-title'>Iteration Overview</div>
-            <Tooltip html={true} type="light"/>
+            <Tooltip html={true} type="light"/>            
             <div class='home-iter-name-block' style={{'height':'4.3%'}}>
-              <div class='home-iter-content-title' id='iteration-name'>{iterData.name}</div>
+              <div class='home-iter-name' id='iteration-name'>{iterData.name}</div>
               <div class='home-iter-team-date' id='iteration-date'>{iterData.startDate} - {iterData.endDate}</div>
               <div class={access?'home-iter-edit-btn-block':'home-iter-edit-btn-block-disabled'} onClick={access?this.showEditIteration:''} style={access?{'cursor':'pointer'}:{'cursor':'default'}}>
                 <InlineSVG src={require('../../../img/Att-icons/att-icons_edit.svg')} data-tip='Edit Iteration Name/Date'></InlineSVG>
