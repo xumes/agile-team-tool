@@ -22,7 +22,7 @@ var AssessmentSetupPopover = React.createClass({
           </div>
         </div>
         <div class='assessment-type-block'>
-          <h1>{'Work Type'}</h1>
+          <h1>{'What is your team\'s work type?'}</h1>
           <div class='assessment-select-block'>
             <select id='assessmentSetupSelectType' defaultValue='Project'>
               <option value='Project'>{'Project Delivery'}</option>

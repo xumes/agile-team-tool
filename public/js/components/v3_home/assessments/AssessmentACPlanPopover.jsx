@@ -9,7 +9,6 @@ var AssessmentACPlanTable = require('./AssessmentACPlanTable.jsx');
 
 var AssessmentACPlanPopover = React.createClass({
   componentDidMount: function() {
-    console.log(this.props.tempAssess);
   },
   showBlock: function(id) {
     $('#showBlockBtn' + id).hide();
@@ -72,8 +71,8 @@ var AssessmentACPlanPopover = React.createClass({
                   <h1 id='assessmentSubmitDateTitle'>{submitDate}</h1>
                 </div>
                 <div class='last-updated-by'>
-                  <h1>{lastUpdatedBy}</h1>
-                  <h1 style={{'marginTop':'-5%'}}>{lastUpdated}</h1>
+                  <h1 id='lastUpdatedByEmail'>{lastUpdatedBy}</h1>
+                  <h1 id='lastUpdatedByTime' style={{'marginTop':'-5%'}}>{lastUpdated}</h1>
                 </div>
               </div>
             </div>
@@ -113,7 +112,7 @@ var AssessmentACPlanPopover = React.createClass({
               <InlineSVG src={require('../../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
             </div>
           </div>
-          <AssessmentACPlanTable loadDetailTeam={self.props.loadDetailTeam} tempAssess={self.props.tempAssess} componentId={'3'}/>
+          <AssessmentACPlanTable updateAssessmentSummary={self.props.updateAssessmentSummary} loadDetailTeam={self.props.loadDetailTeam} tempAssess={self.props.tempAssess} componentId={'3'}/>
         </div>
       )
     } else {

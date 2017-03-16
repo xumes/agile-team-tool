@@ -6689,7 +6689,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 96%;
   left: 2%;
   margin: 2% 0 2% 0;
-  border-bottom: 0.1em solid #979797;
 }
 
 .assessment-popover-block > .assessment-acplan-table > .header-title {
@@ -6735,6 +6734,16 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .assessment-popover-block > .assessment-acplan-table > .table-block > div {
   position: relative;
   float: left;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .table-block > div > select{
+  position: relative;
+  float: left;
+  width: 95%;
+  height: 2em;
+  margin: 0.5em 0 0.5em 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
 }
 
 .assessment-popover-block > .assessment-acplan-table > .table-block > div > div {
@@ -6794,11 +6803,30 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   width: 100%;
   height: 6em;
+  border-bottom: 0.1em solid #979797;
 }
 
 .assessment-popover-block > .assessment-acplan-table > .action-plan-add > button {
   position: relative;
   float: left;
+  top: 25%;
+  width: 10%;
+  height: 50%;
+  font-size: 1.2em;
+  line-height: 0em;
+  padding: 0;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .action-plan-btns {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 6em;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .action-plan-btns > button {
+  position: relative;
+  float: right;
   top: 25%;
   width: 10%;
   height: 50%;
