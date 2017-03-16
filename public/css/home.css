@@ -2162,7 +2162,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.3em;
   line-height: 1.6em;
-  color: #5A5A5A;
+  color: #777677;
 }
 .home-iter-selection-block {
   position: relative;
@@ -2188,10 +2188,18 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .home-iter-select .select2-selection__rendered{
   height: 2em!important;
-  margin-top: -1.8%;
+  margin-top: -2%;
 }
 .home-iter-select .select2-selection--single, select2-homeIterSelection-container{
   height: 2.2em!important;
+}
+
+.home-iter-select .select2-container--default .select2-selection--single .select2-selection__arrow b:before{
+  margin-top: -5%;
+}
+
+.home-iter-select .select2-container--default .select2-selection--single .select2-selection__rendered{
+  color: #777677
 }
 
 .memberChanged input, select, .memberChanged option{
