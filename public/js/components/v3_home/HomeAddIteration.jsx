@@ -209,7 +209,10 @@ var HomeAddIteration = React.createClass({
           return;
         }
 
-        var maxWorkDays = business.weekDays(moment(self.state.iterationStartDate),moment(self.state.iterationEndDate));
+        var maxWorkDays = business.weekDays(moment.utc(self.state.iterationStartDate), moment.utc(self.state.iterationEndDate));
+        if (!business.isWeekendDay(moment.utc(self.state.iterationEndDate))){
+          maxWorkDays +=1;
+        }
         utils.getOptimumAvailability(maxWorkDays, self.props.loadDetailTeam.team._id)
           .then(function(availability){
             var data = _.clone(initData);
@@ -338,9 +341,9 @@ var HomeAddIteration = React.createClass({
               <div className='home-iter-main' style={{'width':'100%'}}>
                 <p className='home-iter-main-section' style={{'lineHeight': '0%'}}>Iteration Dates</p>
                 <div style={{'display':'flex', 'marginTop': '2%'}} id='iterationDates'>
-                  <DatePicker onChange={this.startDateChange} selected={this.state.iterationStartDate} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='startDate' />} disabled={false} ref='iterationStartDate' fixedHeight/>
+                  <DatePicker onChange={this.startDateChange} selected={ moment.utc(this.state.iterationStartDate)} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='startDate' />} disabled={false} ref='iterationStartDate' fixedHeight/>
                   <p style={{'marginLeft':'5%', 'marginRight':'5%'}} className='home-iter-date-range'> to </p>
-                  <DatePicker onChange={this.endDateChange} selected={this.state.iterationEndDate} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='endDate' />} disabled={false} ref='iterationEndDate' fixedHeight/>
+                  <DatePicker onChange={this.endDateChange} selected={ moment.utc(this.state.iterationEndDate)} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='endDate' />} disabled={false} ref='iterationEndDate' fixedHeight/>
                 </div>
               </div>
                 
