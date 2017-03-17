@@ -30,6 +30,14 @@ var HomeAseSummary = React.createClass({
         });
       });
   },
+  componentWillUpdate: function(preProps) {
+    var self = this;
+    if (!_.isEmpty(preProps.loadDetailTeam) && !_.isEmpty(self.props.loadDetailTeam)) {
+      if (preProps.loadDetailTeam.team._id.toString() != self.props.loadDetailTeam.team._id.toString()) {
+        self.state.selectedAssessment = '';
+      }
+    }
+  },
   componentDidUpdate: function() {
     var self = this;
     if (window.innerWidth < 1900) {
@@ -61,6 +69,7 @@ var HomeAseSummary = React.createClass({
     var tempAssess = {};
     _.find(self.props.loadDetailTeam.assessments, function(assess){
       if (assess._id.toString() == e.target.value) {
+        self.state.selectedAssessment = e.target.value;
         return tempAssess = assess;
       }
     });
@@ -148,7 +157,7 @@ var HomeAseSummary = React.createClass({
       if (self.props.loadDetailTeam != undefined && self.props.loadDetailTeam.assessments != undefined && self.props.loadDetailTeam.assessments.length > 0) {
         if (self.props.loadDetailTeam.assessments.length == 1 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft') {
           var updateDate = moment(self.props.loadDetailTeam.assessments[0].updateDate).format('DD MMM YYYY');
-          self.state.selectedAssessment = self.props.loadDetailTeam.assessments[0]._id.toString();
+          // self.state.selectedAssessment = self.props.loadDetailTeam.assessments[0]._id.toString();
           return (
             <div class='home-assessment-summary' style={{'display':'none'}}>
               <div>
@@ -180,18 +189,35 @@ var HomeAseSummary = React.createClass({
             </div>
           )
         } else {
-          if (self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft') {
-            var tempAssess = self.props.loadDetailTeam.assessments[1];
-            var hasDraft = true;
-            var draftUpdateDate = moment(self.props.loadDetailTeam.assessments[0].updateDate).format('DD MMM YYYY');
+          if (self.state.selectedAssessment != '') {
+            var tempAssess = _.find(self.props.loadDetailTeam.assessments, function(assess){
+              if (assess._id.toString() == self.state.selectedAssessment) {
+                return assess;
+              }
+            });
+            if (self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft') {
+              var hasDraft = true;
+              var draftUpdateDate = moment(self.props.loadDetailTeam.assessments[0].updateDate).format('DD MMM YYYY');
+            } else {
+              hasDraft = false;
+              draftUpdateDate = '';
+              self.state.type = self.props.loadDetailTeam.assessments[0].type;
+              self.state.software = self.props.loadDetailTeam.assessments[0].deliversSoftware?'Yes':'No';
+            }
           } else {
-            tempAssess = self.props.loadDetailTeam.assessments[0];
-            hasDraft = false;
-            draftUpdateDate = '';
-            self.state.type = self.props.loadDetailTeam.assessments[0].type;
-            self.state.software = self.props.loadDetailTeam.assessments[0].deliversSoftware?'Yes':'No';
+            if (self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft') {
+              var tempAssess = self.props.loadDetailTeam.assessments[1];
+              var hasDraft = true;
+              var draftUpdateDate = moment(self.props.loadDetailTeam.assessments[0].updateDate).format('DD MMM YYYY');
+            } else {
+              tempAssess = self.props.loadDetailTeam.assessments[0];
+              hasDraft = false;
+              draftUpdateDate = '';
+              self.state.type = self.props.loadDetailTeam.assessments[0].type;
+              self.state.software = self.props.loadDetailTeam.assessments[0].deliversSoftware?'Yes':'No';
+            }
           }
-          self.state.selectedAssessment = tempAssess._id.toString();
+          // self.state.selectedAssessment = tempAssess._id.toString();
           var defaultId = tempAssess._id.toString();
           var submitDate = '(Averaging last submitted: ' + moment(tempAssess.submittedDate).format('DD MMM YYYY') + ')';
           var updateDate = moment(tempAssess.updateDate).format('DD MMM YYYY');
@@ -268,7 +294,7 @@ var HomeAseSummary = React.createClass({
           var assessSelect = self.props.loadDetailTeam.assessments.map(function(assess){
             if (assess.assessmentStatus == 'Submitted') {
               return(
-                <option key={assess._id} value={assess._id}>{moment.utc(assess.createDate).format('DDMMMYYYY')}</option>
+                <option key={assess._id} value={assess._id}>{moment.utc(assess.submittedDate).format('DD MMM YYYY')}</option>
               )
             }
           });
@@ -289,14 +315,14 @@ var HomeAseSummary = React.createClass({
               </div>
               <div class='select-content'>
                 <div class='select-box'>
+                  <h1>{'Previous Assessments'}</h1>
                   <select id='pAsseSelect' defaultValue={defaultId}>
-                    <option disabled='true' value='pa'>{'Previous Assessments'}</option>
                     {assessSelect}
                   </select>
                 </div>
                 <div class='review-box'>
                   <h1>{'Not sure what to do next?'}</h1>
-                  <button type='button' onClick={self.showAssessmentACPlanPopover} class={hasDraft?'ibm-btn-pri ibm-btn-blue-50':'ibm-btn-sec ibm-btn-blue-50'} disabled={haveAccess}>{'Review Action Plan'}</button>
+                  <button type='button' onClick={self.showAssessmentACPlanPopover} class={hasDraft?'ibm-btn-pri ibm-btn-blue-50':'ibm-btn-sec ibm-btn-blue-50'}>{'Review Action Plan'}</button>
                   <h2>{'Last Updated:'}</h2>
                   <h3 style={{'textAlign':'right'}}>{updateDate}</h3>
                 </div>
@@ -308,7 +334,7 @@ var HomeAseSummary = React.createClass({
                 </div>
               </div>
               <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showACPlanModel} onHide={self.hideAssessmentACPlanPopover}>
-                <AssessmentACPlanPopover hideAssessmentACPlanPopover={self.hideAssessmentACPlanPopover} loadDetailTeam={self.props.loadDetailTeam} tempAssess={tempAssess}/>
+                <AssessmentACPlanPopover hideAssessmentACPlanPopover={self.hideAssessmentACPlanPopover} updateAssessmentSummary={self.updateAssessmentSummary} loadDetailTeam={self.props.loadDetailTeam} tempAssess={tempAssess}/>
               </Modal>
               <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAssessmentPopover}>
                 <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary} assessType={self.state.type} assessSoftware={self.state.software}/>

@@ -12,6 +12,11 @@ var windowSize = {
   'width': 1440,
   'fontSize': 0.625
 }
+var windowSize2 = {
+  'height': 1080,
+  'width': 1920,
+  'fontSize': 0.625
+}
 
 var HomePage = React.createClass({
   getInitialState: function() {
@@ -54,7 +59,7 @@ var HomePage = React.createClass({
     }, 0);
     if (window.innerWidth >= 1280 && window.innerWidth < 1900) {
       $('html').css('width', '100vw');
-      $('html').css('height', '56.25vw');
+      $('html').css('height', '56.49vw');
       $('#homeNavShowBtnDiv').show();
       $('.ibm-columns').css('width', '96.6%');
       $('.ibm-columns').css('left', '0');
@@ -94,8 +99,8 @@ var HomePage = React.createClass({
       $('html').css('font-size', changeSize);
     } else if (window.innerWidth >= 1900) {
       $('html').css('width', '100vw');
-      $('html').css('height', '0.375vw');
-      fontSize = (1280/windowSize['width']) * windowSize['fontSize'];
+      $('html').css('height', '37.5vw');
+      fontSize = (window.innerWidth/windowSize2['width']) * windowSize2['fontSize'];
       $('.ibm-columns').css('width', '72.7%');
       $('.ibm-columns').css('left', '22.7%');
       $('#homeNavShowBtnDiv').hide();
@@ -205,6 +210,8 @@ var HomePage = React.createClass({
 
   tabClickedHandler: function(tab, pathId) {
     var self = this;
+    var currentPath = pathId || (self.state.loadDetailTeam.team ? self.state.loadDetailTeam.team.pathId : self.state.selectedTeam);
+    //console.log('tabClickedHandler', tab, currentPath);
     tab = tab || self.state.newTeams.tab
     self.tabClickedStart();
     $('#allTeams').attr('data-state','');
@@ -218,7 +225,10 @@ var HomePage = React.createClass({
           'tab': 'myteams',
           'data': data
         };
-        self.setState({'newTeams': newData, 'selectedTeam': pathId || self.state.selectedTeam});
+        self.setState({
+          'newTeams': newData,
+          'selectedTeam': currentPath
+        });
         // self.setState({'searchTeamSelected': ''});
         $('#searchCancel').click();
         return null;
@@ -240,7 +250,10 @@ var HomePage = React.createClass({
           'tab': 'allteams',
           'data': data
         };
-        self.setState({'newTeams': newData, 'selectedTeam': pathId || self.state.selectedTeam});
+        self.setState({
+          'newTeams': newData,
+          'selectedTeam': currentPath
+        });
         return null;
       })
       .catch(function(err){
@@ -287,7 +300,6 @@ var HomePage = React.createClass({
       self.setState({loadDetailTeam: updatedTeam});
 
       // front end sort
-      console.log(updatedTeam.team.pathId,updatedTeam.team.name);
       $('#'+updatedTeam.team.pathId+ ' > a > span.agile-team-title').html(updatedTeam.team.name);
       var li = $('#'+updatedTeam.team.pathId).parent('ul').children('li');
       var liSorted = _.sortBy(li,function(element){
@@ -300,21 +312,32 @@ var HomePage = React.createClass({
       _.each(liSorted, function(element) {
         $('#'+updatedTeam.team.pathId).parent('ul').append(element);
       });
-      $('.nano').nanoScroller();
-      $('.nano').nanoScroller({
+      $('.home-team-nav').nanoScroller();
+      $('.home-team-nav').nanoScroller({
         scrollTo: $('#link_'+updatedTeam.team.pathId)
       });
     }
   },
 
-  realodTeamMembers: function(members, membersContent) {
+  reloadTeamMembers: function(members, membersContent) {
     var self = this;
     // var newTeam = this.state.loadDetailTeam;
     var newTeam = JSON.parse(JSON.stringify(this.state.loadDetailTeam));
-    newTeam.team.members = members;
-    newTeam.members = membersContent;
-    self.setState({'loadDetailTeam': newTeam}, function(){
+    newTeam.team.members = _.sortBy(members, function(m) {
+      return m.name.replace(/\s/g,'').toLowerCase();
     });
+    newTeam.members = membersContent;
+    var userMember = _.find(members, function(member) {
+      return member.userId == user.ldap.uid;
+    })
+    if (_.isEmpty(userMember) && $('#myTeams').attr('data-state') == 'open') {
+      newTeam.access = false;
+      // front end to hide team from my teams view and disable any other edit blocks on members
+      $('#memberTable h.team-member-table-content-block-hide').removeClass('team-member-table-content-block-hide')
+      $('#memberTable div.modify-field').removeClass('team-member-table-content-block-show')
+      $('#'+newTeam.team.pathId).hide();  //need to hide, removing it would cause react to complain of node not found
+    }
+    self.setState({'loadDetailTeam': newTeam});
   },
 
   reloadTeamIterations: function(id) {
@@ -383,7 +406,7 @@ var HomePage = React.createClass({
 
         <div class='ibm-columns' style={columnsStyle}>
           <div id='mainContent' class='ibm-col-6-4' style={sectionTwoStyle}>
-            <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler} realodTeamMembers={this.realodTeamMembers} roles={this.state.roles} handleChartResize={this.handleChartResize} updateTeamLink={this.updateTeamLink} updateTeamDetails={this.updateTeamDetails} />
+            <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler} reloadTeamMembers={this.reloadTeamMembers} roles={this.state.roles} handleChartResize={this.handleChartResize} updateTeamLink={this.updateTeamLink} updateTeamDetails={this.updateTeamDetails} />
           </div>
           <div id='iterContent' class='ibm-col-6-2' style={sectionOneStyle}>
             <HomeIterContent loadDetailTeam={this.state.loadDetailTeam} selectedIter={this.state.selectedIter} iterChangeHandler={this.iterChangeHandler} iterListHandler={this.reloadTeamIterations} updateTeamIteration={this.updateTeamIteration}/>

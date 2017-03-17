@@ -5,10 +5,12 @@ var moment = require('moment');
 var ReactDOM = require('react-dom');
 var InlineSVG = require('svg-inline-react');
 var AssessmentSummaryTable = require('./AssessmentSummaryTable.jsx');
+var AssessmentACPlanTable = require('./AssessmentACPlanTable.jsx');
 
 var AssessmentACPlanPopover = React.createClass({
   componentDidMount: function() {
-    console.log(this.props.tempAssess);
+    this.hideBlock(1);
+    this.hideBlock(2);
   },
   showBlock: function(id) {
     $('#showBlockBtn' + id).hide();
@@ -33,12 +35,16 @@ var AssessmentACPlanPopover = React.createClass({
     assessType = tempAssess.type;
     deliversSoftware = tempAssess.deliversSoftware?'Yes':'No';
     var componentResultLC = {};
+    var componentShow1 = 'none';
     var componentResultDD = {};
+    var componentShow2 = 'none';
     if (tempAssess.componentResults[0]) {
       componentResultLC = tempAssess.componentResults[0];
+      componentShow1 = 'block';
     }
     if (tempAssess.componentResults[1]) {
       componentResultDD = tempAssess.componentResults[1];
+      componentShow2 = 'block';
     }
     if (self.props.tempAssess && !_.isEmpty(self.props.tempAssess)) {
       return (
@@ -64,20 +70,20 @@ var AssessmentACPlanPopover = React.createClass({
                 <div class='team-type-selector'>
                   <h1 style={{'left':'4%'}}>{assessType}</h1>
                 </div>
-                <div class='team-type-selector' style={{'left':'3%'}}>
+                <div class='team-type-selector' style={{'left':'2%'}}>
                   <h1>{deliversSoftware}</h1>
                 </div>
-                <div class='submit-date-selector'>
+                <div class='submit-date-selector' style={{'left':'6%'}}>
                   <h1 id='assessmentSubmitDateTitle'>{submitDate}</h1>
                 </div>
-                <div class='last-updated-by'>
-                  <h1>{lastUpdatedBy}</h1>
-                  <h1 style={{'marginTop':'-5%'}}>{lastUpdated}</h1>
+                <div class='last-updated-by' style={{'left':'7%'}}>
+                  <h1 id='lastUpdatedByEmail'>{lastUpdatedBy}</h1>
+                  <h1 id='lastUpdatedByTime' style={{'marginTop':'-5%'}}>{lastUpdated}</h1>
                 </div>
               </div>
             </div>
           </div>
-          <div class='lc-header'>
+          <div class='lc-header' style={{'display':componentShow1}}>
             <div class='header-title'>
               <h1>{'Leadership and Collaboration'}</h1>
             </div>
@@ -88,8 +94,8 @@ var AssessmentACPlanPopover = React.createClass({
               <InlineSVG src={require('../../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
             </div>
           </div>
-          <AssessmentSummaryTable componentResult={componentResultLC} componentId={'1'}/>
-          <div class='lc-header'>
+          <AssessmentSummaryTable loadDetailTeam={self.props.loadDetailTeam} componentResult={componentResultLC} assessType={assessType} componentId={'1'}/>
+          <div class='lc-header' style={{'display':componentShow2}}>
             <div class='header-title'>
               <h1>{'Delivery and DevOps'}</h1>
             </div>
@@ -100,7 +106,19 @@ var AssessmentACPlanPopover = React.createClass({
               <InlineSVG src={require('../../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
             </div>
           </div>
-          <AssessmentSummaryTable componentResult={componentResultDD} componentId={'2'}/>
+          <AssessmentSummaryTable loadDetailTeam={self.props.loadDetailTeam} componentResult={componentResultDD} assessType={assessType} componentId={'2'}/>
+          <div class='lc-header'>
+            <div class='header-title'>
+              <h1>{'Action Plan'}</h1>
+            </div>
+            <div class='hideBlock-btn' id='hideBlockBtn3' style={{'display':'block'}} onClick={self.hideBlock.bind(null, '3')}>
+              <InlineSVG src={require('../../../../img/Att-icons/att-icons_show.svg')}></InlineSVG>
+            </div>
+            <div class='showBlock-btn' id='showBlockBtn3' style={{'display':'none'}} onClick={self.showBlock.bind(null, '3')}>
+              <InlineSVG src={require('../../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
+            </div>
+          </div>
+          <AssessmentACPlanTable updateAssessmentSummary={self.props.updateAssessmentSummary} loadDetailTeam={self.props.loadDetailTeam} tempAssess={self.props.tempAssess} componentId={'3'}/>
         </div>
       )
     } else {

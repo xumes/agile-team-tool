@@ -69,7 +69,7 @@ var HomeNav = React.createClass({
         <div class='home-team-nav nano' data-widget='scrollable' data-height='600'>
           <div class='nano-content'>
             <HomeSearchTree searchTeams={this.state.searchTeams} selectedTeamChanged={this.props.selectedTeamChanged}/>
-            <HomeTeamTree newTeams={this.props.newTeams} selectedTeam={this.props.selectedTeam} loadDetailTeamChanged={this.props.loadDetailTeamChanged}/>
+            <HomeTeamTree newTeams={this.props.newTeams} selectedTeam={this.props.selectedTeam} tabClickedHandler={this.props.tabClickedHandler} loadDetailTeamChanged={this.props.loadDetailTeamChanged}/>
           </div>
         </div>
       </div>

@@ -31,7 +31,7 @@ var HomeTeamTree = React.createClass({
     $('#navSpinner').hide();
     $('#newSearchTree').hide();
     $('#newTeamTree').show();
-    $('.nano').nanoScroller();
+    $('.home-team-nav').nanoScroller();
     //console.log('componentDidUpdate',self.props);
     self.initHilightTeam();
     // self.loadTeamInAllTeams(selectedTeam);
@@ -126,16 +126,7 @@ var HomeTeamTree = React.createClass({
         self.highlightTeam(selectedTeam);
         self.loadDetails(selectedTeam);
       } else {
-        $('#bodyContent').hide();
-        $('#snapshotPull').hide();
-        //$('#iterationFallBox').hide();
-        $('#squad_team_scard').hide();
-        $('#nsquad_team_scard').hide();
-        //$('#assessmentFallBox').hide();
-        $('#nsquad_assessment_card').hide();
-        $('#squad_assessment_card').hide();
-        $('#membersList').empty();
-        $('#teamMemberTable').hide();
+        self.props.tabClickedHandler('allteams');
       }
     } else {
       if ($('#myTeams').attr('data-state') == 'open') {
@@ -170,8 +161,8 @@ var HomeTeamTree = React.createClass({
               self.loadDetails(selectedTeam);
               $('#navSpinner').hide();
               $('#newTeamTree').show();
-              $('.nano').nanoScroller();
-              $('.nano').nanoScroller({
+              $('.home-team-nav').nanoScroller();
+              $('.home-team-nav').nanoScroller({
                 scrollTo: $('#link_' + selectedTeam)
               });
             } else {
@@ -223,7 +214,7 @@ var HomeTeamTree = React.createClass({
         $('#' + teamId).attr('data-open', 'true');
         $('#' + teamId).addClass('ibm-active');
         $('#body_' + teamId).css('display', 'block');
-        $('.nano').nanoScroller();
+        $('.home-team-nav').nanoScroller();
       }
     }
   },
@@ -250,30 +241,28 @@ var HomeTeamTree = React.createClass({
       $('#' + teamId).addClass('ibm-active');
       $('#' + teamId + ' > a > .expand-image > img').attr('src', '../../../img/Att-icons/att-icons_-.svg');
       $('#body_' + teamId).css('display', 'block');
-      $('.nano').nanoScroller();
+      $('.home-team-nav').nanoScroller();
     }
   },
 
   collapseParentTeam: function(teamId) {
     $('#' + teamId).removeClass('ibm-active');
     $('#body_' + teamId).css('display', 'none');
-    $('.nano').nanoScroller();
+    $('.home-team-nav').nanoScroller();
   },
 
   loadDetails: function(teamId) {
     var self = this;
     self.removeHighlightParents();
-    $('.nano').nanoScroller();
+    $('.home-team-nav').nanoScroller();
     self.highlightTeam(teamId);
     var objectId = $('#' + teamId).children('span').html();
     //console.log('ooo:',teamId,objectId);
     $('#contentSpinner').show();
     $('#bodyContent').hide();
     $('#snapshotPull').hide();
-    //$('#iterationFallBox').hide();
     $('#squad_team_scard').hide();
     $('#nsquad_team_scard').hide();
-    //$('#assessmentFallBox').hide();
     $('#nsquad_assessment_card').hide();
     $('#squad_assessment_card').hide();
     $('#membersList').empty();
@@ -295,6 +284,10 @@ var HomeTeamTree = React.createClass({
       }
       promiseArray.push(api.isUserAllowed(objectId));
       promiseArray.push(api.getTeamHierarchy(team.path));
+      // sort members by name
+      team.members = _.sortBy(team.members, function(m) {
+        return m.name.replace(/\s/g,'').toLowerCase();
+      });
       if (team.members != null && team.members.length > 0) {
         var ids = [];
         _.each(team.members, function(member){
@@ -369,8 +362,8 @@ var HomeTeamTree = React.createClass({
         self.loadDetails(path[path.length-1]);
         $('#navSpinner').hide();
         $('#newTeamTree').show();
-        $('.nano').nanoScroller();
-        $('.nano').nanoScroller({
+        $('.home-team-nav').nanoScroller();
+        $('.home-team-nav').nanoScroller({
           scrollTo: $('#link_' + path[path.length-1])
         });
         $('.home-team-nav').css('top','3.1%');
@@ -411,8 +404,8 @@ var HomeTeamTree = React.createClass({
       self.loadDetails(teamId);
       $('#navSpinner').hide();
       $('#newTeamTree').show();
-      $('.nano').nanoScroller();
-      $('.nano').nanoScroller({
+      $('.home-team-nav').nanoScroller();
+      $('.home-team-nav').nanoScroller({
         scrollTo: $('#link_' + teamId)
       });
     })
@@ -617,7 +610,7 @@ var HomeTeamTree = React.createClass({
                   </a>
                   <a class='agile-team-link'><span class='agile-team-title'>Standalone Teams</span></a>
                   <span class='ibm-access'>agteamstandalone</span>
-                  <div class='ibm-twisty-boddy' id='body_agteamstandalone' style={{'display':'block'}}>
+                  <div class='ibm-twisty-body' id='body_agteamstandalone' style={{'display':'block'}}>
                     <ul class='ibm-twisty ' id='main_agteamstandalone'>
                       {standaloneTeams}
                     </ul>
