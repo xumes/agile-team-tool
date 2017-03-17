@@ -117,8 +117,8 @@ var HomeEditIteration = React.createClass({
         }
         var data = _.clone(self.props.selectedIter);
         data['name'] = self.state.name;
-        data['startDate'] = new Date(self.state.iterationStartDate);
-        data['endDate'] = new Date(self.state.iterationEndDate);
+        data['startDate'] = new Date( moment.utc(self.state.iterationStartDate));
+        data['endDate'] = new Date( moment.utc(self.state.iterationEndDate));
         return api.updateIteration(data);
       }
     })
@@ -151,9 +151,9 @@ var HomeEditIteration = React.createClass({
               <div className='home-iter-main' style={{'width':'100%'}}>
                 <p className='home-iter-main-section' style={{'lineHeight': '0%'}}>Iteration Dates</p>
                 <div style={{'display':'flex', 'marginTop': '2%'}} id='iterationDates'>
-                  <DatePicker onChange={this.startDateChange} selected={this.state.iterationStartDate} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='startDate' />} disabled={false} ref='iterationStartDate' fixedHeight/>
+                  <DatePicker onChange={this.startDateChange} selected={ moment.utc(this.state.iterationStartDate)} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='startDate' />} disabled={false} ref='iterationStartDate' fixedHeight/>
                   <p style={{'marginLeft':'5%', 'marginRight':'5%'}} className='home-iter-date-range'> to </p>
-                  <DatePicker onChange={this.endDateChange} selected={this.state.iterationEndDate} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='endDate' />} disabled={false} ref='iterationEndDate' fixedHeight/>
+                  <DatePicker onChange={this.endDateChange} selected={ moment.utc(this.state.iterationEndDate)} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='endDate' />} disabled={false} ref='iterationEndDate' fixedHeight/>
                 </div>
               </div>
                 
