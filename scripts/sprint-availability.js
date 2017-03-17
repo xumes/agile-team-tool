@@ -13,6 +13,7 @@ var request = require('request');
 var Promise = require('bluebird');
 var workerLogger = require('../middleware/logger').get('worker');
 var promiseArray = [];
+var uniqueTeamIdArray = [];
 var iterationArray = [];
 var readyToUpdateIterations = [];
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
@@ -23,8 +24,16 @@ iterationModel.getNotCompletedIterations()
     //loop through here to calculate Sprint
     _.each(iterations, function(iteration) {
       iterationArray.push(iteration);
-      promiseArray.push(teamModel.getTeam(iteration.teamId));
+      uniqueTeamIdArray.push(iteration.teamId.toHexString());
     });
+
+    uniqueTeamIdArray=_.uniq(uniqueTeamIdArray);
+
+    _.each(uniqueTeamIdArray, function(uniqueTeam){
+      console.log('processing uniqueTeamIdArray: '+uniqueTeam);
+      promiseArray.push(teamModel.getTeam(uniqueTeam));
+    });
+
     return Promise.all(promiseArray);
   })
   .then(function(teams) {
@@ -35,7 +44,6 @@ iterationModel.getNotCompletedIterations()
         maxWorkDays = business.weekDays(moment.utc(iteration.startDate),moment.utc(iteration.endDate));
         if (business.isWeekDay(moment.utc(iteration.endDate)))
           maxWorkDays++;
-    //    console.log('Iteration id is : '+iteration._id+'start date: '+ moment.utc(iteration.startDate).format('DDMMMYYYY') + ' end date: '+moment.utc(iteration.endDate).format('DDMMMYYYY')+' Workday is: '+maxWorkDays);
       }
 
       var matchedTeam = _.find(teams, function(team) {
@@ -68,7 +76,7 @@ iterationModel.getNotCompletedIterations()
       iteration.teamAvailability = availability;
       iteration.personDaysUnavailable = 0;
       iteration.personDaysAvailable = (iteration.teamAvailability - iteration.personDaysUnavailable).toFixed(2);
-      console.log('Team Name: '+matchedTeam.name + ' | Iteration Name: '+ iteration.name+' id: '+iteration._id+ ' | # of team members: '+matchedTeam.members.length+' Work days in this iteration: '+maxWorkDays+' | Team availability: '+iteration.teamAvailability + ' | Person days available: '+iteration.personDaysAvailable);
+//      console.log('Team Name: '+matchedTeam.name + ' | Iteration Name: '+ iteration.name+' id: '+iteration._id+ ' | # of team members: '+matchedTeam.members.length+' Work days in this iteration: '+maxWorkDays+' | Team availability: '+iteration.teamAvailability + ' | Person days available: '+iteration.personDaysAvailable);
       var updateIteration = {
         '_id': iteration._id,
         'set': {
@@ -84,7 +92,6 @@ iterationModel.getNotCompletedIterations()
     return readyToUpdateIterations;
   })
   .then(function (readyToUpdateIterations){
-    console.log(' Prepare to update Iteration in bulk and readyToUpdateIteration length is: '+readyToUpdateIterations.length);
     return iterationModel.bulkUpdateIterations(readyToUpdateIterations);
   })
   .then(function(result) {
@@ -96,3 +103,4 @@ iterationModel.getNotCompletedIterations()
     console.log('error - '+err);
     return null;
   });
+

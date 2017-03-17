@@ -6,7 +6,9 @@ var ObjectId = require('mongodb').ObjectID;
 var loggers = require('../../middleware/logger');
 var Users = require('./users.js');
 var util = require('../../helpers/util');
+var teamModel = require('./teams');
 var moment = require('moment');
+var business = require('moment-business');
 var dateFormat = 'YYYY-MM-DD HH:mm:ss';
 var Schema   = mongoose.Schema;
 
@@ -648,6 +650,100 @@ var IterationExport = {
             reject({'error':err});
           });
       }
+    });
+  },
+
+  updateSprintAvailability: function() {
+    var promiseArray = [];
+    var uniqueTeamIdArray = [];
+    var iterationArray = [];
+    var readyToUpdateIterations = [];
+    return new Promise(function(resolve, reject) {
+
+      IterationExport.getNotCompletedIterations()
+      .then(function(iterations) {
+        console.log('result length: '+iterations.length);
+          //loop through here to calculate Sprint
+        _.each(iterations, function(iteration) {
+          iterationArray.push(iteration);
+          uniqueTeamIdArray.push(iteration.teamId.toHexString());
+        });
+          //get unique team id for team extract in preparation for iteration sprint calculation
+        uniqueTeamIdArray=_.uniq(uniqueTeamIdArray);
+
+        _.each(uniqueTeamIdArray, function(uniqueTeam){
+          promiseArray.push(teamModel.getTeam(uniqueTeam));
+        });
+
+        return Promise.all(promiseArray);
+      })
+        .then(function(teams) {
+          console.log('Team promise array length: '+teams.length);
+          _.each(iterationArray, function(iteration){
+            var maxWorkDays  = 0;
+            if (iteration.startDate !=undefined && iteration.endDate!=undefined)
+            {
+              maxWorkDays = business.weekDays(moment.utc(iteration.startDate),moment.utc(iteration.endDate));
+              if (business.isWeekDay(moment.utc(iteration.endDate)))
+                maxWorkDays++;
+            }
+
+            var matchedTeam = _.find(teams, function(team) {
+              if (JSON.stringify(team._id) == JSON.stringify(iteration.teamId)) return team;
+            });
+
+
+            var members = [];
+            var availability = 0;
+            if (matchedTeam.members!=undefined && matchedTeam.members.length>0)
+              members = matchedTeam.members;
+
+            _.each(members, function(member){
+              var allocation =  member.allocation/100;
+              var avgWorkWeek = 0;
+              if (member.workTime !=null)
+              {
+                if (!isNaN(parseInt(member.workTime)))
+                  avgWorkWeek = member.workTime;
+                else
+                  avgWorkWeek = 0;
+              }
+              else
+                avgWorkWeek = 100;
+
+              avgWorkWeek = avgWorkWeek/100;
+              availability += (allocation * avgWorkWeek * maxWorkDays);
+            });
+
+            iteration.teamAvailability = availability;
+            iteration.personDaysUnavailable = 0;
+            iteration.personDaysAvailable = (iteration.teamAvailability - iteration.personDaysUnavailable).toFixed(2);
+      //    console.log('Team Name: '+matchedTeam.name + ' | Iteration Name: '+ iteration.name+' id: '+iteration._id+ ' | # of team members: '+matchedTeam.members.length+' Work days in this iteration: '+maxWorkDays+' | Team availability: '+iteration.teamAvailability + ' | Person days available: '+iteration.personDaysAvailable);
+            var updateIteration = {
+              '_id': iteration._id,
+              'set': {
+                'teamAvailability': iteration.teamAvailability,
+                'personDaysUnavailable': iteration.personDaysUnavailable,
+                'personDaysAvailable': iteration.personDaysAvailable
+              }
+            };
+
+            //push ready to update onto a collection:
+            readyToUpdateIterations.push(updateIteration);
+          });
+          return readyToUpdateIterations;
+        })
+        .then(function (readyToUpdateIterations){
+          return IterationExport.bulkUpdateIterations(readyToUpdateIterations);
+        })
+        .then(function(result) {
+          loggers.get('model-iteration').verbose('Successfully get "Not Complete" iterations.');
+          resolve('Successfully completed this operation');
+        })
+        .catch(function(err) {
+          loggers.get('model-iteration').verbose('Unable to process "Not Complete" iterations err='+err.error);
+          reject({'error':err});
+        });
     });
   }
 
