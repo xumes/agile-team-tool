@@ -5059,23 +5059,23 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_role, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_role {
-  width: 14em;
   height: 2em;
-  padding-left: 0.1em;
-  padding-right: 0.1em;
+  padding: 0.4em !important;
   vertical-align: top;
+  width: 14em;
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_allocation, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_allocation {
-  width: 5em;
-  padding-left: 0.2em;
+  padding: 0.4em !important;
   vertical-align: top;
+  width: 5em;
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_workweek, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_workweek {
-  width: 11.5em;
-  height: 3em;
+  height: 2em;
+  padding: 0.4em !important;
   vertical-align: top;
+  width: 11.5em;
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results td.role > .select2 {
