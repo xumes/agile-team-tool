@@ -3,108 +3,8 @@ var _ = require('underscore');
 var moment = require('moment');
 var Utils = require('../utils.jsx');
 
-module.exports.teamAssessmentListHander = function(teamId, teamAssessments, teamAccess) {
-  $('#gotoAssesmentList').attr('disabled', 'disabled');
-
-  var allowAccess = teamAccess;
-  //var listOption = getAssessmentDropdownList(sortAssessments(teamAssessments));
-  var listOption = assessmentDropdownList(teamAssessments);
-
-  var draftExist = false;
-  for (var i = 0; i < listOption.length; i++) {
-    if (listOption[i][1].toLowerCase().indexOf('draft') > -1) {
-      draftExist = true;
-      var draftAssesID = listOption[i][0];
-      break;
-    }
-  }
-
-  $('#CreateAssesmentBtn').attr('disabled', 'disabled');
-  if (allowAccess) {
-    if (!draftExist) {
-      $('#CreateAssesmentBtn').removeAttr('disabled');
-      $('#CreateAssesmentBtn').click(function(e) {
-        window.location = 'assessment?id=' + encodeURIComponent(teamId);
-      });
-    }
-  }
-
-  $('#GoAssesmentBtn').click(function() {
-    var teamID = encodeURIComponent(teamId);
-    var assessId = encodeURIComponent($('#gotoAssesmentList option:selected').val());
-    var isDraft = ($('#gotoAssesmentList option:selected').text().toLowerCase().indexOf('draft') > -1);
-    if (assessId == '' || isDraft) {
-      window.location = 'assessment?id=' + teamID + '&assessId=' + assessId;
-    }
-    else {
-      window.location = 'progress?id=' + teamID + '&assessId=' + assessId;
-    }
-  });
-
-  if (listOption.length > 6) {
-    var newOption = [];
-    for (var i = 0; i <= 5; i++)
-      newOption.push(listOption[i]);
-    listOption = newOption;
-  }
-
-  Utils.setSelectOptions('gotoAssesmentList', listOption, null, null, null);
-  IBMCore.common.widget.selectlist.init('#gotoAssesmentList');
-
-  $('#gotoAssesmentList').removeAttr('disabled');
-
-  plotAssessmentSeries(teamAssessments);
-
-  // redrawCharts('assessmentSection');
-};
-
-function assessmentDropdownList(assessments) {
-  var listOption = [];
-
-  if (assessments == undefined || assessments == null) return listOption;
-
-  for (var i = 0; i < assessments.length; i++) {
-    var option = [];
-    option.push(assessments[i]._id);
-    if (assessments[i]['assessmentStatus'] != '' && assessments[i]['assessmentStatus'].toLowerCase() == 'submitted')
-      option.push(fmDate(assessments[i]['submittedDate']));
-    else
-      option.push('Created: ' + fmDate(assessments[i]['createDate']) + ' (' + assessments[i]['assessmentStatus'] + ')');
-
-    listOption.push(option);
-  }
-  return listOption;
-}
-
-function fmDate(date) {
-  return moment(date).format('DDMMMYYYY');
-};
-
-function destroyAssessmentCharts() {
-  // destroy existing charts in the main container
-  $(Highcharts.charts).each(function(i, chart) {
-    if (chart == null) return;
-
-    if ($('#assessmentSection #' + $(chart.container).attr('id')).length > 0) {
-      chart.destroy();
-    }
-  });
-}
-
-function noAssessmentRecord(){
-  $('#assessmentCharts').empty();
-  // $('#assessmentCharts').css('min-height', '40px');
-  var p = document.createElement('p');
-  p.appendChild(document.createTextNode('No assessment results to display.'));
-  $('#assessmentCharts').append(p);
-
-  var hrDiv = document.createElement('div');
-  hrDiv.setAttribute('class', 'ibm-rule ibm-alternate ibm-gray-30');
-  hrDiv.appendChild(document.createElement('hr'));
-  $('#assessmentCharts').append(hrDiv);
-}
-
-function plotAssessmentSeries(teamAssessments) {
+module.exports.plotAssessmentSeries = function(teamAssessments) {
+  $('#squad_assessment_card').empty();
   destroyAssessmentCharts();
 
   //get the 5 latest submitted results
@@ -117,14 +17,6 @@ function plotAssessmentSeries(teamAssessments) {
 
   var chartSeries = [];
   var chartData = new Object();
-
-  if (assessmentsToPlot.length > 0){
-    $('#assessmentCharts').empty();
-    // $('#assessmentCharts').css('min-height', '280px');
-  }
-  else {
-    noAssessmentRecord();
-  }
   var count = 0;
   for (var i = assessmentsToPlot.length - 1; i > -1; i--) {
     var results = assessmentsToPlot[i]['componentResults'];
@@ -152,12 +44,8 @@ function plotAssessmentSeries(teamAssessments) {
       });
       if (!found) {
         // create a section in the page for the particular assessment group
-        $('#assessmentCharts').append(createChartSection(identifier, count));
+        $('#squad_assessment_card').append(createChartSection(identifier, count));
         count++;
-        // var hrDiv = document.createElement('div');
-        // hrDiv.setAttribute('class', 'ibm-rule ibm-alternate ibm-gray-30');
-        // hrDiv.appendChild(document.createElement('hr'));
-        // $('#assessmentCharts').append(hrDiv);
 
         chartData = new Object();
         // page element id that will render the graph data
@@ -176,7 +64,7 @@ function plotAssessmentSeries(teamAssessments) {
 
       }
 
-      var submitDate = moment.utc(assessmentsToPlot[i]['submittedDate']).format('DD MMM YYYY'); //fmDate(assessmentsToPlot[i]['submittedDate']);
+      var submitDate = moment.utc(assessmentsToPlot[i]['submittedDate']).format('DD MMM YYYY');
       chartData['categories'].push(submitDate);
       chartData['targetScore'].push(isNaN(parseFloat(results[j]['targetScore'])) ? 0 : parseFloat(results[j]['targetScore']));
       chartData['currentScore'].push(isNaN(parseFloat(results[j]['currentScore'])) ? 0 : parseFloat(results[j]['currentScore']));
@@ -401,10 +289,9 @@ function plotAssessment(index, chartData) {
 }
 
 function createChartSection(prefixId, count) {
-  var margintop = 'top: 0%';// + count*2 + '%';
+  var margintop = 'top: 0%';
   var mainDiv = document.createElement('div');
   mainDiv.setAttribute('class', 'container-body-columns-ase');
-  // mainDiv.setAttribute('style', margintop);
   mainDiv.setAttribute('style', 'height: 33%;' + margintop);
   mainDiv.setAttribute('id', prefixId + 'Chart_block');
 
@@ -413,7 +300,6 @@ function createChartSection(prefixId, count) {
 
   var div = document.createElement('div');
   div.setAttribute('id', prefixId + '_Chart');
-  // div.setAttribute('style', 'min-height: 310px;');
   colDiv.appendChild(div);
   mainDiv.appendChild(colDiv);
 
@@ -421,14 +307,25 @@ function createChartSection(prefixId, count) {
   colDiv.setAttribute('class', 'container-body-col-2-2');
   div = document.createElement('div');
   div.setAttribute('id', prefixId + '_SpiderChart');
-  // div.setAttribute('style', 'min-height: 310px;');
   colDiv.appendChild(div);
   mainDiv.appendChild(colDiv);
 
   return mainDiv;
 }
 
+function destroyAssessmentCharts() {
+  // destroy existing charts in the main container
+  $(Highcharts.charts).each(function(i, chart) {
+    if (chart == null) return;
+
+    if ($('#assessmentSection #' + $(chart.container).attr('id')).length > 0) {
+      chart.destroy();
+    }
+  });
+}
+
 module.exports.assessmentParentRollup = function(snapshotData){
+  destroyAssessmentCharts();
   if (_.isEmpty(snapshotData)) return;
 
   var assessmentData = snapshotData.assessmentData;

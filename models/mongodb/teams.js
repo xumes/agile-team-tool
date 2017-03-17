@@ -174,7 +174,7 @@ var Members = mongoose.model('Members', MemberSchema);
 /* istanbul ignore next */
 TeamSchema.pre('update', function() {
   /* istanbul ignore next */
-  console.log('pre update team');
+
 });
 //validate hooks on path. might be better to use a pre hook if this causes issues
 TeamSchema.path('name').validate(function(value, done) {
@@ -297,7 +297,7 @@ module.exports.searchTeamWithName = function(string) {
 
 //using for snapshot roll up data, get all non squads
 module.exports.getNonSquadTeams = function(proj) {
-  console.log ('in getNonSquadTeams in Modal:');
+  // console.log ('in getNonSquadTeams in Modal:');
   return Team.find({type: {$ne:'squad'}, docStatus:{$ne:'delete'}}).select(proj).exec();
 };
 
@@ -413,7 +413,7 @@ module.exports.getRootTeams = function(uid) {
  * @return array of root teams
  */
 module.exports.getAllRootTeamsSquadNonSquad = function() {
-  console.log ('In getAllRootTeamsSquadNonSquad:');
+  // console.log ('In getAllRootTeamsSquadNonSquad:');
   return Team.find({path: null, docStatus:{$ne:'delete'}}).sort('pathId').exec();
 };
 
@@ -609,7 +609,7 @@ module.exports.createUsers = function(members) {
         ids.push(member.userId);
       });
     } else {
-      resolve(null);
+      return resolve(null);
     }
     Users.getUsersInfo(_.uniq(ids))
       .then(function(users) {
@@ -1295,7 +1295,7 @@ module.exports.softDelete = function(teamDoc, user) {
           promiseArray.push(Iterations.softDelete(iter._id, user));
         });
         _.each(assessments, function(as){
-          console.log(as._id, user);
+          // console.log(as._id, user);
           promiseArray.push(Assessments.softDelete(as._id, user));
         });
         return Promise.all(promiseArray);
@@ -1370,7 +1370,7 @@ module.exports.modifyImportantLinks = function(teamId, user, links) {
         obj.linkUrl = url;
         tmpLinks.push(obj);
       });
-      console.log('modifyImportantLinks tmpLinks:',tmpLinks);
+      // console.log('modifyImportantLinks tmpLinks:',tmpLinks);
       var updateTeam = {
         'links': tmpLinks,
         'updatedByUserId': userId,
@@ -1591,7 +1591,7 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, user) {
           var hasChildAccess = results[1];
           var parentTeam = results[2];
           var childTeam = results[3];
-          console.log('parentTeam',parentTeam);
+          // console.log('parentTeam',parentTeam);
           if (_.isEmpty(parentTeam)) {
             return Promise.reject({
               errors: {

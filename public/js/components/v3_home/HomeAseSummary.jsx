@@ -5,16 +5,20 @@ var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
 var AssessmentPopover = require('./assessments/AssessmentPopover.jsx');
 var AssessmentSetupPopover = require('./assessments/AssessmentSetupPopover.jsx');
+var AssessmentACPlanPopover = require('./assessments/AssessmentACPlanPopover.jsx');
 
 var HomeAseSummary = React.createClass({
   getInitialState: function() {
     return {
       showModal: false,
       showSetupModel: false,
+      showACPlanModel: false,
       selectedAssessment: '',
       activeTemplate: null,
       assessTemplate: null,
-      shouldUpdate: false
+      shouldUpdate: false,
+      type: '',
+      software: ''
     };
   },
   componentDidMount: function() {
@@ -100,9 +104,20 @@ var HomeAseSummary = React.createClass({
   hideAssessmentSetupPopover: function() {
     this.setState({ showSetupModel: false });
   },
+  showAssessmentACPlanPopover: function() {
+    this.setState({ showACPlanModel: true });
+  },
+  hideAssessmentACPlanPopover: function() {
+    this.setState({ showACPlanModel: false });
+  },
   updateAssessmentSummary: function() {
     this.setState({shouldUpdate:true});
     this.state.shouldUpdate = false;
+  },
+  continueAssessmentDraft: function(type, software) {
+    this.state.type = type;
+    this.state.software = software;
+    this.showAssessmentPopover();
   },
   render: function() {
     var self = this;
@@ -173,6 +188,8 @@ var HomeAseSummary = React.createClass({
             tempAssess = self.props.loadDetailTeam.assessments[0];
             hasDraft = false;
             draftUpdateDate = '';
+            self.state.type = self.props.loadDetailTeam.assessments[0].type;
+            self.state.software = self.props.loadDetailTeam.assessments[0].deliversSoftware?'Yes':'No';
           }
           self.state.selectedAssessment = tempAssess._id.toString();
           var defaultId = tempAssess._id.toString();
@@ -279,7 +296,7 @@ var HomeAseSummary = React.createClass({
                 </div>
                 <div class='review-box'>
                   <h1>{'Not sure what to do next?'}</h1>
-                  <button type='button' class={hasDraft?'ibm-btn-pri ibm-btn-blue-50':'ibm-btn-sec ibm-btn-blue-50'} disabled={haveAccess}>{'Review Action Plan'}</button>
+                  <button type='button' onClick={self.showAssessmentACPlanPopover} class={hasDraft?'ibm-btn-pri ibm-btn-blue-50':'ibm-btn-sec ibm-btn-blue-50'}>{'Review Action Plan'}</button>
                   <h2>{'Last Updated:'}</h2>
                   <h3 style={{'textAlign':'right'}}>{updateDate}</h3>
                 </div>
@@ -290,8 +307,11 @@ var HomeAseSummary = React.createClass({
                   <h2 style={{'textAlign':'right'}} hidden={hasDraft?false:true}>{draftUpdateDate}</h2>
                 </div>
               </div>
-              <Modal aria-labelledby='modal-label' tabIndex='10' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAssessmentPopover}>
-                <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary}/>
+              <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showACPlanModel} onHide={self.hideAssessmentACPlanPopover}>
+                <AssessmentACPlanPopover hideAssessmentACPlanPopover={self.hideAssessmentACPlanPopover} updateAssessmentSummary={self.updateAssessmentSummary} loadDetailTeam={self.props.loadDetailTeam} tempAssess={tempAssess}/>
+              </Modal>
+              <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAssessmentPopover}>
+                <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary} assessType={self.state.type} assessSoftware={self.state.software}/>
               </Modal>
             </div>
           )
@@ -319,10 +339,10 @@ var HomeAseSummary = React.createClass({
               </div>
             </div>
             <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showSetupModel} onHide={self.hideAssessmentSetupPopover}>
-              <AssessmentSetupPopover hideAssessmentSetupPopover={self.hideAssessmentSetupPopover} showAssessmentPopover={self.showAssessmentPopover}/>
+              <AssessmentSetupPopover hideAssessmentSetupPopover={self.hideAssessmentSetupPopover} continueAssessmentDraft={self.continueAssessmentDraft}/>
             </Modal>
             <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAssessmentPopover}>
-              <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary}/>
+              <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary} assessType={this.state.type} assessSoftware={this.state.software}/>
             </Modal>
           </div>
         )

@@ -47,7 +47,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
 
   show: function() {
     var self = this;
- 
+
     $('#optsel-parent select').select2({'dropdownParent':$('#optsel-parent')});
     $('#pc-hier-selparent').change(self.parentSelectHandler);
 
@@ -112,13 +112,13 @@ var HomeAddTeamHierarchyModal = React.createClass({
       buttonOptions.nextScreen = 'showTeamMemberModal';
       self.setState({ buttonOptions: buttonOptions });
     }
-    
+
     var selectedParent = $('#pc-hier-selparent option:selected').val();
     var selectedChild = $('#pc-hier-selChild option:selected').val();
     if (selectedChild != 'NA' && selectedChild != 'NoChild' && !_.isEmpty(selectedChild)) {
       var childTeam = _.find(self.props.selectableChildren, function(team) {
         if (team._id == selectedChild) return team;
-      })   
+      })
 
       if (_.isEqual(selectedParent, selectedChild)) {
         alert(childTeam.name + ' cannot be both a parent and a child.');
@@ -138,9 +138,9 @@ var HomeAddTeamHierarchyModal = React.createClass({
             $('#pc-hier-selChild').val('').change();
             return;
           }
-        }        
-      }      
- 
+        }
+      }
+
       if ($('.team-hier-children p#'+selectedChild).length > 0) {
         alert(childTeam.name + ' is already listed.');
         $('#pc-hier-selChild').val('').change();
@@ -153,7 +153,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
       self.props.setSelectedChildTeams(children);
     }
   },
-  
+
   render: function () {
     var self = this;
     var noteStyle = {
@@ -178,13 +178,13 @@ var HomeAddTeamHierarchyModal = React.createClass({
     });
 
    var populateParentTeamNames = this.props.selectableParents.map(function(item) {
-     return ( 
+     return (
       <option key={item._id} value={item._id}>{item.name}</option>
      ) ;
    });
 
    var populateDefaultParentOption = this.state.defaultParentObjects.map(function(item) {
-     return ( 
+     return (
       <option key={item._id} value={item._id}>{item.name}</option>
      ) ;
    });
@@ -220,7 +220,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_arrow-thin-grey.svg')}></InlineSVG>
                     </div>
 
-                    <div class="optsel-parent" style={selparent1Style} id="optsel-parent">     
+                    <div class="optsel-parent" style={selparent1Style} id="optsel-parent">
                       <select name="pc-hier-selparent" id="pc-hier-selparent" class="pc-hier-selparent" defaultValue='NA'>
                         <option key='NA' value='NA'>Select parent team </option>
                         <option key='NoParent' value='NoParent'>Top tier / Not Listed</option>
@@ -241,9 +241,9 @@ var HomeAddTeamHierarchyModal = React.createClass({
                     <div>
                       <div class='team-hier-children'>
                       {childTeams}
-                   </div>   
+                   </div>
                  </div>
-                </div>    
+                </div>
               </div>
 
               <div class="clearboth"></div>
@@ -252,7 +252,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
 
 
           </div>
-        </div>   
+        </div>
         <HomeAddTeamFooterButtons buttonOptions={self.state.buttonOptions} openWindow={self.props.openWindow} />
        </div>
       </Modal>

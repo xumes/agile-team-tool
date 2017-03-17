@@ -7,9 +7,9 @@ var AssessmentSetupPopover = React.createClass({
     $('#assessmentSetupSelectType').select2({'width':'100%'});
     $('#assessmentSetupSelectSoftware').select2({'width':'100%'});
   },
-  showAssessmentPopover: function() {
+  continueAssessmentDraft: function() {
     this.props.hideAssessmentSetupPopover();
-    this.props.showAssessmentPopover();
+    this.props.continueAssessmentDraft($('#assessmentSetupSelectType').val(), $('#assessmentSetupSelectSoftware').val());
   },
   render: function() {
     var self = this;
@@ -22,7 +22,7 @@ var AssessmentSetupPopover = React.createClass({
           </div>
         </div>
         <div class='assessment-type-block'>
-          <h1>{'Work Type'}</h1>
+          <h1>{'What is your team\'s work type?'}</h1>
           <div class='assessment-select-block'>
             <select id='assessmentSetupSelectType' defaultValue='Project'>
               <option value='Project'>{'Project Delivery'}</option>
@@ -43,7 +43,7 @@ var AssessmentSetupPopover = React.createClass({
         </div>
         <div class='assessment-setup-btns'>
           <button type='button' id='cancelAssessBtn' class='ibm-btn-sec ibm-btn-blue-50' name='cancelAssessBtn' style={{'width':'25%'}} onClick={self.props.hideAssessmentSetupPopover}>{'Cancel'}</button>
-          <button type='button' id='continueAssessBtn' class='ibm-btn-pri ibm-btn-blue-50' name='continueAssessBtn' style={{'width':'30%','marginRight':'5%'}} onClick={self.showAssessmentPopover}>{'Continue'}</button>
+          <button type='button' id='continueAssessBtn' class='ibm-btn-pri ibm-btn-blue-50' name='continueAssessBtn' style={{'width':'30%','marginRight':'5%'}} onClick={self.continueAssessmentDraft}>{'Continue'}</button>
         </div>
       </div>
     )
