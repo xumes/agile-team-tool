@@ -114,6 +114,8 @@ var HomeMemberTable = React.createClass({
         $('#role_' + index + ' .input-field > input').val(member.role);
         $('#role_' + index + ' .input-field').show();
       }
+      $('#l_location_' + index).val($('#l_location_' + index).attr('placeholder'));
+      $('#a_allocation_' + index).val($('#a_allocation_' + index).attr('placeholder'));
       if (member.workTime == 100 || member.workTime == 50) {
         $('#awk_select_' + index).val(member.workTime).change();
         $('#awk_' + index + ' .input-field > input').val('');
@@ -212,29 +214,52 @@ var HomeMemberTable = React.createClass({
     }
   },
 
+  getMemberRowDetails: function(idx) {
+    var member = new Object();
+    member.email = $('#name_' + idx + ' > div > h1').html();
+    member.role = $('#role_' + idx + ' > h').html();
+    var allocation = $('#allocation_' + idx +  ' > h').html();
+    member.allocation = allocation ? allocation.replace(/[^0-9.]/g,'') : '';
+    var memberAwk = $('#awk_' + idx +  ' > h').html();
+    if (memberAwk == 'Full Time')
+      memberAwk = '100';
+    else if (memberAwk == 'Half Time')
+      memberAwk = '50';
+    else
+      memberAwk = memberAwk ? memberAwk.replace(/[^0-9.]/g,'') : '';
+    member.workTime = memberAwk;
+    return member;
+  },
+
   delTeamMemberHandler: function(idx) {
     var self = this;
-    var blockId = 'name_' + idx;
-    var memberEmail = $('#' + blockId + ' > div > h1').html();
+    var mrd = self.getMemberRowDetails(idx);
     var newMembers = [];
     var newMembersContent = [];
-    var r = confirm('Do you want to delete this member: ' + memberEmail + '?');
+    var r = confirm('Do you want to delete this member: ' + mrd.email + '?');
     if (r) {
-      _.each(self.props.loadDetailTeam.team.members, function(member){
-        if (member.email != memberEmail) {
-          newMembers.push(member);
-        }
+      newMembers = _.reject(self.props.loadDetailTeam.team.members, function(member, index){
+        //return index==idx;
+        return false;
       });
+
       _.each(self.props.loadDetailTeam.members, function(member){
-        if (member.email != memberEmail) {
+        if (member.email != mrd.email) {
           newMembersContent.push(member);
+        } else {
+          var existMember = _.filter(newMembers, function(m){
+            return m.email == mrd.email
+          });
+          if (!_.isEmpty(existMember))
+            newMembersContent.push(member);
         }
       });
-      // self.props.loadDetailTeam.team.members = newMembers;
+
       api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
-        .then(function(results){
-          self.props.reloadTeamMembers(newMembers, newMembersContent);
-          // console.log(results);
+        .then(function(result){
+          $('#member_' + idx).remove();
+          if (newMembersContent.length != self.props.loadDetailTeam.members.length)
+            self.props.reloadTeamMembers(result.members, newMembersContent);
         })
         .catch(function(err){
           console.log(err);
@@ -297,6 +322,9 @@ var HomeMemberTable = React.createClass({
     if (strArray.length < 3) {
       return str.toUpperCase();
     } else {
+      strArray = strArray.map(function(value){
+        return value.trim();
+      });
       strArray[0] = strArray[0].replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
       return strArray.join(', ');
     }
@@ -320,32 +348,29 @@ var HomeMemberTable = React.createClass({
       $('#' + roleId + ' .save-btn').hide();
       $('#' + roleId + ' .cancel-btn').hide();
     } else {
-      $('#' + roleId + ' .input-field > input').val('');
-      $('#' + roleId + ' .input-field').hide();
-      $('#' + roleId + ' .save-btn').hide();
-      $('#' + roleId + ' .cancel-btn').hide();
-      $('#' + roleId + ' > h').html(e.target.value);
-      $('#' + roleId + ' input').attr('placeholder', e.target.value);
-      $('#' + roleId + ' .modify-field').removeClass('team-member-table-content-block-show');
-      $('#' + roleId + ' > h').removeClass('team-member-table-content-block-hide');
-      var blockId = 'name_' + e.target.id.substring(12, e.target.id.length);
-      var memberEmail = $('#' + blockId + ' > div > h1').html();
-      _.each(self.props.loadDetailTeam.team.members, function(member){
-        if (member.email != memberEmail) {
+      var idx = e.target.id.substring(12, e.target.id.length);
+      var mrd = self.getMemberRowDetails(idx);
+      _.each(self.props.loadDetailTeam.team.members, function(member, index){
+        if (index == idx) {
+          member.role = e.target.value;
           newMembers.push(member);
         } else {
-          var pm = JSON.parse(JSON.stringify(member));
-          pm['role'] = e.target.value;
-          newMembers.push(pm);
+          newMembers.push(member);
         }
       });
+
       api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
-        .then(function(results){
-          _.each(self.props.loadDetailTeam.team.members, function(member){
-            if (member.email == memberEmail) {
-              member['role'] = e.target.value;
-            }
-          });
+        .then(function(result){
+          $('#' + roleId + ' .input-field > input').val('');
+          $('#' + roleId + ' .input-field').hide();
+          $('#' + roleId + ' .save-btn').hide();
+          $('#' + roleId + ' .cancel-btn').hide();
+          $('#' + roleId + ' > h').html(e.target.value);
+          $('#' + roleId + ' input').attr('placeholder', e.target.value);
+          $('#' + roleId + ' .modify-field').removeClass('team-member-table-content-block-show');
+          $('#' + roleId + ' > h').removeClass('team-member-table-content-block-hide');
+
+          //self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
         })
         .catch(function(err){
           console.log(err);
@@ -360,30 +385,27 @@ var HomeMemberTable = React.createClass({
     if (roleValue == '') {
       alert('Role cannot be empty.');
     } else {
-      $('#' + roleId + ' > h').html(roleValue);
-      $('#' + roleId + ' input').attr('placeholder', roleValue);
-      $('#' + roleId + ' .save-btn').hide();
-      $('#' + roleId + ' .cancel-btn').hide();
-      $('#' + roleId + ' .modify-field').removeClass('team-member-table-content-block-show');
-      $('#' + roleId + ' > h').removeClass('team-member-table-content-block-hide');
-      var blockId = 'name_' + roleId.substring(5, roleId.length);
-      var memberEmail = $('#' + blockId + ' > div > h1').html();
-      _.each(self.props.loadDetailTeam.team.members, function(member){
-        if (member.email != memberEmail) {
+      var idx = roleId.substring(5, roleId.length);
+      var mrd = self.getMemberRowDetails(idx);
+      _.each(self.props.loadDetailTeam.team.members, function(member, index){
+        if (index == idx) {
+          member.role = roleValue;
           newMembers.push(member);
         } else {
-          var pm = JSON.parse(JSON.stringify(member));
-          pm['role'] = roleValue;
-          newMembers.push(pm);
+          newMembers.push(member);
         }
       });
+
       api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
-        .then(function(results){
-          _.each(self.props.loadDetailTeam.team.members, function(member){
-            if (member.email == memberEmail) {
-              member['role'] = roleValue;
-            }
-          });
+        .then(function(result){
+          $('#' + roleId + ' > h').html(roleValue);
+          $('#' + roleId + ' input').attr('placeholder', roleValue);
+          $('#' + roleId + ' .save-btn').hide();
+          $('#' + roleId + ' .cancel-btn').hide();
+          $('#' + roleId + ' .modify-field').removeClass('team-member-table-content-block-show');
+          $('#' + roleId + ' > h').removeClass('team-member-table-content-block-hide');
+
+          //self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
         })
         .catch(function(err){
           console.log(err);
@@ -423,31 +445,28 @@ var HomeMemberTable = React.createClass({
     if (allocationValue < 0 || allocationValue > 100 || allocationValue == '') {
       alert('Allocation value should be between 0 and 100.');
     } else {
-      $('#' + allocationId + ' > h').html(allocationValue + '%');
-      var blockId = 'name_' + allocationId.substring(11, allocationId.length);
-      var memberEmail = $('#' + blockId + ' > div > h1').html();
-      $('#' + allocationId + ' > .modify-field').removeClass('team-member-table-content-block-show');
-      $('#' + allocationId + ' > h').removeClass('team-member-table-content-block-hide');
-      $('#' + allocationId + ' input').val(allocationValue);
-      $('#' + allocationId + ' input').attr('placeholder', allocationValue);
-      $('#' + allocationId + ' .save-btn').hide();
-      $('#' + allocationId + ' .cancel-btn').hide();
-      _.each(self.props.loadDetailTeam.team.members, function(member){
-        if (member.email != memberEmail) {
+      var idx = allocationId.substring(11, allocationId.length);
+      var mrd = self.getMemberRowDetails(idx);
+      _.each(self.props.loadDetailTeam.team.members, function(member, index){
+        if (index == idx) {
+          member.allocation = allocationValue;
           newMembers.push(member);
         } else {
-          var pm = JSON.parse(JSON.stringify(member));
-          pm['allocation'] = allocationValue;
-          newMembers.push(pm);
+          newMembers.push(member);
         }
       });
+
       api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
-        .then(function(results){
-          _.each(self.props.loadDetailTeam.team.members, function(member){
-            if (member.email == memberEmail) {
-              member['allocation'] = allocationValue;
-            }
-          });
+        .then(function(result){
+          $('#' + allocationId + ' > h').html(allocationValue + '%');
+          $('#' + allocationId + ' > .modify-field').removeClass('team-member-table-content-block-show');
+          $('#' + allocationId + ' > h').removeClass('team-member-table-content-block-hide');
+          $('#' + allocationId + ' input').val(allocationValue);
+          $('#' + allocationId + ' input').attr('placeholder', allocationValue);
+          $('#' + allocationId + ' .save-btn').hide();
+          $('#' + allocationId + ' .cancel-btn').hide();
+
+          //self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
         })
         .catch(function(err){
           console.log(err);
@@ -461,25 +480,49 @@ var HomeMemberTable = React.createClass({
     if (locationValue == '') {
       alert('Location info cannot be empty.');
     } else {
-      $('#' + locationId + ' > h').html(locationValue);
-      var blockId = 'name_' + locationId.substring(9, locationId.length);
-      var memberEmail = $('#' + blockId + ' > div > h1').html();
-      $('#' + locationId + ' > .modify-field').removeClass('team-member-table-content-block-show');
-      $('#' + locationId + ' > h').removeClass('team-member-table-content-block-hide');
-      $('#' + locationId + ' input').val(locationValue);
-      $('#' + locationId + ' input').attr('placeholder', locationValue);
-      $('#' + locationId + ' .save-btn').hide();
-      $('#' + locationId + ' .cancel-btn').hide();
-      var newMember = _.find(self.props.loadDetailTeam.members, function(member){
-        if (member.email == memberEmail) {
+      var idx = locationId.substring(9, locationId.length)
+      var mrd = self.getMemberRowDetails(idx);
+      var userMember = _.find(self.props.loadDetailTeam.members, function(member){
+        if (member.email == mrd.email) {
           return member;
         }
       });
-      if (!_.isEmpty(newMember)) {
-        newMember['location']['site'] = locationValue.toLowerCase();
-        api.updateUser(newMember);
+      if (!_.isEmpty(userMember)) {
+        userMember['location']['site'] = locationValue.toLowerCase();
+        api.updateUser(userMember)
+          .then(function(result){
+            self.updateMemberTableLocations(mrd, idx, locationValue);
+
+            //self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
+          })
+      } else {
+        self.updateMemberTableLocations(mrd, idx, locationValue);
       }
     }
+  },
+
+  updateMemberTableLocations: function(memberRowDetail, idx, locationValue) {
+    var self = this;
+    $('#location_' + idx + ' > h').html(locationValue);
+    $('#location_' + idx + ' > .modify-field').removeClass('team-member-table-content-block-show');
+    $('#location_' + idx + ' > h').removeClass('team-member-table-content-block-hide');
+    $('#location_' + idx + ' input').val(locationValue);
+    $('#location_' + idx + ' input').attr('placeholder', locationValue);
+    $('#location_' + idx + ' .save-btn').hide();
+    $('#location_' + idx + ' .cancel-btn').hide();
+
+    $('[id^="location_"]').each(function(index, value){
+      var mrd = self.getMemberRowDetails(index);
+      if (memberRowDetail.email == mrd.email) {
+        $('#' + value.id  + ' > h').html(locationValue);
+        $('#' + value.id  + ' > .modify-field').removeClass('team-member-table-content-block-show');
+        $('#' + value.id  + ' > h').removeClass('team-member-table-content-block-hide');
+        $('#' + value.id  + ' input').val(locationValue);
+        $('#' + value.id  + ' input').attr('placeholder', locationValue);
+        $('#' + value.id  + ' .save-btn').hide();
+        $('#' + value.id  + ' .cancel-btn').hide();
+      }
+    });
   },
 
   changeAwkHandler: function(e) {
@@ -495,35 +538,32 @@ var HomeMemberTable = React.createClass({
       $('#' + awkId + ' .save-btn').show();
       $('#' + awkId + ' .cancel-btn').show();
     } else {
-      $('#' + awkId + ' input').attr('placeholder', e.target.value);
-      $('#' + awkId + ' .input-field').hide();
-      $('#' + awkId + ' .save-btn').hide();
-      $('#' + awkId + ' .cancel-btn').hide();
-      if (e.target.value == 100) {
-        $('#' + awkId + ' > h').html('Full Time');
-      } else {
-        $('#' + awkId + ' > h').html('Half Time');
-      }
-      $('#' + awkId + ' .modify-field').removeClass('team-member-table-content-block-show');
-      $('#' + awkId + ' > h').removeClass('team-member-table-content-block-hide');
-      var blockId = 'name_' + e.target.id.substring(11, e.target.id.length);
-      var memberEmail = $('#' + blockId + ' > div > h1').html();
-      _.each(self.props.loadDetailTeam.team.members, function(member){
-        if (member.email != memberEmail) {
+      var idx = e.target.id.substring(11, e.target.id.length);
+      var mrd = self.getMemberRowDetails(idx);
+      _.each(self.props.loadDetailTeam.team.members, function(member, index){
+        if (index == idx) {
+          member.workTime = e.target.value;
           newMembers.push(member);
         } else {
-          var pm = JSON.parse(JSON.stringify(member));
-          pm['workTime'] = e.target.value;
-          newMembers.push(pm);
+          newMembers.push(member);
         }
       });
+
       api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
-        .then(function(results){
-          _.each(self.props.loadDetailTeam.team.members, function(member){
-            if (member.email == memberEmail) {
-              member['workTime'] = e.target.value;
-            }
-          });
+        .then(function(result){
+          $('#' + awkId + ' input').attr('placeholder', e.target.value);
+          $('#' + awkId + ' .input-field').hide();
+          $('#' + awkId + ' .save-btn').hide();
+          $('#' + awkId + ' .cancel-btn').hide();
+          if (e.target.value == 100) {
+            $('#' + awkId + ' > h').html('Full Time');
+          } else {
+            $('#' + awkId + ' > h').html('Half Time');
+          }
+          $('#' + awkId + ' .modify-field').removeClass('team-member-table-content-block-show');
+          $('#' + awkId + ' > h').removeClass('team-member-table-content-block-hide');
+
+          //self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
         })
         .catch(function(err){
           console.log(err);
@@ -538,36 +578,33 @@ var HomeMemberTable = React.createClass({
     if (awkValue > 100 || awkValue < 0 || awkValue == '') {
       alert('Average work per week should be between 0 to 100.');
     } else {
-      if (awkValue == 100) {
-        $('#' + awkId + ' > h').html('Full Time');
-      } else if (awkValue == 50) {
-        $('#' + awkId + ' > h').html('Half Time');
-      } else {
-        $('#' + awkId + ' > h').html(awkValue + '%');
-      }
-      $('#' + awkId + ' input').attr('placeholder', awkValue);
-      $('#' + awkId + ' .save-btn').hide();
-      $('#' + awkId + ' .cancel-btn').hide();
-      $('#' + awkId + ' .modify-field').removeClass('team-member-table-content-block-show');
-      $('#' + awkId + ' > h').removeClass('team-member-table-content-block-hide');
-      var blockId = 'name_' + awkId.substring(4, awkId.length);
-      var memberEmail = $('#' + blockId + ' > div > h1').html();
-      _.each(self.props.loadDetailTeam.team.members, function(member){
-        if (member.email != memberEmail) {
+      var idx = awkId.substring(4, awkId.length);
+      var mrd = self.getMemberRowDetails(idx);
+      _.each(self.props.loadDetailTeam.team.members, function(member, index){
+        if (index == idx) {
+          member.workTime = awkValue;
           newMembers.push(member);
         } else {
-          var pm = JSON.parse(JSON.stringify(member));
-          pm['workTime'] = awkValue;
-          newMembers.push(pm);
+          newMembers.push(member);
         }
       });
+
       api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
-        .then(function(results){
-          _.each(self.props.loadDetailTeam.team.members, function(member){
-            if (member.email == memberEmail) {
-              member['workTime'] = awkValue;
-            }
-          });
+        .then(function(result){
+          if (awkValue == 100) {
+            $('#' + awkId + ' > h').html('Full Time');
+          } else if (awkValue == 50) {
+            $('#' + awkId + ' > h').html('Half Time');
+          } else {
+            $('#' + awkId + ' > h').html(awkValue + '%');
+          }
+          $('#' + awkId + ' input').attr('placeholder', awkValue);
+          $('#' + awkId + ' .save-btn').hide();
+          $('#' + awkId + ' .cancel-btn').hide();
+          $('#' + awkId + ' .modify-field').removeClass('team-member-table-content-block-show');
+          $('#' + awkId + ' > h').removeClass('team-member-table-content-block-hide');
+
+          //self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
         })
         .catch(function(err){
           console.log(err);
@@ -658,29 +695,24 @@ var HomeMemberTable = React.createClass({
       if (team.members == null || team.members.length == 0) {
         var teamMembers = null;
       } else {
-        var members = _.sortBy(self.props.loadDetailTeam.members, function(member){
-          return member.name.toLowerCase();
-        });
         if (self.props.loadDetailTeam.access) {
           var addTeamBtnStyle = false;
         } else {
           addTeamBtnStyle = true;
         }
-        teamMembers = members.map(function(member, idx){
+
+        teamMembers = self.props.loadDetailTeam.team.members.map(function(memberDetail, idx){
           if (idx <= 14) {
-            var memberDetail = _.find(team.members, function(m){
-              if (m.userId == member.userId) {
-                return {
-                  'role': m.role,
-                  'allocation': m.allocation,
-                  'workTime': m.workTime
-                }
+            var userDetail = _.find(self.props.loadDetailTeam.members, function(m){
+              if (m.userId == memberDetail.userId) {
+                return m;
               }
             });
-            var mLocation = self.toTitleCase(member.location.site);
-            //var src = 'http://dpev027.innovate.ibm.com:10000/image/' + member.userId.toUpperCase();
-            // var src = '//images.w3ibm.mybluemix.net/image/' + member.userId.toUpperCase();
-            var src = '//faces-cache.mybluemix.net/image/' + member.userId.toUpperCase();
+            var mLocation = '';
+            if (!_.isEmpty(userDetail))
+              mLocation = self.toTitleCase(userDetail.location.site);
+
+            var src = '//faces-cache.mybluemix.net/image/' + memberDetail.userId.toUpperCase();
             var blockColor = {
               'backgroundColor': '#FFFFFF'
             }
@@ -719,6 +751,7 @@ var HomeMemberTable = React.createClass({
               awkPlaceHolder = memberDetail.workTime;
             }
             // }
+
             return (
               <div key={blockId} id={blockId} class={blockClass}>
                 <div style={{'width':'1%','backgroundColor':'#FFFFFF'}}>
@@ -728,9 +761,9 @@ var HomeMemberTable = React.createClass({
                     <img style={{'position':'relative', 'top':'17%'}} src={src}></img>
                   </div>
                   <div style={{'width':'74.4%','height':'50%','display':'inline-block','float':'left','position':'relative','top':'25%'}}>
-                    <h>{member.name}</h>
+                    <h>{memberDetail.name}</h>
                     <br/>
-                    <h1>{member.email}</h1>
+                    <h1 class='team-member-table-email'>{memberDetail.email}</h1>
                   </div>
                 </div>
                 <div class='team-member-table-content-role' id={roleId} style={{'width':'19.3%'}}>

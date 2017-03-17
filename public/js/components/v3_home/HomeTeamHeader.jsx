@@ -48,7 +48,13 @@ var HomeTeamHeader = React.createClass({
       $('.home-team-header-member-image').css({'width': height*0.9+'px', 'height': height*0.9+'px'});
     }, 0);
 
+    // restore default
     $('.home-team-header-btn-img, .home-team-header-btn-title, #teamBookmark, .home-team-header-btns, .home-team-header-btn-img2, .home-team-header-btn-title3, #teamMemberTable').unbind('mouseenter mouseleave');
+    $('.home-team-header-btn-img svg > path').css('fill', '#FFFFFF');
+    $('.home-team-header-btn-title h').css('color', '#FFFFFF');
+    $('.home-team-header-btn-img2 svg > path').css('fill', '#FFFFFF');
+    $('.home-team-header-btn-title3 h').css('color', '#FFFFFF');
+
     // bookmarks button
     $('.home-team-header-btn-img, .home-team-header-btn-title').bind('mouseenter', function() {
       if ($('#teamBookmark').css('display') == 'none') {
@@ -187,17 +193,16 @@ var HomeTeamHeader = React.createClass({
         var teamHierarchy2 = teamName;
       }
       var faceImages = null;
-      if (team.members != undefined) {
-        team.members = _.sortBy(team.members, function(m){
-          return m.name.replace(/\s/g,'');
+      var members = this.props.loadDetailTeam.members
+      if (members != undefined) {
+        members = _.sortBy(members, function(m){
+          return m.name.replace(/\s/g,'').toLowerCase();
         });
-        var teamMemNumber = team.members.length;
+        var teamMemNumber = members.length;
         var teamFTE = self.teamMemFTE(team.members);
-        var faceImages = team.members.map(function(member, index){
+        var faceImages = members.map(function(member, index){
           if (index < 9) {
             var faceImageId = 'faceImage_' + index;
-            //var src = 'http://dpev027.innovate.ibm.com:10000/image/' + member.userId.toUpperCase();
-            // var src = '//images.w3ibm.mybluemix.net/image/' + member.userId.toUpperCase();
             var src = '//faces-cache.mybluemix.net/image/' + member.userId.toUpperCase();
             return (
               <div key={faceImageId} class='home-header-image'>
