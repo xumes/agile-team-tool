@@ -66,7 +66,8 @@ var HomeIterSection = React.createClass({
       return (
         <div id='iterationSection'>
           <div class='no-trends-message-block'>
-            <p>No trending data available</p>
+            <p>No trending data available.</p>
+            <p>Once iteration data has been input in the Iteration Overview section it will be displayed here.</p>
           </div>
         </div>
       )
