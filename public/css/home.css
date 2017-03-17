@@ -2162,7 +2162,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.8em;
   line-height: 1.9em;
-  color: #5A5A5A;
+  color: #323232;
 }
 
 .home-iter-team-date {
@@ -2192,24 +2192,23 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   height: 100%;
 }
 
-.home-iter-select > span > select2 select2-container select2-container--default{
-  width: 100% !important;
+.home-iter-select .select2-container,
+.home-iter-select .select2-selection,
+.home-iter-select .select2-selection--single,
+.home-iter-select .select2-selection__rendered,
+.home-iter-select .select2-selection__arrow,
+.home-iter-select .select2-container--default,
+.home-iter-select .select2-container--default .select2-selection--single .select2-selection__arrow{
+  height: 2.1em;
 }
 
-.home-iter-select .select2-selection__rendered{
-  height: 2em!important;
-  margin-top: -2%;
-}
-.home-iter-select .select2-selection--single, select2-homeIterSelection-container{
-  height: 2.2em!important;
-}
-
-.home-iter-select .select2-container--default .select2-selection--single .select2-selection__arrow b:before{
-  margin-top: -5%;
+.home-iter-select .select2-selection__arrow  b {
+  top: 30% !important;
 }
 
 .home-iter-select .select2-container--default .select2-selection--single .select2-selection__rendered{
-  color: #777677
+  color: #777677;
+  line-height: 2.1em;
 }
 
 .memberChanged input, select, .memberChanged option{
@@ -2273,7 +2272,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   font-family: "Helvetica Neue LT W1G","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   line-height: 1.8em;
-  color: #323232;
+  color: #5A5A5A;
 }
 
 .home-iter-last-update {
