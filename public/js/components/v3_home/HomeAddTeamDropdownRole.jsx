@@ -61,9 +61,15 @@ var HomeAddTeamDropdownRole = React.createClass({
         // if the inputted data(e.g. CEO) dont exist in the array
         if (!_.contains(serverRoles, txt)) {
           if (hasClicked === false) {
-            $('#'+blockId + ' div.data-team-role').css('display','block');
-            $('#'+blockId + ' div.data-team-role-select').css('display','none');
-            $('#'+blockId + ' .custom-field-other').css('display','none');
+            if (_.isEmpty(txt)) {
+              $('#'+blockId + ' .data-team-role').css('display','none');
+              $('#'+blockId + ' .data-team-role-select').css('display','block');
+              $('#'+blockId + ' .data-team-role-select .Select-placeholder').html('Select Role');
+            } else {
+              $('#'+blockId + ' div.data-team-role').css('display','block');
+              $('#'+blockId + ' div.data-team-role-select').css('display','none');
+              $('#'+blockId + ' .custom-field-other').css('display','none');
+            }
           }
         }
     });
@@ -78,13 +84,20 @@ var HomeAddTeamDropdownRole = React.createClass({
     $('#'+blockId + ' .data-team-role-select').css('display','block');
   },
   displayOtherRoleSelect: function(blockId, txt) {
-    $('#'+blockId + ' .data-team-role').css('display','none');
-    $('#'+blockId + ' .data-team-role-select').css('display','block');
-    $('#'+blockId + ' .data-team-role-select .Select-value-label').html('Other...');
-    $('#'+blockId + ' .data-team-role-select .Select-placeholder').html('Other...');
+    if (_.isEmpty(txt)){
+      $('#'+blockId + ' .data-team-role').css('display','none');
+      $('#'+blockId + ' .data-team-role-select').css('display','block');
+      $('#'+blockId + ' .data-team-role-select .Select-placeholder').html('Select Role');
+    } else {
+      $('#'+blockId + ' .data-team-role').css('display','none');
+      $('#'+blockId + ' .data-team-role-select').css('display','block');
+      $('#'+blockId + ' .data-team-role-select .Select-value-label').html('Other...');
+      $('#'+blockId + ' .data-team-role-select .Select-placeholder').html('Other...');
 
-    $('#'+blockId + ' .custom-field-other').css('display','block');
-    $('#'+blockId + ' .custom-field-other .input-field').val(txt);
+      $('#'+blockId + ' .custom-field-other').css('display','block');
+      $('#'+blockId + ' .custom-field-other .input-field').val(txt);
+    }
+
   },
   roleHandler: function(data) {
     if (data.value && (data.value.toLowerCase() === 'other...')) {
@@ -136,8 +149,17 @@ var HomeAddTeamDropdownRole = React.createClass({
     }
   },
   updateSelectValue: function(uid, value) {
-    $('#wrapper-role-'+uid + ' .data-team-role-select .Select-control .Select-value').html(value);
-    $('#wrapper-role-'+uid + ' .data-team-role-select .Select-control .Select-placeholder').html(value);
+    if (_.isNull(value) || _.isUndefined(value)) {
+      // temporary workaround using setTimeout
+      window.setTimeout(function(){
+        $('#wrapper-role-'+uid + ' .data-team-role').css('display','none');
+        $('#wrapper-role-'+uid + ' .data-team-role-select').css('display','block');
+        $('#wrapper-role-'+uid + ' .data-team-role-select .Select-control .Select-placeholder').html('Select Role');
+      },2);
+    } else {
+      $('#wrapper-role-'+uid + ' .data-team-role-select .Select-control .Select-value').html(value);
+      $('#wrapper-role-'+uid + ' .data-team-role-select .Select-control .Select-placeholder').html(value);
+    }
   },
   render: function() {
     var self = this;
