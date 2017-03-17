@@ -116,7 +116,9 @@ var AssessmentACPlanTable = React.createClass({
     self.props.tempAssess.actionPlans = tempActionPlans;
     api.updateAssessment(self.props.tempAssess)
       .then(function(result){
-        self.setState({actionPlans: self.props.tempAssess.actionPlans});
+        self.setState({actionPlans: self.props.tempAssess.actionPlans}, function(result){
+          $('#saveConfirm').show();
+        });
         $('#lastUpdatedByEmail').html(result.updatedBy);
         $('#lastUpdatedByTime').html(moment.utc(result.updateDate).format('DD MMM YYYY'));
         _.find(self.props.loadDetailTeam.assessments, function(assess, idx){
@@ -125,7 +127,6 @@ var AssessmentACPlanTable = React.createClass({
           }
         });
         self.props.updateAssessmentSummary();
-        alert('Your action plan has been saved.');
       })
       .catch(function(err){
         console.log(err);
@@ -292,7 +293,8 @@ var AssessmentACPlanTable = React.createClass({
           <button type='button' id='cancelACPlanBtn' class='ibm-btn-sec ibm-btn-blue-50' disabled={!haveAccess} onClick={self.showCancelActionPlanConfirm}>{'Cancel Changes'}</button>
           <button type='button' id='saveACPlanBtn' class='ibm-btn-pri ibm-btn-blue-50' style={{'marginRight':'1%'}}disabled={!haveAccess} onClick={self.saveActionPlan}>{'Save Action Plan'}</button>
         </div>
-        <ConfirmPopover confirmClick={self.cancelActionPlan} confirmId='cancelActionPlanConfirm' content='You have requested to cancel all changes you made on this action plan.  All changes will be removed. Please confirm that you want to proceed with this cancel changes.'/>
+        <ConfirmPopover confirmClick={self.cancelActionPlan} confirmId='cancelActionPlanConfirm' content={'You have requested to cancel all changes you made on this action plan.  All changes will be removed. Please confirm that you want to proceed with this cancel changes.'} cancelBtn='block' confirmBtn='block' okBtn='none'/>
+        <ConfirmPopover confirmId='saveConfirm' content={'Your action plan has been saved.'} cancelBtn='none' confirmBtn='none' okBtn='block'/>
       </div>
     );
   }

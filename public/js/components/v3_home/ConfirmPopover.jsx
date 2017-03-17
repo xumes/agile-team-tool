@@ -24,8 +24,9 @@ var ConfirmPopover = React.createClass({
           <h1>{self.props.content}</h1>
         </div>
         <div class='btns'>
-          <button type='button' id='cancelConfirm' class='ibm-btn-sec ibm-btn-blue-50' onClick={self.hideConfirm}>{'Cancel'}</button>
-          <button type='button' id='saveConfirm' class='ibm-btn-pri ibm-btn-blue-50' style={{'marginRight':'1%'}} onClick={self.props.confirmClick}>{'Confirm'}</button>
+          <button type='button' id='cancelBtnConfirm' class='ibm-btn-sec ibm-btn-blue-50' style={{'display':self.props.cancelBtn}} onClick={self.hideConfirm}>{'Cancel'}</button>
+          <button type='button' id='okBtnConfirm' class='ibm-btn-sec ibm-btn-blue-50' style={{'display':self.props.okBtn}} onClick={self.hideConfirm}>{'Ok'}</button>
+          <button type='button' id='saveBtnConfirm' class='ibm-btn-pri ibm-btn-blue-50' style={{'marginRight':'1%','display':self.props.confirmBtn}} onClick={self.props.confirmClick}>{'Confirm'}</button>
         </div>
       </div>
     )
