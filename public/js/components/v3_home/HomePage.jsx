@@ -323,7 +323,9 @@ var HomePage = React.createClass({
     var self = this;
     // var newTeam = this.state.loadDetailTeam;
     var newTeam = JSON.parse(JSON.stringify(this.state.loadDetailTeam));
-    newTeam.team.members = members;
+    newTeam.team.members = _.sortBy(members, function(m) {
+      return m.name.replace(/\s/g,'').toLowerCase();
+    });
     newTeam.members = membersContent;
     var userMember = _.find(members, function(member) {
       return member.userId == user.ldap.uid;

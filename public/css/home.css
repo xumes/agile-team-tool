@@ -1295,7 +1295,8 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .team-member-table-content-block1 > div > div > h1,
-.team-member-table-content-block2 > div > div > h1 {
+.team-member-table-content-block2 > div > div > h1,
+.team-member-table-email {
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   color: #325C80;
@@ -3338,8 +3339,9 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .team-member-add-block {
   position: fixed;
   outline: none;
-  left: 39%;
-  top: 21%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   width: 22vw;
   height: 30.93vw;
   min-width: 281.6px;
@@ -6883,7 +6885,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .no-trends-message-block p {
   color: #777677;
-  font-size: 2.5em;
+  font-size: 2.2em;
   position: relative;
   text-align: center;
   top: 50%;
