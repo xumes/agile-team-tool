@@ -6,6 +6,7 @@ var ReactDOM = require('react-dom');
 var InlineSVG = require('svg-inline-react');
 var DatePicker = require('react-datepicker');
 var AssessmentDatePicker = require('./AssessmentDatePicker.jsx');
+var ConfirmPopover = require('../ConfirmPopover.jsx');
 var actionPlanSelection = [];
 
 var AssessmentACPlanTable = React.createClass({
@@ -32,7 +33,7 @@ var AssessmentACPlanTable = React.createClass({
   },
   componentDidUpdate: function() {
     $('.assessment-acplan-table > .table-block').off('hover');
-    $('.practice-name-selection').off('change');
+    // $('.practice-name-selection').off('change');
     this.initialHandler();
   },
   initialHandler: function() {
@@ -46,7 +47,12 @@ var AssessmentACPlanTable = React.createClass({
         $('#' + id + ' .action-plan-delete').css('display', 'none');
       })
     }
-    $('.practice-name-selection').change(self.actionPlanChangeHandler);
+    // $('.practice-name-selection').change(self.actionPlanChangeHandler);
+  },
+  actionPlanChangeHandler2: function(e) {
+    var self = this;
+    var tempActionPlans = self.getActionPlansFromTable();
+    self.setState({actionPlans: tempActionPlans});
   },
   actionPlanChangeHandler: function(e) {
     var self = this;
@@ -96,10 +102,13 @@ var AssessmentACPlanTable = React.createClass({
     self.setState({actionPlans: tempActionPlans});
   },
   cancelActionPlan: function() {
-    var self = this;
-    if(confirm('You have requested to cancel all changes you made on this action plan.  All changes will be removed. Please confirm that you want to proceed with this cancel changes.')){
-      self.setState({actionPlans: self.props.tempAssess.actionPlans});
-    }
+    $('#cancelActionPlanConfirm').hide();
+    this.setState({
+      actionPlans: this.props.tempAssess.actionPlans
+    });
+  },
+  showCancelActionPlanConfirm: function() {
+    $('#cancelActionPlanConfirm').show();
   },
   saveActionPlan: function() {
     var self = this;
@@ -121,6 +130,11 @@ var AssessmentACPlanTable = React.createClass({
       .catch(function(err){
         console.log(err);
       })
+  },
+  textareaChangeHandler: function(e) {
+    var self = this;
+    var tempActionPlans = self.getActionPlansFromTable();
+    self.setState({actionPlans: tempActionPlans});
   },
   getActionPlansFromTable: function() {
     var self = this;
@@ -167,8 +181,8 @@ var AssessmentACPlanTable = React.createClass({
           <option key={'aps_' + idx} value={aps.practiceName}>{aps.practiceName}</option>
         )
       });
-      if (!_.isEmpty(this.state.actionPlans)) {
-        var actionPlans = this.state.actionPlans;
+      if (!_.isEmpty(self.state.actionPlans)) {
+        var actionPlans = self.state.actionPlans;
       } else {
         actionPlans = self.props.tempAssess.actionPlans
       }
@@ -196,7 +210,7 @@ var AssessmentACPlanTable = React.createClass({
             </div>
             <div style={{'width':'10%'}} class='practice-name' id={'actionPlanPracticeName_' + idx}>
               <h1 style={{'display':ap.isUserCreated?'none':'block'}}>{ap.practiceName}</h1>
-              <select style={{'display':ap.isUserCreated?'block':'none'}} class='practice-name-selection' id={'practiceNameSelection_' + idx} defaultValue={ap.practiceName}>
+              <select style={{'display':ap.isUserCreated?'block':'none'}} class='practice-name-selection' id={'practiceNameSelection_' + idx} value={ap.practiceName} onChange={self.actionPlanChangeHandler}>
                 {practiceNameSelection}
               </select>
             </div>
@@ -210,20 +224,20 @@ var AssessmentACPlanTable = React.createClass({
               <h1 id={'actionPlanTargetScore_' + idx} >{ap.targetScore}</h1>
             </div>
             <div style={{'width':'15%'}}>
-              <textarea id={'actionPlanImproveDescription_' + idx} readOnly={!haveAccess||!ap.isUserCreated} style={readOnlyStyle} maxLength='350' defaultValue={ap.improveDescription}/>
+              <textarea id={'actionPlanImproveDescription_' + idx} readOnly={!haveAccess||!ap.isUserCreated} style={readOnlyStyle} maxLength='350' value={ap.improveDescription} onChange={self.textareaChangeHandler}/>
             </div>
             <div style={{'width':'15%','marginLeft':'1%'}}>
-              <textarea id={'actionPlanProgressSummary_' + idx} readOnly={!haveAccess} style={readOnlyStyle2} maxLength='350' defaultValue={ap.progressSummary}/>
+              <textarea id={'actionPlanProgressSummary_' + idx} readOnly={!haveAccess} style={readOnlyStyle2} maxLength='350' value={ap.progressSummary} onChange={self.textareaChangeHandler}></textarea>
             </div>
             <div style={{'width':'15%','marginLeft':'1%'}}>
-              <textarea id={'actionPlanKeyMetric_' + idx} readOnly={!haveAccess} style={readOnlyStyle2} maxLength='350' defaultValue={ap.keyMetric} />
+              <textarea id={'actionPlanKeyMetric_' + idx} readOnly={!haveAccess} style={readOnlyStyle2} maxLength='350' value={ap.keyMetric} onChange={self.textareaChangeHandler}/>
             </div>
             <div style={{'width':'8%','marginLeft':'1%'}}>
               <h1 id={'actionPlanReviewDate_' + idx} style={reviewDeteStyle}>{reviewDate}</h1>
             </div>
             <div style={{'width':'8%'}}>
               <div>
-                <select disabled={!haveAccess} id={'actionPlanSelect_' + idx} defaultValue={ap.actionStatus}>
+                <select disabled={!haveAccess} id={'actionPlanSelect_' + idx} value={ap.actionStatus} onChange={self.actionPlanChangeHandler2}>
                   <option value='Open'>{'Open'}</option>
                   <option value='In-progress'>{'In-progress'}</option>
                   <option value='Closed'>{'Closed'}</option>
@@ -275,9 +289,10 @@ var AssessmentACPlanTable = React.createClass({
           <button disabled={!haveAccess} onClick={self.addNewActionPlan} type='button' id='addActionPlan' class='ibm-btn-sec ibm-btn-blue-50'>{'Add Action Item'}</button>
         </div>
         <div class='action-plan-btns'>
-          <button type='button' id='cancelACPlanBtn' class='ibm-btn-sec ibm-btn-blue-50' disabled={!haveAccess} onClick={self.cancelActionPlan}>{'Cancel Changes'}</button>
+          <button type='button' id='cancelACPlanBtn' class='ibm-btn-sec ibm-btn-blue-50' disabled={!haveAccess} onClick={self.showCancelActionPlanConfirm}>{'Cancel Changes'}</button>
           <button type='button' id='saveACPlanBtn' class='ibm-btn-pri ibm-btn-blue-50' style={{'marginRight':'1%'}}disabled={!haveAccess} onClick={self.saveActionPlan}>{'Save Action Plan'}</button>
         </div>
+        <ConfirmPopover confirmClick={self.cancelActionPlan} confirmId='cancelActionPlanConfirm' content='You have requested to cancel all changes you made on this action plan.  All changes will be removed. Please confirm that you want to proceed with this cancel changes.'/>
       </div>
     );
   }

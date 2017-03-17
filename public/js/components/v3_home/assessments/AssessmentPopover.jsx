@@ -83,6 +83,7 @@ var AssessmentPopover = React.createClass({
     var assessDraft = {};
     var lcAssessTemplate = {};
     var ddAssessTemplate = {};
+    var componentShow = 'none';
     if (self.props.loadDetailTeam.assessments.length > 0 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft') {
       assessDraft = self.props.loadDetailTeam.assessments[0];
     }
@@ -104,6 +105,7 @@ var AssessmentPopover = React.createClass({
       }
       if (deliversSoftware == 'Yes') {
         self.state.ddAssessTemplate = self.props.assessTemplate.components[2];
+        componentShow = 'block';
       } else {
         self.state.ddAssessTemplate = {};
       }
@@ -125,6 +127,7 @@ var AssessmentPopover = React.createClass({
       }
       if (deliversSoftware == 'Yes') {
         self.state.ddAssessTemplate = self.props.assessTemplate.components[2];
+        componentShow = 'block';
       } else {
         self.state.ddAssessTemplate = {};
       }
@@ -194,7 +197,7 @@ var AssessmentPopover = React.createClass({
         <div class='agile-maturity' id='assessmentContainer1'>
           <AssessmentActiveTemplates assessTemplate={self.state.lcAssessTemplate} assessDraft={assessDraft} haveAccess={haveAccess} assessTemplateId={'0'} isUpdate={self.state.isUpdate}/>
         </div>
-        <div class='lc-header'>
+        <div class='lc-header' style={{'display': componentShow}}>
           <div class='header-title'>
             <h1>{'Delivery and DevOps'}</h1>
           </div>
