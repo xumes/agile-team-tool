@@ -284,6 +284,10 @@ var HomeTeamTree = React.createClass({
       }
       promiseArray.push(api.isUserAllowed(objectId));
       promiseArray.push(api.getTeamHierarchy(team.path));
+      // sort members by name
+      team.members = _.sortBy(team.members, function(m) {
+        return m.name.replace(/\s/g,'').toLowerCase();
+      });
       if (team.members != null && team.members.length > 0) {
         var ids = [];
         _.each(team.members, function(member){
