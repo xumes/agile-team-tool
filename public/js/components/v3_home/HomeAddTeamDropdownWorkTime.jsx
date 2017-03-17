@@ -1,7 +1,7 @@
 var React = require('react');
 var Select = require('react-select');
 var InlineSVG = require('svg-inline-react');
-
+var utils = require('../utils.jsx');
 var HomeAddTeamDropdownWorkTime = React.createClass({
   getInitialState: function() {
     return {
@@ -109,7 +109,7 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
       if (!other) {
         alert('Average work per week is required.');
       } else {
-        if (other > 100 || other < 0) {
+        if (!utils.isValidNumRange(other)) {
           alert('Average work per week should be between 0 to 100.');
         } else {
           var obj = {'value': other, 'label': other};

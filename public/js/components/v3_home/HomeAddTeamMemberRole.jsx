@@ -39,7 +39,26 @@ var HomeAddTeamMemberRole = React.createClass({
     var self = this;
     var tmproles = self.props.roles;
     self.setState({defaultRoles: tmproles});
-    self.disableFinishButton();
+  },
+
+  componentWillReceiveProps: function(newProps) {
+    var self = this;
+    var obj = self.props.newTeamObj;
+    var teamObj = newProps.newTeamObj;
+    var errorFound = [];
+
+    // check the required fields such as Team name, role, allocation, etc.
+    if (!_.isEmpty(teamObj.name) && !_.isEmpty(teamObj.description)){
+      if (!_.isEmpty(teamObj.members)) {
+        errorFound = utils.validateTeamMembersObj(teamObj.members);
+        // if the newTeamObj.members object dont have error then enable the Finish button else disable it.
+        if (_.isEmpty(errorFound)){
+          self.enableFinishButton();
+        } else {
+          self.disableFinishButton();
+        }
+      }
+    }
   },
 
   disableFinishButton: function() {
@@ -67,7 +86,6 @@ var HomeAddTeamMemberRole = React.createClass({
       });
       this.setState({defaultRoles: tmproles});
     }
-    self.disableFinishButton();
   },
 
   selectHandler: function(ref, data) {
@@ -95,7 +113,7 @@ var HomeAddTeamMemberRole = React.createClass({
       obj.userId = member.userId;
       obj.location = member.location || '';
       obj.role = member.role || null;
-      obj.allocation = member.allocation || 100;
+      obj.allocation = member.allocation;
       obj.workTime = member.workTime || 'Full Time';
       if (member.userId === uid) {
         if (type === OPTSELECT.ROLE) {
