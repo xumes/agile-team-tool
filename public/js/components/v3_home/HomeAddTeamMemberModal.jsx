@@ -146,7 +146,7 @@ var HomeAddTeamMemberModal = React.createClass({
                 <div class='col2'>
                   <div class='note2'>
                     <strong class="note1">NOTE:</strong>
-                    <p>You will be able to customize your team members locations, allocations and roles next.</p>
+                    <p class='note1-desc'>You will be able to customize your team members locations, allocations and roles next.</p>
                   </div>
                 </div>
 

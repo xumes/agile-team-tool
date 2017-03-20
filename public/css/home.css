@@ -1308,9 +1308,8 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .team-member-table-content-block1 > div > h,
 .team-member-table-content-block2 > div > h {
   position: relative;
-  top: 25%;
-  left: 5%;
-  height: 45%;
+  top: 50%;
+  transform: translate(5%, -50%);
   float: left;
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
@@ -1361,28 +1360,38 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 #teamMemberTable .select2-selection__rendered {
+  font-size: 1.2em;
   line-height: 2.3em;
+  position: relative;
+  top: 35%;
+  transform: translate(0%, -50%);
 }
 
 #teamMemberTable .select2-selection__arrow  b {
   top: 30% !important;
 }
 
+#teamMemberTable .select2-search__field {
+  font-size: 1.2em!important;
+}
+
 .team-member-table-content-role > .modify-field {
   position: relative;
   float: left;
-  left: 5%;
-  top: 10%;
+  top: 50%;
+  transform: translate(0%, -50%);
   width: 90%;
-  height: 80%;
+  height: 100%;
   display: none;
 }
 
-.team-member-table-content-role > .modify-field >.dropdown-list {
+.team-member-table-content-role > .modify-field > .dropdown-list {
   position: relative;
   float: left;
   width: 100%;
-  height: 45%;
+  height: 40%;
+  top: 50%;
+  transform: translate(0%, -50%);
 }
 
 .team-member-table-content-role > .modify-field > .input-field {
@@ -1390,7 +1399,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   top: 10%;
   width: 100%;
-  height: 45%;
+  height: 35%;
   display: none;
 }
 
@@ -1429,10 +1438,10 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .team-member-table-content-location > .modify-field {
   position: relative;
   float: left;
-  left: 5%;
-  top: 10%;
+  top: 50%;
+  transform: translate(0%, -50%);
   width: 90%;
-  height: 40%;
+  height: 35%;
   display: none;
 }
 
@@ -1453,7 +1462,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .team-member-table-content-location > .modify-field > .cancel-btn {
   position: relative;
   float: left;
-  left: 1%;
+  left: 2%;
   width: 10%;
   height: 100%;
   cursor: pointer;
@@ -1470,10 +1479,10 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .team-member-table-content-allocation > .modify-field {
   position: relative;
   float: left;
-  left: 5%;
-  top: 10%;
+  top: 50%;
+  transform: translate(0%, -50%);
   width: 90%;
-  height: 40%;
+  height: 35%;
   display: none;
 }
 
@@ -1525,10 +1534,10 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .team-member-table-content-awk > .modify-field {
   position: relative;
   float: left;
-  left: 5%;
-  top: 10%;
-  width: 70%;
-  height: 80%;
+  top: 50%;
+  transform: translate(0%, -50%);
+  width: 78%;
+  height: 100%;
   display: none;
 }
 
@@ -1536,7 +1545,9 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   float: left;
   width: 100%;
-  height: 45%;
+  height: 40%;
+  top: 50%;
+  transform: translate(0%, -50%);
 }
 
 .team-member-table-content-awk > .modify-field > .input-field {
@@ -1544,7 +1555,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   top: 10%;
   width: 100%;
-  height: 45%;
+  height: 35%;
   display: none;
 }
 
@@ -1565,8 +1576,8 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .team-member-table-content-awk > .modify-field > .input-field > .cancel-btn{
   position: relative;
   float: left;
-  left: 1%;
-  width: 18%;
+  left: 1.5%;
+  width: 16%;
   height: 100%;
   cursor: pointer;
   display: none;
@@ -2163,7 +2174,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.8em;
   line-height: 1.9em;
-  color: #5A5A5A;
+  color: #323232;
 }
 
 .home-iter-team-date {
@@ -2193,24 +2204,23 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   height: 100%;
 }
 
-.home-iter-select > span > select2 select2-container select2-container--default{
-  width: 100% !important;
+.home-iter-select .select2-container,
+.home-iter-select .select2-selection,
+.home-iter-select .select2-selection--single,
+.home-iter-select .select2-selection__rendered,
+.home-iter-select .select2-selection__arrow,
+.home-iter-select .select2-container--default,
+.home-iter-select .select2-container--default .select2-selection--single .select2-selection__arrow{
+  height: 2.1em;
 }
 
-.home-iter-select .select2-selection__rendered{
-  height: 2em!important;
-  margin-top: -2%;
-}
-.home-iter-select .select2-selection--single, select2-homeIterSelection-container{
-  height: 2.2em!important;
-}
-
-.home-iter-select .select2-container--default .select2-selection--single .select2-selection__arrow b:before{
-  margin-top: -5%;
+.home-iter-select .select2-selection__arrow  b {
+  top: 30% !important;
 }
 
 .home-iter-select .select2-container--default .select2-selection--single .select2-selection__rendered{
-  color: #777677
+  color: #777677;
+  line-height: 2.1em;
 }
 
 .memberChanged input, select, .memberChanged option{
@@ -2250,7 +2260,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   margin-top: -6.3%;
 }
 
-.home-iter-edit-btn-block > i > svg, .home-iter-edit-btn-block-disabled > i > svg { 
+.home-iter-edit-btn-block > i > svg, .home-iter-edit-btn-block-disabled > i > svg {
   width: auto;
   height: 100%;
   pointer-events: none;
@@ -2274,7 +2284,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   font-family: "Helvetica Neue LT W1G","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   line-height: 1.8em;
-  color: #323232;
+  color: #5A5A5A;
 }
 
 .home-iter-last-update {
@@ -5049,6 +5059,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .new-team-creation-addteam-member .col1 #txtTeamMemberName {
   font-size: 1.4em;
+  width: 95%;
 }
 
 .new-team-creation-addteam-member .ibm-row-form .frmlabel {
@@ -5081,6 +5092,11 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .new-team-creation-addteam-member .note2 strong, .new-team-creation-addteam-member .note2 p {
   font-size: 1.4em;
+}
+
+.new-team-creation-addteam-member .note2 .note1-desc{
+  font-size: 1.1em;
+  color: #666;
 }
 
 .new-team-creation-addteam-member .new-team-creation-add-block-pad {
@@ -5119,7 +5135,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_location, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_location{
-  width: 10em;
+  width: 12em;
   background: none;
 }
 #addTeamMemberRoleBlock .tbl-memberRole-results td.r_location {
@@ -5128,18 +5144,23 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_role, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_role {
-  width: 13em;
+  height: 2em;
+  padding: 0.4em !important;
   vertical-align: top;
+  width: 14em;
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_allocation, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_allocation {
-  width: 5em;
+  padding: 0.4em !important;
   vertical-align: top;
+  width: 5em;
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_workweek, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_workweek {
-  width: 10em;
+  height: 2em;
+  padding: 0.4em !important;
   vertical-align: top;
+  width: 11.5em;
 }
 
 #addTeamMemberRoleBlock .tbl-memberRole-results td.role > .select2 {
@@ -5158,8 +5179,140 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   cursor: pointer;
 }
 
+#addTeamMemberRoleBlock .data-team-role {
+  font-size: 1.4em;
+  position: relative;
+  border-box: box-sizing;
+  background-color: #fff;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: #333;
+  cursor: default;
+  display: table;
+  height: 35px;
+  outline: medium none;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  border: 1px solid #333;
+}
+
+#addTeamMemberRoleBlock .Select-control2 {
+  background-color: #fff;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: #333;
+  cursor: default;
+  display: table;
+  height: 35px;
+  outline: medium none;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+#addTeamMemberRoleBlock .Select-arrow-zone2 {
+  cursor: pointer;
+  display: table-cell; /*table-cell*/
+  padding-right: 5px;
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  width: 25px;
+}
+
+#addTeamMemberRoleBlock .Select-arrow2 {
+  border-color: #999 transparent transparent;
+  border-style: solid;
+  border-width: 5px 5px 2.5px;
+  display: inline-block;
+  height: 0;
+  position: relative;
+  width: 0;
+}
+
+#addTeamMemberRoleBlock .data-team-role .data {
+  box-sizing: border-box;
+  font-size: 1.4em;
+  line-height: 34px;
+  margin-left: 0.5em;
+  outline: medium none;
+}
+
+#addTeamMemberRoleBlock .data-team-role .tmp1 {
+  font-size: 1em;
+}
+
+#addTeamMemberRoleBlock .data-team-role .dataxx {
+  bottom: 0;
+  left: 0;
+  line-height: 1.8em;
+  height: 36px;
+  display: table;
+  outline: medium none;
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
+  right: 0;
+  text-overflow: ellipsis;
+  top: 0;
+  white-space: nowrap;
+  border-spacing: 0;
+  box-sizing: border-box;
+  margin-left: 1em;
+}
+
+#addTeamMemberRoleBlock .arrow-zone {
+  cursor: pointer;
+  display: table-cell;
+  padding-right: 5px;
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  width: 25px;
+}
+
+/*#addTeamMemberRoleBlock .arrow-down {
+  height:0px;
+  width:0px;
+  border:none;
+  border-top:5px solid #999;
+  border-left:5px solid rgba(0,0,0,0);
+  border-right:5px solid rgba(0,0,0,0);
+  margin-top: 0.6em;
+  float: right;
+}*/
+
+#addTeamMemberRoleBlock .createteam-role-field {
+  box-sizing: border-box;
+  position: relative;
+}
+
+#addTeamMemberRoleBlock .arrow-down {
+  border-top:5px solid #999;
+  border-left:5px solid rgba(0,0,0,0);
+  border-right:5px solid rgba(0,0,0,0);
+
+  border-image: none;
+  border-style: solid solid none;
+  border-width: 5px 5px medium;
+  float: right;
+  height: 0;
+  margin-right: 0.7em;
+  margin-top: 0.9em;
+  width: 0;
+}
+
 #addTeamMemberRoleBlock .custom-field-other {
   margin-top: 0.5em;
+}
+
+#addTeamMemberRoleBlock .border {
+  border: 1px solid #333;
+}
+
+#addTeamMemberRoleBlock .noborder {
+  border: 1px solid transparent;
 }
 
 #addTeamMemberRoleBlock .custom-field-other h1 {
@@ -5186,6 +5339,12 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   padding: 0.3em 0;
   position: relative;
   text-indent: 0.5em;
+  border: 1px solid #333;
+}
+
+#addTeamMemberRoleBlock .createteam-worktime-field, #addTeamMemberRoleBlock .createteam-role-field {
+  float: left;
+  width: 100%;
 }
 
 #addTeamMemberRoleBlock .r_role .r_save-btn, #addTeamMemberRoleBlock .r_role .r_cancel-btn,
@@ -5240,6 +5399,11 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 #addTeamMemberRoleBlock .r_role .r_save-btn, #addTeamMemberRoleBlock .r_role .r_cancel-btn {
   left: 0.5em;
+  top: 0.5em;
+}
+
+#addTeamMemberRoleBlock .r_workweek .r_save-btn, #addTeamMemberRoleBlock .r_workweek .r_cancel-btn {
+  top: 0.5em;
 }
 
 #addTeamMemberRoleBlock .r_role .r_cancel-btn {
@@ -5267,8 +5431,19 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   border-radius: 0% !important;
 }
 
-#addTeamMemberRoleBlock .Select-menu {
+#addTeamMemberRoleBlock .r_role .Select .Select-menu {
   border: 0.1em solid #333 !important;
+  width: 15.3em;
+}
+
+#addTeamMemberRoleBlock .r_allocation .Select .Select-menu {
+  border: 0.1em solid #333 !important;
+  width: 6em;
+}
+
+#addTeamMemberRoleBlock .r_workweek .Select .Select-menu {
+  border: 0.1em solid #333 !important;
+  width: 12.5em;
 }
 
 #addTeamMemberRoleBlock .Select-option.is-selected {
@@ -5283,6 +5458,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 #addTeamMemberRoleBlock .is-focused:not(.is-open) > .Select-control {
   box-shadow: none !important;
+}
+
+.Select-menu {
+  position: fixed !important;
 }
 
 /* END: AddTeamMember Role, Allocation Modal */

@@ -39,7 +39,26 @@ var HomeAddTeamMemberRole = React.createClass({
     var self = this;
     var tmproles = self.props.roles;
     self.setState({defaultRoles: tmproles});
-    self.disableFinishButton();
+  },
+
+  componentWillReceiveProps: function(newProps) {
+    var self = this;
+    var obj = self.props.newTeamObj;
+    var teamObj = newProps.newTeamObj;
+    var errorFound = [];
+
+    // check the required fields such as Team name, role, allocation, etc.
+    if (!_.isEmpty(teamObj.name) && !_.isEmpty(teamObj.description)){
+      if (!_.isEmpty(teamObj.members)) {
+        errorFound = utils.validateTeamMembersObj(teamObj.members);
+        // if the newTeamObj.members object dont have error then enable the Finish button else disable it.
+        if (_.isEmpty(errorFound)){
+          self.enableFinishButton();
+        } else {
+          self.disableFinishButton();
+        }
+      }
+    }
   },
 
   disableFinishButton: function() {
@@ -62,12 +81,11 @@ var HomeAddTeamMemberRole = React.createClass({
       var tmp = [];
       _.map(memRole, function(val){
         if (!_.contains(tmproles, val)) {
-          tmproles.push(val);
+          // tmproles.push(val);
         }
       });
       this.setState({defaultRoles: tmproles});
     }
-    self.disableFinishButton();
   },
 
   selectHandler: function(ref, data) {
@@ -95,7 +113,7 @@ var HomeAddTeamMemberRole = React.createClass({
       obj.userId = member.userId;
       obj.location = member.location || '';
       obj.role = member.role || null;
-      obj.allocation = member.allocation || 100;
+      obj.allocation = member.allocation;
       obj.workTime = member.workTime || 'Full Time';
       if (member.userId === uid) {
         if (type === OPTSELECT.ROLE) {
@@ -109,25 +127,25 @@ var HomeAddTeamMemberRole = React.createClass({
       updatedMember.push(obj);
     });
 
-    if (type === OPTSELECT.ROLE) {
-      var tmproles = self.state.defaultRoles;
-      // when selecting the 'Other...' option get the entered data.
-      if (!_.contains(tmproles, selectVal)) {
-        var tmp = self.state.defaultRoles;
-        tmp.push(selectVal);
-        self.setState({defaultRoles: tmp});
-      }
-    }
+    // if (type === OPTSELECT.ROLE) {
+    //   var tmproles = self.state.defaultRoles;
+    //   when selecting the 'Other...' option get the entered data.
+    //   if (!_.contains(tmproles, selectVal)) {
+    //     var tmp = self.state.defaultRoles;
+    //     tmp.push(selectVal);
+    //     self.setState({defaultRoles: tmp});
+    //   }
+    // }
 
-    if (type === OPTSELECT.AVGWORKWEEK) {
-      var tmpworkweek = self.state.defaultWorkTime;
-      if (!_.contains(tmpworkweek, selectVal)) {
-        var obj = {};
-        obj[selectVal] = selectLabel;
-        var tmp = _.extend(tmpworkweek, obj);
-        self.setState({defaultWorkTime: tmp});
-      }
-    }
+    // if (type === OPTSELECT.AVGWORKWEEK) {
+    //   var tmpworkweek = self.state.defaultWorkTime;
+    //   if (!_.contains(tmpworkweek, selectVal)) {
+    //     var obj = {};
+    //     obj[selectVal] = selectLabel;
+    //     var tmp = _.extend(tmpworkweek, obj);
+    //     self.setState({defaultWorkTime: tmp});
+    //   }
+    // }
 
     self.props.setTeamMember(updatedMember);
     this.enableFinishButton();
@@ -195,13 +213,13 @@ var HomeAddTeamMemberRole = React.createClass({
                 </div>
               </div>
             </td>
-            <td class='r_role' data-index={idx}>
-              <HomeAddTeamDropdownRole newTeamObj={self.props.newTeamObj} memberUserId={memberUserId} roles={self.state.defaultRoles} setTeamMember={self.props.setTeamMember} memberRole={memberRole} roleHandler={self.selectHandler} />
+            <td class='r_role' data-index={idx} id={'tdwrapper-role-'+memberUserId} >
+              <HomeAddTeamDropdownRole newTeamObj={self.props.newTeamObj} memberUserId={memberUserId} defaultRoles={self.state.defaultRoles} serverRoles={self.props.roles} setTeamMember={self.props.setTeamMember} memberRole={memberRole} roleHandler={self.selectHandler} />
             </td>
             <td class='r_allocation' data-index={idx}>
               <HomeAddTeamDropdownAllocation newTeamObj={self.props.newTeamObj} memberUserId={memberUserId} setTeamMember={self.props.setTeamMember} memberAlloc={memberAlloc} allocHandler={self.selectHandler} />
             </td>
-            <td class='r_workweek'>
+            <td class='r_workweek' data-index={idx} id={'tdwrapper-avgworkweek-'+memberUserId}>
               <HomeAddTeamDropdownWorkTime newTeamObj={self.props.newTeamObj} memberUserId={memberUserId} defaultWorkTime={self.state.defaultWorkTime} setTeamMember={self.props.setTeamMember} memberWorkTime={memberWorkTime} workTimeHandler={self.selectHandler} />
             </td>
           </tr>

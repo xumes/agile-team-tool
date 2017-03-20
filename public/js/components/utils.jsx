@@ -361,3 +361,62 @@ module.exports.highlightErrorField = function(type, divIdx) {
     });
   }
 };
+
+/**
+ * Check if the parameter(str) is empty. Note: Here the zero(0) is considered as Empty.
+ * @param String str
+ */
+module.exports.isBlank = function(str){
+  return (!str || /^\s*$/.test(str));
+};
+
+/**
+ * Check if the inputted data is within the range [0 - 100]
+ * @param Number
+ */
+module.exports.isValidNumRange = function(num,from,to){
+  var from = from || 0;
+  var to = to || 100;
+  var num = parseInt(num) || 0;
+  if (num > to || num < from) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
+/**
+ * Validate the Team members object check the required fields
+ * @param array of object
+ */
+module.exports.validateTeamMembersObj = function(teamObj) {
+  var errorFound = [];
+  _.each(teamObj, function(member){
+    if (module.exports.isBlank(member.role)) {
+      errorFound.push(member);
+    }
+    if (module.exports.isBlank(member.allocation)){
+      if (!module.exports.isValidNumRange(member.allocation)){
+        errorFound.push(member);
+      }
+    }
+    if (module.exports.isBlank(member.workTime)) {
+      errorFound.push(member);
+    }
+  });
+  return errorFound;
+};
+
+/**
+ * Update the SVG title attribute
+ * @param wrapperId Container/DIV element
+ * @param svgId
+ * @param title
+ */
+module.exports.updateSVGTitle = function(wrapperId, svgId, title) {
+  window.setTimeout(function(){
+    var str = '#'+ wrapperId + ' svg#'+svgId;
+    $(str).attr('title', title);
+    $(str).attr('alt', title);
+  }, 2);
+};
