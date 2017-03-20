@@ -5102,7 +5102,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .new-team-creation-addteam-member .col1 #txtTeamMemberName {
   font-size: 1.4em;
-  width: 95%;
+  width: 100%;
 }
 
 .new-team-creation-addteam-member .ibm-row-form .frmlabel {
