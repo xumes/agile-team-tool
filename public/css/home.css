@@ -1308,9 +1308,8 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .team-member-table-content-block1 > div > h,
 .team-member-table-content-block2 > div > h {
   position: relative;
-  top: 25%;
-  left: 5%;
-  height: 45%;
+  top: 50%;
+  transform: translate(5%, -50%);
   float: left;
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
@@ -1361,28 +1360,38 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 #teamMemberTable .select2-selection__rendered {
+  font-size: 1.2em;
   line-height: 2.3em;
+  position: relative;
+  top: 35%;
+  transform: translate(0%, -50%);
 }
 
 #teamMemberTable .select2-selection__arrow  b {
   top: 30% !important;
 }
 
+#teamMemberTable .select2-search__field {
+  font-size: 1.2em!important;
+}
+
 .team-member-table-content-role > .modify-field {
   position: relative;
   float: left;
-  left: 5%;
-  top: 10%;
+  top: 50%;
+  transform: translate(0%, -50%);
   width: 90%;
-  height: 80%;
+  height: 100%;
   display: none;
 }
 
-.team-member-table-content-role > .modify-field >.dropdown-list {
+.team-member-table-content-role > .modify-field > .dropdown-list {
   position: relative;
   float: left;
   width: 100%;
-  height: 45%;
+  height: 40%;
+  top: 50%;
+  transform: translate(0%, -50%);
 }
 
 .team-member-table-content-role > .modify-field > .input-field {
@@ -1390,7 +1399,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   top: 10%;
   width: 100%;
-  height: 45%;
+  height: 35%;
   display: none;
 }
 
@@ -1429,10 +1438,10 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .team-member-table-content-location > .modify-field {
   position: relative;
   float: left;
-  left: 5%;
-  top: 10%;
+  top: 50%;
+  transform: translate(0%, -50%);
   width: 90%;
-  height: 40%;
+  height: 35%;
   display: none;
 }
 
@@ -1453,7 +1462,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .team-member-table-content-location > .modify-field > .cancel-btn {
   position: relative;
   float: left;
-  left: 1%;
+  left: 2%;
   width: 10%;
   height: 100%;
   cursor: pointer;
@@ -1470,10 +1479,10 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .team-member-table-content-allocation > .modify-field {
   position: relative;
   float: left;
-  left: 5%;
-  top: 10%;
+  top: 50%;
+  transform: translate(0%, -50%);
   width: 90%;
-  height: 40%;
+  height: 35%;
   display: none;
 }
 
@@ -1525,10 +1534,10 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .team-member-table-content-awk > .modify-field {
   position: relative;
   float: left;
-  left: 5%;
-  top: 10%;
-  width: 70%;
-  height: 80%;
+  top: 50%;
+  transform: translate(0%, -50%);
+  width: 78%;
+  height: 100%;
   display: none;
 }
 
@@ -1536,7 +1545,9 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   float: left;
   width: 100%;
-  height: 45%;
+  height: 40%;
+  top: 50%;
+  transform: translate(0%, -50%);
 }
 
 .team-member-table-content-awk > .modify-field > .input-field {
@@ -1544,7 +1555,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   top: 10%;
   width: 100%;
-  height: 45%;
+  height: 35%;
   display: none;
 }
 
@@ -1565,8 +1576,8 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .team-member-table-content-awk > .modify-field > .input-field > .cancel-btn{
   position: relative;
   float: left;
-  left: 1%;
-  width: 18%;
+  left: 1.5%;
+  width: 16%;
   height: 100%;
   cursor: pointer;
   display: none;
@@ -2250,7 +2261,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   margin-top: -6.3%;
 }
 
-.home-iter-edit-btn-block > i > svg, .home-iter-edit-btn-block-disabled > i > svg { 
+.home-iter-edit-btn-block > i > svg, .home-iter-edit-btn-block-disabled > i > svg {
   width: auto;
   height: 100%;
   pointer-events: none;

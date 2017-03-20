@@ -33,33 +33,45 @@ var HomeMemberTable = React.createClass({
     document.removeEventListener('click', this.handleClick, false);
   },
 
-  handleClick: function(e){
+  handleClick: function(e) {
     var self = this;
+    // if there are fields on edit mode, check the previous field if value has changed without the user saving it
+    // and cancel the previous changes
+    if ($('.team-member-table-content-block-show').length >= 0) {
+      var parentDivId = $('.team-member-table-content-block-show').parent().attr('id');
+      _.each(self.props.loadDetailTeam.team.members, function(member, index) {
+        if ($('#role_' + index + ' input').attr('placeholder') != $('#role_' + index + ' input').val() && parentDivId != ('role_' + index)) {
+          self.cancelChange('role_' + index);
+        }
+        if ($('#location_' + index + ' input').attr('placeholder') != $('#location_' + index + ' input').val() && parentDivId != ('location_' + index)) {
+          self.cancelChange('location_' + index);
+        }
+        if ($('#allocation_' + index + ' input').attr('placeholder') != $('#allocation' + index + ' input').val() && parentDivId != ('allocation_' + index)) {
+          self.cancelChange('allocation_' + index);
+        }
+        if ($('#awk_' + index + ' input').attr('placeholder') != $('#awk' + index + ' input').val() && parentDivId != ('awk_' + index)) {
+          self.cancelChange('awk_' + index);
+        }
+      });
+    }
+    // for all clicks ouside the member rows
     if(!ReactDOM.findDOMNode(this).contains(e.target) || e.target.id == 'teamMemberTableTitle' || e.target.id == 'teamMemberTableFooter') {
-      _.each(self.props.loadDetailTeam.team.members, function(member, index){
+      _.each(self.props.loadDetailTeam.team.members, function(member, index) {
         if ($('#role_' + index + ' .save-btn').css('display') == 'block') {
           if ($('#role_' + index + ' input').attr('placeholder') != $('#role_' + index + ' input').val()) {
-            self.saveRole('role_' + index);
-          } else {
             self.cancelChange('role_' + index);
           }
         } else if ($('#location_' + index + ' .save-btn').css('display') == 'block') {
           if ($('#location_' + index + ' input').attr('placeholder') != $('#location_' + index + ' input').val()) {
-            self.saveRole('location_' + index);
-          } else {
             self.cancelChange('location_' + index);
           }
         } else if ($('#allocation' + index + ' .save-btn').css('display') == 'block') {
-          if ($('#allocation' + index + ' input').attr('placeholder') != $('#allocation' + index + ' input').val()) {
-            self.saveRole('allocation' + index);
-          } else {
-            self.cancelChange('allocation' + index);
+          if ($('#allocation_' + index + ' input').attr('placeholder') != $('#allocation' + index + ' input').val()) {
+            self.cancelChange('allocation_' + index);
           }
-        } else {
-          if ($('#awk' + index + ' input').attr('placeholder') != $('#awk' + index + ' input').val()) {
-            self.saveRole('awk' + index);
-          } else {
-            self.cancelChange('awk' + index);
+        } else if ($('#awk' + index + ' .save-btn').css('display') == 'block') {
+          if ($('#awk_' + index + ' input').attr('placeholder') != $('#awk' + index + ' input').val()) {
+            self.cancelChange('awk_' + index);
           }
         }
       });
@@ -91,9 +103,9 @@ var HomeMemberTable = React.createClass({
 
   initialAll: function() {
     var self = this;
-    $('.team-member-table-content-role > div > div > select').select2({'width':'100%'});
-    // $('.team-member-table-content-allocation > div > select').select2({'width':'100%'});
-    $('.team-member-table-content-awk > div > div > select').select2({'width':'99%'});
+    $('.team-member-table-content-role > div > div > select').select2({'width':'100%','dropdownParent':$('#memberTable')});
+    // $('.team-member-table-content-allocation > div > select').select2({'width':'100%','dropdownParent':$('#memberTable')});
+    $('.team-member-table-content-awk > div > div > select').select2({'width':'99%','dropdownParent':$('#memberTable')});
     self.hoverBlock('team-member-table-content-role');
     self.hoverBlock('team-member-table-content-location');
     self.hoverBlock('team-member-table-content-allocation');
@@ -335,6 +347,7 @@ var HomeMemberTable = React.createClass({
     var newMembers = [];
     var roleId = 'role_' + e.target.id.substring(12, e.target.id.length);
     if (e.target.value == 'Other...') {
+      $('#' + roleId + ' .dropdown-list').css('top', '25%');
       $('#' + roleId + ' .input-field').show();
       setTimeout( function() {
         $('#r_' + roleId).focus();
@@ -343,21 +356,32 @@ var HomeMemberTable = React.createClass({
       $('#' + roleId + ' .save-btn').show();
       $('#' + roleId + ' .cancel-btn').show();
     } else if (e.target.value == 'psr') {
+      $('#' + roleId + ' .dropdown-list').css('top', '50%');
       $('#' + roleId + ' .input-field > input').val('');
       $('#' + roleId + ' .input-field').hide();
       $('#' + roleId + ' .save-btn').hide();
       $('#' + roleId + ' .cancel-btn').hide();
     } else {
+      $('#' + roleId + ' .dropdown-list').css('top', '50%');
       var idx = e.target.id.substring(12, e.target.id.length);
       var mrd = self.getMemberRowDetails(idx);
+      var noChange = false;
       _.each(self.props.loadDetailTeam.team.members, function(member, index){
         if (index == idx) {
+          if (member.role == e.target.value && !noChange)
+            noChange = true;
           member.role = e.target.value;
           newMembers.push(member);
         } else {
           newMembers.push(member);
         }
       });
+      if (noChange) {
+        $('#' + roleId + ' .input-field').hide();
+        $('#' + roleId + ' .save-btn').hide();
+        $('#' + roleId + ' .cancel-btn').hide();
+        return;
+      }
 
       api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
         .then(function(result){
@@ -526,11 +550,11 @@ var HomeMemberTable = React.createClass({
   },
 
   changeAwkHandler: function(e) {
-    // console.log(e.target.id.substring(11, e.target.id.length));
     var self = this;
     var newMembers = [];
     var awkId = 'awk_' + e.target.id.substring(11, e.target.id.length);
     if (e.target.value == 'other') {
+      $('#' + awkId + ' .dropdown-list').css('top', '25%');
       $('#' + awkId + ' .input-field').show();
       setTimeout( function() {
         $('#w_' + awkId).focus();
@@ -538,16 +562,26 @@ var HomeMemberTable = React.createClass({
       $('#' + awkId + ' .save-btn').show();
       $('#' + awkId + ' .cancel-btn').show();
     } else {
+      $('#' + awkId + ' .dropdown-list').css('top', '50%');
       var idx = e.target.id.substring(11, e.target.id.length);
       var mrd = self.getMemberRowDetails(idx);
+      var noChange = false;
       _.each(self.props.loadDetailTeam.team.members, function(member, index){
         if (index == idx) {
+          if (member.workTime == e.target.value && !noChange)
+            noChange = true;
           member.workTime = e.target.value;
           newMembers.push(member);
         } else {
           newMembers.push(member);
         }
       });
+      if (noChange) {
+        $('#' + awkId + ' .input-field').hide();
+        $('#' + awkId + ' .save-btn').hide();
+        $('#' + awkId + ' .cancel-btn').hide();
+        return;
+      }
 
       api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
         .then(function(result){
@@ -656,10 +690,6 @@ var HomeMemberTable = React.createClass({
     }
   },
 
-  // handleClick: function(e) {
-  //   console.log('aaa')
-  // },
-
   render: function() {
     var self = this;
     var backdropStyle = {
@@ -752,6 +782,9 @@ var HomeMemberTable = React.createClass({
             }
             // }
 
+            var roleTopStyle = self.props.roles.indexOf(memberDetail.role) < 0 ? {'top':'25%'} : null;
+            var awkTopStyle = (memberDetail.workTime != '100' && memberDetail.workTime != '50') ? {'top':'25%'} : null;
+
             return (
               <div key={blockId} id={blockId} class={blockClass}>
                 <div style={{'width':'1%','backgroundColor':'#FFFFFF'}}>
@@ -769,7 +802,7 @@ var HomeMemberTable = React.createClass({
                 <div class='team-member-table-content-role' id={roleId} style={{'width':'19.3%'}}>
                   <h>{memberDetail.role}</h>
                   <div class='modify-field'>
-                    <div class='dropdown-list'>
+                    <div class='dropdown-list' style={roleTopStyle}>
                       <select id={'role_select_' + idx} defaultValue='Select a role'>
                         <option key='psr' value='psr'>Please select a role</option>
                         {roleSelection}
@@ -793,7 +826,7 @@ var HomeMemberTable = React.createClass({
                     <div class='save-btn' onClick={self.saveLocation.bind(null, locationId)}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
-                    <div class='cancel-btn' style={{'left':'2%'}} onClick={self.cancelChange.bind(null, locationId)}>
+                    <div class='cancel-btn' style={{'left':'4%'}} onClick={self.cancelChange.bind(null, locationId)}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                     </div>
                   </div>
@@ -817,7 +850,7 @@ var HomeMemberTable = React.createClass({
                 <div class='team-member-table-content-awk' id={awkId} style={{'width':'16.7%'}}>
                   <h>{awkValue}</h>
                   <div class='modify-field'>
-                    <div class='dropdown-list'>
+                    <div class='dropdown-list' style={awkTopStyle}>
                       <select id={'awk_select_' + idx} defaultValue='Full Time'>
                         <option key='100' value='100'>Full Time</option>
                         <option key='50' value='50'>Half Time</option>
@@ -830,7 +863,7 @@ var HomeMemberTable = React.createClass({
                       <div class='save-btn' onClick={self.saveAwk.bind(null, awkId)}>
                         <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                       </div>
-                      <div class='cancel-btn' style={{'left':'2%'}} onClick={self.cancelChange.bind(null, awkId)}>
+                      <div class='cancel-btn' style={{'left':'4%'}} onClick={self.cancelChange.bind(null, awkId)}>
                         <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                       </div>
                     </div>
