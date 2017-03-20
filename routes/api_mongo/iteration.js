@@ -163,8 +163,28 @@ module.exports = function(app, includes) {
       });
   };
 
+  /**
+   * Get all incomplete iteration for update on Sprint availability
+   * - teamAvailability
+   * - personDaysUnavailable
+   * - personDaysAvailable
+   */
+  var updateSprintAvailability = function(req, res, next) {
+    Iterations.updateSprintAvailability()
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        /* cannot simulate Cloudant error during testing */
+        formatErrMsg('[updateSprintAvailability]:' + err);
+        return res.status(400).send(err);
+      });
+  };
+
+
   app.get('/api/iteration/searchTeamIteration', [includes.middleware.auth.requireLogin], searchTeamIteration);
   app.get('/api/iteration/completed', [includes.middleware.auth.requireLogin], getCompletedIterations);
+  app.get('/api/iteration/updateSprintAvailability', [includes.middleware.auth.requireLogin], updateSprintAvailability);
   app.get('/api/iteration/:teamId?', [includes.middleware.auth.requireLogin], getIterinfo);
   app.get('/api/iteration/current/:id', [includes.middleware.auth.requireLogin], getIterationDoc);
   app.post('/api/iteration', [includes.middleware.auth.requireLogin], createIteration);

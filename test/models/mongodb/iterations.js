@@ -240,6 +240,17 @@ describe('Iteration model [getNotCompletedIterations]', function() {
   });
 });
 
+describe('Iteration model [updateSprintAvailability]', function(){
+  it('return successful for updating the sprint availability', function(done) {
+    iterationModel.updateSprintAvailability()
+      .then(function(result){
+        expect(result).to.be.a('String');
+        expect(result).to.equal('Successfully completed this operation');
+        done();
+      });
+  });
+});
+
 describe('Iteration model [searchTeamIteration]', function() {
   it('return successful for retriveing a iteration by query', function(done) {
     var queryrequest = {
