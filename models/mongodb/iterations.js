@@ -653,7 +653,7 @@ var IterationExport = {
     });
   },
 
-  updateSprintAvailability: function() {
+  updateSprintAvailability: /* istanbul ignore next */ function() {
     var promiseArray = [];
     var uniqueTeamIdArray = [];
     var iterationArray = [];
