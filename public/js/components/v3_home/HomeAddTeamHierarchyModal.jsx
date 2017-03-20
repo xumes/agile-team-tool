@@ -1,8 +1,9 @@
 var React = require('react');
-var api = require('../api.jsx');
 var _ = require('underscore');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
+var api = require('../api.jsx');
+var utils = require('../utils.jsx');
 var HomeAddTeamFooterButtons = require('./HomeAddTeamFooterButtons.jsx');
 
 var HomeAddTeamHierarchyModal = React.createClass({
@@ -27,10 +28,10 @@ var HomeAddTeamHierarchyModal = React.createClass({
   componentWillUpdate: function(nextProps, nextState) {
     var self = this;
     // make sure to get the latest team names on focus of this screen
-    //console.log('componentWillUpdate');
     if (!self.props.activeWindow && nextProps.activeWindow) {
       this.selectListInit();
     }
+    utils.updateSVGTitle('pc-hier-SetupBlock', '8e53a6b9-4aca-4973-8bfc-f04aaec49be5', 'Remove team');
   },
 
   selectListInit: function(){
@@ -62,7 +63,6 @@ var HomeAddTeamHierarchyModal = React.createClass({
   parentSelectHandler: function(e){
     var self = this;
     var selectedValue = e.target.value;
-    console.log('parentSelectHandler');
     var teamSelected = _.find(self.props.selectableParents, function(teamSelected) {
       if (_.isEqual(selectedValue,teamSelected._id)) return teamSelected;
     });
@@ -106,8 +106,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
   },
 
   childSelectHandler: function(e) {
-    var self = this;
-    console.log('childSelectHandler');
+    var self = this;         
     var selectedValue = e.target.value;
     if (!_.isEmpty(selectedValue)) {
       var buttonOptions = self.state.buttonOptions;
