@@ -73,9 +73,16 @@ var HomeIterContent = React.createClass({
     }
   },
   componentDidMount: function(){
+    window.addEventListener('click', this.handleWindowClick);
     var data = this.getSelectedIteration();
     if (data != null){
       this.setState({selectedIter: data,backupIter: _.clone(data)});
+    }
+  },
+
+  handleWindowClick: function(e){
+    if (e.target.id === ''){
+      this.setState({selectedField:''});
     }
   },
 
@@ -92,7 +99,7 @@ var HomeIterContent = React.createClass({
     if (!_.isEqual(this.props.loadDetailTeam.iterations, prevProps.loadDetailTeam.iterations)){
       var data = this.getSelectedIteration();
       this.setState({selectedIter: data}, function(){
-        $('select[id="homeIterSelection"]').select2();
+        $('select[id="homeIterSelection"]').select2({'width':'100%'});
       });
     }
     var self = this;
@@ -133,6 +140,7 @@ var HomeIterContent = React.createClass({
       $('.home-iter-content-point').keyup(function(e){
 
       });
+      $('.home-iter-add').css('color','#C7C7C7');
     }
   },
 
@@ -358,7 +366,7 @@ var HomeIterContent = React.createClass({
       value = value.toFixed(2);
       e.target.value = value;
       this.saveIter(e.target.id);
-    }
+    }    
   },
 
   checkRecentTeamAvailbility: function(){
@@ -577,7 +585,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='Indicate if there was a change to the team’s makeup during this iteration. Changes might include adding, replacing, removing members or changing a team member’s allocation % that you feel is significant enough to be noted.  Indicating a team change might help to explain a higher/lower team productivity when compared to other iterations.'>Was there a team change?</div>
                 {this.state.selectedField === 'memberChanged'?
-                  <div className='home-iter-member-change'>
+                  <div id='memeberChangedParent' className='home-iter-member-change'>
                     <select id='memberChanged' defaultValue={defIter.memberChanged} onKeyDown={this.checkChanges} onBlur={this.saveIter.bind(null,'memberChanged')} ref="memberChanged">
                       <option key='Yes' value={true}>Yes</option>
                       <option key='No' value={false}>No</option>
@@ -595,7 +603,7 @@ var HomeIterContent = React.createClass({
                     </div>
                   </div>:''
                 }
-              </div>
+                </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='The number of person days the team had available calculated by subtracting the Person days unavailable from the Optimum team availability (in days).'>Person days available</div>
                 <div id='personDays' class='home-iter-content-point-uneditable'>{iterData.personDaysAvailable}</div>
@@ -625,7 +633,7 @@ var HomeIterContent = React.createClass({
                     </div>
                   </div>:''
                 }
-              </div>
+                </div>
               <div class='home-iter-content-col' style={{'height': '25%'}}>
                 <div class='home-iter-content-sub' data-tip='Primarily for Operations teams, this is the actual number of Stories, Cards or Tickets the team was able to deliver for this iteration period.'>Stories/Cards/Tickets-Delivered</div>
                 {this.state.selectedField === 'deliveredStories'?
@@ -868,19 +876,24 @@ var HomeIterContent = React.createClass({
       } else {
         return (
           <div>
-            <div class='home-iter-title'>Iteration Overview</div>
             <Tooltip html={true} type="light"/>
+            <div style={{'display':'inline','width':'100%'}}>
+              <div class='home-iter-title'>Iteration Overview</div>
+              <div data-tip='Create New Iteration' style={access?{'display':'inline','cursor':'pointer'}:{'display':'inline', 'cursor':'default'}} onClick={access?this.showAddIteration:''} >
+                <div class={access?'home-iter-add-btn-block':'home-iter-add-btn-block-disabled'}>
+                  <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
+                  <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={self.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
+                </div>
+                <span className="home-iter-add">New Iteration</span>
+              </div>
+            </div>
             <div class='home-iter-selection-block'>
               <div class='home-iter-select'>
                 <select value={0} id='homeIterSelection'>
                   <option key={0} value={0}>{'No iteration results'}</option>
                 </select>
               </div>
-              <div class={access?'home-iter-add-btn-block':'home-iter-add-btn-block-disabled'} onClick={access?this.showAddIteration:''} style={access?{'cursor':'pointer'}:{'cursor':'default'}}>
-                <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')} data-tip='Create New Iteration'></InlineSVG>
-              </div>
             </div>
-            <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={this.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
           </div>
         )
       }
