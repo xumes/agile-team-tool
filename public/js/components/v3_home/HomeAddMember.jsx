@@ -63,6 +63,7 @@ var HomeAddMember = React.createClass({
         if (!self.props.loadDetailTeam.access) {
           alert('You don\'t have access to add team memeber for this team.');
         } else {
+          /*
           var isMemberExist = false;
           isMemberExist = _.find(self.props.loadDetailTeam.team.members, function(m){
             if (m.userId == facesPerson.uid.toUpperCase()) {
@@ -72,6 +73,7 @@ var HomeAddMember = React.createClass({
           if (isMemberExist) {
             alert('This person is already in your team.');
           } else {
+          */
             $('.team-member-add-block-footer > p > a').prop('disabled', true);
             var newTeamMembers = [];
             var newUsers = [];
@@ -116,7 +118,9 @@ var HomeAddMember = React.createClass({
                 console.log(err);
                 return;
               });
-          }
+          /*
+          } // if/else member exist
+          */
         }
       }
     }

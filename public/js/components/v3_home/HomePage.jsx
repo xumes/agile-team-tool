@@ -12,6 +12,11 @@ var windowSize = {
   'width': 1440,
   'fontSize': 0.625
 }
+var windowSize2 = {
+  'height': 1080,
+  'width': 1920,
+  'fontSize': 0.625
+}
 
 var HomePage = React.createClass({
   getInitialState: function() {
@@ -54,7 +59,7 @@ var HomePage = React.createClass({
     }, 0);
     if (window.innerWidth >= 1280 && window.innerWidth < 1900) {
       $('html').css('width', '100vw');
-      $('html').css('height', '56.25vw');
+      $('html').css('height', '56.49vw');
       $('#homeNavShowBtnDiv').show();
       $('.ibm-columns').css('width', '96.6%');
       $('.ibm-columns').css('left', '0');
@@ -94,8 +99,8 @@ var HomePage = React.createClass({
       $('html').css('font-size', changeSize);
     } else if (window.innerWidth >= 1900) {
       $('html').css('width', '100vw');
-      $('html').css('height', '0.375vw');
-      fontSize = (1280/windowSize['width']) * windowSize['fontSize'];
+      $('html').css('height', '37.5vw');
+      fontSize = (window.innerWidth/windowSize2['width']) * windowSize2['fontSize'];
       $('.ibm-columns').css('width', '72.7%');
       $('.ibm-columns').css('left', '22.7%');
       $('#homeNavShowBtnDiv').hide();
@@ -318,7 +323,9 @@ var HomePage = React.createClass({
     var self = this;
     // var newTeam = this.state.loadDetailTeam;
     var newTeam = JSON.parse(JSON.stringify(this.state.loadDetailTeam));
-    newTeam.team.members = members;
+    newTeam.team.members = _.sortBy(members, function(m) {
+      return m.name.replace(/\s/g,'').toLowerCase();
+    });
     newTeam.members = membersContent;
     var userMember = _.find(members, function(member) {
       return member.userId == user.ldap.uid;

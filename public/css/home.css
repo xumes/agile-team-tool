@@ -5,8 +5,8 @@ html {
   height: 56.49vw;
   min-width: 1280px;
   min-height: 720px;
-  max-width: 1920px;
-  max-height: 1080px;
+  /*max-width: 1920px;
+  max-height: 1080px;*/
   background-color: white;
 }
 
@@ -1295,7 +1295,8 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .team-member-table-content-block1 > div > div > h1,
-.team-member-table-content-block2 > div > div > h1 {
+.team-member-table-content-block2 > div > div > h1,
+.team-member-table-email {
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   color: #325C80;
@@ -2117,7 +2118,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   left: 5%;
   float: left;
   top: 4%;
-  width: 90%;
+  width: 66.5%;
   height: 2%;
   font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.5em;
@@ -2134,6 +2135,16 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.0em;
   color: #000000;
+}
+
+.home-iter-add{
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.6em;
+  text-align: right;
+  line-height: 1.9em;
+  color: #4178BE;
+  top: 4.1%;
+  position: relative;
 }
 
 .home-iter-name-block {
@@ -2211,11 +2222,11 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .home-iter-add-btn-block, .home-iter-add-btn-block-disabled {
   position: relative;
   display: inline-block;
-  float: right;
-  width: 9%;
-  height: 36%;
+  float: left;
+  width: 6.5%;
+  height: 1.06%;
   min-height: 1.5em;
-  margin-top: 1.8%;
+  top: 4.5%;
 }
 
 .home-iter-add-btn-block > i > svg, .home-iter-add-btn-block-disabled > i > svg {
@@ -2233,13 +2244,13 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   display: inline-block;
   float: right;
-  width: 8.6%;
-  height: 23%;
+  width: 10%;
+  height: 26%;
   min-height: 1.5em;
-  margin-top: -5.5%;
+  margin-top: -6.3%;
 }
 
-.home-iter-edit-btn-block > i > svg, .home-iter-edit-btn-block-disabled > i > svg {
+.home-iter-edit-btn-block > i > svg, .home-iter-edit-btn-block-disabled > i > svg { 
   width: auto;
   height: 100%;
   pointer-events: none;
@@ -2937,6 +2948,18 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   background-color: #EFF9FF;
 }
 
+.home-assessment-summary > .select-content > .select-box > h1 {
+  position: absolute;
+  z-index: 1;
+  margin-top: 0.7em;
+  margin-left: 0.5em;
+  font-size: 1.4em;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  color: #777677;
+  padding: 0;
+  background-color: #EFF9FF;
+}
+
 .home-assessment-summary > .select-content > .select-box > .select2 {
   height: 100%;
 }
@@ -3316,8 +3339,9 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .team-member-add-block {
   position: fixed;
   outline: none;
-  left: 39%;
-  top: 21%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   width: 22vw;
   height: 30.93vw;
   min-width: 281.6px;
@@ -6185,10 +6209,22 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: relative;
   float: left;
   padding: 0;
+  width: 100%;
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
   line-height: 2.0em;
   color: #5A5A5A;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .last-updated-by > h1:last-child {
+  position: relative;
+  float: left;
+  padding: 0;
+  width: 100%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1em;
+  line-height: 2.4em;
+  color: #999;
 }
 
 .assessment-popover-block > .lc-header {
@@ -7018,9 +7054,102 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .no-trends-message-block p {
   color: #777677;
-  font-size: 2.5em;
+  font-size: 2.2em;
   position: relative;
   text-align: center;
   top: 50%;
   transform: translate(0%, -50%);
+}
+
+.confirm-popover {
+  position: fixed;
+  z-index: 999;
+  width: 50em;
+  height: 20em;
+  top: 30%;
+  left: 35%;
+  background-color: #FFFFFF;
+  box-shadow: 0 0 1em 0 rgba(0,0,0,0.16);
+}
+
+.confirm-popover > .header-title {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 15%;
+  margin: 0;
+  background-color: #4178BE;
+}
+
+.confirm-popover > .header-title > h1{
+  position: relative;
+  float: left;
+  left: 2%;
+  top: 25%;
+  color: #FFFFFF;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.5em;
+  padding: 0;
+}
+
+.confirm-popover > .header-title > div {
+  position: relative;
+  float: right;
+  width: 5%;
+  height: 50%;
+  top: 30%;
+  cursor: pointer;
+}
+
+.confirm-popover > .header-title > div svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: auto;
+}
+
+.confirm-popover > .header-title > div svg g {
+  fill: #FFFFFF;
+  opacity: 1;
+}
+
+.confirm-popover > .content {
+  position: relative;
+  float: left;
+  left: 2%;
+  width: 96%;
+  height: 45%;
+  top: 10%;
+}
+
+.confirm-popover > .content > h1 {
+  position: relative;
+  float: left;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 1.4em;
+  text-align: left;
+  color: #323232;
+}
+
+.confirm-popover > .btns {
+  position: relative;
+  float: left;
+  left: 2%;
+  width: 96%;
+  height: 25%;
+  top: 15%;
+}
+
+.confirm-popover > .btns > button {
+  position: relative;
+  float: right;
+  min-width: 0;
+  top: 25%;
+  width: 20%;
+  height: 50%;
+  font-size: 1.2em;
+  line-height: 0em;
+  padding: 0;
 }
