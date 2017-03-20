@@ -240,6 +240,23 @@ describe('Iteration model [getNotCompletedIterations]', function() {
   });
 });
 
+describe('Iteration model [updateSprintAvailability]', function(){
+  before(function(done){
+    var promiseArray = [];
+    promiseArray.push(iterationModel.updateSprintAvailability());
+    Promise.all(promiseArray)
+    .then(function(result){
+      return iterationModel.getNotCompletedIterations();
+    })
+    .then(function(result){
+      expect(result).to.be.a('array');
+      done();      
+    })
+    .catch(function(){
+      done();
+    });
+});
+
 describe('Iteration model [searchTeamIteration]', function() {
   it('return successful for retriveing a iteration by query', function(done) {
     var queryrequest = {
