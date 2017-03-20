@@ -159,7 +159,7 @@ var HomeAddTeamTypeModal = React.createClass({
 
                   <div class='optbox-select' style={displayParents}>
                     <select name="parentSelectList" id="parentSelectList" style={{width: '100%'}}>
-                      <option value=''>Select parent team (optional)</option>
+                      <option value=''>Associate to a Parent Team (optional)</option>
                       {populateTeamNames}
                     </select>
                   </div>

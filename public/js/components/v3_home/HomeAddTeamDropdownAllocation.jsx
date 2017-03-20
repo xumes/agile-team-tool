@@ -1,14 +1,13 @@
 var React = require('react');
 var Select = require('react-select');
-
+var utils = require('../utils.jsx');
 var HomeAddTeamDropdownAllocation = React.createClass({
 
   allocHandler: function(data) {
     if (!data) {
       alert('Member allocation is required.');
     } else {
-      var alloc = parseInt(data.value) || 0;
-      if (alloc > 100 || alloc < 0) {
+      if (!utils.isValidNumRange(data.value)) {
         alert('Allocation should be between 0 to 100.');
       } else {
         this.props.allocHandler(this.refs, data);
@@ -19,7 +18,7 @@ var HomeAddTeamDropdownAllocation = React.createClass({
     var self = this;
     var memberUserId = self.props.memberUserId;
     var memberAlloc;
-    if (self.props.memberAlloc === 0) {
+    if (self.props.memberAlloc == 0) {
       memberAlloc = 0;
     } else {
       memberAlloc = self.props.memberAlloc;
