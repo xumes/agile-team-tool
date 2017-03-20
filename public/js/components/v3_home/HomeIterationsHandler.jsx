@@ -3,9 +3,8 @@ var _ = require('underscore');
 var moment = require('moment');
 var Utils = require('../utils.jsx');
 
-module.exports.squadIterationsHandler = function(teamId, teamIterations) {
+module.exports.squadIterationsHandler = function(teamId, teamIterations, setSelectedIteration) {
   var iterationURL = 'iteration?id=' + encodeURIComponent(teamId) + '&iter=';
-
   var graphCategoryWithChange = [];
   var graphCategory = [];
 
@@ -158,35 +157,35 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations) {
 
     vData.name = p6Iterations[i].name;
     vData.y = isNaN(parseInt(p6Iterations[i].storyPointsDelivered)) ? 0 : parseInt(p6Iterations[i].storyPointsDelivered);
-    vData.iterURL = iterationURL + p6Iterations[i]._id;
+    vData.iterId = p6Iterations[i]._id;
     vData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     vData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     velocitySeries.data.push(vData);
 
     cvData.name = p6Iterations[i].name;
     cvData.y = isNaN(parseInt(p6Iterations[i].committedStoryPoints)) ? 0 : parseInt(p6Iterations[i].committedStoryPoints);
-    cvData.iterURL = iterationURL + p6Iterations[i]._id;
+    cvData.iterId = p6Iterations[i]._id;
     cvData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     cvData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     commVelocitySeries.data.push(cvData);
 
     tData.name = p6Iterations[i].name;
     tData.y = isNaN(parseInt(p6Iterations[i].deliveredStories)) ? 0 : parseInt(p6Iterations[i].deliveredStories);
-    tData.iterURL = iterationURL + p6Iterations[i]._id;
+    tData.iterId = p6Iterations[i]._id;
     tData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     tData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     throughputSeries.data.push(tData);
 
     ctData.name = p6Iterations[i].name;
     ctData.y = isNaN(parseInt(p6Iterations[i].committedStories)) ? 0 : parseInt(p6Iterations[i].committedStories);
-    ctData.iterURL = iterationURL + p6Iterations[i]._id;
+    ctData.iterId = p6Iterations[i]._id;
     ctData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     ctData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     commThroughputSeries.data.push(ctData);
 
     tmData.name = p6Iterations[i].name;
     tmData.y = isNaN(parseInt(p6Iterations[i].memberCount)) ? 0 : parseInt(p6Iterations[i].memberCount);
-    tmData.iterURL = iterationURL + p6Iterations[i]._id;
+    tmData.iterId = p6Iterations[i]._id;
     tmData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     tmData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     teamMemSeries.data.push(tmData);
@@ -194,7 +193,7 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations) {
 
     fteData.name = p6Iterations[i].name;
     fteData.y = isNaN(parseInt(p6Iterations[i].memberFte)) ? 0 : parseFloat(p6Iterations[i].memberFte);
-    fteData.iterURL = iterationURL + p6Iterations[i]._id;
+    fteData.iterId = p6Iterations[i]._id;
     fteData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     fteData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     fteSeries.data.push(fteData);
@@ -204,49 +203,49 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations) {
 
     defectStartData.name = p6Iterations[i].name;
     defectStartData.y = isNaN(parseInt(p6Iterations[i].defectsStartBal)) ? 0 : parseInt(p6Iterations[i].defectsStartBal);
-    defectStartData.iterURL = iterationURL + p6Iterations[i]._id;
+    defectStartData.iterId = p6Iterations[i]._id;
     defectStartData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     defectStartData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     defectsStartSeries.data.push(defectStartData);
 
     defectData.name = p6Iterations[i].name;
     defectData.y = isNaN(parseInt(p6Iterations[i].defects)) ? 0 : parseInt(p6Iterations[i].defects);
-    defectData.iterURL = iterationURL + p6Iterations[i]._id;
+    defectData.iterId = p6Iterations[i]._id;
     defectData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     defectData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     defectsSeries.data.push(defectData);
 
     defectClosedData.name = p6Iterations[i].name;
     defectClosedData.y = isNaN(parseInt(p6Iterations[i].defectsClosed)) ? 0 : parseInt(p6Iterations[i].defectsClosed);
-    defectClosedData.iterURL = iterationURL + p6Iterations[i]._id;
+    defectClosedData.iterId = p6Iterations[i]._id;
     defectClosedData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     defectClosedData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     defectsClosedSeries.data.push(defectClosedData);
 
     defectEndData.name = p6Iterations[i].name;
     defectEndData.y = isNaN(parseInt(p6Iterations[i].defectsEndBal)) ? 0 : parseInt(p6Iterations[i].defectsEndBal);
-    defectEndData.iterURL = iterationURL + p6Iterations[i]._id;
+    defectEndData.iterId = p6Iterations[i]._id;
     defectEndData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     defectEndData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     defectsEndSeries.data.push(defectEndData);
 
     deployData.name = p6Iterations[i].name;
     deployData.y = isNaN(parseInt(p6Iterations[i].deployments)) ? 0 : parseInt(p6Iterations[i].deployments);
-    deployData.iterURL = iterationURL + p6Iterations[i]._id;
+    deployData.iterId = p6Iterations[i]._id;
     deployData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     deployData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     deploySeries.data.push(deployData);
 
     teamSatData.name = p6Iterations[i].name;
     teamSatData.y = isNaN(parseInt(p6Iterations[i].teamSatisfaction)) ? 0 : parseFloat(p6Iterations[i].teamSatisfaction);
-    teamSatData.iterURL = iterationURL + p6Iterations[i]._id;
+    teamSatData.iterId = p6Iterations[i]._id;
     teamSatData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     teamSatData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     teamSatSeries.data.push(teamSatData);
 
     clientSatData.name = p6Iterations[i].name;
     clientSatData.y = isNaN(parseInt(p6Iterations[i].clientSatisfaction)) ? 0 : parseFloat(p6Iterations[i].clientSatisfaction);
-    clientSatData.iterURL = iterationURL + p6Iterations[i]._id;
+    clientSatData.iterId = p6Iterations[i]._id;
     clientSatData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     clientSatData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     clientSatSeries.data.push(clientSatData);
@@ -259,28 +258,28 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations) {
 
     storiesFTEData.name = p6Iterations[i].name;
     storiesFTEData.y = storiesFTE;
-    storiesFTEData.iterURL = iterationURL + p6Iterations[i]._id;
+    storiesFTEData.iterId = p6Iterations[i]._id;
     storiesFTEData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     storiesFTEData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     storyFTESeries.data.push(storiesFTEData);
 
     storyPointFTEData.name = p6Iterations[i].name;
     storyPointFTEData.y = strPointsFTE;
-    storyPointFTEData.iterURL = iterationURL + p6Iterations[i]._id;
+    storyPointFTEData.iterId = p6Iterations[i]._id;
     storyPointFTEData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     storyPointFTEData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     storyPointFTESeries.data.push(storyPointFTEData);
 
     cycleTimeBacklogData.name = p6Iterations[i].name;
     cycleTimeBacklogData.y = isNaN(parseInt(p6Iterations[i].cycleTimeInBacklog)) ? 0 : parseFloat(p6Iterations[i].cycleTimeInBacklog);
-    cycleTimeBacklogData.iterURL = iterationURL + p6Iterations[i]._id;
+    cycleTimeBacklogData.iterId = p6Iterations[i]._id;
     cycleTimeBacklogData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     cycleTimeBacklogData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     cycleTimeBacklogSeries.data.push(cycleTimeBacklogData);
 
     cycleTimeWIPData.name = p6Iterations[i].name;
     cycleTimeWIPData.y = isNaN(parseInt(p6Iterations[i].cycleTimeWIP)) ? 0 : parseFloat(p6Iterations[i].cycleTimeWIP);
-    cycleTimeWIPData.iterURL = iterationURL + p6Iterations[i]._id;
+    cycleTimeWIPData.iterId = p6Iterations[i]._id;
     cycleTimeWIPData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
     cycleTimeWIPData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     cycleTimeWIPSeries.data.push(cycleTimeWIPData);
@@ -305,19 +304,19 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations) {
 
   destroyIterationCharts();
 
-  loadScoreChart('velocityChart', 'Velocity', 'line', graphCategoryWithChange, 'Story points',  velocitySeries, commVelocitySeries, 'Points', '', false);
-  loadScoreChart('throughputChart', 'Throughput', 'line', graphCategoryWithChange, 'Stories/tickets/cards', throughputSeries, commThroughputSeries, 'Points', '', false);
-  loadPizzaChart('pizzaChart', '2 Pizza Rule (Team Size)', 'line', graphCategory, 'Count', yMax, teamMemSeries, fteSeries, targetSeries, 'Points', false);
-  loadMultiDefectDeployChart('defectsChart', graphCategory, defectsStartSeries, defectsSeries, defectsClosedSeries, defectsEndSeries, deploySeries, false);
-  loadSatisfactionChart('statisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', teamSatSeries, clientSatSeries, 'Points', sMax, false);
-  loadChartMultiChart('unitCostChart', 'Unit Cost per Person Day', 'line', graphCategory, 'Count', '', storyFTESeries, storyPointFTESeries, 'Points', false);
-  loadChartMultiChart('wipBacklogChart', 'Cycle Time (in days)', 'line', graphCategory, 'Average days per story', '', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', false);
+  loadScoreChart('velocityChart', 'Velocity', 'line', graphCategoryWithChange, 'Story points',  velocitySeries, commVelocitySeries, 'Points', '', setSelectedIteration);
+  loadScoreChart('throughputChart', 'Throughput', 'line', graphCategoryWithChange, 'Stories/tickets/cards', throughputSeries, commThroughputSeries, 'Points', '', setSelectedIteration);
+  loadPizzaChart('pizzaChart', '2 Pizza Rule (Team Size)', 'line', graphCategory, 'Count', yMax, teamMemSeries, fteSeries, targetSeries, 'Points', setSelectedIteration);
+  loadMultiDefectDeployChart('defectsChart', graphCategory, defectsStartSeries, defectsSeries, defectsClosedSeries, defectsEndSeries, deploySeries, setSelectedIteration);
+  loadSatisfactionChart('statisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', teamSatSeries, clientSatSeries, 'Points', sMax, setSelectedIteration);
+  loadChartMultiChart('unitCostChart', 'Unit Cost per Person Day', 'line', graphCategory, 'Count', '', storyFTESeries, storyPointFTESeries, 'Points', setSelectedIteration);
+  loadChartMultiChart('wipBacklogChart', 'Cycle Time (in days)', 'line', graphCategory, 'Average days per story', '', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', setSelectedIteration);
 
   $('#squad_team_scard').show();
   redrawCharts('iterationSection');
 };
 
-function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, seriesObj2, unit, text, pointClickable) {
+function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, seriesObj2, unit, text, loadIteration) {
   new Highcharts.Chart({
     chart: {
       type: type,
@@ -421,8 +420,7 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
       point: {
         events: {
           click: function(e) {
-            if (pointClickable)
-              window.location = e.point.iterURL;
+              loadIteration(e.point.iterId);
           }
         }
       }
@@ -433,8 +431,7 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
       point: {
         events: {
           click: function(e) {
-            if (pointClickable)
-              window.location = e.point.iterURL;
+              loadIteration(e.point.iterId);
           }
         }
       }
@@ -442,7 +439,7 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
   });
 }
 
-function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj1, seriesObj2, seriesObj3, unit, pointClickable) {
+function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj1, seriesObj2, seriesObj3, unit, loadIteration) {
   var plotBandOptions = null;
 
   if (seriesObj1.data.length > 0 || seriesObj2.data.length > 0 || seriesObj3.data.length > 0) {
@@ -565,8 +562,7 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
       point: {
         events: {
           click: function(e) {
-            if (pointClickable)
-              window.location = e.point.iterURL;
+              loadIteration(e.point.iterId);
           }
         }
       }
@@ -578,8 +574,7 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
       point: {
         events: {
           click: function(e) {
-            if (pointClickable)
-              window.location = e.point.iterURL;
+              loadIteration(e.point.iterId);
           }
         }
       }
@@ -774,7 +769,7 @@ function loadPiePizzaChart(id, title, seriesObj, subtitle) {
   });
 }
 
-function loadChartMultiChart(id, title, type, categories, yAxisLabel, xAxisLabel, seriesObj1, seriesObj2, unit, pointClickable) {
+function loadChartMultiChart(id, title, type, categories, yAxisLabel, xAxisLabel, seriesObj1, seriesObj2, unit, loadIteration) {
   new Highcharts.Chart({
     chart: {
       type: type,
@@ -865,8 +860,7 @@ function loadChartMultiChart(id, title, type, categories, yAxisLabel, xAxisLabel
       point: {
         events: {
           click: function(e) {
-            if (pointClickable)
-              window.location = e.point.iterURL;
+              loadIteration(e.point.iterId);
           }
         }
       }
@@ -877,8 +871,7 @@ function loadChartMultiChart(id, title, type, categories, yAxisLabel, xAxisLabel
       point: {
         events: {
           click: function(e) {
-            if (pointClickable)
-              window.location = e.point.iterURL;
+              loadIteration(e.point.iterId);
           }
         }
       }
@@ -886,7 +879,7 @@ function loadChartMultiChart(id, title, type, categories, yAxisLabel, xAxisLabel
   });
 }
 
-function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2, columnSeries3, columnSeries4, lineSeries, pointClickable) {
+function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2, columnSeries3, columnSeries4, lineSeries, loadIteration) {
   new Highcharts.Chart({
     chart: {
       type: 'column',
@@ -1012,8 +1005,7 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
       point: {
         events: {
           click: function(e) {
-            if (pointClickable)
-              window.location = e.point.iterURL;
+              loadIteration(e.point.iterId);
           }
         }
       }
@@ -1027,8 +1019,7 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
       point: {
         events: {
           click: function(e) {
-            if (pointClickable)
-              window.location = e.point.iterURL;
+              loadIteration(e.point.iterId);
           }
         }
       }
@@ -1043,8 +1034,7 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
       point: {
         events: {
           click: function(e) {
-            if (pointClickable)
-              window.location = e.point.iterURL;
+              loadIteration(e.point.iterId);
           }
         }
       }
@@ -1058,8 +1048,7 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
       point: {
         events: {
           click: function(e) {
-            if (pointClickable)
-              window.location = e.point.iterURL;
+              loadIteration(e.point.iterId);
           }
         }
       }
@@ -1075,8 +1064,7 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
       point: {
         events: {
           click: function(e) {
-            if (pointClickable)
-              window.location = e.point.iterURL;
+              loadIteration(e.point.iterId);
           }
         }
       }
@@ -1453,7 +1441,7 @@ function loadMultiLineChartParent(id, title, categories, yAxisLabel, xAxisLabel,
   });
 }
 
-function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesObj1, seriesObj2, unit, yMax, pointClickable) {
+function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesObj1, seriesObj2, unit, yMax, loadIteration) {
   new Highcharts.Chart({
     chart: {
       type: type,
@@ -1548,8 +1536,7 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
       point: {
         events: {
           click: function(e) {
-            if (pointClickable)
-              window.location = e.point.iterURL;
+              loadIteration(e.point.iterId);
           }
         }
       }
@@ -1560,8 +1547,7 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
       point: {
         events: {
           click: function(e) {
-            if (pointClickable)
-              window.location = e.point.iterURL;
+              loadIteration(e.point.iterId);
           }
         }
       }

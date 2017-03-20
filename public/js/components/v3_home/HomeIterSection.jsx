@@ -19,7 +19,7 @@ var HomeIterSection = React.createClass({
         if (!chartStatus.squad.btns[key])
           $('#'+key+'Chart_block').hide();
       });
-      iterationHandler.squadIterationsHandler(teamId, iterationData);
+      iterationHandler.squadIterationsHandler(teamId, iterationData, this.props.setSelectedIteration);
       this.props.iterationGraphArea('squad_team_scard');
     } else {
       $('#contentSpinner').hide();
