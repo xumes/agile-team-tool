@@ -94,7 +94,7 @@ var AssessmentACPlanPopover = React.createClass({
               <InlineSVG src={require('../../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
             </div>
           </div>
-          <AssessmentSummaryTable loadDetailTeam={self.props.loadDetailTeam} componentResult={componentResultLC} assessType={assessType} componentId={'1'}/>
+          <AssessmentSummaryTable loadDetailTeam={self.props.loadDetailTeam} componentResult={componentResultLC} assessType={assessType} componentId={'1'} assessTemplate={self.props.assessTemplate}/>
           <div class='lc-header' style={{'display':componentShow2}}>
             <div class='header-title'>
               <h1>{'Delivery and DevOps'}</h1>
@@ -106,7 +106,7 @@ var AssessmentACPlanPopover = React.createClass({
               <InlineSVG src={require('../../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
             </div>
           </div>
-          <AssessmentSummaryTable loadDetailTeam={self.props.loadDetailTeam} componentResult={componentResultDD} assessType={assessType} componentId={'2'}/>
+          <AssessmentSummaryTable loadDetailTeam={self.props.loadDetailTeam} componentResult={componentResultDD} assessType={assessType} componentId={'2'} assessTemplate={self.props.assessTemplate}/>
           <div class='lc-header'>
             <div class='header-title'>
               <h1>{'Action Plan'}</h1>
@@ -118,7 +118,7 @@ var AssessmentACPlanPopover = React.createClass({
               <InlineSVG src={require('../../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
             </div>
           </div>
-          <AssessmentACPlanTable updateAssessmentSummary={self.props.updateAssessmentSummary} loadDetailTeam={self.props.loadDetailTeam} tempAssess={self.props.tempAssess} componentId={'3'}/>
+          <AssessmentACPlanTable updateAssessmentSummary={self.props.updateAssessmentSummary} loadDetailTeam={self.props.loadDetailTeam} tempAssess={self.props.tempAssess} componentId={'3'} assessTemplate={self.props.assessTemplate}/>
         </div>
       )
     } else {

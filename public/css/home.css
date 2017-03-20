@@ -10,6 +10,36 @@ html {
   background-color: white;
 }
 
+@media screen and (min-width: 1280px) and (max-width: 1899px) {
+  .assessment-popover-block {
+    top: 6% !important;
+    left: 10% !important;
+    width: 81vw !important;
+    height: 45.2vw !important;
+  }
+  .assessment-setup-block {
+    top: 20% !important;
+    left: 37% !important;
+    width: 26vw !important;
+    height: 30vw !important;
+  }
+}
+
+@media screen and (min-width: 1900px) {
+  .assessment-popover-block {
+    top: 6% !important;
+    left: 15% !important;
+    width: 70vw !important;
+    height: 39.1vw !important;
+  }
+  .assessment-setup-block {
+    top: 20% !important;
+    left: 38.8% !important;
+    width: 22.4vw !important;
+    height: 25.9vw !important;
+  }
+}
+
 body {
   height: 100%;
 }
@@ -391,9 +421,10 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .home-nav-tab-search-field {
   position: relative;
-  top: 85%;
-  height: 30%;
-  width: 100%;
+  top: 0.5%;
+  height: 2%;
+  width: 90%;
+  left: 5%;
 }
 
 .home-nav-search-field {
@@ -871,7 +902,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   margin: 10% 3.4% 0 3.4%;*/
   width: 89%;
   left: 5.5%;
-  /*top: 3.1%;*/
+  top: 0.7% !important;
   height: 85%;
 }
 
@@ -1639,8 +1670,20 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .team-member-table-footer > button {
   position: relative;
+  float: left;
   top: 20%;
   left: 8%;
+}
+
+.team-member-table-footer > h1 {
+  position: relative;
+  float: left;
+  top: 35%;
+  left: 10%;
+  padding: 0;
+  font-size: 1.6em;
+  color: #5A5A5A;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
 }
 
 .team-member-table-add-btn {
@@ -5543,31 +5586,31 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .__react_component_tooltip {
-  width: 234px !important;
+  width: 23.4em !important;
   background-color: #FFFFFF !important;
-  box-shadow: 0 0 10px 0 rgba(0,0,0,0.16) !important;
-  font-family: "HelvNeue Roman for IBM" !important;
-  font-size: 12px !important;
-  line-height: 14px !important;
+  box-shadow: 0 0 1em 0 rgba(0,0,0,0.16) !important;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif" !important;
+  font-size: 1.2em !important;
+  line-height: 1.4em !important;
   color: #5A5A5A !important;
-  padding:10px 15px !important;
+  padding:1em 1.5em !important;
   opacity:1 !important;
 }
 
 .__react_component_tooltip.type-light.place-top {
-  border-top: 4px solid #4178BE !important;
+  border-top: 0.4em solid #4178BE !important;
 }
 
 .__react_component_tooltip.type-light.place-right {
-  border-right: 4px solid #4178BE !important;
+  border-right: 0.4em solid #4178BE !important;
 }
 
 .__react_component_tooltip.type-light.place-bottom {
-  border-bottom: 4px solid #4178BE !important;
+  border-bottom: 0.4em solid #4178BE !important;
 }
 
 .__react_component_tooltip.type-light.place-left {
-  border-left: 4px solid #4178BE !important;
+  border-left: 0.4em solid #4178BE !important;
 }
 
 .home-modal-block {
@@ -6022,9 +6065,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   outline: none;
   top: 6%;
   left: 10%;
-  width: 80vw;
+  width: 81vw;
   height: 45.2vw;
-  min-width: 1024px;
+  min-width: 1036px;
   min-height: 576px;
   background-color: #FFFFFF;
   box-shadow: 0 0.2em 0.4em 0 rgba(0,0,0,0.18);
@@ -7021,6 +7064,18 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   color: #323232;
 }
 
+.assessment-popover-block > .assessment-acplan-table > .table-block > div h2{
+  position: relative;
+  width: 100%;
+  float: left;
+  padding-bottom: 0.5em;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  text-align: left;
+  color: #4178BE;
+  cursor: pointer;
+}
+
 .assessment-popover-block > .assessment-acplan-table > .action-plan-add {
   position: relative;
   float: left;
@@ -7162,4 +7217,35 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-size: 1.2em;
   line-height: 0em;
   padding: 0;
+}
+
+.no-team-block {
+  position: relative;
+  float: left;
+  width: 100%;
+  top: 5%;
+}
+
+.no-team-block > h1 {
+  position: relative;
+  float: left;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 2.3em;
+  width: 100%;
+  text-align: left;
+  color: #777677;
+}
+
+.no-team-block > h2 {
+  position: relative;
+  float: left;
+  padding: 0;
+  margin-top: 5%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 1.4em;
+  width: 100%;
+  text-align: left;
+  color: #777677;
 }

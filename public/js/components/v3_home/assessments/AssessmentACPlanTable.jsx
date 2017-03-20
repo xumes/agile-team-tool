@@ -5,8 +5,10 @@ var moment = require('moment');
 var ReactDOM = require('react-dom');
 var InlineSVG = require('svg-inline-react');
 var DatePicker = require('react-datepicker');
+var Tooltip = require('react-tooltip');
 var AssessmentDatePicker = require('./AssessmentDatePicker.jsx');
 var ConfirmPopover = require('../ConfirmPopover.jsx');
+var AssessmentDatePicker = require('./AssessmentDatePicker.jsx');
 var actionPlanSelection = [];
 
 var AssessmentACPlanTable = React.createClass({
@@ -20,10 +22,30 @@ var AssessmentACPlanTable = React.createClass({
   componentWillMount: function() {
     var self = this;
     actionPlanSelection = [];
+    var templateCount = [
+      self.countPractics(self.props.assessTemplate.components[0]),
+      self.countPractics(self.props.assessTemplate.components[1]),
+      self.countPractics(self.props.assessTemplate.components[2])
+    ];
     _.each(self.props.tempAssess.componentResults, function(componentResult){
       _.each(componentResult.assessedComponents, function(assessedComponent){
         var newAssessedComponent = _.clone(assessedComponent);
         newAssessedComponent['componentName'] = componentResult['componentName'];
+        if (newAssessedComponent['componentName'].indexOf('Project') >= 0) {
+          var template = self.props.assessTemplate.components[0];
+          var tpCount = templateCount[0];
+        } else if (newAssessedComponent['componentName'].indexOf('Operations') >= 0) {
+          template = self.props.assessTemplate.components[1];
+          tpCount = templateCount[1];
+        } else {
+          template = self.props.assessTemplate.components[2];
+          tpCount = templateCount[2];
+        }
+        var principleIndex = parseInt(newAssessedComponent['principleId']) - 1;
+        var practiceSumIndex = parseInt(newAssessedComponent['practiceId']) - 1;
+        var practiceIndex = tpCount[practiceSumIndex];
+        newAssessedComponent['description'] = template.principles[principleIndex].practices[practiceIndex].description;
+        newAssessedComponent['levels'] = template.principles[principleIndex].practices[practiceIndex].levels;
         actionPlanSelection.push(newAssessedComponent);
       });
     })
@@ -48,6 +70,15 @@ var AssessmentACPlanTable = React.createClass({
       })
     }
     // $('.practice-name-selection').change(self.actionPlanChangeHandler);
+  },
+  countPractics: function(template) {
+    var practiceCount= [];
+    _.each(template.principles, function(principle){
+      _.each(principle.practices, function(practice, idx){
+        practiceCount.push(idx);
+      });
+    });
+    return practiceCount;
   },
   actionPlanChangeHandler2: function(e) {
     var self = this;
@@ -116,7 +147,9 @@ var AssessmentACPlanTable = React.createClass({
     self.props.tempAssess.actionPlans = tempActionPlans;
     api.updateAssessment(self.props.tempAssess)
       .then(function(result){
-        self.setState({actionPlans: self.props.tempAssess.actionPlans});
+        self.setState({actionPlans: self.props.tempAssess.actionPlans}, function(result){
+          $('#saveConfirm').show();
+        });
         $('#lastUpdatedByEmail').html(result.updatedBy);
         $('#lastUpdatedByTime').html(moment.utc(result.updateDate).format('DD MMM YYYY'));
         _.find(self.props.loadDetailTeam.assessments, function(assess, idx){
@@ -125,7 +158,6 @@ var AssessmentACPlanTable = React.createClass({
           }
         });
         self.props.updateAssessmentSummary();
-        alert('Your action plan has been saved.');
       })
       .catch(function(err){
         console.log(err);
@@ -133,6 +165,12 @@ var AssessmentACPlanTable = React.createClass({
   },
   textareaChangeHandler: function(e) {
     var self = this;
+    var tempActionPlans = self.getActionPlansFromTable();
+    self.setState({actionPlans: tempActionPlans});
+  },
+  dateChangeDateHandler: function(id, e) {
+    var self = this;
+    $('#' + id).html(moment.utc(e).format('DD MMM YYYY'));
     var tempActionPlans = self.getActionPlansFromTable();
     self.setState({actionPlans: tempActionPlans});
   },
@@ -155,7 +193,7 @@ var AssessmentACPlanTable = React.createClass({
         isUserCreated: $('#actionPlanIsUserCreated_' + idx).html() == 'true',
         actionPlanId: idx
       }
-      if ($('#actionPlanReviewDate_' + idx).html() != 'Override') {
+      if ($('#actionPlanReviewDate_' + idx).html() != '') {
         tempActionPlan['reviewDate'] = new Date(moment.utc($('#actionPlanReviewDate_' + idx).html(), 'DD MMM YYYY'));
       }
       tableActionPlans.push(tempActionPlan);
@@ -187,7 +225,8 @@ var AssessmentACPlanTable = React.createClass({
         actionPlans = self.props.tempAssess.actionPlans
       }
       var tableBlocks = actionPlans.map(function(ap, idx){
-        var reviewDate = ap.reviewDate==null?'Override':moment.utc(ap.reviewDate).format('DD MMM YYYY');
+        var reviewDate = ap.reviewDate==null?'':moment.utc(ap.reviewDate).format('DD MMM YYYY');
+        var selectDate = ap.reviewDate==null?moment.utc(new Date()):moment.utc(ap.reviewDate);
         var reviewDeteStyle = {
           color: ap.reviewDate==null?'#4178BE':'#323232',
           cursor: haveAccess?'pointer':'not-allowed'
@@ -200,6 +239,18 @@ var AssessmentACPlanTable = React.createClass({
           cursor: haveAccess?'auto':'not-allowed',
           color: haveAccess?'#323232':'#777677'
         }
+        var description = '';
+        var currentScoreDescritpion = '';
+        var targetScoreDescription = '';
+        // console.log(ap);
+        _.find(actionPlanSelection, function(acp) {
+          if (acp.practiceId == ap.practiceId && acp.componentName == ap.componentName) {
+              description = acp.description;
+              currentScoreDescritpion = acp.levels[ap.currentScore - 1].criteria.join(' <br /> ');
+              targetScoreDescription = acp.levels[ap.targetScore - 1].criteria.join(' <br /> ');
+              return;
+          }
+        });
         return (
           <div key={'actionPlan_' + idx} id={'actionPlan_' + idx} class='table-block'>
             <div style={{'display':'none'}} class='other-info'>
@@ -209,7 +260,7 @@ var AssessmentACPlanTable = React.createClass({
               <span id={'actionPlanIsUserCreated_' + idx}>{ap.isUserCreated?'true':'false'}</span>
             </div>
             <div style={{'width':'10%'}} class='practice-name' id={'actionPlanPracticeName_' + idx}>
-              <h1 style={{'display':ap.isUserCreated?'none':'block'}}>{ap.practiceName}</h1>
+              <h1 data-tip={description} style={{'display':ap.isUserCreated?'none':'block', 'cursor':'pointer'}}>{ap.practiceName}</h1>
               <select style={{'display':ap.isUserCreated?'block':'none'}} class='practice-name-selection' id={'practiceNameSelection_' + idx} value={ap.practiceName} onChange={self.actionPlanChangeHandler}>
                 {practiceNameSelection}
               </select>
@@ -218,10 +269,10 @@ var AssessmentACPlanTable = React.createClass({
               <h1 id={'actionPlanPrincipleName_' + idx}>{ap.principleName}</h1>
             </div>
             <div style={{'width':'6%'}}>
-              <h1 id={'actionPlanCurrentScore_' + idx}>{ap.currentScore}</h1>
+              <h1 data-tip={currentScoreDescritpion} id={'actionPlanCurrentScore_' + idx} style={{'cursor':'pointer'}}>{ap.currentScore}</h1>
             </div>
             <div style={{'width':'6%'}}>
-              <h1 id={'actionPlanTargetScore_' + idx} >{ap.targetScore}</h1>
+              <h1 data-tip={targetScoreDescription} id={'actionPlanTargetScore_' + idx} style={{'cursor':'pointer'}}>{ap.targetScore}</h1>
             </div>
             <div style={{'width':'15%'}}>
               <textarea id={'actionPlanImproveDescription_' + idx} readOnly={!haveAccess||!ap.isUserCreated} style={readOnlyStyle} maxLength='350' value={ap.improveDescription} onChange={self.textareaChangeHandler}/>
@@ -233,7 +284,8 @@ var AssessmentACPlanTable = React.createClass({
               <textarea id={'actionPlanKeyMetric_' + idx} readOnly={!haveAccess} style={readOnlyStyle2} maxLength='350' value={ap.keyMetric} onChange={self.textareaChangeHandler}/>
             </div>
             <div style={{'width':'8%','marginLeft':'1%'}}>
-              <h1 id={'actionPlanReviewDate_' + idx} style={reviewDeteStyle}>{reviewDate}</h1>
+              <h1 style={{'paddingBottom':'0'}} id={'actionPlanReviewDate_' + idx}>{reviewDate}</h1>
+              <DatePicker onChange={self.dateChangeDateHandler.bind(null,'actionPlanReviewDate_' + idx)} selected={selectDate} customInput={<AssessmentDatePicker haveAccess={!haveAccess}/>}/>
             </div>
             <div style={{'width':'8%'}}>
               <div>
@@ -255,6 +307,7 @@ var AssessmentACPlanTable = React.createClass({
     }
     return (
       <div class='assessment-acplan-table' id={'assessmentContainer' + self.props.componentId}>
+        <Tooltip html={true} type='light'/>
         <div class='header-title'>
           <div style={{'width':'10%'}}>
             <h1>{'Related Practice'}</h1>
@@ -292,7 +345,8 @@ var AssessmentACPlanTable = React.createClass({
           <button type='button' id='cancelACPlanBtn' class='ibm-btn-sec ibm-btn-blue-50' disabled={!haveAccess} onClick={self.showCancelActionPlanConfirm}>{'Cancel Changes'}</button>
           <button type='button' id='saveACPlanBtn' class='ibm-btn-pri ibm-btn-blue-50' style={{'marginRight':'1%'}}disabled={!haveAccess} onClick={self.saveActionPlan}>{'Save Action Plan'}</button>
         </div>
-        <ConfirmPopover confirmClick={self.cancelActionPlan} confirmId='cancelActionPlanConfirm' content='You have requested to cancel all changes you made on this action plan.  All changes will be removed. Please confirm that you want to proceed with this cancel changes.'/>
+        <ConfirmPopover confirmClick={self.cancelActionPlan} confirmId='cancelActionPlanConfirm' content={'You have requested to cancel all changes you made on this action plan.  All changes will be removed. Please confirm that you want to proceed with this cancel changes.'} cancelBtn='block' confirmBtn='block' okBtn='none'/>
+        <ConfirmPopover confirmId='saveConfirm' content={'Your action plan has been saved.'} cancelBtn='none' confirmBtn='none' okBtn='block'/>
       </div>
     );
   }

@@ -334,7 +334,7 @@ var HomeAseSummary = React.createClass({
                 </div>
               </div>
               <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showACPlanModel} onHide={self.hideAssessmentACPlanPopover}>
-                <AssessmentACPlanPopover hideAssessmentACPlanPopover={self.hideAssessmentACPlanPopover} updateAssessmentSummary={self.updateAssessmentSummary} loadDetailTeam={self.props.loadDetailTeam} tempAssess={tempAssess}/>
+                <AssessmentACPlanPopover hideAssessmentACPlanPopover={self.hideAssessmentACPlanPopover} updateAssessmentSummary={self.updateAssessmentSummary} loadDetailTeam={self.props.loadDetailTeam} tempAssess={tempAssess} assessTemplate={self.state.assessTemplate} />
               </Modal>
               <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAssessmentPopover}>
                 <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary} assessType={self.state.type} assessSoftware={self.state.software}/>
