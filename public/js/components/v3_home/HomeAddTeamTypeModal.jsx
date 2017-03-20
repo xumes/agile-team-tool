@@ -1,5 +1,6 @@
 var React = require('react');
 var api = require('../api.jsx');
+var utils = require('../utils.jsx');
 var _ = require('underscore');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
@@ -42,6 +43,8 @@ var HomeAddTeamTypeModal = React.createClass({
           self.props.setSelectableParents(selectableParents);
         });
     }
+    utils.updateSVGTitle('teamTypeBlock', '0b8fefea-f01c-483b-8565-74b11114a6d9', 'Squad team');
+    utils.updateSVGTitle('teamTypeBlock', '4bd0203d-b335-41e2-b105-9983dce2ea07', 'Parent team');
   },
 
   disableNextButton: function() {

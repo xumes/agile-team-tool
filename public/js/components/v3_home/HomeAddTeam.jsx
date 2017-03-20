@@ -41,6 +41,10 @@ var HomeAddTeam = React.createClass({
     this.getTeamNames();
   },
 
+  componentWillUpdate: function(nextProps, nextState) {
+    utils.updateSVGTitle('agileHomeNav', '9807fe82-64a5-4087-bde1-649a83675305', 'Create New Team');
+  },
+
   getTeamNames: function() {
     var self = this;
     return api.fetchTeamNames()
