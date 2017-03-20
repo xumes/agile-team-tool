@@ -5,7 +5,6 @@ var HomeHighlightBox = require('./HomeHighlightBox.jsx');
 var HomeTeamHeader = require('./HomeTeamHeader.jsx');
 var HomeIterSection = require('./HomeIterSection.jsx');
 var HomeAseSection = require('./HomeAseSection.jsx');
-var HomeTeamInfo = require('./HomeTeamInfo.jsx');
 var HomeMemberTable = require('./HomeMemberTable.jsx');
 var InlineSVG = require('svg-inline-react');
 var HomeChartFilter = require('./HomeChartFilter.jsx');
@@ -46,6 +45,7 @@ var HomeContent = React.createClass({
 
   componentDidMount: function() {
     window.addEventListener('resize', this.props.handleChartResize);
+    $('.home-trends-block-filter-img svg').attr('title','Filter Trends').children('title').remove();
   },
 
   componentWillUnmount: function() {

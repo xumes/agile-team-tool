@@ -37,6 +37,8 @@ var HomeTeamHeader = React.createClass({
   },
 
   componentDidUpdate: function() {
+    $('#homeTeamHeaderBookmarkBtn .home-team-header-btn-img svg').attr('title', 'Team Bookmarks');
+    $('#homeTeamHeaderMemberBtn .home-team-header-btn-img2 svg').attr('title', 'Team Members');
     if (this.props.loadDetailTeam.team != undefined && this.props.loadDetailTeam.team.type == 'squad') {
       $('#homeHeaderAseBtn').show();
     } else {

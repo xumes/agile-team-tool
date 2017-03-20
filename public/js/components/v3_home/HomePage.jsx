@@ -44,6 +44,7 @@ var HomePage = React.createClass({
   componentDidMount: function() {
     this.handleResize();
     window.addEventListener('resize', this.handleResize);
+    $('.home-nav-show-btn svg, .home-nav-show-btn2 svg').attr('title', 'Expand Team Tree Navigation')
   },
 
   componentWillUnmount: function() {

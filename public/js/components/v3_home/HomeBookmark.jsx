@@ -41,6 +41,8 @@ var HomeBookmark = React.createClass({
   },
   componentDidUpdate: function(prevProps, prevState) {
     this.linkHoverHandler();
+    $('.edit-bookmark svg').attr('title','Edit Bookmark').children('title').remove();
+    $('.remove-bookmark svg').attr('title','Remove Bookmark').children('title').remove();
   },
   linkHoverHandler: function() {
     var self = this;
@@ -350,10 +352,10 @@ var HomeBookmark = React.createClass({
             <div key={link.id} id={link.id}>
               <div style={{'display':'none'}}></div>
               <a href={link.linkUrl} title={link.linkUrl} target='_blank'>{linkLabel}</a>
-              <span style={{'display':'none'}}>
+              <span style={{'display':'none'}} class='edit-bookmark'>
                   <InlineSVG onClick={self.showTeamLinkModal.bind(null, link.id)} src={require('../../../img/Att-icons/att-icons_edit.svg')}></InlineSVG>
               </span>
-              <span style={{'display':'none','marginLeft':'3%'}}>
+              <span style={{'display':'none','marginLeft':'3%'}} class='remove-bookmark'>
                   <InlineSVG onClick={self.deleteTeamLink.bind(null, link.id)} src={require('../../../img/Att-icons/att-icons_delete.svg')}></InlineSVG>
               </span>
             </div>

@@ -12,6 +12,7 @@ var HomeTeamDescription = React.createClass({
   componentDidMount: function() {
     var self = this;
     self.updatePosition();
+    $('#homeHeaderDesBtn svg').attr('title','Team Information').children('title').remove();
     $('#homeHeaderDesBtn, .home-team-header-teamname-div, .home-team-header-description-div').unbind('mouseenter mouseleave');
 
     $('#homeHeaderDesBtn').bind('mouseenter', function() {
@@ -32,6 +33,7 @@ var HomeTeamDescription = React.createClass({
   },
   componentDidUpdate: function() {
     this.updatePosition();
+    console.log('componentDidUpdate',$('.modal-wrapper .modal-header svg'));
   },
   updatePosition: function() {
     var self = this;

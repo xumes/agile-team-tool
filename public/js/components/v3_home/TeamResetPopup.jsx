@@ -17,7 +17,7 @@ var TeamResetPopup = React.createClass({
               <div class='home-iter-modal-block-header' style={{'backgroundColor':'#d0021b'}}>
                 <h>Team Availability Reset</h>
                 <div class='home-iter-modal-block-close-btn' onClick={this.props.onClose}>
-                  <InlineSVG title='Close' src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
+                  <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
                 </div>
               </div>
               <div class='home-iter-modal-block-content' style={{'height':'auto'}}>
