@@ -5,6 +5,7 @@ var _ = require('underscore');
 var moment = require('moment');
 var InlineSVG = require('svg-inline-react');
 var newestTemplateVersion = 'ag_ref_atma_components_v07';
+var ConfirmPopover = require('../ConfirmPopover.jsx');
 
 var AssessmentButtons = React.createClass({
   componentDidMount: function() {
@@ -129,49 +130,75 @@ var AssessmentButtons = React.createClass({
         self.props.loadDetailTeam.assessments[0] = result;
       }
       self.props.updateAssessmentSummary();
-      self.props.hideAssessmentPopover();
-      alert('Maturity assessment has been saved as draft.');
+      // self.props.hideAssessmentPopover();
+      // alert('Maturity assessment has been saved as draft.');
+      $('#saveDraftConfirm').show();
       return;
     }).catch(function(err){
       alert(err);
       return;
     });
   },
-
+  showConfirm: function (id) {
+    $('#' + id).show();
+  },
   cancelAssessment: function() {
-    if(confirm('You have requested to cancel all changes you made on this draft assessment.  All changes will be removed. Please confirm that you want to proceed with this cancel changes.')){
-      this.props.updateAssessmentPopover();
-      alert('Current changes have been cancelled.');
-    }
+    $('#cancelAssessDraftConfirm').hide();
+    this.props.updateAssessmentPopover();
+    // if(confirm('You have requested to cancel all changes you made on this draft assessment.  All changes will be removed. Please confirm that you want to proceed with this cancel changes.')){
+    //   this.props.updateAssessmentPopover();
+    //   alert('Current changes have been cancelled.');
+    // }
   },
 
   deleteAssessment: function() {
     var self = this;
+    $('#deleteAssessDraftConfirm').hide();
     if (_.isEmpty(self.props.assessDraft) || self.props.assessDraft.assessmentStatus != 'Draft') {
       alert('This assessment draft hasn\'t been saved, there is no necessary to delete it.');
     } else {
-      if(confirm('You have requested to delete this draft assessment.  All saved progress will be deleted. Please confirm that you want to proceed with this delete.')){
-        api.deleteAssessment(self.props.assessDraft._id)
-          .then(function(result){
-            _.find(self.props.loadDetailTeam.assessments, function(assess, idx){
-              if (assess._id.toString() == self.props.assessDraft._id.toString()) {
-                return self.props.loadDetailTeam.assessments.splice(idx, 1);
-              }
-            })
-            self.props.updateAssessmentSummary();
-            self.props.hideAssessmentPopover();
-            alert('Your assessment draft has been deleted.');
-            return;
+      api.deleteAssessment(self.props.assessDraft._id)
+        .then(function(result){
+          _.find(self.props.loadDetailTeam.assessments, function(assess, idx){
+            if (assess._id.toString() == self.props.assessDraft._id.toString()) {
+              return self.props.loadDetailTeam.assessments.splice(idx, 1);
+            }
           })
-          .catch(function(err){
-            console.log(err);
-            return;
-          });
-      }
-      else{
-        return false;
-      }
+          self.props.updateAssessmentSummary();
+          self.props.hideAssessmentPopover();
+          // alert('Your assessment draft has been deleted.');
+          return;
+        })
+        .catch(function(err){
+          console.log(err);
+          return;
+        });
     }
+    // if (_.isEmpty(self.props.assessDraft) || self.props.assessDraft.assessmentStatus != 'Draft') {
+    //   alert('This assessment draft hasn\'t been saved, there is no necessary to delete it.');
+    // } else {
+    //   if(confirm('You have requested to delete this draft assessment.  All saved progress will be deleted. Please confirm that you want to proceed with this delete.')){
+    //     api.deleteAssessment(self.props.assessDraft._id)
+    //       .then(function(result){
+    //         _.find(self.props.loadDetailTeam.assessments, function(assess, idx){
+    //           if (assess._id.toString() == self.props.assessDraft._id.toString()) {
+    //             return self.props.loadDetailTeam.assessments.splice(idx, 1);
+    //           }
+    //         })
+    //         self.props.updateAssessmentSummary();
+    //         self.props.hideAssessmentPopover();
+    //         alert('Your assessment draft has been deleted.');
+    //         return;
+    //       })
+    //       .catch(function(err){
+    //         console.log(err);
+    //         return;
+    //       });
+    //   }
+    //   else{
+    //     return false;
+    //   }
+    // }
   },
 
   getUpdateDoc: function(index, countArray, checkedCurrs, checkedTargs, updateDoc, checkedIsEmpty) {
@@ -288,9 +315,9 @@ var AssessmentButtons = React.createClass({
             <button type='button' id='submitAssessBtn' class='ibm-btn-pri ibm-btn-blue-50' name='submitAssessBtn' disabled={this.props.haveAccess} onClick={this.submitAssess}>{'Submit'}</button>
           </div>
           <div class='btn-col'>
-            <button type='button' id='cancelAssessBtn' class='ibm-btn-sec ibm-btn-blue-50' name='cancelAssessBtn' disabled={this.props.haveAccess} onClick={this.cancelAssessment}>{'Cancel'}</button>
+            <button type='button' id='cancelAssessBtn' class='ibm-btn-sec ibm-btn-blue-50' name='cancelAssessBtn' disabled={this.props.haveAccess} onClick={this.showConfirm.bind(null, 'cancelAssessDraftConfirm')}>{'Cancel'}</button>
           </div>
-          <div class='delete-col' onClick={this.deleteAssessment}>
+          <div class='delete-col' onClick={this.showConfirm.bind(null, 'deleteAssessDraftConfirm')}>
             <div class='delete-img'>
               <InlineSVG src={require('../../../../img/Att-icons/att-icons_delete.svg')}></InlineSVG>
             </div>
@@ -298,6 +325,9 @@ var AssessmentButtons = React.createClass({
           </div>
           <span id='progressIndicatorTop'></span>
         </div>
+        <ConfirmPopover confirmClick={this.cancelAssessment} confirmId='cancelAssessDraftConfirm' content={'You have requested to cancel all changes you made on this draft assessment.  All changes will be removed. Please confirm that you want to proceed with this cancel changes.'} cancelBtn='block' confirmBtn='block' okBtn='none'/>
+        <ConfirmPopover confirmClick={this.deleteAssessment} confirmId='deleteAssessDraftConfirm' content={'You have requested to delete this draft assessment.  All saved progress will be deleted. Please confirm that you want to proceed with this delete.'} cancelBtn='block' confirmBtn='block' okBtn='none'/>
+        <ConfirmPopover confirmId='saveDraftConfirm' content={'Maturity assessment has been saved as draft.'} cancelBtn='none' confirmBtn='none' okBtn='block'/>
       </div>
     )
   }

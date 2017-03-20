@@ -4,6 +4,7 @@ var _ = require('underscore');
 var moment = require('moment');
 var ReactDOM = require('react-dom');
 var InlineSVG = require('svg-inline-react');
+var Tooltip = require('react-tooltip');
 var assessmentsData = {
   'Project': {
   },
@@ -193,26 +194,58 @@ var AssessmentSummaryTable = React.createClass({
       series: series
     });
   },
+  countPractics: function(template) {
+    var practiceCount= [];
+    _.each(template.principles, function(principle){
+      _.each(principle.practices, function(practice, idx){
+        practiceCount.push(idx);
+      });
+    });
+    return practiceCount;
+  },
   render: function() {
     var self = this;
     if (!_.isEmpty(self.props.componentResult)) {
+      var templateCount = [
+        self.countPractics(self.props.assessTemplate.components[0]),
+        self.countPractics(self.props.assessTemplate.components[1]),
+        self.countPractics(self.props.assessTemplate.components[2])
+      ];
+      if (self.props.componentResult.componentName.indexOf('Project') >= 0) {
+        var tpTemplate = self.props.assessTemplate.components[0];
+        var tpCount = templateCount[0];
+      } else if (self.props.componentResult.componentName.indexOf('Operations') >= 0) {
+        var tpTemplate = self.props.assessTemplate.components[1];
+        tpCount = templateCount[1];
+      } else {
+        var tpTemplate = self.props.assessTemplate.components[2];
+        tpCount = templateCount[2];
+      }
       var components = self.props.componentResult.assessedComponents.map(function(component, idx){
+        var principleIndex = parseInt(component['principleId']) - 1;
+        var practiceSumIndex = parseInt(component['practiceId']) - 1;
+        var practiceIndex = tpCount[practiceSumIndex];
+        var description = tpTemplate.principles[principleIndex].practices[practiceIndex].description;
+        var levels = tpTemplate.principles[principleIndex].practices[practiceIndex].levels;
+        var currentScoreDescritpion = levels[component.currentScore - 1].criteria.join(' <br /> ');
+        var targetScoreDescription = levels[component.targetScore - 1].criteria.join(' <br /> ');
         return (
           <div key={'component-block_' + idx} class='component-block'>
             <div style={{'width':'70%'}}>
-              <h1 onClick={self.displayGraphHandler.bind(null, component.practiceName)}>{component.practiceName}</h1>
+              <h1 data-tip={description} onClick={self.displayGraphHandler.bind(null, component.practiceName)}>{component.practiceName}</h1>
             </div>
             <div style={{'width':'15%'}}>
-              <h2>{component.currentScore}</h2>
+              <h2 data-tip={currentScoreDescritpion}>{component.currentScore}</h2>
             </div>
             <div style={{'width':'15%'}}>
-              <h2>{component.targetScore}</h2>
+              <h2 data-tip={targetScoreDescription}>{component.targetScore}</h2>
             </div>
           </div>
         )
       });
       return (
         <div class='agile-summary' id={'assessmentContainer' + self.props.componentId}>
+          <Tooltip html={true} type='light'/>
           <div class='agile-summary-table'>
             <div class='header-title'>
               <h1 style={{'width':'70%'}}>{'Practice'}</h1>

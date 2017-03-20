@@ -10,6 +10,36 @@ html {
   background-color: white;
 }
 
+@media screen and (min-width: 1280px) and (max-width: 1899px) {
+  .assessment-popover-block {
+    top: 6% !important;
+    left: 10% !important;
+    width: 81vw !important;
+    height: 45.2vw !important;
+  }
+  .assessment-setup-block {
+    top: 20% !important;
+    left: 37% !important;
+    width: 26vw !important;
+    height: 30vw !important;
+  }
+}
+
+@media screen and (min-width: 1900px) {
+  .assessment-popover-block {
+    top: 6% !important;
+    left: 15% !important;
+    width: 70vw !important;
+    height: 39.1vw !important;
+  }
+  .assessment-setup-block {
+    top: 20% !important;
+    left: 38.8% !important;
+    width: 22.4vw !important;
+    height: 25.9vw !important;
+  }
+}
+
 body {
   height: 100%;
 }
@@ -5543,31 +5573,31 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .__react_component_tooltip {
-  width: 234px !important;
+  width: 23.4em !important;
   background-color: #FFFFFF !important;
-  box-shadow: 0 0 10px 0 rgba(0,0,0,0.16) !important;
-  font-family: "HelvNeue Roman for IBM" !important;
-  font-size: 12px !important;
-  line-height: 14px !important;
+  box-shadow: 0 0 1em 0 rgba(0,0,0,0.16) !important;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif" !important;
+  font-size: 1.2em !important;
+  line-height: 1.4em !important;
   color: #5A5A5A !important;
-  padding:10px 15px !important;
+  padding:1em 1.5em !important;
   opacity:1 !important;
 }
 
 .__react_component_tooltip.type-light.place-top {
-  border-top: 4px solid #4178BE !important;
+  border-top: 0.4em solid #4178BE !important;
 }
 
 .__react_component_tooltip.type-light.place-right {
-  border-right: 4px solid #4178BE !important;
+  border-right: 0.4em solid #4178BE !important;
 }
 
 .__react_component_tooltip.type-light.place-bottom {
-  border-bottom: 4px solid #4178BE !important;
+  border-bottom: 0.4em solid #4178BE !important;
 }
 
 .__react_component_tooltip.type-light.place-left {
-  border-left: 4px solid #4178BE !important;
+  border-left: 0.4em solid #4178BE !important;
 }
 
 .home-modal-block {
@@ -6024,7 +6054,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 10%;
   width: 81vw;
   height: 45.2vw;
-  min-width: 1024px;
+  min-width: 1036px;
   min-height: 576px;
   background-color: #FFFFFF;
   box-shadow: 0 0.2em 0.4em 0 rgba(0,0,0,0.18);

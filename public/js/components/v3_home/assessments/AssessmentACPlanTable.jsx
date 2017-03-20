@@ -21,10 +21,30 @@ var AssessmentACPlanTable = React.createClass({
   componentWillMount: function() {
     var self = this;
     actionPlanSelection = [];
+    var templateCount = [
+      self.countPractics(self.props.assessTemplate.components[0]),
+      self.countPractics(self.props.assessTemplate.components[1]),
+      self.countPractics(self.props.assessTemplate.components[2])
+    ];
     _.each(self.props.tempAssess.componentResults, function(componentResult){
       _.each(componentResult.assessedComponents, function(assessedComponent){
         var newAssessedComponent = _.clone(assessedComponent);
         newAssessedComponent['componentName'] = componentResult['componentName'];
+        if (newAssessedComponent['componentName'].indexOf('Project') >= 0) {
+          var template = self.props.assessTemplate.components[0];
+          var tpCount = templateCount[0];
+        } else if (newAssessedComponent['componentName'].indexOf('Operations') >= 0) {
+          template = self.props.assessTemplate.components[1];
+          tpCount = templateCount[1];
+        } else {
+          template = self.props.assessTemplate.components[2];
+          tpCount = templateCount[2];
+        }
+        var principleIndex = parseInt(newAssessedComponent['principleId']) - 1;
+        var practiceSumIndex = parseInt(newAssessedComponent['practiceId']) - 1;
+        var practiceIndex = tpCount[practiceSumIndex];
+        newAssessedComponent['description'] = template.principles[principleIndex].practices[practiceIndex].description;
+        newAssessedComponent['levels'] = template.principles[principleIndex].practices[practiceIndex].levels;
         actionPlanSelection.push(newAssessedComponent);
       });
     })
@@ -49,6 +69,15 @@ var AssessmentACPlanTable = React.createClass({
       })
     }
     // $('.practice-name-selection').change(self.actionPlanChangeHandler);
+  },
+  countPractics: function(template) {
+    var practiceCount= [];
+    _.each(template.principles, function(principle){
+      _.each(principle.practices, function(practice, idx){
+        practiceCount.push(idx);
+      });
+    });
+    return practiceCount;
   },
   actionPlanChangeHandler2: function(e) {
     var self = this;
@@ -202,6 +231,18 @@ var AssessmentACPlanTable = React.createClass({
           cursor: haveAccess?'auto':'not-allowed',
           color: haveAccess?'#323232':'#777677'
         }
+        var description = '';
+        var currentScoreDescritpion = '';
+        var targetScoreDescription = '';
+        // console.log(ap);
+        _.find(actionPlanSelection, function(acp) {
+          if (acp.practiceId == ap.practiceId && acp.componentName == ap.componentName) {
+              description = acp.description;
+              currentScoreDescritpion = acp.levels[ap.currentScore - 1].criteria.join(' <br /> ');
+              targetScoreDescription = acp.levels[ap.targetScore - 1].criteria.join(' <br /> ');
+              return;
+          }
+        });
         return (
           <div key={'actionPlan_' + idx} id={'actionPlan_' + idx} class='table-block'>
             <div style={{'display':'none'}} class='other-info'>
@@ -211,7 +252,7 @@ var AssessmentACPlanTable = React.createClass({
               <span id={'actionPlanIsUserCreated_' + idx}>{ap.isUserCreated?'true':'false'}</span>
             </div>
             <div style={{'width':'10%'}} class='practice-name' id={'actionPlanPracticeName_' + idx}>
-              <h1 style={{'display':ap.isUserCreated?'none':'block'}}>{ap.practiceName}</h1>
+              <h1 data-tip={description} style={{'display':ap.isUserCreated?'none':'block', 'cursor':'pointer'}}>{ap.practiceName}</h1>
               <select style={{'display':ap.isUserCreated?'block':'none'}} class='practice-name-selection' id={'practiceNameSelection_' + idx} value={ap.practiceName} onChange={self.actionPlanChangeHandler}>
                 {practiceNameSelection}
               </select>
@@ -220,10 +261,10 @@ var AssessmentACPlanTable = React.createClass({
               <h1 id={'actionPlanPrincipleName_' + idx}>{ap.principleName}</h1>
             </div>
             <div style={{'width':'6%'}}>
-              <h1 data-tip='' id={'actionPlanCurrentScore_' + idx}>{ap.currentScore}</h1>
+              <h1 data-tip={currentScoreDescritpion} id={'actionPlanCurrentScore_' + idx} style={{'cursor':'pointer'}}>{ap.currentScore}</h1>
             </div>
             <div style={{'width':'6%'}}>
-              <h1 id={'actionPlanTargetScore_' + idx} >{ap.targetScore}</h1>
+              <h1 data-tip={targetScoreDescription} id={'actionPlanTargetScore_' + idx} style={{'cursor':'pointer'}}>{ap.targetScore}</h1>
             </div>
             <div style={{'width':'15%'}}>
               <textarea id={'actionPlanImproveDescription_' + idx} readOnly={!haveAccess||!ap.isUserCreated} style={readOnlyStyle} maxLength='350' value={ap.improveDescription} onChange={self.textareaChangeHandler}/>
@@ -257,7 +298,7 @@ var AssessmentACPlanTable = React.createClass({
     }
     return (
       <div class='assessment-acplan-table' id={'assessmentContainer' + self.props.componentId}>
-        <Tooltip html={true} type="light"/>
+        <Tooltip html={true} type='light'/>
         <div class='header-title'>
           <div style={{'width':'10%'}}>
             <h1>{'Related Practice'}</h1>

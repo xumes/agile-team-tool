@@ -14,7 +14,7 @@ var windowSize = {
 }
 var windowSize2 = {
   'height': 1080,
-  'width': 1920,
+  'width': 1900,
   'fontSize': 0.625
 }
 
