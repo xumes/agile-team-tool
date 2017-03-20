@@ -662,7 +662,6 @@ var IterationExport = {
 
       IterationExport.getNotCompletedIterations()
       .then(function(iterations) {
-        console.log('result length: '+iterations.length);
           //loop through here to calculate Sprint
         _.each(iterations, function(iteration) {
           iterationArray.push(iteration);
@@ -678,7 +677,6 @@ var IterationExport = {
         return Promise.all(promiseArray);
       })
         .then(function(teams) {
-          console.log('Team promise array length: '+teams.length);
           _.each(iterationArray, function(iteration){
             var maxWorkDays  = 0;
             if (iteration.startDate !=undefined && iteration.endDate!=undefined)
