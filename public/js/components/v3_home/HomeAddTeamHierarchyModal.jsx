@@ -1,8 +1,9 @@
 var React = require('react');
-var api = require('../api.jsx');
 var _ = require('underscore');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
+var api = require('../api.jsx');
+var utils = require('../utils.jsx');
 var HomeAddTeamFooterButtons = require('./HomeAddTeamFooterButtons.jsx');
 
 var HomeAddTeamHierarchyModal = React.createClass({
@@ -30,6 +31,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
     if (!self.props.activeWindow && nextProps.activeWindow) {
       this.selectListInit();
     }
+    utils.updateSVGTitle('pc-hier-SetupBlock', '8e53a6b9-4aca-4973-8bfc-f04aaec49be5', 'Remove team');
   },
 
   selectListInit: function(){

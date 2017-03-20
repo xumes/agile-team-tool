@@ -5025,6 +5025,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .new-team-creation-addteam-member .col1 #txtTeamMemberName {
   font-size: 1.4em;
+  width: 95%;
 }
 
 .new-team-creation-addteam-member .ibm-row-form .frmlabel {
@@ -5057,6 +5058,11 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .new-team-creation-addteam-member .note2 strong, .new-team-creation-addteam-member .note2 p {
   font-size: 1.4em;
+}
+
+.new-team-creation-addteam-member .note2 .note1-desc{
+  font-size: 1.1em;
+  color: #666;
 }
 
 .new-team-creation-addteam-member .new-team-creation-add-block-pad {

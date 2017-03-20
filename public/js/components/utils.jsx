@@ -406,3 +406,17 @@ module.exports.validateTeamMembersObj = function(teamObj) {
   });
   return errorFound;
 }
+
+/**
+ * Update the SVG title attribute
+ * @param wrapperId Container/DIV element
+ * @param svgId
+ * @param title
+ */
+module.exports.updateSVGTitle = function(wrapperId, svgId, title) {
+  window.setTimeout(function(){
+    var str = '#'+ wrapperId + ' svg#'+svgId;
+    $(str).attr('title', title);
+    $(str).attr('alt', title);
+  }, 2);
+}
