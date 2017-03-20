@@ -7051,6 +7051,18 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   color: #323232;
 }
 
+.assessment-popover-block > .assessment-acplan-table > .table-block > div h2{
+  position: relative;
+  width: 100%;
+  float: left;
+  padding-bottom: 0.5em;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  text-align: left;
+  color: #4178BE;
+  cursor: pointer;
+}
+
 .assessment-popover-block > .assessment-acplan-table > .action-plan-add {
   position: relative;
   float: left;

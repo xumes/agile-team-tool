@@ -8,6 +8,7 @@ var DatePicker = require('react-datepicker');
 var Tooltip = require('react-tooltip');
 var AssessmentDatePicker = require('./AssessmentDatePicker.jsx');
 var ConfirmPopover = require('../ConfirmPopover.jsx');
+var AssessmentDatePicker = require('./AssessmentDatePicker.jsx');
 var actionPlanSelection = [];
 
 var AssessmentACPlanTable = React.createClass({
@@ -167,6 +168,12 @@ var AssessmentACPlanTable = React.createClass({
     var tempActionPlans = self.getActionPlansFromTable();
     self.setState({actionPlans: tempActionPlans});
   },
+  dateChangeDateHandler: function(id, e) {
+    var self = this;
+    $('#' + id).html(moment.utc(e).format('DD MMM YYYY'));
+    var tempActionPlans = self.getActionPlansFromTable();
+    self.setState({actionPlans: tempActionPlans});
+  },
   getActionPlansFromTable: function() {
     var self = this;
     var tableActionPlans = [];
@@ -186,7 +193,7 @@ var AssessmentACPlanTable = React.createClass({
         isUserCreated: $('#actionPlanIsUserCreated_' + idx).html() == 'true',
         actionPlanId: idx
       }
-      if ($('#actionPlanReviewDate_' + idx).html() != 'Override') {
+      if ($('#actionPlanReviewDate_' + idx).html() != '') {
         tempActionPlan['reviewDate'] = new Date(moment.utc($('#actionPlanReviewDate_' + idx).html(), 'DD MMM YYYY'));
       }
       tableActionPlans.push(tempActionPlan);
@@ -218,7 +225,8 @@ var AssessmentACPlanTable = React.createClass({
         actionPlans = self.props.tempAssess.actionPlans
       }
       var tableBlocks = actionPlans.map(function(ap, idx){
-        var reviewDate = ap.reviewDate==null?'Override':moment.utc(ap.reviewDate).format('DD MMM YYYY');
+        var reviewDate = ap.reviewDate==null?'':moment.utc(ap.reviewDate).format('DD MMM YYYY');
+        var selectDate = ap.reviewDate==null?moment.utc(new Date()):moment.utc(ap.reviewDate);
         var reviewDeteStyle = {
           color: ap.reviewDate==null?'#4178BE':'#323232',
           cursor: haveAccess?'pointer':'not-allowed'
@@ -276,7 +284,8 @@ var AssessmentACPlanTable = React.createClass({
               <textarea id={'actionPlanKeyMetric_' + idx} readOnly={!haveAccess} style={readOnlyStyle2} maxLength='350' value={ap.keyMetric} onChange={self.textareaChangeHandler}/>
             </div>
             <div style={{'width':'8%','marginLeft':'1%'}}>
-              <h1 id={'actionPlanReviewDate_' + idx} style={reviewDeteStyle}>{reviewDate}</h1>
+              <h1 style={{'paddingBottom':'0'}} id={'actionPlanReviewDate_' + idx}>{reviewDate}</h1>
+              <DatePicker onChange={self.dateChangeDateHandler.bind(null,'actionPlanReviewDate_' + idx)} selected={selectDate} customInput={<AssessmentDatePicker haveAccess={!haveAccess}/>}/>
             </div>
             <div style={{'width':'8%'}}>
               <div>
