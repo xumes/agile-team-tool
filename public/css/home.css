@@ -4903,9 +4903,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 45%;
   padding: 0.8em;
   position: absolute;
-  text-align: center;
+  text-align: left;
   vertical-align: middle;
-  width: 16.3em;
+  width: 12em;
   top: 9.5rem;
 }
 

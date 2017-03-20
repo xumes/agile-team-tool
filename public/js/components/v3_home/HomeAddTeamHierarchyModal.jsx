@@ -203,7 +203,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
 
           <div class='new-team-creation-add-block-content'>
             <div class='new-team-creation-add-block-content-mid'>
-              <div class='top-note-parent-child-hierarchy'>Please choose the parent team, if any, "above" your team as well as the childrean beneath.</div>
+              <div class='top-note-parent-child-hierarchy'>Choose the parent team, if any, "above" your team as well as any possible children "under" your team.</div>
 
               <div class='home-modal-block-content'>
                 <div class='team-hier-block'>
