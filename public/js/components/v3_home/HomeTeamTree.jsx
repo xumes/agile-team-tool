@@ -588,7 +588,14 @@ var HomeTeamTree = React.createClass({
             </li>
           );
         })
-        if (_.isEmpty(this.props.newTeams.data.standalone)) {
+        if (myteams.length == 0) {
+          return (
+            <div id='noTeamBlock' class='no-team-block'>
+              <h1>{'You are not a member of any team.'}</h1>
+              <h2>{'To be added to a team please contact the Team Lead or the Iteration Manager.'}</h2>
+            </div>
+          )
+        } else if (_.isEmpty(this.props.newTeams.data.standalone)) {
           return (
             <div id='newTeamTree' style={teamTreeStyle}>
               <ul class='ibm-twisty  ibm-widget-processed' id='newTeamTreeMain'>
