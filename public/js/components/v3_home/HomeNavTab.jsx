@@ -6,7 +6,7 @@ var HomeAddTeam = require('./HomeAddTeam.jsx');
 
 var HomeNavTab = React.createClass({
   componentDidMount: function() {
-    $('.home-nav-tab-buttons-item:first-child svg').attr('title', 'Collapse Team Tree Navigation');
+    $('.home-nav-tab-buttons-item:first-child svg').attr('title', 'Collapse Team Hierarchy Navigation');
     $('.home-nav-tab-buttons-item:last-child svg').attr('title', 'Search');
   },
 

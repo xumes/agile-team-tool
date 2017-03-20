@@ -33,7 +33,6 @@ var HomeTeamDescription = React.createClass({
   },
   componentDidUpdate: function() {
     this.updatePosition();
-    console.log('componentDidUpdate',$('.modal-wrapper .modal-header svg'));
   },
   updatePosition: function() {
     var self = this;
