@@ -68,7 +68,6 @@ var HomeNavTab = React.createClass({
 
           </div>
         </div>
-        <HomeSearchField />
       </nav>
     )
   }

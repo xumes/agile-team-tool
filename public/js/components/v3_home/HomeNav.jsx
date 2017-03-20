@@ -4,6 +4,7 @@ var HomeNavTab = require('./HomeNavTab.jsx');
 var HomeSpinner = require('./HomeSpinner.jsx');
 var HomeSearchTree = require('./HomeSearchTree.jsx');
 var HomeTeamTree = require('./HomeTeamTree.jsx');
+var HomeSearchField = require('./HomeSearchField.jsx');
 
 var HomeNav = React.createClass({
   getInitialState: function() {
@@ -65,6 +66,7 @@ var HomeNav = React.createClass({
       <div id='agileHomeNav' style={{'height': '100%'}}>
         <HomeNavTab searchStart={this.searchStartHandler} tabClicked={this.props.tabClickedHandler} loadDetailTeam={this.props.loadDetailTeam} roles={this.props.roles} />
         {/*<HomeSearchField style={{'marginTop': '20px'}}/>*/}
+        <HomeSearchField />
         <HomeSpinner id={'navSpinner'}/>
         <div class='home-team-nav nano' data-widget='scrollable' data-height='600'>
           <div class='nano-content'>

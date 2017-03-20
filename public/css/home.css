@@ -421,9 +421,10 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .home-nav-tab-search-field {
   position: relative;
-  top: 85%;
-  height: 30%;
-  width: 100%;
+  top: 0.5%;
+  height: 2%;
+  width: 90%;
+  left: 5%;
 }
 
 .home-nav-search-field {
@@ -901,7 +902,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   margin: 10% 3.4% 0 3.4%;*/
   width: 89%;
   left: 5.5%;
-  /*top: 3.1%;*/
+  top: 0.7% !important;
   height: 85%;
 }
 
