@@ -5,6 +5,7 @@ var moment = require('moment');
 var ReactDOM = require('react-dom');
 var InlineSVG = require('svg-inline-react');
 var DatePicker = require('react-datepicker');
+var Tooltip = require('react-tooltip');
 var AssessmentDatePicker = require('./AssessmentDatePicker.jsx');
 var ConfirmPopover = require('../ConfirmPopover.jsx');
 var actionPlanSelection = [];
@@ -219,7 +220,7 @@ var AssessmentACPlanTable = React.createClass({
               <h1 id={'actionPlanPrincipleName_' + idx}>{ap.principleName}</h1>
             </div>
             <div style={{'width':'6%'}}>
-              <h1 id={'actionPlanCurrentScore_' + idx}>{ap.currentScore}</h1>
+              <h1 data-tip='' id={'actionPlanCurrentScore_' + idx}>{ap.currentScore}</h1>
             </div>
             <div style={{'width':'6%'}}>
               <h1 id={'actionPlanTargetScore_' + idx} >{ap.targetScore}</h1>
@@ -256,6 +257,7 @@ var AssessmentACPlanTable = React.createClass({
     }
     return (
       <div class='assessment-acplan-table' id={'assessmentContainer' + self.props.componentId}>
+        <Tooltip html={true} type="light"/>
         <div class='header-title'>
           <div style={{'width':'10%'}}>
             <h1>{'Related Practice'}</h1>
