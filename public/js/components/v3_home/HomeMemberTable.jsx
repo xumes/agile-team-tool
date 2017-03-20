@@ -919,6 +919,7 @@ var HomeMemberTable = React.createClass({
             <div class='team-member-table-footer-block'>
               <div id='teamMemberTableFooter' class='team-member-table-footer'>
                 <button type='button' class='ibm-btn-sec ibm-btn-blue-50' disabled={addTeamBtnStyle} onClick={self.showAddTeamTable}>Add Team Member</button>
+                <h1 style={{'display':addTeamBtnStyle?'block':'none'}}>{'To be added to this team please contact the Team Lead or the Iteration Manager.'}</h1>
               </div>
             </div>
           </div>

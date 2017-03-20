@@ -1670,8 +1670,20 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .team-member-table-footer > button {
   position: relative;
+  float: left;
   top: 20%;
   left: 8%;
+}
+
+.team-member-table-footer > h1 {
+  position: relative;
+  float: left;
+  top: 35%;
+  left: 10%;
+  padding: 0;
+  font-size: 1.6em;
+  color: #5A5A5A;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
 }
 
 .team-member-table-add-btn {
