@@ -360,7 +360,7 @@ module.exports.highlightErrorField = function(type, divIdx) {
       }
     });
   }
-}
+};
 
 /**
  * Check if the parameter(str) is empty. Note: Here the zero(0) is considered as Empty.
@@ -368,7 +368,7 @@ module.exports.highlightErrorField = function(type, divIdx) {
  */
 module.exports.isBlank = function(str){
   return (!str || /^\s*$/.test(str));
-}
+};
 
 /**
  * Check if the inputted data is within the range [0 - 100]
@@ -383,7 +383,7 @@ module.exports.isValidNumRange = function(num,from,to){
   } else {
     return true;
   }
-}
+};
 
 /**
  * Validate the Team members object check the required fields
@@ -405,7 +405,7 @@ module.exports.validateTeamMembersObj = function(teamObj) {
     }
   });
   return errorFound;
-}
+};
 
 /**
  * Update the SVG title attribute
@@ -419,4 +419,4 @@ module.exports.updateSVGTitle = function(wrapperId, svgId, title) {
     $(str).attr('title', title);
     $(str).attr('alt', title);
   }, 2);
-}
+};
