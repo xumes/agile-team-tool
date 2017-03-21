@@ -21,8 +21,13 @@ var HomeTeamSetup = React.createClass({
       children: []
     }
   },
+  componentDidMount: function() {
+    $('#homeHeaderSetupBtn svg').attr('title','Team Setup').children('title').remove();
+  },
   componentDidUpdate: function(prevProps, prevState) {
     var self = this;
+    $('.team-setup-squad-icon svg, team-setup-squad-icon-change svg, .team-setup-icon svg, .team-setup-icon-child svg').attr('title','Team Hierarchy').children('title').remove();
+    $('#homeHeaderSetupBtn svg').attr('title','Team Setup').children('title').remove();
     if (self.state.showParentSetup) {
       $('#squadParentSelectList').val(self.state.parentId).change();
 
@@ -174,19 +179,21 @@ var HomeTeamSetup = React.createClass({
   },
   changeTypeHandler: function() {
     var self = this;
-    if (self.state.showParentSetup && allowTeamTypeChange) {
-      self.setState({
-        showParentSetup: false,
-        showTreeSetup: true,
-        revertAsSquad: false,
-        children: _.clone(currentChildren)
-      })
-    } else if (self.state.showTreeSetup && allowTeamTypeChange) {
-      self.setState({
-        showParentSetup: true,
-        showTreeSetup: false,
-        revertAsSquad: true
-      })
+    if (self.props.loadDetailTeam.access) {
+      if (self.state.showParentSetup && allowTeamTypeChange) {
+        self.setState({
+          showParentSetup: false,
+          showTreeSetup: true,
+          revertAsSquad: false,
+          children: _.clone(currentChildren)
+        })
+      } else if (self.state.showTreeSetup && allowTeamTypeChange) {
+        self.setState({
+          showParentSetup: true,
+          showTreeSetup: false,
+          revertAsSquad: true
+        })
+      }
     }
   },
   show: function() {
@@ -335,6 +342,7 @@ var HomeTeamSetup = React.createClass({
   },
 
   render: function() {
+    console.log('render');
     var self = this;
     var backdropStyle = {
       top: 0, bottom: 0, left: 0, right: 0,
@@ -409,7 +417,7 @@ var HomeTeamSetup = React.createClass({
     }
     return (
       <div style={{'height': '100%', 'display':'inline'}} id='teamSetupBlock'>
-        <div class='home-team-header-teamname-btn' onClick={self.showTeamSetup}>
+        <div class='home-team-header-teamname-btn'  id='homeHeaderSetupBtn' onClick={self.showTeamSetup}>
           <InlineSVG class='home-team-header-teamname-btn-img' src={require('../../../img/Att-icons/att-icons_team-settings-open.svg')}></InlineSVG>
         </div>
 
@@ -418,7 +426,7 @@ var HomeTeamSetup = React.createClass({
             <div class='home-modal-block-header'>
               <h>Team Setup</h>
               <div class='home-modal-block-close-btn' onClick={self.hideTeamSetup}>
-                <InlineSVG title='Close' src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
               </div>
             </div>
 
@@ -481,7 +489,7 @@ var HomeTeamSetup = React.createClass({
             <div class='home-modal-block-header'>
               <h>Team Setup</h>
               <div class='home-modal-block-close-btn' onClick={self.hideTeamSetup}>
-                <InlineSVG title='Close' src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
               </div>
             </div>
             <div class='home-modal-block-content'>
@@ -554,7 +562,7 @@ var HomeTeamSetup = React.createClass({
             <div class='home-modal-block-header' style={{'backgroundColor':'#d0021b'}}>
               <h>Warning!</h>
               <div class='home-modal-block-close-btn' onClick={self.hideConfirmDialog}>
-                <InlineSVG title='Close' src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
               </div>
             </div>
             <div class='home-modal-block-content' style={{'height':'auto'}}>
