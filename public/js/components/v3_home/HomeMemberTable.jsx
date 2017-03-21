@@ -13,6 +13,9 @@ var HomeMemberTable = React.createClass({
   },
   componentDidMount: function() {
     this.initialAll();
+    $('.save-btn svg').attr('title','Save').children('title').remove();
+    $('.cancel-btn svg').attr('title','Cancel').children('title').remove();
+    $('.delete-btn svg').attr('title','Remove Member').children('title').remove();
     $('.team-member-table-content-role > div > div > select').change(this.changeRoleHandler);
     // $('.team-member-table-content-allocation > div > select').change(this.changeMemberHandler);
     $('.team-member-table-content-awk > div > div > select').change(this.changeAwkHandler);
@@ -251,8 +254,7 @@ var HomeMemberTable = React.createClass({
     var r = confirm('Do you want to delete this member: ' + mrd.email + '?');
     if (r) {
       newMembers = _.reject(self.props.loadDetailTeam.team.members, function(member, index){
-        //return index==idx;
-        return false;
+        return index==idx;
       });
 
       _.each(self.props.loadDetailTeam.members, function(member){
@@ -759,7 +761,7 @@ var HomeMemberTable = React.createClass({
             var awkId = 'awk_'+idx;
             if (self.props.loadDetailTeam.access) {
               var deletBtn = (
-                <span onClick={self.delTeamMemberHandler.bind(null, idx)}>
+                <span class='delete-btn' onClick={self.delTeamMemberHandler.bind(null, idx)}>
                   <InlineSVG src={require('../../../img/Att-icons/att-icons_delete.svg')}></InlineSVG>
                 </span>
               );

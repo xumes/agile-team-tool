@@ -14,6 +14,7 @@ var HomeSearchField = React.createClass({
 
   componentDidMount: function() {
     var self = this;
+    $('.home-nav-search-field-cancel svg').attr('title','Cancel').children('title').remove();
     $('#nameSearchField').on('input',function() {
       var inputText = $('#nameSearchField').val();
       if (inputText.length > 0) {

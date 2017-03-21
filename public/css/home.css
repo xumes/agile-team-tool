@@ -6034,11 +6034,16 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .team-setup-squad-revert .team-setup-revert-icon {
+  cursor: pointer;
   display: inline-block;
   height: 15%;
   padding-right: 0.5em;
   position: relative;
   width: 5%;
+}
+
+.team-setup-revert-icon.disabled {
+  cursor: default;
 }
 
 .team-setup-revert-icon.disabled svg path {
