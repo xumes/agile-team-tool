@@ -103,7 +103,7 @@ var HomeIterContent = React.createClass({
       });
     }
     var self = this;
-    
+
     $('select[id="homeIterSelection"]').change(self.iterationSelectChange);
 
     _.each($('.home-iter-content-point'), function(blk){
@@ -114,6 +114,8 @@ var HomeIterContent = React.createClass({
       }
     });
     if (self.props.loadDetailTeam.access) {
+      $('.home-iter-content-btn:first-child svg').attr('title','Save').children('title').remove();
+      $('.home-iter-content-btn:last-child svg').attr('title','Cancel').children('title').remove();
       $('.home-iter-content-point').addClass('home-iter-content-point-hover');
       $('.home-iter-content-point').keypress(function(e){
         var key = e.which;
@@ -133,7 +135,7 @@ var HomeIterContent = React.createClass({
     } else {
       $('.home-iter-content-point').removeClass('home-iter-content-point-hover');
       $('.home-iter-content-point').css('cursor','default');
-      $('.home-iter-content-point').prop('onclick',null).off('click');
+      $('.home-iter-content-point').prop('onclick',null).off('click','');
       $('.home-iter-content-point').keypress(function(e){
 
       });
@@ -203,7 +205,7 @@ var HomeIterContent = React.createClass({
     if (this.state.selectedField[id] != this.state.backupIter[id]){
       this.setState({selectedField:'', selectedIter: this.state.backupIter}, function(){
         this.props.updateTeamIteration(this.state.backupIter);
-      }); 
+      });
     }
     else{
       this.setState({selectedField:''});
@@ -219,7 +221,7 @@ var HomeIterContent = React.createClass({
     if (!this.state.editIteration)
       this.setState({editIteration: true});
   },
-  
+
   closeIteration: function(){
     this.setState({createIteration: false, editIteration: false});
   },
@@ -366,7 +368,7 @@ var HomeIterContent = React.createClass({
       value = value.toFixed(2);
       e.target.value = value;
       this.saveIter(e.target.id);
-    }    
+    }
   },
 
   checkRecentTeamAvailbility: function(){
@@ -524,7 +526,7 @@ var HomeIterContent = React.createClass({
                 </div>
                 <span className="home-iter-add">New Iteration</span>
               </div>
-            </div>            
+            </div>
             <div class='home-iter-name-block' style={{'height':'4.3%'}}>
               <div class='home-iter-name' id='iteration-name'>{iterData.name}</div>
               <div class='home-iter-team-date' id='iteration-date'>{iterData.startDate} - {iterData.endDate}</div>
