@@ -38,12 +38,18 @@ var HomeAddTeam = React.createClass({
   },
 
   componentDidMount: function() {
-    $('.home-nav-tab-buttons-item:nth-child(2) svg').attr('title', 'Create New Team');
     this.getTeamNames();
+    this.showTooltip();
   },
 
   componentWillUpdate: function(nextProps, nextState) {
-    utils.updateSVGTitle('agileHomeNav', '9807fe82-64a5-4087-bde1-649a83675305', 'Create New Team');
+    this.showTooltip();
+  },
+
+  showTooltip: function() {
+    setTimeout(function(){
+      $('.home-nav-tab-buttons .createnewteam-btn svg').attr('title', 'Create New Team');
+    },2);
   },
 
   getTeamNames: function() {
@@ -217,7 +223,7 @@ var HomeAddTeam = React.createClass({
 
     return (
       <div class='home-nav-tab-buttons-item' style={{'display': 'block'}}>
-        <div style={{'width':'100%','height':'100%'}}>
+        <div style={{'width':'100%','height':'100%'}} class='createnewteam-btn'>
           <InlineSVG onClick={this.createNewTeam} src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
         </div>
 

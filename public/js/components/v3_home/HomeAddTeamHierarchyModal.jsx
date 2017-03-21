@@ -25,13 +25,24 @@ var HomeAddTeamHierarchyModal = React.createClass({
     }
   },
 
+  componentDidMount: function() {
+    this.showTooltip();
+  },
+
   componentWillUpdate: function(nextProps, nextState) {
     var self = this;
     // make sure to get the latest team names on focus of this screen
     if (!self.props.activeWindow && nextProps.activeWindow) {
       this.selectListInit();
     }
-    utils.updateSVGTitle('pc-hier-SetupBlock', '8e53a6b9-4aca-4973-8bfc-f04aaec49be5', 'Remove team');
+    self.showTooltip();
+  },
+
+  showTooltip: function() {
+    setTimeout(function(){
+      $('.removechildteam-icon svg').attr('title', 'Remove team');
+      $('.team-setup-icon-hier svg').attr('title', ' ').children('title').remove();
+    },2);
   },
 
   selectListInit: function(){
@@ -167,7 +178,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
     var childTeams = null;
     childTeams = self.props.selectedChildTeams.map(function(item, index) {
       return (
-         <p key={index} id={item._id}>
+         <p key={index} id={item._id} class='removechildteam-icon'>
           <h title={item.name}>{item.name}</h>
           <InlineSVG class='list-child-remove-icon' src={require('../../../img/Att-icons/att-icons_delete.svg')} onClick={self.childDeleteHandler.bind(null, item._id)}></InlineSVG> </p>
         )

@@ -5,11 +5,17 @@ var api = require('../api.jsx');
 var utils = require('../utils.jsx');
 
 var HomeAddTeamMemberTable = React.createClass({
-
-  componentWillUpdate: function(nextProps, nextState) {
-    utils.updateSVGTitle('addTeamMemberBlock', '8e53a6b9-4aca-4973-8bfc-f04aaec49be5', 'Remove Member');
+  componentDidMount: function() {
+    this.showTooltip();
   },
-
+  componentWillUpdate: function(nextProps, nextState) {
+    this.showTooltip();
+  },
+  showTooltip: function() {
+    setTimeout(function(){
+      $('.delete-ico svg').attr('title','Remove Member');
+    },2);
+  },
   render: function() {
     var self = this;
     var teamMemberList = null;
