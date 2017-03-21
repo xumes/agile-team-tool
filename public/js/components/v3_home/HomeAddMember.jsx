@@ -219,8 +219,8 @@ var HomeAddMember = React.createClass({
         </div>
         <div class='team-member-add-block-footer'>
           <p class='ibm-btn-row ibm-button-link' style={{'position':'relative','top':'30%','right':'5%','float':'right'}}>
-            <a class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50' onClick={self.addTeamMemberHandler}>Add</a>
-            <a class='ibm-btn-sec ibm-btn-small ibm-btn-blue-50' onClick={self.props.hideAddTeamTable}>Cancel</a>
+            <button class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50' onClick={self.addTeamMemberHandler}>Add</button>
+            <button class='ibm-btn-sec ibm-btn-small ibm-btn-blue-50' onClick={self.props.hideAddTeamTable}>Cancel</button>
           </p>
         </div>
       </div>
