@@ -197,7 +197,7 @@ var HomeContent = React.createClass({
             </div>
             <div class='home-trends-overflow nano'>
               <div class='nano-content'>
-                <HomeIterSection loadDetailTeam={this.props.loadDetailTeam} iterationGraphArea={this.iterationGraphArea}/>
+                <HomeIterSection loadDetailTeam={this.props.loadDetailTeam} iterationGraphArea={this.iterationGraphArea} setSelectedIteration={this.props.setSelectedIteration}/>
                 <HomeAseSection loadDetailTeam={this.props.loadDetailTeam} assessmentGraphArea={this.assessmentGraphArea}/>
               </div>
             </div>

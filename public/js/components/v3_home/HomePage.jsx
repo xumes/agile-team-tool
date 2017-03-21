@@ -157,6 +157,10 @@ var HomePage = React.createClass({
     this.setState({'selectedIter': e.target.value.toString()});
   },
 
+  setSelectedIteration: function(id) {
+    this.setState({'selectedIter': id});
+  },
+
   loadDetailTeamChanged: function(team) {
     if (window.innerWidth < 1900) {
       if (team.team.type != 'squad') {
@@ -407,7 +411,7 @@ var HomePage = React.createClass({
 
         <div class='ibm-columns' style={columnsStyle}>
           <div id='mainContent' class='ibm-col-6-4' style={sectionTwoStyle}>
-            <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler} reloadTeamMembers={this.reloadTeamMembers} roles={this.state.roles} handleChartResize={this.handleChartResize} updateTeamLink={this.updateTeamLink} updateTeamDetails={this.updateTeamDetails} />
+            <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler} reloadTeamMembers={this.reloadTeamMembers} roles={this.state.roles} handleChartResize={this.handleChartResize} updateTeamLink={this.updateTeamLink} updateTeamDetails={this.updateTeamDetails} setSelectedIteration={this.setSelectedIteration}/>
           </div>
           <div id='iterContent' class='ibm-col-6-2' style={sectionOneStyle}>
             <HomeIterContent loadDetailTeam={this.state.loadDetailTeam} selectedIter={this.state.selectedIter} iterChangeHandler={this.iterChangeHandler} iterListHandler={this.reloadTeamIterations} updateTeamIteration={this.updateTeamIteration}/>
