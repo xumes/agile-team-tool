@@ -175,6 +175,15 @@ paths:
               memberFte:
                 type: Number
                 default: null
+              teamAvailability:
+                type: Number
+                default: null
+              personDaysAvailable:
+                type: Number
+                default: null
+              personDaysUnavailable:
+                type: Number
+                default: null
               updatedBy:
                 type: String
                 default: null
@@ -295,6 +304,15 @@ paths:
                 type: String
                 default: 'Not complete'
               memberFte:
+                type: Number
+                default: null
+              teamAvailability:
+                type: Number
+                default: null
+              personDaysAvailable:
+                type: Number
+                default: null
+              personDaysUnavailable:
                 type: Number
                 default: null
               updatedBy:
