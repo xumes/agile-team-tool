@@ -175,7 +175,6 @@ var HomeIterContent = React.createClass({
 
   iterBlockClickHandler: function(e) {
     var self = this;
-    self.cancelChange(this.state.selectedField);
     var data = _.clone(this.state.selectedIter);
     if (!_.isEqual(data, this.getSelectedIteration())){
       this.props.updateTeamIteration(data);
@@ -200,10 +199,10 @@ var HomeIterContent = React.createClass({
     return iterationData;
   },
   cancelChange: function(id) {
-    if (this.state.selectedField[id] != this.state.backupIter[id]){
+    if (this.refs[id].value != this.state.backupIter[id]){
       this.setState({selectedField:'', selectedIter: this.state.backupIter}, function(){
         this.props.updateTeamIteration(this.state.backupIter);
-      }); 
+      });
     }
     else{
       this.setState({selectedField:''});
@@ -594,7 +593,7 @@ var HomeIterContent = React.createClass({
                   <div id='memberChanged' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.memberChanged}</div>
                 }
                 {this.state.selectedField === 'memberChanged'?
-                  <div>
+                  <div style={{'height':'100%'}}>
                     <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'memberChanged')}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
                     </div>
