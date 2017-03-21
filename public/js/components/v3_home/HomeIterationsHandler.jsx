@@ -375,6 +375,9 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
     plotOptions: {
       column: {
         pointPlacement: 'on'
+      },
+      series: {
+        cursor: 'pointer'
       }
     },
 
@@ -514,6 +517,9 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
     plotOptions: {
       column: {
         pointPlacement: 'on'
+      },
+      series: {
+        cursor: 'pointer'
       }
     },
 
@@ -826,6 +832,9 @@ function loadChartMultiChart(id, title, type, categories, yAxisLabel, xAxisLabel
     plotOptions: {
       column: {
         pointPlacement: 'on'
+      },
+      series: {
+        cursor: 'pointer'
       }
     },
 
@@ -944,7 +953,8 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
         stacking: 'normal'
       },
       series: {
-        pointWidth: 35
+        pointWidth: 35,
+        cursor: 'pointer'
       }
     },
 
@@ -1502,6 +1512,9 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
     plotOptions: {
       column: {
         pointPlacement: 'on'
+      },
+      series: {
+        cursor: 'pointer'
       }
     },
 
