@@ -44,17 +44,9 @@ var HomeAddTeamNameModal = React.createClass({
     var self = this;
     var newTeamName = self.refs.newTeamName.value.toLowerCase().replace(/[^a-z0-9]/g, '');
     var newTeamDesc = self.refs.newTeamDescription.value;
-    var team = _.find(self.state.teams, function(team) {
-      var strippedName = team.name.toLowerCase().replace(/[^a-z0-9]/g, '');
-      if (_.isEqual(strippedName, newTeamName)) return team;
-    });
+    var hasError = self.isTeamNameExist(newTeamName);
 
-    var hasError = false;
-    if (!_.isEmpty(team)) {
-      hasError = true;
-    }
-
-    if (hasError ) {
+    if (hasError) {
       var buttonOptions = self.state.buttonOptions;
       buttonOptions.nextDisabled = 'disabled';
       self.setState({ buttonOptions: buttonOptions, showStyle: {'display': 'inline'} });
@@ -69,14 +61,28 @@ var HomeAddTeamNameModal = React.createClass({
       self.props.setTeamNameDesc(self.refs.newTeamName.value, self.refs.newTeamDescription.value);
     }
   },
+  isTeamNameExist: function(newTeamName) {
+    var self = this;
+    var team = _.find(self.state.teams, function(team) {
+      var strippedName = team.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (_.isEqual(strippedName, newTeamName)) return team;
+    });
+
+    var hasError = false;
+    if (!_.isEmpty(team)) {
+      hasError = true;
+    }
+    return hasError;
+  },
   descriptionUpdate: function() {
     var self = this;
     self.props.setTeamNameDesc(self.refs.newTeamName.value, self.refs.newTeamDescription.value);
-
-   if (_.isEmpty(self.refs.newTeamName.value) || _.isEmpty(self.refs.newTeamDescription.value)) {
+    var newTeamName = self.refs.newTeamName.value.toLowerCase().replace(/[^a-z0-9]/g, '');
+    var hasError = self.isTeamNameExist(newTeamName);
+   if (_.isEmpty(self.refs.newTeamName.value) || _.isEmpty(self.refs.newTeamDescription.value) || hasError) {
       var buttonOptions = self.state.buttonOptions;
       buttonOptions.nextDisabled = 'disabled';
-      self.setState({ buttonOptions: buttonOptions, showStyle: {'display': 'none'} });
+      self.setState({ buttonOptions: buttonOptions, showStyle: {'display': 'inline'} });
     } else {
       var buttonOptions = self.state.buttonOptions;
       buttonOptions.nextDisabled = '';
@@ -102,7 +108,7 @@ var HomeAddTeamNameModal = React.createClass({
               <div class='new-team-creation-add-block-content-name-wrapper'>
                 <div class='new-team-creation-add-block-content-name'>
                 <label for='newTeamName'>Team Name</label>
-                <input type='text' size='30' id='newTeamName' name='newTeamName' aria-label='team name' maxLength = '75' ref='newTeamName' onChange={self.nameUpdate} defaultValue={self.props.newTeamObj.name}/>
+                <input type='text' size='30' id='newTeamName' name='newTeamName' aria-label='team name' maxLength = '75' ref='newTeamName' onChange={self.nameUpdate} defaultValue={self.props.newTeamObj.name} placeholder='75 characters max' />
                 <div class='error-dup-team-name'>
                   <span style={this.state.showStyle}>
                     <span class='alert-icon'>

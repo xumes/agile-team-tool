@@ -1,5 +1,6 @@
 var React = require('react');
 var api = require('../api.jsx');
+var utils = require('../utils.jsx');
 var _ = require('underscore');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
@@ -19,6 +20,7 @@ var HomeAddTeamTypeModal = React.createClass({
 
   componentDidMount: function() {
     this.setDefaultMember();
+    this.showTooltip();
   },
 
   componentWillReceiveProps: function(newProps) {
@@ -42,6 +44,14 @@ var HomeAddTeamTypeModal = React.createClass({
           self.props.setSelectableParents(selectableParents);
         });
     }
+    self.showTooltip();
+  },
+
+  showTooltip: function() {
+    setTimeout(function(){
+      $('.squadteam-icon svg').attr('title','Squad team');
+      $('.parentteam-icon svg').attr('title','Parent team');
+    },2);
   },
 
   disableNextButton: function() {
@@ -143,7 +153,7 @@ var HomeAddTeamTypeModal = React.createClass({
                     <input class="ibm-styled-radio" id="pteam" name="teamtype" type="radio" defaultValue="parentTeam" checked={parentTeamChecked} onChange={self.changeTypeHandler}  />
                     <label for="pteam" class="ibm-field-label lbl"><span data-widget="tooltip" title="A parent team, also known as a domain, subdomain, or tribe, is a team who oversees numerous teams below them and would have 'Roll up' data from each of those teams.">Parent team</span></label>
                   </span>
-                  <div class="pteam-bg">
+                  <div class="pteam-bg parentteam-icon">
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_parentteam.svg')}></InlineSVG>
                   </div>
                 </div>
@@ -153,7 +163,7 @@ var HomeAddTeamTypeModal = React.createClass({
                     <input class="ibm-styled-radio" id="steam" name="teamtype" type="radio" defaultValue="squadTeam" checked={squadTeamChecked} onChange={self.changeTypeHandler} />
                     <label for="steam" class="ibm-field-label lbl"><span data-widget="tooltip" title="Typically, a squad is a team that uses Agile frameworks like Scrum or Kanban to deliver outcomes. Still not sure if you are a squad? If your team does not have any other teams organized below it, then it would be a squad.">Squad team</span></label>
                   </span>
-                  <div class="pteam-bg">
+                  <div class="pteam-bg squadteam-icon">
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_squadteam.svg')}></InlineSVG>
                   </div>
 

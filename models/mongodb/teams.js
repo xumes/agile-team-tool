@@ -571,6 +571,26 @@ module.exports.createTeam = function(teamDoc, creator) {
         email: creator ? creator['shortEmail'].toLowerCase() : '',
         location: {site: teamDoc['location'], timezone:null}
       }];
+    } else {
+      var member = [];
+      _.each(teamDoc.members, function(m) {
+        // setting the creators role should be hard-coded as per Bruce
+        // check if the type==squad the creators role will be Iteration Manager otherwise will be Team Lead
+        if (m.userId.toUpperCase() === creator.ldap.uid.toUpperCase()) {
+          var obj = {
+            name: creator ? creator['ldap']['hrFirstName'] + ' ' + creator['ldap']['hrLastName'] : '',
+            allocation: m['allocation'],
+            role: _.isEqual(teamDoc.type, 'squad') ? 'Iteration Manager' : 'Team Lead',
+            userId: creator ? creator['ldap']['uid'].toUpperCase() : '',
+            email: creator ? creator['shortEmail'].toLowerCase() : '',
+            location: {site: m['location'], timezone:null}
+          };
+          member.push(obj);
+        } else {
+          member.push(m);
+        }
+        teamDoc.members = member;
+      });
     }
     var newTeam = {
       'name': teamDoc.name,
