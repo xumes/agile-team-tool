@@ -62,7 +62,7 @@ var HomeIterSection = React.createClass({
           </div>
         </div>
       )
-    } else if (this.props.loadDetailTeam.team) {
+    } else if (this.props.loadDetailTeam.team && this.props.loadDetailTeam.assessments && this.props.loadDetailTeam.assessments.length == 0) {
       return (
         <div id='iterationSection'>
           <div class='no-trends-message-block'>
