@@ -58,6 +58,7 @@ var HomeTeamTree = React.createClass({
         }
       }
     }
+    $('#loadingPage').hide();
   },
 
   triggerTeam: function(teamId) {

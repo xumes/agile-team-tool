@@ -9,8 +9,14 @@ var AssessmentACPlanTable = require('./AssessmentACPlanTable.jsx');
 
 var AssessmentACPlanPopover = React.createClass({
   componentDidMount: function() {
-    this.hideBlock(1);
-    this.hideBlock(2);
+    var self = this;
+    if (self.props.loadDetailTeam.assessments.length == 1 || (self.props.loadDetailTeam.assessments.length == 2 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft')) {
+      self.showBlock(1);
+      self.showBlock(2);
+    } else {
+      self.hideBlock(1);
+      self.hideBlock(2);
+    }
   },
   showBlock: function(id) {
     $('#showBlockBtn' + id).hide();

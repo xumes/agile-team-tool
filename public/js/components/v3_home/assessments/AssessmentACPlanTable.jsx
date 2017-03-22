@@ -342,10 +342,10 @@ var AssessmentACPlanTable = React.createClass({
           <button disabled={!haveAccess} onClick={self.addNewActionPlan} type='button' id='addActionPlan' class='ibm-btn-sec ibm-btn-blue-50'>{'Add Action Item'}</button>
         </div>
         <div class='action-plan-btns'>
-          <button type='button' id='cancelACPlanBtn' class='ibm-btn-sec ibm-btn-blue-50' disabled={!haveAccess} onClick={self.showCancelActionPlanConfirm}>{'Cancel Changes'}</button>
+          <button type='button' id='cancelACPlanBtn' class='ibm-btn-sec ibm-btn-blue-50' disabled={!haveAccess} onClick={self.showCancelActionPlanConfirm}>{'Reset Changes'}</button>
           <button type='button' id='saveACPlanBtn' class='ibm-btn-pri ibm-btn-blue-50' style={{'marginRight':'1%'}}disabled={!haveAccess} onClick={self.saveActionPlan}>{'Save Action Plan'}</button>
         </div>
-        <ConfirmPopover confirmClick={self.cancelActionPlan} confirmId='cancelActionPlanConfirm' content={'You have requested to cancel all changes you made on this action plan.  All changes will be removed. Please confirm that you want to proceed with this cancel changes.'} cancelBtn='block' confirmBtn='block' okBtn='none'/>
+        <ConfirmPopover confirmClick={self.cancelActionPlan} confirmId='cancelActionPlanConfirm' content={'You have requested to reset all changes you made on this action plan.  All changes will be removed. Please confirm that you want to proceed with this reset changes.'} cancelBtn='block' confirmBtn='block' okBtn='none'/>
         <ConfirmPopover confirmId='saveConfirm' content={'Your action plan has been saved.'} cancelBtn='none' confirmBtn='none' okBtn='block'/>
       </div>
     );
