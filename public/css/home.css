@@ -2995,13 +2995,20 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   float: left;
   left: 15%;
-  top: 5%;
+  top: 8%;
   width: 70%;
   height: 15%;
+}
+
+.home-assessment-summary > .select-content > .select-box > div {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
   background-color: #EFF9FF;
 }
 
-.home-assessment-summary > .select-content > .select-box > h1 {
+.home-assessment-summary > .select-content > .select-box > div > h1 {
   position: absolute;
   z-index: 1;
   margin-top: 0.7em;
@@ -3013,24 +3020,24 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   background-color: #EFF9FF;
 }
 
-.home-assessment-summary > .select-content > .select-box > .select2 {
+.home-assessment-summary > .select-content > .select-box > div > .select2 {
   height: 100%;
 }
 
-.home-assessment-summary > .select-content > .select-box > .select2 .select2-selection {
+.home-assessment-summary > .select-content > .select-box > div > .select2 .select2-selection {
   height: 100%;
   outline: none;
   background-color: #EFF9FF;
 }
 
-.home-assessment-summary > .select-content > .select-box > .select2 .select2-selection__rendered {
+.home-assessment-summary > .select-content > .select-box > div > .select2 .select2-selection__rendered {
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1em;
   line-height: 2.5em;
   color: #777677;
 }
 
-.home-assessment-summary > .select-content > .select-box > .select2 b {
+.home-assessment-summary > .select-content > .select-box > div > .select2 b {
   top: 1.8em;
 }
 
@@ -3039,7 +3046,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   width: 70%;
   left: 15%;
-  top: 13%;
+  top: 22%;
   height: 40%;
 }
 
@@ -3086,7 +3093,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   width: 70%;
   left: 15%;
-  top: 10%;
+  top: 15%;
   height: 40%;
 }
 
@@ -6372,7 +6379,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .assessment-popover-block > .agile-maturity span {
   float: right;
-  color: red;
+  color: #999;
 }
 
 /*.assessment-popover-block > .agile-maturity caption,

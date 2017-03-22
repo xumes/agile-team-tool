@@ -217,6 +217,11 @@ var HomeAseSummary = React.createClass({
               self.state.software = self.props.loadDetailTeam.assessments[0].deliversSoftware?'Yes':'No';
             }
           }
+          if (self.props.loadDetailTeam.assessments.length == 1 || (self.props.loadDetailTeam.assessments.length == 2 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft')) {
+            var showPreviousAssessment = 'none';
+          } else {
+            var showPreviousAssessment = 'block';
+          }
           // self.state.selectedAssessment = tempAssess._id.toString();
           var defaultId = tempAssess._id.toString();
           var submitDate = '(Averaging last submitted: ' + moment(tempAssess.submittedDate).format('DD MMM YYYY') + ')';
@@ -315,19 +320,21 @@ var HomeAseSummary = React.createClass({
               </div>
               <div class='select-content'>
                 <div class='select-box'>
-                  <h1>{'Previous Assessments'}</h1>
-                  <select id='pAsseSelect' defaultValue={defaultId}>
-                    {assessSelect}
-                  </select>
+                  <div style={{'display':showPreviousAssessment}}>
+                    <h1>{'Previous Assessments'}</h1>
+                    <select id='pAsseSelect' defaultValue={defaultId}>
+                      {assessSelect}
+                    </select>
+                  </div>
                 </div>
                 <div class='review-box'>
-                  <h1>{'Not sure what to do next?'}</h1>
+                  {/*<h1>{'Not sure what to do next?'}</h1>*/}
                   <button type='button' onClick={self.showAssessmentACPlanPopover} class={hasDraft?'ibm-btn-pri ibm-btn-blue-50':'ibm-btn-sec ibm-btn-blue-50'}>{'Review Action Plan'}</button>
                   <h2>{'Last Updated:'}</h2>
                   <h3 style={{'textAlign':'right'}}>{updateDate}</h3>
                 </div>
                 <div class='draft-box'>
-                  <h1>{'Or show your improvement!'}</h1>
+                  {/*<h1>{'Or show your improvement!'}</h1>*/}
                   <button type='button' onClick={self.showAssessmentPopover} class={hasDraft?'ibm-btn-sec ibm-btn-blue-50':'ibm-btn-pri ibm-btn-blue-50'} disabled={haveAccess}>{hasDraft?'Work with Draft':'Create New Assessment'}</button>
                   <h2 hidden={hasDraft?false:true}>{'Last Updated:'}</h2>
                   <h2 style={{'textAlign':'right'}} hidden={hasDraft?false:true}>{draftUpdateDate}</h2>
