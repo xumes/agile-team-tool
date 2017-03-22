@@ -41,6 +41,9 @@ var HomePage = React.createClass({
       });
   },
 
+  componentDidUpdate: function() {
+  },
+
   componentDidMount: function() {
     this.handleResize();
     window.addEventListener('resize', this.handleResize);
