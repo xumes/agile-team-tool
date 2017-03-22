@@ -20,7 +20,8 @@ var HomeAddTeamMemberTable = React.createClass({
     var self = this;
     var teamMemberList = null;
     if (!_.isEmpty(self.props.newTeamObj) && !_.isEmpty(self.props.newTeamObj.members)) {
-      teamMemberList = self.props.newTeamObj.members.map(function(member) {
+      var sortedMembers = _.sortBy(self.props.newTeamObj.members, 'name');
+      teamMemberList = sortedMembers.map(function(member) {
         var key = (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase();
         var memberName = member.name;
         var memberEmail = member.email;

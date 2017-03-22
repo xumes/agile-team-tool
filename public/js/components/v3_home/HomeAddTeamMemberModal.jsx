@@ -63,7 +63,7 @@ var HomeAddTeamMemberModal = React.createClass({
       $('#txtTeamMemberNameError').removeClass('ibm-alert-link');
       $('#txtTeamMemberNameError').html('');
         var member = {
-            name: self.state.facesPerson.name,
+            name: self.state.facesPerson.name.trim(),
             userId: self.state.facesPerson.uid ? self.state.facesPerson.uid.toUpperCase() : null,
             email: self.state.facesPerson.email ? self.state.facesPerson.email.toLowerCase() : null,
             location: {
