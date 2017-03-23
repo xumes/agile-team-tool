@@ -156,7 +156,7 @@ var HomeIterContent = React.createClass({
     }
   },
 
-  checkTimeOut: function() {    
+  checkTimeOut: function() {
     this.saveIter(this.state.selectedField);
   },
 
@@ -241,6 +241,12 @@ var HomeIterContent = React.createClass({
         if (decimal1.length > 1){
           var val1 = parseFloat(value1).toFixed(decimal1[1].length);
           var val2 = parseFloat(value2).toFixed(decimal1[1].length);
+          if (val1 === val2)
+            isEqual = true;
+        }
+        else if (decimal2.length > 1){
+          var val1 = parseFloat(value1).toFixed(decimal2[1].length);
+          var val2 = parseFloat(value2).toFixed(decimal2[1].length);
           if (val1 === val2)
             isEqual = true;
         }
