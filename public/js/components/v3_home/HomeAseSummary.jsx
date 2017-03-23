@@ -50,6 +50,7 @@ var HomeAseSummary = React.createClass({
       $('.home-assessment-summary .select2').remove();
     }
     $('#pAsseSelect').off('change');
+    $('#pAsseSelect').val('ps').change();
     $('#pAsseSelect').select2({'width':'100%'});
     $('#pAsseSelect').change(this.assessmentChangeHandler);
     if (self.props.loadDetailTeam != undefined && self.props.loadDetailTeam.assessments != undefined && self.props.loadDetailTeam.assessments.length > 0 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft') {
@@ -66,40 +67,45 @@ var HomeAseSummary = React.createClass({
   },
   assessmentChangeHandler: function(e) {
     var self = this;
-    var tempAssess = {};
-    _.find(self.props.loadDetailTeam.assessments, function(assess){
-      if (assess._id.toString() == e.target.value) {
-        self.state.selectedAssessment = e.target.value;
-        return tempAssess = assess;
-      }
-    });
-    var submitDate = '(Averaging last submitted: ' + moment(tempAssess.submittedDate).format('DD MMM YYYY') + ')';
-    $('.home-assessment-summary > .main-content > div > .submit-date > h1').html(submitDate);
-    var updateDate = moment(tempAssess.updateDate).format('DD MMM YYYY');
-    $('.home-assessment-summary > .select-content > .review-box > h3').html(updateDate);
-    if (tempAssess.componentResults.length == 1) {
-      $('#assess_1').hide();
+    // var tempAssess = {};
+    if (e.target.value == 'ps') {
+      return;
+    } else {
+      _.find(self.props.loadDetailTeam.assessments, function(assess){
+        if (assess._id.toString() == e.target.value) {
+          return self.state.selectedAssessment = e.target.value;
+          // return tempAssess = assess;
+        }
+      });
+      self.setState({ showACPlanModel: true });
     }
-    _.each(tempAssess.componentResults, function(assess, index){
-      var assessId = '#assess_' + index;
-      $(assessId).show();
-      if (assess.componentName == 'Team Agile Leadership and Collaboration - Projects') {
-        var assessmentName = 'Leadership & Collaboration';
-      } else if (assess.componentName == 'Team Delivery') {
-        assessmentName = 'Delivery (Dev Ops)';
-      } else {
-        assessmentName = 'Leadership & Collaboration';
-      }
-      if (tempAssess.componentResults.length == 2 && index == 0) {
-        var middleLineClass = 'middle-line';
-      } else {
-        middleLineClass = '';
-      }
-      var lineWidth = (assess.currentScore)/4 * 95 + '%';
-      $(assessId + ' > div > .summary-title > h1').html(assessmentName);
-      $(assessId + ' > div > .summary-ponts .line').css('width',lineWidth);
-      $(assessId + ' > div > .summary-ponts .current-dot').css('left',lineWidth);
-    });
+    // var submitDate = '(Averaging last submitted: ' + moment(tempAssess.submittedDate).format('DD MMM YYYY') + ')';
+    // $('.home-assessment-summary > .main-content > div > .submit-date > h1').html(submitDate);
+    // var updateDate = moment(tempAssess.updateDate).format('DD MMM YYYY');
+    // $('.home-assessment-summary > .select-content > .review-box > h3').html(updateDate);
+    // if (tempAssess.componentResults.length == 1) {
+    //   $('#assess_1').hide();
+    // }
+    // _.each(tempAssess.componentResults, function(assess, index){
+    //   var assessId = '#assess_' + index;
+    //   $(assessId).show();
+    //   if (assess.componentName == 'Team Agile Leadership and Collaboration - Projects') {
+    //     var assessmentName = 'Leadership & Collaboration';
+    //   } else if (assess.componentName == 'Team Delivery') {
+    //     assessmentName = 'Delivery (Dev Ops)';
+    //   } else {
+    //     assessmentName = 'Leadership & Collaboration';
+    //   }
+    //   if (tempAssess.componentResults.length == 2 && index == 0) {
+    //     var middleLineClass = 'middle-line';
+    //   } else {
+    //     middleLineClass = '';
+    //   }
+    //   var lineWidth = (assess.currentScore)/4 * 95 + '%';
+    //   $(assessId + ' > div > .summary-title > h1').html(assessmentName);
+    //   $(assessId + ' > div > .summary-ponts .line').css('width',lineWidth);
+    //   $(assessId + ' > div > .summary-ponts .current-dot').css('left',lineWidth);
+    // });
   },
   showAssessmentPopover: function() {
     this.setState({ showModal: true });
@@ -117,6 +123,7 @@ var HomeAseSummary = React.createClass({
     this.setState({ showACPlanModel: true });
   },
   hideAssessmentACPlanPopover: function() {
+    this.state.selectedAssessment = '';
     this.setState({ showACPlanModel: false });
   },
   updateAssessmentSummary: function() {
@@ -159,7 +166,7 @@ var HomeAseSummary = React.createClass({
           var updateDate = moment(self.props.loadDetailTeam.assessments[0].updateDate).format('DD MMM YYYY');
           // self.state.selectedAssessment = self.props.loadDetailTeam.assessments[0]._id.toString();
           return (
-            <div class='home-assessment-summary' style={{'display':'none'}}>
+            <div class='home-assessment-summary' style={{'display':self.props.showAseSummary?'none':'block'}}>
               <div>
                 <div class='first-title'>
                   <h1>Agile Maturity Overview</h1>
@@ -167,6 +174,9 @@ var HomeAseSummary = React.createClass({
                 <div class='last-opened'>
                   <h1>{'Last Opened:'}</h1>
                   <h2>{updateDate}</h2>
+                </div>
+                <div class='hide-show-btn' onClick={self.props.showHideAseSummary}>
+                  <InlineSVG src={require('../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
                 </div>
               </div>
               <div>
@@ -296,15 +306,19 @@ var HomeAseSummary = React.createClass({
             );
           });
 
+          var submitAssessCount = 0;
           var assessSelect = self.props.loadDetailTeam.assessments.map(function(assess){
             if (assess.assessmentStatus == 'Submitted') {
-              return(
-                <option key={assess._id} value={assess._id}>{moment.utc(assess.submittedDate).format('DD MMM YYYY')}</option>
-              )
+              submitAssessCount ++ ;
+              if (submitAssessCount > 1) {
+                return(
+                  <option key={assess._id} value={assess._id}>{moment.utc(assess.submittedDate).format('DD MMM YYYY')}</option>
+                )
+              }
             }
           });
           return (
-            <div class='home-assessment-summary' style={{'display':'none'}}>
+            <div class='home-assessment-summary' style={{'display':self.props.showAseSummary?'none':'block'}}>
               <div class='main-content'>
                 <div>
                   <div class='content-title'>
@@ -322,7 +336,8 @@ var HomeAseSummary = React.createClass({
                 <div class='select-box'>
                   <div style={{'display':showPreviousAssessment}}>
                     <h1>{'Previous Assessments'}</h1>
-                    <select id='pAsseSelect' defaultValue={defaultId}>
+                    <select id='pAsseSelect' defaultValue={'ps'}>
+                      <option value='ps'>{'Please select'}</option>
                       {assessSelect}
                     </select>
                   </div>
@@ -340,6 +355,9 @@ var HomeAseSummary = React.createClass({
                   <h2 style={{'textAlign':'right'}} hidden={hasDraft?false:true}>{draftUpdateDate}</h2>
                 </div>
               </div>
+              <div class='hide-show-btn' onClick={self.props.showHideAseSummary}>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
+              </div>
               <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showACPlanModel} onHide={self.hideAssessmentACPlanPopover}>
                 <AssessmentACPlanPopover hideAssessmentACPlanPopover={self.hideAssessmentACPlanPopover} updateAssessmentSummary={self.updateAssessmentSummary} loadDetailTeam={self.props.loadDetailTeam} tempAssess={tempAssess} assessTemplate={self.state.assessTemplate} />
               </Modal>
@@ -351,10 +369,13 @@ var HomeAseSummary = React.createClass({
         }
       } else {
         return (
-          <div class='home-assessment-summary' style={{'display':'none'}}>
+          <div class='home-assessment-summary' style={{'display':self.props.showAseSummary?'none':'block'}}>
             <div>
               <div class='first-title'>
                 <h1>Agile Maturity Overview</h1>
+              </div>
+              <div class='hide-show-btn' onClick={self.props.showHideAseSummary}>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
               </div>
             </div>
             <div>

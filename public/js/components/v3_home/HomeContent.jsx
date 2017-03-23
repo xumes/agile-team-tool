@@ -9,8 +9,14 @@ var HomeMemberTable = require('./HomeMemberTable.jsx');
 var InlineSVG = require('svg-inline-react');
 var HomeChartFilter = require('./HomeChartFilter.jsx');
 var HomeAseSummary = require('./HomeAseSummary.jsx');
+var HomeAseSummaryHide = require('./HomeAseSummaryHide.jsx');
 
 var HomeContent = React.createClass({
+  getInitialState: function() {
+    return {
+      showAseSummary: true,
+    };
+  },
   shouldComponentUpdate: function(nextProps, nextState) {
     // if (nextProps.loadDetailTeam == this.props.loadDetailTeam) {
     //   return false;
@@ -31,7 +37,17 @@ var HomeContent = React.createClass({
       }
     }
   },
-
+  showHideAseSummary: function() {
+    if (this.state.showAseSummary) {
+      $('.home-assessment-summary-hide').show();
+      $('.home-assessment-summary').hide();
+      this.state.showAseSummary = false;
+    } else {
+      $('.home-assessment-summary-hide').hide();
+      $('.home-assessment-summary').show();
+      this.state.showAseSummary = true;
+    }
+  },
   // handleResize: function(e) {
   //   $(Highcharts.charts).each(function(i,chart) {
   //     if (chart == null) return;
@@ -180,7 +196,8 @@ var HomeContent = React.createClass({
         <div id='bodyContent' style={{'height':'100%','width':'100%'}}>
           <HomeHighlightBox />
           <HomeTeamHeader loadDetailTeam={this.props.loadDetailTeam} selectedTeamChanged={this.props.selectedTeamChanged} tabClickedHandler={this.props.tabClickedHandler} updateTeamLink={this.props.updateTeamLink} updateTeamDetails={this.props.updateTeamDetails} reloadTeamMembers={this.props.reloadTeamMembers} roles={this.props.roles} />
-          <HomeAseSummary loadDetailTeam={this.props.loadDetailTeam} />
+          <HomeAseSummary loadDetailTeam={this.props.loadDetailTeam} showAseSummary={this.state.showAseSummary} showHideAseSummary={this.showHideAseSummary}/>
+          <HomeAseSummaryHide loadDetailTeam={this.props.loadDetailTeam} showAseSummary={this.state.showAseSummary} showHideAseSummary={this.showHideAseSummary}/>
           <div class='home-trends-block'>
             <div class='home-trends-block-title'>
               <h1>Trends</h1>
