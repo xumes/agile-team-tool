@@ -315,7 +315,7 @@ var AssessmentButtons = React.createClass({
             <button type='button' id='submitAssessBtn' class='ibm-btn-pri ibm-btn-blue-50' name='submitAssessBtn' disabled={this.props.haveAccess} onClick={this.submitAssess}>{'Submit'}</button>
           </div>
           <div class='btn-col'>
-            <button type='button' id='cancelAssessBtn' class='ibm-btn-sec ibm-btn-blue-50' name='cancelAssessBtn' disabled={this.props.haveAccess} onClick={this.showConfirm.bind(null, 'cancelAssessDraftConfirm')}>{'Cancel'}</button>
+            <button type='button' id='cancelAssessBtn' class='ibm-btn-sec ibm-btn-blue-50' name='cancelAssessBtn' disabled={this.props.haveAccess} onClick={this.showConfirm.bind(null, 'cancelAssessDraftConfirm')}>{'Reset'}</button>
           </div>
           <div class='delete-col' onClick={this.showConfirm.bind(null, 'deleteAssessDraftConfirm')}>
             <div class='delete-img'>
@@ -325,7 +325,7 @@ var AssessmentButtons = React.createClass({
           </div>
           <span id='progressIndicatorTop'></span>
         </div>
-        <ConfirmPopover confirmClick={this.cancelAssessment} confirmId='cancelAssessDraftConfirm' content={'You have requested to cancel all changes you made on this draft assessment.  All changes will be removed. Please confirm that you want to proceed with this cancel changes.'} cancelBtn='block' confirmBtn='block' okBtn='none'/>
+        <ConfirmPopover confirmClick={this.cancelAssessment} confirmId='cancelAssessDraftConfirm' content={'You have requested to reset all changes you made on this draft assessment.  All changes will be removed. Please confirm that you want to proceed with this reset changes.'} cancelBtn='block' confirmBtn='block' okBtn='none'/>
         <ConfirmPopover confirmClick={this.deleteAssessment} confirmId='deleteAssessDraftConfirm' content={'You have requested to delete this draft assessment.  All saved progress will be deleted. Please confirm that you want to proceed with this delete.'} cancelBtn='block' confirmBtn='block' okBtn='none'/>
         <ConfirmPopover confirmId='saveDraftConfirm' content={'Maturity assessment has been saved as draft.'} cancelBtn='none' confirmBtn='none' okBtn='block'/>
       </div>

@@ -9,8 +9,30 @@ var AssessmentACPlanTable = require('./AssessmentACPlanTable.jsx');
 
 var AssessmentACPlanPopover = React.createClass({
   componentDidMount: function() {
-    this.hideBlock(1);
-    this.hideBlock(2);
+    var self = this;
+    var submitCount = 0
+    _.find(self.props.loadDetailTeam.assessments, function(assess){
+      if (assess.assessmentStatus != 'Draft') {
+        submitCount ++;
+        if (assess._id.toString() == self.props.tempAssess._id.toString()) {
+          return true;
+        }
+      }
+    });
+    if (submitCount == 1) {
+      self.hideBlock(1);
+      self.hideBlock(2);
+    } else {
+      self.showBlock(1);
+      self.showBlock(2);
+    }
+    // if (self.props.loadDetailTeam.assessments.length == 1 || (self.props.loadDetailTeam.assessments.length == 2 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft')) {
+    //   self.showBlock(1);
+    //   self.showBlock(2);
+    // } else {
+    //   self.hideBlock(1);
+    //   self.hideBlock(2);
+    // }
   },
   showBlock: function(id) {
     $('#showBlockBtn' + id).hide();
@@ -88,10 +110,10 @@ var AssessmentACPlanPopover = React.createClass({
               <h1>{'Leadership and Collaboration'}</h1>
             </div>
             <div class='hideBlock-btn' id='hideBlockBtn1' style={{'display':'block'}} onClick={self.hideBlock.bind(null, '1')}>
-              <InlineSVG src={require('../../../../img/Att-icons/att-icons_show.svg')}></InlineSVG>
+              <InlineSVG src={require('../../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
             </div>
             <div class='showBlock-btn' id='showBlockBtn1' style={{'display':'none'}} onClick={self.showBlock.bind(null, '1')}>
-              <InlineSVG src={require('../../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
+              <InlineSVG src={require('../../../../img/Att-icons/att-icons_show.svg')}></InlineSVG>
             </div>
           </div>
           <AssessmentSummaryTable loadDetailTeam={self.props.loadDetailTeam} componentResult={componentResultLC} assessType={assessType} componentId={'1'} assessTemplate={self.props.assessTemplate}/>
@@ -100,10 +122,10 @@ var AssessmentACPlanPopover = React.createClass({
               <h1>{'Delivery and DevOps'}</h1>
             </div>
             <div class='hideBlock-btn' id='hideBlockBtn2' style={{'display':'block'}} onClick={self.hideBlock.bind(null, '2')}>
-              <InlineSVG src={require('../../../../img/Att-icons/att-icons_show.svg')}></InlineSVG>
+              <InlineSVG src={require('../../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
             </div>
             <div class='showBlock-btn' id='showBlockBtn2' style={{'display':'none'}} onClick={self.showBlock.bind(null, '2')}>
-              <InlineSVG src={require('../../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
+              <InlineSVG src={require('../../../../img/Att-icons/att-icons_show.svg')}></InlineSVG>
             </div>
           </div>
           <AssessmentSummaryTable loadDetailTeam={self.props.loadDetailTeam} componentResult={componentResultDD} assessType={assessType} componentId={'2'} assessTemplate={self.props.assessTemplate}/>
@@ -112,10 +134,10 @@ var AssessmentACPlanPopover = React.createClass({
               <h1>{'Action Plan'}</h1>
             </div>
             <div class='hideBlock-btn' id='hideBlockBtn3' style={{'display':'block'}} onClick={self.hideBlock.bind(null, '3')}>
-              <InlineSVG src={require('../../../../img/Att-icons/att-icons_show.svg')}></InlineSVG>
+              <InlineSVG src={require('../../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
             </div>
             <div class='showBlock-btn' id='showBlockBtn3' style={{'display':'none'}} onClick={self.showBlock.bind(null, '3')}>
-              <InlineSVG src={require('../../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
+              <InlineSVG src={require('../../../../img/Att-icons/att-icons_show.svg')}></InlineSVG>
             </div>
           </div>
           <AssessmentACPlanTable updateAssessmentSummary={self.props.updateAssessmentSummary} loadDetailTeam={self.props.loadDetailTeam} tempAssess={self.props.tempAssess} componentId={'3'} assessTemplate={self.props.assessTemplate}/>

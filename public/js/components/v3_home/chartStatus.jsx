@@ -33,5 +33,6 @@ module.exports.chartStatus = {
       'chartHeight': '23%',
       'secHeight': '26.45%'
     }
-  }
+  },
+  'assessmentSummaryShow': true
 };

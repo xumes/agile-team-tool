@@ -94,7 +94,7 @@ var AssessmentPopover = React.createClass({
     }
     if (_.isEmpty(assessDraft)) {
       var submitDate = 'On Submission';
-      var lastUpdatedBy = 'On Submission';
+      var lastUpdatedBy = 'On Save/Submission';
       var lastUpdated = null;
       var assessType = $('#assessmentTeamTypeSelector').val() == undefined?(self.props.assessType==undefined?'Project':self.props.assessType):$('#assessmentTeamTypeSelector').val();
       var deliversSoftware = $('#assessmentSoftwareTypeSelector').val() == undefined?(self.props.assessSoftware==undefined?'Yes':self.props.assessSoftware):$('#assessmentSoftwareTypeSelector').val();
