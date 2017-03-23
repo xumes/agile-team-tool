@@ -80,8 +80,13 @@ var HomeIterContent = React.createClass({
     }
   },
 
+  componentWillUnmount: function () {
+    clearInterval(this.timer);
+  },
+
   handleWindowClick: function(e){
-    if (e.target.id === ''){
+    if (_.indexOf(editIndexing,e.target.id) === -1 && e.target.id != 'memeberChangedParent' && e.target.id != 'memberChangeOpt' ){
+      this.stopTimer();
       this.setState({selectedField:''});
     }
   },
@@ -121,6 +126,7 @@ var HomeIterContent = React.createClass({
         var key = e.which;
         if (key == 13)  // the enter key code
         {
+          this.stopTimer();
           self.saveIter(e.target.id);
         }
       });
@@ -131,6 +137,10 @@ var HomeIterContent = React.createClass({
       });
       if (!_.isEmpty(this.state.selectedField)){
         $('#'+this.state.selectedField).focus();
+        var val = $('#'+this.state.selectedField).val();
+        $('#'+this.state.selectedField).val('').val(val);
+        $('#'+this.state.selectedField).select();
+        this.startTimer();
       }
     } else {
       $('.home-iter-content-point').removeClass('home-iter-content-point-hover');
@@ -146,8 +156,22 @@ var HomeIterContent = React.createClass({
     }
   },
 
+  checkTimeOut: function() {    
+    this.saveIter(this.state.selectedField);
+  },
+
+  startTimer: function () {
+    clearInterval(this.timer);
+    this.timer = setInterval(this.checkTimeOut, 2000);
+  },
+  
+  stopTimer: function () {
+    clearInterval(this.timer);
+  },
+
   checkChanges: function(event){
     if(event.keyCode == 9){
+      this.startTimer();
       event.preventDefault();
       this.tabHandling(event.target.id, event.shiftKey);
     }
@@ -157,15 +181,11 @@ var HomeIterContent = React.createClass({
     var self = this;
     var next = _.indexOf(editIndexing, id);
       if (next != null){
-        var result = self.saveIter(id);
+        var result = self.partialSaveIter(id);
         if (reverse)
-          self.setState({selectedField:editIndexing[next-1], backupIter:result});
+          self.setState({selectedField:editIndexing[next-1],  backupIter:result});
         else
-          self.setState({selectedField:editIndexing[next+1], backupIter:result});
-      }
-      else{
-        self.saveIter(id);
-        self.setState({backupIter:result});
+          self.setState({selectedField:editIndexing[next+1],  backupIter:result});
       }
   },
 
@@ -178,9 +198,6 @@ var HomeIterContent = React.createClass({
   iterBlockClickHandler: function(e) {
     var self = this;
     var data = _.clone(this.state.selectedIter);
-    if (!_.isEqual(data, this.getSelectedIteration())){
-      this.props.updateTeamIteration(data);
-    }
     this.setState({selectedField:e.target.id, backupIter: data});
   },
   saveBtnClickHandler: function(id) {
@@ -194,13 +211,44 @@ var HomeIterContent = React.createClass({
     var iterationData = _.clone(this.state.selectedIter);
     var selectedValue = this.state.selectedIter[id] !== null?this.state.selectedIter[id].toString():'';
     if (this.refs[id].value !== 'N/A' && this.refs[id].value !== selectedValue){
+      if (this.checkNumericEquality(this.refs[id].value, selectedValue)){
+        return;
+      }
       iterationData = this.recalculate(id);
       this.props.updateTeamIteration(iterationData);
+    }
+    return iterationData;
+  },
+
+  partialSaveIter: function(id) {
+    var iterationData = _.clone(this.state.selectedIter);
+    var selectedValue = this.state.selectedIter[id] !== null?this.state.selectedIter[id].toString():'';
+    if (this.refs[id].value !== 'N/A' && this.refs[id].value !== selectedValue){
+      if (this.checkNumericEquality(this.refs[id].value, selectedValue)){
+        return;
+      }
+      iterationData = this.recalculate(id);
       this.setState({selectedIter:iterationData});
     }
     return iterationData;
   },
+
+  checkNumericEquality: function(value1, value2){
+    var isEqual = false;
+    if (!isNaN(value1) && !isNaN(value2) && value1.split('.').length > 0) {
+        var decimal1 = value1.split('.');
+        var decimal2 = value2.split('.');
+        if (decimal1.length > 1){
+          var val1 = parseFloat(value1).toFixed(decimal1[1].length);
+          var val2 = parseFloat(value2).toFixed(decimal1[1].length);
+          if (val1 === val2)
+            isEqual = true;
+        }
+    }
+    return isEqual;
+  },
   cancelChange: function(id) {
+    this.stopTimer();
     if (this.refs[id].value != this.state.backupIter[id]){
       this.setState({selectedField:'', selectedIter: this.state.backupIter}, function(){
         this.props.updateTeamIteration(this.state.backupIter);
@@ -357,7 +405,7 @@ var HomeIterContent = React.createClass({
     if (!isNaN(value)) {
       value = value.toFixed(1);
       e.target.value = value;
-        this.saveIter(e.target.id);
+        this.partialSaveIter(e.target.id);
     }
   },
 
@@ -366,7 +414,7 @@ var HomeIterContent = React.createClass({
     if (!isNaN(value)) {
       value = value.toFixed(2);
       e.target.value = value;
-      this.saveIter(e.target.id);
+      this.partialSaveIter(e.target.id);
     }
   },
 
@@ -587,9 +635,9 @@ var HomeIterContent = React.createClass({
                 <div class='home-iter-content-sub' data-tip='Indicate if there was a change to the team’s makeup during this iteration. Changes might include adding, replacing, removing members or changing a team member’s allocation % that you feel is significant enough to be noted.  Indicating a team change might help to explain a higher/lower team productivity when compared to other iterations.'>Was there a team change?</div>
                 {this.state.selectedField === 'memberChanged'?
                   <div id='memeberChangedParent' className='home-iter-member-change'>
-                    <select id='memberChanged' defaultValue={defIter.memberChanged} onKeyDown={this.checkChanges} onBlur={this.saveIter.bind(null,'memberChanged')} ref="memberChanged">
-                      <option key='Yes' value={true}>Yes</option>
-                      <option key='No' value={false}>No</option>
+                    <select id='memberChanged' defaultValue={defIter.memberChanged} onKeyDown={this.checkChanges} onBlur={this.partialSaveIter.bind(null,'memberChanged')} ref="memberChanged">
+                      <option id='memberChangeOpt' key='Yes' value={true}>Yes</option>
+                      <option id='memberChangeOpt' key='No' value={false}>No</option>
                     </select>
                   </div>:
                   <div id='memberChanged' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.memberChanged}</div>
@@ -621,7 +669,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '25%'}}>
                 <div class='home-iter-content-sub' data-tip='Primarily for Operations teams, this is the number of Stories, Cards or Tickets the team has committed to delivering as part of their iteration planning.'>Stories/Cards/Tickets-Committed</div>
                 {this.state.selectedField === 'committedStories'?
-                  <input id='committedStories' class='home-iter-content-point' placeholder='0' onKeyDown={this.checkChanges} onKeyPress={this.wholeNumberCheck} onBlur={this.saveIter.bind(null,'committedStories')} defaultValue={iterData.committedStories} onPaste={this.paste} ref="committedStories"/>:
+                  <input id='committedStories' class='home-iter-content-point' placeholder='0' onKeyDown={this.checkChanges} onKeyPress={this.wholeNumberCheck} onBlur={this.partialSaveIter.bind(null,'committedStories')} defaultValue={iterData.committedStories} onPaste={this.paste} ref="committedStories"/>:
                   <div id='committedStories' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.committedStories != ''?iterData.committedStories:'0'}</div>
                 }
                 {this.state.selectedField === 'committedStories'?
@@ -638,7 +686,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '25%'}}>
                 <div class='home-iter-content-sub' data-tip='Primarily for Operations teams, this is the actual number of Stories, Cards or Tickets the team was able to deliver for this iteration period.'>Stories/Cards/Tickets-Delivered</div>
                 {this.state.selectedField === 'deliveredStories'?
-                  <input id='deliveredStories' class='home-iter-content-point' placeholder='0' onKeyDown={this.checkChanges} onKeyPress={this.wholeNumberCheck} onBlur={this.saveIter.bind(null,'deliveredStories')} defaultValue={iterData.deliveredStories} onPaste={this.paste} ref="deliveredStories"/>:
+                  <input id='deliveredStories' class='home-iter-content-point' placeholder='0' onKeyDown={this.checkChanges} onKeyPress={this.wholeNumberCheck} onBlur={this.partialSaveIter.bind(null,'deliveredStories')} defaultValue={iterData.deliveredStories} onPaste={this.paste} ref="deliveredStories"/>:
                   <div id='deliveredStories' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.deliveredStories != ''?iterData.deliveredStories:'0'}</div>
                 }
                 {this.state.selectedField === 'deliveredStories'?
@@ -668,7 +716,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='Primarily for Delivery teams, this is the number of Story points the team has committed to delivering as part of their iteration planning.'>Story points committed</div>
                 {this.state.selectedField === 'committedStoryPoints'?
-                  <input id='committedStoryPoints' class='home-iter-content-point' placeholder='0' onKeyDown={this.checkChanges} onKeyPress={this.wholeNumberCheck} onBlur={this.saveIter.bind(null,'committedStoryPoints')} defaultValue={iterData.committedStoryPoints} onPaste={this.paste} ref="committedStoryPoints"/>:
+                  <input id='committedStoryPoints' class='home-iter-content-point' placeholder='0' onKeyDown={this.checkChanges} onKeyPress={this.wholeNumberCheck} onBlur={this.partialSaveIter.bind(null,'committedStoryPoints')} defaultValue={iterData.committedStoryPoints} onPaste={this.paste} ref="committedStoryPoints"/>:
                   <div id='committedStoryPoints' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.committedStoryPoints != ''?iterData.committedStoryPoints:'0'}</div>
                 }
                 {this.state.selectedField === 'committedStoryPoints'?
@@ -685,7 +733,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='Primarily for Delivery teams, this is the actual number of Story points the team was able to deliver for this iteration period.'>Story points delivered</div>
                 {this.state.selectedField === 'storyPointsDelivered'?
-                  <input id='storyPointsDelivered' class='home-iter-content-point' placeholder='0' onKeyDown={this.checkChanges} onKeyPress={this.wholeNumberCheck} onBlur={this.saveIter.bind(null,'storyPointsDelivered')} defaultValue={iterData.storyPointsDelivered} onPaste={this.paste} ref="storyPointsDelivered"/>:
+                  <input id='storyPointsDelivered' class='home-iter-content-point' placeholder='0' onKeyDown={this.checkChanges} onKeyPress={this.wholeNumberCheck} onBlur={this.partialSaveIter.bind(null,'storyPointsDelivered')} defaultValue={iterData.storyPointsDelivered} onPaste={this.paste} ref="storyPointsDelivered"/>:
                   <div id='storyPointsDelivered' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.storyPointsDelivered != ''?iterData.storyPointsDelivered:'0'}</div>
                 }
                 {this.state.selectedField === 'storyPointsDelivered'?
@@ -702,7 +750,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='The number of code drops moved to production for this iteration. (Ex. If 3 enhancements/defects went into production on a single ‘push’, this is one deployment.)'>Deployments this iteration</div>
                 {this.state.selectedField === 'deployments'?
-                  <input id='deployments' class='home-iter-content-point' placeholder='0' onKeyDown={this.checkChanges} onKeyPress={this.wholeNumberCheck} onBlur={this.saveIter.bind(null,'deployments')} defaultValue={iterData.deployments} onPaste={this.paste} ref="deployments" />:
+                  <input id='deployments' class='home-iter-content-point' placeholder='0' onKeyDown={this.checkChanges} onKeyPress={this.wholeNumberCheck} onBlur={this.partialSaveIter.bind(null,'deployments')} defaultValue={iterData.deployments} onPaste={this.paste} ref="deployments" />:
                   <div id='deployments' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.deployments != ''?iterData.deployments:'0'}</div>
                 }
                 {this.state.selectedField === 'deployments'?
@@ -732,7 +780,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='This is the number of production defects your are starting out with in this iteration.  This is pre-populated from the closing balance of defects from the previous iteration.'>Opening balance</div>
                 {this.state.selectedField === 'defectsStartBal'?
-                  <input id='defectsStartBal' class='home-iter-content-point' placeholder='0' onKeyDown={this.checkChanges} onKeyPress={this.wholeNumberCheck} onBlur={this.saveIter.bind(null,'defectsStartBal')} defaultValue={iterData.defectsStartBal} onPaste={this.paste} ref="defectsStartBal"/>:
+                  <input id='defectsStartBal' class='home-iter-content-point' placeholder='0' onKeyDown={this.checkChanges} onKeyPress={this.wholeNumberCheck} onBlur={this.partialSaveIter.bind(null,'defectsStartBal')} defaultValue={iterData.defectsStartBal} onPaste={this.paste} ref="defectsStartBal"/>:
                   <div id='defectsStartBal' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.defectsStartBal !=''?iterData.defectsStartBal:'0'}</div>
                 }
                 {this.state.selectedField === 'defectsStartBal'?
@@ -749,7 +797,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='This is the number of production defects discovered during this iteration.'>New this iteration</div>
                 {this.state.selectedField === 'defects'?
-                  <input id='defects' class='home-iter-content-point' placeholder='0' onKeyDown={this.checkChanges} onKeyPress={this.wholeNumberCheck} onBlur={this.saveIter.bind(null,'defects')} defaultValue={iterData.defects} onPaste={this.paste} ref="defects"/>:
+                  <input id='defects' class='home-iter-content-point' placeholder='0' onKeyDown={this.checkChanges} onKeyPress={this.wholeNumberCheck} onBlur={this.partialSaveIter.bind(null,'defects')} defaultValue={iterData.defects} onPaste={this.paste} ref="defects"/>:
                   <div id='defects' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.defects != ''?iterData.defects:'0'}</div>
                 }
                 {this.state.selectedField === 'defects'?
@@ -766,7 +814,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='This is the number of production defects resolved during this iteration.  In some situations, depending on the type of team, this might also include defects transferred to another team.'>Resolved this iteration</div>
                 {this.state.selectedField === 'defectsClosed'?
-                  <input id='defectsClosed' class='home-iter-content-point' placeholder='0' onKeyDown={this.checkChanges} onKeyPress={this.wholeNumberCheck} onBlur={this.saveIter.bind(null,'defectsClosed')} defaultValue={iterData.defectsClosed} onPaste={this.paste} ref="defectsClosed"/>:
+                  <input id='defectsClosed' class='home-iter-content-point' placeholder='0' onKeyDown={this.checkChanges} onKeyPress={this.wholeNumberCheck} onBlur={this.partialSaveIter.bind(null,'defectsClosed')} defaultValue={iterData.defectsClosed} onPaste={this.paste} ref="defectsClosed"/>:
                   <div id='defectsClosed' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.defectsClosed != ''?iterData.defectsClosed:'0'}</div>
                 }
                 {this.state.selectedField === 'defectsClosed'?
@@ -869,7 +917,7 @@ var HomeIterContent = React.createClass({
             </div>
             <div class='home-iter-comment-block'>
               <div class='home-iter-content-title' data-tip='Enter any comments you feel are relevant to this iteration.  Perhaps it was something unplanned that affected the team’s deliverables, either positively or negatively.'>Iteration Comments</div>
-              <textarea class='home-iter-comment-test' readOnly={!access} value={iterData.comment} onBlur={this.saveIter.bind(null, 'comment')} onChange={this.handleChange}  id='comment' ref="comment"/>:
+              <textarea class='home-iter-comment-test' readOnly={!access} value={iterData.comment} onBlur={this.partialSaveIter.bind(null, 'comment')} onChange={this.handleChange}  id='comment' ref="comment"/>:
             </div>
           </div>
 

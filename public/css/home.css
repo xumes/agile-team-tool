@@ -4225,10 +4225,12 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: relative;
   cursor:pointer;
   width: 18%;
+  height: 100%;
 }
 
 .home-iter-cal-btn-block > i > svg {
-  height: 3.67%;
+  height: 80%;
+  top: 10%;
   min-height: 2em;
   position: relative;
   margin-left: 25%;
@@ -5555,10 +5557,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .checkbox input[type="checkbox"]:checked + span::after {
   content: "✓";
   position: absolute;
-  top: 0.25em;
+  top: 15%;
   left: 0.2em;
   color: #4178BE;
-  font-weight: bold;
+  font-weight: normal;
   font-size: 1.6em;
 }
 
