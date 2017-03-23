@@ -7143,11 +7143,16 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .no-trends-message-block {
   height: 15em;
+  left: 50%;
+  position: relative;
+  transform: translate(-50%, 0px);
+  width: 55%;
 }
 
 .no-trends-message-block p {
-  color: #777677;
+  color: #aeaeae;
   font-size: 2.2em;
+  line-height: 1.4em;
   position: relative;
   text-align: center;
   top: 50%;

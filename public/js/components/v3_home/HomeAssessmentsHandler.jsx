@@ -142,6 +142,7 @@ module.exports.plotAssessmentSeries = function(teamAssessments) {
       plotOptions: {
         series: {
           allowPointSelect: true,
+          cursor: 'pointer',
           marker: {
             states: {
               select: {
