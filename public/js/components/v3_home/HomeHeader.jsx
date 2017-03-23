@@ -77,6 +77,9 @@ var HomeHeader = React.createClass({
               <li>
                 <a href="./howto/AgileTeamTool_MaturityAssessmentGuide.pdf" target="_blank">Assess Your Agile Maturity</a>
               </li>
+              <li>
+                <a href="./howto/AgileTeamTool_PersonDayTeamSatTemplate.xlsx" target="_blank">Compute Person Days Avail</a>
+              </li>
 
               <li>
                 <a href="./howto/AgileTeamTool_UserGuide.pdf" target="_blank">User Guide</a>
