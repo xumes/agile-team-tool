@@ -9,8 +9,10 @@ function getSiteStatus() {
 
 function setSystemMessage(systemStatusControl, systemStatusMsg){
   //set db system message on the top of the page banner - header.ejs id=#warningBar
-  if (systemStatusControl == 'DynamicChange' || systemStatusControl == 'AdminOnlyChange' || systemStatusControl == 'AdminOnlyReadChange'){
+  if (systemStatusControl == 'DynamicChange' || systemStatusControl == 'AdminOnlyChange' || systemStatusControl == 'AdminOnlyReadChange' || systemStatusControl == 'PilotUI'){
     $('#warningBar').html(systemStatusMsg);
+    if (systemStatusControl == 'PilotUI')
+      $('#warningBar').css({'background-color':'#7CC7FF'});
     $('#warningBar').show();
   } else {
     $('#warningBar').hide();
