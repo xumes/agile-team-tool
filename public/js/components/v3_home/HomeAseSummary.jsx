@@ -45,7 +45,11 @@ var HomeAseSummary = React.createClass({
     } else {
       $('.home-assessment-summary').css('background-position','150% 85%');
     }
-    $('.home-assessment-summary').show();
+    if (self.props.showAseSummary) {
+      $('.home-assessment-summary').show();
+    } else {
+      $('.home-assessment-summary').hide();
+    }
     if ($('.home-assessment-summary .select2').length > 0) {
       $('.home-assessment-summary .select2').remove();
     }
@@ -166,7 +170,7 @@ var HomeAseSummary = React.createClass({
           var updateDate = moment(self.props.loadDetailTeam.assessments[0].updateDate).format('DD MMM YYYY');
           // self.state.selectedAssessment = self.props.loadDetailTeam.assessments[0]._id.toString();
           return (
-            <div class='home-assessment-summary' style={{'display':self.props.showAseSummary?'none':'block'}}>
+            <div class='home-assessment-summary' style={{'display':self.props.showAseSummary?'block':'none'}}>
               <div>
                 <div class='first-title'>
                   <h1>Agile Maturity Overview</h1>
@@ -318,7 +322,7 @@ var HomeAseSummary = React.createClass({
             }
           });
           return (
-            <div class='home-assessment-summary' style={{'display':self.props.showAseSummary?'none':'block'}}>
+            <div class='home-assessment-summary' style={{'display':self.props.showAseSummary?'block':'none'}}>
               <div class='main-content'>
                 <div>
                   <div class='content-title'>
@@ -369,7 +373,7 @@ var HomeAseSummary = React.createClass({
         }
       } else {
         return (
-          <div class='home-assessment-summary' style={{'display':self.props.showAseSummary?'none':'block'}}>
+          <div class='home-assessment-summary' style={{'display':self.props.showAseSummary?'block':'none'}}>
             <div>
               <div class='first-title'>
                 <h1>Agile Maturity Overview</h1>

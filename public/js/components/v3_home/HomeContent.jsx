@@ -23,6 +23,8 @@ var HomeContent = React.createClass({
     // } else {
     //   return true;
     // }
+    // console.log('aaa');
+    // console.log(this.state.showAseSummary);
     if (_.isEmpty(this.props.loadDetailTeam) && _.isEmpty(nextProps.loadDetailTeam)) {
       return false;
     } else if (_.isEmpty(this.props.loadDetailTeam) && !_.isEmpty(nextProps.loadDetailTeam)) {
