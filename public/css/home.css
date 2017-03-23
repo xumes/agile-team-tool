@@ -52,6 +52,22 @@ input, select {
   font-size: 1em;
 }
 
+#loadingPage {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 99;
+  top: 0;
+  left: 0;
+  background-color: #FFFFFF;
+}
+
+#loadingPage > div {
+  position: relative;
+  width: 100%;
+  top: 30%;
+}
+
 .select2, .select2-results ul li {
   font-size: 1.4em;
 }
@@ -119,10 +135,10 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 /* Loading Effect One */
 .loading-effect-1 {
-  width: 50px;
-  height: 50px;
-  margin-top: 20px;
-  margin-bottom: 20px; }
+  width: 5.0em;
+  height: 5.0em;
+  margin-top: 2.0em;
+  margin-bottom: 2.0em; }
 
 .loading-effect-1 span {
   display: block;
@@ -2770,11 +2786,49 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   background-position: 150% 100%;
 }
 
+.home-assessment-summary-hide {
+  position: relative;
+  float: left;
+  left: 0.5%;
+  top: 1%;
+  z-index: 7;
+  background-color: #EFF9FF;
+  border: 0.1em solid #7CC7FF;
+  width: 99.8%;
+  height: 9.7%;
+  /*background-image: url('../img/header-bg-art.svg');
+  background-repeat: no-repeat;
+  background-size: 60%;
+  background-position: 150% 100%;*/
+}
+
 .home-assessment-summary > div {
   position: relative;
   float: left;
   width: 100%;
   height: 33.3%;
+}
+
+.home-assessment-summary-hide > div {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+.home-assessment-summary > .hide-show-btn {
+  position: relative;
+  float: right;
+  width: 3.3%;
+  height: 16.5%;
+  cursor: pointer;
+}
+
+.home-assessment-summary > .hide-show-btn > svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
 }
 
 .home-assessment-summary > .main-content {
@@ -2995,13 +3049,20 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   float: left;
   left: 15%;
-  top: 5%;
+  top: 8%;
   width: 70%;
   height: 15%;
+}
+
+.home-assessment-summary > .select-content > .select-box > div {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
   background-color: #EFF9FF;
 }
 
-.home-assessment-summary > .select-content > .select-box > h1 {
+.home-assessment-summary > .select-content > .select-box > div > h1 {
   position: absolute;
   z-index: 1;
   margin-top: 0.7em;
@@ -3013,24 +3074,24 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   background-color: #EFF9FF;
 }
 
-.home-assessment-summary > .select-content > .select-box > .select2 {
+.home-assessment-summary > .select-content > .select-box > div > .select2 {
   height: 100%;
 }
 
-.home-assessment-summary > .select-content > .select-box > .select2 .select2-selection {
+.home-assessment-summary > .select-content > .select-box > div > .select2 .select2-selection {
   height: 100%;
   outline: none;
   background-color: #EFF9FF;
 }
 
-.home-assessment-summary > .select-content > .select-box > .select2 .select2-selection__rendered {
+.home-assessment-summary > .select-content > .select-box > div > .select2 .select2-selection__rendered {
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1em;
   line-height: 2.5em;
   color: #777677;
 }
 
-.home-assessment-summary > .select-content > .select-box > .select2 b {
+.home-assessment-summary > .select-content > .select-box > div > .select2 b {
   top: 1.8em;
 }
 
@@ -3039,7 +3100,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   width: 70%;
   left: 15%;
-  top: 13%;
+  top: 22%;
   height: 40%;
 }
 
@@ -3086,7 +3147,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   width: 70%;
   left: 15%;
-  top: 10%;
+  top: 15%;
   height: 40%;
 }
 
@@ -3112,7 +3173,8 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   padding: 0;
 }
 
-.home-assessment-summary > div > .first-title {
+.home-assessment-summary > div > .first-title,
+.home-assessment-summary-hide > div > .first-title {
   position: relative;
   float: left;
   width: 30%;
@@ -3123,11 +3185,11 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .home-assessment-summary > div > .last-opened {
   position: relative;
-  float: right;
+  float: left;
   width: 20%;
   height: 20%;
   top: 40%;
-  right: 5%;
+  left: 45%;
 }
 
 .home-assessment-summary > div > .last-opened > h1 {
@@ -3157,12 +3219,30 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   padding: 0;
 }
 
-.home-assessment-summary > div > .first-title > h1 {
+.home-assessment-summary > div > .first-title > h1,
+.home-assessment-summary-hide > div > .first-title > h1 {
   font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.2em;
   line-height: 2em;
   color: #62B2EF;
   padding: 0;
+}
+
+.home-assessment-summary-hide > div > .hide-show-btn,
+.home-assessment-summary > div > .hide-show-btn {
+  position: relative;
+  float: right;
+  width: 3%;
+  height: 50%;
+  cursor: pointer;
+}
+
+.home-assessment-summary-hide > div > .hide-show-btn svg,
+.home-assessment-summary > div > .hide-show-btn svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
 }
 
 .home-assessment-summary > div > .second-title {
@@ -6374,7 +6454,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .assessment-popover-block > .agile-maturity span {
   float: right;
-  color: red;
+  color: #999;
 }
 
 /*.assessment-popover-block > .agile-maturity caption,
@@ -7122,11 +7202,16 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .no-trends-message-block {
   height: 15em;
+  left: 50%;
+  position: relative;
+  transform: translate(-50%, 0px);
+  width: 55%;
 }
 
 .no-trends-message-block p {
-  color: #777677;
+  color: #aeaeae;
   font-size: 2.2em;
+  line-height: 1.4em;
   position: relative;
   text-align: center;
   top: 50%;
