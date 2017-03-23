@@ -6,6 +6,7 @@ var Modal = require('react-overlays').Modal;
 var AssessmentPopover = require('./assessments/AssessmentPopover.jsx');
 var AssessmentSetupPopover = require('./assessments/AssessmentSetupPopover.jsx');
 var AssessmentACPlanPopover = require('./assessments/AssessmentACPlanPopover.jsx');
+var chartStatus = require('./chartStatus.jsx').chartStatus;
 
 var HomeAseSummary = React.createClass({
   getInitialState: function() {
@@ -45,7 +46,7 @@ var HomeAseSummary = React.createClass({
     } else {
       $('.home-assessment-summary').css('background-position','150% 85%');
     }
-    if (self.props.showAseSummary) {
+    if (chartStatus.assessmentSummaryShow) {
       $('.home-assessment-summary').show();
     } else {
       $('.home-assessment-summary').hide();
@@ -170,7 +171,7 @@ var HomeAseSummary = React.createClass({
           var updateDate = moment(self.props.loadDetailTeam.assessments[0].updateDate).format('DD MMM YYYY');
           // self.state.selectedAssessment = self.props.loadDetailTeam.assessments[0]._id.toString();
           return (
-            <div class='home-assessment-summary' style={{'display':self.props.showAseSummary?'block':'none'}}>
+            <div class='home-assessment-summary' style={{'display':'none'}}>
               <div>
                 <div class='first-title'>
                   <h1>Agile Maturity Overview</h1>
@@ -322,7 +323,7 @@ var HomeAseSummary = React.createClass({
             }
           });
           return (
-            <div class='home-assessment-summary' style={{'display':self.props.showAseSummary?'block':'none'}}>
+            <div class='home-assessment-summary' style={{'display':'none'}}>
               <div class='main-content'>
                 <div>
                   <div class='content-title'>
@@ -373,7 +374,7 @@ var HomeAseSummary = React.createClass({
         }
       } else {
         return (
-          <div class='home-assessment-summary' style={{'display':self.props.showAseSummary?'block':'none'}}>
+          <div class='home-assessment-summary' style={{'display':'none'}}>
             <div>
               <div class='first-title'>
                 <h1>Agile Maturity Overview</h1>

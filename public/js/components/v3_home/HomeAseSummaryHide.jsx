@@ -2,6 +2,7 @@ var React = require('react');
 var _ = require('underscore');
 var ReactDOM = require('react-dom');
 var InlineSVG = require('svg-inline-react');
+var chartStatus = require('./chartStatus.jsx').chartStatus;
 
 var HomeAseSummaryHide = React.createClass({
   render: function() {
@@ -9,7 +10,7 @@ var HomeAseSummaryHide = React.createClass({
       return null;
     } else {
       return (
-        <div class='home-assessment-summary-hide' style={{'display':this.props.showAseSummary?'none':'block'}}>
+        <div class='home-assessment-summary-hide' style={{'display':chartStatus.assessmentSummaryShow?'none':'block'}}>
           <div>
             <div class='first-title'>
               <h1>Agile Maturity Overview</h1>

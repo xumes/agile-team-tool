@@ -10,6 +10,7 @@ var InlineSVG = require('svg-inline-react');
 var HomeChartFilter = require('./HomeChartFilter.jsx');
 var HomeAseSummary = require('./HomeAseSummary.jsx');
 var HomeAseSummaryHide = require('./HomeAseSummaryHide.jsx');
+var chartStatus = require('./chartStatus.jsx').chartStatus;
 
 var HomeContent = React.createClass({
   getInitialState: function() {
@@ -40,14 +41,14 @@ var HomeContent = React.createClass({
     }
   },
   showHideAseSummary: function() {
-    if (this.state.showAseSummary) {
+    if (chartStatus.assessmentSummaryShow) {
       $('.home-assessment-summary-hide').show();
       $('.home-assessment-summary').hide();
-      this.state.showAseSummary = false;
+      chartStatus.assessmentSummaryShow = false;
     } else {
       $('.home-assessment-summary-hide').hide();
       $('.home-assessment-summary').show();
-      this.state.showAseSummary = true;
+      chartStatus.assessmentSummaryShow = true;
     }
   },
   // handleResize: function(e) {
@@ -198,8 +199,8 @@ var HomeContent = React.createClass({
         <div id='bodyContent' style={{'height':'100%','width':'100%'}}>
           <HomeHighlightBox />
           <HomeTeamHeader loadDetailTeam={this.props.loadDetailTeam} selectedTeamChanged={this.props.selectedTeamChanged} tabClickedHandler={this.props.tabClickedHandler} updateTeamLink={this.props.updateTeamLink} updateTeamDetails={this.props.updateTeamDetails} reloadTeamMembers={this.props.reloadTeamMembers} roles={this.props.roles} />
-          <HomeAseSummary loadDetailTeam={this.props.loadDetailTeam} showAseSummary={this.state.showAseSummary} showHideAseSummary={this.showHideAseSummary}/>
-          <HomeAseSummaryHide loadDetailTeam={this.props.loadDetailTeam} showAseSummary={this.state.showAseSummary} showHideAseSummary={this.showHideAseSummary}/>
+          <HomeAseSummary loadDetailTeam={this.props.loadDetailTeam} showHideAseSummary={this.showHideAseSummary}/>
+          <HomeAseSummaryHide loadDetailTeam={this.props.loadDetailTeam} showHideAseSummary={this.showHideAseSummary}/>
           <div class='home-trends-block'>
             <div class='home-trends-block-title'>
               <h1>Trends</h1>
