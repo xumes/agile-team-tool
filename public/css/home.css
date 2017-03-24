@@ -2786,11 +2786,49 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   background-position: 150% 100%;
 }
 
+.home-assessment-summary-hide {
+  position: relative;
+  float: left;
+  left: 0.5%;
+  top: 1%;
+  z-index: 7;
+  background-color: #EFF9FF;
+  border: 0.1em solid #7CC7FF;
+  width: 99.8%;
+  height: 9.7%;
+  /*background-image: url('../img/header-bg-art.svg');
+  background-repeat: no-repeat;
+  background-size: 60%;
+  background-position: 150% 100%;*/
+}
+
 .home-assessment-summary > div {
   position: relative;
   float: left;
   width: 100%;
   height: 33.3%;
+}
+
+.home-assessment-summary-hide > div {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+.home-assessment-summary > .hide-show-btn {
+  position: relative;
+  float: right;
+  width: 3.3%;
+  height: 16.5%;
+  cursor: pointer;
+}
+
+.home-assessment-summary > .hide-show-btn > svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
 }
 
 .home-assessment-summary > .main-content {
@@ -3135,7 +3173,8 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   padding: 0;
 }
 
-.home-assessment-summary > div > .first-title {
+.home-assessment-summary > div > .first-title,
+.home-assessment-summary-hide > div > .first-title {
   position: relative;
   float: left;
   width: 30%;
@@ -3146,11 +3185,11 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .home-assessment-summary > div > .last-opened {
   position: relative;
-  float: right;
+  float: left;
   width: 20%;
   height: 20%;
   top: 40%;
-  right: 5%;
+  left: 45%;
 }
 
 .home-assessment-summary > div > .last-opened > h1 {
@@ -3180,12 +3219,30 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   padding: 0;
 }
 
-.home-assessment-summary > div > .first-title > h1 {
+.home-assessment-summary > div > .first-title > h1,
+.home-assessment-summary-hide > div > .first-title > h1 {
   font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.2em;
   line-height: 2em;
   color: #62B2EF;
   padding: 0;
+}
+
+.home-assessment-summary-hide > div > .hide-show-btn,
+.home-assessment-summary > div > .hide-show-btn {
+  position: relative;
+  float: right;
+  width: 3%;
+  height: 50%;
+  cursor: pointer;
+}
+
+.home-assessment-summary-hide > div > .hide-show-btn svg,
+.home-assessment-summary > div > .hide-show-btn svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
 }
 
 .home-assessment-summary > div > .second-title {
@@ -7143,11 +7200,16 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .no-trends-message-block {
   height: 15em;
+  left: 50%;
+  position: relative;
+  transform: translate(-50%, 0px);
+  width: 55%;
 }
 
 .no-trends-message-block p {
-  color: #777677;
+  color: #aeaeae;
   font-size: 2.2em;
+  line-height: 1.4em;
   position: relative;
   text-align: center;
   top: 50%;
