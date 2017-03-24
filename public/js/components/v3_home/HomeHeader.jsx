@@ -1,7 +1,19 @@
 var React = require('react');
 var InlineSVG = require('svg-inline-react');
+var HomeFeedback = require('./HomeFeedback.jsx');
 
 var HomeHeader = React.createClass({
+  getInitialState: function() {
+    return {
+      showFeedbackModal: false
+    }
+  },
+  showFeedback: function() {
+    this.setState({ showFeedbackModal: true });
+  },
+  closeFeedback: function() {
+    this.setState({ showFeedbackModal: false });
+  },
   render: function() {
     var userName = user.ldap.preferredFirstName || user.ldap.hrFirstName;
     var callupName = user.ldap.callupName || userName;
@@ -88,7 +100,7 @@ var HomeHeader = React.createClass({
                 <a href="./howto/AgileTeamTool_FrequentlyAskedQuestions.pdf" target="_blank">FAQ</a>
               </li>
               <li>
-                <a href="javascript: launchFeeback();" title="Feedback" id="feedback-modal">Support & Feedback</a>
+                <a href="#" title="Feedback" id="feedback-modal" onClick={this.showFeedback}>Support & Feedback</a>
               </li>
               <li>
                 <a href="https://w3-connections.ibm.com/forums/html/topic?id=b3e1586f-37a5-4d2a-a3e1-653867728fd8&ps=25" target="_blank">What's new</a>
@@ -102,6 +114,8 @@ var HomeHeader = React.createClass({
             <InlineSVG class='header-ibm-logo' src={require('../../../img/Att-icons/att-icons-IBM_logo.svg')}></InlineSVG>
           </div>
         </div>
+
+        <HomeFeedback showFeedbackModal={this.state.showFeedbackModal} closeFeedback={this.closeFeedback} />
       </div>
     )
   }

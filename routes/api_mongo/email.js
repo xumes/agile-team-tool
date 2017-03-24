@@ -8,7 +8,7 @@ var async = require('async');
 SMTP_HOST = settings.email.smtpHost;
 EMAIL_APPKEY = settings.email.smtpApplicationKey;
 FEEDBACK_FROM = 'noreply@agile-team-tool.ibm.com';
-FEEDBACK_RECIPIENTS = 'jeanlam@us.ibm.com, bfouts@us.ibm.com';
+FEEDBACK_RECIPIENTS = 'descalhc@ph.ibm.com';//jeanlam@us.ibm.com, bfouts@us.ibm.com';
 
 var sendRequest = function(emailObj, cb) {
   var params = emailObj;
@@ -45,7 +45,7 @@ var processFeedbackRequest = function(req, res) {
   emails.push({
     html: '<b>Sent by:</b> ' + req.body.feedback_senderName + ' &lt;' + req.body.feedback_sender + '&gt;\
     <br><b>Date submitted:</b> ' + moment.utc().format('MMMM Do YYYY, h:mm a') + ' GMT\
-    <br><b>Page:</b> ' + req.body.feedback_page + '\
+    <br><b>Area:</b> ' + req.body.feedback_page + '\
     <br><b>Team name:</b> ' + req.body.feedback_teamName + '\
     <br><br><b>Text of feedback:</b> \
     <br>' + req.body.feedback,
@@ -59,7 +59,7 @@ var processFeedbackRequest = function(req, res) {
   emails.push({
     html: 'Thank you for your feedback about the Agile Team Tool, submitted on: ' + moment.utc().format('MMMM Do YYYY, h:mm a') + ' GMT. We appreciate your comments! \
     <br><br>As a reminder, here is what you told us:\
-    <br><b>Page:</b> ' + req.body.feedback_page + '\
+    <br><b>Area:</b> ' + req.body.feedback_page + '\
     <br><b>Team name:</b> ' + req.body.feedback_teamName + '\
     <br><br><b>Message:</b>\
     <br>' + req.body.feedback + "\
