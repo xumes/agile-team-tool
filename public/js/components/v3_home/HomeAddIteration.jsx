@@ -128,14 +128,14 @@ var HomeAddIteration = React.createClass({
         data.committedStories = this.props.loadDetailTeam.iterations[0].committedStories;
       }
       if (this.state.c_stories_op_delivered){
-        data.deliveredStories = this.props.loadDetailTeam.iterations[0].deliveredStories;
+        data.committedStories = this.props.loadDetailTeam.iterations[0].deliveredStories;
         
       }
       if (this.state.c_stories_dev_committed) {
         data.committedStoryPoints = this.props.loadDetailTeam.iterations[0].committedStoryPoints;
       }
       if (this.state.c_stories_dev_delivered){
-        data.storyPointsDelivered = this.props.loadDetailTeam.iterations[0].storyPointsDelivered;
+        data.committedStoryPoints = this.props.loadDetailTeam.iterations[0].storyPointsDelivered;
       }
     }
     return data;
@@ -305,7 +305,7 @@ var HomeAddIteration = React.createClass({
                     </label>
                   </div>
                 </div>
-                <p className='home-iter-subdetail-section' style={{'lineHeight': '0%'}}>Stories/Cards (For Operations) from: </p>
+                <p className='home-iter-subdetail-section' style={{'lineHeight': '0%'}}>Stories/Cards (Operations) from: </p>
                 <div className='home-iter-sub-section'>
                   <div class="checkbox">
                     <label for="cstoriesopcom" style={{'display':'flex'}}>
@@ -321,7 +321,7 @@ var HomeAddIteration = React.createClass({
                     </label>
                   </div>
                 </div>
-                <p className='home-iter-subdetail-section' style={{'lineHeight': '0%'}}>Story Points (For Development) from: </p>
+                <p className='home-iter-subdetail-section' style={{'lineHeight': '0%'}}>Story Points (Development) from: </p>
                 <div className='home-iter-sub-section'>
                   <div class="checkbox">
                     <label for="cstoriesdevcom">

@@ -104,12 +104,12 @@ var HomeIterContent = React.createClass({
     if (!_.isEqual(this.props.loadDetailTeam.iterations, prevProps.loadDetailTeam.iterations)){
       var data = this.getSelectedIteration();
       this.setState({selectedIter: data}, function(){
-        $('select[id="homeIterSelection"]').select2({'width':'100%'});
+          $('select[id="homeIterSelection"]').select2({'width':'100%'});
       });
     }
     var self = this;
-
-    $('select[id="homeIterSelection"]').change(self.iterationSelectChange);
+    
+      $('select[id="homeIterSelection"]').change(self.iterationSelectChange);
 
     _.each($('.home-iter-content-point'), function(blk){
       if (blk.id != '') {
@@ -572,7 +572,7 @@ var HomeIterContent = React.createClass({
             <Tooltip html={true} type="light"/>
             <div style={{'display':'inline','width':'100%'}}>
               <div class='home-iter-title'>Iteration Overview</div>
-              <div data-tip='Create New Iteration' style={access?{'display':'inline','cursor':'pointer'}:{'display':'inline', 'cursor':'default'}} onClick={access?this.showAddIteration:''} >
+              <div style={access?{'display':'inline','cursor':'pointer'}:{'display':'inline', 'cursor':'default'}} onClick={access?this.showAddIteration:''} >
                 <div class={access?'home-iter-add-btn-block':'home-iter-add-btn-block-disabled'}>
                   <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
                   <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={self.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
@@ -931,23 +931,21 @@ var HomeIterContent = React.createClass({
       } else {
         return (
           <div>
-            <Tooltip html={true} type="light"/>
-            <div style={{'display':'inline','width':'100%'}}>
-              <div class='home-iter-title'>Iteration Overview</div>
-              <div data-tip='Create New Iteration' style={access?{'display':'inline','cursor':'pointer'}:{'display':'inline', 'cursor':'default'}} onClick={access?this.showAddIteration:''} >
-                <div class={access?'home-iter-add-btn-block':'home-iter-add-btn-block-disabled'}>
-                  <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
-                  <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={self.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
-                </div>
-                <span className="home-iter-add">New Iteration</span>
-              </div>
+            <div class='home-iter-title'>Iteration Overview</div>
+            <div class='home-no-iter-info'>
+              <p>This column will let you and your team keep track of and modify a series of  Agile measurements throughout its iteration
+<span>(Iterations are typically about 2 weeks)</span>.</p>
+
+              <p>Once an iteration completes the information will be displayed in a series of charts in the bottom left of this page.  Your team can use these charts to track values such as velocity, throughput and defects.
+              </p>
             </div>
-            <div class='home-iter-selection-block'>
-              <div class='home-iter-select'>
-                <select value={0} id='homeIterSelection'>
-                  <option key={0} value={0}>{'No iteration results'}</option>
-                </select>
+            <div style={access?{'cursor':'pointer'}:{'cursor':'default'}} className='home-iter-add-btn-block-2' onClick={access?this.showAddIteration:''}>
+              <div style={{'width':'5%'}}>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
               </div>
+                <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={self.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
+
+                <span className="home-iter-add" style={{'left':'2%'}}>Start the first Iteration</span>
             </div>
           </div>
         )
