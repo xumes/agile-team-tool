@@ -146,7 +146,7 @@ var HomeAddTeamMemberModal = React.createClass({
       <Modal aria-labelledby='modal-label' className='reactbootstrap-modal' backdropClassName='reactbootstrap-backdrop' show={self.props.activeWindow}>
         <div class='new-team-creation-add-block new-team-creation-addteam-member' id='addTeamMemberBlock'>
           <div class='new-team-creation-add-block-header'>
-            <h>Add Team Members</h>
+            <h>Select Your Agile Team Members</h>
             <span class='close-ico'><InlineSVG onClick={self.props.closeWindow} src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG></span>
           </div>
           <div class='new-team-creation-add-block-content'>
