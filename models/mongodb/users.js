@@ -235,15 +235,6 @@ var users = {
       }
 
       User.create(newUser)
-      // getUserFromFaces(newUser.email)
-      //   .then(function(facesInfo){
-      //     if (!facesInfo.error) {
-      //       if (facesInfo.location) {
-      //         newUser.location.site = facesInfo.location;
-      //       }
-      //     }
-      //     return User.create(newUser);
-      //   })
         .then(function(result){
           resolve(result);
         })

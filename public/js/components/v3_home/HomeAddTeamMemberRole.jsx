@@ -164,7 +164,7 @@ var HomeAddTeamMemberRole = React.createClass({
       var obj = {};
       obj = _.clone(member);
       if (member.userId === uid) {
-        obj.location = value;
+        obj.location.site = value;
       }
       updatedMember.push(obj);
     });

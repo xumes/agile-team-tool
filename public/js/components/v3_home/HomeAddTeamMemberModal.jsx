@@ -58,39 +58,52 @@ var HomeAddTeamMemberModal = React.createClass({
   addTeamMember: function() {
     var self = this;
     var teamMemberData = [];
-    //var member = $('#txtTeamMemberName').val().trim();
+    var members = [];
     if (!_.isEmpty(self.state.facesPerson)) {
       $('#txtTeamMemberNameError').removeClass('ibm-alert-link');
       $('#txtTeamMemberNameError').html('');
-        var member = {
-            name: self.state.facesPerson.name.trim(),
-            userId: self.state.facesPerson.uid ? self.state.facesPerson.uid.toUpperCase() : null,
-            email: self.state.facesPerson.email ? self.state.facesPerson.email.toLowerCase() : null,
-            location: {
-              site: self.state.facesPerson.location ? self.state.facesPerson.location.toLowerCase() : null
-            },
-            allocation: 100,
-            workTime: 100
-          };
+      var member = {
+        name: self.state.facesPerson.name.trim(),
+        userId: self.state.facesPerson.uid ? self.state.facesPerson.uid.toUpperCase() : null,
+        email: self.state.facesPerson.email ? self.state.facesPerson.email.toLowerCase() : null,
+        location: {
+          site: self.state.facesPerson.location ? self.state.facesPerson.location.toLowerCase() : null
+        },
+        allocation: 100,
+        workTime: 100
+      };
 
-        // onced added to the Table, clear the txtfield automatically
-        $('#txtTeamMemberName').val('');
-        var members = [];
-        if (!_.isEmpty(self.props.newTeamObj) && !_.isEmpty(self.props.newTeamObj.members))
-          members = self.props.newTeamObj.members;
-        members.push(member);
+      /* Before adding the member to the Table lets lookup first if he is exist in Users collection */
+      /* If found then use the data from Users collection else use the data coming from Faces above. */
+      api.getUsersInfo([member.userId])
+        .then(function(user) {
+          if (!_.isEmpty(user)) {
+            tmpMember = _.clone(member);
+            tmpMember.location.site = user[0].location.site;
+            member = tmpMember;
+          }
+          // onced added to the Table, clear the txtfield automatically
+          $('#txtTeamMemberName').val('');
+          if (!_.isEmpty(self.props.newTeamObj) && !_.isEmpty(self.props.newTeamObj.members))
+            members = self.props.newTeamObj.members;
+          members.push(member);
 
-        // remove duplicate user by email
-        _.each(_.uniq(_.pluck(members, 'userId'), utils.toLowerCase), function(value) {
-          teamMemberData.push(_.findWhere(members, {userId: value}));
+          // remove duplicate user by email
+          _.each(_.uniq(_.pluck(members, 'userId'), utils.toLowerCase), function(value) {
+            teamMemberData.push(_.findWhere(members, {userId: value}));
+          });
+
+          self.props.setTeamMember(teamMemberData);
+          if (!_.isEmpty(teamMemberData)) {
+            self.enableNextButton();
+          }
+          self.setState({facesPerson: {}});
+        })
+        .catch(function(err){
+          console.log(err);
+          return;
         });
 
-        self.props.setTeamMember(teamMemberData);
-
-        if (!_.isEmpty(teamMemberData)) {
-          self.enableNextButton();
-        }
-        self.setState({facesPerson: {}});
     } else {
       $('#txtTeamMemberNameError').addClass('ibm-alert-link');
       $('#txtTeamMemberNameError').html('Member name is required.');

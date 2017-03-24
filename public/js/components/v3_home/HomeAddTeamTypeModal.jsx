@@ -60,6 +60,8 @@ var HomeAddTeamTypeModal = React.createClass({
     this.setState({buttonOptions: buttonOptions, showStyle: {'display': 'none'}});
   },
 
+  /* In setting the default member we check first if this member already exist in Users collection. */
+  /* If exist then use the location.site data from Users collection otherwise use the location coming from Faces */
   setDefaultMember: function() {
     var self = this;
     var userId = user.ldap.uid.toUpperCase();
@@ -74,8 +76,23 @@ var HomeAddTeamTypeModal = React.createClass({
           location: {site: result[0]['location']},
           workTime: 100
         };
-        self.props.setTeamMember([data]);
-      }).catch(function(err){
+        return data;
+      })
+      .then(function(data) {
+        api.getActiveUserInfo()
+          .then(function(result) {
+            if (!_.isEmpty(result) && (result[0].userId === data.userId)) {
+              if (!_.isEmpty(result[0].location.site)) {
+                data.location.site = result[0].location.site;
+              }
+            }
+            self.props.setTeamMember([data]);
+          })
+          .catch(function(err){
+            console.log(err);
+          });
+      })
+      .catch(function(err){
         console.log(err);
       });
   },
