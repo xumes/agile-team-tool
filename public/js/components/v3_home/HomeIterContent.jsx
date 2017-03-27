@@ -933,20 +933,19 @@ var HomeIterContent = React.createClass({
           <div>
             <div class='home-iter-title'>Iteration Overview</div>
             <div class='home-no-iter-info'>
-              <p>This column will let you and your team keep track of and modify a series of  Agile measurements throughout its iteration
+              <p>This column will let you and your team keep track of and modify a series of  Agile measurements throughout its iteration &nbsp;
 <span>(Iterations are typically about 2 weeks)</span>.</p>
 
               <p>Once an iteration completes the information will be displayed in a series of charts in the bottom left of this page.  Your team can use these charts to track values such as velocity, throughput and defects.
               </p>
-            </div>
-            <div style={access?{'cursor':'pointer'}:{'cursor':'default'}} className='home-iter-add-btn-block-2' onClick={access?this.showAddIteration:''}>
-              <div style={{'width':'5%'}}>
-                <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
-              </div>
+                <p style={access?{'cursor':'pointer', 'marginRight': '10%'}:{'cursor':'default','marginRight': '10%'}} className='home-iter-add-btn-block-2' onClick={access?this.showAddIteration:''}>
+                  <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
+                  <span className="home-iter-add" style={access?{'left':'1.5%', 'color':'#4178BE'}:{'left':'1.5%', 'color':'#C7C7C7'}}>Start the first Iteration</span>                 
+                </p>
+                
                 <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={self.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
-
-                <span className="home-iter-add" style={{'left':'2%'}}>Start the first Iteration</span>
             </div>
+            
           </div>
         )
       }
