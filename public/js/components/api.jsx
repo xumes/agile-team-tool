@@ -727,3 +727,25 @@ module.exports.getUserFromFacesByUid = function(uid) {
     });
   });
 };
+
+module.exports.sendFeedback = function(senderEmail, senderName, toolArea, teamName, feedback) {
+  var data = {
+    feedback_sender: senderEmail,
+    feedback_senderName: senderName,
+    feedback_page: toolArea,
+    feedback_teamName: teamName,
+    feedback: feedback
+  };
+  return new Promise(function(resolve, reject){
+    var url = '/email/feedback';
+    var req = $.ajax({
+      type: 'POST',
+      url: url,
+      data: data
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};

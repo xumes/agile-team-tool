@@ -670,7 +670,8 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .header-menu-help-block li:nth-child(2)::before,
 .header-menu-help-block li:nth-child(3)::before,
-.header-menu-help-block li:nth-child(4)::before {
+.header-menu-help-block li:nth-child(4)::before,
+.header-menu-help-block li:nth-child(5)::before {
   content: "•" !important;
   margin-left: 0;
   margin-top: .7em;
@@ -679,7 +680,8 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .header-menu-help-block li:nth-child(2) a,
 .header-menu-help-block li:nth-child(3) a,
-.header-menu-help-block li:nth-child(4) a {
+.header-menu-help-block li:nth-child(4) a,
+.header-menu-help-block li:nth-child(5) a {
   margin-left: 1em;
 }
 
@@ -5760,7 +5762,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .home-modal-block-footer {
   display: inline-block;
   font-size: inherit;
-  padding: 0 1em;
+  padding: 0.5em 1em 1em 1em;
   position: relative;
 }
 
@@ -7369,3 +7371,35 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   text-align: left;
   color: #777677;
 }
+
+.feedback-block {
+  font-size: 0.9em;
+  padding: 0.5em 0 1em;
+}
+
+.feedback-block > p {
+  font-size: inherit;
+  padding: 1.5em 1em 0.5em;
+}
+
+.feedback-block label {
+  display: block;
+  font-weight: bold;
+  padding-bottom: 0.3em;
+}
+
+.feedback-block span {
+  font-size: inherit;
+}
+
+.feedback-block span select {
+  width: 70%;
+}
+
+.feedback-block textarea {
+  font-size: inherit;
+  width: 100%;
+}
+
+
+
