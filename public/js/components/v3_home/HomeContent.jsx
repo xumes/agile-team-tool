@@ -76,24 +76,32 @@ var HomeContent = React.createClass({
     var isSquad = this.props.loadDetailTeam.team.type == 'squad';
     $('.home-trends-block-filter-img, .home-chart-filter-block, .home-trends-block-title, .home-assessment-summary, .home-team-header').unbind('mouseenter mouseleave');
     // filter button
-    $('.home-trends-block-filter-img').bind('mouseenter', function() {
-      if ($('.home-chart-filter-block').css('display') == 'none') {
-        if (isSquad) {
-          $('.home-chart-filter-block').css('left', '32.5%');
-        } else {
-          $('.home-chart-filter-block').css('left', '-2.5%');
+    if (!isSquad || ((this.props.loadDetailTeam.iterations && this.props.loadDetailTeam.iterations.length > 0) || (this.props.loadDetailTeam.assessments && this.props.loadDetailTeam.assessments.length > 0))) {
+      $('.home-trends-block-filter-img svg').css('cursor', 'default');
+      $('.home-trends-block-title').show();
+      $('.home-trends-block-filter-img').bind('mouseenter', function() {
+        if ($('.home-chart-filter-block').css('display') == 'none') {
+          if (isSquad) {
+            $('.home-chart-filter-block').css('left', '32.5%');
+          } else {
+            $('.home-chart-filter-block').css('left', '-2.5%');
+          }
+          $('.home-chart-filter-block').fadeIn();
         }
-        $('.home-chart-filter-block').fadeIn();
-      }
-    });
-    $('.home-chart-filter-block').bind('mouseleave', function() {
-      if ($('.home-chart-filter-block').css('display') != 'none' && $('.home-chart-filter-block').attr('data-open') != 'true') {
-        $('.home-chart-filter-block').fadeOut();
-      }
-    });
-    $('.home-assessment-summary, .home-team-header').bind('mouseenter', function() {
-      $('.home-chart-filter-block').trigger('mouseleave');
-    });
+      });
+      $('.home-chart-filter-block').bind('mouseleave', function() {
+        if ($('.home-chart-filter-block').css('display') != 'none' && $('.home-chart-filter-block').attr('data-open') != 'true') {
+          $('.home-chart-filter-block').fadeOut();
+        }
+      });
+      $('.home-assessment-summary, .home-team-header').bind('mouseenter', function() {
+        $('.home-chart-filter-block').trigger('mouseleave');
+      });
+    } else {
+      $('.home-trends-block-filter-img svg').css('cursor', 'pointer');
+      $('.home-trends-block-title').hide();
+      $('.home-trends-overflow').removeClass('nano');
+    }
   },
   showFilter: function() {
     $('.home-chart-filter-block').attr('data-open', 'true');
@@ -210,7 +218,7 @@ var HomeContent = React.createClass({
               <h4>&nbsp;/&nbsp;</h4>
               <h4 style={{'color':'#FFA501'}}>*</h4>
               <h4 id='partialName'>&nbsp;{partialName}</h4>
-              <div class='home-trends-block-filter-img' onClick={this.showFilter} style={{'cursor':'pointer'}}>
+              <div class='home-trends-block-filter-img' onClick={this.showFilter} >
                 <InlineSVG src={require('../../../img/Att-icons/att-icons_filter.svg')}></InlineSVG>
               </div>
               <HomeChartFilter loadDetailTeam={this.props.loadDetailTeam} closeFilter={this.closeFilter} iterationGraphArea={this.iterationGraphArea} assessmentGraphArea={this.assessmentGraphArea}/>

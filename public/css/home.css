@@ -1884,6 +1884,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 .home-trends-block-title > h4 {
   display: inline-block;
+  cursor: pointer;
   float: left;
   position: relative;
   top: 60%;
@@ -2206,7 +2207,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   height: 25em;
 }
 
-.home-no-iter-info p{  
+.home-no-iter-info p{
   font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 18px;
   line-height: 25px;
@@ -2329,7 +2330,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   height: 100%;
 }
 
-.home-iter-add-btn-block > i > svg, .home-iter-add-btn-block-disabled > i > svg, 
+.home-iter-add-btn-block > i > svg, .home-iter-add-btn-block-disabled > i > svg,
 .home-iter-add-btn-block-2 > i > svg, .home-iter-add-btn-block-disabled-2 > i > svg  {
   width: auto;
   height: 100%;
@@ -7236,12 +7237,14 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 15em;
   left: 50%;
   position: relative;
-  transform: translate(-50%, 0px);
-  width: 55%;
+  top: 50%;
+  transform: translate(-50%, 50%);
+  width: 43%;
 }
 
 .no-trends-message-block p {
   color: #aeaeae;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.2em;
   line-height: 1.4em;
   position: relative;
