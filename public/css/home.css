@@ -2206,20 +2206,20 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   height: 25em;
 }
 
-.home-no-iter-info p{  
+.home-no-iter-info p{
   font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 18px;
   line-height: 25px;
   color: #464646;
-  margin-right: 4.5%;
+  margin-right: 7.5%;
 
 }
 
 .home-no-iter-info p span{
   display: inline-block;
   font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
-  font-size: 14px;
-  line-height: 25px;
+  font-size: 16px;
+  line-height: 16px;
   color: #C7C7C7;
 }
 
@@ -2314,19 +2314,16 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .home-iter-add-btn-block-2, .home-iter-add-btn-block-disabled-2 {
-  position: relative;
   display: inline-flex;
-  float: left;
-  width: 100%;
+  float: right;
   height: 1.22%;
   min-height: 1.5em;
-  top: 6%;
-  margin-left: 50%;
+  margin-right: 10%;
 }
 
+
 .home-iter-add-btn-block-2 > i{
-  width: 100%;
-  height: 100%;
+  height: 70%;
 }
 
 .home-iter-add-btn-block > i > svg, .home-iter-add-btn-block-disabled > i > svg, 
@@ -4187,7 +4184,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-iter-popup {
-  width: 25%;
+  width: 26%;
   background-color: #FFFFFF;
   position: absolute;
   top: 50%;
@@ -4247,7 +4244,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-iter-main {
-  margin-top: 14%;
+  margin-top: 7.27%;
 }
 
 .home-iter-main-section {
@@ -4264,6 +4261,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   flex-direction: row;
   align-items: center;
   height: 3.5em;
+  margin-top: -3%;
 }
 
 .home-iter-sub-section-category {
@@ -4288,7 +4286,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-iter-subdetail-section {
-  margin-top: 10.42%;
+  margin-top: 4%;
   font-family: "HelvNeue Medium for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
   font-weight: normal;
