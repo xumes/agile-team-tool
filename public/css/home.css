@@ -7384,13 +7384,14 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .feedback-block > p {
   font-size: inherit;
-  padding: 1.5em 1em 0.5em;
+  padding: 1.5em 1.5em 0.5em;
 }
 
 .feedback-block label {
   display: block;
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-weight: bold;
-  padding-bottom: 0.3em;
+  padding-bottom: 0.4em;
 }
 
 .feedback-block span {
@@ -7398,12 +7399,12 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .feedback-block span select {
-  width: 70%;
+  width: 62%;
 }
 
 .feedback-block textarea {
   font-size: inherit;
-  width: 100%;
+  width: 98%;
 }
 
 
