@@ -7675,3 +7675,12 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-size: inherit;
   width: 100%;
 }
+
+.home-header-banner-message > .home-header-banner-icon > a > i > svg {
+  height: 1.2em;
+  width: 2em;
+}
+
+.home-header-banner-message > .home-header-banner-icon > a > i > svg path {
+  fill: #4178BE !important;
+}
