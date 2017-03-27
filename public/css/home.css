@@ -2200,20 +2200,33 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   left: 5%;
   float: left;
   top: 5%;
-  width: 90%;
-  height: 2%;
+  width: 98%;
+  height: 25em;
+}
+
+.home-no-iter-info p{  
   font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
-  font-size: 2.0em;
-  color: #000000;
+  font-size: 18px;
+  line-height: 25px;
+  color: #464646;
+  margin-right: 4.5%;
+
+}
+
+.home-no-iter-info p span{
+  display: inline-block;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 14px;
+  line-height: 25px;
+  color: #C7C7C7;
 }
 
 .home-iter-add{
   font-family: "HelvNeue Roman for IBM";
   font-size: 1.6em;
   text-align: right;
-  line-height: 1.9em;
   color: #4178BE;
-  top: 4.1%;
+  top: 4.5%;
   position: relative;
 }
 
@@ -2298,7 +2311,24 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   top: 4.5%;
 }
 
-.home-iter-add-btn-block > i > svg, .home-iter-add-btn-block-disabled > i > svg {
+.home-iter-add-btn-block-2, .home-iter-add-btn-block-disabled-2 {
+  position: relative;
+  display: inline-flex;
+  float: left;
+  width: 100%;
+  height: 1.22%;
+  min-height: 1.5em;
+  top: 6%;
+  margin-left: 50%;
+}
+
+.home-iter-add-btn-block-2 > i{
+  width: 100%;
+  height: 100%;
+}
+
+.home-iter-add-btn-block > i > svg, .home-iter-add-btn-block-disabled > i > svg, 
+.home-iter-add-btn-block-2 > i > svg, .home-iter-add-btn-block-disabled-2 > i > svg  {
   width: auto;
   height: 100%;
   pointer-events: none;
@@ -4305,10 +4335,12 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: relative;
   cursor:pointer;
   width: 18%;
+  height: 100%;
 }
 
 .home-iter-cal-btn-block > i > svg {
-  height: 3.67%;
+  height: 80%;
+  top: 10%;
   min-height: 2em;
   position: relative;
   margin-left: 25%;
@@ -5635,10 +5667,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .checkbox input[type="checkbox"]:checked + span::after {
   content: "✓";
   position: absolute;
-  top: 0.25em;
+  top: 15%;
   left: 0.2em;
   color: #4178BE;
-  font-weight: bold;
+  font-weight: normal;
   font-size: 1.6em;
 }
 
