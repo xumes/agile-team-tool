@@ -151,7 +151,7 @@ var HomeAddTeamMemberModal = React.createClass({
           </div>
           <div class='new-team-creation-add-block-content'>
             <div class='new-team-creation-add-block-content-mid'>
-              <form class="ibm-row-form">
+              <div class="ibm-row-form">
                 <div class='col1'>
                   <HomeAddTeamMemberFaces addTeamMember={self.addTeamMember} updateFacesObj={self.updateFacesObj} changeHandlerFacesFullname={self.changeHandlerFacesFullname} />
                 </div>
@@ -168,7 +168,7 @@ var HomeAddTeamMemberModal = React.createClass({
                 <div class='tbl-results'>
                   <HomeAddTeamMemberTable newTeamObj={self.props.newTeamObj} deleteTeamMember={self.deleteTeamMember} />
                 </div>
-              </form>
+              </div>
 
             </div>
           </div>

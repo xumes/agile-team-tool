@@ -21,7 +21,6 @@ var HomeAddTeamDropdownRole = React.createClass({
   init: function() {
     var self = this;
     var serverRoles = _.clone(self.props.serverRoles);
-    serverRoles.push('Team Lead');
 
     $('.tbl-members-role-data .createteam-role-field').unbind('mouseenter mouseleave');
     $('.tbl-members-role-data .r_save-btn').click(self.saveRole);
@@ -167,8 +166,9 @@ var HomeAddTeamDropdownRole = React.createClass({
     var memberUserId = self.props.memberUserId;
     var memberRole = self.props.memberRole || 'Select Role';
     var options = [];
-    options.push({value: 'Team Lead', label: 'Team Lead'});
-    self.props.defaultRoles.map(function(v) {
+    // options.push({value: 'Team Lead', label: 'Team Lead'});
+    var sortedRoles = _.sortBy(self.props.defaultRoles, 'label');
+    sortedRoles.map(function(v) {
       if (v) {
         options.push({value: v, label: v});
       }
