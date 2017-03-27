@@ -21,7 +21,7 @@ var windowSize2 = {
   'width': 1900,
   'fontSize': 0.625
 };
-var loginDate = '2017-03-28T00:00:00.000Z';
+var loginDate = '2017-03-31T00:00:00.000Z';
 
 var HomePage = React.createClass({
   getInitialState: function() {

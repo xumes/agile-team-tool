@@ -158,7 +158,7 @@ var FirstLoginPopover = React.createClass({
           <div class='description'>
             <div class='desc-row'>
               <div>
-                <InlineSVG src={require('../../../img/Att-icons/Att-icons_Add.svg')}></InlineSVG>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
               </div>
               <h1>{'Icon creates a new team.'}</h1>
             </div>
