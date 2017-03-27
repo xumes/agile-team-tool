@@ -327,7 +327,7 @@ var AssessmentButtons = React.createClass({
         </div>
         <ConfirmPopover confirmClick={this.cancelAssessment} confirmId='cancelAssessDraftConfirm' content={'You have requested to reset all changes you made on this draft assessment.  All changes will be removed. Please confirm that you want to proceed with this reset changes.'} cancelBtn='block' confirmBtn='block' okBtn='none'/>
         <ConfirmPopover confirmClick={this.deleteAssessment} confirmId='deleteAssessDraftConfirm' content={'You have requested to delete this draft assessment.  All saved progress will be deleted. Please confirm that you want to proceed with this delete.'} cancelBtn='block' confirmBtn='block' okBtn='none'/>
-        <ConfirmPopover confirmId='saveDraftConfirm' content={'Maturity assessment has been saved as draft.'} cancelBtn='none' confirmBtn='none' okBtn='block'/>
+        <ConfirmPopover confirmId='saveDraftConfirm' content={'Maturity assessment has been saved as draft.'} cancelBtn='none' confirmBtn='none' okBtn='block' hideAssessmentPopover={this.props.hideAssessmentPopover}/>
       </div>
     )
   }
