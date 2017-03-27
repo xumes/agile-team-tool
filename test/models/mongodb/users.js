@@ -17,7 +17,8 @@ var testParentTeam = {
     'role': 'Tester',
     'allocation': 100,
     'userId': 'TEST1234567',
-    'email': 'testuser@test.com'
+    'email': 'testuser@test.com',
+    'workTime': 100
   }],
   'createdByUserId': 'TEST1234567',
   'createdBy': 'testuser@test.com'
@@ -54,13 +55,17 @@ var testChildTeam = {
 };
 var userSession1 = {
   'ldap': {
-    'uid': 'TEST1234567'
+    'uid': 'TEST1234567',
+    'hrFirstName': 'John',
+    'hrLastName': 'Doe',
   },
   'shortEmail': 'testuser@test.com'
 };
 var userSession2 = {
   'ldap': {
-    'uid': 'ADMIN1234567'
+    'uid': 'ADMIN1234567',
+    'hrFirstName': 'John',
+    'hrLastName': 'Doe',
   },
   'shortEmail': 'admintestuser@test.com'
 };
@@ -127,8 +132,19 @@ describe('Users model [create]', function() {
   });
 });
 
-describe('Users model [findUserByEmail]', function() {
-  it('return all admin users', function(done) {
+describe('Users model [getAllUsers]', function() {
+  it('return all users', function(done){
+    this.timeout(5000);
+    users.getAllUsers()
+      .then(function(result) {
+        expect(result).to.be.a('array');
+        done();
+      });
+  });
+});
+
+describe('Users model [getAdmins]', function() {
+  it('return all admin users', function(done){
     users.getAdmins()
       .then(function(result) {
         expect(result).to.be.a('array');
@@ -139,6 +155,7 @@ describe('Users model [findUserByEmail]', function() {
 
 describe('Users model [findUserByEmail]', function() {
   it('return all users info by searching empty email', function(done) {
+    this.timeout(60000);
     users.findUserByEmail()
       .then(function(result) {
         expect(result).to.be.a('array');
@@ -174,6 +191,7 @@ describe('Users model [findUserByEmail]', function() {
 
 describe('Users model [findUserByUserId]', function() {
   it('return all users info by searching empty userId', function(done) {
+    this.timeout(60000);
     users.findUserByUserId()
       .then(function(result) {
         expect(result).to.be.a('array');
@@ -224,6 +242,7 @@ describe('Users model [getUsersInfo]', function() {
 
 describe('Users model [isUserAllowed]', function() {
   it('return true if the user has access', function(done) {
+    this.timeout(60000);
     users.isUserAllowed(testUser.userId, newParentTeamId)
       .then(function(result) {
         expect(result).to.equal(true);
@@ -231,6 +250,7 @@ describe('Users model [isUserAllowed]', function() {
       });
   });
   it('return true if the user has access to child team', function(done) {
+    this.timeout(60000);
     users.isUserAllowed(testUser.userId, newChildTeamId)
       .then(function(result) {
         expect(result).to.equal(true);
@@ -266,6 +286,7 @@ describe('Users model [isUserAllowed]', function() {
       });
   });
   it('return true for child user access', function(done) {
+    this.timeout(60000);
     users.isUserAllowed(testChildUser.userId, newChildTeamId)
       .then(function(result) {
         expect(result).to.equal(true);

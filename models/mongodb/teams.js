@@ -583,7 +583,7 @@ module.exports.createTeam = function(teamDoc, creator) {
             role: _.isEqual(teamDoc.type, 'squad') ? 'Iteration Manager' : 'Team Lead',
             userId: creator ? creator['ldap']['uid'].toUpperCase() : '',
             email: creator ? creator['shortEmail'].toLowerCase() : '',
-            location: {site: m['location']['site'] ? m['location']['site'] : '', timezone:null},
+            location: {site: (m['location'] && m['location']['site']) ? m['location']['site'] : '', timezone:null},
             workTime: m['workTime']
           };
           member.push(obj);
