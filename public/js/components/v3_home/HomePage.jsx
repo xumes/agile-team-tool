@@ -4,19 +4,24 @@ var HomeHeader = require('./HomeHeader.jsx');
 var HomeNav = require('./HomeNav.jsx');
 var HomeContent = require('./HomeContent.jsx');
 var HomeIterContent = require('./HomeIterContent.jsx');
+var FirstLoginPopover = require('./FirstLoginPopover.jsx');
 var InlineSVG = require('svg-inline-react');
 var update = require('immutability-helper');
+var Modal = require('react-overlays').Modal;
 var utils = require('../utils.jsx');
+var _ = require('underscore');
+var moment = require('moment');
 var windowSize = {
   'height': 768,
   'width': 1440,
   'fontSize': 0.625
-}
+};
 var windowSize2 = {
   'height': 1080,
   'width': 1900,
   'fontSize': 0.625
-}
+};
+var loginDate = '2017-03-28T00:00:00.000Z';
 
 var HomePage = React.createClass({
   getInitialState: function() {
@@ -26,7 +31,8 @@ var HomePage = React.createClass({
       newTeams: new Object(),
       loadDetailTeam: new Object(),
       selectedIter: '',
-      roles: []
+      roles: [],
+      firstLogin: false
     }
   },
 
@@ -34,7 +40,35 @@ var HomePage = React.createClass({
     var self = this;
     api.fetchTeamMemberRoles()
       .then(function(roles){
-        self.setState({'roles': roles});
+        // self.setState({'roles': roles});
+        self.state.roles = roles;
+      })
+      .catch(function(err){
+        console.log(err);
+      });
+    api.getUsersInfo([(user.ldap.uid).toUpperCase()])
+      .then(function(result){
+        if (_.isEmpty(result[0])) {
+          return;
+        } else {
+          var loginUser = result[0];
+          var now = new Date();
+          var now_utc = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds());
+          if (loginUser.lastLogin == null) {
+            self.state.firstLogin = true;
+          } else {
+            var lastLogin = moment.utc(loginUser.lastLogin);
+            var isAfter = lastLogin.isAfter(loginDate);
+            if (!isAfter) {
+              self.state.firstLogin = true;
+            }
+          }
+          loginUser.lastLogin = now_utc;
+          return api.updateUser(loginUser);
+        }
+      })
+      .then(function(result){
+        console.log(result);
       })
       .catch(function(err){
         console.log(err);
@@ -42,6 +76,17 @@ var HomePage = React.createClass({
   },
 
   componentDidUpdate: function() {
+    if (!_.isEmpty(this.state.loadDetailTeam) && $('.first-login-block').css('display') == 'block') {
+      if (this.state.loadDetailTeam.team.type == 'squad') {
+        $('#firstLoginCard_4').css('left', '27vw');
+        $('#firstLoginCard_5').css('top', '12vw');
+        $('#firstLoginCard_6').css('left', '3vw');
+        $('#firstLoginCard_6 > .pointer').css('transform','rotate(315deg)');
+        $('#firstLoginCard_6 > .pointer').css('-ms-transform','rotate(315deg)');
+        $('#firstLoginCard_6 > .pointer').css('-webkit-transform','rotate(315deg)');
+        $('#firstLoginCard_6 > .pointer').css('top','0');
+      }
+    }
   },
 
   componentDidMount: function() {
@@ -52,6 +97,14 @@ var HomePage = React.createClass({
 
   componentWillUnmount: function() {
     window.removeEventListener('resize', this.handleResize);
+  },
+
+  hideFirstLoginPopover: function() {
+    this.setState({firstLogin: false});
+  },
+
+  showFirstLoginPopover: function() {
+    this.setState({firstLogin: true});
   },
 
   handleResize: function() {
@@ -389,7 +442,7 @@ var HomePage = React.createClass({
     var pageStyle = {
       'width': '100%',
       'height': '100%'
-    }
+    };
     var columnsStyle = {
       'position': 'relative',
       'width': '96.6%',
@@ -401,12 +454,29 @@ var HomePage = React.createClass({
       'width': '30.91%',
       'backgroundColor': '#F7F7F7',
       'height': '205%'
-    }
+    };
     var sectionTwoStyle = {
       'width': '69.09%',
       'height': '100%',
       'position': 'relative'
-    }
+    };
+    var backdropStyle = {
+      top: 0, bottom: 0, left: 0, right: 0,
+      zIndex: 'auto',
+      backgroundColor: '#000',
+      opacity: 0.5,
+      width: '100%',
+      height: '100%'
+    };
+    var modalStyle = {
+      position: 'fixed',
+      width: '100%',
+      height: '100%',
+      minWidth: '1280px',
+      minHeight: '720px',
+      zIndex: 1040,
+      top: 0, bottom: 0, left: 0, right: 0,
+    };
     var src = require('../../../img/Att-icons/att-icons-Chevron-right.svg');
     return (
       <div style={pageStyle}>
@@ -434,6 +504,9 @@ var HomePage = React.createClass({
         <div id='homeNavDiv' class='home-nav-div' hidden='true'>
           <HomeNav loadDetailTeam={this.state.loadDetailTeam} loadDetailTeamChanged={this.loadDetailTeamChanged} selectedTeam={this.state.selectedTeam} selectedTeamChanged={this.selectedTeamChanged} newTeams={this.state.newTeams} newTeamsChanged={this.newTeamsChanged} tabClickedHandler={this.tabClickedHandler} roles={this.state.roles} />
         </div>
+        <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={this.state.firstLogin} onHide={this.hideFirstLoginPopover}>
+          <FirstLoginPopover hideFirstLoginPopover={this.hideFirstLoginPopover}/>
+        </Modal>
       </div>
     )
   }
