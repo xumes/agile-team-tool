@@ -55,7 +55,7 @@ var HomeAddIteration = React.createClass({
   reset: function(){
     if (this.props.loadDetailTeam.iterations.length > 0){
       var name = this.props.loadDetailTeam.iterations[0].name + ' (copy)';
-      this.startDateChange(new moment(this.props.loadDetailTeam.iterations[0].endDate).add(1,'day'));
+      this.startDateChange(this.props.loadDetailTeam.iterations[0].endDate != null ?new moment(this.props.loadDetailTeam.iterations[0].endDate).add(1,'day'):null);
       this.setState({
         name: name, 
         c_name: true, 
@@ -128,14 +128,14 @@ var HomeAddIteration = React.createClass({
         data.committedStories = this.props.loadDetailTeam.iterations[0].committedStories;
       }
       if (this.state.c_stories_op_delivered){
-        data.deliveredStories = this.props.loadDetailTeam.iterations[0].deliveredStories;
+        data.committedStories = this.props.loadDetailTeam.iterations[0].deliveredStories;
         
       }
       if (this.state.c_stories_dev_committed) {
         data.committedStoryPoints = this.props.loadDetailTeam.iterations[0].committedStoryPoints;
       }
       if (this.state.c_stories_dev_delivered){
-        data.storyPointsDelivered = this.props.loadDetailTeam.iterations[0].storyPointsDelivered;
+        data.committedStoryPoints = this.props.loadDetailTeam.iterations[0].storyPointsDelivered;
       }
     }
     return data;
@@ -305,7 +305,7 @@ var HomeAddIteration = React.createClass({
                     </label>
                   </div>
                 </div>
-                <p className='home-iter-subdetail-section' style={{'lineHeight': '0%'}}>Stories/Cards (For Operations) from: </p>
+                <p className='home-iter-subdetail-section' style={{'lineHeight': '0%'}}>Stories/Cards (Operations) from: </p>
                 <div className='home-iter-sub-section'>
                   <div class="checkbox">
                     <label for="cstoriesopcom" style={{'display':'flex'}}>
@@ -321,7 +321,7 @@ var HomeAddIteration = React.createClass({
                     </label>
                   </div>
                 </div>
-                <p className='home-iter-subdetail-section' style={{'lineHeight': '0%'}}>Story Points (For Development) from: </p>
+                <p className='home-iter-subdetail-section' style={{'lineHeight': '0%'}}>Story Points (Development) from: </p>
                 <div className='home-iter-sub-section'>
                   <div class="checkbox">
                     <label for="cstoriesdevcom">
@@ -341,9 +341,9 @@ var HomeAddIteration = React.createClass({
               <div className='home-iter-main' style={{'width':'100%'}}>
                 <p className='home-iter-main-section' style={{'lineHeight': '0%'}}>Iteration Dates</p>
                 <div style={{'display':'flex', 'marginTop': '2%'}} id='iterationDates'>
-                  <DatePicker onChange={this.startDateChange} selected={ moment.utc(this.state.iterationStartDate)} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='startDate' />} disabled={false} ref='iterationStartDate' fixedHeight/>
+                  <DatePicker onChange={this.startDateChange} selected={ this.state.iterationStartDate != null?moment.utc(this.state.iterationStartDate):null} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='startDate' />} disabled={false} ref='iterationStartDate' fixedHeight/>
                   <p style={{'marginLeft':'5%', 'marginRight':'5%'}} className='home-iter-date-range'> to </p>
-                  <DatePicker onChange={this.endDateChange} selected={ moment.utc(this.state.iterationEndDate)} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='endDate' />} disabled={false} ref='iterationEndDate' fixedHeight/>
+                  <DatePicker onChange={this.endDateChange} selected={ this.state.iterationEndDate != null? moment.utc(this.state.iterationEndDate):null} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='endDate' />} disabled={false} ref='iterationEndDate' fixedHeight/>
                 </div>
               </div>
                 
