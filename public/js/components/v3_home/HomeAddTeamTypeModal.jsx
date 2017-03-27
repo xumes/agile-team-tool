@@ -176,7 +176,7 @@ var HomeAddTeamTypeModal = React.createClass({
                 </div>
               </div>
             </div>
-            <div class='footer-note'><strong class="note1">NOTE:</strong>&nbsp;To join an existing team, click the "All teams" tab, find the team and click "request to join"</div>
+            <div class='footer-note'><strong class="note1">NOTE:</strong>&nbsp;To be added to an existing team please contact the Team Lead or the Iteration Manager.</div>
           </div>
 
           <HomeAddTeamFooterButtons buttonOptions={self.state.buttonOptions} openWindow={self.props.openWindow} />
