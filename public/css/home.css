@@ -2159,6 +2159,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 .home-trends-block-title > h4 {
   display: inline-block;
+  cursor: pointer;
   float: left;
   position: relative;
   top: 60%;
@@ -4472,6 +4473,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   border: none;
   border-radius: 0;
   max-width: 600px;
+  min-width: 300px;
 }
 
 .popup-title {
@@ -4535,8 +4537,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 3.5em;
-  margin-top: -3%;
 }
 
 .home-iter-sub-section-category {
@@ -7509,12 +7509,14 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 15em;
   left: 50%;
   position: relative;
-  transform: translate(-50%, 0px);
-  width: 55%;
+  top: 50%;
+  transform: translate(-50%, 50%);
+  width: 43%;
 }
 
 .no-trends-message-block p {
   color: #aeaeae;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.2em;
   line-height: 1.4em;
   position: relative;
@@ -7654,13 +7656,14 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .feedback-block > p {
   font-size: inherit;
-  padding: 1.5em 1em 0.5em;
+  padding: 1.5em 1.5em 0.5em;
 }
 
 .feedback-block label {
   display: block;
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-weight: bold;
-  padding-bottom: 0.3em;
+  padding-bottom: 0.4em;
 }
 
 .feedback-block span {
@@ -7668,12 +7671,12 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .feedback-block span select {
-  width: 70%;
+  width: 62%;
 }
 
 .feedback-block textarea {
   font-size: inherit;
-  width: 100%;
+  width: 98%;
 }
 
 .home-header-banner-label {

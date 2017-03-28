@@ -302,33 +302,33 @@ var HomeAddIteration = React.createClass({
                  </div>
               </div>
               <div className='home-iter-main' style={{'marginTop':'10%'}}>
-                <p className='home-iter-main-section' style={{'lineHeight': '0%'}}>Copy into Committed from your last Iteration: </p>
-                <p className='home-iter-subdetail-section' style={{'lineHeight': '0%'}}>Stories/Cards (<i>Operations</i>) from </p>
+                <div className='home-iter-main-section'>Copy into Committed from your last Iteration: </div>
+                <div className='home-iter-subdetail-section'>Stories/Cards (<i>Operations</i>) from </div>
                 <div className='home-iter-sub-section'>
-                  <div class="checkbox">
+                  <div class="checkbox" style={{'marginTop':'2%'}}>
                     <label for="cstoriesopcom" style={{'display':'flex'}}>
                       <input type="checkbox" checked={this.state.c_stories_op_committed} onChange={this.copyOpCommStories} id="cstoriesopcom"/>
                       <span className='home-iter-sub-section-category'>Committed</span>
                     </label>
                   </div>
                   <span style={{'paddingLeft':'10%'}}/>
-                  <div class="checkbox" >
+                  <div class="checkbox" style={{'marginTop':'2%'}}>
                     <label for="cstoriesopdel" style={{'display':'flex'}}>
                       <input type="checkbox" checked={this.state.c_stories_op_delivered} onChange={this.copyOpDelStories} id="cstoriesopdel"/>
                       <span className='home-iter-sub-section-category' style={{'marginRight': '0.1em'}}>Delivered </span>
                     </label>
                   </div>
                 </div>
-                <p className='home-iter-subdetail-section' style={{'lineHeight': '0%','marginTop':'8%'}}>Story Points (<i>Development</i>) from </p>
+                <div className='home-iter-subdetail-section' style={{'marginTop':'8%'}}>Story Points (<i>Development</i>) from </div>
                 <div className='home-iter-sub-section'>
-                  <div class="checkbox">
+                  <div class="checkbox" style={{'marginTop':'2%'}}>
                     <label for="cstoriesdevcom">
                       <input type="checkbox" checked={this.state.c_stories_dev_committed} onChange={this.copyDevCommStories} id="cstoriesdevcom"/>
                       <span className='home-iter-sub-section-category'>Committed</span>
                     </label>
                   </div>
                   <span style={{'paddingLeft':'10%'}}/>
-                  <div class="checkbox" >
+                  <div class="checkbox" style={{'marginTop':'2%'}} >
                     <label for="cstoriesdevdel" style={{'display':'flex','textAlign':'center'}}>
                       <input type="checkbox" checked={this.state.c_stories_dev_delivered} onChange={this.copyDevDelStories} id="cstoriesdevdel"/>
                       <span className='home-iter-sub-section-category' style={{'marginRight': '0.1em'}}>Delivered </span>

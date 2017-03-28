@@ -139,6 +139,13 @@ var HomeTeamTree = React.createClass({
               if (team.path != null) {
                 path = (team.path.substring(1,team.path.length-1)).split(',');
               }
+
+              var parentId=$($('li#'+selectedTeam)[0]).parent().attr('id')
+              if (!_.isEmpty(parentId)) {
+                parentId = parentId.substring(5, parentId.length);
+                if (!_.isEqual(parentId, path[path.length-1]))
+                  $('#' +parentId +' li#'+selectedTeam).remove();
+              }
               path.push(team.pathId);
               var promiseArray = [];
 
@@ -155,10 +162,10 @@ var HomeTeamTree = React.createClass({
             }
           })
           .then(function(results){
+            for (var i = 0; i < results.length; i++) {
+              self.appendChildTeams(results[i], availablePath[i]);
+            }
             if (($.find('#' + selectedTeam)).length > 0) {
-              for (var i = 0; i < results.length; i++) {
-                self.appendChildTeams(results[i], availablePath[i]);
-              }
               self.loadDetails(selectedTeam);
               $('#navSpinner').hide();
               $('#newTeamTree').show();
