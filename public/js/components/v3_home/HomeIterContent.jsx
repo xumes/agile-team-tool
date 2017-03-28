@@ -933,8 +933,8 @@ var HomeIterContent = React.createClass({
           <div>
             <div class='home-iter-title'>Iteration Overview</div>
             <div class='home-no-iter-info'>
-              <p>This column will let you and your team keep track of and modify a series of  Agile measurements throughout its iteration &nbsp;
-<span>(Iterations are typically about 2 weeks)</span>.</p>
+              <p>This column will let you and your team keep track of and modify a series of  Agile measurements throughout its iteration. &nbsp;
+<span>(Iterations are typically about 2 weeks.)</span></p>
 
               <p>Once an iteration completes the information will be displayed in a series of charts in the bottom left of this page.  Your team can use these charts to track values such as velocity, throughput and defects.
               </p>
