@@ -79,7 +79,11 @@ var HomeAddTeamMemberModal = React.createClass({
         .then(function(user) {
           if (!_.isEmpty(user)) {
             tmpMember = _.clone(member);
-            tmpMember.location.site = user[0].location.site;
+            if (user[0].location && user[0].location.site) {
+              tmpMember.location.site = user[0].location.site.trim();
+            } else {
+              tmpMember.location.site = member.location.site.trim();
+            }
             member = tmpMember;
           }
           // onced added to the Table, clear the txtfield automatically
