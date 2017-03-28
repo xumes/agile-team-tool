@@ -253,8 +253,11 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, setSele
     var StoriesDel = isNaN(parseInt(p6Iterations[i].deliveredStories)) ? 0 : parseInt(p6Iterations[i].deliveredStories);
     var StoryPointDel = isNaN(parseInt(p6Iterations[i].storyPointsDelivered)) ? 0 : parseInt(p6Iterations[i].storyPointsDelivered);
     var fte = isNaN(parseInt(p6Iterations[i].memberFte)) ? 0 : parseFloat(p6Iterations[i].memberFte);
-    var storiesFTE = isNaN(parseInt((StoriesDel / fte).toFixed(1))) ? 0 : parseFloat((StoriesDel / fte).toFixed(1));
-    var strPointsFTE = isNaN(parseInt((StoryPointDel / fte).toFixed(1))) ? 0 : parseFloat((StoryPointDel / fte).toFixed(1));
+    //var storiesFTE = isNaN(parseInt((StoriesDel / fte).toFixed(1))) ? 0 : parseFloat((StoriesDel / fte).toFixed(1));
+    //var strPointsFTE = isNaN(parseInt((StoryPointDel / fte).toFixed(1))) ? 0 : parseFloat((StoryPointDel / fte).toFixed(1));
+    var availability = isNaN(parseInt(p6Iterations[i].personDaysAvailable)) ? 0 : parseFloat(p6Iterations[i].personDaysAvailable);
+    var storiesFTE = isNaN(parseInt((StoriesDel / availability).toFixed(1))) ? 0 : parseFloat((StoriesDel / availability).toFixed(1));
+    var strPointsFTE = isNaN(parseInt((StoryPointDel / availability).toFixed(1))) ? 0 : parseFloat((StoryPointDel / availability).toFixed(1));
 
     storiesFTEData.name = p6Iterations[i].name;
     storiesFTEData.y = storiesFTE;
