@@ -110,6 +110,16 @@ jQuery(function($) {
   });
 });
 
+function getJsonParametersFromUrl() {
+  var query = location.search.substr(1);
+  var result = {};
+  query.split('&').forEach(function(part) {
+    var item = part.split('=');
+    result[item[0]] = decodeURIComponent(item[1]);
+  });
+  return result;
+};
+
 function plotAssessmentSeries(teamAssessments) {
   //get the 5 latest submitted results
   var assessmentsToPlot = [];
