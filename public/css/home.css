@@ -4473,6 +4473,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   border: none;
   border-radius: 0;
   max-width: 600px;
+  min-width: 300px;
 }
 
 .popup-title {
@@ -4536,8 +4537,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 3.5em;
-  margin-top: -3%;
 }
 
 .home-iter-sub-section-category {
