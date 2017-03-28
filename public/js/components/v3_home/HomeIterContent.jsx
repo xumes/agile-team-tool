@@ -140,7 +140,7 @@ var HomeIterContent = React.createClass({
         var val = $('#'+this.state.selectedField).val();
         $('#'+this.state.selectedField).val('').val(val);
         $('#'+this.state.selectedField).select();
-        this.startTimer();
+        this.startTimer(this.state.selectedField);
       }
     } else {
       $('.home-iter-content-point').removeClass('home-iter-content-point-hover');
@@ -156,13 +156,13 @@ var HomeIterContent = React.createClass({
     }
   },
 
-  checkTimeOut: function() {
-    this.saveIter(this.state.selectedField);
+  checkTimeOut: function(id) {
+    this.saveIter(id);
   },
 
-  startTimer: function () {
+  startTimer: function (id) {
     clearInterval(this.timer);
-    this.timer = setInterval(this.checkTimeOut, 2000);
+    this.timer = setInterval(this.checkTimeOut.bind(null,id), 2000);
   },
   
   stopTimer: function () {
@@ -171,7 +171,6 @@ var HomeIterContent = React.createClass({
 
   checkChanges: function(event){
     if(event.keyCode == 9){
-      this.startTimer();
       event.preventDefault();
       this.tabHandling(event.target.id, event.shiftKey);
     }
@@ -181,11 +180,16 @@ var HomeIterContent = React.createClass({
     var self = this;
     var next = _.indexOf(editIndexing, id);
       if (next != null){
+        
         var result = self.partialSaveIter(id);
-        if (reverse)
+        if (reverse){
+          this.startTimer(editIndexing[next-1]);
           self.setState({selectedField:editIndexing[next-1],  backupIter:result});
-        else
+        }
+        else{
+          this.startTimer(editIndexing[next+1]);
           self.setState({selectedField:editIndexing[next+1],  backupIter:result});
+        }
       }
   },
 
@@ -491,7 +495,7 @@ var HomeIterContent = React.createClass({
   handleChange: function(e){
     var temp = _.clone(this.state.selectedIter);
     temp[e.target.id] = e.target.value;
-    this.setState({selectedIter:temp});
+    this.setState({selectedIter:temp, selectedField:''});
   },
 
   updateSelectedIteration: function(iterData){
