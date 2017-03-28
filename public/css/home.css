@@ -7676,11 +7676,15 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 100%;
 }
 
+.home-header-banner-label {
+  color: #5596E6 !important;
+}
+
 .home-header-banner-message > .home-header-banner-icon > a > i > svg {
-  height: 1.2em;
+  height: 1em;
   width: 2em;
 }
 
 .home-header-banner-message > .home-header-banner-icon > a > i > svg path {
-  fill: #4178BE !important;
+  fill: #5596E6 !important;
 }
