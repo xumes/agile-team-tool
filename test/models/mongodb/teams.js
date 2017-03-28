@@ -125,13 +125,17 @@ var inValidTeam = {
 };
 var userSession = {
   'ldap': {
-    'uid': testUser.userId
+    'uid': testUser.userId,
+    'hrFirstName': 'John',
+    'hrLastName': 'Doe',
   },
   'shortEmail': testUser.email
 };
 var invalidUserSession = {
   'ldap': {
-    'uid': invalidUser.userId
+    'uid': invalidUser.userId,
+    'hrFirstName': 'John',
+    'hrLastName': 'Doe',
   },
   'shortEmail': invalidUser.email
 };

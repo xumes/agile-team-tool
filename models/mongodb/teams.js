@@ -576,12 +576,12 @@ module.exports.createTeam = function(teamDoc, creator) {
       _.each(teamDoc.members, function(m) {
         // setting the creators role should be hard-coded as per Bruce
         // check if the type==squad the creators role will be Iteration Manager otherwise will be Team Lead
-        if (m.userId.toUpperCase() === creator.ldap.uid.toUpperCase()) {
+        if (m.userId && m.userId.toUpperCase() === creator.ldap.uid && creator.ldap.uid.toUpperCase()) {
           var obj = {
             name: creator ? creator['ldap']['hrFirstName'] + ' ' + creator['ldap']['hrLastName'] : '',
             allocation: m['allocation'],
             role: _.isEqual(teamDoc.type, 'squad') ? 'Iteration Manager' : 'Team Lead',
-            userId: creator ? creator['ldap']['uid'].toUpperCase() : '',
+            userId: creator ? creator['ldap']['uid'] : '',
             email: creator ? creator['shortEmail'].toLowerCase() : '',
             location: {site: (m['location'] && m['location']['site']) ? m['location']['site'] : '', timezone:null},
             workTime: m['workTime']
@@ -595,13 +595,13 @@ module.exports.createTeam = function(teamDoc, creator) {
     }
     var newTeam = {
       'name': teamDoc.name,
-      'createdByUserId': creator.ldap.uid.toUpperCase(),
-      'createdBy': creator.shortEmail.toLowerCase(),
+      'createdByUserId': creator ? creator.ldap.uid : '',
+      'createdBy': creator ? creator.shortEmail.toLowerCase() : '',
       'pathId': createPathId(teamDoc.name),
       'path': teamDoc.path || teamDoc.path,
       'docStatus': null,
       'updatedBy': creator ? creator['shortEmail'].toLowerCase() : '',
-      'updatedByUserId': creator ? creator['ldap']['uid'].toUpperCase() : '',
+      'updatedByUserId': creator ? creator['ldap']['uid'] : '',
       'updateDate': new Date(moment.utc()),
       'members': teamDoc.members,
       'type': _.isEqual(teamDoc.type, 'squad') ? 'squad' : null,
