@@ -37,7 +37,7 @@ var HomeHeader = React.createClass({
              <span class='home-header-banner-label'>
              Revert to previous interface
              </span>
-             </a>
+            </a>
             </span>
           </div>
         </div>

@@ -7684,7 +7684,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-header-banner-message > .home-header-banner-icon > a > i > svg {
-  height: 1em;
+  height: 0.8em;
   width: 2em;
 }
 
