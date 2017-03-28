@@ -5180,7 +5180,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .new-team-creation-addteam-member .tbl-members-data {
-  height: 16.5em;
+  height: 18em;
   width: 100%;
   overflow-y: auto;
   position: absolute;
