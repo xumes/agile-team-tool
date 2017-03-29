@@ -62,15 +62,21 @@ var HomeIterSection = React.createClass({
           </div>
         </div>
       )
-    } else if (this.props.loadDetailTeam.team && this.props.loadDetailTeam.assessments && this.props.loadDetailTeam.assessments.length == 0) {
-      return (
-        <div id='iterationSection'>
-          <div class='no-trends-message-block'>
-            <p>No trending data available.</p>
-            <p>Once iteration data has been input in the Iteration Overview section it will be displayed here.</p>
+    } else if (this.props.loadDetailTeam.team && this.props.loadDetailTeam.assessments) {
+      var submittedAssessment = _.find(this.props.loadDetailTeam.assessments, function(assessment) {
+        return _.isEqual(assessment.assessmentStatus, 'Submitted');
+      });
+      if (submittedAssessment)
+        return null;
+      else {
+        return (
+          <div id='iterationSection'>
+            <div class='no-trends-message-block'>
+              <p>Once iteration and maturity overview information has been submitted it will be displayed in this area.</p>
+            </div>
           </div>
-        </div>
-      )
+        )
+      }
     } else
       return null;
   }

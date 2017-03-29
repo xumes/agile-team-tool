@@ -566,32 +566,11 @@ module.exports.createTeam = function(teamDoc, creator) {
       teamDoc.members = [{
         name: creator ? creator['ldap']['hrFirstName'] + ' ' + creator['ldap']['hrLastName'] : '',
         allocation: 0,
-        role: _.isEqual(teamDoc.type, 'squad') ? 'Iteration Manager' : 'Team Lead',
+        role: teamDoc['role'],
         userId: creator ? creator['ldap']['uid'].toUpperCase() : '',
         email: creator ? creator['shortEmail'].toLowerCase() : '',
         location: {site: teamDoc['location'] ? teamDoc['location'] : '', timezone:null}
       }];
-    } else {
-      var member = [];
-      _.each(teamDoc.members, function(m) {
-        // setting the creators role should be hard-coded as per Bruce
-        // check if the type==squad the creators role will be Iteration Manager otherwise will be Team Lead
-        if (m.userId && m.userId.toUpperCase() === creator.ldap.uid && creator.ldap.uid.toUpperCase()) {
-          var obj = {
-            name: creator ? creator['ldap']['hrFirstName'] + ' ' + creator['ldap']['hrLastName'] : '',
-            allocation: m['allocation'],
-            role: _.isEqual(teamDoc.type, 'squad') ? 'Iteration Manager' : 'Team Lead',
-            userId: creator ? creator['ldap']['uid'] : '',
-            email: creator ? creator['shortEmail'].toLowerCase() : '',
-            location: {site: (m['location'] && m['location']['site']) ? m['location']['site'] : '', timezone:null},
-            workTime: m['workTime']
-          };
-          member.push(obj);
-        } else {
-          member.push(m);
-        }
-        teamDoc.members = member;
-      });
     }
     var newTeam = {
       'name': teamDoc.name,
@@ -638,9 +617,9 @@ module.exports.createUsers = function(members) {
           var promiseArray = [];
           var user = new Object();
           _.each(members, function(member) {
-            user = _.find(users, function(user) {
-              if (_.isEqual(member.userId, user.userId))
-                return user;
+            user = _.find(users, function(u) {
+              if (_.isEqual(member.userId, u.userId))
+                return u;
             });
             if (_.isEmpty(user)) {
               if (!_.isEmpty(member.location)) {
@@ -649,6 +628,7 @@ module.exports.createUsers = function(members) {
               promiseArray.push(Users.create(member));
             } else {
               if (!_.isEmpty(user.location) && !_.isEmpty(user.location.timezone)) {
+                if (!member.location) member.location = {};
                 member.location.timezone = user.location.timezone;
               }
               promiseArray.push(Users.updateUser(member));

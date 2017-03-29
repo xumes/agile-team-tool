@@ -1,7 +1,6 @@
 var React = require('react');
 var api = require('../api.jsx');
 var assessmentHandler = require('./HomeAssessmentsHandler.jsx');
-var HomeFallBox = require('./HomeFallBox.jsx');
 var HomeSnapshotPull = require('./HomeSnapshotPull.jsx');
 
 var HomeAseSection = React.createClass({
