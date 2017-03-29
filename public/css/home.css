@@ -4473,6 +4473,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   border: none;
   border-radius: 0;
   max-width: 600px;
+  min-width: 300px;
 }
 
 .popup-title {
@@ -4536,8 +4537,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 3.5em;
-  margin-top: -3%;
 }
 
 .home-iter-sub-section-category {
@@ -7680,11 +7679,15 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 98%;
 }
 
+.home-header-banner-label {
+  color: #5596E6 !important;
+}
+
 .home-header-banner-message > .home-header-banner-icon > a > i > svg {
-  height: 1.2em;
+  height: 0.8em;
   width: 2em;
 }
 
 .home-header-banner-message > .home-header-banner-icon > a > i > svg path {
-  fill: #4178BE !important;
+  fill: #5596E6 !important;
 }
