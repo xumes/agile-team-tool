@@ -427,6 +427,7 @@ var IterationExport = {
           data['updatedBy'] = userInfo.email;
           data['updatedByUserId'] = userInfo.userId;
           data['status'] = IterationExport.calculateStatus(data);
+          data['defectsEndBal'] = IterationExport.calculateDefectEndngBalance(data);
           return Iteration.where({'_id': docId}).update({},{'$set':data}, {runValidators:true, context: 'query'});
         }
       })
@@ -557,6 +558,24 @@ var IterationExport = {
     }
 
     return status;
+  },
+
+  calculateDefectEndngBalance: function(data) {
+    var defectStartingBalanace = IterationExport.numericValue(data['defectsStartBal'] || 0);
+    var defectNew = IterationExport.numericValue(data['defects'] || 0);
+    var defectClosing = IterationExport.numericValue(data['defectsClosed'] || 0);
+    var defectEndingBalance = defectStartingBalanace + defectNew - defectClosing;
+    return defectEndingBalance;
+  },
+
+  numericValue:function(data) {
+    var value = parseInt(data);
+    if (!isNaN(value)) {
+      return value;
+    }
+    else {
+      return 0;
+    }
   },
 
   getNotCompletedIterations: function() {
