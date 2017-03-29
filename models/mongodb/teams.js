@@ -1331,7 +1331,7 @@ module.exports.softDelete = function(teamDoc, user) {
       .then(function(result){
         resolve({'ok': 'Delete successfully'});
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         reject(err);
       });
   });
