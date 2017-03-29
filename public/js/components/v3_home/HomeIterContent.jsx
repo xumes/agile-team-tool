@@ -743,7 +743,7 @@ var HomeIterContent = React.createClass({
                 }
               </div>
               <div class='home-iter-content-col' style={{'height': '25%'}}>
-                <div class='home-iter-content-sub' data-tip='The calculated number of stories, cards or tickets delivered per person day.  Stories, Cards or Tickets delivered divided by the number of person days available.'>Stories per person days</div>
+                <div class='home-iter-content-sub' data-tip='The calculated number of stories, cards or tickets delivered per person day.  Stories, Cards or Tickets delivered divided by the number of person days available.'>Stories per person day</div>
                 <div id='storiesDays' class='home-iter-content-point-uneditable'>{storiesDays}</div>
                   <div class='home-iter-locked-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_locked.svg')} data-tip={lockMessage}></InlineSVG>
