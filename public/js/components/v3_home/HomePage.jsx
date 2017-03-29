@@ -79,13 +79,13 @@ var HomePage = React.createClass({
     window.scrollTo(0, 0);
     if (!_.isEmpty(this.state.loadDetailTeam) && $('.first-login-block').css('display') == 'block') {
       if (this.state.loadDetailTeam.team.type == 'squad') {
-        $('#firstLoginCard_4').css('left', '27vw');
-        $('#firstLoginCard_5').css('top', '12vw');
-        $('#firstLoginCard_6').css('left', '3vw');
-        $('#firstLoginCard_6 > .pointer').css('transform','rotate(315deg)');
-        $('#firstLoginCard_6 > .pointer').css('-ms-transform','rotate(315deg)');
-        $('#firstLoginCard_6 > .pointer').css('-webkit-transform','rotate(315deg)');
-        $('#firstLoginCard_6 > .pointer').css('top','0');
+        $('#firstLoginCard_5').css('left', '27vw');
+        $('#firstLoginCard_6').css('top', '12vw');
+        $('#firstLoginCard_7').css('left', '3vw');
+        $('#firstLoginCard_7 > .pointer').css('transform','rotate(315deg)');
+        $('#firstLoginCard_7 > .pointer').css('-ms-transform','rotate(315deg)');
+        $('#firstLoginCard_7 > .pointer').css('-webkit-transform','rotate(315deg)');
+        $('#firstLoginCard_7 > .pointer').css('top','0');
       }
     }
   },
