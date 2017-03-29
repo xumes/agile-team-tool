@@ -76,6 +76,7 @@ var HomePage = React.createClass({
   },
 
   componentDidUpdate: function() {
+    window.scrollTo(0, 0);
     if (!_.isEmpty(this.state.loadDetailTeam) && $('.first-login-block').css('display') == 'block') {
       if (this.state.loadDetailTeam.team.type == 'squad') {
         $('#firstLoginCard_4').css('left', '27vw');
