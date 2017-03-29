@@ -155,7 +155,6 @@ describe('Users model [getAdmins]', function() {
 
 describe('Users model [findUserByEmail]', function() {
   it('return all users info by searching empty email', function(done) {
-    this.timeout(60000);
     users.findUserByEmail()
       .then(function(result) {
         expect(result).to.be.a('array');
@@ -191,7 +190,6 @@ describe('Users model [findUserByEmail]', function() {
 
 describe('Users model [findUserByUserId]', function() {
   it('return all users info by searching empty userId', function(done) {
-    this.timeout(60000);
     users.findUserByUserId()
       .then(function(result) {
         expect(result).to.be.a('array');
@@ -242,7 +240,6 @@ describe('Users model [getUsersInfo]', function() {
 
 describe('Users model [isUserAllowed]', function() {
   it('return true if the user has access', function(done) {
-    this.timeout(60000);
     users.isUserAllowed(testUser.userId, newParentTeamId)
       .then(function(result) {
         expect(result).to.equal(true);
@@ -250,7 +247,6 @@ describe('Users model [isUserAllowed]', function() {
       });
   });
   it('return true if the user has access to child team', function(done) {
-    this.timeout(60000);
     users.isUserAllowed(testUser.userId, newChildTeamId)
       .then(function(result) {
         expect(result).to.equal(true);
@@ -286,7 +282,6 @@ describe('Users model [isUserAllowed]', function() {
       });
   });
   it('return true for child user access', function(done) {
-    this.timeout(60000);
     users.isUserAllowed(testChildUser.userId, newChildTeamId)
       .then(function(result) {
         expect(result).to.equal(true);
