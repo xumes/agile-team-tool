@@ -2482,21 +2482,21 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   height: 25em;
 }
 
-.home-no-iter-info p{
+.home-no-iter-info p {
   font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 18px;
   line-height: 25px;
   color: #464646;
   margin-right: 7.5%;
-
+  color: #777677;
 }
 
-.home-no-iter-info p span{
+.home-no-iter-info p span {
   display: inline-block;
   font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 16px;
   line-height: 16px;
-  color: #C7C7C7;
+  color: #777677;
 }
 
 .home-iter-add{
@@ -2600,6 +2600,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .home-iter-add-btn-block-2 > i{
   height: 70%;
+  padding-right: 0.2em;
 }
 
 .home-iter-add-btn-block > i > svg, .home-iter-add-btn-block-disabled > i > svg,
@@ -7679,6 +7680,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .feedback-block textarea {
   font-size: inherit;
+  padding: .5em;
   width: 98%;
 }
 
