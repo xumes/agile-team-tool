@@ -31,8 +31,8 @@ var HomeAddTeamMemberFaces = React.createClass({
     var self = this;
     return (
       <div>
-        <label for='txtTeamMemberName' class='frmlabel'>Add Team Members manually</label>
-        <input type='text' name='txtTeamMemberName' id='txtTeamMemberName' size='32' placeholder='Search then select a name to add them' onChange={self.props.changeHandlerFacesFullname} />
+        <label for='txtTeamMemberName' class='frmlabel'>To add a member, search and select them</label>
+        <input type='text' name='txtTeamMemberName' id='txtTeamMemberName' size='32' placeholder='ex. John Smith or smith@xx.ibm.com' onChange={self.props.changeHandlerFacesFullname} />
         <span id='txtTeamMemberNameError' class='ibm-item-note'></span>
       </div>
     );

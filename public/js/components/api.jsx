@@ -728,6 +728,20 @@ module.exports.getUserFromFacesByUid = function(uid) {
   });
 };
 
+module.exports.getActiveUserInfo = function() {
+  return new Promise(function(resolve, reject){
+    var url = '/api/users/activeInfo';
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
 module.exports.sendFeedback = function(senderEmail, senderName, toolArea, teamName, feedback) {
   var data = {
     feedback_sender: senderEmail,

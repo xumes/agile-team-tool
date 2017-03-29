@@ -23,6 +23,16 @@ var testUser = {
     'timezone': 'UTC-4'
   }
 };
+var testUser2 = {
+  'userId': 'USER002US',
+  'name': 'test user2',
+  'email': 'testuser2@test.com',
+  'adminAccess': 'none',
+  'location': {
+    'site': 'somers, ny, usa',
+    'timezone': 'UTC-4'
+  }
+};
 var invalidUser = {
   'userId': 'TEST7654321',
   'name': 'test user2',
@@ -41,6 +51,24 @@ var testTeam = {
     'allocation': 100,
     'userId': testUser.userId,
     'email': testUser.email
+  }],
+  'createdByUserId': testUser.userId,
+  'createdBy': testUser.email
+};
+var testTeam2 = {
+  'name': 'mongodb-test-team-02',
+  'members': [{
+    'name': 'test user1',
+    'role': 'Tester',
+    'allocation': 100,
+    'userId': testUser.userId,
+    'email': testUser.email
+  },{
+    'name': 'test user2',
+    'role': 'Tester',
+    'allocation': 100,
+    'userId': testUser2.userId,
+    'email': testUser2.email
   }],
   'createdByUserId': testUser.userId,
   'createdBy': testUser.email
@@ -112,8 +140,10 @@ describe('Team model [createTeam]', function() {
   before(function(done){
     var promiseArray = [];
     promiseArray.push(Users.deleteUser(testUser.userId));
+    promiseArray.push(Users.deleteUser(testUser2.userId));
     promiseArray.push(Users.deleteUser(invalidUser.userId));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-01'));
+    promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-02'));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-parent'));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-child'));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-gchild'));
@@ -148,6 +178,19 @@ describe('Team model [createTeam]', function() {
         newTeamId = result._id;
         expect(result).to.have.property('pathId');
         newTeamPathId = result.pathId;
+        done();
+      })
+      .catch(function(err) {
+        done();
+      });
+  });
+  it('return successful for adding a team with more than 1 members', function(done){
+    Teams.createTeam(testTeam2, userSession)
+      .then(function(result){
+        expect(result).to.be.a('object');
+        expect(result.name).to.equal(testTeam2.name);
+        expect(result).to.have.property('_id');
+        expect(result).to.have.property('pathId');
         done();
       })
       .catch(function(err) {
@@ -1023,8 +1066,10 @@ describe('Team model [softDelete]', function() {
   after(function(done){
     var promiseArray = [];
     promiseArray.push(Users.deleteUser(testUser.userId));
+    promiseArray.push(Users.deleteUser(testUser2.userId));
     promiseArray.push(Users.deleteUser(invalidUser.userId));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-01'));
+    promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-02'));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-parent'));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-child'));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-gchild'));
