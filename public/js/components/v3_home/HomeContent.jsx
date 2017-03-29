@@ -74,9 +74,15 @@ var HomeContent = React.createClass({
   componentDidUpdate: function() {
     $('.home-trends-overflow').nanoScroller();
     var isSquad = this.props.loadDetailTeam.team.type == 'squad';
+    var submittedAssessment = null;
+    if (isSquad && this.props.loadDetailTeam.assessments) {
+      submittedAssessment = _.find(this.props.loadDetailTeam.assessments, function(assessment) {
+        return _.isEqual(assessment.assessmentStatus, 'Submitted');
+      })
+    }
     $('.home-trends-block-filter-img, .home-chart-filter-block, .home-trends-block-title, .home-assessment-summary, .home-team-header').unbind('mouseenter mouseleave');
     // filter button
-    if (!isSquad || ((this.props.loadDetailTeam.iterations && this.props.loadDetailTeam.iterations.length > 0) || (this.props.loadDetailTeam.assessments && this.props.loadDetailTeam.assessments.length > 0))) {
+    if (!isSquad || ((this.props.loadDetailTeam.iterations && this.props.loadDetailTeam.iterations.length > 0) || submittedAssessment)) {
       $('.home-trends-block-filter-img svg').css('cursor', 'default');
       $('.home-trends-block-title').show();
       $('.home-trends-block-filter-img').bind('mouseenter', function() {
