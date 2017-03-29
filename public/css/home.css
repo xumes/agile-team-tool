@@ -7677,6 +7677,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .feedback-block textarea {
   font-size: inherit;
+  padding: .5em;
   width: 98%;
 }
 
