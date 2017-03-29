@@ -3127,6 +3127,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   width: 3.3%;
   height: 16.5%;
   cursor: pointer;
+  top: 7%;
 }
 
 .home-assessment-summary > .hide-show-btn > svg {
@@ -3165,7 +3166,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .home-assessment-summary > .main-content > div > .content-title {
   position: relative;
   float: left;
-  width: 35%;
+  width: 36%;
   height: 50%;
   top: 25%;
 }
@@ -3182,7 +3183,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   float: left;
   width: 50%;
-  left: 2%;
+  left: 1%;
   height: 20%;
   top: 37%;
 }
@@ -3192,6 +3193,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   font-size: 1.2em;
   font-weight: 500;
   line-height: 1.4em;
+  padding: 0;
   color: #5A5A5A;
 }
 
@@ -3540,6 +3542,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   width: 3%;
   height: 50%;
   cursor: pointer;
+  top: 28%;
 }
 
 .home-assessment-summary-hide > div > .hide-show-btn svg,
