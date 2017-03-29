@@ -342,7 +342,6 @@ var HomeTeamSetup = React.createClass({
   },
 
   render: function() {
-    console.log('render');
     var self = this;
     var backdropStyle = {
       top: 0, bottom: 0, left: 0, right: 0,

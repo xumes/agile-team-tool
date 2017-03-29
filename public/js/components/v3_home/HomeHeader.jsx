@@ -19,13 +19,27 @@ var HomeHeader = React.createClass({
     var callupName = user.ldap.callupName || userName;
     var userImage = '//images.w3ibm.mybluemix.net/image/'+user.ldap.uid.toUpperCase();
     var siteEnv = '';
+    var revertToOld = {
+      'display': 'inline-block',
+      'color':'#3B6DAA'
+    };
+
     if (_.isEmpty(environment) || environment.toLowerCase() == 'development')
       siteEnv = 'Stage'
     return (
       <div class='agile-home-header'>
         <div class='header-title'>
           <div>IBM</div>&nbsp;<div>Agile Team Tool</div>&nbsp;
-          <div>{siteEnv}</div>
+          <div class='home-header-banner-message'>{siteEnv} &nbsp; &nbsp; 
+            <span class='home-header-banner-icon' style={revertToOld}>
+            <a href="/">            
+            <InlineSVG src={require('../../../img/Att-icons/att-icons-revert.svg')}></InlineSVG>
+             <span class='home-header-banner-label'>
+             Revert to previous interface
+             </span>
+            </a>
+            </span>
+          </div>
         </div>
         <div class="header-menu">
           <div class="header-menu-dropdown">

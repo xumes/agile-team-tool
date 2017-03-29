@@ -97,7 +97,7 @@ var HomeFeedback = React.createClass({
     return (
       <div>
         <Modal aria-labelledby='Feedback Dialog' style={modalStyle} backdropStyle={backdropStyle} show={self.props.showFeedbackModal} onHide={self.hideTeamSetup}  onShow={self.show}>
-          <div class='home-modal-block' style={{'width':'32em'}} id='feedbackBlock'>
+          <div class='home-modal-block' style={{'width':'27em'}} id='feedbackBlock'>
             <div class='home-modal-block-header'>
               <h>Feedback and support... Please let us know!</h>
               <div class='home-modal-block-close-btn' onClick={self.props.closeFeedback}>
@@ -137,11 +137,11 @@ var HomeFeedback = React.createClass({
                   </span>
                 </p>
                 <p>
-                  Have a question?  Be sure to checkout our <a target='_blank' href='http://agileacademy.w3ibm.mybluemix.net/teamtool/howto/AgileTeamTool_FrequentlyAskedQuestions.pdf'>Frequently Asked Questions</a> document.
+                  Have a question?  Checkout our <a target='_blank' href='http://agileacademy.w3ibm.mybluemix.net/teamtool/howto/AgileTeamTool_FrequentlyAskedQuestions.pdf'>Frequently Asked Questions</a>.
                 </p>
               </div>
             </div>
-            <div class='home-modal-block-footer ibm-btn-row' style={{'width':'95%','top':'-3%'}}>
+            <div class='home-modal-block-footer ibm-btn-row' style={{'width':'92%','top':'-3%'}}>
               <div style={{'float':'right'}}>
                 <button class=' ibm-btn-pri ibm-btn-small ibm-btn-blue-50' style={{'marginRight':'.5em'}} onClick={self.sendFeedback} id='submitFeedbackBtn'>Submit</button>
                 <button class=' ibm-btn-sec ibm-btn-small ibm-btn-blue-50' onClick={self.props.closeFeedback} id='cancelFeedbackBtn'>Cancel</button>

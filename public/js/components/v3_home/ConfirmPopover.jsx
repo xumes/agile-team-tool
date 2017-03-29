@@ -9,7 +9,11 @@ var ConfirmPopover = React.createClass({
     )
   },
   hideConfirm: function() {
-    $('#' + this.props.confirmId).hide();
+    var self = this;
+    $('#' + self.props.confirmId).hide();
+    if (self.props.confirmId == 'saveDraftConfirm') {
+      self.props.hideAssessmentPopover();
+    }
   },
   render: function (){
     var self = this;

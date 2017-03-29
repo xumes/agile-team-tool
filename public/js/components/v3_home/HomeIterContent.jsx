@@ -87,6 +87,9 @@ var HomeIterContent = React.createClass({
   handleWindowClick: function(e){
     if (_.indexOf(editIndexing,e.target.id) === -1 && e.target.id != 'memeberChangedParent' && e.target.id != 'memberChangeOpt' ){
       this.stopTimer();
+      if (this.state.selectedField != ''){
+        this.saveIter(this.state.selectedField);
+      }      
       this.setState({selectedField:''});
     }
   },
@@ -140,7 +143,7 @@ var HomeIterContent = React.createClass({
         var val = $('#'+this.state.selectedField).val();
         $('#'+this.state.selectedField).val('').val(val);
         $('#'+this.state.selectedField).select();
-        this.startTimer();
+        this.startTimer(this.state.selectedField);
       }
     } else {
       $('.home-iter-content-point').removeClass('home-iter-content-point-hover');
@@ -156,13 +159,13 @@ var HomeIterContent = React.createClass({
     }
   },
 
-  checkTimeOut: function() {
-    this.saveIter(this.state.selectedField);
+  checkTimeOut: function(id) {
+    this.saveIter(id);
   },
 
-  startTimer: function () {
+  startTimer: function (id) {
     clearInterval(this.timer);
-    this.timer = setInterval(this.checkTimeOut, 2000);
+    this.timer = setInterval(this.checkTimeOut.bind(null,id), 2000);
   },
   
   stopTimer: function () {
@@ -171,22 +174,40 @@ var HomeIterContent = React.createClass({
 
   checkChanges: function(event){
     if(event.keyCode == 9){
-      this.startTimer();
-      event.preventDefault();
-      this.tabHandling(event.target.id, event.shiftKey);
+      var result = this.tabHandling(event.target.id, event.shiftKey);
+      if (result){
+        event.preventDefault();
+      }
+      else{
+        this.saveIter(event.target.id);
+        this.stopTimer();
+      }
     }
   },
 
   tabHandling: function(id, reverse){
     var self = this;
     var next = _.indexOf(editIndexing, id);
+    var prevent = false;
       if (next != null){
         var result = self.partialSaveIter(id);
-        if (reverse)
-          self.setState({selectedField:editIndexing[next-1],  backupIter:result});
-        else
-          self.setState({selectedField:editIndexing[next+1],  backupIter:result});
+        if (reverse){
+          if (editIndexing[next-1] != null){
+            prevent = true;
+            this.startTimer(editIndexing[next-1]);
+            self.setState({selectedField:editIndexing[next-1],  backupIter:result});
+          }
+        }
+        else{
+          if (editIndexing[next+1] != null){
+            prevent = true;
+            this.startTimer(editIndexing[next+1]);
+            self.setState({selectedField:editIndexing[next+1],  backupIter:result});
+          }
+        }
+        return prevent;
       }
+      
   },
 
   iterationSelectChange: function(e){
@@ -210,8 +231,16 @@ var HomeIterContent = React.createClass({
   saveIter: function(id) {
     var iterationData = _.clone(this.state.selectedIter);
     var selectedValue = this.state.selectedIter[id] !== null?this.state.selectedIter[id].toString():'';
+    var propValue = this.getSelectedIteration()[id] !== null?this.getSelectedIteration()[id].toString():'';
     if (this.refs[id].value !== 'N/A' && this.refs[id].value !== selectedValue){
       if (this.checkNumericEquality(this.refs[id].value, selectedValue)){
+        return;
+      }
+      iterationData = this.recalculate(id);
+      this.props.updateTeamIteration(iterationData);
+    }
+    else if (selectedValue !== propValue){
+      if (this.checkNumericEquality(propValue, selectedValue)){
         return;
       }
       iterationData = this.recalculate(id);
@@ -223,12 +252,18 @@ var HomeIterContent = React.createClass({
   partialSaveIter: function(id) {
     var iterationData = _.clone(this.state.selectedIter);
     var selectedValue = this.state.selectedIter[id] !== null?this.state.selectedIter[id].toString():'';
+    var propValue = this.getSelectedIteration()[id] !== null?this.getSelectedIteration()[id].toString():'';
     if (this.refs[id].value !== 'N/A' && this.refs[id].value !== selectedValue){
       if (this.checkNumericEquality(this.refs[id].value, selectedValue)){
         return;
       }
       iterationData = this.recalculate(id);
       this.setState({selectedIter:iterationData});
+    }
+    else if (selectedValue !== propValue){
+      if (this.checkNumericEquality(this.getSelectedIteration()[id].toString(), selectedValue)){
+        return;
+      }
     }
     return iterationData;
   },
@@ -491,7 +526,8 @@ var HomeIterContent = React.createClass({
   handleChange: function(e){
     var temp = _.clone(this.state.selectedIter);
     temp[e.target.id] = e.target.value;
-    this.setState({selectedIter:temp});
+    this.startTimer(e.target.id);
+    this.setState({selectedIter:temp, selectedField:''});
   },
 
   updateSelectedIteration: function(iterData){
@@ -707,7 +743,7 @@ var HomeIterContent = React.createClass({
                 }
               </div>
               <div class='home-iter-content-col' style={{'height': '25%'}}>
-                <div class='home-iter-content-sub' data-tip='The calculated number of stories, cards or tickets delivered per person day.  Stories, Cards or Tickets delivered divided by the number of person days available.'>Stories per person days</div>
+                <div class='home-iter-content-sub' data-tip='The calculated number of stories, cards or tickets delivered per person day.  Stories, Cards or Tickets delivered divided by the number of person days available.'>Stories per person day</div>
                 <div id='storiesDays' class='home-iter-content-point-uneditable'>{storiesDays}</div>
                   <div class='home-iter-locked-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_locked.svg')} data-tip={lockMessage}></InlineSVG>
@@ -771,7 +807,7 @@ var HomeIterContent = React.createClass({
                 }
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
-                <div class='home-iter-content-sub' data-tip='The calculated number of story points delivered per person day.  Story points delivered divided by the number of person days available.'>Story points per person days</div>
+                <div class='home-iter-content-sub' data-tip='The calculated number of story points delivered per person day.  Story points delivered divided by the number of person days available.'>Story points per person day</div>
                 <div id='storyPointsDays' class='home-iter-content-point-uneditable'>{storyPointsDays}</div>
                   <div class='home-iter-locked-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_locked.svg')} data-tip={lockMessage}></InlineSVG>
@@ -923,7 +959,7 @@ var HomeIterContent = React.createClass({
             </div>
             <div class='home-iter-comment-block'>
               <div class='home-iter-content-title' data-tip='Enter any comments you feel are relevant to this iteration.  Perhaps it was something unplanned that affected the team’s deliverables, either positively or negatively.'>Iteration Comments</div>
-              <textarea class='home-iter-comment-test' readOnly={!access} value={iterData.comment} onBlur={this.partialSaveIter.bind(null, 'comment')} onChange={this.handleChange}  id='comment' ref="comment"/>:
+              <textarea class='home-iter-comment-test' readOnly={!access} value={iterData.comment} onBlur={this.partialSaveIter.bind(null, 'comment')} onChange={this.handleChange} onKeyDown={this.checkChanges} onClick={this.startTimer.bind(null, 'comment')} id='comment' ref="comment"/>:
             </div>
           </div>
 
@@ -933,20 +969,19 @@ var HomeIterContent = React.createClass({
           <div>
             <div class='home-iter-title'>Iteration Overview</div>
             <div class='home-no-iter-info'>
-              <p>This column will let you and your team keep track of and modify a series of  Agile measurements throughout its iteration
-<span>(Iterations are typically about 2 weeks)</span>.</p>
+              <p>This column will let you and your team keep track of and modify a series of  Agile measurements throughout its iteration. &nbsp;
+<span>(Iterations are typically about 2 weeks.)</span></p>
 
               <p>Once an iteration completes the information will be displayed in a series of charts in the bottom left of this page.  Your team can use these charts to track values such as velocity, throughput and defects.
               </p>
-            </div>
-            <div style={access?{'cursor':'pointer'}:{'cursor':'default'}} className='home-iter-add-btn-block-2' onClick={access?this.showAddIteration:''}>
-              <div style={{'width':'5%'}}>
-                <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
-              </div>
+                <p style={access?{'cursor':'pointer', 'marginRight': '10%'}:{'cursor':'default','marginRight': '10%'}} className='home-iter-add-btn-block-2' onClick={access?this.showAddIteration:''}>
+                  <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
+                  <span className="home-iter-add" style={access?{'left':'1.5%', 'color':'#4178BE'}:{'left':'1.5%', 'color':'#C7C7C7'}}>Start the first Iteration</span>                 
+                </p>
+                
                 <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={self.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
-
-                <span className="home-iter-add" style={{'left':'2%'}}>Start the first Iteration</span>
             </div>
+            
           </div>
         )
       }
