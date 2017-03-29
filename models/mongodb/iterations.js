@@ -561,21 +561,13 @@ var IterationExport = {
   },
 
   calculateDefectEndngBalance: function(data) {
-    var defectStartingBalanace = IterationExport.numericValue(data['defectsStartBal'] || 0);
-    var defectNew = IterationExport.numericValue(data['defects'] || 0);
-    var defectClosing = IterationExport.numericValue(data['defectsClosed'] || 0);
+    var defectStartingBalanace = util.getIntegerValue(data['defectsStartBal'] || 0);
+    var defectNew = util.getIntegerValue(data['defects'] || 0);
+    var defectClosing = util.getIntegerValue(data['defectsClosed'] || 0);
     var defectEndingBalance = defectStartingBalanace + defectNew - defectClosing;
+    if (defectEndingBalance < 0)
+      defectEndingBalance = 0;
     return defectEndingBalance;
-  },
-
-  numericValue:function(data) {
-    var value = parseInt(data);
-    if (!isNaN(value)) {
-      return value;
-    }
-    else {
-      return 0;
-    }
   },
 
   getNotCompletedIterations: function() {
