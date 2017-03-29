@@ -85,6 +85,8 @@ var HomeContent = React.createClass({
     if (!isSquad || ((this.props.loadDetailTeam.iterations && this.props.loadDetailTeam.iterations.length > 0) || submittedAssessment)) {
       $('.home-trends-block-filter-img svg').css('cursor', 'default');
       $('.home-trends-block-title').show();
+      if (!$('.home-trends-overflow').hasClass('nano'))
+        $('.home-trends-overflow').addClass('nano');
       $('.home-trends-block-filter-img').bind('mouseenter', function() {
         if ($('.home-chart-filter-block').css('display') == 'none') {
           if (isSquad) {
