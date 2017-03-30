@@ -77,7 +77,7 @@ var HomeApikey = React.createClass({
             <div class='home-modal-block-content'>
               <div class='apikey-block'>
                 <p class='apikey-note'>
-                  Note: The API key is used for APIs that write data directly to the Agile Team Tool from another system.
+                  The API key is used for APIs that write data directly to the Agile Team Tool from another system.
                 </p>
                 <p style={_.isEmpty(this.state.apiKey) ? {'display': 'none'} : {}}>
                   <label>Your key</label>

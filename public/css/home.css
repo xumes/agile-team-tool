@@ -7734,8 +7734,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 p.apikey-note {
-  color: #777677;
-  font-size: 0.8em;
-  padding-left: 2em;
+  color: #5A5A5A;
   text-align: justify;
 }
