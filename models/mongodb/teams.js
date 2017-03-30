@@ -568,30 +568,8 @@ module.exports.createTeam = function(teamDoc, creator) {
         allocation: 0,
         role: _.isEqual(teamDoc.type, 'squad') ? 'Iteration Manager' : 'Team Lead',
         userId: creator ? creator['ldap']['uid'].toUpperCase() : '',
-        email: creator ? creator['shortEmail'].toLowerCase() : '',
-        location: {site: teamDoc['location'] ? teamDoc['location'] : '', timezone:null}
+        email: creator ? creator['shortEmail'].toLowerCase() : ''
       }];
-    } else {
-      var member = [];
-      _.each(teamDoc.members, function(m) {
-        // setting the creators role should be hard-coded as per Bruce
-        // check if the type==squad the creators role will be Iteration Manager otherwise will be Team Lead
-        if (m.userId.toUpperCase() === creator.ldap.uid.toUpperCase()) {
-          var obj = {
-            name: creator ? creator['ldap']['hrFirstName'] + ' ' + creator['ldap']['hrLastName'] : '',
-            allocation: m['allocation'],
-            role: m['role'],
-            userId: creator ? creator['ldap']['uid'].toUpperCase() : '',
-            email: creator ? creator['shortEmail'].toLowerCase() : '',
-            location: {site: (m['location'] && m['location']['site']) ? m['location']['site'] : '', timezone:null},
-            workTime: m['workTime']
-          };
-          member.push(obj);
-        } else {
-          member.push(m);
-        }
-        teamDoc.members = member;
-      });
     }
     var newTeam = {
       'name': teamDoc.name,
@@ -649,8 +627,20 @@ module.exports.createUsers = function(members) {
               promiseArray.push(Users.create(member));
             } else {
               if (!_.isEmpty(user.location) && !_.isEmpty(user.location.timezone)) {
-                if (!member.location) member.location = {};
-                member.location.timezone = user.location.timezone;
+                if (_.isEmpty(member.location)) {
+                  member.location = {};
+                  member.location.timezone = user.location.timezone;
+                  member.location.site = user.location.site;
+                } else {
+                  if (_.isEmpty(member.location.timezone)) {
+                    var tz = ulocation[member.location.site.toLowerCase()];
+                    if (_.isUndefined(tz)) {
+                      member.location.timezone = user.location.timezone;
+                    } else {
+                      member.location.timezone = tz;
+                    }
+                  }
+                }
               }
               promiseArray.push(Users.updateUser(member));
             }
