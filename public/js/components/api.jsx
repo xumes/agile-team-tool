@@ -763,3 +763,33 @@ module.exports.sendFeedback = function(senderEmail, senderName, toolArea, teamNa
     });
   });
 };
+
+module.exports.getApiKey = function() {
+  return new Promise(function(resolve, reject){
+    var uuidKey;
+    var url = '/api/apiKey/apiKey';
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};
+
+module.exports.getApiKeyByUser = function() {
+  return new Promise(function(resolve, reject){
+    var uuidKey;
+    var url = '/api/apiKey/apiKeyByUser';
+    var req = $.ajax({
+      type: 'GET',
+      url: url
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+};

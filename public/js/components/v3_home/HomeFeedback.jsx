@@ -16,7 +16,6 @@ var HomeFeedback = React.createClass({
   },
   componentWillUpdate: function(nextProps, nextState) {
     var self = this;
-    // make sure to get the latest team names on focus of this screen
     if (!self.props.showFeedbackModal && nextProps.showFeedbackModal) {
       api.fetchTeamNames()
         .then(function(teams) {
@@ -96,7 +95,7 @@ var HomeFeedback = React.createClass({
     var confirmHeaderStyle = self.state.submitStatusOk ? null : {'backgroundColor':'#d0021b'};
     return (
       <div>
-        <Modal aria-labelledby='Feedback Dialog' style={modalStyle} backdropStyle={backdropStyle} show={self.props.showFeedbackModal} onHide={self.hideTeamSetup}  onShow={self.show}>
+        <Modal aria-labelledby='Feedback Dialog' style={modalStyle} backdropStyle={backdropStyle} show={self.props.showFeedbackModal} onHide={self.props.closeFeedback} onShow={self.show}>
           <div class='home-modal-block' style={{'width':'27em'}} id='feedbackBlock'>
             <div class='home-modal-block-header'>
               <h>Feedback and support... Please let us know!</h>

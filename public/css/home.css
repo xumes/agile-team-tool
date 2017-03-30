@@ -7689,17 +7689,17 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   color: #777677;
 }
 
-.feedback-block {
+.feedback-block, .apikey-block {
   font-size: 0.9em;
   padding: 0.5em 0 1em;
 }
 
-.feedback-block > p {
+.feedback-block p, .apikey-block p {
   font-size: inherit;
   padding: 1.5em 1.5em 0.5em;
 }
 
-.feedback-block label {
+.feedback-block label, .apikey-block label {
   display: block;
   font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-weight: bold;
@@ -7731,4 +7731,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .home-header-banner-message > .home-header-banner-icon > a > i > svg path {
   fill: #5596E6 !important;
+}
+
+p.apikey-note {
+  color: #5A5A5A;
+  text-align: justify;
 }

@@ -1,11 +1,13 @@
 var React = require('react');
 var InlineSVG = require('svg-inline-react');
 var HomeFeedback = require('./HomeFeedback.jsx');
+var HomeApikey = require('./HomeApikey.jsx');
 
 var HomeHeader = React.createClass({
   getInitialState: function() {
     return {
-      showFeedbackModal: false
+      showFeedbackModal: false,
+      showApikeyModal: false
     }
   },
   showFeedback: function() {
@@ -13,6 +15,12 @@ var HomeHeader = React.createClass({
   },
   closeFeedback: function() {
     this.setState({ showFeedbackModal: false });
+  },
+  showApikey: function() {
+    this.setState({ showApikeyModal: true });
+  },
+  closeApikey: function() {
+    this.setState({ showApikeyModal: false });
   },
   render: function() {
     var userName = user.ldap.preferredFirstName || user.ldap.hrFirstName;
@@ -30,9 +38,9 @@ var HomeHeader = React.createClass({
       <div class='agile-home-header'>
         <div class='header-title'>
           <div>IBM</div>&nbsp;<div>Agile Team Tool</div>&nbsp;
-          <div class='home-header-banner-message'>{siteEnv} &nbsp; &nbsp; 
+          <div class='home-header-banner-message'>{siteEnv} &nbsp; &nbsp;
             <span class='home-header-banner-icon' style={revertToOld}>
-            <a href="/">            
+            <a href="/">
             <InlineSVG src={require('../../../img/Att-icons/att-icons-revert.svg')}></InlineSVG>
              <span class='home-header-banner-label'>
              Revert to previous interface
@@ -63,7 +71,7 @@ var HomeHeader = React.createClass({
               </li>
               <li>
                 <div class="header-menu-icon-api" style={{'paddingTop':'1em'}}>
-                  <a href="javascript: launchApiKey();">
+                  <a href="#" onClick={this.showApikey}>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_api.svg')}></InlineSVG>
                     <div>API Key Generation</div>
                   </a>
@@ -133,6 +141,7 @@ var HomeHeader = React.createClass({
         </div>
 
         <HomeFeedback showFeedbackModal={this.state.showFeedbackModal} closeFeedback={this.closeFeedback} />
+        <HomeApikey showApikeyModal={this.state.showApikeyModal} closeApikey={this.closeApikey} />
       </div>
     )
   }
