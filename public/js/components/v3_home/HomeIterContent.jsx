@@ -138,12 +138,14 @@ var HomeIterContent = React.createClass({
           self.cancelChange(e.target.id);
         }
       });
-      if (!_.isEmpty(this.state.selectedField)){
+      //highlight only when field is first selected/tab
+      if (!_.isEmpty(this.state.selectedField) && this.state.selectedField !== prevState.selectedField){
         $('#'+this.state.selectedField).focus();
         var val = $('#'+this.state.selectedField).val();
         $('#'+this.state.selectedField).val('').val(val);
         $('#'+this.state.selectedField).select();
-        this.startTimer(this.state.selectedField);
+        if (prevState.selectedField != '')
+          this.startTimer(prevState.selectedField);
       }
     } else {
       $('.home-iter-content-point').removeClass('home-iter-content-point-hover');
@@ -161,6 +163,7 @@ var HomeIterContent = React.createClass({
 
   checkTimeOut: function(id) {
     this.saveIter(id);
+    this.stopTimer();
   },
 
   startTimer: function (id) {
@@ -194,20 +197,24 @@ var HomeIterContent = React.createClass({
         if (reverse){
           if (editIndexing[next-1] != null){
             prevent = true;
-            this.startTimer(editIndexing[next-1]);
             self.setState({selectedField:editIndexing[next-1],  backupIter:result});
           }
         }
         else{
           if (editIndexing[next+1] != null){
             prevent = true;
-            this.startTimer(editIndexing[next+1]);
             self.setState({selectedField:editIndexing[next+1],  backupIter:result});
           }
         }
-        return prevent;
       }
-      
+      return prevent;
+  },
+
+  commentSelected: function(id){
+    if (!_.isEmpty(this.state.selectedField)){
+      this.startTimer(this.state.selectedField);
+      this.setState({selectedField:''});
+    }
   },
 
   iterationSelectChange: function(e){
@@ -232,14 +239,7 @@ var HomeIterContent = React.createClass({
     var iterationData = _.clone(this.state.selectedIter);
     var selectedValue = this.state.selectedIter[id] !== null?this.state.selectedIter[id].toString():'';
     var propValue = this.getSelectedIteration()[id] !== null?this.getSelectedIteration()[id].toString():'';
-    if (this.refs[id].value !== 'N/A' && this.refs[id].value !== selectedValue){
-      if (this.checkNumericEquality(this.refs[id].value, selectedValue)){
-        return;
-      }
-      iterationData = this.recalculate(id);
-      this.props.updateTeamIteration(iterationData);
-    }
-    else if (selectedValue !== propValue){
+    if (selectedValue !== propValue){
       if (this.checkNumericEquality(propValue, selectedValue)){
         return;
       }
@@ -270,7 +270,10 @@ var HomeIterContent = React.createClass({
 
   checkNumericEquality: function(value1, value2){
     var isEqual = false;
-    if (!isNaN(value1) && !isNaN(value2) && value1.split('.').length > 0) {
+    if(value1 === value2){
+      isEqual = true;
+    }
+    else if (!isNaN(value1) && !isNaN(value2) && value1.split('.').length > 0) {
         var decimal1 = value1.split('.');
         var decimal2 = value2.split('.');
         if (decimal1.length > 1){
@@ -333,7 +336,7 @@ var HomeIterContent = React.createClass({
     var newDefects;
     var closedDefects;
     var closedDefects;
-    selectedIter[id] = $('#'+id).val();
+    selectedIter[id] = $('#'+id).val()||$('#'+id).text();
     switch (id){
       case 'personDaysUnavailable':
         selectedIter = this.updateAvailability(selectedIter);
@@ -959,7 +962,7 @@ var HomeIterContent = React.createClass({
             </div>
             <div class='home-iter-comment-block'>
               <div class='home-iter-content-title' data-tip='Enter any comments you feel are relevant to this iteration.  Perhaps it was something unplanned that affected the team’s deliverables, either positively or negatively.'>Iteration Comments</div>
-              <textarea class='home-iter-comment-test' readOnly={!access} value={iterData.comment} onBlur={this.partialSaveIter.bind(null, 'comment')} onChange={this.handleChange} onKeyDown={this.checkChanges} onClick={this.startTimer.bind(null, 'comment')} id='comment' ref="comment"/>:
+              <textarea class='home-iter-comment-test' readOnly={!access} value={iterData.comment} onBlur={this.partialSaveIter.bind(null, 'comment')} onChange={this.handleChange} onKeyDown={this.checkChanges} onClick={this.commentSelected.bind(null, 'comment')} id='comment' ref="comment"/>:
             </div>
           </div>
 
