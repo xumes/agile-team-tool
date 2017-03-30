@@ -393,6 +393,9 @@ var HomeIterContent = React.createClass({
      });
     }
     selectedIter.personDaysAvailable = (selectedIter.teamAvailability - selectedIter.personDaysUnavailable).toFixed(2);
+    //2 new fields on DB - 
+    selectedIter.storiesDays = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+    selectedIter.storyPointDays = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
     return selectedIter;
   },
 
@@ -485,6 +488,10 @@ var HomeIterContent = React.createClass({
     var selectedIter = this.state.selectedIter;
     selectedIter.teamAvailability = this.state.teamAvailability;
     selectedIter.personDaysAvailable = (this.float2Decimal(selectedIter.teamAvailability) - this.float2Decimal(selectedIter.personDaysUnavailable)).toFixed(2);
+    //2 new fields on DB - 
+    selectedIter.storiesDays = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+    selectedIter.storyPointDays = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+    
     this.props.updateTeamIteration(selectedIter);
     this.setState({selectedField:''});
   },
@@ -577,6 +584,10 @@ var HomeIterContent = React.createClass({
           iterData.personDaysAvailable = 'N/A';
           storiesDays = 'N/A';
           storyPointsDays = 'N/A';
+          //two new fields
+          iterData.storiesDays = storiesDays;
+          iterData.storyPointDays = storyPointsDays;
+
         }
         else{
           iterData.teamAvailability = !_.isNull(defIter.teamAvailability)? this.float2Decimal(defIter.teamAvailability): '0.00';
@@ -586,6 +597,9 @@ var HomeIterContent = React.createClass({
           storiesDays = !isFinite(storiesDays) ? '0.0': storiesDays.toFixed(1);
           storyPointsDays = this.float2Decimal(defIter.storyPointsDelivered)/this.float2Decimal(iterData.personDaysAvailable);
           storyPointsDays = !isFinite(storyPointsDays) ? '0.0': storyPointsDays.toFixed(1);
+          //two new fields
+          iterData.storiesDays = storiesDays;
+          iterData.storyPointDays = storyPointsDays;
         }
         iterData.name = defIter.name;
         iterData.startDate = moment.utc(defIter.startDate).format('DD MMM YYYY');
