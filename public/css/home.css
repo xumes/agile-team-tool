@@ -49,22 +49,19 @@ html {
     border: 0.1em solid #979797;
   }
   #firstLoginCard_3 {
-    top: 15vw !important;
+    top: 13vw !important;
   }
-  #firstLoginCard_4 {
+  #firstLoginCard_5 {
     left: 43vw !important;
-  }
-  #firstLoginCard_5 {
-    top: 5vw !important;
-  }
-  #firstLoginCard_5 {
-    top: 5vw !important;
   }
   #firstLoginCard_6 {
     top: 5vw !important;
+  }
+  #firstLoginCard_7 {
+    top: 5vw !important;
     left: 27vw !important;
   }
-  #firstLoginCard_6 > .pointer {
+  #firstLoginCard_7 > .pointer {
     -ms-transform: rotate(270deg) !important;
     -webkit-transform: rotate(270deg) !important;
     transform: rotate(270deg) !important;
@@ -75,19 +72,19 @@ html {
 
 @media screen and (max-width: 1899px) {
   #firstLoginCard_3 {
-    top: 23vw;
-  }
-  #firstLoginCard_4 {
-    left: 56vw;
+    top: 20vw;
   }
   #firstLoginCard_5 {
-    top: 5vw;
+    left: 56vw;
   }
   #firstLoginCard_6 {
     top: 5vw;
+  }
+  #firstLoginCard_7 {
+    top: 5vw;
     left: 31vw;
   }
-  #firstLoginCard_6 > .pointer {
+  #firstLoginCard_7 > .pointer {
     -ms-transform: rotate(270deg);
     -webkit-transform: rotate(270deg);
     transform: rotate(270deg);
@@ -145,6 +142,21 @@ html {
   width: 70%;
   left: 15%;
   top: 15%;
+}
+
+.first-login-block > div > .img-block {
+  position: relative;
+  float: left;
+  width: 70%;
+  left: 15%;
+  top: 15%;
+}
+
+.first-login-block > div > .img-block > img{
+  position: relative;
+  float: left;
+  width: 100%;
+  height: auto;
 }
 
 .first-login-block > div > .content > h1 {
@@ -258,14 +270,15 @@ html {
   float: left;
   width: 100%;
   height: 2em;
+  padding-top: 0.5em;
 }
 
 .first-login-block > div > .description > .desc-row > div {
   position: relative;
   float: left;
   width: 5%;
-  height: 50%;
-  top: 25%;
+  height: 70%;
+  top: 15%;
 }
 
 .first-login-block > div > .description > .desc-row > div > i {
@@ -280,8 +293,13 @@ html {
   height: 100%;
 }
 
-.first-login-block > div > .description > .desc-row > div > i > svg path {
+.first-login-block > div > .description > .desc-row > div > i > svg path,
+.first-login-block > div > .description > .desc-row > div > i > svg polygon {
   fill: #5596E6;
+}
+
+#firstLoginCard_7 > .description > .desc-row:first-child svg path {
+  fill: #4D4D4D;
 }
 
 .first-login-block > div > .description > .desc-row > h1 {
@@ -291,6 +309,24 @@ html {
   font-size: 1.4em;
   line-height: 1.4em;
   color: #777677;
+  left: 0.3em;
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+}
+
+#firstLoginCard_7 > .description > .desc-row:nth-child(1) > h1,
+#firstLoginCard_7 > .description > .desc-row:nth-child(2) > h1 {
+  position: relative;
+  float: left;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 1.7em;
+  padding: 0;
+  left: 0.5em;
+  color: #777677;
+}
+
+#firstLoginCard_7 > .description > .desc-row:nth-child(1) > h1 > span,
+#firstLoginCard_7 > .description > .desc-row:nth-child(2) > h1 > span {
   font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
 }
 
@@ -299,7 +335,7 @@ html {
   left: 40%;
 }
 
-#firstLoginCard_4 > .pointer {
+#firstLoginCard_5 > .pointer {
   -ms-transform: rotate(90deg);
   -webkit-transform: rotate(90deg);
   transform: rotate(90deg);
@@ -307,7 +343,7 @@ html {
   top: 40%;
 }
 
-#firstLoginCard_5 > .pointer {
+#firstLoginCard_6 > .pointer {
   -ms-transform: rotate(180deg);
   -webkit-transform: rotate(180deg);
   transform: rotate(180deg);

@@ -21,7 +21,7 @@ var FirstLoginPopover = React.createClass({
             <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
           </div>
           <div class='content'>
-            <h1>{'It appears this is your first time to this version of the Agile Team Tool.'}</h1>
+            <h1>{'It appears this is your first time to the new user interface of the Agile Team Tool.'}</h1>
           </div>
           <div class='sub-content'>
             <h1>{'Would you like us to show you around?'}</h1>
@@ -60,11 +60,10 @@ var FirstLoginPopover = React.createClass({
             <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
           </div>
           <div class='content'>
-            <h1>{'The team and it’s maturity.'}</h1>
+            <h1>{'The team'}</h1>
           </div>
           <div class='sub-content'>
             <h1><span>{'The large blue area '}</span>{'above displays & changes your team information: name, description, setup, heirarchy, bookmarks and team members.'}</h1>
-            <h1><span>{'The light blue area '}</span>{'displays an overview of your most recently submitted maturity assessment with access to the team’s action plan and previous assessment(s).'}</h1>
           </div>
           <div class='btns'>
             <span></span>
@@ -78,6 +77,30 @@ var FirstLoginPopover = React.createClass({
           </div>
         </div>
         <div id='firstLoginCard_4' style={{'display':'none'}}>
+          <div class='close-btn' onClick={this.props.hideFirstLoginPopover}>
+            <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
+          </div>
+          <div class='content'>
+            <h1>{'The Team\'s Maturity Overview.'}</h1>
+          </div>
+          <div class='img-block'>
+            <img src={'../../../img/maturityoverview.png'}></img>
+          </div>
+          <div class='sub-content' style={{'top': '17%'}}>
+            <h1><span>{'The light blue area '}</span>{'which is not displayed on parent teams such as this, displays an overview of your teams most recently submitted maturity assessment with access to the team’s action plan and previous assessment(s).'}</h1>
+          </div>
+          <div class='btns'>
+            <span></span>
+            <span style={{'backgroundColor': '#777677'}}></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <button type='button' class='ibm-btn-pri ibm-btn-blue-50' onClick={this.nextCard.bind(null, 4)}>{'What else?!'}</button>
+            <button type='button' class='ibm-btn-sec ibm-btn-blue-50' onClick={this.previousCard.bind(null, 4)} style={{'right':'1%'}}>{'back'}</button>
+          </div>
+        </div>
+        <div id='firstLoginCard_5' style={{'display':'none'}}>
           <div class='pointer'>
             <InlineSVG src={require('../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
           </div>
@@ -105,11 +128,11 @@ var FirstLoginPopover = React.createClass({
             <span></span>
             <span></span>
             <span></span>
-            <button type='button' class='ibm-btn-pri ibm-btn-blue-50' onClick={this.nextCard.bind(null, 4)}>{'What else?!'}</button>
-            <button type='button' class='ibm-btn-sec ibm-btn-blue-50' onClick={this.previousCard.bind(null, 4)} style={{'right':'1%'}}>{'back'}</button>
+            <button type='button' class='ibm-btn-pri ibm-btn-blue-50' onClick={this.nextCard.bind(null, 5)}>{'What else?!'}</button>
+            <button type='button' class='ibm-btn-sec ibm-btn-blue-50' onClick={this.previousCard.bind(null, 5)} style={{'right':'1%'}}>{'back'}</button>
           </div>
         </div>
-        <div id='firstLoginCard_5' style={{'display':'none'}}>
+        <div id='firstLoginCard_6' style={{'display':'none'}}>
           <div class='pointer'>
             <InlineSVG src={require('../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
           </div>
@@ -137,11 +160,11 @@ var FirstLoginPopover = React.createClass({
             <span style={{'backgroundColor': '#777677'}}></span>
             <span></span>
             <span></span>
-            <button type='button' class='ibm-btn-pri ibm-btn-blue-50' onClick={this.nextCard.bind(null, 5)}>{'What else?!'}</button>
-            <button type='button' class='ibm-btn-sec ibm-btn-blue-50' onClick={this.previousCard.bind(null, 5)} style={{'right':'1%'}}>{'back'}</button>
+            <button type='button' class='ibm-btn-pri ibm-btn-blue-50' onClick={this.nextCard.bind(null, 6)}>{'What else?!'}</button>
+            <button type='button' class='ibm-btn-sec ibm-btn-blue-50' onClick={this.previousCard.bind(null, 6)} style={{'right':'1%'}}>{'back'}</button>
           </div>
         </div>
-        <div id='firstLoginCard_6' style={{'display':'none'}}>
+        <div id='firstLoginCard_7' style={{'display':'none'}}>
           <div class='pointer'>
             <InlineSVG src={require('../../../img/Att-icons/att-icons_hide.svg')}></InlineSVG>
           </div>
@@ -156,13 +179,19 @@ var FirstLoginPopover = React.createClass({
             <h1><span>{'All Teams '}</span>{'display all IBM teams registered in the Agile Team Tool.'}</h1>
           </div>
           <div class='description'>
-            <div class='desc-row'>
-              <div>
+            <div class='desc-row' style={{'width':'50%', 'height':'2.5em'}}>
+              <div style={{'width':'10%'}}>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons_tribe.svg')}></InlineSVG>
+              </div>
+              <h1><span>{'Indicates '}</span>{'squad team'}</h1>
+            </div>
+            <div class='desc-row' style={{'width':'50%', 'height':'2.5em'}}>
+              <div style={{'width':'10%'}}>
                 <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
               </div>
-              <h1>{'Icon creates a new team.'}</h1>
+              <h1><span>{'Creates '}</span>{'a new team.'}</h1>
             </div>
-            <div class='desc-row'>
+            <div class='desc-row' style={{'paddingTop': '1.5em'}}>
               <div>
                 <InlineSVG src={require('../../../img/Att-icons/Att-icons_detail.svg')}></InlineSVG>
               </div>
@@ -176,11 +205,11 @@ var FirstLoginPopover = React.createClass({
             <span></span>
             <span style={{'backgroundColor': '#777677'}}></span>
             <span></span>
-            <button type='button' class='ibm-btn-pri ibm-btn-blue-50' onClick={this.nextCard.bind(null, 6)}>{'What else?!'}</button>
-            <button type='button' class='ibm-btn-sec ibm-btn-blue-50' onClick={this.previousCard.bind(null, 6)} style={{'right':'1%'}}>{'back'}</button>
+            <button type='button' class='ibm-btn-pri ibm-btn-blue-50' onClick={this.nextCard.bind(null, 7)}>{'What else?!'}</button>
+            <button type='button' class='ibm-btn-sec ibm-btn-blue-50' onClick={this.previousCard.bind(null, 7)} style={{'right':'1%'}}>{'back'}</button>
           </div>
         </div>
-        <div id='firstLoginCard_7' style={{'display':'none'}}>
+        <div id='firstLoginCard_8' style={{'display':'none'}}>
           <div class='close-btn' onClick={this.props.hideFirstLoginPopover}>
             <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
           </div>
@@ -188,7 +217,7 @@ var FirstLoginPopover = React.createClass({
             <h1>{'That\'s It!'}</h1>
           </div>
           <div class='sub-content'>
-            <h1>{'If you need additional help feel free to check out the other resources in the top right corner under the "Help" menu.'}</h1>
+            <h1>{'If you need '}<span>{'additional help '}</span>{'feel free to check out the other resources in the top right corner under the "Help" menu.'}</h1>
           </div>
           <div class='btns'>
             <span></span>
@@ -198,7 +227,7 @@ var FirstLoginPopover = React.createClass({
             <span></span>
             <span style={{'backgroundColor': '#777677'}}></span>
             <button type='button' class='ibm-btn-pri ibm-btn-blue-50' onClick={this.props.hideFirstLoginPopover}>{'Ok. Thanks.'}</button>
-            <button type='button' class='ibm-btn-sec ibm-btn-blue-50' onClick={this.previousCard.bind(null, 7)} style={{'right':'1%'}}>{'back'}</button>
+            <button type='button' class='ibm-btn-sec ibm-btn-blue-50' onClick={this.previousCard.bind(null, 8)} style={{'right':'1%'}}>{'back'}</button>
           </div>
         </div>
       </div>

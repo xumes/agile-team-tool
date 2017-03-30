@@ -566,10 +566,9 @@ module.exports.createTeam = function(teamDoc, creator) {
       teamDoc.members = [{
         name: creator ? creator['ldap']['hrFirstName'] + ' ' + creator['ldap']['hrLastName'] : '',
         allocation: 0,
-        role: teamDoc['role'],
+        role: _.isEqual(teamDoc.type, 'squad') ? 'Iteration Manager' : 'Team Lead',
         userId: creator ? creator['ldap']['uid'].toUpperCase() : '',
-        email: creator ? creator['shortEmail'].toLowerCase() : '',
-        location: {site: teamDoc['location'] ? teamDoc['location'] : '', timezone:null}
+        email: creator ? creator['shortEmail'].toLowerCase() : ''
       }];
     }
     var newTeam = {
@@ -628,8 +627,20 @@ module.exports.createUsers = function(members) {
               promiseArray.push(Users.create(member));
             } else {
               if (!_.isEmpty(user.location) && !_.isEmpty(user.location.timezone)) {
-                if (!member.location) member.location = {};
-                member.location.timezone = user.location.timezone;
+                if (_.isEmpty(member.location)) {
+                  member.location = {};
+                  member.location.timezone = user.location.timezone;
+                  member.location.site = user.location.site;
+                } else {
+                  if (_.isEmpty(member.location.timezone)) {
+                    var tz = ulocation[member.location.site.toLowerCase()];
+                    if (_.isUndefined(tz)) {
+                      member.location.timezone = user.location.timezone;
+                    } else {
+                      member.location.timezone = tz;
+                    }
+                  }
+                }
               }
               promiseArray.push(Users.updateUser(member));
             }
