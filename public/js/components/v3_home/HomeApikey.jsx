@@ -10,11 +10,7 @@ var HomeApikey = React.createClass({
       apiKey: ''
     }
   },
-  componentWillUpdate: function(nextProps, nextState) {
-    console.log('componentWillUpdate', this.state.apiKey);
-  },
   componentDidUpdate: function(prevProps, prevState) {
-    console.log('componentDidUpdate', this.state.apiKey,!_.isEmpty(this.state.apiKey));
     if (!_.isEmpty(this.state.apiKey)) {
       if (clipboard) clipboard.destroy();
       clipboard = new Clipboard('#copyApikeyBtn');
