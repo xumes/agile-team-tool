@@ -151,6 +151,14 @@ var IterationSchema = {
   personDaysAvailable: {
     type: Number,
     default: null
+  },
+  storiesDays: {
+    type: Number,
+    default: null
+  },
+  storyPointDays: {
+    type: Number,
+    default: null
   }
 };
 
