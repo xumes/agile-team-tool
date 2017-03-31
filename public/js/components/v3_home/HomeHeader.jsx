@@ -130,9 +130,6 @@ var HomeHeader = React.createClass({
               <li>
                 <a href="https://w3-connections.ibm.com/forums/html/topic?id=b3e1586f-37a5-4d2a-a3e1-653867728fd8&ps=25" target="_blank">What's new</a>
               </li>
-              <li>
-                <a href="#" onClick={this.showApikey}>API Key Generation</a>
-              </li>
             </ul>
           </div>
           <div class='header-logo'>
