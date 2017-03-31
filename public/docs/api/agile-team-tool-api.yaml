@@ -3,6 +3,9 @@ info:
   title: Agile Team Tool API
   description: Set of APIs to import data into the tool
   version: "1.0.0"
+  x-logo:
+    url: "/img/logo.svg"
+    backgroundColor: "#FFFFFF"
 # the domain of the service
 host: agiletool.mybluemix.net
 # array of all schemes that your API supports
@@ -12,7 +15,7 @@ schemes:
 basePath: /v1
 produces:
   - application/json
-  
+
 paths:
   /teams:
     get:
@@ -31,7 +34,7 @@ paths:
       responses:
         200:
           description: An array of teams
-          schema: 
+          schema:
             type: array
             items:
               $ref: '#/definitions/Team'
@@ -322,7 +325,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'  
+            $ref: '#/definitions/Error'
 definitions:
   Team:
     type: object
@@ -353,12 +356,12 @@ definitions:
         type: string
         description: record create user id (cnum = serial + 3 digit personal system code)
       createdBy:
-        type: string    
+        type: string
         description: record create user email
       createDate:
         type: string
         format: new Date()
-        description: record create daytime   date format 2016-01-04T00:00:00.000Z 
+        description: record create daytime   date format 2016-01-04T00:00:00.000Z
       startDate:
         type: string
         format: date-time
@@ -416,7 +419,7 @@ definitions:
         description:  Average days of iteration storys from planning to delivery
       cycleTimeInBacklog:
         type: number
-        description: Average days of iteration storys from backlog to planning 
+        description: Average days of iteration storys from backlog to planning
       clientSatisfaction:
         type: number
         description: Client satisfaction score
@@ -446,7 +449,7 @@ definitions:
         type: string
         default: new Date()
         description: System log last update date.  Update date date format 2016-01-04T00:00:00.000Z
-        
+
   Error:
     type: object
     properties:
