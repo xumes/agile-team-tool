@@ -297,7 +297,6 @@ var HomeMemberTable = React.createClass({
     var mrd = self.getMemberRowDetails(idx);
     var newMembers = [];
     var newMembersContent = [];
-    console.log('deleteMember user:',mrd);
     newMembers = _.reject(self.props.loadDetailTeam.team.members, function(member, index){
       return index==idx;
     });
@@ -316,8 +315,6 @@ var HomeMemberTable = React.createClass({
 
     api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
       .then(function(result){
-        console.log('deleteMember results:');
-        console.dir(result.members);
         if (newMembersContent.length != self.props.loadDetailTeam.members.length) {
           self.props.reloadTeamMembers(result.members, newMembersContent);
           self.setState({showConfirmModal: false});
