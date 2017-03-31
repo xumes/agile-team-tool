@@ -3,6 +3,9 @@ info:
   title: Agile Team Tool API
   description: Set of APIs to import data into the tool
   version: "1.0.0"
+  x-logo:
+    url: "/img/logo.svg"
+    backgroundColor: "#FFFFFF"
 # the domain of the service
 host: agiletool.mybluemix.net
 # array of all schemes that your API supports

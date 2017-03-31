@@ -131,7 +131,7 @@ var HomeHeader = React.createClass({
                 <a href="https://w3-connections.ibm.com/forums/html/topic?id=b3e1586f-37a5-4d2a-a3e1-653867728fd8&ps=25" target="_blank">What's new</a>
               </li>
               <li>
-                <a href="javascript: launchApiKey();">API Key Generation</a>
+                <a href="/apioverview/redoc" target="_blank">{'ATT API Documentation'}</a>
               </li>
             </ul>
           </div>
