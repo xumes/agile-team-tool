@@ -962,6 +962,7 @@ module.exports.getAllUserTeamsByUserId = function(uid) {
                   'allocation':member.allocation,
                   'userId':member.userId,
                   'email':member.email,
+                  'workTime':member.workTime,
                   'location':{
                     'site': '',
                     'timezone': ''
