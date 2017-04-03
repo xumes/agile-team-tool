@@ -573,13 +573,13 @@ module.exports.createTeam = function(teamDoc, creator) {
     }
     var newTeam = {
       'name': teamDoc.name,
-      'createdByUserId': creator.ldap.uid.toUpperCase(),
-      'createdBy': creator.shortEmail.toLowerCase(),
+      'createdByUserId': creator ? creator.ldap.uid : '',
+      'createdBy': creator ? creator.shortEmail.toLowerCase() : '',
       'pathId': createPathId(teamDoc.name),
       'path': teamDoc.path || teamDoc.path,
       'docStatus': null,
       'updatedBy': creator ? creator['shortEmail'].toLowerCase() : '',
-      'updatedByUserId': creator ? creator['ldap']['uid'].toUpperCase() : '',
+      'updatedByUserId': creator ? creator['ldap']['uid'] : '',
       'updateDate': new Date(moment.utc()),
       'members': teamDoc.members,
       'type': _.isEqual(teamDoc.type, 'squad') ? 'squad' : null,
@@ -1343,7 +1343,7 @@ module.exports.softDelete = function(teamDoc, user) {
       .then(function(result){
         resolve({'ok': 'Delete successfully'});
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         reject(err);
       });
   });
