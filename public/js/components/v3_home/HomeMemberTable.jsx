@@ -5,11 +5,11 @@ var ReactDOM = require('react-dom');
 var HomeAddMember = require('./HomeAddMember.jsx');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
-
+var ConfirmDialog = require('./ConfirmDialog.jsx');
 
 var HomeMemberTable = React.createClass({
   getInitialState: function() {
-    return { showModal: false };
+    return { showModal: false, showConfirmModal: false};
   },
   componentDidMount: function() {
     this.initialAll();
@@ -279,6 +279,50 @@ var HomeMemberTable = React.createClass({
           console.log(err);
         });
     }
+  },
+
+  confirmDialog: function(idx) {
+    var mrd = this.getMemberRowDetails(idx);
+    this.setState({showConfirmModal: true});
+    this.setState({deleteMemberIdx: idx, deleteMemberEmail: mrd.email});
+  },
+
+  hideConfirmDialog: function() {
+    this.setState({showConfirmModal: false});
+  },
+
+  deleteMember: function() {
+    var self = this;
+    var idx = self.state.deleteMemberIdx;
+    var mrd = self.getMemberRowDetails(idx);
+    var newMembers = [];
+    var newMembersContent = [];
+    newMembers = _.reject(self.props.loadDetailTeam.team.members, function(member, index){
+      return index==idx;
+    });
+
+    _.each(self.props.loadDetailTeam.members, function(member){
+      if (member.email != mrd.email) {
+        newMembersContent.push(member);
+      } else {
+        var existMember = _.filter(newMembers, function(m){
+          return m.email == mrd.email
+        });
+        if (!_.isEmpty(existMember))
+          newMembersContent.push(member);
+      }
+    });
+
+    api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
+      .then(function(result){
+        if (newMembersContent.length != self.props.loadDetailTeam.members.length) {
+          self.props.reloadTeamMembers(result.members, newMembersContent);
+          self.setState({showConfirmModal: false});
+        }
+      })
+      .catch(function(err){
+        console.log(err);
+      });
   },
   // changeMemberHandler: function(e) {
   //   var self = this;
@@ -761,7 +805,7 @@ var HomeMemberTable = React.createClass({
             var awkId = 'awk_'+idx;
             if (self.props.loadDetailTeam.access) {
               var deletBtn = (
-                <span class='delete-btn' onClick={self.delTeamMemberHandler.bind(null, idx)}>
+                <span class='delete-btn' onClick={self.confirmDialog.bind(null, idx)}>
                   <InlineSVG src={require('../../../img/Att-icons/att-icons_delete.svg')}></InlineSVG>
                 </span>
               );
@@ -928,6 +972,7 @@ var HomeMemberTable = React.createClass({
           <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAddTeamTable}>
             <HomeAddMember reloadTeamMembers={self.props.reloadTeamMembers} loadDetailTeam={self.props.loadDetailTeam} roleSelection={roleSelection} hideAddTeamTable={self.hideAddTeamTable}/>
           </Modal>
+          <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.deleteMember} content={'Do you want to delete this member: ' + self.state.deleteMemberEmail +' ?'} actionBtnLabel='Delete' cancelBtnLabel='Cancel' />
         </div>
       )
     }
