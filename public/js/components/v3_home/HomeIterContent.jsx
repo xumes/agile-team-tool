@@ -364,9 +364,11 @@ var HomeIterContent = React.createClass({
         selectedIter[id] = $('#'+id).val();
         break;
       case 'deliveredStories':
+        selectedIter['storiesDays'] = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
         this.updateStories(selectedIter);
         break;
       case 'storyPointsDelivered':
+        selectedIter['storyPointsDays'] = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
         this.updateStoryPoints(selectedIter);
         break;
     }
@@ -400,11 +402,13 @@ var HomeIterContent = React.createClass({
   },
 
   updateStories: function(selectedIter){
-    $('#storiesDays').text((utils.numericValue($('#deliveredStories').val())/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1));
+    $('#storiesDays').text((selectedIter.storiesDays).toFixed(1));
+//    $('#storiesDays').text((utils.numericValue($('#deliveredStories').val())/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1));
   },
 
   updateStoryPoints: function(selectedIter){
-    $('#storyPointsDays').text((utils.numericValue($('#storyPointsDelivered').val())/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1));
+    $('#storyPointsDays').text((selectedIter.storyPointsDays).toFixed(1));
+//    $('#storyPointsDays').text((utils.numericValue($('#storyPointsDelivered').val())/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1));
   },
 
   float2Decimal:function(val) {
@@ -598,8 +602,8 @@ var HomeIterContent = React.createClass({
 //          storyPointsDays = this.float2Decimal(defIter.storyPointsDelivered)/this.float2Decimal(iterData.personDaysAvailable);
 //          storyPointsDays = !isFinite(storyPointsDays) ? '0.0': storyPointsDays.toFixed(1);
           //two new fields
-          iterData.storiesDays = !_.isNull(defIter.storiesDays)? this.float2Decimal(defIter.storiesDays): '0.00';
-          iterData.storyPointsDays = !_.isNull(defIter.storyPointsDays)? this.float2Decimal(defIter.storyPointsDays): '0.00';
+          iterData.storiesDays = !_.isNull(defIter.storiesDays)? this.float1Decimal(defIter.storiesDays): '0.0';
+          iterData.storyPointsDays = !_.isNull(defIter.storyPointsDays)? this.float1Decimal(defIter.storyPointsDays): '0.0';
         }
         iterData.name = defIter.name;
         iterData.startDate = moment.utc(defIter.startDate).format('DD MMM YYYY');
