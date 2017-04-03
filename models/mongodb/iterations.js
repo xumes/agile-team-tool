@@ -156,7 +156,7 @@ var IterationSchema = {
     type: Number,
     default: null
   },
-  storyPointDays: {
+  storyPointsDays: {
     type: Number,
     default: null
   }
