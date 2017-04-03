@@ -1,0 +1,457 @@
+swagger: '2.0'
+info:
+  title: Agile Team Tool API
+  description: Set of APIs to import data into the tool
+  version: "1.0.0"
+  x-logo:
+    url: "/img/logo.svg"
+    backgroundColor: "#FFFFFF"
+# the domain of the service
+host: agiletool.mybluemix.net
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /v1
+produces:
+  - application/json
+
+paths:
+  /teams:
+    get:
+      summary: Teams
+      description: |
+        The teams endpoint retrieves all of the teams associated by the user that created the API key
+      parameters:
+        - name: apiKey
+          in: header
+          description: Unique API key generated for the consumer of this API
+          required: true
+          type: string
+          format: string
+      tags:
+        - Team
+      responses:
+        200:
+          description: An array of teams
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Team'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /iterations:
+    get:
+      summary: Iterations
+      description: |
+        The iterations endpoint retrieves all of the iteration data for a particular team
+      parameters:
+        - name: apiKey
+          in: header
+          description: Unique API key generated for the consumer of this API
+          required: true
+          type: string
+          format: string
+        - name: teamId
+          in: query
+          description: Unique team ID
+          required: false
+          type: string
+          format: string
+      tags:
+        - Iteration
+      responses:
+        200:
+          description: An array of iterations
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Iteration'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: Iterations
+      description: |
+        This endpoint inserts new iteration data
+      parameters:
+        - name: apiKey
+          in: header
+          description: Unique API key generated for the consumer of this API
+          required: true
+          type: string
+          format: string
+        - name: iteration
+          in: body
+          description: JSON body of the iteration data to be updated
+          required: true
+          schema:
+            type: object
+            required:
+              - teamId
+              - name
+              - startDate
+              - endDate
+            properties:
+              _id:
+                type: string
+              name:
+                type: string
+              teamId:
+                type: string
+              createdByUserId:
+                type: string
+              createdBy:
+                type: string
+              createDate:
+                type: string
+                format: new Date()
+              startDate:
+                type: string
+                format: date-time
+              endDate:
+                type: string
+                format: date-time
+              status:
+                type: string
+                default: 'Not complete'
+              memberCount:
+                type: integer
+              memberChanged:
+                type: boolean
+                default: false
+              committedStories:
+                type: integer
+              deliveredStories:
+                type: integer
+              commitedStoryPoints:
+                type: integer
+              storyPointsDelivered:
+                type: integer
+              comment:
+                type: string
+              memberFte:
+                type: number
+              deployments:
+                type: integer
+              defectsStartBal:
+                type: integer
+              defects:
+                type: integer
+              defectsClosed:
+                type: integer
+              defectsEndBal:
+                type: integer
+                minimum: 0
+              cycleTimeWIP:
+                type: number
+              cycleTimeInBacklog:
+                type: number
+              clientSatisfaction:
+                type: number
+                maximum: 4
+                minimum: 1
+              teamSatisfaction:
+                type: number
+                maximum: 4
+                minimum: 1
+              teamAvailability:
+                type: number
+              personDaysAvailable:
+                type: number
+              personDaysUnavailable:
+                type: number
+              updatedBy:
+                type: string
+              updatedByUserId:
+                type: string
+              updateDate:
+                type: string
+                default: new Date()
+      tags:
+        - Iteration
+      responses:
+        201:
+          description: Iteration data
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Iteration'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: Iterations
+      description: |
+        This endpoint updates existing iteration data
+      parameters:
+        - name: apiKey
+          in: header
+          description: Unique API key generated for the consumer of this API
+          required: true
+          type: string
+          format: string
+        - name: iteration
+          in: body
+          description: JSON body of the iteration data to be updated
+          required: true
+          schema:
+            type: object
+            required:
+              - _id
+            properties:
+              _id:
+                type: string
+              name:
+                type: string
+              teamId:
+                type: string
+              createdByUserId:
+                type: string
+              createdBy:
+                type: string
+              createDate:
+                type: string
+                format: new Date()
+              startDate:
+                type: string
+                format: date-time
+              endDate:
+                type: string
+                format: date-time
+              status:
+                type: string
+                default: 'Not complete'
+              memberCount:
+                type: integer
+              memberChanged:
+                type: boolean
+                default: false
+              committedStories:
+                type: integer
+              deliveredStories:
+                type: integer
+              commitedStoryPoints:
+                type: integer
+              storyPointsDelivered:
+                type: integer
+              comment:
+                type: string
+              memberFte:
+                type: number
+              deployments:
+                type: integer
+              defectsStartBal:
+                type: integer
+              defects:
+                type: integer
+              defectsClosed:
+                type: integer
+              defectsEndBal:
+                type: integer
+                minimum: 0
+              cycleTimeWIP:
+                type: number
+              cycleTimeInBacklog:
+                type: number
+              clientSatisfaction:
+                type: number
+                maximum: 4
+                minimum: 1
+              teamSatisfaction:
+                type: number
+                maximum: 4
+                minimum: 1
+              teamAvailability:
+                type: number
+              personDaysAvailable:
+                type: number
+              personDaysUnavailable:
+                type: number
+              updatedBy:
+                type: string
+              updatedByUserId:
+                type: string
+              updateDate:
+                type: string
+                default: new Date()
+            example:
+              _id: xxxxxxx
+              teamId: xxxxxxx
+              status: xxxxxxx
+      tags:
+        - Iteration
+      responses:
+        200:
+          description: Iteration data
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Iteration'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Iterations
+      description: |
+        This endpoint deletes existing iteration data
+      parameters:
+        - name: apiKey
+          in: header
+          description: Unique API key generated for the consumer of this API
+          required: true
+          type: string
+          format: string
+        - name: iterationId
+          in: query
+          description: Unique identifier for the iteration
+          required: true
+          type: string
+          format: string
+      tags:
+        - Iteration
+      responses:
+        200:
+          description: Iteration data
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/Iteration'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Team:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: Unique database objectid
+      teamId:
+        type: string
+        description: Unique database identifier from Cloudant
+      name:
+        type: string
+        description: Name of the team
+  Iteration:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: Unique database objectid
+      name:
+        type: string
+        description: Unique iteration name
+      teamId:
+        type: string
+        format: Schema.Types.ObjectId
+        description: iteration parent team id
+      createdByUserId:
+        type: string
+        description: record create user id (cnum = serial + 3 digit personal system code)
+      createdBy:
+        type: string
+        description: record create user email
+      createDate:
+        type: string
+        format: new Date()
+        description: record create daytime   date format 2016-01-04T00:00:00.000Z
+      startDate:
+        type: string
+        format: date-time
+        description: iteration start date - date format 2016-01-04T00:00:00.000Z
+      endDate:
+        type: string
+        format: date-time
+        description: iteration end date date format 2016-01-04T00:00:00.000Z
+      status:
+        type: string
+        default: 'Not complete'
+        description: indicator of iteration is completed or not completed
+      memberCount:
+        type: integer
+        description: Number of members in this iteration
+      memberChanged:
+        type: boolean
+        default: false
+        description: team change in the iteration
+      committedStories:
+        type: integer
+        description: Number of committed stories
+      deliveredStories:
+        type: integer
+        description: Number of delivered stories
+      commitedStoryPoints:
+        type: integer
+        description: Number of committed story points
+      storyPointsDelivered:
+        type: integer
+        description: Number of delivered story points
+      comment:
+        type: string
+        description: Iteration comments
+      memberFte:
+        type: number
+        description: Full time equivalent of team member allocation
+      deployments:
+        type: integer
+        description: Number of deployments done
+      defectsStartBal:
+        type: integer
+        description: Number of defects from previous iteration
+      defects:
+        type: integer
+        description: Number of defects found this iteration
+      defectsClosed:
+        type: integer
+        description: Number of defects resolved this iteration
+      defectsEndBal:
+        type: integer
+        description: Calculated defect when iteration is closed (starting balance + new defects - defect closed)
+      cycleTimeWIP:
+        type: number
+        description:  Average days of iteration storys from planning to delivery
+      cycleTimeInBacklog:
+        type: number
+        description: Average days of iteration storys from backlog to planning
+      clientSatisfaction:
+        type: number
+        description: Client satisfaction score
+        maximum: 4
+        minimum: 1
+      teamSatisfaction:
+        type: number
+        description: Team satisfaction score
+        maximum: 4
+        minimum: 1
+      teamAvailability:
+        type: number
+        description: Total number of person day for the team during the iteration
+      personDaysAvailable:
+        type: number
+        description: Total number of person day available during the iteration
+      personDaysUnavailable:
+        type: number
+        description: Total number of person day non available during the iteration
+      updatedBy:
+        type: string
+        description:  System log last updated by user email id
+      updatedByUserId:
+        type: string
+        description: System log last update by user id (cnum - serial number + 3 digit personal system code)
+      updateDate:
+        type: string
+        default: new Date()
+        description: System log last update date.  Update date date format 2016-01-04T00:00:00.000Z
+
+  Error:
+    type: object
+    properties:
+      message:
+        type: string
