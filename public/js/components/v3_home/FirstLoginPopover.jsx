@@ -1,11 +1,27 @@
 var React = require('react');
 var ReactModal = require('react-modal');
 var InlineSVG = require('svg-inline-react');
+var _ = require('underscore');
 
 var FirstLoginPopover = React.createClass({
   componentDidMount: function() {
   },
   nextCard: function(count) {
+    // var self = this;
+    // var showCount = 0;
+    // if (!_.isEmpty(self.props.loadDetailTeam)) {
+    //   if (self.props.loadDetailTeam.team.type != 'squad') {
+    //     if (count == 3) {
+    //       showCount = count + 2;
+    //     } else {
+    //       showCount = count + 1;
+    //     }
+    //   } else {
+    //     showCount = count + 1;
+    //   }
+    // } else {
+    //   showCount = count + 1;
+    // }
     $('#firstLoginCard_' + count).hide();
     $('#firstLoginCard_' + (count+1)).show();
   },
@@ -87,7 +103,7 @@ var FirstLoginPopover = React.createClass({
             <img src={'../../../img/maturityoverview.png'}></img>
           </div>
           <div class='sub-content' style={{'top': '17%'}}>
-            <h1><span>{'The light blue area '}</span>{'which is not displayed on parent teams such as this, displays an overview of your teams most recently submitted maturity assessment with access to the team’s action plan and previous assessment(s).'}</h1>
+            <h1><span>{'The light blue area '}</span>{' (example above) only displays on squad teams '}<a><img src={'../../../img/Att-icons/att-icons_tribe.svg'}></img></a>{', and shows an overview of your team\'s most recently submitted maturity assessment with access to the team\'s action plan and previous assessment(s).'}</h1>
           </div>
           <div class='btns'>
             <span></span>
