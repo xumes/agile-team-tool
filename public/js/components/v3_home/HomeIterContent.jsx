@@ -396,18 +396,20 @@ var HomeIterContent = React.createClass({
     }
     selectedIter.personDaysAvailable = (selectedIter.teamAvailability - selectedIter.personDaysUnavailable).toFixed(2);
     //2 new fields on DB - 
+    console.log('HERE......');
     selectedIter.storiesDays = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+    console.log('DONE.... ');
     selectedIter.storyPointsDays = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
     return selectedIter;
   },
 
   updateStories: function(selectedIter){
-    $('#storiesDays').text((selectedIter.storiesDays).toFixed(1));
+    $('#storiesDays').text((selectedIter.storiesDays));
 //    $('#storiesDays').text((utils.numericValue($('#deliveredStories').val())/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1));
   },
 
   updateStoryPoints: function(selectedIter){
-    $('#storyPointsDays').text((selectedIter.storyPointsDays).toFixed(1));
+    $('#storyPointsDays').text((selectedIter.storyPointsDays));
 //    $('#storyPointsDays').text((utils.numericValue($('#storyPointsDelivered').val())/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1));
   },
 
