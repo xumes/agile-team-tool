@@ -749,7 +749,7 @@ var IterationExport = {
           loggers.get('model-iteration').verbose('Successfully get "Not Complete" iterations.');
           resolve('Successfully completed this operation');
         })
-        .catch(function(err) {
+        .catch( /* istanbul ignore next */ function(err) {
           loggers.get('model-iteration').verbose('Unable to process "Not Complete" iterations err='+err.error);
           reject({'error':err});
         });

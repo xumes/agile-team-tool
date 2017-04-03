@@ -2531,7 +2531,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   display: inline-block;
   font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 16px;
-  line-height: 16px;
+  line-height: 18px;
   color: #777677;
 }
 
@@ -2540,7 +2540,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   font-size: 1.6em;
   text-align: right;
   color: #4178BE;
-  top: 4.5%;
+  top: 4.45%;
   position: relative;
 }
 
@@ -6050,12 +6050,21 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-size: 1.6em;
 }
 
+.home-modal-block.style1{
+  height: 12em;
+  width: 25em;
+}
+
 .home-modal-block-header {
   background-color: #4178be;
   font-size: inherit;
   height: 2.5em;
   position: relative;
   width: 100%;
+}
+
+.home-modal-block-header.redBg{
+  background-color: #d0021b;
 }
 
 .home-modal-block-header > h {
@@ -6074,6 +6083,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: relative;
 }
 
+.home-modal-block-content.setauto {
+ height: auto;
+}
+
 .home-modal-block-footer {
   display: inline-block;
   font-size: inherit;
@@ -6084,6 +6097,21 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .home-modal-block-footer .ibm-btn-small {
   font-size: 1.5 !important;
   margin-bottom: 0px;
+}
+
+.home-modal-block-footer .ibm-btn-small.action-btn {
+  margin-right: 0.5em;
+  background: #d0021b none repeat scroll 0 0;
+  border-color: #d0021b;
+}
+
+.home-modal-block-footer.style1 {
+  width: 93%;
+  top:5%;
+}
+
+.home-modal-block-footer .floatright {
+  float: right;
 }
 
 .home-modal-block-close-btn {
