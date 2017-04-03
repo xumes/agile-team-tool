@@ -8,6 +8,7 @@ var HomeAddTeamHierarchyModal = require('./HomeAddTeamHierarchyModal.jsx');
 var HomeAddTeamTypeModal = require('./HomeAddTeamTypeModal.jsx');
 var HomeAddTeamMemberModal = require('./HomeAddTeamMemberModal.jsx');
 var HomeAddTeamMemberRole = require('./HomeAddTeamMemberRole.jsx');
+var ConfirmDialog = require('./ConfirmDialog.jsx');
 
 var HomeAddTeam = React.createClass({
   getInitialState: function() {
@@ -33,7 +34,8 @@ var HomeAddTeam = React.createClass({
       selectedParentTeam: {},
       selectedChildTeams: [],
       teamNames: [],
-      teamMembers: []
+      teamMembers: [],
+      showConfirmModal: false
     };
   },
 
@@ -151,7 +153,7 @@ var HomeAddTeam = React.createClass({
     api.postTeam(JSON.stringify(self.state.newTeamObj))
       .then(function(result) {
         currentTeam = result;
-        self.props.tabClickedHandler('',currentTeam.pathId);
+        // self.props.tabClickedHandler('',currentTeam.pathId);
         return result;
       })
       .then(function(result) {
@@ -176,7 +178,9 @@ var HomeAddTeam = React.createClass({
               Promise.all(promiseArray);
          }
          self.closeWindow();
-         alert('You have successfully added this team. ');
+         // alert('You have successfully added this team. ');
+         self.props.tabClickedHandler('',currentTeam.pathId);
+         self.setState({showConfirmModal: true});
       })
       .catch(function(err) {
         if (err) {
@@ -217,6 +221,10 @@ var HomeAddTeam = React.createClass({
     this.setState({selectedParentTeam: obj});
   },
 
+  hideConfirmDialog: function() {
+    this.setState({showConfirmModal: false});
+  },
+
   render: function () {
     var self = this;
     var addBtnStyle = self.props.access?'block':'none';
@@ -239,6 +247,7 @@ var HomeAddTeam = React.createClass({
 
         <HomeAddTeamMemberRole activeWindow={this.state.screenStatus['showTeamMemberRoleModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamMember={self.setTeamMember} roles={self.props.roles} saveTeam={self.saveTeam}/>
 
+        <ConfirmDialog showConfirmModal={self.state.showConfirmModal} confirmAction={self.hideConfirmDialog} alertType='information' content={'You have successfully added this team.'} actionBtnLabel='Ok' />
         {/*
         //TODO, needs only to pass newTeamObj as the container object of the new team related data, and only relevant setter functions that will update the object.
         <HomeAddTeamHierarchyModal showModal={this.state.showTeamHierarchyModal} closeWindow={self.hideTeamHierarchyModal}  updateStep={self.updateStep} setTeamObj={self.setTeamObj} getTeamObj={getTeamObj} onchangeParentTeamDropdown={self.onchangeParentTeamDropdown} teamNames={self.state.teamNames} selectableParents={self.state.selectableParents} onchangeChildTeamList={self.onchangeChildTeamList}/>

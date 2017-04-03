@@ -972,7 +972,7 @@ var HomeMemberTable = React.createClass({
           <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAddTeamTable}>
             <HomeAddMember reloadTeamMembers={self.props.reloadTeamMembers} loadDetailTeam={self.props.loadDetailTeam} roleSelection={roleSelection} hideAddTeamTable={self.hideAddTeamTable}/>
           </Modal>
-          <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.deleteMember} content={'Do you want to delete this member: ' + self.state.deleteMemberEmail +' ?'} actionBtnLabel='Delete' cancelBtnLabel='Cancel' />
+          <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.deleteMember} alertType='warning' content={'Do you want to delete this member: ' + self.state.deleteMemberEmail +' ?'} actionBtnLabel='Delete' cancelBtnLabel='Cancel' />
         </div>
       )
     }
