@@ -161,6 +161,10 @@ paths:
                 type: number
               personDaysUnavailable:
                 type: number
+              storiesDay:
+                type: number
+              storyPointsDay:
+                type: number                
               updatedBy:
                 type: string
               updatedByUserId:
@@ -269,6 +273,10 @@ paths:
                 type: number
               personDaysUnavailable:
                 type: number
+              storiesDay:
+                type: number
+              storyPointsDay:
+                type: number                
               updatedBy:
                 type: string
               updatedByUserId:
@@ -436,6 +444,12 @@ definitions:
       personDaysUnavailable:
         type: number
         description: Total number of person day non available during the iteration
+      storiesDay:
+        type: number
+        description: Average stories per person day -- Total number of story delivered divides by total person day
+      storyPointsDay:
+        type: number
+        description: Average story points per person day -- Total number of story points delivered divide by total person day        
       updatedBy:
         type: string
         description:  System log last updated by user email id
