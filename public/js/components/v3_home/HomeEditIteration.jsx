@@ -158,10 +158,10 @@ var HomeEditIteration = React.createClass({
               </div>
                 
               <div className='popup-btns'>
-                <p class='ibm-btn-row ibm-button-link' style={{'position':'relative','float':'right'}}>
-                  <a onClick={this.processIteration} class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50' style={{'padding':'4%'}}>Change</a>
-                  <a onClick={this.close} class='ibm-btn-sec ibm-btn-small ibm-btn-blue-50' style={{'padding':'4%'}}>Cancel</a>
-                </p>
+                <div class='ibm-btn-row' style={{'float':'right', 'paddingBottom':'1rem'}}>
+                  <a onClick={this.processIteration} class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50' style={{'padding':'0.4rem'}}>Change</a>
+                  <a onClick={this.close} class='ibm-btn-sec ibm-btn-small ibm-btn-blue-50' style={{'padding':'0.4rem'}}>Cancel</a>
+                </div>
               </div>
           </div>
           </ReactModal>

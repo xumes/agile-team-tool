@@ -2516,7 +2516,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   left: 5%;
   float: left;
   top: 4%;
-  width: 66.5%;
+  width: 66%;
   height: 2%;
   font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.5em;
@@ -2554,8 +2554,9 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   font-size: 1.6em;
   text-align: right;
   color: #4178BE;
-  top: 4.45%;
   position: relative;
+  float: right;
+  line-height: 1.05em;
 }
 
 .home-iter-name-block {
@@ -2631,25 +2632,23 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .home-iter-add-btn-block, .home-iter-add-btn-block-disabled {
   position: relative;
-  display: inline-block;
+  display: inline;
   float: left;
-  width: 6.5%;
-  height: 1.06%;
-  min-height: 1.5em;
-  top: 4.5%;
+  width: 29%;
+  height: 1.6em;
+  top: 4.6%;
 }
 
 .home-iter-add-btn-block-2, .home-iter-add-btn-block-disabled-2 {
-  display: inline-flex;
+  display: inline;
   float: right;
-  height: 1.22%;
-  min-height: 1.5em;
+  height: 1.7em;
   margin-right: 10%;
 }
 
 
 .home-iter-add-btn-block-2 > i{
-  height: 70%;
+  height: 100%;
   padding-right: 0.2em;
 }
 
@@ -4491,21 +4490,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 /* END: Team description Modal section */
 
 @media only screen and (min-width: 1800px){
-  .popup-title{
-    font-size: 15px;
-  }
-
-  .popup-btns, .home-iter-main, .home-iter-date, .home-iter-new-dates, p.home-iter-date-range, .home-iter-sub-section-category, .checkbox {
-    font-size: 14px;
-  }
 
   span.home-iter-sub-section-delivered {
     font-size: 12px;
-  }
-
-  .home-iter-cal-btn-block > i > svg{
-    height: 28px;
-    width: 28px;
   }
 
   .team-hier-children {
@@ -4514,7 +4501,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-iter-popup {
-  width: 26%;
   background-color: #FFFFFF;
   position: absolute;
   top: 50%;
@@ -4526,12 +4512,11 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   background-clip: padding-box;
   border: none;
   border-radius: 0;
-  max-width: 600px;
-  min-width: 300px;
+  width: 37rem;
 }
 
 .popup-title {
-  height: 3em;
+  height: 3rem;  
   width: 100%;
   background-color: #4178BE;
   padding-top: 4%;
@@ -4547,7 +4532,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .popup-title > h1 {
   width: 90%;
   height: 3.67%;
-  font-size: 1.5em;
+  font-size: 1.45rem;
   font-family: "HelvNeue Medium for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
   line-height: 1.19em;
   position: relative;
@@ -4555,7 +4540,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .popup-title > div {
-  width: 10%;
+  width: 3.5rem;
   cursor: pointer;
   margin-right: 3%;
 }
@@ -4580,9 +4565,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .home-iter-main-section {
   font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
-  font-size: 1.4em;
+  font-size: 1.4rem;
   font-weight: normal;
-  line-height: 1.8em;
+  line-height: 1.8rem;
   color: #323232;
   text-align: left;
 }
@@ -4595,9 +4580,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .home-iter-sub-section-category {
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
-  font-size: 1.2em;
+  font-size: 1.2rem;
   font-weight: normal;
-  line-height: 1.4em;
+  line-height: 1.4rem;
   color: #323232;
   display: inline-flex;
   align-items: center;
@@ -4605,9 +4590,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .home-iter-sub-section-delivered {
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
-  font-size: 1.1em;
+  font-size: 1.1rem;
   font-weight: normal;
-  line-height: 1.3em;
+  line-height: 1.3rem;
   color: #323232;
   display: inline-flex;
   align-items: center;
@@ -4617,17 +4602,17 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .home-iter-subdetail-section {
   margin-top: 4%;
   font-family: "HelvNeue Medium for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
-  font-size: 1.2em;
+  font-size: 1.2rem;
   font-weight: normal;
-  line-height: 1.4em;
+  line-height: 1.4rem;
   color: #5A5A5A;
   text-align: left;
 }
 
 .home-iter-date {
   width: 73%;
-  font-size: 1.4em;
-  line-height: 1.8em;
+  font-size: 1.4rem;
+  line-height: 2.5rem;
   color: #5A5A5A;
   padding: 2%;
   text-align: center;
@@ -4637,11 +4622,11 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-iter-text-field {
-  width: 94%;
+  width: 95%;
   margin-top: 3%;
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
-  font-size: 1.4em;
-  line-height: 1.8em;
+  font-size: 1.4rem;
+  line-height: 1.8rem;
   color: #5A5A5A;
   padding: 2%;
   height: 6.25%;
@@ -4649,8 +4634,8 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-iter-date-range {
-  font-size: 1.4em;
-  line-height: 1.8em;
+  font-size: 1.4rem;
+  line-height: 1.8rem;
   color: #5A5A5A;
   text-align: center;
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
@@ -4663,14 +4648,12 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .home-iter-cal-btn-block {
   position: relative;
   cursor:pointer;
-  width: 18%;
+  width: 3rem;
   height: 100%;
 }
 
 .home-iter-cal-btn-block > i > svg {
-  height: 80%;
   top: 10%;
-  min-height: 2em;
   position: relative;
   margin-left: 25%;
 }
@@ -4679,7 +4662,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .home-iter-new-dates{
   display: flex;
   align-items: center;
-  min-height: 3em;
+  min-height: 3rem;
   height: 5.79%;
 }
 
@@ -4690,10 +4673,19 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .popup-btns {
   width: 100%;
-  float: left;
-  background-color: #FFFFFF;
-  margin-top: 7%;
-  padding-bottom: 3%;
+  margin-top: 2rem;
+}
+
+.popup-btns > a {
+  position: relative;
+  float: right;
+  height: 50%;
+  top: 25%;
+  width: 20%;
+  font-size: 1.4rem;
+  min-width: 0;
+  line-height: 0;
+  padding: 0;
 }
 /** New Team Creation - Begin */
 .new-team-creation-add-block, .new-team-creation-addteam-member {
@@ -5983,8 +5975,8 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   }
 
   .checkbox input[type="checkbox"] + span::before {
-    width: 1.7em;
-    height: 1.7em;
+    width: 1.7rem;
+    height: 1.7rem;
     display: inline-block;
     position: relative;
     background-color: transparent;
@@ -5997,10 +5989,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   content: "✓";
   position: absolute;
   top: 15%;
-  left: 0.2em;
+  left: 0.4rem;
   color: #4178BE;
   font-weight: normal;
-  font-size: 1.6em;
+  font-size: 1.6rem;
 }
 
 .iter-member-change > div {
