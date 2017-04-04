@@ -5,6 +5,7 @@ var Modal = require('react-overlays').Modal;
 var api = require('../api.jsx');
 var utils = require('../utils.jsx');
 var HomeAddTeamFooterButtons = require('./HomeAddTeamFooterButtons.jsx');
+var ConfirmDialog = require('./ConfirmDialog.jsx');
 
 var HomeAddTeamHierarchyModal = React.createClass({
   getInitialState: function() {
@@ -21,7 +22,9 @@ var HomeAddTeamHierarchyModal = React.createClass({
       defaultParentObjects: [
         {name: 'Parent of my currently selected team', id: 'parentOfSelected'},
         {name: 'Peer of my currently selected team', id: 'peerOfSelected'}
-      ]
+      ],
+      alertMsg: '',
+      showConfirmModal: false
     }
   },
 
@@ -80,14 +83,16 @@ var HomeAddTeamHierarchyModal = React.createClass({
 
     _.each(self.props.selectedChildTeams, function(childTeam) {
         if (_.isEqual(childTeam._id, team._id)) {
-          alert(teamSelected.name + ' cannot be both a parent and a child.');
+          // alert(teamSelected.name + ' cannot be both a parent and a child.');
+          self.setState({alertMsg: teamSelected.name + ' cannot be both a parent and a child.', showConfirmModal: true});
           $('#pc-hier-selparent').val('').change();
           return;
         }
         if (!_.isEmpty(teamSelected.path)) {
           var rootPathId = teamSelected.path.split(',')[1];
           if (_.isEqual(rootPathId, childTeam.pathId)) {
-            alert(teamSelected.name + ' cannot be your parent team since it is reporting to '+childTeam.name+', that is already listed as your child team.');
+            // alert(teamSelected.name + ' cannot be your parent team since it is reporting to '+childTeam.name+', that is already listed as your child team.');
+            self.setState({alertMsg: teamSelected.name + ' cannot be your parent team since it is reporting to '+childTeam.name+', that is already listed as your child team.', showConfirmModal: true});
             $('#parentSelectList').val('').change();
             return;
           }
@@ -134,7 +139,8 @@ var HomeAddTeamHierarchyModal = React.createClass({
       })
 
       if (_.isEqual(selectedParent, selectedChild)) {
-        alert(childTeam.name + ' cannot be both a parent and a child.');
+        // alert(childTeam.name + ' cannot be both a parent and a child.');
+        self.setState({alertMsg: childTeam.name + ' cannot be both a parent and a child.', showConfirmModal: true});
         $('#pc-hier-selChild').val('').change();
         return;
       }
@@ -147,7 +153,8 @@ var HomeAddTeamHierarchyModal = React.createClass({
       if (parentTeam!=undefined && !_.isEmpty(parentTeam.path)) {
         var rootPathId = parentTeam.path.split(',')[1];
           if (_.isEqual(rootPathId, childTeam.pathId)) {
-            alert(childTeam.name + ' cannot be added as a child since your current parent team, '+parentTeam.name+', is reporting to it.');
+            // alert(childTeam.name + ' cannot be added as a child since your current parent team, '+parentTeam.name+', is reporting to it.');
+            self.setState({alertMsg: childTeam.name + ' cannot be added as a child since your current parent team, '+parentTeam.name+', is reporting to it.', showConfirmModal: true});
             $('#pc-hier-selChild').val('').change();
             return;
           }
@@ -155,7 +162,8 @@ var HomeAddTeamHierarchyModal = React.createClass({
       }
 
       if ($('.team-hier-children p#'+selectedChild).length > 0) {
-        alert(childTeam.name + ' is already listed.');
+        // alert(childTeam.name + ' is already listed.');
+        self.setState({alertMsg: childTeam.name + ' is already listed.', showConfirmModal: true});
         $('#pc-hier-selChild').val('').change();
         return;
       }
@@ -165,6 +173,10 @@ var HomeAddTeamHierarchyModal = React.createClass({
       children = _.sortBy(children, 'name');
       self.props.setSelectedChildTeams(children);
     }
+  },
+
+  hideConfirmDialog: function() {
+    this.setState({showConfirmModal: false, alertMsg: ''});
   },
 
   render: function () {
@@ -267,6 +279,7 @@ var HomeAddTeamHierarchyModal = React.createClass({
           </div>
         </div>
         <HomeAddTeamFooterButtons buttonOptions={self.state.buttonOptions} openWindow={self.props.openWindow} />
+        <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.hideConfirmDialog} alertType='error' content={self.state.alertMsg} actionBtnLabel='Ok' />
        </div>
       </Modal>
     </div>

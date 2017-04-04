@@ -18,6 +18,10 @@ var ConfirmDialog = React.createClass({
       heading = heading || 'Warning!';
       headingBlockStyle = 'style1';
       headingStyle = 'redBg';
+    } else if (alertType === 'error') {
+      heading = heading || 'Error';
+      headingBlockStyle = 'style2';
+      headingStyle = 'redBg';
     }
     displayBtn = function() {
       if (alertType === 'information') {
@@ -27,10 +31,12 @@ var ConfirmDialog = React.createClass({
       } else if (alertType === 'warning') {
         return (
           <div>
-            <button class=' ibm-btn-pri ibm-btn-small ibm-btn-red-50 action-btn' onClick={self.props.confirmAction} id='updateBtn' ref='updateBtn'>{self.props.actionBtnLabel}</button>
-            <button class=' ibm-btn-pri ibm-btn-small ibm-btn-blue-50' onClick={self.props.hideConfirmDialog} id='cancelBtn'>{self.props.cancelBtnLabel}</button>
+            {self.props.actionBtnLabel && <button class=' ibm-btn-pri ibm-btn-small ibm-btn-red-50 action-btn' onClick={self.props.confirmAction} id='updateBtn' ref='updateBtn'>{self.props.actionBtnLabel}</button>}
+            {self.props.cancelBtnLabel && <button class=' ibm-btn-pri ibm-btn-small ibm-btn-blue-50' onClick={self.props.hideConfirmDialog} id='cancelBtn'>{self.props.cancelBtnLabel}</button>}
           </div>
         );
+      } else if (alertType === 'error') {
+        return (<div>{self.props.actionBtnLabel && <button class=' ibm-btn-pri ibm-btn-small ibm-btn-red-50 action-btn' onClick={self.props.confirmAction} id='updateBtn' ref='updateBtn'>{self.props.actionBtnLabel}</button>}</div>);
       }
     }
     return(
