@@ -200,13 +200,17 @@ html {
   height: 1.2em;
 }
 
+.first-login-block > div > .sub-content > h1 > a:hover {
+  text-decoration: none !important;
+}
+
 .first-login-block > div > .sub-content > h1 > a > img {
   /*position: relative;
   float: left;*/
   position: relative;
   top: 0.2em;
-  width: 1.2em;
-  height: 1.2em;
+  width: 0.93em;
+  height: 0.93em;
 }
 
 .first-login-block > div > .pointer {
