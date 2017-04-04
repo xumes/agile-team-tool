@@ -143,7 +143,7 @@ var HomeTeamTree = React.createClass({
               var parentId=$($('li#'+selectedTeam)[0]).parent().attr('id')
               if (!_.isEmpty(parentId)) {
                 parentId = parentId.substring(5, parentId.length);
-                if (!_.isEqual(parentId, path[path.length-1]))
+                if (!_.isEqual(parentId, path[path.length-1]) && team.path != null)
                   $('#' +parentId +' li#'+selectedTeam).remove();
               }
               path.push(team.pathId);
@@ -596,6 +596,7 @@ var HomeTeamTree = React.createClass({
             </li>
           );
         })
+
         if (myteams.length == 0) {
           return (
             <div id='noTeamBlock' class='no-team-block'>
