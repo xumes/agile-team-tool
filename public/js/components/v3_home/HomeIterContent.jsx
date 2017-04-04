@@ -364,9 +364,11 @@ var HomeIterContent = React.createClass({
         selectedIter[id] = $('#'+id).val();
         break;
       case 'deliveredStories':
+        selectedIter['storiesDays'] = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
         this.updateStories(selectedIter);
         break;
       case 'storyPointsDelivered':
+        selectedIter['storyPointsDays'] = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
         this.updateStoryPoints(selectedIter);
         break;
     }
@@ -393,15 +395,22 @@ var HomeIterContent = React.createClass({
      });
     }
     selectedIter.personDaysAvailable = (selectedIter.teamAvailability - selectedIter.personDaysUnavailable).toFixed(2);
+    //2 new fields on DB - 
+    console.log('HERE......');
+    selectedIter.storiesDays = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+    console.log('DONE.... ');
+    selectedIter.storyPointsDays = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
     return selectedIter;
   },
 
   updateStories: function(selectedIter){
-    $('#storiesDays').text((utils.numericValue($('#deliveredStories').val())/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1));
+    $('#storiesDays').text((selectedIter.storiesDays));
+//    $('#storiesDays').text((utils.numericValue($('#deliveredStories').val())/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1));
   },
 
   updateStoryPoints: function(selectedIter){
-    $('#storyPointsDays').text((utils.numericValue($('#storyPointsDelivered').val())/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1));
+    $('#storyPointsDays').text((selectedIter.storyPointsDays));
+//    $('#storyPointsDays').text((utils.numericValue($('#storyPointsDelivered').val())/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1));
   },
 
   float2Decimal:function(val) {
@@ -485,6 +494,10 @@ var HomeIterContent = React.createClass({
     var selectedIter = this.state.selectedIter;
     selectedIter.teamAvailability = this.state.teamAvailability;
     selectedIter.personDaysAvailable = (this.float2Decimal(selectedIter.teamAvailability) - this.float2Decimal(selectedIter.personDaysUnavailable)).toFixed(2);
+    //2 new fields on DB - 
+    selectedIter.storiesDays = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+    selectedIter.storyPointsDays = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+    
     this.props.updateTeamIteration(selectedIter);
     this.setState({selectedField:''});
   },
@@ -575,17 +588,24 @@ var HomeIterContent = React.createClass({
           iterData.teamAvailability = 'N/A';
           iterData.personDaysUnavailable = 'N/A';
           iterData.personDaysAvailable = 'N/A';
-          storiesDays = 'N/A';
-          storyPointsDays = 'N/A';
+//          storiesDays = 'N/A';
+//          storyPointsDays = 'N/A';
+          //two new fields
+          iterData.storiesDays = 'N/A';
+          iterData.storyPointsDays = 'N/A';
+
         }
         else{
           iterData.teamAvailability = !_.isNull(defIter.teamAvailability)? this.float2Decimal(defIter.teamAvailability): '0.00';
           iterData.personDaysUnavailable = !_.isNull(defIter.personDaysUnavailable)? this.float2Decimal(defIter.personDaysUnavailable): '';
           iterData.personDaysAvailable = !_.isNull(defIter.personDaysAvailable)? this.float2Decimal(defIter.personDaysAvailable) : '0.00' ;
-          storiesDays = this.float2Decimal(defIter.deliveredStories)/this.float2Decimal(iterData.personDaysAvailable);
-          storiesDays = !isFinite(storiesDays) ? '0.0': storiesDays.toFixed(1);
-          storyPointsDays = this.float2Decimal(defIter.storyPointsDelivered)/this.float2Decimal(iterData.personDaysAvailable);
-          storyPointsDays = !isFinite(storyPointsDays) ? '0.0': storyPointsDays.toFixed(1);
+//          storiesDays = this.float2Decimal(defIter.deliveredStories)/this.float2Decimal(iterData.personDaysAvailable);
+//          storiesDays = !isFinite(storiesDays) ? '0.0': storiesDays.toFixed(1);
+//          storyPointsDays = this.float2Decimal(defIter.storyPointsDelivered)/this.float2Decimal(iterData.personDaysAvailable);
+//          storyPointsDays = !isFinite(storyPointsDays) ? '0.0': storyPointsDays.toFixed(1);
+          //two new fields
+          iterData.storiesDays = !_.isNull(defIter.storiesDays)? this.float1Decimal(defIter.storiesDays): '0.0';
+          iterData.storyPointsDays = !_.isNull(defIter.storyPointsDays)? this.float1Decimal(defIter.storyPointsDays): '0.0';
         }
         iterData.name = defIter.name;
         iterData.startDate = moment.utc(defIter.startDate).format('DD MMM YYYY');
@@ -747,7 +767,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '25%'}}>
                 <div class='home-iter-content-sub' data-tip='The calculated number of stories, cards or tickets delivered per person day.  Stories, Cards or Tickets delivered divided by the number of person days available.'>Stories per person day</div>
-                <div id='storiesDays' class='home-iter-content-point-uneditable'>{storiesDays}</div>
+                <div id='storiesDays' class='home-iter-content-point-uneditable'>{iterData.storiesDays}</div>
                   <div class='home-iter-locked-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_locked.svg')} data-tip={lockMessage}></InlineSVG>
                   </div>
@@ -811,7 +831,7 @@ var HomeIterContent = React.createClass({
               </div>
               <div class='home-iter-content-col' style={{'height': '20%'}}>
                 <div class='home-iter-content-sub' data-tip='The calculated number of story points delivered per person day.  Story points delivered divided by the number of person days available.'>Story points per person day</div>
-                <div id='storyPointsDays' class='home-iter-content-point-uneditable'>{storyPointsDays}</div>
+                <div id='storyPointsDays' class='home-iter-content-point-uneditable'>{iterData.storyPointsDays}</div>
                   <div class='home-iter-locked-btn'>
                     <InlineSVG src={require('../../../img/Att-icons/att-icons_locked.svg')} data-tip={lockMessage}></InlineSVG>
                   </div>
