@@ -248,11 +248,6 @@ var HomeAddTeam = React.createClass({
         <HomeAddTeamMemberRole activeWindow={this.state.screenStatus['showTeamMemberRoleModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamMember={self.setTeamMember} roles={self.props.roles} saveTeam={self.saveTeam}/>
 
         <ConfirmDialog showConfirmModal={self.state.showConfirmModal} confirmAction={self.hideConfirmDialog} alertType='information' content={'You have successfully added this team.'} actionBtnLabel='Ok' />
-        {/*
-        //TODO, needs only to pass newTeamObj as the container object of the new team related data, and only relevant setter functions that will update the object.
-        <HomeAddTeamHierarchyModal showModal={this.state.showTeamHierarchyModal} closeWindow={self.hideTeamHierarchyModal}  updateStep={self.updateStep} setTeamObj={self.setTeamObj} getTeamObj={getTeamObj} onchangeParentTeamDropdown={self.onchangeParentTeamDropdown} teamNames={self.state.teamNames} selectableParents={self.state.selectableParents} onchangeChildTeamList={self.onchangeChildTeamList}/>
-        <HomeAddTeamMemberRoleModal showModal={this.state.showTeamNameModal} closeWindow={self.hideAddTeamModal} />
-        */}
       </div>
     )
   }
