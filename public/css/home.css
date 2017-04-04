@@ -195,6 +195,20 @@ html {
   font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
 }
 
+.first-login-block > div > .sub-content > h1 > a {
+  width: 1.2em;
+  height: 1.2em;
+}
+
+.first-login-block > div > .sub-content > h1 > a > img {
+  /*position: relative;
+  float: left;*/
+  position: relative;
+  top: 0.2em;
+  width: 1.2em;
+  height: 1.2em;
+}
+
 .first-login-block > div > .pointer {
   position: absolute;
   top: 0;
@@ -318,7 +332,7 @@ html {
   position: relative;
   float: left;
   font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
-  font-size: 1.4em;
+  font-size: 1.6em;
   line-height: 1.7em;
   padding: 0;
   left: 0.5em;
@@ -454,7 +468,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .loading-effect-1 span {
   display: block;
   -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
+  /*-moz-border-radius: 50%;*/
   -ms-border-radius: 50%;
   -o-border-radius: 50%;
   border-radius: 50%;
@@ -762,7 +776,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   width: 100%;
   height: 100%;
   -webkit-appearance: none;
-  appearance: none;
+  -moz-appearance: none;
   border: 0.1em solid #959f9f;
   border-radius: 0;
   box-sizing: border-box;
@@ -1342,7 +1356,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .hierarchy-lastteam {
-  font-family: "HelvNeue Roman for IBM""HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   display: inline;
   font-size: 1.4em;
   color: #EFF9FF;
@@ -1572,7 +1586,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   background-color: #FFFFFF;
   width: 100%;
-  height: 94;
+  height: 94%;
 }
 
 .team-member-table {
@@ -2565,7 +2579,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .home-iter-team-date {
   position: relative;
-  width: 100;
+  width: 100%;
   display: inline-block;
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.3em;
@@ -4959,7 +4973,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 'auto';
+  z-index: auto;
   background-color: #000;
   opacity: 0.5;
   width: 100%;
@@ -5652,7 +5666,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 #addTeamMemberRoleBlock .data-team-role {
   font-size: 1.4em;
   position: relative;
-  border-box: box-sizing;
+  box-sizing: border-box;
   background-color: #fff;
   border-collapse: separate;
   border-spacing: 0;
@@ -6101,7 +6115,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-modal-block-footer .ibm-btn-small {
-  font-size: 1.5 !important;
+  font-size: 1.5em !important;
   margin-bottom: 0px;
 }
 
@@ -7000,13 +7014,12 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 0.2em;
   position: absolute;
   text-decoration: none;
-  speak: none;
+  /*speak: none;*/
   text-decoration: none;
   text-rendering: optimizeLegibility;
   text-transform: none;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-  font-smoothing: antialiased;
 }
 
 .assessment-popover-block > .agile-maturity a.collapse::before {
@@ -7021,13 +7034,12 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 0.2em;
   position: absolute;
   text-decoration: none;
-  speak: none;
+  /*speak: none;*/
   text-decoration: none;
   text-rendering: optimizeLegibility;
   text-transform: none;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-  font-smoothing: antialiased;
 }
 
 .assessment-popover-block > .assessment-btns {

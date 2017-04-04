@@ -3,6 +3,9 @@ info:
   title: Agile Team Tool API
   description: Set of APIs to import data into the tool
   version: "1.0.0"
+  x-logo:
+    url: "/img/logo.svg"
+    backgroundColor: "#FFFFFF"
 # the domain of the service
 host: agiletool.mybluemix.net
 # array of all schemes that your API supports
@@ -12,7 +15,7 @@ schemes:
 basePath: /v1
 produces:
   - application/json
-  
+
 paths:
   /teams:
     get:
@@ -31,7 +34,7 @@ paths:
       responses:
         200:
           description: An array of teams
-          schema: 
+          schema:
             type: array
             items:
               $ref: '#/definitions/Team'
@@ -54,7 +57,7 @@ paths:
         - name: teamId
           in: query
           description: Unique team ID
-          required: false
+          required: true
           type: string
           format: string
       tags:
@@ -161,6 +164,10 @@ paths:
                 type: number
               personDaysUnavailable:
                 type: number
+              storiesDay:
+                type: number
+              storyPointsDay:
+                type: number                
               updatedBy:
                 type: string
               updatedByUserId:
@@ -170,13 +177,12 @@ paths:
                 default: new Date()
       tags:
         - Iteration
+
       responses:
-        201:
+        200:
           description: Iteration data
           schema:
-            type: object
-            items:
-              $ref: '#/definitions/Iteration'
+            $ref: '#/definitions/Iteration'
         default:
           description: Unexpected error
           schema:
@@ -269,6 +275,10 @@ paths:
                 type: number
               personDaysUnavailable:
                 type: number
+              storiesDay:
+                type: number
+              storyPointsDay:
+                type: number                
               updatedBy:
                 type: string
               updatedByUserId:
@@ -277,7 +287,6 @@ paths:
                 type: string
                 default: new Date()
             example:
-              _id: xxxxxxx
               teamId: xxxxxxx
               status: xxxxxxx
       tags:
@@ -286,9 +295,7 @@ paths:
         200:
           description: Iteration data
           schema:
-            type: object
-            items:
-              $ref: '#/definitions/Iteration'
+            $ref: '#/definitions/Iteration'
         default:
           description: Unexpected error
           schema:
@@ -322,20 +329,85 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'  
+            $ref: '#/definitions/Error'
 definitions:
   Team:
     type: object
     properties:
       _id:
         type: string
+        format: Schema.Types.ObjectId
         description: Unique database objectid
-      teamId:
-        type: string
-        description: Unique database identifier from Cloudant
       name:
         type: string
         description: Name of the team
+      description:
+        type: string
+        description: Description of the team
+      pathId:
+        type: string
+        description: Unique database identifier for identifying team relationship
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/TeamMember'
+      links:
+        type: array
+        items:
+          $ref: '#/definitions/TeamLink'
+      createdByUserId:
+        type: string
+        description: record create user id (cnum = serial + 3 digit personal system code)
+      createdBy:
+        type: string
+        description: record create user email
+      createDate:
+        type: string
+        format: new Date()
+        description: record create daytime   date format 2016-01-04T00:00:00.000Z
+      updatedBy:
+        type: string
+        description:  System log last updated by user email id
+      updatedByUserId:
+        type: string
+        description: System log last update by user id (cnum - serial number + 3 digit personal system code)
+      updateDate:
+        type: string
+        default: new Date()
+        description: System log last update date.  Update date date format 2016-01-04T00:00:00.000Z
+  TeamMember:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Member name
+      allocation:
+        type: number
+        description: Member allocation percentage
+      workTime:
+        type: number
+        description: Member average work week percentage
+      role:
+        type: string
+        description: Member role
+      userId:
+        type: string
+        description: Member id (cnum - serial number + 3 digit personal system code)
+      email:
+        type: string
+        description: Member email id
+  TeamLink:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Unique bookmark link id
+      linkLabel:
+        type: string
+        description: Bookmark link label
+      linkUrl:
+        type: string
+        description: Bookmark link url
   Iteration:
     type: object
     properties:
@@ -344,7 +416,7 @@ definitions:
         description: Unique database objectid
       name:
         type: string
-        description: Unique iteration name
+        description: Unique team iteration name
       teamId:
         type: string
         format: Schema.Types.ObjectId
@@ -353,12 +425,12 @@ definitions:
         type: string
         description: record create user id (cnum = serial + 3 digit personal system code)
       createdBy:
-        type: string    
+        type: string
         description: record create user email
       createDate:
         type: string
         format: new Date()
-        description: record create daytime   date format 2016-01-04T00:00:00.000Z 
+        description: record create daytime   date format 2016-01-04T00:00:00.000Z
       startDate:
         type: string
         format: date-time
@@ -413,10 +485,10 @@ definitions:
         description: Calculated defect when iteration is closed (starting balance + new defects - defect closed)
       cycleTimeWIP:
         type: number
-        description:  Average days of iteration storys from planning to delivery
+        description:  Average days of iteration stories from planning to delivery
       cycleTimeInBacklog:
         type: number
-        description: Average days of iteration storys from backlog to planning 
+        description: Average days of iteration stories from backlog to planning
       clientSatisfaction:
         type: number
         description: Client satisfaction score
@@ -436,6 +508,12 @@ definitions:
       personDaysUnavailable:
         type: number
         description: Total number of person day non available during the iteration
+      storiesDay:
+        type: number
+        description: Average stories per person day -- Total number of story delivered divides by total person day
+      storyPointsDay:
+        type: number
+        description: Average story points per person day -- Total number of story points delivered divide by total person day        
       updatedBy:
         type: string
         description:  System log last updated by user email id
@@ -446,7 +524,7 @@ definitions:
         type: string
         default: new Date()
         description: System log last update date.  Update date date format 2016-01-04T00:00:00.000Z
-        
+
   Error:
     type: object
     properties:
