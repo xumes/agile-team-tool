@@ -631,12 +631,10 @@ var HomeIterContent = React.createClass({
             <Tooltip html={true} type="light"/>
             <div style={{'display':'inline','width':'100%'}}>
               <div class='home-iter-title'>Iteration Overview</div>
-              <div style={access?{'display':'inline','cursor':'pointer'}:{'display':'inline', 'cursor':'default'}} onClick={access?this.showAddIteration:''} >
-                <div class={access?'home-iter-add-btn-block':'home-iter-add-btn-block-disabled'}>
+              <div class={access?'home-iter-add-btn-block':'home-iter-add-btn-block-disabled'} style={access?{'cursor':'pointer'}:{'cursor':'default'}} onClick={access?this.showAddIteration:''} >
                   <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
+                  <div className="home-iter-add">New Iteration</div>
                   <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={self.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
-                </div>
-                <span className="home-iter-add">New Iteration</span>
               </div>
             </div>
             <div class='home-iter-name-block' style={{'height':'4.3%'}}>
@@ -997,10 +995,10 @@ var HomeIterContent = React.createClass({
 
               <p>Once an iteration completes the information will be displayed in a series of charts in the bottom left of this page.  Your team can use these charts to track values such as velocity, throughput and defects.
               </p>
-                <p style={access?{'cursor':'pointer', 'marginRight': '10%'}:{'cursor':'default','marginRight': '10%'}} className='home-iter-add-btn-block-2' onClick={access?this.showAddIteration:''}>
+                <div class={access?'home-iter-add-btn-block-2':'home-iter-add-btn-block-disabled-2'} style={access?{'cursor':'pointer'}:{'cursor':'default'}} onClick={access?this.showAddIteration:''} >
                   <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
-                  <span className="home-iter-add" style={access?{'left':'1.5%', 'color':'#4178BE'}:{'left':'1.5%', 'color':'#C7C7C7'}}>Start the first Iteration</span>                 
-                </p>
+                  <div className="home-iter-add" style={access?{'left':'1.5%', 'color':'#4178BE'}:{'left':'1.5%', 'color':'#C7C7C7'}}>Start the first Iteration</div>
+                </div>
                 
                 <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={self.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
             </div>
