@@ -344,13 +344,11 @@ var HomeAddIteration = React.createClass({
                   <DatePicker onChange={this.endDateChange} selected={ this.state.iterationEndDate != null? moment.utc(this.state.iterationEndDate):null} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='endDate' />} disabled={false} ref='iterationEndDate' fixedHeight/>
                 </div>
               </div>
-                
-              <div className='popup-btns'>
-                <p class='ibm-btn-row ibm-button-link' style={{'position':'relative','float':'right'}}>
-                  <a onClick={this.processIteration} class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50' style={{'padding':'4%'}}>Add</a>
-                  <a onClick={this.close} class='ibm-btn-sec ibm-btn-small ibm-btn-blue-50' style={{'padding':'4%'}}>Cancel</a>
-                </p>
-              </div>
+
+                <div class='ibm-btn-row' style={{'float':'right', 'paddingTop':'1.5rem','paddingBottom':'1.5rem'}}>
+                  <a onClick={this.processIteration} class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50' style={{'padding':'0.4rem','paddingLeft': '1rem','paddingRight': '1rem'}}>Add</a>
+                  <a onClick={this.close} class='ibm-btn-sec ibm-btn-small ibm-btn-blue-50' style={{'padding':'0.4rem'}}>Cancel</a>
+                </div>
           </div>
           </ReactModal>
           </div>
