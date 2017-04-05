@@ -2,12 +2,16 @@ var React = require('react');
 var Select = require('react-select');
 var InlineSVG = require('svg-inline-react');
 var utils = require('../utils.jsx');
+var ConfirmDialog = require('./ConfirmDialog.jsx');
+
 var HomeAddTeamDropdownWorkTime = React.createClass({
   getInitialState: function() {
     return {
       showOther: false,
       defaultWorkTime: ['Full Time', 'Half Time', 'Other'],
-      selectedAvgworkweek: ''
+      selectedAvgworkweek: '',
+      alertMsg: '',
+      showConfirmModal: false
     }
   },
 
@@ -107,10 +111,14 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
     if (typeof (uid) == 'string') {
       var other = parseInt($('#wrapper-worktime-'+uid + ' .role-worktime > #input-field').val().trim());
       if (!other) {
-        alert('Average work per week is required.');
+        // alert('Average work per week is required.');
+        this.setState({alertMsg: 'Average work per week is required.', showConfirmModal: true});
+        this.cancelWorkTime(uid);
       } else {
         if (!utils.isValidNumRange(other)) {
-          alert('Average work per week should be between 0 to 100.');
+          // alert('Average work per week should be between 0 to 100.');
+          this.setState({alertMsg: 'Average work per week should be between 0 to 100.', showConfirmModal: true});
+          this.cancelWorkTime(uid);
         } else {
           var obj = {'value': other, 'label': other};
           this.props.workTimeHandler(this.refs, obj);
@@ -154,6 +162,10 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
     value = this.getAvgworkweekByLabel(value);
     $('#wrapper-worktime-'+uid + ' .Select-control .Select-value').html(value);
     $('#wrapper-worktime-'+uid + ' .Select-control .Select-placeholder').html(value);
+  },
+
+  hideConfirmDialog: function() {
+    this.setState({showConfirmModal: false, alertMsg: ''});
   },
 
   render: function() {
@@ -200,7 +212,8 @@ var HomeAddTeamDropdownWorkTime = React.createClass({
           <div class='r_cancel-btn' onClick={self.cancelWorkTime.bind(null, memberUserId)}>
             <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
           </div>
-        </div>      
+        </div>
+        <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.hideConfirmDialog} alertType='error' content={self.state.alertMsg} actionBtnLabel='Ok' />
       </div>
 
     );
