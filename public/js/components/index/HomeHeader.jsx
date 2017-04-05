@@ -40,7 +40,7 @@ var HomeHeader = React.createClass({
           <div>IBM</div>&nbsp;<div>Agile Team Tool</div>&nbsp;
           <div class='home-header-banner-message'>{siteEnv} &nbsp; &nbsp;
             <span class='home-header-banner-icon' style={revertToOld}>
-            <a href="/">
+            <a href="https://agiletool.mybluemix.net">
             <InlineSVG src={require('../../../img/Att-icons/att-icons-revert.svg')}></InlineSVG>
              <span class='home-header-banner-label'>
              Revert to previous interface
