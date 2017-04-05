@@ -9,6 +9,8 @@ var HomeEditIteration = require('./HomeEditIteration.jsx');
 var TeamResetPopup = require('./TeamResetPopup.jsx');
 var Tooltip = require('react-tooltip');
 var utils = require('../utils.jsx');
+var ConfirmDialog = require('./ConfirmDialog.jsx');
+
 var selectedIter = new Object();
 var lockMessage = 'This value is automatically calculated and can’t be updated directly.';
 var clientSatisfactionTT = 'Please indicate the satisfaction level of your client(s) with the results of this iteration using the following scale:' +
@@ -69,7 +71,10 @@ var HomeIterContent = React.createClass({
       teamAvailability: null,
       selectedField:'',
       selectedIter: new Object(),
-      backupIter: new Object()
+      backupIter: new Object(),
+      showConfirmModal: false,
+      alertMsg: '',
+      alertType: ''
     }
   },
   componentDidMount: function(){
@@ -571,7 +576,16 @@ var HomeIterContent = React.createClass({
     if (!_.isEqual(this.state.selectedIter, selectedIter)){
       this.setState({selectedIter:iterData});
     }
+  },
 
+  hideConfirmDialog: function() {
+    this.setState({showConfirmModal: false, alertMsg: ''});
+  },
+
+  alertDisplay: function(message, type){
+    if (!_.isEmpty(message)){
+      this.setState({alertMsg: message, showConfirmModal: true, alertType: type});
+    }
   },
 
   render: function() {
@@ -1003,6 +1017,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-title' data-tip='Enter any comments you feel are relevant to this iteration.  Perhaps it was something unplanned that affected the team’s deliverables, either positively or negatively.'>Iteration Comments</div>
               <textarea class='home-iter-comment-test' readOnly={!access} value={iterData.comment} onBlur={this.partialSaveIter.bind(null, 'comment')} onChange={this.handleChange} onKeyDown={this.checkChanges} onClick={this.commentSelected.bind(null, 'comment')} id='comment' ref="comment"/>:
             </div>
+            <ConfirmDialog showConfirmModal={this.state.showConfirmModal} hideConfirmDialog={this.hideConfirmDialog} confirmAction={this.hideConfirmDialog} alertType={this.state.alertType} content={this.state.alertMsg} actionBtnLabel='Ok' />
           </div>
 
         )
@@ -1023,7 +1038,7 @@ var HomeIterContent = React.createClass({
                 
                 <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={self.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
             </div>
-            
+            <ConfirmDialog showConfirmModal={this.state.showConfirmModal} hideConfirmDialog={this.hideConfirmDialog} confirmAction={this.hideConfirmDialog} alertType={this.state.alertType} content={this.state.alertMsg} actionBtnLabel='Ok' />
           </div>
         )
       }

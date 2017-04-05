@@ -434,7 +434,7 @@ var HomePage = React.createClass({
         self.setState({'loadDetailTeam': teamDetail});
       })
       .catch(function(err){
-        utils.handleIterationErrors(err);
+        self.refs['iterContent'].alertDisplay(utils.handleIterationErrors(err),'error');
       });
   },
 
@@ -487,7 +487,7 @@ var HomePage = React.createClass({
             <HomeContent loadDetailTeam={this.state.loadDetailTeam} selectedTeamChanged={this.selectedTeamChanged} tabClickedHandler={this.tabClickedHandler} reloadTeamMembers={this.reloadTeamMembers} roles={this.state.roles} handleChartResize={this.handleChartResize} updateTeamLink={this.updateTeamLink} updateTeamDetails={this.updateTeamDetails} setSelectedIteration={this.setSelectedIteration}/>
           </div>
           <div id='iterContent' class='ibm-col-6-2' style={sectionOneStyle}>
-            <HomeIterContent loadDetailTeam={this.state.loadDetailTeam} selectedIter={this.state.selectedIter} iterChangeHandler={this.iterChangeHandler} iterListHandler={this.reloadTeamIterations} updateTeamIteration={this.updateTeamIteration}/>
+            <HomeIterContent loadDetailTeam={this.state.loadDetailTeam} selectedIter={this.state.selectedIter} iterChangeHandler={this.iterChangeHandler} iterListHandler={this.reloadTeamIterations} updateTeamIteration={this.updateTeamIteration} ref="iterContent"/>
           </div>
         </div>
         <div id='homeNavShowBtnDiv' class='home-nav-show-btn-div' onClick={this.showHomeNav}>
