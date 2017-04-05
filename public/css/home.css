@@ -1644,6 +1644,11 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   background-color: #DEEDF7;
 }
 
+.team-member-table-content-block1.user-deleted:hover,
+.team-member-table-content-block2.user-deleted:hover {
+  background-color: #F7E6E6;
+}
+
 .team-member-table-content-block1 > div,
 .team-member-table-content-block2 > div  {
   height: 100%;
@@ -1852,6 +1857,14 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   width: 100%;
   height: 100%;
+}
+
+.team-member-table-content-location > h.user-deleted {
+  color: #AA231F !important;
+}
+
+.team-member-table-content-location > h.user-deleted > span {
+  font-size: .8em;
 }
 
 .team-member-table-content-allocation > .modify-field {
@@ -4520,7 +4533,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .popup-title {
-  height: 3rem;  
+  height: 3rem;
   width: 100%;
   background-color: #4178BE;
   padding-top: 4%;
