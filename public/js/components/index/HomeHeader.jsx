@@ -28,7 +28,7 @@ var HomeHeader = React.createClass({
     var userImage = '//images.w3ibm.mybluemix.net/image/'+user.ldap.uid.toUpperCase();
     var siteEnv = '';
     var revertToOld = {
-      'display': 'inline-block',
+      'display': environment.toLowerCase() == 'development'?'none':'inline-block',
       'color':'#3B6DAA'
     };
 
