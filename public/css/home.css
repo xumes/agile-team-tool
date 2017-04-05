@@ -6061,7 +6061,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-modal-block.style1{
-  height: 12em;
+  height: auto;
   width: 25em;
 }
 

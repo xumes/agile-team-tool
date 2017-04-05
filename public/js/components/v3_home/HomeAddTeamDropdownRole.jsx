@@ -2,12 +2,15 @@ var React = require('react');
 var InlineSVG = require('svg-inline-react');
 var Select = require('react-select');
 var _ = require('underscore');
+var ConfirmDialog = require('./ConfirmDialog.jsx');
 
 var HomeAddTeamDropdownRole = React.createClass({
   getInitialState: function() {
     return {
       showOther: false,
-      selectedRole: ''
+      selectedRole: '',
+      showConfirmModal: false,
+      alertMsg: ''
     }
   },
   componentDidMount: function() {
@@ -121,8 +124,10 @@ var HomeAddTeamDropdownRole = React.createClass({
   saveRole: function(uid) {
     if (typeof (uid) == 'string') {
       var other = $('#wrapper-role-'+uid + ' .role-other > #input-field').val();
-      if (_.isEmpty(other)) {
-        alert('Role cannot be empty.');
+      if (_.isEmpty(other.trim())) {
+        // alert('Role cannot be empty.');
+        this.setState({alertMsg: 'Role cannot be empty.', showConfirmModal: true});
+        this.cancelRole(uid);
       } else {
         var obj = {'value': other, 'label': other};
         $('#wrapper-role-'+uid + ' > div.data-team-role .data').html(other);
@@ -160,6 +165,9 @@ var HomeAddTeamDropdownRole = React.createClass({
       $('#wrapper-role-'+uid + ' .data-team-role-select .Select-control .Select-value').html(value);
       $('#wrapper-role-'+uid + ' .data-team-role-select .Select-control .Select-placeholder').html(value);
     }
+  },
+  hideConfirmDialog: function() {
+    this.setState({showConfirmModal: false, alertMsg: ''});
   },
   render: function() {
     var self = this;
@@ -205,6 +213,7 @@ var HomeAddTeamDropdownRole = React.createClass({
             <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
           </div>
         </div>
+        <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.hideConfirmDialog} alertType='error' content={self.state.alertMsg} actionBtnLabel='Ok' />
       </div>
     );
   }
