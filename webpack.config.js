@@ -4,12 +4,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   entry: {
-    home: path.join(__dirname, 'public/js/v2Home.jsx'),
-    iterations: path.join(__dirname, 'public/js/v2Iteration.jsx'),
-    teams: path.join(__dirname, 'public/js/v2Team.jsx'),
-    assessments: path.join(__dirname, 'public/js/v2Assessment.jsx'),
-    assessmentSummary: path.join(__dirname, 'public/js/v2AssessmentSummary.jsx'),
-    v3home: path.join(__dirname, 'public/js/v3Home.jsx'),
+    app: path.join(__dirname, 'public/js/app.jsx'),
     styles: path.join(__dirname, 'public/css/styles.jsx')
   },
   output: {
