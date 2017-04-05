@@ -9,18 +9,14 @@ var ConfirmDialog = React.createClass({
     var heading = this.props.heading;
     var alertType = this.props.alertType;
     var headingStyle = '';
-    var headingBlockStyle = 'style1';
     var displayBtn;
     if (alertType === 'information') {
       heading = heading || 'Information';
-      headingBlockStyle = 'style2';
     } else if (alertType === 'warning') {
       heading = heading || 'Warning!';
-      headingBlockStyle = 'style1';
       headingStyle = 'redBg';
     } else if (alertType === 'error') {
       heading = heading || 'Error';
-      headingBlockStyle = 'style2';
       headingStyle = 'redBg';
     }
     displayBtn = function() {
@@ -41,7 +37,7 @@ var ConfirmDialog = React.createClass({
     }
     return(
       <Modal aria-labelledby='modal-label' className='reactbootstrap-modal' backdropClassName='reactbootstrap-backdrop' show={this.props.showConfirmModal} onHide={this.props.hideConfirmDialog}>
-        <div class={'home-modal-block ' + headingBlockStyle}>
+        <div class='home-modal-block style1'>
           <div class={'home-modal-block-header ' + headingStyle}>
             <h>{heading}</h>
             <div class='home-modal-block-close-btn' onClick={this.props.hideConfirmDialog}>

@@ -6064,14 +6064,8 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-size: 1.6em;
 }
 
-
 .home-modal-block.style1{
-  height: 12em;
-  width: 25em;
-}
-
-.home-modal-block.style2{
-  height: 11em;
+  height: auto;
   width: 25em;
 }
 
