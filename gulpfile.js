@@ -1,7 +1,9 @@
 var gulp = require('gulp');
 var istanbul = require('gulp-istanbul');
 var mocha = require('gulp-mocha');
-var eslint   = require('gulp-eslint');
+var eslint = require('gulp-eslint');
+var fs = require('fs');
+var replace = require('gulp-string-replace');
 
 gulp.task('lint', function() {
   return gulp.src(['**/*.js', '!public/dist/**', '!node_modules/**', '!models/mongodb/data/**', '!mongo_scripts/**', '!public/lib/**/*.js'])
@@ -42,3 +44,17 @@ gulp.task('test', ['lint', 'pre-test'], function() {
       process.exit();
     });
 });
+
+gulp.task('replace-assets', function() {
+  var assets = JSON.parse(fs.readFileSync('webpack-assets.json', 'utf-8'));
+
+  gulp.src('views/**/*.ejs')
+    .pipe(replace('/dist/(.*?.js|.*?.css)', function(replacement)  {
+      var replaceKeys = replacement.substring(6).split('.');
+      return '/dist/' + assets[replaceKeys[0]][replaceKeys[1]];
+    }
+  )).pipe(gulp.dest('dist'));
+
+});
+
+gulp.task('build', ['replace-assets']);
