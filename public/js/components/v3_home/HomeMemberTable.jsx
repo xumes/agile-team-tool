@@ -6,10 +6,11 @@ var HomeAddMember = require('./HomeAddMember.jsx');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
 var ConfirmDialog = require('./ConfirmDialog.jsx');
+var ConfirmDialogError = require('./ConfirmDialog.jsx');
 
 var HomeMemberTable = React.createClass({
   getInitialState: function() {
-    return { showModal: false, showConfirmModal: false};
+    return { showModal: false, showConfirmModal: false, showConfirmErrorModal: false, alertMsg: ''};
   },
   componentDidMount: function() {
     this.initialAll();
@@ -291,6 +292,10 @@ var HomeMemberTable = React.createClass({
     this.setState({showConfirmModal: false});
   },
 
+  hideConfirmErrorDialog: function() {
+    this.setState({showConfirmErrorModal: false, alertMsg: ''});
+  },
+
   deleteMember: function() {
     var self = this;
     var idx = self.state.deleteMemberIdx;
@@ -451,9 +456,9 @@ var HomeMemberTable = React.createClass({
   saveRole: function(roleId) {
     var self = this;
     var newMembers = [];
-    var roleValue = $('#' + roleId + ' input').val();
+    var roleValue = $('#' + roleId + ' input').val().trim();
     if (roleValue == '') {
-      alert('Role cannot be empty.');
+      self.setState({alertMsg: 'Role cannot be empty.', showConfirmErrorModal: true});
     } else {
       var idx = roleId.substring(5, roleId.length);
       var mrd = self.getMemberRowDetails(idx);
@@ -513,7 +518,7 @@ var HomeMemberTable = React.createClass({
     var newMembers = [];
     var allocationValue = $('#' + allocationId + ' input').val();
     if (allocationValue < 0 || allocationValue > 100 || allocationValue == '') {
-      alert('Allocation value should be between 0 and 100.');
+      self.setState({alertMsg: 'Allocation value should be between 0 and 100.', showConfirmErrorModal: true});
     } else {
       var idx = allocationId.substring(11, allocationId.length);
       var mrd = self.getMemberRowDetails(idx);
@@ -546,9 +551,9 @@ var HomeMemberTable = React.createClass({
 
   saveLocation: function(locationId) {
     var self = this;
-    var locationValue = $('#' + locationId + ' input').val();
+    var locationValue = $('#' + locationId + ' input').val().trim();
     if (locationValue == '') {
-      alert('Location info cannot be empty.');
+      self.setState({alertMsg: 'Location info cannot be empty.', showConfirmErrorModal: true});
     } else {
       var idx = locationId.substring(9, locationId.length)
       var mrd = self.getMemberRowDetails(idx);
@@ -656,7 +661,7 @@ var HomeMemberTable = React.createClass({
     var newMembers = [];
     var awkValue = $('#' + awkId + ' input').val();
     if (awkValue > 100 || awkValue < 0 || awkValue == '') {
-      alert('Average work per week should be between 0 to 100.');
+      self.setState({alertMsg: 'Average work per week should be between 0 to 100.', showConfirmErrorModal: true});
     } else {
       var idx = awkId.substring(4, awkId.length);
       var mrd = self.getMemberRowDetails(idx);
@@ -972,7 +977,8 @@ var HomeMemberTable = React.createClass({
           <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAddTeamTable}>
             <HomeAddMember reloadTeamMembers={self.props.reloadTeamMembers} loadDetailTeam={self.props.loadDetailTeam} roleSelection={roleSelection} hideAddTeamTable={self.hideAddTeamTable}/>
           </Modal>
-          <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.deleteMember} content={'Do you want to delete this member: ' + self.state.deleteMemberEmail +' ?'} actionBtnLabel='Delete' cancelBtnLabel='Cancel' />
+          <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.deleteMember} alertType='warning' content={'Do you want to delete this member: ' + self.state.deleteMemberEmail +' ?'} actionBtnLabel='Delete' cancelBtnLabel='Cancel' />
+          <ConfirmDialogError showConfirmModal={self.state.showConfirmErrorModal} hideConfirmDialog={self.hideConfirmErrorDialog} confirmAction={self.hideConfirmErrorDialog} alertType='error' content={self.state.alertMsg} actionBtnLabel='Ok' />
         </div>
       )
     }

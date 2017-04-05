@@ -1,18 +1,31 @@
 var React = require('react');
 var Select = require('react-select');
 var utils = require('../utils.jsx');
+var ConfirmDialog = require('./ConfirmDialog.jsx');
+
 var HomeAddTeamDropdownAllocation = React.createClass({
+  getInitialState: function() {
+    return {
+      alertMsg: '',
+      showConfirmModal: false
+    }
+  },
 
   allocHandler: function(data) {
     if (!data) {
-      alert('Member allocation is required.');
+      // alert('Member allocation is required.');
+      this.setState({alertMsg: 'Member allocation is required.', showConfirmModal: true});
     } else {
       if (!utils.isValidNumRange(data.value)) {
-        alert('Allocation should be between 0 to 100.');
+        // alert('Allocation should be between 0 to 100.');
+        this.setState({alertMsg: 'Allocation should be between 0 to 100.', showConfirmModal: true});
       } else {
         this.props.allocHandler(this.refs, data);
       }
     }
+  },
+  hideConfirmDialog: function() {
+    this.setState({showConfirmModal: false, alertMsg: ''});
   },
   render: function() {
     var self = this;
@@ -30,14 +43,17 @@ var HomeAddTeamDropdownAllocation = React.createClass({
     });  
 
     return(
-      <Select
-        name='select-alloc'
-        ref='selalloc'
-        data-uid={memberUserId}
-        value={memberAlloc}
-        options={selallocOptions}
-        clearable={false}
-        onChange={self.allocHandler} />
+      <div>
+        <Select
+          name='select-alloc'
+          ref='selalloc'
+          data-uid={memberUserId}
+          value={memberAlloc}
+          options={selallocOptions}
+          clearable={false}
+          onChange={self.allocHandler} />
+        <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.hideConfirmDialog} alertType='error' content={self.state.alertMsg} actionBtnLabel='Ok' />
+      </div>
     );
   }
 });
