@@ -103,26 +103,26 @@ var HomeHeader = React.createClass({
                 <div>How to:</div>
               </li>
               <li>
-                <a href="./howto/AgileTeamTool_TeamDataGuide.pdf" target="_blank">Maintain Your Team Data</a>
+                <a href="./docs/howto/AgileTeamTool_TeamDataGuide.pdf" target="_blank">Maintain Your Team Data</a>
               </li>
               <li>
-                <a href="./howto/AgileTeamTool_IterationResultsGuide.pdf" target="_blank">Record Iteration Results</a>
+                <a href="./docs/howto/AgileTeamTool_IterationResultsGuide.pdf" target="_blank">Record Iteration Results</a>
               </li>
               <li>
-                <a href="./howto/AgileTeamTool_MaturityAssessmentGuide.pdf" target="_blank">Assess Your Agile Maturity</a>
+                <a href="./docs/howto/AgileTeamTool_MaturityAssessmentGuide.pdf" target="_blank">Assess Your Agile Maturity</a>
               </li>
               <li>
-                <a href="./howto/AgileTeamTool_PersonDayTeamSatTemplate.xlsx" target="_blank">Compute Person Days Avail</a>
+                <a href="./docs/howto/AgileTeamTool_PersonDayTeamSatTemplate.xlsx" target="_blank">Compute Person Days Avail</a>
               </li>
 
               <li>
-                <a href="./howto/AgileTeamTool_UserGuide.pdf" target="_blank">User Guide</a>
+                <a href="./docs/howto/AgileTeamTool_UserGuide.pdf" target="_blank">User Guide</a>
               </li>
               <li>
-                <a href="./howto/Agile Team Tool - Quick Ref.pdf" target="_blank">Quick Reference Card</a>
+                <a href="./docs/howto/Agile Team Tool - Quick Ref.pdf" target="_blank">Quick Reference Card</a>
               </li>
               <li>
-                <a href="./howto/AgileTeamTool_FrequentlyAskedQuestions.pdf" target="_blank">FAQ</a>
+                <a href="./docs/howto/AgileTeamTool_FrequentlyAskedQuestions.pdf" target="_blank">FAQ</a>
               </li>
               <li>
                 <a href="#" title="Feedback" id="feedback-modal" onClick={this.showFeedback}>Support & Feedback</a>
