@@ -2,10 +2,17 @@ var React = require('react');
 var api = require('../api.jsx');
 var _ = require('underscore');
 var InlineSVG = require('svg-inline-react');
-
+var ConfirmDialog = require('./ConfirmDialog.jsx');
 var facesPerson = {};
 
 var HomeAddMember = React.createClass({
+  getInitialState: function() {
+    return {
+      alertMsg: '',
+      showConfirmModal: false
+    }
+  },
+
   componentDidUpdate: function() {
     facesPerson = {};
     // $('#teamMemberRoleSelect').select2({'width':'100%'});
@@ -51,17 +58,17 @@ var HomeAddMember = React.createClass({
   addTeamMemberHandler: function() {
     var self = this;
     if (_.isEmpty(facesPerson)) {
-      alert('Cannot find this person on faces.');
+      self.setState({alertMsg: 'Cannot find this person on faces.', showConfirmModal: true});
     } else if ($('#teamMemberRoleSelect').val() == 'psr') {
-      alert('Please select a role.');
+      self.setState({alertMsg: 'Please select a role.', showConfirmModal: true});
     } else if ($('#teamMemberRoleSelect').val() == 'Other...' && $('#otherRole').val() == '') {
-      alert('Please fill the role description.');
+      self.setState({alertMsg: 'Please fill the role description.', showConfirmModal: true});
     } else {
       if (_.isEmpty(facesPerson.uid)) {
-        alert('Cannot find this person on faces.');
+        self.setState({alertMsg: 'Cannot find this person on faces.', showConfirmModal: true});
       } else {
         if (!self.props.loadDetailTeam.access) {
-          alert('You don\'t have access to add team memeber for this team.');
+          self.setState({alertMsg: 'You don\'t have access to add team memeber for this team.', showConfirmModal: true});
         } else {
           /*
           var isMemberExist = false;
@@ -162,6 +169,10 @@ var HomeAddMember = React.createClass({
     }
   },
 
+  hideConfirmDialog: function() {
+    this.setState({showConfirmModal: false, alertMsg: ''});
+  },
+
   render: function () {
     var self = this;
     var allocationArray = Array.from(Array(101).keys())
@@ -223,6 +234,7 @@ var HomeAddMember = React.createClass({
             <button class='ibm-btn-sec ibm-btn-small ibm-btn-blue-50' onClick={self.props.hideAddTeamTable}>Cancel</button>
           </p>
         </div>
+        <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.hideConfirmDialog} alertType='error' content={self.state.alertMsg} actionBtnLabel='Ok' />
       </div>
     )
   }
