@@ -8,13 +8,13 @@ var _ = require('underscore');
 var testTeam = {
   'name': 'mongodb-test-team-01',
   'type': '',
-  'members': {
+  'members': [{
     'name': 'test user',
     'role': 'Tester',
     'allocation': 100,
     'userId': 'TEST1234567',
     'email': 'testuser@test.com'
-  },
+  }],
   'createdByUserId': 'TEST1234567',
   'createdBy': 'testuser@test.com'
 };

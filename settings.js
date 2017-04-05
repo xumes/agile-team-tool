@@ -37,7 +37,8 @@ module.exports = {
   sentry: {
     dsn: process.env.sentryDSN || '',
     publicDSN: process.env.sentryPublicDSN || ''
-  }
+  },
+  uiReleaseDate: process.env.uiReleaseDate || '2017-04-05T00:00:00.000Z' // we will use this date to trigger the walkthrough for new ui.
 };
 
 var loggers = require('./middleware/logger');

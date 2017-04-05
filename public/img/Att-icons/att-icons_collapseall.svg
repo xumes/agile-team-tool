@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>Collapse All</title>
+    <defs>
+        <rect id="path-1" x="0" y="5" width="12" height="12"></rect>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="12" height="12" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <polyline id="path-3" points="2 3 14 3 14 15"></polyline>
+        <mask id="mask-4" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="12" height="12" fill="white">
+            <use xlink:href="#path-3"></use>
+        </mask>
+        <polyline id="path-5" points="4 1 16 1 16 13"></polyline>
+        <mask id="mask-6" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="12" height="12" fill="white">
+            <use xlink:href="#path-5"></use>
+        </mask>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Assesment-Seperations-Expanded" transform="translate(-1367.000000, -5.000000)">
+            <g id="Collapse-all" transform="translate(1367.000000, 4.000000)">
+                <polygon id="Shape" fill="#4178BE" fill-rule="nonzero" points="2 10 2 12 10 12 10 10"></polygon>
+                <use id="Rectangle-5" stroke="#4178BE" mask="url(#mask-2)" stroke-width="2" xlink:href="#path-1"></use>
+                <use id="Rectangle-5" stroke="#4178BE" mask="url(#mask-4)" stroke-width="2" xlink:href="#path-3"></use>
+                <use id="Rectangle-5-Copy" stroke="#4178BE" mask="url(#mask-6)" stroke-width="2" xlink:href="#path-5"></use>
+            </g>
+        </g>
+    </g>
+</svg>

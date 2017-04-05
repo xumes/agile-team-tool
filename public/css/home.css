@@ -1,0 +1,7775 @@
+html {
+  /*height: 100%;
+  font-size: 62.5%;*/
+  width: 100vw;
+  height: 56.49vw;
+  min-width: 1280px;
+  min-height: 720px;
+  /*max-width: 1920px;
+  max-height: 1080px;*/
+  background-color: white;
+}
+
+@media screen and (min-width: 1280px) and (max-width: 1899px) {
+  .assessment-popover-block {
+    top: 6% !important;
+    left: 10% !important;
+    width: 81vw !important;
+    height: 45.2vw !important;
+  }
+  .assessment-setup-block {
+    top: 20% !important;
+    left: 37% !important;
+    width: 26vw !important;
+    height: 30vw !important;
+  }
+}
+
+@media screen and (min-width: 1900px) {
+  .assessment-popover-block {
+    top: 6% !important;
+    left: 15% !important;
+    width: 70vw !important;
+    height: 39.1vw !important;
+  }
+  .assessment-setup-block {
+    top: 20% !important;
+    left: 38.8% !important;
+    width: 22.4vw !important;
+    height: 25.9vw !important;
+  }
+  .first-login-block > div {
+    position: relative;
+    float: left;
+    background-color: #FFFFFF;
+    height: 21vw !important;
+    width: 30vw !important;
+    top: 30%;
+    left: 35%;
+    border: 0.1em solid #979797;
+  }
+  #firstLoginCard_3 {
+    top: 13vw !important;
+  }
+  #firstLoginCard_5 {
+    left: 43vw !important;
+  }
+  #firstLoginCard_6 {
+    top: 5vw !important;
+  }
+  #firstLoginCard_7 {
+    top: 5vw !important;
+    left: 27vw !important;
+  }
+  #firstLoginCard_7 > .pointer {
+    -ms-transform: rotate(270deg) !important;
+    -webkit-transform: rotate(270deg) !important;
+    transform: rotate(270deg) !important;
+    left: -5% !important;
+    top: 40% !important;
+  }
+}
+
+@media screen and (max-width: 1899px) {
+  #firstLoginCard_3 {
+    top: 20vw;
+  }
+  #firstLoginCard_5 {
+    left: 56vw;
+  }
+  #firstLoginCard_6 {
+    top: 5vw;
+  }
+  #firstLoginCard_7 {
+    top: 5vw;
+    left: 31vw;
+  }
+  #firstLoginCard_7 > .pointer {
+    -ms-transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+    transform: rotate(270deg);
+    left: -5%;
+    top: 40%;
+  }
+}
+
+.first-login-block > div {
+  position: relative;
+  float: left;
+  background-color: #FFFFFF;
+  width: 40vw;
+  height: 28vw;
+  top: 30%;
+  left: 30%;
+  min-width: 512px;
+  min-height: 358.4px;
+  border: 0.1em solid #979797;
+}
+
+.first-login-block {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  outline: none;
+}
+
+.first-login-block > div > .close-btn {
+  position: relative;
+  float: right;
+  width: 7%;
+  height: 10%;
+  top: 5%;
+  cursor: pointer;
+}
+
+.first-login-block > div > .close-btn > i {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+.first-login-block > div > .close-btn > i > svg {
+  width: 100%;
+  right: 100%;
+}
+
+.first-login-block > div > .content {
+  position: relative;
+  float: left;
+  width: 70%;
+  left: 15%;
+  top: 15%;
+}
+
+.first-login-block > div > .img-block {
+  position: relative;
+  float: left;
+  width: 70%;
+  left: 15%;
+  top: 15%;
+}
+
+.first-login-block > div > .img-block > img{
+  position: relative;
+  float: left;
+  width: 100%;
+  height: auto;
+}
+
+.first-login-block > div > .content > h1 {
+  position: relative;
+  float: left;
+  width: 100%;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 3.0em;
+  font-weight: 300;
+  line-height: 1.5em;
+  padding: 0;
+  color: #5596E6;
+}
+
+.first-login-block > div > .sub-content {
+  position: relative;
+  float: left;
+  width: 70%;
+  left: 15%;
+  top: 20%;
+}
+
+.first-login-block > div > .sub-content > h1 {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  line-height: 1.5em;
+  padding: 0;
+  color: #777677;
+}
+
+.first-login-block > div > .sub-content > h1 > span {
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+}
+
+.first-login-block > div > .sub-content > h1 > a {
+  width: 1.2em;
+  height: 1.2em;
+}
+
+.first-login-block > div > .sub-content > h1 > a:hover {
+  text-decoration: none !important;
+}
+
+.first-login-block > div > .sub-content > h1 > a > img {
+  /*position: relative;
+  float: left;*/
+  position: relative;
+  top: 0.2em;
+  width: 0.93em;
+  height: 0.93em;
+}
+
+.first-login-block > div > .pointer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 15%;
+  height: 10%;
+}
+
+.first-login-block > div > .pointer > i {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+.first-login-block > div > .pointer > i > svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: auto;
+}
+
+.first-login-block > div > .pointer > i > svg symbol {
+  fill: #777677;
+}
+
+.first-login-block > div > .btns {
+  position: absolute;;
+  float: left;
+  width: 86%;
+  left: 7%;
+  height: 15%;
+  bottom: 5%;
+}
+
+.first-login-block > div > .btns > button {
+  position: relative;
+  float: right;
+  height: 50%;
+  top: 25%;
+  width: 20%;
+  font-size: 1.4em;
+  min-width: 0;
+  line-height: 0;
+  padding: 0;
+}
+
+.first-login-block > div > .btns > span {
+  position: relative;
+  float: left;
+  width: 0.5em;
+  height: 0.5em;
+  top: 40%;
+  background-color: #D8D8D8;
+  margin-left: 2%;
+  border-radius: 50%;
+}
+
+.first-login-block > div > .btns > span:first-child {
+  margin-left: 10%;
+}
+
+.first-login-block > div > .description {
+  position: relative;
+  float: left;
+  width: 70%;
+  left: 15%;
+  top: 20%;
+}
+
+.first-login-block > div > .description > .desc-row {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 2em;
+  padding-top: 0.5em;
+}
+
+.first-login-block > div > .description > .desc-row > div {
+  position: relative;
+  float: left;
+  width: 5%;
+  height: 70%;
+  top: 15%;
+}
+
+.first-login-block > div > .description > .desc-row > div > i {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+.first-login-block > div > .description > .desc-row > div > i > svg {
+  width: 100%;
+  height: 100%;
+}
+
+.first-login-block > div > .description > .desc-row > div > i > svg path,
+.first-login-block > div > .description > .desc-row > div > i > svg polygon {
+  fill: #5596E6;
+}
+
+#firstLoginCard_7 > .description > .desc-row:first-child svg path {
+  fill: #4D4D4D;
+}
+
+.first-login-block > div > .description > .desc-row > h1 {
+  position: relative;
+  float: left;
+  padding: 0;
+  font-size: 1.4em;
+  line-height: 1.4em;
+  color: #777677;
+  left: 0.3em;
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+}
+
+#firstLoginCard_7 > .description > .desc-row:nth-child(1) > h1,
+#firstLoginCard_7 > .description > .desc-row:nth-child(2) > h1 {
+  position: relative;
+  float: left;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  line-height: 1.7em;
+  padding: 0;
+  left: 0.5em;
+  color: #777677;
+}
+
+#firstLoginCard_7 > .description > .desc-row:nth-child(1) > h1 > span,
+#firstLoginCard_7 > .description > .desc-row:nth-child(2) > h1 > span {
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+}
+
+
+#firstLoginCard_3 > .pointer {
+  left: 40%;
+}
+
+#firstLoginCard_5 > .pointer {
+  -ms-transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+  left: 92%;
+  top: 40%;
+}
+
+#firstLoginCard_6 > .pointer {
+  -ms-transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  transform: rotate(180deg);
+  left: 40%;
+  top: 80%;
+}
+
+body {
+  height: 100%;
+}
+
+textarea {
+  font-size: 1.6em;
+}
+
+input, select {
+  font-size: 1em;
+}
+
+#loadingPage {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 99;
+  top: 0;
+  left: 0;
+  background-color: #FFFFFF;
+}
+
+#loadingPage > div {
+  position: relative;
+  width: 100%;
+  top: 30%;
+}
+
+.select2, .select2-results ul li {
+  font-size: 1.4em;
+}
+
+ul>li::before, ol>li::before {
+  content: '';
+}
+
+button.ibm-btn-small[class*="ibm-btn-"],a.ibm-btn-small[class*="ibm-btn-"] {
+  font-size: 1.3em;
+}
+
+input[disabled], input[class*="ibm-btn-"][class*="-pri"][disabled], input[disabled]:hover, input[class*="ibm-btn-"][class*="-pri"][disabled]:hover, button[disabled] {
+  background-color: #FFFFFF;
+  border: 2px solid #C7C7C7;
+  color: #C7C7C7;
+  cursor: not-allowed;
+}
+
+button[class*="ibm-btn-"][class*="-pri"][disabled], button[disabled]:hover, button[class*="ibm-btn-"][class*="-pri"][disabled]:hover {
+  background-color: #EAEAEA;
+  color: #C0BFC0;
+  cursor: not-allowed;
+}
+
+input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][class*="-sec"][disabled]:hover, button[class*="ibm-btn-"][class*="-sec"][disabled], button[class*="ibm-btn-"][class*="-sec"][disabled]:hover {
+  background-color: #fff;
+  border: 2px solid #C7C7C7;
+  color: #C7C7C7;
+}
+
+.select2-container--default.select2-container--disabled .select2-selection--single {
+  background-color: #fff;
+  color: #C7C7C7;
+  cursor: not-allowed;
+}
+
+.select2-container--default.select2-container--disabled .select2-selection--single {
+  cursor: not-allowed;
+}
+
+.select2-container--default.select2-container--disabled .select2-selection--single .select2-selection__rendered {
+  color: #C7C7C7;
+  border-color: #C7C7C7
+}
+
+.select2-container--default.select2-container--disabled .select2-selection {
+  box-shadow: 0 0 0 1px #C7C7C7 inset;
+}
+.select2-container--default.select2-container--disabled .select2-selection--single {
+  border-color: #C7C7C7;
+}
+/* Matts dank spinner */
+/* The Modal (background) */
+/* Clear Loading */
+.clear-loading {
+  text-align: center;
+  margin: 0 auto;
+  position: relative;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  box-sizing: border-box; }
+
+/* Loading Effect One */
+.loading-effect-1 {
+  width: 5.0em;
+  height: 5.0em;
+  margin-top: 2.0em;
+  margin-bottom: 2.0em; }
+
+.loading-effect-1 span {
+  display: block;
+  -webkit-border-radius: 50%;
+  /*-moz-border-radius: 50%;*/
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); }
+
+.loading-effect-1 span:first-child {
+  width: 100%;
+  height: 100%;
+  border-color: #414d5b;
+  border-left-color: transparent;
+  top: 0;
+  left: 0;
+  -webkit-animation: effect-1-1 4s infinite linear;
+  -moz-animation: effect-1-1 4s infinite linear;
+  -ms-animation: effect-1-1 4s infinite linear;
+  -o-animation: effect-1-1 4s infinite linear;
+  animation: effect-1-1 4s infinite linear; }
+
+.loading-effect-1 span:nth-child(2) {
+  width: 75%;
+  height: 75%;
+  border-color: #01c2a7;
+  border-right-color: transparent;
+  top: 12.5%;
+  left: 12.5%;
+  -webkit-animation: effect-1-2 3s infinite linear;
+  -moz-animation: effect-1-2 3s infinite linear;
+  -ms-animation: effect-1-2 3s infinite linear;
+  -o-animation: effect-1-2 3s infinite linear;
+  animation: effect-1-2 3s infinite linear; }
+
+.loading-effect-1 span:last-child {
+  width: 50%;
+  height: 50%;
+  border-color: #00b0d5;
+  border-bottom-color: transparent;
+  top: 25%;
+  left: 25%;
+  -webkit-animation: effect-1-1 4s infinite linear;
+  -moz-animation: effect-1-1 4s infinite linear;
+  -ms-animation: effect-1-1 4s infinite linear;
+  -o-animation: effect-1-1 4s infinite linear;
+  animation: effect-1-1 4s infinite linear; }
+
+@-webkit-keyframes effect-1-1 {
+  from {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  to {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg); } }
+@keyframes effect-1-1 {
+  from {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  to {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg); } }
+@-webkit-keyframes effect-1-2 {
+  from {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  to {
+    -webkit-transform: rotate(-360deg);
+    -moz-transform: rotate(-360deg);
+    -ms-transform: rotate(-360deg);
+    -o-transform: rotate(-360deg);
+    transform: rotate(-360deg); } }
+@keyframes effect-1-2 {
+  from {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  to {
+    -webkit-transform: rotate(-360deg);
+    -moz-transform: rotate(-360deg);
+    -ms-transform: rotate(-360deg);
+    -o-transform: rotate(-360deg);
+    transform: rotate(-360deg); } }
+/* spinner end */
+
+.expand-image {
+  position: relative;
+  float: left;
+  width: 2.2em;
+  height: 100%;
+}
+
+.expand-image img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  left: 0.5em;
+}
+
+.squad-image {
+  position: relative;
+  float: left;
+  width: 2.2em;
+  height: 100%;
+}
+
+.squad-image img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  left: 0.5em;
+}
+
+#newTeamTree ul.ibm-twisty > li.ibm-active > a.ibm-twisty-trigger,
+#newTeamTree ul.ibm-twisty > li a.ibm-twisty-trigger,
+#newTeamTree ul.ibm-twisty > li a.agile-team-link {
+  color: #4D4D4D;
+  font-size: 1.6em;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  /*font-family: "Helvetica Neue";*/
+  line-height: 1.5em;
+  margin-bottom: 1.5em;
+  font-weight: 300;
+}
+
+#newSearchTree ul.ibm-twisty > li.ibm-active > a.ibm-twisty-trigger,
+#newSearchTree ul.ibm-twisty > li a.ibm-twisty-trigger,
+#newSearchTree ul.ibm-twisty > li a.agile-team-link {
+  color: #4D4D4D;
+  font-size: 1.6em;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  /*font-family: "Helvetica Neue";*/
+  line-height: 1.5em;
+  margin-bottom: 1.5em;
+  font-weight: 300;
+}
+
+#newTeamTree, #newSearchTree {
+  position: relative;
+  left: -1%;
+  width: 96%;
+}
+#newTeamTree, #newSearchTree {
+  top: 2%;
+}
+#newTeamTreeMain, #newSearchTreeMain{
+  width: 100%;
+}
+
+#newTeamTreeMain a.ibm-twisty-trigger,
+#newSearchTreeMain a.ibm-twisty-trigger {
+  margin: 0 0.2em 0 0.2em;
+}
+
+#newTeamTree a::before,
+#newSearchTree a::before {
+  font-size: 1.3em;
+  font-weight: 300;
+  color: #3B6DAA;
+}
+
+#newTeamTree .agile-team-standalone a::before,
+#newSearchTree .agile-team-standalone a::before  {
+  font-size: 0rem
+}
+
+#newTeamTree a.agile-team-link,
+#newSearchTree a.agile-team-link {
+  display: inherit;
+  /*margin-left: 8.0%;
+  margin-right: 8.0%;*/
+  padding-left: 0;
+  cursor: pointer;
+}
+
+.agile-team-link > .agile-team-title {
+  font-size: 1.1em;
+  /*font-weight: 300;*/
+  color: #4D4D4D;
+  position: relative;
+  left: 0.65em;
+}
+
+.agile-team-selected > .agile-team-title {
+  border-bottom: 0.15em solid #008ABF;
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  /*padding-bottom: 2%;*/
+  position: relative;
+  left: 0.65em;
+}
+
+/*#newSearchTree a.agile-team-link {
+  display: inherit;
+  margin-left: 15px;
+  padding-left: 5px;
+  border-bottom: 1px solid #e0e0e0 !important;
+  cursor: pointer;
+}*/
+
+#newTeamTree a:hover {
+  text-decoration: none !important;
+  /*border-bottom: 0.2em solid #008ABF;*/
+}
+
+#newTeamTree a.agile-team-parent-selected {
+  background-color: #c0e6ff;
+}
+
+#newTeamTree a.agile-team-selected {
+  /*border-bottom: 0.15em solid #008ABF;*/
+}
+
+#newTeamTree a.agile-team-squad, #newTeamTree li.agile-team-squad a::after, #newTeamTree a.agile-team-squad::after{
+  /*background-image: url('../img/Att-icons/att-icons_tribe.svg');
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 10% 40%;
+  text-indent: 8%;*/
+}
+#newSearchTree a {
+  width: 100%;
+}
+#newTeamTree a.trigger-squad::before {
+  /*background-image: url('../img/Att-icons/att-icons_tribe.svg');
+  background-repeat: no-repeat;
+  background-size: 90% 90%;
+  background-position: center;
+  width: 7%;*/
+}
+
+#newSearchTree a.trigger-squad::before {
+  /*background-image: url('../img/Att-icons/att-icons_tribe.svg');
+  background-repeat: no-repeat;
+  background-size: 80% 80%;
+  background-position: center;
+  width: 6%;*/
+}
+
+
+#newTeamTree .ibm-twisty-body > p {
+  margin-left: 0px;
+  padding-bottom: 0.1em;
+  padding-top: 0.1em;
+}
+
+#newTeamTree li,
+#newSearchTree li {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  line-height: 1.625rem
+}
+
+#newTeamTree li > a,
+#newSearchTree li > a {
+  margin-top: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  /*padding-left: 1.5em;*/
+  /*font-size:  10.5pt;*/
+}
+
+#newTeamTree div > p > a,
+#newSearchTree a {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  /*font-size:  10.5pt;*/
+  color: #4D4D4D;
+  display: block;
+}
+
+.home-nav-tab-search-field {
+  position: relative;
+  top: 0.5%;
+  height: 2%;
+  width: 90%;
+  left: 5%;
+}
+
+.home-nav-search-field {
+  /* display: inline-block; */
+  position: relative;
+  float: left;
+  font-size: 1.6em;
+  width: 100%;
+  height: 100%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: 0.1em solid #959f9f;
+  border-radius: 0;
+  box-sizing: border-box;
+  box-shadow: 0 0 0 0.1em transparent inset;
+  font-style: normal;
+  height: 100%;
+  text-indent: 1em;
+  transition: .3s border-color,.3s background,.3s box-shadow;
+  padding: 0;
+}
+
+.home-nav-search-field::-webkit-search-cancel-button {
+  display: none;
+}
+
+.home-nav-search-field:focus {
+  background: #fff none repeat scroll 0 0;
+  border: 0.1em solid #000;
+}
+
+.home-nav-search-field:hover {
+  border-color: #000;
+}
+
+.home-nav-search-field-cancel {
+  position: absolute;
+  left: 90%;
+  top: 10%;
+  width: 10%;
+  height: 80%;
+}
+
+.home-nav-search-field-cancel > i > svg {
+  width: 100%;
+  height: 100%;
+}
+
+.home-nav-search-field-cancel > i > svg path {
+  fill: #777677;
+}
+
+.agile-home-header div {
+  font-size: 1em !important;
+}
+
+.agile-header-warning {
+  font-size: 2em;
+  margin-bottom: .1em;
+  margin-top: 0;
+  text-align: left;
+  background-color: #fde876;
+  padding: 1.5em;
+  display:none;
+  border-bottom : 0.1em solid #a7963a;
+}
+
+.agile-home-header {
+  background-color: #323232;
+  display: block;
+  color: #FFFFFF;
+  font-size: 1.5em !important;
+  height: 6.2%;
+  width: 100%;
+}
+
+.header-title {
+  display: inline-block;
+  float: left;
+  height: 100%;
+  margin-left: 1.8%;
+  position: relative;
+  white-space: nowrap;
+}
+
+.header-title > div {
+  display: inline-block;
+  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  position: relative;
+  top: 25%;
+}
+
+.header-title > div ~ div {
+  font-family: "HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+}
+
+.header-title div:last-child {
+  color: #e71d32;
+  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+}
+
+.header-logo {
+  display: inline-block;
+  padding: 0 0.75em 0 1em;
+  position: relative;
+}
+
+.header-ibm-logo {
+  display: inline-block;
+  position: relative;
+  top: .5em;
+}
+
+.header-menu {
+  display: inline-block;
+  float: right;
+  height: 100%;
+  position: relative;
+  width: initial;
+}
+
+.header-menu-profile li {
+  padding-bottom: 1em;
+  padding-top: 1em;
+}
+
+.header-menu li a {
+  line-height: 2em;
+  color: #FFFFFF;
+  font-size: 1.5em;
+  padding-right: 2em;
+}
+
+.header-menu li::before {
+  content: none;
+}
+
+.header-menu-dropdown {
+  cursor: pointer;
+  display: inline-block;
+  height: 100%;
+  padding: 0 1em 0 0;
+  position: relative;
+  white-space: nowrap;
+  width: initial;
+}
+
+.header-menu-dropdown:hover .header-menu-profile-block, .header-menu-dropdown:hover .header-menu-help-block {
+  display: block;
+}
+
+.header-menu-icon {
+  display: inline-block;
+  padding: 0 0.25em 0 1em;
+  position: relative;
+  top: 10%;
+}
+
+.header-menu-label {
+  color: #FFFFFF;
+  display: inline-block;
+  padding: .75em .25em 0 .25em;
+  position: relative;
+  white-space: nowrap;
+}
+
+.header-menu-icon-chev {
+  display: inline-block;
+  padding: 0 .25em;
+  position: relative;
+  top: 10%;
+}
+
+.header-menu-icon-chev-hide {
+  display: none;
+  padding: 0 .25em;
+  position: relative;
+  top: 10%;
+}
+
+.header-menu-profile-block {
+  background-color: #4178be;
+  cursor: context-menu;
+  float: left;
+  list-style: outside none none !important;
+  position: absolute;
+  display: none;
+  top: 100%;
+  z-index: 10;
+}
+
+.header-menu-profile-block li:first-child div {
+  border-bottom: 0.1em solid #FFFFFF;
+  font-size: 1.5em !important;
+  font-weight: bold;
+  padding-top: 1em;
+  padding-bottom: .5em;
+  width: 90%;
+}
+
+.header-menu-help-block li:first-child div {
+  font-size: 1.5em !important;
+  font-weight: normal;
+  padding-top: 1em;
+  padding-bottom: .5em;
+  width: 90%;
+}
+
+.header-menu-helo-block li:first-child div {
+  border-bottom: none;
+}
+
+.header-menu-profile-block li:nth-child(2) img {
+  border: 1px solid #FFFFFF;
+  border-radius: 60%;
+  box-sizing: border-box;
+  height: auto;
+  margin-bottom: 0.5em;
+  margin-top: 1em;
+  padding: 0.2em;
+  width: 20%;
+}
+
+.header-menu-help-block li {
+  padding-top: 0;
+}
+
+.header-menu-help-block li:nth-child(2)::before,
+.header-menu-help-block li:nth-child(3)::before,
+.header-menu-help-block li:nth-child(4)::before,
+.header-menu-help-block li:nth-child(5)::before {
+  content: "•" !important;
+  margin-left: 0;
+  margin-top: .7em;
+  color: #FFFFFF;
+}
+
+.header-menu-help-block li:nth-child(2) a,
+.header-menu-help-block li:nth-child(3) a,
+.header-menu-help-block li:nth-child(4) a,
+.header-menu-help-block li:nth-child(5) a {
+  margin-left: 1em;
+}
+
+.header-menu-profile-block li:nth-child(2),
+.header-menu-profile-block li:nth-child(3) {
+  padding-bottom: 1em;
+}
+
+.header-menu-profile-block li:nth-child(2) div {
+  font-size: 1.5em !important;
+  line-height: 1.5em;
+  white-space: normal;
+}
+
+.header-menu-profile-block li:last-child {
+  border-top: 0.1em solid #FFFFFF;
+  padding-top: 1em;
+}
+
+.header-menu-icon-logout, .header-menu-icon-api {
+  display: inline-block;
+  padding-right: 0.5em;
+  position: relative;
+  top: .5em;
+  width: 8%;
+}
+
+.header-menu-icon-logout div, .header-menu-icon-api div {
+  display: inline-block;
+  padding-left: 0.75em;
+  position: relative;
+  top: -0.4em;
+}
+
+.header-menu-help-block {
+  background-color: #4178be;
+  cursor: context-menu;
+  float: left;
+  list-style: outside none none !important;
+  position: absolute;
+  display: none;
+  top: 100%;
+  left: -100%;
+  width: calc(100%*2);
+  z-index: 10;
+}
+
+.agile-home-header svg {
+  height: 20px;
+  width: 20px;
+}
+
+.agile-home-header .header-ibm-logo svg {
+  width: 50px !important;
+}
+
+.agile-home-header path, .agile-home-header polygon {
+  fill: #EFEFEF !important;
+}
+
+.header-menu-icon-chev-hide path, .header-menu-icon-chev-hide polygon {
+  fill: #4178BE !important;
+}
+
+.header-menu-dropdown:hover {
+  background-color: #4178BE;
+}
+
+.header-menu > div:hover .header-menu-dropdown {
+  display: block;
+}
+
+.header-menu > div:hover .header-menu-icon-chev {
+  display: none;
+}
+
+.header-menu > div:hover .header-menu-icon-chev-hide {
+  display: inline-block;
+}
+
+.home-nav-show-btn-div {
+  width: 2.6vw;
+  height: 16.9vw;
+  min-width: 33.28px;
+  min-height: 216.32px;
+  background-color: #F7F7F7;
+  position: relative;
+  top: -99.9%;
+  left: -0.2%;
+  z-index: 10;
+  box-shadow: 0.2em 0.2em 0.5em #666;
+  cursor: pointer;
+}
+
+.home-nav-show-btn {
+  position: relative;
+  float: left;
+  width: 60%;
+  height: 10%;
+  top: -344%;
+  left: 20%;
+}
+
+.home-nav-show-btn2 {
+  position: relative;
+  float: left;
+  width: 60%;
+  height: 10%;
+  top: -282%;
+  left: 20%;
+}
+
+.home-nav-show-btn > i, .home-nav-show-btn2 > i {
+  position: relative;
+  float: left;
+  height: 100%;
+  width: 100%;
+}
+.home-nav-show-btn svg, .home-nav-show-btn2 svg{
+  width: 100%;
+  height: 100%;
+}
+.home-nav-show-btn path, .home-nav-show-btn polygon, .home-nav-show-btn2 path, .home-nav-show-btn2 polygon{
+  fill: #5A5A5A
+}
+
+.home-nav-show-text {
+  position: relative;
+  float: left;
+  top: -315%;
+  right: 18%;
+  -ms-transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+  font-size: 1.6em;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  color: #5A5A5A;
+}
+
+.home-nav-div {
+  width: 30%;
+  height: 205%;
+  background-color: #F7F7F7;
+  position: absolute;;
+  float: left;
+  top: 6.3%;
+  left: 0;
+  z-index: 11;
+  /*box-shadow: 0.1em 0.3em 0.4em 0 rgba(0,0,0,0.22);*/
+}
+
+.home-nav-tab-div {
+  width: 100%;
+  height: 25%;
+  position: relative;
+  top: 75%;
+  border-bottom: 0.1em solid #979797;
+}
+
+.home-nav-tab {
+  width : 89%;
+  left: 5.5%;
+  height: 7.1%;
+  background-color: #F7F7F7;
+  /*display: flex;*/
+  position: relative;
+  /*align-items: flex-end;*/
+}
+
+.home-nav-tab-list {
+  position: relative;
+  width: 70%;
+  height: 100%;
+  float: left;
+}
+
+.home-nav-tab-item {
+  width: 50%;
+  height: 100%;
+  /*line-height: 1em;*/
+  color: #4D4D4D;
+  padding: 0;
+  margin: 0;
+  display: inline-block
+}
+
+.home-nav-tab-item > h {
+  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 2em;
+  text-align: left;
+  padding-top: 0;
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 1%;
+}
+
+.home-nav-tab-item:hover > h {
+  border-bottom: 0.15em solid #008ABF;
+  cursor: pointer
+}
+
+.home-nav-tab-item[data-state="open"] > h{
+  border-bottom: 0.15em solid #008ABF;
+  font-weight: bold
+}
+
+.home-nav-tab-buttons {
+  width: 30%;
+  height: 100%;
+  display: inline-block;
+  float: right;
+}
+
+.home-nav-tab-buttons-item {
+  position: relative;
+  height: 90%;
+  width: 20%;
+  padding: 0;
+  display: inline-block;
+  cursor: pointer;
+  float: right;
+}
+
+.home-nav-tab-buttons-item > i > svg {
+  width: 100%;
+  height: 100%;
+}
+
+#hideNavBtn svg g{
+  fill: #3b6caa;
+}
+
+.home-team-nav {
+  position: relative;
+  /*width : 93.2%;
+  margin: 10% 3.4% 0 3.4%;*/
+  width: 89%;
+  left: 5.5%;
+  top: 0.7% !important;
+  height: 85%;
+}
+
+.nano-content {
+  width : 100%;
+  height: 100%;
+}
+
+.home-team-header {
+  position: relative;
+  top: 0.1%;
+  left: 0.5%;
+  width: 100%;
+  height: 30%;
+  background-color: #7CC7FF;
+  background-image: url('../img/header-bg-art.svg');
+  background-repeat: no-repeat;
+  background-size: 60%;
+  background-position: 150% 25%;
+}
+
+.home-team-header-title {
+  position: relative;
+  width: 90%;
+  height: 17%;
+  position: relative;
+  top: 32%;
+  left: 0.6%;
+}
+
+.home-team-header-teamname-div {
+  width: 90%;
+  height: 100%;
+  display: inline-block;
+  margin-left: 0.5%;
+}
+
+.home-team-header-teamname {
+  display: inline;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 3em;
+  font-weight: 300;
+  color: #323232;
+  display: inline-block;
+  float: left;
+}
+
+.home-team-header-teamname-btn {
+  width: 4%;
+  height: 60%;
+  display: inline-block;
+  float: left;
+  position: relative;
+  top: 20%;
+  left: 2%;
+  cursor: pointer;
+}
+
+.home-team-header-teamname-btn-img svg {
+  width: 100%;
+  height: 100%;
+}
+
+.home-team-header-teamname-btn-img path, .home-team-header-teamname-btn-img polygon, .home-team-header-teamname-btn-img circle, .home-team-header-teamname-btn-img rect{
+  fill: #4178BE !important;
+}
+
+.home-team-header-img-div {
+  width: 5%;
+  height: 80%;
+  display: inline-block;
+  float: left;
+}
+
+.home-team-header-img {
+}
+
+.home-team-header-img svg {
+  width: 100%;
+  height: 100%;
+  padding-top: 10%;
+}
+
+.home-team-header-img path, .home-team-header-img polygon, .home-team-header-img circle, .home-team-header-img rect {
+  fill: #323232 !important;
+}
+
+.home-team-header-hierarchy {
+  height: 8.3%;
+  width: 100%;
+  position: relative;
+  top: 35%;
+  left: 1%;
+}
+
+.hierarchy-link {
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  display:inline;
+  padding-left:0px;
+  font-size: 1.4em;
+  color: #EFF9FF;
+}
+
+.hierarchy-mark {
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  color: #EFF9FF;
+}
+
+.hierarchy-lastteam {
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  display: inline;
+  font-size: 1.4em;
+  color: #EFF9FF;
+  border-bottom: 0.1em solid #EFF9FF;
+}
+
+.home-team-header-btns-div {
+  /*background-color: red;*/
+  height: 22.2%;
+  width: 98%;
+  position: relative;
+  top: 48%;
+  left: 1%;
+}
+
+.home-team-header-btns {
+  width: 20%;
+  height: 100%;
+  display: inline-block;
+  /*cursor: pointer;*/
+  float: left;
+}
+
+.home-team-header-btns svg {
+  cursor: pointer;
+}
+
+.home-team-header-btns2 {
+  width: 80%;
+  height: 100%;
+  display: inline-block;
+}
+
+.home-team-header-btn-img {
+  display: inline-block;
+  width: 30%;
+  height: 100%;
+  float: left;
+}
+.home-team-header-btn-img2 {
+  display: inline-block;
+  width: 8%;
+  height: 100%;
+  cursor: pointer;
+  float: left;
+}
+.home-team-header-btn-img svg, .home-team-header-btn-img2 svg {
+  width: 100%;
+  height: 100%;
+}
+
+/*.home-team-header-btn-img path, .home-team-header-btn-img rect, .home-team-header-btn-img polygon, .home-team-header-btn-img circle{
+  fill: #FFFFFF
+}*/
+
+.home-team-header-btn-img2 path, .home-team-header-btn-img2 rect, .home-team-header-btn-img2 polygon, .home-team-header-btn-img2 circle{
+  fill: #FFFFFF;
+}
+
+.home-team-header-btn-title {
+  width: 50%;
+  height: 100%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  color: #FFFFFF;
+  position: relative;
+  top: 10%;
+  left: 5%;
+  display: inline-block;
+  float: left;
+  cursor: pointer;
+}
+
+.home-team-header-btn-title2 {
+  position: relative;
+  left: 1%;
+  width: 2%;
+  height: 100%;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 5em;
+  font-weight: 100;
+  color: #FFFFFF;
+  position: relative;
+  float: left;
+  top: 0%;
+}
+
+/*.home-team-header-btn-title2 > h {
+  position: relative;
+  float: left;
+  height: 100%;
+  width: 100%;
+}*/
+
+.home-team-header-btn-title2 svg {
+  fill: #FFFFFF;
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 95%;
+}
+
+.home-team-header-btn-title3 {
+  position: relative;
+  top: 10%;
+  left: 1%;
+  width: 8%;
+  height: 100%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  font-weight: 100;
+  color: #FFFFFF;
+  display: inline-block;
+  float: left;
+  cursor: pointer;
+}
+
+.home-team-header-members-div {
+  position: relative;
+  left: 2%;
+  width: 80%;
+  height: 100%;
+  display: inline-block;
+  float: left;
+  position: relative;
+}
+
+.home-team-header-members-div > div {
+  /*width: 10%;*/
+  height: 90%;
+  display: inline-block;
+  float: left;
+  position: relative;
+  margin-left: 1%;
+  border: 0.2em solid #FFFFFF;
+  border-radius: 50%;
+}
+
+.home-team-header-members-div > div > a {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/*.home-team-header-members-div > div:before {
+  content: " ";
+  position: absolute;
+  display: block;
+  z-index: -1;
+  top: -15px;
+  left: -15px;
+  right: -15px;
+  bottom: -15px;
+  border: 1px solid #FFFFFF;
+}*/
+
+/*.home-team-header-member-image {
+  width: 9%;
+  height: 80%;
+  border-radius: 50%;
+  margin-left: 0.5%;
+  display: inline-block;
+  border: 0.1em solid #FFFFFF;
+  float: left;
+}*/
+
+.home-team-header-member-image {
+  position: relative;
+  width: auto;
+  height: 90%;
+  /*top: 3.5%;
+  left: 0.1em;*/
+  top: 4.8%;
+  left: 5.1%;
+  /*border: 0.1px solid #FFFFFF;*/
+  border-radius: 50%;
+}
+
+#teamMemberTable {
+  width: 99.8%;
+  height: 680%;
+  padding: 0;
+  /*background-color: red;*/
+  position: absolute;
+  top: 100%;
+  z-index: 9;
+}
+
+.team-member-table-title-div {
+  width: 100%;
+  height: 5.3%;
+  background-color: #FFFFFF;
+  border-left: 0.1em solid #C7C7C7;
+  border-right: 0.1em solid #C7C7C7;
+  border-top: 0.1em solid #C7C7C7;
+}
+
+.team-member-table-title {
+  height: 32.5%;
+  position: relative;
+  top: 35%;
+  left: 1%;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 2.5em;
+  color: #4178BE;
+}
+
+.team-member-table-close-btn {
+  position: relative;
+  width: 4%;
+  height: 50%;
+  top: 40%;
+  right: 1%;
+  float: right;
+  cursor: pointer;
+}
+
+.team-member-table-close-btn svg {
+  position: relative;
+  float: left;
+  left: 40%;
+  width: 100%;
+  height: auto;
+}
+
+.team-member-table-block {
+  position: relative;
+  background-color: #FFFFFF;
+  width: 100%;
+  height: 94%;
+}
+
+.team-member-table {
+  width: 100%;
+  height: 94%;
+}
+
+.team-member-table-header-block {
+  width: 100%;
+  height: 2.65%;
+  border-left: 0.1em solid #C7C7C7;
+  border-right: 0.1em solid #C7C7C7;
+}
+
+.team-member-table-header-block > div {
+  height: 100%;
+  background-color: #EFEFEF;
+  display: inline-block;
+  float: left;
+}
+
+.team-member-table-header-block > div > h {
+  position: relative;
+  top: 32%;
+  left: 8%;
+  height: 45%;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  /*line-height: 18px;*/
+  color: #323232;
+}
+
+.team-member-table-content-block1 {
+  width: 100%;
+  height: 5.3%;
+  border-left: 0.1em solid #C7C7C7;
+  border-right: 0.1em solid #C7C7C7;
+  background-color: #FFFFFF;
+}
+
+.team-member-table-content-block2 {
+  width: 100%;
+  height: 5.3%;
+  border-left: 0.1em solid #C7C7C7;
+  border-right: 0.1em solid #C7C7C7;
+  background-color: #EFEFEF;
+}
+
+.team-member-table-content-block1:hover,
+.team-member-table-content-block2:hover {
+  background-color: #DEEDF7;
+}
+
+.team-member-table-content-block1 > div,
+.team-member-table-content-block2 > div  {
+  height: 100%;
+  display: inline-block;
+  float: left;
+}
+
+.team-member-table-content-block1 > div > div > img,
+.team-member-table-content-block2 > div > div > img {
+  width: 70%;
+  height: auto;
+  position: relative;
+  top: 10%;
+  left: 15%;
+  border-radius: 50%;
+  /*display: inline-block;*/
+}
+
+.team-member-table-content-block1 > div > div > h,
+.team-member-table-content-block2 > div > div > h {
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  color: #5A5A5A;
+  padding: 0;
+  margin: 0;
+  /*display: inline-block;*/
+}
+
+.team-member-table-content-block1 > div > div > h1,
+.team-member-table-content-block2 > div > div > h1,
+.team-member-table-email {
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  color: #325C80;
+  padding: 0;
+  margin: 0;
+}
+
+
+.team-member-table-content-block1 > div > h,
+.team-member-table-content-block2 > div > h {
+  position: relative;
+  top: 50%;
+  transform: translate(5%, -50%);
+  float: left;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  color: #5A5A5A;
+}
+
+.team-member-table-content-awk > span {
+  position: relative;
+  float: right;
+  right: 5%;
+  width: 15%;
+  height: 100%;
+  cursor: pointer;
+  display: none;
+  padding: 0;
+}
+
+.team-member-table-content-awk > span > i > svg {
+  width: 100%;
+  height: 100%;
+}
+
+.team-member-table-content-awk > span > i > svg path,
+.team-member-table-content-awk > span > i > svg rect {
+  fill: #27B0E5;
+}
+
+.team-member-table-content-block1:hover > .team-member-table-content-awk > span,
+.team-member-table-content-block2:hover > .team-member-table-content-awk > span
+ {
+  /*display: block;*/
+}
+
+.team-member-table-content-block-show {
+  display: block !important;
+}
+
+.team-member-table-content-block-hide {
+  display: none !important;
+}
+
+#teamMemberTable .select2-container,
+#teamMemberTable .select2-selection,
+#teamMemberTable .select2-selection--single,
+#teamMemberTable .select2-selection__rendered,
+#teamMemberTable .select2-selection__arrow{
+  height: 100%;
+}
+
+#teamMemberTable .select2-selection__rendered {
+  font-size: 1.2em;
+  line-height: 2.3em;
+  position: relative;
+  top: 35%;
+  transform: translate(0%, -50%);
+}
+
+#teamMemberTable .select2-selection__arrow  b {
+  top: 30% !important;
+}
+
+#teamMemberTable .select2-search__field {
+  font-size: 1.2em!important;
+}
+
+.team-member-table-content-role > .modify-field {
+  position: relative;
+  float: left;
+  top: 50%;
+  transform: translate(0%, -50%);
+  width: 90%;
+  height: 100%;
+  display: none;
+}
+
+.team-member-table-content-role > .modify-field > .dropdown-list {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 40%;
+  top: 50%;
+  transform: translate(0%, -50%);
+}
+
+.team-member-table-content-role > .modify-field > .input-field {
+  position: relative;
+  float: left;
+  top: 10%;
+  width: 100%;
+  height: 35%;
+  display: none;
+}
+
+.team-member-table-content-role > .modify-field > .input-field > input {
+  position: relative;
+  float: left;
+  width: 70%;
+  height: 100%;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  text-indent: 0.5em;
+  background-color: rgb(255, 255, 255);
+  border: 0.1em solid #aaa;
+}
+
+.team-member-table-content-role > .modify-field > .input-field > .save-btn,
+.team-member-table-content-role > .modify-field > .input-field > .cancel-btn{
+  position: relative;
+  float: left;
+  left: 3%;
+  width: 12%;
+  height: 100%;
+  cursor: pointer;
+  display: none;
+}
+
+.team-member-table-content-role > .modify-field > .input-field > .save-btn svg,
+.team-member-table-content-role > .modify-field > .input-field >.cancel-btn svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+.team-member-table-content-location > .modify-field {
+  position: relative;
+  float: left;
+  top: 50%;
+  transform: translate(0%, -50%);
+  width: 90%;
+  height: 35%;
+  display: none;
+}
+
+.team-member-table-content-location > .modify-field > input {
+  position: relative;
+  float: left;
+  width: 78%;
+  height: 100%;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  text-indent: 0.5em;
+  background-color: rgb(255, 255, 255);
+  border: 0.1em solid #aaa;
+}
+
+.team-member-table-content-location > .modify-field > .save-btn,
+.team-member-table-content-location > .modify-field > .cancel-btn {
+  position: relative;
+  float: left;
+  left: 2%;
+  width: 10%;
+  height: 100%;
+  cursor: pointer;
+  display: none;
+}
+
+.team-member-table-content-location > .modify-field svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+.team-member-table-content-allocation > .modify-field {
+  position: relative;
+  float: left;
+  top: 50%;
+  transform: translate(0%, -50%);
+  width: 90%;
+  height: 35%;
+  display: none;
+}
+
+.team-member-table-content-allocation > .modify-field > input {
+  position: relative;
+  float: left;
+  width: 42%;
+  height: 100%;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  text-indent: 0.5em;
+  background-color: rgb(255, 255, 255);
+  border: 0.1em solid #aaa;
+}
+
+.team-member-table-content-allocation > .modify-field > .save-btn,
+.team-member-table-content-allocation > .modify-field > .cancel-btn{
+  position: relative;
+  float: left;
+  left: 3%;
+  width: 20%;
+  height: 100%;
+  cursor: pointer;
+  display: none;
+}
+
+.team-member-table-content-allocation > .modify-field > .save-btn svg,
+.team-member-table-content-allocation > .modify-field > .cancel-btn svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+.team-member-table-content-allocation > .modify-field > h1 {
+  position: relative;
+  float: left;
+  font-size: 1.6em;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  padding: 0;
+  height: 50%;
+  color: black;
+  top: 25%;
+  left: 1%;
+  width: 15%;
+}
+
+.team-member-table-content-awk > .modify-field {
+  position: relative;
+  float: left;
+  top: 50%;
+  transform: translate(0%, -50%);
+  width: 78%;
+  height: 100%;
+  display: none;
+}
+
+.team-member-table-content-awk > .modify-field > .dropdown-list {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 40%;
+  top: 50%;
+  transform: translate(0%, -50%);
+}
+
+.team-member-table-content-awk > .modify-field > .input-field {
+  position: relative;
+  float: left;
+  top: 10%;
+  width: 100%;
+  height: 35%;
+  display: none;
+}
+
+.team-member-table-content-awk > .modify-field > .input-field > input {
+  position: relative;
+  float: left;
+  width: 45%;
+  height: 100%;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  text-indent: 0.5em;
+  background-color: rgb(255, 255, 255);
+  border: 0.1em solid #aaa;
+}
+
+.team-member-table-content-awk > .modify-field > .input-field > .save-btn,
+.team-member-table-content-awk > .modify-field > .input-field > .cancel-btn{
+  position: relative;
+  float: left;
+  left: 1.5%;
+  width: 16%;
+  height: 100%;
+  cursor: pointer;
+  display: none;
+}
+
+.team-member-table-content-awk > .modify-field > .input-field > .save-btn svg,
+.team-member-table-content-awk > .modify-field > .input-field >.cancel-btn svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+.team-member-table-content-awk > .modify-field > .input-field > h1 {
+  position: relative;
+  float: left;
+  font-size: 1.6em;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  padding: 0;
+  height: 50%;
+  top: 25%;
+  left: 1%;
+  width: 15%;
+}
+/*.team-member-table-content-awk > div {
+  position: relative;
+  float: left;
+  left: 5%;
+  top: 10%;
+  width: 70%;
+  height: 40%;
+  display: none;
+}*/
+
+.team-member-table-footer-block {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 5.3%;
+  background-color: #FFFFFF;
+  border-left: 0.1em solid #C7C7C7;
+  border-right: 0.1em solid #C7C7C7;
+  border-bottom: 0.1em solid #C7C7C7;
+  box-shadow: 0 0.2em 0.4em #C7C7C7;
+}
+
+.team-member-table-footer-block > div {
+  position: relative;
+  float: left;
+}
+
+.team-member-table-footer {
+  position: relative;
+  float: left;
+  width: 98%;
+  left: 1%;
+  height: 100%;
+  border-top: 0.1em solid #C7C7C7;
+}
+
+.team-member-table-footer > button {
+  position: relative;
+  float: left;
+  top: 20%;
+  left: 8%;
+}
+
+.team-member-table-footer > h1 {
+  position: relative;
+  float: left;
+  top: 35%;
+  left: 10%;
+  padding: 0;
+  font-size: 1.6em;
+  color: #5A5A5A;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+}
+
+.team-member-table-add-btn {
+  width: 20%;
+  height: 37.5%;
+  position: relative;
+  top: 25%;
+  left: 8%;
+  border: 0.2em solid #4178BE;
+  cursor: pointer;
+  margin-top: 25%;
+}
+
+.team-member-table-add-btn > h {
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  text-align: center;
+  color: #4178BE;
+  position: relative;
+  top: 25%;
+  left: 15%;
+}
+
+.home-team-header-description-div {
+  position: absolute;
+  float: left;
+  /*position: relative;*/
+  /*left: -3%;*/
+  top: -10%;
+  /*display: inline-block;*/
+  z-index: 10;
+  width: 40%;
+  height: 700%;
+}
+.home-team-header-description-arrow {
+  height: 5em;
+  width: 5%;
+  display: inline-block;
+  float: left;
+  -ms-transform: rotate(180deg); /* IE 9 */
+  -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+  transform: rotate(180deg);
+}
+
+.home-team-header-description-arrow-img svg {
+  position: relative;
+  right: 85%;
+  height: 100%;
+  width: 200%;
+}
+
+.home-team-header-description-arrow-img svg polygon {
+  fill: #4178BE;
+}
+.home-team-header-description-title {
+  height: 5em;
+  width: 95%;
+  background-color: #4178BE;
+  display: inline-block;
+  float: left;
+  box-shadow: 0.1em 0 0.1em #4178BE;
+}
+.home-team-header-description-title > h {
+  height: 50%;
+  position: relative;
+  float: left;
+  top: 35%;
+  left: 5%;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  color: #FFFFFF;
+  display: inline-block;
+  float: left;
+}
+
+.home-team-header-description-title > div {
+  position: relative;
+  float: right;
+  width: 10%;
+  height: 70%;
+  top: 30%;
+  right: 1%;
+  cursor: pointer;
+}
+
+.home-team-header-description-title > div svg{
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+.home-team-header-description-title > div svg g{
+  fill: #FFFFFF;
+  opacity: 1;
+}
+
+.home-team-header-description-content {
+  height: 80%;
+  width: 95%;
+  background-color: #FFFFFF;
+  position: relative;
+  left: 5%;
+  box-shadow: 0.1em 0.1em 0.1em #C7C7C7;
+  float: left
+}
+
+.home-team-header-description-content > div {
+  position: relative;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 60%;
+  display: block;
+}
+
+.home-team-header-description-content > div > h1 {
+  position: relative;
+  height: 20%;
+  width: 100%;
+  float: left;
+  display: inline-block;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  color: #464646;
+  padding: 0;
+}
+
+.home-team-header-description-content > div > p {
+  position: relative;
+  float: left;
+  height: 70%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 1.6em;
+  color: #464646;
+  overflow: auto;
+}
+
+.home-team-header-description-content > button {
+  float: right;
+  position: relative;
+  right: 10%;
+  top: 15%;
+}
+
+.home-trends-block {
+  position: relative;
+  left: 0.5%;
+  width: 100%;
+  height: 150%;
+}
+
+.home-trends-block-title {
+  float: left;
+  width: 100%;
+  height: 5.4%;
+}
+
+.home-trends-block-title > h1 {
+  float: left;
+  display: inline-block;
+  position: relative;
+  top: 60%;
+  padding: 0;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 2.5em;
+  color: #734098;
+}
+
+.home-trends-block-title > span {
+  display: inline-block;
+  float: left;
+  position: relative;
+  top: 63%;
+  left: 38%;
+  width: 1%;
+  height: 13%;
+  background-color: #FFA501;
+  padding: 0;
+}
+.home-trends-block-title > h4 {
+  display: inline-block;
+  cursor: pointer;
+  float: left;
+  position: relative;
+  top: 60%;
+  left: 38%;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.1em;
+  color: #777677;
+  padding: 0;
+}
+
+.home-trends-block-filter-img {
+  display: inline-block;
+  float: right;
+  position: relative;
+  top: 45%;
+  right: 2.5%;
+  width: 3%;
+  height: 50%;
+}
+
+.home-trends-overflow {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 94.6%;
+  /*overflow-y: scroll;*/
+}
+
+#iterationSection, #assessmentSection{
+  float: left;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.home-chart {
+  border: 0.1em solid #000000;
+}
+
+.container-body-columns {
+  position: relative;
+  width: 99%;
+  height: 23%;
+}
+
+.container-body-columns-ase {
+  position: relative;
+  width: 100%;
+  height: 31%;
+}
+
+.container-body-col-2-1 {
+  position: relative;
+  width: 47.5%;
+  height: 23%;
+  display: block;
+  float: left;
+  border: 0.1em solid #C7C7C7;
+  margin: 1.5% 1.5% 0% 0%;
+}
+
+.container-body-col-2-2 {
+  position: relative;
+  width: 47.5%;
+  height: 100%;
+  display: block;
+  float: left;
+  border: 0.1em solid #C7C7C7;
+  margin: 1.5% 1.5% 0% 0%;
+}
+
+.container-body-col-2-1 > div, .container-body-col-2-2 > div  {
+  position: relative;
+  width: 96%;
+  height: 96%;
+  top: 2%;
+  left: 2%;
+  margin-bottom: 1%;
+}
+
+.home-chart-filter-block {
+  cursor: default;
+  display: inline-block;
+  left: 32%;
+  position: relative;
+  z-index: 10;
+}
+
+.home-trends-block-title > div {
+  display: inline-block;
+  float: right;
+  height: 50%;
+  position: relative;
+  right: 2.5%;
+  top: 45%;
+  width: 3%;
+}
+
+.home-chart-filter-arrow {
+  height: 18%;
+  width: 5%;
+  display: inline-block;
+  float: left;
+  -ms-transform: rotate(180deg); /* IE 9 */
+  -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+  transform: rotate(180deg);
+}
+
+.home-chart-filter-arrow-right {
+  display: inline;
+  float: right;
+  height: 18%;
+  width: 5%;
+}
+
+.home-chart-filter-arrow-img svg {
+  position: relative;
+  right: 85%;
+  height: 100%;
+  width: 200%;
+}
+.home-chart-filter-arrow-img svg polygon {
+  fill: #4178BE;
+}
+
+.home-chart-filter-content-block {
+  position: relative;
+  width: 95%;
+  height: 100%;
+  float:left;
+  /*background-color: #FFFFFF;
+  box-shadow: 0 0 1em 0 rgba(0,0,0,0.16);*/
+}
+
+.home-chart-filter-title {
+  height: 18%;
+  width: 100%;
+  background-color: #4178BE;
+  display: inline-block;
+  float: left;
+}
+
+.home-chart-filter-title > h {
+  height: 50%;
+  position: relative;
+  top: 50%;
+  left: 5%;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.5em;
+  color: #FFFFFF;
+  display: inline-block;
+  float: left;
+  padding: 0;
+  transform: translate(0%, -50%);
+}
+
+.home-chart-filter-title > div {
+  position: relative;
+  float: right;
+  width: 10%;
+  height: 70%;
+  top: 32%;
+  right: 1%;
+  cursor: pointer;
+}
+
+.home-chart-filter-title > div svg g {
+  fill: #FFFFFF;
+  opacity: 1;
+}
+
+.home-chart-filter-title > h2 {
+  height: 50%;
+  position: relative;
+  top: 40%;
+  right: 5%;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 2em;
+  color: #FFFFFF;
+  display: inline-block;
+  float: right;
+  padding: 0;
+  cursor: pointer;
+}
+
+.home-chart-filter-shadowbox {
+  position: relative;
+  height: 80%;
+  width: 100%;
+  float: left;
+  box-shadow: 0 0 1em 0 rgba(0,0,0,0.16);
+}
+
+.home-chart-filter-content {
+  height: 100%;
+  width: 100%;
+  background-color: #FFFFFF;
+  position: relative;
+  /*left: 5%;*/
+  /*box-shadow:  2px 2px 2px #C7C7C7;*/
+  float: left;
+}
+
+/*.home-chart-filter-columns {
+  height: 20%;
+  width: 100%;
+}*/
+
+.home-chart-filter-select-block {
+  position: relative;
+  float: left;
+  width: 48%;
+  height: 18%;
+}
+
+.home-chart-filter-checkbox {
+  position: relative;
+  float: left;
+  width: 12%;
+  height: 47%;
+  top: 35%;
+  left: 8%;
+  background-color: #FFFFFF;
+  border: 0.1em solid #777677;
+  cursor: pointer;
+}
+.home-chart-filter-checkbox > div {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+.home-chart-filter-checkbox svg {
+  position: relative;
+  left: 5%;
+  width: 90%;
+  height: auto;
+}
+
+.home-chart-filter-checkbox-title {
+  position: relative;
+  float: left;
+  top: 40%;
+  left: 11%;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 1.4em;
+  color: #323232;
+  white-space: nowrap;
+}
+
+.home-chart-filter-selected {
+  position: relative;
+  float: left;
+  margin-top: 1.5%;
+  margin-left: 8%;
+  background-color: #7CC7FF;
+  border: 0.1em solid #7CC7FF;
+  height: 16%;
+  width: 37.5%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 2em;
+  color: #323232;
+  text-align: center;
+  cursor: pointer;
+}
+
+.home-chart-filter-unselected {
+  position: relative;
+  float: left;
+  margin-top: 1.5%;
+  margin-left: 8%;
+  border: 0.1em solid #00B4A0;
+  height: 16%;
+  width: 37.5%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 2em;
+  color: #323232;
+  text-align: center;
+  cursor: pointer;
+}
+
+.home-chart-filter-btns {
+  height: 29.4%;
+  width: 100%;
+  position: relative;
+  /*left: 5%;*/
+  float: left;
+  background-color: #FFFFFF;
+  /*border-top: 0.1em solid #C7C7C7;*/
+}
+
+/*Iteration section start*/
+#iterContent > div {
+  height: 100%;
+  cursor: default;
+}
+
+.home-iter-title {
+  position: relative;
+  left: 5%;
+  float: left;
+  top: 4%;
+  width: 66%;
+  height: 2%;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 2.5em;
+  color: #734098;
+}
+
+.home-no-iter-info {
+  position: relative;
+  left: 5%;
+  float: left;
+  top: 5%;
+  width: 98%;
+  height: 25em;
+}
+
+.home-no-iter-info p {
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 18px;
+  line-height: 25px;
+  color: #464646;
+  margin-right: 7.5%;
+  color: #777677;
+}
+
+.home-no-iter-info p span {
+  display: inline-block;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 16px;
+  line-height: 18px;
+  color: #777677;
+}
+
+.home-iter-add{
+  font-family: "HelvNeue Roman for IBM";
+  font-size: 1.6em;
+  text-align: right;
+  color: #4178BE;
+  position: relative;
+  float: right;
+  line-height: 1.05em;
+}
+
+.home-iter-name-block {
+  position: relative;
+  left: 5%;
+  float: left;
+  top: 5%;
+  width: 95%;
+  height: 3%;
+}
+
+.home-iter-name {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.8em;
+  line-height: 1.9em;
+  color: #323232;
+}
+
+.home-iter-team-date {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.3em;
+  line-height: 1.6em;
+  color: #777677;
+}
+.home-iter-selection-block {
+  position: relative;
+  left: 5%;
+  float: left;
+  top: 4.5%;
+  width: 95%;
+  height: 3%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+}
+
+.home-iter-select {
+  position: relative;
+  float: left;
+  width: 90%;
+  height: 100%;
+}
+
+.home-iter-select .select2-container,
+.home-iter-select .select2-selection,
+.home-iter-select .select2-selection--single,
+.home-iter-select .select2-selection__rendered,
+.home-iter-select .select2-selection__arrow,
+.home-iter-select .select2-container--default,
+.home-iter-select .select2-container--default .select2-selection--single .select2-selection__arrow{
+  height: 2.1em;
+}
+
+.home-iter-select .select2-selection__arrow  b {
+  top: 30% !important;
+}
+
+.home-iter-select .select2-container--default .select2-selection--single .select2-selection__rendered{
+  color: #777677;
+  line-height: 2.1em;
+}
+
+.memberChanged input, select, .memberChanged option{
+  width:100%;
+  height: 1.7em;
+  font-size: 0.9em;
+}
+
+.home-iter-add-btn-block, .home-iter-add-btn-block-disabled {
+  position: relative;
+  display: inline;
+  float: left;
+  width: 29%;
+  height: 1.6em;
+  top: 4.6%;
+}
+
+.home-iter-add-btn-block-2, .home-iter-add-btn-block-disabled-2 {
+  display: inline;
+  float: right;
+  height: 1.7em;
+  margin-right: 10%;
+}
+
+
+.home-iter-add-btn-block-2 > i{
+  height: 100%;
+  padding-right: 0.2em;
+}
+
+.home-iter-add-btn-block > i > svg, .home-iter-add-btn-block-disabled > i > svg,
+.home-iter-add-btn-block-2 > i > svg, .home-iter-add-btn-block-disabled-2 > i > svg  {
+  width: auto;
+  height: 100%;
+  pointer-events: none;
+}
+
+.home-iter-add-btn-block-disabled > i > svg polygon, .home-iter-add-btn-block-disabled > i > svg path,
+.home-iter-edit-btn-block-disabled i svg path{
+  fill: #C7C7C7;
+}
+
+.home-iter-edit-btn-block, .home-iter-edit-btn-block-disabled {
+  position: relative;
+  display: inline-block;
+  float: right;
+  width: 10%;
+  height: 26%;
+  min-height: 1.5em;
+  margin-top: -6.3%;
+}
+
+.home-iter-edit-btn-block > i > svg, .home-iter-edit-btn-block-disabled > i > svg {
+  width: auto;
+  height: 100%;
+  pointer-events: none;
+}
+
+.home-iter-last-update-block {
+  position: relative;
+  left: 5%;
+  float: left;
+  top: 5%;
+  width: 90%;
+  height: 3%;
+  margin-bottom: 7%;
+}
+
+.home-iter-last-update-title{
+  height: 100%;
+  width: 40%;
+  display: inline-block;
+  float: left;
+  font-family: "Helvetica Neue LT W1G","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  line-height: 1.8em;
+  color: #5A5A5A;
+}
+
+.home-iter-last-update {
+  position: relative;
+  top: 15%;
+  right: 4%;
+  height: 85%;
+  width: 40%;
+  display: inline-block;
+  float: right;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.3em;
+  text-align: right;
+  line-height: 1.6em;
+  color: #5A5A5A;
+}
+
+.home-iter-sprint-block {
+  position: relative;
+  top: 5.5%;
+  left: 5%;
+  width: 95%;
+  height: 10%;
+  float: left;
+}
+
+.home-iter-throughput-block {
+  position: relative;
+  top: 7.5%;
+  left: 5%;
+  width: 95%;
+  height: 8%;
+  float: left;
+}
+
+.home-iter-velocity-block {
+  position: relative;
+  top: 9.5%;
+  left: 5%;
+  width: 95%;
+  height: 10%;
+  float: left;
+}
+
+.home-iter-defects-block {
+  position: relative;
+  top: 11.5%;
+  left: 5%;
+  width: 95%;
+  height: 10%;
+  float: left;
+}
+
+.home-iter-cyclage-block {
+  position: relative;
+  top: 13.5%;
+  left: 5%;
+  width: 95%;
+  height: 6%;
+  float: left;
+}
+
+.home-iter-overal-block {
+  position: relative;
+  top: 15.5%;
+  left: 5%;
+  width: 95%;
+  height: 6%;
+  float: left;
+}
+
+.home-iter-comment-block {
+  position: relative;
+  top: 17.5%;
+  left: 5%;
+  width: 90%;
+  height: 15%;
+  float: left;
+}
+
+.home-iter-content-title {
+  position: relative;
+  width: 100%;
+  float: left;
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  line-height: 1.9em;
+  color: #5A5A5A;
+}
+
+.home-iter-content-col {
+  position: relative;
+  width: 100%;
+  float: left;
+}
+
+.home-iter-content-sub {
+  position: relative;
+  width: 75%;
+  float: left;
+  display: inline-block;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  text-align: left;
+  line-height: 1.6em;
+  color: #777677;
+}
+
+.home-iter-content-point {
+  position: relative;
+  right: 10%;
+  width: 12%;
+  height: 70%;
+  float: right;
+  display: inline-block;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  text-align: right;
+  line-height: 1.6em;
+  color: #4178BE;
+  cursor: pointer;
+  margin-left: -0.1em;
+}
+
+.home-iter-content-point-uneditable {
+  position: relative;
+  right: 10%;
+  width: 12%;
+  height: 70%;
+  float: right;
+  display: inline-block;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  text-align: right;
+  line-height: 1.6em;
+  color: #777677;
+}
+
+.home-iter-content-point-hover:hover{
+  background-color: #FFFFFF;
+  border: 0.1em solid #4178BE;
+}
+
+.home-iter-content-btn {
+  position: relative;
+  display: inline-block;
+  float: right;
+  top: 5%;
+  right: -9%;
+  width: 5%;
+  height: 60%;
+  cursor: pointer;
+  display: inline-block;
+}
+.home-iter-content-btn > i > svg {
+  width: 100%;
+  height: auto;
+}
+.home-iter-locked-btn {
+  position: relative;
+  display: inline-block;
+  float: right;
+  top: 5%;
+  right: -8.5%;
+  width: 5%;
+  height: 60%;
+}
+.home-iter-locked-btn > i > svg {
+  width: 100%;
+  height: auto;
+}
+
+.home-iter-team-availability, .home-iter-team-availability-disabled {
+  position: relative;
+  display: inline-block;
+  float: right;
+  top: 15%;
+  right: -7.5%;
+  width: 5%;
+  height: 50%;
+  cursor: pointer;
+}
+
+.home-iter-team-availability-disabled > i > svg polygon, .home-iter-team-availability-disabled > i > svg path {
+  fill: #C7C7C7;
+  cursor: default;
+}
+
+.home-iter-comment-test {
+  width: 100%;
+  height: 80%;
+  resize: none;
+  border: 0.1em solid #979797;
+  background-color: #FFFFFF;
+}
+
+.home-iter-modal-block-header {
+  background-color: #4178be;
+  font-size: inherit;
+  height: 2.5em;
+  position: relative;
+  width: 100%;
+}
+
+.home-iter-modal-block-header > h {
+  color: #ffffff;
+  font-size: inherit;
+  font-family: "HelvNeue Bold for IBM";
+  height: 100%;
+  padding-left: 1.5em;
+  position: relative;
+  top: 25%;
+}
+
+.home-iter-modal-block-close-btn {
+  cursor: pointer;
+  display: inline-block;
+  float: right;
+  height: inherit;
+  position: relative;
+  top: 27%;
+  width: 6%;
+  padding-right:1.5em;
+}
+
+.home-iter-modal-block-close-btn i svg polygon {
+  stroke: #ffffff;
+}
+
+.home-iter-modal-block-close-btn g {
+  opacity: 1;
+}
+
+.home-iter-modal-block-content {
+  font-size: inherit;
+  height: 80%;
+  position: relative;
+}
+.home-iter-modal-block-content > p {
+  color: #4D4D4D;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 1.15em;
+  line-height: 1.3em;
+  padding: 1.25em 2em;
+}
+
+/*Iteration section end*/
+
+.home-team-header-bgimage-block {
+  width: 50%;
+  height: 100%;
+  position: relative;
+  float: right;
+}
+
+.home-team-header-bgimage-block > i > svg {
+  width: 100%;
+  height: 100%;
+}
+
+.team-bookmark-block {
+  position: absolute;
+  left:5.5%;
+  display: inline-block;
+  z-index: 10;
+  float: left;
+  width: 35%;
+}
+
+.home-team-header-bookmark-arrow {
+  height: 5em;
+  width: 5%;
+  display: inline-block;
+  float: left;
+  -ms-transform: rotate(180deg); /* IE 9 */
+  -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+  transform: rotate(180deg);
+}
+
+.home-team-header-bookmark-arrow-img svg {
+  position: relative;
+  width: 120%;
+  height: 100%;
+  /*top: 30%;*/
+  right: 25%;
+}
+
+.home-team-header-bookmark-arrow-img svg polygon {
+  fill: #4178BE;
+}
+
+.home-team-header-bookmark-content {
+  float: left;
+  height: 100%;
+  width: 95%;
+  background-color: #FFFFFF;
+  box-shadow: 0 0 1em 0 rgba(0,0,0,0.16);
+}
+
+.home-team-header-bookmark-title {
+  height: 5em;
+  width: 100%;
+  background-color: #4178BE;
+  display: inline-block;
+  float: left;
+}
+
+.home-team-header-bookmark-title > h {
+  position: relative;
+  top: 50%;
+  left: 5%;
+  font-family: "HelvNeue Bold for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  color: #FFFFFF;
+  display: inline-block;
+  float: left;
+  transform: translate(0%, -50%);
+}
+
+.home-team-header-bookmark-title > div {
+  position: relative;
+  float: right;
+  width: 10%;
+  height: 70%;
+  top: 32%;
+  right: 1%;
+  cursor: pointer;
+}
+
+.home-team-header-bookmark-title > div svg{
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+.home-team-header-bookmark-title > div svg g{
+  fill: #FFFFFF;
+  opacity: 1;
+}
+
+.home-team-header-bookmark-scroll {
+  position: relative;
+  width: 100%;
+  float: left;
+  border-bottom: 0.1em solid #E0E0E0;
+  overflow-x: auto;
+}
+
+.home-team-header-bookmark-scroll > div {
+  height: 4.5em;
+  width: 100%;
+  border-bottom: 0.1em solid #E0E0E0;
+}
+
+.home-team-header-bookmark-scroll > .no-link-block {
+  border-bottom: 0 none;
+  color: #777677;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  height: 10em;
+  position: relative;
+  text-align: center;
+}
+
+.no-link-block > h {
+  display: inline-block;
+  position: relative;
+  top: 50%;
+  transform: translate(0px, -50%);
+}
+
+.home-team-header-bookmark-scroll > div > div {
+  position: relative;
+  /*left: 1%;*/
+  height: 100%;
+  width: 1%;
+  float: left;
+  background-color: #4178BE;
+}
+
+.home-team-header-bookmark-scroll > div > a {
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  color: #4178BE;
+  padding: 0;
+  position: relative;
+  top: 50%;
+  left: 5%;
+  float: left;
+  width: 73%;
+  cursor: pointer;
+  transform: translate(0%, -50%);
+}
+
+.home-team-header-bookmark-scroll > div > span {
+  position: relative;
+  width: 8%;
+  height: 50%;
+  top: 50%;
+  left: 29%;
+  float: left;
+  cursor: pointer;
+  transform: translate(0%,-50%);
+}
+
+.home-team-header-bookmark-scroll > div > span > i > svg{
+  position: relative;
+  width: 100%;
+  height: auto;
+  left: 0;
+}
+
+.home-team-header-bookmark-scroll > div > span > i > svg path {
+  fill: #24AFE5;
+}
+.home-team-header-bookmark-scroll > div > span > i > svg rect {
+  fill: #24AFE5;
+}
+
+.home-team-header-bookmark-btns {
+  position: relative;
+  float: left;
+  height: 6em;
+  width: 100%;
+}
+
+.home-assessment-summary {
+  position: relative;
+  float: left;
+  left: 0.5%;
+  top: 1%;
+  z-index: 7;
+  background-color: #EFF9FF;
+  border: 0.1em solid #7CC7FF;
+  width: 99.8%;
+  height: 29%;
+  background-image: url('../img/header-bg-art.svg');
+  background-repeat: no-repeat;
+  background-size: 60%;
+  background-position: 150% 100%;
+}
+
+.home-assessment-summary-hide {
+  position: relative;
+  float: left;
+  left: 0.5%;
+  top: 1%;
+  z-index: 7;
+  background-color: #EFF9FF;
+  border: 0.1em solid #7CC7FF;
+  width: 99.8%;
+  height: 9.7%;
+  /*background-image: url('../img/header-bg-art.svg');
+  background-repeat: no-repeat;
+  background-size: 60%;
+  background-position: 150% 100%;*/
+}
+
+.home-assessment-summary > div {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 33.3%;
+}
+
+.home-assessment-summary-hide > div {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+.home-assessment-summary > .hide-show-btn {
+  position: relative;
+  float: right;
+  width: 3.3%;
+  height: 16.5%;
+  cursor: pointer;
+  top: 7%;
+}
+
+.home-assessment-summary > .hide-show-btn > svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+.home-assessment-summary > .main-content {
+  position: relative;
+  float: left;
+  left: 1.8%;
+  width: 68.2%;
+  height: 100%;
+}
+
+.home-assessment-summary > .main-content > div {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 33.3%;
+}
+
+.home-assessment-summary > .main-content > div > div {
+  position: relative;
+  float: left;
+  width: 97%;
+  height: 100%;
+}
+
+.home-assessment-summary > .main-content > div > .middle-line {
+  border-bottom: 0.1em solid #7CC7FF;
+}
+
+.home-assessment-summary > .main-content > div > .content-title {
+  position: relative;
+  float: left;
+  width: 36%;
+  height: 50%;
+  top: 25%;
+}
+
+.home-assessment-summary > .main-content > div > .content-title > h1 {
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 2.2em;
+  line-height: 1.8em;
+  color: #62B2EF;
+  padding: 0;
+}
+
+.home-assessment-summary > .main-content > div > .submit-date {
+  position: relative;
+  float: left;
+  width: 50%;
+  left: 1%;
+  height: 20%;
+  top: 37%;
+}
+
+.home-assessment-summary > .main-content > div > .submit-date > h1 {
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 1.2em;
+  font-weight: 500;
+  line-height: 1.4em;
+  padding: 0;
+  color: #5A5A5A;
+}
+
+.home-assessment-summary > .main-content > div > div > .summary-title {
+  position: relative;
+  float: left;
+  top: 15%;
+  width: 36%;
+  height: 85%;
+}
+
+.home-assessment-summary > .main-content > div > div > .summary-ponts {
+  position: relative;
+  float: left;
+  left: 2%;
+  width: 62%;
+  height: 100%;
+}
+
+.home-assessment-summary > .main-content > div > div > .summary-ponts > .points-block {
+  position: relative;
+  float: left;
+  top: 12%;
+  width: 100%;
+  height: 45%;
+}
+
+.points-block > .arrow-right {
+  position: relative;
+  float: left;
+  width: 2%;
+  height: 100%;
+  z-index: 3;
+}
+
+.arrow-right > i > svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+.arrow-right > i > svg polygon{
+  fill: black;
+}
+
+.points-block > .dot {
+  position: relative;
+  float: left;
+  z-index: 3;
+  left: 31%;
+  width: 1.5%;
+  height: 100%;
+}
+
+.dot > i > svg {
+  height: 100%;
+  width: 100%;
+}
+
+.points-block > .arrow-end {
+  position: relative;
+  float: right;
+  /*left: 96%;*/
+  z-index: 3;
+  width: 3%;
+  height: 40%;
+  top: 30%;
+  background-color: #5596E6;
+}
+
+.arrow-end > i > svg {
+  position: relative;
+  top: 16.7%;
+  left: 16.7%;
+  height: 66.7%;
+  width: 66.7%;
+}
+
+.arrow-end > i > svg polygon{
+  fill: white;
+}
+
+.points-block > .dash {
+  position: relative;
+  left: 1%;
+  z-index: 1;
+  width: 97.5%;
+  height: 1%;
+  top: 47%;
+  border-bottom: 0.1em dotted;
+}
+
+.points-block > .line {
+  position: absolute;
+  left: 1%;
+  z-index: 2;
+  /*width: 95%;*/
+  height: 1%;
+  top: 47%;
+  border-bottom: 0.1em solid #5596E6;
+}
+
+.points-block > .current-dot {
+  position: absolute;
+  z-index: 4;
+  /*left: 96%;*/
+  top: 25%;
+  width: 3%;
+  height: 50%;
+  cursor: pointer;
+}
+
+.current-dot > i > svg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.points-block > h1 {
+  position: relative;
+  float: left;
+  width: 25%;
+  height: 100%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.3em;
+  line-height: 0.5em;
+  color: #5A5A5A;
+  padding: 0;
+}
+
+.home-assessment-summary > .main-content > div > div > .summary-title > h1 {
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 1.8em;
+  line-height: 1.8em;
+  color: #5A5A5A;
+  padding: 0;
+}
+
+.home-assessment-summary > .select-content-bg {
+  position: relative;
+  float: left;
+  width: 26.5%;
+  height: 100%;
+  left: 1.8%;
+  background-color: #FFFFFF;
+  border-left: 0.1em solid #7CC7FF;
+  border-right: 0.1em solid #7CC7FF;
+  opacity: 0.5;
+}
+
+.home-assessment-summary > .select-content {
+  position: absolute;
+  left: 70%;
+  width: 26.7%;
+  height: 100%;
+}
+
+.home-assessment-summary > .select-content > .select-box {
+  position: relative;
+  float: left;
+  left: 15%;
+  top: 8%;
+  width: 70%;
+  height: 15%;
+}
+
+.home-assessment-summary > .select-content > .select-box > div {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+  background-color: #EFF9FF;
+}
+
+.home-assessment-summary > .select-content > .select-box > div > h1 {
+  position: absolute;
+  z-index: 1;
+  margin-top: 0.7em;
+  margin-left: 0.5em;
+  font-size: 1.4em;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  color: #777677;
+  padding: 0;
+  background-color: #EFF9FF;
+}
+
+.home-assessment-summary > .select-content > .select-box > div > .select2 {
+  height: 100%;
+}
+
+.home-assessment-summary > .select-content > .select-box > div > .select2 .select2-selection {
+  height: 100%;
+  outline: none;
+  background-color: #EFF9FF;
+}
+
+.home-assessment-summary > .select-content > .select-box > div > .select2 .select2-selection__rendered {
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1em;
+  line-height: 2.5em;
+  color: #777677;
+}
+
+.home-assessment-summary > .select-content > .select-box > div > .select2 b {
+  top: 1.8em;
+}
+
+.home-assessment-summary > .select-content > .review-box {
+  position: relative;
+  float: left;
+  width: 70%;
+  left: 15%;
+  top: 22%;
+  height: 40%;
+}
+
+.home-assessment-summary > .select-content > .review-box > h1 {
+  position: relative;
+  text-align: center;
+  float: left;
+  width: 100%;
+  height: 20%;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 1.4em;
+  font-weight: 500;
+  color: #5A5A5A;
+  padding: 0;
+}
+
+.home-assessment-summary > .select-content > .review-box > button {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 35%;
+  font-size: 1.4em;
+  line-height: 0.8em;
+  padding: 0;
+}
+
+.home-assessment-summary > .select-content > .review-box > h2,
+.home-assessment-summary > .select-content > .review-box > h3,
+.home-assessment-summary > .select-content > .draft-box > h2
+{
+  position: relative;
+  float: left;
+  text-align: left;
+  width: 50%;
+  height: 20%;
+  font-size: 1.1em;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  color: #999999;
+  padding: 0;
+}
+
+.home-assessment-summary > .select-content > .draft-box {
+  position: relative;
+  float: left;
+  width: 70%;
+  left: 15%;
+  top: 15%;
+  height: 40%;
+}
+
+.home-assessment-summary > .select-content > .draft-box > h1 {
+  position: relative;
+  float: left;
+  width: 105%;
+  height: 20%;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 1.4em;
+  font-weight: 500;
+  color: #5A5A5A;
+  padding: 0;
+}
+
+.home-assessment-summary > .select-content > .draft-box > button {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 35%;
+  font-size: 1.4em;
+  line-height: 0.8em;
+  padding: 0;
+}
+
+.home-assessment-summary > div > .first-title,
+.home-assessment-summary-hide > div > .first-title {
+  position: relative;
+  float: left;
+  width: 30%;
+  height: 50%;
+  top: 25%;
+  left: 1.8%;
+}
+
+.home-assessment-summary > div > .last-opened {
+  position: relative;
+  float: left;
+  width: 20%;
+  height: 20%;
+  top: 40%;
+  left: 45%;
+}
+
+.home-assessment-summary > div > .last-opened > h1 {
+  position: relative;
+  float: left;
+  left: 10%;
+  width: 45%;
+  height: 100%;
+  font-size: 1.2em;
+  line-height: 1.5em;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Arial","sans-serif";
+  color: #777677;
+  padding: 0;
+}
+
+.home-assessment-summary > div > .last-opened > h2 {
+  position: relative;
+  float: left;
+  left: 10%;
+  width: 50%;
+  height: 100%;
+  font-size: 1.2em;
+  line-height: 1.3em;
+  font-weight: 500;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  color: #777677;
+  padding: 0;
+}
+
+.home-assessment-summary > div > .first-title > h1,
+.home-assessment-summary-hide > div > .first-title > h1 {
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 2.2em;
+  line-height: 2em;
+  color: #62B2EF;
+  padding: 0;
+}
+
+.home-assessment-summary-hide > div > .hide-show-btn,
+.home-assessment-summary > div > .hide-show-btn {
+  position: relative;
+  float: right;
+  width: 3%;
+  height: 50%;
+  cursor: pointer;
+  top: 28%;
+}
+
+.home-assessment-summary-hide > div > .hide-show-btn svg,
+.home-assessment-summary > div > .hide-show-btn svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+.home-assessment-summary > div > .second-title {
+  position: relative;
+  float: left;
+  width: 50%;
+  height: 90%;
+  top: 5%;
+  left: 1.5%;
+}
+
+.home-assessment-summary > div > .second-title > h1 {
+  position: relative;
+  float: left;
+  height: 100%;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 3.0em;
+  line-height: 1.5em;
+  color: #734098;
+  padding: 0;
+}
+
+.home-assessment-summary > div > .third-title {
+  position: relative;
+  float: left;
+  width: 70%;
+  height: 45%;
+  left: 1.5%;
+}
+
+.home-assessment-summary > div > .third-title > h1 {
+  position: relative;
+  float: left;
+  height: 50%;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  color: #777677;
+  padding: 0;
+}
+
+.home-assessment-summary > div > .start-btn {
+  position: relative;
+  float: right;
+  height: 40%;
+  width: 20%;
+  right: 5%;
+}
+
+.home-assessment-summary > div > .start-btn > button {
+  position: relative;
+  float: left;
+  height: 100%;
+  width: 100%;
+  font-family: "Helvetica Neue LT W1G","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 0em;
+}
+
+
+
+/*.home-assessment-summary-header-btn {
+  position: relative;
+  float: right;
+  width: 20%;
+  height: 50%;
+  top: 25%;
+}
+.home-assessment-summary-header-btn > button {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+  font-size: 1.4em;
+  line-height: 0.8em;
+  font-family: "Helvetica Neue LT W1G","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.home-assessment-summary-header-status {
+  position: relative;
+  float: right;
+  width: 18%;
+  height: 50%;
+  top: 25%;
+  right: 2%;
+}
+
+.home-assessment-summary-header-status > div {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 50%;
+}
+.home-assessment-summary-header-status > div > h1 {
+  position: relative;
+  float: left;
+  text-align: left;
+  font-family: "HelvNeue Light for IBM";
+  font-size: 1.2em;
+  line-height: 1.4em;
+  color: #777677;
+  padding: 0;
+}
+.home-assessment-summary-header-status > div > h2 {
+  position: relative;
+  float: right;
+  text-align: right;
+  font-family: "Helvetica Neue";
+  font-size: 1.2em;
+  line-height: 1.3em;
+  color: #777677;
+  padding: 0;
+}
+.home-assessment-summary-content {
+  position: relative;
+  float: left;
+  left: 2%;
+  width: 96%;
+  height: 100%;
+}
+.last-summary-content {
+  top: 0.1%;
+  border-top: 0.1em solid #7CC7FF;
+}
+.home-assessment-summary-content:last-child {
+  top: 0.1%;
+  border-top: 0.1em solid #7CC7FF;
+}
+
+.home-assessment-summary-title {
+  position: relative;
+  float: left;
+  top: 10%;
+  width: 30%;
+  height: 100%;
+}
+
+.home-assessment-summary-title > h1 {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 50%;
+  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  font-weight: 300;
+  line-height: 2.5em;
+  color: #5A5A5A;
+  padding: 0;
+}
+
+.home-assessment-summary-title > h2 {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 50%;
+  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  color: #777677;
+  line-height: 0.5em;
+  padding: 0;
+}
+
+.home-assessment-summary-ponts {
+  position: relative;
+  float: left;
+  width: 70%;
+  height: 100%;
+}
+
+.home-assessment-summary-ponts-block {
+  position: relative;
+  float: left;
+  top: 10%;
+  width: 100%;
+  height: 50%;
+}
+
+.home-assessment-summary-btn {
+  position: relative;
+  float: right;
+  width: 25%;
+  height: 100%;
+}
+
+.home-assessment-summary-btn > button {
+  position: relative;
+  width: 90%;
+  height: 50%;
+  left: 10%;
+  top: 25%;
+  font-size: 1.6em;
+  line-height: 0.8em;
+}
+
+.home-assessment-summary-content > h1 {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.8em;
+  font-weight: 300;
+  line-height: 4em;
+  color: #5A5A5A;
+  padding: 0;
+  text-align: center;
+}*/
+
+.home-header-image {
+  position: relative;
+  width: 10%;
+  height: 100%;
+}
+.more-image {
+  position: relative;
+  /*left: 5%;*/
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 2em;
+  color: #FFFFFF;
+  line-height: 2.3em;
+  cursor: pointer;
+}
+
+.team-member-add-block {
+  position: fixed;
+  outline: none;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 22vw;
+  height: 30.93vw;
+  min-width: 281.6px;
+  min-height: 417.6px;
+  background-color: #FFFFFF;
+  box-shadow: 0 0 1em 0 rgba(0,0,0,0.16);
+}
+
+.team-member-add-block-header {
+  position: relative;
+  background-color: #4178BE;
+  height: 10%;
+  width: 100%;
+}
+.team-member-add-block-header > h {
+  position: relative;
+  float: left;
+  top: 35%;
+  left: 5%;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.5em;
+  color: #FFFFFF;
+}
+.team-member-add-block-header > span {
+  position: relative;
+  float: right;
+  top: 35%;
+  right: 5%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 2em;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+
+.team-member-add-block-header > .close-btn {
+  position: relative;
+  float: right;
+  top: 40%;
+  width: 10%;
+  height: 70%;
+  right: 5%;
+  cursor: pointer;
+}
+
+.team-member-add-block-header > .close-btn svg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.team-member-add-block-header > .close-btn svg g {
+  fill: #FFFFFF;
+  opacity: 1;
+}
+
+.typeahead-results {
+  z-index: 1040 !important;
+  width: 20% !important;
+  min-width: 250px;
+}
+
+.team-member-add-block-content {
+  position: relative;
+  float: left;
+  height: 70%;
+  width: 100%;
+}
+
+.team-member-add-block-content-name {
+  position: relative;
+  float: left;
+  height: 22%;
+  width: 90%;
+  left: 5%;
+  top: 5%;
+}
+
+.team-member-add-block-content-name > label {
+  position: relative;
+  float: left;
+  height: 45%;
+  width: 100%;
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 1.8em;
+  color: #323232;
+}
+
+.team-member-add-block-content-name > input {
+  position: relative;
+  float: left;
+  height: 54% !important;
+  width: 99.9%;
+  border: 0.1em solid #777677;
+  text-indent: 1em;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 1.8em;
+  color: #5A5A5A;
+}
+
+.team-member-add-block-content-role {
+  position: relative;
+  float: left;
+  height: 22%;
+  width: 90%;
+  left: 5%;
+  top: 10%;
+}
+
+.team-member-add-block-content-role > label {
+  position: relative;
+  float: left;
+  height: 45%;
+  width: 100%;
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 1.8em;
+  color: #323232;
+}
+
+.team-member-add-block-content-role .role-select {
+  position: relative;
+  float: left;
+  height: 55%;
+  width: 100%;
+}
+
+.team-member-add-block-content-other {
+  position: relative;
+  float: left;
+  top: 15%;
+  height: 12%;
+  width: 90%;
+  left: 5%;
+}
+
+.team-member-add-block-content-other > input {
+  position: relative;
+  float: left;
+  height: 100% !important;
+  width: 99.9%;
+  border: 0.1em solid #777677;
+  text-indent: 1em;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 1.8em;
+  color: #5A5A5A;
+  display: none;
+}
+
+.team-member-add-block-content-allocation {
+  position: relative;
+  float: left;
+  height: 22%;
+  width: 25%;
+  left: 5%;
+  top: 5%;
+}
+
+.team-member-add-block-content-allocation > label {
+  position: relative;
+  float: left;
+  height: 45%;
+  width: 100%;
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 1.8em;
+  color: #323232;
+}
+
+.team-member-add-block-content-allocation .allocation-select {
+  position: relative;
+  float: left;
+  height: 55%;
+  width: 100%;
+}
+
+.team-member-add-block-content-awk {
+  position: relative;
+  float: left;
+  height: 22%;
+  width: 55%;
+  left: 15%;
+  top: 5%;
+}
+
+.team-member-add-block-content-awk > label {
+  position: relative;
+  float: left;
+  height: 45%;
+  width: 100%;
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 1.8em;
+  color: #323232;
+}
+
+.team-member-add-block-content-awk .awk-select {
+  position: relative;
+  float: left;
+  height: 55%;
+  width: 60%;
+}
+
+.team-member-add-block-content-awk > .awk-input {
+  position: relative;
+  float: left;
+  left: 5%;
+  height: 56%;
+  width: 35%;
+}
+
+.team-member-add-block-content-awk > .awk-input  > input {
+  position: relative;
+  float: left;
+  height: 100% !important;
+  width: 99.9%;
+  border: 0.1em solid #777677;
+  text-indent: 1em;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 1.8em;
+  color: #5A5A5A;
+  display: none;
+}
+
+.team-member-add-block-footer {
+  position: relative;
+  float: left;
+  height: 20%;
+  width: 100%;
+}
+
+.agile-tool-footer {
+  position: relative;
+  float: left;
+  top: 112%;
+  height: 40%;
+  width: 100%;
+  background-color: #F7F7F7;
+}
+
+.att-footer-links {
+  position: relative;
+  float: left;
+  top: 20%;
+  height: 60%;
+  width: 100%;
+}
+
+.att-footer-links .learn-links, .att-footer-links .discover-links, .att-footer-links .superfriends-links {
+  position: relative;
+  float: left;
+  height: 100%;
+  left: 2.5%;
+  width: 15.8%;
+}
+
+
+
+.att-footer-links h4 {
+  position: relative;
+  float: left;
+  width: 100%;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.8em;
+}
+
+.att-footer-links ul {
+  position: relative;
+  float: left;
+  padding-top: 5%;
+}
+
+.att-footer-links li {
+  padding-bottom: 5%;
+  padding-left: 0;
+}
+
+.att-footer-links a {
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  color: #464646;
+}
+
+.att-footer-links a:hover {
+  text-decoration: none !important;
+  cursor: pointer;
+  color: #4178be;
+}
+
+.att-footer-bottom {
+  border-top: 0.1em solid #464646;
+  position: relative;
+  float: left;
+  width: 95%;
+  top: 20%;
+  height: 20%;
+  left: 2.5%;
+}
+
+.footer-bottom-links {
+  position: relative;
+  float: left;
+  width: 80%;
+  height: 100%;
+}
+.footer-bottom-links ul {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 60%;
+  top: 40%;
+}
+.footer-bottom-links li {
+  position: relative;
+  float: left;
+  padding-left: 2%;
+  display: inline-block;
+}
+.footer-bottom-links a {
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.8em;
+  color: #777677;
+}
+.footer-bottom-image {
+  position: relative;
+  float: left;
+  width: 20%;
+  height: 100%;
+}
+.footer-bottom-image img {
+  position: relative;
+  width: 80%;
+  height: 80%;
+  left: 20%;
+  top: 10%;
+}
+.footer-image {
+  position: relative;
+  float: right;
+  width: 15.8%;
+  height: 50%;
+  right: 2.5%;
+  top: -14%;
+}
+.footer-image img {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+/*.team-member-add-block-content-role .Select-control {
+  border: 0.1em solid #777677 !important;
+  border-radius: 0% !important;
+}
+.team-member-add-block-content-role > div span {
+  padding: 0;
+}*/
+
+/**
+ * Modal dialog style
+ */
+
+/* BEGIN: ReactModal */
+.att-modal {
+  background-clip: padding-box;
+  background-color: #fff;
+  border: medium none;
+  border-radius: 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.16);
+  left: 50%;
+  line-height: 18px;
+  margin: 0 auto !important;
+  position: absolute;
+  top: 51%;
+  transform: translate(-50%, -50%);
+  width: inherit;
+  z-index: 12;
+}
+
+.teamlink-modal {
+  height: 30%;
+}
+
+.att-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.50);
+  z-index: 11;
+}
+/* END: ReactModal */
+
+/* BEGIN: Important Link section */
+.att-modal .implabel {
+  width: 100%;
+}
+
+.att-modal .implink {
+  width: 100%;
+}
+
+.implink {
+  font-size: 1.25em;
+}
+
+.att-modal input {
+  font-size: 1em;
+}
+
+.att-modal .select2 {
+  font-size: inherit;
+}
+
+.att-modal select, .att-modal .select2-container--default {
+width: 100% !important;
+}
+
+.att-modal span, .att-modal p, .att-modal select {
+  padding: 0px;
+}
+
+.att-modal p {
+  font-size: 10.21pt;
+}
+
+.att-modal .ibm-row-form p {
+  padding-top: 8.3%;
+  width: 100%;
+}
+
+.att-modal .ibm-row-form label {
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  color: #323232;
+  font-size: 1em;
+}
+
+.att-modal .ibm-row-form .lblRoman {
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  line-height: 1.7em;
+}
+
+.iterspecific {
+  background-color: #eee;
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  text-align: left;
+}
+
+.home-team-header-bookmark-scroll > div.iterspecific {
+  width: 100% !important;
+}
+
+.iterspecific span.caption {
+  left: 1% !important;
+  padding-left: 11px;
+  padding-top: 3.5%;
+  width: 99% !important;
+}
+
+/* END: Important Link Modal */
+
+
+.att-modal .modal-header {
+  background-color: #4178be;
+  font-size: 1em;
+  height: 4em;
+  position: relative;
+}
+
+.att-modal label {
+  max-width: 90%;
+}
+
+.att-modal .modal-footer {
+  border: medium none;
+  padding: 2em 2.5em;
+  text-align: right;
+}
+
+.att-modal .modal-footer .btn + .btn {
+  margin-left:4%;
+  margin-bottom: 0;
+}
+
+.att-modal .modal-header .modal-title {
+  color: #FFFFFF;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.5em;
+  padding: 0 0 0 1.5em;
+  position: relative;
+  top: 25%;
+}
+
+.att-modal .modal-header .close-btn {
+  cursor: pointer;
+  display: inline-block;
+  float: right;
+  height: 50%;
+  position: relative;
+  top: 25%;
+  width: 8%;
+}
+
+.modal-header .close-btn svg polygon {
+  fill: #FFFFFF;
+}
+
+.att-modal .sr-only { /* line 8732 */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.att-modal button {
+  overflow: visible;
+}
+
+.att-modal .sr-only {
+  border: 0 none;
+  clip: rect(0px, 0px, 0px, 0px);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.att-modal .modal-body {
+  padding: 0 2.5em;
+}
+
+/* responsive teamlinks modal */
+@media only screen and (max-width: 579px) {
+  .att-modal form.ibm-column-form p, .att-modal form.ibm-row-form p {
+    padding-bottom: 1%;
+  }
+  .att-modal {
+    top: 45%;
+  }
+  .att-modal .btn {
+    width: 90%;
+    margin-top: 1em;
+  }
+  .att-modal .btn {
+    margin-right: 5%;
+  }
+}
+
+.clearboth {
+  clear: both;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+  display: block;
+}
+
+
+/* btn */
+.att-modal .btn-primary {
+  background-color: #4178be;
+  color: #FFFFFF;
+}
+
+.att-modal .btn {
+  border-radius: 0;
+  border-width: 2px !important ;
+  font-family: "Helvetica Neue Roman for IBM",Helvetica,Arial,sans-serif;
+  height: 2.85em;
+  padding: 0 7%;
+  -moz-user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1.27em;
+  font-weight: normal;
+  line-height: 1em;
+  margin-bottom: 0;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.att-modal .btn-secondary,
+.att-modal .btn-cancel {
+  background-color: #FFFFFF;
+  border-color: #4178BE;
+  color: #4178BE;
+}
+
+.att-modal .btn-primary:hover, .att-modal .btn-primary:focus, .att-modal .btn-primary.focus, .att-modal .btn-primary:active,
+.att-modal .btn-primary.active, .open > .btn-primary.dropdown-toggle {
+  background-color: #325c80;
+  color: #FFFFFF;
+}
+
+button, html input[type="button"], input[type="reset"], input[type="submit"] {
+  cursor: pointer;
+}
+
+/*
+ * Font style
+ */
+@font-face {
+  font-family: "HelvNeue Roman for IBM";
+  font-style: normal;
+  src: url("../fonts/helvetica-neue-roman.eot?") format("eot"),
+    url("../fonts/helvetica-neue-roman.woff2") format("woff2"),
+    url("../fonts/helvetica-neue-roman.woff") format("woff"),
+    url("../fonts/helvetica-neue-roman.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "HelvNeue Medium for IBM";
+  font-style: normal;
+  font-weight: 500;
+  src: url("../fonts/helvetica-neue-medium.eot?") format("eot"),
+    url("../fonts/helvetica-neue-medium.woff2") format("woff2"),
+    url("../fonts/helvetica-neue-medium.woff") format("woff"),
+    url("../fonts/helvetica-neue-medium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "HelvNeue Bold for IBM";
+  font-style: normal;
+  font-weight: 700;
+  src: url("../fonts/helvetica-neue-bold.eot?") format("eot"),
+    url("../fonts/helvetica-neue-bold.woff2") format("woff2"),
+    url("../fonts/helvetica-neue-bold.woff") format("woff"),
+    url("../fonts/helvetica-neue-bold.ttf") format("truetype");
+}
+
+/* BEGIN: Team description Modal section */
+.att-modal .txtarea {
+  padding-top: 1.1%;
+  height: 7em;
+  width: 100%;
+  font-size: 1em;
+  resize: none;
+}
+/* END: Team description Modal section */
+
+@media only screen and (min-width: 1800px){
+
+  span.home-iter-sub-section-delivered {
+    font-size: 12px;
+  }
+
+  .team-hier-children {
+    top: 20.5rem !important;
+  }
+}
+
+.home-iter-popup {
+  background-color: #FFFFFF;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin:0 auto !important;
+  z-index: 12;
+  box-shadow:0 0 1em rgba(0, 0, 0, 0.16);
+  background-clip: padding-box;
+  border: none;
+  border-radius: 0;
+  width: 37rem;
+}
+
+.popup-title {
+  height: 3rem;  
+  width: 100%;
+  background-color: #4178BE;
+  padding-top: 4%;
+  display: flex;
+  color: white;
+}
+
+.popup-title g {
+  fill: #FFFFFF;
+  opacity: 1;
+}
+
+.popup-title > h1 {
+  width: 90%;
+  height: 3.67%;
+  font-size: 1.45rem;
+  font-family: "HelvNeue Medium for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  line-height: 1.19em;
+  position: relative;
+  margin-left: 7%;
+}
+
+.popup-title > div {
+  width: 3.5rem;
+  cursor: pointer;
+  margin-right: 3%;
+}
+
+.popup-title > div > i > svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: auto;
+}
+
+.home-iter-add-content {
+  color: #4D4D4D;
+  margin-left: 7%;
+  margin-right: 7%;
+  position: relative;
+}
+
+.home-iter-main {
+  margin-top: 7.27%;
+}
+
+.home-iter-main-section {
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4rem;
+  font-weight: normal;
+  line-height: 1.8rem;
+  color: #323232;
+  text-align: left;
+}
+
+.home-iter-sub-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.home-iter-sub-section-category {
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2rem;
+  font-weight: normal;
+  line-height: 1.4rem;
+  color: #323232;
+  display: inline-flex;
+  align-items: center;
+}
+
+.home-iter-sub-section-delivered {
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.1rem;
+  font-weight: normal;
+  line-height: 1.3rem;
+  color: #323232;
+  display: inline-flex;
+  align-items: center;
+  min-width: 10em;
+}
+
+.home-iter-subdetail-section {
+  margin-top: 4%;
+  font-family: "HelvNeue Medium for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2rem;
+  font-weight: normal;
+  line-height: 1.4rem;
+  color: #5A5A5A;
+  text-align: left;
+}
+
+.home-iter-date {
+  width: 73%;
+  font-size: 1.4rem;
+  line-height: 2.5rem;
+  color: #5A5A5A;
+  padding: 2%;
+  text-align: center;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  border: 0.1em solid #777677;
+
+}
+
+.home-iter-text-field {
+  width: 95%;
+  margin-top: 3%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4rem;
+  line-height: 1.8rem;
+  color: #5A5A5A;
+  padding: 2%;
+  height: 6.25%;
+  border: 0.1em solid #777677;
+}
+
+.home-iter-date-range {
+  font-size: 1.4rem;
+  line-height: 1.8rem;
+  color: #5A5A5A;
+  text-align: center;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+}
+
+.home-iter-category {
+  margin-top: 3.28%
+}
+
+.home-iter-cal-btn-block {
+  position: relative;
+  cursor:pointer;
+  width: 3rem;
+  height: 100%;
+}
+
+.home-iter-cal-btn-block > i > svg {
+  top: 10%;
+  position: relative;
+  margin-left: 25%;
+}
+
+
+.home-iter-new-dates{
+  display: flex;
+  align-items: center;
+  min-height: 3rem;
+  height: 5.79%;
+}
+
+.home-iter-main div .react-datepicker__input-container {
+  width: 45% !important;
+  height: 4em !important;
+}
+
+.popup-btns {
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.popup-btns > a {
+  position: relative;
+  float: right;
+  height: 50%;
+  top: 25%;
+  width: 20%;
+  font-size: 1.4rem;
+  min-width: 0;
+  line-height: 0;
+  padding: 0;
+}
+/** New Team Creation - Begin */
+.new-team-creation-add-block, .new-team-creation-addteam-member {
+  background-color: #ffffff;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.16);
+  display: block;
+  height: 14vw;
+  left: 50%;
+  max-width: 68rem;
+  min-height: 43rem;
+  min-width: 68rem;
+  position: fixed;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.new-team-creation-add-block-header {
+  position: relative;
+  height: 10%;
+  width: 100%;
+}
+.new-team-creation-add-block-header > h {
+  position: relative;
+  float: left;
+  top: 100%;
+  left: 5%;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 2.08em;
+  color: #323232;
+}
+.new-team-creation-add-block-header > span {
+  position: relative;
+  float: right;
+  top: 35%;
+  right: 5%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 2em;
+  cursor: pointer;
+}
+
+.new-team-creation-add-block-content {
+  position: relative;
+  float: left;
+  height: 70%;
+  width: 100%;
+}
+
+.new-team-creation-add-block-content-name-wrapper {
+  width: 98%;
+  float: left;
+  margin-top: 3%;
+}
+
+.new-team-creation-add-block-content-name {
+  position: relative;
+  float: left;
+  height: 22%;
+  width: 90%;
+  left: 5.5%;
+  margin-top: 6%;
+}
+
+.new-team-creation-add-block-content-name > label {
+  position: relative;
+  float: left;
+  height: 40%;
+  width: 50%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.33em;
+  line-height: 1.8em;
+  color: #323232;
+}
+.new-team-creation-add-block-content-name > input {
+  position: relative;
+  float: left;
+  height: 40% !important;
+  width: 50%;
+  border: 0.1em solid #777677;
+  text-indent: 0.5em;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  color: #5A5A5A;
+  padding: 0.3em 0;
+}
+.new-team-creation-add-block-content-description {
+  position: relative;
+  float: left;
+  height: 52%;
+  width: 90%;
+  left: 5.4%;
+  margin-top: 1%;
+  display: inline-block;
+}
+.new-team-creation-add-block-content-description > label {
+  position: relative;
+  float: left;
+  width: 90%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.33em;
+  line-height: 1.8em;
+  color: #323232;
+}
+.new-team-creation-add-block-content-description > textarea {
+  position: relative;
+  float: left;
+  height: 74% !important;
+  width: 90% !important;
+  border: 0.1em solid #777677;
+  text-indent: 0.5em;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 1.8em;
+  color: #5A5A5A;
+}
+.new-team-creation-add-note-section {
+  position: relative;
+  left: 8%;
+  float: left;
+  height: 0%;
+  width: 100%;
+  top: -3%;
+
+}
+.new-team-creation-add-note-section-notetext {
+  position: relative;
+  float: left;
+  height: 0%;
+  width: 100%;
+  font-family: "HelvNeue light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  font-weight: normal;
+  line-height: 1.4em;
+  color: #323232;
+}
+.new-team-creation-add-block-footer {
+  position: relative;
+  float: left;
+  height: 20%;
+  width: 100%;
+}
+
+.new-team-creation-add-block-footer #nextBtn, .new-team-creation-add-block-footer  #FinishBtn {
+  margin-left: -1.5%;
+}
+
+/** New Team Creation - End */
+
+
+/* BEGIN: TeamType Selection Modal */
+.lblstyle2 {
+  font-size: 2em;
+  margin-top: 1em;
+  margin-left: 0.05em;
+  font-family: "HelvNeue light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+}
+
+.midcontent {
+  margin-top: 1.5em;
+}
+
+.curTeam {
+  height: 2em;
+  background-color: #B2D1E2;
+  padding: 3em 0 3em 0;
+  font-size: 1.3em;
+}
+
+.reactbootstrap-modal .select2 {
+  font-size: 1.4em;
+}
+
+#selparent-1 {
+  width: 20em !important;
+}
+
+.teamtypeSel, .modal-wrapper2 {
+  width: 65em;
+}
+
+.modal-title2 {
+  padding-top: 4% !important;
+}
+
+.pad2 {
+  padding: 0 4em 2.5em 4em;
+}
+
+.lbl {
+  font-size: 1.3em;
+  line-height: 1.6em;
+}
+
+.optbox-1 {
+  float: left;
+  width: 11em;
+}
+
+.midcontent .optbox {
+  display: inline-block;
+  position: relative;
+  width: 50%;
+}
+
+.ibm-radio-wrapper.obtbox-radio {
+  left: 30%;
+  position: relative;
+}
+.midcontent .optbox .pteam-bg {
+  left: 25%;
+  position: absolute;
+  width: 40%;
+  top:100%;
+  height: 9em;
+}
+
+.midcontent .optbox-select {
+  position: absolute;
+  top: 12em;
+  width: 100%;
+}
+
+.rpad {
+  margin-right: 15em;
+}
+
+.optsel-1 {
+  width: 22em;
+  float: right;
+  margin-top: 1em;
+}
+
+.floatr {
+  float: right;
+}
+
+.pteam-bg {
+  width: 60%;
+  padding-left: 3em;
+}
+
+.note1 {
+  color: #7BA3FA;
+}
+
+.btn2 {
+  text-align: center;
+  margin-top: 2em;
+}
+
+.glyicoblack::before {
+  color:#000;
+}
+
+.reactbootstrap-modal {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 1040;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.reactbootstrap-modal .close-ico {
+  padding-top: 0.1em;
+  position: absolute;
+  right: 1%;
+  width: 1.5em;
+  height: 1.5em;
+}
+
+.reactbootstrap-backdrop {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: auto;
+  background-color: #000;
+  opacity: 0.5;
+  width: 100%;
+  height: 100%;
+}
+
+.new-team-creation-add-block-content-mid {
+  position: relative;
+  float: left;
+  height: 22%;
+  width: 90%;
+  left: 5%;
+  top: 15%;
+}
+
+.footer-btn {
+  text-align: center;
+  top: 30%;
+  position: relative;
+}
+
+.footer-note {
+  float: left;
+  font-size: 1.3em;
+  margin-top: 17.2em;
+  width: 87%;
+  position: relative;
+  left: 5.2%;
+}
+
+.footer-note-add-team-name {
+  float: left;
+  font-size: 1.3em;
+  margin-top: 1.9rem;
+  width: 92%;
+  position: relative;
+  left: 5.4%;
+  color: #4d4d4d
+}
+
+.error-dup-team-name {
+  float: left;
+  font-size: 1.3em;
+  margin-top: 0.3em;
+  margin-left: 2em;
+  width: 40%;
+  color: red;
+}
+.alert-icon svg {
+  height: 1.5em !important;
+  width: 1.5em !important;
+}
+
+.alert-text {
+  font-size: 1em;
+  margin-bottom: 1em;
+  margin-left: 0.5em;
+  width: 20%;
+}
+
+.top-note-parent-child-hierarchy {
+  float: left;
+  font-size: 1.25em;
+  margin-top: 0.6em;
+  margin-left: 0.22em;
+  width: 100%;
+}
+
+
+@media screen and (min-width:321px) and (max-width:639px) {
+  .optbox-1 {
+    float: none !important;
+    margin: 0 auto !important;
+    width: 13em !important;
+    margin-bottom: 1.5em !important;
+  }
+
+  .optsel-1 {
+    float: none;
+    margin: 0 auto !important;
+  }
+
+  .footer-note {
+    margin-top: 24em;
+  }
+
+  .footer-btn {
+    top:50%;
+  }
+
+  .new-team-creation-add-block {
+    height: 55em;
+  }
+}
+
+@media screen and (min-width:640px) and (max-width:959px) {
+  .optbox-1 {
+    float: none !important;
+    margin: 0 auto !important;
+    width: 13em !important;
+    margin-bottom: 3em !important;
+  }
+
+  .new-team-creation-add-block {
+    height: 60em;
+  }
+
+  .footer-note {
+    margin-top: 26em;
+  }
+
+  .footer-btn {
+    top:40%;
+  }
+}
+
+@media screen and (min-width:960px) and (max-width:1279px) {
+  .optbox-1 {
+    width: 7em !important;
+  }
+}
+
+/* END: TeamType Selection Modal */
+/* BEGIN: Parent / Child Team Hierarchy Selection Modal */
+.new-team-parent-child-hierarchy-note-section {
+  position: relative;
+  left: 0%;
+  float: left;
+  height: 0%;
+  width: 100%;
+  top: -3%;
+
+}
+.new-team-parent-child-hierarchy-note-section-notetext {
+  position: relative;
+  float: left;
+  height: 0%;
+  width: 100%;
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  font-weight: normal;
+  line-height: 1.4em;
+  color: #323232;
+}
+
+.pncteam-midcontent {
+  width: 80%;
+  margin: 0 auto;
+  padding-bottom: 7em;
+  margin-top: 6em;
+}
+
+.pncteam-bg {
+  width: 80%;
+  padding-left: 0.5em;
+}
+
+.team-parent-child-hierarchy-p > .line1, .team-parent-child-hierarchy-p > .line2,
+.team-parent-child-hierarchy-p > .line3 {
+/*  width: 14.8em;*/
+  height: 3em;
+}
+
+/* ================== */
+/* IE10 and IE11      */
+/* ================== */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .team-parent-child-hierarchy-p > .line1, .team-parent-child-hierarchy-p > .line2 {
+    left: 12% !important;
+    width: 21.5em !important;
+    height: 3.5em !important;
+  }
+
+  .team-parent-child-hierarchy-p > .line3 {
+    left: 18% !important;
+    top: 270% !important;
+    width: 16em !important;
+    height: 6em !important;
+  }
+
+  .optsel-child {
+    bottom: -255% !important;
+  }
+
+  .list-child-remove-icon {
+    top: -1% !important;
+    width: 1.8rem !important;
+    height: 2rem !important;
+  }
+
+  .team-hier-children > p {
+    padding: 0 !important;
+    height: 2em !important;
+    padding-right: 0.4em !important;
+  }
+
+}
+
+.team-hier-children > p {
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1.3em;
+  overflow: hidden;
+  padding: 0 0.2em 0;
+  white-space: nowrap;
+  width: 95%;
+}
+
+.team-parent-child-hierarchy-p > .line1, .team-parent-child-hierarchy-p > .line2 {
+  width: 19em;
+  left: 14%;
+  position: absolute;
+}
+
+.team-parent-child-hierarchy-p > .line1 {
+  top: 3.8rem;
+}
+
+.team-parent-child-hierarchy-p > .line2 {
+  top: 9.8rem;
+}
+
+.pointer-arrow-right-current {
+  position: absolute;
+  bottom: -81%;
+  left: 45%;
+  height: 2%;
+  width: 2%;
+}
+
+.pointer-arrow-right-current  polygon{
+  fill: #777677;
+}
+
+.team-parent-child-hierarchy-p > .line3 {
+  height: 3em;
+  left: 18%;
+  position: absolute;
+  top: 16rem;
+  width: 16.5em;
+  z-index: 2;
+}
+
+.pointer-arrow-right-child {
+  position: absolute;
+  bottom: -171%;
+  left: 45%;
+  height: 2%;
+  width: 2%;
+}
+
+.pointer-arrow-right-child  polygon{
+  fill: #777677;
+}
+
+.optsel-parent {
+  float: right;
+  left: 45%;
+  position: absolute;
+  top: 3.8rem;
+  width: 25em;
+}
+
+.optsel-parent .select2-container--default {
+  width: 100%;
+}
+
+.select2-search__field {
+  font-size: 1.4em !important;
+}
+
+.optsel-child {
+  float: right;
+  left: 45%;
+  margin-top: 1em;
+  position: absolute;
+  top: 14.2rem;
+  width: 25em;
+}
+
+.team-hier-children {
+  border: 1px solid #b3b3b3 !important;
+  display: inline-block;
+  font-size: inherit;
+  height: 134%;
+  left: 45%;
+  overflow-y: auto !important;
+  position: absolute;
+  top: 19.5rem;
+  width: 24.8rem;
+}
+
+.team-hier-children > p {
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1.3em;
+  overflow: hidden;
+  padding: 0;
+  white-space: nowrap;
+  width: 97%;
+}
+
+.team-hier-children > p > h {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.2em 0;
+  position: relative;
+  text-overflow: ellipsis;
+  width: 90%;
+  left: 3%;
+}
+
+.team-hier-children-remove-icon {
+  display: inline-block;
+  left: 3%;
+  position: relative;
+  top: -9%;
+  width: 8%;
+}
+
+
+.team-hier-block .team-hier-content {
+  display: inline-block;
+  font-size: inherit;
+  height: inherit;
+  left: 50%;
+  position: absolute;
+  width: 40%;
+}
+
+.team-hier-content > select:first-of-type, .team-hier-content > span:first-of-type {
+  font-size: inherit;
+  position: absolute;
+  top: 6%;
+  width: 95%;
+}
+
+.team-hier-content > select:last-of-type, .team-hier-content > span:last-of-type {
+  font-size: inherit;
+  position: absolute;
+  top: 58%;
+  width: 95%;
+}
+
+.team-hier-content > div {
+  font-size: inherit;
+  height: 35%;
+  position: absolute;
+  top: 20%;
+  width: 95%;
+}
+
+.team-hier-content > div > h {
+  color: #777677;
+  font-size: 1.2em;
+  position: absolute;
+  top: 50%;
+  transform: translate(0px, -50%);
+}
+
+.curteam-block {
+  background-color: #b2d1e2;
+  color: #526566;
+  float: right;
+  font-family: inherit;
+  font-size: 1.4em;
+  font-weight: normal;
+  left: 45%;
+  padding: 0.8em;
+  position: absolute;
+  text-align: left;
+  vertical-align: middle;
+  width: 12em;
+  top: 9.5rem;
+}
+
+.list-child {
+  border: 1px solid #b3b3b3 !important;
+  height: 25% !important;
+  overflow-y: auto !important;
+  top: 71% !important;
+}
+
+.list-child > p {
+  cursor: pointer;
+  display: inline-block;
+  font-size: inherit;
+  overflow: hidden;
+  padding: 0.3em 0.2em 0;
+  white-space: nowrap;
+  width: 95%;
+}
+
+.list-child > p > h {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.2em 0;
+  position: relative;
+  text-overflow: ellipsis;
+  width: 90%;
+}
+
+.list-child-remove-icon {
+  display: inline-block;
+  left: 0;
+  position: relative;
+  top: -9%;
+  width: 8%;
+}
+
+.optsel-child .select2-container--default {
+  width: 100% !important;
+}
+
+.home-modal-block-content > p {
+  color: #5a5a5a;
+  font-size: inherit;
+  line-height: 1.3em;
+  padding: 1.25em 1em;
+}
+
+.home-modal-block-close-btn svg, .team-setup-squad-icon svg {
+  height: inherit;
+  width: inherit;
+}
+
+.home-modal-block-close-btn polygon {
+  fill: #FFFFFF;
+  opacity: 1;
+}
+
+.team-tier-block {
+  display: inline-block;
+  font-size: inherit;
+  height: 100%;
+  width: 100%;
+}
+
+.team-hier-block .team-setup-icon-hier {
+  display: inline-block;
+  padding: 2em 0 0 2em;
+  position: relative;
+  width: 16%;
+}
+
+.team-setup-icon-hier svg circle:first-of-type {
+  fill: #8cc63f !important;
+}
+
+.team-setup-icon-hier svg circle:last-of-type,.team-setup-icon-hier svg circle:nth-last-child(2) {
+  fill: #8cc63f !important;
+}
+
+
+/* END: Parent / Child Team Hierarchy Selection Modal */
+
+/* BEGIN: AddTeam Member Modal */
+/*.new-team-creation-addteam-member .tbl-results {
+  height: 10em;
+  margin-top: 2em;
+}*/
+
+.new-team-creation-addteam-member .tbl-members {
+  width: 100%;
+}
+
+.new-team-creation-addteam-member .tbl-members td {
+  font-size: 1.3em;
+  padding: 0.3em;
+}
+
+.new-team-creation-addteam-member .tbl-members thead .name {
+  width: 1em;
+  border: 1px solid;
+  display: block;
+  height: 2em;
+  float: left;
+  margin-left: 2em;
+}
+
+.new-team-creation-addteam-member .tbl-members thead .email {
+  width: 3em;
+  border: 1px solid;
+  display: block;
+  height: 2em;
+  float: left;
+  margin-left: 2em;
+}
+
+.new-team-creation-addteam-member .tbl-members td.h-delete {
+  border-bottom:1px solid #000;
+  font-weight: bold;
+}
+
+.new-team-creation-addteam-member .tbl-members td.row-delete {
+  padding:0.5em;
+  width: 2em;
+}
+
+.new-team-creation-addteam-member .tbl-members tbody td {
+  border-bottom: 1px solid #ccc;
+  vertical-align: middle;
+}
+
+.new-team-creation-addteam-member .tbl-members tbody td.name {
+  width: 17em;
+}
+
+.new-team-creation-addteam-member .tbl-members tbody td.email {
+  background-color: #f2f2f2;
+  width: 14.8em;
+}
+
+.new-team-creation-addteam-member .tbl-members tbody td.email span.email {
+  padding-left: 1em;
+}
+
+.new-team-creation-addteam-member .tbl-members tbody td.location span.location {
+  padding-left: 1em;
+}
+
+.new-team-creation-addteam-member .tbl-members tbody td.location {
+  width: 22em;
+}
+
+.new-team-creation-addteam-member .tbl-members .delete-ico {
+  width: 1.6em;
+  height: 1.6em;
+  cursor: pointer;
+  position: absolute;
+}
+
+.new-team-creation-addteam-member .tbl-members-data {
+  height: 18em;
+  width: 100%;
+  overflow-y: auto;
+  position: absolute;
+}
+
+.dataTables_empty {
+  text-align: center;
+  display: block;
+}
+
+.new-team-creation-addteam-member .heading {
+  font-weight: bold;
+  border-bottom: 0.1em solid #000;
+}
+
+.new-team-creation-addteam-member .btn-addmember {
+  cursor: pointer;
+  float: right;
+  height: 2.5em;
+  margin-left: 0.1em;
+  margin-top: 0.5em;
+  width: 2.5em;
+  padding-right: 0.2em;
+}
+
+.new-team-creation-addteam-member .col1 {
+  box-sizing: border-box;
+  float: left;
+  margin: 0;
+  min-height: 1px;
+  width: 28.2em;
+}
+
+.new-team-creation-addteam-member .col1 #txtTeamMemberName {
+  font-size: 1.4em;
+  width: 100%;
+}
+
+.new-team-creation-addteam-member .ibm-row-form .frmlabel {
+  font-size: 1.4em;
+  display: inline;
+}
+
+.new-team-creation-addteam-member .col2 {
+  box-sizing: border-box;
+  float: right;
+  margin: 0;
+  min-height: 1px;
+  width: 24em;
+}
+
+.new-team-creation-addteam-member .csvblock {
+  margin-top:1.5em;
+}
+
+.new-team-creation-addteam-member #txtTeamMemberNameError {
+  float: left;
+  font-size: 1.3em;
+  line-height: 1em;
+}
+
+.new-team-creation-addteam-member .note2 {
+  float: left;
+  margin-left: 0.2em;
+}
+
+.new-team-creation-addteam-member .note2 strong, .new-team-creation-addteam-member .note2 p {
+  font-size: 1.4em;
+}
+
+.new-team-creation-addteam-member .note2 .note1-desc{
+  font-size: 1.1em;
+  color: #666;
+}
+
+.new-team-creation-addteam-member .new-team-creation-add-block-pad {
+  float: left;
+  margin-top: 5em;
+  margin-right: 3.9em;
+  margin-bottom: 0;
+  margin-left: 3.5em;
+}
+
+/* END: AddTeam Member Modal */
+
+/* BEGIN: AddTeamMember Role, Allocation Modal */
+#addTeamMemberRoleBlock .desc {
+  font-size: 1.3em;
+}
+
+#addTeamMemberRoleBlock .tbl-members-role-data {
+  height: 18em;
+  width: 100%;
+  overflow-y: auto;
+  position: absolute;
+}
+
+#addTeamMemberRoleBlock .tbl-memberRole-results {
+  height: 10em;
+  margin-top: 1em;
+}
+
+#addTeamMemberRoleBlock .tbl-memberRole-results td {
+  font-size: 1.3em;
+}
+
+#addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_name, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_name {
+  width: 10em;
+}
+
+#addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_location, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_location{
+  width: 12em;
+  background: none;
+}
+#addTeamMemberRoleBlock .tbl-memberRole-results td.r_location {
+  background-color: #F2F2F2;
+  vertical-align: top;
+}
+
+#addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_role, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_role {
+  height: 2em;
+  padding: 0.4em !important;
+  vertical-align: top;
+  width: 14em;
+}
+
+#addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_allocation, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_allocation {
+  padding: 0.4em !important;
+  vertical-align: top;
+  width: 5em;
+}
+
+#addTeamMemberRoleBlock .tbl-memberRole-results thead td.r_workweek, #addTeamMemberRoleBlock .tbl-memberRole-results td.r_workweek {
+  height: 2em;
+  padding: 0.4em !important;
+  vertical-align: top;
+  width: 11.5em;
+}
+
+#addTeamMemberRoleBlock .tbl-memberRole-results td.role > .select2 {
+  width: 100% !important;
+}
+
+#addTeamMemberRoleBlock .tbl-memberRole-results td.allocation > .select2 {
+  width: 88% !important;
+}
+
+#addTeamMemberRoleBlock .Select-value, .Select--multi .Select-value, .Select-placeholder,
+#addTeamMemberRoleBlock .Select-option, #addTeamMemberRoleBlock .otherTxt,
+#addTeamMemberRoleBlock .Select .Select-input input {
+  font-size: 1.4em !important;
+  color: #333 !important;
+  cursor: pointer;
+}
+
+#addTeamMemberRoleBlock .data-team-role {
+  font-size: 1.4em;
+  position: relative;
+  box-sizing: border-box;
+  background-color: #fff;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: #333;
+  cursor: default;
+  display: table;
+  height: 35px;
+  outline: medium none;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  border: 1px solid #333;
+}
+
+#addTeamMemberRoleBlock .Select-control2 {
+  background-color: #fff;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: #333;
+  cursor: default;
+  display: table;
+  height: 35px;
+  outline: medium none;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+#addTeamMemberRoleBlock .Select-arrow-zone2 {
+  cursor: pointer;
+  display: table-cell; /*table-cell*/
+  padding-right: 5px;
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  width: 25px;
+}
+
+#addTeamMemberRoleBlock .Select-arrow2 {
+  border-color: #999 transparent transparent;
+  border-style: solid;
+  border-width: 5px 5px 2.5px;
+  display: inline-block;
+  height: 0;
+  position: relative;
+  width: 0;
+}
+
+#addTeamMemberRoleBlock .data-team-role .data {
+  box-sizing: border-box;
+  font-size: 1.4em;
+  line-height: 34px;
+  margin-left: 0.5em;
+  outline: medium none;
+}
+
+#addTeamMemberRoleBlock .data-team-role .tmp1 {
+  font-size: 1em;
+}
+
+#addTeamMemberRoleBlock .data-team-role .dataxx {
+  bottom: 0;
+  left: 0;
+  line-height: 1.8em;
+  height: 36px;
+  display: table;
+  outline: medium none;
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
+  right: 0;
+  text-overflow: ellipsis;
+  top: 0;
+  white-space: nowrap;
+  border-spacing: 0;
+  box-sizing: border-box;
+  margin-left: 1em;
+}
+
+#addTeamMemberRoleBlock .arrow-zone {
+  cursor: pointer;
+  display: table-cell;
+  padding-right: 5px;
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  width: 25px;
+}
+
+/*#addTeamMemberRoleBlock .arrow-down {
+  height:0px;
+  width:0px;
+  border:none;
+  border-top:5px solid #999;
+  border-left:5px solid rgba(0,0,0,0);
+  border-right:5px solid rgba(0,0,0,0);
+  margin-top: 0.6em;
+  float: right;
+}*/
+
+#addTeamMemberRoleBlock .createteam-role-field {
+  box-sizing: border-box;
+  position: relative;
+}
+
+#addTeamMemberRoleBlock .arrow-down {
+  border-top:5px solid #999;
+  border-left:5px solid rgba(0,0,0,0);
+  border-right:5px solid rgba(0,0,0,0);
+
+  border-image: none;
+  border-style: solid solid none;
+  border-width: 5px 5px medium;
+  float: right;
+  height: 0;
+  margin-right: 0.7em;
+  margin-top: 0.9em;
+  width: 0;
+}
+
+#addTeamMemberRoleBlock .custom-field-other {
+  margin-top: 0.5em;
+}
+
+#addTeamMemberRoleBlock .border {
+  border: 1px solid #333;
+}
+
+#addTeamMemberRoleBlock .noborder {
+  border: 1px solid transparent;
+}
+
+#addTeamMemberRoleBlock .custom-field-other h1 {
+  float: left;
+  font-size: 1.5em;
+  left: 1em;
+  line-height: 1.7em;
+  margin-left: 0.1em;
+}
+
+#addTeamMemberRoleBlock .custom-field-other .input-field {
+  width: 65%;
+}
+
+#addTeamMemberRoleBlock .custom-field-other .wt {
+  width: 35%;
+}
+
+#addTeamMemberRoleBlock .custom-field-other .input-field {
+  float: left;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  height: 100%;
+  padding: 0.3em 0;
+  position: relative;
+  text-indent: 0.5em;
+  border: 1px solid #333;
+}
+
+#addTeamMemberRoleBlock .createteam-worktime-field, #addTeamMemberRoleBlock .createteam-role-field {
+  float: left;
+  width: 100%;
+}
+
+#addTeamMemberRoleBlock .r_role .r_save-btn, #addTeamMemberRoleBlock .r_role .r_cancel-btn,
+#addTeamMemberRoleBlock .r_workweek .r_save-btn, #addTeamMemberRoleBlock .r_workweek .r_cancel-btn {
+  cursor: pointer;
+  float: left;
+  position: relative;
+  display: block;
+}
+
+#addTeamMemberRoleBlock .r_workweek .r_save-btn, #addTeamMemberRoleBlock .r_workweek .r_cancel-btn {
+  left: 0.5em;
+}
+
+#addTeamMemberRoleBlock .r_role .r_cancel-btn {
+  left: 0.9em;
+}
+
+#addTeamMemberRoleBlock .r_workweek .r_cancel-btn {
+  left: 0.9em;
+}
+
+#addTeamMemberRoleBlock .edit-inplace-btns .r_cancel-btn {
+  margin-left:0.5em;
+}
+
+#addTeamMemberRoleBlock .edit-inplace-btns {
+  border: 0 solid;
+  float: right;
+  width: 100%;
+  margin-top: 0.5em;
+}
+
+#addTeamMemberRoleBlock .edit-inplace-location {
+  float: left;
+  font-size: 1.3em;
+  padding: 0.4em 0.5em;
+  width: 80%;
+}
+
+#addTeamMemberRoleBlock .edit-inplace-btns .r_save-btn, #addTeamMemberRoleBlock .edit-inplace-btns .r_cancel-btn,
+#addTeamMemberRoleBlock .r_role .r_save-btn, #addTeamMemberRoleBlock .r_role .r_cancel-btn,
+#addTeamMemberRoleBlock .r_workweek .r_save-btn, #addTeamMemberRoleBlock .r_workweek .r_cancel-btn {
+  width: 2em;
+  height: 2em;
+  cursor: pointer;
+}
+
+#addTeamMemberRoleBlock .edit-inplace-btns .r_save-btn, #addTeamMemberRoleBlock .edit-inplace-btns .r_cancel-btn {
+  float: right;
+}
+
+#addTeamMemberRoleBlock .r_role .r_save-btn, #addTeamMemberRoleBlock .r_role .r_cancel-btn {
+  left: 0.5em;
+  top: 0.5em;
+}
+
+#addTeamMemberRoleBlock .r_workweek .r_save-btn, #addTeamMemberRoleBlock .r_workweek .r_cancel-btn {
+  top: 0.5em;
+}
+
+#addTeamMemberRoleBlock .r_role .r_cancel-btn {
+  left: 1em;
+}
+
+#addTeamMemberRoleBlock .data-edit-inplace {
+  border: 0.1em solid transparent;
+  cursor: pointer;
+  font-size: 1em;
+  padding: 0.4em 0.6em;
+}
+
+#addTeamMemberRoleBlock .data-edit-inplace:hover {
+  border: 0.1em solid #aaa;
+  background-color: rgb(255, 255, 255);
+}
+
+#addTeamMemberRoleBlock .Select-control, #addTeamMemberRoleBlock .Select--multi .Select-value {
+  border: 0.1em solid #333 !important;
+  border-radius: 0% !important;
+}
+
+#addTeamMemberRoleBlock .Select-option:last-child {
+  border-radius: 0% !important;
+}
+
+#addTeamMemberRoleBlock .r_role .Select .Select-menu {
+  border: 0.1em solid #333 !important;
+  width: 15.3em;
+}
+
+#addTeamMemberRoleBlock .r_allocation .Select .Select-menu {
+  border: 0.1em solid #333 !important;
+  width: 6em;
+}
+
+#addTeamMemberRoleBlock .r_workweek .Select .Select-menu {
+  border: 0.1em solid #333 !important;
+  width: 12.5em;
+}
+
+#addTeamMemberRoleBlock .Select-option.is-selected {
+  background-color: #ddd !important;
+}
+
+#addTeamMemberRoleBlock .Select-option.is-focused {
+  background-color: #333 !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+#addTeamMemberRoleBlock .is-focused:not(.is-open) > .Select-control {
+  box-shadow: none !important;
+}
+
+.Select-menu {
+  position: fixed !important;
+}
+
+/* END: AddTeamMember Role, Allocation Modal */
+
+.home-iter-sub-section > input[type="checkbox"] {
+  width: 6.25%;
+  height: 6.25%;
+  min-height: 1.2em;
+  min-width: 1.2em;
+  vertical-align: middle;
+  background-color: #FFFFFF;
+  border: 0.1em solid #777677;
+  cursor: pointer;
+  margin-left: 0;
+  -webkit-appearance: none;
+}
+
+.checkbox {
+  position: relative;
+  display: block;
+}
+
+.checkbox input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+ }
+
+  .checkbox label {
+    cursor: pointer;
+  }
+
+  .checkbox input[type="checkbox"]:checked + span::before {
+    background-color: transparent;
+    border-color: #777677;
+  }
+
+  .checkbox input[type="checkbox"] + span::before {
+    width: 1.7rem;
+    height: 1.7rem;
+    display: inline-block;
+    position: relative;
+    background-color: transparent;
+    border: 0.1em solid #777677;
+    margin-right: 1em;
+    content: '';
+  }
+
+.checkbox input[type="checkbox"]:checked + span::after {
+  content: "✓";
+  position: absolute;
+  top: 15%;
+  left: 0.4rem;
+  color: #4178BE;
+  font-weight: normal;
+  font-size: 1.6rem;
+}
+
+.iter-member-change > div {
+  position: relative;
+  float: left;
+  left: 5%;
+  top: 10%;
+  display: block;
+
+}
+
+.home-iter-member-change {
+  position: relative;
+  right: 10%;
+  width: 13%;
+  height: 70%;
+  float: right;
+  display: inline-block;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.7em;
+  text-align: right;
+  color: #4178BE;
+  cursor: pointer;
+}
+
+.__react_component_tooltip {
+  width: 23.4em !important;
+  background-color: #FFFFFF !important;
+  box-shadow: 0 0 1em 0 rgba(0,0,0,0.16) !important;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif" !important;
+  font-size: 1.2em !important;
+  line-height: 1.4em !important;
+  color: #5A5A5A !important;
+  padding:1em 1.5em !important;
+  opacity:1 !important;
+}
+
+.__react_component_tooltip.type-light.place-top {
+  border-top: 0.4em solid #4178BE !important;
+}
+
+.__react_component_tooltip.type-light.place-right {
+  border-right: 0.4em solid #4178BE !important;
+}
+
+.__react_component_tooltip.type-light.place-bottom {
+  border-bottom: 0.4em solid #4178BE !important;
+}
+
+.__react_component_tooltip.type-light.place-left {
+  border-left: 0.4em solid #4178BE !important;
+}
+
+.home-modal-block {
+  background-color: #FFFFFF;
+  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.16);
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.6em;
+}
+
+.home-modal-block.style1{
+  height: auto;
+  width: 25em;
+}
+
+.home-modal-block-header {
+  background-color: #4178be;
+  font-size: inherit;
+  height: 2.5em;
+  position: relative;
+  width: 100%;
+}
+
+.home-modal-block-header.redBg{
+  background-color: #d0021b;
+}
+
+.home-modal-block-header > h {
+  color: #FFFFFF;
+  font-size: inherit;
+  font-family: "HelvNeue Medium for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  height: 100%;
+  padding-left: 1em;
+  position: relative;
+  top: 25%;
+}
+
+.home-modal-block-content {
+  font-size: inherit;
+  height: 80%;
+  position: relative;
+}
+
+.home-modal-block-content.setauto {
+ height: auto;
+}
+
+.home-modal-block-footer {
+  display: inline-block;
+  font-size: inherit;
+  padding: 0.5em 1em 1em 1em;
+  position: relative;
+}
+
+.home-modal-block-footer .ibm-btn-small {
+  font-size: 1.5em !important;
+  margin-bottom: 0px;
+}
+
+.home-modal-block-footer .ibm-btn-small.action-btn {
+  margin-right: 0.5em;
+  background: #d0021b none repeat scroll 0 0;
+  border-color: #d0021b;
+}
+
+.home-modal-block-footer.style1 {
+  width: 93%;
+  top:5%;
+}
+
+.home-modal-block-footer .floatright {
+  float: right;
+}
+
+.home-modal-block-close-btn {
+  cursor: pointer;
+  display: inline-block;
+  float: right;
+  height: inherit;
+  position: relative;
+  top: 27%;
+  width: 6%;
+}
+
+.team-setup-squad-block {
+  display: inline-block;
+  font-size: 0.9em;
+  height: 100%;
+  width: 100%;
+}
+
+.team-setup-squad-block .squad-note {
+  display: inline-block;
+  font-size: inherit;
+  padding: 2em 1em;
+  position: relative;
+}
+
+.team-setup-squad-block .squad-note > p {
+  color: #777677;
+  font-size: .8em;
+  line-height: 1.3em;
+  padding: 2em 1em 0;
+  text-align: justify;
+}
+
+.team-setup-squad-block .team-setup-squad-icon {
+  display: inline-block;
+  font-size: inherit;
+  padding: 0 0 0 4em;
+  position: relative;
+  width: 22%;
+}
+
+.team-setup-squad-icon > h {
+  display: inline-block;
+  font-size: inherit;
+  font-weight: bold;
+  left: -2em;
+  padding: 1em 0 0.5em;
+  position: relative;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-change {
+  left: 27.25%;
+  height: 23%;
+  position: absolute;
+  top: 52%;
+  width: 5%;
+}
+
+.team-setup-squad-block .team-setup-squad-content {
+  display: inline-block;
+  font-size: inherit;
+  height: 95%;
+  left: 39%;
+  position: absolute;
+  top: 0;
+  width: 59%;
+}
+
+.team-setup-squad-content .squad-parent {
+  display: inline-block;
+  font-size: inherit;
+  position: relative;
+  top: 13%;
+  width: 95%;
+}
+
+.team-setup-squad-content .squad-parent > select:first-of-type, .team-setup-squad-content .squad-parent > span:first-of-type {
+  font-size: inherit;
+  position: relative;
+  padding-top: 0.25em;
+  width: 99%;
+}
+
+.team-setup-squad-content .squad-name {
+  display: inline-block;
+  font-size: inherit;
+  height: 33%;
+  position: relative;
+  top: 15%;
+  width: 95%;
+}
+
+.team-setup-squad-content .squad-name > h {
+  color: #464646;
+  font-size: 1.2em;
+  position: absolute;
+  top: 50%;
+  transform: translate(0px, -50%);
+}
+
+.team-setup-squad-content .squad-add-child {
+  display: inline-block;
+  font-size: inherit;
+  position: relative;
+  top: 17%;
+  width: 95%;
+}
+
+.team-setup-squad-content .squad-add-child > a {
+  cursor: pointer;
+}
+
+.team-setup-squad-content .squad-add-child > p {
+  color: #777677;
+  font-size: .8em;
+  padding-top: 0.25em;
+  text-align: justify;
+}
+
+.home-modal-block-content > p {
+  color: #5a5a5a;
+  font-size: inherit;
+  line-height: 1.3em;
+  padding: 1.25em 1em;
+}
+
+.home-modal-block-close-btn svg, .team-setup-squad-icon svg {
+  height: inherit;
+  width: inherit;
+}
+
+.home-modal-block-close-btn polygon {
+  fill: #FFFFFF;
+  opacity: 1;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-arrow-top {
+  display: inline-block;
+  height: 3%;
+  left: 35%;
+  position: absolute;
+  top: 13%;
+  width: 1.4%;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-arrow-top .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -640%;
+  position: absolute;
+  top: 50%;
+  width: 650%;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-arrow-middle {
+  display: inline-block;
+  height: 3%;
+  left: 35%;
+  position: absolute;
+  top: 47%;
+  width: 1.4%;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-arrow-middle .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -105%;
+  position: absolute;
+  top: 50%;
+  width: 115%;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-arrow-bottom {
+  display: inline-block;
+  height: 3%;
+  left: 35%;
+  position: absolute;
+  top: 67%;
+  width: 1.4%;
+}
+
+.team-setup-squad-block .team-setup-squad-icon-arrow-bottom .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -105%;
+  position: absolute;
+  top: 50%;
+  width: 115%;
+}
+
+.team-setup-squad-note {
+  position: absolute;
+  left: -70%;
+  top: 70%;
+  font-size: inherit;
+}
+
+.team-setup-squad-icon-arrow-top polygon, .team-setup-squad-icon-arrow-middle polygon, .team-setup-squad-icon-arrow-bottom polygon,
+.team-setup-icon-arrow-top polygon, .team-setup-icon-arrow-middle polygon, .team-setup-icon-arrow-bottom polygon {
+  fill: #b3b3b3 !important;
+}
+
+.team-setup-icon svg circle:first-of-type, .team-setup-icon svg circle:last-of-type {
+  fill: #8cc63f !important;
+}
+
+.team-setup-block {
+  display: inline-block;
+  font-size: 0.9em;
+  height: 100%;
+  width: 100%;
+}
+
+.team-setup-block .team-setup-icon {
+  display: inline-block;
+  padding: 3em 0 0 4em;
+  position: relative;
+  width: 22%;
+}
+
+.team-setup-block .team-setup-icon-child {
+  display: inline-block;
+  height: 19%;
+  left: -5%;
+  position: relative;
+  top: 16.5%;
+  width: 5%;
+}
+
+.team-setup-block .team-setup-icon-arrow-top {
+  display: inline-block;
+  height: 3%;
+  left: 33%;
+  position: absolute;
+  top: 8%;
+  width: 1.4%;
+}
+
+.team-setup-block .team-setup-icon-arrow-top .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -790%;
+  position: absolute;
+  top: 38%;
+  width: 800%;
+}
+
+.team-setup-block .team-setup-icon-arrow-middle {
+  display: inline-block;
+  height: 3%;
+  left: 33%;
+  position: absolute;
+  top: 32%;
+  width: 1.4%;
+}
+
+.team-setup-block .team-setup-icon-arrow-middle .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -220%;
+  position: absolute;
+  top: 39%;
+  width: 230%;
+}
+
+.team-setup-block .team-setup-icon-arrow-bottom {
+  display: inline-block;
+  height: 3%;
+  left: 33%;
+  position: absolute;
+  top: 48.5%;
+  width: 1.4%;
+}
+
+.team-setup-block .team-setup-icon-arrow-bottom .line {
+  border-bottom: 0.1em solid #b3b3b3;
+  left: -220%;
+  position: absolute;
+  top: 41%;
+  width: 230%;
+}
+
+.team-setup-block .team-setup-content {
+  display: inline-block;
+  font-size: inherit;
+  height: inherit;
+  left: 37%;
+  position: absolute;
+  width: 61%;
+}
+
+.team-setup-content .team-setup-parent-select {
+  display: inline-block;
+  font-size: inherit;
+  position: absolute;
+  top: 7%;
+  width: 95%;
+}
+
+.team-setup-content .team-setup-name {
+  font-size: inherit;
+  height: 22%;
+  position: absolute;
+  top: 22%;
+  width: 95%;
+}
+
+.team-setup-content .team-setup-name > h {
+  color: #464646;
+  font-size: 1.2em;
+  position: absolute;
+  top: 50%;
+  transform: translate(0px, -50%);
+}
+
+.team-setup-content .team-setup-child-select {
+  display: inline-block;
+  font-size: inherit;
+  height: 32%;
+  position: absolute;
+  top: 48.5%;
+  width: 95%;
+}
+
+.team-setup-content .team-setup-parent-select > select:first-of-type, .team-setup-content .team-setup-parent-select > span:first-of-type,
+.team-setup-content .team-setup-child-select > select:first-of-type, .team-setup-content .team-setup-child-select > span:first-of-type {
+  font-size: inherit;
+  position: relative;
+  padding-top: 0.25em;
+  width: 99%;
+}
+
+.team-setup-children {
+  border: 1px solid #b3b3b3 !important;
+  font-size: inherit;
+  height: 50%;
+  overflow-y: auto !important;
+  position: relative;
+  top: 0.5em;
+  width: 99%;
+}
+
+.team-setup-children > p {
+  cursor: pointer;
+  display: inline-block;
+  font-size: inherit;
+  height: 28%;
+  overflow: hidden;
+  padding: 0 0.2em;
+  white-space: nowrap;
+  width: 95%;
+}
+
+.team-setup-children > p > h {
+  display: inline-block;
+  height: 100%;
+  overflow: hidden;
+  padding: 0.2em 0;
+  position: relative;
+  text-overflow: ellipsis;
+  width: 94%;
+}
+
+.team-setup-children-remove-icon {
+  display: inline-block;
+  height: 100%;
+  position: relative;
+  top: -25%;
+  width: 6%;
+}
+
+.team-setup-squad-revert {
+  display: inline-block;
+  font-size: inherit;
+  height: 20%;
+  position: absolute;
+  top: 81%;
+  width: 95%;
+}
+
+.team-setup-squad-revert .team-setup-revert-icon {
+  cursor: pointer;
+  display: inline-block;
+  height: 15%;
+  padding-right: 0.5em;
+  position: relative;
+  width: 5%;
+}
+
+.team-setup-revert-icon.disabled {
+  cursor: default;
+}
+
+.team-setup-revert-icon.disabled svg path {
+  fill: #C7C7C7;
+}
+
+.team-setup-squad-revert > a {
+  cursor: pointer;
+  height: 25%;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.team-setup-squad-revert > p {
+  color: #777677;
+  font-size: .8em;
+  padding-left: 2em;
+  text-align: justify;
+}
+
+.assessment-popover-block {
+  position: fixed;
+  float: left;
+  outline: none;
+  top: 6%;
+  left: 10%;
+  width: 81vw;
+  height: 45.2vw;
+  min-width: 1036px;
+  min-height: 576px;
+  background-color: #FFFFFF;
+  box-shadow: 0 0.2em 0.4em 0 rgba(0,0,0,0.18);
+  overflow: auto;
+}
+
+.assessment-popover-block > .assessment-title {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 5%;
+  background-color: #4178BE;
+}
+
+.assessment-popover-block > .assessment-title > h1 {
+  position: relative;
+  float: left;
+  left: 2%;
+  top: 30%;
+  color: #FFFFFF;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.5em;
+  padding: 0;
+}
+
+.assessment-popover-block > .assessment-title > div {
+  position: relative;
+  float: right;
+  width: 3%;
+  height: 50%;
+  top: 30%;
+  cursor: pointer;
+  right: 0.5%;
+}
+
+.assessment-popover-block > .assessment-title > div svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: auto;
+}
+
+.assessment-popover-block > .assessment-title > div svg g {
+  fill: #FFFFFF;
+  opacity: 1;
+}
+
+.assessment-popover-block > .assessment-header {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 15%;
+}
+
+.assessment-popover-block > .assessment-header > .header-title {
+  position: relative;
+  float: left;
+  width: 48%;
+  left: 2%;
+  height: 100%;
+  margin-left: 0;
+}
+
+.assessment-popover-block > .assessment-header > .header-title > h1 {
+  position: relative;
+  float: left;
+  top: 35%;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 2.2em;
+  font-weight: 300;
+  color: #734098;
+  padding: 0;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status {
+  position: relative;
+  float: left;
+  left: 2%;
+  width: 48%;
+  height: 100%;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-title {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 50%;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-title > h1 {
+  position: relative;
+  float: left;
+  top: 70%;
+  height: 28%;
+  text-align: center;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  color: #777677;
+  border-bottom: 0.1em solid #777677;
+  padding: 0;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 50%;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector {
+  position: relative;
+  float: left;
+  width: 19%;
+  height: 40%;
+  top: 10%;
+  font-size: 1em;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector > h1 {
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 2.0em;
+  color: #5A5A5A;
+  position: relative;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector > .select2 {
+  height: 100%;
+  font-size: 1em;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector > .select2 .select2-selection {
+  height: 100%;
+  outline: none;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector > .select2 .select2-selection__rendered {
+  height: 100%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 1.4em;
+  color: #777677;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector > .select2 .select2-selection__arrow {
+  height: 100%;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector > .select2 b {
+  top: 1.2em;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .submit-date-selector {
+  position: relative;
+  float: left;
+  left: 7%;
+  width: 25%;
+  height: 40%;
+  top: 10%;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .submit-date-selector > h1 {
+  display: inline-block;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 2.0em;
+  color: #5A5A5A;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .submit-date-selector h2 {
+  display: inline-block;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 2.0em;
+  color: #4178BE;
+  cursor: pointer;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .last-updated-by {
+  position: relative;
+  float: left;
+  left: 8%;
+  width: 30%;
+  height: 40%;
+  top: 10%;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .last-updated-by > h1 {
+  position: relative;
+  float: left;
+  padding: 0;
+  width: 100%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 2.0em;
+  color: #5A5A5A;
+}
+
+.assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .last-updated-by > h1:last-child {
+  position: relative;
+  float: left;
+  padding: 0;
+  width: 100%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1em;
+  line-height: 2.4em;
+  color: #999;
+}
+
+.assessment-popover-block > .lc-header {
+  position: relative;
+  float: left;
+  left: 2%;
+  width: 96%;
+  height: 5%;
+  border-bottom: 0.1em solid #C7C7C7;
+}
+
+.assessment-popover-block > .lc-header > .header-title {
+  position: relative;
+  float: left;
+  top: 50%;
+  width: 20%;
+  height: 50%;
+  margin: 0;
+}
+
+.assessment-popover-block > .lc-header > .header-title > h1 {
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.6em;
+  color: #5A5A5A;
+  padding: 0;
+}
+
+.assessment-popover-block > .lc-header > .expandall-btn,
+.assessment-popover-block > .lc-header > .collapseall-btn {
+  position: relative;
+  float: right;
+  margin-right: 1%;
+  top: 40%;
+  width: 2%;
+  height: 50%;
+  cursor: pointer;
+}
+
+.assessment-popover-block > .lc-header > .showBlock-btn,
+.assessment-popover-block > .lc-header > .hideBlock-btn {
+  position: relative;
+  float: right;
+  top: 15%;
+  width: 3%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.assessment-popover-block > .lc-header > .expandall-btn svg,
+.assessment-popover-block > .lc-header > .collapseall-btn svg,
+.assessment-popover-block > .lc-header > .showBlock-btn svg,
+.assessment-popover-block > .lc-header > .hideBlock-btn svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+.assessment-popover-block > .agile-maturity {
+  position: relative;
+  float: left;
+  width: 96%;
+  left: 2%;
+  font-size: 1.2em;
+  margin: 2% 0 2% 0;
+}
+
+.assessment-popover-block > .agile-maturity div {
+  position: relative;
+  float: left;
+  width: 100%;
+}
+
+.assessment-popover-block > .agile-maturity .ibm-twisty-trigger {
+  font-size: 1.4em;
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  color: #5A5A5A !important;
+  padding: 0.5em 0 0.5em 2em !important;
+}
+.assessment-popover-block > .agile-maturity .ibm-twisty-trigger:hover {
+  text-decoration: none !important;
+}
+
+.assessment-popover-block > .agile-maturity > div > div > div > div > a{
+  background-color: #C0E6FF;
+}
+
+.assessment-popover-block > .agile-maturity span {
+  float: right;
+  color: #999;
+}
+
+/*.assessment-popover-block > .agile-maturity caption,
+.assessment-popover-block > .agile-maturity tbody,
+.assessment-popover-block > .agile-maturity tbody li {
+  display: block;
+  position: relative;
+  font-size: 1.2em;
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  color: black;
+}
+
+.assessment-popover-block > .agile-maturity thead {
+  font-size: 1.2em;
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  color: black;
+  border-bottom: 0.1em solid black;
+  line-height: 2.0em;
+  display: block;
+  position: relative;
+}
+
+.assessment-popover-block > .agile-maturity table {
+  display: block;
+  width: 100%;
+}
+.assessment-popover-block > .agile-maturity tr {
+  display: block;
+}*/
+
+.assessment-popover-block > .agile-maturity .ibm-twisty-body {
+  margin-left: 2.8em;
+  float: left;
+  position: relative;
+  width: 97.3%;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table {
+  position: relative;
+  width: 100%;
+  float: left;
+  /*font-size: 1.2em;
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";*/
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-summary {
+  position: relative;
+  width: 100%;
+  font-size: 1.2em;
+  float: left;
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  color: #5A5A5A
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-header {
+  position: relative;
+  width: 100%;
+  float: left;
+  padding: 0.5em 0 0.5em 0;
+  border-bottom: 0.1em solid #5A5A5A;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-header > div {
+  position: relative;;
+  float: left;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-header > div > h1 {
+  position: relative;
+  float: left;
+  font-size: 1.2em;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  padding: 0;
+  color: #5A5A5A;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-body {
+  position: relative;
+  width: 100%;
+  float: left;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-body > .agile-table-level {
+  position: relative;
+  width: 100%;
+  float: left;
+  display: flex;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-body > .agile-table-level > div {
+  position: relative;
+  float: left;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-body > .agile-table-level > div {
+  position: relative;
+  float: left;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-body > .agile-table-level > div h1 {
+  position: relative;
+  float: left;
+  font-size: 1.2em;
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  padding: 0;
+  color: #5A5A5A;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-body > .agile-table-level:nth-child(even) {
+  background-color: #ECECEC;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-body > .agile-table-level:nth-child(even):hover {
+  background-color: #7cc7ff;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-body > .agile-table-level:nth-child(odd):hover {
+  background-color: #c0e6ff;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-body > .agile-table-level .agile-table-criteria:nth-child(1) {
+  padding-top: 0.5em;
+}
+
+.assessment-popover-block > .agile-maturity .agile-question-opt {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-textarea h1 {
+  position: relative;
+  float: left;
+  font-size: 1.2em;
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  padding: 0.5em 0 0.5em 0;
+  color: #5A5A5A
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-textarea textarea {
+  position: relative;
+  float: left;
+  width: 98%;
+  left: 1%;
+  height: 6em;
+  font-size: 1.2em;
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  margin-bottom: 0.5em;
+  color: #5A5A5A
+}
+
+.assessment-popover-block > .agile-maturity .agile-table-textarea:hover {
+  background-color: #c0e6ff;
+}
+
+.assessment-popover-block > .agile-maturity a.expand::before {
+  content: "\f340";
+  display: inline-block;
+  font-family: "icons-ibm-v9";
+  font-size: 1.4em;
+  line-height: 0.8em;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  left: 0.2em;
+  position: absolute;
+  text-decoration: none;
+  /*speak: none;*/
+  text-decoration: none;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+.assessment-popover-block > .agile-maturity a.collapse::before {
+  content: "\f34d";
+  display: inline-block;
+  font-family: "icons-ibm-v9";
+  font-size: 1.4em;
+  line-height: 0.8em;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  left: 0.2em;
+  position: absolute;
+  text-decoration: none;
+  /*speak: none;*/
+  text-decoration: none;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+.assessment-popover-block > .assessment-btns {
+  position: relative;
+  float: left;
+  width: 96%;
+  height: 10%;
+  left: 2%;
+  border-top: 0.1em solid #C7C7C7;
+}
+
+.assessment-popover-block > .assessment-btns > .status-bar {
+  position: relative;
+  float: left;
+  width: 30%;
+  height: 50%;
+  top: 25%;
+}
+
+.assessment-popover-block > .assessment-btns > .status-bar > span {
+  position: relative;
+  float: left;
+  font-size: 1.6em;
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  color: #5A5A5A;
+}
+.assessment-popover-block > .assessment-btns > .btn-row {
+  position: relative;
+  float: right;
+  width: 50%;
+  height: 50%;
+  top: 25%;
+}
+.assessment-popover-block > .assessment-btns > .btn-row > .btn-col {
+  position: relative;
+  float: left;
+  width: 20%;
+  margin-left: 2%;
+  height: 100%;
+}
+.assessment-popover-block > .assessment-btns > .btn-row > .btn-col > button {
+  position: relative;
+  float: left;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  text-align: center;
+  line-height: 0em;
+}
+
+.assessment-popover-block > .assessment-btns > .btn-row > .delete-col {
+  position: relative;
+  float: left;
+  width: 34%;
+  margin-left: 2%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.assessment-popover-block > .assessment-btns > .btn-row > .delete-col > .delete-img {
+  position: relative;
+  float: left;
+  width: 14%;
+  height: 100%;
+}
+
+.assessment-popover-block > .assessment-btns > .btn-row > .delete-col > .delete-img svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+.assessment-popover-block > .assessment-btns > .btn-row > .delete-col > .delete-img svg path,
+.assessment-popover-block > .assessment-btns > .btn-row > .delete-col > .delete-img svg rect
+{
+  fill: #27B0E5;
+}
+
+.assessment-popover-block > .assessment-btns > .btn-row > .delete-col > h1 {
+  position: relative;
+  float: left;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  padding: 0;
+  top: 25%;
+  left: 3%;
+  color: #4178BE;
+}
+
+.assessment-setup-block {
+  position: fixed;
+  float: left;
+  outline: none;
+  top: 20%;
+  left: 37%;
+  width: 26vw;
+  height: 30vw;
+  min-width: 332px;
+  min-height: 384px;
+  background-color: #FFFFFF;
+  box-shadow: 0 0.2em 0.4em 0 rgba(0,0,0,0.18);
+  overflow: auto;
+}
+
+.assessment-setup-block > .setup-title {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 10%;
+  background-color: #4178BE;
+}
+
+.assessment-setup-block > .setup-title > h1 {
+  position: relative;
+  float: left;
+  left: 5%;
+  top: 30%;
+  color: #FFFFFF;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.5em;
+  padding: 0;
+}
+
+.assessment-setup-block > .setup-title > div {
+  position: relative;
+  float: right;
+  width: 10%;
+  height: 50%;
+  top: 30%;
+  cursor: pointer;
+  right: 0.5%;
+}
+
+.assessment-setup-block > .setup-title > div svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: auto;
+}
+
+.assessment-setup-block > .setup-title > div svg g {
+  fill: #FFFFFF;
+  opacity: 1;
+}
+
+.assessment-setup-block > .assessment-type-block {
+  position: relative;
+  float: left;
+  width: 90%;
+  left: 5%;
+  height: 40%;
+}
+
+.assessment-setup-block > .assessment-type-block > h1 {
+  position: relative;
+  float: left;
+  top: 15%;
+  width: 100%;
+  height: 10%;
+  padding: 0;
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  color: #323232;
+}
+
+.assessment-setup-block > .assessment-type-block > .assessment-select-block {
+  position: relative;
+  float: left;
+  top: 20%;
+  height: 20%;
+  width: 50%;
+}
+
+.assessment-setup-block > .assessment-type-block > .assessment-select-block > .select2 {
+  height: 100%;
+  font-size: 1em;
+}
+
+.assessment-setup-block > .assessment-type-block > .assessment-select-block > .select2 .select2-selection {
+  height: 100%;
+  outline: none;
+}
+
+.assessment-setup-block > .assessment-type-block > .assessment-select-block > .select2 .select2-selection__rendered {
+  height: 100%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 2.2em;
+  color: #777677;
+}
+
+.assessment-setup-block > .assessment-type-block > .assessment-select-block > .select2 .select2-selection__arrow {
+  height: 100%;
+}
+
+.assessment-setup-block > .assessment-type-block > .assessment-select-block > .select2 b {
+  top: 2.6em;
+}
+
+.assessment-setup-block > .assessment-type-block > h2 {
+  position: relative;
+  float: left;
+  width: 100%;
+  top: 25%;
+  padding: 0;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 1.4em;
+  color: #5A5A5A;
+}
+
+.assessment-setup-block > .assessment-software-block {
+  position: relative;
+  float: left;
+  width: 90%;
+  left: 5%;
+  top: 5%;
+  height: 20%;
+}
+
+.assessment-setup-block > .assessment-software-block > h1 {
+  position: relative;
+  float: left;
+  top: 20%;
+  width: 100%;
+  height: 20%;
+  padding: 0;
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  color: #323232;
+}
+
+.assessment-setup-block > .assessment-software-block > .assessment-select-block2 {
+  position: relative;
+  float: left;
+  width: 20%;
+  height: 40%;
+  top: 30%;
+}
+
+.assessment-setup-block > .assessment-software-block > h2 {
+  position: relative;
+  float: left;
+  top: 30%;
+  left: 5%;
+  width: 75%;
+  height: 40%;
+  padding: 0;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 1.2em;
+  line-height: 1.4em;
+  color: #5A5A5A;
+}
+
+.assessment-setup-block > .assessment-software-block > .assessment-select-block2 > .select2 {
+  height: 100%;
+  font-size: 1em;
+}
+
+.assessment-setup-block > .assessment-software-block > .assessment-select-block2 > .select2 .select2-selection {
+  height: 100%;
+  outline: none;
+}
+
+.assessment-setup-block > .assessment-software-block > .assessment-select-block2 > .select2 .select2-selection__rendered {
+  height: 100%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 2.2em;
+  color: #777677;
+}
+
+.assessment-setup-block > .assessment-software-block > .assessment-select-block2 > .select2 .select2-selection__arrow {
+  height: 100%;
+}
+
+.assessment-setup-block > .assessment-software-block > .assessment-select-block2 > .select2 b {
+  top: 2.4em;
+}
+
+.assessment-setup-block > .assessment-setup-btns {
+  position: relative;
+  float: left;
+  height: 20%;
+  width: 90%;
+  left: 5%;
+  top: 10%;
+}
+
+.assessment-setup-block > .assessment-setup-btns > button {
+  position: relative;
+  float: right;
+  width: 30%;
+  top: 25%;
+  height: 40%;
+  min-width: 0;
+  font-size: 1.4em;
+  line-height: 0em;
+  text-align: center;
+}
+
+.assessment-popover-block > .agile-summary {
+  position: relative;
+  float: left;
+  margin-top: 2%;
+  margin-bottom: 3%;
+  width: 96%;
+  left: 2%;
+}
+
+.assessment-popover-block > .agile-summary > .agile-summary-table {
+  position: relative;
+  float: left;
+  width: 48%;
+}
+
+.assessment-popover-block > .agile-summary > .agile-summary-table > .header-title {
+  position: relative;
+  float: left;
+  width: 100%;
+  margin: 0;
+  border-bottom: 0.1em solid #323232;
+}
+
+.assessment-popover-block > .agile-summary > .agile-summary-table > .header-title > h1 {
+  display: inline-block;
+  position: relative;
+  float: left;
+  padding: 0;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 2em;
+  text-align: left;
+  color: #323232;
+}
+
+.assessment-popover-block > .agile-summary > .agile-summary-table > .component-block {
+  position: relative;
+  float: left;
+  width: 100%;
+}
+
+.assessment-popover-block > .agile-summary > .agile-summary-table > .component-block:nth-child(odd) {
+  background-color: #EDEDED;
+}
+
+.assessment-popover-block > .agile-summary > .agile-summary-table > .component-block:nth-child(even):hover {
+  background-color: #c0e6ff;
+}
+
+.assessment-popover-block > .agile-summary > .agile-summary-table > .component-block:nth-child(odd):hover {
+  background-color: #7cc7ff;
+}
+
+.assessment-popover-block > .agile-summary > .agile-summary-table > .component-block > div{
+  position: relative;
+  float: left;
+}
+
+.assessment-popover-block > .agile-summary > .agile-summary-table > .component-block > div > h1,
+.assessment-popover-block > .agile-summary > .agile-summary-table > .component-block > div > h2 {
+  display: inline-block;
+  position: relative;
+  float: left;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 2em;
+  text-align: left;
+  color: #323232;
+  cursor: pointer;
+}
+.assessment-popover-block > .agile-summary > .agile-summary-table > .component-block > div > h1:hover {
+  color: #4178BE;
+}
+
+.assessment-popover-block > .agile-summary > .agile-summary-chart {
+  position: relative;
+  float: left;
+  width: 48%;
+  left: 4%;
+}
+
+.assessment-popover-block > .assessment-acplan-table {
+  position: relative;
+  float: left;
+  width: 96%;
+  left: 2%;
+  margin: 2% 0 2% 0;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .header-title {
+  position: relative;
+  float: left;
+  margin: 0;
+  width: 100%;
+  border-bottom: 0.1em solid #323232;
+}
+.assessment-popover-block > .assessment-acplan-table > .header-title > div {
+  position: relative;
+  float: left;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .header-title > div > h1 {
+  position: relative;
+  float: left;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  text-align: left;
+  padding-bottom: 0.5em;
+  color: #323232;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .table-block {
+  position: relative;
+  float: left;
+  width: 100%;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .table-block:nth-child(odd) {
+  background-color: #EDEDED;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .table-block:nth-child(even):hover {
+  background-color: #c0e6ff;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .table-block:nth-child(odd):hover {
+  background-color: #7cc7ff;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .table-block > div {
+  position: relative;
+  float: left;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .table-block > div > select{
+  position: relative;
+  float: left;
+  width: 95%;
+  height: 2em;
+  margin: 0.5em 0 0.5em 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .table-block > div > div {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 2em;
+  margin: 0.5em 0 0.5em 0;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .table-block > div > div svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .table-block > div > div svg rect,
+.assessment-popover-block > .assessment-acplan-table > .table-block > div > div svg path {
+  fill: #27B0E5;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .table-block > div > div > select {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .table-block > div > textarea {
+  position: relative;
+  float: left;
+  width: 100%;
+  max-width: 100%;
+  max-height: 16em;
+  margin: 0.5em 0 0.5em 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  text-align: left;
+  color: #323232;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .table-block > div > h1{
+  position: relative;
+  float: left;
+  padding: 0.5em 0 0.5em 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  text-align: left;
+  color: #323232;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .table-block > div h2{
+  position: relative;
+  width: 100%;
+  float: left;
+  padding-bottom: 0.5em;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.2em;
+  text-align: left;
+  color: #4178BE;
+  cursor: pointer;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .action-plan-add {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 6em;
+  border-bottom: 0.1em solid #979797;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .action-plan-add > button {
+  position: relative;
+  float: left;
+  top: 25%;
+  width: 10%;
+  height: 50%;
+  font-size: 1.2em;
+  line-height: 0em;
+  padding: 0;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .action-plan-btns {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 6em;
+}
+
+.assessment-popover-block > .assessment-acplan-table > .action-plan-btns > button {
+  position: relative;
+  float: right;
+  top: 25%;
+  width: 10%;
+  height: 50%;
+  font-size: 1.2em;
+  line-height: 0em;
+  padding: 0;
+}
+
+.no-trends-message-block {
+  height: 15em;
+  left: 50%;
+  position: relative;
+  top: 50%;
+  transform: translate(-50%, 50%);
+  width: 43%;
+}
+
+.no-trends-message-block p {
+  color: #aeaeae;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 2.2em;
+  line-height: 1.4em;
+  position: relative;
+  text-align: center;
+  top: 50%;
+  transform: translate(0%, -50%);
+}
+
+.confirm-popover {
+  position: fixed;
+  z-index: 999;
+  width: 50em;
+  height: 20em;
+  top: 30%;
+  left: 35%;
+  background-color: #FFFFFF;
+  box-shadow: 0 0 1em 0 rgba(0,0,0,0.16);
+}
+
+.confirm-popover > .header-title {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 15%;
+  margin: 0;
+  background-color: #4178BE;
+}
+
+.confirm-popover > .header-title > h1{
+  position: relative;
+  float: left;
+  left: 2%;
+  top: 25%;
+  color: #FFFFFF;
+  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.5em;
+  padding: 0;
+}
+
+.confirm-popover > .header-title > div {
+  position: relative;
+  float: right;
+  width: 5%;
+  height: 50%;
+  top: 30%;
+  cursor: pointer;
+}
+
+.confirm-popover > .header-title > div svg {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: auto;
+}
+
+.confirm-popover > .header-title > div svg g {
+  fill: #FFFFFF;
+  opacity: 1;
+}
+
+.confirm-popover > .content {
+  position: relative;
+  float: left;
+  left: 2%;
+  width: 96%;
+  height: 45%;
+  top: 10%;
+}
+
+.confirm-popover > .content > h1 {
+  position: relative;
+  float: left;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 1.4em;
+  text-align: left;
+  color: #323232;
+}
+
+.confirm-popover > .btns {
+  position: relative;
+  float: left;
+  left: 2%;
+  width: 96%;
+  height: 25%;
+  top: 15%;
+}
+
+.confirm-popover > .btns > button {
+  position: relative;
+  float: right;
+  min-width: 0;
+  top: 25%;
+  width: 20%;
+  height: 50%;
+  font-size: 1.2em;
+  line-height: 0em;
+  padding: 0;
+}
+
+.no-team-block {
+  position: relative;
+  float: left;
+  width: 100%;
+  top: 5%;
+}
+
+.no-team-block > h1 {
+  position: relative;
+  float: left;
+  padding: 0;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 2.3em;
+  width: 100%;
+  text-align: left;
+  color: #777677;
+}
+
+.no-team-block > h2 {
+  position: relative;
+  float: left;
+  padding: 0;
+  margin-top: 5%;
+  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 1.4em;
+  line-height: 1.4em;
+  width: 100%;
+  text-align: left;
+  color: #777677;
+}
+
+.feedback-block, .apikey-block {
+  font-size: 0.9em;
+  padding: 0.5em 0 1em;
+}
+
+.feedback-block p, .apikey-block p {
+  font-size: inherit;
+  padding: 1.5em 1.5em 0.5em;
+}
+
+.feedback-block label, .apikey-block label {
+  display: block;
+  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: bold;
+  padding-bottom: 0.4em;
+}
+
+.feedback-block span {
+  font-size: inherit;
+}
+
+.feedback-block span select {
+  width: 62%;
+}
+
+.feedback-block textarea {
+  font-size: inherit;
+  padding: .5em;
+  width: 98%;
+}
+
+.home-header-banner-label {
+  color: #5596E6 !important;
+}
+
+.home-header-banner-message > .home-header-banner-icon > a > i > svg {
+  height: 0.8em;
+  width: 2em;
+}
+
+.home-header-banner-message > .home-header-banner-icon > a > i > svg path {
+  fill: #5596E6 !important;
+}
+
+p.apikey-note {
+  color: #5A5A5A;
+  text-align: justify;
+}

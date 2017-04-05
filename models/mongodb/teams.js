@@ -47,6 +47,12 @@ var MemberSchema = new Schema({
     type: String,
     default: null
     //required: [true, 'Member email is required.'] // allow for BP profiles that does not have email
+  },
+  workTime: {
+    type: Number,
+    default: 100,
+    min: [0, 'Work time must be between 0 and 100.'],
+    max: [100, 'Work time must be between 0 and 100.']
   }
 },{_id : false});
 
@@ -59,12 +65,16 @@ var LinkSchema = new Schema({
   linkLabel: {
     type: String,
     required: [true, 'URL link label is required.'],
-    validate: validators.matches({message: 'URL link label is required.'}, /^(?!.*(Select label|Other...))/ig)
+    validate: validators.matches({message: 'URL link label is required.'}, /^(?!.*(Select label|-1|Other...))/ig)
   },
   linkUrl: {
     type: String,
     required: [true, 'URL is required.'],
     validate: validators.isURL({message: errURLInvalidMsg})
+  },
+  type: {
+    type: String,
+    default: null
   }
 },{_id : false});
 
@@ -164,7 +174,7 @@ var Members = mongoose.model('Members', MemberSchema);
 /* istanbul ignore next */
 TeamSchema.pre('update', function() {
   /* istanbul ignore next */
-  console.log('pre update team');
+
 });
 //validate hooks on path. might be better to use a pre hook if this causes issues
 TeamSchema.path('name').validate(function(value, done) {
@@ -287,6 +297,7 @@ module.exports.searchTeamWithName = function(string) {
 
 //using for snapshot roll up data, get all non squads
 module.exports.getNonSquadTeams = function(proj) {
+  // console.log ('in getNonSquadTeams in Modal:');
   return Team.find({type: {$ne:'squad'}, docStatus:{$ne:'delete'}}).select(proj).exec();
 };
 
@@ -358,7 +369,8 @@ module.exports.getRootTeams = function(uid) {
                 'path': team.path,
                 'pathId': team.pathId,
                 'hasChild': null,
-                'docStatus': team.docStatus
+                'docStatus': team.docStatus,
+                'description': (!_.isEmpty(team.description)) ? team.description : null
               };
               if (uniquePaths.indexOf(','+team.pathId+',') >= 0) {
                 newTeam.hasChild = true;
@@ -394,6 +406,17 @@ module.exports.getRootTeams = function(uid) {
     }
   });
 };
+
+/**
+ * Get all root teams - regardless if it is squad or non-squad
+ * @param user email
+ * @return array of root teams
+ */
+module.exports.getAllRootTeamsSquadNonSquad = function() {
+  // console.log ('In getAllRootTeamsSquadNonSquad:');
+  return Team.find({path: null, docStatus:{$ne:'delete'}}).sort('pathId').exec();
+};
+
 
 /**
  * If email is empty, get all standalone teams. Otherwise, get all user's standalone teams.
@@ -458,7 +481,7 @@ module.exports.getSelectableParents = function(teamId) {
           {type:{$ne:'squad'}, path: regEx, docStatus:{$ne:'delete'}},
           {type:{$ne:'squad'}, path: {$eq:null}, docStatus:{$ne:'delete'}, _id: {$ne:teamId}}
         ]
-      },{_id:1,name:2});
+      },{_id:1,name:2,pathId:3,path:4});
     })
     .then(function(result){
       resolve(result);
@@ -475,7 +498,7 @@ module.exports.getSelectableChildren = function(teamId) {
     if (_.isEmpty(teamId))
       return reject({'error':'Team ID is required.'});
     else
-      Team.find({_id: {$ne: teamId}, path:null, docStatus:{$ne:'delete'}}).exec()
+      Team.find({_id: {$ne: teamId}, path:null, docStatus:{$ne:'delete'}},{_id:1,name:2,pathId:3,path:4})
         .then(function(result) {
           resolve(result);
         })
@@ -550,13 +573,13 @@ module.exports.createTeam = function(teamDoc, creator) {
     }
     var newTeam = {
       'name': teamDoc.name,
-      'createdByUserId': creator.ldap.uid.toUpperCase(),
-      'createdBy': creator.shortEmail.toLowerCase(),
+      'createdByUserId': creator ? creator.ldap.uid : '',
+      'createdBy': creator ? creator.shortEmail.toLowerCase() : '',
       'pathId': createPathId(teamDoc.name),
       'path': teamDoc.path || teamDoc.path,
       'docStatus': null,
       'updatedBy': creator ? creator['shortEmail'].toLowerCase() : '',
-      'updatedByUserId': creator ? creator['ldap']['uid'].toUpperCase() : '',
+      'updatedByUserId': creator ? creator['ldap']['uid'] : '',
       'updateDate': new Date(moment.utc()),
       'members': teamDoc.members,
       'type': _.isEqual(teamDoc.type, 'squad') ? 'squad' : null,
@@ -566,7 +589,7 @@ module.exports.createTeam = function(teamDoc, creator) {
     Team.create(newTeamDoc)
       .then(function(result){
         teamDoc = result;
-        return self.createUsers(teamDoc.members);
+        return self.createUsers(newTeam.members);
       })
       .then(function() {
         resolve(teamDoc);
@@ -585,7 +608,7 @@ module.exports.createUsers = function(members) {
         ids.push(member.userId);
       });
     } else {
-      resolve(null);
+      return resolve(null);
     }
     Users.getUsersInfo(_.uniq(ids))
       .then(function(users) {
@@ -593,15 +616,33 @@ module.exports.createUsers = function(members) {
           var promiseArray = [];
           var user = new Object();
           _.each(members, function(member) {
-            user = _.find(users, function(user) {
-              if (_.isEqual(member.userId, user.userId))
-                return user;
+            user = _.find(users, function(u) {
+              if (_.isEqual(member.userId, u.userId))
+                return u;
             });
             if (_.isEmpty(user)) {
               if (!_.isEmpty(member.location)) {
-                member.location.timezone = ulocation[member.location.site];
+                member.location.timezone = ulocation[member.location.site.toLowerCase()];
               }
               promiseArray.push(Users.create(member));
+            } else {
+              if (!_.isEmpty(user.location) && !_.isEmpty(user.location.timezone)) {
+                if (_.isEmpty(member.location)) {
+                  member.location = {};
+                  member.location.timezone = user.location.timezone;
+                  member.location.site = user.location.site;
+                } else {
+                  if (_.isEmpty(member.location.timezone)) {
+                    var tz = ulocation[member.location.site.toLowerCase()];
+                    if (_.isUndefined(tz)) {
+                      member.location.timezone = user.location.timezone;
+                    } else {
+                      member.location.timezone = tz;
+                    }
+                  }
+                }
+              }
+              promiseArray.push(Users.updateUser(member));
             }
           });
           return Promise.all(promiseArray);
@@ -659,7 +700,7 @@ module.exports.getChildrenByPathId = function(pathId) {
               'pathId': team.pathId,
               'hasChild': null,
               'description': team.description,
-              'docStatus': team.docStatus
+              'docStatus': team.docStatus,
             };
             if (uniquePaths.indexOf(','+team.pathId+',') >= 0) {
               newTeam.hasChild = true;
@@ -921,6 +962,7 @@ module.exports.getAllUserTeamsByUserId = function(uid) {
                   'allocation':member.allocation,
                   'userId':member.userId,
                   'email':member.email,
+                  'workTime':member.workTime,
                   'location':{
                     'site': '',
                     'timezone': ''
@@ -1012,7 +1054,8 @@ module.exports.modifyTeamMembers = function(teamId, user, newMembers) { //TODO t
         allocation: member.allocation,
         role: member.role,
         userId: member.userId,
-        email: member.email
+        email: member.email,
+        workTime: member.workTime
       });
     });
     for (var i=0; i<updatedMembers.length; i++) {
@@ -1270,7 +1313,7 @@ module.exports.softDelete = function(teamDoc, user) {
           promiseArray.push(Iterations.softDelete(iter._id, user));
         });
         _.each(assessments, function(as){
-          console.log(as._id, user);
+          // console.log(as._id, user);
           promiseArray.push(Assessments.softDelete(as._id, user));
         });
         return Promise.all(promiseArray);
@@ -1300,7 +1343,7 @@ module.exports.softDelete = function(teamDoc, user) {
       .then(function(result){
         resolve({'ok': 'Delete successfully'});
       })
-      .catch(function(err){
+      .catch( /* istanbul ignore next */ function(err){
         reject(err);
       });
   });
@@ -1340,10 +1383,12 @@ module.exports.modifyImportantLinks = function(teamId, user, links) {
         if (!pattern.test(url)) {
           url = 'http://' + url;
         }
+        obj.type = data.type;
         obj.linkLabel = data.linkLabel;
         obj.linkUrl = url;
         tmpLinks.push(obj);
       });
+      // console.log('modifyImportantLinks tmpLinks:',tmpLinks);
       var updateTeam = {
         'links': tmpLinks,
         'updatedByUserId': userId,
@@ -1564,6 +1609,7 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, user) {
           var hasChildAccess = results[1];
           var parentTeam = results[2];
           var childTeam = results[3];
+          // console.log('parentTeam',parentTeam);
           if (_.isEmpty(parentTeam)) {
             return Promise.reject({
               errors: {
@@ -1668,6 +1714,66 @@ module.exports.associateTeams = function(parentTeamId, childTeamId, user) {
     }
   });
 };
+
+// module.exports.getDesigner = function() {
+//   return new Promise(function(resolve, reject){
+//     var designer = [];
+//     // var dlist = ['Designer', 'UX Designer', 'UX Visual Designer', 'FE Developer', 'Lead designer'];
+//     // var dlist = ['Developer'];
+//     // var regex = new RegExp(',agileandtalentdomain-1753,');
+//     // Team.find({'path': regex, 'docStatus': {$ne:'delete'}}).exec()
+//     //   .then(function(teams){
+//     //     _.each(teams, function(team){
+//     //       _.each(team.members, function(member){
+//     //         if (dlist.indexOf(member.role) >= 0) {
+//     //           var pd = {
+//     //             'name': member.name,
+//     //             'id': member.userId,
+//     //             'email': member.email,
+//     //             'role': member.role
+//     //           };
+//     //           var dup = false;
+//     //           _.find(designer, function(d){
+//     //             if (d.id == pd.id) {
+//     //               dup = true;
+//     //               return;
+//     //             }
+//     //           });
+//     //           if (!dup) {
+//     //             designer.push(pd);
+//     //           }
+//     //         }
+//     //       });
+//     //     });
+//     //     resolve(designer);
+//     //   })
+//     //   .catch(function(err){
+//     //     reject(err);
+//     //   });
+//     var allPath = [];
+//     Team.find({'docStatus': {$ne:'delete'}}).exec()
+//       .then(function(teams){
+//         var pps = [];
+//         allPath = _.uniq(_.pluck(teams, 'pathId'));
+//         _.each(teams, function(team){
+//           if (team.path != null) {
+//             var parray = (team.path.substring(1, team.path.length-1)).split(',');
+//             if (parray.length > 0) {
+//               _.each(parray, function(a){
+//                 if (allPath.indexOf(a) < 0) {
+//                   pps.push(a);
+//                 }
+//               });
+//             }
+//           }
+//         });
+//         resolve(pps);
+//       })
+//       .catch(function(err){
+//         reject(err);
+//       });
+//   });
+// };
 
 module.exports.removeAssociation = function(childTeamId, user) {
   return new Promise(function(resolve, reject){

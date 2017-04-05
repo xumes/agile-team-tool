@@ -17,7 +17,8 @@ var testParentTeam = {
     'role': 'Tester',
     'allocation': 100,
     'userId': 'TEST1234567',
-    'email': 'testuser@test.com'
+    'email': 'testuser@test.com',
+    'workTime': 100
   }],
   'createdByUserId': 'TEST1234567',
   'createdBy': 'testuser@test.com'
@@ -54,13 +55,17 @@ var testChildTeam = {
 };
 var userSession1 = {
   'ldap': {
-    'uid': 'TEST1234567'
+    'uid': 'TEST1234567',
+    'hrFirstName': 'John',
+    'hrLastName': 'Doe',
   },
   'shortEmail': 'testuser@test.com'
 };
 var userSession2 = {
   'ldap': {
-    'uid': 'ADMIN1234567'
+    'uid': 'ADMIN1234567',
+    'hrFirstName': 'John',
+    'hrLastName': 'Doe',
   },
   'shortEmail': 'admintestuser@test.com'
 };
@@ -127,8 +132,19 @@ describe('Users model [create]', function() {
   });
 });
 
-describe('Users model [findUserByEmail]', function() {
-  it('return all admin users', function(done) {
+describe('Users model [getAllUsers]', function() {
+  it('return all users', function(done){
+    this.timeout(5000);
+    users.getAllUsers()
+      .then(function(result) {
+        expect(result).to.be.a('array');
+        done();
+      });
+  });
+});
+
+describe('Users model [getAdmins]', function() {
+  it('return all admin users', function(done){
     users.getAdmins()
       .then(function(result) {
         expect(result).to.be.a('array');
@@ -276,6 +292,23 @@ describe('Users model [isUserAllowed]', function() {
     users.isUserAllowed(testChildUser.userId, newParentTeamId)
       .then(function(result) {
         expect(result).to.equal(false);
+        done();
+      });
+  });
+});
+
+describe('Users model [update]', function() {
+  it('return fail for updateing a user without userId', function(done){
+    users.updateUser({})
+      .catch(function(err) {
+        expect(err).to.be.a('object');
+        done();
+      });
+  });
+  it('return successful for updateing a user', function(done){
+    users.updateUser(testUser)
+      .then(function(result) {
+        expect(result).to.be.a('object');
         done();
       });
   });

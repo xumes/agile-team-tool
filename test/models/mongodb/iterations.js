@@ -40,13 +40,13 @@ var validIterationDoc = {
 var testTeam = {
   'name': 'mongodb-test-team-01',
   'type': 'squad',
-  'members': {
+  'members': [{
     'name': 'test user',
     'role': 'Tester',
     'allocation': 100,
     'userId': testUser.userId,
     'email': testUser.email
-  },
+  }],
   'createdByUserId': testUser.userId,
   'createdBy': testUser.email
 };
@@ -235,6 +235,17 @@ describe('Iteration model [getNotCompletedIterations]', function() {
     iterationModel.getNotCompletedIterations()
       .then(function(result){
         expect(result).to.be.a('array');
+        done();
+      });
+  });
+});
+
+describe('Iteration model [updateSprintAvailability]', function(){
+  it('return successful for updating the sprint availability', function(done) {
+    iterationModel.updateSprintAvailability()
+      .then(function(result){
+        expect(result).to.be.a('String');
+        expect(result).to.equal('Successfully completed this operation');
         done();
       });
   });

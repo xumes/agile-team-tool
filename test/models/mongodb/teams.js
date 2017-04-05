@@ -23,6 +23,26 @@ var testUser = {
     'timezone': 'UTC-4'
   }
 };
+var testUser2 = {
+  'userId': 'USER002US',
+  'name': 'test user2',
+  'email': 'testuser2@test.com',
+  'adminAccess': 'none',
+  'location': {
+    'site': 'somers, ny, usa',
+    'timezone': 'UTC-4'
+  }
+};
+var testUser3 = {
+  'userId': 'USER003US',
+  'name': 'test user3',
+  'email': 'testuser3@test.com',
+  'adminAccess': 'none',
+  'location': {
+    'site': 'somers, ny, usa',
+    'timezone': ''
+  }
+};
 var invalidUser = {
   'userId': 'TEST7654321',
   'name': 'test user2',
@@ -35,52 +55,70 @@ var invalidUser = {
 };
 var testTeam = {
   'name': 'mongodb-test-team-01',
-  'members': {
+  'members': [{
     'name': 'test user',
     'role': 'Tester',
     'allocation': 100,
     'userId': testUser.userId,
     'email': testUser.email
-  },
+  }],
+  'createdByUserId': testUser.userId,
+  'createdBy': testUser.email
+};
+var testTeam2 = {
+  'name': 'mongodb-test-team-02',
+  'members': [{
+    'name': 'test user1',
+    'role': 'Tester',
+    'allocation': 100,
+    'userId': testUser.userId,
+    'email': testUser.email
+  },{
+    'name': 'test user2',
+    'role': 'Tester',
+    'allocation': 100,
+    'userId': testUser2.userId,
+    'email': testUser2.email
+  }],
   'createdByUserId': testUser.userId,
   'createdBy': testUser.email
 };
 var testTeamParent = {
   'name': 'mongodb-test-team-parent',
   'type': '',
-  'members': {
+  'members': [{
     'name': 'test user',
     'role': 'Tester',
     'allocation': 100,
     'userId': testUser.userId,
     'email': testUser.email
-  },
+  }],
   'createdByUserId': testUser.userId,
   'createdBy': testUser.email
 };
 var testTeamChild = {
   'name': 'mongodb-test-team-child',
   'type': '',
-  'members': {
+  'members': [{
     'name': 'test user',
     'role': 'Tester',
     'allocation': 100,
     'userId': testUser.userId,
     'email': testUser.email
-  },
+  }],
   'createdByUserId': testUser.userId,
   'createdBy': testUser.email
 };
 var testTeamGChild = {
   'name': 'mongodb-test-team-gchild',
   'type': 'squad',
-  'members': {
+  'members': [{
     'name': 'test user',
     'role': 'Tester',
     'allocation': 100,
     'userId': testUser.userId,
     'email': testUser.email
-  },
+  }],
   'createdByUserId': testUser.userId,
   'createdBy': 'testuser@test.com'
 };
@@ -97,13 +135,17 @@ var inValidTeam = {
 };
 var userSession = {
   'ldap': {
-    'uid': testUser.userId
+    'uid': testUser.userId,
+    'hrFirstName': 'John',
+    'hrLastName': 'Doe',
   },
   'shortEmail': testUser.email
 };
 var invalidUserSession = {
   'ldap': {
-    'uid': invalidUser.userId
+    'uid': invalidUser.userId,
+    'hrFirstName': 'John',
+    'hrLastName': 'Doe',
   },
   'shortEmail': invalidUser.email
 };
@@ -112,14 +154,23 @@ describe('Team model [createTeam]', function() {
   before(function(done){
     var promiseArray = [];
     promiseArray.push(Users.deleteUser(testUser.userId));
+    promiseArray.push(Users.deleteUser(testUser2.userId));
+    promiseArray.push(Users.deleteUser(testUser3.userId));
     promiseArray.push(Users.deleteUser(invalidUser.userId));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-01'));
+    promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-02'));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-parent'));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-child'));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-gchild'));
     Promise.all(promiseArray)
       .then(function(results){
         return Users.create(testUser);
+      })
+      .then(function(results){
+        return Users.create(testUser2);
+      })
+      .then(function(results){
+        return Users.create(testUser3);
       })
       .then(function(result){
         return Users.create(invalidUser);
@@ -148,6 +199,19 @@ describe('Team model [createTeam]', function() {
         newTeamId = result._id;
         expect(result).to.have.property('pathId');
         newTeamPathId = result.pathId;
+        done();
+      })
+      .catch(function(err) {
+        done();
+      });
+  });
+  it('return successful for adding a team with more than 1 members', function(done){
+    Teams.createTeam(testTeam2, userSession)
+      .then(function(result){
+        expect(result).to.be.a('object');
+        expect(result.name).to.equal(testTeam2.name);
+        expect(result).to.have.property('_id');
+        expect(result).to.have.property('pathId');
         done();
       })
       .catch(function(err) {
@@ -574,6 +638,20 @@ describe('Team model [getSelectableChildren]', function() {
 //   });
 // });
 
+describe('Team model [getAllRootTeamsSquadNonSquad]', function() {
+  it('return all root teams (team with no parents) regardless if it is squad or non squad', function(done){
+    Teams.getAllRootTeamsSquadNonSquad()
+      .then(function(result){
+        expect(result).to.be.a('array');
+        done();
+      })
+      .catch(function(err) {
+        done();
+      });
+  });
+});
+
+
 describe('Team model [getChildrenByPathId]', function() {
   it('return empty by empty path id', function(done){
     Teams.getChildrenByPathId()
@@ -825,6 +903,14 @@ describe('Team model [deleteImportantLinks]', function() {
         done();
       });
   });
+  it('return Link ID is required', function(done){
+    Teams.deleteImportantLinks(newTeamId, userSession, [] )
+      .catch(function(err){
+        expect(err).to.be.a('object');
+        expect(err.error.links[0]).to.equal('Link ID is required');
+        done();
+      });
+  });
   it('return fail by invalid user modify', function(done){
     userSession.ldap.uid = 'TEST7654321';
     Teams.deleteImportantLinks(newTeamId, userSession, [{id: newLinkId}])
@@ -960,6 +1046,29 @@ describe('Team model [updateTeam]', function() {
   });
 });
 
+describe('Team model [getAllUserTeamsByUserId]', function() {
+  it('return all teams full object with location - site and timezone by user id', function(done){
+    Teams.getTeamsByUserId(testUser.userId)
+      .then(function(result){
+        expect(result).to.be.a('array');
+        done();
+      })
+      .catch(function(err) {
+        done();
+      });
+  });
+  it('return all user teams by userId',function(done){
+    Teams.getAllUserTeamsByUserId(testUser.userId)
+      .then(function(result){
+        expect(result).to.be.a('array');
+        done();
+      })
+      .catch(function(err) {
+        done();
+      });
+  });
+});
+
 describe('Team model [softDelete]', function() {
   var newDoc = {
     'name' : 'mongodb-test-team-01',
@@ -1009,8 +1118,11 @@ describe('Team model [softDelete]', function() {
   after(function(done){
     var promiseArray = [];
     promiseArray.push(Users.deleteUser(testUser.userId));
+    promiseArray.push(Users.deleteUser(testUser2.userId));
+    promiseArray.push(Users.deleteUser(testUser3.userId));
     promiseArray.push(Users.deleteUser(invalidUser.userId));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-01'));
+    promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-02'));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-parent'));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-child'));
     promiseArray.push(Teams.deleteTeamByName('mongodb-test-team-gchild'));
@@ -1023,17 +1135,3 @@ describe('Team model [softDelete]', function() {
       });
   });
 });
-
-describe('Team model [getAllUserTeamsByUserId]', function() {
-  it('return all teams full object with location - site and timezone by user id', function(done){
-    Teams.getTeamsByUserId(testUser.userId)
-      .then(function(result){
-        expect(result).to.be.a('array');
-        done();
-      })
-      .catch(function(err) {
-        done();
-      });
-  });
-});
-

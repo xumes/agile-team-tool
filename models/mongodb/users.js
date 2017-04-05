@@ -233,22 +233,30 @@ var users = {
         newUser.location.site = user.location.site || null;
         newUser.location.timezone = user.location.timezone || null;
       }
+
       User.create(newUser)
-      // getUserFromFaces(newUser.email)
-      //   .then(function(facesInfo){
-      //     if (!facesInfo.error) {
-      //       if (facesInfo.location) {
-      //         newUser.location.site = facesInfo.location;
-      //       }
-      //     }
-      //     return User.create(newUser);
-      //   })
         .then(function(result){
           resolve(result);
         })
         .catch( /* istanbul ignore next */ function(err){
           reject({'error':err});
         });
+    });
+  },
+
+  updateUser: function(userInfo) {
+    return new Promise(function(resolve, reject){
+      if (_.isEmpty(userInfo.userId)) {
+        reject({'error':'missing user ID.'});
+      } else {
+        User.findOneAndUpdate({'userId': userInfo.userId}, {'$set': userInfo})
+          .then(function(result){
+            resolve(result);
+          })
+          .catch( /* istanbul ignore next */ function(err){
+            reject({'error':err});
+          });
+      }
     });
   },
   //

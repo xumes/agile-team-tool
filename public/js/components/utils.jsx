@@ -1,6 +1,7 @@
 /* Helper functions that can be shared to other components */
 var _ = require('underscore');
 var moment = require('moment');
+var api = require('./api.jsx');
 
 module.exports.setPrefixHttp = function(url) {
   var pattern = /^((http|https):\/\/)/;
@@ -169,4 +170,239 @@ module.exports.setSelectOptions = function(elementId, listOption, firstOption, l
   $('#select2-' + elementId + '-container').text(selectedText);
   $('#select2-' + elementId + '-container').attr('title', selectedText);
   $('#' + elementId).attr('aria-label',elementId);
-}
+};
+
+module.exports.handleIterationErrors = function (errorResponse) {
+  var errorlist = '';
+  var response = errorResponse.responseJSON;
+
+  if (response && response.error) {
+    var errors = response.error.errors;
+    if (errors){
+        // Return iteration errors as String
+      errorlist = this.getIterationErrorPopup(errors);
+      if (!_.isEmpty(errorlist)) {
+        alert(errorlist);
+      }
+    }
+    else {
+      this.setFieldErrorHighlight(response.error.path);
+      alert(response.error.message);
+    }
+  }
+};
+
+module.exports.getIterationErrorPopup = function(errors) {
+  var errorLists = '';
+  var self = this;
+  // Model fields/Form element field
+  var fields = [
+    'name',
+    'startDate',
+    'endDate',
+    'committedStories',
+    'committedStoryPoints',
+    'personDaysUnavailable',
+    'deliveredStories',
+    'storyPointsDelivered',
+    'deployments',
+    'defectsStartBal',
+    'defects',
+    'defectsClosed',
+    'defectsEndBal',
+    'cycleTimeWIP',
+    'cycleTimeInBacklog',
+    'memberChanged',
+    'clientSatisfaction',
+    'teamSatisfaction'
+  ];
+
+  _.each(fields, function(mdlField, index) {
+    if (errors[mdlField]) {
+      self.setFieldErrorHighlight(mdlField);
+      errorLists = errorLists + errors[mdlField].message + '\n';
+    } else {
+      self.clearFieldErrorHighlight(mdlField);
+    }
+  });
+  return errorLists;
+};
+
+module.exports.clearHighlightedIterErrors = function () {
+  var self = this;
+  var fields = [
+    'name',
+    'startDate',
+    'endDate',
+    'committedStories',
+    'committedStoryPoints',
+    'personDaysUnavailable',
+    'deliveredStories',
+    'storyPointsDelivered',
+    'deployments',
+    'defectsStartBal',
+    'defects',
+    'defectsClosed',
+    'defectsEndBal',
+    'cycleTimeWIP',
+    'cycleTimeInBacklog',
+    'memberChanged',
+    'clientSatisfaction',
+    'teamSatisfaction'
+  ];
+
+  _.each(fields, function(field, index) {
+    self.clearFieldErrorHighlight(field);
+  });
+};
+
+module.exports.toTitleCase = function(str) {
+  if (_.isEmpty(str)) return '';
+  var strArray = str.toUpperCase().split(',');
+  if (strArray.length < 3) {
+    return str.toUpperCase();
+  } else {
+    strArray[0] = strArray[0].replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    return strArray.join(', ');
+  }
+};
+
+module.exports.toLowerCase = function(str) {
+  if (_.isEmpty(str)) return str;
+  if (str) {
+    return str.toLowerCase();
+  }
+};
+
+module.exports.numericValue = function(data) {
+  var value = parseInt(data);
+  if (!isNaN(value)) {
+    return value;
+  }
+  else {
+    return 0;
+  }
+};
+
+module.exports.getOptimumAvailability = function(maxWorkDays, teamId){
+  var self = this;
+  return new Promise(function(resolve, reject){
+    api.loadTeam(teamId)
+      .then(function(team){
+        var members = self.getTeamMembers(team);
+        var availability = 0;
+        _.each(members, function(member){
+          var allocation =  member.allocation/100;
+          var avgWorkWeek = (member.workTime != null ? self.numericValue(member.workTime) : 100 )/100;
+          availability += (allocation * avgWorkWeek * maxWorkDays);
+        });
+        return resolve(availability.toFixed(2));
+      })
+      .catch(function(err){
+        return reject(err);
+      });
+  });
+};
+
+module.exports.getTeamMembers = function(team){
+  var teamMembers = [];
+  if (!_.isEmpty(team) && team.members) {
+    _.each(team.members, function(member) {
+      var temp = _.find(teamMembers, function(item){
+        if ( item.userId === member.userId)
+          return item;
+      });
+      if (temp === undefined) {
+        teamMembers.push(member);
+      }
+    });
+  }
+  return teamMembers;
+};
+
+/**
+ * Return an array of unique errors
+ *
+ * @param Array of errors
+ */
+module.exports.returnUniqErrors = function(errors) {
+  var err = [];
+  _.each(_.uniq(errors), function(v) {
+    err.push(v);
+  });
+  return err;
+};
+
+/**
+ * Highlight the field that has an error
+ *
+ * @param type of the field (such as role, allocation)
+ * @param index
+ */
+module.exports.highlightErrorField = function(type, divIdx) {
+  var elem;
+  if (type == 'role') {
+    $('.tbl-memberRole-results .tbl-members td.r_role').each(function() {
+      var idx = parseInt($(this).attr('data-index'));
+      var divId = $(this).children('div').attr('id');
+      if (idx === divIdx) {
+        $('#' + divId +' .Select-placeholder').css('border', '1px solid red');
+      }
+    });
+  }
+
+  if (type == 'allocation') {
+    $('.tbl-memberRole-results .tbl-members td.r_allocation').each(function() {
+      var idx = parseInt($(this).attr('data-index'));
+      var divId = $(this).find('.Select-value');
+      if (idx === divIdx) {
+        $(this).find('.Select-value').css('border', '1px solid red');
+      }
+    });
+  }
+};
+
+/**
+ * Check if the parameter(str) is empty. Note: Here the zero(0) is considered as Empty.
+ * @param String str
+ */
+module.exports.isBlank = function(str){
+  return (!str || /^\s*$/.test(str));
+};
+
+/**
+ * Check if the inputted data is within the range [0 - 100]
+ * @param Number
+ */
+module.exports.isValidNumRange = function(num,from,to){
+  var from = from || 0;
+  var to = to || 100;
+  var num = parseInt(num) || 0;
+  if (num > to || num < from) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
+/**
+ * Validate the Team members object check the required fields
+ * @param array of object
+ */
+module.exports.validateTeamMembersObj = function(teamObj) {
+  var errorFound = [];
+  _.each(teamObj, function(member){
+    if (module.exports.isBlank(member.role)) {
+      errorFound.push(member);
+    }
+    if (module.exports.isBlank(member.allocation)){
+      if (!module.exports.isValidNumRange(member.allocation)){
+        errorFound.push(member);
+      }
+    }
+    if (module.exports.isBlank(member.workTime)) {
+      errorFound.push(member);
+    }
+  });
+  return errorFound;
+};

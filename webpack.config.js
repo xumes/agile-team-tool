@@ -9,6 +9,7 @@ module.exports = {
     teams: path.join(__dirname, 'public/js/v2Team.jsx'),
     assessments: path.join(__dirname, 'public/js/v2Assessment.jsx'),
     assessmentSummary: path.join(__dirname, 'public/js/v2AssessmentSummary.jsx'),
+    v3home: path.join(__dirname, 'public/js/v3Home.jsx'),
     styles: path.join(__dirname, 'public/css/styles.jsx')
   },
   output: {
@@ -29,7 +30,8 @@ module.exports = {
           presets: ['react'],
           plugins: ['react-html-attrs']
         }
-      }
+      },
+      {test: /\.svg$/, loader: 'svg-inline'}
     ]
   },
   plugins: [
