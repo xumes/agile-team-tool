@@ -21,7 +21,6 @@ var windowSize2 = {
   'width': 1900,
   'fontSize': 0.625
 };
-var loginDate = '2017-04-05T00:00:00.000Z';
 
 var HomePage = React.createClass({
   getInitialState: function() {
@@ -58,7 +57,7 @@ var HomePage = React.createClass({
             self.state.firstLogin = true;
           } else {
             var lastLogin = moment.utc(loginUser.lastLogin);
-            var isAfter = lastLogin.isAfter(loginDate);
+            var isAfter = lastLogin.isAfter(uiReleaseDate);
             if (!isAfter) {
               self.state.firstLogin = true;
             }

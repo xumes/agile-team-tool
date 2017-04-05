@@ -8,7 +8,8 @@ module.exports = function(app, includes) {
     'googleAnalyticsKey': settings.googleAnalyticsKey,
     'ibmNPSKey': settings.ibmNPSKey,
     'environment': settings.environment,
-    'sentryPublicDSN': settings.sentry.publicDSN
+    'sentryPublicDSN': settings.sentry.publicDSN,
+    'uiReleaseDate': settings.uiReleaseDate
   };
 
   app.get(['/', '/home'], includes.middleware.auth.requireLoginWithRedirect, function(req, res) {
