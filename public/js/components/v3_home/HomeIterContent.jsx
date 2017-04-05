@@ -144,7 +144,7 @@ var HomeIterContent = React.createClass({
         var val = $('#'+this.state.selectedField).val();
         $('#'+this.state.selectedField).val('').val(val);
         $('#'+this.state.selectedField).select();
-        if (prevState.selectedField != '')
+        if (prevState.selectedField != '')          
           this.startTimer(prevState.selectedField);
       }
     } else {
@@ -244,9 +244,25 @@ var HomeIterContent = React.createClass({
         return;
       }
       iterationData = this.recalculate(id);
+      if (id === 'clientSatisfaction'){
+        iterationData = this.validateSatisfactionValue(iterationData, 'clientSatisfaction');
+      }
+      else if (id === 'teamSatisfaction'){
+        iterationData = this.validateSatisfactionValue(iterationData, 'teamSatisfaction');
+      }
       this.props.updateTeamIteration(iterationData);
     }
     return iterationData;
+  },
+
+  validateSatisfactionValue: function(iteration, id){
+    if (!_.isEmpty(id)){
+      var value = this.float1Decimal(iteration[id]);
+      if (value === '0.0'){
+        iteration[id] = null;
+      }      
+    }
+    return iteration;
   },
 
   partialSaveIter: function(id) {
@@ -454,11 +470,16 @@ var HomeIterContent = React.createClass({
   },
 
   roundOff:function(e) {
-    var value = parseFloat(e.target.value);
-    if (!isNaN(value)) {
-      value = value.toFixed(1);
-      e.target.value = value;
+    if (_.isEmpty(e.target.value)){
         this.partialSaveIter(e.target.id);
+    }
+    else{
+      var value = parseFloat(e.target.value);
+      if (!isNaN(value)) {
+        value = value.toFixed(1);
+        e.target.value = value;
+          this.partialSaveIter(e.target.id);
+      }
     }
   },
 
