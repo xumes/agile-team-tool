@@ -67,7 +67,7 @@ var HomePage = React.createClass({
         }
       })
       .then(function(result){
-        console.log(result);
+        // console.log(result);
       })
       .catch(function(err){
         console.log(err);
@@ -87,6 +87,7 @@ var HomePage = React.createClass({
         $('#firstLoginCard_7 > .pointer').css('top','0');
       }
     }
+    $('#loadingPage').hide();
   },
 
   componentDidMount: function() {
