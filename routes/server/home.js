@@ -14,6 +14,6 @@ module.exports = function(app, includes) {
 
   app.get(['/', '/home'], includes.middleware.auth.requireLoginWithRedirect, function(req, res) {
     json['user'] = req.session.user;
-    render(req, res, 'index', json);
+    render(req, res, 'app', json);
   });
 };
