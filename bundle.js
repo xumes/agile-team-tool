@@ -10,6 +10,7 @@ module.exports = function() {
   webpackConfig.plugins = [
     new ExtractTextPlugin('[name].css')
   ];
+  webpackConfig.output.filename = '[name].js';
 
   var compiler = webpack(webpackConfig);
   var bundleStart = null;
