@@ -34,6 +34,10 @@ module.exports = {
   googleApiKey: process.env.googleAPIKey || 'AIzaSyAF2vwg6z-pH4xC7Ac1eMcpR9mVG-A2u7Y',
   facesURL: 'https://faces.tap.ibm.com/api/',
   ibmNPSKey: process.env.ibmNPSKey || '',
+  ibmNPS: {
+    key: process.env.ibmNPSKey || '',
+    attributes: process.env.ibmNPSAttributes ? JSON.parse(process.env.ibmNPSAttributes) : {}
+  },
   sentry: {
     dsn: process.env.sentryDSN || '',
     publicDSN: process.env.sentryPublicDSN || ''
