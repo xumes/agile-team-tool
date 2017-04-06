@@ -97,7 +97,8 @@ var HomeIterContent = React.createClass({
       this.stopTimer();
       if (this.state.selectedField != ''){
         this.saveIter(this.state.selectedField);
-        lastYPosition = 0;
+        if (lastYPosition != window.pageYOffset)
+          lastYPosition = window.pageYOffset;      
       }
       this.setState({selectedField:''});
     }
