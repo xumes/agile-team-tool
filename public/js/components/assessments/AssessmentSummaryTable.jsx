@@ -48,7 +48,7 @@ var AssessmentSummaryTable = React.createClass({
             }
             assessmentsData[type]['Overall']['current'].push(parseFloat(componentResult.currentScore==null?0:componentResult.currentScore.toFixed(1)));
             assessmentsData[type]['Overall']['target'].push(parseFloat(componentResult.targetScore==null?0:componentResult.targetScore.toFixed(1)));
-            assessmentsData[type]['Date'].push(moment.utc(assessment.submittedDate).format('DD MMM YYYY'));
+            assessmentsData[type]['Date'].push(moment(assessment.submittedDate).format('DD MMM YYYY'));
             _.each(componentResult.assessedComponents, function(assessedComponent, idx2){
               switch (assessedComponent.practiceName) {
                 case 'Adaptive Planning (Release and Iteration Planning)' :
