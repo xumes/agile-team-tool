@@ -317,7 +317,7 @@ var HomeAseSummary = React.createClass({
               submitAssessCount ++ ;
               if (submitAssessCount > 1) {
                 return(
-                  <option key={assess._id} value={assess._id}>{moment.utc(assess.submittedDate).format('DD MMM YYYY')}</option>
+                  <option key={assess._id} value={assess._id}>{moment(assess.submittedDate).format('DD MMM YYYY')}</option>
                 )
               }
             }

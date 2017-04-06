@@ -170,7 +170,7 @@ var AssessmentACPlanTable = React.createClass({
   },
   dateChangeDateHandler: function(id, e) {
     var self = this;
-    $('#' + id).html(moment.utc(e).format('DD MMM YYYY'));
+    $('#' + id).html(moment(e).format('DD MMM YYYY'));
     var tempActionPlans = self.getActionPlansFromTable();
     self.setState({actionPlans: tempActionPlans});
   },
@@ -194,7 +194,7 @@ var AssessmentACPlanTable = React.createClass({
         actionPlanId: idx
       }
       if ($('#actionPlanReviewDate_' + idx).html() != '') {
-        tempActionPlan['reviewDate'] = new Date(moment.utc($('#actionPlanReviewDate_' + idx).html(), 'DD MMM YYYY'));
+        tempActionPlan['reviewDate'] = new Date(moment($('#actionPlanReviewDate_' + idx).html(), 'DD MMM YYYY'));
       }
       tableActionPlans.push(tempActionPlan);
     });
@@ -225,8 +225,8 @@ var AssessmentACPlanTable = React.createClass({
         actionPlans = self.props.tempAssess.actionPlans
       }
       var tableBlocks = actionPlans.map(function(ap, idx){
-        var reviewDate = ap.reviewDate==null?'':moment.utc(ap.reviewDate).format('DD MMM YYYY');
-        var selectDate = ap.reviewDate==null?moment.utc(new Date()):moment.utc(ap.reviewDate);
+        var reviewDate = ap.reviewDate==null?'':moment(ap.reviewDate).format('DD MMM YYYY');
+        var selectDate = ap.reviewDate==null?moment(new Date()):moment(ap.reviewDate);
         var reviewDeteStyle = {
           color: ap.reviewDate==null?'#4178BE':'#323232',
           cursor: haveAccess?'pointer':'not-allowed'
