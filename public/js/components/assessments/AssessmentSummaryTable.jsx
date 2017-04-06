@@ -212,30 +212,45 @@ var AssessmentSummaryTable = React.createClass({
   },
   countPractics: function(template) {
     var practiceCount= [];
-    _.each(template.principles, function(principle){
-      _.each(principle.practices, function(practice, idx){
-        practiceCount.push(idx);
+    if (!_.isEmpty(template)) {
+      _.each(template.principles, function(principle){
+        _.each(principle.practices, function(practice, idx){
+          practiceCount.push(idx);
+        });
       });
-    });
+    }
     return practiceCount;
   },
   render: function() {
     var self = this;
     if (!_.isEmpty(self.props.componentResult)) {
-      var templateCount = [
-        self.countPractics(self.props.assessTemplate.components[0]),
-        self.countPractics(self.props.assessTemplate.components[1]),
-        self.countPractics(self.props.assessTemplate.components[2])
-      ];
-      if (self.props.componentResult.componentName.indexOf('Project') >= 0) {
+      if (self.props.assessTemplate.version == 1) {
+        var templateCount = [
+          self.countPractics(self.props.assessTemplate.components[0]),
+          self.countPractics(self.props.assessTemplate.components[0]),
+          self.countPractics(self.props.assessTemplate.components[1])
+        ];
+      } else {
+        templateCount = [
+          self.countPractics(self.props.assessTemplate.components[0]),
+          self.countPractics(self.props.assessTemplate.components[1]),
+          self.countPractics(self.props.assessTemplate.components[2])
+        ];
+      }
+      if (self.props.componentResult.componentName.indexOf('Project') >= 0 || self.props.componentResult.componentName == 'Team Agile Leadership and Collaboration' || self.props.componentResult.componentName == 'Agile Leadership and Collaboration') {
         var tpTemplate = self.props.assessTemplate.components[0];
         var tpCount = templateCount[0];
-      } else if (self.props.componentResult.componentName.indexOf('Operations') >= 0) {
+      } else if (self.props.componentResult.componentName.indexOf('Operations') >= 0 || self.props.componentResult.componentName.indexOf('Ops') >= 0) {
         var tpTemplate = self.props.assessTemplate.components[1];
         tpCount = templateCount[1];
       } else {
-        var tpTemplate = self.props.assessTemplate.components[2];
-        tpCount = templateCount[2];
+        if (self.props.assessTemplate.version == 1) {
+          var tpTemplate = self.props.assessTemplate.components[1];
+          tpCount = templateCount[2];
+        } else {
+          var tpTemplate = self.props.assessTemplate.components[2];
+          tpCount = templateCount[2];
+        }
       }
       var components = self.props.componentResult.assessedComponents.map(function(component, idx){
         var principleIndex = parseInt(component['principleId']) - 1;
