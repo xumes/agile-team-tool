@@ -9,6 +9,8 @@ var HomeEditIteration = require('./HomeEditIteration.jsx');
 var TeamResetPopup = require('./TeamResetPopup.jsx');
 var Tooltip = require('react-tooltip');
 var utils = require('../utils.jsx');
+var ConfirmDialog = require('./ConfirmDialog.jsx');
+
 var selectedIter = new Object();
 var lockMessage = 'This value is automatically calculated and can’t be updated directly.';
 var clientSatisfactionTT = 'Please indicate the satisfaction level of your client(s) with the results of this iteration using the following scale:' +
@@ -58,6 +60,7 @@ var editIndexing = [
 'teamSatisfaction',
 'comment'
 ];
+var lastYPosition = 0;
 
 
 var HomeIterContent = React.createClass({
@@ -69,11 +72,15 @@ var HomeIterContent = React.createClass({
       teamAvailability: null,
       selectedField:'',
       selectedIter: new Object(),
-      backupIter: new Object()
+      backupIter: new Object(),
+      showConfirmModal: false,
+      alertMsg: '',
+      alertType: ''
     }
   },
   componentDidMount: function(){
     window.addEventListener('click', this.handleWindowClick);
+    lastYPosition = 0;
     var data = this.getSelectedIteration();
     if (data != null){
       this.setState({selectedIter: data,backupIter: _.clone(data)});
@@ -82,6 +89,7 @@ var HomeIterContent = React.createClass({
 
   componentWillUnmount: function () {
     clearInterval(this.timer);
+    lastYPosition = 0;
   },
 
   handleWindowClick: function(e){
@@ -89,7 +97,9 @@ var HomeIterContent = React.createClass({
       this.stopTimer();
       if (this.state.selectedField != ''){
         this.saveIter(this.state.selectedField);
-      }      
+        if (lastYPosition != window.pageYOffset)
+          lastYPosition = window.pageYOffset;      
+      }
       this.setState({selectedField:''});
     }
   },
@@ -108,6 +118,10 @@ var HomeIterContent = React.createClass({
       var data = this.getSelectedIteration();
       this.setState({selectedIter: data}, function(){
           $('select[id="homeIterSelection"]').select2({'width':'100%'});
+          if (lastYPosition > 0){
+            $(window).scrollTop(lastYPosition);
+          }
+            
       });
     }
     var self = this;
@@ -144,7 +158,7 @@ var HomeIterContent = React.createClass({
         var val = $('#'+this.state.selectedField).val();
         $('#'+this.state.selectedField).val('').val(val);
         $('#'+this.state.selectedField).select();
-        if (prevState.selectedField != '')
+        if (prevState.selectedField != '')          
           this.startTimer(prevState.selectedField);
       }
     } else {
@@ -178,7 +192,8 @@ var HomeIterContent = React.createClass({
   checkChanges: function(event){
     if(event.keyCode == 9){
       var result = this.tabHandling(event.target.id, event.shiftKey);
-      if (result){
+      if (result){        
+        lastYPosition = window.pageYOffset;
         event.preventDefault();
       }
       else{
@@ -226,6 +241,7 @@ var HomeIterContent = React.createClass({
   iterBlockClickHandler: function(e) {
     var self = this;
     var data = _.clone(this.state.selectedIter);
+    lastYPosition = window.pageYOffset;
     this.setState({selectedField:e.target.id, backupIter: data});
   },
   saveBtnClickHandler: function(id) {
@@ -244,9 +260,25 @@ var HomeIterContent = React.createClass({
         return;
       }
       iterationData = this.recalculate(id);
+      if (id === 'clientSatisfaction'){
+        iterationData = this.validateSatisfactionValue(iterationData, 'clientSatisfaction');
+      }
+      else if (id === 'teamSatisfaction'){
+        iterationData = this.validateSatisfactionValue(iterationData, 'teamSatisfaction');
+      }
       this.props.updateTeamIteration(iterationData);
     }
     return iterationData;
+  },
+
+  validateSatisfactionValue: function(iteration, id){
+    if (!_.isEmpty(id)){
+      var value = this.float1Decimal(iteration[id]);
+      if (value === '0.0'){
+        iteration[id] = null;
+      }      
+    }
+    return iteration;
   },
 
   partialSaveIter: function(id) {
@@ -396,9 +428,7 @@ var HomeIterContent = React.createClass({
     }
     selectedIter.personDaysAvailable = (selectedIter.teamAvailability - selectedIter.personDaysUnavailable).toFixed(2);
     //2 new fields on DB - 
-    console.log('HERE......');
     selectedIter.storiesDays = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
-    console.log('DONE.... ');
     selectedIter.storyPointsDays = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
     return selectedIter;
   },
@@ -454,11 +484,16 @@ var HomeIterContent = React.createClass({
   },
 
   roundOff:function(e) {
-    var value = parseFloat(e.target.value);
-    if (!isNaN(value)) {
-      value = value.toFixed(1);
-      e.target.value = value;
+    if (_.isEmpty(e.target.value)){
         this.partialSaveIter(e.target.id);
+    }
+    else{
+      var value = parseFloat(e.target.value);
+      if (!isNaN(value)) {
+        value = value.toFixed(1);
+        e.target.value = value;
+          this.partialSaveIter(e.target.id);
+      }
     }
   },
 
@@ -550,7 +585,16 @@ var HomeIterContent = React.createClass({
     if (!_.isEqual(this.state.selectedIter, selectedIter)){
       this.setState({selectedIter:iterData});
     }
+  },
 
+  hideConfirmDialog: function() {
+    this.setState({showConfirmModal: false, alertMsg: ''});
+  },
+
+  alertDisplay: function(message, type){
+    if (!_.isEmpty(message)){
+      this.setState({alertMsg: message, showConfirmModal: true, alertType: type});
+    }
   },
 
   render: function() {
@@ -982,6 +1026,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-title' data-tip='Enter any comments you feel are relevant to this iteration.  Perhaps it was something unplanned that affected the team’s deliverables, either positively or negatively.'>Iteration Comments</div>
               <textarea class='home-iter-comment-test' readOnly={!access} value={iterData.comment} onBlur={this.partialSaveIter.bind(null, 'comment')} onChange={this.handleChange} onKeyDown={this.checkChanges} onClick={this.commentSelected.bind(null, 'comment')} id='comment' ref="comment"/>:
             </div>
+            <ConfirmDialog showConfirmModal={this.state.showConfirmModal} hideConfirmDialog={this.hideConfirmDialog} confirmAction={this.hideConfirmDialog} alertType={this.state.alertType} content={this.state.alertMsg} actionBtnLabel='Ok' />
           </div>
 
         )
@@ -1002,7 +1047,7 @@ var HomeIterContent = React.createClass({
                 
                 <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={self.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
             </div>
-            
+            <ConfirmDialog showConfirmModal={this.state.showConfirmModal} hideConfirmDialog={this.hideConfirmDialog} confirmAction={this.hideConfirmDialog} alertType={this.state.alertType} content={this.state.alertMsg} actionBtnLabel='Ok' />
           </div>
         )
       }

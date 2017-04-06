@@ -132,7 +132,7 @@ var FirstLoginPopover = React.createClass({
           <div class='description'>
             <div class='desc-row'>
               <div>
-                <InlineSVG src={require('../../../img/Att-icons/Att-icons_detail.svg')}></InlineSVG>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons_detail.svg')}></InlineSVG>
               </div>
               <h1>{'This area will be empty for parent teams.'}</h1>
             </div>
@@ -164,7 +164,7 @@ var FirstLoginPopover = React.createClass({
           <div class='description'>
             <div class='desc-row'>
               <div>
-                <InlineSVG src={require('../../../img/Att-icons/Att-icons_detail.svg')}></InlineSVG>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons_detail.svg')}></InlineSVG>
               </div>
               <h1>{'Parent teams show aggregate data across teams.'}</h1>
             </div>
@@ -209,7 +209,7 @@ var FirstLoginPopover = React.createClass({
             </div>
             <div class='desc-row' style={{'paddingTop': '1.5em'}}>
               <div>
-                <InlineSVG src={require('../../../img/Att-icons/Att-icons_detail.svg')}></InlineSVG>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons_detail.svg')}></InlineSVG>
               </div>
               <h1>{'To be added to a team contact its iteration manager or lead.'}</h1>
             </div>
