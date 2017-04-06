@@ -623,10 +623,10 @@ module.exports.createUsers = function(members) {
             if (_.isEmpty(user)) {
               if (!_.isEmpty(member.location)) {
                 member.location.timezone = ulocation[member.location.site.toLowerCase()];
+                promiseArray.push(Users.create(member));
               }
-              promiseArray.push(Users.create(member));
             } else {
-              if (!_.isEmpty(user.location) && !_.isEmpty(user.location.timezone)) {
+              if (!_.isEmpty(user.location) || !_.isEmpty(user.location.timezone)) {
                 if (_.isEmpty(member.location)) {
                   member.location = {};
                   member.location.timezone = user.location.timezone;
