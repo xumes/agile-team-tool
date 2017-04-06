@@ -268,6 +268,9 @@ var HomeIterContent = React.createClass({
       }
       this.props.updateTeamIteration(iterationData);
     }
+    else if (!_.isEqual(iterationData, this.getSelectedIteration())){
+      this.props.updateTeamIteration(iterationData);
+    }
     return iterationData;
   },
 
@@ -325,7 +328,7 @@ var HomeIterContent = React.createClass({
   },
   cancelChange: function(id) {
     this.stopTimer();
-    if (this.refs[id].value != this.state.backupIter[id]){
+    if (this.state.selectedIter[id] != this.state.backupIter[id]){
       this.setState({selectedField:'', selectedIter: this.state.backupIter}, function(){
         this.props.updateTeamIteration(this.state.backupIter);
       });
@@ -393,7 +396,6 @@ var HomeIterContent = React.createClass({
         closedDefects = utils.numericValue($('#defectsClosed').val());
         defectsEndBal = openDefects + newDefects - closedDefects;
         selectedIter['defectsEndBal'] = defectsEndBal;
-        selectedIter[id] = $('#'+id).val();
         break;
       case 'deliveredStories':
         selectedIter['storiesDays'] = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
