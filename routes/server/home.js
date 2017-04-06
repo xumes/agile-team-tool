@@ -6,7 +6,7 @@ module.exports = function(app, includes) {
   var json = {
     'pageTitle': 'Home',
     'googleAnalyticsKey': settings.googleAnalyticsKey,
-    'ibmNPSKey': settings.ibmNPSKey,
+    'ibmNPS': settings.ibmNPS,
     'environment': settings.environment,
     'sentryPublicDSN': settings.sentry.publicDSN,
     'uiReleaseDate': settings.uiReleaseDate
