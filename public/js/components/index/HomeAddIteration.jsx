@@ -7,6 +7,7 @@ var business = require('moment-business');
 var DatePicker = require('react-datepicker');
 var CustomDate = require('./CustomDatePicker.jsx');
 var utils = require('../utils.jsx');
+var ConfirmDialog = require('./ConfirmDialog.jsx');
 
 var initData = {
   'startDate':null,
@@ -39,6 +40,9 @@ var HomeAddIteration = React.createClass({
       c_stories_dev_committed:false,
       c_stories_op_delivered:true,
       c_stories_dev_delivered: true,
+      showConfirmModal: false,
+      alertMsg: '',
+      alertType: ''
     }
   },
 
@@ -204,7 +208,7 @@ var HomeAddIteration = React.createClass({
       if (data != undefined) {
         var jsonData = data;
         if (jsonData.type != undefined && jsonData.type.toLowerCase() != 'squad') {
-          alert('Team information has been changed to non squad.  Iteration information cannot be entered for non squad teams.');
+          self.setState({alertMsg: 'Team information has been changed to non squad.  Iteration information cannot be entered for non squad teams.', showConfirmModal: true, alertType: 'error'});
           self.updateIterationInfo('clearIteration');
           return;
         }
@@ -233,12 +237,16 @@ var HomeAddIteration = React.createClass({
           })
           .then(function(result) {
               utils.clearHighlightedIterErrors();
-              alert('You have successfully added Iteration information.');
-              self.props.iterListHandler();
-              self.close();       
+              self.setState({alertMsg: 'You have successfully added Iteration information.', showConfirmModal: true, alertType: 'information'}, 
+                function(){
+                  self.props.iterListHandler();                  
+              });
           })
           .catch(function(err){
-            utils.handleIterationErrors(err);
+            var message = utils.handleIterationErrors(err);
+            if (!_.isEmpty(message)){
+              self.setState({alertMsg: message, showConfirmModal: true, alertType: 'error'});
+            }
           });
       }
     });
@@ -278,6 +286,11 @@ var HomeAddIteration = React.createClass({
       this.setState({c_stories_dev_delivered: e.target.checked, c_stories_dev_committed: false});
     else
       this.setState({c_stories_dev_delivered: e.target.checked});
+  },
+
+  hideConfirmDialog: function() {
+    this.setState({showConfirmModal: false, alertMsg: ''});
+    this.close();
   },
   
   render: function() {
@@ -350,6 +363,7 @@ var HomeAddIteration = React.createClass({
                   <a onClick={this.close} class='ibm-btn-sec ibm-btn-small ibm-btn-blue-50' style={{'padding':'0.4rem'}}>Cancel</a>
                 </div>
           </div>
+          <ConfirmDialog showConfirmModal={this.state.showConfirmModal} hideConfirmDialog={this.hideConfirmDialog} confirmAction={this.hideConfirmDialog} alertType={this.state.alertType} content={this.state.alertMsg} actionBtnLabel='Ok' />
           </ReactModal>
           </div>
       )
