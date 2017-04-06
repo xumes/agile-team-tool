@@ -37,7 +37,7 @@ var FirstLoginPopover = React.createClass({
             <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
           </div>
           <div class='content'>
-            <h1>{'It appears this is your first time to the new user interface of the Agile Team Tool.'}</h1>
+            <h1>{'It appears this is your first time to the new user interface of the Agile Team Tool'}</h1>
           </div>
           <div class='sub-content'>
             <h1>{'Would you like us to show you around?'}</h1>
@@ -52,7 +52,7 @@ var FirstLoginPopover = React.createClass({
             <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
           </div>
           <div class='content'>
-            <h1>{'The basics.'}</h1>
+            <h1>{'The basics'}</h1>
           </div>
           <div class='sub-content'>
             <h1>{'As you may know, this tool helps your team through its Agile journey by providing maturity direction,  trending data as well as iteration tracking data.  And this is how we do it… '}</h1>
@@ -97,13 +97,13 @@ var FirstLoginPopover = React.createClass({
             <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
           </div>
           <div class='content'>
-            <h1>{'The Team\'s Maturity Overview.'}</h1>
+            <h1>{'The Team\'s Maturity Overview'}</h1>
           </div>
           <div class='img-block'>
             <img src={'../../../img/maturityoverview.png'}></img>
           </div>
           <div class='sub-content' style={{'top': '17%'}}>
-            <h1><span>{'The light blue area '}</span><span style={{'fontSize': '1.3em', 'color':'#A49FA4', 'fontFamily':'inherit'}}>{'(example above)'}</span>{' only displays on squad teams '}<a>{' ( '}<img src={'../../../img/Att-icons/att-icons_tribe.svg'}></img>{' ) '}</a>{', and shows an overview of your team\'s most recently submitted maturity assessment with access to the team\'s action plan and previous assessment(s).'}</h1>
+            <h1><span>{'The light blue area '}</span><span style={{'fontSize': '0.9em', 'color':'#A49FA4', 'fontFamily':'inherit'}}>{'(example above)'}</span>{' only displays on squad teams '}<a style={{'color': 'inherit'}}>{' ( '}<img src={'../../../img/Att-icons/att-icons_tribe.svg'}></img>{' ) '}</a>{', and shows an overview of your team\'s most recently submitted maturity assessment with access to the team\'s action plan and previous assessment(s).'}</h1>
           </div>
           <div class='btns'>
             <span></span>
@@ -188,7 +188,7 @@ var FirstLoginPopover = React.createClass({
             <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
           </div>
           <div class='content'>
-            <h1>{'My Teams. All Teams.'}</h1>
+            <h1>{'My Teams & All Teams'}</h1>
           </div>
           <div class='sub-content'>
             <h1><span>{'My Teams '}</span>{'display only those teams you have edit access for (which means you are a member).'}</h1>
