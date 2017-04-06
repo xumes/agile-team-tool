@@ -804,13 +804,13 @@ var IterationExport = {
             iteration.personDaysAvailable = (iteration.teamAvailability - iteration.personDaysUnavailable).toFixed(2);
             if (iteration.personDaysAvailable != 0)
             {
-              iteration.storiesDay = (util.getIntegerValue(iteration.deliveredStories)/iteration.personDaysAvailable).toFixed(1);
-              iteration.storyPointsDay = (util.getIntegerValue(iteration.storyPointsDelivered)/iteration.personDaysAvailable).toFixed(1);
+              iteration.storiesDays = (util.getIntegerValue(iteration.deliveredStories)/iteration.personDaysAvailable).toFixed(1);
+              iteration.storyPointsDays = (util.getIntegerValue(iteration.storyPointsDelivered)/iteration.personDaysAvailable).toFixed(1);
             }
             else
             {
-              iteration.storiesDay = 0;
-              iteration.storyPointsDay = 0;
+              iteration.storiesDays = 0;
+              iteration.storyPointsDays = 0;
             }
 //           console.log('Team Name: '+matchedTeam.name + ' | Iteration Name: '+ iteration.name+' id: '+iteration._id+ ' | # of team members: '+matchedTeam.members.length+' Work days in this iteration: '+maxWorkDays+' | Team availability: '+iteration.teamAvailability + ' | Person days available: '+iteration.personDaysAvailable +' delivered story: '+ iteration.deliveredStories + 'delivered story points : ' + iteration.storyPointsDelivered + ' | StoriesDay : '+ iteration.storiesDay + ' | storyPointDay : '+ iteration.storyPointsDay);
             var updateIteration = {
@@ -819,8 +819,8 @@ var IterationExport = {
                 'teamAvailability': iteration.teamAvailability,
                 'personDaysUnavailable': iteration.personDaysUnavailable,
                 'personDaysAvailable': iteration.personDaysAvailable,
-                'storiesDay' : iteration.storiesDay,
-                'storyPointsDay' : iteration.storyPoints
+                'storiesDays' : iteration.storiesDays,
+                'storyPointsDays' : iteration.storyPointsDays
               }
             };
 
