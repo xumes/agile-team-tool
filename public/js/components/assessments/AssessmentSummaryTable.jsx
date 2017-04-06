@@ -82,6 +82,22 @@ var AssessmentSummaryTable = React.createClass({
   },
 
   displayGraphHandler: function(title) {
+    switch (title) {
+      case 'Adaptive Planning (Release and Iteration Planning)' :
+        var tempTitle = 'Release and Iteration Planning';
+        break;
+      case 'Track & Visualize Progress (Walls)' :
+        var tempTitle = 'Walls of Work';
+        break;
+      case 'Work Break Down (Stories)' :
+        var tempTitle = 'Story Cards';
+        break;
+      case 'Work Prioritization':
+        var tempTitle = 'Backlog Refinement';
+        break;
+      default:
+        tempTitle = title;
+    }
     var self = this;
     if (self.props.assessType == 'Project' && self.props.componentId == '1') {
       var assessType = 'Project';
@@ -90,15 +106,15 @@ var AssessmentSummaryTable = React.createClass({
     } else {
       assessType = 'Team Delivery';
     }
-    if (assessmentsData[assessType][title] != undefined) {
+    if (assessmentsData[assessType][tempTitle] != undefined) {
       var assessChartData = [
         {
           name: 'Target',
-          data: assessmentsData[assessType][title]['target']
+          data: assessmentsData[assessType][tempTitle]['target']
         },
         {
           name: 'Current',
-          data: assessmentsData[assessType][title]['current']
+          data: assessmentsData[assessType][tempTitle]['current']
         }
       ];
       self.loadResultChart('agileSummaryChart' + self.props.componentId, title, 'line', assessmentsData[assessType]['Date'], 'Maturity Level', assessChartData, null);
