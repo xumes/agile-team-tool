@@ -9,3 +9,5 @@ npm-debug.log
 agile-team-tool-manifest.yml
 .node-version
 public/dist/
+webpack-assets.json
+dist/

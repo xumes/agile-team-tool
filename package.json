@@ -5,10 +5,11 @@
   "scripts": {
     "start": "node ./bin/www",
     "worker": "node ./bin/update-snapshots.js",
-    "webpack": "webpack"
+    "build": "webpack && gulp build"
   },
   "dependencies": {
     "assert": "^1.4.1",
+    "assets-webpack-plugin": "^3.5.1",
     "async": "^2.0.1",
     "bluebird": "^3.4.1",
     "body-parser": "~1.15.1",
@@ -80,6 +81,7 @@
     "babel-preset-react": "^6.16.0",
     "eslint": "3.4.0",
     "eslint-config-google": "^0.6.0",
+    "gulp-string-replace": "^0.4.0",
     "webpack-dev-middleware": "^1.8.4",
     "webpack-hot-middleware": "^2.12.2"
   }
