@@ -60,6 +60,7 @@ var editIndexing = [
 'teamSatisfaction',
 'comment'
 ];
+var lastYPosition = 0;
 
 
 var HomeIterContent = React.createClass({
@@ -79,6 +80,7 @@ var HomeIterContent = React.createClass({
   },
   componentDidMount: function(){
     window.addEventListener('click', this.handleWindowClick);
+    lastYPosition = 0;
     var data = this.getSelectedIteration();
     if (data != null){
       this.setState({selectedIter: data,backupIter: _.clone(data)});
@@ -87,6 +89,7 @@ var HomeIterContent = React.createClass({
 
   componentWillUnmount: function () {
     clearInterval(this.timer);
+    lastYPosition = 0;
   },
 
   handleWindowClick: function(e){
@@ -94,7 +97,8 @@ var HomeIterContent = React.createClass({
       this.stopTimer();
       if (this.state.selectedField != ''){
         this.saveIter(this.state.selectedField);
-      }      
+        lastYPosition = 0;
+      }
       this.setState({selectedField:''});
     }
   },
@@ -113,6 +117,10 @@ var HomeIterContent = React.createClass({
       var data = this.getSelectedIteration();
       this.setState({selectedIter: data}, function(){
           $('select[id="homeIterSelection"]').select2({'width':'100%'});
+          if (lastYPosition > 0){
+            $(window).scrollTop(lastYPosition);
+          }
+            
       });
     }
     var self = this;
@@ -183,7 +191,8 @@ var HomeIterContent = React.createClass({
   checkChanges: function(event){
     if(event.keyCode == 9){
       var result = this.tabHandling(event.target.id, event.shiftKey);
-      if (result){
+      if (result){        
+        lastYPosition = window.pageYOffset;
         event.preventDefault();
       }
       else{
@@ -231,6 +240,7 @@ var HomeIterContent = React.createClass({
   iterBlockClickHandler: function(e) {
     var self = this;
     var data = _.clone(this.state.selectedIter);
+    lastYPosition = window.pageYOffset;
     this.setState({selectedField:e.target.id, backupIter: data});
   },
   saveBtnClickHandler: function(id) {
@@ -417,9 +427,7 @@ var HomeIterContent = React.createClass({
     }
     selectedIter.personDaysAvailable = (selectedIter.teamAvailability - selectedIter.personDaysUnavailable).toFixed(2);
     //2 new fields on DB - 
-    console.log('HERE......');
     selectedIter.storiesDays = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
-    console.log('DONE.... ');
     selectedIter.storyPointsDays = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
     return selectedIter;
   },
