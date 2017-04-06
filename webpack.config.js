@@ -1,19 +1,15 @@
 var Webpack = require('webpack');
 var path = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var AssetsPlugin = require('assets-webpack-plugin');
 
 module.exports = {
   entry: {
-    home: path.join(__dirname, 'public/js/v2Home.jsx'),
-    iterations: path.join(__dirname, 'public/js/v2Iteration.jsx'),
-    teams: path.join(__dirname, 'public/js/v2Team.jsx'),
-    assessments: path.join(__dirname, 'public/js/v2Assessment.jsx'),
-    assessmentSummary: path.join(__dirname, 'public/js/v2AssessmentSummary.jsx'),
-    v3home: path.join(__dirname, 'public/js/v3Home.jsx'),
+    app: path.join(__dirname, 'public/js/app.jsx'),
     styles: path.join(__dirname, 'public/css/styles.jsx')
   },
   output: {
-    filename: '[name].js',
+    filename: '[name].[chunkhash].js',
     path: path.join(__dirname, 'public/dist')
   },
   module: {
@@ -35,7 +31,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new ExtractTextPlugin('[name].css'),
+    new ExtractTextPlugin('[name].[chunkhash].css'),
     new Webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify('production')
@@ -44,11 +40,12 @@ module.exports = {
     new Webpack.optimize.UglifyJsPlugin({
       sourceMap: false,
       compress: {
-        warnings: false
+        warnings:false
       },
       output: {
         comments: false
       }
-    })
+    }),
+    new AssetsPlugin()
   ]
 };

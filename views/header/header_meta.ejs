@@ -2,6 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="geo.country" content="US" />
 <meta name="dcterms.rights" content="© Copyright IBM Corp. 2015" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title> <%= siteTitle %> | <%= pageTitle%> </title>
 
 <% if (typeof(googleAnalyticsKey) !== 'undefined' && googleAnalyticsKey != '') { %>
@@ -15,12 +16,6 @@
 </script>
 <% } %>
 
-<% if (typeof(sentryPublicDSN) !== 'undefined' && sentryPublicDSN != '') { %>
-<script src="https://cdn.ravenjs.com/3.9.1/raven.min.js" crossorigin="anonymous"></script>
-<script>
-  Raven.config('<%= sentryPublicDSN %>').install();
-</script>
-<% } %>
 
 <% if (ibmNPSKey != '') { %>
 <script>
@@ -59,7 +54,7 @@
           "contentProducer" : "REPLACE",
           "country" : "US",
           "industry" : "CIO",
-          "owner" : "Cheryl Rabenstein/Sterling Forest/IBM",
+          "owner" : "Sean M Reilley/New York/IBM",
           "subject" : "REPLACE",
           "type" : "REPLACE"
         }
@@ -71,21 +66,13 @@
 
 <!--<script src="//1.www.s81c.com/common/stats/ida_stats.js"></script>-->
 <link href="//1.www.s81c.com/common/v18/css/www.css" rel="stylesheet"/>
-<link href="/css/att.css" rel="stylesheet" type="text/css">
 <script src="//1.www.s81c.com/common/v18/js/www.js"></script>
-
-<script src="//1.www.s81c.com/common/v18/js/dyntabs.js"></script>
 
 <link href="//1.www.s81c.com/common/v18/css/forms.css" rel="stylesheet">
 <script src="//1.www.s81c.com/common/v18/js/forms.js"></script>
-<link href="//1.www.s81c.com/common/v18/css/tables.css" rel="stylesheet">
-<script src="//1.www.s81c.com/common/v18/js/tables.js"></script>
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment.min.js"></script>
-
-<script type="text/javascript" src="js/common.js?v=<%=Math.random()%>"></script>
-<script type="text/javascript" src="js/feedback.js?v=<%=Math.random()%>"></script>
 
 <script type="text/javascript">
   IBMCore.common.util.config.set({

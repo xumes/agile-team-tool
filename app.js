@@ -33,7 +33,9 @@ if (settings.sentry.dsn) {
 app.use(favicon(__dirname + '/public/img/favicon.ico'));
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+var viewFolder = process.env.NODE_ENV === 'production' ? 'dist': 'views';
+
+app.set('views', path.join(__dirname, viewFolder));
 app.set('view engine', 'ejs');
 
 /* istanbul ignore if */
