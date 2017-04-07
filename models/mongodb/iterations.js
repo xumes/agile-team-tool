@@ -10,7 +10,7 @@ var teamModel = require('./teams');
 var moment = require('moment');
 var business = require('moment-business');
 var dateFormat = 'YYYY-MM-DD HH:mm:ss';
-var Schema   = mongoose.Schema;
+var Schema = mongoose.Schema;
 
 require('../../settings');
 
@@ -44,7 +44,7 @@ var IterationSchema = {
   },
   docStatus: {
     type: String,
-    default:null
+    default: null
   },
   startDate: {
     type: Date,
@@ -104,7 +104,7 @@ var IterationSchema = {
   teamSatisfaction: {
     type: Number,
     min: [1, 'Team satisfaction should be between 1.0 - 4.0'],
-    max: [4,'Team satisfaction should be between 1.0 - 4.0'],
+    max: [4, 'Team satisfaction should be between 1.0 - 4.0'],
     default: null
   },
   comment: {
@@ -164,7 +164,7 @@ var IterationSchema = {
 
 function isIterationNumExist(iterationName, iterData, docId) {
   var duplicate = false;
-  _.find(iterData, function(iter){
+  _.find(iterData, function(iter) {
     if (iter.name == iterationName) {
       if (docId && docId.toString() == iter._id.toString()) {
         return duplicate = false;
@@ -180,11 +180,10 @@ function validateDate(value) {
   var dateFormat = 'MM/DD/YYYY';
   var error = false;
   var d1, d2;
-  if (_.isFunction(this.getUpdate)){
+  if (_.isFunction(this.getUpdate)) {
     d1 = moment(new Date(this.getUpdate().$set.startDate), dateFormat);
     d2 = moment(new Date(this.getUpdate().$set.endDate), dateFormat);
-  }
-  else {
+  } else {
     d1 = moment(new Date(this.startDate), dateFormat);
     d2 = moment(new Date(this.endDate), dateFormat);
   }
@@ -195,17 +194,17 @@ function validateDate(value) {
   return error;
 };
 
-function validateIteration(data, iterData, docId){
+function validateIteration(data, iterData, docId) {
   var errorMsg = {};
   var errorsList = {};
   var duplicate = isIterationNumExist(data['name'], iterData, docId);
   if (duplicate) {
     errorsList.name = {
-      message:'Iteration number/identifier: ' + data['name'] + ' already exists'
+      message: 'Iteration number/identifier: ' + data['name'] + ' already exists'
     };
   }
 
-  if (_.keys(errorsList).length > 0){
+  if (_.keys(errorsList).length > 0) {
     errorMsg.errors = errorsList;
   }
 
@@ -223,15 +222,24 @@ var IterationExport = {
 
   hasIterations: function(teamId) {
     return new Promise(function(resolve, reject) {
-      Iteration.find({'teamId': teamId, docStatus:{$ne:'delete'}}, {_id:1})
+      Iteration.find({
+        'teamId': teamId,
+        docStatus: {
+          $ne: 'delete'
+        }
+      }, {
+        _id: 1
+      })
         .then(function(results) {
           if (_.isEmpty(results))
             resolve(false);
           else
             resolve(true);
         })
-        .catch( /* istanbul ignore next */ function(err){
-          reject({'error':err});
+        .catch( /* istanbul ignore next */ function(err) {
+          reject({
+            'error': err
+          });
         });
     });
   },
@@ -239,35 +247,42 @@ var IterationExport = {
   getByIterInfo: function(teamId, limit) {
     return new Promise(function(resolve, reject) {
       if (teamId) {
-        Iteration.find({'teamId': teamId}).sort('endDate').exec()
-          .then(function(results){
+        Iteration.find({
+          'teamId': teamId
+        }).sort('endDate').exec()
+          .then(function(results) {
             loggers.get('model-iteration').verbose('getByIterInfo() - Team Iteration docs obtained. teamId: ' + teamId);
             resolve(results);
           })
-          .catch( /* istanbul ignore next */ function(err){
-            reject({'error':err});
+          .catch( /* istanbul ignore next */ function(err) {
+            reject({
+              'error': err
+            });
           });
-      }
-      else {
+      } else {
         loggers.get('model-iteration').verbose('getByIterInfo() - no teamId, Getting all team Iteration docs');
         if (limit) {
           Iteration.find().limit(limit).exec()
-            .then(function(results){
+            .then(function(results) {
               loggers.get('model-iteration').verbose('getByIterInfo() - Team Iteration docs obtained with limit: ' + limit);
               resolve(results);
             })
-            .catch( /* istanbul ignore next */ function(err){
-              reject({'error':err});
+            .catch( /* istanbul ignore next */ function(err) {
+              reject({
+                'error': err
+              });
             });
-        }
-        else {
-          /* istanbul ignore next */ Iteration.find().exec()
-            .then( /* istanbul ignore next */ function(results){
+        } else {
+          /* istanbul ignore next */
+          Iteration.find().exec()
+            .then( /* istanbul ignore next */ function(results) {
               loggers.get('model-iteration').verbose('getByIterInfo() - All team iteration docs obtained');
               resolve(results);
             })
-            .catch( /* istanbul ignore next */ function(err){
-              reject({'error':err});
+            .catch( /* istanbul ignore next */ function(err) {
+              reject({
+                'error': err
+              });
             });
         }
       }
@@ -276,13 +291,17 @@ var IterationExport = {
 
   get: function(docId) {
     return new Promise(function(resolve, reject) {
-      Iteration.findOne({'_id':docId}).exec()
-      .then(function(iteration){
-        resolve(iteration);
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        reject({'error':err});
-      });
+      Iteration.findOne({
+        '_id': docId
+      }).exec()
+        .then(function(iteration) {
+          resolve(iteration);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          reject({
+            'error': err
+          });
+        });
     });
   },
 
@@ -290,8 +309,14 @@ var IterationExport = {
     return new Promise(function(resolve, reject) {
       var qReq = {
         '$or': [
-          {'docStatus': null},
-          {'docStatus': {'$ne': 'delete'}}
+          {
+            'docStatus': null
+          },
+          {
+            'docStatus': {
+              '$ne': 'delete'
+            }
+          }
         ],
         'status': 'Completed'
       };
@@ -311,11 +336,13 @@ var IterationExport = {
       }
       Iteration.find(qReq).sort('endDate').exec()
         .then(function(body) {
-          loggers.get('model-iteration').verbose('getCompletedIterationsByKey() - '+body.length+' Completed Iteration docs obtained');
+          loggers.get('model-iteration').verbose('getCompletedIterationsByKey() - ' + body.length + ' Completed Iteration docs obtained');
           resolve(body);
         })
         .catch( /* istanbul ignore next */ function(err) {
-          reject({'error':err});
+          reject({
+            'error': err
+          });
         });
     });
   },
@@ -328,67 +355,68 @@ var IterationExport = {
       data['updateDate'] = new Date(moment.utc());
       data['status'] = IterationExport.calculateStatus(data);
       Users.findUserByUserId(userId.toUpperCase())
-      .then(function(userInfo){
-        if (userInfo == null) {
-          var msg = 'This user is not in the database: ' + userId;
-          loggers.get('model-iteration').error(msg);
-          return Promise.reject(msg);
-        }
-        else {
-          data['createdBy'] = userInfo.email;
-          data['createdByUserId'] = userInfo.userId;
-          data['updatedBy'] = userInfo.email;
-          data['updatedByUserId'] = userInfo.userId;
-          return Users.isUserAllowed(userInfo.userId, data['teamId']);
-        }
-      })
-      .then(function(validUser){
-        if (validUser) {
-          return IterationExport.getByIterInfo(data['teamId']);
-        } else {
-          var msg = 'This user is not allowed to add Iteration: ' + userId;
-          loggers.get('model-iteration').error(msg);
-          return Promise.reject(msg);
-        }
-      })
-      .then(function(iterData){
-        if (iterData != undefined) {
-          var errors = validateIteration(data, iterData);
-          if (!_.isEmpty(errors)){
-            return Promise.reject(errors);
+        .then(function(userInfo) {
+          if (userInfo == null) {
+            var msg = 'This user is not in the database: ' + userId;
+            loggers.get('model-iteration').error(msg);
+            return Promise.reject(msg);
+          } else {
+            data['createdBy'] = userInfo.email;
+            data['createdByUserId'] = userInfo.userId;
+            data['updatedBy'] = userInfo.email;
+            data['updatedByUserId'] = userInfo.userId;
+            return Users.isUserAllowed(userInfo.userId, data['teamId']);
           }
-        }
-        delete data['_id'];
-        return data;
-      })
-      .then(function(cleanData) {
-        return IterationExport.getDefectsOpenBalance(cleanData.teamId, cleanData.startDate);
-      })
-      .then(function(openBalance) {
-        if (_.isUndefined(data['defectsStartBal']) && _.isEmpty(data['defectsStartBal'])) {
-          data['defectsStartBal'] = openBalance;
-        } else {
-          openBalance = util.getIntegerValue(data['defectsStartBal']);
-        }
-        var newDefects = util.getIntegerValue(data['defects']);
-        var closedDefects = util.getIntegerValue(data['defectsClosed']);
-        var endBalance = openBalance + newDefects - closedDefects;
-        if (_.isUndefined(data['defects']) || !_.isEmpty(data['defects']))
-          data['defects'] = newDefects;
-        if (_.isUndefined(data['defectsClosed']) || !_.isEmpty(data['defectsClosed']))
-          data['defectsClosed'] = closedDefects;
-        data['defectsEndBal'] = endBalance;
+        })
+        .then(function(validUser) {
+          if (validUser) {
+            return IterationExport.getByIterInfo(data['teamId']);
+          } else {
+            var msg = 'This user is not allowed to add Iteration: ' + userId;
+            loggers.get('model-iteration').error(msg);
+            return Promise.reject(msg);
+          }
+        })
+        .then(function(iterData) {
+          if (iterData != undefined) {
+            var errors = validateIteration(data, iterData);
+            if (!_.isEmpty(errors)) {
+              return Promise.reject(errors);
+            }
+          }
+          delete data['_id'];
+          return data;
+        })
+        .then(function(cleanData) {
+          return IterationExport.getDefectsOpenBalance(cleanData.teamId, cleanData.startDate);
+        })
+        .then(function(openBalance) {
+          if (_.isUndefined(data['defectsStartBal']) && _.isEmpty(data['defectsStartBal'])) {
+            data['defectsStartBal'] = openBalance;
+          } else {
+            openBalance = util.getIntegerValue(data['defectsStartBal']);
+          }
+          var newDefects = util.getIntegerValue(data['defects']);
+          var closedDefects = util.getIntegerValue(data['defectsClosed']);
+          var endBalance = openBalance + newDefects - closedDefects;
+          if (_.isUndefined(data['defects']) || !_.isEmpty(data['defects']))
+            data['defects'] = newDefects;
+          if (_.isUndefined(data['defectsClosed']) || !_.isEmpty(data['defectsClosed']))
+            data['defectsClosed'] = closedDefects;
+          data['defectsEndBal'] = endBalance;
 
-        return Iteration.create(data);
-      })
-      .then(function(result){
-        loggers.get('model-iteration').verbose('Iteration added ' + result);
-        return resolve(result);
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        loggers.get('model-iteration').error('Iteration add error: ' + err);
-        reject({'error':err});
-      });
+          return Iteration.create(data);
+        })
+        .then(function(result) {
+          loggers.get('model-iteration').verbose('Iteration added ' + result);
+          return resolve(result);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          loggers.get('model-iteration').error('Iteration add error: ' + err);
+          reject({
+            'error': err
+          });
+        });
     });
   },
 
@@ -397,55 +425,63 @@ var IterationExport = {
       // user validated through apikey works with users collection object, session ldap object if otherwise
       var userId = user.userId || user.ldap.uid;
       IterationExport.get(docId)
-      .then(function(iterData){
-        if (_.isEmpty(iterData)) {
-          var msg = 'Iteration does not exist: ' + docId;
-          loggers.get('model-iteration').error(msg);
-          return Promise.reject(msg);
-        }
-        if (_.isEmpty(data['teamId']))
-          data['teamId'] = iterData['teamId'];
-        return Users.isUserAllowed(userId.toUpperCase(), data['teamId']);
-      })
-      .then(function(isAllowed){
-        if (isAllowed)
-          return IterationExport.getByIterInfo(data['teamId']);
-          //return Iteration.where({'_id': docId}).update({'$set':data});
-        else
-          return Promise.reject('The user is not allowed to edit iteration:' + userId);
-      })
-      .then(function(iterData){
-        if (iterData != undefined && iterData.length > 0) {
-          var errors = validateIteration(data, iterData, docId);
-          if (!_.isEmpty(errors)){
-            return Promise.reject(errors);
+        .then(function(iterData) {
+          if (_.isEmpty(iterData)) {
+            var msg = 'Iteration does not exist: ' + docId;
+            loggers.get('model-iteration').error(msg);
+            return Promise.reject(msg);
           }
+          if (_.isEmpty(data['teamId']))
+            data['teamId'] = iterData['teamId'];
+          return Users.isUserAllowed(userId.toUpperCase(), data['teamId']);
+        })
+        .then(function(isAllowed) {
+          if (isAllowed)
+            return IterationExport.getByIterInfo(data['teamId']);
+          //return Iteration.where({'_id': docId}).update({'$set':data});
+          else
+            return Promise.reject('The user is not allowed to edit iteration:' + userId);
+        })
+        .then(function(iterData) {
+          if (iterData != undefined && iterData.length > 0) {
+            var errors = validateIteration(data, iterData, docId);
+            if (!_.isEmpty(errors)) {
+              return Promise.reject(errors);
+            }
 
-        }
-        return Users.findUserByUserId(userId.toUpperCase());
-      })
-      .then(function(userInfo){
-        if (userInfo == null) {
-          var msg = 'This user is not in the database: ' + userId;
-          loggers.get('model-iteration').error(msg);
-          return Promise.reject(msg);
-        }
-        else {
-          data['updateDate'] = new Date(moment.utc());
-          data['updatedBy'] = userInfo.email;
-          data['updatedByUserId'] = userInfo.userId;
-          data['status'] = IterationExport.calculateStatus(data);
-          data['defectsEndBal'] = IterationExport.calculateDefectEndngBalance(data);
-          return Iteration.where({'_id': docId}).update({},{'$set':data}, {runValidators:true, context: 'query'});
-        }
-      })
-      .then(function(result){
-        return resolve(result);
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        loggers.get('model-iteration').error('Iteration edit error: ' + err);
-        return reject({'error':err});
-      });
+          }
+          return Users.findUserByUserId(userId.toUpperCase());
+        })
+        .then(function(userInfo) {
+          if (userInfo == null) {
+            var msg = 'This user is not in the database: ' + userId;
+            loggers.get('model-iteration').error(msg);
+            return Promise.reject(msg);
+          } else {
+            data['updateDate'] = new Date(moment.utc());
+            data['updatedBy'] = userInfo.email;
+            data['updatedByUserId'] = userInfo.userId;
+            data['status'] = IterationExport.calculateStatus(data);
+            data['defectsEndBal'] = IterationExport.calculateDefectEndngBalance(data);
+            return Iteration.where({
+              '_id': docId
+            }).update({}, {
+              '$set': data
+            }, {
+              runValidators: true,
+              context: 'query'
+            });
+          }
+        })
+        .then(function(result) {
+          return resolve(result);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          loggers.get('model-iteration').error('Iteration edit error: ' + err);
+          return reject({
+            'error': err
+          });
+        });
     });
   },
 
@@ -462,34 +498,40 @@ var IterationExport = {
         limit: 1
       };
       IterationExport.searchTeamIteration(params)
-      .then(function(iteration) {
-        //console.log('[getDefectsOpenBalance] body: '+JSON.stringify(iteration));
-        if (!_.isEmpty(iteration)) {
-          if (!_.isUndefined(iteration[0].defectsEndBal) & !isNaN(iteration[0].defectsEndBal))
-            return util.getIntegerValue(iteration[0].defectsEndBal);
-        }
-        return 0;
-      })
-      .then(function(body) {
-        resolve(body);
-      })
-      .catch( /* istanbul ignore next */ function(err) {
-        loggers.get('models').error('[iterationModel.getOpeningDefectBalance]:', err);
-        reject({'error':err});
-      });
+        .then(function(iteration) {
+          //console.log('[getDefectsOpenBalance] body: '+JSON.stringify(iteration));
+          if (!_.isEmpty(iteration)) {
+            if (!_.isUndefined(iteration[0].defectsEndBal) & !isNaN(iteration[0].defectsEndBal))
+              return util.getIntegerValue(iteration[0].defectsEndBal);
+          }
+          return 0;
+        })
+        .then(function(body) {
+          resolve(body);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          loggers.get('models').error('[iterationModel.getOpeningDefectBalance]:', err);
+          reject({
+            'error': err
+          });
+        });
     });
   },
 
   searchTeamIteration: function(p) {
-    return new Promise(function(resolve, reject){
-      var qReq = {'docStatus': {'$ne': 'delete'}};
+    return new Promise(function(resolve, reject) {
+      var qReq = {
+        'docStatus': {
+          '$ne': 'delete'
+        }
+      };
       if (!_.isEmpty(p.id))
         qReq['teamId'] = new ObjectId(p.id);
 
       if (!_.isEmpty(p.status))
         qReq['status'] = p.status;
 
-      if (!_.isEmpty(p.startDate) || !_.isEmpty(p.endDate)){
+      if (!_.isEmpty(p.startDate) || !_.isEmpty(p.endDate)) {
         var startDate = p.startDate;
         var endDate = p.endDate;
         if (startDate && endDate)
@@ -510,21 +552,25 @@ var IterationExport = {
       if (limit > 0) {
         loggers.get('model-iteration').verbose('Querying Iteration w/ limit :' + JSON.stringify(qReq), p.limit);
         Iteration.find(qReq).sort('-endDate').limit(limit).exec()
-        .then(function(iterations){
-          resolve(iterations);
-        })
-        .catch( /* istanbul ignore next */ function(err){
-          reject({'error':err});
-        });
+          .then(function(iterations) {
+            resolve(iterations);
+          })
+          .catch( /* istanbul ignore next */ function(err) {
+            reject({
+              'error': err
+            });
+          });
       } else {
         loggers.get('model-iteration').verbose('Querying Iteration:' + JSON.stringify(qReq));
         Iteration.find(qReq).sort('-endDate').exec()
-        .then(function(iterations){
-          resolve(iterations);
-        })
-        .catch( /* istanbul ignore next */ function(err){
-          reject({'error':err});
-        });
+          .then(function(iterations) {
+            resolve(iterations);
+          })
+          .catch( /* istanbul ignore next */ function(err) {
+            reject({
+              'error': err
+            });
+          });
       }
     });
   },
@@ -579,14 +625,21 @@ var IterationExport = {
   },
 
   getNotCompletedIterations: function() {
-    return new Promise(function(resolve, reject){
-      Iteration.find({'status': 'Not complete', 'docStatus': {'$ne': 'delete'}}).exec()
-      .then(function(iterations){
-        resolve(iterations);
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        reject({'error':err});
-      });
+    return new Promise(function(resolve, reject) {
+      Iteration.find({
+        'status': 'Not complete',
+        'docStatus': {
+          '$ne': 'delete'
+        }
+      }).exec()
+        .then(function(iterations) {
+          resolve(iterations);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          reject({
+            'error': err
+          });
+        });
     });
   },
 
@@ -596,10 +649,14 @@ var IterationExport = {
       if (_.isEmpty(Iterations)) {
         resolve([]);
       } else {
-        _.each(Iterations, function(Iteration){
-          bulk.find({'_id':Iteration._id}).update({'$set':Iteration.set});
+        _.each(Iterations, function(Iteration) {
+          bulk.find({
+            '_id': Iteration._id
+          }).update({
+            '$set': Iteration.set
+          });
         });
-        bulk.execute(function(error, result){
+        bulk.execute(function(error, result) {
           if (error) {
             /* istanbul ignore next */
             reject(error);
@@ -620,11 +677,15 @@ var IterationExport = {
       updateDoc.updatedByUserId = userId;
       updateDoc.updatedBy = userEmail;
       updateDoc.updateDate = new Date(moment.utc());
-      Iteration.update({'_id': docId}, {'$set': updateDoc}).exec()
-        .then(function(result){
+      Iteration.update({
+        '_id': docId
+      }, {
+        '$set': updateDoc
+      }).exec()
+        .then(function(result) {
           return resolve(result);
         })
-        .catch( /* istanbul ignore next */ function(err){
+        .catch( /* istanbul ignore next */ function(err) {
           return reject(err);
         });
     });
@@ -639,15 +700,21 @@ var IterationExport = {
           _id: ['_id/_rev is missing']
         };
         loggers.get('model-iteration').error('delete() ' + msg);
-        reject({'error':msg});
+        reject({
+          'error': msg
+        });
       } else {
-        Iteration.remove({'_id': docId})
+        Iteration.remove({
+          '_id': docId
+        })
           .then(function(body) {
             resolve(body);
           })
           .catch( /* istanbul ignore next */ function(err) {
             loggers.get('model-iteration').error('delete() ' + err);
-            reject({'error':err});
+            reject({
+              'error': err
+            });
           });
       }
     });
@@ -657,16 +724,19 @@ var IterationExport = {
       if (!request) {
         var msg = 'request is missing';
         loggers.get('model-iteration').error('delete() ' + msg);
-        reject({'error':msg});
-      }
-      else {
+        reject({
+          'error': msg
+        });
+      } else {
         Iteration.findOneAndRemove(request).exec()
           .then(function(body) {
             resolve(body);
           })
           .catch( /* istanbul ignore next */ function(err) {
             loggers.get('model-iteration').error('deleteByFields() ' + err);
-            reject({'error':err});
+            reject({
+              'error': err
+            });
           });
       }
     });
@@ -680,27 +750,26 @@ var IterationExport = {
     return new Promise(function(resolve, reject) {
 
       IterationExport.getNotCompletedIterations()
-      .then(function(iterations) {
+        .then(function(iterations) {
           //loop through here to calculate Sprint
-        _.each(iterations, function(iteration) {
-          iterationArray.push(iteration);
-          uniqueTeamIdArray.push(iteration.teamId.toHexString());
-        });
+          _.each(iterations, function(iteration) {
+            iterationArray.push(iteration);
+            uniqueTeamIdArray.push(iteration.teamId.toHexString());
+          });
           //get unique team id for team extract in preparation for iteration sprint calculation
-        uniqueTeamIdArray=_.uniq(uniqueTeamIdArray);
+          uniqueTeamIdArray = _.uniq(uniqueTeamIdArray);
 
-        _.each(uniqueTeamIdArray, function(uniqueTeam){
-          promiseArray.push(teamModel.getTeam(uniqueTeam));
-        });
+          _.each(uniqueTeamIdArray, function(uniqueTeam) {
+            promiseArray.push(teamModel.getTeam(uniqueTeam));
+          });
 
-        return Promise.all(promiseArray);
-      })
+          return Promise.all(promiseArray);
+        })
         .then(function(teams) {
-          _.each(iterationArray, function(iteration){
-            var maxWorkDays  = 0;
-            if (iteration.startDate !=undefined && iteration.endDate!=undefined)
-            {
-              maxWorkDays = business.weekDays(moment.utc(iteration.startDate),moment.utc(iteration.endDate));
+          _.each(iterationArray, function(iteration) {
+            var maxWorkDays = 0;
+            if (iteration.startDate != undefined && iteration.endDate != undefined) {
+              maxWorkDays = business.weekDays(moment.utc(iteration.startDate), moment.utc(iteration.endDate));
               if (business.isWeekDay(moment.utc(iteration.endDate)))
                 maxWorkDays++;
             }
@@ -712,23 +781,21 @@ var IterationExport = {
 
             var members = [];
             var availability = 0;
-            if (matchedTeam.members!=undefined && matchedTeam.members.length>0)
+            if (matchedTeam.members != undefined && matchedTeam.members.length > 0)
               members = matchedTeam.members;
 
-            _.each(members, function(member){
-              var allocation =  member.allocation/100;
+            _.each(members, function(member) {
+              var allocation = member.allocation / 100;
               var avgWorkWeek = 0;
-              if (member.workTime !=null)
-              {
+              if (member.workTime != null) {
                 if (!isNaN(parseInt(member.workTime)))
                   avgWorkWeek = member.workTime;
                 else
                   avgWorkWeek = 0;
-              }
-              else
+              } else
                 avgWorkWeek = 100;
 
-              avgWorkWeek = avgWorkWeek/100;
+              avgWorkWeek = avgWorkWeek / 100;
               availability += (allocation * avgWorkWeek * maxWorkDays);
             });
 
@@ -762,7 +829,7 @@ var IterationExport = {
           });
           return readyToUpdateIterations;
         })
-        .then(function (readyToUpdateIterations){
+        .then(function(readyToUpdateIterations) {
           return IterationExport.bulkUpdateIterations(readyToUpdateIterations);
         })
         .then(function(result) {
@@ -770,8 +837,10 @@ var IterationExport = {
           resolve('Successfully completed this operation');
         })
         .catch( /* istanbul ignore next */ function(err) {
-          loggers.get('model-iteration').verbose('Unable to process "Not Complete" iterations err='+err.error);
-          reject({'error':err});
+          loggers.get('model-iteration').verbose('Unable to process "Not Complete" iterations err=' + err.error);
+          reject({
+            'error': err
+          });
         });
     });
   }

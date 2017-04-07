@@ -51,6 +51,7 @@ var HomeAddTeamDropdownAllocation = React.createClass({
           value={memberAlloc}
           options={selallocOptions}
           clearable={false}
+          placeholder = '0'
           onChange={self.allocHandler} />
         <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.hideConfirmDialog} alertType='error' content={self.state.alertMsg} actionBtnLabel='Ok' />
       </div>

@@ -2,6 +2,7 @@ var React = require('react');
 var api = require('../api.jsx');
 var _ = require('underscore');
 var InlineSVG = require('svg-inline-react');
+var ConfirmDialog = require('./ConfirmDialog.jsx');
 var Modal = require('react-overlays').Modal;
 var currentParentId = '';
 var currentChildren = [];
@@ -18,7 +19,9 @@ var HomeTeamSetup = React.createClass({
       selectableChildren: [],
       revertAsSquad: false,
       parentId: '',
-      children: []
+      children: [],
+      alertMsg: '',
+      showAlertModal: false
     }
   },
   componentDidMount: function() {
@@ -115,14 +118,16 @@ var HomeTeamSetup = React.createClass({
         });
         _.each(self.state.children, function(childTeam) {
           if (_.isEqual(childTeam._id, parentTeam._id)) {
-            alert(parentTeam.name + ' cannot be both a parent and a child.');
+            // alert(parentTeam.name + ' cannot be both a parent and a child.');
+            self.setState({alertMsg: parentTeam.name + ' cannot be both a parent and a child.', showAlertModal: true});
             $('#parentSelectList').val('').change();
             return;
           }
           if (!_.isEmpty(parentTeam.path)) {
             var rootPathId = parentTeam.path.split(',')[1];
             if (_.isEqual(rootPathId, childTeam.pathId)) {
-              alert(parentTeam.name + ' cannot be your parent team since it is reporting to '+childTeam.name+', that is already listed as your child team.');
+              // alert(parentTeam.name + ' cannot be your parent team since it is reporting to '+childTeam.name+', that is already listed as your child team.');
+              self.setState({alertMsg: parentTeam.name + ' cannot be your parent team since it is reporting to '+childTeam.name+', that is already listed as your child team.', showAlertModal: true});
               $('#parentSelectList').val('').change();
               return;
             }
@@ -140,7 +145,8 @@ var HomeTeamSetup = React.createClass({
         if (team._id == selectedChild) return team;
       })
       if (_.isEqual(currentParentId, selectedChild)) {
-        alert(childTeam.name + ' cannot be both a parent and a child.');
+        // alert(childTeam.name + ' cannot be both a parent and a child.');
+        self.setState({alertMsg: childTeam.name + ' cannot be both a parent and a child.', showAlertModal: true});
         $('#childSelectList').val('').change();
         return;
       }
@@ -151,14 +157,16 @@ var HomeTeamSetup = React.createClass({
         if (!_.isEmpty(parentTeam.path)) {
           var rootPathId = parentTeam.path.split(',')[1];
           if (_.isEqual(rootPathId, childTeam.pathId)) {
-            alert(childTeam.name + ' cannot be added as a child since your current parent team, '+parentTeam.name+', is reporting to it.');
+            // alert(childTeam.name + ' cannot be added as a child since your current parent team, '+parentTeam.name+', is reporting to it.');
+            self.setState({alertMsg: childTeam.name + ' cannot be added as a child since your current parent team, '+parentTeam.name+', is reporting to it.', showAlertModal: true});
             $('#childSelectList').val('').change();
             return;
           }
         }
       }
       if ($('.team-setup-children p#'+selectedChild).length > 0) {
-        alert(childTeam.name + ' is already listed.');
+        // alert(childTeam.name + ' is already listed.');
+        self.setState({alertMsg: childTeam.name + ' is already listed.', showAlertModal: true});
         $('#childSelectList').val('').change();
         return;
       }
@@ -339,6 +347,10 @@ var HomeTeamSetup = React.createClass({
         console.log(err);
         return err;
       });
+  },
+
+  hideAlertDialog: function() {
+    this.setState({showAlertModal: false, alertMsg: ''});
   },
 
   render: function() {
@@ -576,6 +588,8 @@ var HomeTeamSetup = React.createClass({
             </div>
           </div>
         </Modal>
+
+        <ConfirmDialog showConfirmModal={self.state.showAlertModal} hideConfirmDialog={self.hideAlertDialog} confirmAction={self.hideAlertDialog} alertType='error' content={self.state.alertMsg} actionBtnLabel='Ok' />
       </div>
     )
   }
