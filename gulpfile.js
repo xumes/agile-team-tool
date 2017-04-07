@@ -25,7 +25,7 @@ gulp.task('pre-test', function() {
 
 gulp.task('test', ['lint', 'pre-test'], function() {
   process.env.isGulpTest = true;
-  return gulp.src(['test/models/mongodb/*.js'])
+  return gulp.src(['test/models/*.js'])
   //return gulp.src(['test/*.js', 'test/*/*/*.js', 'test/*/*.js'])
     .pipe(mocha({
       reporter: process.env.REPORTER || 'spec',

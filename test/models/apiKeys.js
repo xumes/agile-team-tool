@@ -1,6 +1,6 @@
 var chai = require('chai');
 var expect = chai.expect;
-var apiKeys = require('../../../models/mongodb/apiKeys');
+var apiKeys = require('../../models/mongodb/apiKeys');
 var _ = require('underscore');
 var testUser = {
   'userid': 'TEST1234567',
