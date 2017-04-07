@@ -22,8 +22,11 @@ var helmet = require('helmet');
 var httpProxy = require('http-proxy');
 var bundle = require('./bundle');
 var cors = require('cors');
+var compression = require('compression');
 
 var app = express();
+
+app.use(compression());
 
 if (settings.sentry.dsn) {
   Raven.config(settings.sentry.dsn).install();
