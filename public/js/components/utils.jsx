@@ -175,21 +175,22 @@ module.exports.setSelectOptions = function(elementId, listOption, firstOption, l
 module.exports.handleIterationErrors = function (errorResponse) {
   var errorlist = '';
   var response = errorResponse.responseJSON;
-
+  var message = '';
   if (response && response.error) {
     var errors = response.error.errors;
     if (errors){
         // Return iteration errors as String
       errorlist = this.getIterationErrorPopup(errors);
       if (!_.isEmpty(errorlist)) {
-        alert(errorlist);
+        message = errorlist;
       }
     }
     else {
       this.setFieldErrorHighlight(response.error.path);
-      alert(response.error.message);
+      message = response.error.message;
     }
   }
+  return message;
 };
 
 module.exports.getIterationErrorPopup = function(errors) {

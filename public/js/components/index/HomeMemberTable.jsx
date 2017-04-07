@@ -149,7 +149,7 @@ var HomeMemberTable = React.createClass({
     $('.' + block + ' > div').css('display','none');
     $('.' + block).off('click');
     if (this.props.loadDetailTeam.access) {
-      $('.' + block).click(function(){
+      $('.' + block + ':not(".user-deleted")').click(function(){
         $('.save-btn').hide();
         $('.cancel-btn').hide();
         $('.team-member-table-content-role > h').css('display','block');
@@ -189,14 +189,16 @@ var HomeMemberTable = React.createClass({
   hoverBlock: function(block) {
     $('.' + block).unbind('mouseenter mouseleave');
     if (this.props.loadDetailTeam.access) {
-      $('.' + block).hover(function(){
+      $('.' + block + ':not(".user-deleted")').hover(function(){
         // $(this).css('border','0.1em solid');
         // $(this).css('background-color','#FFFFFF');
         // $(this).css('padding-top','0.2em');
         // $(this).css('cursor','pointer');
         var blockId = $(this)[0].id;
-        $('#' + blockId + ' > h').css('display', 'none');
-        $('#' + blockId + ' > .modify-field').css('display','block');
+        if (!$('#' + blockId).hasClass('user-deleted')) {
+          $('#' + blockId + ' > h').css('display', 'none');
+          $('#' + blockId + ' > .modify-field').css('display','block');
+        }
       }, function(){
         // $(this).css('border','');
         // $(this).css('background-color','');
@@ -758,6 +760,7 @@ var HomeMemberTable = React.createClass({
       zIndex: 1040,
       top: 0, bottom: 0, left: 0, right: 0,
     };
+    console.log('memberpanel', self.props.loadDetailTeam);
     if (self.props.loadDetailTeam.team == undefined) {
       return null;
     } else {
@@ -783,24 +786,27 @@ var HomeMemberTable = React.createClass({
         }
 
         teamMembers = self.props.loadDetailTeam.team.members.map(function(memberDetail, idx){
-          if (idx <= 14) {
+          //if (idx <= 14) {
             var userDetail = _.find(self.props.loadDetailTeam.members, function(m){
               if (m.userId == memberDetail.userId) {
                 return m;
               }
             });
             var mLocation = '';
+            var userExist = true;
             if (!_.isEmpty(userDetail))
               mLocation = self.toTitleCase(userDetail.location.site);
+            else
+              userExist = false;
 
             var src = '//faces-cache.mybluemix.net/image/' + memberDetail.userId.toUpperCase();
             var blockColor = {
               'backgroundColor': '#FFFFFF'
             }
-            var blockClass = 'team-member-table-content-block1';
+            var blockClass = 'team-member-table-content-block1' + (userExist ? '' : ' user-deleted');
             if (idx % 2 != 0) {
               blockColor['backgroundColor'] = '#EFEFEF';
-              blockClass = 'team-member-table-content-block2';
+              blockClass = 'team-member-table-content-block2' + (userExist ? '' : ' user-deleted');
             }
             var blockId = 'member_'+idx;
             var nameId = 'name_'+idx;
@@ -850,8 +856,9 @@ var HomeMemberTable = React.createClass({
                     <h1 class='team-member-table-email'>{memberDetail.email}</h1>
                   </div>
                 </div>
-                <div class='team-member-table-content-role' id={roleId} style={{'width':'19.3%'}}>
+                <div class={userExist ? 'team-member-table-content-role' : 'team-member-table-content-role user-deleted'} id={roleId} style={{'width':'19.3%'}}>
                   <h>{memberDetail.role}</h>
+                  {userExist ?
                   <div class='modify-field'>
                     <div class='dropdown-list' style={roleTopStyle}>
                       <select id={'role_select_' + idx} defaultValue='Select a role'>
@@ -869,9 +876,11 @@ var HomeMemberTable = React.createClass({
                       </div>
                     </div>
                   </div>
+                  : ''}
                 </div>
-                <div class='team-member-table-content-location' id={locationId} style={{'width':'21.9%'}}>
+                <div class={userExist ? 'team-member-table-content-location' : 'team-member-table-content-location user-deleted'} id={locationId} style={{'width':'21.9%'}}>
                   <h>{mLocation}</h>
+                  {userExist ?
                   <div class='modify-field'>
                     <input type='text' id={'l_'+locationId} placeholder={mLocation} onKeyPress={self.keyPressCheck} onKeyUp={self.escPressCheck} defaultValue={mLocation}></input>
                     <div class='save-btn' onClick={self.saveLocation.bind(null, locationId)}>
@@ -881,9 +890,11 @@ var HomeMemberTable = React.createClass({
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                     </div>
                   </div>
+                  : <h class='user-deleted'>Invalid User<br/><span>(No longer in Bluepages)</span></h>}
                 </div>
-                <div class='team-member-table-content-allocation' id={allocationId} style={{'width':'11.3%'}}>
+                <div class={userExist ? 'team-member-table-content-allocation' : 'team-member-table-content-allocation user-deleted'} id={allocationId} style={{'width':'11.3%'}}>
                   <h>{memberDetail.allocation+'%'}</h>
+                  {userExist ?
                   <div class='modify-field'>
                     {/*<select id={'allocation_select_' + idx} defaultValue={memberDetail.allocation}>
                       {allocationSelection}
@@ -897,9 +908,11 @@ var HomeMemberTable = React.createClass({
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
                     </div>
                   </div>
+                  : ''}
                 </div>
-                <div class='team-member-table-content-awk' id={awkId} style={{'width':'16.7%'}}>
+                <div class={userExist ? 'team-member-table-content-awk' : 'team-member-table-content-awk user-deleted'} id={awkId} style={{'width':'16.7%'}}>
                   <h>{awkValue}</h>
+                  {userExist ?
                   <div class='modify-field'>
                     <div class='dropdown-list' style={awkTopStyle}>
                       <select id={'awk_select_' + idx} defaultValue='Full Time'>
@@ -919,13 +932,14 @@ var HomeMemberTable = React.createClass({
                       </div>
                     </div>
                   </div>
+                  : ''}
                   {deletBtn}
                 </div>
                 <div style={{'width':'1%','backgroundColor':'#FFFFFF'}}>
                 </div>
               </div>
             )
-          }
+          //}
         });
       }
       return (

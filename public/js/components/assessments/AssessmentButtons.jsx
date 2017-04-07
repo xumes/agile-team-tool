@@ -30,7 +30,7 @@ var AssessmentButtons = React.createClass({
     if ($('#assessmentSubmitDateTitle').html() == 'On Submission') {
       var submittedDate = ''
     } else {
-      submittedDate = new Date(moment.utc($('#assessmentSubmitDateTitle').html(), 'DD MMM YYYY'));
+      submittedDate = new Date(moment($('#assessmentSubmitDateTitle').html(), 'DD MMM YYYY'));
     }
     var updateDoc = {
       'assessmentStatus' : 'Submitted',
@@ -101,7 +101,7 @@ var AssessmentButtons = React.createClass({
     if ($('#assessmentSubmitDateTitle').html() == 'On Submission') {
       var submittedDate = ''
     } else {
-      submittedDate = new Date(moment.utc($('#assessmentSubmitDateTitle').html(), 'DD MMM YYYY'));
+      submittedDate = new Date(moment($('#assessmentSubmitDateTitle').html(), 'DD MMM YYYY'));
     }
     var updateDoc = {
       'assessmentStatus' : 'Draft',
