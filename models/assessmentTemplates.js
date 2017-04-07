@@ -2,10 +2,10 @@ var lodash = require('lodash');
 var Promise = require('bluebird');
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
-var config = require('../../settings');
+var config = require('../settings');
 mongoose.createConnection(config.mongoURL);
-var loggers = require('../../middleware/logger');
-var Schema = mongoose.Schema;
+var loggers = require('../middleware/logger');
+var Schema   = mongoose.Schema;
 var lodash = require('lodash');
 
 var componentsPrinciplesPracticesLevelsSchema = new Schema({

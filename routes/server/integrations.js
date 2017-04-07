@@ -1,5 +1,5 @@
 var settings = require('../../settings');
-var apiKeysModel = require('../../models/mongodb/apiKeys');
+var apiKeysModel = require('../../models/apiKeys');
 
 module.exports = function(app, includes) {
   app.get('/integrations/trello', includes.middleware.auth.requireLoginWithRedirect, function(req, res) {

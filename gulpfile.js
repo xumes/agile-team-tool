@@ -6,7 +6,7 @@ var fs = require('fs');
 var replace = require('gulp-string-replace');
 
 gulp.task('lint', function() {
-  return gulp.src(['**/*.js', '!public/dist/**', '!node_modules/**', '!models/mongodb/data/**', '!mongo_scripts/**', '!public/lib/**/*.js'])
+  return gulp.src(['**/*.js', '!public/dist/**', '!node_modules/**', '!models/data/**', '!public/lib/**/*.js'])
     .pipe(eslint({
       useEslintrc: true,
       envs: ['node', 'mocha']
@@ -16,7 +16,7 @@ gulp.task('lint', function() {
 });
 
 gulp.task('pre-test', function() {
-  return gulp.src(['*.js', 'routes/*.js', 'routes/*/*.js', '!models/*.js', 'models/mongodb/*.js'])
+  return gulp.src(['*.js', 'routes/*.js', 'routes/*/*.js', 'models/*.js'])
     // Covering files
     .pipe(istanbul())
     // Force `require` to return covered files
@@ -25,7 +25,7 @@ gulp.task('pre-test', function() {
 
 gulp.task('test', ['lint', 'pre-test'], function() {
   process.env.isGulpTest = true;
-  return gulp.src(['test/models/mongodb/*.js'])
+  return gulp.src(['test/models/*.js'])
   //return gulp.src(['test/*.js', 'test/*/*/*.js', 'test/*/*.js'])
     .pipe(mocha({
       reporter: process.env.REPORTER || 'spec',

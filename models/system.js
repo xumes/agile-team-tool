@@ -1,6 +1,6 @@
 var Promise = require('bluebird');
-var loggers = require('../../middleware/logger');
-var config = require('../../settings');
+var loggers = require('../middleware/logger');
+var config = require('../settings');
 var mongoose = config.mongoose;
 var Schema   = require('mongoose').Schema;
 

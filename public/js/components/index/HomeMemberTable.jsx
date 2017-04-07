@@ -760,7 +760,6 @@ var HomeMemberTable = React.createClass({
       zIndex: 1040,
       top: 0, bottom: 0, left: 0, right: 0,
     };
-    console.log('memberpanel', self.props.loadDetailTeam);
     if (self.props.loadDetailTeam.team == undefined) {
       return null;
     } else {
