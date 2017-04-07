@@ -10,6 +10,7 @@ var Select = require('react-select');
 var HomeAddTeamDropdownRole = require('./HomeAddTeamDropdownRole.jsx');
 var HomeAddTeamDropdownAllocation = require('./HomeAddTeamDropdownAllocation.jsx');
 var HomeAddTeamDropdownWorkTime = require('./HomeAddTeamDropdownWorkTime.jsx');
+var ConfirmDialog = require('./ConfirmDialog.jsx');
 var OPTSELECT = {
   ALLOCATION: 'allocation',
   ROLE: 'role',
@@ -31,7 +32,9 @@ var HomeAddTeamMemberRole = React.createClass({
         'Full Time': 100,
         'Half Time': 50,
         'Other': -1
-      }
+      },
+      showConfirmModal: false,
+      alertMsg: ''
     }
   },
 
@@ -160,22 +163,30 @@ var HomeAddTeamMemberRole = React.createClass({
     var self = this;
     var updatedMember = [];
     var value = $('#txtedit-inplace-location-'+uid).val().trim();
-    var memberList = self.props.newTeamObj.members.map(function(member){
-      var obj = {};
-      obj = _.clone(member);
-      if (member.userId === uid) {
-        obj.location.site = value;
-      }
-      updatedMember.push(obj);
-    });
-    self.props.setTeamMember(updatedMember);
-    $('#edit-inplace-location-'+uid).hide();
-    self.enableFinishButton();
+    if (_.isEmpty(value)) {
+      self.setState({alertMsg: 'Location info cannot be empty.', showConfirmModal: true});
+    } else {
+      var memberList = self.props.newTeamObj.members.map(function(member){
+        var obj = {};
+        obj = _.clone(member);
+        if (member.userId === uid) {
+          obj.location.site = value;
+        }
+        updatedMember.push(obj);
+      });
+      self.props.setTeamMember(updatedMember);
+      $('#edit-inplace-location-'+uid).hide();
+      self.enableFinishButton();
+    }
   },
 
   editInPlaceCancelLocation: function(uid, prevdata) {
     $('#data-edit-inplace-location-'+uid).html(prevdata).show();
     $('#edit-inplace-location-'+uid).hide();
+  },
+
+  hideConfirmDialog: function() {
+    this.setState({showConfirmModal: false, alertMsg: ''});
   },
 
   render: function() {
@@ -258,6 +269,7 @@ var HomeAddTeamMemberRole = React.createClass({
           </div>
 
           <HomeAddTeamFooterButtons buttonOptions={self.state.buttonOptions} openWindow={self.props.openWindow} saveTeam={self.props.saveTeam} />
+          <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.hideConfirmDialog} alertType='error' content={self.state.alertMsg} actionBtnLabel='Ok' />
         </div>
       </Modal>
     );
