@@ -11,6 +11,7 @@ var Modal = require('react-overlays').Modal;
 var utils = require('../utils.jsx');
 var _ = require('underscore');
 var moment = require('moment');
+var noTeamFlag = false;
 var windowSize = {
   'height': 768,
   'width': 1440,
@@ -280,6 +281,7 @@ var HomePage = React.createClass({
     $('#myTeams').attr('data-state','open');
     $('#bodyContent').show();
     $('#noTeamContent').hide();
+    $('#noTeamBlock').hide();
     if (tab == 'myteams') {
       $('#searchFieldDiv').hide();
       $('#navSearchBtn').hide();
@@ -293,9 +295,13 @@ var HomePage = React.createClass({
           'newTeams': newData,
           'selectedTeam': currentPath
         }, function(){
-          if (_.isEmpty(data.teams) && _.isEmpty(data.standalone)) {
-            $('#bodyContent').hide();
-            $('#noTeamContent').show();
+          if (noTeamFlag) {
+            if (_.isEmpty(data.teams) && _.isEmpty(data.standalone)) {
+              $('#bodyContent').hide();
+              $('#noTeamContent').show();
+            }
+          } else {
+            noTeamFlag = true;
           }
         });
         // self.setState({'searchTeamSelected': ''});
