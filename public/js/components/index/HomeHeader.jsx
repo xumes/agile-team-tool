@@ -129,11 +129,11 @@ var HomeHeader = React.createClass({
                 <a href="./docs/howto/AgileTeamTool_PersonDayTeamSatTemplate.xlsx" target="_blank">Compute Person Days Avail</a>
               </li>
               <li>
-                <a href="./docs/howto/AgileTeamTool_Top things to know about the new UI.docx" target="_blank">Navigate the New Interface</a>
+                <a href="./docs/howto/AgileTeamTool_Top things to know about the new UI.pdf" target="_blank">Navigate the New Interface</a>
               </li>
 
               <li>
-                <a href="./docs/howto/AgileTeamTool_UserGuide.pdf" target="_blank">User Guide</a>
+                <a href="./docs/howto/AgileTeamTool_Agile Team Tool User Guide_newUI.pdf" target="_blank">User Guide</a>
               </li>
               <li>
                 <a href="./docs/howto/Agile Team Tool - Quick Ref.pdf" target="_blank">Quick Reference Card</a>
