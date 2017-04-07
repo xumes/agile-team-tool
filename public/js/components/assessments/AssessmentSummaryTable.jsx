@@ -48,7 +48,7 @@ var AssessmentSummaryTable = React.createClass({
             }
             assessmentsData[type]['Overall']['current'].push(parseFloat(componentResult.currentScore==null?0:componentResult.currentScore.toFixed(1)));
             assessmentsData[type]['Overall']['target'].push(parseFloat(componentResult.targetScore==null?0:componentResult.targetScore.toFixed(1)));
-            assessmentsData[type]['Date'].push(moment.utc(assessment.submittedDate).format('DD MMM YYYY'));
+            assessmentsData[type]['Date'].push(moment(assessment.submittedDate).format('DD MMM YYYY'));
             _.each(componentResult.assessedComponents, function(assessedComponent, idx2){
               switch (assessedComponent.practiceName) {
                 case 'Adaptive Planning (Release and Iteration Planning)' :
@@ -82,6 +82,22 @@ var AssessmentSummaryTable = React.createClass({
   },
 
   displayGraphHandler: function(title) {
+    switch (title) {
+      case 'Adaptive Planning (Release and Iteration Planning)' :
+        var tempTitle = 'Release and Iteration Planning';
+        break;
+      case 'Track & Visualize Progress (Walls)' :
+        var tempTitle = 'Walls of Work';
+        break;
+      case 'Work Break Down (Stories)' :
+        var tempTitle = 'Story Cards';
+        break;
+      case 'Work Prioritization':
+        var tempTitle = 'Backlog Refinement';
+        break;
+      default:
+        tempTitle = title;
+    }
     var self = this;
     if (self.props.assessType == 'Project' && self.props.componentId == '1') {
       var assessType = 'Project';
@@ -90,15 +106,15 @@ var AssessmentSummaryTable = React.createClass({
     } else {
       assessType = 'Team Delivery';
     }
-    if (assessmentsData[assessType][title] != undefined) {
+    if (assessmentsData[assessType][tempTitle] != undefined) {
       var assessChartData = [
         {
           name: 'Target',
-          data: assessmentsData[assessType][title]['target']
+          data: assessmentsData[assessType][tempTitle]['target']
         },
         {
           name: 'Current',
-          data: assessmentsData[assessType][title]['current']
+          data: assessmentsData[assessType][tempTitle]['current']
         }
       ];
       self.loadResultChart('agileSummaryChart' + self.props.componentId, title, 'line', assessmentsData[assessType]['Date'], 'Maturity Level', assessChartData, null);
@@ -196,30 +212,45 @@ var AssessmentSummaryTable = React.createClass({
   },
   countPractics: function(template) {
     var practiceCount= [];
-    _.each(template.principles, function(principle){
-      _.each(principle.practices, function(practice, idx){
-        practiceCount.push(idx);
+    if (!_.isEmpty(template)) {
+      _.each(template.principles, function(principle){
+        _.each(principle.practices, function(practice, idx){
+          practiceCount.push(idx);
+        });
       });
-    });
+    }
     return practiceCount;
   },
   render: function() {
     var self = this;
     if (!_.isEmpty(self.props.componentResult)) {
-      var templateCount = [
-        self.countPractics(self.props.assessTemplate.components[0]),
-        self.countPractics(self.props.assessTemplate.components[1]),
-        self.countPractics(self.props.assessTemplate.components[2])
-      ];
-      if (self.props.componentResult.componentName.indexOf('Project') >= 0) {
+      if (self.props.assessTemplate.version == 1) {
+        var templateCount = [
+          self.countPractics(self.props.assessTemplate.components[0]),
+          self.countPractics(self.props.assessTemplate.components[0]),
+          self.countPractics(self.props.assessTemplate.components[1])
+        ];
+      } else {
+        templateCount = [
+          self.countPractics(self.props.assessTemplate.components[0]),
+          self.countPractics(self.props.assessTemplate.components[1]),
+          self.countPractics(self.props.assessTemplate.components[2])
+        ];
+      }
+      if (self.props.componentResult.componentName.indexOf('Project') >= 0 || self.props.componentResult.componentName == 'Team Agile Leadership and Collaboration' || self.props.componentResult.componentName == 'Agile Leadership and Collaboration') {
         var tpTemplate = self.props.assessTemplate.components[0];
         var tpCount = templateCount[0];
-      } else if (self.props.componentResult.componentName.indexOf('Operations') >= 0) {
+      } else if (self.props.componentResult.componentName.indexOf('Operations') >= 0 || self.props.componentResult.componentName.indexOf('Ops') >= 0) {
         var tpTemplate = self.props.assessTemplate.components[1];
         tpCount = templateCount[1];
       } else {
-        var tpTemplate = self.props.assessTemplate.components[2];
-        tpCount = templateCount[2];
+        if (self.props.assessTemplate.version == 1) {
+          var tpTemplate = self.props.assessTemplate.components[1];
+          tpCount = templateCount[2];
+        } else {
+          var tpTemplate = self.props.assessTemplate.components[2];
+          tpCount = templateCount[2];
+        }
       }
       var components = self.props.componentResult.assessedComponents.map(function(component, idx){
         var principleIndex = parseInt(component['principleId']) - 1;

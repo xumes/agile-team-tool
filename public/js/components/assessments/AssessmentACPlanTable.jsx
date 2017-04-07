@@ -22,24 +22,44 @@ var AssessmentACPlanTable = React.createClass({
   componentWillMount: function() {
     var self = this;
     actionPlanSelection = [];
-    var templateCount = [
-      self.countPractics(self.props.assessTemplate.components[0]),
-      self.countPractics(self.props.assessTemplate.components[1]),
-      self.countPractics(self.props.assessTemplate.components[2])
-    ];
+    if (self.props.assessTemplate.version == 1) {
+      var templateCount = [
+        self.countPractics(self.props.assessTemplate.components[0]),
+        self.countPractics(self.props.assessTemplate.components[0]),
+        self.countPractics(self.props.assessTemplate.components[1])
+      ];
+    } else {
+      templateCount = [
+        self.countPractics(self.props.assessTemplate.components[0]),
+        self.countPractics(self.props.assessTemplate.components[1]),
+        self.countPractics(self.props.assessTemplate.components[2])
+      ];
+    }
+    // var templateCount = [
+    //   self.countPractics(self.props.assessTemplate.components[0]),
+    //   self.countPractics(self.props.assessTemplate.components[1]),
+    //   self.countPractics(self.props.assessTemplate.components[2])
+    // ];
     _.each(self.props.tempAssess.componentResults, function(componentResult){
       _.each(componentResult.assessedComponents, function(assessedComponent){
         var newAssessedComponent = _.clone(assessedComponent);
         newAssessedComponent['componentName'] = componentResult['componentName'];
-        if (newAssessedComponent['componentName'].indexOf('Project') >= 0) {
+        if (newAssessedComponent['componentName'].indexOf('Project') >= 0 || newAssessedComponent['componentName'] == 'Team Agile Leadership and Collaboration' || newAssessedComponent['componentName'] == 'Agile Leadership and Collaboration') {
           var template = self.props.assessTemplate.components[0];
           var tpCount = templateCount[0];
-        } else if (newAssessedComponent['componentName'].indexOf('Operations') >= 0) {
+        } else if (newAssessedComponent['componentName'].indexOf('Operations') >= 0 || newAssessedComponent['componentName'].indexOf('Ops') >= 0) {
           template = self.props.assessTemplate.components[1];
           tpCount = templateCount[1];
         } else {
-          template = self.props.assessTemplate.components[2];
-          tpCount = templateCount[2];
+          if (self.props.assessTemplate.version == 1) {
+            var template = self.props.assessTemplate.components[1];
+            tpCount = templateCount[2];
+          } else {
+            var template = self.props.assessTemplate.components[2];
+            tpCount = templateCount[2];
+          }
+          // template = self.props.assessTemplate.components[2];
+          // tpCount = templateCount[2];
         }
         var principleIndex = parseInt(newAssessedComponent['principleId']) - 1;
         var practiceSumIndex = parseInt(newAssessedComponent['practiceId']) - 1;
@@ -73,11 +93,13 @@ var AssessmentACPlanTable = React.createClass({
   },
   countPractics: function(template) {
     var practiceCount= [];
-    _.each(template.principles, function(principle){
-      _.each(principle.practices, function(practice, idx){
-        practiceCount.push(idx);
+    if (!_.isEmpty(template)) {
+      _.each(template.principles, function(principle){
+        _.each(principle.practices, function(practice, idx){
+          practiceCount.push(idx);
+        });
       });
-    });
+    }
     return practiceCount;
   },
   actionPlanChangeHandler2: function(e) {
@@ -170,7 +192,7 @@ var AssessmentACPlanTable = React.createClass({
   },
   dateChangeDateHandler: function(id, e) {
     var self = this;
-    $('#' + id).html(moment.utc(e).format('DD MMM YYYY'));
+    $('#' + id).html(moment(e).format('DD MMM YYYY'));
     var tempActionPlans = self.getActionPlansFromTable();
     self.setState({actionPlans: tempActionPlans});
   },
@@ -194,7 +216,7 @@ var AssessmentACPlanTable = React.createClass({
         actionPlanId: idx
       }
       if ($('#actionPlanReviewDate_' + idx).html() != '') {
-        tempActionPlan['reviewDate'] = new Date(moment.utc($('#actionPlanReviewDate_' + idx).html(), 'DD MMM YYYY'));
+        tempActionPlan['reviewDate'] = new Date(moment($('#actionPlanReviewDate_' + idx).html(), 'DD MMM YYYY'));
       }
       tableActionPlans.push(tempActionPlan);
     });
@@ -224,86 +246,90 @@ var AssessmentACPlanTable = React.createClass({
       } else {
         actionPlans = self.props.tempAssess.actionPlans
       }
-      var tableBlocks = actionPlans.map(function(ap, idx){
-        var reviewDate = ap.reviewDate==null?'':moment.utc(ap.reviewDate).format('DD MMM YYYY');
-        var selectDate = ap.reviewDate==null?moment.utc(new Date()):moment.utc(ap.reviewDate);
-        var reviewDeteStyle = {
-          color: ap.reviewDate==null?'#4178BE':'#323232',
-          cursor: haveAccess?'pointer':'not-allowed'
-        }
-        var readOnlyStyle = {
-          cursor: haveAccess&&ap.isUserCreated?'auto':'not-allowed',
-          color: haveAccess&&ap.isUserCreated?'#323232':'#777677'
-        }
-        var readOnlyStyle2 = {
-          cursor: haveAccess?'auto':'not-allowed',
-          color: haveAccess?'#323232':'#777677'
-        }
-        var description = '';
-        var currentScoreDescritpion = '';
-        var targetScoreDescription = '';
-        // console.log(ap);
-        _.find(actionPlanSelection, function(acp) {
-          if (acp.practiceId == ap.practiceId && acp.componentName == ap.componentName) {
-              description = acp.description;
-              currentScoreDescritpion = acp.levels[ap.currentScore - 1].criteria.join(' <br /> ');
-              targetScoreDescription = acp.levels[ap.targetScore - 1].criteria.join(' <br /> ');
-              return;
+      if (_.isEmpty(actionPlans)) {
+        tableBlocks = null;
+      } else {
+        var tableBlocks = actionPlans.map(function(ap, idx){
+          var reviewDate = ap.reviewDate==null?'':moment(ap.reviewDate).format('DD MMM YYYY');
+          var selectDate = ap.reviewDate==null?moment(new Date()):moment(ap.reviewDate);
+          var reviewDeteStyle = {
+            color: ap.reviewDate==null?'#4178BE':'#323232',
+            cursor: haveAccess?'pointer':'not-allowed'
           }
-        });
-        return (
-          <div key={'actionPlan_' + idx} id={'actionPlan_' + idx} class='table-block'>
-            <div style={{'display':'none'}} class='other-info'>
-              <span id={'actionPlanPricipleId_' + idx}>{ap.principleId}</span>
-              <span id={'actionPlanPracticeId_' + idx}>{ap.practiceId}</span>
-              <span id={'actionPlanComponentName_' + idx}>{ap.componentName}</span>
-              <span id={'actionPlanIsUserCreated_' + idx}>{ap.isUserCreated?'true':'false'}</span>
-            </div>
-            <div style={{'width':'10%'}} class='practice-name' id={'actionPlanPracticeName_' + idx}>
-              <h1 data-tip={description} style={{'display':ap.isUserCreated?'none':'block', 'cursor':'pointer'}}>{ap.practiceName}</h1>
-              <select style={{'display':ap.isUserCreated?'block':'none'}} class='practice-name-selection' id={'practiceNameSelection_' + idx} value={ap.practiceName} onChange={self.actionPlanChangeHandler}>
-                {practiceNameSelection}
-              </select>
-            </div>
-            <div style={{'width':'10%'}} class='principle-name'>
-              <h1 id={'actionPlanPrincipleName_' + idx}>{ap.principleName}</h1>
-            </div>
-            <div style={{'width':'6%'}}>
-              <h1 data-tip={currentScoreDescritpion} id={'actionPlanCurrentScore_' + idx} style={{'cursor':'pointer'}}>{ap.currentScore}</h1>
-            </div>
-            <div style={{'width':'6%'}}>
-              <h1 data-tip={targetScoreDescription} id={'actionPlanTargetScore_' + idx} style={{'cursor':'pointer'}}>{ap.targetScore}</h1>
-            </div>
-            <div style={{'width':'15%'}}>
-              <textarea id={'actionPlanImproveDescription_' + idx} readOnly={!haveAccess||!ap.isUserCreated} style={readOnlyStyle} maxLength='350' value={ap.improveDescription} onChange={self.textareaChangeHandler}/>
-            </div>
-            <div style={{'width':'15%','marginLeft':'1%'}}>
-              <textarea id={'actionPlanProgressSummary_' + idx} readOnly={!haveAccess} style={readOnlyStyle2} maxLength='350' value={ap.progressSummary} onChange={self.textareaChangeHandler}></textarea>
-            </div>
-            <div style={{'width':'15%','marginLeft':'1%'}}>
-              <textarea id={'actionPlanKeyMetric_' + idx} readOnly={!haveAccess} style={readOnlyStyle2} maxLength='350' value={ap.keyMetric} onChange={self.textareaChangeHandler}/>
-            </div>
-            <div style={{'width':'8%','marginLeft':'1%'}}>
-              <h1 style={{'paddingBottom':'0'}} id={'actionPlanReviewDate_' + idx}>{reviewDate}</h1>
-              <DatePicker onChange={self.dateChangeDateHandler.bind(null,'actionPlanReviewDate_' + idx)} selected={selectDate} customInput={<AssessmentDatePicker haveAccess={!haveAccess}/>}/>
-            </div>
-            <div style={{'width':'8%'}}>
-              <div>
-                <select disabled={!haveAccess} id={'actionPlanSelect_' + idx} value={ap.actionStatus} onChange={self.actionPlanChangeHandler2}>
-                  <option value='Open'>{'Open'}</option>
-                  <option value='In-progress'>{'In-progress'}</option>
-                  <option value='Closed'>{'Closed'}</option>
+          var readOnlyStyle = {
+            cursor: haveAccess&&ap.isUserCreated?'auto':'not-allowed',
+            color: haveAccess&&ap.isUserCreated?'#323232':'#777677'
+          }
+          var readOnlyStyle2 = {
+            cursor: haveAccess?'auto':'not-allowed',
+            color: haveAccess?'#323232':'#777677'
+          }
+          var description = '';
+          var currentScoreDescritpion = '';
+          var targetScoreDescription = '';
+          // console.log(ap);
+          _.find(actionPlanSelection, function(acp) {
+            if (acp.practiceId == ap.practiceId && acp.componentName == ap.componentName) {
+                description = acp.description;
+                currentScoreDescritpion = acp.levels[ap.currentScore - 1].criteria.join(' <br /> ');
+                targetScoreDescription = acp.levels[ap.targetScore - 1].criteria.join(' <br /> ');
+                return;
+            }
+          });
+          return (
+            <div key={'actionPlan_' + idx} id={'actionPlan_' + idx} class='table-block'>
+              <div style={{'display':'none'}} class='other-info'>
+                <span id={'actionPlanPricipleId_' + idx}>{ap.principleId}</span>
+                <span id={'actionPlanPracticeId_' + idx}>{ap.practiceId}</span>
+                <span id={'actionPlanComponentName_' + idx}>{ap.componentName}</span>
+                <span id={'actionPlanIsUserCreated_' + idx}>{ap.isUserCreated?'true':'false'}</span>
+              </div>
+              <div style={{'width':'10%'}} class='practice-name' id={'actionPlanPracticeName_' + idx}>
+                <h1 data-tip={description} style={{'display':ap.isUserCreated?'none':'block', 'cursor':'pointer'}}>{ap.practiceName}</h1>
+                <select style={{'display':ap.isUserCreated?'block':'none'}} class='practice-name-selection' id={'practiceNameSelection_' + idx} value={ap.practiceName} onChange={self.actionPlanChangeHandler}>
+                  {practiceNameSelection}
                 </select>
               </div>
-            </div>
-            <div style={{'width':'4%','display':haveAccess?'block':'none'}}>
-              <div class='action-plan-delete' style={{'cursor':'pointer','display':'none'}} onClick={self.deleteActionPlan.bind(null, idx)}>
-                <InlineSVG src={require('../../../img/Att-icons/att-icons_delete.svg')}></InlineSVG>
+              <div style={{'width':'10%'}} class='principle-name'>
+                <h1 id={'actionPlanPrincipleName_' + idx}>{ap.principleName}</h1>
+              </div>
+              <div style={{'width':'6%'}}>
+                <h1 data-tip={currentScoreDescritpion} id={'actionPlanCurrentScore_' + idx} style={{'cursor':'pointer'}}>{ap.currentScore}</h1>
+              </div>
+              <div style={{'width':'6%'}}>
+                <h1 data-tip={targetScoreDescription} id={'actionPlanTargetScore_' + idx} style={{'cursor':'pointer'}}>{ap.targetScore}</h1>
+              </div>
+              <div style={{'width':'15%'}}>
+                <textarea id={'actionPlanImproveDescription_' + idx} readOnly={!haveAccess||!ap.isUserCreated} style={readOnlyStyle} maxLength='350' value={ap.improveDescription} onChange={self.textareaChangeHandler}/>
+              </div>
+              <div style={{'width':'15%','marginLeft':'1%'}}>
+                <textarea id={'actionPlanProgressSummary_' + idx} readOnly={!haveAccess} style={readOnlyStyle2} maxLength='350' value={ap.progressSummary} onChange={self.textareaChangeHandler}></textarea>
+              </div>
+              <div style={{'width':'15%','marginLeft':'1%'}}>
+                <textarea id={'actionPlanKeyMetric_' + idx} readOnly={!haveAccess} style={readOnlyStyle2} maxLength='350' value={ap.keyMetric} onChange={self.textareaChangeHandler}/>
+              </div>
+              <div style={{'width':'8%','marginLeft':'1%'}}>
+                <h1 style={{'paddingBottom':'0'}} id={'actionPlanReviewDate_' + idx}>{reviewDate}</h1>
+                <DatePicker onChange={self.dateChangeDateHandler.bind(null,'actionPlanReviewDate_' + idx)} selected={selectDate} customInput={<AssessmentDatePicker haveAccess={!haveAccess}/>}/>
+              </div>
+              <div style={{'width':'8%'}}>
+                <div>
+                  <select disabled={!haveAccess} id={'actionPlanSelect_' + idx} value={ap.actionStatus} onChange={self.actionPlanChangeHandler2}>
+                    <option value='Open'>{'Open'}</option>
+                    <option value='In-progress'>{'In-progress'}</option>
+                    <option value='Closed'>{'Closed'}</option>
+                  </select>
+                </div>
+              </div>
+              <div style={{'width':'4%','display':haveAccess?'block':'none'}}>
+                <div class='action-plan-delete' style={{'cursor':'pointer','display':'none'}} onClick={self.deleteActionPlan.bind(null, idx)}>
+                  <InlineSVG src={require('../../../img/Att-icons/att-icons_delete.svg')}></InlineSVG>
+                </div>
               </div>
             </div>
-          </div>
-        );
-      });
+          );
+        });
+      }
     }
     return (
       <div class='assessment-acplan-table' id={'assessmentContainer' + self.props.componentId}>
