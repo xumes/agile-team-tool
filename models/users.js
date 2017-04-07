@@ -111,20 +111,20 @@ var users = {
     return new Promise(function(resolve, reject){
       if (_.isEmpty(uid)) {
         User.find().exec()
-        .then(function(users){
-          resolve(users);
-        })
-        .catch( /* istanbul ignore next */ function(err){
-          reject({'error':err});
-        });
+          .then(function(users){
+            resolve(users);
+          })
+          .catch( /* istanbul ignore next */ function(err){
+            reject({'error':err});
+          });
       } else {
         return User.findOne({userId: uid}).exec()
-        .then(function(user){
-          resolve(user);
-        })
-        .catch( /* istanbul ignore next */ function(err){
-          reject({'error':err});
-        });
+          .then(function(user){
+            resolve(user);
+          })
+          .catch( /* istanbul ignore next */ function(err){
+            reject({'error':err});
+          });
       }
     });
   },
@@ -133,20 +133,20 @@ var users = {
     return new Promise(function(resolve, reject){
       if (_.isEmpty(email)) {
         User.find().exec()
-        .then(function(users){
-          resolve(users);
-        })
-        .catch( /* istanbul ignore next */ function(err){
-          reject({'error':err});
-        });
+          .then(function(users){
+            resolve(users);
+          })
+          .catch( /* istanbul ignore next */ function(err){
+            reject({'error':err});
+          });
       } else {
         return User.findOne({email: email.toLowerCase()}).exec()
-        .then(function(user){
-          resolve(user);
-        })
-        .catch( /* istanbul ignore next */ function(err){
-          reject({'error':err});
-        });
+          .then(function(user){
+            resolve(user);
+          })
+          .catch( /* istanbul ignore next */ function(err){
+            reject({'error':err});
+          });
       }
     });
   },
@@ -208,12 +208,12 @@ var users = {
   getUsersInfo: function(ids) {
     return new Promise(function(resolve, reject) {
       User.find({'userId': {'$in': ids}}).exec()
-      .then(function(users){
-        resolve(users);
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        reject({'error':err});
-      });
+        .then(function(users){
+          resolve(users);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject({'error':err});
+        });
     });
   },
 

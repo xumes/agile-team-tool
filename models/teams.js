@@ -199,12 +199,12 @@ TeamSchema.path('pathId').validate(function(value, done) {
 var getAllUniquePaths = function(){
   return new Promise(function(resolve, reject){
     Team.find({path: {$ne: null}, docStatus:{$ne:'delete'}}, {path: 1})
-    .then(function(paths) {
-      resolve(_.uniq(_.pluck(paths, 'path')));
-    })
-    .catch( /* istanbul ignore next */ function(err) {
-      reject(err);
-    });
+      .then(function(paths) {
+        resolve(_.uniq(_.pluck(paths, 'path')));
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        reject(err);
+      });
   });
 };
 
@@ -472,23 +472,23 @@ module.exports.getSelectableParents = function(teamId) {
     if (_.isEmpty(teamId)) reject({'error':'Id of team is required.'});
 
     Team.findOne({_id: teamId, docStatus:{$ne:'delete'}})
-    .then(function(team){
-      if (_.isEmpty(team)) reject({'error': teamId + ' is not a team.'});
+      .then(function(team){
+        if (_.isEmpty(team)) reject({'error': teamId + ' is not a team.'});
 
-      var regEx = new RegExp('^((?!'+team.pathId+').)*$');
-      return Team.find({
-        $or: [
-          {type:{$ne:'squad'}, path: regEx, docStatus:{$ne:'delete'}},
-          {type:{$ne:'squad'}, path: {$eq:null}, docStatus:{$ne:'delete'}, _id: {$ne:teamId}}
-        ]
-      },{_id:1,name:2,pathId:3,path:4});
-    })
-    .then(function(result){
-      resolve(result);
-    })
-    .catch( /* istanbul ignore next */ function(err) {
-      reject(err);
-    });
+        var regEx = new RegExp('^((?!'+team.pathId+').)*$');
+        return Team.find({
+          $or: [
+            {type:{$ne:'squad'}, path: regEx, docStatus:{$ne:'delete'}},
+            {type:{$ne:'squad'}, path: {$eq:null}, docStatus:{$ne:'delete'}, _id: {$ne:teamId}}
+          ]
+        },{_id:1,name:2,pathId:3,path:4});
+      })
+      .then(function(result){
+        resolve(result);
+      })
+      .catch( /* istanbul ignore next */ function(err) {
+        reject(err);
+      });
   });
 };
 
@@ -910,82 +910,84 @@ module.exports.getTeamsByUserId = function(uid, proj) {
 module.exports.getAllUserTeamsByUserId = function(uid) {
   return new Promise(function(resolve, reject){
     teamModel.getUserTeamsByUserId(uid)
-     .then(function(ids){
-       Team.find({_id: {$in: ids}}).exec()
-       .then(function(teams){
-         //console.log('team result: '+JSON.stringify(teams));
-         var ids = [''];
-         var memberTemp = {};
+      .then(function(ids){
+        Team.find({_id: {$in: ids}}).exec()
+          .then(function(teams){
+            //console.log('team result: '+JSON.stringify(teams));
+            var ids = [''];
+            var memberTemp = {};
 
-         _.each(teams, function(team) {
-           if (!_.isEmpty(team.members) && team.members.length != 0 && team.members != undefined) {
-             var members = team.members;
-             //console.log('Members in team: '+JSON.stringify(members));
-             if (!_.isEmpty(members)) {
-               _.each(members, function(member){
-                 ids.push(member.userId);
-               });
-             }
-           }
-         });
-         var user = new Object();
-         var teamsTemp = [];
-         var teamTemp = new Object();
-         Users.getUsersInfo(_.uniq(ids))
-          .then(function(users) {
             _.each(teams, function(team) {
-              teamTemp =
-              {
-                '_id':team._id,
-                'name':team.name,
-                'pathId':team.pathId,
-                'createDate':team.createdDate,
-                'createdByUserId':team.createdByUserId,
-                'createdBy':team.createdBy,
-                'updatedByUserId':team.updatedByUserId,
-                'updatedBy':team.updatedBy,
-                'docStatus':team.docStatus,
-                'updateDate':team.updateDate,
-                'createdDate':team.createDate,
-                'links':team.links,
-                'description':team.description,
-                'members':[],
-                'path':team.parentTeamId
-              };
-
               if (!_.isEmpty(team.members) && team.members.length != 0 && team.members != undefined) {
                 var members = team.members;
-                _.each(members, function(member){
-                  memberTemp =
-                 {'name':member.name,
-                  'role':member.role,
-                  'allocation':member.allocation,
-                  'userId':member.userId,
-                  'email':member.email,
-                  'workTime':member.workTime,
-                  'location':{
-                    'site': '',
-                    'timezone': ''
-                  }
-                 };
-                  user = _.find(users, function(user) {
-                    if (_.isEqual(member.userId, user.userId)){
-                      memberTemp.location.site = user.location.site;
-                      memberTemp.location.timezone = user.location.timezone;
-                      teamTemp.members.push(memberTemp);
-                    }
+                //console.log('Members in team: '+JSON.stringify(members));
+                if (!_.isEmpty(members)) {
+                  _.each(members, function(member){
+                    ids.push(member.userId);
                   });
-                });
+                }
               }
-              return teamsTemp.push(teamTemp);
             });
-            resolve (teamsTemp);
+            var user = new Object();
+            var teamsTemp = [];
+            var teamTemp = new Object();
+            Users.getUsersInfo(_.uniq(ids))
+              .then(function(users) {
+                _.each(teams, function(team) {
+                  teamTemp =
+                  {
+                    '_id':team._id,
+                    'name':team.name,
+                    'pathId':team.pathId,
+                    'createDate':team.createdDate,
+                    'createdByUserId':team.createdByUserId,
+                    'createdBy':team.createdBy,
+                    'updatedByUserId':team.updatedByUserId,
+                    'updatedBy':team.updatedBy,
+                    'docStatus':team.docStatus,
+                    'updateDate':team.updateDate,
+                    'createdDate':team.createDate,
+                    'links':team.links,
+                    'description':team.description,
+                    'members':[],
+                    'path':team.parentTeamId
+                  };
+
+                  if (!_.isEmpty(team.members) && team.members.length != 0 && team.members != undefined) {
+                    var members = team.members;
+                    _.each(members, function(member){
+                      memberTemp =
+                      {
+                        'name':member.name,
+                        'role':member.role,
+                        'allocation':member.allocation,
+                        'userId':member.userId,
+                        'email':member.email,
+                        'workTime':member.workTime,
+                        'location':
+                        {
+                          'site': '',
+                          'timezone': ''
+                        }
+                      };
+                      user = _.find(users, function(user) {
+                        if (_.isEqual(member.userId, user.userId)){
+                          memberTemp.location.site = user.location.site;
+                          memberTemp.location.timezone = user.location.timezone;
+                          teamTemp.members.push(memberTemp);
+                        }
+                      });
+                    });
+                  }
+                  return teamsTemp.push(teamTemp);
+                });
+                resolve (teamsTemp);
+              });
           });
-       });
-     })
-     .catch( /* istanbul ignore next */ function(err){
-       reject(err);
-     });
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        reject(err);
+      });
   });
 };
 
@@ -1068,36 +1070,33 @@ module.exports.modifyTeamMembers = function(teamId, user, newMembers) { //TODO t
       return reject(error);
     //check if user is allowed to edit team
     Users.isUserAllowed(userId, teamId)//TODO this should use userId
-    .then(function(isAllowed){
-      if (!isAllowed)
-        return Promise.reject({'error':'User is not allowed to modify team members.'});
-      else
-        return true;
-    })
-    .then(function() {
-      var promiseArray = [];
-      promiseArray.push(self.createUsers(newMembers));
-      promiseArray.push(Team.findByIdAndUpdate({_id: teamId},{
-        $set:
-        {
-          members: updatedMembers,
-          updatedBy: userEmail,
-          updatedByUserId: userId,
-          updateDate: new Date(moment.utc())
-        }
-      }, {new:true}));
-      return Promise.all(promiseArray);
-    })
-    // .then(function() {
-    //   return self.createUsers(newMembers);
-    // })
-    .then(function(results){
-      // return resolve({'ok':'Updated successfully.'});
-      resolve(results[1]);
-    })
-    .catch( /* istanbul ignore next */ function(err){
-      reject(err);
-    });
+      .then(function(isAllowed){
+        if (!isAllowed)
+          return Promise.reject({'error':'User is not allowed to modify team members.'});
+        else
+          return true;
+      })
+      .then(function() {
+        var promiseArray = [];
+        promiseArray.push(self.createUsers(newMembers));
+        promiseArray.push(Team.findByIdAndUpdate({_id: teamId},{
+          $set:
+          {
+            members: updatedMembers,
+            updatedBy: userEmail,
+            updatedByUserId: userId,
+            updateDate: new Date(moment.utc())
+          }
+        }, {new:true}));
+        return Promise.all(promiseArray);
+      })
+      .then(function(results){
+        // return resolve({'ok':'Updated successfully.'});
+        resolve(results[1]);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        reject(err);
+      });
   });
 };
 
@@ -1148,29 +1147,29 @@ module.exports.getTeamHierarchy = function(path) {
       var tempPath = path.substring(1, path.length - 1);
       var paths = tempPath.split(',');
       Team.find({'pathId': {'$in': paths}, docStatus:{$ne:'delete'}}).exec()
-      .then(function(teams){
-        if (teams.length < paths.length) {
-          resolve({'error': 'cannot get the whole hierarchy'});
-        } else {
-          var returnTeams = [];
-          _.each(paths, function(p){
-            _.find(teams, function(t){
-              if (t.pathId == p) {
-                var returnTeam = {
-                  'pathId': t.pathId,
-                  '_id': t._id,
-                  'name': t.name
-                };
-                return returnTeams.push(returnTeam);
-              }
+        .then(function(teams){
+          if (teams.length < paths.length) {
+            resolve({'error': 'cannot get the whole hierarchy'});
+          } else {
+            var returnTeams = [];
+            _.each(paths, function(p){
+              _.find(teams, function(t){
+                if (t.pathId == p) {
+                  var returnTeam = {
+                    'pathId': t.pathId,
+                    '_id': t._id,
+                    'name': t.name
+                  };
+                  return returnTeams.push(returnTeam);
+                }
+              });
             });
-          });
-          resolve(returnTeams);
-        }
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        reject(err);
-      });
+            resolve(returnTeams);
+          }
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject(err);
+        });
     }
   });
 };
@@ -1365,45 +1364,45 @@ module.exports.modifyImportantLinks = function(teamId, user, links) {
 
     //check if user is allowed to edit team
     Users.isUserAllowed(userId, teamId)
-    .then(function(allowed){
-      if (!allowed) {
-        return Promise.reject({'error':'User is not allowed to modify team links.'});
-      }
-      var tmpLinks = [];
-      var pattern = /^((http|https):\/\/)/;
-      _.each(links, function(data,idx,ls) {
-        var str = data.linkUrl + process.hrtime().toString();
-        var hashId = crypto.createHash('md5').update(str).digest('hex');
-        var obj = {};
-        obj.id = (data.id !== undefined) ? data.id : hashId;
-        if (data._id !== undefined) {
-          obj._id = data._id;
+      .then(function(allowed){
+        if (!allowed) {
+          return Promise.reject({'error':'User is not allowed to modify team links.'});
         }
-        var url = data.linkUrl;
-        if (!pattern.test(url)) {
-          url = 'http://' + url;
-        }
-        obj.type = data.type;
-        obj.linkLabel = data.linkLabel;
-        obj.linkUrl = url;
-        tmpLinks.push(obj);
+        var tmpLinks = [];
+        var pattern = /^((http|https):\/\/)/;
+        _.each(links, function(data,idx,ls) {
+          var str = data.linkUrl + process.hrtime().toString();
+          var hashId = crypto.createHash('md5').update(str).digest('hex');
+          var obj = {};
+          obj.id = (data.id !== undefined) ? data.id : hashId;
+          if (data._id !== undefined) {
+            obj._id = data._id;
+          }
+          var url = data.linkUrl;
+          if (!pattern.test(url)) {
+            url = 'http://' + url;
+          }
+          obj.type = data.type;
+          obj.linkLabel = data.linkLabel;
+          obj.linkUrl = url;
+          tmpLinks.push(obj);
+        });
+        // console.log('modifyImportantLinks tmpLinks:',tmpLinks);
+        var updateTeam = {
+          'links': tmpLinks,
+          'updatedByUserId': userId,
+          'updatedBy': userEmail,
+          'updateDate': new Date(moment.utc())
+        };
+        // return Team.update({'_id': teamId},{'$set': updateTeam}).exec();
+        return Team.findByIdAndUpdate({'_id': teamId},{'$set': updateTeam},{new:true}).exec();
+      })
+      .then(function(result){
+        return resolve(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        return reject(err);
       });
-      // console.log('modifyImportantLinks tmpLinks:',tmpLinks);
-      var updateTeam = {
-        'links': tmpLinks,
-        'updatedByUserId': userId,
-        'updatedBy': userEmail,
-        'updateDate': new Date(moment.utc())
-      };
-      // return Team.update({'_id': teamId},{'$set': updateTeam}).exec();
-      return Team.findByIdAndUpdate({'_id': teamId},{'$set': updateTeam},{new:true}).exec();
-    })
-    .then(function(result){
-      return resolve(result);
-    })
-    .catch( /* istanbul ignore next */ function(err){
-      return reject(err);
-    });
   });
 };
 
@@ -1425,80 +1424,80 @@ module.exports.deleteImportantLinks = function(teamId, user, links) {
 
     //check if user is allowed to edit team
     Users.isUserAllowed(userId, teamId)
-    .then(function(allowed){
-      loggers.get('models').verbose('User ' + userEmail + ' is allowed to edit team ' + teamId + '. Proceed with modification');
-      if (!allowed) {
-        return Promise.reject({'error':'User is not allowed to modify team links.'});
-      }
-      return allowed;
-    })
-    .then(function(){
-      return module.exports.getTeam(teamId);
-    })
-    .then(function(teamDetails){
-      if (!_.isEmpty(teamDetails.links)){
-        var curlinkData = teamDetails.links;
-        var tmpcurlinkData = _.clone(teamDetails.links);
-        var tmpLinks = [];
-        var deletedIds = _.pluck(links, 'id');
-        var failDeleteLinkIds = [];
-        var errmsg;
-        _.each(curlinkData, function(value, key, list){
-          if (_.contains(deletedIds, value.id)){
-            delete curlinkData[key];
-          }
-        });
+      .then(function(allowed){
+        loggers.get('models').verbose('User ' + userEmail + ' is allowed to edit team ' + teamId + '. Proceed with modification');
+        if (!allowed) {
+          return Promise.reject({'error':'User is not allowed to modify team links.'});
+        }
+        return allowed;
+      })
+      .then(function(){
+        return module.exports.getTeam(teamId);
+      })
+      .then(function(teamDetails){
+        if (!_.isEmpty(teamDetails.links)){
+          var curlinkData = teamDetails.links;
+          var tmpcurlinkData = _.clone(teamDetails.links);
+          var tmpLinks = [];
+          var deletedIds = _.pluck(links, 'id');
+          var failDeleteLinkIds = [];
+          var errmsg;
+          _.each(curlinkData, function(value, key, list){
+            if (_.contains(deletedIds, value.id)){
+              delete curlinkData[key];
+            }
+          });
 
-        _.each(curlinkData, function(value, key, list){
-          if (value !== undefined){
-            tmpLinks.push(value);
-          }
-        });
+          _.each(curlinkData, function(value, key, list){
+            if (value !== undefined){
+              tmpLinks.push(value);
+            }
+          });
 
-        var currlinkData = _.pluck(tmpcurlinkData, 'id');
-        _.each(deletedIds, function(value, key, list) {
-          if (!_.contains(currlinkData, value)) {
-            failDeleteLinkIds.push(value);
+          var currlinkData = _.pluck(tmpcurlinkData, 'id');
+          _.each(deletedIds, function(value, key, list) {
+            if (!_.contains(currlinkData, value)) {
+              failDeleteLinkIds.push(value);
+            }
+          });
+          if (failDeleteLinkIds.length > 0) {
+            failDeleteLinkIds = _.reject(failDeleteLinkIds, _.isUndefined);
+            if (failDeleteLinkIds && failDeleteLinkIds.length > 0) {
+              errmsg = 'The following Link ID does not exist in the database: ' + failDeleteLinkIds.join(',');
+            } else {
+              errmsg = 'Link ID not found';
+            }
+            errorLists['error']['links'] = [errmsg];
+            return Promise.reject(errorLists);
+          } else {
+            var updateTeam = {
+              'links': tmpLinks,
+              'updatedByUserId': userId,
+              'updatedBy': userEmail,
+              'updateDate': new Date(moment.utc())
+            };
+            // return Team.update({'_id': teamId},{'$set': updateTeam}).exec();
+            return Team.findByIdAndUpdate({'_id': teamId},{'$set': updateTeam},{new:true}).exec();
           }
-        });
-        if (failDeleteLinkIds.length > 0) {
-          failDeleteLinkIds = _.reject(failDeleteLinkIds, _.isUndefined);
-          if (failDeleteLinkIds && failDeleteLinkIds.length > 0) {
-            errmsg = 'The following Link ID does not exist in the database: ' + failDeleteLinkIds.join(',');
+        } else {
+          var deletedIds = _.pluck(links, 'id');
+          var errmsg;
+          deletedIds = _.reject(deletedIds, _.isUndefined);
+          if (deletedIds && deletedIds.length > 0) {
+            errmsg = 'The following Link ID does not exist in the database: ' + deletedIds.join(',');
           } else {
             errmsg = 'Link ID not found';
           }
           errorLists['error']['links'] = [errmsg];
           return Promise.reject(errorLists);
-        } else {
-          var updateTeam = {
-            'links': tmpLinks,
-            'updatedByUserId': userId,
-            'updatedBy': userEmail,
-            'updateDate': new Date(moment.utc())
-          };
-          // return Team.update({'_id': teamId},{'$set': updateTeam}).exec();
-          return Team.findByIdAndUpdate({'_id': teamId},{'$set': updateTeam},{new:true}).exec();
         }
-      } else {
-        var deletedIds = _.pluck(links, 'id');
-        var errmsg;
-        deletedIds = _.reject(deletedIds, _.isUndefined);
-        if (deletedIds && deletedIds.length > 0) {
-          errmsg = 'The following Link ID does not exist in the database: ' + deletedIds.join(',');
-        } else {
-          errmsg = 'Link ID not found';
-        }
-        errorLists['error']['links'] = [errmsg];
-        return Promise.reject(errorLists);
-      }
-    })
-    .then(function(result) {
-      return resolve(result);
-    })
-    .catch( /* istanbul ignore next */ function(err){
-      return reject(err);
-    });
+      })
+      .then(function(result) {
+        return resolve(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        return reject(err);
+      });
   });
 };
 

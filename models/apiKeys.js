@@ -5,7 +5,7 @@ var loggers = require('../middleware/logger');
 var moment = require('moment');
 var _ = require('underscore');
 var mongoose = config.mongoose;
-var Schema   = require('mongoose').Schema;
+var Schema = require('mongoose').Schema;
 
 var apiKeySchema = {
   userId: {
@@ -27,7 +27,9 @@ var apiKeySchema = {
   }
 };
 
-var apiKeySchema = new Schema(apiKeySchema, {collection : 'apiKeys'});
+var apiKeySchema = new Schema(apiKeySchema, {
+  collection: 'apiKeys'
+});
 var ApiKey = mongoose.model('apiKeys', apiKeySchema);
 
 var apiKeys = {
@@ -39,25 +41,29 @@ var apiKeys = {
       } else {
         var uid = user['ldap']['uid'];
         loggers.get('model-apikeys').verbose('Getting user api key with UID ' + uid);
-        query = ApiKey.findOne({userId: uid});
+        query = ApiKey.findOne({
+          userId: uid
+        });
       }
       query
-      .then(function(result){
-        resolve(result);
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        reject(err);
-      });
+        .then(function(result) {
+          resolve(result);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          reject(err);
+        });
     });
   },
 
   createApikey: function(user) {
     return new Promise(function(resolve, reject) {
       if (_.isEmpty(user)) {
-        reject({'error': 'user cannot be empty'});
+        reject({
+          'error': 'user cannot be empty'
+        });
       } else {
         apiKeys.getUserApikeyByUser(user)
-          .then(function(result){
+          .then(function(result) {
             if (_.isEmpty(result)) {
               var newApiKey = {
                 'key': uuid.v4(),
@@ -69,10 +75,10 @@ var apiKeys = {
               return result;
             }
           })
-          .then(function(result){
+          .then(function(result) {
             resolve(result);
           })
-          .catch( /* istanbul ignore next */ function(err){
+          .catch( /* istanbul ignore next */ function(err) {
             loggers.get('models-apikeys').error(err);
             reject(err);
           });
@@ -84,24 +90,26 @@ var apiKeys = {
     return new Promise(function(resolve, reject) {
       loggers.get('model-apikeys').verbose('Delete api key for user ' + user['ldap']['uid']);
       apiKeys.getUserApikeyByUser(user)
-     .then(function(userApi) {
-       if (!_.isEmpty(userApi)) {
-         loggers.get('model-apikeys').verbose('Ready to remove user uid =: '+user['ldap']['uid']);
-         var q = {userId: user['ldap']['uid']};
-         return ApiKey.remove(q);
-       } else {
-         return 'user not exist';
-       }
-     })
-     .then(function(result) {
-       resolve(result);
-     })
-     .catch( /* istanbul ignore next */ function(err) {
-       console.log(err);
-       loggers.get('model-apikeys').error('ERROR:', err);
-       var msg = err.error;
-       reject(msg);
-     });
+        .then(function(userApi) {
+          if (!_.isEmpty(userApi)) {
+            loggers.get('model-apikeys').verbose('Ready to remove user uid =: ' + user['ldap']['uid']);
+            var q = {
+              userId: user['ldap']['uid']
+            };
+            return ApiKey.remove(q);
+          } else {
+            return 'user not exist';
+          }
+        })
+        .then(function(result) {
+          resolve(result);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          console.log(err);
+          loggers.get('model-apikeys').error('ERROR:', err);
+          var msg = err.error;
+          reject(msg);
+        });
     });
   },
 
@@ -113,17 +121,19 @@ var apiKeys = {
         var query = ApiKey.find(q);
       } else {
         loggers.get('model-apiKeys').verbose('Getting user api key with API (Mongo)' + apiKey);
-        var q = {key: apiKey};
+        var q = {
+          key: apiKey
+        };
         var query = ApiKey.findOne(q);
       }
       query
-      .then(function(result){
-        resolve(result);
-        loggers.get('model-apiKeys').verbose('Finish with getting apiKey with result (Mongo)');
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        reject(err);
-      });
+        .then(function(result) {
+          resolve(result);
+          loggers.get('model-apiKeys').verbose('Finish with getting apiKey with result (Mongo)');
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          reject(err);
+        });
     });
   }
 

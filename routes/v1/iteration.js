@@ -21,13 +21,13 @@ module.exports = function(app, includes) {
             res.status(400).send({message: 'Unauthorized access.  You must be a member of the team or a member of its parent team.'});
           } else {
             iterationModel.getByIterInfo(teamId)
-            .then(function(iterations) {
-              res.status(200).send(iterations);
-            })
-            .catch( /* istanbul ignore next  */ function(err) {
-              loggers.get('api').error('[v1.iterations.getIterations]:', err);
-              res.status(400).send(err);
-            });
+              .then(function(iterations) {
+                res.status(200).send(iterations);
+              })
+              .catch( /* istanbul ignore next  */ function(err) {
+                loggers.get('api').error('[v1.iterations.getIterations]:', err);
+                res.status(400).send(err);
+              });
           }
         })
         .catch( /* istanbul ignore next  */ function(err) {

@@ -108,12 +108,12 @@ module.exports = function(app, includes) {
   //checked
   modifyTeamMembers = function(req, res) {
     teamModel.modifyTeamMembers(req.body['_id'], req.session['user'], req.body['members'])
-    .then(function(result){
-      res.status(200).send(result);
-    })
-    .catch(function(err){
-      res.status(400).send(err);
-    });
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch(function(err){
+        res.status(400).send(err);
+      });
   };
 
   getTeamLinkLabels = function(req, res) {
@@ -387,22 +387,22 @@ module.exports = function(app, includes) {
   //checked
   getTeamHierarchy = function(req, res) {
     teamModel.getTeamHierarchy(req.params.path)
-    .then(function(result){
-      res.status(200).send(result);
-    })
-    .catch( /* istanbul ignore next */ function(err){
-      res.status(400).send(err);
-    });
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
   };
 
   getDesigner = function(req, res) {
     teamModel.getDesigner()
-    .then(function(result){
-      res.status(200).send(result);
-    })
-    .catch( /* istanbul ignore next */ function(err){
-      res.status(400).send(err);
-    });
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
   };
 
   // search team with name

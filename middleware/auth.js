@@ -54,24 +54,27 @@ var auth = {
       });
     } else {
       apiKeyModel.getUserApikeyByApikey(req.headers.apikey)
-      .then(function(apiuser) {
-        if (_.isEmpty(apiuser)) {
-          res.status(401).send({
-            status: 401,
-            message: 'Unauthorized'
-          });
+        .then(function(apiuser) {
+          if (_.isEmpty(apiuser)) {
+            res.status(401).send({
+              status: 401,
+              message: 'Unauthorized'
+            });
+            return null;
+          } else {
+            apiuser = {
+              userId: apiuser.userId,
+              email: apiuser.email
+            };
+            req.apiuser = apiuser;
+            return next();
+          }
+        })
+        .catch(function(err) {
+          console.log(err);
+          res.status(err.statusCode).send(err.message);
           return null;
-        } else {
-          apiuser = {userId: apiuser.userId, email: apiuser.email};
-          req.apiuser = apiuser;
-          return next();
-        }
-      })
-      .catch(function(err) {
-        console.log(err);
-        res.status(err.statusCode).send(err.message);
-        return null;
-      });
+        });
     }
   }
 };
