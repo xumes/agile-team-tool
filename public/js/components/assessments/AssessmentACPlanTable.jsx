@@ -22,24 +22,44 @@ var AssessmentACPlanTable = React.createClass({
   componentWillMount: function() {
     var self = this;
     actionPlanSelection = [];
-    var templateCount = [
-      self.countPractics(self.props.assessTemplate.components[0]),
-      self.countPractics(self.props.assessTemplate.components[1]),
-      self.countPractics(self.props.assessTemplate.components[2])
-    ];
+    if (self.props.assessTemplate.version == 1) {
+      var templateCount = [
+        self.countPractics(self.props.assessTemplate.components[0]),
+        self.countPractics(self.props.assessTemplate.components[0]),
+        self.countPractics(self.props.assessTemplate.components[1])
+      ];
+    } else {
+      templateCount = [
+        self.countPractics(self.props.assessTemplate.components[0]),
+        self.countPractics(self.props.assessTemplate.components[1]),
+        self.countPractics(self.props.assessTemplate.components[2])
+      ];
+    }
+    // var templateCount = [
+    //   self.countPractics(self.props.assessTemplate.components[0]),
+    //   self.countPractics(self.props.assessTemplate.components[1]),
+    //   self.countPractics(self.props.assessTemplate.components[2])
+    // ];
     _.each(self.props.tempAssess.componentResults, function(componentResult){
       _.each(componentResult.assessedComponents, function(assessedComponent){
         var newAssessedComponent = _.clone(assessedComponent);
         newAssessedComponent['componentName'] = componentResult['componentName'];
-        if (newAssessedComponent['componentName'].indexOf('Project') >= 0) {
+        if (newAssessedComponent['componentName'].indexOf('Project') >= 0 || newAssessedComponent['componentName'] == 'Team Agile Leadership and Collaboration' || newAssessedComponent['componentName'] == 'Agile Leadership and Collaboration') {
           var template = self.props.assessTemplate.components[0];
           var tpCount = templateCount[0];
-        } else if (newAssessedComponent['componentName'].indexOf('Operations') >= 0) {
+        } else if (newAssessedComponent['componentName'].indexOf('Operations') >= 0 || newAssessedComponent['componentName'].indexOf('Ops') >= 0) {
           template = self.props.assessTemplate.components[1];
           tpCount = templateCount[1];
         } else {
-          template = self.props.assessTemplate.components[2];
-          tpCount = templateCount[2];
+          if (self.props.assessTemplate.version == 1) {
+            var template = self.props.assessTemplate.components[1];
+            tpCount = templateCount[2];
+          } else {
+            var template = self.props.assessTemplate.components[2];
+            tpCount = templateCount[2];
+          }
+          // template = self.props.assessTemplate.components[2];
+          // tpCount = templateCount[2];
         }
         var principleIndex = parseInt(newAssessedComponent['principleId']) - 1;
         var practiceSumIndex = parseInt(newAssessedComponent['practiceId']) - 1;
@@ -73,11 +93,13 @@ var AssessmentACPlanTable = React.createClass({
   },
   countPractics: function(template) {
     var practiceCount= [];
-    _.each(template.principles, function(principle){
-      _.each(principle.practices, function(practice, idx){
-        practiceCount.push(idx);
+    if (!_.isEmpty(template)) {
+      _.each(template.principles, function(principle){
+        _.each(principle.practices, function(practice, idx){
+          practiceCount.push(idx);
+        });
       });
-    });
+    }
     return practiceCount;
   },
   actionPlanChangeHandler2: function(e) {
@@ -170,7 +192,7 @@ var AssessmentACPlanTable = React.createClass({
   },
   dateChangeDateHandler: function(id, e) {
     var self = this;
-    $('#' + id).html(moment.utc(e).format('DD MMM YYYY'));
+    $('#' + id).html(moment(e).format('DD MMM YYYY'));
     var tempActionPlans = self.getActionPlansFromTable();
     self.setState({actionPlans: tempActionPlans});
   },
@@ -194,7 +216,7 @@ var AssessmentACPlanTable = React.createClass({
         actionPlanId: idx
       }
       if ($('#actionPlanReviewDate_' + idx).html() != '') {
-        tempActionPlan['reviewDate'] = new Date(moment.utc($('#actionPlanReviewDate_' + idx).html(), 'DD MMM YYYY'));
+        tempActionPlan['reviewDate'] = new Date(moment($('#actionPlanReviewDate_' + idx).html(), 'DD MMM YYYY'));
       }
       tableActionPlans.push(tempActionPlan);
     });
@@ -225,8 +247,8 @@ var AssessmentACPlanTable = React.createClass({
         actionPlans = self.props.tempAssess.actionPlans
       }
       var tableBlocks = actionPlans.map(function(ap, idx){
-        var reviewDate = ap.reviewDate==null?'':moment.utc(ap.reviewDate).format('DD MMM YYYY');
-        var selectDate = ap.reviewDate==null?moment.utc(new Date()):moment.utc(ap.reviewDate);
+        var reviewDate = ap.reviewDate==null?'':moment(ap.reviewDate).format('DD MMM YYYY');
+        var selectDate = ap.reviewDate==null?moment(new Date()):moment(ap.reviewDate);
         var reviewDeteStyle = {
           color: ap.reviewDate==null?'#4178BE':'#323232',
           cursor: haveAccess?'pointer':'not-allowed'

@@ -7,7 +7,7 @@ var HomeFeedback = React.createClass({
   getInitialState: function() {
     return {
       teamNames: [],
-      toolAreas: ['Charts overview', 'Create team', 'Help', 'Important links', 'Iteration overview', 'Maturity overview', 'Team Description', 'Team Detail', 'Team Navigation', 'Team Setup', 'Other'],
+      toolAreas: ['Charts overview', 'Create team', 'Help', 'Important links', 'Iteration overview', 'Maturity overview', 'Team Description', 'Team Detail', 'Team Navigation', 'Team Setup', 'User Interface', 'Other'],
       submitStatusOk: true,
       submitHeader: 'Thank you for your feedback!',
       submitMessage: 'Your input helps us improve the Agile Team Tool.',
@@ -25,7 +25,12 @@ var HomeFeedback = React.createClass({
     }
   },
   componentDidUpdate: function(prevProps, prevState) {
-    $('#toolAreaFeedback').val('Other').change();
+    self = this;
+    if (self.props.userInterfaceIndicator)
+      $('#toolAreaFeedback').val('User Interface').change();
+    else
+      $('#toolAreaFeedback').val('Other').change();
+
     $('#teamNameFeedback').val('Not specified').change();
   },
   show: function() {

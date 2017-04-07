@@ -1644,6 +1644,11 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   background-color: #DEEDF7;
 }
 
+.team-member-table-content-block1.user-deleted:hover,
+.team-member-table-content-block2.user-deleted:hover {
+  background-color: #F7E6E6;
+}
+
 .team-member-table-content-block1 > div,
 .team-member-table-content-block2 > div  {
   height: 100%;
@@ -1852,6 +1857,14 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   width: 100%;
   height: 100%;
+}
+
+.team-member-table-content-location > h.user-deleted {
+  color: #AA231F !important;
+}
+
+.team-member-table-content-location > h.user-deleted > span {
+  font-size: .8em;
 }
 
 .team-member-table-content-allocation > .modify-field {
@@ -4604,7 +4617,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-iter-subdetail-section {
-  margin-top: 4%;
+  margin-top: 6%;
   font-family: "HelvNeue Medium for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2rem;
   font-weight: normal;
@@ -6116,7 +6129,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-modal-block-footer.style1 {
-  width: 93%;
+  width: 92%;
   top:5%;
 }
 
@@ -7767,6 +7780,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .home-header-banner-message > .home-header-banner-icon > a > i > svg path {
   fill: #5596E6 !important;
+}
+
+.home-header-banner-label-feedback {
+  color: #5596E6 !important;
 }
 
 p.apikey-note {
