@@ -6,11 +6,17 @@ var HomeApikey = require('./HomeApikey.jsx');
 var HomeHeader = React.createClass({
   getInitialState: function() {
     return {
+      userInterfaceIndicator: false,
       showFeedbackModal: false,
       showApikeyModal: false
     }
   },
   showFeedback: function() {
+    this.setState({userInterfaceIndicator: false});
+    this.setState({ showFeedbackModal: true });
+  },
+  showUserInterfaceFeedback: function() {
+    this.setState({userInterfaceIndicator: true});
     this.setState({ showFeedbackModal: true });
   },
   closeFeedback: function() {
@@ -29,6 +35,13 @@ var HomeHeader = React.createClass({
     var siteEnv = '';
     var revertToOld = {
       'display': environment.toLowerCase() == 'development'?'none':'inline-block',
+//      'display': 'inline-block',
+      'color':'#3B6DAA'
+    };
+
+    var feedbackPopup = {
+//      'display': environment.toLowerCase() == 'development'?'none':'inline-block',
+      'display': 'inline-block',
       'color':'#3B6DAA'
     };
 
@@ -47,6 +60,9 @@ var HomeHeader = React.createClass({
              </span>
             </a>
             </span>
+            <span class='home-header-banner-label-feedback' style={feedbackPopup} >
+             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; My <a href="#" title="Feedback" id="feedback-modal" onClick={this.showUserInterfaceFeedback}>Feedback</a> on the new User Interface.
+            </span>            
           </div>
         </div>
         <div class="header-menu">
@@ -140,7 +156,7 @@ var HomeHeader = React.createClass({
           </div>
         </div>
 
-        <HomeFeedback showFeedbackModal={this.state.showFeedbackModal} closeFeedback={this.closeFeedback} />
+        <HomeFeedback showFeedbackModal={this.state.showFeedbackModal} closeFeedback={this.closeFeedback} userInterfaceIndicator={this.state.userInterfaceIndicator}/>
         <HomeApikey showApikeyModal={this.state.showApikeyModal} closeApikey={this.closeApikey} />
       </div>
     )
