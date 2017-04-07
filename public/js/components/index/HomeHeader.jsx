@@ -12,12 +12,10 @@ var HomeHeader = React.createClass({
     }
   },
   showFeedback: function() {
-    this.setState({userInterfaceIndicator: false});
-    this.setState({ showFeedbackModal: true });
+    this.setState({userInterfaceIndicator: false, showFeedbackModal: true});
   },
   showUserInterfaceFeedback: function() {
-    this.setState({userInterfaceIndicator: true});
-    this.setState({ showFeedbackModal: true });
+    this.setState({userInterfaceIndicator: true, showFeedbackModal: true});
   },
   closeFeedback: function() {
     this.setState({ showFeedbackModal: false });
