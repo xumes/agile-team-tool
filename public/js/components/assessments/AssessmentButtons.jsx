@@ -6,8 +6,16 @@ var moment = require('moment');
 var InlineSVG = require('svg-inline-react');
 var newestTemplateVersion = 'ag_ref_atma_components_v07';
 var ConfirmPopover = require('../index/ConfirmPopover.jsx');
+var ConfirmDialog = require('../index/ConfirmDialog.jsx');
 
 var AssessmentButtons = React.createClass({
+  getInitialState: function() {
+    return {
+      alertMsg: '',
+      showConfirmModal: false
+    };
+  },
+
   componentDidMount: function() {
 
   },
@@ -57,7 +65,9 @@ var AssessmentButtons = React.createClass({
       self.getUpdateDoc(1, p2N, checkedCurrs, checkedTargs, updateDoc, checkedIsEmpty);
     }
     if (checkedIsEmpty) {
-      return alert('All assessment maturity practices need to be answered.  See highlighted practices in yellow.');
+      // return alert('All assessment maturity practices need to be answered.  See highlighted practices in yellow.');
+      self.setState({alertMsg: 'All assessment maturity practices need to be answered. See highlighted practices in yellow.', showConfirmModal: true});
+      return;
     }
     if (_.isEmpty(self.props.assessDraft)) {
       var req = api.addAssessment(updateDoc);
@@ -72,8 +82,9 @@ var AssessmentButtons = React.createClass({
         self.props.loadDetailTeam.assessments[0] = result;
       }
       self.props.updateAssessmentSummary();
-      self.props.hideAssessmentPopover();
-      alert('Maturity assessment has been submitted.');
+      // self.props.hideAssessmentPopover();
+      // alert('Maturity assessment has been submitted.');
+      $('#submittedMatAssessment').show();
       return;
     }).catch(function(err){
       alert(err);
@@ -284,7 +295,12 @@ var AssessmentButtons = React.createClass({
     return $('#' + chElementId).val();
   },
 
+  hideConfirmDialog: function() {
+    this.setState({showConfirmModal: false, alertMsg: ''});
+  },
+
   render: function() {
+    var self = this;
     var spanStyle = {
       float: 'left',
       display: 'block'
@@ -328,6 +344,8 @@ var AssessmentButtons = React.createClass({
         <ConfirmPopover confirmClick={this.cancelAssessment} confirmId='cancelAssessDraftConfirm' content={'You have requested to reset all changes you made on this draft assessment.  All changes will be removed. Please confirm that you want to proceed with this reset changes.'} cancelBtn='block' confirmBtn='block' okBtn='none'/>
         <ConfirmPopover confirmClick={this.deleteAssessment} confirmId='deleteAssessDraftConfirm' content={'You have requested to delete this draft assessment.  All saved progress will be deleted. Please confirm that you want to proceed with this delete.'} cancelBtn='block' confirmBtn='block' okBtn='none'/>
         <ConfirmPopover confirmId='saveDraftConfirm' content={'Maturity assessment has been saved as draft.'} cancelBtn='none' confirmBtn='none' okBtn='block' hideAssessmentPopover={this.props.hideAssessmentPopover}/>
+        <ConfirmPopover confirmId='submittedMatAssessment' content={'Maturity assessment has been submitted.'} cancelBtn='none' confirmBtn='none' okBtn='block' hideAssessmentPopover={this.props.hideAssessmentPopover}/>
+        <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.hideConfirmDialog} alertType='error' content={self.state.alertMsg} actionBtnLabel='Ok' />
       </div>
     )
   }
