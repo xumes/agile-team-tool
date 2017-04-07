@@ -1,7 +1,7 @@
 require('../settings');
 
 var schedule = require('node-schedule');
-var users = require('../models/mongodb/users');
+var users = require('../models/users');
 var request = require('request');
 var Promise = require('bluebird');
 var workerLogger = require('../middleware/logger').get('worker');

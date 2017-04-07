@@ -1,4 +1,4 @@
-var Users = require('../../models/mongodb/users');
+var Users = require('../../models/users');
 // Get admins and supports api call
 var _ = require('underscore');
 module.exports = function(app, includes) {
