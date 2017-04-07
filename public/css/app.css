@@ -2520,7 +2520,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   left: 5%;
   float: left;
   top: 4%;
-  width: 66%;
+  width: 65%;
   height: 2%;
   font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.5em;
@@ -2538,8 +2538,8 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .home-no-iter-info p {
   font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
-  font-size: 18px;
-  line-height: 25px;
+  font-size: 1.8rem;
+  line-height: 2.5rem;
   color: #464646;
   margin-right: 7.5%;
   color: #777677;
@@ -2548,8 +2548,8 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .home-no-iter-info p span {
   display: inline-block;
   font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
-  font-size: 16px;
-  line-height: 18px;
+  font-size: 1.6rem;
+  line-height: 1.8rem;
   color: #777677;
 }
 
@@ -2574,17 +2574,19 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .home-iter-name {
   position: relative;
-  width: 100%;
+  width: 95%;
+  height: 1.9em;
   display: inline-block;
   font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.8em;
   line-height: 1.9em;
   color: #323232;
+  overflow: auto;
 }
 
 .home-iter-team-date {
   position: relative;
-  width: 100%;
+  width: 90%;
   display: inline-block;
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.3em;
@@ -2638,27 +2640,27 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   display: inline;
   float: left;
-  width: 29%;
-  height: 1.6em;
+  width: 30%;
+  height: 1.6rem;
   top: 4.6%;
 }
 
 .home-iter-add-btn-block-2, .home-iter-add-btn-block-disabled-2 {
   display: inline;
   float: right;
-  height: 1.7em;
+  height: 1.7rem;
   margin-right: 10%;
 }
 
 
 .home-iter-add-btn-block-2 > i{
   height: 100%;
-  padding-right: 0.2em;
+  padding-right: 0.2rem;
 }
 
 .home-iter-add-btn-block > i > svg, .home-iter-add-btn-block-disabled > i > svg,
 .home-iter-add-btn-block-2 > i > svg, .home-iter-add-btn-block-disabled-2 > i > svg  {
-  width: auto;
+  width: 2rem;
   height: 100%;
   pointer-events: none;
 }
@@ -2675,11 +2677,10 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   width: 10%;
   height: 26%;
   min-height: 1.5em;
-  margin-top: -6.3%;
 }
 
 .home-iter-edit-btn-block > i > svg, .home-iter-edit-btn-block-disabled > i > svg {
-  width: auto;
+  width: 2em;
   height: 100%;
   pointer-events: none;
 }
@@ -4614,15 +4615,15 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-iter-date {
-  width: 73%;
+  width: 80%;
+  height: 100%;
   font-size: 1.4rem;
-  line-height: 2.5rem;
   color: #5A5A5A;
   padding: 2%;
   text-align: center;
   font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   border: 0.1em solid #777677;
-
+  margin-right: 0.85rem;
 }
 
 .home-iter-text-field {
@@ -4652,22 +4653,20 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .home-iter-cal-btn-block {
   position: relative;
   cursor:pointer;
-  width: 3rem;
+  width: 17%;
   height: 100%;
 }
 
 .home-iter-cal-btn-block > i > svg {
-  top: 10%;
   position: relative;
-  margin-left: 25%;
 }
 
 
 .home-iter-new-dates{
   display: flex;
   align-items: center;
-  min-height: 3rem;
-  height: 5.79%;
+  min-height: 2.4rem;
+  height: 5%;
 }
 
 .home-iter-main div .react-datepicker__input-container {
