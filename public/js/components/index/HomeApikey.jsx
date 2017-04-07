@@ -62,7 +62,7 @@ var HomeApikey = React.createClass({
     return (
       <div>
         <Modal aria-labelledby='API Key Dialog' style={modalStyle} backdropStyle={backdropStyle} show={self.props.showApikeyModal} onHide={self.props.closeApikey} onShow={self.show}>
-          <div class='home-modal-block' style={{'width':'27em'}} id='apikeyBlock'>
+          <div class='home-modal-block' style={{'width':'29em'}} id='apikeyBlock'>
             <div class='home-modal-block-header'>
               <h>API Key</h>
               <div class='home-modal-block-close-btn' onClick={self.props.closeApikey}>
@@ -83,7 +83,7 @@ var HomeApikey = React.createClass({
                 </p>
               </div>
             </div>
-            <div class='home-modal-block-footer ibm-btn-row' style={{'width':'92%','top':'-3%'}}>
+            <div class='home-modal-block-footer ibm-btn-row' style={{'width':'95%','top':'-3%'}}>
               <div style={_.isEmpty(this.state.apiKey) ? {'display': 'none'} : {'float':'left'}}>
                 <button class=' ibm-btn-sec ibm-btn-small ibm-btn-blue-50' style={{'marginRight':'.5em'}} id='copyApikeyBtn' data-clipboard-target='#userApikey' >Copy to clipboard</button>
               </div>
