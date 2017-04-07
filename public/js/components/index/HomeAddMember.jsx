@@ -21,7 +21,7 @@ var HomeAddMember = React.createClass({
     var self = this;
     $('#teamMemberRoleSelect').select2({'width':'100%', 'dropdownParent':$('#addMemberBlock')});
     $('#teamMemberRoleSelect').change(self.roleHandler);
-    $('#teamMemberAllocationSelect').select2({'width':'100%'});
+    $('#teamMemberAllocationSelect').select2({'width':'100%', 'dropdownParent':$('#addMemberBlock')});
     $('#teamMemberAwkSelect').select2({'width':'100%'});
     $('#teamMemberAwkSelect').change(self.changeAwkHandler);
     FacesTypeAhead.init(
