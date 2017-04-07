@@ -1000,7 +1000,8 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .header-menu-help-block li:nth-child(2)::before,
 .header-menu-help-block li:nth-child(3)::before,
 .header-menu-help-block li:nth-child(4)::before,
-.header-menu-help-block li:nth-child(5)::before {
+.header-menu-help-block li:nth-child(5)::before, 
+.header-menu-help-block li:nth-child(6)::before {
   content: "•" !important;
   margin-left: 0;
   margin-top: .7em;
@@ -1010,7 +1011,8 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .header-menu-help-block li:nth-child(2) a,
 .header-menu-help-block li:nth-child(3) a,
 .header-menu-help-block li:nth-child(4) a,
-.header-menu-help-block li:nth-child(5) a {
+.header-menu-help-block li:nth-child(5) a,
+.header-menu-help-block li:nth-child(6) a {
   margin-left: 1em;
 }
 
@@ -7780,6 +7782,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .home-header-banner-message > .home-header-banner-icon > a > i > svg path {
   fill: #5596E6 !important;
+}
+
+.home-header-banner-label-feedback {
+  color: #5596E6 !important;
 }
 
 p.apikey-note {
