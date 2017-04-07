@@ -7782,6 +7782,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   fill: #5596E6 !important;
 }
 
+.home-header-banner-label-feedback {
+  color: #5596E6 !important;
+}
+
 p.apikey-note {
   color: #5A5A5A;
   text-align: justify;
