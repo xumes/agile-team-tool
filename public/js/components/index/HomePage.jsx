@@ -278,6 +278,8 @@ var HomePage = React.createClass({
     self.tabClickedStart();
     $('#allTeams').attr('data-state','');
     $('#myTeams').attr('data-state','open');
+    $('#bodyContent').show();
+    $('#noTeamContent').hide();
     if (tab == 'myteams') {
       $('#searchFieldDiv').hide();
       $('#navSearchBtn').hide();
@@ -290,6 +292,11 @@ var HomePage = React.createClass({
         self.setState({
           'newTeams': newData,
           'selectedTeam': currentPath
+        }, function(){
+          if (_.isEmpty(data.teams) && _.isEmpty(data.standalone)) {
+            $('#bodyContent').hide();
+            $('#noTeamContent').show();
+          }
         });
         // self.setState({'searchTeamSelected': ''});
         $('#searchCancel').click();
