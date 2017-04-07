@@ -7,13 +7,13 @@ var Schema   = mongoose.Schema;
 var Users = require('./users');
 var Iterations = require('./iterations');
 var Assessments = require('./assessments');
-var loggers = require('../../middleware/logger');
+var loggers = require('../middleware/logger');
 var crypto = require('crypto');
 var validators = require('mongoose-validators');
 var moment = require('moment');
 var self = this;
 // Just needed so that corresponding test could run
-require('../../settings');
+require('../settings');
 var teamModel = require('./teams');
 var userTimezone = require('./data/uniqueUserTimezone.js');
 var ulocation = {};

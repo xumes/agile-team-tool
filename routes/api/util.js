@@ -1,4 +1,4 @@
-var System = require('../../models/mongodb/system');
+var System = require('../../models/system');
 var util = require('../../helpers/util');
 
 module.exports = function(app, includes) {

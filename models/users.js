@@ -1,15 +1,15 @@
 var mongoose = require('mongoose');
 var Promise = require('bluebird');
-var loggers = require('../../middleware/logger');
+var loggers = require('../middleware/logger');
 var moment = require('moment');
 var _ = require('underscore');
 var Schema = mongoose.Schema;
 var request = require('request');
-var settings = require('../../settings');
+var settings = require('../settings');
 var System = require('./system');
 
 // Just needed so that corresponding test could run
-require('../../settings');
+require('../settings');
 
 var userSchema = {
   userId: {

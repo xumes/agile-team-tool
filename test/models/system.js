@@ -1,6 +1,6 @@
 var chai = require('chai');
 var expect = chai.expect;
-var System = require('../../models/mongodb/system');
+var System = require('../../models/system');
 var _ = require('underscore');
 
 describe('SystemConstants Model Test', function() {

@@ -5,8 +5,8 @@ var validate = require('validate.js');
 var _ = require('underscore');
 var sprintf = require('sprintf-js').sprintf;
 var setting = require('../../settings.js');
-var Iterations = require('../../models/mongodb/iterations');
-var Users = require('../../models/mongodb/users');
+var Iterations = require('../../models/iterations');
+var Users = require('../../models/users');
 
 
 var formatErrMsg = function(msg) {

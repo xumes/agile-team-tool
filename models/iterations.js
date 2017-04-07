@@ -3,16 +3,16 @@ var _ = require('underscore');
 var Promise = require('bluebird');
 var mongoose = require('mongoose');
 var ObjectId = require('mongodb').ObjectID;
-var loggers = require('../../middleware/logger');
+var loggers = require('../middleware/logger');
 var Users = require('./users.js');
-var util = require('../../helpers/util');
+var util = require('../helpers/util');
 var teamModel = require('./teams');
 var moment = require('moment');
 var business = require('moment-business');
 var dateFormat = 'YYYY-MM-DD HH:mm:ss';
 var Schema   = mongoose.Schema;
 
-require('../../settings');
+require('../settings');
 
 var IterationSchema = {
   cloudantId: {

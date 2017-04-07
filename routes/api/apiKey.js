@@ -1,6 +1,6 @@
 var _ = require('underscore');
 var util = require('../../helpers/util');
-var apiKeysModel = require('../../models/mongodb/apiKeys');
+var apiKeysModel = require('../../models/apiKeys');
 
 module.exports = function(app, includes) {
   var middleware = includes.middleware;

@@ -1,4 +1,4 @@
-var teamModel = require('../../models/mongodb/teams');
+var teamModel = require('../../models/teams');
 var util = require('../../helpers/util');
 var loggers = require('../../middleware/logger');
 var _ = require('underscore');

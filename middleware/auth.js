@@ -1,5 +1,5 @@
 'use strict';
-var apiKeyModel = require('../models/mongodb/apiKeys');
+var apiKeyModel = require('../models/apiKeys');
 var _ = require('underscore');
 
 var auth = {

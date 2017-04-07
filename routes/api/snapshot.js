@@ -1,4 +1,4 @@
-var snapshotModel = require('../../models/mongodb/snapshot');
+var snapshotModel = require('../../models/snapshot');
 var _ = require('underscore');
 
 module.exports = function(app, includes) {

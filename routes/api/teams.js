@@ -1,5 +1,5 @@
-var teamModel = require('../../models/mongodb/teams');
-var sysModel = require('../../models/mongodb/system');
+var teamModel = require('../../models/teams');
+var sysModel = require('../../models/system');
 // var teamIndex = require('../../models/index/teamIndex');
 // var validate = require('validate.js');
 var _ = require('underscore');
