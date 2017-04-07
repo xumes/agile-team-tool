@@ -2,6 +2,7 @@ var React = require('react');
 var api = require('../api.jsx');
 var _ = require('underscore');
 var InlineSVG = require('svg-inline-react');
+var utils = require('../utils.jsx');
 var ConfirmDialog = require('./ConfirmDialog.jsx');
 var facesPerson = {};
 
@@ -9,12 +10,12 @@ var HomeAddMember = React.createClass({
   getInitialState: function() {
     return {
       alertMsg: '',
-      showConfirmModal: false
+      showConfirmModal: false,
+      facesPerson: {}
     }
   },
 
   componentDidUpdate: function() {
-    facesPerson = {};
     // $('#teamMemberRoleSelect').select2({'width':'100%'});
   },
   componentDidMount: function() {
@@ -47,25 +48,30 @@ var HomeAddMember = React.createClass({
   },
 
   facesClickHandler: function(person) {
-    facesPerson = person;
+    this.setState({facesPerson: person});
     $('#teamMemberName').text(person.name);
   },
 
   nameInputOnChangeHandler: function() {
-    facesPerson = {};
+    this.setState({facesPerson: ''});
   },
 
   addTeamMemberHandler: function() {
     var self = this;
+    var facesPerson = self.state.facesPerson;
     if (_.isEmpty(facesPerson)) {
       self.setState({alertMsg: 'Cannot find this person on faces.', showConfirmModal: true});
     } else if ($('#teamMemberRoleSelect').val() == 'psr') {
       self.setState({alertMsg: 'Please select a role.', showConfirmModal: true});
-    } else if ($('#teamMemberRoleSelect').val() == 'Other...' && $('#otherRole').val() == '') {
+    } else if ($('#teamMemberRoleSelect').val() == 'Other...' && $('#otherRole').val().trim() == '') {
       self.setState({alertMsg: 'Please fill the role description.', showConfirmModal: true});
+    } else if ($('#teamMemberAwkSelect').val() == 'other' && $('#otherAwk').val().trim() == '') {
+      self.setState({alertMsg: 'Please fill the average work per week.', showConfirmModal: true});
     } else {
       if (_.isEmpty(facesPerson.uid)) {
         self.setState({alertMsg: 'Cannot find this person on faces.', showConfirmModal: true});
+      } else if ($('#teamMemberAwkSelect').val() == 'other' && (!utils.isValidNumRange($('#otherAwk').val().trim()))) {
+        self.setState({alertMsg: 'Average work per week should be between 0 to 100.', showConfirmModal: true});
       } else {
         if (!self.props.loadDetailTeam.access) {
           self.setState({alertMsg: 'You don\'t have access to add team memeber for this team.', showConfirmModal: true});
