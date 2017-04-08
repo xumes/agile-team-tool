@@ -1,4 +1,4 @@
-var Users = require('../../models/mongodb/users');
+var Users = require('../../models/users');
 // Get admins and supports api call
 var _ = require('underscore');
 module.exports = function(app, includes) {
@@ -64,12 +64,12 @@ module.exports = function(app, includes) {
       res.status(400).send({'error': 'ids is empty'});
     } else {
       Users.getUsersInfo(req.body.ids)
-      .then(function(result) {
-        res.status(200).send(result);
-      })
-      .catch(function(err) {
-        res.status(404).send(err);
-      });
+        .then(function(result) {
+          res.status(200).send(result);
+        })
+        .catch(function(err) {
+          res.status(404).send(err);
+        });
     }
   };
 
@@ -79,33 +79,33 @@ module.exports = function(app, includes) {
     if (user) {
       userId = user ? user['ldap']['uid'].toUpperCase() : '';
       Users.getUsersInfo(userId)
+        .then(function(result) {
+          res.status(200).send(result);
+        })
+        .catch(function(err) {
+          res.status(404).send(err);
+        });
+    }
+  };
+
+  updateUser = function(req, res) {
+    Users.updateUser(req.body)
       .then(function(result) {
         res.status(200).send(result);
       })
       .catch(function(err) {
         res.status(404).send(err);
       });
-    }
-  };
-
-  updateUser = function(req, res) {
-    Users.updateUser(req.body)
-    .then(function(result) {
-      res.status(200).send(result);
-    })
-    .catch(function(err) {
-      res.status(404).send(err);
-    });
   };
 
   createUser = function(req, res) {
     Users.create(req.body)
-    .then(function(result) {
-      res.status(200).send(result);
-    })
-    .catch(function(err) {
-      res.status(404).send(err);
-    });
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch(function(err) {
+        res.status(404).send(err);
+      });
   };
 
   // //TODO: Refactor this and store in the database

@@ -16,17 +16,20 @@
 </script>
 <% } %>
 
-
-<% if (ibmNPSKey != '') { %>
+<% if (ibmNPS) { %>
 <script>
   window.ibmNps = {
-    offeringId: '<%= ibmNPSKey %>',
+    offeringId: '<%= ibmNPS.key %>',
     userId: '<%- userEmail %>'
   };
   <% if (environment != 'production') { %>
-    window.ibmNps.test = true;
+  window.ibmNps.test = true;
+  <% } %>
+  <% if (ibmNPS.attributes != {}) { %>
+  window.ibmNps.customAttributes = <%- JSON.stringify(ibmNPS.attributes) %>
   <% } %>
 </script>
+
 <script id="ibmNpsSurveyScript" async src="//nps.mybluemix.net/survey/nps-survey.js"></script>
 <% } %>
 

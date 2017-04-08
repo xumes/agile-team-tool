@@ -76,13 +76,22 @@ var HomeAseSummary = React.createClass({
     if (e.target.value == 'ps') {
       return;
     } else {
-      _.find(self.props.loadDetailTeam.assessments, function(assess){
+      var tempAssess = _.find(self.props.loadDetailTeam.assessments, function(assess){
         if (assess._id.toString() == e.target.value) {
-          return self.state.selectedAssessment = e.target.value;
+          self.state.selectedAssessment = e.target.value;
+          return assess;
           // return tempAssess = assess;
         }
       });
-      self.setState({ showACPlanModel: true });
+      var version = 'ag_ref_atma_components_v0' + tempAssess.version.charAt(tempAssess.version.length - 1);
+      api.getTemplateByVersion(version)
+        .then(function(template){
+          self.state.assessTemplate = template;
+          self.setState({ showACPlanModel: true });
+        })
+        .catch(function(err){
+          console.log(err);
+        })
     }
     // var submitDate = '(Averaging last submitted: ' + moment(tempAssess.submittedDate).format('DD MMM YYYY') + ')';
     // $('.home-assessment-summary > .main-content > div > .submit-date > h1').html(submitDate);
@@ -317,7 +326,7 @@ var HomeAseSummary = React.createClass({
               submitAssessCount ++ ;
               if (submitAssessCount > 1) {
                 return(
-                  <option key={assess._id} value={assess._id}>{moment.utc(assess.submittedDate).format('DD MMM YYYY')}</option>
+                  <option key={assess._id} value={assess._id}>{moment(assess.submittedDate).format('DD MMM YYYY')}</option>
                 )
               }
             }

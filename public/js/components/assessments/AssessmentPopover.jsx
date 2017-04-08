@@ -15,7 +15,7 @@ var AssessmentPopover = React.createClass({
       lcAssessTemplate: {},
       ddAssessTemplate: {},
       isUpdate: true,
-      submitDatePicker: moment.utc(new Date())
+      submitDatePicker: moment(new Date())
     };
   },
   componentWillMount: function() {
@@ -35,13 +35,13 @@ var AssessmentPopover = React.createClass({
     if (self.props.loadDetailTeam.assessments.length > 0 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft') {
       $('#assessmentTeamTypeSelector').val(self.props.loadDetailTeam.assessments[0].type).change();
       $('#assessmentSoftwareTypeSelector').val(self.props.loadDetailTeam.assessments[0].deliversSoftware?'Yes':'No').change();
-      $('#assessmentSubmitDateTitle').html(moment.utc(self.props.loadDetailTeam.assessments[0].submitDate).format('DD MMM YYYY'));
-      self.state.submitDatePicker = moment.utc(self.props.loadDetailTeam.assessments[0].submitDate);
+      $('#assessmentSubmitDateTitle').html(moment(self.props.loadDetailTeam.assessments[0].submitDate).format('DD MMM YYYY'));
+      self.state.submitDatePicker = moment(self.props.loadDetailTeam.assessments[0].submitDate);
     } else {
       $('#assessmentTeamTypeSelector').val(self.props.assessType==undefined?'Project':self.props.assessType).change();
       $('#assessmentSoftwareTypeSelector').val(self.props.assessSoftware==undefined?'Yes':self.props.assessSoftware).change();
       $('#assessmentSubmitDateTitle').html('On Submission');
-      self.state.submitDatePicker = moment.utc(new Date());
+      self.state.submitDatePicker = moment(new Date());
     }
     $('#assessmentTeamTypeSelector').change(this.ttChangeHandler);
     $('#assessmentSoftwareTypeSelector').change(this.stChangeHandler);
@@ -76,7 +76,7 @@ var AssessmentPopover = React.createClass({
     $('#assessmentContainer' + id + ' .ibm-twisty-body').css('display','none');
   },
   changeDateHandler: function(e) {
-    $('#assessmentSubmitDateTitle').html(moment.utc(e).format('DD MMM YYYY'));
+    $('#assessmentSubmitDateTitle').html(moment(e).format('DD MMM YYYY'));
   },
   render: function() {
     var self = this;
@@ -113,8 +113,8 @@ var AssessmentPopover = React.createClass({
       if (assessDraft.submittedDate == '') {
         submitDate = 'On Submisson';
       } else {
-        submitDate = moment.utc(assessDraft.submittedDate).format('DD MMM YYYY');
-        self.state.submitDatePicker = moment.utc(assessDraft.submittedDate);
+        submitDate = moment(assessDraft.submittedDate).format('DD MMM YYYY');
+        self.state.submitDatePicker = moment(assessDraft.submittedDate);
       }
       lastUpdatedBy = assessDraft.updatedBy;
       lastUpdated = ' (' + moment.utc(assessDraft.updateDate).format('DD MMM YYYY') + ')';

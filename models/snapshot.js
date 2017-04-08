@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var Promise = require('bluebird');
 var mongoose = require('mongoose');
-var loggers = require('../../middleware/logger');
+var loggers = require('../middleware/logger');
 var userModel = require('./users.js');
 var teamModel = require('./teams.js');
 var iterationModel = require('./iterations.js');
@@ -9,7 +9,7 @@ var iterationModel = require('./iterations.js');
 var assessmentModel = require('./assessments.js');
 var userTimezone = require('./data/uniqueUserTimezone.js');
 var moment = require('moment');
-var util = require('../../helpers/util');
+var util = require('../helpers/util');
 var dateFormat = 'YYYY-MM-DD HH:mm:ss';
 var Schema   = mongoose.Schema;
 
@@ -21,7 +21,7 @@ var monthArray = [];
 var ASSESSMENT_MAX_DAYS_SUBMISSION = 120;
 var ASSESSMENT_PERIOD = 5;
 
-var settings = require('../../settings');
+var settings = require('../settings');
 
 var pointsSchema = {
   totalPoints: {

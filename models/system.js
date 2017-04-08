@@ -1,6 +1,6 @@
 var Promise = require('bluebird');
-var loggers = require('../../middleware/logger');
-var config = require('../../settings');
+var loggers = require('../middleware/logger');
+var config = require('../settings');
 var mongoose = config.mongoose;
 var Schema   = require('mongoose').Schema;
 
@@ -50,36 +50,36 @@ var system = {
   getTeamMemberRoles: function() {
     return new Promise(function(resolve, reject) {
       SysCollOptions.findOne({'collTag': 'team', 'collField': 'members.role'}).exec()
-      .then(function(options){
-        resolve(options.validOptions);
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        reject({'error':err});
-      });
+        .then(function(options){
+          resolve(options.validOptions);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject({'error':err});
+        });
     });
   },
 
   getTeamLinkLabels: function() {
     return new Promise(function(resolve, reject) {
       SysCollOptions.findOne({'collTag': 'team', 'collField': 'links.linkLabel'}).exec()
-      .then(function(options){
-        resolve(options.validOptions);
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        reject({'error':err});
-      });
+        .then(function(options){
+          resolve(options.validOptions);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject({'error':err});
+        });
     });
   },
 
   getSystemStatus: function() {
     return new Promise(function(resolve, reject) {
       SysStatus.findOne({'active': true}).exec()
-      .then(function(status){
-        resolve(status);
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        reject({'error':err});
-      });
+        .then(function(status){
+          resolve(status);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject({'error':err});
+        });
     });
   },
 };

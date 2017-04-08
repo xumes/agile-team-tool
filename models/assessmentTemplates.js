@@ -2,9 +2,9 @@ var lodash = require('lodash');
 var Promise = require('bluebird');
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
-var config = require('../../settings');
+var config = require('../settings');
 mongoose.createConnection(config.mongoURL);
-var loggers = require('../../middleware/logger');
+var loggers = require('../middleware/logger');
 var Schema   = mongoose.Schema;
 var lodash = require('lodash');
 
@@ -23,7 +23,7 @@ var componentsPrinciplesPracticesLevelsSchema = new Schema({
   }
 });
 
-var  componentsPrinciplesPracticesSchema = new Schema({
+var componentsPrinciplesPracticesSchema = new Schema({
   id: {
     type: Number,
     required: [true, 'Practices ID is required']
@@ -55,11 +55,11 @@ var componentsPrinciplesSchema = new Schema({
 });
 
 var componentsSchema = new Schema({
-  name : {
+  name: {
     type: String,
     required: [true, 'Component name is required']
   },
-  principles : {
+  principles: {
     type: [componentsPrinciplesSchema],
     required: true
   }
@@ -78,7 +78,7 @@ var AssessmentTemplatesSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['inactive','active'],
+    enum: ['inactive', 'active'],
     default: 'inactive',
     required: [true, 'status is required.']
   },
@@ -86,15 +86,19 @@ var AssessmentTemplatesSchema = new Schema({
     type: [componentsSchema],
     required: true
   }
-}, {collection: 'assessmentTemplates'});
+}, {
+  collection: 'assessmentTemplates'
+});
 
 var AssessmentTemplates = mongoose.model('assessmentTemplates', AssessmentTemplatesSchema);
 
-module.exports.create = function(templateData){
+module.exports.create = function(templateData) {
   return new Promise(function(resolve, reject) {
     if (lodash.isEmpty(templateData)) {
       var msg = 'Assessment template data is required';
-      msg = {'error':msg};
+      msg = {
+        'error': msg
+      };
       loggers.get('models').error('Error: ' + msg);
       return reject(msg);
     } else {
@@ -115,29 +119,33 @@ module.exports.create = function(templateData){
 module.exports.get = function(templateId, status) {
   return new Promise(function(resolve, reject) {
     if (!lodash.isEmpty(templateId)) {
-      AssessmentTemplates.findOne({'_id': templateId})
-      .then(function(result) {
-        return resolve(result);
+      AssessmentTemplates.findOne({
+        '_id': templateId
       })
-      .catch( /* istanbul ignore next */ function(err) {
-        /* cannot simulate MongoDB error during testing */
-        loggers.get('models').error('Error: ' + err.error);
-        return reject(err);
-      });
+        .then(function(result) {
+          return resolve(result);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          /* cannot simulate MongoDB error during testing */
+          loggers.get('models').error('Error: ' + err.error);
+          return reject(err);
+        });
     } else {
       if (lodash.isEmpty(status))
         var q = {};
       else
-        var q = {'status':status};
+        var q = {
+          'status': status
+        };
       AssessmentTemplates.find(q)
-      .then(function(result) {
-        return resolve(result);
-      })
-      .catch( /* istanbul ignore next */ function(err) {
-        /* cannot simulate MongoDB error during testing */
-        loggers.get('models').error('Error: ' + err.error);
-        return reject(err);
-      });
+        .then(function(result) {
+          return resolve(result);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          /* cannot simulate MongoDB error during testing */
+          loggers.get('models').error('Error: ' + err.error);
+          return reject(err);
+        });
     }
   });
 };
@@ -145,17 +153,21 @@ module.exports.get = function(templateId, status) {
 module.exports.getTemplateByVersion = function(version) {
   return new Promise(function(resolve, reject) {
     if (!lodash.isEmpty(version)) {
-      AssessmentTemplates.findOne({'cloudantId': version})
-      .then(function(result) {
-        return resolve(result);
+      AssessmentTemplates.findOne({
+        'cloudantId': version
       })
-      .catch( /* istanbul ignore next */ function(err) {
-        /* cannot simulate MongoDB error during testing */
-        loggers.get('models').error('Error: ' + err.error);
-        return reject(err);
-      });
+        .then(function(result) {
+          return resolve(result);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          /* cannot simulate MongoDB error during testing */
+          loggers.get('models').error('Error: ' + err.error);
+          return reject(err);
+        });
     } else {
-      return reject({'error': 'Version number cannot be empty.'});
+      return reject({
+        'error': 'Version number cannot be empty.'
+      });
     }
   });
 };
@@ -164,11 +176,17 @@ module.exports.update = function(templateId, templateData) {
   return new Promise(function(resolve, reject) {
     if (lodash.isEmpty(templateId)) {
       var msg = 'Assessment template id is required';
-      msg={'error':msg};
+      msg = {
+        'error': msg
+      };
       loggers.get('models').error('Error: ' + msg);
       return reject(msg);
     } else {
-      AssessmentTemplates.findOneAndUpdate({'_id' :  templateId}, templateData, {'new':true})
+      AssessmentTemplates.findOneAndUpdate({
+        '_id': templateId
+      }, templateData, {
+        'new': true
+      })
         .then(function(result) {
           resolve(result);
         })
@@ -184,11 +202,15 @@ module.exports.delete = function(templateId) {
   return new Promise(function(resolve, reject) {
     if (lodash.isEmpty(templateId)) {
       var msg = 'Assessment template id is required';
-      msg={'error':msg};
+      msg = {
+        'error': msg
+      };
       loggers.get('models').error('Error: ' + msg);
       return reject(msg);
     } else {
-      AssessmentTemplates.remove({'_id': templateId})
+      AssessmentTemplates.remove({
+        '_id': templateId
+      })
         .then(function(body) {
           return resolve(body);
         })
@@ -205,11 +227,15 @@ module.exports.deleteByCloudantId = /* istanbul ignore next */ function(cloudant
   return new Promise(function(resolve, reject) {
     if (lodash.isEmpty(cloudantId)) {
       var msg = 'Assessment template cloudantId is required';
-      msg={'error':msg};
+      msg = {
+        'error': msg
+      };
       loggers.get('models').error('Error: ' + msg);
       return reject(msg);
     } else {
-      AssessmentTemplates.remove({'cloudantId': cloudantId})
+      AssessmentTemplates.remove({
+        'cloudantId': cloudantId
+      })
         .then(function(body) {
           return resolve(body);
         })

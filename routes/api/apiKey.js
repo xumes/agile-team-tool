@@ -1,6 +1,6 @@
 var _ = require('underscore');
 var util = require('../../helpers/util');
-var apiKeysModel = require('../../models/mongodb/apiKeys');
+var apiKeysModel = require('../../models/apiKeys');
 
 module.exports = function(app, includes) {
   var middleware = includes.middleware;
@@ -37,16 +37,16 @@ module.exports = function(app, includes) {
 
   deleteApiKey = function(req, res) {
     apiKeysModel.deleteApikey(req.session['user'])
-    .then(function(result) {
-      if (result == 'user not exist') {
-        res.status(404).send(result);
-      } else {
-        res.status(200).send(result);
-      }
-    })
-    .catch(function(err) {
-      res.status(400).send(err);
-    });
+      .then(function(result) {
+        if (result == 'user not exist') {
+          res.status(404).send(result);
+        } else {
+          res.status(200).send(result);
+        }
+      })
+      .catch(function(err) {
+        res.status(400).send(err);
+      });
   };
 
 

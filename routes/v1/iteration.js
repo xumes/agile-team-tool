@@ -1,6 +1,6 @@
-var teamModel = require('../../models/mongodb/teams');
-var iterationModel = require('../../models/mongodb/iterations');
-var userModel = require('../../models/mongodb/users');
+var teamModel = require('../../models/teams');
+var iterationModel = require('../../models/iterations');
+var userModel = require('../../models/users');
 var util = require('../../helpers/util');
 var loggers = require('../../middleware/logger');
 var _ = require('underscore');
@@ -21,13 +21,13 @@ module.exports = function(app, includes) {
             res.status(400).send({message: 'Unauthorized access.  You must be a member of the team or a member of its parent team.'});
           } else {
             iterationModel.getByIterInfo(teamId)
-            .then(function(iterations) {
-              res.status(200).send(iterations);
-            })
-            .catch( /* istanbul ignore next  */ function(err) {
-              loggers.get('api').error('[v1.iterations.getIterations]:', err);
-              res.status(400).send(err);
-            });
+              .then(function(iterations) {
+                res.status(200).send(iterations);
+              })
+              .catch( /* istanbul ignore next  */ function(err) {
+                loggers.get('api').error('[v1.iterations.getIterations]:', err);
+                res.status(400).send(err);
+              });
           }
         })
         .catch( /* istanbul ignore next  */ function(err) {

@@ -1,15 +1,15 @@
 var mongoose = require('mongoose');
 var Promise = require('bluebird');
-var loggers = require('../../middleware/logger');
+var loggers = require('../middleware/logger');
 var moment = require('moment');
 var _ = require('underscore');
 var Schema = mongoose.Schema;
 var request = require('request');
-var settings = require('../../settings');
+var settings = require('../settings');
 var System = require('./system');
 
 // Just needed so that corresponding test could run
-require('../../settings');
+require('../settings');
 
 var userSchema = {
   userId: {
@@ -111,20 +111,20 @@ var users = {
     return new Promise(function(resolve, reject){
       if (_.isEmpty(uid)) {
         User.find().exec()
-        .then(function(users){
-          resolve(users);
-        })
-        .catch( /* istanbul ignore next */ function(err){
-          reject({'error':err});
-        });
+          .then(function(users){
+            resolve(users);
+          })
+          .catch( /* istanbul ignore next */ function(err){
+            reject({'error':err});
+          });
       } else {
         return User.findOne({userId: uid}).exec()
-        .then(function(user){
-          resolve(user);
-        })
-        .catch( /* istanbul ignore next */ function(err){
-          reject({'error':err});
-        });
+          .then(function(user){
+            resolve(user);
+          })
+          .catch( /* istanbul ignore next */ function(err){
+            reject({'error':err});
+          });
       }
     });
   },
@@ -133,20 +133,20 @@ var users = {
     return new Promise(function(resolve, reject){
       if (_.isEmpty(email)) {
         User.find().exec()
-        .then(function(users){
-          resolve(users);
-        })
-        .catch( /* istanbul ignore next */ function(err){
-          reject({'error':err});
-        });
+          .then(function(users){
+            resolve(users);
+          })
+          .catch( /* istanbul ignore next */ function(err){
+            reject({'error':err});
+          });
       } else {
         return User.findOne({email: email.toLowerCase()}).exec()
-        .then(function(user){
-          resolve(user);
-        })
-        .catch( /* istanbul ignore next */ function(err){
-          reject({'error':err});
-        });
+          .then(function(user){
+            resolve(user);
+          })
+          .catch( /* istanbul ignore next */ function(err){
+            reject({'error':err});
+          });
       }
     });
   },
@@ -208,12 +208,12 @@ var users = {
   getUsersInfo: function(ids) {
     return new Promise(function(resolve, reject) {
       User.find({'userId': {'$in': ids}}).exec()
-      .then(function(users){
-        resolve(users);
-      })
-      .catch( /* istanbul ignore next */ function(err){
-        reject({'error':err});
-      });
+        .then(function(users){
+          resolve(users);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject({'error':err});
+        });
     });
   },
 

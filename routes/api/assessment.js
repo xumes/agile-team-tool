@@ -1,6 +1,6 @@
-var assessmentModel = require('../../models/mongodb/assessments');
-var assessmentTemplateModel = require('../../models/mongodb/assessmentTemplates');
-var teamModel = require('../../models/mongodb/teams');
+var assessmentModel = require('../../models/assessments');
+var assessmentTemplateModel = require('../../models/assessmentTemplates');
+var teamModel = require('../../models/teams');
 
 var _ = require('underscore');
 
