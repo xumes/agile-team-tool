@@ -6,6 +6,7 @@ var moment = require('moment');
 var DatePicker = require('react-datepicker');
 var CustomDate = require('./CustomDatePicker.jsx');
 var utils = require('../utils.jsx');
+var ConfirmDialog = require('./ConfirmDialog.jsx');
 
 var initData = {
   'startDate':null,
@@ -28,7 +29,10 @@ var HomeEditIteration = React.createClass({
     return {
       iterationStartDate: null,
       iterationEndDate: null,
-      name: ''
+      name: '',
+      showConfirmModal: false,
+      alertMsg: '',
+      alertType: ''
     }
   },
 
@@ -111,8 +115,12 @@ var HomeEditIteration = React.createClass({
       if (data != undefined) {
         var jsonData = data;
         if (jsonData.type != undefined && jsonData.type.toLowerCase() != 'squad') {
-          alert('Team information has been changed to non squad.  Iteration information cannot be entered for non squad teams.');
-          self.updateIterationInfo('clearIteration');
+          //alert('Team information has been changed to non squad.  Iteration information cannot be entered for non squad teams.');
+          self.setState({alertMsg: 'Team information has been changed to non squad.  Iteration information cannot be entered for non squad teams.', showConfirmModal: true, alertType: 'error'}, 
+            function(){
+              self.updateIterationInfo('clearIteration');                
+          });
+          
           return;
         }
         var data = _.clone(self.props.selectedIter);
@@ -124,13 +132,20 @@ var HomeEditIteration = React.createClass({
     })
     .then(function(result) {
       utils.clearHighlightedIterErrors();
-      alert('You have successfully updated Iteration information.');
-      self.props.iterListHandler(self.props.selectedIter._id);
-      self.close();       
+      //alert('You have successfully updated Iteration information.');
+      self.setState({alertMsg: 'You have successfully updated Iteration information.', showConfirmModal: true, alertType: 'information'}, 
+        function(){
+          self.props.iterListHandler(self.props.selectedIter._id);                  
+        });
     })
     .catch(function(err){
       utils.handleIterationErrors(err);
     });
+  },
+
+  hideConfirmDialog: function() {
+    this.setState({showConfirmModal: false, alertMsg: ''});
+    this.close();
   },
   
   render: function() {
@@ -164,6 +179,7 @@ var HomeEditIteration = React.createClass({
                 </div>
               </div>
           </div>
+          <ConfirmDialog showConfirmModal={this.state.showConfirmModal} hideConfirmDialog={this.hideConfirmDialog} confirmAction={this.hideConfirmDialog} alertType={this.state.alertType} content={this.state.alertMsg} actionBtnLabel='Ok' />
           </ReactModal>
           </div>
       )
