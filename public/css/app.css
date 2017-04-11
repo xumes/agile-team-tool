@@ -7791,3 +7791,19 @@ p.apikey-note {
   color: #5A5A5A;
   text-align: justify;
 }
+
+.team-setup-squad-block .MA-link-note {
+  display: inline-block;
+  font-size: inherit;
+  padding: 2em 1em;
+  position: relative;
+}
+
+.team-setup-squad-block .MA-link-note > p {
+  color: #777677;
+  font-size: .8em;
+  line-height: 0em;
+  padding: 0em 1em 0;
+  text-align: justify;
+}
+
