@@ -7795,9 +7795,9 @@ p.apikey-note {
 .MA-link-note {
   display: inline-block;
   font-size: inherit;
-  padding: 1.5em 1em;
+  padding: 1.8em 1em;
   position: fixed;
-  top: 21em;
+  top: 19.5em;
   right: 0em;
   left: 0em;
 }
@@ -7805,7 +7805,7 @@ p.apikey-note {
 .MA-link-note > p {
   color: #777677;
   font-size: .7em;
-  line-height: 0em;
+  line-height: 2em;
   padding: 0em 1em 0;
   text-align: left;
 }
