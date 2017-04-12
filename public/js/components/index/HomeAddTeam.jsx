@@ -9,6 +9,7 @@ var HomeAddTeamTypeModal = require('./HomeAddTeamTypeModal.jsx');
 var HomeAddTeamMemberModal = require('./HomeAddTeamMemberModal.jsx');
 var HomeAddTeamMemberRole = require('./HomeAddTeamMemberRole.jsx');
 var ConfirmDialog = require('./ConfirmDialog.jsx');
+var ConfirmDialogError = require('./ConfirmDialog.jsx');
 
 var HomeAddTeam = React.createClass({
   getInitialState: function() {
@@ -35,7 +36,8 @@ var HomeAddTeam = React.createClass({
       selectedChildTeams: [],
       teamNames: [],
       teamMembers: [],
-      showConfirmModal: false
+      showConfirmModal: false,
+      alertMsg: ''
     };
   },
 
@@ -189,19 +191,28 @@ var HomeAddTeam = React.createClass({
           var err2 = [];
           try {
             if (err && err['responseJSON']) {
-              var tmperr = err['responseJSON']['errors'];
-              _.each(tmperr, function(e, idx, ls) {
-                var divIdx = parseInt(idx.match(/\d+/)[0], 10);
-                utils.highlightErrorField(e.path, divIdx);
-                err1.push(e['message']);
-              });
-              err2 = utils.returnUniqErrors(err1);
-              _.each(err2, function(s) {
-                str = str + ' ' + s + '\n';
-              });
-              alert(str);
+              if (err['responseJSON'] && err['responseJSON']['errmsg']) {
+                if(err['responseJSON']['code'] == 11000) {
+                  self.setState({alertMsg: self.state.newTeamObj.name + ' is too similar to another team. Please enter a different team name.', showConfirmErrorModal: true});
+                } else {
+                  self.setState({alertMsg: err['responseJSON']['errmsg'], showConfirmErrorModal: true});
+                }
+              } else {
+                var tmperr = err['responseJSON']['errors'];
+                _.each(tmperr, function(e, idx, ls) {
+                  var divIdx = parseInt(idx.match(/\d+/)[0], 10);
+                  utils.highlightErrorField(e.path, divIdx);
+                  err1.push(e['message']);
+                });
+                err2 = utils.returnUniqErrors(err1);
+                _.each(err2, function(s) {
+                  str = str + ' ' + s + ' \u000A';
+                });
+                // console.log(str);
+                self.setState({alertMsg: str, showConfirmErrorModal: true, responseErrors: tmperr});
+              }
             } else {
-              alert(err);
+              self.setState({alertMsg: err, showConfirmErrorModal: true});
             }
           } catch(e) {
             console.log('e:', e);
@@ -223,6 +234,10 @@ var HomeAddTeam = React.createClass({
 
   hideConfirmDialog: function() {
     this.setState({showConfirmModal: false});
+  },
+
+  hideConfirmErrorDialog: function() {
+    this.setState({showConfirmErrorModal: false, alertMsg: ''});
   },
 
   render: function () {
@@ -248,6 +263,7 @@ var HomeAddTeam = React.createClass({
         <HomeAddTeamMemberRole activeWindow={this.state.screenStatus['showTeamMemberRoleModal'].active} closeWindow={self.closeWindow} openWindow={self.openWindow} newTeamObj={self.state.newTeamObj} setTeamMember={self.setTeamMember} roles={self.props.roles} saveTeam={self.saveTeam}/>
 
         <ConfirmDialog showConfirmModal={self.state.showConfirmModal} confirmAction={self.hideConfirmDialog} alertType='information' content={'You have successfully added this team.'} actionBtnLabel='Ok' />
+        <ConfirmDialogError showConfirmModal={self.state.showConfirmErrorModal} hideConfirmDialog={self.hideConfirmErrorDialog} confirmAction={self.hideConfirmErrorDialog} alertType='error' content={self.state.alertMsg} actionBtnLabel='Ok' />
       </div>
     )
   }
