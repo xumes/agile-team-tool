@@ -6103,7 +6103,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .home-modal-block-content {
   font-size: inherit;
-  height: 80%;
+  height: 75%;
   position: relative;
 }
 
@@ -6158,7 +6158,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .team-setup-squad-block .squad-note {
   display: inline-block;
   font-size: inherit;
-  padding: 2em 1em;
+  padding: 1em 1em;
   position: relative;
 }
 
@@ -7795,7 +7795,7 @@ p.apikey-note {
 .team-setup-squad-block .MA-link-note {
   display: inline-block;
   font-size: inherit;
-  padding: 2em 1em;
+  padding: 1.5em 1em;
   position: relative;
 }
 

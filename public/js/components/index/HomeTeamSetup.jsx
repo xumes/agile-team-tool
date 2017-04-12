@@ -484,9 +484,9 @@ var HomeTeamSetup = React.createClass({
                 <div class='squad-note' style={showNote}>
                   <p>Note: Because your team has an iteration result or a maturity assessment result, you no longer have abilities to add child teams beneath you.</p>
                 </div>
-            <div class='MA-link-note'>
-                  <p>Maturity assessment link: <a href="./maturityTrends?id=5858519ea0a583041f66f8fa" target="_blank">{self.state.maturityAssessmentLink}</a></p>             
-            </div>                
+                <div class='MA-link-note'>
+                  <p>Maturity assessment link: <a href={self.state.maturityAssessmentLink} target="_blank">{self.state.maturityAssessmentLink}</a></p>
+                </div>
               </div>
             </div>
             <div class='home-modal-block-footer ibm-btn-row' style={{'width':'95%','top':'-2%'}}>
