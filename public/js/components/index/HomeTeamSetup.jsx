@@ -21,11 +21,14 @@ var HomeTeamSetup = React.createClass({
       parentId: '',
       children: [],
       alertMsg: '',
-      showAlertModal: false
+      showAlertModal: false,
+      maturityAssessmentLink: ''
     }
   },
   componentDidMount: function() {
+    var self = this;
     $('#homeHeaderSetupBtn svg').attr('title','Team Setup').children('title').remove();
+    self.setState({maturityAssessmentLink: location.origin+'/maturityTrends?id='+self.props.loadDetailTeam.team._id});
   },
   componentDidUpdate: function(prevProps, prevState) {
     var self = this;
@@ -481,6 +484,9 @@ var HomeTeamSetup = React.createClass({
                 <div class='squad-note' style={showNote}>
                   <p>Note: Because your team has an iteration result or a maturity assessment result, you no longer have abilities to add child teams beneath you.</p>
                 </div>
+            <div class='MA-link-note'>
+                  <p>Maturity assessment link: <a href="./maturityTrends?id=5858519ea0a583041f66f8fa" target="_blank">{self.state.maturityAssessmentLink}</a></p>             
+            </div>                
               </div>
             </div>
             <div class='home-modal-block-footer ibm-btn-row' style={{'width':'95%','top':'-2%'}}>
