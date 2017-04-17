@@ -5,6 +5,7 @@ var _ = require('underscore');
 var ReactModal = require('react-modal');
 var LinksSelectDropdown = require('./LinksSelectDropdown.jsx');
 var utils = require('../utils.jsx');
+var ConfirmDialog = require('./ConfirmDialog.jsx');
 
 var HomeBookmark = React.createClass({
   getInitialState: function() {
@@ -15,7 +16,9 @@ var HomeBookmark = React.createClass({
       linkLabel: '',
       link_otherLabel: '',
       isChecked: false,
-      showOtherlabel: false
+      showOtherlabel: false,
+      showAlertModal: false,
+      alertMsg: ''
     }
   },
   componentDidMount:function() {
@@ -236,12 +239,16 @@ var HomeBookmark = React.createClass({
         if (err.responseJSON !== undefined && err.responseJSON['error'] !== undefined) {
           var error = err.responseJSON['error'];
           self.handleTeamLinksValidationErrors(error);
+        } else if (err.responseJSON !== undefined && err.responseJSON['errmsg'] !== undefined) {
+          self.setState({alertMsg: err.responseJSON['errmsg'], showAlertModal: true});
         } else {
           console.log('err:',err);
           if (err['statusText'] != undefined) {
-            alert(err['statusText']);
+            // alert(err['statusText']);
+            self.setState({alertMsg: err['statusText'], showAlertModal: true});
           } else {
-            alert(err);
+            // alert(err);
+            self.setState({alertMsg: err, showAlertModal: true});
           }
         }
       });
@@ -332,6 +339,9 @@ var HomeBookmark = React.createClass({
         this.setState({showOtherlabel: false});
       }
     }
+  },
+  hideAlertDialog: function() {
+    this.setState({showAlertModal: false, alertMsg: ''});
   },
   render: function() {
     var self = this;
@@ -457,6 +467,8 @@ var HomeBookmark = React.createClass({
             </footer>
            </div>
         </ReactModal>
+
+        <ConfirmDialog showConfirmModal={self.state.showAlertModal} hideConfirmDialog={self.hideAlertDialog} confirmAction={self.hideAlertDialog} alertType='error' content={self.state.alertMsg} actionBtnLabel='Ok' />
       </div>
     );
   }

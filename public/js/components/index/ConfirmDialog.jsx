@@ -45,7 +45,7 @@ var ConfirmDialog = React.createClass({
             </div>
           </div>
           <div class='home-modal-block-content setauto'>
-            <p>{content}</p>
+            <p class='content'>{content}</p>
           </div>
           <div class='home-modal-block-footer ibm-btn-row style1'>
             <div class='floatright'>
