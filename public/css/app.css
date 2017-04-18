@@ -6118,7 +6118,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .home-modal-block-footer {
   display: inline-block;
   font-size: inherit;
-  padding: 0.5rem 1rem 1rem 1rem;
+  padding: 0.5rem 1rem 1rem 1.6rem;
   position: relative;
 }
 
@@ -6170,14 +6170,14 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   color: #777677;
   font-size: .8em;
   line-height: 1.3em;
-  padding: 2em 1em 0;
+  padding: 6rem 1rem 0;
   text-align: justify;
 }
 
 .team-setup-squad-block .team-setup-squad-icon {
   display: inline-block;
   font-size: inherit;
-  padding: 1em 0 0 4em;
+  padding: 0.5em 0 0 4em;
   position: relative;
   width: 22%;
   height: 14.5rem;
@@ -6188,7 +6188,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-size: inherit;
   font-weight: bold;
   left: -2em;
-  padding: 1rem 0 0;
+  padding: 1rem 0 0.6rem;
   position: relative;
 }
 
@@ -6214,7 +6214,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: inline-block;
   font-size: inherit;
   position: relative;
-  top: 3.5rem;
+  top: 4.2rem;
   width: 95%;
   font-size: 1.5rem;
 }
@@ -6234,7 +6234,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .team-setup-squad-content .squad-name > h {
   color: #464646;
-  font-size: 1.6rem;
+  font-size: 1.7rem;
   position: absolute;
   top: 16.4rem;
   transform: translate(0px, -50%);
@@ -6282,7 +6282,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 3%;
   left: 35%;
   position: absolute;
-  top: 4rem;
+  top: 4.5rem;
   width: 1.4%;
 }
 
@@ -6299,7 +6299,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 3%;
   left: 35%;
   position: absolute;
-  top: 15.8rem;
+  top: 16rem;
   width: 1.4%;
 }
 
@@ -7803,10 +7803,8 @@ p.apikey-note {
   display: inline-block;
   font-size: inherit;
   padding: 1.8em 1em;
-  position: fixed;
+  position: absolute;
   top: 19em;
-  right: 0em;
-  left: 0em;
 }
 
 .MA-link-note > p {

@@ -439,7 +439,7 @@ var HomeTeamSetup = React.createClass({
         </div>
 
         <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showParentSetup} onHide={self.hideTeamSetup}  onShow={self.show}>
-          <div class='home-modal-block' style={{'height':'46rem', 'width':'35em'}} id='teamParentSetupBlock'>
+          <div class='home-modal-block' style={{'height':'45rem', 'width':'35em'}} id='teamParentSetupBlock'>
             <div class='home-modal-block-header'>
               <h>Team Setup</h>
               <div class='home-modal-block-close-btn' onClick={self.hideTeamSetup}>
