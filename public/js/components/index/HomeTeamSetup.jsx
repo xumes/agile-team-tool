@@ -92,7 +92,7 @@ var HomeTeamSetup = React.createClass({
               parentId: returnNewState.parentId,
               children: returnNewState.children
             }, function() {
-              // workaround to update the dropdown select value
+              // workaround to update the dropdown select value (squadParentSelectList)
               $('#squadParentSelectList').val(self.state.parentId).change();
             });
           else
@@ -102,6 +102,9 @@ var HomeTeamSetup = React.createClass({
               selectableChildren: returnNewState.selectableChildren,
               parentId: returnNewState.parentId,
               children: returnNewState.children
+            }, function() {
+              // workaround to update the dropdown select value (parentSelectList)
+              $('#parentSelectList').val(self.state.parentId).change();
             });
 
           return resolve(returnNewState);
@@ -471,7 +474,7 @@ var HomeTeamSetup = React.createClass({
                 <div class='team-setup-squad-content'>
                   <div class='squad-parent'>
                     <label for='squadParentSelectList'>Parent Team</label>
-                    <select id='squadParentSelectList' name='squadParentSelectListA' disabled={!self.props.loadDetailTeam.access} value={self.state.parentId}>
+                    <select id='squadParentSelectList' name='squadParentSelectListA' disabled={!self.props.loadDetailTeam.access} defaultValue={self.state.parentId}>
                       <option key='pdef' value=''>No Team Associated/Available</option>
                       {parentOptions}
                     </select>
@@ -536,7 +539,7 @@ var HomeTeamSetup = React.createClass({
                 <div class='team-setup-content'>
                   <div class='team-setup-parent-select'>
                     <label for='parentSelectList'>Parent Team</label>
-                    <select id='parentSelectList' name='parentSelectList' disabled={!self.props.loadDetailTeam.access} value={self.state.parentId}>
+                    <select id='parentSelectList' name='parentSelectList' disabled={!self.props.loadDetailTeam.access} defaultValue={self.state.parentId}>
                       <option key='pdef' value=''>No Team Associated/Available</option>
                       {parentOptions}
                     </select>
