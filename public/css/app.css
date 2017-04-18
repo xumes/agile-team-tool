@@ -2589,12 +2589,12 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .home-iter-name {
   position: relative;
-  width: 95%;
-  height: 1.9em;
+  width: 90%;
+  height: 1.2em;
   display: inline-block;
   font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.8em;
-  line-height: 1.9em;
+  line-height: 1.2em;
   color: #323232;
   overflow: auto;
 }
@@ -2692,6 +2692,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   width: 10%;
   height: 26%;
   min-height: 1.5em;
+  top: 0.4em;
 }
 
 .home-iter-edit-btn-block > i > svg, .home-iter-edit-btn-block-disabled > i > svg {
