@@ -1,6 +1,7 @@
 module.exports = {
   dbUrl: process.env.dbUrl || 'test.cloudant.com',
   ldapAuthURL: process.env.ldapAuthURL || 'http://ifundit-dp.tap.ibm.com:3004',
+  bluepagesURL: process.env.bluepagesURL || 'http://ifundit-dp.tap.ibm.com:3004',
   redisDb: {
     url: process.env.redisURL || 'redis://localhost:6379',
     prefix: process.env.redisPrefix || 'agileteamtool:'
@@ -32,7 +33,7 @@ module.exports = {
   googleAnalyticsKey: process.env.googleAnalyticsKey || '',
   googleHost: 'maps.googleapis.com',
   googleApiKey: process.env.googleAPIKey || 'AIzaSyAF2vwg6z-pH4xC7Ac1eMcpR9mVG-A2u7Y',
-  facesURL: 'https://faces.tap.ibm.com/api/',
+  facesURL: 'https://faces.tap.ibm.com/api',
   ibmNPSKey: process.env.ibmNPSKey || '',
   ibmNPS: {
     key: process.env.ibmNPSKey || '',

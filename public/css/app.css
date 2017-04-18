@@ -6111,6 +6111,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
  height: auto;
 }
 
+.home-modal-block-content > p.content {
+  white-space: pre-wrap;
+}
+
 .home-modal-block-footer {
   display: inline-block;
   font-size: inherit;
