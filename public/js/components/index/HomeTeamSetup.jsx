@@ -208,14 +208,11 @@ var HomeTeamSetup = React.createClass({
   show: function() {
     var self = this;
     if (self.state.showParentSetup) {
-      $('#squadParentSelectList').select2({'width':'100%'});
-      $('#teamParentSetupBlock select').select2({'dropdownParent':$('#teamParentSetupBlock')});
+      $('#teamParentSetupBlock select').select2({'width':'100%','dropdownParent':$('#teamParentSetupBlock')});
       $('#squadParentSelectList').change(self.parentSelectHandler);
 
     } else if (self.state.showTreeSetup) {
-      $('#parentSelectList').select2({'width':'100%'});
-      $('#childSelectList').select2({'width':'100%'});
-      $('#teamTreeSetupBlock select').select2({'dropdownParent':$('#teamTreeSetupBlock')});
+      $('#teamTreeSetupBlock select').select2({'width':'100%','dropdownParent':$('#teamTreeSetupBlock')});
       $('#parentSelectList').change(self.parentSelectHandler);
       $('#childSelectList').change(self.childSelectHandler);
     }
