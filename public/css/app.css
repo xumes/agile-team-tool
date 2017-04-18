@@ -6193,10 +6193,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .team-setup-squad-block .team-setup-squad-icon-change {
-  left: 27.25%;
-  height: 7rem;
+  left: 27.1%;
+  height: 7.6rem;
   position: relative;
-  width: 5%;
+  width: 2.9rem;
   top: 3.5rem;
 }
 
@@ -6214,7 +6214,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: inline-block;
   font-size: inherit;
   position: relative;
-  top: 4.2rem;
+  top: 4.4rem;
   width: 95%;
   font-size: 1.5rem;
 }
@@ -6236,7 +6236,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   color: #464646;
   font-size: 1.7rem;
   position: absolute;
-  top: 16.6rem;
+  top: 17rem;
   transform: translate(0px, -50%);
 }
 
@@ -6244,7 +6244,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: block;
   font-size: inherit;
   position: absolute;
-  top: 23.2rem;
+  top: 24rem;
   width: 95%;
 }
 
@@ -6282,7 +6282,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 3%;
   left: 35%;
   position: absolute;
-  top: 4.5rem;
+  top: 4.9rem;
   width: 1.4%;
 }
 
@@ -6299,7 +6299,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 3%;
   left: 35%;
   position: absolute;
-  top: 16.1rem;
+  top: 16.6rem;
   width: 1.4%;
 }
 
@@ -6316,7 +6316,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 3%;
   left: 35%;
   position: absolute;
-  top: 23.5rem;
+  top: 24.3rem;
   width: 1.4%;
 }
 
