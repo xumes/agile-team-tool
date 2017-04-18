@@ -684,13 +684,13 @@ var HomeIterContent = React.createClass({
               </div>
             </div>
             <div class='home-iter-name-block' style={{'height':'4.3%'}}>
-              <div class='home-iter-name' id='iteration-name'>{iterData.name}</div>
-              <div onClick={access?this.showEditIteration:''} style={access?{'cursor':'pointer','display':'inline'}:{'cursor':'default','display':'inline'}}>
-                <div class='home-iter-team-date' id='iteration-date'>{iterData.startDate} - {iterData.endDate}</div>
-                <div class={access?'home-iter-edit-btn-block':'home-iter-edit-btn-block-disabled'} >
+              <div style={{'display':'inline'}}>
+                <div class='home-iter-name' id='iteration-name'>{iterData.name}</div>
+                <div class={access?'home-iter-edit-btn-block':'home-iter-edit-btn-block-disabled'} onClick={access?this.showEditIteration:''} style={access?{'cursor':'pointer'}:{'cursor':'default'}}>
                   <InlineSVG src={require('../../../img/Att-icons/att-icons_edit.svg')} data-tip='Edit Iteration Name/Date'></InlineSVG>
                 </div>
               </div>
+              <div class='home-iter-team-date' id='iteration-date'>{iterData.startDate} - {iterData.endDate}</div>
               <HomeEditIteration isOpen={this.state.editIteration} onClose={this.closeIteration} selectedIter={this.state.selectedIter} iterListHandler={this.props.iterListHandler}/>
             </div>
             <div class='home-iter-selection-block'>

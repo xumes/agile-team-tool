@@ -214,11 +214,11 @@ var HomeTeamSetup = React.createClass({
   show: function() {
     var self = this;
     if (self.state.showParentSetup) {
-      $('#teamParentSetupBlock select').select2({'dropdownParent':$('#teamParentSetupBlock')});
+      $('#teamParentSetupBlock select').select2({'width':'100%','dropdownParent':$('#teamParentSetupBlock')});
       $('#squadParentSelectList').change(self.parentSelectHandler);
 
     } else if (self.state.showTreeSetup) {
-      $('#teamTreeSetupBlock select').select2({'dropdownParent':$('#teamTreeSetupBlock')});
+      $('#teamTreeSetupBlock select').select2({'width':'100%','dropdownParent':$('#teamTreeSetupBlock')});
       $('#parentSelectList').change(self.parentSelectHandler);
       $('#childSelectList').change(self.childSelectHandler);
     }
@@ -421,9 +421,9 @@ var HomeTeamSetup = React.createClass({
         showNote = {'display':' block'};
       else {
         if (!self.props.loadDetailTeam.access)
-          showAdd = {'display':'inline-block', 'pointerEvents':'none', 'color' : '#C7C7C7'};
+          showAdd = {'display':'block', 'pointerEvents':'none', 'color' : '#C7C7C7'};
         else
-          showAdd = {'display':'inline-block'};
+          showAdd = {'display':'block'};
       }
     }
     var styleSetupChildren = {'backgroundColor' : 'inherit'}
@@ -442,7 +442,7 @@ var HomeTeamSetup = React.createClass({
         </div>
 
         <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showParentSetup} onHide={self.hideTeamSetup}  onShow={self.show}>
-          <div class='home-modal-block' style={{'height':'28em', 'width':'35em'}} id='teamParentSetupBlock'>
+          <div class='home-modal-block' style={{'height':'45rem', 'width':'35em'}} id='teamParentSetupBlock'>
             <div class='home-modal-block-header'>
               <h>Team Setup</h>
               <div class='home-modal-block-close-btn' onClick={self.hideTeamSetup}>
@@ -509,14 +509,14 @@ var HomeTeamSetup = React.createClass({
         </Modal>
 
         <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showTreeSetup} onHide={self.hideTeamSetup}  onShow={self.show}>
-          <div class='home-modal-block' style={{'height':'38em', 'width':'35em'}} id='teamTreeSetupBlock'>
+          <div class='home-modal-block' style={{'height':'37.1em', 'width':'35em'}} id='teamTreeSetupBlock'>
             <div class='home-modal-block-header'>
               <h>Team Setup</h>
               <div class='home-modal-block-close-btn' onClick={self.hideTeamSetup}>
                 <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
               </div>
             </div>
-            <div class='home-modal-block-content'>
+            <div class='home-modal-block-content' style={{'height':'80%'}}>
               <div class='team-setup-block'>
                 <div class='team-setup-icon'>
                   <InlineSVG src={require('../../../img/Att-icons/att-icons_teamsetup.svg')}></InlineSVG>
@@ -561,7 +561,7 @@ var HomeTeamSetup = React.createClass({
                     <div class={self.props.loadDetailTeam.access ? 'team-setup-revert-icon' : 'team-setup-revert-icon disabled'} onClick={self.changeTypeHandler}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_revert.svg')}></InlineSVG>
                     </div>
-                    <a onClick={self.changeTypeHandler} style={showAdd}>
+                    <a onClick={self.changeTypeHandler}>
                       Revert to a Squad Team
                     </a>
                     <p>Note: All child teams will be disassociated with your team and removed!  Your team will be able to enter and record Iteration or Assessment data.</p>
@@ -569,7 +569,7 @@ var HomeTeamSetup = React.createClass({
                 </div>
               </div>
             </div>
-            <div class='home-modal-block-footer ibm-btn-row' style={{'width':'95%', 'top':'4%'}}>
+            <div class='home-modal-block-footer ibm-btn-row' style={{'width':'94%', 'top':'4%'}}>
               <div style={{'float':'left'}}>
                 <button class=' ibm-btn-sec ibm-btn-small ibm-btn-blue-50' onClick={self.confirmDelete} id='deleteBtn' disabled={!self.props.loadDetailTeam.access} >Delete Team</button>
               </div>
