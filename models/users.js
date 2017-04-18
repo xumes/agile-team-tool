@@ -295,6 +295,65 @@ var users = {
           reject({'error':err});
         });
     });
+  },
+
+  ldapUserQuery: /* istanbul ignore next */ function(ldapUrl) {
+    return new Promise(function(resolve) {
+      request(ldapUrl, function(err, response, body) {
+        var json;
+        try {
+          json = JSON.parse(body) ; // if the body is STRING, try to parse it
+        }
+        catch (err) {
+          var msg = {};
+          if (err.statusCode) {
+            msg.statusCode = err.statusCode;
+          } else {
+            msg.statusCode = 400;
+          }
+          msg.message = err;
+          loggers.get('model-users').verbose('Error getting Bluepages record', ldapUrl, msg);
+        }
+
+        if (response.statusCode == 404 && json.message == 'Unable to find record') {
+          loggers.get('model-users').verbose('Unable to get Bluepages record', ldapUrl);
+          resolve();
+        }
+        else {
+          //console.log('ldapUserQuery found', ldapUrl, json.preferredIdentity);
+          resolve(json);
+        }
+      });
+    });
+  },
+
+  facesUserQuery: /* istanbul ignore next */ function(facesUrl) {
+    return new Promise(function(resolve) {
+      request(facesUrl, function(err, response, body) {
+        var json;
+        try {
+          json = JSON.parse(body) ; // if the body is STRING, try to parse it
+        }
+        catch (err) {
+          var msg = {};
+          if (err.statusCode) {
+            msg.statusCode = err.statusCode;
+          } else {
+            msg.statusCode = 400;
+          }
+          msg.message = err;
+          loggers.get('model-users').verbose('Error getting Faces record', facesUrl, msg);
+        }
+
+        if (response.statusCode == 404 && _.isEmpty(json)) {
+          loggers.get('model-users').verbose('Unable to get Faces record', facesUrl);
+          resolve();
+        }
+        else {
+          resolve(json);
+        }
+      });
+    });
   }
 };
 
