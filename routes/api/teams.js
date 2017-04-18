@@ -405,6 +405,16 @@ module.exports = function(app, includes) {
       });
   };
 
+  validateMemberData = function(req,res) {
+    teamModel.validateMemberData(req.params.teamId)
+      .then(function(result){
+        res.status(200).send(result);
+      })
+      .catch( /* istanbul ignore next */ function(err){
+        res.status(400).send(err);
+      });
+  };
+
   // search team with name
   app.get('/api/teams/search/:name', [includes.middleware.auth.requireLogin], searchTeamWithName);
 
@@ -501,4 +511,5 @@ module.exports = function(app, includes) {
   app.get('/api/teams/hierarchy/team/:path?', [includes.middleware.auth.requireLogin], getTeamHierarchy);
   // app.get('/api/teams/getDesigner/getDesigner', [includes.middleware.auth.requireLogin], getDesigner);
 
+  app.get('/api/teams/validate/member/:teamId?', [includes.middleware.auth.requireLogin], validateMemberData);
 };
