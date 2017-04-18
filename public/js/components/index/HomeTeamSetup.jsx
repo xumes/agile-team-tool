@@ -91,6 +91,9 @@ var HomeTeamSetup = React.createClass({
               selectableChildren: returnNewState.selectableChildren,
               parentId: returnNewState.parentId,
               children: returnNewState.children
+            }, function() {
+              // workaround to update the dropdown select value
+              $('#squadParentSelectList').val(self.state.parentId).change();
             });
           else
             self.setState({
