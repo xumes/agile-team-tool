@@ -6236,7 +6236,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   color: #464646;
   font-size: 1.7rem;
   position: absolute;
-  top: 16.4rem;
+  top: 16.6rem;
   transform: translate(0px, -50%);
 }
 
@@ -6299,7 +6299,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 3%;
   left: 35%;
   position: absolute;
-  top: 16rem;
+  top: 16.1rem;
   width: 1.4%;
 }
 
