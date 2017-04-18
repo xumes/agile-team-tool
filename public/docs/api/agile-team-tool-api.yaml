@@ -19,7 +19,7 @@ produces:
 paths:
   /teams:
     get:
-      summary: Teams
+      summary: Retrieve teams
       description: |
         The teams endpoint retrieves all of the teams associated by the user that created the API key
       parameters:
@@ -38,13 +38,15 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Team'
-        default:
+        401:
+          description: Unauthorized API Key
+        400:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   /iterations:
     get:
-      summary: Iterations
+      summary: Retrieve iteration
       description: |
         The iterations endpoint retrieves all of the iteration data for a particular team
       parameters:
@@ -69,12 +71,14 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Iteration'
-        default:
+        401:
+          description: Unauthorized API Key
+        400:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     post:
-      summary: Iterations
+      summary: Create iteration
       description: |
         This endpoint inserts new iteration data
       parameters:
@@ -179,12 +183,14 @@ paths:
           description: Iteration data
           schema:
             $ref: '#/definitions/Iteration'
-        default:
+        401:
+          description: Unauthorized API Key
+        400:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     put:
-      summary: Iterations
+      summary: Update iteration
       description: |
         This endpoint updates existing iteration data
       parameters:
@@ -288,12 +294,14 @@ paths:
           description: Iteration data
           schema:
             $ref: '#/definitions/Iteration'
-        default:
+        401:
+          description: Unauthorized API Key
+        400:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
-      summary: Iterations
+      summary: Delete iteration
       description: |
         This endpoint deletes existing iteration data
       parameters:
@@ -318,7 +326,9 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Iteration'
-        default:
+        401:
+          description: Unauthorized API Key
+        400:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'

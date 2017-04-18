@@ -455,9 +455,9 @@ function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsCalResults, nonSquad
           var squadIterationResult = squadsCalResults[squadDoc[i]];
           if (squadIterationResult[j].totalPoints != undefined) {
             currData[j].totalPoints = currData[j].totalPoints + squadIterationResult[j].totalPoints;
-            currData[j].totalCommPoints = currData[j].totalPoints + squadIterationResult[j].totalCommPoints;
+            currData[j].totalCommPoints = currData[j].totalCommPoints + squadIterationResult[j].totalCommPoints;
             currData[j].totalStories = currData[j].totalStories + squadIterationResult[j].totalStories;
-            currData[j].totalCommStories = currData[j].totalStories + squadIterationResult[j].totalCommStories;
+            currData[j].totalCommStories = currData[j].totalCommStories + squadIterationResult[j].totalCommStories;
             currData[j].totalDefectsStartBal = currData[j].totalDefectsStartBal + squadIterationResult[j].totalDefectsStartBal;
             currData[j].totalDefects = currData[j].totalDefects + squadIterationResult[j].totalDefects;
             currData[j].totalDefectsClosed = currData[j].totalDefectsClosed + squadIterationResult[j].totalDefectsClosed;
