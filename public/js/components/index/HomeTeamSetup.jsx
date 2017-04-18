@@ -33,12 +33,9 @@ var HomeTeamSetup = React.createClass({
     $('.team-setup-squad-icon svg, team-setup-squad-icon-change svg, .team-setup-icon svg, .team-setup-icon-child svg').attr('title','Team Hierarchy').children('title').remove();
     $('#homeHeaderSetupBtn svg').attr('title','Team Setup').children('title').remove();
     if (self.state.showParentSetup) {
-      $('#squadParentSelectList').select2({'width':'100%'});
       $('#squadParentSelectList').val(self.state.parentId).change();
 
     } else if (self.state.showTreeSetup) {
-      $('#parentSelectList').select2({'width':'100%'});
-      $('#childSelectList').select2({'width':'100%'});
       $('#parentSelectList').val(self.state.parentId).change();
       $('#childSelectList').val('').change();
     }
@@ -211,10 +208,13 @@ var HomeTeamSetup = React.createClass({
   show: function() {
     var self = this;
     if (self.state.showParentSetup) {
+      $('#squadParentSelectList').select2({'width':'100%'});
       $('#teamParentSetupBlock select').select2({'dropdownParent':$('#teamParentSetupBlock')});
       $('#squadParentSelectList').change(self.parentSelectHandler);
 
     } else if (self.state.showTreeSetup) {
+      $('#parentSelectList').select2({'width':'100%'});
+      $('#childSelectList').select2({'width':'100%'});
       $('#teamTreeSetupBlock select').select2({'dropdownParent':$('#teamTreeSetupBlock')});
       $('#parentSelectList').change(self.parentSelectHandler);
       $('#childSelectList').change(self.childSelectHandler);
