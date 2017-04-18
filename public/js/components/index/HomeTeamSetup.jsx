@@ -25,6 +25,7 @@ var HomeTeamSetup = React.createClass({
     }
   },
   componentDidMount: function() {
+    var self = this;
     $('#homeHeaderSetupBtn svg').attr('title','Team Setup').children('title').remove();
   },
   componentDidUpdate: function(prevProps, prevState) {
@@ -429,6 +430,8 @@ var HomeTeamSetup = React.createClass({
         'border': '1px solid #C7C7C7 !important'
       };
     }
+    var maturityLink= location.origin+'/maturityTrends?id='+self.props.loadDetailTeam.team._id;
+
     return (
       <div style={{'height': '100%', 'display':'inline'}} id='teamSetupBlock'>
         <div class='home-team-header-teamname-btn'  id='homeHeaderSetupBtn' onClick={self.showTeamSetup}>
@@ -486,7 +489,11 @@ var HomeTeamSetup = React.createClass({
                 </div>
               </div>
             </div>
-            <div class='home-modal-block-footer ibm-btn-row' style={{'width':'94%','top':'-2%'}}>
+                <div class='MA-link-note'>
+                  <p>Maturity assessment link: <a href={maturityLink} target="_blank">{maturityLink}</a></p>
+                </div>
+
+            <div class='home-modal-block-footer ibm-btn-row' style={{'width':'95%','top':'-2%'}}>
               <div style={{'float':'left'}}>
                 <button class=' ibm-btn-sec ibm-btn-small ibm-btn-blue-50' onClick={self.confirmDelete} id='deleteBtn' disabled={!self.props.loadDetailTeam.access} >Delete Team</button>
               </div>

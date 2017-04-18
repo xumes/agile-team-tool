@@ -6111,6 +6111,10 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
  height: auto;
 }
 
+.home-modal-block-content > p.content {
+  white-space: pre-wrap;
+}
+
 .home-modal-block-footer {
   display: inline-block;
   font-size: inherit;
@@ -6158,7 +6162,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .team-setup-squad-block .squad-note {
   display: inline-block;
   font-size: inherit;
-  padding: 2em 1em;
+  padding: 1em 1em;
   position: relative;
 }
 
@@ -7794,3 +7798,22 @@ p.apikey-note {
   color: #5A5A5A;
   text-align: justify;
 }
+
+.MA-link-note {
+  display: inline-block;
+  font-size: inherit;
+  padding: 1.8em 1em;
+  position: fixed;
+  top: 19em;
+  right: 0em;
+  left: 0em;
+}
+
+.MA-link-note > p {
+  color: #777677;
+  font-size: .7em;
+  line-height: 2em;
+  padding: 0em 1em 0;
+  text-align: left;
+}
+

@@ -2,11 +2,13 @@ var React = require('react');
 var api = require('../api.jsx');
 var InlineSVG = require('svg-inline-react');
 var ReactModal = require('react-modal');
-
+var ConfirmDialog = require('./ConfirmDialog.jsx');
 var HomeTeamDescription = React.createClass({
   getInitialState: function() {
     return {
-      showModal: false
+      showModal: false,
+      showAlertModal: false,
+      alertMsg: ''
     }
   },
   componentDidMount: function() {
@@ -83,12 +85,17 @@ var HomeTeamDescription = React.createClass({
           var error = err.responseJSON['errors'];
           self.handleTeamDescValidationErrors(error);
         } else if (err.responseJSON !== undefined && err.responseJSON['error'] !== undefined) {
-          alert(err.responseJSON['error']);
+          // alert(err.responseJSON['error']);
+          self.setState({alertMsg: err.responseJSON['error'], showAlertModal: true});
+        } else if (err.responseJSON !== undefined && err.responseJSON['errmsg'] !== undefined) {
+          self.setState({alertMsg: err.responseJSON['errmsg'], showAlertModal: true});
         } else {
           if (err['statusText'] != undefined) {
-            alert(err['statusText']);
+            // alert(err['statusText']);
+            self.setState({alertMsg: err['statusText'], showAlertModal: true});
           } else {
-            alert(err);
+            // alert(err);
+            self.setState({alertMsg: err, showAlertModal: true});
           }
         }
       });
@@ -110,6 +117,9 @@ var HomeTeamDescription = React.createClass({
   onFormSubmit: function(e) {
     e.preventDefault();
     this.saveTeamDescModal();
+  },
+  hideAlertDialog: function() {
+    this.setState({showAlertModal: false, alertMsg: ''});
   },
   render: function() {
     var self = this;
@@ -179,6 +189,8 @@ var HomeTeamDescription = React.createClass({
              </div>
           </ReactModal>
         </div>
+
+        <ConfirmDialog showConfirmModal={self.state.showAlertModal} hideConfirmDialog={self.hideAlertDialog} confirmAction={self.hideAlertDialog} alertType='error' content={self.state.alertMsg} actionBtnLabel='Ok' />
       </div>
     )
   }
