@@ -33,12 +33,9 @@ var HomeTeamSetup = React.createClass({
     $('.team-setup-squad-icon svg, team-setup-squad-icon-change svg, .team-setup-icon svg, .team-setup-icon-child svg').attr('title','Team Hierarchy').children('title').remove();
     $('#homeHeaderSetupBtn svg').attr('title','Team Setup').children('title').remove();
     if (self.state.showParentSetup) {
-      $('#squadParentSelectList').select2({'width':'100%'});
       $('#squadParentSelectList').val(self.state.parentId).change();
 
     } else if (self.state.showTreeSetup) {
-      $('#parentSelectList').select2({'width':'100%'});
-      $('#childSelectList').select2({'width':'100%'});
       $('#parentSelectList').val(self.state.parentId).change();
       $('#childSelectList').val('').change();
     }
@@ -94,6 +91,9 @@ var HomeTeamSetup = React.createClass({
               selectableChildren: returnNewState.selectableChildren,
               parentId: returnNewState.parentId,
               children: returnNewState.children
+            }, function() {
+              // workaround to update the dropdown select value (squadParentSelectList)
+              $('#squadParentSelectList').val(self.state.parentId).change();
             });
           else
             self.setState({
@@ -102,6 +102,9 @@ var HomeTeamSetup = React.createClass({
               selectableChildren: returnNewState.selectableChildren,
               parentId: returnNewState.parentId,
               children: returnNewState.children
+            }, function() {
+              // workaround to update the dropdown select value (parentSelectList)
+              $('#parentSelectList').val(self.state.parentId).change();
             });
 
           return resolve(returnNewState);
@@ -211,11 +214,11 @@ var HomeTeamSetup = React.createClass({
   show: function() {
     var self = this;
     if (self.state.showParentSetup) {
-      $('#teamParentSetupBlock select').select2({'dropdownParent':$('#teamParentSetupBlock')});
+      $('#teamParentSetupBlock select').select2({'width':'100%','dropdownParent':$('#teamParentSetupBlock')});
       $('#squadParentSelectList').change(self.parentSelectHandler);
 
     } else if (self.state.showTreeSetup) {
-      $('#teamTreeSetupBlock select').select2({'dropdownParent':$('#teamTreeSetupBlock')});
+      $('#teamTreeSetupBlock select').select2({'width':'100%','dropdownParent':$('#teamTreeSetupBlock')});
       $('#parentSelectList').change(self.parentSelectHandler);
       $('#childSelectList').change(self.childSelectHandler);
     }
@@ -471,7 +474,7 @@ var HomeTeamSetup = React.createClass({
                 <div class='team-setup-squad-content'>
                   <div class='squad-parent'>
                     <label for='squadParentSelectList'>Parent Team</label>
-                    <select id='squadParentSelectList' name='squadParentSelectListA' disabled={!self.props.loadDetailTeam.access} value={self.state.parentId}>
+                    <select id='squadParentSelectList' name='squadParentSelectListA' disabled={!self.props.loadDetailTeam.access} defaultValue={self.state.parentId}>
                       <option key='pdef' value=''>No Team Associated/Available</option>
                       {parentOptions}
                     </select>
@@ -536,7 +539,7 @@ var HomeTeamSetup = React.createClass({
                 <div class='team-setup-content'>
                   <div class='team-setup-parent-select'>
                     <label for='parentSelectList'>Parent Team</label>
-                    <select id='parentSelectList' name='parentSelectList' disabled={!self.props.loadDetailTeam.access} value={self.state.parentId}>
+                    <select id='parentSelectList' name='parentSelectList' disabled={!self.props.loadDetailTeam.access} defaultValue={self.state.parentId}>
                       <option key='pdef' value=''>No Team Associated/Available</option>
                       {parentOptions}
                     </select>
