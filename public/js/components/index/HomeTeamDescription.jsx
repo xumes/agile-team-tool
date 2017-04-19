@@ -137,13 +137,18 @@ var HomeTeamDescription = React.createClass({
             <h>Team Description</h>
           </div>
           <div class='home-team-header-description-content'>
-            <div>
-              <h1>
-                {self.props.teamName}
-              </h1>
-              <p>
-                {self.props.teamDescription}
-              </p>
+            <div class='team-info'>
+              <div class='teamname'>
+                <h1>
+                  {self.props.teamName}
+                </h1>
+              </div>
+              <div class='teamdesc'>
+                <p>
+                  {self.props.teamDescription}
+                </p>
+              </div>
+
             </div>
             <button type='button' class='ibm-btn-sec ibm-btn-blue-50 ibm-btn-small' onClick={self.showTeamDescModal} disabled={!self.props.loadDetailTeam.access}>Edit</button>
           </div>

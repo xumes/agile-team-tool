@@ -2161,7 +2161,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   display: block;
 }
 
-.home-team-header-description-content > div > h1 {
+.home-team-header-description-content > div.team-info h1 {
   position: relative;
   height: 20%;
   width: 100%;
@@ -2173,7 +2173,19 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   padding: 0;
 }
 
-.home-team-header-description-content > div > p {
+.home-team-header-description-content > div.team-info .teamname {
+  float: left;
+  width: 100%;
+}
+
+.home-team-header-description-content > div.team-info .teamdesc {
+  float: left;
+  width: 100%;
+  height: 70%;
+  padding-top: 0.5em;
+}
+
+.home-team-header-description-content > div.team-info p {
   position: relative;
   float: left;
   height: 70%;
