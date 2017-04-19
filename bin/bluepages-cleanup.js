@@ -5,11 +5,12 @@ var users = require('../models/users');
 var request = require('request');
 var Promise = require('bluebird');
 var workerLogger = require('../middleware/logger').get('worker');
+var settings = require('../settings');
 
 schedule.scheduleJob('* * 2 * *', function() {
   var queryUser = function(user) {
     return new Promise(function(resolve) {
-      var bluepagesURL = process.env.bluepagesURL;
+      var bluepagesURL = settings.bluepagesURL;
       var requestURL = bluepagesURL + '/id/' + user.userId + '/uid';
       request(requestURL, function(err, response, body) {
         var json;
