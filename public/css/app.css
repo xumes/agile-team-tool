@@ -2589,12 +2589,12 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .home-iter-name {
   position: relative;
-  width: 95%;
-  height: 1.9em;
+  width: 90%;
+  height: 1.2em;
   display: inline-block;
   font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.8em;
-  line-height: 1.9em;
+  line-height: 1.2em;
   color: #323232;
   overflow: auto;
 }
@@ -2692,6 +2692,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   width: 10%;
   height: 26%;
   min-height: 1.5em;
+  top: 0.4em;
 }
 
 .home-iter-edit-btn-block > i > svg, .home-iter-edit-btn-block-disabled > i > svg {
@@ -6118,7 +6119,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .home-modal-block-footer {
   display: inline-block;
   font-size: inherit;
-  padding: 0.5em 1em 1em 1em;
+  padding: 0.5rem 1rem 1rem 1.6rem;
   position: relative;
 }
 
@@ -6170,16 +6171,17 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   color: #777677;
   font-size: .8em;
   line-height: 1.3em;
-  padding: 2em 1em 0;
+  padding: 6rem 1rem 0;
   text-align: justify;
 }
 
 .team-setup-squad-block .team-setup-squad-icon {
   display: inline-block;
   font-size: inherit;
-  padding: 0 0 0 4em;
+  padding: 0.5em 0 0 4em;
   position: relative;
   width: 22%;
+  height: 14.5rem;
 }
 
 .team-setup-squad-icon > h {
@@ -6187,22 +6189,22 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-size: inherit;
   font-weight: bold;
   left: -2em;
-  padding: 1em 0 0.5em;
+  padding: 1rem 0 0.6rem;
   position: relative;
 }
 
 .team-setup-squad-block .team-setup-squad-icon-change {
-  left: 27.25%;
-  height: 23%;
-  position: absolute;
-  top: 52%;
-  width: 5%;
+  left: 27.1%;
+  height: 7.6rem;
+  position: relative;
+  width: 2.9rem;
+  top: 3.5rem;
 }
 
 .team-setup-squad-block .team-setup-squad-content {
   display: inline-block;
   font-size: inherit;
-  height: 95%;
+  height: 100%;
   left: 39%;
   position: absolute;
   top: 0;
@@ -6213,8 +6215,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: inline-block;
   font-size: inherit;
   position: relative;
-  top: 13%;
+  top: 4.4rem;
   width: 95%;
+  font-size: 1.5rem;
 }
 
 .team-setup-squad-content .squad-parent > select:first-of-type, .team-setup-squad-content .squad-parent > span:first-of-type {
@@ -6227,25 +6230,22 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .team-setup-squad-content .squad-name {
   display: inline-block;
   font-size: inherit;
-  height: 33%;
-  position: relative;
-  top: 15%;
   width: 95%;
 }
 
 .team-setup-squad-content .squad-name > h {
   color: #464646;
-  font-size: 1.2em;
+  font-size: 1.7rem;
   position: absolute;
-  top: 50%;
+  top: 17rem;
   transform: translate(0px, -50%);
 }
 
 .team-setup-squad-content .squad-add-child {
-  display: inline-block;
+  display: block;
   font-size: inherit;
-  position: relative;
-  top: 17%;
+  position: absolute;
+  top: 24rem;
   width: 95%;
 }
 
@@ -6270,6 +6270,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .home-modal-block-close-btn svg, .team-setup-squad-icon svg {
   height: inherit;
   width: inherit;
+  display: block;
 }
 
 .home-modal-block-close-btn polygon {
@@ -6282,7 +6283,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 3%;
   left: 35%;
   position: absolute;
-  top: 13%;
+  top: 4.9rem;
   width: 1.4%;
 }
 
@@ -6299,7 +6300,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 3%;
   left: 35%;
   position: absolute;
-  top: 47%;
+  top: 16.6rem;
   width: 1.4%;
 }
 
@@ -6316,7 +6317,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 3%;
   left: 35%;
   position: absolute;
-  top: 67%;
+  top: 24.3rem;
   width: 1.4%;
 }
 
@@ -6356,15 +6357,16 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   padding: 3em 0 0 4em;
   position: relative;
   width: 22%;
+  height: 14.5rem;
 }
 
 .team-setup-block .team-setup-icon-child {
   display: inline-block;
-  height: 19%;
-  left: -5%;
+  height: 8.5rem;
+  left: -5.3%;  
   position: relative;
-  top: 16.5%;
-  width: 5%;
+  top: 8.5rem;
+  width: 5.3%;
 }
 
 .team-setup-block .team-setup-icon-arrow-top {
@@ -6389,7 +6391,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 3%;
   left: 33%;
   position: absolute;
-  top: 32%;
+  top: 15.8rem;
   width: 1.4%;
 }
 
@@ -6406,7 +6408,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 3%;
   left: 33%;
   position: absolute;
-  top: 48.5%;
+  top: 24.3rem;
   width: 1.4%;
 }
 
@@ -6431,7 +6433,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: inline-block;
   font-size: inherit;
   position: absolute;
-  top: 7%;
+  top: 3.5rem;
   width: 95%;
 }
 
@@ -6447,16 +6449,16 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   color: #464646;
   font-size: 1.2em;
   position: absolute;
-  top: 50%;
+  top: 6rem;
   transform: translate(0px, -50%);
 }
 
 .team-setup-content .team-setup-child-select {
   display: inline-block;
   font-size: inherit;
-  height: 32%;
+  height: 15rem;
   position: absolute;
-  top: 48.5%;
+  top: 24rem;
   width: 95%;
 }
 
@@ -6512,8 +6514,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-size: inherit;
   height: 20%;
   position: absolute;
-  top: 81%;
+  top: 38rem;
   width: 95%;
+  padding-top: 1rem;
 }
 
 .team-setup-squad-revert .team-setup-revert-icon {
@@ -6523,6 +6526,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   padding-right: 0.5em;
   position: relative;
   width: 5%;
+  top: 0.3rem;
 }
 
 .team-setup-revert-icon.disabled {
@@ -7800,10 +7804,8 @@ p.apikey-note {
   display: inline-block;
   font-size: inherit;
   padding: 1.8em 1em;
-  position: fixed;
+  position: absolute;
   top: 19em;
-  right: 0em;
-  left: 0em;
 }
 
 .MA-link-note > p {
