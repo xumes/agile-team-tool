@@ -2693,7 +2693,8 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .home-iter-add-btn-block-disabled > i > svg polygon, .home-iter-add-btn-block-disabled > i > svg path,
-.home-iter-edit-btn-block-disabled i svg path{
+.home-iter-edit-btn-block-disabled i svg path,
+.home-iter-add-btn-block-disabled-2 > i > svg polygon, .home-iter-add-btn-block-disabled-2 > i > svg path{
   fill: #C7C7C7;
 }
 
