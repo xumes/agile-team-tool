@@ -33,7 +33,7 @@ module.exports = {
   googleAnalyticsKey: process.env.googleAnalyticsKey || '',
   googleHost: 'maps.googleapis.com',
   googleApiKey: process.env.googleAPIKey || 'AIzaSyAF2vwg6z-pH4xC7Ac1eMcpR9mVG-A2u7Y',
-  facesURL: 'https://faces.tap.ibm.com/api',
+  facesURL: 'https://faces.w3ibm.mybluemix.net/api',
   ibmNPSKey: process.env.ibmNPSKey || '',
   ibmNPS: {
     key: process.env.ibmNPSKey || '',
