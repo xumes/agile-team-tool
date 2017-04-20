@@ -19,6 +19,9 @@ var HomeNoTeamContent = React.createClass({
           <h4>{'Create a new team'}</h4>
         </div>
         <p style={{'top':'15.4rem'}}>{'If your team does not already exist, the other option is to select the Create New Team icon ( '}<a style={{'color': 'inherit'}}><img src={'../../../img/Att-icons/att-icons_Add.svg'}></img></a>{' ) to the right of \'All Teams\' and follow the directions.'}</p>
+        <div class='background-art'>
+          <InlineSVG src={require('../../../img/header-bg-art.svg')}></InlineSVG>
+        </div>
       </div>
     )
   }

@@ -7798,9 +7798,9 @@ p.apikey-note {
   height: 205%;
   color: #FFFFFF;
   display: none;
-  background-image: url("../img/header-bg-art.svg");
+  /*background-image: url("../img/header-bg-art.svg");
   background-repeat: no-repeat;
-  background-position: 180% 10%;
+  background-position: 180% 10%;*/
 }
 
 #noTeamContent > h1 {
@@ -7809,7 +7809,7 @@ p.apikey-note {
   left: 10%;
   width: 50%;
   color: #734098;
-  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 6.4rem;
   line-height: 6.4rem;
 }
@@ -7889,6 +7889,29 @@ p.apikey-note {
   top: 0.5rem;
   width: 2rem;
   height: 2rem;
+}
+
+#noTeamContent > .background-art {
+  position: absolute;
+  top: 4%;
+  left: 75%;
+  height: 35%;
+  width: 25%;
+  overflow: hidden;
+}
+
+#noTeamContent > .background-art > i {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+#noTeamContent > .background-art svg {
+  position: relative;
+  float: left;
+  width: auto;
+  height: 100%;
 }
 
 .MA-link-note {
