@@ -166,7 +166,7 @@ var AssessmentButtons = React.createClass({
     var self = this;
     $('#deleteAssessDraftConfirm').hide();
     if (_.isEmpty(self.props.assessDraft) || self.props.assessDraft.assessmentStatus != 'Draft') {
-      alert('This assessment draft hasn\'t been saved, there is no necessary to delete it.');
+      self.setState({alertMsg: 'This assessment draft hasn\'t been saved, there is no necessary to delete it.', showConfirmModal: true});
     } else {
       api.deleteAssessment(self.props.assessDraft._id)
         .then(function(result){
