@@ -752,7 +752,7 @@ describe('Team model [modifyTeamMembers]', function() {
     Teams.modifyTeamMembers(newTeamId, userSession, null)
       .catch(function(err){
         expect(err).to.be.a('object');
-        expect(err.error).to.equal('Member lists is required.');
+        expect(err.error).to.equal('You can\'t remove the last team member. You must have at least one member listed.');
         done();
       });
   });
