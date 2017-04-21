@@ -7829,3 +7829,8 @@ p.apikey-note {
   text-align: left;
 }
 
+.link-disable {
+  cursor: default;
+  color: #C7C7C7;
+  pointer-events: none;
+}
