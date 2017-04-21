@@ -227,9 +227,9 @@ var HomeTeamHeader = React.createClass({
         teamFTE = 0;
       }
       return (
-        <div class='home-team-header' style={teamHierarchy === ''?{'height':'26%', 'background-position': '150.5% 30%'}:{'':''}}>
+        <div class='home-team-header' style={teamHierarchy === ''?{'height':'26%', 'background-position': '150.5% 30%'}:{}}>
           {/*<h2 class='heading-teamType' id="teamType">{teamType}</h2>*/}
-          <div class='home-team-header-title' style={teamHierarchy === ''?{'top':'36.8%'}:{'':''}}>
+          <div class='home-team-header-title' style={teamHierarchy === ''?{'top':'36.8%'}:{}}>
             <div class='home-team-header-img-div' style={squadMarkDisplay}>
               <InlineSVG class='home-team-header-img' src={require('../../../img/Att-icons/att-icons_tribe.svg')}></InlineSVG>
             </div>
@@ -250,7 +250,7 @@ var HomeTeamHeader = React.createClass({
                 </div>
             </span>
           </div>:null}
-          <div class='home-team-header-btns-div'>
+          <div class='home-team-header-btns-div' style={teamHierarchy === ''?{'top':'56.5%'}:{}}>
             <div id='homeTeamHeaderBookmarkBtn' class='home-team-header-btns'>
               <InlineSVG class='home-team-header-btn-img' onClick={self.showBookmark} src={require('../../../img/Att-icons/att-icons_main-nav-bookmark.svg')}></InlineSVG>
               <div class='home-team-header-btn-title' onClick={self.showBookmark}>
