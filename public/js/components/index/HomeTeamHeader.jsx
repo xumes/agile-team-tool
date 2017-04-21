@@ -227,20 +227,21 @@ var HomeTeamHeader = React.createClass({
         teamFTE = 0;
       }
       return (
-        <div class='home-team-header'>
+        <div class='home-team-header' style={teamHierarchy === ''?{'height':'26%', 'background-position': '150.5% 30%'}:{'':''}}>
           {/*<h2 class='heading-teamType' id="teamType">{teamType}</h2>*/}
-          <div class='home-team-header-title'>
+          <div class='home-team-header-title' style={teamHierarchy === ''?{'top':'36.8%'}:{'':''}}>
             <div class='home-team-header-img-div' style={squadMarkDisplay}>
               <InlineSVG class='home-team-header-img' src={require('../../../img/Att-icons/att-icons_tribe.svg')}></InlineSVG>
             </div>
             <div class='home-team-header-teamname-div'>
               <h class='home-team-header-teamname' style={{'fontSize': teamNameFontSize, 'lineHeight': teamNameFontLingHeight}} id="teamName">{teamName}</h>
 
-              <HomeTeamDescription teamName={teamName} teamDescription={teamDescription} showDescriptionBlock={self.showDescriptionBlock} loadDetailTeam={self.props.loadDetailTeam} updateTeamDetails={self.props.updateTeamDetails} />
+              <HomeTeamDescription teamName={teamName} teamDescription={teamDescription} showDescriptionBlock={self.showDescriptionBlock} loadDetailTeam={self.props.loadDetailTeam} updateTeamDetails={self.props.updateTeamDetails}/>
 
               <HomeTeamSetup loadDetailTeam={self.props.loadDetailTeam} selectedTeamChanged={self.props.selectedTeamChanged} tabClickedHandler={self.props.tabClickedHandler}/>
             </div>
           </div>
+          {teamHierarchy != ''?
           <div class='home-team-header-hierarchy'>
             <span id='Hierarchy'>
                 {teamHierarchy}
@@ -248,7 +249,7 @@ var HomeTeamHeader = React.createClass({
                   {teamHierarchy2}
                 </div>
             </span>
-          </div>
+          </div>:null}
           <div class='home-team-header-btns-div'>
             <div id='homeTeamHeaderBookmarkBtn' class='home-team-header-btns'>
               <InlineSVG class='home-team-header-btn-img' onClick={self.showBookmark} src={require('../../../img/Att-icons/att-icons_main-nav-bookmark.svg')}></InlineSVG>
