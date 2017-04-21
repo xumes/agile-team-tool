@@ -561,7 +561,7 @@ var HomeTeamSetup = React.createClass({
                     <div class={self.props.loadDetailTeam.access ? 'team-setup-revert-icon' : 'team-setup-revert-icon disabled'} onClick={self.changeTypeHandler}>
                       <InlineSVG src={require('../../../img/Att-icons/att-icons_revert.svg')}></InlineSVG>
                     </div>
-                    <a onClick={self.changeTypeHandler}>
+                    <a onClick={self.changeTypeHandler} class={!self.props.loadDetailTeam.access ?'link-disable':''}>
                       Revert to a Squad Team
                     </a>
                     <p>Note: All child teams will be disassociated with your team and removed!  Your team will be able to enter and record Iteration or Assessment data.</p>
