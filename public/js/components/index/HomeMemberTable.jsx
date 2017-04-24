@@ -286,8 +286,7 @@ var HomeMemberTable = React.createClass({
 
   confirmDialog: function(idx) {
     var mrd = this.getMemberRowDetails(idx);
-    this.setState({showConfirmModal: true});
-    this.setState({deleteMemberIdx: idx, deleteMemberEmail: mrd.email});
+    this.setState({showConfirmModal: true, deleteMemberIdx: idx, deleteMemberEmail: mrd.email});
   },
 
   hideConfirmDialog: function() {
@@ -322,12 +321,21 @@ var HomeMemberTable = React.createClass({
 
     api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newMembers)
       .then(function(result){
-        if (newMembersContent.length != self.props.loadDetailTeam.members.length) {
-          self.props.reloadTeamMembers(result.members, newMembersContent);
-          self.setState({showConfirmModal: false});
-        }
+        self.props.reloadTeamMembers(result.members, newMembersContent);
+        self.setState({showConfirmModal: false});
       })
       .catch(function(err){
+        if (err.responseJSON !== undefined && err.responseJSON['error'] !== undefined) {
+          self.setState({showConfirmModal: false, showConfirmErrorModal: true, alertMsg: err.responseJSON['error']});
+        } else if (err.responseJSON !== undefined && err.responseJSON['errmsg'] !== undefined) {
+          self.setState({showConfirmModal: false, showConfirmErrorModal: true, alertMsg: err.responseJSON['errmsg']});
+        } else {
+          if (err['statusText'] != undefined) {
+            self.setState({showConfirmModal: false, showConfirmErrorModal: true, alertMsg: err['statusText']});
+          } else {
+            self.setState({showConfirmModal: false, showConfirmErrorModal: true, alertMsg: err});
+          }
+        }
         console.log(err);
       });
   },

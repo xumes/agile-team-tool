@@ -1045,7 +1045,7 @@ module.exports.modifyTeamMembers = function(teamId, user, newMembers) { //TODO t
       return reject({'error':'Team ID is required.'});
     }
     if (_.isEmpty(newMembers)){
-      return reject({'error':'Member lists is required.'});
+      return reject({'error':'You can\'t remove the last team member. You must have at least one member listed.'});
     }
     if (!_.isArray(newMembers)){
       return reject({'error':'Invalid member lists.'});

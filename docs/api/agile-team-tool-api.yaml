@@ -127,7 +127,7 @@ paths:
                 type: integer
               deliveredStories:
                 type: integer
-              commitedStoryPoints:
+              committedStoryPoints:
                 type: integer
               storyPointsDelivered:
                 type: integer
@@ -238,7 +238,7 @@ paths:
                 type: integer
               deliveredStories:
                 type: integer
-              commitedStoryPoints:
+              committedStoryPoints:
                 type: integer
               storyPointsDelivered:
                 type: integer
@@ -456,7 +456,7 @@ definitions:
       deliveredStories:
         type: integer
         description: Number of delivered stories
-      commitedStoryPoints:
+      committedStoryPoints:
         type: integer
         description: Number of committed story points
       storyPointsDelivered:

@@ -345,7 +345,7 @@ var users = {
           loggers.get('model-users').verbose('Error getting Faces record', facesUrl, msg);
         }
 
-        if (response.statusCode == 404 && _.isEmpty(json)) {
+        if (_.isEmpty(json)) {
           loggers.get('model-users').verbose('Unable to get Faces record', facesUrl);
           resolve();
         }
