@@ -50,7 +50,7 @@ var HomeHeader = React.createClass({
         <div class='header-title'>
           <div>IBM</div>&nbsp;<div>Agile Team Tool</div>&nbsp;
           <div class='home-header-banner-message'>{siteEnv} &nbsp; &nbsp;
-            <span class='home-header-banner-icon' style={revertToOld}>
+{/*            <span class='home-header-banner-icon' style={revertToOld}>
             <a href="https://agiletool.mybluemix.net">
             <InlineSVG src={require('../../../img/Att-icons/att-icons-revert.svg')}></InlineSVG>
              <span class='home-header-banner-label'>
@@ -60,7 +60,7 @@ var HomeHeader = React.createClass({
             </span>
             <span class='home-header-banner-label-feedback' style={feedbackPopup} >
              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; My <a href="#" title="Feedback" id="feedback-modal" onClick={this.showUserInterfaceFeedback}>Feedback</a> on the new User Interface.
-            </span>            
+            </span>*/}
           </div>
         </div>
         <div class="header-menu">
