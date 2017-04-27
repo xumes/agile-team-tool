@@ -596,7 +596,7 @@ var HomeTeamTree = React.createClass({
           );
         })
 
-        if (myteams.length == 0) {
+        if (myteams.length == 0 && standaloneTeams.length == 0) {
           return (
             <div id='noTeamBlock' class='no-team-block'>
               <h1>{'You are not a member of any team.'}</h1>
