@@ -10,6 +10,7 @@ var InlineSVG = require('svg-inline-react');
 var HomeChartFilter = require('./HomeChartFilter.jsx');
 var HomeAseSummary = require('./HomeAseSummary.jsx');
 var HomeAseSummaryHide = require('./HomeAseSummaryHide.jsx');
+var HomeNoTeamContent = require('./HomeNoTeamContent.jsx');
 var chartStatus = require('./chartStatus.jsx').chartStatus;
 
 var HomeContent = React.createClass({
@@ -239,6 +240,7 @@ var HomeContent = React.createClass({
             </div>
           </div>
         </div>
+        <HomeNoTeamContent />
       </div>
     )
   }

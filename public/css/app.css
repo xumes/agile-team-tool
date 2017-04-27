@@ -1000,7 +1000,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .header-menu-help-block li:nth-child(2)::before,
 .header-menu-help-block li:nth-child(3)::before,
 .header-menu-help-block li:nth-child(4)::before,
-.header-menu-help-block li:nth-child(5)::before, 
+.header-menu-help-block li:nth-child(5)::before,
 .header-menu-help-block li:nth-child(6)::before {
   content: "•" !important;
   margin-left: 0;
@@ -6377,7 +6377,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .team-setup-block .team-setup-icon-child {
   display: inline-block;
   height: 8.5rem;
-  left: -5.3%;  
+  left: -5.3%;
   position: relative;
   top: 8.5rem;
   width: 5.3%;
@@ -7812,6 +7812,128 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 p.apikey-note {
   color: #5A5A5A;
   text-align: justify;
+}
+
+#noTeamContent {
+  position: relative;
+  width: 100%;
+  height: 205%;
+  color: #FFFFFF;
+  display: none;
+  /*background-image: url("../img/header-bg-art.svg");
+  background-repeat: no-repeat;
+  background-position: 180% 10%;*/
+}
+
+#noTeamContent > h1 {
+  position: relative;
+  top: 5%;
+  left: 10%;
+  width: 50%;
+  color: #734098;
+  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
+  font-size: 6.4rem;
+  line-height: 6.4rem;
+}
+
+#noTeamContent > h2 {
+  position: relative;
+  left: 10%;
+  top: 9.4rem;
+  color: #4D4D4D;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 2.4rem;
+}
+
+#noTeamContent > h3 {
+  position: relative;
+  left: 10%;
+  top: 9.4rem;
+  color: #777677;
+  font-weight: 300;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 2.4rem;
+}
+#noTeamContent > .second-level-title {
+  position: relative;
+  top: 12.4rem;
+  left: 10%;
+  width: 90%;
+}
+
+#noTeamContent > .second-level-title > div {
+  position: relative;
+  top: 0.2rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  display: inline-block;
+  border-radius: 50%;
+  border: 0.1rem solid #734098;
+}
+
+#noTeamContent > .second-level-title > h4 {
+  position: relative;
+  left: 1rem;
+  display: inline-block;
+}
+
+#noTeamContent > .second-level-title > div > span {
+  position: relative;
+  left: 25%;
+  bottom: 0.2rem;
+  color: #734098;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 2.4rem;
+  font-weight: 300;
+}
+
+#noTeamContent h4 {
+  color: #4D4D4D;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 2.4rem;
+  font-weight: 300;
+}
+
+#noTeamContent p {
+  position: relative;
+  top: 12.4rem;
+  left: 14%;
+  width: 50%;
+  color: #777677;
+  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
+  font-size: 1.6rem;
+  font-weight: 300;
+  line-height: 2.4rem;
+}
+
+#noTeamContent img {
+  position: relative;
+  top: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+}
+
+#noTeamContent > .background-art {
+  position: absolute;
+  top: 4%;
+  left: 75%;
+  height: 35%;
+  width: 25%;
+  overflow: hidden;
+}
+
+#noTeamContent > .background-art > i {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+#noTeamContent > .background-art svg {
+  position: relative;
+  float: left;
+  width: auto;
+  height: 100%;
 }
 
 .MA-link-note {
