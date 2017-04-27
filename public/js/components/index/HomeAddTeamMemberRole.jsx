@@ -214,13 +214,15 @@ var HomeAddTeamMemberRole = React.createClass({
             <td class='r_location'>
               <div class='data-edit-inplace' id={'data-edit-inplace-location-'+memberUserId} onClick={self.onclickEditInPlace.bind(null, memberUserId)}>{memberLocation}</div>
               <div class='edit-inplace-field' style={{'display': 'none'}} id={'edit-inplace-location-'+memberUserId}>
-                <input type='text' name='edit-inplace-location' id={'txtedit-inplace-location-'+memberUserId} class='edit-inplace-location' defaultValue={memberLocation} />
-                <div class='edit-inplace-btns'>
-                  <div class='r_cancel-btn' onClick={self.editInPlaceCancelLocation.bind(null, memberUserId, memberLocation)}>
-                    <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
-                  </div>
-                  <div class='r_save-btn' onClick={self.editInPlaceSaveLocation.bind(null, memberUserId)}>
-                    <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
+                <div class='edit-inplace-field-alignright'>
+                  <input type='text' name='edit-inplace-location' id={'txtedit-inplace-location-'+memberUserId} class='edit-inplace-location' defaultValue={memberLocation} />
+                  <div class='edit-inplace-btns'>
+                    <div class='r_cancel-btn' onClick={self.editInPlaceCancelLocation.bind(null, memberUserId, memberLocation)}>
+                      <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
+                    </div>
+                    <div class='r_save-btn' onClick={self.editInPlaceSaveLocation.bind(null, memberUserId)}>
+                      <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
+                    </div>
                   </div>
                 </div>
               </div>
