@@ -1744,12 +1744,9 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   height: 100%;
 }
 
-#teamMemberTable .select2-selection__rendered {
+#teamMemberTable .select2-container--default .select2-selection--single .select2-selection__rendered{
   font-size: 1.2em;
-  line-height: 2.3em;
-  position: relative;
-  top: 35%;
-  transform: translate(0%, -50%);
+  line-height: 1.6em;
 }
 
 #teamMemberTable .select2-selection__arrow  b {
@@ -2161,7 +2158,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   display: block;
 }
 
-.home-team-header-description-content > div > h1 {
+.home-team-header-description-content > div.team-info h1 {
   position: relative;
   height: 20%;
   width: 100%;
@@ -2173,7 +2170,19 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   padding: 0;
 }
 
-.home-team-header-description-content > div > p {
+.home-team-header-description-content > div.team-info .teamname {
+  float: left;
+  width: 100%;
+}
+
+.home-team-header-description-content > div.team-info .teamdesc {
+  float: left;
+  width: 100%;
+  height: 70%;
+  padding-top: 0.5em;
+}
+
+.home-team-header-description-content > div.team-info p {
   position: relative;
   float: left;
   height: 70%;
@@ -2681,7 +2690,8 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .home-iter-add-btn-block-disabled > i > svg polygon, .home-iter-add-btn-block-disabled > i > svg path,
-.home-iter-edit-btn-block-disabled i svg path{
+.home-iter-edit-btn-block-disabled i svg path,
+.home-iter-add-btn-block-disabled-2 > i > svg polygon, .home-iter-add-btn-block-disabled-2 > i > svg path{
   fill: #C7C7C7;
 }
 
@@ -5869,7 +5879,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 #addTeamMemberRoleBlock .edit-inplace-btns {
   border: 0 solid;
   float: right;
-  width: 100%;
   margin-top: 0.5em;
 }
 
@@ -5877,7 +5886,12 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   font-size: 1.3em;
   padding: 0.4em 0.5em;
-  width: 80%;
+  width: 90%;
+}
+
+#addTeamMemberRoleBlock .edit-inplace-field-alignright {
+  float: left;
+  width: 95%;
 }
 
 #addTeamMemberRoleBlock .edit-inplace-btns .r_save-btn, #addTeamMemberRoleBlock .edit-inplace-btns .r_cancel-btn,
@@ -6363,7 +6377,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .team-setup-block .team-setup-icon-child {
   display: inline-block;
   height: 8.5rem;
-  left: -5.3%;  
+  left: -5.3%;
   position: relative;
   top: 8.5rem;
   width: 5.3%;
@@ -7936,4 +7950,10 @@ p.apikey-note {
   line-height: 2em;
   padding: 0em 1em 0;
   text-align: left;
+}
+
+.link-disable {
+  cursor: default;
+  color: #C7C7C7;
+  pointer-events: none;
 }
