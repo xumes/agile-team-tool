@@ -5879,7 +5879,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 #addTeamMemberRoleBlock .edit-inplace-btns {
   border: 0 solid;
   float: right;
-  width: 100%;
   margin-top: 0.5em;
 }
 
@@ -5887,7 +5886,12 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   font-size: 1.3em;
   padding: 0.4em 0.5em;
-  width: 80%;
+  width: 90%;
+}
+
+#addTeamMemberRoleBlock .edit-inplace-field-alignright {
+  float: left;
+  width: 95%;
 }
 
 #addTeamMemberRoleBlock .edit-inplace-btns .r_save-btn, #addTeamMemberRoleBlock .edit-inplace-btns .r_cancel-btn,
