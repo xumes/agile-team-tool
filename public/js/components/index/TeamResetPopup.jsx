@@ -13,7 +13,7 @@ var TeamResetPopup = React.createClass({
       return (
         <div>
          <ReactModal isOpen={this.props.isOpen} onRequestClose={this.props.onClose} className='home-iter-popup' overlayClassName='att-modal-overlay' contentLabel='Add Iteration'>
-            <div class='home-modal-block' style={{'height':'18.5em', 'width':'25em'}}>
+            <div class='home-modal-block' style={{'height':'22.8em', 'width':'25em'}}>
               <div class='home-iter-modal-block-header' style={{'backgroundColor':'#d0021b'}}>
                 <h>Team Availability Reset</h>
                 <div class='home-iter-modal-block-close-btn' onClick={this.props.onClose}>
@@ -22,6 +22,7 @@ var TeamResetPopup = React.createClass({
               </div>
               <div class='home-iter-modal-block-content' style={{'height':'auto'}}>
                 <p style={{'fontWeight':'600'}}>You are about to overwrite the optimum team availability with {this.props.teamAvailability} based on the current team structure.</p>
+                <p style={{'fontWeight':'600','paddingTop':'0'}}>This will also update the team member and FTE count for this iteration.</p>
                 <p>Are you sure you want to continue?</p>
               </div>
               <div class='ibm-btn-row' style={{'width':'93%','top':'5%'}}>
