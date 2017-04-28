@@ -144,36 +144,7 @@ var HomeAddIteration = React.createClass({
     }
     return data;
   },
-
-  teamMemCount: function () {
-    var count = 0;
-    var tmArr = [];
-    var currentTeam = this.props.loadDetailTeam.team;
-    if (!_.isEmpty(currentTeam) && currentTeam.members) {
-       $.each(currentTeam.members, function(key, member) {
-        if (tmArr.indexOf(member.userId) == -1) {
-          count++;
-          tmArr.push(member.userId);
-        }
-      });
-    }
-    return count;
-  },
-
-  teamMemFTE: function () {
-    var fte = 0.0;
-    var currentTeam = this.props.loadDetailTeam.team;
-    if (!_.isEmpty(currentTeam) && currentTeam.members) {
-      var teamCount = 0;
-      var self = this;
-      _.each(currentTeam.members, function(member) {
-        teamCount += self.numericValue(member.allocation);
-      });
-      fte = parseFloat(teamCount / 100).toFixed(1);
-    }
-    return fte;
-  },
-
+  
   numericValue:function(data) {
     var value = parseInt(data);
     if (!isNaN(value)) {
@@ -221,8 +192,8 @@ var HomeAddIteration = React.createClass({
           .then(function(availability){
             var data = _.clone(initData);
             data = self.populateCopyData(data);
-            data.memberCount = self.teamMemCount();
-            data.memberFte = self.teamMemFTE();
+            data.memberCount = utils.teamMemCount(self.props.loadDetailTeam.team);
+            data.memberFte = utils.teamMemFTE(self.props.loadDetailTeam.team);
             data['teamId'] = self.props.loadDetailTeam.team._id;
             data['name'] = self.state.name;
             data['startDate'] = new Date(self.state.iterationStartDate);
