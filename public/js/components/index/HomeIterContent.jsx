@@ -534,7 +534,8 @@ var HomeIterContent = React.createClass({
     //2 new fields on DB - 
     selectedIter.storiesDays = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
     selectedIter.storyPointsDays = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
-    
+    selectedIter.memberCount = utils.teamMemCount(this.props.loadDetailTeam.team);
+    selectedIter.memberFte = utils.teamMemFTE(this.props.loadDetailTeam.team);
     this.props.updateTeamIteration(selectedIter);
     this.setState({selectedField:''});
   },

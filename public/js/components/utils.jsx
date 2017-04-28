@@ -407,3 +407,31 @@ module.exports.validateTeamMembersObj = function(teamObj) {
   });
   return errorFound;
 };
+
+module.exports.teamMemFTE = function (currentTeam) {
+    var fte = 0.0;
+    if (!_.isEmpty(currentTeam) && currentTeam.members) {
+      var teamCount = 0;
+      var self = this;
+      _.each(currentTeam.members, function(member) {
+        teamCount += self.numericValue(member.allocation);
+      });
+      fte = parseFloat(teamCount / 100).toFixed(1);
+    }
+    return fte;
+  };
+
+  module.exports.teamMemCount = function (currentTeam) {
+    var count = 0;
+    var tmArr = [];
+    if (!_.isEmpty(currentTeam) && currentTeam.members) {
+       $.each(currentTeam.members, function(key, member) {
+        if (tmArr.indexOf(member.userId) == -1) {
+          count++;
+          tmArr.push(member.userId);
+        }
+      });
+    }
+    return count;
+  };
+  
