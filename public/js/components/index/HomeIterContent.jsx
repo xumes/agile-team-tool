@@ -13,6 +13,7 @@ var ConfirmDialog = require('./ConfirmDialog.jsx');
 
 var selectedIter = new Object();
 var lockMessage = 'This value is automatically calculated and can’t be updated directly.';
+var npsScoreTT = 'The acceptable values will be an integer with a valid range of -100 to +100.';
 var clientSatisfactionTT = 'Please indicate the satisfaction level of your client(s) with the results of this iteration using the following scale:' +
     '<br/>4 - Very satisfied' +
     '<br/>3 - Satisfied' +
@@ -38,6 +39,7 @@ var iterData = {
   defectsEndBal : '',
   cycleTimeWIP : '',
   cycleTimeInBacklog : '',
+  npsScore: '',
   clientSatisfaction : '',
   teamSatisfaction : '',
   comment: '',
@@ -56,6 +58,7 @@ var editIndexing = [
 'defectsClosed',
 'cycleTimeWIP',
 'cycleTimeInBacklog',
+'npsScore',
 'clientSatisfaction',
 'teamSatisfaction',
 'comment'
@@ -98,7 +101,7 @@ var HomeIterContent = React.createClass({
       if (this.state.selectedField != ''){
         this.saveIter(this.state.selectedField);
         if (lastYPosition != window.pageYOffset)
-          lastYPosition = window.pageYOffset;      
+          lastYPosition = window.pageYOffset;
       }
       this.setState({selectedField:''});
     }
@@ -121,11 +124,11 @@ var HomeIterContent = React.createClass({
           if (lastYPosition > 0){
             $(window).scrollTop(lastYPosition);
           }
-            
+
       });
     }
     var self = this;
-    
+
       $('select[id="homeIterSelection"]').change(self.iterationSelectChange);
 
     _.each($('.home-iter-content-point'), function(blk){
@@ -184,7 +187,7 @@ var HomeIterContent = React.createClass({
     clearInterval(this.timer);
     this.timer = setInterval(this.checkTimeOut.bind(null,id), 2000);
   },
-  
+
   stopTimer: function () {
     clearInterval(this.timer);
   },
@@ -192,7 +195,7 @@ var HomeIterContent = React.createClass({
   checkChanges: function(event){
     if(event.keyCode == 9){
       var result = this.tabHandling(event.target.id, event.shiftKey);
-      if (result){        
+      if (result){
         lastYPosition = window.pageYOffset;
         event.preventDefault();
       }
@@ -279,7 +282,7 @@ var HomeIterContent = React.createClass({
       var value = this.float1Decimal(iteration[id]);
       if (value === '0.0'){
         iteration[id] = null;
-      }      
+      }
     }
     return iteration;
   },
@@ -429,7 +432,7 @@ var HomeIterContent = React.createClass({
      });
     }
     selectedIter.personDaysAvailable = (selectedIter.teamAvailability - selectedIter.personDaysUnavailable).toFixed(2);
-    //2 new fields on DB - 
+    //2 new fields on DB -
     selectedIter.storiesDays = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
     selectedIter.storyPointsDays = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
     return selectedIter;
@@ -485,6 +488,16 @@ var HomeIterContent = React.createClass({
     }
   },
 
+  integerCheck: function(e) {
+    var pattern = /^[-]?\d*$/;
+    if (e.charCode >= 32 && e.charCode < 127 &&  !pattern.test(String.fromCharCode(e.charCode)))
+    {
+      e.preventDefault();
+    } else if (parseInt(e.target.value + String.fromCharCode(e.charCode)) < -100 || parseInt(e.target.value + String.fromCharCode(e.charCode)) > 100) {
+      e.preventDefault();
+    }
+  },
+
   roundOff:function(e) {
     if (_.isEmpty(e.target.value)){
         this.partialSaveIter(e.target.id);
@@ -531,7 +544,7 @@ var HomeIterContent = React.createClass({
     var selectedIter = this.state.selectedIter;
     selectedIter.teamAvailability = this.state.teamAvailability;
     selectedIter.personDaysAvailable = (this.float2Decimal(selectedIter.teamAvailability) - this.float2Decimal(selectedIter.personDaysUnavailable)).toFixed(2);
-    //2 new fields on DB - 
+    //2 new fields on DB -
     selectedIter.storiesDays = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
     selectedIter.storyPointsDays = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
     selectedIter.memberCount = utils.teamMemCount(this.props.loadDetailTeam.team);
@@ -669,6 +682,7 @@ var HomeIterContent = React.createClass({
         iterData.defectsEndBal = utils.numericValue(defIter.defectsEndBal);
         iterData.cycleTimeWIP = _.isNull(defIter.cycleTimeWIP) || _.isUndefined(defIter.cycleTimeWIP) ? '' : this.float1Decimal(defIter.cycleTimeWIP);
         iterData.cycleTimeInBacklog = _.isNull(defIter.cycleTimeInBacklog) || _.isUndefined(defIter.cycleTimeInBacklog) ? '' : this.float1Decimal(defIter.cycleTimeInBacklog);
+        iterData.npsScore = _.isNull(defIter.npsScore) || _.isUndefined(defIter.npsScore) ? '' : utils.numericValue(defIter.npsScore);
         iterData.clientSatisfaction = _.isNull(defIter.clientSatisfaction) || _.isUndefined(defIter.clientSatisfaction) ? '' : this.float1Decimal(defIter.clientSatisfaction);
         iterData.teamSatisfaction = _.isNull(defIter.teamSatisfaction) || _.isUndefined(defIter.teamSatisfaction) ? '' : this.float1Decimal(defIter.teamSatisfaction);
         iterData.comment = (defIter.comment == null) ? '' : defIter.comment;
@@ -993,6 +1007,23 @@ var HomeIterContent = React.createClass({
                 <div class='home-iter-content-title'>Overall Satisfaction</div>
               </div>
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
+                <div class='home-iter-content-sub' data-tip={npsScoreTT}>{'NPS score'}</div>
+                {this.state.selectedField === 'npsScore'?
+                  <input type='number' max='100' min='-100' id='npsScore' class='home-iter-content-point' placeholder={iterData.npsScore === ''?'0':iterData.npsScore} onKeyDown={this.checkChanges} onKeyPress={this.integerCheck} onBlur={this.roundOff} defaultValue={iterData.npsScore} onPaste={this.paste} ref="npsScore"/>:
+                  <div id='npsScore' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.npsScore != ''?iterData.npsScore:'0'}</div>
+                }
+                {this.state.selectedField === 'npsScore'?
+                  <div style={{'display': 'block','height': '100%'}}>
+                    <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'npsScore')}>
+                      <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
+                    </div>
+                    <div class='home-iter-content-btn' style={{'right':'-19.1%'}} onClick={this.cancelBtnClickHandler.bind(null, 'npsScore')}>
+                      <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
+                    </div>
+                  </div>:''
+                }
+              </div>
+              <div class='home-iter-content-col' style={{'height': '33.3%'}}>
                 <div class='home-iter-content-sub' data-tip={clientSatisfactionTT}>Client satisfaction</div>
                 {this.state.selectedField === 'clientSatisfaction'?
                   <input id='clientSatisfaction' class='home-iter-content-point' placeholder={iterData.clientSatisfaction === ''?'0.0':iterData.clientSatisfaction} onKeyDown={this.checkChanges} onKeyPress={this.decimalNumCheck} onBlur={this.roundOff} defaultValue={iterData.clientSatisfaction} onPaste={this.paste} ref="clientSatisfaction"/>:
@@ -1049,7 +1080,7 @@ var HomeIterContent = React.createClass({
                   <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
                   <div className="home-iter-add" style={access?{'left':'1.5%', 'color':'#4178BE'}:{'left':'1.5%', 'color':'#C7C7C7'}}>Start the first Iteration</div>
                 </div>
-                
+
                 <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={self.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
             </div>
             <ConfirmDialog showConfirmModal={this.state.showConfirmModal} hideConfirmDialog={this.hideConfirmDialog} confirmAction={this.hideConfirmDialog} alertType={this.state.alertType} content={this.state.alertMsg} actionBtnLabel='Ok' />
