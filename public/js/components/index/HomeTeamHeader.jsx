@@ -227,7 +227,7 @@ var HomeTeamHeader = React.createClass({
         teamFTE = 0;
       }
       return (
-        <div class='home-team-header' style={teamHierarchy === ''?{'height':'26%', 'background-position': '150.5% 30%'}:{}}>
+        <div class='home-team-header' style={teamHierarchy === ''?{'height':'26%', 'backgroundPosition': '150.5% 30%'}:{}}>
           {/*<h2 class='heading-teamType' id="teamType">{teamType}</h2>*/}
           <div class='home-team-header-title' style={teamHierarchy === ''?{'top':'36.8%'}:{}}>
             <div class='home-team-header-img-div' style={squadMarkDisplay}>

@@ -158,7 +158,7 @@ var HomeContent = React.createClass({
     $('.home-trends-overflow').nanoScroller();
   },
   assessmentGraphArea: function(sectionId) {
-    var chartBlock = $('#'+sectionId+' .container-body-columns-ase');
+    var chartBlock = $('#'+sectionId+' .container-body-columns-ase, '+'#'+sectionId+' .container-body-col-2-1');
     var chartLength = 0;
     _.each(chartBlock, function(block){
       if ($('#'+block.id).css('display') != 'none') {
@@ -174,9 +174,11 @@ var HomeContent = React.createClass({
           secHeight = '0';
           break;
         default:
-          chartHeight = '70%';
+          chartHeight = '75%';
           secHeight = '50%';
       }
+      $('#assessmentSection').css('height',secHeight);
+      $('#'+sectionId+' > .container-body-col-2-1').css('height',chartHeight);
     } else {
       switch (chartLength) {
         case 0:
@@ -196,9 +198,9 @@ var HomeContent = React.createClass({
           secHeight = '105%';
           break;
       }
+      $('#assessmentSection').css('height',secHeight);
+      $('#'+sectionId+' .container-body-columns-ase').css('height',chartHeight);
     }
-    $('#assessmentSection').css('height',secHeight);
-    $('#'+sectionId+' .container-body-columns-ase').css('height',chartHeight);
     $('.home-trends-overflow').nanoScroller();
   },
   render: function() {
