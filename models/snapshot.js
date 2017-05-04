@@ -760,7 +760,7 @@ function rollUpAssessmentsBySquad(assessments, teamId, assessmentTemplate) {
 
     _.each(assessments, function(assessment ) {
       var assessmentDate = new Date(assessment['submittedDate']);
-      var assessmentQuarter = moment(assessment['submittedDate']).format('[Q]Q Y');
+      var assessmentQuarter = moment(assessment['submittedDate']).format('Q[Q]YY');
       if (quarterArray.indexOf(assessmentQuarter) > -1) {
         _.each(assessment.componentResults, function(cr) {
           var squadAssessmentData = {};
@@ -1213,8 +1213,8 @@ var snapshot = {
         monthArray[i] = month + ' ' + year;
       }
       quarterArray = [];
-      for (var i=0; i <= (ASSESSMENT_QUARTERS - 1); i++) {
-        quarterArray.push(moment().subtract(i, 'Q').format('[Q]Q Y'));
+      for (var i=0; i < ASSESSMENT_QUARTERS; i++) {
+        quarterArray.push(moment().subtract(i, 'Q').format('Q[Q]YY'));
       }
 
       var promiseArray = [];
