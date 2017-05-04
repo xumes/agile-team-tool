@@ -794,7 +794,6 @@ function plotQuarterAssessmentResults(assessmentComponent) {
           var hasData = false;
           for (var i=0; i < this.chart.series.length; i++) {
             if (!_.isEmpty(this.chart.series[i].data)) {
-              console.log(this);
               hasData = true;
               i = this.chart.series.length;
             }
