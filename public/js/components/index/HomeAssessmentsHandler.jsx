@@ -243,14 +243,17 @@ function plotAssessment(index, chartData) {
         style: {
           'fontSize': '.75em'
         },
-        enabled: false
+        enabled: true, y: 15, x: 3
       },
       gridLineInterpolation: 'polygon',
       lineWidth: 0,
       max: 4,
       min: 0,
-      maxPadding: 0.1,
+      maxPadding: 0.2,
       tickInterval: 1,
+      endOnTick: true,
+      showFirstLabel: false,
+      showLastLabel: true,
       allowDecimals: false
     },
 
@@ -713,15 +716,19 @@ function plotQuarterAssessmentResults(assessmentComponent) {
   spiderData['categories'] = [];
   spiderData['series'] = [];
 
-  _.each(assessmentComponent.quarterResults, function(qr, qIndex) {
+  _.each(assessmentComponent.quarterResults.reverse(), function(qr, qIndex) {
     var series = {
       name: qr.quarter,
       data: []
     };
+    if (qIndex == 0)
+      series.color = '#434348'
+    if (qIndex == 1)
+      series.color = '#7cb5ec'
     if (qIndex == 2)
-      series.color = '#808080';
+      series.color = '#B4E051'
     else if (qIndex == 3)
-      series.color = '#CCCCCC';
+      series.color = '#DB2780';
 
     _.each(qr.practices, function(p, pIndex) {
       var practiceName = p.practiceName.toLowerCase();
@@ -782,14 +789,31 @@ function plotQuarterAssessmentResults(assessmentComponent) {
         style: {
           'fontSize': '.75em'
         },
-        enabled: false
+        enabled: true, y:15, x: 3,
+        formatter: function() {
+          var hasData = false;
+          for (var i=0; i < this.chart.series.length; i++) {
+            if (!_.isEmpty(this.chart.series[i].data)) {
+              console.log(this);
+              hasData = true;
+              i = this.chart.series.length;
+            }
+          }
+          if (!hasData)
+            return '';
+          else
+            return this.value;
+        }
       },
       gridLineInterpolation: 'polygon',
       lineWidth: 0,
       max: 4,
       min: 0,
-      maxPadding: 0.1,
+      maxPadding: 0.2,
       tickInterval: 1,
+      endOnTick: true,
+      showFirstLabel: false,
+      showLastLabel: true,
       allowDecimals: false
     },
 
@@ -812,7 +836,7 @@ function plotQuarterAssessmentResults(assessmentComponent) {
       verticalAlign: 'bottom',
       layout: 'horizontal',
       itemStyle: {fontWeight: 'normal'},
-      itemDistance: 5,
+      itemDistance: 7,
     },
 
     credits: {
