@@ -1260,6 +1260,10 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   height: 100%;
 }
 
+.nano > .nano-content {
+  padding-right: 5em !important;
+}
+
 .home-team-header {
   position: relative;
   top: 0.1%;
