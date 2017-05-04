@@ -374,7 +374,7 @@ function getAllTeams() {
         var teamInformation = {
           squadsByParent: squadsByParent,
           squadTeamMemberData: squadTeamMemberData
-        }
+        };
         var nonSquadTeams = results[0];
         var squadTeams = results[1];
         _.each(nonSquadTeams, function(nonSquadTeam) {
@@ -768,14 +768,14 @@ function rollUpAssessmentsBySquad(assessments, teamId, assessmentTemplate) {
           var componentDescription = '';
           if ((cr.componentName.toLowerCase().indexOf('leadership') > -1 && cr.componentName.toLowerCase().indexOf('ops') == -1) &&
             (cr.componentName.toLowerCase().indexOf('leadership') > -1 && cr.componentName.toLowerCase().indexOf('operations') == -1)) {
-            componentIdentifier = 'prj'
+            componentIdentifier = 'prj';
             componentDescription = 'Project Teams (Foundational Practices)';
           } else if ((cr.componentName.toLowerCase().indexOf('leadership') > -1 && cr.componentName.toLowerCase().indexOf('ops') > -1) ||
             (cr.componentName.toLowerCase().indexOf('leadership') > -1 && cr.componentName.toLowerCase().indexOf('operations') > -1)) {
-            componentIdentifier = 'ops'
+            componentIdentifier = 'ops';
             componentDescription = 'Operations Teams (Foundational Practices)';
           } else if (cr.componentName.toLowerCase().indexOf('delivery') > -1) {
-            componentIdentifier = 'devops'
+            componentIdentifier = 'devops';
             componentDescription = 'DevOps Practices';
           }
           var practiceList = [];
@@ -1098,17 +1098,17 @@ function resestQuarterAssessmentData(assessmentTemplate) {
       var componentDescription = '';
       if ((c.name.toLowerCase().indexOf('leadership') > -1 && c.name.toLowerCase().indexOf('ops') == -1) &&
         (c.name.toLowerCase().indexOf('leadership') > -1 && c.name.toLowerCase().indexOf('operations') == -1)) {
-        componentIdentifier = 'prj'
+        componentIdentifier = 'prj';
         componentDescription = 'Project Teams (Foundational Practices)';
       } else if ((c.name.toLowerCase().indexOf('leadership') > -1 && c.name.toLowerCase().indexOf('ops') > -1) ||
         (c.name.toLowerCase().indexOf('leadership') > -1 && c.name.toLowerCase().indexOf('operations') > -1)) {
-        componentIdentifier = 'ops'
+        componentIdentifier = 'ops';
         componentDescription = 'Operations Teams (Foundational Practices)';
       } else if (c.name.toLowerCase().indexOf('delivery') > -1) {
-        componentIdentifier = 'devops'
+        componentIdentifier = 'devops';
         componentDescription = 'DevOps Practices';
       }
-      var quarterList = []
+      var quarterList = [];
       _.each(quarterArray, function(q) {
         var quarterData = {
           quarter: q,
@@ -1220,7 +1220,7 @@ var snapshot = {
       var promiseArray = [];
       var squadIterationDocs = {};
       var squadsByParent = {};
-      var squadTeamMemberData = {}
+      var squadTeamMemberData = {};
       // var teamMemberData = {};
       var squadAssessments = {};
       var squadsCalResultsByIter = {};
