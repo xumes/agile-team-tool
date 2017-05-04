@@ -5891,7 +5891,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   font-size: 1.3em;
   padding: 0.4em 0.5em;
-  width: 80%;
+  width: 90%;
 }
 
 #addTeamMemberRoleBlock .edit-inplace-field-alignright {
