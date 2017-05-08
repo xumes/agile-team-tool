@@ -142,6 +142,12 @@ var HomeMemberTable = React.createClass({
         $('#awk_' + index + ' .input-field').show();
       }
     });
+    var promiseArray = [];
+    _.each($('#teamMemberTable img'), function(img) {
+      var imgId = img.id.substring(5, img.id.length);
+      promiseArray.push(api.isFaceImageBroken(imgId, 'table'));
+    });
+    Promise.all(promiseArray);
   },
 
   onClickBlock: function(block) {
@@ -855,7 +861,7 @@ var HomeMemberTable = React.createClass({
                 </div>
                 <div id={nameId} style={{'width':'28.8%'}}>
                   <div style={{'width':'25.6%','height':'100%','display':'inline-block','float':'left'}}>
-                    <img style={{'position':'relative', 'top':'17%'}} src={src}></img>
+                    <img id={'table' + memberDetail.userId.toUpperCase()} style={{'position':'relative', 'top':'17%'}}></img>
                   </div>
                   <div style={{'width':'74.4%','height':'50%','display':'inline-block','float':'left','position':'relative','top':'25%'}}>
                     <h>{memberDetail.name}</h>

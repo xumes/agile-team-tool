@@ -108,6 +108,16 @@ module.exports = function(app, includes) {
       });
   };
 
+  isUserImageBroken = function(req, res) {
+    Users.isUserImageBroken(req.params.uid)
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch(function(err) {
+        res.status(200).send('');
+      });
+  };
+
   // //TODO: Refactor this and store in the database
   // getRoles = function(req, res) {
   //   var roles = [{
@@ -156,4 +166,5 @@ module.exports = function(app, includes) {
   app.get('/api/users/activeInfo', [includes.middleware.auth.requireLogin], getActiveUserInfo);
   app.put('/api/users/', [includes.middleware.auth.requireLogin], updateUser);
   app.post('/api/users/create', [includes.middleware.auth.requireLogin], createUser);
+  app.get('/api/users/image/:uid', [includes.middleware.auth.requireLogin], isUserImageBroken);
 };

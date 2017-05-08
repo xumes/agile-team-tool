@@ -297,6 +297,24 @@ var users = {
     });
   },
 
+  isUserImageBroken: /* istanbul ignore next */ function(uid) {
+    return new Promise(function(resolve, reject) {
+      var queryUrl = 'http://faces-cache.mybluemix.net/image/' + uid;
+      request(queryUrl, function(err, response, body) {
+        // console.log(response.body);
+        if (err) {
+          reject(err);
+        }
+        else if (_.isEmpty(body)) {
+          reject('empty');
+        }
+        else {
+          resolve(body);
+        }
+      });
+    });
+  },
+
   ldapUserQuery: /* istanbul ignore next */ function(ldapUrl) {
     return new Promise(function(resolve) {
       request(ldapUrl, function(err, response, body) {
