@@ -354,6 +354,27 @@ var users = {
         }
       });
     });
+  },
+
+  isUserImageBroken: /* istanbul ignore next */ function(uid) {
+    return new Promise(function(resolve) {
+      var queryUrl = 'http://faces-cache.mybluemix.net/image/' + uid;
+      request(queryUrl, function(err, response, body) {
+        var json;
+        try {
+          json = JSON.parse(body) ; // if the body is STRING, try to parse it
+        }
+        catch (err) {
+          reject(err);
+        }
+        if (_.isEmpty(json)) {
+          reject('empty');
+        }
+        else {
+          resolve(json);
+        }
+      });
+    });
   }
 };
 

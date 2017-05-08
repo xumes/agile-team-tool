@@ -99,6 +99,12 @@ var HomeTeamHeader = React.createClass({
         $('#teamMemberTable').fadeOut();
       }
     });
+
+    var promiseArray = [];
+    _.each($('.home-header-image img'), function(img) {
+      promiseArray.push(api.isFaceImageBroken(img.id));
+    });
+    Promise.all(promiseArray);
   },
 
   findTeamInAllTeams: function(pathId) {
@@ -209,7 +215,7 @@ var HomeTeamHeader = React.createClass({
             var src = '//faces-cache.mybluemix.net/image/' + member.userId.toUpperCase();
             return (
               <div key={faceImageId} class='home-header-image'>
-                <a title={member.name}><img id={faceImageId} class='home-team-header-member-image' src={src}></img></a>
+                <a title={member.name}><img id={member.userId.toUpperCase()} class='home-team-header-member-image'></img></a>
               </div>
             )
           } else if (index == 9) {
