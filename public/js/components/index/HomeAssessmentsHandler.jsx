@@ -119,8 +119,10 @@ module.exports.plotAssessmentSeries = function(teamAssessments) {
           var tt = '<b>' + this.key + '<b><br>';
           var point = this.point.index;
           for (var i=0;i < this.series.chart.series.length; i++) {
-            if (this.series.chart.series[i].visible)
-              tt += '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';
+            if (this.series.chart.series[i].visible) {
+              var result = !_.isEmpty(this.series.chart.series[i].data) && !isNaN(this.series.chart.series[i].data[point].y) ? parseFloat(this.series.chart.series[i].data[point].y).toFixed(1) : 'No result';
+              tt += '<span style="color:' +  this.series.chart.series[i].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + result + '<br>';
+            }
           }
           tt = tt + "<i style='font-size: 8pt;'>Click to see practice results</i>";
           return tt;
@@ -262,8 +264,10 @@ function plotAssessment(index, chartData) {
         var tt = '<b>' + this.key + '<b><br>';
         var point = this.point.index;
         for (var i=0;i < this.series.chart.series.length; i++) {
-          if (this.series.chart.series[i].visible)
-            tt += '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';
+          if (this.series.chart.series[i].visible) {
+            var result = !_.isEmpty(this.series.chart.series[i].data) && !isNaN(this.series.chart.series[i].data[point].y) ? parseFloat(this.series.chart.series[i].data[point].y).toFixed(1) : 'No result';
+            tt += '<span style="color:' +  this.series.chart.series[i].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + result + '<br>';
+          }
         }
         return tt;
       }
@@ -640,7 +644,7 @@ function loadLineMaturityTrend(categories, seriesObj1, seriesObj2, seriesObj3, y
         var point = this.point.index;
         for (var i=0;i < this.series.chart.series.length; i++) {
           if (this.series.chart.series[i].visible) {
-            var result = !_.isEmpty(this.series.chart.series[i].data) ? this.series.chart.series[i].data[point].y : 'No result';
+            var result =  this.series.chart.series[i].data[point].y != null && !isNaN(this.series.chart.series[i].data[point].y) ? parseFloat(this.series.chart.series[i].data[point].y).toFixed(1) : 'No result';
             tt += '<span style="color:' +  this.series.chart.series[i].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + result + '<br>';
           }
         }
@@ -822,7 +826,7 @@ function plotQuarterAssessmentResults(assessmentComponent) {
         var point = this.point.index;
         for (var i=0;i < this.series.chart.series.length; i++) {
           if (this.series.chart.series[i].visible) {
-            var result = !_.isEmpty(this.series.chart.series[i].data) ? this.series.chart.series[i].data[point].y : 'No result';
+            var result = !_.isEmpty(this.series.chart.series[i].data) && !isNaN(this.series.chart.series[i].data[point].y) ? parseFloat(this.series.chart.series[i].data[point].y).toFixed(1) : 'No result';
             tt += '<span style="color:' +  this.series.chart.series[i].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + result + '<br>';
           }
         }
