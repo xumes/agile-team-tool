@@ -49,6 +49,7 @@ var HomeIterSection = React.createClass({
               <HomeIterChart id={'pizzaChart'} />
               <HomeIterChart id={'unitCostChart'} />
               <HomeIterChart id={'statisfactionChart'} />
+              <HomeIterChart id={'npsScoreChart'} />
             </div>
             <div id='nsquad_team_scard' style={{'display':'none', 'height':'100%', 'position':'relative', 'top':'1%'}}>
               <HomeIterChart id={'pvelocityChart'} />
