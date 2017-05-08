@@ -4,7 +4,9 @@ var moment = require('moment');
 var Utils = require('../utils.jsx');
 
 module.exports.plotAssessmentSeries = function(teamAssessments) {
+  // initialize chart area
   destroyAssessmentCharts();
+  $('#squad_assessment_card ').empty();
 
   //get the 5 latest submitted results
   var assessmentsToPlot = [];
@@ -343,7 +345,10 @@ function destroyAssessmentCharts() {
 }
 
 module.exports.assessmentParentRollup = function(snapshotData) {
+  // initialize chart area
   destroyAssessmentCharts();
+  $('#nsquad_assessment_card ').empty();
+
   if (_.isEmpty(snapshotData)) return;
 
   var assessmentData = snapshotData.assessmentData;
