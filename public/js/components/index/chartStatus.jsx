@@ -26,8 +26,11 @@ module.exports.chartStatus = {
       'pPizza': {show: true, title: '2 Pizza - Iteration'},
       'piePizza': {show: true, title: '2 Pizza - Circle'},
       'pstatisfaction': {show: true, title: 'Satisfaction'},
-      'eval': {show: true, title: 'Maturity Frequency'},
-      'trend': {show: true, title: 'Maturity Trends'}
+      'pFrequency': {show: true, title: 'Maturity Frequency'},
+      'pTrends': {show: true, title: 'Maturity Trends'},
+      'pPrj': {show: true, title: 'Projects Maturity'},
+      'pOps': {show: true, title: 'Operations Trends'},
+      'pDevops': {show: true, title: 'Delivery Trends'}
     },
     'charts': {
       'chartHeight': '23%',

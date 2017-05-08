@@ -1260,6 +1260,10 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   height: 100%;
 }
 
+.nano > .nano-content {
+  padding-right: 5em !important;
+}
+
 .home-team-header {
   position: relative;
   top: 0.1%;
@@ -2337,7 +2341,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .home-chart-filter-arrow {
-  height: 18%;
+  height: 15%;
   width: 5%;
   display: inline-block;
   float: left;
@@ -2349,7 +2353,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .home-chart-filter-arrow-right {
   display: inline;
   float: right;
-  height: 18%;
+  height: 15%;
   width: 5%;
 }
 
@@ -2373,7 +2377,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .home-chart-filter-title {
-  height: 18%;
+  height: 15%;
   width: 100%;
   background-color: #4178BE;
   display: inline-block;
@@ -2450,7 +2454,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   float: left;
   width: 48%;
-  height: 18%;
+  height: 16%;
 }
 
 .home-chart-filter-checkbox {
@@ -5879,6 +5883,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 #addTeamMemberRoleBlock .edit-inplace-btns {
   border: 0 solid;
   float: right;
+  width: 100%;
   margin-top: 0.5em;
 }
 
@@ -7854,6 +7859,7 @@ p.apikey-note {
   font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
   font-size: 2.4rem;
 }
+
 #noTeamContent > .second-level-title {
   position: relative;
   top: 12.4rem;
@@ -7935,7 +7941,6 @@ p.apikey-note {
   width: auto;
   height: 100%;
 }
-
 .MA-link-note {
   display: inline-block;
   font-size: inherit;

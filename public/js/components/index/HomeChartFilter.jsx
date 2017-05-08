@@ -161,7 +161,7 @@ var HomeChartFilter = React.createClass({
       }
       var classArrow = self.props.loadDetailTeam.team.type == 'squad' ? 'home-chart-filter-arrow' : 'home-chart-filter-arrow-right';
       return (
-        <div class='home-chart-filter-block' style={{'display':'none','width':'32%','height':'350%','top':'35%'}}>
+        <div class='home-chart-filter-block' style={{'display':'none','width':'32%','height':'400%','top':'35%'}}>
           <div class={classArrow}>
             <InlineSVG class='home-chart-filter-arrow-img' src={require('../../../img/Att-icons/play-arrow.svg')}></InlineSVG>
           </div>

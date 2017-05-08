@@ -94,7 +94,7 @@ var HomePage = React.createClass({
   componentDidMount: function() {
     this.handleResize();
     window.addEventListener('resize', this.handleResize);
-    $('.home-nav-show-btn svg, .home-nav-show-btn2 svg').attr('title', 'Expand Team Hierarchy Navigation')
+    $('.home-nav-show-btn svg, .home-nav-show-btn2 svg').attr('title', 'Expand Team Hierarchy Navigation');
   },
 
   componentWillUnmount: function() {
@@ -348,6 +348,8 @@ var HomePage = React.createClass({
     },200,function(){
       $('.home-nav-show-btn').prop('disabled',false);
     });
+
+    $('.home-team-nav').nanoScroller(); // initialize the nanoScroller for home-team-nav
   },
 
   updateTeamLink: function(teamId, linkData) {

@@ -4,7 +4,6 @@ var moment = require('moment');
 var Utils = require('../utils.jsx');
 
 module.exports.plotAssessmentSeries = function(teamAssessments) {
-  $('#squad_assessment_card').empty();
   destroyAssessmentCharts();
 
   //get the 5 latest submitted results
@@ -17,7 +16,6 @@ module.exports.plotAssessmentSeries = function(teamAssessments) {
 
   var chartSeries = [];
   var chartData = new Object();
-  var count = 0;
   for (var i = assessmentsToPlot.length - 1; i > -1; i--) {
     var results = assessmentsToPlot[i]['componentResults'];
     for (var j = 0; j < results.length; j++) {
@@ -42,10 +40,12 @@ module.exports.plotAssessmentSeries = function(teamAssessments) {
 
         }
       });
+
       if (!found) {
-        // create a section in the page for the particular assessment group
-        $('#squad_assessment_card').append(createChartSection(identifier, count));
-        count++;
+        if ($('#'+identifier+'Chart_block').length == 0) {
+          // create a section in the page for the particular assessment group
+          $('#squad_assessment_card').append(createTeamAssessmentChartSection(identifier));
+        }
 
         chartData = new Object();
         // page element id that will render the graph data
@@ -66,8 +66,8 @@ module.exports.plotAssessmentSeries = function(teamAssessments) {
 
       var submitDate = moment.utc(assessmentsToPlot[i]['submittedDate']).format('DD MMM YYYY');
       chartData['categories'].push(submitDate);
-      chartData['targetScore'].push(isNaN(parseFloat(results[j]['targetScore'])) ? 0 : parseFloat(results[j]['targetScore']));
-      chartData['currentScore'].push(isNaN(parseFloat(results[j]['currentScore'])) ? 0 : parseFloat(results[j]['currentScore']));
+      chartData['targetScore'].push(isNaN(parseFloat(results[j]['targetScore'])) ? 0 : parseFloat((results[j]['targetScore']).toFixed(2)));
+      chartData['currentScore'].push(isNaN(parseFloat(results[j]['currentScore'])) ? 0 : parseFloat((results[j]['currentScore']).toFixed(2)));
       chartData['assessmentResult'].push(results[j]['assessedComponents']);
 
     }
@@ -119,9 +119,10 @@ module.exports.plotAssessmentSeries = function(teamAssessments) {
           var tt = '<b>' + this.key + '<b><br>';
           var point = this.point.index;
           for (var i=0;i < this.series.chart.series.length; i++) {
-            if (this.series.chart.series[i].visible)
-              tt +=
-                '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';
+            if (this.series.chart.series[i].visible) {
+              var result = !_.isEmpty(this.series.chart.series[i].data) && !isNaN(this.series.chart.series[i].data[point].y) ? parseFloat(this.series.chart.series[i].data[point].y).toFixed(1) : 'No result';
+              tt += '<span style="color:' +  this.series.chart.series[i].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + result + '<br>';
+            }
           }
           tt = tt + "<i style='font-size: 8pt;'>Click to see practice results</i>";
           return tt;
@@ -197,7 +198,7 @@ function plotAssessment(index, chartData) {
   $('#' + spiderData['prefixId'] + '_SpiderChart').highcharts({
     chart: {
       polar: true,
-      type: 'line', width: 380
+      type: 'line'
     },
 
     subtitle: {
@@ -244,14 +245,17 @@ function plotAssessment(index, chartData) {
         style: {
           'fontSize': '.75em'
         },
-        enabled: false
+        enabled: true, y: 15, x: 3
       },
       gridLineInterpolation: 'polygon',
       lineWidth: 0,
       max: 4,
       min: 0,
-      maxPadding: 0.1,
+      maxPadding: 0.2,
       tickInterval: 1,
+      endOnTick: true,
+      showFirstLabel: false,
+      showLastLabel: true,
       allowDecimals: false
     },
 
@@ -260,9 +264,10 @@ function plotAssessment(index, chartData) {
         var tt = '<b>' + this.key + '<b><br>';
         var point = this.point.index;
         for (var i=0;i < this.series.chart.series.length; i++) {
-          if (this.series.chart.series[i].visible)
-            tt +=
-              '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';
+          if (this.series.chart.series[i].visible) {
+            var result = !_.isEmpty(this.series.chart.series[i].data) && !isNaN(this.series.chart.series[i].data[point].y) ? parseFloat(this.series.chart.series[i].data[point].y).toFixed(1) : 'No result';
+            tt += '<span style="color:' +  this.series.chart.series[i].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + result + '<br>';
+          }
         }
         return tt;
       }
@@ -289,11 +294,10 @@ function plotAssessment(index, chartData) {
   });
 }
 
-function createChartSection(prefixId, count) {
-  var margintop = 'top: 0%';
+function createTeamAssessmentChartSection(prefixId) {
   var mainDiv = document.createElement('div');
   mainDiv.setAttribute('class', 'container-body-columns-ase');
-  mainDiv.setAttribute('style', 'height: 33%;' + margintop);
+  mainDiv.setAttribute('style', 'height: 33%;');
   mainDiv.setAttribute('id', prefixId + 'Chart_block');
 
   var colDiv = document.createElement('div');
@@ -314,6 +318,19 @@ function createChartSection(prefixId, count) {
   return mainDiv;
 }
 
+function createRollupAssessmentChartSection(prefixId) {
+  var mainDiv = document.createElement('div');
+  mainDiv.setAttribute('class', 'container-body-col-2-1');
+  mainDiv.setAttribute('style', 'height: 33%;');
+  mainDiv.setAttribute('id', prefixId + 'Chart_block');
+
+  var div = document.createElement('div');
+  div.setAttribute('id', prefixId + '_Chart');
+  mainDiv.appendChild(div);
+
+  return mainDiv;
+}
+
 function destroyAssessmentCharts() {
   // destroy existing charts in the main container
   $(Highcharts.charts).each(function(i, chart) {
@@ -325,16 +342,14 @@ function destroyAssessmentCharts() {
   });
 }
 
-module.exports.assessmentParentRollup = function(snapshotData){
+module.exports.assessmentParentRollup = function(snapshotData) {
   destroyAssessmentCharts();
   if (_.isEmpty(snapshotData)) return;
 
   var assessmentData = snapshotData.assessmentData;
   var date = moment(snapshotData.lastUpdate).format('DD MMM YYYY');
-  //set div min height
-  // $('#assessmentTrend').attr('style','min-height: 380px;');
-  // $('#assessmentEval').attr('style','min-height: 380px;');
   var graphCategory = [];
+
   //Evaluation rollup
   var teamNoAssessment = new Object();
   teamNoAssessment.name = 'Squads with no assessment';
@@ -415,11 +430,20 @@ module.exports.assessmentParentRollup = function(snapshotData){
     teamOperations.data.push(tOperationsData);
   }
 
-  loadBarAssessmentEvaluation('assessmentEval', date, graphCategory,teamLt120Days, teamGt120Days, teamNoAssessment, 100);
-  loadLineMaturityTrend('assessmentTrend', graphCategory, teamFoundational, teamDevOps, teamOperations, 4);
+  loadLineMaturityTrend(graphCategory, teamFoundational, teamDevOps, teamOperations, 4);
+  loadBarAssessmentEvaluation(date, graphCategory, teamLt120Days, teamGt120Days, teamNoAssessment, 100);
+
+  _.each(snapshotData.assessmentData2, function(assessmentComponent) {
+    plotQuarterAssessmentResults(assessmentComponent);
+  });
 };
 
-function loadBarAssessmentEvaluation(id, asOfDate, categories, seriesObj1, seriesObj2, seriesObj3, yMax) {
+function loadBarAssessmentEvaluation(asOfDate, categories, seriesObj1, seriesObj2, seriesObj3, yMax) {
+  if ($('#pFrequencyChart_block').length == 0) {
+    $('#nsquad_assessment_card').append(createRollupAssessmentChartSection('pFrequency'));
+  }
+  var chartId = 'pFrequency_Chart';
+
   Highcharts.setOptions({
     lang: {
       thousandsSep: ''
@@ -429,13 +453,13 @@ function loadBarAssessmentEvaluation(id, asOfDate, categories, seriesObj1, serie
   new Highcharts.Chart({
     chart: {
       type: 'column',
-      renderTo: id,
+      renderTo: chartId,
       marginLeft: 60,
       width:390,
       events: {
         load: function(event) {
           // modify the legend symbol
-          $('#' +id+' .highcharts-legend-item rect').attr('width', '7').attr('height', '7').attr('x', '5').attr('y', '7');
+          $('#' +chartId+' .highcharts-legend-item rect').attr('width', '7').attr('height', '7').attr('x', '5').attr('y', '7');
         }
       }
     },
@@ -510,8 +534,7 @@ function loadBarAssessmentEvaluation(id, asOfDate, categories, seriesObj1, serie
         for (var i=0;i < this.series.chart.series.length; i++) {
           var percentage = this.series.chart.series[i].data[point].percentage || 0;
           if (this.series.chart.series[i].visible && this.series.chart.series[i].data[point].y > 0)
-            formatResult +=
-              '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].data[point].y + ' (' + percentage.toFixed(1) + ' % of teams)<br/>';
+            formatResult += '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].data[point].y + ' (' + percentage.toFixed(1) + ' % of teams)<br/>';
         }
         return formatResult;
       }
@@ -550,11 +573,15 @@ function loadBarAssessmentEvaluation(id, asOfDate, categories, seriesObj1, serie
   });
 }
 
-function loadLineMaturityTrend(id, categories, seriesObj1, seriesObj2, seriesObj3, yMax) {
+function loadLineMaturityTrend(categories, seriesObj1, seriesObj2, seriesObj3, yMax) {
+  if ($('#pTrendsChart_block').length == 0) {
+    $('#nsquad_assessment_card').append(createRollupAssessmentChartSection('pTrends'));
+  }
+  var chartId = 'pTrends_Chart';
   new Highcharts.Chart({
     chart: {
       type: 'line',
-      renderTo: id,
+      renderTo: chartId,
       marginLeft: 65,
       width:390
     },
@@ -608,20 +635,20 @@ function loadLineMaturityTrend(id, categories, seriesObj1, seriesObj2, seriesObj
         text: 'Average maturity level',
         style: {
           width: 170
-        },
-        x: -12
+        }
       }
     },
     tooltip: {
       formatter: function() {
-        var formatResult = '<b>' + this.key + '<b><br>';
+        var tt = '<b>' + this.key + '<b><br>';
         var point = this.point.index;
         for (var i=0;i < this.series.chart.series.length; i++) {
-          if (this.series.chart.series[i].visible)
-            formatResult +=
-              '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].data[point].y + ' ('+ this.series.chart.series[i].data[point].squads + ' squads)<br/>';
+          if (this.series.chart.series[i].visible) {
+            var result =  this.series.chart.series[i].data[point].y != null && !isNaN(this.series.chart.series[i].data[point].y) ? parseFloat(this.series.chart.series[i].data[point].y).toFixed(1) : 'No result';
+            tt += '<span style="color:' +  this.series.chart.series[i].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + result + '<br>';
+          }
         }
-        return formatResult;
+        return tt;
       }
     },
     series: [{
@@ -673,4 +700,152 @@ function getCharacter(symbol) {
       symbol = '\u25A0';
   }
   return symbol;
+}
+
+function plotQuarterAssessmentResults(assessmentComponent) {
+  var chartPrefixId = '';
+  if (assessmentComponent.componentIdentifier == 'prj')
+    chartPrefixId = 'pPrj';
+  else if (assessmentComponent.componentIdentifier == 'ops')
+    chartPrefixId = 'pOps';
+  if (assessmentComponent.componentIdentifier == 'devops')
+    chartPrefixId = 'pDevops';
+
+  if ($('#'+chartPrefixId+'Chart_block').length == 0)
+    $('#nsquad_assessment_card').append(createRollupAssessmentChartSection(chartPrefixId));
+
+  var spiderData = new Object();
+  spiderData['title'] = assessmentComponent.componentDescription;
+  spiderData['chartId'] = chartPrefixId + '_Chart';
+  spiderData['categories'] = [];
+  spiderData['series'] = [];
+
+  _.each(assessmentComponent.quarterResults.reverse(), function(qr, qIndex) {
+    var series = {
+      name: qr.quarter,
+      data: []
+    };
+    if (qIndex == 0)
+      series.color = '#434348'
+    if (qIndex == 1)
+      series.color = '#7cb5ec'
+    if (qIndex == 2)
+      series.color = '#B4E051'
+    else if (qIndex == 3)
+      series.color = '#DB2780';
+
+    _.each(qr.practices, function(p, pIndex) {
+      var practiceName = p.practiceName.toLowerCase();
+      if (spiderData['categories'].indexOf(p.practiceName) == -1) {
+        spiderData['categories'].push(practiceName.replace(practiceName[0], practiceName[0].toUpperCase()));
+      }
+      var point = null;
+      if (!isNaN(parseFloat(p.totalCurrentScore)) && !isNaN(parseFloat(p.totalPracticeCount)) && parseFloat(p.totalPracticeCount) != 0) {
+        point = parseFloat(p.totalCurrentScore) / parseFloat(p.totalPracticeCount);
+        series.data.push(parseFloat(point.toFixed(2)));
+      } else {
+        series.data.push(null);
+      }
+    });
+
+    spiderData['series'].push(series);
+
+  });
+
+  $('#' + spiderData['chartId']).highcharts({
+    chart: {
+      polar: true,
+      type: 'line'
+    },
+    pane: {
+      size: '70%'
+    },
+    title: {
+      style: {
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
+        fontSize: '1.3em',
+        color: '#5A5A5A'
+      },
+      text: spiderData['title']
+    },
+
+    xAxis: {
+      reserveSpace: false,
+      labels: {
+        style: {
+          'whiteSpace': 'nowrap',
+          'fontSize': '.75em'
+        },
+        formatter: function() {
+          var text = this.value;
+          var formatted = text.length > 15 ? text.substring(0, 15) + '...' : text;
+
+          return formatted;
+        }
+      },
+      categories: spiderData['categories'],
+      tickmarkPlacement: 'on',
+      lineWidth: 0
+    },
+
+    yAxis: {
+      labels: {
+        style: {
+          'fontSize': '.75em'
+        },
+        enabled: true, y:15, x: 3,
+        formatter: function() {
+          var hasData = false;
+          for (var i=0; i < this.chart.series.length; i++) {
+            if (!_.isEmpty(this.chart.series[i].data)) {
+              hasData = true;
+              i = this.chart.series.length;
+            }
+          }
+          if (!hasData)
+            return '';
+          else
+            return this.value;
+        }
+      },
+      gridLineInterpolation: 'polygon',
+      lineWidth: 0,
+      max: 4,
+      min: 0,
+      maxPadding: 0.2,
+      tickInterval: 1,
+      endOnTick: true,
+      showFirstLabel: false,
+      showLastLabel: true,
+      allowDecimals: false
+    },
+
+    tooltip: {
+      formatter: function() {
+        var tt = '<b>' + this.key + '<b><br>';
+        var point = this.point.index;
+        for (var i=0;i < this.series.chart.series.length; i++) {
+          if (this.series.chart.series[i].visible) {
+            var result = !_.isEmpty(this.series.chart.series[i].data) && !isNaN(this.series.chart.series[i].data[point].y) ? parseFloat(this.series.chart.series[i].data[point].y).toFixed(1) : 'No result';
+            tt += '<span style="color:' +  this.series.chart.series[i].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + result + '<br>';
+          }
+        }
+        return tt;
+      }
+    },
+
+    legend: {
+      align: 'center',
+      verticalAlign: 'bottom',
+      layout: 'horizontal',
+      itemStyle: {fontWeight: 'normal'},
+      itemDistance: 7,
+    },
+
+    credits: {
+      enabled: false
+    },
+
+    series: spiderData['series']
+  });
 }
