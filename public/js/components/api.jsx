@@ -796,17 +796,13 @@ module.exports.getApiKeyByUser = function() {
 
 module.exports.isFaceImageBroken = function(uid) {
   return new Promise(function(resolve, reject){
-    var url = 'http://faces-cache.mybluemix.net/image/' + uid;
+    var url = '/api/users/image/' + uid;
+    var facesUrl = '//faces-cache.mybluemix.net/image/' + uid;
     var req = $.ajax({
       type: 'GET',
       url: url
     }).done(function(data){
-      console.log(data);
-      if (_.isEmpty(data)) {
-        $('#' + uid).attr('src', '../../img/No_Image_icon.png');
-      } else {
-        $('#' + uid).attr('src', url);
-      }
+      $('#' + uid).attr('src', facesUrl);
       resolve(data);
     }).fail(function(err){
       $('#' + uid).attr('src', '../../img/No_Image_icon.png');
