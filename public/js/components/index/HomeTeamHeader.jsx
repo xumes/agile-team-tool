@@ -102,7 +102,7 @@ var HomeTeamHeader = React.createClass({
 
     var promiseArray = [];
     _.each($('.home-header-image img'), function(img) {
-      promiseArray.push(api.isFaceImageBroken(img.id));
+      promiseArray.push(api.isFaceImageBroken(img.id, ''));
     });
     Promise.all(promiseArray);
   },

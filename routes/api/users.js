@@ -114,7 +114,7 @@ module.exports = function(app, includes) {
         res.status(200).send(result);
       })
       .catch(function(err) {
-        res.status(400).send(err);
+        res.status(200).send('');
       });
   };
 

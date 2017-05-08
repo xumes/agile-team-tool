@@ -794,7 +794,7 @@ module.exports.getApiKeyByUser = function() {
   });
 };
 
-module.exports.isFaceImageBroken = function(uid) {
+module.exports.isFaceImageBroken = function(uid, componentId) {
   return new Promise(function(resolve, reject){
     var url = '/api/users/image/' + uid;
     var facesUrl = '//faces-cache.mybluemix.net/image/' + uid;
@@ -802,10 +802,14 @@ module.exports.isFaceImageBroken = function(uid) {
       type: 'GET',
       url: url
     }).done(function(data){
-      $('#' + uid).attr('src', facesUrl);
+      if (_.isEmpty(data)) {
+        $('#' + componentId + uid).attr('src', '../../img/No_Image_icon.png');
+      } else {
+        $('#' + componentId + uid).attr('src', facesUrl);
+      }
       resolve(data);
     }).fail(function(err){
-      $('#' + uid).attr('src', '../../img/No_Image_icon.png');
+      $('#' + componentId + uid).attr('src', '../../img/No_Image_icon.png');
       resolve(err);
     });
   });
