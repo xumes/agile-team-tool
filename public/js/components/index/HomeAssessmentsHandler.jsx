@@ -122,8 +122,6 @@ module.exports.plotAssessmentSeries = function(teamAssessments) {
             if (this.series.chart.series[i].visible) {
               var result = !_.isEmpty(this.series.chart.series[i].data) && !isNaN(this.series.chart.series[i].data[point].y) ? parseFloat(this.series.chart.series[i].data[point].y).toFixed(1) : 'No result';
               tt += '<span style="color:' +  this.series.chart.series[i].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + result + '<br>';
-
-              //tt += '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';
             }
           }
           tt = tt + "<i style='font-size: 8pt;'>Click to see practice results</i>";
