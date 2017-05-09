@@ -136,7 +136,7 @@ var AssessmentPopover = React.createClass({
       <div tabIndex='1' class='assessment-popover-block'>
         <div class='assessment-title'>
           <h1>{'Agile Maturity Team Assessment'}</h1>
-          <div onClick={self.props.hideAssessmentPopover}>
+          <div onClick={self.props.showWarning}>
             <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
           </div>
         </div>

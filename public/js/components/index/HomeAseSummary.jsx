@@ -6,6 +6,7 @@ var Modal = require('react-overlays').Modal;
 var AssessmentPopover = require('../assessments/AssessmentPopover.jsx');
 var AssessmentSetupPopover = require('../assessments/AssessmentSetupPopover.jsx');
 var AssessmentACPlanPopover = require('../assessments/AssessmentACPlanPopover.jsx');
+var ConfirmDialog = require('./ConfirmDialog.jsx');
 var chartStatus = require('./chartStatus.jsx').chartStatus;
 
 var HomeAseSummary = React.createClass({
@@ -14,6 +15,7 @@ var HomeAseSummary = React.createClass({
       showModal: false,
       showSetupModel: false,
       showACPlanModel: false,
+      showConfirmModal: false,
       selectedAssessment: '',
       activeTemplate: null,
       assessTemplate: null,
@@ -149,6 +151,16 @@ var HomeAseSummary = React.createClass({
     this.state.software = software;
     this.showAssessmentPopover();
   },
+  hideConfirmDialogAndAssessment: function() {
+    this.setState({ showModal: false });
+    this.setState({ showConfirmModal: false });
+  },
+  hideConfirmDialog: function() {
+    this.setState({ showConfirmModal: false });
+  },
+  showWarning: function() {
+    this.setState({ showConfirmModal: true });
+  },
   render: function() {
     var self = this;
     var backdropStyle = {
@@ -207,9 +219,10 @@ var HomeAseSummary = React.createClass({
                   <button type='button' onClick={self.showAssessmentPopover} class='ibm-btn-pri ibm-btn-blue-50' disabled={haveAccess}>{'Continue Assessment'}</button>
                 </div>
               </div>
-              <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAssessmentPopover}>
-                <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary}/>
+              <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal}>
+                <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary} showWarning={self.showWarning} />
               </Modal>
+              <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.hideConfirmDialogAndAssessment} alertType={'warning'} content={'All contents will not be saved, do you still want to close it?'} actionBtnLabel='Yes' />
             </div>
           )
         } else {
@@ -375,9 +388,10 @@ var HomeAseSummary = React.createClass({
               <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showACPlanModel} onHide={self.hideAssessmentACPlanPopover}>
                 <AssessmentACPlanPopover hideAssessmentACPlanPopover={self.hideAssessmentACPlanPopover} updateAssessmentSummary={self.updateAssessmentSummary} loadDetailTeam={self.props.loadDetailTeam} tempAssess={tempAssess} assessTemplate={self.state.assessTemplate} />
               </Modal>
-              <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAssessmentPopover}>
-                <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary} assessType={self.state.type} assessSoftware={self.state.software}/>
+              <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal}>
+                <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary} assessType={self.state.type} assessSoftware={self.state.software} showWarning={self.showWarning}/>
               </Modal>
+              <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.hideConfirmDialogAndAssessment} alertType={'warning'} content={'All contents will not be saved, do you still want to close it?'} actionBtnLabel='Yes' />
             </div>
           )
         }
@@ -409,9 +423,10 @@ var HomeAseSummary = React.createClass({
             <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showSetupModel} onHide={self.hideAssessmentSetupPopover}>
               <AssessmentSetupPopover hideAssessmentSetupPopover={self.hideAssessmentSetupPopover} continueAssessmentDraft={self.continueAssessmentDraft}/>
             </Modal>
-            <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal} onHide={self.hideAssessmentPopover}>
-              <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary} assessType={this.state.type} assessSoftware={this.state.software}/>
+            <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal}>
+              <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary} assessType={this.state.type} assessSoftware={this.state.software} showWarning={self.showWarning}/>
             </Modal>
+            <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.hideConfirmDialogAndAssessment} alertType={'warning'} content={'All contents will not be saved, do you still want to close it?'} actionBtnLabel='Yes' />
           </div>
         )
       }
