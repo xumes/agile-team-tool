@@ -514,11 +514,11 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
  * @param string nonSquadTeamId (non-squad team id)
  * @param Object squadsIterReults
  * @param Object teamMemberData
- * @param Object squadsAsseReults
+ * @param Object squadsAsseResults
  * @param Object assessmentTemplate
  * @return nonSquadCalResult
  */
-function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsIterReults, nonSquadTeamPathId, teamMemberData, squadsAsseReults, assessmentTemplate) {
+function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsIterReults, nonSquadTeamPathId, teamMemberData, squadsAsseResults, assessmentTemplate) {
   return new Promise(function(resolve, reject) {
     var iterData = resetData();
     var nonSquadCalResult = {
@@ -589,7 +589,7 @@ function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsIterReults, nonSquad
       }
     }
     nonSquadCalResult['teamMemberData'] = rollUpTeamMemberData(squads, teamMemberData);
-    var asseResult = rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsAsseReults, assessmentTemplate);
+    var asseResult = rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsAsseResults, assessmentTemplate);
     nonSquadCalResult['assessmentData'] = asseResult.assessmentData;
     nonSquadCalResult['assessmentData2'] = asseResult.assessmentData2;
 
@@ -899,8 +899,7 @@ function rollUpAssessmentsBySquad(assessments, teamId, assessmentTemplate) {
         period.gt_120_days = 0;
         period.no_submission = 0;
       }
-      else if (period.gt_120_days >= 1 &&
-        assessmentData[index].less_120_days == 0){
+      else if (period.gt_120_days >= 1 && assessmentData[index].less_120_days == 0){
         period.gt_120_days = 1;
         period.no_submission = 0;
       }
@@ -916,10 +915,10 @@ function rollUpAssessmentsBySquad(assessments, teamId, assessmentTemplate) {
 /**
  * Process assessment rollup data in tribe/non squad level
  * @param squads - list of squads under specific tribe
- * @param squadsAsseReults - squad assessment data
+ * @param squadsAsseResults - squad assessment data
  * @return tribe rollup data
  */
-function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsAsseReults, assessmentTemplate) {
+function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsAsseResults, assessmentTemplate) {
   var assessmentData = resetAssessmentData();
   var assessmentData2 = resestQuarterAssessmentData(assessmentTemplate);
   var rollUpAssessmentData = {
@@ -934,8 +933,8 @@ function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsAsseReults, a
 
   for (var i = 0; i < squads.length; i++) {
     for (var j = 0; j <= ASSESSMENT_PERIOD; j++) {
-      if (!_.isUndefined(squadsAsseReults[squads[i]]) && !_.isUndefined(squadsAsseReults[squads[i]].assessmentData)) {
-        var squadAssessmentResult = squadsAsseReults[squads[i]].assessmentData;
+      if (!_.isUndefined(squadsAsseResults[squads[i]]) && !_.isUndefined(squadsAsseResults[squads[i]].assessmentData)) {
+        var squadAssessmentResult = squadsAsseResults[squads[i]].assessmentData;
         if (!(_.isEmpty(squadAssessmentResult)) && !(_.isUndefined(squadAssessmentResult))) {
           if (squadAssessmentResult[j].less_120_days != undefined) {
             assessmentData[j].less_120_days += squadAssessmentResult[j].less_120_days;
@@ -956,11 +955,13 @@ function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsAsseReults, a
         else {
           assessmentData[j].no_submission += 1;
         }
+      } else {
+        assessmentData[j].no_submission += 1;
       }
     }
     // TODO WORK ON THE ROLL UPLOGIC
-    if (!_.isUndefined(squadsAsseReults[squads[i]]) && !_.isUndefined(squadsAsseReults[squads[i]].assessmentData2)) {
-      var squadAssessmentQuarterResult = squadsAsseReults[squads[i]].assessmentData2;
+    if (!_.isUndefined(squadsAsseResults[squads[i]]) && !_.isUndefined(squadsAsseResults[squads[i]].assessmentData2)) {
+      var squadAssessmentQuarterResult = squadsAsseResults[squads[i]].assessmentData2;
       if (!(_.isEmpty(squadAssessmentQuarterResult)) && !(_.isUndefined(squadAssessmentQuarterResult))) {
         if (_.isEmpty(assessmentData2)) {
           // add first assessment component result for roll up
