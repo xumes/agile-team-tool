@@ -15,7 +15,6 @@ var HomeAseSummary = React.createClass({
       showModal: false,
       showSetupModel: false,
       showACPlanModel: false,
-      showConfirmModal: false,
       selectedAssessment: '',
       activeTemplate: null,
       assessTemplate: null,
@@ -151,16 +150,6 @@ var HomeAseSummary = React.createClass({
     this.state.software = software;
     this.showAssessmentPopover();
   },
-  hideConfirmDialogAndAssessment: function() {
-    this.setState({ showModal: false });
-    this.setState({ showConfirmModal: false });
-  },
-  hideConfirmDialog: function() {
-    this.setState({ showConfirmModal: false });
-  },
-  showWarning: function() {
-    this.setState({ showConfirmModal: true });
-  },
   render: function() {
     var self = this;
     var backdropStyle = {
@@ -220,9 +209,8 @@ var HomeAseSummary = React.createClass({
                 </div>
               </div>
               <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal}>
-                <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary} showWarning={self.showWarning} />
+                <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary} />
               </Modal>
-              <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.hideConfirmDialogAndAssessment} alertType={'warning'} content={'All contents will not be saved, do you still want to close it?'} actionBtnLabel='Yes' />
             </div>
           )
         } else {
@@ -389,9 +377,8 @@ var HomeAseSummary = React.createClass({
                 <AssessmentACPlanPopover hideAssessmentACPlanPopover={self.hideAssessmentACPlanPopover} updateAssessmentSummary={self.updateAssessmentSummary} loadDetailTeam={self.props.loadDetailTeam} tempAssess={tempAssess} assessTemplate={self.state.assessTemplate} />
               </Modal>
               <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal}>
-                <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary} assessType={self.state.type} assessSoftware={self.state.software} showWarning={self.showWarning}/>
+                <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary} assessType={self.state.type} assessSoftware={self.state.software} />
               </Modal>
-              <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.hideConfirmDialogAndAssessment} alertType={'warning'} content={'All contents will not be saved, do you still want to close it?'} actionBtnLabel='Yes' />
             </div>
           )
         }
@@ -424,9 +411,8 @@ var HomeAseSummary = React.createClass({
               <AssessmentSetupPopover hideAssessmentSetupPopover={self.hideAssessmentSetupPopover} continueAssessmentDraft={self.continueAssessmentDraft}/>
             </Modal>
             <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal}>
-              <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary} assessType={this.state.type} assessSoftware={this.state.software} showWarning={self.showWarning}/>
+              <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary} assessType={this.state.type} assessSoftware={this.state.software} />
             </Modal>
-            <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.hideConfirmDialogAndAssessment} alertType={'warning'} content={'All contents will not be saved, do you still want to close it?'} actionBtnLabel='Yes' />
           </div>
         )
       }
