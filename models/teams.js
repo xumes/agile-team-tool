@@ -2031,167 +2031,165 @@ module.exports.validateMemberData =  /* istanbul ignore next */ function(teamId)
     var errorData = [];
     var teams = [];
     self.getTeam(teamId)
-    .then(function(result) {
-      if (!_.isArray(result))
-        teams.push(result);
-      else
-        teams = result;
+      .then(function(result) {
+        if (!_.isArray(result))
+          teams.push(result);
+        else
+          teams = result;
 
-      _.each(teams, function(team) {
-        var ids = [''];
-        if (!_.isEmpty(team.members)) {
-          _.each(team.members, function(member){
-            ids.push(member.userId);
-          });
+        _.each(teams, function(team) {
+          var ids = [''];
+          if (!_.isEmpty(team.members)) {
+            _.each(team.members, function(member){
+              ids.push(member.userId);
+            });
 
-          promiseArray.push(self.validateMemberUserData(team, ids));
-        }
-      });
-      return Promise.all(promiseArray);
-    })
-    .then(function(results) {
-      _.each(results, function(errData) {
-        if (errData.length > 0)
-          errorData = _.union(errorData, errData);
-      });
-      var searchIds = [];
-      _.each(errorData, function(d) {
-        //if (!_.isEmpty(d.member.email) && searchIds.indexOf(d.member.email) == -1)
-        if (!_.isEmpty(d.member.userId) && searchIds.indexOf(d.member.userId) == -1)
-          searchIds.push(d.member.userId);
-      });
-      promiseArray = [];
-      var bluepagesURL = settings.bluepagesURL;
-      _.each(searchIds, function(id) {
-        //var requestURL = bluepagesURL + '/id/' + id + '/email';
-        var requestURL = bluepagesURL + '/id/' + id + '/uid';
-        promiseArray.push(Users.ldapUserQuery(requestURL));
-      });
-      return Promise.all(promiseArray);
-    })
-    .then(function(results) {
-      var uids = [];
-      _.each(results, function(bpInfo) {
-        var ldap = {};
-        if (!_.isEmpty(bpInfo)) {
-          var name = '';
-          if (bpInfo.ldap.notesEmail)
-            name = bpInfo.ldap.notesEmail.split('/')[0].split('=')[1];
-          else if (bpInfo.ldap.notesemail)
-            name = bpInfo.ldap.notesemail.split('/')[0].split('=')[1];
-          else if (bpInfo.ldap.preferredFirstName && bpInfo.ldap.preferredLastName)
-            name = bpInfo.ldap.preferredFirstName +  ' ' + bpInfo.ldap.preferredLastName;
-          else if (bpInfo.ldap.preferredfirstname && bpInfo.ldap.preferredlastname)
-            name = bpInfo.ldap.preferredfirstname +  ' ' + bpInfo.ldap.preferredlastname;
-          ldap = {
-            name: name,
-            email: bpInfo.ldap.preferredIdentity || bpInfo.shortEmail,
-            userId: bpInfo.ldap.uid || ''
-          };
-
-          _.each(errorData, function(d) {
-            //if (d.member.email.toLowerCase() == ldap.email.toLowerCase())
-            if (d.member.userId.toUpperCase() == ldap.userId.toUpperCase())
-              d.ldap = ldap;
-          });
-
-          if (!_.isEmpty(bpInfo.ldap.uid) && uids.indexOf(bpInfo.ldap.uid) == -1)
-            uids.push(bpInfo.ldap.uid);
-        }
-      });
-
-      promiseArray = [];
-      var facesURL = settings.facesURL;
-      _.each(uids, function(uid) {
-        var requestURL = facesURL + '/find/?q=uid:' + uid + '&limit=100';
-        promiseArray.push(Users.facesUserQuery(requestURL));
-      });
-      return Promise.all(promiseArray);
-    })
-    .then(function(results) {
-      _.each(errorData, function(d) {
-        var foundFacesInfo = false;
-        _.each(results, function(facesInfo) {
-          _.each(facesInfo, function(f) {
-            //if (f.email.toLowerCase() == d.member.email.toLowerCase()) {
-            if (f.uid.toUpperCase() == d.member.userId.toUpperCase()) {
-              var faces = {
-                name: f.name || '',
-                email: f.email ? f.email.toLowerCase() : '',
-                userId: f.uid ? f.uid.toUpperCase() : '',
-                site: f.location ? f.location.toLowerCase() : '',
-                timezone: ulocation[f.location ? f.location.toLowerCase() : '']
-              };
-              d.faces = faces;
-              foundFacesInfo = true;
-            }
-          });
-        });
-        if (!foundFacesInfo)
-          loggers.get('model-teams').verbose('No faces found for ' + d.member.email + ' ' + d.member.userId);
-      });
-
-      return errorData;
-    })
-    .then(function(results) {
-      errorData = results;
-      promiseArray = [];
-      var updatedMembers = [];
-      _.each(errorData, function(newData, index) {
-        var team = _.find(teams, function(team) {
-          if (newData.teamId == team._id)
-            return team;
-        });
-        var updatedMember = {};
-        var location = {};
-        if (!_.isEmpty(team)) {
-          _.each(team.members, function(member) {
-            if (_.isEqual(newData.member.email, member.email) || _.isEqual(newData.member.userId, member.userId)) {
-              if (!_.isEmpty(newData.faces)) {
-                updatedMember.name = newData.faces.name;
-                updatedMember.email = newData.faces.email;
-                updatedMember.userId = newData.faces.userId;
-                location.site = newData.faces.site;
-                location.timezone = newData.faces.timezone;
-                updatedMember.location = location;
-
-                member.name = newData.faces.name;
-                member.email = newData.faces.email;
-                member.userId = newData.faces.userId;
-
-              } else if (!_.isEmpty(newData.ldap)) {
-                updatedMember.name = newData.ldap.name;
-                updatedMember.email = newData.ldap.email;
-                updatedMember.userId = newData.ldap.userId;
-                location.site = newData.user.site;
-                location.timezone = newData.user.timezone;
-                updatedMember.location = location;
-
-                member.name = newData.ldap.name;
-                member.email = newData.ldap.email;
-                member.userId = newData.ldap.userId;
-
-              }
-            }
-          });
-        }
-        newData.updatedMember = updatedMember;
-        updatedMembers.push(updatedMember);
-        promiseArray.push(Team.findByIdAndUpdate({_id: newData.teamId},{
-          $set:
-          {
-            members: team.members,
-            updatedBy: 'batch',
-            updatedByUserId: 'batch',
-            updateDate: new Date(moment.utc())
+            promiseArray.push(self.validateMemberUserData(team, ids));
           }
-        }, {new:true}));
+        });
+        return Promise.all(promiseArray);
+      })
+      .then(function(results) {
+        _.each(results, function(errData) {
+          if (errData.length > 0)
+            errorData = _.union(errorData, errData);
+        });
+        var searchIds = [];
+        _.each(errorData, function(d) {
+          //if (!_.isEmpty(d.member.email) && searchIds.indexOf(d.member.email) == -1)
+          if (!_.isEmpty(d.member.userId) && searchIds.indexOf(d.member.userId) == -1)
+            searchIds.push(d.member.userId);
+        });
+        promiseArray = [];
+        var bluepagesURL = settings.bluepagesURL;
+        _.each(searchIds, function(id) {
+          //var requestURL = bluepagesURL + '/id/' + id + '/email';
+          var requestURL = bluepagesURL + '/id/' + id + '/uid';
+          promiseArray.push(Users.ldapUserQuery(requestURL));
+        });
+        return Promise.all(promiseArray);
+      })
+      .then(function(results) {
+        var uids = [];
+        _.each(results, function(bpInfo) {
+          var ldap = {};
+          if (!_.isEmpty(bpInfo)) {
+            var name = '';
+            if (bpInfo.ldap.notesEmail)
+              name = bpInfo.ldap.notesEmail.split('/')[0].split('=')[1];
+            else if (bpInfo.ldap.notesemail)
+              name = bpInfo.ldap.notesemail.split('/')[0].split('=')[1];
+            else if (bpInfo.ldap.preferredFirstName && bpInfo.ldap.preferredLastName)
+              name = bpInfo.ldap.preferredFirstName +  ' ' + bpInfo.ldap.preferredLastName;
+            else if (bpInfo.ldap.preferredfirstname && bpInfo.ldap.preferredlastname)
+              name = bpInfo.ldap.preferredfirstname +  ' ' + bpInfo.ldap.preferredlastname;
+            ldap = {
+              name: name,
+              email: bpInfo.ldap.preferredIdentity || bpInfo.shortEmail,
+              userId: bpInfo.ldap.uid || ''
+            };
+
+            _.each(errorData, function(d) {
+              //if (d.member.email.toLowerCase() == ldap.email.toLowerCase())
+              if (d.member.userId.toUpperCase() == ldap.userId.toUpperCase())
+                d.ldap = ldap;
+            });
+
+            if (!_.isEmpty(bpInfo.ldap.uid) && uids.indexOf(bpInfo.ldap.uid) == -1)
+              uids.push(bpInfo.ldap.uid);
+          }
+        });
+        promiseArray = [];
+        var facesURL = settings.facesURL;
+        _.each(uids, function(uid) {
+          var requestURL = facesURL + '/find/?q=uid:' + uid + '&limit=100';
+          promiseArray.push(Users.facesUserQuery(requestURL));
+        });
+        return Promise.all(promiseArray);
+      })
+      .then(function(results) {
+        _.each(errorData, function(d) {
+          var foundFacesInfo = false;
+          _.each(results, function(facesInfo) {
+            _.each(facesInfo, function(f) {
+              //if (f.email.toLowerCase() == d.member.email.toLowerCase()) {
+              if (f.uid.toUpperCase() == d.member.userId.toUpperCase()) {
+                var faces = {
+                  name: f.name || '',
+                  email: f.email ? f.email.toLowerCase() : '',
+                  userId: f.uid ? f.uid.toUpperCase() : '',
+                  site: f.location ? f.location.toLowerCase() : '',
+                  timezone: ulocation[f.location ? f.location.toLowerCase() : '']
+                };
+                d.faces = faces;
+                foundFacesInfo = true;
+              }
+            });
+          });
+          if (!foundFacesInfo)
+            loggers.get('model-teams').verbose('No faces found for ' + d.member.email + ' ' + d.member.userId);
+        });
+        return errorData;
+      })
+      .then(function(results) {
+        errorData = results;
+        promiseArray = [];
+        var updatedMembers = [];
+        _.each(errorData, function(newData, index) {
+          var team = _.find(teams, function(team) {
+            if (newData.teamId == team._id)
+              return team;
+          });
+          var updatedMember = {};
+          var location = {};
+          if (!_.isEmpty(team)) {
+            _.each(team.members, function(member) {
+              if (_.isEqual(newData.member.email, member.email) || _.isEqual(newData.member.userId, member.userId)) {
+                if (!_.isEmpty(newData.faces)) {
+                  updatedMember.name = newData.faces.name;
+                  updatedMember.email = newData.faces.email;
+                  updatedMember.userId = newData.faces.userId;
+                  location.site = newData.faces.site;
+                  location.timezone = newData.faces.timezone;
+                  updatedMember.location = location;
+
+                  member.name = newData.faces.name;
+                  member.email = newData.faces.email;
+                  member.userId = newData.faces.userId;
+
+                } else if (!_.isEmpty(newData.ldap)) {
+                  updatedMember.name = newData.ldap.name;
+                  updatedMember.email = newData.ldap.email;
+                  updatedMember.userId = newData.ldap.userId;
+                  location.site = newData.user.site;
+                  location.timezone = newData.user.timezone;
+                  updatedMember.location = location;
+
+                  member.name = newData.ldap.name;
+                  member.email = newData.ldap.email;
+                  member.userId = newData.ldap.userId;
+
+                }
+              }
+            });
+          }
+          newData.updatedMember = updatedMember;
+          updatedMembers.push(updatedMember);
+          promiseArray.push(Team.findByIdAndUpdate({_id: newData.teamId},{
+            $set:
+            {
+              members: team.members,
+              updatedBy: 'batch',
+              updatedByUserId: 'batch',
+              updateDate: new Date(moment.utc())
+            }
+          }, {new:true}));
+        });
+        promiseArray.push(self.createUsers(updatedMembers));
+        return Promise.all(promiseArray);
+      }).
+      then(function(results) {
+        resolve(errorData);
       });
-      promiseArray.push(self.createUsers(updatedMembers));
-      return Promise.all(promiseArray);
-    }).
-    then(function(results) {
-      resolve(errorData);
-    });
   });
 };

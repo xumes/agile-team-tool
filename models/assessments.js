@@ -375,13 +375,13 @@ module.exports.updateTeamAssessment = function(user, data) {
               data['updatedByUserId'] = updatedUser.userId;
               data['updatedBy'] = updatedUser.email;
               data['updateDate'] = new Date(moment.utc());
-              if (data['assessmentStatus'] == 'Submitted' || data['assessmentStatus'] == 'Draft') {
-                data['submittedByUserId'] = updatedUser.userId;
-                data['submittedBy'] = updatedUser.email;
-                if (_.isEmpty(data['submittedDate'])) {
-                  data['submittedDate'] = new Date(moment.utc());
-                }
-              }
+              // if (data['assessmentStatus'] == 'Submitted' || data['assessmentStatus'] == 'Draft') {
+              //   data['submittedByUserId'] = updatedUser.userId;
+              //   data['submittedBy'] = updatedUser.email;
+              //   if (_.isEmpty(data['submittedDate'])) {
+              //     data['submittedDate'] = new Date(moment.utc());
+              //   }
+              // }
             }
             return Assessment.findOneAndUpdate({
               '_id': data['_id']
