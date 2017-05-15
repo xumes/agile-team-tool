@@ -50,7 +50,7 @@ var AssessmentACPlanPopover = React.createClass({
     if (tempAssess.submittedDate == '') {
       submitDate = 'On Submisson';
     } else {
-      submitDate = moment(tempAssess.submittedDate).format('DD MMM YYYY');
+      submitDate = moment.utc(tempAssess.submittedDate).format('DD MMM YYYY');
     }
     lastUpdatedBy = tempAssess.updatedBy;
     lastUpdated = ' (' + moment.utc(tempAssess.updateDate).format('DD MMM YYYY') + ')';
