@@ -78,6 +78,7 @@ var AssessmentPopover = React.createClass({
   },
   changeDateHandler: function(e) {
     $('#assessmentSubmitDateTitle').html(moment(e).format('DD MMM YYYY'));
+    $('#assessmentSubmitDateString').html(moment(e).format('YYYY-MM-DDTHH:mm:ss.SSSSZ'));
   },
   showCloseAssessment: function() {
     $('#closeAssessment').show();
@@ -98,6 +99,7 @@ var AssessmentPopover = React.createClass({
     }
     if (_.isEmpty(assessDraft)) {
       var submitDate = 'On Submission';
+      var submitDateString = null;
       var lastUpdatedBy = 'On Save/Submission';
       var lastUpdated = null;
       var assessType = $('#assessmentTeamTypeSelector').val() == undefined?(self.props.assessType==undefined?'Project':self.props.assessType):$('#assessmentTeamTypeSelector').val();
@@ -116,8 +118,10 @@ var AssessmentPopover = React.createClass({
     } else {
       if (assessDraft.submittedDate == '') {
         submitDate = 'On Submisson';
+        submitDateString = null;
       } else {
         submitDate = moment(assessDraft.submittedDate).format('DD MMM YYYY');
+        submitDateString = assessDraft.submittedDate;
         self.state.submitDatePicker = moment(assessDraft.submittedDate);
       }
       lastUpdatedBy = assessDraft.updatedBy;
@@ -173,6 +177,7 @@ var AssessmentPopover = React.createClass({
                 <h1 style={{'display':haveAccess?'none':'inline-block'}}>{' ('}</h1>
                 <DatePicker onChange={self.changeDateHandler} selected={self.state.submitDatePicker} customInput={<AssessmentDatePicker haveAccess={haveAccess}/>}/>
                 <h1 style={{'display':haveAccess?'none':'inline-block'}}>{')'}</h1>
+                <span id='assessmentSubmitDateString' style={{'display':'none'}}>{submitDateString}</span>
               </div>
               <div class='last-updated-by'>
                 <h1>{lastUpdatedBy}</h1>
