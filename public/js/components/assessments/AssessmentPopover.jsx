@@ -8,6 +8,7 @@ var DatePicker = require('react-datepicker');
 var AssessmentDatePicker = require('./AssessmentDatePicker.jsx');
 var AssessmentActiveTemplates = require('./AssessmentActiveTemplates.jsx');
 var AssessmentButtons = require('./AssessmentButtons.jsx');
+var ConfirmPopover = require('../index/ConfirmPopover.jsx');
 
 var AssessmentPopover = React.createClass({
   getInitialState: function() {
@@ -78,6 +79,9 @@ var AssessmentPopover = React.createClass({
   changeDateHandler: function(e) {
     $('#assessmentSubmitDateTitle').html(moment(e).format('DD MMM YYYY'));
   },
+  showCloseAssessment: function() {
+    $('#closeAssessment').show();
+  },
   render: function() {
     var self = this;
     var assessDraft = {};
@@ -136,7 +140,7 @@ var AssessmentPopover = React.createClass({
       <div tabIndex='1' class='assessment-popover-block'>
         <div class='assessment-title'>
           <h1>{'Agile Maturity Team Assessment'}</h1>
-          <div onClick={self.props.hideAssessmentPopover}>
+          <div onClick={self.showCloseAssessment}>
             <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
           </div>
         </div>
@@ -218,6 +222,7 @@ var AssessmentPopover = React.createClass({
           <AssessmentActiveTemplates assessTemplate={self.state.ddAssessTemplate} assessDraft={assessDraft} haveAccess={haveAccess} assessTemplateId={'1'} isUpdate={self.state.isUpdate}/>
         </div>
         <AssessmentButtons loadDetailTeam={self.props.loadDetailTeam} assessDraft={assessDraft} haveAccess={haveAccess} updateAssessmentSummary={self.props.updateAssessmentSummary} updateAssessmentPopover={self.updateAssessmentPopover} hideAssessmentPopover={self.props.hideAssessmentPopover} />
+        <ConfirmPopover confirmClick={self.props.hideAssessmentPopover} confirmId='closeAssessment' content={'You have requested to close the assessment window. All changes not saved will be removed. Please confirm that you want to close it.'} cancelBtn='block' confirmBtn='block' okBtn='none'/>
       </div>
     )
   }

@@ -121,13 +121,14 @@ var HomeContent = React.createClass({
     $('.home-chart-filter-block').trigger('mouseleave');
   },
   iterationGraphArea: function(sectionId) {
-    var charts = $('#'+sectionId+' > .container-body-col-2-1');
     var chartLength = 0;
-    _.each(charts, function(chart){
-      if ($('#'+chart.id).css('display') != 'none') {
+    for (var key in chartStatus.squad.btns) {
+      if (chartStatus.squad.btns[key].show && $('#'+key+'Chart_block').length > 0 && $('#'+key+'Chart_block').css('display') != 'none') {
+        $('#'+key+'Chart_block').show();
         chartLength++;
-      }
-    });
+      } else
+        $('#'+key+'Chart_block').hide();
+    };
 
     var chartHeight = '';
     var secHeight = '';
@@ -158,13 +159,15 @@ var HomeContent = React.createClass({
     $('.home-trends-overflow').nanoScroller();
   },
   assessmentGraphArea: function(sectionId) {
-    var chartBlock = $('#'+sectionId+' .container-body-columns-ase, '+'#'+sectionId+' .container-body-col-2-1');
     var chartLength = 0;
-    _.each(chartBlock, function(block){
-      if ($('#'+block.id).css('display') != 'none') {
+    for (var key in chartStatus.nonSquad.btns) {
+      if (chartStatus.nonSquad.btns[key].show && $('#'+key+'Chart_block').length > 0 && $('#'+key+'Chart_block').css('display') != 'none') {
+        $('#'+key+'Chart_block').show();
         chartLength++;
-      }
-    });
+      } else
+        $('#'+key+'Chart_block').hide();
+    }
+
     var chartHeight = '';
     var secHeight = '';
     if (sectionId == 'nsquad_assessment_card') {

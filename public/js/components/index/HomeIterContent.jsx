@@ -98,7 +98,7 @@ var HomeIterContent = React.createClass({
       if (this.state.selectedField != ''){
         this.saveIter(this.state.selectedField);
         if (lastYPosition != window.pageYOffset)
-          lastYPosition = window.pageYOffset;      
+          lastYPosition = window.pageYOffset;
       }
       this.setState({selectedField:''});
     }
@@ -121,11 +121,11 @@ var HomeIterContent = React.createClass({
           if (lastYPosition > 0){
             $(window).scrollTop(lastYPosition);
           }
-            
+
       });
     }
     var self = this;
-    
+
       $('select[id="homeIterSelection"]').change(self.iterationSelectChange);
 
     _.each($('.home-iter-content-point'), function(blk){
@@ -184,7 +184,7 @@ var HomeIterContent = React.createClass({
     clearInterval(this.timer);
     this.timer = setInterval(this.checkTimeOut.bind(null,id), 2000);
   },
-  
+
   stopTimer: function () {
     clearInterval(this.timer);
   },
@@ -192,7 +192,7 @@ var HomeIterContent = React.createClass({
   checkChanges: function(event){
     if(event.keyCode == 9){
       var result = this.tabHandling(event.target.id, event.shiftKey);
-      if (result){        
+      if (result){
         lastYPosition = window.pageYOffset;
         event.preventDefault();
       }
@@ -279,7 +279,7 @@ var HomeIterContent = React.createClass({
       var value = this.float1Decimal(iteration[id]);
       if (value === '0.0'){
         iteration[id] = null;
-      }      
+      }
     }
     return iteration;
   },
@@ -398,11 +398,15 @@ var HomeIterContent = React.createClass({
         selectedIter['defectsEndBal'] = defectsEndBal;
         break;
       case 'deliveredStories':
-        selectedIter['storiesDays'] = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+        selectedIter['storiesDays'] = '0.0';
+        if (!isNaN(selectedIter.personDaysAvailable) && parseFloat(selectedIter.personDaysAvailable) != 0)
+          selectedIter['storiesDays'] = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
         this.updateStories(selectedIter);
         break;
       case 'storyPointsDelivered':
-        selectedIter['storyPointsDays'] = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+        selectedIter['storyPointsDays'] = '0.0';
+        if (!isNaN(selectedIter.personDaysAvailable) && parseFloat(selectedIter.personDaysAvailable) != 0)
+          selectedIter['storyPointsDays'] = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
         this.updateStoryPoints(selectedIter);
         break;
     }
@@ -429,20 +433,22 @@ var HomeIterContent = React.createClass({
      });
     }
     selectedIter.personDaysAvailable = (selectedIter.teamAvailability - selectedIter.personDaysUnavailable).toFixed(2);
-    //2 new fields on DB - 
-    selectedIter.storiesDays = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
-    selectedIter.storyPointsDays = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+    //2 new fields on DB -
+    selectedIter.storiesDays = '0.0';
+    selectedIter.storyPointsDays = '0.0';
+    if (!isNaN(selectedIter.personDaysAvailable) && parseFloat(selectedIter.personDaysAvailable) != 0) {
+      selectedIter.storiesDays = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+      selectedIter.storyPointsDays = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+    }
     return selectedIter;
   },
 
   updateStories: function(selectedIter){
     $('#storiesDays').text((selectedIter.storiesDays));
-//    $('#storiesDays').text((utils.numericValue($('#deliveredStories').val())/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1));
   },
 
   updateStoryPoints: function(selectedIter){
     $('#storyPointsDays').text((selectedIter.storyPointsDays));
-//    $('#storyPointsDays').text((utils.numericValue($('#storyPointsDelivered').val())/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1));
   },
 
   float2Decimal:function(val) {
@@ -531,9 +537,13 @@ var HomeIterContent = React.createClass({
     var selectedIter = this.state.selectedIter;
     selectedIter.teamAvailability = this.state.teamAvailability;
     selectedIter.personDaysAvailable = (this.float2Decimal(selectedIter.teamAvailability) - this.float2Decimal(selectedIter.personDaysUnavailable)).toFixed(2);
-    //2 new fields on DB - 
-    selectedIter.storiesDays = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
-    selectedIter.storyPointsDays = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+    //2 new fields on DB -
+    selectedIter.storiesDays = '0.0';
+    selectedIter.storyPointsDays = '0.0';
+    if (!isNaN(selectedIter.personDaysAvailable) && parseFloat(selectedIter.personDaysAvailable) != 0) {
+      selectedIter.storiesDays = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+      selectedIter.storyPointsDays = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+    }
     selectedIter.memberCount = utils.teamMemCount(this.props.loadDetailTeam.team);
     selectedIter.memberFte = utils.teamMemFTE(this.props.loadDetailTeam.team);
     this.props.updateTeamIteration(selectedIter);
@@ -635,8 +645,6 @@ var HomeIterContent = React.createClass({
           iterData.teamAvailability = 'N/A';
           iterData.personDaysUnavailable = 'N/A';
           iterData.personDaysAvailable = 'N/A';
-//          storiesDays = 'N/A';
-//          storyPointsDays = 'N/A';
           //two new fields
           iterData.storiesDays = 'N/A';
           iterData.storyPointsDays = 'N/A';
@@ -646,10 +654,6 @@ var HomeIterContent = React.createClass({
           iterData.teamAvailability = !_.isNull(defIter.teamAvailability)? this.float2Decimal(defIter.teamAvailability): '0.00';
           iterData.personDaysUnavailable = !_.isNull(defIter.personDaysUnavailable)? this.float2Decimal(defIter.personDaysUnavailable): '';
           iterData.personDaysAvailable = !_.isNull(defIter.personDaysAvailable)? this.float2Decimal(defIter.personDaysAvailable) : '0.00' ;
-//          storiesDays = this.float2Decimal(defIter.deliveredStories)/this.float2Decimal(iterData.personDaysAvailable);
-//          storiesDays = !isFinite(storiesDays) ? '0.0': storiesDays.toFixed(1);
-//          storyPointsDays = this.float2Decimal(defIter.storyPointsDelivered)/this.float2Decimal(iterData.personDaysAvailable);
-//          storyPointsDays = !isFinite(storyPointsDays) ? '0.0': storyPointsDays.toFixed(1);
           //two new fields
           iterData.storiesDays = !_.isNull(defIter.storiesDays)? this.float1Decimal(defIter.storiesDays): '0.0';
           iterData.storyPointsDays = !_.isNull(defIter.storyPointsDays)? this.float1Decimal(defIter.storyPointsDays): '0.0';
@@ -1049,7 +1053,7 @@ var HomeIterContent = React.createClass({
                   <InlineSVG src={require('../../../img/Att-icons/att-icons_Add.svg')}></InlineSVG>
                   <div className="home-iter-add" style={access?{'left':'1.5%', 'color':'#4178BE'}:{'left':'1.5%', 'color':'#C7C7C7'}}>Start the first Iteration</div>
                 </div>
-                
+
                 <HomeAddIteration isOpen={this.state.createIteration} onClose={this.closeIteration} loadDetailTeam={self.props.loadDetailTeam} iterListHandler={this.props.iterListHandler}/>
             </div>
             <ConfirmDialog showConfirmModal={this.state.showConfirmModal} hideConfirmDialog={this.hideConfirmDialog} confirmAction={this.hideConfirmDialog} alertType={this.state.alertType} content={this.state.alertMsg} actionBtnLabel='Ok' />
