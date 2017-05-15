@@ -30,7 +30,7 @@ var AssessmentButtons = React.createClass({
     if ($('#assessmentSubmitDateTitle').html() == 'On Submission') {
       var submittedDate = ''
     } else {
-      submittedDate = new Date(moment($('#assessmentSubmitDateTitle').html(), 'DD MMM YYYY'));
+      submittedDate = new Date($('#assessmentSubmitDateString').html());
     }
     var updateDoc = {
       'assessmentStatus' : 'Submitted',
@@ -40,7 +40,9 @@ var AssessmentButtons = React.createClass({
       'componentResults' : [],
       'actionPlans': [],
       'teamId': teamId,
-      'submittedDate': submittedDate
+      'submittedDate': submittedDate,
+      'submittedBy': user.shortEmail.toLowerCase(),
+      'submittedByUserId': user.ldap.uid.toUpperCase()
     }
     var objectLength = 0;
     var checkedIsEmpty = false;
@@ -101,7 +103,8 @@ var AssessmentButtons = React.createClass({
     if ($('#assessmentSubmitDateTitle').html() == 'On Submission') {
       var submittedDate = ''
     } else {
-      submittedDate = new Date(moment($('#assessmentSubmitDateTitle').html(), 'DD MMM YYYY'));
+      // submittedDate = new Date(moment($('#assessmentSubmitDateTitle').html(), 'DD MMM YYYY'));
+      submittedDate = new Date($('#assessmentSubmitDateString').html());
     }
     var updateDoc = {
       'assessmentStatus' : 'Draft',

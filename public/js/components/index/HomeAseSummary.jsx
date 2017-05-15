@@ -249,7 +249,7 @@ var HomeAseSummary = React.createClass({
           }
           // self.state.selectedAssessment = tempAssess._id.toString();
           var defaultId = tempAssess._id.toString();
-          var submitDate = '(Averaging last submitted: ' + moment(tempAssess.submittedDate).format('DD MMM YYYY') + ')';
+          var submitDate = '(Averaging last submitted: ' + moment.utc(tempAssess.submittedDate).format('DD MMM YYYY') + ')';
           var updateDate = moment(tempAssess.updateDate).format('DD MMM YYYY');
           if (tempAssess.componentResults.length == 2) {
             var middleLineClass = 'middle-line';
@@ -327,7 +327,7 @@ var HomeAseSummary = React.createClass({
               submitAssessCount ++ ;
               if (submitAssessCount > 1) {
                 return(
-                  <option key={assess._id} value={assess._id}>{moment(assess.submittedDate).format('DD MMM YYYY')}</option>
+                  <option key={assess._id} value={assess._id}>{moment.utc(assess.submittedDate).format('DD MMM YYYY')}</option>
                 )
               }
             }
