@@ -1104,10 +1104,10 @@ module.exports.modifyTeamMembers = function(teamId, user, newMembers) { //TODO t
 
 module.exports.updateTeamMemberDataByTeamId = /* istanbul ignore next */ function(teamId, updatedMembers) {
   return Team.findByIdAndUpdate({_id: teamId},{
-      $set: {
-        members: updatedMembers
-      }
-    }, {new:true}).exec();
+    $set: {
+      members: updatedMembers
+    }
+  }, {new:true}).exec();
 };
 
 module.exports.deleteTeamByName = function(name) {

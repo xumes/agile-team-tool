@@ -274,7 +274,7 @@ var users = {
             var teamName = row['name'];
             var tmpMembers = row['members'];
             var updatedMembers = [];
-            for(i=0; i < tmpMembers.length; i++) {
+            for (i=0; i < tmpMembers.length; i++) {
               if (bpUserId === tmpMembers[i]['userId']) {
                 obj = {
                   name: bpFullname,
@@ -303,7 +303,6 @@ var users = {
                 return res;
               });
           });
-          // return teamResult;
         })
         .then(function(updateMember) {
           resolve(updateMember);
@@ -361,7 +360,7 @@ var users = {
               var teamName = row['name'];
               var tmpMembers = row['members'];
               var updatedMembers = [];
-              for(i=0; i < tmpMembers.length; i++) {
+              for (i=0; i < tmpMembers.length; i++) {
                 if (bpUserId === tmpMembers[i]['userId']) {
                   obj = {
                     name: bpFullname,
@@ -395,7 +394,7 @@ var users = {
           .catch( /* istanbul ignore next */ function(err){
             reject({'error':err});
           });
-        }
+      }
     });
   },
 
