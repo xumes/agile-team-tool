@@ -26,7 +26,7 @@ module.exports = function(app, includes) {
 
   // Needed for the validation fix
   /* istanbul ignore next */
-  require('passport-saml/node_modules/xml-crypto/lib/signed-xml').SignedXml.prototype.checkSignature = function(xml) {
+  require('xml-crypto/lib/signed-xml').SignedXml.prototype.checkSignature = function(xml) {
     return true;
   };
 
