@@ -268,7 +268,8 @@ var users = {
           return teamModel.getAllUserTeamsByUserId(userId);
         })
         .then(function(teamResult) {
-          teamResult.forEach(function(row) {
+          var promiseArray = [];
+          teamResult.map(function(row){
             var obj = {};
             var teamId = row['_id'];
             var teamName = row['name'];
@@ -298,14 +299,24 @@ var users = {
               }
               updatedMembers.push(obj);
             }
-            teamModel.updateTeamMemberDataByTeamId(teamId, updatedMembers)
-              .then(function(res) {
-                return res;
-              });
+            promiseArray.push(teamModel.updateTeamMemberDataByTeamId(teamId, updatedMembers));
+            return;
+            // return Promise.all(promiseArray);
+            // return teamModel.updateTeamMemberDataByTeamId(teamId, updatedMembers);
           });
+          return Promise.all(promiseArray);
         })
-        .then(function(updateMember) {
-          resolve(updateMember);
+        .then(function(updateTeamMemberData) {
+          if (userId === 'CHILD1234567' || userId === 'CHILD111') {
+            console.log('MODELUSERfindUserByUserId_createUser updateTeamMemberData:',updateTeamMemberData);
+          }
+          return module.exports.findUserByUserId(userId);
+        })
+        .then(function(foundUser) {
+          if (userId === 'CHILD1234567' || userId === 'CHILD111') {
+            console.log('MODELUSERfindUserByUserId_createUser foundUser:',foundUser);
+          }
+          return resolve(foundUser);
         })
         .catch( /* istanbul ignore next */ function(err) {
           console.log('ldapResult err:' ,err);
@@ -354,7 +365,7 @@ var users = {
             return teamModel.getAllUserTeamsByUserId(userId);
           })
           .then(function(teamResult) {
-            teamResult.forEach(function(row) {
+            /**teamResult.forEach(function(row) {
               var obj = {};
               var teamId = row['_id'];
               var teamName = row['name'];
@@ -386,10 +397,53 @@ var users = {
               }
               // Lets update the team.members data
               return teamModel.updateTeamMemberDataByTeamId(teamId, updatedMembers);
+            });**/
+            teamResult.map(function(row) {
+              var obj = {};
+              var teamId = row['_id'];
+              var teamName = row['name'];
+              var tmpMembers = row['members'];
+              var updatedMembers = [];
+              if (userId === 'CHILD1234567' || userId === 'CHILD111') {
+                console.log('MODELUSERgetAllUserTeamsByUserId_updateUser teamName:',teamName);
+                console.log('MODELUSERgetAllUserTeamsByUserId_updateUser tmpMembers:',JSON.stringify(tmpMembers));
+              }
+              for (i=0; i < tmpMembers.length; i++) {
+                if (bpUserId === tmpMembers[i]['userId']) {
+                  obj = {
+                    name: bpFullname,
+                    userId: bpUserId,
+                    email: bpEmail,
+                    role: tmpMembers[i]['role'],
+                    allocation: tmpMembers[i]['allocation'],
+                    workTime: tmpMembers[i]['workTime'],
+                    location: tmpMembers[i]['location']
+                  };
+                } else {
+                  obj = {
+                    name: tmpMembers[i]['name'],
+                    userId: tmpMembers[i]['userId'],
+                    email: tmpMembers[i]['email'],
+                    role: tmpMembers[i]['role'],
+                    allocation: tmpMembers[i]['allocation'],
+                    workTime: tmpMembers[i]['workTime'],
+                    location: tmpMembers[i]['location']
+                  };
+                }
+                updatedMembers.push(obj);
+              }
+              // Lets update the team.members data
+              return teamModel.updateTeamMemberDataByTeamId(teamId, updatedMembers);
             });
           })
           .then(function(updateMember) {
-            resolve(updateMember);
+            return module.exports.findUserByUserId(userId);
+          })
+          .then(function(foundUser){
+            if (userId === 'CHILD1234567' || userId === 'CHILD111') {
+              console.log('MODELUSERfindUserByUserId_updateUser foundUser:',foundUser);
+            }
+            return resolve(foundUser);
           })
           .catch( /* istanbul ignore next */ function(err){
             reject({'error':err});

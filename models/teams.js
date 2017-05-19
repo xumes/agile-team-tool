@@ -1102,7 +1102,7 @@ module.exports.modifyTeamMembers = function(teamId, user, newMembers) { //TODO t
   });
 };
 
-module.exports.updateTeamMemberDataByTeamId = /* istanbul ignore next */ function(teamId, updatedMembers) {
+module.exports.updateTeamMemberDataByTeamId = function(teamId, updatedMembers) {
   return Team.findByIdAndUpdate({_id: teamId},{
     $set: {
       members: updatedMembers
