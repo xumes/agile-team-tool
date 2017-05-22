@@ -652,7 +652,7 @@ module.exports.createUsers = function(members) {
         return null;
       })
       .then(function(result) {
-        resolve({'ok':'New users created successfully.'});
+        resolve({'ok':'New users created successfully.', 'data': result});
       })
       .catch( /* istanbul ignore next */ function(err) {
         reject(err);
@@ -1094,6 +1094,26 @@ module.exports.modifyTeamMembers = function(teamId, user, newMembers) { //TODO t
       })
       .then(function(results){
         // return resolve({'ok':'Updated successfully.'});
+        var postMemberdata = results[0]['data'];
+        var preMemberdata = results[1]['members'];
+        var updatedMemberdata = [];
+        _.each(preMemberdata, function(memberdata1) {
+          _.each(postMemberdata, function(memberdata2) {
+            if (memberdata1.userId === memberdata2.userId) {
+              var obj = {
+                userId: memberdata1.userId,
+                role: memberdata1.role,
+                allocation: memberdata1.allocation,
+                name: memberdata2.name,
+                email: memberdata2.email,
+                workTime: memberdata1.workTime
+              };
+              updatedMemberdata.push(obj);
+            }
+          });
+        });
+
+        results[1].members = updatedMemberdata;
         resolve(results[1]);
       })
       .catch( /* istanbul ignore next */ function(err){
