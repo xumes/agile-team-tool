@@ -71,28 +71,8 @@ var userSession2 = {
   'shortEmail': 'admintestuser@test.com'
 };
 
-var testChildUser2 = {
-  'userId': 'CHILD111',
-  'name': 'childtest_user1',
-  'email': 'childtestuser111@test.com',
-  'adminAccess': 'none'
-};
-var testChildTeam2 = {
-  'name': 'mongodb-test-child2',
-  'members': [{
-    'name': 'childtest_user1',
-    'role': 'Tester',
-    'allocation': 100,
-    'userId': 'CHILD111',
-    'email': 'childtestuser111@test.com'
-  }],
-  'createdByUserId': 'ADMIN1234567',
-  'createdBy': 'admintestuser@test.com'
-};
-
 var newParentTeamId = Schema.Types.ObjectId;
 var newChildTeamId = Schema.Types.ObjectId;
-// var newChildTeamId2 = Schema.Types.ObjectId;
 
 describe('Users model [create]', function() {
   before(function(done){
@@ -113,7 +93,6 @@ describe('Users model [create]', function() {
       })
       .then(function(result){
         newChildTeamId = result._id;
-        console.log('TESTING_createTeam result:',result);
         // delete all created users who were members of the team
         promiseArray = [];
         promiseArray.push(users.deleteUser(testUser.userId));
@@ -262,21 +241,6 @@ describe('Users model [getUsersInfo]', function() {
 });
 
 describe('Users model [isUserAllowed]', function() {
-  // before(function(done) {
-  //   var promiseArray = [];
-  //   promiseArray.push(teams.createTeam(testChildTeam2, userSession2));
-  //   Promise.all(promiseArray)
-  //     .then(function(result) {
-  //       newChildTeamId2 = result._id;
-  //       console.log('testChildTeam2 RETURN TRUE FOR CHILD USER ACCESS result:',result);
-  //       done();
-  //     })
-  //     .catch(function(err){
-  //       console.log('testChildTeam2 RETURN TRUE FOR CHILD USER ACCESS err:',err);
-  //       done();
-  //     });
-  // });
-
   it('return true if the user has access', function(done) {
     users.isUserAllowed(testUser.userId, newParentTeamId)
       .then(function(result) {
@@ -319,28 +283,9 @@ describe('Users model [isUserAllowed]', function() {
         done();
       });
   });
-  // it('return true for child user access', function(done) {
-  //   users.isUserAllowed(testChildUser2.userId, newChildTeamId2)
-  //     .then(function(result) {
-  //       if (testChildUser2.userId === 'CHILD111') {
-  //         console.log('TESTING_isUserAllowed RETURN TRUE FOR CHILD USER ACCESS');
-  //         console.log('TESTING_isUserAllowed testChildUser.userId:',testChildUser2.userId);
-  //         console.log('TESTING_isUserAllowed testChildTeam2:',JSON.stringify(testChildTeam2));
-  //         console.log('TESTING_isUserAllowed result:',result);
-  //       }
-  //       expect(result).to.equal(true);
-  //       done();
-  //     });
-  // });
   it('return true for child user access', function(done) {
     users.isUserAllowed(testChildUser.userId, newChildTeamId)
       .then(function(result) {
-        if (testChildUser.userId === 'CHILD1234567') {
-          console.log('TESTING_isUserAllowed RETURN TRUE FOR CHILD USER ACCESS');
-          console.log('TESTING_isUserAllowed testChildUser.userId:',testChildUser.userId);
-          console.log('TESTING_isUserAllowed testChildTeam:',JSON.stringify(testChildTeam));
-          console.log('TESTING_isUserAllowed result:',result);
-        }
         expect(result).to.equal(true);
         done();
       });
@@ -382,11 +327,6 @@ describe('Users model [delete]', function() {
 
   after(function(done){
     var promiseArray = [];
-    console.log('AFTER testUser.userId:', testUser.userId);
-    console.log('AFTER testAdminUser.userId:', testAdminUser.userId);
-    console.log('AFTER testChildUser.userId:', testChildUser.userId);
-    console.log('AFTER testParentTeam.name:', testParentTeam.name);
-    console.log('AFTER testChildTeam.name:', testChildTeam.name);
     promiseArray.push(users.deleteUser(testUser.userId));
     promiseArray.push(users.deleteUser(testAdminUser.userId));
     promiseArray.push(users.deleteUser(testChildUser.userId));

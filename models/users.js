@@ -348,6 +348,7 @@ var users = {
               }
               return User.findOneAndUpdate({'userId': userId}, {'$set': userInfo}).exec();
             } else {
+              loggers.get('model-users').verbose('Bluepages is currently down!! Requested URL:',requestURL);
               return User.findOneAndUpdate({'userId': userId}, {'$set': userInfo}).exec();
             }
           })
@@ -461,7 +462,7 @@ var users = {
 
   ldapUserQuery: /* istanbul ignore next */ function(ldapUrl) {
     return new Promise(function(resolve) {
-      request(ldapUrl, function(err, response, body) {
+      request(ldapUrl, {timeout: 5000}, function(err, response, body) {
         var json;
         try {
           json = JSON.parse(body) ; // if the body is STRING, try to parse it
