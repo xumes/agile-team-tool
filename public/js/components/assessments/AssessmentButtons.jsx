@@ -84,7 +84,7 @@ var AssessmentButtons = React.createClass({
         self.props.loadDetailTeam.assessments[0] = result;
       }
       self.props.updateAssessmentSummary();
-      // self.props.hideAssessmentPopover();
+      self.props.hideAssessmentPopover();
       // alert('Maturity assessment has been submitted.');
       $('#submittedMatAssessment').show();
       return;
@@ -347,7 +347,6 @@ var AssessmentButtons = React.createClass({
         <ConfirmPopover confirmClick={this.cancelAssessment} confirmId='cancelAssessDraftConfirm' content={'You have requested to reset all changes you made on this draft assessment.  All changes will be removed. Please confirm that you want to proceed with this reset changes.'} cancelBtn='block' confirmBtn='block' okBtn='none'/>
         <ConfirmPopover confirmClick={this.deleteAssessment} confirmId='deleteAssessDraftConfirm' content={'You have requested to delete this draft assessment.  All saved progress will be deleted. Please confirm that you want to proceed with this delete.'} cancelBtn='block' confirmBtn='block' okBtn='none'/>
         <ConfirmPopover confirmId='saveDraftConfirm' content={'Maturity assessment has been saved as draft.'} cancelBtn='none' confirmBtn='none' okBtn='block' hideAssessmentPopover={this.props.hideAssessmentPopover}/>
-        <ConfirmPopover confirmId='submittedMatAssessment' content={'Maturity assessment has been submitted.'} cancelBtn='none' confirmBtn='none' okBtn='block' hideAssessmentPopover={this.props.hideAssessmentPopover}/>
         <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.hideConfirmDialog} alertType='error' content={self.state.alertMsg} actionBtnLabel='Ok' />
       </div>
     )
