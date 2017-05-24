@@ -249,7 +249,7 @@ var HomeAseSummary = React.createClass({
           }
           // self.state.selectedAssessment = tempAssess._id.toString();
           var defaultId = tempAssess._id.toString();
-          var submitDate = '(Averaging last submitted: ' + moment(tempAssess.submittedDate).format('DD MMM YYYY') + ')';
+          var submitDate = '(Averaging last submitted: ' + moment.utc(tempAssess.submittedDate).format('DD MMM YYYY') + ')';
           var updateDate = moment(tempAssess.updateDate).format('DD MMM YYYY');
           if (tempAssess.componentResults.length == 2) {
             var middleLineClass = 'middle-line';
@@ -273,7 +273,19 @@ var HomeAseSummary = React.createClass({
               } else {
                 middleLineClass = '';
               }
-              var lineWidth = (assessment.currentScore)/4 * 95 + '%';
+              var lineWidth = '94.5%';
+              var baseScore = Math.floor(assessment.currentScore);
+              if (baseScore == 1) {
+                var baseRatio = (assessment.currentScore - baseScore) * 10;
+                lineWidth = 1 + (3*baseRatio)+ '%';
+              } else if (baseScore == 2) {
+                var baseRatio = (assessment.currentScore - baseScore) * 10;
+                lineWidth = 32.5 + (3.3*baseRatio) + '%';
+              } else if (baseScore == 3) {
+                var baseRatio = (assessment.currentScore - baseScore) * 10;
+                lineWidth = 66 + (2.85*baseRatio) + '%';
+              }
+              //var lineWidth = (assessment.currentScore)/4 * 95 + '%';
               var shouldShow = 'block';
             } else {
               assessmentName = '';
@@ -327,7 +339,7 @@ var HomeAseSummary = React.createClass({
               submitAssessCount ++ ;
               if (submitAssessCount > 1) {
                 return(
-                  <option key={assess._id} value={assess._id}>{moment(assess.submittedDate).format('DD MMM YYYY')}</option>
+                  <option key={assess._id} value={assess._id}>{moment.utc(assess.submittedDate).format('DD MMM YYYY')}</option>
                 )
               }
             }
