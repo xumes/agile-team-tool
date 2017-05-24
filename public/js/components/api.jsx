@@ -794,22 +794,23 @@ module.exports.getApiKeyByUser = function() {
   });
 };
 
-module.exports.isFaceImageBroken = function(uid, componentId) {
+module.exports.isFaceImageBroken = function(uid) {
   return new Promise(function(resolve, reject){
+    var src = '../../img/No_Image_icon.png';
     var url = '/api/users/image/' + uid;
     var facesUrl = '//faces-cache.mybluemix.net/image/' + uid;
     var req = $.ajax({
       type: 'GET',
       url: url
     }).done(function(data){
-      if (_.isEmpty(data)) {
-        $('#' + componentId + uid).attr('src', '../../img/No_Image_icon.png');
-      } else {
-        $('#' + componentId + uid).attr('src', facesUrl);
-      }
+      if (!_.isEmpty(data))
+        src = facesUrl;
+
+      $('img[id*="'+uid+'"]').attr('src',src);
       resolve(data);
+
     }).fail(function(err){
-      $('#' + componentId + uid).attr('src', '../../img/No_Image_icon.png');
+      $('img[id*="'+uid+'"]').attr('src',src);
       resolve(err);
     });
   });
