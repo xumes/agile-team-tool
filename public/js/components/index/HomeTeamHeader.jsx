@@ -102,7 +102,8 @@ var HomeTeamHeader = React.createClass({
 
     var promiseArray = [];
     _.each($('.home-header-image img'), function(img) {
-      promiseArray.push(api.isFaceImageBroken(img.id, ''));
+      var uid = img.id.split('_')[2];
+      promiseArray.push(api.isFaceImageBroken(uid));
     });
     Promise.all(promiseArray);
   },
@@ -213,9 +214,10 @@ var HomeTeamHeader = React.createClass({
           if (index < 9) {
             var faceImageId = 'faceImage_' + index;
             var src = '//faces-cache.mybluemix.net/image/' + member.userId.toUpperCase();
+            var imgId = 'user_' + index + '_' + member.userId.toUpperCase();
             return (
               <div key={faceImageId} class='home-header-image'>
-                <a title={member.name}><img id={member.userId.toUpperCase()} class='home-team-header-member-image'></img></a>
+                <a title={member.name}><img id={imgId} class='home-team-header-member-image'></img></a>
               </div>
             )
           } else if (index == 9) {

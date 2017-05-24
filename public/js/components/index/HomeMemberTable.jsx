@@ -144,8 +144,8 @@ var HomeMemberTable = React.createClass({
     });
     var promiseArray = [];
     _.each($('#teamMemberTable img'), function(img) {
-      var imgId = img.id.substring(5, img.id.length);
-      promiseArray.push(api.isFaceImageBroken(imgId, 'table'));
+      var uid = img.id.split('_')[2]
+      promiseArray.push(api.isFaceImageBroken(uid));
     });
     Promise.all(promiseArray);
   },
@@ -854,14 +854,14 @@ var HomeMemberTable = React.createClass({
 
             var roleTopStyle = self.props.roles.indexOf(memberDetail.role) < 0 ? {'top':'25%'} : null;
             var awkTopStyle = (memberDetail.workTime != '100' && memberDetail.workTime != '50') ? {'top':'25%'} : null;
-
+            var imgId = 'member_' + idx + '_' + memberDetail.userId.toUpperCase();
             return (
               <div key={blockId} id={blockId} class={blockClass}>
                 <div style={{'width':'1%','backgroundColor':'#FFFFFF'}}>
                 </div>
                 <div id={nameId} style={{'width':'28.8%'}}>
                   <div style={{'width':'25.6%','height':'100%','display':'inline-block','float':'left'}}>
-                    <img id={'table' + memberDetail.userId.toUpperCase()} style={{'position':'relative', 'top':'17%'}}></img>
+                    <img id={imgId} style={{'position':'relative', 'top':'17%'}}></img>
                   </div>
                   <div style={{'width':'74.4%','height':'50%','display':'inline-block','float':'left','position':'relative','top':'25%'}}>
                     <h>{memberDetail.name}</h>
