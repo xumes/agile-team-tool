@@ -248,7 +248,7 @@ var users = {
       requestURL = bluepagesURL + '/id/' + userId + '/uid';
       // First, Search the user (by userId) using ldap query
       module.exports.ldapUserQuery(requestURL)
-        .then(function(bpInfo) {
+        .then(function(bpInfo) { /* istanbul ignore next */
           if (bpInfo && (bpInfo.ldap.uid === newUser.userId)) {
             bpUserId = bpInfo.ldap.uid.toUpperCase();
             bpEmail = bpInfo.ldap.preferredIdentity || bpInfo.shortEmail;
@@ -334,7 +334,7 @@ var users = {
         requestURL = bluepagesURL + '/id/' + userId + '/uid';
         // First, Search this user (by userId) using ldap query
         module.exports.ldapUserQuery(requestURL)
-          .then(function(bpInfo) {
+          .then(function(bpInfo) { /* istanbul ignore next */
             if (bpInfo && (bpInfo.ldap.uid === userId)) {
               bpUserId = bpInfo.ldap.uid.toUpperCase();
               bpEmail = bpInfo.ldap.preferredIdentity || bpInfo.shortEmail;

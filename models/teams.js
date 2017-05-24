@@ -976,9 +976,9 @@ module.exports.getAllUserTeamsByUserId = function(uid) {
                         if (_.isEqual(member.userId, user.userId)){
                           memberTemp.location.site = user.location.site;
                           memberTemp.location.timezone = user.location.timezone;
-                          teamTemp.members.push(memberTemp);
                         }
                       });
+                      teamTemp.members.push(memberTemp);
                     });
                   }
                   return teamsTemp.push(teamTemp);
