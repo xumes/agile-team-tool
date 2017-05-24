@@ -652,7 +652,7 @@ module.exports.createUsers = function(members) {
         return null;
       })
       .then(function(result) {
-        resolve({'ok':'New users created successfully.'});
+        resolve({'ok':'New users created successfully.', 'data': result});
       })
       .catch( /* istanbul ignore next */ function(err) {
         reject(err);
@@ -915,7 +915,7 @@ module.exports.getAllUserTeamsByUserId = function(uid) {
       .then(function(ids){
         Team.find({_id: {$in: ids}}).exec()
           .then(function(teams){
-            //console.log('team result: '+JSON.stringify(teams));
+            // console.log('team result: '+JSON.stringify(teams));
             var ids = [''];
             var memberTemp = {};
 
@@ -976,9 +976,9 @@ module.exports.getAllUserTeamsByUserId = function(uid) {
                         if (_.isEqual(member.userId, user.userId)){
                           memberTemp.location.site = user.location.site;
                           memberTemp.location.timezone = user.location.timezone;
-                          teamTemp.members.push(memberTemp);
                         }
                       });
+                      teamTemp.members.push(memberTemp);
                     });
                   }
                   return teamsTemp.push(teamTemp);
@@ -1094,12 +1094,40 @@ module.exports.modifyTeamMembers = function(teamId, user, newMembers) { //TODO t
       })
       .then(function(results){
         // return resolve({'ok':'Updated successfully.'});
+        var postMemberdata = results[0]['data'];
+        var preMemberdata = results[1]['members'];
+        var updatedMemberdata = [];
+        _.each(preMemberdata, function(memberdata1) {
+          _.each(postMemberdata, function(memberdata2) {
+            if (memberdata1.userId === memberdata2.userId) {
+              var obj = {
+                userId: memberdata1.userId,
+                role: memberdata1.role,
+                allocation: memberdata1.allocation,
+                name: memberdata2.name,
+                email: memberdata2.email,
+                workTime: memberdata1.workTime
+              };
+              updatedMemberdata.push(obj);
+            }
+          });
+        });
+
+        results[1].members = updatedMemberdata;
         resolve(results[1]);
       })
       .catch( /* istanbul ignore next */ function(err){
         reject(err);
       });
   });
+};
+
+module.exports.updateTeamMemberDataByTeamId = function(teamId, updatedMembers) {
+  return Team.findByIdAndUpdate({_id: teamId},{
+    $set: {
+      members: updatedMembers
+    }
+  }, {new:true}).exec();
 };
 
 module.exports.deleteTeamByName = function(name) {

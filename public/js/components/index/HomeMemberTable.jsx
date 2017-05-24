@@ -461,7 +461,7 @@ var HomeMemberTable = React.createClass({
           $('#' + roleId + ' .modify-field').removeClass('team-member-table-content-block-show');
           $('#' + roleId + ' > h').removeClass('team-member-table-content-block-hide');
 
-          //self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
+          self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
         })
         .catch(function(err){
           console.log(err);
@@ -496,7 +496,7 @@ var HomeMemberTable = React.createClass({
           $('#' + roleId + ' .modify-field').removeClass('team-member-table-content-block-show');
           $('#' + roleId + ' > h').removeClass('team-member-table-content-block-hide');
 
-          //self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
+          self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
         })
         .catch(function(err){
           console.log(err);
@@ -557,7 +557,7 @@ var HomeMemberTable = React.createClass({
           $('#' + allocationId + ' .save-btn').hide();
           $('#' + allocationId + ' .cancel-btn').hide();
 
-          //self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
+          self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
         })
         .catch(function(err){
           console.log(err);
@@ -584,7 +584,7 @@ var HomeMemberTable = React.createClass({
           .then(function(result){
             self.updateMemberTableLocations(mrd, idx, locationValue);
 
-            //self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
+            self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
           })
       } else {
         self.updateMemberTableLocations(mrd, idx, locationValue);
@@ -664,7 +664,7 @@ var HomeMemberTable = React.createClass({
           $('#' + awkId + ' .modify-field').removeClass('team-member-table-content-block-show');
           $('#' + awkId + ' > h').removeClass('team-member-table-content-block-hide');
 
-          //self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
+          self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
         })
         .catch(function(err){
           console.log(err);
@@ -705,7 +705,7 @@ var HomeMemberTable = React.createClass({
           $('#' + awkId + ' .modify-field').removeClass('team-member-table-content-block-show');
           $('#' + awkId + ' > h').removeClass('team-member-table-content-block-hide');
 
-          //self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
+          self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
         })
         .catch(function(err){
           console.log(err);
