@@ -524,7 +524,6 @@ var HomePage = React.createClass({
         <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={this.state.firstLogin} onHide={this.hideFirstLoginPopover}>
           <FirstLoginPopover hideFirstLoginPopover={this.hideFirstLoginPopover}/>
         </Modal>
-        <ConfirmPopover confirmId='submittedMatAssessment' content={'Maturity assessment has been submitted.'} cancelBtn='none' confirmBtn='none' okBtn='block' />
       </div>
     )
   }
