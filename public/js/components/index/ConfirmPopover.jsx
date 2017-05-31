@@ -11,7 +11,7 @@ var ConfirmPopover = React.createClass({
   hideConfirm: function() {
     var self = this;
     $('#' + self.props.confirmId).hide();
-    if (self.props.confirmId == 'saveDraftConfirm') {
+    if (self.props.confirmId == 'saveDraftConfirm' || self.props.confirmId == 'submittedMatAssessment') {
       self.props.hideAssessmentPopover();
     }
   },
