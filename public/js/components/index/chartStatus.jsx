@@ -6,7 +6,7 @@ module.exports.chartStatus = {
       'defects': {show: true, title: 'Deploy/Defects'},
       'wipBacklog': {show: true, title: 'Cycle Time'},
       'pizza': {show: true, title: '2 Pizza - Squad'},
-      'unitCost': {show: true, title: 'Unit Cost'},
+      'unitCost': {show: true, title: 'Stories/Story Points'},
       'statisfaction': {show: true, title: 'Satisfaction'},
       'prj': {show: true, title: 'Projects Maturity'},
       'ops': {show: true, title: 'Operations Maturity'},
