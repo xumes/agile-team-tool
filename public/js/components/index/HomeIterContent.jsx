@@ -182,7 +182,7 @@ var HomeIterContent = React.createClass({
 
   startTimer: function (id) {
     clearInterval(this.timer);
-    this.timer = setInterval(this.checkTimeOut.bind(null,id), 2000);
+    this.timer = setInterval(this.checkTimeOut.bind(null,id), id === 'comment' ? 8000 : 2000);
   },
 
   stopTimer: function () {
@@ -230,6 +230,7 @@ var HomeIterContent = React.createClass({
       this.startTimer(this.state.selectedField);
       this.setState({selectedField:''});
     }
+    lastYPosition = window.pageYOffset;
   },
 
   iterationSelectChange: function(e){
