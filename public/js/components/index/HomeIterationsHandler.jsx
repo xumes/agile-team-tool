@@ -385,7 +385,8 @@ function loadNpsScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, 
       min: -100,
       max: 100,
       title: {
-        text: yAxisLabel
+        text: yAxisLabel,
+        x: 15
       }
     },
 

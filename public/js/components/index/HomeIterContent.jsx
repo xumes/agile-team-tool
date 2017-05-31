@@ -13,7 +13,7 @@ var ConfirmDialog = require('./ConfirmDialog.jsx');
 
 var selectedIter = new Object();
 var lockMessage = 'This value is automatically calculated and can’t be updated directly.';
-var npsScoreTT = 'The acceptable values will be an integer with a valid range of -100 to +100.';
+var npsScoreTT = 'NPS® (Net Promoter Score®) measures customer experience and predicts business growth. Subtracting the % of Detractors (score 0-6) from the % of Promoters (score 9-10) yields the Net Promoter Score. Acceptable integer values are -100 to +100.';
 var clientSatisfactionTT = 'Please indicate the satisfaction level of your client(s) with the results of this iteration using the following scale:' +
     '<br/>4 - Very satisfied' +
     '<br/>3 - Satisfied' +
