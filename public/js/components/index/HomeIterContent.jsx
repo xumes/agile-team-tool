@@ -182,7 +182,7 @@ var HomeIterContent = React.createClass({
 
   startTimer: function (id) {
     clearInterval(this.timer);
-    this.timer = setInterval(this.checkTimeOut.bind(null,id), 2000);
+    this.timer = setInterval(this.checkTimeOut.bind(null,id), id === 'comment' ? 8000 : 2000);
   },
 
   stopTimer: function () {
@@ -201,28 +201,29 @@ var HomeIterContent = React.createClass({
         this.stopTimer();
       }
     }
+
   },
 
   tabHandling: function(id, reverse){
     var self = this;
     var next = _.indexOf(editIndexing, id);
     var prevent = false;
-      if (next != null){
-        var result = self.partialSaveIter(id);
-        if (reverse){
-          if (editIndexing[next-1] != null){
-            prevent = true;
-            self.setState({selectedField:editIndexing[next-1],  backupIter:result});
-          }
-        }
-        else{
-          if (editIndexing[next+1] != null){
-            prevent = true;
-            self.setState({selectedField:editIndexing[next+1],  backupIter:result});
-          }
+    if (next != null){
+      var result = self.partialSaveIter(id);
+      if (reverse){
+        if (editIndexing[next-1] != null){
+          prevent = true;
+          self.setState({selectedField:editIndexing[next-1],  backupIter:result});
         }
       }
-      return prevent;
+      else{
+        if (editIndexing[next+1] != null){
+          prevent = true;
+          self.setState({selectedField:editIndexing[next+1],  backupIter:result});
+        }
+      }
+    }
+    return prevent;
   },
 
   commentSelected: function(id){
@@ -230,6 +231,7 @@ var HomeIterContent = React.createClass({
       this.startTimer(this.state.selectedField);
       this.setState({selectedField:''});
     }
+    lastYPosition = window.pageYOffset;
   },
 
   iterationSelectChange: function(e){
@@ -285,6 +287,7 @@ var HomeIterContent = React.createClass({
   },
 
   partialSaveIter: function(id) {
+    lastYPosition = window.pageYOffset;
     var iterationData = _.clone(this.state.selectedIter);
     var selectedValue = this.state.selectedIter[id] !== null?this.state.selectedIter[id].toString():'';
     var propValue = this.getSelectedIteration()[id] !== null?this.getSelectedIteration()[id].toString():'';
@@ -294,9 +297,11 @@ var HomeIterContent = React.createClass({
       }
       iterationData = this.recalculate(id);
       this.setState({selectedIter:iterationData});
-    }
-    else if (selectedValue !== propValue){
-      if (this.checkNumericEquality(this.getSelectedIteration()[id].toString(), selectedValue)){
+    } else if (selectedValue !== propValue){
+      if (id == 'comment') {
+        clearInterval(this.timer);
+        this.checkTimeOut(id);
+      } else if (this.checkNumericEquality(this.getSelectedIteration()[id].toString(), selectedValue)){
         return;
       }
     }
