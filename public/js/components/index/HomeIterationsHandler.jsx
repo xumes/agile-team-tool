@@ -324,7 +324,7 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, setSele
   loadPizzaChart('pizzaChart', '2 Pizza Rule (Team Size)', 'line', graphCategory, 'Count', yMax, teamMemSeries, fteSeries, targetSeries, 'Points', setSelectedIteration);
   loadMultiDefectDeployChart('defectsChart', graphCategory, defectsStartSeries, defectsSeries, defectsClosedSeries, defectsEndSeries, deploySeries, setSelectedIteration);
   loadSatisfactionChart('statisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', teamSatSeries, clientSatSeries, 'Points', sMax, setSelectedIteration);
-  loadChartMultiChart('unitCostChart', 'Unit Cost per Person Day', 'line', graphCategory, 'Count', '', storyFTESeries, storyPointFTESeries, 'Points', setSelectedIteration);
+  loadChartMultiChart('unitCostChart', 'Stories/Story Points per Person', 'line', graphCategory, 'Count', '', storyFTESeries, storyPointFTESeries, 'Points', setSelectedIteration);
   loadChartMultiChart('wipBacklogChart', 'Cycle Time (in days)', 'line', graphCategory, 'Average days per story', '', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', setSelectedIteration);
   loadNpsScoreChart('npsScoreChart', 'NPS Score', 'line', graphCategory, 'Points', npsScoreSeries, 'Points', '', setSelectedIteration);
 

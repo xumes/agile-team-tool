@@ -35,6 +35,7 @@ var testChildUser = {
   'email': 'childtestuser@test.com',
   'adminAccess': 'none'
 };
+
 var testChildTeam = {
   'name': 'mongodb-test-child-team-01',
   'members': [{
@@ -50,8 +51,8 @@ var testChildTeam = {
     'userId': 'CHILD1234567',
     'email': 'childtestuser@test.com'
   }],
-  'createdByUserId': 'ADMIN1234567',
-  'createdBy': 'admintestuser@test.com'
+  'createdByUserId': 'CHILD1234567',
+  'createdBy': 'childtestuser@test.com'
 };
 var userSession1 = {
   'ldap': {
@@ -106,6 +107,7 @@ describe('Users model [create]', function() {
         done();
       });
   });
+
   it('return successful for adding a user', function(done) {
     users.create(testUser)
       .then(function(result) {
@@ -322,6 +324,7 @@ describe('Users model [delete]', function() {
         done();
       });
   });
+
   after(function(done){
     var promiseArray = [];
     promiseArray.push(users.deleteUser(testUser.userId));

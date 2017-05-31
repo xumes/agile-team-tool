@@ -154,7 +154,7 @@ module.exports = function(app, includes) {
 
   getTeamByEmail = function(req, res) {
     var email = req.params.email;
-    teamModel.getTeamByEmail(email)
+    teamModel.getTeamsByEmail(email)
       .then(function(result) {
         res.send(result);
       })

@@ -392,7 +392,12 @@ function getAllTeams() {
             var parentsList = squadTeam.path.substring(1,squadTeam.path.length-1).split(',');
             _.each(parentsList, function(parent){
               if (!_.isUndefined(squadsByParent[parent])) {
-                squadsByParent[parent]['children'].push(squadTeam._id);
+                var team = {
+                  _id: squadTeam._id,
+                  createDate: squadTeam.createDate
+                };
+                //squadsByParent[parent]['children'].push(squadTeam._id);
+                squadsByParent[parent]['children'].push(team);
               }
             });
           }
@@ -514,11 +519,11 @@ function rollUpIterationsBySquad(iterationDocs, teamId) {
  * @param string nonSquadTeamId (non-squad team id)
  * @param Object squadsIterReults
  * @param Object teamMemberData
- * @param Object squadsAsseReults
+ * @param Object squadsAsseResults
  * @param Object assessmentTemplate
  * @return nonSquadCalResult
  */
-function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsIterReults, nonSquadTeamPathId, teamMemberData, squadsAsseReults, assessmentTemplate) {
+function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsIterReults, nonSquadTeamPathId, teamMemberData, squadsAsseResults, assessmentTemplate) {
   return new Promise(function(resolve, reject) {
     var iterData = resetData();
     var nonSquadCalResult = {
@@ -536,8 +541,8 @@ function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsIterReults, nonSquad
     }
     for (var i = 0; i < squads.length; i++) {
       for (var j = 0; j <= ITERATION_MONTHS; j++) {
-        if (!(_.isEmpty(squadsIterReults[squads[i]])) && !(_.isUndefined(squadsIterReults[squads[i]]))) {
-          var squadIterationResult = squadsIterReults[squads[i]];
+        if (!(_.isEmpty(squadsIterReults[squads[i]._id])) && !(_.isUndefined(squadsIterReults[squads[i]._id]))) {
+          var squadIterationResult = squadsIterReults[squads[i]._id];
           if (squadIterationResult[j].totalPoints != undefined) {
             iterData[j].totalPoints = iterData[j].totalPoints + squadIterationResult[j].totalPoints;
             iterData[j].totalCommPoints = iterData[j].totalCommPoints + squadIterationResult[j].totalCommPoints;
@@ -589,7 +594,7 @@ function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsIterReults, nonSquad
       }
     }
     nonSquadCalResult['teamMemberData'] = rollUpTeamMemberData(squads, teamMemberData);
-    var asseResult = rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsAsseReults, assessmentTemplate);
+    var asseResult = rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsAsseResults, assessmentTemplate);
     nonSquadCalResult['assessmentData'] = asseResult.assessmentData;
     nonSquadCalResult['assessmentData2'] = asseResult.assessmentData2;
 
@@ -673,7 +678,8 @@ function rollUpTeamMemberData(squadsList, squadTeams) {
   var fte5to12 = 0;
   var fteGt12 = 0;
 
-  _.each(squadsList, function(squadId) {
+  _.each(squadsList, function(squad) {
+    var squadId = squad._id;
     if (!_.isEmpty(squadTeams[squadId]) && squadTeams[squadId] != undefined) {
       var squad = squadTeams[squadId];
       var teamCnt = squad.teamCnt;
@@ -899,8 +905,7 @@ function rollUpAssessmentsBySquad(assessments, teamId, assessmentTemplate) {
         period.gt_120_days = 0;
         period.no_submission = 0;
       }
-      else if (period.gt_120_days >= 1 &&
-        assessmentData[index].less_120_days == 0){
+      else if (period.gt_120_days >= 1 && assessmentData[index].less_120_days == 0){
         period.gt_120_days = 1;
         period.no_submission = 0;
       }
@@ -916,10 +921,10 @@ function rollUpAssessmentsBySquad(assessments, teamId, assessmentTemplate) {
 /**
  * Process assessment rollup data in tribe/non squad level
  * @param squads - list of squads under specific tribe
- * @param squadsAsseReults - squad assessment data
+ * @param squadsAsseResults - squad assessment data
  * @return tribe rollup data
  */
-function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsAsseReults, assessmentTemplate) {
+function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsAsseResults, assessmentTemplate) {
   var assessmentData = resetAssessmentData();
   var assessmentData2 = resestQuarterAssessmentData(assessmentTemplate);
   var rollUpAssessmentData = {
@@ -934,13 +939,20 @@ function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsAsseReults, a
 
   for (var i = 0; i < squads.length; i++) {
     for (var j = 0; j <= ASSESSMENT_PERIOD; j++) {
-      if (!_.isUndefined(squadsAsseReults[squads[i]]) && !_.isUndefined(squadsAsseReults[squads[i]].assessmentData)) {
-        var squadAssessmentResult = squadsAsseReults[squads[i]].assessmentData;
+      // check if squad team was already created before the rollup period
+      var createPeriod = moment(squads[i].createDate);
+      var currentPeriod = moment().subtract(j, 'months');
+      var monthDiff = calMonthDiff(createPeriod, currentPeriod);
+
+      if (!_.isUndefined(squadsAsseResults[squads[i]._id]) && !_.isUndefined(squadsAsseResults[squads[i]._id].assessmentData)) {
+        var squadAssessmentResult = squadsAsseResults[squads[i]._id].assessmentData;
         if (!(_.isEmpty(squadAssessmentResult)) && !(_.isUndefined(squadAssessmentResult))) {
           if (squadAssessmentResult[j].less_120_days != undefined) {
             assessmentData[j].less_120_days += squadAssessmentResult[j].less_120_days;
             assessmentData[j].gt_120_days += squadAssessmentResult[j].gt_120_days;
-            assessmentData[j].no_submission += squadAssessmentResult[j].no_submission;
+            // rollup if team was created within covered period
+            if (monthDiff >= 0)
+              assessmentData[j].no_submission += squadAssessmentResult[j].no_submission;
 
             assessmentData[j].prj_foundation_score += squadAssessmentResult[j].prj_foundation_score;
             assessmentData[j].operation_score += squadAssessmentResult[j].operation_score;
@@ -950,17 +962,22 @@ function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsAsseReults, a
             assessmentData[j].total_prj_devops += squadAssessmentResult[j].total_prj_devops;
             assessmentData[j].total_operation += squadAssessmentResult[j].total_operation;
           } else {
-            assessmentData[j].no_submission += 1;
+            if (monthDiff >= 0)
+              assessmentData[j].no_submission += 1;
           }
         }
         else {
-          assessmentData[j].no_submission += 1;
+          if (monthDiff >= 0)
+            assessmentData[j].no_submission += 1;
         }
+      } else {
+        if (monthDiff >= 0)
+          assessmentData[j].no_submission += 1;
       }
     }
-    // TODO WORK ON THE ROLL UPLOGIC
-    if (!_.isUndefined(squadsAsseReults[squads[i]]) && !_.isUndefined(squadsAsseReults[squads[i]].assessmentData2)) {
-      var squadAssessmentQuarterResult = squadsAsseReults[squads[i]].assessmentData2;
+
+    if (!_.isUndefined(squadsAsseResults[squads[i]._id]) && !_.isUndefined(squadsAsseResults[squads[i]._id].assessmentData2)) {
+      var squadAssessmentQuarterResult = squadsAsseResults[squads[i]._id].assessmentData2;
       if (!(_.isEmpty(squadAssessmentQuarterResult)) && !(_.isUndefined(squadAssessmentQuarterResult))) {
         if (_.isEmpty(assessmentData2)) {
           // add first assessment component result for roll up
@@ -1027,6 +1044,13 @@ function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsAsseReults, a
   }
 
   return rollUpAssessmentData;
+};
+
+
+function getPeriodName(monthPeriod) {
+  var month = monthNames[monthPeriod.month()];
+  var year = monthPeriod.year();
+  return month + ' ' + year;
 };
 
 /**
@@ -1207,10 +1231,8 @@ var snapshot = {
       //var startTime = moment().startOf('month').format(dateFormat);
       monthArray = [];
       for (var i = 0; i <= ITERATION_MONTHS; i++) {
-        var time = moment().subtract(i, 'months');
-        var month = monthNames[time.month()];
-        var year = time.year();
-        monthArray[i] = month + ' ' + year;
+        var monthPeriod = moment().subtract(i, 'months');
+        monthArray.push(getPeriodName(monthPeriod));
       }
       quarterArray = [];
       for (var i=0; i < ASSESSMENT_QUARTERS; i++) {

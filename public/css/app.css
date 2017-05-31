@@ -6147,12 +6147,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   margin-bottom: 0px;
 }
 
-.home-modal-block-footer .ibm-btn-small.action-btn {
-  margin-right: 0.5em;
-  background: #d0021b none repeat scroll 0 0;
-  border-color: #d0021b;
-}
-
 .home-modal-block-footer.style1 {
   width: 92%;
   top:5%;

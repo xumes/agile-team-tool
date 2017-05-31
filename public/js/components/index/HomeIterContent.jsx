@@ -185,7 +185,7 @@ var HomeIterContent = React.createClass({
 
   startTimer: function (id) {
     clearInterval(this.timer);
-    this.timer = setInterval(this.checkTimeOut.bind(null,id), 2000);
+    this.timer = setInterval(this.checkTimeOut.bind(null,id), id === 'comment' ? 8000 : 2000);
   },
 
   stopTimer: function () {
@@ -204,28 +204,29 @@ var HomeIterContent = React.createClass({
         this.stopTimer();
       }
     }
+
   },
 
   tabHandling: function(id, reverse){
     var self = this;
     var next = _.indexOf(editIndexing, id);
     var prevent = false;
-      if (next != null){
-        var result = self.partialSaveIter(id);
-        if (reverse){
-          if (editIndexing[next-1] != null){
-            prevent = true;
-            self.setState({selectedField:editIndexing[next-1],  backupIter:result});
-          }
-        }
-        else{
-          if (editIndexing[next+1] != null){
-            prevent = true;
-            self.setState({selectedField:editIndexing[next+1],  backupIter:result});
-          }
+    if (next != null){
+      var result = self.partialSaveIter(id);
+      if (reverse){
+        if (editIndexing[next-1] != null){
+          prevent = true;
+          self.setState({selectedField:editIndexing[next-1],  backupIter:result});
         }
       }
-      return prevent;
+      else{
+        if (editIndexing[next+1] != null){
+          prevent = true;
+          self.setState({selectedField:editIndexing[next+1],  backupIter:result});
+        }
+      }
+    }
+    return prevent;
   },
 
   commentSelected: function(id){
@@ -233,6 +234,7 @@ var HomeIterContent = React.createClass({
       this.startTimer(this.state.selectedField);
       this.setState({selectedField:''});
     }
+    lastYPosition = window.pageYOffset;
   },
 
   iterationSelectChange: function(e){
@@ -288,6 +290,7 @@ var HomeIterContent = React.createClass({
   },
 
   partialSaveIter: function(id) {
+    lastYPosition = window.pageYOffset;
     var iterationData = _.clone(this.state.selectedIter);
     var selectedValue = this.state.selectedIter[id] !== null?this.state.selectedIter[id].toString():'';
     var propValue = this.getSelectedIteration()[id] !== null?this.getSelectedIteration()[id].toString():'';
@@ -297,9 +300,11 @@ var HomeIterContent = React.createClass({
       }
       iterationData = this.recalculate(id);
       this.setState({selectedIter:iterationData});
-    }
-    else if (selectedValue !== propValue){
-      if (this.checkNumericEquality(this.getSelectedIteration()[id].toString(), selectedValue)){
+    } else if (selectedValue !== propValue){
+      if (id == 'comment') {
+        clearInterval(this.timer);
+        this.checkTimeOut(id);
+      } else if (this.checkNumericEquality(this.getSelectedIteration()[id].toString(), selectedValue)){
         return;
       }
     }
@@ -401,11 +406,15 @@ var HomeIterContent = React.createClass({
         selectedIter['defectsEndBal'] = defectsEndBal;
         break;
       case 'deliveredStories':
-        selectedIter['storiesDays'] = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+        selectedIter['storiesDays'] = '0.0';
+        if (!isNaN(selectedIter.personDaysAvailable) && parseFloat(selectedIter.personDaysAvailable) != 0)
+          selectedIter['storiesDays'] = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
         this.updateStories(selectedIter);
         break;
       case 'storyPointsDelivered':
-        selectedIter['storyPointsDays'] = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+        selectedIter['storyPointsDays'] = '0.0';
+        if (!isNaN(selectedIter.personDaysAvailable) && parseFloat(selectedIter.personDaysAvailable) != 0)
+          selectedIter['storyPointsDays'] = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
         this.updateStoryPoints(selectedIter);
         break;
     }
@@ -433,19 +442,21 @@ var HomeIterContent = React.createClass({
     }
     selectedIter.personDaysAvailable = (selectedIter.teamAvailability - selectedIter.personDaysUnavailable).toFixed(2);
     //2 new fields on DB -
-    selectedIter.storiesDays = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
-    selectedIter.storyPointsDays = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+    selectedIter.storiesDays = '0.0';
+    selectedIter.storyPointsDays = '0.0';
+    if (!isNaN(selectedIter.personDaysAvailable) && parseFloat(selectedIter.personDaysAvailable) != 0) {
+      selectedIter.storiesDays = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+      selectedIter.storyPointsDays = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+    }
     return selectedIter;
   },
 
   updateStories: function(selectedIter){
     $('#storiesDays').text((selectedIter.storiesDays));
-//    $('#storiesDays').text((utils.numericValue($('#deliveredStories').val())/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1));
   },
 
   updateStoryPoints: function(selectedIter){
     $('#storyPointsDays').text((selectedIter.storyPointsDays));
-//    $('#storyPointsDays').text((utils.numericValue($('#storyPointsDelivered').val())/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1));
   },
 
   float2Decimal:function(val) {
@@ -545,8 +556,12 @@ var HomeIterContent = React.createClass({
     selectedIter.teamAvailability = this.state.teamAvailability;
     selectedIter.personDaysAvailable = (this.float2Decimal(selectedIter.teamAvailability) - this.float2Decimal(selectedIter.personDaysUnavailable)).toFixed(2);
     //2 new fields on DB -
-    selectedIter.storiesDays = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
-    selectedIter.storyPointsDays = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+    selectedIter.storiesDays = '0.0';
+    selectedIter.storyPointsDays = '0.0';
+    if (!isNaN(selectedIter.personDaysAvailable) && parseFloat(selectedIter.personDaysAvailable) != 0) {
+      selectedIter.storiesDays = (utils.numericValue(selectedIter.deliveredStories)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+      selectedIter.storyPointsDays = (utils.numericValue(selectedIter.storyPointsDelivered)/this.float2Decimal(selectedIter.personDaysAvailable)).toFixed(1);
+    }
     selectedIter.memberCount = utils.teamMemCount(this.props.loadDetailTeam.team);
     selectedIter.memberFte = utils.teamMemFTE(this.props.loadDetailTeam.team);
     this.props.updateTeamIteration(selectedIter);
@@ -648,8 +663,6 @@ var HomeIterContent = React.createClass({
           iterData.teamAvailability = 'N/A';
           iterData.personDaysUnavailable = 'N/A';
           iterData.personDaysAvailable = 'N/A';
-//          storiesDays = 'N/A';
-//          storyPointsDays = 'N/A';
           //two new fields
           iterData.storiesDays = 'N/A';
           iterData.storyPointsDays = 'N/A';
@@ -659,10 +672,6 @@ var HomeIterContent = React.createClass({
           iterData.teamAvailability = !_.isNull(defIter.teamAvailability)? this.float2Decimal(defIter.teamAvailability): '0.00';
           iterData.personDaysUnavailable = !_.isNull(defIter.personDaysUnavailable)? this.float2Decimal(defIter.personDaysUnavailable): '';
           iterData.personDaysAvailable = !_.isNull(defIter.personDaysAvailable)? this.float2Decimal(defIter.personDaysAvailable) : '0.00' ;
-//          storiesDays = this.float2Decimal(defIter.deliveredStories)/this.float2Decimal(iterData.personDaysAvailable);
-//          storiesDays = !isFinite(storiesDays) ? '0.0': storiesDays.toFixed(1);
-//          storyPointsDays = this.float2Decimal(defIter.storyPointsDelivered)/this.float2Decimal(iterData.personDaysAvailable);
-//          storyPointsDays = !isFinite(storyPointsDays) ? '0.0': storyPointsDays.toFixed(1);
           //two new fields
           iterData.storiesDays = !_.isNull(defIter.storiesDays)? this.float1Decimal(defIter.storiesDays): '0.0';
           iterData.storyPointsDays = !_.isNull(defIter.storyPointsDays)? this.float1Decimal(defIter.storyPointsDays): '0.0';

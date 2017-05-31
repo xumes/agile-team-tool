@@ -7,6 +7,7 @@ var Schema = mongoose.Schema;
 var request = require('request');
 var settings = require('../settings');
 var System = require('./system');
+var util = require('../helpers/util');
 
 // Just needed so that corresponding test could run
 require('../settings');
@@ -218,6 +219,15 @@ var users = {
   },
 
   create: function(user) {
+    var teamModel = require('./teams');
+    var bpEmail = '';
+    var bpUserId = 0;
+    var userId = 0;
+    var bluepagesURL = '';
+    var requestURL = '';
+    var bpldapResult = {};
+    var bpInfo;
+    var promiseArray = [];
     return new Promise(function(resolve, reject) {
       var newUser = {
         'userId': user.userId.toUpperCase(),
@@ -233,25 +243,159 @@ var users = {
         newUser.location.site = user.location.site || null;
         newUser.location.timezone = user.location.timezone || null;
       }
-
-      User.create(newUser)
-        .then(function(result){
-          resolve(result);
+      userId = user.userId.toUpperCase();
+      bluepagesURL = settings.bluepagesURL;
+      requestURL = bluepagesURL + '/id/' + userId + '/uid';
+      // First, Search the user (by userId) using ldap query
+      module.exports.ldapUserQuery(requestURL)
+        .then(function(bpInfo) { /* istanbul ignore next */
+          if (bpInfo && (bpInfo.ldap.uid === newUser.userId)) {
+            bpUserId = bpInfo.ldap.uid.toUpperCase();
+            bpEmail = bpInfo.ldap.preferredIdentity || bpInfo.shortEmail;
+            bpEmail = bpEmail.toLowerCase();
+            bpFullname = util.getBPFullname(bpInfo);
+            // If userInfo.email don't match from the bluepages data then lets update it
+            if (bpEmail !== newUser.email || bpFullname !== newUser.name) {
+              newUser.userId = bpUserId;
+              newUser.email = bpEmail;
+              newUser.name = bpFullname;
+            }
+            return User.create(newUser);
+          } else {
+            return User.create(newUser);
+          }
         })
-        .catch( /* istanbul ignore next */ function(err){
+        .then(function(createdUser) {
+          return teamModel.getAllUserTeamsByUserId(userId);
+        })
+        .then(function(teamResult) {
+          teamResult.map(function(row){
+            var obj = {};
+            var teamId = row['_id'];
+            var teamName = row['name'];
+            var tmpMembers = row['members'];
+            var updatedMembers = [];
+            for (i=0; i < tmpMembers.length; i++) {
+              if (bpUserId === tmpMembers[i]['userId']) {
+                obj = {
+                  name: bpFullname,
+                  userId: bpUserId,
+                  email: bpEmail,
+                  role: tmpMembers[i]['role'],
+                  allocation: tmpMembers[i]['allocation'],
+                  workTime: tmpMembers[i]['workTime'],
+                  location: tmpMembers[i]['location']
+                };
+              } else {
+                obj = {
+                  name: tmpMembers[i]['name'],
+                  userId: tmpMembers[i]['userId'],
+                  email: tmpMembers[i]['email'],
+                  role: tmpMembers[i]['role'],
+                  allocation: tmpMembers[i]['allocation'],
+                  workTime: tmpMembers[i]['workTime'],
+                  location: tmpMembers[i]['location']
+                };
+              }
+              updatedMembers.push(obj);
+            }
+            return promiseArray.push(teamModel.updateTeamMemberDataByTeamId(teamId, updatedMembers));
+          });
+          return Promise.all(promiseArray);
+        })
+        .then(function(updateTeamMemberData) {
+          return module.exports.findUserByUserId(userId);
+        })
+        .then(function(foundUser) {
+          return resolve(foundUser);
+        })
+        .catch( /* istanbul ignore next */ function(err) {
+          console.log('ldapResult err:' ,err);
           reject({'error':err});
         });
     });
   },
 
   updateUser: function(userInfo) {
+    var teamModel = require('./teams');
+    var bpFullname = '';
+    var bpEmail = '';
+    var bpUserId;
+    var userId;
+    var bluepagesURL = '';
+    var requestURL = '';
     return new Promise(function(resolve, reject){
       if (_.isEmpty(userInfo.userId)) {
         reject({'error':'missing user ID.'});
-      } else {
-        User.findOneAndUpdate({'userId': userInfo.userId}, {'$set': userInfo})
-          .then(function(result){
-            resolve(result);
+      }
+      else {
+        userId = userInfo.userId.toUpperCase();
+        bluepagesURL = settings.bluepagesURL;
+        requestURL = bluepagesURL + '/id/' + userId + '/uid';
+        // First, Search this user (by userId) using ldap query
+        module.exports.ldapUserQuery(requestURL)
+          .then(function(bpInfo) { /* istanbul ignore next */
+            if (bpInfo && (bpInfo.ldap.uid === userId)) {
+              bpUserId = bpInfo.ldap.uid.toUpperCase();
+              bpEmail = bpInfo.ldap.preferredIdentity || bpInfo.shortEmail;
+              bpEmail = bpEmail.toLowerCase();
+              bpFullname = util.getBPFullname(bpInfo);
+              // If userInfo.email don't match from the bluepages data then lets update it
+              if (bpEmail && (bpEmail !== userInfo.email || bpFullname !== userInfo.name)) {
+                userInfo.userId = bpUserId;
+                userInfo.email = bpEmail;
+                userInfo.name = bpFullname;
+              }
+              return User.findOneAndUpdate({'userId': userId}, {'$set': userInfo}).exec();
+            } else {
+              loggers.get('model-users').verbose('Bluepages is currently down!! Requested URL:',requestURL);
+              return User.findOneAndUpdate({'userId': userId}, {'$set': userInfo}).exec();
+            }
+          })
+          .then(function(updatedUser) {
+            // Get all teams that this user belongs to and then update the team.members info
+            return teamModel.getAllUserTeamsByUserId(userId);
+          })
+          .then(function(teamResult) {
+            teamResult.map(function(row) {
+              var obj = {};
+              var teamId = row['_id'];
+              var teamName = row['name'];
+              var tmpMembers = row['members'];
+              var updatedMembers = [];
+              for (i=0; i < tmpMembers.length; i++) {
+                if (bpUserId === tmpMembers[i]['userId']) {
+                  obj = {
+                    name: bpFullname,
+                    userId: bpUserId,
+                    email: bpEmail,
+                    role: tmpMembers[i]['role'],
+                    allocation: tmpMembers[i]['allocation'],
+                    workTime: tmpMembers[i]['workTime'],
+                    location: tmpMembers[i]['location']
+                  };
+                } else {
+                  obj = {
+                    name: tmpMembers[i]['name'],
+                    userId: tmpMembers[i]['userId'],
+                    email: tmpMembers[i]['email'],
+                    role: tmpMembers[i]['role'],
+                    allocation: tmpMembers[i]['allocation'],
+                    workTime: tmpMembers[i]['workTime'],
+                    location: tmpMembers[i]['location']
+                  };
+                }
+                updatedMembers.push(obj);
+              }
+              // Lets update the team.members data
+              return teamModel.updateTeamMemberDataByTeamId(teamId, updatedMembers);
+            });
+          })
+          .then(function(updateMember) {
+            return module.exports.findUserByUserId(userId);
+          })
+          .then(function(foundUser){
+            return resolve(foundUser);
           })
           .catch( /* istanbul ignore next */ function(err){
             reject({'error':err});
@@ -259,6 +403,7 @@ var users = {
       }
     });
   },
+
   //
   // bulkUpdateUsers: function(updateUsers) {
   //   return new Promise(function(resolve, reject) {
@@ -297,9 +442,27 @@ var users = {
     });
   },
 
+  isUserImageBroken: /* istanbul ignore next */ function(uid) {
+    return new Promise(function(resolve, reject) {
+      var queryUrl = 'http://faces-cache.mybluemix.net/image/' + uid;
+      request(queryUrl, function(err, response, body) {
+        // console.log(response.body);
+        if (err) {
+          reject(err);
+        }
+        else if (_.isEmpty(body)) {
+          reject('empty');
+        }
+        else {
+          resolve(body);
+        }
+      });
+    });
+  },
+
   ldapUserQuery: /* istanbul ignore next */ function(ldapUrl) {
     return new Promise(function(resolve) {
-      request(ldapUrl, function(err, response, body) {
+      request(ldapUrl, {timeout: 5000}, function(err, response, body) {
         var json;
         try {
           json = JSON.parse(body) ; // if the body is STRING, try to parse it
@@ -315,7 +478,7 @@ var users = {
           loggers.get('model-users').verbose('Error getting Bluepages record', ldapUrl, msg);
         }
 
-        if (response.statusCode == 404 && json.message == 'Unable to find record') {
+        if (response && response.statusCode == 404 && json.message == 'Unable to find record') {
           loggers.get('model-users').verbose('Unable to get Bluepages record', ldapUrl);
           resolve();
         }

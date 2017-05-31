@@ -142,6 +142,12 @@ var HomeMemberTable = React.createClass({
         $('#awk_' + index + ' .input-field').show();
       }
     });
+    var promiseArray = [];
+    _.each($('#teamMemberTable img'), function(img) {
+      var uid = img.id.split('_')[2]
+      promiseArray.push(api.isFaceImageBroken(uid));
+    });
+    Promise.all(promiseArray);
   },
 
   onClickBlock: function(block) {
@@ -455,7 +461,7 @@ var HomeMemberTable = React.createClass({
           $('#' + roleId + ' .modify-field').removeClass('team-member-table-content-block-show');
           $('#' + roleId + ' > h').removeClass('team-member-table-content-block-hide');
 
-          //self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
+          self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
         })
         .catch(function(err){
           console.log(err);
@@ -490,7 +496,7 @@ var HomeMemberTable = React.createClass({
           $('#' + roleId + ' .modify-field').removeClass('team-member-table-content-block-show');
           $('#' + roleId + ' > h').removeClass('team-member-table-content-block-hide');
 
-          //self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
+          self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
         })
         .catch(function(err){
           console.log(err);
@@ -551,7 +557,7 @@ var HomeMemberTable = React.createClass({
           $('#' + allocationId + ' .save-btn').hide();
           $('#' + allocationId + ' .cancel-btn').hide();
 
-          //self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
+          self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
         })
         .catch(function(err){
           console.log(err);
@@ -578,7 +584,7 @@ var HomeMemberTable = React.createClass({
           .then(function(result){
             self.updateMemberTableLocations(mrd, idx, locationValue);
 
-            //self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
+            self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
           })
       } else {
         self.updateMemberTableLocations(mrd, idx, locationValue);
@@ -658,7 +664,7 @@ var HomeMemberTable = React.createClass({
           $('#' + awkId + ' .modify-field').removeClass('team-member-table-content-block-show');
           $('#' + awkId + ' > h').removeClass('team-member-table-content-block-hide');
 
-          //self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
+          self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
         })
         .catch(function(err){
           console.log(err);
@@ -699,7 +705,7 @@ var HomeMemberTable = React.createClass({
           $('#' + awkId + ' .modify-field').removeClass('team-member-table-content-block-show');
           $('#' + awkId + ' > h').removeClass('team-member-table-content-block-hide');
 
-          //self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
+          self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
         })
         .catch(function(err){
           console.log(err);
@@ -848,14 +854,14 @@ var HomeMemberTable = React.createClass({
 
             var roleTopStyle = self.props.roles.indexOf(memberDetail.role) < 0 ? {'top':'25%'} : null;
             var awkTopStyle = (memberDetail.workTime != '100' && memberDetail.workTime != '50') ? {'top':'25%'} : null;
-
+            var imgId = 'member_' + idx + '_' + memberDetail.userId.toUpperCase();
             return (
               <div key={blockId} id={blockId} class={blockClass}>
                 <div style={{'width':'1%','backgroundColor':'#FFFFFF'}}>
                 </div>
                 <div id={nameId} style={{'width':'28.8%'}}>
                   <div style={{'width':'25.6%','height':'100%','display':'inline-block','float':'left'}}>
-                    <img style={{'position':'relative', 'top':'17%'}} src={src}></img>
+                    <img id={imgId} style={{'position':'relative', 'top':'17%'}}></img>
                   </div>
                   <div style={{'width':'74.4%','height':'50%','display':'inline-block','float':'left','position':'relative','top':'25%'}}>
                     <h>{memberDetail.name}</h>
