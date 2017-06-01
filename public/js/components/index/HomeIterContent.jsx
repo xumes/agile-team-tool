@@ -247,11 +247,20 @@ var HomeIterContent = React.createClass({
     var self = this;
     var data = _.clone(this.state.selectedIter);
     lastYPosition = window.pageYOffset;
-    this.setState({selectedField:e.target.id, backupIter: data});
+    var blockId = e.target.id;
+    this.setState({selectedField:e.target.id, backupIter: data}, function(){
+      if (blockId == 'npsScore') {
+        $('.nps-score-input').val('');
+      }
+    });
   },
   saveBtnClickHandler: function(id) {
-    this.saveIter(id);
-    this.setState({selectedField:''});
+    if (id == 'npsScore' && $('.nps-score-input').val() == '') {
+      $('.nps-score-input').val(this.state.backupIter[id] !== null?this.state.backupIter[id]:0);
+    } else {
+      this.saveIter(id);
+      this.setState({selectedField:''});
+    }
   },
   cancelBtnClickHandler: function(id) {
     this.cancelChange(id);
@@ -1018,7 +1027,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
                 <div class='home-iter-content-sub' data-tip={npsScoreTT}>{'NPS score'}</div>
                 {this.state.selectedField === 'npsScore'?
-                  <input max='100' min='-100' id='npsScore' class='home-iter-content-point' placeholder={iterData.npsScore === ''?'0':iterData.npsScore} onKeyDown={this.checkChanges} onKeyPress={this.integerCheck} onBlur={this.roundOff} defaultValue={iterData.npsScore} onPaste={this.paste} ref="npsScore"/>:
+                  <input max='100' min='-100' id='npsScore' class='home-iter-content-point nps-score-input' placeholder={iterData.npsScore === ''?'0':iterData.npsScore} onKeyDown={this.checkChanges} onKeyPress={this.integerCheck} onBlur={this.roundOff} defaultValue={iterData.npsScore} onPaste={this.paste} ref="npsScore"/>:
                   <div id='npsScore' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.npsScore != ''?iterData.npsScore:'0'}</div>
                 }
                 {this.state.selectedField === 'npsScore'?
