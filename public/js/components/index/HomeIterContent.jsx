@@ -248,6 +248,9 @@ var HomeIterContent = React.createClass({
 
   iterBlockClickHandler: function(e) {
     var self = this;
+    if (this.state.selectedField == 'npsScore' && $('.nps-score-input').val() == '') {
+      this.state.selectedIter.npsScore = this.state.backupIter.npsScore !== null?this.state.backupIter.npsScore:0;
+    }
     var data = _.clone(this.state.selectedIter);
     lastYPosition = window.pageYOffset;
     var blockId = e.target.id;
