@@ -194,6 +194,9 @@ var HomeIterContent = React.createClass({
 
   checkChanges: function(event){
     if(event.keyCode == 9){
+      if (event.target.id == 'npsScore' && $('.nps-score-input').val() == '') {
+        $('.nps-score-input').val(this.state.backupIter[event.target.id] !== null?this.state.backupIter[event.target.id]:0);
+      }
       var result = this.tabHandling(event.target.id, event.shiftKey);
       if (result){
         lastYPosition = window.pageYOffset;
