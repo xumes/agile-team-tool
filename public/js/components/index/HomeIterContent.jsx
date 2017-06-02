@@ -146,7 +146,7 @@ var HomeIterContent = React.createClass({
         var key = e.which;
         if (key == 13)  // the enter key code
         {
-          this.stopTimer();
+          self.stopTimer();
           self.saveIter(e.target.id);
         }
       });
@@ -255,9 +255,9 @@ var HomeIterContent = React.createClass({
     lastYPosition = window.pageYOffset;
     var blockId = e.target.id;
     this.setState({selectedField:e.target.id, backupIter: data}, function(){
-      if (blockId == 'npsScore') {
-        $('.nps-score-input').val('');
-      }
+      // if (blockId == 'npsScore') {
+      //   $('.nps-score-input').val('');
+      // }
     });
   },
   saveBtnClickHandler: function(id) {
@@ -641,6 +641,10 @@ var HomeIterContent = React.createClass({
     if (!_.isEmpty(message)){
       this.setState({alertMsg: message, showConfirmModal: true, alertType: type});
     }
+  },
+
+  removeNumber: function() {
+    $('.nps-score-input').val('');
   },
 
   render: function() {
@@ -1033,7 +1037,7 @@ var HomeIterContent = React.createClass({
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
                 <div class='home-iter-content-sub' data-tip={npsScoreTT}>{'NPS score'}</div>
                 {this.state.selectedField === 'npsScore'?
-                  <input max='100' min='-100' id='npsScore' class='home-iter-content-point nps-score-input' placeholder={iterData.npsScore === ''?'0':iterData.npsScore} onKeyDown={this.checkChanges} onKeyPress={this.integerCheck} onBlur={this.roundOff} defaultValue={iterData.npsScore} onPaste={this.paste} ref="npsScore"/>:
+                  <input max='100' min='-100' id='npsScore' class='home-iter-content-point nps-score-input' placeholder={iterData.npsScore === ''?'0':iterData.npsScore} onKeyDown={this.checkChanges} onKeyPress={this.integerCheck} onBlur={this.roundOff} defaultValue={iterData.npsScore} onPaste={this.paste} onFocus={this.removeNumber} ref="npsScore"/>:
                   <div id='npsScore' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.npsScore != ''?iterData.npsScore:'0'}</div>
                 }
                 {this.state.selectedField === 'npsScore'?
