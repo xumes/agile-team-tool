@@ -117,10 +117,14 @@ var HomeAddMember = React.createClass({
                   'workTime': $('#teamMemberAwkSelect').val() == 'other'?$('#otherAwk').val():$('#teamMemberAwkSelect').val()
                 };
                 newTeamMembers = JSON.parse(JSON.stringify(self.props.loadDetailTeam.team.members));
-                if (!_.isEmpty(self.props.loadDetailTeam.members))
-                  newUsers = JSON.parse(JSON.stringify(self.props.loadDetailTeam.members));
                 newTeamMembers.push(ntm);
-                newUsers.push(result);
+                if (!_.isEmpty(self.props.loadDetailTeam.members)) {
+                  newUsers = JSON.parse(JSON.stringify(self.props.loadDetailTeam.members));
+                  if (_.isEmpty(_.findWhere(newUsers, {userId: result.userId})))
+                    newUsers.push(result);
+                } else
+                    newUsers.push(result);
+
                 return api.modifyTeamMembers(self.props.loadDetailTeam.team._id, newTeamMembers);
               })
               .then(function(result){
