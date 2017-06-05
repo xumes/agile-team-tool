@@ -131,7 +131,7 @@ paths:
                 type: integer
               deliveredStories:
                 type: integer
-              commitedStoryPoints:
+              committedStoryPoints:
                 type: integer
               storyPointsDelivered:
                 type: integer
@@ -168,6 +168,10 @@ paths:
                 type: number
               personDaysUnavailable:
                 type: number
+              storiesDay:
+                type: number
+              storyPointsDay:
+                type: number
               updatedBy:
                 type: string
               updatedByUserId:
@@ -175,6 +179,11 @@ paths:
               updateDate:
                 type: string
                 default: new Date()
+              npsScore:
+                type: integer
+                maximum: 100
+                minimum: -100
+                default: 0
       tags:
         - Iteration
 
@@ -240,7 +249,7 @@ paths:
                 type: integer
               deliveredStories:
                 type: integer
-              commitedStoryPoints:
+              committedStoryPoints:
                 type: integer
               storyPointsDelivered:
                 type: integer
@@ -277,6 +286,10 @@ paths:
                 type: number
               personDaysUnavailable:
                 type: number
+              storiesDay:
+                type: number
+              storyPointsDay:
+                type: number
               updatedBy:
                 type: string
               updatedByUserId:
@@ -284,6 +297,11 @@ paths:
               updateDate:
                 type: string
                 default: new Date()
+              npsScore:
+                type: integer
+                maximum: 100
+                minimum: -100
+                default: 0
             example:
               teamId: xxxxxxx
               status: xxxxxxx
@@ -458,7 +476,7 @@ definitions:
       deliveredStories:
         type: integer
         description: Number of delivered stories
-      commitedStoryPoints:
+      committedStoryPoints:
         type: integer
         description: Number of committed story points
       storyPointsDelivered:
@@ -520,7 +538,12 @@ definitions:
         type: string
         default: new Date()
         description: System log last update date.  Update date date format 2016-01-04T00:00:00.000Z
-
+      npsScore:
+        type: integer
+        description: NPS® (Net Promoter Score®) measures customer experience and predicts business growth.
+        maximum: 100
+        minimum: -100
+        default: 0
   Error:
     type: object
     properties:

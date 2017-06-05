@@ -19,7 +19,7 @@ produces:
 paths:
   /teams:
     get:
-      summary: Teams
+      summary: Retrieve teams
       description: |
         The teams endpoint retrieves all of the teams associated by the user that created the API key
       parameters:
@@ -38,13 +38,15 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Team'
-        default:
+        401:
+          description: Unauthorized API Key
+        400:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   /iterations:
     get:
-      summary: Iterations
+      summary: Retrieve iteration
       description: |
         The iterations endpoint retrieves all of the iteration data for a particular team
       parameters:
@@ -69,12 +71,14 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Iteration'
-        default:
+        401:
+          description: Unauthorized API Key
+        400:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     post:
-      summary: Iterations
+      summary: Create iteration
       description: |
         This endpoint inserts new iteration data
       parameters:
@@ -167,7 +171,7 @@ paths:
               storiesDay:
                 type: number
               storyPointsDay:
-                type: number                
+                type: number
               updatedBy:
                 type: string
               updatedByUserId:
@@ -175,6 +179,11 @@ paths:
               updateDate:
                 type: string
                 default: new Date()
+              npsScore:
+                type: integer
+                maximum: 100
+                minimum: -100
+                default: 0
       tags:
         - Iteration
 
@@ -183,12 +192,14 @@ paths:
           description: Iteration data
           schema:
             $ref: '#/definitions/Iteration'
-        default:
+        401:
+          description: Unauthorized API Key
+        400:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     put:
-      summary: Iterations
+      summary: Update iteration
       description: |
         This endpoint updates existing iteration data
       parameters:
@@ -278,7 +289,7 @@ paths:
               storiesDay:
                 type: number
               storyPointsDay:
-                type: number                
+                type: number
               updatedBy:
                 type: string
               updatedByUserId:
@@ -286,6 +297,11 @@ paths:
               updateDate:
                 type: string
                 default: new Date()
+              npsScore:
+                type: integer
+                maximum: 100
+                minimum: -100
+                default: 0
             example:
               teamId: xxxxxxx
               status: xxxxxxx
@@ -296,12 +312,14 @@ paths:
           description: Iteration data
           schema:
             $ref: '#/definitions/Iteration'
-        default:
+        401:
+          description: Unauthorized API Key
+        400:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     delete:
-      summary: Iterations
+      summary: Delete iteration
       description: |
         This endpoint deletes existing iteration data
       parameters:
@@ -326,7 +344,9 @@ paths:
             type: object
             items:
               $ref: '#/definitions/Iteration'
-        default:
+        401:
+          description: Unauthorized API Key
+        400:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
@@ -508,12 +528,6 @@ definitions:
       personDaysUnavailable:
         type: number
         description: Total number of person day non available during the iteration
-      storiesDay:
-        type: number
-        description: Average stories per person day -- Total number of story delivered divides by total person day
-      storyPointsDay:
-        type: number
-        description: Average story points per person day -- Total number of story points delivered divide by total person day        
       updatedBy:
         type: string
         description:  System log last updated by user email id
@@ -524,7 +538,12 @@ definitions:
         type: string
         default: new Date()
         description: System log last update date.  Update date date format 2016-01-04T00:00:00.000Z
-
+      npsScore:
+        type: integer
+        description: NPS® (Net Promoter Score®) measures customer experience and predicts business growth.
+        maximum: 100
+        minimum: -100
+        default: 0
   Error:
     type: object
     properties:
