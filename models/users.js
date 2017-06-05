@@ -266,7 +266,7 @@ var users = {
           }
         })
         .then(function(createdUser) {
-          return teamModel.getAllUserTeamsByUserId(userId);
+          return teamModel.getTeamsByUserId(userId);
         })
         .then(function(teamResult) {
           teamResult.map(function(row){
@@ -354,7 +354,7 @@ var users = {
           })
           .then(function(updatedUser) {
             // Get all teams that this user belongs to and then update the team.members info
-            return teamModel.getAllUserTeamsByUserId(userId);
+            return teamModel.getTeamsByUserId(userId);
           })
           .then(function(teamResult) {
             teamResult.map(function(row) {
