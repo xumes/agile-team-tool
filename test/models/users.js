@@ -276,6 +276,13 @@ describe('Users model [isUserAllowed]', function() {
         done();
       });
   });
+  it('return true for parent user access to child team', function(done) {
+    users.isUserAllowed(testUser.userId, newChildTeamId)
+      .then(function(result) {
+        expect(result).to.equal(true);
+        done();
+      });
+  });
   it('return true for admin user access', function(done) {
     users.isUserAllowed(testAdminUser.userId, '581b72897bc85c73d8254a48')
       .then(function(result) {
