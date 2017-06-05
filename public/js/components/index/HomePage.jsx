@@ -408,14 +408,18 @@ var HomePage = React.createClass({
     var userMember = _.find(members, function(member) {
       return member.userId == user.ldap.uid;
     })
-    if (_.isEmpty(userMember) && $('#myTeams').attr('data-state') == 'open') {
-      newTeam.access = false;
-      // front end to hide team from my teams view and disable any other edit blocks on members
-      $('#memberTable h.team-member-table-content-block-hide').removeClass('team-member-table-content-block-hide')
-      $('#memberTable div.modify-field').removeClass('team-member-table-content-block-show')
-      $('#'+newTeam.team.pathId).hide();  //need to hide, removing it would cause react to complain of node not found
-    }
-    self.setState({'loadDetailTeam': newTeam});
+    api.isUserAllowed(newTeam.team._id)
+      .then(function (userAllowed) {
+        if (!userAllowed) {
+          newTeam.access = false;
+          // front end to hide team from my teams view and disable any other edit blocks on members
+          $('#memberTable h.team-member-table-content-block-hide').removeClass('team-member-table-content-block-hide')
+          $('#memberTable div.modify-field').removeClass('team-member-table-content-block-show')
+          $('#'+newTeam.team.pathId).hide();  //need to hide, removing it would cause react to complain of node not found
+        }
+        self.setState({'loadDetailTeam': newTeam});
+
+      });
   },
 
   reloadTeamIterations: function(id) {
