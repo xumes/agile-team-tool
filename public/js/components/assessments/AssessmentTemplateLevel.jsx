@@ -1,6 +1,7 @@
 var React = require('react');
 var _ = require('underscore');
 var AssessmentTemplateCriteria = require('./AssessmentTemplateCriteria.jsx');
+var AssessmentLinks = require('./AssessmentLinks.jsx').links;
 var AssessmentTemplateLevel = React.createClass({
   componentDidMount: function() {
     $('a[data-widget=\'tooltip\']').tooltip();
@@ -125,6 +126,7 @@ var AssessmentTemplateLevel = React.createClass({
       return (
         <div class='agile-table' summary='Maturity assessment level and description for the identified practice.'>
           <div class='agile-table-summary'>{this.props.description}</div>
+          <h1 class='assessmet-improve-link'>{AssessmentLinks[this.props.name]['description']}<a target='_blank' href={'http://' + AssessmentLinks[this.props.name]['link']}>{AssessmentLinks[this.props.name]['link']}</a></h1>
             <div class='agile-table-header'>
                 <div style={{'width': '15%'}}>
                   <h1>Maturity level</h1>
@@ -151,7 +153,7 @@ var AssessmentTemplateLevel = React.createClass({
              <div id={levelMainId + 'tbtr_action'} class='agile-table-textarea'>
                 <div id={levelMainId + 'td_action'}>
                   <h1>{'How do we get better? (Action plan item; 350 char limit)'}</h1>
-                  <textarea aria-label='Action plan item' maxLength='350' id={levelMainId + 'action'}>
+                  <textarea aria-label='Action plan item' maxLength='350' id={levelMainId + 'action'} placeholder={AssessmentLinks[this.props.name]['description'] + AssessmentLinks[this.props.name]['link']}>
                   </textarea>
                 </div>
               </div>
