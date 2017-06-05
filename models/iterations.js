@@ -164,7 +164,7 @@ var IterationSchema = {
     type: Number,
     min: [-100, 'NPS score should between -100 to 100'],
     max: [100, 'NPS score should between -100 to 100'],
-    default: null
+    default: 0
   }
 };
 
