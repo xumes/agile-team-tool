@@ -20,7 +20,7 @@ var AssessmentTemplatePractice = React.createClass({
               {practice.name}
               <span id={practiceAnsId}>Not answered</span>
             </a>
-            <div class='ibm-twisty-body' style={{'display':'none'}}><AssessmentTemplateLevel levels={practice.levels} description={practice.description} practiceId={practiceId}/></div>
+            <div class='ibm-twisty-body' style={{'display':'none'}}><AssessmentTemplateLevel levels={practice.levels} description={practice.description} practiceId={practiceId} name={practice.name}/></div>
           </div>
         )
       });

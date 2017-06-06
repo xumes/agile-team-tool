@@ -117,7 +117,9 @@ var AssessmentSummaryTable = React.createClass({
           data: assessmentsData[assessType][tempTitle]['current']
         }
       ];
-      self.loadResultChart('agileSummaryChart' + self.props.componentId, title, 'line', assessmentsData[assessType]['Date'], 'Maturity Level', assessChartData, null);
+      if ($('#agileSummaryChart' + self.props.componentId).length > 0) {
+        self.loadResultChart('agileSummaryChart' + self.props.componentId, title, 'line', assessmentsData[assessType]['Date'], 'Maturity Level', assessChartData, null);
+      }
     }
   },
   /**

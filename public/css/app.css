@@ -6927,6 +6927,16 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   color: #5A5A5A
 }
 
+.assessmet-improve-link {
+  position: relative;
+  width: 100%;
+  font-size: 1.2em;
+  float: left;
+  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif" !important;
+  color: #5A5A5A !important;
+  padding: 0.5em 0 0 0;
+}
+
 .assessment-popover-block > .agile-maturity .agile-table-header {
   position: relative;
   width: 100%;
