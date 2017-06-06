@@ -1094,6 +1094,7 @@ module.exports.modifyTeamMembers = function(teamId, user, newMembers) { //TODO t
       })
       .then(function(results){
         // return resolve({'ok':'Updated successfully.'});
+        /*
         var postMemberdata = results[0]['data'];
         var preMemberdata = results[1]['members'];
         var updatedMemberdata = [];
@@ -1114,6 +1115,7 @@ module.exports.modifyTeamMembers = function(teamId, user, newMembers) { //TODO t
         });
 
         results[1].members = updatedMemberdata;
+        */
         resolve(results[1]);
       })
       .catch( /* istanbul ignore next */ function(err){
