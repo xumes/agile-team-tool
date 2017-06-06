@@ -13,6 +13,7 @@ var ConfirmDialog = require('./ConfirmDialog.jsx');
 
 var selectedIter = new Object();
 var lockMessage = 'This value is automatically calculated and can’t be updated directly.';
+var npsScoreTT = 'NPS® (Net Promoter Score®) measures customer experience and predicts business growth. Subtracting the % of Detractors (score 0-6) from the % of Promoters (score 9-10) yields the Net Promoter Score. Acceptable integer values are -100 to +100.';
 var clientSatisfactionTT = 'Please indicate the satisfaction level of your client(s) with the results of this iteration using the following scale:' +
     '<br/>4 - Very satisfied' +
     '<br/>3 - Satisfied' +
@@ -38,6 +39,7 @@ var iterData = {
   defectsEndBal : '',
   cycleTimeWIP : '',
   cycleTimeInBacklog : '',
+  npsScore: '',
   clientSatisfaction : '',
   teamSatisfaction : '',
   comment: '',
@@ -56,6 +58,7 @@ var editIndexing = [
 'defectsClosed',
 'cycleTimeWIP',
 'cycleTimeInBacklog',
+'npsScore',
 'clientSatisfaction',
 'teamSatisfaction',
 'comment'
@@ -143,7 +146,7 @@ var HomeIterContent = React.createClass({
         var key = e.which;
         if (key == 13)  // the enter key code
         {
-          this.stopTimer();
+          self.stopTimer();
           self.saveIter(e.target.id);
         }
       });
@@ -191,6 +194,9 @@ var HomeIterContent = React.createClass({
 
   checkChanges: function(event){
     if(event.keyCode == 9){
+      if (event.target.id == 'npsScore' && $('.nps-score-input').val() == '') {
+        $('.nps-score-input').val(this.state.backupIter[event.target.id] !== null?this.state.backupIter[event.target.id]:0);
+      }
       var result = this.tabHandling(event.target.id, event.shiftKey);
       if (result){
         lastYPosition = window.pageYOffset;
@@ -242,13 +248,25 @@ var HomeIterContent = React.createClass({
 
   iterBlockClickHandler: function(e) {
     var self = this;
+    if (this.state.selectedField == 'npsScore' && $('.nps-score-input').val() == '') {
+      this.state.selectedIter.npsScore = this.state.backupIter.npsScore !== null?this.state.backupIter.npsScore:0;
+    }
     var data = _.clone(this.state.selectedIter);
     lastYPosition = window.pageYOffset;
-    this.setState({selectedField:e.target.id, backupIter: data});
+    var blockId = e.target.id;
+    this.setState({selectedField:e.target.id, backupIter: data}, function(){
+      // if (blockId == 'npsScore') {
+      //   $('.nps-score-input').val('');
+      // }
+    });
   },
   saveBtnClickHandler: function(id) {
-    this.saveIter(id);
-    this.setState({selectedField:''});
+    if (id == 'npsScore' && $('.nps-score-input').val() == '') {
+      $('.nps-score-input').val(this.state.backupIter[id] !== null?this.state.backupIter[id]:0);
+    } else {
+      this.saveIter(id);
+      this.setState({selectedField:''});
+    }
   },
   cancelBtnClickHandler: function(id) {
     this.cancelChange(id);
@@ -496,6 +514,16 @@ var HomeIterContent = React.createClass({
     }
   },
 
+  integerCheck: function(e) {
+    var pattern = /^[-]?\d*$/;
+    if (e.charCode >= 32 && e.charCode < 127 &&  !pattern.test(String.fromCharCode(e.charCode)))
+    {
+      e.preventDefault();
+    } else if (parseInt(e.target.value + String.fromCharCode(e.charCode)) < -100 || parseInt(e.target.value + String.fromCharCode(e.charCode)) > 100) {
+      e.preventDefault();
+    }
+  },
+
   roundOff:function(e) {
     if (_.isEmpty(e.target.value)){
         this.partialSaveIter(e.target.id);
@@ -615,6 +643,10 @@ var HomeIterContent = React.createClass({
     }
   },
 
+  removeNumber: function() {
+    $('.nps-score-input').val('');
+  },
+
   render: function() {
     var self = this;
     if (_.isEmpty(self.props.loadDetailTeam) || self.props.loadDetailTeam.team.type != 'squad') {
@@ -678,6 +710,7 @@ var HomeIterContent = React.createClass({
         iterData.defectsEndBal = utils.numericValue(defIter.defectsEndBal);
         iterData.cycleTimeWIP = _.isNull(defIter.cycleTimeWIP) || _.isUndefined(defIter.cycleTimeWIP) ? '' : this.float1Decimal(defIter.cycleTimeWIP);
         iterData.cycleTimeInBacklog = _.isNull(defIter.cycleTimeInBacklog) || _.isUndefined(defIter.cycleTimeInBacklog) ? '' : this.float1Decimal(defIter.cycleTimeInBacklog);
+        iterData.npsScore = _.isNull(defIter.npsScore) || _.isUndefined(defIter.npsScore) ? '' : utils.numericValue(defIter.npsScore);
         iterData.clientSatisfaction = _.isNull(defIter.clientSatisfaction) || _.isUndefined(defIter.clientSatisfaction) ? '' : this.float1Decimal(defIter.clientSatisfaction);
         iterData.teamSatisfaction = _.isNull(defIter.teamSatisfaction) || _.isUndefined(defIter.teamSatisfaction) ? '' : this.float1Decimal(defIter.teamSatisfaction);
         iterData.comment = (defIter.comment == null) ? '' : defIter.comment;
@@ -1000,6 +1033,23 @@ var HomeIterContent = React.createClass({
             <div class='home-iter-overal-block'>
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
                 <div class='home-iter-content-title'>Overall Satisfaction</div>
+              </div>
+              <div class='home-iter-content-col' style={{'height': '33.3%'}}>
+                <div class='home-iter-content-sub' data-tip={npsScoreTT}>{'NPS score'}</div>
+                {this.state.selectedField === 'npsScore'?
+                  <input max='100' min='-100' id='npsScore' class='home-iter-content-point nps-score-input' placeholder={iterData.npsScore === ''?'0':iterData.npsScore} onKeyDown={this.checkChanges} onKeyPress={this.integerCheck} onBlur={this.roundOff} defaultValue={iterData.npsScore} onPaste={this.paste} onFocus={this.removeNumber} ref="npsScore"/>:
+                  <div id='npsScore' class='home-iter-content-point home-iter-content-point-hover' onClick={access?this.iterBlockClickHandler:''}>{iterData.npsScore != ''?iterData.npsScore:'0'}</div>
+                }
+                {this.state.selectedField === 'npsScore'?
+                  <div style={{'display': 'block','height': '100%'}}>
+                    <div class='home-iter-content-btn' onClick={this.saveBtnClickHandler.bind(null, 'npsScore')}>
+                      <InlineSVG src={require('../../../img/Att-icons/att-icons_confirm.svg')}></InlineSVG>
+                    </div>
+                    <div class='home-iter-content-btn' style={{'right':'-19.1%'}} onClick={this.cancelBtnClickHandler.bind(null, 'npsScore')}>
+                      <InlineSVG src={require('../../../img/Att-icons/att-icons_close-cancel.svg')}></InlineSVG>
+                    </div>
+                  </div>:''
+                }
               </div>
               <div class='home-iter-content-col' style={{'height': '33.3%'}}>
                 <div class='home-iter-content-sub' data-tip={clientSatisfactionTT}>Client satisfaction</div>

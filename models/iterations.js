@@ -159,6 +159,12 @@ var IterationSchema = {
   storyPointsDays: {
     type: Number,
     default: null
+  },
+  npsScore: {
+    type: Number,
+    min: [-100, 'NPS score should between -100 to 100'],
+    max: [100, 'NPS score should between -100 to 100'],
+    default: 0
   }
 };
 
