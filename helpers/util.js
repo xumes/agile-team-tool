@@ -77,7 +77,7 @@ var util = {
       duplicated.forEach(function(i){
         if (i){
           var strErr = i.split(ch);
-          str = str + userIdx[strErr[0]] + ' is already assign a role ' + strErr[1] + '. ';
+          str = str + userIdx[strErr[0]] + ' is already assign with a \'' + strErr[1] + '\' role. ';
         }
       });
       if (str){
