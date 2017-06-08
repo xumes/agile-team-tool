@@ -51,6 +51,40 @@ var util = {
       bpFullname = bpInfo.ldap.preferredfirstname +  ' ' + bpInfo.ldap.preferredlastname;
 
     return bpFullname.trim();
+  },
+
+  hasDuplicateRole: function(memberAry) {
+    var uuid = require('node-uuid');
+    var duplicate = [];
+    var ch = '|'+uuid.v4()+'|';
+    var result = _.map(memberAry, function(value){
+      if ((value.userId !== undefined) && (value.role !== undefined)){
+        return value.userId.trim() + ch + value.role.trim();
+      }
+    });
+    _.some(result, function(value, index, ary) {
+      if (ary.indexOf(value) !== ary.lastIndexOf(value) === true){
+        duplicate.push(value);
+      }
+    });
+    var duplicated = _.uniq(duplicate);
+    var userIdx = [];
+    _.each(memberAry, function(m){
+      userIdx[m.userId] = m.name;
+    });
+    var str = '';
+    if (!_.isEmpty(duplicated)){
+      duplicated.forEach(function(i){
+        if (i){
+          var strErr = i.split(ch);
+          str = str + userIdx[strErr[0]] + ' is already assign a role ' + strErr[1] + '. ';
+        }
+      });
+      if (str){
+        return {'error': str};
+      }
+    }
+    return false;
   }
 };
 

@@ -17,6 +17,7 @@ require('../settings');
 var settings = require('../settings');
 
 var teamModel = require('./teams');
+var util = require('../helpers/util');
 var userTimezone = require('./data/uniqueUserTimezone.js');
 var ulocation = {};
 _.each(userTimezone, function(tz) {
@@ -193,7 +194,6 @@ TeamSchema.path('pathId').validate(function(value, done) {
     done(!count);
   });
 }, 'This team name is too similar to another team. Please enter a different team name.');
-
 
 /*
   model helper functions
@@ -587,6 +587,12 @@ module.exports.createTeam = function(teamDoc, creator) {
       'type': _.isEqual(teamDoc.type, 'squad') ? 'squad' : null,
       'description': (!_.isEmpty(teamDoc.description)) ? teamDoc.description : null
     };
+
+    var dupResult = util.hasDuplicateRole(teamDoc.members);
+    if (dupResult && dupResult.error) {
+      return reject({'error': dupResult.error});
+    }
+
     var newTeamDoc = new Team(newTeam);
     Team.create(newTeamDoc)
       .then(function(result){
@@ -1050,6 +1056,12 @@ module.exports.modifyTeamMembers = function(teamId, user, newMembers) { //TODO t
     if (!_.isArray(newMembers)){
       return reject({'error':'Invalid member lists.'});
     }
+
+    var dupResult = util.hasDuplicateRole(newMembers);
+    if (dupResult && dupResult.error) {
+      return reject({'error': dupResult.error});
+    }
+
     var updatedMembers = [];
     var error = {};
     _.each(newMembers, function(member) {
