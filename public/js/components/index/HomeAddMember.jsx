@@ -133,6 +133,10 @@ var HomeAddMember = React.createClass({
                 self.props.hideAddTeamTable();
               })
               .catch(function(err){
+                if (err && err.responseJSON){
+                  var errMsg = err.responseJSON.error;
+                  self.setState({alertMsg: errMsg, showConfirmModal: true});
+                }
                 console.log(err);
                 return;
               });
