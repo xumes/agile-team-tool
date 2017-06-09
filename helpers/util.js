@@ -59,7 +59,7 @@ var util = {
     var ch = '|'+uuid.v4()+'|';
     var result = _.map(memberAry, function(value){
       if ((value.userId !== undefined) && (value.role !== undefined)){
-        return value.userId.trim() + ch + value.role.trim();
+        return value.userId.toUpperCase().trim() + ch + value.role.toLowerCase().trim();
       }
     });
     _.some(result, function(value, index, ary) {
@@ -70,14 +70,16 @@ var util = {
     var duplicated = _.uniq(duplicate);
     var userIdx = [];
     _.each(memberAry, function(m){
-      userIdx[m.userId] = m.name;
+      if (!_.isEmpty(m.name) && !_.isEmpty(m.role)){
+        userIdx[m.userId] = {name: m.name, role: m.role.replace(/\b\w/g, function(r){return r.toUpperCase();})};
+      }
     });
     var str = '';
     if (!_.isEmpty(duplicated)){
       duplicated.forEach(function(i){
         if (i){
           var strErr = i.split(ch);
-          str = str + userIdx[strErr[0]] + ' is already assign with a \'' + strErr[1] + '\' role. ';
+          str = str + userIdx[strErr[0]].name + ' is already assigned to a ' + userIdx[strErr[0]].role + ' role. ';
         }
       });
       if (str){
