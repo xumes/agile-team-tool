@@ -277,6 +277,11 @@ var AssessmentACPlanTable = React.createClass({
                 return;
             }
           });
+          if (AssessmentLinks[ap.practiceName] != null) {
+            var placeHolder = AssessmentLinks[ap.practiceName]['description'] + AssessmentLinks[ap.practiceName]['link'];
+          } else {
+            placeHolder = null;
+          }
           return (
             <div key={'actionPlan_' + idx} id={'actionPlan_' + idx} class='table-block'>
               <div style={{'display':'none'}} class='other-info'>
@@ -301,7 +306,7 @@ var AssessmentACPlanTable = React.createClass({
                 <h1 data-tip={targetScoreDescription} id={'actionPlanTargetScore_' + idx} style={{'cursor':'pointer'}}>{ap.targetScore}</h1>
               </div>
               <div style={{'width':'15%'}}>
-                <textarea id={'actionPlanImproveDescription_' + idx} readOnly={!haveAccess||!ap.isUserCreated} style={readOnlyStyle} maxLength='350' value={ap.improveDescription} onChange={self.textareaChangeHandler} placeholder={AssessmentLinks[ap.practiceName]['description'] + AssessmentLinks[ap.practiceName]['link']}/>
+                <textarea id={'actionPlanImproveDescription_' + idx} readOnly={!haveAccess||!ap.isUserCreated} style={readOnlyStyle} maxLength='350' value={ap.improveDescription} onChange={self.textareaChangeHandler} placeholder={placeHolder}/>
               </div>
               <div style={{'width':'15%','marginLeft':'1%'}}>
                 <textarea id={'actionPlanProgressSummary_' + idx} readOnly={!haveAccess} style={readOnlyStyle2} maxLength='350' value={ap.progressSummary} onChange={self.textareaChangeHandler}></textarea>

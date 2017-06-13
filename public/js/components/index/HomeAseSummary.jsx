@@ -8,6 +8,7 @@ var AssessmentSetupPopover = require('../assessments/AssessmentSetupPopover.jsx'
 var AssessmentACPlanPopover = require('../assessments/AssessmentACPlanPopover.jsx');
 var ConfirmDialog = require('./ConfirmDialog.jsx');
 var chartStatus = require('./chartStatus.jsx').chartStatus;
+var updateFromParent = true;
 
 var HomeAseSummary = React.createClass({
   getInitialState: function() {
@@ -15,9 +16,10 @@ var HomeAseSummary = React.createClass({
       showModal: false,
       showSetupModel: false,
       showACPlanModel: false,
-      selectedAssessment: '',
+      selectedAssessment: null,
       activeTemplate: null,
       assessTemplate: null,
+      draftTemplate: null,
       shouldUpdate: false,
       type: '',
       software: ''
@@ -33,12 +35,12 @@ var HomeAseSummary = React.createClass({
       });
   },
   componentWillUpdate: function(preProps) {
-    var self = this;
-    if (!_.isEmpty(preProps.loadDetailTeam) && !_.isEmpty(self.props.loadDetailTeam)) {
-      if (preProps.loadDetailTeam.team._id.toString() != self.props.loadDetailTeam.team._id.toString()) {
-        self.state.selectedAssessment = '';
-      }
-    }
+    // var self = this;
+    // if (!_.isEmpty(preProps.loadDetailTeam) && !_.isEmpty(self.props.loadDetailTeam)) {
+    //   if (preProps.loadDetailTeam.team._id.toString() != self.props.loadDetailTeam.team._id.toString()) {
+    //     self.state.selectedAssessment = null;
+    //   }
+    // }
   },
   componentDidUpdate: function() {
     var self = this;
@@ -56,30 +58,29 @@ var HomeAseSummary = React.createClass({
       $('.home-assessment-summary .select2').remove();
     }
     $('#pAsseSelect').off('change');
-    $('#pAsseSelect').val('ps').change();
+    // $('#pAsseSelect').val('ps').change();
     $('#pAsseSelect').select2({'width':'100%'});
-    $('#pAsseSelect').change(this.assessmentChangeHandler);
+    $('#pAsseSelect').change(self.assessmentChangeHandler);
     if (self.props.loadDetailTeam != undefined && self.props.loadDetailTeam.assessments != undefined && self.props.loadDetailTeam.assessments.length > 0 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft') {
       api.getTemplateByVersion(self.props.loadDetailTeam.assessments[0].version)
         .then(function(template){
-          self.state.assessTemplate = template;
+          self.state.draftTemplate = template;
         })
         .catch(function(err){
           console.log(err);
         })
     } else {
-      self.state.assessTemplate = self.state.activeTemplate;
+      self.state.draftTemplate = self.state.activeTemplate;
     }
   },
   assessmentChangeHandler: function(e) {
     var self = this;
     // var tempAssess = {};
-    if (e.target.value == 'ps') {
+    if (self.state.selectedAssessment != null && e.target.value == self.state.selectedAssessment._id.toString()) {
       return;
     } else {
       var tempAssess = _.find(self.props.loadDetailTeam.assessments, function(assess){
         if (assess._id.toString() == e.target.value) {
-          self.state.selectedAssessment = e.target.value;
           return assess;
           // return tempAssess = assess;
         }
@@ -87,8 +88,15 @@ var HomeAseSummary = React.createClass({
       var version = 'ag_ref_atma_components_v0' + tempAssess.version.charAt(tempAssess.version.length - 1);
       api.getTemplateByVersion(version)
         .then(function(template){
-          self.state.assessTemplate = template;
-          self.setState({ showACPlanModel: true });
+          // self.state.assessTemplate = template;
+          // self.setState({ showACPlanModel: true });
+          updateFromParent = false;
+          self.setState({
+            selectedAssessment: tempAssess,
+            assessTemplate: template
+          }, function() {
+            updateFromParent = true;
+          });
         })
         .catch(function(err){
           console.log(err);
@@ -123,11 +131,16 @@ var HomeAseSummary = React.createClass({
     // });
   },
   showAssessmentPopover: function() {
-    this.setState({ showModal: true });
+    updateFromParent = false;
+    this.setState({ showModal: true }, function() {
+      updateFromParent = true;
+    });
   },
   hideAssessmentPopover: function() {
-    this.setState({ showModal: false });
-  },
+    updateFromParent = false;
+    this.setState({ showModal: false }, function() {
+      updateFromParent = true;
+    });  },
   showAssessmentSetupPopover: function() {
     this.setState({ showSetupModel: true });
   },
@@ -135,11 +148,16 @@ var HomeAseSummary = React.createClass({
     this.setState({ showSetupModel: false });
   },
   showAssessmentACPlanPopover: function() {
-    this.setState({ showACPlanModel: true });
+    updateFromParent = false;
+    this.setState({ showACPlanModel: true }, function() {
+      updateFromParent = true;
+    });
   },
   hideAssessmentACPlanPopover: function() {
-    this.state.selectedAssessment = '';
-    this.setState({ showACPlanModel: false });
+    updateFromParent = false;
+    this.setState({ showACPlanModel: false }, function() {
+      updateFromParent = true;
+    });
   },
   updateAssessmentSummary: function() {
     this.setState({shouldUpdate:true});
@@ -169,6 +187,9 @@ var HomeAseSummary = React.createClass({
       zIndex: 1040,
       top: 0, bottom: 0, left: 0, right: 0,
     };
+    if (updateFromParent) {
+      self.state.selectedAssessment = null;
+    }
     if (self.props.loadDetailTeam.type != 'squad') {
       return null;
     } else {
@@ -209,17 +230,13 @@ var HomeAseSummary = React.createClass({
                 </div>
               </div>
               <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal}>
-                <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary} />
+                <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.draftTemplate} updateAssessmentSummary={self.updateAssessmentSummary} />
               </Modal>
             </div>
           )
         } else {
-          if (self.state.selectedAssessment != '') {
-            var tempAssess = _.find(self.props.loadDetailTeam.assessments, function(assess){
-              if (assess._id.toString() == self.state.selectedAssessment) {
-                return assess;
-              }
-            });
+          if (self.state.selectedAssessment != null) {
+            var tempAssess = self.state.selectedAssessment;
             if (self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft') {
               var hasDraft = true;
               var draftUpdateDate = moment(self.props.loadDetailTeam.assessments[0].updateDate).format('DD MMM YYYY');
@@ -242,11 +259,11 @@ var HomeAseSummary = React.createClass({
               self.state.software = self.props.loadDetailTeam.assessments[0].deliversSoftware?'Yes':'No';
             }
           }
-          if (self.props.loadDetailTeam.assessments.length == 1 || (self.props.loadDetailTeam.assessments.length == 2 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft')) {
-            var showPreviousAssessment = 'none';
-          } else {
-            var showPreviousAssessment = 'block';
-          }
+          // if (self.props.loadDetailTeam.assessments.length == 1 || (self.props.loadDetailTeam.assessments.length == 2 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft')) {
+          //   var showPreviousAssessment = 'none';
+          // } else {
+          //   var showPreviousAssessment = 'block';
+          // }
           // self.state.selectedAssessment = tempAssess._id.toString();
           var defaultId = tempAssess._id.toString();
           var submitDate = '(Averaging last submitted: ' + moment.utc(tempAssess.submittedDate).format('DD MMM YYYY') + ')';
@@ -333,15 +350,11 @@ var HomeAseSummary = React.createClass({
             );
           });
 
-          var submitAssessCount = 0;
           var assessSelect = self.props.loadDetailTeam.assessments.map(function(assess){
             if (assess.assessmentStatus == 'Submitted') {
-              submitAssessCount ++ ;
-              if (submitAssessCount > 1) {
-                return(
-                  <option key={assess._id} value={assess._id}>{moment.utc(assess.submittedDate).format('DD MMM YYYY')}</option>
-                )
-              }
+              return(
+                <option key={assess._id} value={assess._id}>{moment.utc(assess.submittedDate).format('DD MMM YYYY')}</option>
+              )
             }
           });
           return (
@@ -361,10 +374,8 @@ var HomeAseSummary = React.createClass({
               </div>
               <div class='select-content'>
                 <div class='select-box'>
-                  <div style={{'display':showPreviousAssessment}}>
-                    <h1>{'Previous Assessments'}</h1>
-                    <select id='pAsseSelect' defaultValue={'ps'}>
-                      <option value='ps'>{'Please select'}</option>
+                  <div>
+                    <select id='pAsseSelect' onChange={this.assessmentChangeHandler} value={tempAssess._id}>
                       {assessSelect}
                     </select>
                   </div>
@@ -389,7 +400,7 @@ var HomeAseSummary = React.createClass({
                 <AssessmentACPlanPopover hideAssessmentACPlanPopover={self.hideAssessmentACPlanPopover} updateAssessmentSummary={self.updateAssessmentSummary} loadDetailTeam={self.props.loadDetailTeam} tempAssess={tempAssess} assessTemplate={self.state.assessTemplate} />
               </Modal>
               <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal}>
-                <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary} assessType={self.state.type} assessSoftware={self.state.software} />
+                <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.draftTemplate} updateAssessmentSummary={self.updateAssessmentSummary} assessType={self.state.type} assessSoftware={self.state.software} />
               </Modal>
             </div>
           )
@@ -423,7 +434,7 @@ var HomeAseSummary = React.createClass({
               <AssessmentSetupPopover hideAssessmentSetupPopover={self.hideAssessmentSetupPopover} continueAssessmentDraft={self.continueAssessmentDraft}/>
             </Modal>
             <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showModal}>
-              <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.assessTemplate} updateAssessmentSummary={self.updateAssessmentSummary} assessType={this.state.type} assessSoftware={this.state.software} />
+              <AssessmentPopover hideAssessmentPopover={self.hideAssessmentPopover} loadDetailTeam={self.props.loadDetailTeam} assessTemplate={self.state.draftTemplate} updateAssessmentSummary={self.updateAssessmentSummary} assessType={this.state.type} assessSoftware={this.state.software} />
             </Modal>
           </div>
         )
