@@ -8,9 +8,10 @@ module.exports.chartStatus = {
       'pizza': {show: true, title: '2 Pizza - Squad'},
       'unitCost': {show: true, title: 'Stories/Story Points'},
       'statisfaction': {show: true, title: 'Satisfaction'},
+      'npsScore': {show: true, title: 'NPS Score'},
       'prj': {show: true, title: 'Projects Maturity'},
       'ops': {show: true, title: 'Operations Maturity'},
-      'devops': {show: true, title: 'Delivery Maturity'}
+      'devops': {show: true, title: 'Delivery Maturity'},
     },
     'charts': {
       'chartHeight': '23%',

@@ -465,6 +465,11 @@ var HomeMemberTable = React.createClass({
         })
         .catch(function(err){
           console.log(err);
+          if (err && err.responseJSON){
+            var errMsg = err.responseJSON.error;
+            self.cancelChange(roleId);
+            self.setState({alertMsg: errMsg, showConfirmErrorModal: true});
+          }
         });
     }
   },
@@ -500,6 +505,11 @@ var HomeMemberTable = React.createClass({
         })
         .catch(function(err){
           console.log(err);
+          if (err && err.responseJSON){
+            var errMsg = err.responseJSON.error;
+            self.cancelChange(roleId);
+            self.setState({alertMsg: errMsg, showConfirmErrorModal: true});
+          }
         });
     }
   },

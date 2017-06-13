@@ -84,6 +84,10 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, setSele
   cycleTimeWIPSeries.name = 'Time in WIP';
   cycleTimeWIPSeries.data = [];
 
+  var npsScoreSeries = new Object();
+  npsScoreSeries.name = 'NPS Score';
+  npsScoreSeries.data = [];
+
   var series = [];
 
   // Get last 6 iterations
@@ -140,6 +144,7 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, setSele
     var storyPointFTEData = new Object();
     var cycleTimeBacklogData = new Object();
     var cycleTimeWIPData = new Object();
+    var npsScoreData = new Object();
 
     var categoryWithChange = '';
     var category = moment.utc(p6Iterations[i].endDate).format('DD MMM YYYY');
@@ -250,6 +255,13 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, setSele
     clientSatData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
     clientSatSeries.data.push(clientSatData);
 
+    npsScoreData.name = p6Iterations[i].name;
+    npsScoreData.y = isNaN(parseInt(p6Iterations[i].npsScore)) ? 0 : parseFloat(p6Iterations[i].npsScore);
+    npsScoreData.iterId = p6Iterations[i]._id;
+    npsScoreData.startDate = showDateDDMMMYYYY(p6Iterations[i].startDate);
+    npsScoreData.endDate = showDateDDMMMYYYY(p6Iterations[i].endDate);
+    npsScoreSeries.data.push(npsScoreData);
+
     var StoriesDel = isNaN(parseInt(p6Iterations[i].deliveredStories)) ? 0 : parseInt(p6Iterations[i].deliveredStories);
     var StoryPointDel = isNaN(parseInt(p6Iterations[i].storyPointsDelivered)) ? 0 : parseInt(p6Iterations[i].storyPointsDelivered);
     var fte = isNaN(parseInt(p6Iterations[i].memberFte)) ? 0 : parseFloat(p6Iterations[i].memberFte);
@@ -314,10 +326,132 @@ module.exports.squadIterationsHandler = function(teamId, teamIterations, setSele
   loadSatisfactionChart('statisfactionChart', 'Client and Team Satisfaction', 'line', graphCategory, 'Rating', teamSatSeries, clientSatSeries, 'Points', sMax, setSelectedIteration);
   loadChartMultiChart('unitCostChart', 'Stories/Story Points per Person', 'line', graphCategory, 'Count', '', storyFTESeries, storyPointFTESeries, 'Points', setSelectedIteration);
   loadChartMultiChart('wipBacklogChart', 'Cycle Time (in days)', 'line', graphCategory, 'Average days per story', '', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', setSelectedIteration);
+  loadNpsScoreChart('npsScoreChart', 'NPS Score', 'line', graphCategory, 'Points', npsScoreSeries, 'Points', '', setSelectedIteration);
 
   $('#squad_team_scard').show();
   redrawCharts('iterationSection');
 };
+
+function loadNpsScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, unit, text, loadIteration) {
+  new Highcharts.Chart({
+    chart: {
+      type: type,
+      renderTo: id,
+      marginLeft: 60,
+      marginRight: 0, width: 380
+    },
+    lang: {
+      noData: 'No data to display'
+    },
+    noData: {
+      style: {
+        fontWeight: 'normal',
+        fontSize: '1em',
+        color: '#303030'
+      }
+    },
+    title: {
+      style: {
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
+        fontSize: '1.3em',
+        color: '#5A5A5A'
+      },
+      text: title
+    },
+
+    xAxis: {
+      title: {
+        text: text,
+        align: 'middle',
+        x: -20
+      },
+      categories: categories,
+      tickmarkPlacement: 'on',
+      labels: {
+        style: {
+          'fontSize': '.75em'
+        },
+        formatter: function() {
+          if (typeof this.value === 'string' && this.value.indexOf('*') >= 0) {
+            return '<span style="fill: orange;">' + this.value + '</span>';
+          } else {
+            return this.value;
+          }
+        }
+      }
+    },
+
+    yAxis: {
+      min: -100,
+      max: 100,
+      maxPadding: 1,
+      tickInterval: 100,
+      title: {
+        text: yAxisLabel,
+        x: 15
+      }
+    },
+
+    plotOptions: {
+      column: {
+        pointPlacement: 'on'
+      },
+      series: {
+        cursor: 'pointer'
+      }
+    },
+
+    tooltip: {
+      formatter: function() {
+        var formatResult = '<b>' + this.key + '<b><br>';
+        var point = this.point.index;
+        for (var i=0;i < this.series.chart.series.length; i++) {
+          if (this.series.chart.series[i].visible)
+            formatResult += '<span style="color:' +  this.series.chart.series[i].data[point].color + '">' + getCharacter(this.series.chart.series[i].symbol) +' </span>' + this.series.chart.series[i].name + ': ' + this.series.chart.series[i].data[point].y + '<br>';
+        }
+        return formatResult;
+      }
+    },
+
+    legend: {
+      align: 'center',
+      verticalAlign: 'bottom',
+      layout: 'horizontal',
+      itemMarginTop: -10,
+      itemStyle: {fontWeight: 'normal'}
+    },
+
+    credits: {
+      enabled: false
+    },
+    /*
+    subtitle: {
+      text: subtitle,
+      verticalAlign: 'bottom',
+      align: 'center',
+      y: 8,
+      style: {
+        fontSize: '1em',
+        color: 'orange'
+      }
+    },
+    */
+    series: [{
+      showInLegend: true,
+      name: seriesObj1.name,
+      data: seriesObj1.data,
+      point: {
+        events: {
+          click: function(e) {
+              loadIteration(e.point.iterId);
+          }
+        }
+      }
+    }]
+  });
+}
+
+
 
 function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, seriesObj2, unit, text, loadIteration) {
   new Highcharts.Chart({
