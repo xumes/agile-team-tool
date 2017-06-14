@@ -9,6 +9,7 @@ var AssessmentACPlanPopover = require('../assessments/AssessmentACPlanPopover.js
 var ConfirmDialog = require('./ConfirmDialog.jsx');
 var chartStatus = require('./chartStatus.jsx').chartStatus;
 var updateFromParent = true;
+var shouldThisUpdate = true;
 
 var HomeAseSummary = React.createClass({
   getInitialState: function() {
@@ -61,16 +62,53 @@ var HomeAseSummary = React.createClass({
     // $('#pAsseSelect').val('ps').change();
     $('#pAsseSelect').select2({'width':'100%'});
     $('#pAsseSelect').change(self.assessmentChangeHandler);
-    if (self.props.loadDetailTeam != undefined && self.props.loadDetailTeam.assessments != undefined && self.props.loadDetailTeam.assessments.length > 0 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft') {
-      api.getTemplateByVersion(self.props.loadDetailTeam.assessments[0].version)
-        .then(function(template){
-          self.state.draftTemplate = template;
-        })
-        .catch(function(err){
-          console.log(err);
-        })
-    } else {
-      self.state.draftTemplate = self.state.activeTemplate;
+    if (updateFromParent && shouldThisUpdate) {
+      if (self.props.loadDetailTeam != undefined && self.props.loadDetailTeam.assessments != undefined && self.props.loadDetailTeam.assessments.length > 0 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft') {
+        var draftTemplate = null;
+        api.getTemplateByVersion(self.props.loadDetailTeam.assessments[0].version)
+          .then(function(template){
+            draftTemplate = template;
+            if (self.props.loadDetailTeam.assessments.length > 1) {
+              return api.getTemplateByVersion(self.props.loadDetailTeam.assessments[1].version);
+            } else {
+              return null;
+            }
+          })
+          .then(function(template){
+            shouldThisUpdate = false;
+            self.setState({
+              draftTemplate: draftTemplate,
+              assessTemplate: template
+            }, function() {
+              shouldThisUpdate = true;
+            });
+          })
+          .catch(function(err){
+            console.log(err);
+          });
+      } else if (self.props.loadDetailTeam != undefined && self.props.loadDetailTeam.assessments != undefined && self.props.loadDetailTeam.assessments.length > 0 && self.props.loadDetailTeam.assessments[0].assessmentStatus != 'Draft') {
+        api.getTemplateByVersion(self.props.loadDetailTeam.assessments[0].version)
+          .then(function(template) {
+            shouldThisUpdate = false;
+            self.setState({
+              draftTemplate: self.state.activeTemplate,
+              assessTemplate: template
+            }, function() {
+              shouldThisUpdate = true;
+            });
+          })
+          .catch(function(err){
+            console.log(err);
+          })
+      } else {
+        shouldThisUpdate = false;
+        self.setState({
+          draftTemplate: self.state.activeTemplate,
+        }, function() {
+          console.log('aaa'+updateFromParent);
+          shouldThisUpdate = true;
+        });
+      }
     }
   },
   assessmentChangeHandler: function(e) {
@@ -383,7 +421,7 @@ var HomeAseSummary = React.createClass({
                 </div>
                 <div class='review-box'>
                   {/*<h1>{'Not sure what to do next?'}</h1>*/}
-                  <button type='button' onClick={self.showAssessmentACPlanPopover} class={hasDraft?'ibm-btn-pri ibm-btn-blue-50':'ibm-btn-sec ibm-btn-blue-50'}>{'Review summary'}</button>
+                  <button type='button' onClick={self.showAssessmentACPlanPopover} class={hasDraft?'ibm-btn-pri ibm-btn-blue-50':'ibm-btn-sec ibm-btn-blue-50'}>{'Review Team Summary'}</button>
                   <h2>{'Last Updated:'}</h2>
                   <h3 style={{'textAlign':'right'}}>{updateDate}</h3>
                 </div>
