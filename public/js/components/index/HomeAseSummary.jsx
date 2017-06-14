@@ -375,6 +375,7 @@ var HomeAseSummary = React.createClass({
               <div class='select-content'>
                 <div class='select-box'>
                   <div>
+                    <h1>{'All Assessments'}</h1>
                     <select id='pAsseSelect' onChange={this.assessmentChangeHandler} value={tempAssess._id}>
                       {assessSelect}
                     </select>
@@ -382,7 +383,7 @@ var HomeAseSummary = React.createClass({
                 </div>
                 <div class='review-box'>
                   {/*<h1>{'Not sure what to do next?'}</h1>*/}
-                  <button type='button' onClick={self.showAssessmentACPlanPopover} class={hasDraft?'ibm-btn-pri ibm-btn-blue-50':'ibm-btn-sec ibm-btn-blue-50'}>{'Review Action Plan'}</button>
+                  <button type='button' onClick={self.showAssessmentACPlanPopover} class={hasDraft?'ibm-btn-pri ibm-btn-blue-50':'ibm-btn-sec ibm-btn-blue-50'}>{'Review summary'}</button>
                   <h2>{'Last Updated:'}</h2>
                   <h3 style={{'textAlign':'right'}}>{updateDate}</h3>
                 </div>
