@@ -7038,9 +7038,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .assessment-popover-block > .agile-maturity a.expand::before {
-  content: "\f340";
+  content: "\f11c";
   display: inline-block;
-  font-family: "icons-ibm-v9";
+  font-family: "icons-ibm-v10";
   font-size: 1.4em;
   line-height: 0.8em;
   font-style: normal;
@@ -7058,9 +7058,9 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .assessment-popover-block > .agile-maturity a.collapse::before {
-  content: "\f34d";
+  content: "\f129";
   display: inline-block;
-  font-family: "icons-ibm-v9";
+  font-family: "icons-ibm-v10";
   font-size: 1.4em;
   line-height: 0.8em;
   font-style: normal;
