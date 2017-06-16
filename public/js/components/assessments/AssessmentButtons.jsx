@@ -169,7 +169,7 @@ var AssessmentButtons = React.createClass({
     var self = this;
     $('#deleteAssessDraftConfirm').hide();
     if (_.isEmpty(self.props.assessDraft) || self.props.assessDraft.assessmentStatus != 'Draft') {
-      self.setState({alertMsg: 'This assessment draft hasn\'t been saved, there is no necessary to delete it.', showConfirmModal: true});
+      self.setState({alertMsg: 'This assessment has not yet been saved as a draft. Click OK to return and close the assessment.', showConfirmModal: true});
     } else {
       api.deleteAssessment(self.props.assessDraft._id)
         .then(function(result){
@@ -348,7 +348,7 @@ var AssessmentButtons = React.createClass({
         <ConfirmPopover confirmClick={this.deleteAssessment} confirmId='deleteAssessDraftConfirm' content={'You have requested to delete this draft assessment.  All saved progress will be deleted. Please confirm that you want to proceed with this delete.'} cancelBtn='block' confirmBtn='block' okBtn='none'/>
         <ConfirmPopover confirmId='saveDraftConfirm' content={'Maturity assessment has been saved as draft.'} cancelBtn='none' confirmBtn='none' okBtn='block' hideAssessmentPopover={this.props.hideAssessmentPopover}/>
         <ConfirmPopover confirmId='submittedMatAssessment' content={'Maturity assessment has been submitted.'} cancelBtn='none' confirmBtn='none' okBtn='block' hideAssessmentPopover={this.props.hideAssessmentPopover}/>
-        <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.hideConfirmDialog} alertType='error' content={self.state.alertMsg} actionBtnLabel='Ok' />
+        <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.hideConfirmDialog} alertType='information' content={self.state.alertMsg} actionBtnLabel='Ok' />
       </div>
     )
   }
