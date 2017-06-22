@@ -4453,7 +4453,6 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   padding: 0 7%;
   -moz-user-select: none;
   background-image: none;
-  border: 1px solid transparent;
   cursor: pointer;
   display: inline-block;
   font-size: 1.27em;
