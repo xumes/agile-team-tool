@@ -13,6 +13,7 @@ var AssessmentActiveTemplates = React.createClass({
 
   initial: function() {
     var self = this;
+    $('#atma_' + self.props.assessTemplateId + ' .agile-question-opt > input').prop('checked', false);
     $('#atma_' + self.props.assessTemplateId + ' a.ibm-twisty-trigger > span').html('Not answered');
     $('#atma_' + self.props.assessTemplateId + ' a.ibm-twisty-trigger').css('background','');
     $('#atma_' + self.props.assessTemplateId + ' textarea').val('');
