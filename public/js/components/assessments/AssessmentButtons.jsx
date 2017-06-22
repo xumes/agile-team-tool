@@ -55,8 +55,8 @@ var AssessmentButtons = React.createClass({
       var p2N = updateDoc.componentResults[1].practiceNumber;
       objectLength = objectLength + updateDoc.componentResults[1].assessedComponents.length;
     }
-    var checkedCurrs = $('.iradio_square-blue.curr.checked > input');
-    var checkedTargs = $('.iradio_square-blue.targ.checked > input');
+    var checkedCurrs = $('.agile-table-body input[id*="curr"]:checked');
+    var checkedTargs = $('.agile-table-body input[id*="targ"]:checked');
     if (checkedCurrs.length < objectLength || checkedTargs.length < objectLength) {
       checkedIsEmpty = true;
     }
@@ -123,8 +123,8 @@ var AssessmentButtons = React.createClass({
       updateDoc.componentResults.push(JSON.parse(JSON.stringify(templates[newestTemplateVersion]['Delivery'])));
       var p2N = updateDoc.componentResults[1].practiceNumber;
     }
-    var checkedCurrs = $('.iradio_square-blue.curr.checked > input');
-    var checkedTargs = $('.iradio_square-blue.targ.checked > input');
+    var checkedCurrs = $('.agile-table-body input[id*="curr"]:checked');
+    var checkedTargs = $('.agile-table-body input[id*="targ"]:checked');
     if (p1N) {
       self.getUpdateDoc(0, p1N, checkedCurrs, checkedTargs, updateDoc);
     }
@@ -223,10 +223,10 @@ var AssessmentButtons = React.createClass({
     for (var i = 0; i < countArray.length; i++) {
       for (var j = 0; j < countArray[i]; j++) {
         var chId = 'atma_' + index + '_prin_' + i + '_prac_' + j;
-        var currScore = self.getPointById(chId, checkedCurrs);
+        var currScore = self.getPointById(chId + '_curr', checkedCurrs);
         updateDoc.componentResults[index].assessedComponents[count].currentLevelName = currScore.levelName;
         updateDoc.componentResults[index].assessedComponents[count].currentScore = currScore.score;
-        var targetScore = self.getPointById(chId, checkedTargs);
+        var targetScore = self.getPointById(chId + '_targ', checkedTargs);
         updateDoc.componentResults[index].assessedComponents[count].targetLevelName = targetScore.levelName;
         updateDoc.componentResults[index].assessedComponents[count].targetScore = targetScore.score;
         var improveDescription = self.getComments(chId);

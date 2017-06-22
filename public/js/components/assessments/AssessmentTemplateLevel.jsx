@@ -24,8 +24,6 @@ var AssessmentTemplateLevel = React.createClass({
     if ($('#'+levelCurrId+' > div > input').prop('disabled')) {
       return;
     }
-    $('#' + practiceId + ' .curr.checked').removeClass('checked');
-    $('#' + levelCurrId + ' .iradio_square-blue.curr').addClass('checked');
     if ($('#' + practiceId + '_ans').html() == 'Not answered') {
       $('#' + practiceId + '_ans').html('Current: ' + clickValue + ' | Target: ---')
     } else {
@@ -43,8 +41,6 @@ var AssessmentTemplateLevel = React.createClass({
     if ($('#'+levelCurrId+' > div > input').prop('disabled')) {
       return;
     }
-    $('#' + practiceId + ' .targ.checked').removeClass('checked');
-    $('#' + levelCurrId + ' .iradio_square-blue.targ').addClass('checked');
     if ($('#' + practiceId + '_ans').html() == 'Not answered') {
       $('#' + practiceId + '_ans').html('Current: --- | Target: ' + clickValue);
     } else {
@@ -81,6 +77,8 @@ var AssessmentTemplateLevel = React.createClass({
         var levelCurrId = levelMainId + 'td' + '_curr_' + count;
         var levelTargId = levelMainId + 'td' + '_targ_' + count;
         var levelIndId = levelMainId + 'td' + '_ind_' + count;
+        var practiceCurrName = levelMainId + 'curr';
+        var practiceTargName = levelMainId + 'targ';
         var clickValue = 'Initiating';
         switch (count) {
           case 0:
@@ -105,19 +103,14 @@ var AssessmentTemplateLevel = React.createClass({
             <div style={{'width': '72%'}}>
               <AssessmentTemplateCriteria criterias={level.criteria} levelId={levelId}/>
             </div>
-            <div style={{'width': '6.5%'}} id={levelCurrId} class='agile-question-opt ibm-background-cool-gray-20'>
-              <div class='iradio_square-blue curr' role='radio' aria-checked='false' aria-disabled='false' aria-label='Maturity level' style={{'position': 'relative', 'width': '22px','left':'25%'}}>
-                <input type='radio' name={levelCurrId} value={clickValue} aria-label={clickValue} style={currStyle}/>
-                <ins class='iCheck-helper' style={currStyle} onClick={self.currClickHandler.bind(null, [practiceId, levelCurrId, clickValue])}></ins>
-              </div>
+            <div style={{'width': '6.5%'}} class='agile-question-opt ibm-background-cool-gray-20'>
+              <input data-init="false" class="ibm-styled-radio" type="radio" id={levelCurrId} name={practiceCurrName} value={clickValue} aria-label={clickValue} onClick={self.currClickHandler.bind(null, [practiceId, levelCurrId, clickValue])}/>
+              <label for={levelCurrId} title={clickValue}><span style={{'display':'none'}}>{clickValue}</span></label>
             </div>
-            <div style={{'width': '6.5%'}} id={levelTargId} class='agile-question-opt ibm-background-cool-gray-20'>
-              <div class='iradio_square-blue targ' role='radio' aria-checked='false' aria-disabled='false' aria-label='Maturity level' style={{'position': 'relative', 'width': '22px','left':'25%'}}>
-                <input type='radio' name={levelTargId} value={clickValue} aria-label={clickValue} style={currStyle}/>
-                <ins class='iCheck-helper' style={currStyle} onClick={self.targClickHandler.bind(null, [practiceId, levelTargId, clickValue])}></ins>
-              </div>
+            <div style={{'width': '6.5%'}} class='agile-question-opt ibm-background-cool-gray-20'>
+              <input data-init="false" class="ibm-styled-radio" type="radio" id={levelTargId} name={practiceTargName} value={clickValue} aria-label={clickValue} onClick={self.targClickHandler.bind(null, [practiceId, levelTargId, clickValue])}/>
+              <label for={levelTargId} title={clickValue}><span style={{'display':'none'}}>{clickValue}</span></label>
             </div>
-            {/*<td></td>*/}
           </div>
         )
       });
