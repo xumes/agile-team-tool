@@ -13,8 +13,7 @@ var AssessmentActiveTemplates = React.createClass({
 
   initial: function() {
     var self = this;
-    $('#atma_' + self.props.assessTemplateId + ' .iradio_square-blue').removeClass('checked');
-    $('#atma_' + self.props.assessTemplateId + ' span').html('Not answered');
+    $('#atma_' + self.props.assessTemplateId + ' a.ibm-twisty-trigger > span').html('Not answered');
     $('#atma_' + self.props.assessTemplateId + ' a.ibm-twisty-trigger').css('background','');
     $('#atma_' + self.props.assessTemplateId + ' textarea').val('');
     $('#atma_' + self.props.assessTemplateId + ' textarea').prop('disabled', false);
@@ -40,8 +39,8 @@ var AssessmentActiveTemplates = React.createClass({
           var targAssessId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_td_targ_' + targLevelId;
           var levelLabelId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_ans';
           var textAreaId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_action';
-          $('#' + currAssessId + ' .iradio_square-blue.curr').addClass('checked');
-          $('#' + targAssessId + ' .iradio_square-blue.targ').addClass('checked');
+          $('#' + currAssessId).prop('checked', true);
+          $('#' + targAssessId).prop('checked', true);
           if (currLevelName == '---' && targLevelName == '---') {
             $('#' + levelLabelId).html('Not answered');
           } else {
