@@ -1,5 +1,4 @@
 module.exports = {
-  dbUrl: process.env.dbUrl || 'test.cloudant.com',
   ldapAuthURL: process.env.ldapAuthURL || 'http://ifundit-dp.tap.ibm.com:3004',
   bluepagesURL: process.env.bluepagesURL || 'http://ifundit-dp.tap.ibm.com:3004',
   redisDb: {
@@ -8,10 +7,6 @@ module.exports = {
   },
   secret: process.env.secret || 'thisshouldberandom',
   authType: process.env.authType || 'ldap-login',
-  cloudant: {
-    url: process.env.cloudantURL || 'https://user:pass@user.cloudant.com',
-    dbName: process.env.cloudantDb || 'localDb'
-  },
   mongoURL: process.env.mongoURL || 'mongodb://localhost/agiletool_stage',
   saml: {
     path: '/auth/saml/ibm/callback',
@@ -24,15 +19,8 @@ module.exports = {
     smtpHost: process.env.smtpHost || 'https://localhost:8080/mail',
     smtpApplicationKey: process.env.smtpApplicationKey || 'key123'
   },
-  prefixes: {
-    team: 'ag_team_',
-    iteration: 'ag_iterationinfo_',
-    assessment: 'ag_mar_'
-  },
   environment: process.env.NODE_ENV || 'development',
   googleAnalyticsKey: process.env.googleAnalyticsKey || '',
-  googleHost: 'maps.googleapis.com',
-  googleApiKey: process.env.googleAPIKey || 'AIzaSyAF2vwg6z-pH4xC7Ac1eMcpR9mVG-A2u7Y',
   facesURL: 'https://faces.w3ibm.mybluemix.net/api',
   ibmNPSKey: process.env.ibmNPSKey || '',
   ibmNPS: {
