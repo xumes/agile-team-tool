@@ -674,12 +674,16 @@ var IterationExport = {
     });
   },
 
-  softDelete: function(docId, user) {
+  softDeleteArchive: function(docId, user, status) {
     return new Promise(function(resolve, reject) {
       var updateDoc = {};
       var userId = user['ldap']['uid'].toUpperCase();
       var userEmail = user['shortEmail'].toLowerCase();
-      updateDoc.docStatus = 'delete';
+      var docStatus = 'delete';
+      if (status && (status === 'archive')){
+        docStatus = 'archive';
+      }
+      updateDoc.docStatus = docStatus;
       updateDoc.updatedByUserId = userId;
       updateDoc.updatedBy = userEmail;
       updateDoc.updateDate = new Date(moment.utc());

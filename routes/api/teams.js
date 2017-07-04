@@ -35,7 +35,7 @@ module.exports = function(app, includes) {
 
   //checked
   deleteTeam = function(req, res) {
-    teamModel.softDelete(req.body, req.session['user'])
+    teamModel.softDeleteArchive(req.body, req.session['user'], 'delete')
       .then(function(result) {
         res.status(200).send(result);
       })
@@ -47,6 +47,20 @@ module.exports = function(app, includes) {
   //checked
   updateTeam = function(req, res) {
     teamModel.updateTeam(req.body, req.session['user'])
+      .then(function(result) {
+        res.status(200).send(result);
+      })
+      .catch(function(err) {
+        res.status(400).send(err);
+      });
+  };
+
+  archiveTeam = function(req, res) {
+    var docStatus = null;
+    if (req.body['docStatus'] && req.body['docStatus'].toLowerCase() === 'archive') {
+      docStatus = 'archive';
+    }
+    teamModel.softDeleteArchive(req.body, req.session['user'], docStatus)
       .then(function(result) {
         res.status(200).send(result);
       })
@@ -429,6 +443,9 @@ module.exports = function(app, includes) {
 
   // update existing team document
   app.put('/api/teams/', [includes.middleware.auth.requireLogin], updateTeam);
+
+  // archive team document
+  app.put('/api/teams/archive', [includes.middleware.auth.requireLogin], archiveTeam);
 
   // associate team document
   app.put('/api/teams/associates', [includes.middleware.auth.requireLogin], associateTeam);

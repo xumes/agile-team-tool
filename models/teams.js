@@ -1309,7 +1309,7 @@ module.exports.updateTeam = function(teamDoc, user) {
   });
 };
 
-module.exports.softDelete = function(teamDoc, user) {
+module.exports.softDeleteArchive = function(teamDoc, user, status) {
   return new Promise(function(resolve, reject){
     var updatedDoc = {};
     if (_.isEmpty(teamDoc) || _.isEmpty(teamDoc._id)) {
@@ -1318,7 +1318,11 @@ module.exports.softDelete = function(teamDoc, user) {
     var teamId = teamDoc._id;
     var userId = user ? user['ldap']['uid'].toUpperCase() : '';
     var userEmail = user ? user['shortEmail'].toLowerCase() : '';
-    updatedDoc.docStatus = 'delete';
+    var docStatus = 'delete';
+    if (status && (status === 'archive')){
+      docStatus = 'archive';
+    }
+    updatedDoc.docStatus = docStatus;
     updatedDoc.updatedByUserId = userId;
     updatedDoc.updatedBy = userEmail;
     updatedDoc.updateDate = new Date(moment.utc());
@@ -1327,7 +1331,7 @@ module.exports.softDelete = function(teamDoc, user) {
     Users.isUserAllowed(userId, teamId)
       .then(function(result){
         if (!result) {
-          return Promise.reject({'error':'User is not allowed to delete team.'});
+          return Promise.reject({'error':'User is not allowed to '+docStatus+' team.'});
         }
         var promiseArray = [];
         promiseArray.push(self.getTeam(teamId));
@@ -1348,16 +1352,16 @@ module.exports.softDelete = function(teamDoc, user) {
         var query = {
           'path' : {
             '$regex' : parentPath
-          }, docStatus:{$ne:'delete'}
+          }, docStatus:{$ne: docStatus}
         };
         var promiseArray = [];
         promiseArray.push(Team.find(query).exec());
         _.each(iterations, function(iter){
-          promiseArray.push(Iterations.softDelete(iter._id, user));
+          promiseArray.push(Iterations.softDeleteArchive(iter._id, user, docStatus));
         });
         _.each(assessments, function(as){
           // console.log(as._id, user);
-          promiseArray.push(Assessments.softDelete(as._id, user));
+          promiseArray.push(Assessments.softDeleteArchive(as._id, user, docStatus));
         });
         return Promise.all(promiseArray);
       })
@@ -1384,7 +1388,9 @@ module.exports.softDelete = function(teamDoc, user) {
         return Promise.all(promiseArray);
       })
       .then(function(result){
-        resolve({'ok': 'Delete successfully'});
+        var msg = docStatus + ' successfully';
+        msg = msg.charAt(0).toUpperCase() + msg.slice(1);
+        resolve({'ok': msg});
       })
       .catch( /* istanbul ignore next */ function(err){
         reject(err);

@@ -1069,13 +1069,13 @@ describe('Team model [getAllUserTeamsByUserId]', function() {
   });
 });
 
-describe('Team model [softDelete]', function() {
+describe('Team model [softDeleteArchive]', function() {
   var newDoc = {
     'name' : 'mongodb-test-team-01',
     'description': 'aaa'
   };
   it('return fail by empty team id', function(done){
-    Teams.softDelete(null, userSession)
+    Teams.softDeleteArchive(null, userSession)
       .catch(function(err){
         expect(err).to.be.a('object');
         expect(err.error).to.equal('Team ID is required.');
@@ -1084,7 +1084,7 @@ describe('Team model [softDelete]', function() {
   });
   it('return fail by empty user', function(done){
     newDoc._id = parentTeamId;
-    Teams.softDelete(newDoc, null)
+    Teams.softDeleteArchive(newDoc, null)
       .catch(function(err){
         expect(err).to.be.a('object');
         //TODO: need to refactor to valid promise error object
@@ -1095,7 +1095,7 @@ describe('Team model [softDelete]', function() {
   it('return fail by wrong user', function(done){
     userSession.ldap.uid = 'TEST7654321';
     newDoc._id = parentTeamId;
-    Teams.softDelete(newDoc, userSession)
+    Teams.softDeleteArchive(newDoc, userSession)
       .catch(function(err){
         expect(err).to.be.a('object');
         //TODO: need to refactor to valid promise error object
@@ -1106,7 +1106,7 @@ describe('Team model [softDelete]', function() {
   it('return successful', function(done){
     userSession.ldap.uid = testUser.userId;
     newDoc._id = parentTeamId;
-    Teams.softDelete(newDoc, userSession)
+    Teams.softDeleteArchive(newDoc, userSession)
       .then(function(result){
         expect(result).to.be.a('object');
         done();
