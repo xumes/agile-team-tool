@@ -15,6 +15,7 @@ var HomeTeamSetup = React.createClass({
       showParentSetup: false,
       showTreeSetup: false,
       showConfirmModal: false,
+      showArchiveModal: false,
       selectableParents: [],
       selectableChildren: [],
       revertAsSquad: false,
@@ -265,11 +266,17 @@ var HomeTeamSetup = React.createClass({
   confirmDelete: function() {
     this.setState({ showConfirmModal: true });
   },
+  confirmArchive: function() {
+    this.setState({ showArchiveModal: true });
+  },
   hideConfirmDialog: function() {
     this.setState({ showConfirmModal: false });
   },
+  hideArchiveModal: function() {
+    this.setState({ showArchiveModal: false });
+  },
   deleteTeam: function() {
-    var self = this
+    var self = this;
     var team = self.props.loadDetailTeam.team;
     api.deleteTeam(JSON.stringify(team))
       .then(function(result) {
@@ -285,7 +292,24 @@ var HomeTeamSetup = React.createClass({
       showTreeSetup: false,
       showConfirmModal: false
     });
-
+  },
+  archiveTeam: function() {
+    var self = this;
+    var team = self.props.loadDetailTeam.team;
+    team.docStatus = 'archive';
+    api.archiveTeam(JSON.stringify(team))
+      .then(function(result) {
+        //alert('You have successfully archived the team.');
+        self.props.tabClickedHandler('','');
+      })
+      .catch(function(err) {
+        console.log(err);
+      });
+    this.setState({
+      showParentSetup: false,
+      showTreeSetup: false,
+      showArchiveModal: false
+    });
   },
   updateTeamSetup: function() {
     var self = this;
@@ -355,11 +379,9 @@ var HomeTeamSetup = React.createClass({
         return err;
       });
   },
-
   hideAlertDialog: function() {
     this.setState({showAlertModal: false, alertMsg: ''});
   },
-
   render: function() {
     var self = this;
     var backdropStyle = {
@@ -498,7 +520,10 @@ var HomeTeamSetup = React.createClass({
 
             <div class='home-modal-block-footer ibm-btn-row' style={{'width':'95%','top':'-2%'}}>
               <div style={{'float':'left'}}>
-                <button class=' ibm-btn-sec ibm-btn-small ibm-btn-blue-50' onClick={self.confirmDelete} id='deleteBtn' disabled={!self.props.loadDetailTeam.access} >Delete Team</button>
+                <button class=' ibm-btn-sec ibm-btn-small ibm-btn-blue-50' onClick={self.confirmDelete} id='deleteBtn' disabled={!self.props.loadDetailTeam.access} style={{'marginRight':'.5em'}}>Delete Team</button>
+                { self.props.loadDetailTeam.type === 'squad' ?
+                  <button class=' ibm-btn-sec ibm-btn-small ibm-btn-blue-50' onClick={self.confirmArchive} id='archiveBtn' disabled={!self.props.loadDetailTeam.access} >Archive</button> : ''
+                }
               </div>
               <div style={{'float':'right'}}>
                 <button class=' ibm-btn-pri ibm-btn-small ibm-btn-blue-50' style={{'marginRight':'.5em'}} onClick={self.updateTeamSetup} id='updateBtn' disabled={!self.props.loadDetailTeam.access} >Save Changes</button>
@@ -571,7 +596,10 @@ var HomeTeamSetup = React.createClass({
             </div>
             <div class='home-modal-block-footer ibm-btn-row' style={{'width':'94%', 'top':'4%'}}>
               <div style={{'float':'left'}}>
-                <button class=' ibm-btn-sec ibm-btn-small ibm-btn-blue-50' onClick={self.confirmDelete} id='deleteBtn' disabled={!self.props.loadDetailTeam.access} >Delete Team</button>
+                <button class=' ibm-btn-sec ibm-btn-small ibm-btn-blue-50' onClick={self.confirmDelete} id='deleteBtn' disabled={!self.props.loadDetailTeam.access} style={{'marginRight':'.5em'}}>Delete Team</button>
+                { self.props.loadDetailTeam.type === 'squad' ?
+                  <button class=' ibm-btn-sec ibm-btn-small ibm-btn-blue-50' onClick={self.confirmArchive} id='archiveBtn' disabled={!self.props.loadDetailTeam.access} >Archive</button> : ''
+                }
               </div>
               <div style={{'float':'right'}}>
                 <button class=' ibm-btn-pri ibm-btn-small ibm-btn-blue-50' style={{'marginRight':'.5em'}} onClick={self.updateTeamSetup} id='updateBtn' disabled={!self.props.loadDetailTeam.access} >Save Changes</button>
@@ -602,7 +630,29 @@ var HomeTeamSetup = React.createClass({
           </div>
         </Modal>
 
+        <Modal aria-labelledby='modal-label' style={modalStyle} backdropStyle={backdropStyle} show={self.state.showArchiveModal} onHide={self.hideArchiveModal}>
+          <div class='home-modal-block' style={{'height':'18em', 'width':'25em'}}>
+            <div class='home-modal-block-header' style={{'backgroundColor':'#d0021b'}}>
+              <h>Warning!</h>
+              <div class='home-modal-block-close-btn' onClick={self.hideArchiveModal}>
+                <InlineSVG src={require('../../../img/Att-icons/att-icons-close.svg')}></InlineSVG>
+              </div>
+            </div>
+            <div class='home-modal-block-content' style={{'height':'auto'}}>
+              <p>This will remove the selected team from the team navigation view but will continue to roll up past iteration and assessment data!</p>
+              <p>Are you sure you want to continue?</p>
+            </div>
+            <div class='home-modal-block-footer ibm-btn-row' style={{'width':'93%','top':'5%'}}>
+              <div style={{'float':'right'}}>
+                <button class=' ibm-btn-pri ibm-btn-small ibm-btn-red-50' style={{'marginRight':'.5em','background':'#d0021b none repeat scroll 0 0','borderColor':'#d0021b'}} onClick={self.archiveTeam} id='updateBtn' ref='updateBtn'>Archive</button>
+                <button class=' ibm-btn-pri ibm-btn-small ibm-btn-blue-50' onClick={self.hideArchiveModal} id='cancelBtn'>Cancel</button>
+              </div>
+            </div>
+          </div>
+        </Modal>
+
         <ConfirmDialog showConfirmModal={self.state.showAlertModal} hideConfirmDialog={self.hideAlertDialog} confirmAction={self.hideAlertDialog} alertType='error' content={self.state.alertMsg} actionBtnLabel='Ok' />
+
       </div>
     )
   }

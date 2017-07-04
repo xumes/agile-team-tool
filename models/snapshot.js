@@ -394,7 +394,8 @@ function getAllTeams() {
               if (!_.isUndefined(squadsByParent[parent])) {
                 var team = {
                   _id: squadTeam._id,
-                  createDate: squadTeam.createDate
+                  createDate: squadTeam.createDate,
+                  docStatus: squadTeam.docStatus
                 };
                 //squadsByParent[parent]['children'].push(squadTeam._id);
                 squadsByParent[parent]['children'].push(team);
@@ -594,7 +595,7 @@ function rollUpDataByNonSquad(squads, nonSquadTeamId, squadsIterReults, nonSquad
       }
     }
     nonSquadCalResult['teamMemberData'] = rollUpTeamMemberData(squads, teamMemberData);
-    var asseResult = rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsAsseResults, assessmentTemplate);
+    var asseResult = rollUpAssessmentsByNonSquad(squads, squadsAsseResults, assessmentTemplate);
     nonSquadCalResult['assessmentData'] = asseResult.assessmentData;
     nonSquadCalResult['assessmentData2'] = asseResult.assessmentData2;
 
@@ -660,13 +661,19 @@ function getSquadsData() {
   });
 };
 
+function isTeamArchived(squad) {
+  if (!_.isEmpty(squad.docStatus) && _.isEqual(squad.docStatus, 'archive'))
+    return true;
+  return false;
+};
+
 /**
  * Roll up total_members and total_allocation data
- * @param Array squadsList
- * @param Object squadTeams
+ * @param Array squads
+ * @param Object teamMemberData
  * @return Object entry
  */
-function rollUpTeamMemberData(squadsList, squadTeams) {
+function rollUpTeamMemberData(squads, teamMemberData) {
   var entry = new Object();
   var teamsLt5 = 0;
   var teams5to12 = 0;
@@ -678,10 +685,11 @@ function rollUpTeamMemberData(squadsList, squadTeams) {
   var fte5to12 = 0;
   var fteGt12 = 0;
 
-  _.each(squadsList, function(squad) {
-    var squadId = squad._id;
-    if (!_.isEmpty(squadTeams[squadId]) && squadTeams[squadId] != undefined) {
-      var squad = squadTeams[squadId];
+  _.each(squads, function(team) {
+    var teamId = team._id;
+    var isArchived = isTeamArchived(team);
+    if (!_.isEmpty(teamMemberData[teamId]) && teamMemberData[teamId] != undefined && !isArchived) {
+      var squad = teamMemberData[teamId];
       var teamCnt = squad.teamCnt;
       var teamFTE = squad.teamFTE;
       if (teamCnt < 5) {
@@ -922,9 +930,10 @@ function rollUpAssessmentsBySquad(assessments, teamId, assessmentTemplate) {
  * Process assessment rollup data in tribe/non squad level
  * @param squads - list of squads under specific tribe
  * @param squadsAsseResults - squad assessment data
+ * @param assessmentTemplate - current assessment template
  * @return tribe rollup data
  */
-function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsAsseResults, assessmentTemplate) {
+function rollUpAssessmentsByNonSquad(squads, squadsAsseResults, assessmentTemplate) {
   var assessmentData = resetAssessmentData();
   var assessmentData2 = resestQuarterAssessmentData(assessmentTemplate);
   var rollUpAssessmentData = {
@@ -943,36 +952,39 @@ function rollUpAssessmentsByNonSquad(squads, nonSquadTeamId, squadsAsseResults, 
       var createPeriod = moment(squads[i].createDate);
       var currentPeriod = moment().subtract(j, 'months');
       var monthDiff = calMonthDiff(createPeriod, currentPeriod);
+      var isArchived = isTeamArchived(squads[i]);
 
-      if (!_.isUndefined(squadsAsseResults[squads[i]._id]) && !_.isUndefined(squadsAsseResults[squads[i]._id].assessmentData)) {
-        var squadAssessmentResult = squadsAsseResults[squads[i]._id].assessmentData;
-        if (!(_.isEmpty(squadAssessmentResult)) && !(_.isUndefined(squadAssessmentResult))) {
-          if (squadAssessmentResult[j].less_120_days != undefined) {
-            assessmentData[j].less_120_days += squadAssessmentResult[j].less_120_days;
-            assessmentData[j].gt_120_days += squadAssessmentResult[j].gt_120_days;
-            // rollup if team was created within covered period
-            if (monthDiff >= 0)
-              assessmentData[j].no_submission += squadAssessmentResult[j].no_submission;
+      if (!isArchived) {
+        if (!_.isUndefined(squadsAsseResults[squads[i]._id]) && !_.isUndefined(squadsAsseResults[squads[i]._id].assessmentData)) {
+          var squadAssessmentResult = squadsAsseResults[squads[i]._id].assessmentData;
+          if (!(_.isEmpty(squadAssessmentResult)) && !(_.isUndefined(squadAssessmentResult))) {
+            if (squadAssessmentResult[j].less_120_days != undefined) {
+              assessmentData[j].less_120_days += squadAssessmentResult[j].less_120_days;
+              assessmentData[j].gt_120_days += squadAssessmentResult[j].gt_120_days;
+              // rollup if team was created within covered period
+              if (monthDiff >= 0)
+                assessmentData[j].no_submission += squadAssessmentResult[j].no_submission;
 
-            assessmentData[j].prj_foundation_score += squadAssessmentResult[j].prj_foundation_score;
-            assessmentData[j].operation_score += squadAssessmentResult[j].operation_score;
-            assessmentData[j].prj_devops_score += squadAssessmentResult[j].prj_devops_score;
+              assessmentData[j].prj_foundation_score += squadAssessmentResult[j].prj_foundation_score;
+              assessmentData[j].operation_score += squadAssessmentResult[j].operation_score;
+              assessmentData[j].prj_devops_score += squadAssessmentResult[j].prj_devops_score;
 
-            assessmentData[j].total_prj_foundation += squadAssessmentResult[j].total_prj_foundation;
-            assessmentData[j].total_prj_devops += squadAssessmentResult[j].total_prj_devops;
-            assessmentData[j].total_operation += squadAssessmentResult[j].total_operation;
-          } else {
+              assessmentData[j].total_prj_foundation += squadAssessmentResult[j].total_prj_foundation;
+              assessmentData[j].total_prj_devops += squadAssessmentResult[j].total_prj_devops;
+              assessmentData[j].total_operation += squadAssessmentResult[j].total_operation;
+            } else {
+              if (monthDiff >= 0)
+                assessmentData[j].no_submission += 1;
+            }
+          }
+          else {
             if (monthDiff >= 0)
               assessmentData[j].no_submission += 1;
           }
-        }
-        else {
+        } else {
           if (monthDiff >= 0)
             assessmentData[j].no_submission += 1;
         }
-      } else {
-        if (monthDiff >= 0)
-          assessmentData[j].no_submission += 1;
       }
     }
 

@@ -555,6 +555,22 @@ module.exports.deleteTeam = function(data) {
   });
 };
 
+module.exports.archiveTeam = function(data) {
+  return new Promise(function(resolve, reject){
+    var url = '/api/teams/archive';
+    var req = $.ajax({
+      type: 'PUT',
+      contentType: 'application/json',
+      url: url,
+      data: data
+    }).done(function(data){
+      resolve(data);
+    }).fail(function(err){
+      reject(err);
+    });
+  });
+}
+
 module.exports.getSelectableParents = function(teamId) {
   return new Promise(function(resolve, reject){
     var url = '/api/teams/lookup/parents/' + encodeURIComponent(teamId);

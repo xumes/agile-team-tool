@@ -337,7 +337,7 @@ describe('Iteration model [edit]', function() {
 
 describe('Iteration model [softDelete]', function() {
   it('return successful for soft deleteing a iteration', function(done) {
-    iterationModel.softDelete(newIterationId, userSession)
+    iterationModel.softDeleteArchive(newIterationId, userSession)
       .then(function(result){
         expect(result).to.be.a('object');
         expect(result).to.have.property('ok');

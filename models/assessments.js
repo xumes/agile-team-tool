@@ -401,8 +401,12 @@ module.exports.updateTeamAssessment = function(user, data) {
   });
 };
 
-module.exports.softDelete = function(docId, user) {
+module.exports.softDeleteArchive = function(docId, user, status) {
   return new Promise(function(resolve, reject) {
+    var docStatus = 'delete';
+    if (status && (status === 'archive')){
+      docStatus = 'archive';
+    }
     if (lodash.isEmpty(docId)) {
       return reject({
         'error': 'Assessment Id is required'
@@ -417,13 +421,13 @@ module.exports.softDelete = function(docId, user) {
         .then(function(result) {
           if (!result) {
             return Promise.reject({
-              'error': 'Not allowed to delete assessment'
+              'error': 'Not allowed to '+docStatus+' assessment'
             });
           } else {
             var updateDoc = {};
             var userId = user['ldap']['uid'].toUpperCase();
             var userEmail = user['shortEmail'].toLowerCase();
-            updateDoc.docStatus = 'delete';
+            updateDoc.docStatus = docStatus;
             updateDoc.updatedByUserId = userId;
             updateDoc.updatedBy = userEmail;
             updateDoc.updateDate = new Date(moment.utc());

@@ -232,7 +232,7 @@ var HomeTeamTree = React.createClass({
       $('#main_' + teamId).remove();
       $('#body_' + teamId).append(self.createMainTwistySection('main_' + teamId, ''));
       _.each(teams, function(team){
-        if (team.docStatus != 'delete') {
+        if (team.docStatus != 'delete' && team.docStatus != 'archive') {
           $('#main_' + teamId).append(self.createSubSection(team));
           var trigger = $('#' + team.pathId).find('a.twisty-trigger');
           trigger.attr('title', 'Expand/Collapse').on('click', function() {
@@ -516,7 +516,7 @@ var HomeTeamTree = React.createClass({
         return null;
       } else {
         var myteams = this.props.newTeams.data.teams.map(function(team) {
-          if (team.docStatus == 'delete') {
+          if (team.docStatus == 'delete' && team.docStatus == 'archive') {
             return;
           }
           var teamId = team.pathId;
@@ -561,7 +561,7 @@ var HomeTeamTree = React.createClass({
         });
         // standalone teams
         var standaloneTeams = this.props.newTeams.data.standalone.map(function(team) {
-          if (team.docStatus == 'delete') {
+          if (team.docStatus == 'delete' && team.docStatus == 'archive') {
             return null;
           }
           var teamId = team.pathId;
@@ -638,7 +638,7 @@ var HomeTeamTree = React.createClass({
       }
     } else if (this.props.newTeams.tab == 'allteams') {
       var allteams = this.props.newTeams.data.map(function(team) {
-        if (team.docStatus == 'delete') {
+        if (team.docStatus == 'delete' && team.docStatus == 'archive') {
           return null;
         }
         var teamId = team.pathId;
