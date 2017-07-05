@@ -274,7 +274,10 @@ var HomePage = React.createClass({
 
   tabClickedHandler: function(tab, pathId) {
     var self = this;
-    var currentPath = pathId || (self.state.loadDetailTeam.team ? self.state.loadDetailTeam.team.pathId : self.state.selectedTeam);
+    var currentPath = pathId;
+    if (!_.isEmpty(tab) && _.isEmpty(pathId))
+      var currentPath = self.state.loadDetailTeam.team ? self.state.loadDetailTeam.team.pathId : self.state.selectedTeam;
+
     //console.log('tabClickedHandler', tab, currentPath);
     tab = tab || self.state.newTeams.tab
     self.tabClickedStart();
