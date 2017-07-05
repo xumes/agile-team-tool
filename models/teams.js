@@ -282,7 +282,7 @@ module.exports.searchTeamWithName = function(string) {
     var searchQuery = {
       'name': {
         '$regex': new RegExp('.*' + string.toLowerCase() + '.*', 'i')
-      }, docStatus:{$ne:'delete'}
+      }, docStatus:{$nin:['delete', 'archive']}
     };
     Team.find(searchQuery)
       .then(function(result) {
