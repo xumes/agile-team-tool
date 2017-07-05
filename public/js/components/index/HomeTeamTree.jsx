@@ -516,7 +516,7 @@ var HomeTeamTree = React.createClass({
         return null;
       } else {
         var myteams = this.props.newTeams.data.teams.map(function(team) {
-          if (team.docStatus == 'delete' && team.docStatus == 'archive') {
+          if (team.docStatus == 'delete' || team.docStatus == 'archive') {
             return;
           }
           var teamId = team.pathId;
@@ -561,13 +561,15 @@ var HomeTeamTree = React.createClass({
         });
         // standalone teams
         var standaloneTeams = this.props.newTeams.data.standalone.map(function(team) {
-          if (team.docStatus == 'delete' && team.docStatus == 'archive') {
+          if (team.docStatus == 'delete' || team.docStatus == 'archive') {
             return null;
           }
           var teamId = team.pathId;
           var linkId = 'link_' + team.pathId;
           var bodyId = 'body_' + team.pathId;
           var label = team.name;
+          console.log('standaloneTeams label:',label);
+          console.log('standaloneTeams docStatus:',team.docStatus);
           var objectId = team._id;
           if (team.type == 'squad') {
             var isSquad = 'agile-team-link agile-team-standalone agile-team-squad';
@@ -638,7 +640,8 @@ var HomeTeamTree = React.createClass({
       }
     } else if (this.props.newTeams.tab == 'allteams') {
       var allteams = this.props.newTeams.data.map(function(team) {
-        if (team.docStatus == 'delete' && team.docStatus == 'archive') {
+
+        if (team.docStatus == 'delete' || team.docStatus == 'archive') {
           return null;
         }
         var teamId = team.pathId;
@@ -646,6 +649,8 @@ var HomeTeamTree = React.createClass({
         var bodyId = 'body_' + team.pathId;
         var mainId = 'main_' + team.pathId;
         var label = team.name;
+        console.log('allteams label:',label);
+        console.log('allteams docStatus:',team.docStatus);
         var objectId = team._id;
         var teamDesc = (team.description == null)?'No description specified':team.description;
         var title = teamDesc;
