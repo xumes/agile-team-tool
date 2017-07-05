@@ -78,7 +78,8 @@ module.exports = function(app, includes) {
 
   deleteAssessment = function(req, res) {
     var docId = req.body.docId;
-    assessmentModel.softDeleteArchive(docId, req.session['user'])
+    var userId = req.session['user']['ldap']['uid'].toUpperCase();
+    assessmentModel.deleteAssessment(userId, docId)
       .then(function(result) {
         res.send(result);
       })
