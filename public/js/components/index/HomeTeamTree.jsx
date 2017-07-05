@@ -649,8 +649,6 @@ var HomeTeamTree = React.createClass({
         var bodyId = 'body_' + team.pathId;
         var mainId = 'main_' + team.pathId;
         var label = team.name;
-        console.log('allteams label:',label);
-        console.log('allteams docStatus:',team.docStatus);
         var objectId = team._id;
         var teamDesc = (team.description == null)?'No description specified':team.description;
         var title = teamDesc;
