@@ -266,8 +266,8 @@ describe('Assessment model [updateTeamAssessment] ', function() {
   });
 });
 
-describe('Iteration model [softDelete]', function() {
-  it('return successful for soft deleteing a iteration', function(done) {
+describe('Assessment model [softDelete]', function() {
+  it('return successful for soft deleteing a assessment', function(done) {
     Assessments.softDeleteArchive(newAssessId, userSession)
       .then(function(result){
         expect(result).to.be.a('object');
