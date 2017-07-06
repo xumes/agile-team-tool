@@ -41,7 +41,7 @@ Highcharts is used to graph metrics relevant to the tool.
 | saml                | SAML configuration used for authentication with [w3 SSO](https://w3.innovate.ibm.com/tools/sso/home.html) when `authType: saml`.    |
 | redisDb             | Redis related setup for session management                                                                                          |
 | sentry              | Sentry related setup for tracking possible applicaiton exceptions.                                                                  |
-| mongoURL            | A secret to be used for the sessions.                                                                                               |
+| mongoURL            | Connection setup for MongoDB.                                                                                                       |
 | bluepagesURL        | Bluepages API end point used by job that validates team member profiles                                                             |
 | facesURL            | Faces API endpoint.                                                                                                                 |
 | email               | SMTP related configuration.                                                                                                         |
