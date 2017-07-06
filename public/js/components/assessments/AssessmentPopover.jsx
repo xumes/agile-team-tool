@@ -175,7 +175,7 @@ var AssessmentPopover = React.createClass({
               <div class='submit-date-selector'>
                 <h1 id='assessmentSubmitDateTitle'>{submitDate}</h1>
                 <h1 style={{'display':haveAccess?'none':'inline-block'}}>{' ('}</h1>
-                <DatePicker onChange={self.changeDateHandler} selected={self.state.submitDatePicker} customInput={<AssessmentDatePicker haveAccess={haveAccess}/>}/>
+                <DatePicker onChange={self.changeDateHandler} selected={self.state.submitDatePicker} customInput={<AssessmentDatePicker haveAccess={haveAccess}/>} maxDate={moment().add(1,'days')} />
                 <h1 style={{'display':haveAccess?'none':'inline-block'}}>{')'}</h1>
                 <span id='assessmentSubmitDateString' style={{'display':'none'}}>{submitDateString}</span>
               </div>
