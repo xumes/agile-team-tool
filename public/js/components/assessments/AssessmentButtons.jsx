@@ -103,7 +103,6 @@ var AssessmentButtons = React.createClass({
     if ($('#assessmentSubmitDateTitle').html() == 'On Submission') {
       var submittedDate = ''
     } else {
-      // submittedDate = new Date(moment($('#assessmentSubmitDateTitle').html(), 'DD MMM YYYY'));
       submittedDate = new Date($('#assessmentSubmitDateString').html());
     }
     var updateDoc = {

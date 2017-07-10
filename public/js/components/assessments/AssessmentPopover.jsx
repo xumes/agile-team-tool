@@ -16,7 +16,7 @@ var AssessmentPopover = React.createClass({
       lcAssessTemplate: {},
       ddAssessTemplate: {},
       isUpdate: true,
-      submitDatePicker: moment(new Date())
+      submitDatePicker: null
     };
   },
   componentWillMount: function() {
@@ -36,8 +36,13 @@ var AssessmentPopover = React.createClass({
     if (self.props.loadDetailTeam.assessments.length > 0 && self.props.loadDetailTeam.assessments[0].assessmentStatus == 'Draft') {
       $('#assessmentTeamTypeSelector').val(self.props.loadDetailTeam.assessments[0].type).change();
       $('#assessmentSoftwareTypeSelector').val(self.props.loadDetailTeam.assessments[0].deliversSoftware?'Yes':'No').change();
-      $('#assessmentSubmitDateTitle').html(moment.utc(self.props.loadDetailTeam.assessments[0].submittedDate).format('DD MMM YYYY'));
-      self.state.submitDatePicker = moment.utc(self.props.loadDetailTeam.assessments[0].submittedDate);
+      if (!_.isEmpty(self.props.loadDetailTeam.assessments[0].submittedDate)) {
+        $('#assessmentSubmitDateTitle').html(moment.utc(self.props.loadDetailTeam.assessments[0].submittedDate).format('DD MMM YYYY'));
+        self.state.submitDatePicker = moment.utc(self.props.loadDetailTeam.assessments[0].submittedDate);
+      } else {
+        $('#assessmentSubmitDateTitle').html('On Submission');
+        self.state.submitDatePicker = moment(new Date());
+      }
     } else {
       $('#assessmentTeamTypeSelector').val(self.props.assessType==undefined?'Project':self.props.assessType).change();
       $('#assessmentSoftwareTypeSelector').val(self.props.assessSoftware==undefined?'Yes':self.props.assessSoftware).change();
@@ -78,12 +83,14 @@ var AssessmentPopover = React.createClass({
   },
   changeDateHandler: function(e) {
     $('#assessmentSubmitDateTitle').html(moment(e).format('DD MMM YYYY'));
-    $('#assessmentSubmitDateString').html(moment(e).format('YYYY-MM-DDTHH:mm:ss.SSSSZ'));
+    $('#assessmentSubmitDateString').html(moment(e).format('YYYY-MM-DD'));
+    this.setState({submitDatePicker: moment(e)});
   },
   showCloseAssessment: function() {
     $('#closeAssessment').show();
   },
   render: function() {
+    console.log('render');
     var self = this;
     var assessDraft = {};
     var lcAssessTemplate = {};
@@ -116,13 +123,16 @@ var AssessmentPopover = React.createClass({
         self.state.ddAssessTemplate = {};
       }
     } else {
-      if (assessDraft.submittedDate == '') {
+      if (_.isEmpty(assessDraft.submittedDate)) {
         submitDate = 'On Submisson';
         submitDateString = null;
       } else {
+        console.log('x',assessDraft.submittedDate);
         submitDate = moment.utc(assessDraft.submittedDate).format('DD MMM YYYY');
-        submitDateString = assessDraft.submittedDate;
-        self.state.submitDatePicker = moment.utc(assessDraft.submittedDate);
+        submitDateString = moment.utc(assessDraft.submittedDate).format('YYYY-MM-DD');
+        if (_.isEmpty(self.state.submitDatePicker)) {
+          self.state.submitDatePicker = moment.utc(assessDraft.submittedDate);
+        }
       }
       lastUpdatedBy = assessDraft.updatedBy;
       lastUpdated = ' (' + moment.utc(assessDraft.updateDate).format('DD MMM YYYY') + ')';
@@ -175,7 +185,7 @@ var AssessmentPopover = React.createClass({
               <div class='submit-date-selector'>
                 <h1 id='assessmentSubmitDateTitle'>{submitDate}</h1>
                 <h1 style={{'display':haveAccess?'none':'inline-block'}}>{' ('}</h1>
-                <DatePicker onChange={self.changeDateHandler} selected={self.state.submitDatePicker} customInput={<AssessmentDatePicker haveAccess={haveAccess}/>} maxDate={moment().add(1,'days')} />
+                <DatePicker onChange={self.changeDateHandler} selected={self.state.submitDatePicker} customInput={<AssessmentDatePicker haveAccess={haveAccess}/>} maxDate={moment()} />
                 <h1 style={{'display':haveAccess?'none':'inline-block'}}>{')'}</h1>
                 <span id='assessmentSubmitDateString' style={{'display':'none'}}>{submitDateString}</span>
               </div>
@@ -226,7 +236,7 @@ var AssessmentPopover = React.createClass({
         <div class='agile-maturity' id='assessmentContainer2'>
           <AssessmentActiveTemplates assessTemplate={self.state.ddAssessTemplate} assessDraft={assessDraft} haveAccess={haveAccess} assessTemplateId={'1'} isUpdate={self.state.isUpdate}/>
         </div>
-        <AssessmentButtons loadDetailTeam={self.props.loadDetailTeam} assessDraft={assessDraft} haveAccess={haveAccess} updateAssessmentSummary={self.props.updateAssessmentSummary} updateAssessmentPopover={self.updateAssessmentPopover} hideAssessmentPopover={self.props.hideAssessmentPopover} />
+        <AssessmentButtons loadDetailTeam={self.props.loadDetailTeam} assessDraft={assessDraft} haveAccess={haveAccess} updateAssessmentSummary={self.props.updateAssessmentSummary} updateAssessmentPopover={self.updateAssessmentPopover} hideAssessmentPopover={self.props.hideAssessmentPopover}/>
         <ConfirmPopover confirmClick={self.props.hideAssessmentPopover} confirmId='closeAssessment' content={'You have requested to close the assessment window. All changes not saved will be removed. Please confirm that you want to close it.'} cancelBtn='block' confirmBtn='block' okBtn='none'/>
       </div>
     )
