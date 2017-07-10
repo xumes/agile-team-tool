@@ -133,7 +133,7 @@ var HomeHeader = React.createClass({
               </li>
 
               <li>
-                <a href="./docs/howto/AgileTeamTool_Agile Team Tool User Guide_newUI.pdf" target="_blank">User Guide</a>
+                <a href="./docs/howto/Agile_Team_Tool_User_Guide.pdf" target="_blank">User Guide</a>
               </li>
               <li>
                 <a href="./docs/howto/Agile Team Tool - Quick Ref.pdf" target="_blank">Quick Reference Card</a>
