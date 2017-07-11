@@ -136,7 +136,7 @@ var HomeHeader = React.createClass({
                 <a href="./docs/howto/Agile_Team_Tool_User_Guide.pdf" target="_blank">User Guide</a>
               </li>
               <li>
-                <a href="./docs/howto/Agile Team Tool - Quick Ref.pdf" target="_blank">Quick Reference Card</a>
+                <a href="./docs/howto/Agile_Team_Tool_Quick_Ref.pdf" target="_blank">Quick Reference Card</a>
               </li>
               <li>
                 <a href="./docs/howto/AgileTeamTool_FrequentlyAskedQuestions.pdf" target="_blank">FAQ</a>
