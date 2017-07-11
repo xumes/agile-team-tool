@@ -52,7 +52,7 @@ var HomeEditIteration = React.createClass({
       var startDate = new moment(this.props.selectedIter.startDate);
       var endDate = new moment(this.props.selectedIter.endDate);
       this.setState({
-        name: name, 
+        name: name,
         iterationStartDate: startDate,
         iterationEndDate: endDate});
     }
@@ -116,11 +116,11 @@ var HomeEditIteration = React.createClass({
         var jsonData = data;
         if (jsonData.type != undefined && jsonData.type.toLowerCase() != 'squad') {
           //alert('Team information has been changed to non squad.  Iteration information cannot be entered for non squad teams.');
-          self.setState({alertMsg: 'Team information has been changed to non squad.  Iteration information cannot be entered for non squad teams.', showConfirmModal: true, alertType: 'error'}, 
+          self.setState({alertMsg: 'Team information has been changed to non squad.  Iteration information cannot be entered for non squad teams.', showConfirmModal: true, alertType: 'error'},
             function(){
-              self.updateIterationInfo('clearIteration');                
+              self.updateIterationInfo('clearIteration');
           });
-          
+
           return;
         }
         var data = _.clone(self.props.selectedIter);
@@ -133,21 +133,25 @@ var HomeEditIteration = React.createClass({
     .then(function(result) {
       utils.clearHighlightedIterErrors();
       //alert('You have successfully updated Iteration information.');
-      self.setState({alertMsg: 'You have successfully updated Iteration information.', showConfirmModal: true, alertType: 'information'}, 
+      self.setState({alertMsg: 'You have successfully updated Iteration information.', showConfirmModal: true, alertType: 'information'},
         function(){
-          self.props.iterListHandler(self.props.selectedIter._id);                  
+          self.props.iterListHandler(self.props.selectedIter._id);
         });
     })
     .catch(function(err){
-      utils.handleIterationErrors(err);
+      var message = utils.handleIterationErrors(err);
+      if (!_.isEmpty(message)){
+        self.setState({alertMsg: message, showConfirmModal: true, alertType: 'error'});
+      }
     });
   },
 
   hideConfirmDialog: function() {
     this.setState({showConfirmModal: false, alertMsg: ''});
-    this.close();
+    if (this.state.alertType == 'information')
+      this.close();
   },
-  
+
   render: function() {
       return (
         <div>
@@ -171,7 +175,7 @@ var HomeEditIteration = React.createClass({
                   <DatePicker onChange={this.endDateChange} selected={ moment.utc(this.state.iterationEndDate)} readOnly dateFormat='DD MMM YYYY' customInput={<CustomDate fieldId='endDate' />} disabled={false} ref='iterationEndDate' fixedHeight/>
                 </div>
               </div>
-                
+
               <div className='popup-btns'>
                 <div class='ibm-btn-row' style={{'float':'right', 'paddingBottom':'1rem'}}>
                   <a onClick={this.processIteration} class='ibm-btn-pri ibm-btn-small ibm-btn-blue-50' style={{'padding':'0.4rem'}}>Change</a>

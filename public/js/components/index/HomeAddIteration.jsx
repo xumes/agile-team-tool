@@ -61,8 +61,8 @@ var HomeAddIteration = React.createClass({
       var name = this.props.loadDetailTeam.iterations[0].name + ' (copy)';
       this.startDateChange(this.props.loadDetailTeam.iterations[0].endDate != null ?new moment(this.props.loadDetailTeam.iterations[0].endDate).add(1,'day'):null);
       this.setState({
-        name: name, 
-        c_name: true, 
+        name: name,
+        c_name: true,
         c_stories_op_committed:false,
         c_stories_dev_committed:false,
         c_stories_op_delivered:true,
@@ -70,8 +70,8 @@ var HomeAddIteration = React.createClass({
     }
     else {
       this.setState({
-      name: '', 
-      c_name: false, 
+      name: '',
+      c_name: false,
       c_stories_op_committed:false,
       c_stories_dev_committed:false,
       c_stories_op_delivered:false,
@@ -133,7 +133,7 @@ var HomeAddIteration = React.createClass({
       }
       if (this.state.c_stories_op_delivered){
         data.committedStories = this.props.loadDetailTeam.iterations[0].deliveredStories;
-        
+
       }
       if (this.state.c_stories_dev_committed) {
         data.committedStoryPoints = this.props.loadDetailTeam.iterations[0].committedStoryPoints;
@@ -144,7 +144,7 @@ var HomeAddIteration = React.createClass({
     }
     return data;
   },
-  
+
   numericValue:function(data) {
     var value = parseInt(data);
     if (!isNaN(value)) {
@@ -171,7 +171,7 @@ var HomeAddIteration = React.createClass({
     return teamMembers;
   },
 
-  
+
   processIteration: function () {
     var self =this;
     api.loadTeam(self.props.loadDetailTeam.team._id)
@@ -208,9 +208,9 @@ var HomeAddIteration = React.createClass({
           })
           .then(function(result) {
               utils.clearHighlightedIterErrors();
-              self.setState({alertMsg: 'You have successfully added Iteration information.', showConfirmModal: true, alertType: 'information'}, 
+              self.setState({alertMsg: 'You have successfully added Iteration information.', showConfirmModal: true, alertType: 'information'},
                 function(){
-                  self.props.iterListHandler();                  
+                  //self.props.iterListHandler();
               });
           })
           .catch(function(err){
@@ -224,7 +224,7 @@ var HomeAddIteration = React.createClass({
   },
 
   copyNameChange: function(e){
-    var copyName = '';
+    var copyName = this.state.name;
     if (e.target.checked && this.props.loadDetailTeam.iterations.length > 0) {
         copyName = this.props.loadDetailTeam.iterations[0].name + ' (copy)';
     }
@@ -260,10 +260,12 @@ var HomeAddIteration = React.createClass({
   },
 
   hideConfirmDialog: function() {
+    this.props.iterListHandler();
     this.setState({showConfirmModal: false, alertMsg: ''});
-    this.close();
+    if (this.state.alertType == 'information')
+      this.close();
   },
-  
+
   render: function() {
       return (
         <div>
