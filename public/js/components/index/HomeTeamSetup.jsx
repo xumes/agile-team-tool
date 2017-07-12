@@ -26,13 +26,10 @@ var HomeTeamSetup = React.createClass({
     }
   },
   componentDidMount: function() {
-    var self = this;
-    $('#homeHeaderSetupBtn svg').attr('title','Team Setup').children('title').remove();
   },
   componentDidUpdate: function(prevProps, prevState) {
     var self = this;
     $('.team-setup-squad-icon svg, team-setup-squad-icon-change svg, .team-setup-icon svg, .team-setup-icon-child svg').attr('title','Team Hierarchy').children('title').remove();
-    $('#homeHeaderSetupBtn svg').attr('title','Team Setup').children('title').remove();
     if (self.state.showParentSetup) {
       $('#squadParentSelectList').val(self.state.parentId).change();
 
