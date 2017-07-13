@@ -65,7 +65,6 @@ var HomeContent = React.createClass({
 
   componentDidMount: function() {
     window.addEventListener('resize', this.props.handleChartResize);
-    $('.home-trends-block-filter-img svg').attr('title','Filter Trends').children('title').remove();
   },
 
   componentWillUnmount: function() {
