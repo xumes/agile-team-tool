@@ -470,6 +470,7 @@ var HomeTeamTree = React.createClass({
     var span = document.createElement('a');
     if (team.type == 'squad') {
       span.setAttribute('class', 'trigger-squad');
+      span.setAttribute('title', 'Expand/Collapse');
     } else {
       span.setAttribute('class', 'twisty-trigger');
     }
@@ -549,7 +550,7 @@ var HomeTeamTree = React.createClass({
                   <img src={'../../../img/Att-icons/att-icons_+.svg'}></img>
                 </div>
                 <div class='squad-image' style={{'display': hiddenSquad}}>
-                  <img src={'../../../img/Att-icons/att-icons_tribe.svg'}></img>
+                  <img src={'../../../img/Att-icons/att-icons_tribe.svg'} title='Expand/Collapse'></img>
                 </div>
                 <span class='ibm-access'>{label}</span>
               </a>
@@ -588,7 +589,7 @@ var HomeTeamTree = React.createClass({
             <li class='agile-team-standalone' key={objectId} data-open='false' id={teamId}>
               <a class={triggerClass} href='#toggle' title='Expand/Collapse'>
                 <div class='squad-image' style={{'display': hiddenSquad}}>
-                  <img src={'../../../img/Att-icons/att-icons_tribe.svg'}></img>
+                  <img src={'../../../img/Att-icons/att-icons_tribe.svg'} title='Expand/Collapse'></img>
                 </div>
                 <span class='ibm-access'>{label}</span>
               </a>

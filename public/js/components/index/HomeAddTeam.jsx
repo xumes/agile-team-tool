@@ -43,17 +43,6 @@ var HomeAddTeam = React.createClass({
 
   componentDidMount: function() {
     this.getTeamNames();
-    this.showTooltip();
-  },
-
-  componentWillUpdate: function(nextProps, nextState) {
-    this.showTooltip();
-  },
-
-  showTooltip: function() {
-    setTimeout(function(){
-      $('.home-nav-tab-buttons .createnewteam-btn svg').attr('title', 'Create New Team');
-    },2);
   },
 
   getTeamNames: function() {
