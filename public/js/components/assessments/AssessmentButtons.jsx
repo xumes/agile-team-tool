@@ -12,7 +12,8 @@ var AssessmentButtons = React.createClass({
   getInitialState: function() {
     return {
       alertMsg: '',
-      showConfirmModal: false
+      showConfirmModal: false,
+      isUpdating: false
     };
   },
 
@@ -71,6 +72,11 @@ var AssessmentButtons = React.createClass({
       self.setState({alertMsg: 'All assessment maturity practices need to be answered. See highlighted practices in yellow.', showConfirmModal: true});
       return;
     }
+    if (self.state.isUpdating) {
+      $('#updateProgress').show();
+      return;
+    }
+    self.setState({isUpdating: true});
     if (_.isEmpty(self.props.assessDraft)) {
       var req = api.addAssessment(updateDoc);
     } else {
@@ -84,11 +90,12 @@ var AssessmentButtons = React.createClass({
         self.props.loadDetailTeam.assessments[0] = result;
       }
       self.props.updateAssessmentSummary();
-      // self.props.hideAssessmentPopover();
-      // alert('Maturity assessment has been submitted.');
+      $('#updateProgress').hide();
+      self.setState({isUpdating: false});
       $('#submittedMatAssessment').show();
       return;
     }).catch(function(err){
+      self.setState({isUpdating: false});
       alert(err);
       return;
     });
@@ -130,6 +137,11 @@ var AssessmentButtons = React.createClass({
     if (p2N) {
       self.getUpdateDoc(1, p2N, checkedCurrs, checkedTargs, updateDoc);
     }
+    if (self.state.isUpdating) {
+      $('#updateProgress').show();
+      return;
+    }
+    self.setState({isUpdating: true});
     if (_.isEmpty(self.props.assessDraft)) {
       var req = api.addAssessment(updateDoc);
     } else {
@@ -143,8 +155,8 @@ var AssessmentButtons = React.createClass({
         self.props.loadDetailTeam.assessments[0] = result;
       }
       self.props.updateAssessmentSummary();
-      // self.props.hideAssessmentPopover();
-      // alert('Maturity assessment has been saved as draft.');
+      $('#updateProgress').hide();
+      self.setState({isUpdating: false});
       $('#saveDraftConfirm').show();
       return;
     }).catch(function(err){
@@ -347,6 +359,7 @@ var AssessmentButtons = React.createClass({
         <ConfirmPopover confirmClick={this.deleteAssessment} confirmId='deleteAssessDraftConfirm' content={'You have requested to delete this draft assessment.  All saved progress will be deleted. Please confirm that you want to proceed with this delete.'} cancelBtn='block' confirmBtn='block' okBtn='none'/>
         <ConfirmPopover confirmId='saveDraftConfirm' content={'Maturity assessment has been saved as draft.'} cancelBtn='none' confirmBtn='none' okBtn='block' hideAssessmentPopover={this.props.hideAssessmentPopover}/>
         <ConfirmPopover confirmId='submittedMatAssessment' content={'Maturity assessment has been submitted.'} cancelBtn='none' confirmBtn='none' okBtn='block' hideAssessmentPopover={this.props.hideAssessmentPopover}/>
+        <ConfirmPopover confirmId='updateProgress' content={'Please wait...'} cancelBtn='none' confirmBtn='none' okBtn='none' hideAssessmentPopover={this.props.hideAssessmentPopover}/>
         <ConfirmDialog showConfirmModal={self.state.showConfirmModal} hideConfirmDialog={self.hideConfirmDialog} confirmAction={self.hideConfirmDialog} alertType='information' content={self.state.alertMsg} actionBtnLabel='Ok' />
       </div>
     )
