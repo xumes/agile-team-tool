@@ -1,6 +1,6 @@
 module.exports = {
   ldapAuthURL: process.env.ldapAuthURL || 'http://ifundit-dp.tap.ibm.com:3004',
-  bluepagesURL: process.env.bluepagesURL || 'http://ifundit-dp.tap.ibm.com:3004',
+  bluepagesURL: process.env.bluepagesURL || 'http://user:pass@agile-gw.mybluemix.net/api/bluepages',
   redisDb: {
     url: process.env.redisURL || 'redis://localhost:6379',
     prefix: process.env.redisPrefix || 'agileteamtool:'
