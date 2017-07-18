@@ -245,7 +245,7 @@ var users = {
       }
       userId = user.userId.toUpperCase();
       bluepagesURL = settings.bluepagesURL;
-      requestURL = bluepagesURL + '/id/' + userId + '/uid';
+      requestURL = bluepagesURL + '/' + userId;
       // First, Search the user (by userId) using ldap query
       module.exports.ldapUserQuery(requestURL)
         .then(function(bpInfo) { /* istanbul ignore next */
@@ -331,7 +331,7 @@ var users = {
       else {
         userId = userInfo.userId.toUpperCase();
         bluepagesURL = settings.bluepagesURL;
-        requestURL = bluepagesURL + '/id/' + userId + '/uid';
+        requestURL = bluepagesURL + '/' + userId;
         // First, Search this user (by userId) using ldap query
         module.exports.ldapUserQuery(requestURL)
           .then(function(bpInfo) { /* istanbul ignore next */

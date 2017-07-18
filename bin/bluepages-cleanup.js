@@ -11,11 +11,12 @@ schedule.scheduleJob('* * 2 * *', function() {
   var queryUser = function(user) {
     return new Promise(function(resolve) {
       var bluepagesURL = settings.bluepagesURL;
-      var requestURL = bluepagesURL + '/id/' + user.userId + '/uid';
+      var requestURL = bluepagesURL + '/' + user.userId;
       request(requestURL, function(err, response, body) {
         var json;
         try {
           json = JSON.parse(body) ; // if the body is STRING, try to parse it
+
         }
         catch (err) {
           if (err.statusCode) {
