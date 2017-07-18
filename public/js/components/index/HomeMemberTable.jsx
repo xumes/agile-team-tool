@@ -593,8 +593,6 @@ var HomeMemberTable = React.createClass({
         api.updateUser(userMember)
           .then(function(result){
             self.updateMemberTableLocations(mrd, idx, locationValue);
-
-            self.props.reloadTeamMembers(result.members, self.props.loadDetailTeam.members);
           })
       } else {
         self.updateMemberTableLocations(mrd, idx, locationValue);

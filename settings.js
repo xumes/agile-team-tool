@@ -1,6 +1,6 @@
 module.exports = {
   ldapAuthURL: process.env.ldapAuthURL || 'http://ifundit-dp.tap.ibm.com:3004',
-  bluepagesURL: process.env.bluepagesURL || 'http://ifundit-dp.tap.ibm.com:3004',
+  bluepagesURL: process.env.bluepagesURL || 'http://user:pass@agile-gw.mybluemix.net/api/bluepages',
   redisDb: {
     url: process.env.redisURL || 'redis://localhost:6379',
     prefix: process.env.redisPrefix || 'agileteamtool:'
@@ -31,7 +31,7 @@ module.exports = {
     dsn: process.env.sentryDSN || '',
     publicDSN: process.env.sentryPublicDSN || ''
   },
-  uiReleaseDate: process.env.uiReleaseDate || '2017-04-31T00:00:00.000Z' // we will use this date to trigger the walkthrough for new ui.
+  uiReleaseDate: process.env.uiReleaseDate || '2017-05-31T00:00:00.000Z' // we will use this date to trigger the walkthrough for new ui.
 };
 
 var loggers = require('./middleware/logger');
