@@ -17,7 +17,7 @@ module.exports = {
           'score': 1,
           'criteria': [
             'No regular team opportunity for sharing progress on work',
-            'Typically meetings maybe long and have limited engagement from attendees',
+            'Typically meetings are long and have limited engagement from attendees',
             'Meeting attendees are forced or feel obliged to attend rather than recognizing the value of the meeting and voluntarily attending',
             'Team members are unclear what work is happening or issues blocking progress',
             'Team members typically perform additional reporting to highlight work completed'
@@ -27,8 +27,8 @@ module.exports = {
           'score': 2,
           'criteria': [
             'Standup meetings happen but are irregular',
-            'Core team attendance maybe intermittent',
-            'Team member updates are focus only on status with limited insight into risks or issues'
+            'Core team attendance may be intermittent',
+            'Team member updates are focused only on status with limited insight into risks or issues'
           ]
         }, {
           'name': 'Transforming',
@@ -53,14 +53,14 @@ module.exports = {
       }, {
         'id': 2,
         'name': 'Track & Visualize Progress (Walls)',
-        'description': 'Tracking progress of work and visualizing to create transparency and shared understanding ',
+        'description': 'Tracking progress of work and visualizing to create transparency and shared understanding',
         'levels': [{
           'name': 'Initiating',
           'score': 1,
           'criteria': [
             'Project information is stored in locations with restricted access',
             'Not all stakeholders have access to project information',
-            'Information is either not maintained or accurate'
+            'Information is either not maintained or is inaccurate'
           ]
         }, {
           'name': 'Practicing',
@@ -95,7 +95,7 @@ module.exports = {
       'practices': [{
         'id': 3,
         'name': 'Engaging the Product Owner',
-        'description': 'through showcases, planning, progress and team meetings to support definition and prioritization',
+        'description': 'Through showcases, planning, progress and team meetings to support definition and prioritization',
         'levels': [{
           'name': 'Initiating',
           'score': 1,
@@ -131,7 +131,7 @@ module.exports = {
       }, {
         'id': 4,
         'name': 'Work Prioritization',
-        'description': 'Effective work prioritization ensures that the greatest business value is always being delivered thereby maximizing return on investment.',
+        'description': 'Effective work prioritization ensures that the greatest business value is always being delivered thereby maximizing return on investment',
         'levels': [{
           'name': 'Initiating',
           'score': 1,
@@ -179,15 +179,15 @@ module.exports = {
           'criteria': [
             'No plans exist (release or iteration)',
             'Plans are created without input from team before delivery',
-            'Plans are based upon one major release without consideration of smaller incremental releases.'
+            'Plans are based upon one major release without consideration of smaller incremental releases'
           ]
         }, {
           'name': 'Practicing',
           'score': 2,
           'criteria': [
             'Release Plans and Iteration Plans are defined by the Project Manager/Iteration Manager with limited involvement from the core team and with limited consideration of business priority or involvement of stakeholders',
-            'Release Plans and Iterations Plans are not adjusted to reflect changing priorities.',
-            'Variations in planned vs. delivered are not consistently measured or reported.'
+            'Release Plans and Iterations Plans are not adjusted to reflect changing priorities',
+            'Variations in planned vs. delivered are not consistently measured or reported'
           ]
         }, {
           'name': 'Transforming',
@@ -195,8 +195,8 @@ module.exports = {
           'criteria': [
             'Key stakeholders (sponsors, business owners and steering committee members) attend some project ceremonies (showcases and planning sessions)',
             'Release Plans and Iterations Plans are visible to the team',
-            'Variations in planned vs. delivered are measured and reported.',
-            'Release Plans and Iterations Plans are not adjusted due to variations in planned vs. delivered work.'
+            'Variations in planned vs. delivered are measured and reported',
+            'Release Plans and Iterations Plans are not adjusted due to variations in planned vs. delivered work'
           ]
         }, {
           'name': 'Scaling',
@@ -205,7 +205,7 @@ module.exports = {
             'Key stakeholders (sponsors, business owners and steering committee members) attend most project ceremonies (showcases and planning sessions)',
             'Release and iteration planning produces an achievable plan that the team is confident to deliver',
             'Work planned is regularly achieved with only small variations in progress',
-            'An overall (long-term) plan is maintained and accurately reflects the team\'s understanding of work, timing, resources, dependencies, etc.',
+            'An overall (long-term) plan is maintained and accurately reflects the team\'s understanding of work, timing, resources, dependencies, etc',
             'Sliders are used to inform planning'
           ]
         }]
@@ -244,7 +244,7 @@ module.exports = {
           'score': 4,
           'criteria': [
             'Retrospectives are consistently attended by the core team who actively contribute to concrete adaptions/actions',
-            'Actions are reliability completed',
+            'Actions are reliably completed',
             'Decisions are fact-based, addressing the root-cause of the problems and rarely need to be revisited'
           ]
         }]
@@ -264,7 +264,7 @@ module.exports = {
           'score': 2,
           'criteria': [
             'The unit of estimation is elapsed time',
-            'The amount of work committed to an iteration is not compared with the actual work completed',
+            'The amount of work committed to in an iteration is not compared with the actual work completed',
             'Core team members participate in the estimation techniques'
           ]
         }, {
@@ -314,11 +314,11 @@ module.exports = {
           'name': 'Transforming',
           'score': 3,
           'criteria': [
-            'For the current release',
-            'Features are broken into Stories.',
+            'For the current release:',
+            'Features are broken into Stories',
             'Stories are used to describe all work activities using language/words that the customer understands',
             'Features and Stories are recorded in a manner that is readily accessible by all team members and regularly maintained',
-            'For future releases',
+            'For future releases:',
             'Features are described using language/words that the customer understands',
             'Features are recorded in a manner that is readily accessible by the project team'
           ]
@@ -397,7 +397,7 @@ module.exports = {
           'name': 'Scaling',
           'score': 4,
           'criteria': [
-            'The whole team recognize quality issues and prioritizes remediation activities'
+            'The whole team recognizes quality issues and prioritizes remediation activities'
           ]
         }]
       }, {
@@ -414,7 +414,7 @@ module.exports = {
           'name': 'Practicing',
           'score': 2,
           'criteria': [
-            'Risks and Issues have been identified and are captured using an appropriate artifacts such as a Risk Story Walls, Big Visual Charts (BVC), Risk Register, etc.',
+            'Risks and Issues have been identified and are captured using an appropriate artifacts such as a Risk Story Walls, Big Visual Charts (BVC), Risk Register, etc',
             'Risks and Issue are identified by an appropriate group of stakeholders (i.e. not just the project manager or the team leader in isolation)',
             'Risk artifacts are \'owned\' by the team and team members have no reservations in making contributions or changes'
           ]
@@ -423,16 +423,16 @@ module.exports = {
           'score': 3,
           'criteria': [
             'Risk management is embedded into day-to-day operations or project activities',
-            'Risks, issues and blockers are discussed in appropriate detail as part of all sessions (stand-ups; iteration planning; showcases; steering committee meetings; etc).',
-            'Risk mitigations and action plans are treated like any other activity or feature; they are represented by individual story cards, included in iteration planning and tracked and completed during the iteration.'
+            'Risks, issues and blockers are discussed in appropriate detail as part of all sessions (standups; iteration planning; showcases; steering committee meetings; etc)',
+            'Risk mitigations and action plans are treated like any other activity or feature; they are represented by individual story cards, included in iteration planning and tracked and completed during the iteration'
           ]
         }, {
           'name': 'Scaling',
           'score': 4,
           'criteria': [
             'Risk mitigations and action plans take into consideration the source and cause of a risk',
-            'Risks, assumptions, issues, dependencies, constraints (etc) identified previously are periodically revisited, discussed, reviewed and updated',
-            'Risk Management is used to identify potential impacts on benefits, goals, objectives, strategies, problems, and success criteria.',
+            'Risks, assumptions, issues, dependencies, constraints (etc.) identified previously are periodically revisited, discussed, reviewed and updated',
+            'Risk Management is used to identify potential impacts on benefits, goals, objectives, strategies, problems, and success criteria',
             'Mechanisms exist for reporting and escalating risks and issues which are beyond the capabilities or authority of the team'
           ]
         }]
@@ -608,14 +608,14 @@ module.exports = {
           'score': 2,
           'criteria': [
             'Continuous integration with static code analysis (analyzing code when not running) and build verification testing',
-            'Test cases align with the acceptance criteria for a given user story, epic, scenario, use-case, etc.',
+            'Test cases align with the acceptance criteria for a given user story, epic, scenario, use-case, etc',
             'Developers execute their own \'personal builds\' and run their own tests prior to committing code'
           ]
         }, {
           'name': 'Transforming',
           'score': 3,
           'criteria': [
-            'Some funcational and acceptance testing is automated',
+            'Some functional and acceptance testing is automated',
             'Test data created, under change control, and automatically deployed to appropriate test environments',
             'Automatically report failing tests against the build and log problems to owners'
           ]
@@ -623,7 +623,7 @@ module.exports = {
           'name': 'Scaling',
           'score': 4,
           'criteria': [
-            'Testing (regression, functional acceptence, unit test, system and integration) is automated and executed as needed',
+            'Testing (regression, functional acceptance, unit, system and integration) is automated and executed as needed',
             'Test environments are under change control',
             'Any version of a test environment can be recreated automatically',
             'Test failures can be reproduced by automation recreating the failure environment',
@@ -642,7 +642,7 @@ module.exports = {
           'name': 'Initiating',
           'score': 1,
           'criteria': [
-            'Deployment processes standardized and documented',
+            'Deployment processes are standardized and documented',
             'Deployments require significant manual effort and pre-planning'
           ]
         }, {
@@ -677,7 +677,7 @@ module.exports = {
       'practices': [{
         'id': 7,
         'name': 'Customer Feedback',
-        'description': 'Customer term means your end-user.',
+        'description': 'Customer term means your end-user',
         'levels': [{
           'name': 'Initiating',
           'score': 1,
