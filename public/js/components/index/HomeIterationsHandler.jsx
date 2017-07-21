@@ -1219,7 +1219,7 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
   });
 }
 
-function loadLineChartParent(id, title, categories, yAxisLabel, xAxisLabel, lineSeries1, lineSeries2, unit) {
+function loadLineChartParent(id, title, categories, yAxisLabel, xAxisLabel, lineSeries1, lineSeries2, lineSeries3, unit) {
   new Highcharts.Chart({
     chart: {
       type: 'line',
@@ -1306,6 +1306,13 @@ function loadLineChartParent(id, title, categories, yAxisLabel, xAxisLabel, line
       showInLegend: true,
       name: lineSeries2.name,
       data: lineSeries2.data,
+      zoneAxis: 'x',
+      zones: [{value: 4.1}, {dashStyle: 'dash', color: 'orange'}]
+    }, {
+      showInLegend: true,
+      name: lineSeries3.name,
+      data: lineSeries3.data,
+      color: lineSeries3.color,
       zoneAxis: 'x',
       zones: [{value: 4.1}, {dashStyle: 'dash', color: 'orange'}]
     }]
@@ -1711,10 +1718,17 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
   var nonsquadScore = (snapshotData.teamMemberData)[0];
   var timestamp = snapshotData.lastUpdate;
   var graphCategory = [];
+  var monthsToExclude = 2; // exclude 2 previous months in graph
+  var monthsToAverage = 3; // averaging 3 months for thoughput and velocity
 
   var velocitySeries = new Object();
   velocitySeries.name = 'Delivered';
   velocitySeries.data = [];
+
+  var velocityAveSeries = new Object();
+  velocityAveSeries.name = '3 Mo avg';
+  velocityAveSeries.data = [];
+  velocityAveSeries.color = '#8CD211';
 
   var commVelocitySeries = new Object();
   commVelocitySeries.name = 'Planned';
@@ -1723,6 +1737,11 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
   var throughputSeries = new Object();
   throughputSeries.name = 'Delivered';
   throughputSeries.data = [];
+
+  var throughputAveSeries = new Object();
+  throughputAveSeries.name = '3 Mo avg';
+  throughputAveSeries.data = [];
+  throughputAveSeries.color = '#8CD211';
 
   var commThroughputSeries = new Object();
   commThroughputSeries.name = 'Planned';
@@ -1784,9 +1803,10 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
   var curTeamstat = nonsquadScore;
 
   for (var i = monthList.length - 1; i > -1; i--) {
-    var graphCat;
-    graphCat = monthList[i].month;
-    graphCategory.push(graphCat);
+    if (((monthList.length - 1) - i) < monthsToExclude)
+      continue;
+
+    graphCategory.push(monthList[i].month);
 
     var vData = new Object();
     vData.name = monthList[i].month;
@@ -1815,6 +1835,26 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
     ctData.totalCompleted = isNaN(parseInt(monthList[i].totalCompleted)) ? 0 : parseInt(monthList[i].totalCompleted);
     ctData.totalSquad = isNaN(parseInt(monthList[i].totalSquad)) ? 0 : parseInt(monthList[i].totalSquad);
     commThroughputSeries.data.push(ctData);
+
+    var velocityAve = new Object();
+    velocityAve.y = 0;
+    var throughputAve = new Object();
+    throughputAve.y = 0;
+    for (var j=0; j<monthsToAverage; j++) {
+      velocityAve.y = velocityAve.y + (isNaN(parseInt(monthList[i + j].totalPoints)) ? 0 : parseInt(monthList[i + j].totalPoints));
+      throughputAve.y = throughputAve.y + (isNaN(parseInt(monthList[i + j].totalStories)) ? 0 : parseInt(monthList[i + j].totalStories));
+    }
+    velocityAve.name = monthList[i].month;
+    velocityAve.y = parseFloat((velocityAve.y / monthsToAverage).toFixed(0));
+    velocityAve.totalCompleted = isNaN(parseInt(monthList[i].totalCompleted)) ? 0 : parseInt(monthList[i].totalCompleted);
+    velocityAve.totalSquad = isNaN(parseInt(monthList[i].totalSquad)) ? 0 : parseInt(monthList[i].totalSquad);
+    velocityAveSeries.data.push(velocityAve);
+
+    throughputAve.name = monthList[i].month;
+    throughputAve.y = parseFloat((throughputAve.y / monthsToAverage).toFixed(0));
+    throughputAve.totalCompleted = isNaN(parseInt(monthList[i].totalCompleted)) ? 0 : parseInt(monthList[i].totalCompleted);
+    throughputAve.totalSquad = isNaN(parseInt(monthList[i].totalSquad)) ? 0 : parseInt(monthList[i].totalSquad);
+    throughputAveSeries.data.push(throughputAve);
 
     var defData = new Object();
     defData.name = monthList[i].month;
@@ -1928,8 +1968,8 @@ module.exports.iterationSnapshotHandler = function(teamId, teamName, snapshotDat
     ctsYMax = null;
   }
   destroyIterationCharts();
-  loadLineChartParent('pvelocityChart', 'Velocity', graphCategory, 'Story points', '', velocitySeries, commVelocitySeries, 'Points');
-  loadLineChartParent('pthroughputChart', 'Throughput', graphCategory, 'Stories/tickets/cards', '', throughputSeries, commThroughputSeries, 'Points');
+  loadLineChartParent('pvelocityChart', 'Velocity', graphCategory, 'Story points', '', velocitySeries, commVelocitySeries, velocityAveSeries, 'Points');
+  loadLineChartParent('pthroughputChart', 'Throughput', graphCategory, 'Stories/tickets/cards', '', throughputSeries, commThroughputSeries, throughputAveSeries, 'Points');
   loadMultiDefectDeployChartParent('pdefectsChart', graphCategory, defectsStartSeries, defectsSeries, defectsClosedSeries, defectsEndSeries, deploySeries);
   loadMultiLineChartParent('pwipBacklogChart', 'Cycle Time (in days)', graphCategory, 'Average days per story', '', cycleTimeBacklogSeries, cycleTimeWIPSeries, 'Points', false);
   loadMultiLineChartParent('pstatisfactionChart', 'Client and Team Satisfaction', graphCategory, 'Rating', '', teamStatSeries, clientStatSeries, 'Points', false, ctsYMax);

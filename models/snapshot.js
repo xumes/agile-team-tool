@@ -14,7 +14,7 @@ var util = require('../helpers/util');
 var dateFormat = 'YYYY-MM-DD HH:mm:ss';
 var Schema   = mongoose.Schema;
 
-var ITERATION_MONTHS = 5;
+var ITERATION_MONTHS = 7;
 var lastUpdate = moment().format(dateFormat);
 var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 var monthArray = [];
