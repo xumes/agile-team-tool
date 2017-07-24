@@ -413,7 +413,7 @@ function getAllTeams() {
             var memCount = 0;
             var tmArr = [];
             _.each(squadTeam.members, function(member){
-              if (tmArr.indexOf(member.userId) == -1) {
+              if (tmArr.indexOf(member.userId) == -1 && parseInt(member.allocation) > 0) {
                 memCount++;
                 tmArr.push(member.userId);
               }
