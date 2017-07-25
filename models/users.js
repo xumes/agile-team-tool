@@ -248,7 +248,7 @@ var users = {
       // First, Search the user (by userId) using ldap query
       module.exports.ldapUserQuery(requestURL)
         .then(function(bpInfo) { /* istanbul ignore next */
-          if (bpInfo && _.isEmpty(bpInfo.ldap) && (bpInfo.ldap.uid === newUser.userId)) {
+          if (bpInfo && !_.isEmpty(bpInfo.ldap) && (bpInfo.ldap.uid === newUser.userId)) {
             bpUserId = bpInfo.ldap.uid.toUpperCase();
             bpEmail = bpInfo.ldap.preferredIdentity || bpInfo.shortEmail;
             bpEmail = bpEmail.toLowerCase();
@@ -333,7 +333,7 @@ var users = {
         // First, Search this user (by userId) using ldap query
         module.exports.ldapUserQuery(requestURL)
           .then(function(bpInfo) { /* istanbul ignore next */
-            if (bpInfo && _.isEmpty(bpInfo.ldap) && (bpInfo.ldap.uid === userId)) {
+            if (bpInfo && !_.isEmpty(bpInfo.ldap) && (bpInfo.ldap.uid === userId)) {
               bpUserId = bpInfo.ldap.uid.toUpperCase();
               bpEmail = bpInfo.ldap.preferredIdentity || bpInfo.shortEmail;
               bpEmail = bpEmail.toLowerCase();
