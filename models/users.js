@@ -200,7 +200,6 @@ var users = {
           }
         })
         .catch( /* istanbul ignore next */ function(err){
-          // console.log(err);
           reject({'error':err});
         });
     });
@@ -249,7 +248,7 @@ var users = {
       // First, Search the user (by userId) using ldap query
       module.exports.ldapUserQuery(requestURL)
         .then(function(bpInfo) { /* istanbul ignore next */
-          if (bpInfo && (bpInfo.ldap.uid === newUser.userId)) {
+          if (bpInfo && _.isEmpty(bpInfo.ldap) && (bpInfo.ldap.uid === newUser.userId)) {
             bpUserId = bpInfo.ldap.uid.toUpperCase();
             bpEmail = bpInfo.ldap.preferredIdentity || bpInfo.shortEmail;
             bpEmail = bpEmail.toLowerCase();
@@ -310,7 +309,6 @@ var users = {
           return resolve(foundUser);
         })
         .catch( /* istanbul ignore next */ function(err) {
-          console.log('ldapResult err:' ,err);
           reject({'error':err});
         });
     });
@@ -335,7 +333,7 @@ var users = {
         // First, Search this user (by userId) using ldap query
         module.exports.ldapUserQuery(requestURL)
           .then(function(bpInfo) { /* istanbul ignore next */
-            if (bpInfo && (bpInfo.ldap.uid === userId)) {
+            if (bpInfo && _.isEmpty(bpInfo.ldap) && (bpInfo.ldap.uid === userId)) {
               bpUserId = bpInfo.ldap.uid.toUpperCase();
               bpEmail = bpInfo.ldap.preferredIdentity || bpInfo.shortEmail;
               bpEmail = bpEmail.toLowerCase();
@@ -348,7 +346,7 @@ var users = {
               }
               return User.findOneAndUpdate({'userId': userId}, {'$set': userInfo}).exec();
             } else {
-              loggers.get('model-users').verbose('Bluepages is currently down!! Requested URL:',requestURL);
+              loggers.get('model-users').verbose('Unable to retrieve Bluepages information!! Requested URL:',requestURL);
               return User.findOneAndUpdate({'userId': userId}, {'$set': userInfo}).exec();
             }
           })
@@ -446,7 +444,6 @@ var users = {
     return new Promise(function(resolve, reject) {
       var queryUrl = 'http://faces-cache.mybluemix.net/image/' + uid;
       request(queryUrl, function(err, response, body) {
-        // console.log(response.body);
         if (err) {
           reject(err);
         }
@@ -483,7 +480,6 @@ var users = {
           resolve();
         }
         else {
-          //console.log('ldapUserQuery found', ldapUrl, json.preferredIdentity);
           resolve(json);
         }
       });
