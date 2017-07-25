@@ -1107,7 +1107,7 @@ function calMonthDiff(d1, d2) {
  */
 function resetAssessmentData() {
   var rollupDataList = [];
-  for (var i=0; i<=ITERATION_MONTHS; i++) {
+  for (var i=0; i<=ASSESSMENT_PERIOD; i++) {
     rollupDataList.push({
       'less_120_days': 0,
       'gt_120_days': 0,
