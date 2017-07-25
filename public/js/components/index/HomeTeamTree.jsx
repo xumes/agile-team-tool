@@ -569,8 +569,6 @@ var HomeTeamTree = React.createClass({
           var linkId = 'link_' + team.pathId;
           var bodyId = 'body_' + team.pathId;
           var label = team.name;
-          console.log('standaloneTeams label:',label);
-          console.log('standaloneTeams docStatus:',team.docStatus);
           var objectId = team._id;
           if (team.type == 'squad') {
             var isSquad = 'agile-team-link agile-team-standalone agile-team-squad';
