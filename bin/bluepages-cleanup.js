@@ -28,7 +28,7 @@ schedule.scheduleJob('* * 2 * *', function() {
           reject(msg);
         }
 
-        if (response.statusCode == 404 && json.message == 'Unable to find record') {
+        if (response.statusCode == 404 || json.message == 'Unable to find record' || json.message == 'Not found') {
           user.remove();
           workerLogger.info('User', user.email, 'unable to get Bluepages record');
         }
@@ -39,7 +39,6 @@ schedule.scheduleJob('* * 2 * *', function() {
       });
     });
   };
-
   users.getAllUsers()
     .then(function(users) {
       return Promise.mapSeries(users, function(user) {
