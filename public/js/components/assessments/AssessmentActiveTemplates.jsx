@@ -13,42 +13,45 @@ var AssessmentActiveTemplates = React.createClass({
 
   initial: function() {
     var self = this;
-    $('#atma_' + self.props.assessTemplateId + ' .agile-question-opt > input').prop('checked', false);
-    $('#atma_' + self.props.assessTemplateId + ' a.ibm-twisty-trigger > span').html('Not answered');
-    $('#atma_' + self.props.assessTemplateId + ' a.ibm-twisty-trigger').css('background','');
-    $('#atma_' + self.props.assessTemplateId + ' textarea').val('');
-    $('#atma_' + self.props.assessTemplateId + ' textarea').prop('disabled', false);
-    $('#atma_' + self.props.assessTemplateId + ' input[type=\'radio\']').prop('disabled', false);
-    if (self.props.isUpdate && self.props.assessDraft != undefined && !_.isEmpty(self.props.assessDraft) && !_.isEmpty(self.props.assessDraft.componentResults[self.props.assessTemplateId])) {
-      var template = self.props.assessTemplate;
-      var assessDraft = self.props.assessDraft.componentResults[self.props.assessTemplateId];
-      var componentId ='atma_' + self.props.assessTemplateId;
-      var templateCount = self.countPractics(template);
-      if (!_.isEmpty(assessDraft.assessedComponents)) {
-        _.each(assessDraft.assessedComponents, function(assessedComponent){
-          var principleId = assessedComponent.principleId - 1;
-          var practiceTotal = 0;
-          for (var i = 0; i < assessedComponent.principleId - 1; i++) {
-            practiceTotal = practiceTotal + templateCount[i];
-          }
-          var practiceId = assessedComponent.practiceId - 1 - practiceTotal;
-          var currLevelId = assessedComponent.currentScore - 1;
-          var targLevelId = assessedComponent.targetScore - 1;
-          var currLevelName = assessedComponent.currentLevelName==''?'---':assessedComponent.currentLevelName;
-          var targLevelName = assessedComponent.targetLevelName==''?'---':assessedComponent.targetLevelName;
-          var currAssessId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_td_curr_' + currLevelId;
-          var targAssessId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_td_targ_' + targLevelId;
-          var levelLabelId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_ans';
-          var textAreaId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_action';
-          $('#' + currAssessId).prop('checked', true);
-          $('#' + targAssessId).prop('checked', true);
-          if (currLevelName == '---' && targLevelName == '---') {
-            $('#' + levelLabelId).html('Not answered');
-          } else {
-            $('#' + levelLabelId).html('Current: ' + currLevelName + ' | Target: ' + targLevelName);
-          }
-          $('#' + textAreaId).val(assessedComponent.improveDescription);
-        });
+    if (self.props.isUpdate) {
+      $('#atma_' + self.props.assessTemplateId + ' .agile-question-opt > input').prop('checked', false);
+      $('#atma_' + self.props.assessTemplateId + ' a.ibm-twisty-trigger > span').html('Not answered');
+      $('#atma_' + self.props.assessTemplateId + ' a.ibm-twisty-trigger').css('background','');
+      $('#atma_' + self.props.assessTemplateId + ' textarea').val('');
+      $('#atma_' + self.props.assessTemplateId + ' textarea').prop('disabled', false);
+      $('#atma_' + self.props.assessTemplateId + ' input[type=\'radio\']').prop('disabled', false);
+
+      if(self.props.assessDraft != undefined && !_.isEmpty(self.props.assessDraft) && !_.isEmpty(self.props.assessDraft.componentResults[self.props.assessTemplateId])) {
+        var template = self.props.assessTemplate;
+        var assessDraft = self.props.assessDraft.componentResults[self.props.assessTemplateId];
+        var componentId ='atma_' + self.props.assessTemplateId;
+        var templateCount = self.countPractics(template);
+        if (!_.isEmpty(assessDraft.assessedComponents)) {
+          _.each(assessDraft.assessedComponents, function(assessedComponent){
+            var principleId = assessedComponent.principleId - 1;
+            var practiceTotal = 0;
+            for (var i = 0; i < assessedComponent.principleId - 1; i++) {
+              practiceTotal = practiceTotal + templateCount[i];
+            }
+            var practiceId = assessedComponent.practiceId - 1 - practiceTotal;
+            var currLevelId = assessedComponent.currentScore - 1;
+            var targLevelId = assessedComponent.targetScore - 1;
+            var currLevelName = assessedComponent.currentLevelName==''?'---':assessedComponent.currentLevelName;
+            var targLevelName = assessedComponent.targetLevelName==''?'---':assessedComponent.targetLevelName;
+            var currAssessId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_td_curr_' + currLevelId;
+            var targAssessId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_td_targ_' + targLevelId;
+            var levelLabelId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_ans';
+            var textAreaId = componentId + '_prin_' + principleId + '_prac_' + practiceId + '_action';
+            $('#' + currAssessId).prop('checked', true);
+            $('#' + targAssessId).prop('checked', true);
+            if (currLevelName == '---' && targLevelName == '---') {
+              $('#' + levelLabelId).html('Not answered');
+            } else {
+              $('#' + levelLabelId).html('Current: ' + currLevelName + ' | Target: ' + targLevelName);
+            }
+            $('#' + textAreaId).val(assessedComponent.improveDescription);
+          });
+        }
       }
     } else {
       $('textarea').prop('disabled', self.props.haveAccess);
