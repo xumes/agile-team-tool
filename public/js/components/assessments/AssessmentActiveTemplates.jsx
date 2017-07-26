@@ -13,14 +13,14 @@ var AssessmentActiveTemplates = React.createClass({
 
   initial: function() {
     var self = this;
-    $('#atma_' + self.props.assessTemplateId + ' .agile-question-opt > input').prop('checked', false);
-    $('#atma_' + self.props.assessTemplateId + ' a.ibm-twisty-trigger > span').html('Not answered');
-    $('#atma_' + self.props.assessTemplateId + ' a.ibm-twisty-trigger').css('background','');
-    $('#atma_' + self.props.assessTemplateId + ' textarea').val('');
-    $('#atma_' + self.props.assessTemplateId + ' textarea').prop('disabled', false);
-    $('#atma_' + self.props.assessTemplateId + ' input[type=\'radio\']').prop('disabled', false);
     if (self.props.isUpdate && self.props.assessDraft != undefined && !_.isEmpty(self.props.assessDraft) && !_.isEmpty(self.props.assessDraft.componentResults[self.props.assessTemplateId])) {
-      var template = self.props.assessTemplate;
+     $('#atma_' + self.props.assessTemplateId + ' .agile-question-opt > input').prop('checked', false);
+     $('#atma_' + self.props.assessTemplateId + ' a.ibm-twisty-trigger > span').html('Not answered');
+     $('#atma_' + self.props.assessTemplateId + ' a.ibm-twisty-trigger').css('background','');
+     $('#atma_' + self.props.assessTemplateId + ' textarea').val('');
+     $('#atma_' + self.props.assessTemplateId + ' textarea').prop('disabled', false);
+     $('#atma_' + self.props.assessTemplateId + ' input[type=\'radio\']').prop('disabled', false);
+     var template = self.props.assessTemplate;
       var assessDraft = self.props.assessDraft.componentResults[self.props.assessTemplateId];
       var componentId ='atma_' + self.props.assessTemplateId;
       var templateCount = self.countPractics(template);
