@@ -426,7 +426,7 @@ module.exports.teamMemFTE = function (currentTeam) {
     var tmArr = [];
     if (!_.isEmpty(currentTeam) && currentTeam.members) {
        $.each(currentTeam.members, function(key, member) {
-        if (tmArr.indexOf(member.userId) == -1) {
+        if (tmArr.indexOf(member.userId) == -1 && parseInt(member.allocation) > 0) {
           count++;
           tmArr.push(member.userId);
         }
@@ -434,4 +434,3 @@ module.exports.teamMemFTE = function (currentTeam) {
     }
     return count;
   };
-  

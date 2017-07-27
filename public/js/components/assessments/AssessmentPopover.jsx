@@ -84,7 +84,10 @@ var AssessmentPopover = React.createClass({
   changeDateHandler: function(e) {
     $('#assessmentSubmitDateTitle').html(moment(e).format('DD MMM YYYY'));
     $('#assessmentSubmitDateString').html(moment(e).format('YYYY-MM-DD'));
-    this.setState({submitDatePicker: moment(e)});
+    this.setState({
+      submitDatePicker: moment(e),
+      isUpdate: false
+    });
   },
   showCloseAssessment: function() {
     $('#closeAssessment').show();

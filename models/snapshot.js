@@ -14,7 +14,7 @@ var util = require('../helpers/util');
 var dateFormat = 'YYYY-MM-DD HH:mm:ss';
 var Schema   = mongoose.Schema;
 
-var ITERATION_MONTHS = 5;
+var ITERATION_MONTHS = 7;
 var lastUpdate = moment().format(dateFormat);
 var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 var monthArray = [];
@@ -413,7 +413,7 @@ function getAllTeams() {
             var memCount = 0;
             var tmArr = [];
             _.each(squadTeam.members, function(member){
-              if (tmArr.indexOf(member.userId) == -1) {
+              if (tmArr.indexOf(member.userId) == -1 && parseInt(member.allocation) > 0) {
                 memCount++;
                 tmArr.push(member.userId);
               }
@@ -1107,7 +1107,7 @@ function calMonthDiff(d1, d2) {
  */
 function resetAssessmentData() {
   var rollupDataList = [];
-  for (var i=0; i<=ITERATION_MONTHS; i++) {
+  for (var i=0; i<=ASSESSMENT_PERIOD; i++) {
     rollupDataList.push({
       'less_120_days': 0,
       'gt_120_days': 0,
