@@ -80,6 +80,7 @@ gulp test
 ### Jobs
 
 There are 3 jobs running on separate deployments using the same base code.  These are to:
-1. Rollup squad iteration data to their parents.
-2. Mark iteration as `Complete` if it is past end date.
-3. Mark member information if they no longer exist in Bluepages.
+1. Rollup squad iteration data to their parents.  Currently scheduled to run every 3 minutes.
+2. Mark iteration as `Complete` if it is past end date. Currently scheduled to run daily.
+3. Mark member information if they no longer exist in Bluepages. Currently scheduled to run weekly.
+4. Replicate DB to another instance for reporting purposes.  Intended for users who need to access and extract data.  Currently scheduled to run daily.
