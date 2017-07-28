@@ -7,7 +7,7 @@ var Promise = require('bluebird');
 var workerLogger = require('../middleware/logger').get('worker');
 var settings = require('../settings');
 
-schedule.scheduleJob('* * 2 * *', function() {
+schedule.scheduleJob('* 1 0 * * 6', function() {
   var queryUser = function(user) {
     return new Promise(function(resolve) {
       var bluepagesURL = settings.bluepagesURL;
