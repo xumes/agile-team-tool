@@ -66,13 +66,6 @@ logColors=true redisHost=172.17.0.2 redisPort=6379 NODE_ENV=production nodemon .
 ```
 gulp test
 ```
-### Running the app with docker
-
-1. Make sure docker and docker-compose is installed in your local machine
-2. Run the project by doing `docker-compose up -d`
-3. Access the app via http://{docker ip}:3000
-
-
 ## Deployment
 
 * [Jenkins](https://jenkins.io/)
