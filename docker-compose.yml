@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile-app
+    image: agile-team-tool-nodejs:${APP_VERSION:-1.0.0}
+    working_dir: /service
+    command: npm start
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+      - "5858:5858"
+    networks:
+      - agile_team_tool_nodejs
+    environment:
+      - mongoURL=mongodb://mongodb:27017/agiletool_stage
+      - redisURL=redis://redis:6379/
+    depends_on:
+      - mongodb
+      - redis
+  mongodb:
+    image: tutum/mongodb:2.6
+    environment:
+      - AUTH=no
+    networks:
+      - agile_team_tool_nodejs
+    ports:
+      - "27017:27017"
+      - "28017:28017"
+    volumes:
+      - mongodb_data:/data/db/
+  redis:
+    image: redis:2.8
+    networks:
+      - agile_team_tool_nodejs
+    ports:
+      - "6379:6379"
+
+networks:
+  agile_team_tool_nodejs:
+
+volumes:
+  mongodb_data:
