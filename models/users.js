@@ -170,28 +170,40 @@ var users = {
     });
   },
 
+  isUserAdmin: function(userId) {
+    return new Promise(function(resolve, reject) {
+      users.findUserByUserId(userId.toUpperCase())
+        .then(function(result) {
+          if (result != null && result.adminAccess != undefined) {
+            if (result.adminAccess == 'full')
+              resolve(true);
+            else
+              resolve(false);
+          } else
+            resolve(false);
+        })
+        .catch( /* istanbul ignore next */ function(err){
+          reject({'error':err});
+        });
+    });
+  },
+
   isUserAllowed: function(userId, teamId) {
-    var hasAccess = false;
     return new Promise(function(resolve, reject) {
       var promiseArray = [];
       promiseArray.push(System.getSystemStatus());
-      promiseArray.push(users.findUserByUserId(userId.toUpperCase()));
+      promiseArray.push(users.isUserAdmin(userId));
       promiseArray.push(users.isTeamMember(userId, teamId));
       Promise.all(promiseArray)
         .then(function(results){
-          var systemAccess = 'none';
-          var userAccess = 'none';
-          var teamAccess = false;
+          var systemAccess = 'none'; // when system adminAccess is 'full', only admins are allowed to make edits.
           if (results[0] != null && results[0].adminAccess != undefined) {
             systemAccess = results[0].adminAccess;
           }
-          if (results[1] != null && results[1].adminAccess != undefined) {
-            userAccess = results[1].adminAccess;
-          }
-          if (results[2] != undefined) {
-            teamAccess = results[2];
-          }
-          if (userAccess == 'full') {
+          var userAdmin = results[1];
+          var teamAccess = results[2];
+
+          if (userAdmin) {
             resolve(true);
           } else if (systemAccess == 'none' && teamAccess) {
             resolve(true);
