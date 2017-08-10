@@ -21,9 +21,7 @@ services:
       - mongodb
       - redis
   mongodb:
-    image: tutum/mongodb:2.6
-    environment:
-      - AUTH=no
+    image: mongo:3.2.11
     networks:
       - agile_team_tool_nodejs
     ports:
