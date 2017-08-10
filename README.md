@@ -75,13 +75,13 @@ docker-compose up app
 
 In order to load the MongoDB with existing data, do the following with a file that was dumped from a running database.
 ```
-docker cp <path_to_file>/agiletool_stage.tar agileteamtoolnodejs_mongodb_1:/tmp
+docker cp <path_to_file>/agiletool_stage.tar.gz agileteamtoolnodejs_mongodb_1:/tmp
 docker exec -it agileteamtoolnodejs_mongodb_1 bash
 ```
 Then the following from the bash shell:
 ```
 cd /tmp
-tar -xf agiletool_stage.tar
+tar -xzf agiletool_stage.tar.gz
 mongorestore -h localhost:27017 --db agiletool_stage agiletool_stage
 ```
 
