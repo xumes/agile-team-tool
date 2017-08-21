@@ -89,7 +89,17 @@ module.exports = function(app, includes) {
   };
 
   updateUser = function(req, res) {
-    Users.updateUser(req.body)
+    var user = req.session['user'];
+    var userId = user ? user['ldap']['uid'].toUpperCase() : '';
+    Users.isUserAdmin(userId)
+      .then(function(result) {
+        var userInfo = req.body;
+        if (!result) {
+          // remove adminAccess override on update if current user is not admin
+          delete userInfo.adminAccess;
+        }
+        return Users.updateUser(userInfo);
+      })
       .then(function(result) {
         res.status(200).send(result);
       })
@@ -99,7 +109,17 @@ module.exports = function(app, includes) {
   };
 
   createUser = function(req, res) {
-    Users.create(req.body)
+    var user = req.session['user'];
+    var userId = user ? user['ldap']['uid'].toUpperCase() : '';
+    Users.isUserAdmin(userId)
+      .then(function(result) {
+        var userInfo = req.body;
+        if (!result) {
+          // remove adminAccess override on create if current user is not admin
+          delete userInfo.adminAccess;
+        }
+        return Users.create(userInfo);
+      })
       .then(function(result) {
         res.status(200).send(result);
       })
@@ -118,38 +138,6 @@ module.exports = function(app, includes) {
       });
   };
 
-  // //TODO: Refactor this and store in the database
-  // getRoles = function(req, res) {
-  //   var roles = [{
-  //     name: 'Analyst'
-  //   }, {
-  //     name: 'Architect'
-  //   }, {
-  //     name: 'Consultant'
-  //   }, {
-  //     name: 'DBA'
-  //   }, {
-  //     name: 'Designer'
-  //   }, {
-  //     name: 'Developer'
-  //   }, {
-  //     name: 'Infrastructure'
-  //   }, {
-  //     name: 'Iteration Manager'
-  //   }, {
-  //     name: 'Manager'
-  //   }, {
-  //     name: 'Operations and Support'
-  //   }, {
-  //     name: 'Product Owner'
-  //   }, {
-  //     name: 'Program & Project Mgmt'
-  //   }, {
-  //     name: 'Tester'
-  //   }];
-  //   res.json(roles);
-  // };
-
   app.get('/api/users/active', [includes.middleware.auth.requireLogin], getActiveUser);
 
   app.get('/api/users/isuserallowed', [includes.middleware.auth.requireLogin], isUserAllowed);
@@ -160,11 +148,13 @@ module.exports = function(app, includes) {
   // try to get data from here
   app.delete('/api/users/apikey', [includes.middleware.auth.requireLogin], deleteApiKey);
 
-  // app.get('/api/users/roles', [includes.middleware.auth.requireLogin], getRoles);
-
   app.post('/api/users/info', [includes.middleware.auth.requireLogin], getUsersInfo);
+
   app.get('/api/users/activeInfo', [includes.middleware.auth.requireLogin], getActiveUserInfo);
+
   app.put('/api/users/', [includes.middleware.auth.requireLogin], updateUser);
+
   app.post('/api/users/create', [includes.middleware.auth.requireLogin], createUser);
+
   app.get('/api/users/image/:uid', [includes.middleware.auth.requireLogin], isUserImageBroken);
 };
