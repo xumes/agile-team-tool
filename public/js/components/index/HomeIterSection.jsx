@@ -4,6 +4,7 @@ var HomeIterChart = require('./HomeIterChart.jsx');
 var iterationHandler = require('./HomeIterationsHandler.jsx');
 var HomeSnapshotPull = require('./HomeSnapshotPull.jsx');
 var chartStatus = require('./chartStatus.jsx').chartStatus;
+var _ = require('underscore');
 
 var HomeIterSection = React.createClass({
   componentWillUpdate: function(nextProps, nextState) {

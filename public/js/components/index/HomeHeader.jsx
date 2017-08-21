@@ -2,6 +2,7 @@ var React = require('react');
 var InlineSVG = require('svg-inline-react');
 var HomeFeedback = require('./HomeFeedback.jsx');
 var HomeApikey = require('./HomeApikey.jsx');
+var _ = require('underscore');
 
 var HomeHeader = React.createClass({
   getInitialState: function() {

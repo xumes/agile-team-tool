@@ -3,6 +3,7 @@ var api = require('../api.jsx');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
 var clipboard = null;
+var _ = require('underscore');
 
 var HomeApikey = React.createClass({
   getInitialState: function() {

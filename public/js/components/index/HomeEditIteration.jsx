@@ -7,6 +7,7 @@ var DatePicker = require('react-datepicker');
 var CustomDate = require('./CustomDatePicker.jsx');
 var utils = require('../utils.jsx');
 var ConfirmDialog = require('./ConfirmDialog.jsx');
+var _ = require('underscore');
 
 var initData = {
   'startDate':null,
