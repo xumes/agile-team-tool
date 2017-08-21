@@ -1,12 +1,10 @@
 'use strict';
 var _ = require('underscore');
-var lodash = require('lodash');
 var Promise = require('bluebird');
 var config = require('../settings');
 var mongoose = config.mongoose;
 var loggers = require('../middleware/logger');
 var Schema   = require('mongoose').Schema;
-var lodash = require('lodash');
 var Users = require('./users');
 var moment = require('moment');
 var self = this;
@@ -103,9 +101,6 @@ var componentResultsSchema = new Schema({
 });
 
 var assessmentsSchema = new Schema({
-  cloudantId: {
-    type: String
-  },
   teamId: {
     type: Schema.Types.ObjectId,
     required: [true, 'teamId is required.']
@@ -207,14 +202,14 @@ module.exports.hasAssessments = function(teamId) {
 
 module.exports.addTeamAssessment = function(user, data) {
   return new Promise(function(resolve, reject) {
-    if (lodash.isEmpty(user) && lodash.isEmpty(data)) {
+    if (_.isEmpty(user) && _.isEmpty(data)) {
       var err = {
         'error': 'User ID and Assessment data is required'
       };
       loggers.get('models').error('Error: ' + err);
       reject(err);
     } else {
-      if (lodash.isEmpty(data['teamId'])) {
+      if (_.isEmpty(data['teamId'])) {
         var err = {
           'error': 'Assessment team id is required'
         };
@@ -279,7 +274,7 @@ module.exports.addTeamAssessment = function(user, data) {
 
 module.exports.getTeamAssessments = function(teamId) {
   return new Promise(function(resolve, reject) {
-    if (lodash.isEmpty(teamId)) {
+    if (_.isEmpty(teamId)) {
       var err = {
         'error': 'Team ID is required'
       };
@@ -312,7 +307,7 @@ module.exports.getTeamAssessments = function(teamId) {
 
 module.exports.getAssessment = function(assessmentId) {
   return new Promise(function(resolve, reject) {
-    if (lodash.isEmpty(assessmentId)) {
+    if (_.isEmpty(assessmentId)) {
       var err = {
         'error': 'Assessment ID is required'
       };
@@ -336,7 +331,7 @@ module.exports.getAssessment = function(assessmentId) {
 
 module.exports.updateTeamAssessment = function(user, data) {
   return new Promise(function(resolve, reject) {
-    if (lodash.isEmpty(data) || lodash.isEmpty(user)) {
+    if (_.isEmpty(data) || _.isEmpty(user)) {
       var msg = 'Assessment ID and user ID is required';
       msg = {
         'error': msg
@@ -344,7 +339,7 @@ module.exports.updateTeamAssessment = function(user, data) {
       loggers.get('models').error('Error: ' + msg);
       return reject(msg);
     } else {
-      if (lodash.isEmpty(data['teamId']) || lodash.isEmpty(data['_id'])) {
+      if (_.isEmpty(data['teamId']) || _.isEmpty(data['_id'])) {
         var msg = 'Invalid assessment or team id';
         msg = {
           'error': msg
@@ -407,7 +402,7 @@ module.exports.softDeleteArchive = function(docId, user, status) {
     if (status && (status === 'archive')){
       docStatus = 'archive';
     }
-    if (lodash.isEmpty(docId)) {
+    if (_.isEmpty(docId)) {
       return reject({
         'error': 'Assessment Id is required'
       });
@@ -464,7 +459,7 @@ module.exports.softDeleteArchive = function(docId, user, status) {
 
 module.exports.deleteAssessment = function(userId, assessmentId) {
   return new Promise(function(resolve, reject) {
-    if (lodash.isEmpty(assessmentId) || lodash.isEmpty(userId)) {
+    if (_.isEmpty(assessmentId) || _.isEmpty(userId)) {
       var msg = 'Assessment ID and user ID is required';
       msg = {
         'error': msg
@@ -526,10 +521,10 @@ module.exports.getSubmittedAssessments = function() {
   });
 };
 
-module.exports.deleteByCloudantId = function(cloudantId) {
+module.exports.deleteByVersion = function(version) {
   return new Promise(function(resolve, reject) {
     Assessment.remove({
-      cloudantId: cloudantId
+      version: version
     })
       .then(function(body) {
         resolve(body);

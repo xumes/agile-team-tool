@@ -11,8 +11,7 @@ var deleteId = Schema.Types.ObjectId;
 var testData = {
   initTemplate : function() {
     return {
-      cloudantId : 'cloudant_id_for_assessment_template',
-      version : 1,
+      version : 'assessment_version_for_assessment_template',
       effectiveDate : new Date(),
       status : 'inactive'
     };
@@ -51,10 +50,10 @@ var testData = {
 describe('Assessment Template model [create]', function() {
   before(function(done){
     var promiseArray = [];
-    promiseArray.push(assessmentTemplates.deleteByCloudantId(testData.initTemplate().cloudantId));
-    promiseArray.push(assessmentTemplates.deleteByCloudantId(testData.validTemplates().cloudantId));
-    promiseArray.push(assessmentTemplates.deleteByCloudantId('cloudant_id_inactive'));
-    promiseArray.push(assessmentTemplates.deleteByCloudantId('cloudant_id_active'));
+    promiseArray.push(assessmentTemplates.deleteByVersion(testData.initTemplate().version));
+    promiseArray.push(assessmentTemplates.deleteByVersion(testData.validTemplates().version));
+    promiseArray.push(assessmentTemplates.deleteByVersion('assessment_version_inactive'));
+    promiseArray.push(assessmentTemplates.deleteByVersion('assessment_version_active'));
     Promise.all(promiseArray)
       .then(function(results){
         done();
@@ -205,12 +204,12 @@ describe('Assessment Template model [get]', function() {
 
   it('will return active and inactive assessment template', function(done) {
     var inactiveTemplate = testData.validTemplates();
-    inactiveTemplate['cloudantId'] = 'cloudant_id_inactive';
+    inactiveTemplate['version'] = 'assessment_version_inactive';
     inactiveTemplate['status'] = 'inactive';
     assessmentTemplates.create(inactiveTemplate)
       .then(function() {
         var activeTemplate = testData.validTemplates();
-        activeTemplate['cloudantId'] = 'cloudant_id_active';
+        activeTemplate['version'] = 'assessment_version_active';
         activeTemplate['status'] = 'active';
         return assessmentTemplates.create(activeTemplate);
       })
@@ -219,7 +218,7 @@ describe('Assessment Template model [get]', function() {
       })
       .then(function(result) {
         expect(result).to.be.a('array');
-        var deleteTpl = [assessmentTemplates.deleteByCloudantId('cloudant_id_active'), assessmentTemplates.deleteByCloudantId('cloudant_id_inactive')];
+        var deleteTpl = [assessmentTemplates.deleteByVersion('assessment_version_active'), assessmentTemplates.deleteByVersion('assessment_version_inactive')];
         return Promise.all(deleteTpl);
       })
       .then(function() {
@@ -241,11 +240,11 @@ describe('Assessment Template model [getTemplateByVersion]', function() {
     var activeTemplate = testData.validTemplates();
     assessmentTemplates.create(activeTemplate)
       .then(function(result){
-        return assessmentTemplates.getTemplateByVersion(activeTemplate.cloudantId);
+        return assessmentTemplates.getTemplateByVersion(activeTemplate.version);
       })
       .then(function(result){
         expect(result).to.be.a('object');
-        expect(result.cloudantId).to.equal(activeTemplate.cloudantId);
+        expect(result.version).to.equal(activeTemplate.version);
         return assessmentTemplates.delete(result._id);
       })
       .then(function(){
@@ -265,17 +264,17 @@ describe('Assessment Template model [update]', function() {
 
   it('return success in updating template', function(done) {
     var activeTemplate = testData.validTemplates();
-    activeTemplate['cloudantId'] = 'cloudant_id_update';
+    activeTemplate['version'] = 'assessment_version_update';
     activeTemplate['status'] = 'active';
     assessmentTemplates.create(activeTemplate)
       .then(function(result) {
-        var update = {'status':'inactive','cloudantId':'new_cloudant_id'};
+        var update = {'status':'inactive','version':'new_assessment_version'};
         var id = result['_id'];
         return assessmentTemplates.update(id, update);
       })
       .then(function(updated) {
         expect(updated['status']).to.be.equal('inactive');
-        expect(updated['cloudantId']).to.be.equal('new_cloudant_id');
+        expect(updated['version']).to.be.equal('new_assessment_version');
         return assessmentTemplates.delete(updated['_id']);
       })
       .then(function(deleted) {

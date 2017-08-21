@@ -2,6 +2,7 @@ var React = require('react');
 var api = require('../api.jsx');
 var InlineSVG = require('svg-inline-react');
 var chartStatus = require('./chartStatus.jsx').chartStatus;
+var _ = require('underscore');
 
 var HomeChartFilter = React.createClass({
   showSec: function(id) {

@@ -1,5 +1,4 @@
 module.exports = {
-  'cloudantId': 'ag_mar_ag_team_CHISAPDeployment_1458119346268_1461134471880',
   'version': 'ag_ref_atma_components_v04',
   'docStatus': null,
   'type': 'Project',

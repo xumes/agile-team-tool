@@ -10,6 +10,7 @@ var ConfirmDialog = require('./ConfirmDialog.jsx');
 var chartStatus = require('./chartStatus.jsx').chartStatus;
 var updateFromParent = true;
 var shouldThisUpdate = true;
+var _ = require('underscore');
 
 var HomeAseSummary = React.createClass({
   getInitialState: function() {
@@ -105,7 +106,6 @@ var HomeAseSummary = React.createClass({
         self.setState({
           draftTemplate: self.state.activeTemplate,
         }, function() {
-          console.log('aaa'+updateFromParent);
           shouldThisUpdate = true;
         });
       }
