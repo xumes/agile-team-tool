@@ -212,7 +212,7 @@ var AssessmentSummaryTable = React.createClass({
       series: series
     });
   },
-  countPractics: function(template) {
+  countPractices: function(template) {
     var practiceCount= [];
     if (!_.isEmpty(template)) {
       _.each(template.principles, function(principle){
@@ -226,19 +226,12 @@ var AssessmentSummaryTable = React.createClass({
   render: function() {
     var self = this;
     if (!_.isEmpty(self.props.componentResult)) {
-      if (self.props.assessTemplate.version == 1) {
-        var templateCount = [
-          self.countPractics(self.props.assessTemplate.components[0]),
-          self.countPractics(self.props.assessTemplate.components[0]),
-          self.countPractics(self.props.assessTemplate.components[1])
-        ];
-      } else {
-        templateCount = [
-          self.countPractics(self.props.assessTemplate.components[0]),
-          self.countPractics(self.props.assessTemplate.components[1]),
-          self.countPractics(self.props.assessTemplate.components[2])
-        ];
-      }
+      var templateCount = [];
+      _.each(self.props.assessTemplate.components, function(c) {
+        templateCount.push(self.countPractices(c));
+      });
+
+      // exists for compatibility with assessments done on previous templates with different component naming convention
       if (self.props.componentResult.componentName.indexOf('Project') >= 0 || self.props.componentResult.componentName == 'Team Agile Leadership and Collaboration' || self.props.componentResult.componentName == 'Agile Leadership and Collaboration') {
         var tpTemplate = self.props.assessTemplate.components[0];
         var tpCount = templateCount[0];
@@ -246,7 +239,7 @@ var AssessmentSummaryTable = React.createClass({
         var tpTemplate = self.props.assessTemplate.components[1];
         tpCount = templateCount[1];
       } else {
-        if (self.props.assessTemplate.version == 1) {
+        if (self.props.assessTemplate.version.indexOf('v01') >= 0) {
           var tpTemplate = self.props.assessTemplate.components[1];
           tpCount = templateCount[2];
         } else {
@@ -254,6 +247,7 @@ var AssessmentSummaryTable = React.createClass({
           tpCount = templateCount[2];
         }
       }
+
       var components = self.props.componentResult.assessedComponents.map(function(component, idx){
         var principleIndex = parseInt(component['principleId']) - 1;
         var practiceSumIndex = parseInt(component['practiceId']) - 1;
