@@ -15,9 +15,6 @@ var Schema = mongoose.Schema;
 require('../settings');
 
 var IterationSchema = {
-  cloudantId: {
-    type: String
-  },
   createDate: {
     type: Date,
     required: [true, 'Creation date is required.']

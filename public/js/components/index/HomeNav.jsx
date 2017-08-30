@@ -38,7 +38,6 @@ var HomeNav = React.createClass({
   },
 
   searchTeamClickedHandler: function(teamId) {
-    console.log(teamId);
     this.setState({'searchTeamSelected':teamId});
   },
 

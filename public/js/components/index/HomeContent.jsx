@@ -12,6 +12,7 @@ var HomeAseSummary = require('./HomeAseSummary.jsx');
 var HomeAseSummaryHide = require('./HomeAseSummaryHide.jsx');
 var HomeNoTeamContent = require('./HomeNoTeamContent.jsx');
 var chartStatus = require('./chartStatus.jsx').chartStatus;
+var _ = require('underscore');
 
 var HomeContent = React.createClass({
   getInitialState: function() {

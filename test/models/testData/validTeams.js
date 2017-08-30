@@ -1,5 +1,4 @@
 module.exports = {
-  'cloudantId': 'ag_team_AG-DatabaseTeamroom_1463146469558',
   'name': Date.now().toString(),
   'pathId': 'agdatabaseteamroom',
   'path': ',agglobalmailservices,',

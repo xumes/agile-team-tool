@@ -1,7 +1,6 @@
 // have to put it on a separate file, quite long
 module.exports = {
-  'cloudantId': 'ag_ref_atma_components_test',
-  'version': 1,
+  'version': 'test_template',
   'status': 'inactive',
   'components': [{
     'name': 'Agile Leadership and Collaboration',

@@ -1,7 +1,7 @@
 var settings = require('../../settings');
 var util = require('../../helpers/util');
 var loggers = require('../../middleware/logger');
-var _ = require('lodash');
+var _ = require('underscore');
 var action, authType;
 
 module.exports = function(app, includes) {

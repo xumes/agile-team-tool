@@ -77,7 +77,7 @@ describe('Assessment model [addTeamAssessment] ', function() {
     promiseArray.push(Users.deleteUser(testUser.userId));
     promiseArray.push(Users.deleteUser(invalidUser.userId));
     promiseArray.push(Teams.deleteTeamByName(testTeam.name));
-    promiseArray.push(Assessments.deleteByCloudantId(validAssessments.cloudantId));
+    promiseArray.push(Assessments.deleteByVersion(validAssessments.version));
     Promise.all(promiseArray)
       .then(function(results){
         return Users.create(testUser);
@@ -89,7 +89,6 @@ describe('Assessment model [addTeamAssessment] ', function() {
         return Teams.createTeam(testTeam, userSession);
       })
       .then(function(result){
-        console.log('4');
         newTeamId = result._id;
         done();
       })

@@ -23,28 +23,17 @@ var AssessmentACPlanTable = React.createClass({
   componentWillMount: function() {
     var self = this;
     actionPlanSelection = [];
-    if (self.props.assessTemplate.version == 1) {
-      var templateCount = [
-        self.countPractics(self.props.assessTemplate.components[0]),
-        self.countPractics(self.props.assessTemplate.components[0]),
-        self.countPractics(self.props.assessTemplate.components[1])
-      ];
-    } else {
-      templateCount = [
-        self.countPractics(self.props.assessTemplate.components[0]),
-        self.countPractics(self.props.assessTemplate.components[1]),
-        self.countPractics(self.props.assessTemplate.components[2])
-      ];
-    }
-    // var templateCount = [
-    //   self.countPractics(self.props.assessTemplate.components[0]),
-    //   self.countPractics(self.props.assessTemplate.components[1]),
-    //   self.countPractics(self.props.assessTemplate.components[2])
-    // ];
+    var templateCount = [];
+    _.each(self.props.assessTemplate.components, function(c) {
+      templateCount.push(self.countPractics(c));
+    });
+
     _.each(self.props.tempAssess.componentResults, function(componentResult){
       _.each(componentResult.assessedComponents, function(assessedComponent){
         var newAssessedComponent = _.clone(assessedComponent);
         newAssessedComponent['componentName'] = componentResult['componentName'];
+
+        // exists for compatibility with assessments done on previous templates with different component naming convention
         if (newAssessedComponent['componentName'].indexOf('Project') >= 0 || newAssessedComponent['componentName'] == 'Team Agile Leadership and Collaboration' || newAssessedComponent['componentName'] == 'Agile Leadership and Collaboration') {
           var template = self.props.assessTemplate.components[0];
           var tpCount = templateCount[0];
@@ -52,16 +41,15 @@ var AssessmentACPlanTable = React.createClass({
           template = self.props.assessTemplate.components[1];
           tpCount = templateCount[1];
         } else {
-          if (self.props.assessTemplate.version == 1) {
+          if (self.props.assessTemplate.version.indexOf('v01') >= 0) {
             var template = self.props.assessTemplate.components[1];
             tpCount = templateCount[2];
           } else {
             var template = self.props.assessTemplate.components[2];
             tpCount = templateCount[2];
           }
-          // template = self.props.assessTemplate.components[2];
-          // tpCount = templateCount[2];
         }
+
         var principleIndex = parseInt(newAssessedComponent['principleId']) - 1;
         var practiceSumIndex = parseInt(newAssessedComponent['practiceId']) - 1;
         var practiceIndex = tpCount[practiceSumIndex];
