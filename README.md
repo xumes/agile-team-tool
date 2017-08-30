@@ -12,6 +12,8 @@ You can find to us on [![Chat with us on Slack](https://imgh.us/joinslack.svg)](
 ## Getting Started
 In order to run this project on your local machine, you have a couple of options. You can either run [Node.js](https://nodejs.org/en/), [MongoDB](https://www.mongodb.com/) and [Redis](https://redis.io/) on your machine, or you can use Docker to run everything for you.
 
+If you use the Docker instructions below, then you only have to have [Node.js] and [npm] installed.
+
 Make sure to execute `npm install` first for module dependencies
 
 ### [Node.js](https://nodejs.org/en/)
@@ -62,10 +64,32 @@ A bit of a better setup might be something like the following, where you can cha
 npm install
 logColors=true redisHost=172.17.0.2 redisPort=6379 NODE_ENV=production nodemon ./bin/www
 ```
+
+#### Using Docker in your local environment
+In order to run the application and the associated MongoDB and Redis processes in Docker containers in your local environment, do the following. Please note that the `mongodb` container doesn't start quickly enough to bring all the containers up at the same time, and causes the `app` to fail. So you'll need to do them in two batches, with `mongodb` and `redis` first.
+```
+npm install
+docker-compose up mongodb redis
+docker-compose up app
+```
+
+In order to load the MongoDB with existing data, do the following with a file that was dumped from a running database.
+```
+docker cp <path_to_file>/agiletool_stage.tar.gz agileteamtoolnodejs_mongodb_1:/tmp
+docker exec -it agileteamtoolnodejs_mongodb_1 bash
+```
+Then the following from the bash shell:
+```
+cd /tmp
+tar -xzf agiletool_stage.tar.gz
+mongorestore -h localhost:27017 --db agiletool_stage agiletool_stage
+```
+
 #### Testing Locally
 ```
 gulp test
 ```
+
 ## Deployment
 
 * [Jenkins](https://jenkins.io/)
