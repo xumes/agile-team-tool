@@ -139,7 +139,6 @@ var HomeBookmark = React.createClass({
     });
   },
   deleteTeamLink: function(id) {
-    console.log('deleteTeamLink:',id);
     var self = this;
     var team_id = self.props.loadDetailTeam.team._id;
     var linkData = [];
@@ -162,13 +161,11 @@ var HomeBookmark = React.createClass({
           } else {
             alert(err);
           }
-          console.log('[deleteTeamLink] Error:', JSON.stringify(err));
         });
     }
   },
   onchangeLinkLabel: function(event) {
     var selectVal = event.target.value;
-    console.log('onchangeLinkLabel selectVal:', selectVal);
     if (selectVal == 'Other...') {
       this.setState({showOtherlabel: true});
     } else {
@@ -193,8 +190,6 @@ var HomeBookmark = React.createClass({
       var link_label = $('#link_otherlabel').val();
     }
     var link_id = self.state.linkId;
-    console.log('saveTeamLinkModal..');
-    console.log('current links:',links);
 
     var linkData = [];
     _.each(links, function(link){
@@ -295,7 +290,6 @@ var HomeBookmark = React.createClass({
   },
   handleTeamLinksValidationErrors: function(err) {
     var self = this;
-    console.log('handleTeamLinksValidationErrors err:', JSON.stringify(err));
     self.clearTeamLinkErrorField('both');
     err.links.forEach(function(klinkStr, iddx) {
       // check linkUrl value e.g. abcd is not a valid url.
@@ -328,7 +322,6 @@ var HomeBookmark = React.createClass({
     }.bind(this));
   },
   updateStateLinkLabel: function(label) {
-    console.log('updateStateLinkLabel label:', label);
     this.setState({linkLabel: label});
     if (label) {
       var label = label.toLowerCase();

@@ -1,10 +1,8 @@
 var React = require('react');
 var api = require('../api.jsx');
-var templates = require('./AssessmentUpdateDocs.jsx');
 var _ = require('underscore');
 var moment = require('moment');
-var InlineSVG = require('svg-inline-react');
-var newestTemplateVersion = 'ag_ref_atma_components_v07';
+var InlineSVG = require('svg-inline-react')
 var ConfirmPopover = require('../index/ConfirmPopover.jsx');
 var ConfirmDialog = require('../index/ConfirmDialog.jsx');
 
@@ -21,6 +19,48 @@ var AssessmentButtons = React.createClass({
 
   },
 
+  flattenTemplate: function(template) {
+    var components = ['Project', 'Operations', 'Delivery'];
+    var templateComponents = {};
+    for(var i=0; i<components.length; i++) {
+      if (!_.isEmpty(template) && !_.isEmpty(template.components)) {
+        _.each(template.components, function(comp, compIndex) {
+          if (comp.name.toLowerCase().indexOf(components[i].toLowerCase()) > -1) {
+            templateComponents[components[i]] = {
+              componentName: comp.name,
+              practiceNumber: [],
+              assessedComponents: [],
+              currentScore: 0,
+              targetScore: 0
+            };
+
+            _.each(comp.principles, function(prin, prinIndex) {
+              templateComponents[components[i]].practiceNumber.push(prin.practices.length);
+              _.each(prin.practices, function(prax, praxIndex) {
+                var component = {
+                  principleId: prin.id,
+                  principleName: prin.name,
+                  practiceId: prax.id,
+                  practiceName: prax.name,
+                  currentLevelName: '',
+                  currentScore: 0,
+                  targetLevelName: '',
+                  targetScore: 0,
+                  assessorLevel: '',
+                  assessorTarget: 0,
+                  improveDescription: '',
+                  assessorComment: ''
+                };
+                templateComponents[components[i]].assessedComponents.push(component);
+              });
+            });
+          }
+        });
+      }
+    }
+    return templateComponents;
+  },
+
   submitAssess: function() {
     var self = this;
     var assessType = $('#assessmentTeamTypeSelector').val();
@@ -35,7 +75,7 @@ var AssessmentButtons = React.createClass({
     }
     var updateDoc = {
       'assessmentStatus' : 'Submitted',
-      'version' : newestTemplateVersion,
+      'version' : self.props.assessTemplate.version,
       'type' : assessType,
       'deliversSoftware' : false,
       'componentResults' : [],
@@ -47,12 +87,13 @@ var AssessmentButtons = React.createClass({
     }
     var objectLength = 0;
     var checkedIsEmpty = false;
-    updateDoc.componentResults.push(JSON.parse(JSON.stringify(templates[newestTemplateVersion][assessType])));
+    var templateComponents = self.flattenTemplate(self.props.assessTemplate);
+    updateDoc.componentResults.push(JSON.parse(JSON.stringify(templateComponents[assessType])));
     var p1N = updateDoc.componentResults[0].practiceNumber;
     objectLength = updateDoc.componentResults[0].assessedComponents.length;
     if (software == 'Yes') {
       updateDoc['deliversSoftware'] = true;
-      updateDoc.componentResults.push(JSON.parse(JSON.stringify(templates[newestTemplateVersion]['Delivery'])));
+      updateDoc.componentResults.push(JSON.parse(JSON.stringify(templateComponents['Delivery'])));
       var p2N = updateDoc.componentResults[1].practiceNumber;
       objectLength = objectLength + updateDoc.componentResults[1].assessedComponents.length;
     }
@@ -68,7 +109,6 @@ var AssessmentButtons = React.createClass({
       self.getUpdateDoc(1, p2N, checkedCurrs, checkedTargs, updateDoc, checkedIsEmpty);
     }
     if (checkedIsEmpty) {
-      // return alert('All assessment maturity practices need to be answered.  See highlighted practices in yellow.');
       self.setState({alertMsg: 'All assessment maturity practices need to be answered. See highlighted practices in yellow.', showConfirmModal: true});
       return;
     }
@@ -114,7 +154,7 @@ var AssessmentButtons = React.createClass({
     }
     var updateDoc = {
       'assessmentStatus' : 'Draft',
-      'version' : newestTemplateVersion,
+      'version' : self.props.assessTemplate.version,
       'type' : assessType,
       'deliversSoftware' : false,
       'componentResults' : [],
@@ -122,11 +162,12 @@ var AssessmentButtons = React.createClass({
       'teamId': teamId,
       'submittedDate': submittedDate
     }
-    updateDoc.componentResults.push(JSON.parse(JSON.stringify(templates[newestTemplateVersion][assessType])));
+    var templateComponents = self.flattenTemplate(self.props.assessTemplate);
+    updateDoc.componentResults.push(JSON.parse(JSON.stringify(templateComponents[assessType])));
     var p1N = updateDoc.componentResults[0].practiceNumber;
     if (software == 'Yes') {
       updateDoc['deliversSoftware'] = true;
-      updateDoc.componentResults.push(JSON.parse(JSON.stringify(templates[newestTemplateVersion]['Delivery'])));
+      updateDoc.componentResults.push(JSON.parse(JSON.stringify(templateComponents['Delivery'])));
       var p2N = updateDoc.componentResults[1].practiceNumber;
     }
     var checkedCurrs = $('.agile-table-body input[id*="curr"]:checked');

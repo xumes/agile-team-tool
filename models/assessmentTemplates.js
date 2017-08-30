@@ -1,4 +1,4 @@
-var lodash = require('lodash');
+var _ = require('underscore');
 var Promise = require('bluebird');
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
@@ -6,7 +6,6 @@ var config = require('../settings');
 mongoose.createConnection(config.mongoURL);
 var loggers = require('../middleware/logger');
 var Schema   = mongoose.Schema;
-var lodash = require('lodash');
 
 var componentsPrinciplesPracticesLevelsSchema = new Schema({
   name: {
@@ -66,9 +65,6 @@ var componentsSchema = new Schema({
 });
 
 var AssessmentTemplatesSchema = new Schema({
-  cloudantId: {
-    type: String,
-  },
   version: {
     type: String
   },
@@ -94,7 +90,7 @@ var AssessmentTemplates = mongoose.model('assessmentTemplates', AssessmentTempla
 
 module.exports.create = function(templateData) {
   return new Promise(function(resolve, reject) {
-    if (lodash.isEmpty(templateData)) {
+    if (_.isEmpty(templateData)) {
       var msg = 'Assessment template data is required';
       msg = {
         'error': msg
@@ -118,7 +114,7 @@ module.exports.create = function(templateData) {
 
 module.exports.get = function(templateId, status) {
   return new Promise(function(resolve, reject) {
-    if (!lodash.isEmpty(templateId)) {
+    if (!_.isEmpty(templateId)) {
       AssessmentTemplates.findOne({
         '_id': templateId
       })
@@ -131,7 +127,7 @@ module.exports.get = function(templateId, status) {
           return reject(err);
         });
     } else {
-      if (lodash.isEmpty(status))
+      if (_.isEmpty(status))
         var q = {};
       else
         var q = {
@@ -152,9 +148,9 @@ module.exports.get = function(templateId, status) {
 
 module.exports.getTemplateByVersion = function(version) {
   return new Promise(function(resolve, reject) {
-    if (!lodash.isEmpty(version)) {
+    if (!_.isEmpty(version)) {
       AssessmentTemplates.findOne({
-        'cloudantId': version
+        'version': version
       })
         .then(function(result) {
           return resolve(result);
@@ -174,7 +170,7 @@ module.exports.getTemplateByVersion = function(version) {
 
 module.exports.update = function(templateId, templateData) {
   return new Promise(function(resolve, reject) {
-    if (lodash.isEmpty(templateId)) {
+    if (_.isEmpty(templateId)) {
       var msg = 'Assessment template id is required';
       msg = {
         'error': msg
@@ -200,7 +196,7 @@ module.exports.update = function(templateId, templateData) {
 
 module.exports.delete = function(templateId) {
   return new Promise(function(resolve, reject) {
-    if (lodash.isEmpty(templateId)) {
+    if (_.isEmpty(templateId)) {
       var msg = 'Assessment template id is required';
       msg = {
         'error': msg
@@ -223,10 +219,10 @@ module.exports.delete = function(templateId) {
   });
 };
 
-module.exports.deleteByCloudantId = /* istanbul ignore next */ function(cloudantId) {
+module.exports.deleteByVersion = /* istanbul ignore next */ function(version) {
   return new Promise(function(resolve, reject) {
-    if (lodash.isEmpty(cloudantId)) {
-      var msg = 'Assessment template cloudantId is required';
+    if (_.isEmpty(version)) {
+      var msg = 'Assessment template version is required';
       msg = {
         'error': msg
       };
@@ -234,7 +230,7 @@ module.exports.deleteByCloudantId = /* istanbul ignore next */ function(cloudant
       return reject(msg);
     } else {
       AssessmentTemplates.remove({
-        'cloudantId': cloudantId
+        'version': version
       })
         .then(function(body) {
           return resolve(body);

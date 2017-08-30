@@ -1175,10 +1175,10 @@ function getAssessmentAveScore(data, type){
   var ave_score = 0;
   if (data != null && !_.isEmpty(data)){
     if (type == 'Project'){
-      ave_score = data.componentResults[0].currentScore;
+      ave_score = util.getFloatValue(data.componentResults[0].currentScore);
     }
     else if (type == 'Delivery'){
-      ave_score = data.componentResults[1].currentScore;
+      ave_score = util.getFloatValue(data.componentResults[1].currentScore);
     }
   }
   return ave_score;

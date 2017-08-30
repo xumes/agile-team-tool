@@ -1,6 +1,4 @@
 var React = require('react');
-var _ = require('underscore');
-var ReactDOM = require('react-dom');
 var InlineSVG = require('svg-inline-react');
 var chartStatus = require('./chartStatus.jsx').chartStatus;
 

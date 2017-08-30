@@ -3,6 +3,7 @@ var Select = require('react-select');
 var InlineSVG = require('svg-inline-react');
 var utils = require('../utils.jsx');
 var ConfirmDialog = require('./ConfirmDialog.jsx');
+var _ = require('underscore');
 
 var HomeAddTeamDropdownWorkTime = React.createClass({
   getInitialState: function() {
