@@ -1,7 +1,6 @@
 var assessmentModel = require('../../models/assessments');
 var assessmentTemplateModel = require('../../models/assessmentTemplates');
 var teamModel = require('../../models/teams');
-
 var _ = require('underscore');
 
 module.exports = function(app, includes) {
@@ -16,7 +15,7 @@ module.exports = function(app, includes) {
           res.send(result);
         })
         .catch( /* istanbul ignore next */ function(err) {
-          /* cannot simulate Cloudant error during testing */
+          /* cannot simulate Mongo error during testing */
           res.status(400).send(err);
         });
     } else {
@@ -38,7 +37,7 @@ module.exports = function(app, includes) {
         res.send(result);
       })
       .catch( /* istanbul ignore next */ function(err) {
-        /* cannot simulate Cloudant error during testing */
+        /* cannot simulate Mongo error during testing */
         res.status(400).send(err);
       });
   };
@@ -50,7 +49,7 @@ module.exports = function(app, includes) {
         res.status(200).send(result);
       })
       .catch( /* istanbul ignore next */ function(err) {
-        /* cannot simulate Cloudant error during testing */
+        /* cannot simulate Mongo error during testing */
         res.status(400).send(err);
       });
   };

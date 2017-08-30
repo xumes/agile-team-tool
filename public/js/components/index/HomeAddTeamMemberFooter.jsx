@@ -1,7 +1,4 @@
 var React = require('react');
-var api = require('../api.jsx');
-var _ = require('underscore');
-var InlineSVG = require('svg-inline-react');
 
 var HomeAddTeamMemberFooter = React.createClass({
 

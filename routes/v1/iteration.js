@@ -55,7 +55,7 @@ module.exports = function(app, includes) {
           res.status(200).send(result);
         })
         .catch( /* istanbul ignore next */ function(err) {
-        /* cannot simulate Cloudant error during testing */
+        /* cannot simulate Mongo error during testing */
           loggers.get('api').error('[v1_mongo.iterations.putIteration]:', err);
           res.status(400).send(err);
         });

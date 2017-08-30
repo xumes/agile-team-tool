@@ -33,7 +33,7 @@ module.exports = function(app, includes) {
         res.status(200).send(result);
       })
       .catch( /* istanbul ignore next */ function(err) {
-        /* cannot simulate Cloudant error during testing */
+        /* cannot simulate Mongo error during testing */
         formatErrMsg('[iterationRoute.getIterinfo]:' + err);
         return res.status(400).send(err);
       });
@@ -52,7 +52,7 @@ module.exports = function(app, includes) {
         res.status(200).send(result);
       })
       .catch( /* istanbul ignore next */ function(err) {
-        /* cannot simulate Cloudant error during testing */
+        /* cannot simulate Mongo error during testing */
         formatErrMsg('[iterationRoute.getIterationDoc]:', JSON.stringify(err));
         return res.status(400).send(err);
       });
@@ -72,7 +72,7 @@ module.exports = function(app, includes) {
         res.status(200).send(result);
       })
       .catch( /* istanbul ignore next */ function(err) {
-        /* cannot simulate Cloudant error during testing */
+        /* cannot simulate Mongo error during testing */
         formatErrMsg('[getCompletedIterations]:' + err);
         return res.status(400).send(err);
       });
@@ -96,7 +96,7 @@ module.exports = function(app, includes) {
         res.send(result);
       })
       .catch( /* istanbul ignore next */ function(err) {
-        /* cannot simulate Cloudant error during testing */
+        /* cannot simulate Mongo error during testing */
         // console.log('[api] [createIteration]:', err);
         loggers.get('api').error('[iterationRoute.createIteration]:', err);
         res.status(400).send(err);
@@ -127,7 +127,7 @@ module.exports = function(app, includes) {
         res.status(200).send(result);
       })
       .catch( /* istanbul ignore next */ function(err) {
-        /* cannot simulate Cloudant error during testing */
+        /* cannot simulate Mongo error during testing */
         loggers.get('api').error('[iterationRoute.updateIteration]:', err);
         res.status(400).send(err);
       });
@@ -175,7 +175,7 @@ module.exports = function(app, includes) {
         res.status(200).send(result);
       })
       .catch( /* istanbul ignore next */ function(err) {
-        /* cannot simulate Cloudant error during testing */
+        /* cannot simulate Mongo error during testing */
         formatErrMsg('[updateSprintAvailability]:' + err);
         return res.status(400).send(err);
       });

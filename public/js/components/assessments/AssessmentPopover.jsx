@@ -93,7 +93,6 @@ var AssessmentPopover = React.createClass({
     $('#closeAssessment').show();
   },
   render: function() {
-    console.log('render');
     var self = this;
     var assessDraft = {};
     var lcAssessTemplate = {};
@@ -130,7 +129,6 @@ var AssessmentPopover = React.createClass({
         submitDate = 'On Submisson';
         submitDateString = null;
       } else {
-        console.log('x',assessDraft.submittedDate);
         submitDate = moment.utc(assessDraft.submittedDate).format('DD MMM YYYY');
         submitDateString = moment.utc(assessDraft.submittedDate).format('YYYY-MM-DD');
         if (_.isEmpty(self.state.submitDatePicker)) {
@@ -239,7 +237,7 @@ var AssessmentPopover = React.createClass({
         <div class='agile-maturity' id='assessmentContainer2'>
           <AssessmentActiveTemplates assessTemplate={self.state.ddAssessTemplate} assessDraft={assessDraft} haveAccess={haveAccess} assessTemplateId={'1'} isUpdate={self.state.isUpdate}/>
         </div>
-        <AssessmentButtons loadDetailTeam={self.props.loadDetailTeam} assessDraft={assessDraft} haveAccess={haveAccess} updateAssessmentSummary={self.props.updateAssessmentSummary} updateAssessmentPopover={self.updateAssessmentPopover} hideAssessmentPopover={self.props.hideAssessmentPopover}/>
+        <AssessmentButtons loadDetailTeam={self.props.loadDetailTeam} assessDraft={assessDraft} haveAccess={haveAccess} updateAssessmentSummary={self.props.updateAssessmentSummary} updateAssessmentPopover={self.updateAssessmentPopover} hideAssessmentPopover={self.props.hideAssessmentPopover} assessTemplate={self.props.assessTemplate}/>
         <ConfirmPopover confirmClick={self.props.hideAssessmentPopover} confirmId='closeAssessment' content={'You have requested to close the assessment window. All changes not saved will be removed. Please confirm that you want to close it.'} cancelBtn='block' confirmBtn='block' okBtn='none'/>
       </div>
     )
