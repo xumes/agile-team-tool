@@ -2,6 +2,7 @@ var React = require('react');
 var api = require('../api.jsx');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
+var _ = require('underscore');
 
 var HomeFeedback = React.createClass({
   getInitialState: function() {
