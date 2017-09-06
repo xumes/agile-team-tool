@@ -6,28 +6,46 @@ var AssetsPlugin = require('assets-webpack-plugin');
 module.exports = {
   entry: {
     app: path.join(__dirname, 'public/js/app.jsx'),
-    styles: path.join(__dirname, 'public/css/styles.jsx')
+    styles: path.join(__dirname, 'public/css/styles.jsx')    
   },
   output: {
     filename: '[name].[chunkhash].js',
     path: path.join(__dirname, 'public/dist')
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract('style', 'css')
+        use: [
+          'style-loader',
+          'css-loader'
+        ]
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' },
+          { loader: 'sass-loader' }
+        ]
       },
       {
         test: /\.jsx$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
-        query: {
-          presets: ['react'],
-          plugins: ['react-html-attrs']
-        }
+        use: [
+          { 
+            loader: 'babel-loader',
+            options: {              
+              presets: ['react'],
+              plugins: ['react-html-attrs']
+            }
+          }
+        ]        
       },
-      {test: /\.svg$/, loader: 'svg-inline'}
+      {
+        test: /\.svg$/, 
+        loader: 'svg-inline-loader'
+      }
     ]
   },
   plugins: [
