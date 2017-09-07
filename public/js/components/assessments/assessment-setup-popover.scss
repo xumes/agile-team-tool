@@ -1,5 +1,7 @@
 @import './../../../css/variables.scss';
 
 .assessment-setup-block {
-  border: solid $aqua;
+  &.teal-border {
+    border: solid $teal;
+  }
 }

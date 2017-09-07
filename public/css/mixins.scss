@@ -1,0 +1,42 @@
+/**
+ * Good DRY mixin sample taken from https://alistapart.com/article/dry-ing-out-your-sass-mixins
+ */
+
+$Placeholder-Selectors: ();
+
+@mixin button($color, $extend: true) {
+	@include button-static($extend);
+	
+	background-color: $color !important;
+	border-color: mix(black, $color, 25%);
+	
+	&:hover {
+		background-color: mix(black, $color, 15%);
+		border-color: mix(black, $color, 40%);
+	}
+}
+
+@mixin button-static($extend: true) {
+	$button-selector: map-get($Placeholder-Selectors, 'button');
+	
+	@if $extend == true {
+		@if $button-selector == null {
+			$button-selector: unique-id();
+			$Placeholder-Selectors: map-merge($Placeholder-Selectors, ('button': $button-selector)) !global;
+			
+			@at-root %#{$button-selector} {
+				@include button-static(false);
+			}
+		}
+		@extend %#{$button-selector};
+  }
+  @else {
+		border: 1px solid;
+		border-radius: 5px;
+		padding: .25em .5em;
+		
+		&:hover {
+			cursor: pointer;
+		}
+	}
+}

@@ -1,5 +1,7 @@
 @import './../../../css/variables.scss';
 
 .home-team-header {
-  border: solid $aqua;
+  &.teal-border {
+    border: solid $teal;
+  }
 }

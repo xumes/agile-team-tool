@@ -1,0 +1,6 @@
+@import './../../../css/mixins.scss';
+@import './../../../css/variables.scss';
+
+.teal-button {
+  @include button($teal);
+}

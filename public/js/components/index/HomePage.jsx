@@ -1,6 +1,5 @@
 var React = require('react');
 var api = require('../api.jsx');
-var scss = require('./index.scss');
 var HomeHeader = require('./HomeHeader.jsx');
 var HomeNav = require('./HomeNav.jsx');
 var HomeContent = require('./HomeContent.jsx');

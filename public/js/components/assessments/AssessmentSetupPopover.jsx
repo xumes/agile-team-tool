@@ -1,7 +1,7 @@
 var React = require('react');
 var ReactModal = require('react-modal');
 var InlineSVG = require('svg-inline-react');
-var scss = require('./assessments.scss');
+var scss = require('./assessment-setup-popover.scss');
 
 var AssessmentSetupPopover = React.createClass({
   componentDidMount: function() {
