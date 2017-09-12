@@ -30,26 +30,13 @@ module.exports = {
         ]
       },
       {
-        test: /\.jsx$/,        
-        exclude: [
-          /node_modules/,
-          path.resolve(__dirname, 'public/js/components/index/'),
-          path.resolve(__dirname, 'public/js/components/assessments/')
-        ],
-        use: [
-          {
-            loader: 'eslint-loader'
-          }
-        ]
-      },      
-      {
         test: /\.jsx$/,
         exclude: /node_modules/,
         use: [
           { 
             loader: 'babel-loader',
             options: {              
-              presets: ['es2017', 'react'],
+              presets: ['react'],
               plugins: ['react-html-attrs']
             }
           }
