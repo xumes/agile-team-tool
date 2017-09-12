@@ -1,2 +1,11 @@
 node_modules/*
 coverage/
+public/dist/*
+public/js/components/index/*
+public/js/components/assessments/*
+public/js/app.jsx
+public/js/components/index/HomePage.jsx
+public/css/styles.jsx
+public/js/components/api.jsx
+public/js/components/utils.jsx
+app.*.js

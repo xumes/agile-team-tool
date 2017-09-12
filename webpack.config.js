@@ -1,7 +1,8 @@
-var Webpack = require('webpack');
-var path = require('path');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var AssetsPlugin = require('assets-webpack-plugin');
+const Webpack = require('webpack');
+const path = require('path');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const AssetsPlugin = require('assets-webpack-plugin');
+const MinifyPlugin = require("babel-minify-webpack-plugin");
 
 module.exports = {
   entry: {
@@ -30,14 +31,25 @@ module.exports = {
         ]
       },
       {
+        test: /\.jsx$/,        
+        exclude: [/node_modules/],
+        use: [
+          {
+            loader: 'eslint-loader'
+          }
+        ]
+      },      
+      {
         test: /\.jsx$/,
         exclude: /node_modules/,
         use: [
           { 
             loader: 'babel-loader',
             options: {              
-              presets: ['react'],
-              plugins: ['react-html-attrs']
+              presets: ['es2017', 'react'],
+              plugins: [
+                'react-html-attrs'                
+              ]
             }
           }
         ]        
@@ -55,15 +67,7 @@ module.exports = {
         NODE_ENV: JSON.stringify('production')
       }
     }),
-    new Webpack.optimize.UglifyJsPlugin({
-      sourceMap: false,
-      compress: {
-        warnings:false
-      },
-      output: {
-        comments: false
-      }
-    }),
+    new MinifyPlugin(),
     new AssetsPlugin()
   ]
 };
