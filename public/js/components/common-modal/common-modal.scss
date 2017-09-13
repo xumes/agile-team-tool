@@ -57,7 +57,7 @@
 
         &__heading {
           color: $foreground-common-modal-header;
-          font-size: 16px;
+          font-size: 1.6rem;
           line-height: 1.6em;
           padding: 0 30px 0 0;
         }
@@ -86,5 +86,9 @@
       @include flexbox();
       @include flex(1 1 auto);
       overflow-y: auto;
+
+      &__inner {
+        font-size: 1.6rem;
+      }
     }
   }
