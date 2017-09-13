@@ -23,13 +23,13 @@ let count = 0;
  */
 const randomID = (
   len = 5,
-  chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+  chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
 ) => {
   count += 1;
 
-  const id = Array.apply(0, Array(len)).map(() =>
-    chars.charAt(Math.floor(Math.random() * chars.length))
-  ).join('');
+  const id = Array.apply(0, Array(len))
+    .map(() => chars.charAt(Math.floor(Math.random() * chars.length)))
+    .join('');
 
   return `${id}-${count}`;
 };
