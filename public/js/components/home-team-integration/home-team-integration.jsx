@@ -4,24 +4,29 @@ const InlineSVG = require('svg-inline-react');
 const confirmIcon = require('../../../img/Att-icons/att-icons_confirm.svg');
 
 
-const HomeTeamIntegration = React.Component({
-  getInitialState() {
-    return {
+class HomeTeamIntegration extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
       showModal: false,
     };
-  },
+
+    this.show = this.show.bind(this);
+    this.hide = this.hide.bind(this);
+  }
 
   show() {
     this.setState({
       showModal: true,
     });
-  },
+  }
 
   hide() {
     this.setState({
       showModal: false,
     });
-  },
+  }
 
   render() {
     const styles = {
@@ -54,7 +59,7 @@ const HomeTeamIntegration = React.Component({
         </CommonModal>
       </div>
     );
-  },
-});
+  }
+}
 
 module.exports = HomeTeamIntegration;
