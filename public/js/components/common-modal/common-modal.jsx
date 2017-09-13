@@ -7,7 +7,7 @@ const uniqueID = require('../../util/uniqueID.jsx');
 
 
 const CommonModal = (props) => {
-  // create props to send to `Modal`
+  // filter props to send to `Modal`
   const modalProps = Object.assign({}, props);
   delete modalProps.heading;
   delete modalProps.triggerCloseModal;
@@ -54,14 +54,14 @@ const CommonModal = (props) => {
 };
 
 CommonModal.propTypes = {
-  children: React.PropTypes.string,
+  children: React.PropTypes.node,
   heading: React.PropTypes.string,
   backdropClassName: React.PropTypes.string,
   className: React.PropTypes.string,
 };
 
 CommonModal.defaultProps = {
-  children: '',
+  children: undefined,
   heading: '',
   backdropClassName: 'att-common-modal__backdrop',
   className: 'att-common-modal',
