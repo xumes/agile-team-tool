@@ -1,5 +1,6 @@
 require('./common-modal.scss');
 const React = require('react');
+const PropTypes = require('prop-types');
 const Modal = require('react-overlays').Modal;
 const InlineSVG = require('svg-inline-react');
 const closeIcon = require('../../../img/Att-icons/att-icons-close.svg');
@@ -54,10 +55,10 @@ const CommonModal = (props) => {
 };
 
 CommonModal.propTypes = {
-  children: React.PropTypes.node,
-  heading: React.PropTypes.string,
-  backdropClassName: React.PropTypes.string,
-  className: React.PropTypes.string,
+  children: PropTypes.node,
+  heading: PropTypes.string,
+  backdropClassName: PropTypes.string,
+  className: PropTypes.string,
 };
 
 CommonModal.defaultProps = {
