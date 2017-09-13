@@ -2,7 +2,7 @@
 let count = 0;
 
 /**
- * Function to create a random ID. A counter is appended to the end of each
+ * Function to create a unique ID. A counter is appended to the end of each
  * generated ID. This will all but guarantee true uniqueness of the ID.
  *
  * @param {integer} len The length of the ID (default is 5)
@@ -10,18 +10,18 @@ let count = 0;
  * @return {string} A random string based on parameters
  *
  * @example
- * const randomID = require('../util/randomID.jsx');
+ * const uniqueID = require('../util/uniqueID.jsx');
  * // Default usage
- * const aria_id = randomID();
+ * const aria_id = uniqueID();
  * // → "fAwfG-1"
  *
  * @example
- * const randomID = require('../util/randomID.jsx');
+ * const uniqueID = require('../util/uniqueID.jsx');
  * // Usage with parameters
- * const item_id = randomID(6,"1234567890abcdef.!$");
+ * const item_id = uniqueID(6,"1234567890abcdef.!$");
  * // → "5.fd!2-2"
  */
-const randomID = (
+const uniqueID = (
   len = 5,
   chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
 ) => {
@@ -34,4 +34,4 @@ const randomID = (
   return `${id}-${count}`;
 };
 
-module.exports = randomID;
+module.exports = uniqueID;

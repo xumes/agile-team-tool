@@ -3,7 +3,7 @@ const React = require('react');
 const Modal = require('react-overlays').Modal;
 const InlineSVG = require('svg-inline-react');
 const closeIcon = require('../../../img/Att-icons/att-icons-close.svg');
-const randomID = require('../util/randomID.jsx');
+const uniqueID = require('../../util/uniqueID.jsx');
 
 
 const CommonModal = (props) => {
@@ -12,7 +12,7 @@ const CommonModal = (props) => {
   delete modalProps.heading;
   delete modalProps.triggerCloseModal;
 
-  const ariaID = randomID();
+  const ariaID = uniqueID();
 
   return (
     <Modal
