@@ -54,14 +54,14 @@ const CommonModal = (props) => {
 };
 
 CommonModal.propTypes = {
-  children: React.PropTypes.children,
+  children: React.PropTypes.string,
   heading: React.PropTypes.string,
   backdropClassName: React.PropTypes.string,
   className: React.PropTypes.string,
 };
 
 CommonModal.defaultProps = {
-  children: {},
+  children: '',
   heading: '',
   backdropClassName: 'att-common-modal__backdrop',
   className: 'att-common-modal',
