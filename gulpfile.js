@@ -6,7 +6,7 @@ var fs = require('fs');
 var replace = require('gulp-string-replace');
 
 gulp.task('lint', function() {
-  return gulp.src(['**/*.js', '!public/dist/**', '!node_modules/**', '!models/data/**', '!public/lib/**/*.js'])
+  return gulp.src(['**/*.js', '!webpack.config.js', '!public/dist/**', '!node_modules/**', '!models/data/**', '!public/lib/**/*.js'])
     .pipe(eslint({
       useEslintrc: true,
       envs: ['node', 'mocha']

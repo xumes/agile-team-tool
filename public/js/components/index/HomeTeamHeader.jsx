@@ -1,5 +1,6 @@
 var React = require('react');
 var api = require('../api.jsx');
+var scss = require('./home-team-header.scss');
 var HomeMemberTable = require('./HomeMemberTable.jsx');
 var HomeBookmark = require('./HomeBookmark.jsx');
 var HomeTeamDescription = require('./HomeTeamDescription.jsx');

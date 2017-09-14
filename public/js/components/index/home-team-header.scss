@@ -1,0 +1,7 @@
+@import './../../../css/variables.scss';
+
+.home-team-header {
+  &.teal-border {
+    border: solid $teal;
+  }
+}

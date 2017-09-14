@@ -1,0 +1,7 @@
+@import './../../../css/variables.scss';
+
+.assessment-setup-block {
+  &.teal-border {
+    border: solid $teal;
+  }
+}
