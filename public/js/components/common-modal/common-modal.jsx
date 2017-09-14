@@ -20,7 +20,7 @@ const CommonModal = (props) => {
       {...modalProps}
       aria-labelledby={ariaID}
     >
-      <section className="att-common-modal__inner">
+      <section className="att-common-modal__inner" aria-labelledby={ariaID}>
         <div className="att-cm-sticky-header">
           <div className="att-cm-sticky-header__header">
             <div className="att-cm-sticky-header__header__inner group">
