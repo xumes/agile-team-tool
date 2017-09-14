@@ -1,5 +1,6 @@
 var React = require('react');
 var api = require('../api.jsx');
+var scss = require('./home-ase-summary.scss');
 var moment = require('moment');
 var InlineSVG = require('svg-inline-react');
 var Modal = require('react-overlays').Modal;
