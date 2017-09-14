@@ -4444,7 +4444,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
        local('IBMPlexSans Light'),
        url('../fonts/IBMPlexSans-Light.woff2') format('woff2'),
        url('../fonts/IBMPlexSans-Light.woff') format('woff'),
-       url('../fonts/IBMPlexSans-Light.woff') format('eot');
+       url('../fonts/IBMPlexSans-Light.eot') format('eot');
 }
 
 @font-face {
@@ -4454,7 +4454,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
        local('IBMPlexSans Regular'),
        url('../fonts/IBMPlexSans-Regular.woff2') format('woff2'),
        url('../fonts/IBMPlexSans-Regular.woff') format('woff'),
-       url('../fonts/IBMPlexSans-Regular.woff') format('eot');
+       url('../fonts/IBMPlexSans-Regular.eot') format('eot');
 }
 
 @font-face {
@@ -4464,7 +4464,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
        local('IBMPlexSans Medium'),
        url('../fonts/IBMPlexSans-Medium.woff2') format('woff2'),
        url('../fonts/IBMPlexSans-Medium.woff') format('woff'),
-       url('../fonts/IBMPlexSans-Medium.woff') format('eot');
+       url('../fonts/IBMPlexSans-Medium.eot') format('eot');
 }
 
 @font-face {
@@ -4474,7 +4474,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
        local('IBMPlexSans Bold'),
        url('../fonts/IBMPlexSans-Bold.woff2') format('woff2'),
        url('../fonts/IBMPlexSans-Bold.woff') format('woff'),
-       url('../fonts/IBMPlexSans-Bold.woff') format('eot');
+       url('../fonts/IBMPlexSans-Bold.eot') format('eot');
 }
 
 @font-face {
@@ -4485,7 +4485,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
        local('IBMPlexSans LightItalic'),
        url('../fonts/IBMPlexSans-LightItalic.woff2') format('woff2'),
        url('../fonts/IBMPlexSans-LightItalic.woff') format('woff'),
-       url('../fonts/IBMPlexSans-LightItalic.woff') format('eot');
+       url('../fonts/IBMPlexSans-LightItalic.eot') format('eot');
 }
 
 @font-face {
@@ -4496,7 +4496,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
        local('IBMPlexSans Italic'),
        url('../fonts/IBMPlexSans-Italic.woff2') format('woff2'),
        url('../fonts/IBMPlexSans-Italic.woff') format('woff'),
-       url('../fonts/IBMPlexSans-Italic.woff') format('eot');
+       url('../fonts/IBMPlexSans-Italic.eot') format('eot');
 }
 
 @font-face {
@@ -4507,7 +4507,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
        local('IBMPlexSans MediumItalic'),
        url('../fonts/IBMPlexSans-MediumItalic.woff2') format('woff2'),
        url('../fonts/IBMPlexSans-MediumItalic.woff') format('woff'),
-       url('../fonts/IBMPlexSans-MediumItalic.woff') format('eot');
+       url('../fonts/IBMPlexSans-MediumItalic.eot') format('eot');
 }
 
 @font-face {
@@ -4518,7 +4518,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
        local('IBMPlexSans BoldItalic'),
        url('../fonts/IBMPlexSans-BoldItalic.woff2') format('woff2'),
        url('../fonts/IBMPlexSans-BoldItalic.woff') format('woff'),
-       url('../fonts/IBMPlexSans-BoldItalic.woff') format('eot');
+       url('../fonts/IBMPlexSans-BoldItalic.eot') format('eot');
 }
 
 
