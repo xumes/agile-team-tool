@@ -6,7 +6,7 @@
     "start": "webpack && node ./bin/www",
     "worker": "node ./bin/update-snapshots.js",
     "build": "webpack && gulp build",
-    "test": "karma start"
+    "test": "karma start && node ./test/_helpers/ascii-art.js"
   },
   "dependencies": {
     "assets-webpack-plugin": "^3.5.1",
@@ -46,6 +46,7 @@
     "mongoose-validators": "^0.1.0",
     "morgan": "~1.7.0",
     "newrelic": "^1.30.0",
+    "node-notifier": "^5.1.2",
     "node-schedule": "^1.1.1",
     "node-uuid": "^1.4.7",
     "passport": "^0.3.2",
