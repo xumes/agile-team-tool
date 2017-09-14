@@ -1,3 +1,4 @@
+require('./home-team-integration.scss');
 const React = require('react');
 const CommonModal = require('../common-modal/common-modal.jsx');
 const InlineSVG = require('svg-inline-react');
@@ -29,13 +30,8 @@ class HomeTeamIntegration extends React.Component {
   }
 
   render() {
-    const styles = {
-      height: '100%',
-      display: 'inline',
-    };
-
     return (
-      <div style={styles}>
+      <div className="att-hti">
         <div
           className="home-team-header-teamname-btn"
           id="homeHeaderIntegrationBtn"
