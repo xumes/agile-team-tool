@@ -30,7 +30,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.js?$/,
+        test: /\.jsx$/,
         exclude: [/node_modules/],
         enforce: 'pre',
         use: [
@@ -40,7 +40,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.js?$/,
+        test: /\.jsx$/,
         exclude: /node_modules/,
         use: [
           {
