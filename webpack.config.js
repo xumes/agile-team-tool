@@ -7,7 +7,6 @@ const MinifyPlugin = require('babel-minify-webpack-plugin');
 module.exports = {
   entry: {
     app: path.join(__dirname, 'public/js/app.jsx'),
-    styles: path.join(__dirname, 'public/css/styles.jsx'),
   },
   output: {
     filename: '[name].[chunkhash].js',
