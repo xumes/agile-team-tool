@@ -4,7 +4,7 @@ const IntegrationWizardStepOne = require('../../integration-wizard-step-one.jsx'
 const ReactShallowRenderer = require('react-test-renderer/shallow');
 const _ = require('lodash');
 
-
+// todo: expand on this once we get better at testing react components
 describe('<IntegrationWizardStepOne />', () => {
   let comp;
 
