@@ -42,6 +42,13 @@ module.exports = (config) => {
           },
         ],
       },
+      externals: {
+        jsdom: 'window',
+        cheerio: 'window',
+        'react/lib/ExecutionEnvironment': true,
+        'react/addons': true,
+        'react/lib/ReactContext': 'window',
+      },
     },
     webpackServer: {
       noInfo: true, // please don't spam the console when running in karma!
