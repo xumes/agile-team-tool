@@ -4410,6 +4410,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
  */
 @font-face {
   font-family: 'IBMPlexSans';
+  font-weight: 300;
   src: local('IBMPlexSans-Light'),
        local('IBMPlexSans Light'),
        url('../fonts/IBMPlexSans-Light.woff2') format('woff2'),
@@ -4449,6 +4450,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 @font-face {
   font-family: 'IBMPlexSans';
+  font-weight: 300;
   font-style: italic;
   src: local('IBMPlexSans-LightItalic'),
        local('IBMPlexSans LightItalic'),
