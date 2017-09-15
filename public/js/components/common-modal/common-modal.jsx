@@ -11,7 +11,6 @@ const CommonModal = (props) => {
   // filter props to send to `Modal`
   const modalProps = Object.assign({}, props);
   delete modalProps.heading;
-  delete modalProps.triggerCloseModal;
 
   const ariaID = uniqueID();
 

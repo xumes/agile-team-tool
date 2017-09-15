@@ -1,6 +1,6 @@
 const uniqueID = require('../../uniqueID.js');
 
-fdescribe('Utility: uniqueID', () => {
+describe('Utility: uniqueID', () => {
   it('is defined', () => {
     expect(uniqueID).toBeDefined();
   });
