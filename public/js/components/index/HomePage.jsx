@@ -118,7 +118,7 @@ var HomePage = React.createClass({
       $('.home-team-header-member-image').css({'width': height*0.9+'px', 'height': height*0.9+'px'});
     }, 0);
     if (window.innerWidth >= 1280 && window.innerWidth < 1900) {
-      $('html').css('width', '100vw');
+      $('html').css('width', '100%');
       $('html').css('height', '56.49vw');
       $('#homeNavShowBtnDiv').show();
       $('.ibm-columns').css('width', '96.6%');
@@ -158,7 +158,7 @@ var HomePage = React.createClass({
       }
       $('html').css('font-size', changeSize);
     } else if (window.innerWidth >= 1900) {
-      $('html').css('width', '100vw');
+      $('html').css('width', '100%');
       $('html').css('height', '37.5vw');
       fontSize = (window.innerWidth/windowSize2['width']) * windowSize2['fontSize'];
       $('.ibm-columns').css('width', '72.7%');
