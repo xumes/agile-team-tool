@@ -88,7 +88,7 @@ float:left;
 */
 /*
 .passwordform .buttons {
-  float: left;  
+  float: left;
 }
 */
 .ibm-signin-card a.button,
@@ -157,7 +157,6 @@ float:left;
 .field-email{display:none;}
 
 .ibm-signin-card.reset a.button.cancel {
-  font-weight: 300;
   color: #008abf;
   background: white;
   border: 1px solid #008abf;
@@ -170,7 +169,6 @@ float:left;
   border-radius: 0;
 }
 .alertbox.ibm-signin-card p {
-  font-weight: 300;
   margin-bottom: 0;
 }
 .alertbox #ibm-id-header {
@@ -178,7 +176,6 @@ float:left;
   text-align: left;
 }
 .alertbox #ibm-id-header h1 {
-  font-weight: 300;
   font-size: 20px;
   line-height: 24px;
   margin: 20px 0 10px;
@@ -209,7 +206,6 @@ a.button.cancel.cancellink {
 .addtrial .ibm-id h3 b {
   font-size: 31px;
   line-height: 37px;
-  font-weight: 300;
 /*  text-align: center; */
   margin-bottom: 30px;
 }
@@ -295,7 +291,6 @@ a.button.cancel.cancellink {
   margin: 0 !important;
   text-indent: 0 !important;
 /*  text-align: center; */
-  font-weight: 300;
   background: none;
   border-bottom: 1px solid #aaaaaa !important;
   position: relative;
@@ -333,7 +328,6 @@ input[type=password]::-ms-clear
   text-align: center;
 }
 #ibm-id-header h1 {
-  font-weight: 300;
   padding-left: 55px;
   font-size: 50px;
   line-height: 50px;
@@ -350,11 +344,9 @@ input[type=password]::-ms-clear
 }
 #ibm-id-header h2,
 .alertbox h2 {
-  font-weight: 300;
   font-size: 19px;
 }
 .alertbox h2 {
-  font-weight: 300;
   font-size: 32px;
   line-height: 34px;
 }
@@ -365,7 +357,6 @@ input[type=password]::-ms-clear
 #ibm-content .ibm-id input[type=text].success,
 #ibm-content .ibm-id input[type=password].success,
 #ibm-content .ibm-id select.success {
-  font-weight: 300;
   font-size: 16px;
   line-height: 16px;
   width: 100%;

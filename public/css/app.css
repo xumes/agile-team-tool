@@ -174,7 +174,6 @@ body {
   float: left;
   width: 100%;
   font-size: 3.0em;
-  font-weight: 300;
   line-height: 1.5em;
   padding: 0;
   color: #5596E6;
@@ -193,7 +192,6 @@ body {
   float: left;
   width: 100%;
   height: 100%;
-  font-weight: 300;
   font-size: 1.6em;
   line-height: 1.5em;
   padding: 0;
@@ -344,7 +342,6 @@ body {
 #firstLoginCard_7 > .description > .desc-row:nth-child(2) > h1 {
   position: relative;
   float: left;
-  font-weight: 300;
   font-size: 1.6em;
   line-height: 1.7em;
   padding: 0;
@@ -623,7 +620,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   font-size: 1.6em;
   line-height: 1.5em;
   margin-bottom: 1.5em;
-  font-weight: 300;
 }
 
 #newSearchTree ul.ibm-twisty > li.ibm-active > a.ibm-twisty-trigger,
@@ -633,7 +629,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   font-size: 1.6em;
   line-height: 1.5em;
   margin-bottom: 1.5em;
-  font-weight: 300;
 }
 
 #newTeamTree, #newSearchTree {
@@ -656,7 +651,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 #newTeamTree a::before,
 #newSearchTree a::before {
   font-size: 1.3em;
-  font-weight: 300;
   color: #3B6DAA;
 }
 
@@ -676,7 +670,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .agile-team-link > .agile-team-title {
   font-size: 1.1em;
-  /*font-weight: 300;*/
   color: #4D4D4D;
   position: relative;
   left: 0.65em;
@@ -1151,7 +1144,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   -webkit-transform: rotate(90deg);
   transform: rotate(90deg);
   font-size: 1.6em;
-  font-weight: 300;
   color: #5A5A5A;
 }
 
@@ -1298,7 +1290,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .home-team-header-teamname {
   display: inline;
   font-size: 3em;
-  font-weight: 300;
   color: #323232;
   display: inline-block;
   float: left;
@@ -1442,7 +1433,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   left: 1%;
   width: 2%;
   height: 100%;
-  font-weight: 300;
   font-size: 5em;
   color: #FFFFFF;
   position: relative;
@@ -1564,7 +1554,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   top: 35%;
   left: 1%;
-  font-weight: 300;
   font-size: 2.5em;
   color: #4178BE;
 }
@@ -2206,7 +2195,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   top: 60%;
   padding: 0;
-  font-weight: 300;
   font-size: 2.5em;
   color: #734098;
 }
@@ -2229,7 +2217,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   top: 60%;
   left: 38%;
-  font-weight: 300;
   font-size: 1.1em;
   color: #777677;
   padding: 0;
@@ -2401,7 +2388,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   top: 40%;
   right: 5%;
-  font-weight: 300;
   font-size: 2em;
   color: #FFFFFF;
   display: inline-block;
@@ -2530,7 +2516,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   top: 4%;
   width: 65%;
   height: 2%;
-  font-weight: 300;
   font-size: 2.5em;
   color: #734098;
 }
@@ -2545,7 +2530,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .home-no-iter-info p {
-  font-weight: 300;
   font-size: 1.8rem;
   line-height: 2.5rem;
   color: #464646;
@@ -2555,7 +2539,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .home-no-iter-info p span {
   display: inline-block;
-  font-weight: 300;
   font-size: 1.6rem;
   line-height: 1.8rem;
   color: #777677;
@@ -2707,7 +2690,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   width: 40%;
   display: inline-block;
   float: left;
-  font-weight: 300;
   font-size: 1.6em;
   line-height: 1.8em;
   color: #5A5A5A;
@@ -3227,7 +3209,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .home-assessment-summary > .main-content > div > .content-title > h1 {
-  font-weight: 300;
   font-size: 2.2em;
   line-height: 1.8em;
   color: #62B2EF;
@@ -3554,7 +3535,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   height: 100%;
   font-size: 1.2em;
   line-height: 1.5em;
-  font-weight: 300;
   color: #777677;
   padding: 0;
 }
@@ -3574,7 +3554,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .home-assessment-summary > div > .first-title > h1,
 .home-assessment-summary-hide > div > .first-title > h1 {
-  font-weight: 300;
   font-size: 2.2em;
   line-height: 2em;
   color: #62B2EF;
@@ -3612,7 +3591,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   float: left;
   height: 100%;
-  font-weight: 300;
   font-size: 3.0em;
   line-height: 1.5em;
   color: #734098;
@@ -3631,7 +3609,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   float: left;
   height: 50%;
-  font-weight: 300;
   font-size: 1.6em;
   color: #777677;
   padding: 0;
@@ -3650,7 +3627,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   height: 100%;
   width: 100%;
-  font-weight: 300;
   font-size: 1.4em;
   line-height: 0em;
 }
@@ -3671,7 +3647,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   height: 100%;
   font-size: 1.4em;
   line-height: 0.8em;
-  font-weight: 300;
   padding-top: 0;
   padding-bottom: 0;
 }
@@ -3695,7 +3670,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   float: left;
   text-align: left;
-  font-weight: 300;
   font-size: 1.2em;
   line-height: 1.4em;
   color: #777677;
@@ -3740,7 +3714,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   width: 100%;
   height: 50%;
   font-size: 1.6em;
-  font-weight: 300;
   line-height: 2.5em;
   color: #5A5A5A;
   padding: 0;
@@ -3794,7 +3767,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   width: 100%;
   height: 100%;
   font-size: 1.8em;
-  font-weight: 300;
   line-height: 4em;
   color: #5A5A5A;
   padding: 0;
@@ -4104,7 +4076,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .att-footer-links a {
-  font-weight: 300;
   font-size: 1.6em;
   color: #464646;
 }
@@ -4439,7 +4410,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
  */
 @font-face {
   font-family: 'IBMPlexSans';
-  font-weight: 300;
   src: local('IBMPlexSans-Light'),
        local('IBMPlexSans Light'),
        url('../fonts/IBMPlexSans-Light.woff2') format('woff2'),
@@ -4480,7 +4450,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 @font-face {
   font-family: 'IBMPlexSans';
   font-style: italic;
-  font-weight: 300;
   src: local('IBMPlexSans-LightItalic'),
        local('IBMPlexSans LightItalic'),
        url('../fonts/IBMPlexSans-LightItalic.woff2') format('woff2'),
@@ -4751,7 +4720,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   top: 100%;
   left: 5%;
-  font-weight: 300;
   font-size: 2.08em;
   color: #323232;
 }
@@ -4850,7 +4818,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   height: 0%;
   width: 100%;
-  font-weight: 300;
   font-size: 1.2em;
   font-weight: normal;
   line-height: 1.4em;
@@ -4875,7 +4842,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-size: 2em;
   margin-top: 1em;
   margin-left: 0.05em;
-  font-weight: 300;
 }
 
 .midcontent {
@@ -6638,7 +6604,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   top: 35%;
   font-size: 2.2em;
-  font-weight: 300;
   color: #734098;
   padding: 0;
 }
@@ -7603,7 +7568,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .no-trends-message-block p {
   color: #aeaeae;
-  font-weight: 300;
   font-size: 2.2em;
   line-height: 1.4em;
   position: relative;
@@ -7802,7 +7766,6 @@ p.apikey-note {
   left: 10%;
   width: 50%;
   color: #734098;
-  font-weight: 300;
   font-size: 6.4rem;
   line-height: 6.4rem;
 }
@@ -7820,7 +7783,6 @@ p.apikey-note {
   left: 10%;
   top: 9.4rem;
   color: #777677;
-  font-weight: 300;
   font-size: 2.4rem;
 }
 
@@ -7853,13 +7815,11 @@ p.apikey-note {
   bottom: 0.2rem;
   color: #734098;
   font-size: 2.4rem;
-  font-weight: 300;
 }
 
 #noTeamContent h4 {
   color: #4D4D4D;
   font-size: 2.4rem;
-  font-weight: 300;
 }
 
 #noTeamContent p {
@@ -7869,7 +7829,6 @@ p.apikey-note {
   width: 50%;
   color: #777677;
   font-size: 1.6rem;
-  font-weight: 300;
   line-height: 2.4rem;
 }
 
