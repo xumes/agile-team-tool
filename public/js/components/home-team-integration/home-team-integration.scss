@@ -1,0 +1,70 @@
+/*------------------------------------*\
+  #HOME-TEAM-INTEGRATION
+\*------------------------------------*/
+
+  .att-hti {
+    display: inline;
+  }
+
+
+
+
+
+  /*------------------------------------*\
+    #INTEGRATION-WIZARD
+  \*------------------------------------*/
+    @mixin normalFont {
+      font-size: 16px;
+      line-height: 1.5em;
+    }
+    @mixin headingFont {
+      font-size: 18px;
+      line-height: 1.5em;
+    }
+
+    $imageSize: 50px;
+    $imagePad: 20px;
+
+    .att-integration {
+      @include normalFont();
+
+      &__heading {
+        @include headingFont();
+      }
+
+      &__article {
+        position: relative;
+        min-height: $imageSize + (2 * $imagePad);
+        padding-top: 10px;
+        @include normalFont();
+
+        &__image {
+          position: absolute;
+          left: $imagePad;
+          top: $imagePad;
+
+          &__rtc-logo {
+            width: $imageSize;
+            height: $imageSize;
+          }
+        }
+
+        &__text {
+          padding-left: $imageSize + (2 * $imagePad);
+        }
+      }
+
+      p,
+      &__unordered-list {
+        @include normalFont();
+      }
+
+      &__unordered-list {
+        list-style-type: square;
+        padding-left: $imagePad;
+
+        li {
+          padding: 0;
+        }
+      }
+    }

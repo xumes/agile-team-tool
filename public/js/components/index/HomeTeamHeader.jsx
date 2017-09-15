@@ -5,6 +5,7 @@ var HomeMemberTable = require('./HomeMemberTable.jsx');
 var HomeBookmark = require('./HomeBookmark.jsx');
 var HomeTeamDescription = require('./HomeTeamDescription.jsx');
 var HomeTeamSetup = require('./HomeTeamSetup.jsx');
+var HomeTeamIntegration = require('../home-team-integration/home-team-integration.jsx');
 var InlineSVG = require('svg-inline-react');
 var Promise = require('bluebird');
 var _ = require('underscore');
@@ -12,9 +13,6 @@ var teamName = ''
 var teamType = ''
 
 var HomeTeamHeader = React.createClass({
-  getInitialState: function() {
-    return { showModal: false };
-  },
   componentWillUpdate: function(nextProps, nextState){
     // if (nextProps.loadDetailTeam.type == 'squad') {
     //   teamType = 'Squad: ';
@@ -23,6 +21,7 @@ var HomeTeamHeader = React.createClass({
     // }
     // teamName = nextProps.loadDetailTeam.team.name;
   },
+
   componentDidMount: function() {
     if (this.props.loadDetailTeam.team != undefined && this.props.loadDetailTeam.team.type == 'squad') {
       $('#homeHeaderAseBtn').show();
@@ -112,6 +111,7 @@ var HomeTeamHeader = React.createClass({
     selectedTeam = pathId;
     this.props.tabClickedHandler('allteams', pathId);
   },
+
   teamMemFTE: function(teamMembers) {
      var teamCount = 0;
      var tmArr = [];
@@ -120,22 +120,27 @@ var HomeTeamHeader = React.createClass({
      });
      return (teamCount / 100);
   },
+
   showTeamTable: function() {
     $('#teamMemberTable').attr('data-open', 'true');
     $('.home-team-header-btn-img2').trigger('mouseenter');
   },
+
   closeTeamTable: function() {
     $('#teamMemberTable').attr('data-open', 'false');
     $('#teamMemberTable').trigger('mouseleave');
   },
+
   showBookmark: function() {
     $('#teamBookmark').attr('data-open', 'true');
     $('.home-team-header-btn-img').trigger('mouseenter');
   },
+
   closeBookmark: function() {
     $('#teamBookmark').attr('data-open', 'false');
     $('#teamBookmark').trigger('mouseleave');
   },
+
   showAssessments: function() {
     if ($('.home-assessment-summary').css('display') == 'none') {
       $('.home-assessment-summary').fadeIn();
@@ -149,6 +154,7 @@ var HomeTeamHeader = React.createClass({
     var headerStyle= {
       'display': 'inline'
     };
+    var isSquad = false;
 
     if (this.props.loadDetailTeam.team == undefined) {
       return null;
@@ -175,6 +181,7 @@ var HomeTeamHeader = React.createClass({
         'display': 'none'
       };
       if (team.type == 'squad') {
+        isSquad = true;
         squadMarkDisplay['display'] = 'block';
       }
       if (self.props.loadDetailTeam.hierarchy == undefined || self.props.loadDetailTeam.hierarchy.error || self.props.loadDetailTeam.hierarchy.length == 0) {
@@ -247,6 +254,11 @@ var HomeTeamHeader = React.createClass({
               <HomeTeamDescription teamName={teamName} teamDescription={teamDescription} showDescriptionBlock={self.showDescriptionBlock} loadDetailTeam={self.props.loadDetailTeam} updateTeamDetails={self.props.updateTeamDetails}/>
 
               <HomeTeamSetup loadDetailTeam={self.props.loadDetailTeam} selectedTeamChanged={self.props.selectedTeamChanged} tabClickedHandler={self.props.tabClickedHandler}/>
+
+              {/* Feature Flagged Component */}
+              {environment === 'development' && isSquad &&
+                <HomeTeamIntegration/>
+              }
             </div>
           </div>
           {teamHierarchy != ''?

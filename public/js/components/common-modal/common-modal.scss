@@ -1,0 +1,94 @@
+@import './../../../css/variables.scss';
+@import './../../../css/mixins.scss';
+
+/*------------------------------------*\
+  #COMMON-MODAL
+\*------------------------------------*/
+
+  .att-common-modal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1040;
+
+    .att-common-modal__inner {
+      background-color: $background-common-modal-inner;
+      box-shadow: $box-shadow-common-modal-inner;
+      left: 50%;
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.6em;
+      height: 500px;
+      max-height: 80%;
+      width: 90%;
+      max-width: 550px;
+    }
+
+    &__backdrop {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: $background-common-modal-backdrop;
+      opacity: 0.5;
+      z-index: auto;
+    }
+  }
+
+  .att-cm-sticky-header {
+    @include flexbox();
+    @include flex-direction(column);
+    height: 100%;
+
+    &__header {
+      @include flexbox();
+      @include flex(0 0 auto);
+
+      &__inner {
+        background-color: $background-common-modal-header;
+        padding: 5px 15px;
+        min-height: 30px;
+        position: relative;
+        width: 100%; // needed for Safari :/
+
+        &__heading {
+          color: $foreground-common-modal-header;
+          font-size: 1.6rem;
+          line-height: 1.6em;
+          padding: 0 30px 0 0;
+        }
+
+        &__close {
+          position: absolute;
+          right: 0;
+          top: 10px;
+          cursor: pointer;
+
+          svg {
+            height: 34px;
+            width: 34px;
+            display: block;
+          }
+
+          polygon {
+            fill: $foreground-common-modal-header;
+            opacity: 1;
+          }
+        }
+      }
+    }
+
+    &__content {
+      @include flexbox();
+      @include flex(1 1 auto);
+      overflow-y: auto;
+
+      &__inner {
+        font-size: 1.6rem;
+      }
+    }
+  }
