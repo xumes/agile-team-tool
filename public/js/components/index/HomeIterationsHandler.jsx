@@ -352,7 +352,7 @@ function loadNpsScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, 
     },
     title: {
       style: {
-        fontWeight: '300',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -473,7 +473,7 @@ function loadScoreChart(id, title, type, categories, yAxisLabel, seriesObj1, ser
     },
     title: {
       style: {
-        fontWeight: '300',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -611,7 +611,7 @@ function loadPizzaChart(id, title, type, categories, yAxisLabel, yMax, seriesObj
     },
     title: {
       style: {
-        fontWeight: '300',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -745,7 +745,7 @@ function loadBarChartParent(id, title, categories, columnSeries, yMax) {
     },
     title: {
       style: {
-        fontWeight: '300',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -850,7 +850,7 @@ function loadPiePizzaChart(id, title, seriesObj, subtitle) {
     },
     title: {
       style: {
-        fontWeight: '300',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -932,7 +932,7 @@ function loadChartMultiChart(id, title, type, categories, yAxisLabel, xAxisLabel
     },
     title: {
       style: {
-        fontWeight: '300',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -1051,7 +1051,7 @@ function loadMultiDefectDeployChart(id, categories, columnSeries1, columnSeries2
     },
     title: {
       style: {
-        fontWeight: '300',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -1239,7 +1239,7 @@ function loadLineChartParent(id, title, categories, yAxisLabel, xAxisLabel, line
     },
     title: {
       style: {
-        fontWeight: '300',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -1345,7 +1345,7 @@ function loadMultiDefectDeployChartParent(id, categories, columnSeries1, columnS
     },
     title: {
       style: {
-        fontWeight: '300',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -1500,7 +1500,7 @@ function loadMultiLineChartParent(id, title, categories, yAxisLabel, xAxisLabel,
     },
     title: {
       style: {
-        fontWeight: '300',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -1616,7 +1616,7 @@ function loadSatisfactionChart(id, title, type, categories, yAxisLabel, seriesOb
 
     title: {
       style: {
-        fontWeight: '300',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
