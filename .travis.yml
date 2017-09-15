@@ -23,6 +23,7 @@ install:
 - tar -xf agiletool_stage.tar.gz
 - mongorestore -h localhost --port 27017 --db agiletool_stage agiletool_stage
 script:
+- npm run test
 - gulp test
 services:
 - docker

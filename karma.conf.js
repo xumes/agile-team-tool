@@ -1,3 +1,5 @@
+const webpackConfig = require('./webpack.config.js');
+
 module.exports = (config) => {
   config.set({
     browsers: ['ChromeHeadless'],
@@ -12,37 +14,7 @@ module.exports = (config) => {
       'public/**/__tests__/unit/**/*spec.jsx': ['webpack', 'sourcemap'],
     },
     reporters: ['dots'],
-    webpack: {
-      devtool: 'inline-source-map',
-      module: {
-        rules: [
-          {
-            test: /\.jsx$|\.js$/,
-            exclude: /node_modules/,
-            use: [
-              {
-                loader: 'babel-loader',
-                options: {
-                  presets: ['es2017', 'react'],
-                },
-              },
-            ],
-          },
-          {
-            test: /\.scss$/,
-            use: [
-              { loader: 'style-loader' },
-              { loader: 'css-loader' },
-              { loader: 'sass-loader' },
-            ],
-          },
-          {
-            test: /\.svg$/,
-            loader: 'svg-inline-loader',
-          },
-        ],
-      },
-    },
+    webpack: webpackConfig,
     webpackServer: {
       noInfo: true, // please don't spam the console when running in karma!
     },

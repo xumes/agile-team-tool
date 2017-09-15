@@ -12,6 +12,7 @@
     "assets-webpack-plugin": "^3.5.1",
     "async": "^2.0.1",
     "axios": "^0.16.2",
+    "babel-minify-webpack-plugin": "^0.2.0",
     "bluebird": "^3.4.1",
     "body-parser": "~1.15.1",
     "chai": "^3.5.0",
@@ -80,7 +81,6 @@
     "babel-core": "^6.17.0",
     "babel-eslint": "^8.0.0",
     "babel-loader": "^7.1.2",
-    "babel-minify-webpack-plugin": "^0.2.0",
     "babel-plugin-react-html-attrs": "^2.0.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-es2017": "^6.24.1",
@@ -93,12 +93,9 @@
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.3.0",
-    "extract-text-webpack-plugin": "^2.1.2",
     "gulp-string-replace": "^0.4.0",
     "node-sass": "^4.5.3",
     "sass-loader": "^6.0.6",
-    "style-loader": "^0.13.2",
-    "webpack": "^2.0.0",
-    "webpack-dev-server": "^1.16.5"
+    "style-loader": "^0.13.2"
   }
 }
