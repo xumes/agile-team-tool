@@ -1,7 +1,7 @@
 body,
 html, body {
     background: #ffffff !important;
-} 
+}
 
 #ibm-content .ibm-signin-card p {
   color: #444444;
@@ -37,7 +37,7 @@ float:left;
 
 .bg{
     background-color:#2d3f49 !important;
-  } 
+  }
 
 .displaymobile {
   display: none;
@@ -66,7 +66,7 @@ float:left;
   color: #ff5050;
     padding: 12px 0 47px;
     text-align: center;
-} 
+}
 
 .icon {
   width: 114px;
@@ -95,15 +95,14 @@ float:left;
 .addtrial a.button,
 .button,
 .pwreset a.button {
-  font-family: "HelveticaNeue-Bold","HelvBoldIBM",Arial,sans-serif;
+  font-weight: bold;
   margin: 0;
-/*  width: 100%; */
   font-size: 18px;
   color: white;
   background: #008abf;
   text-decoration: none;
   text-align: center;
-  text-shadow: none;  
+  text-shadow: none;
   border: none;
   padding: 18px 50px;
   display: inline-block;
@@ -111,15 +110,14 @@ float:left;
 }
 
 .signin{
-  font-family: "HelveticaNeue-Bold","HelvBoldIBM",Arial,sans-serif !important;
+  font-weight: bold;
   margin: 0;
-/*  width: 100%; */
   font-size: 18px;
   color: white;
   background: #008abf;
   text-decoration: none;
   text-align: center;
-  text-shadow: none;  
+  text-shadow: none;
   border: none;
   padding: 18px 50px;
   display: inline-block;
@@ -152,14 +150,14 @@ float:left;
 }
 .ibm-signin-card.reset a.button.buttonRegister {
   /* float: none; */
-  margin: 40px 20px 0 0 !important; 
-  
+  margin: 40px 20px 0 0 !important;
+
 }
 .forgotfield{display:none;}
 .field-email{display:none;}
 
 .ibm-signin-card.reset a.button.cancel {
-  font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
+  font-weight: 300;
   color: #008abf;
   background: white;
   border: 1px solid #008abf;
@@ -168,11 +166,11 @@ float:left;
 .alertbox.ibm-signin-card.reset a.button.buttonRegister {
   width: 49%;
   margin: 0 1% 0 0 !important;
-  box-sizing: border-box; 
+  box-sizing: border-box;
   border-radius: 0;
 }
 .alertbox.ibm-signin-card p {
-  font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
+  font-weight: 300;
   margin-bottom: 0;
 }
 .alertbox #ibm-id-header {
@@ -180,7 +178,6 @@ float:left;
   text-align: left;
 }
 .alertbox #ibm-id-header h1 {
-  font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
   font-weight: 300;
   font-size: 20px;
   line-height: 24px;
@@ -212,13 +209,13 @@ a.button.cancel.cancellink {
 .addtrial .ibm-id h3 b {
   font-size: 31px;
   line-height: 37px;
-  font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
+  font-weight: 300;
 /*  text-align: center; */
   margin-bottom: 30px;
 }
 .ibm-type .ibm-signin-card h3 b,
 .addtrial .ibm-id h3 b {
-  color: #008abf; 
+  color: #008abf;
 }
 .addtrial .ibm-id h3 {
   margin-top: 80px;
@@ -228,13 +225,12 @@ a.button.cancel.cancellink {
 .ibm-signin-card h4,
 .addtrial .ibm-id h4 {
   font-size: 16px;
-  font-family: "HelveticaNeue-Bold","Helvetica Neue Bold","Helvetica Neue","HelvBoldIBM",Arial,sans-serif;
   font-weight: bold;
   margin: 10px 0 0;
   padding: 0;
 }
 .ibm-signin-card form {
-  margin: 10px 0 75px;  
+  margin: 10px 0 75px;
 }
 .ibm-signin-card p {
   margin-bottom: 10px;
@@ -253,7 +249,7 @@ a.button.cancel.cancellink {
 }
 .ibm-signin-card p.securityquestion {
 /*  color: #38AF57 !important; */
-  margin-bottom: 20px;  
+  margin-bottom: 20px;
 }
 /*
 #ibm-top.ibm-signin #ibm-pcon.addtrial p {
@@ -278,7 +274,7 @@ a.button.cancel.cancellink {
 
 .ibm-liquid #ibm-content .ibm-columns .ibm-container.ibm-dyntabs,
 .ibm-landing-page #ibm-content .ibm-columns .ibm-container.ibm-dyntabs {
-  margin: 0;  
+  margin: 0;
 }
 .ibm-signin-card .ibm-graphic-tabs .ibm-tab-section {
   border-bottom: none;
@@ -299,7 +295,7 @@ a.button.cancel.cancellink {
   margin: 0 !important;
   text-indent: 0 !important;
 /*  text-align: center; */
-  font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
+  font-weight: 300;
   background: none;
   border-bottom: 1px solid #aaaaaa !important;
   position: relative;
@@ -312,7 +308,7 @@ a.button.cancel.cancellink {
 .ibm-signin-card .ibm-graphic-tabs ul.ibm-tabs li.ibm-active {
   padding: 15px 0 11px !important;
   border-bottom: 5px solid #008abf !important;
-  font-family: "HelveticaNeue-Bold","HelvBoldIBM",Arial,sans-serif;
+  font-weight: bold;
 }
 .ibm-signin-card .ibm-graphic-tabs ul.ibm-tabs li.ibm-active a {
   color: #008abf;
@@ -337,7 +333,7 @@ input[type=password]::-ms-clear
   text-align: center;
 }
 #ibm-id-header h1 {
-  font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
+  font-weight: 300;
   padding-left: 55px;
   font-size: 50px;
   line-height: 50px;
@@ -354,7 +350,7 @@ input[type=password]::-ms-clear
 }
 #ibm-id-header h2,
 .alertbox h2 {
-  font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
+  font-weight: 300;
   font-size: 19px;
 }
 .alertbox h2 {
@@ -369,7 +365,7 @@ input[type=password]::-ms-clear
 #ibm-content .ibm-id input[type=text].success,
 #ibm-content .ibm-id input[type=password].success,
 #ibm-content .ibm-id select.success {
-  font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue","HelvLightIBM",Arial,sans-serif;
+  font-weight: 300;
   font-size: 16px;
   line-height: 16px;
   width: 100%;
@@ -400,7 +396,7 @@ input[type=password]::-ms-clear
   height: 50px;
 }
 #ibm-content .ibm-id .passwordcontainer.strengthtest {
-  height: 56px; 
+  height: 56px;
 }
 #ibm-content .ibm-id .passwordcontainer.strengthtest input {
   margin-top: 6px;
@@ -480,7 +476,7 @@ input[type=password]::-ms-clear
 }
 #ibm-content .ibm-id .instructions .moreinstructions {
   margin-top: 15px;
-  display: none;  
+  display: none;
 }
 #ibm-content .ibm-id .instructions .expand {
   position: absolute;
@@ -556,7 +552,7 @@ input[type=password]::-ms-clear
   text-indent: 41px;
 }
 
-input[type=checkbox] { 
+input[type=checkbox] {
   display: inline-block;
   height: 18px;
   width: 20px;
@@ -574,7 +570,7 @@ input[type=checkbox] {
 }
 .confirm input[type=text],
 .confirm input[type=password] {
-  width: 95%; 
+  width: 95%;
 }
 .step {
 /*
@@ -584,7 +580,7 @@ input[type=checkbox] {
   margin: 0 auto 20px;
   width: 100%;
   text-align: center;
-  
+
 }
 .step img {
   vertical-align: middle;
@@ -669,14 +665,14 @@ input[type=checkbox] {
 }
 
 .carousel div h3 {
-  font-family: "HelveticaNeue-Bold","HelvBoldIBM",Arial,sans-serif;
+  font-weight: bold;
   color: white;
   font-size: 44px;
   line-height: 42px;
   text-align: left;
 }
 .carousel div p {
-  font-size: 23px;  
+  font-size: 23px;
   line-height: 31px;
 }
 .ibm-signin-card .carousel.small .slide {
@@ -719,7 +715,7 @@ input[type=checkbox] {
 }
 .carousel .slick-dots li.slick-active button {
   background: url(../img/carousel_active.png) center center no-repeat !important;
-  
+
 }
 .carousel #slide-try {
   background-color: #00B4A0;
@@ -738,7 +734,7 @@ input[type=checkbox] {
   position: relative;
 }
 .alertbox#successalert {
-  background: #6EB400; color: white;  text-align: center; font-size: 19px; 
+  background: #6EB400; color: white;  text-align: center; font-size: 19px;
 }
 .alertbox#progressive {
   background: white; padding-top: 0;
@@ -806,7 +802,7 @@ footer ul li:before, footer .ibm-bullet:before {
     width: 100%;
     height: 100%;
     background-color: #ffffff;
-    
+
     padding-top: 150px;
     z-index: 10000;
     display: block;
@@ -1095,11 +1091,11 @@ footer ul li:before, footer .ibm-bullet:before {
   }
   .ibm-signin-card p, .addtrial p {
     font-size: 16px;
-    line-height: 20px;  
+    line-height: 20px;
   }
   .ibm-signin-card p.inboxmessage, .ibm-signin-card p.securityquestion {
     font-size: 20px;
-    line-height: 24px;  
+    line-height: 24px;
   }
   #ibm-top.ibm-landing-page .ibm-container .ibm-columns, .ibm-columns, .ibm-col-1-1, .ibm-col-2-1, .ibm-col-4-1, .ibm-col-4-2, .ibm-col-4-3, .ibm-col-5-1, .ibm-col-5-2, .ibm-col-5-3, .ibm-col-5-4, .ibm-col-6-1, .ibm-col-6-2, .ibm-col-6-3, .ibm-col-6-4, .ibm-col-6-5, .ibm-landing-page .ibm-w-gutter .ibm-col-4-2, .ibm-landing-page .ibm-w-gutter .ibm-col-6-3, .ibm-landing-page .ibm-ribbon .ibm-w-gutter .ibm-col-4-2, .ibm-landing-page .ibm-ribbon .ibm-w-gutter .ibm-col-6-3, .ibm-landing-page .ibm-thumbnail-small > div[class^="ibm-col-"], .ibm-default #ibm-content .ibm-col-1-1, .ibm-default #ibm-content .ibm-col-2-1, .ibm-content-expand #ibm-content .ibm-col-1-1, .ibm-content-expand #ibm-content .ibm-col-2-1, .ibm-content-expand #ibm-content .ibm-col-5-1, .ibm-content-expand #ibm-content .ibm-col-5-2, .ibm-content-expand #ibm-content .ibm-col-5-3, #ibm-top .ibm-columns .ibm-columns {
     width: 100%;
@@ -1151,10 +1147,10 @@ footer ul li:before, footer .ibm-bullet:before {
     display: none !important;
   }
   .carousel div.slick-slide {
-    min-height: 745px;  
+    min-height: 745px;
   }
   .carousel.small div.slick-slide {
-    min-height: 250px;  
+    min-height: 250px;
   }
   .carousel .slide {
     padding: 20px;
