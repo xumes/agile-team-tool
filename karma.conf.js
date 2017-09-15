@@ -16,7 +16,7 @@ module.exports = (config) => {
       module: {
         rules: [
           {
-            test: /\.js$/,
+            test: /\.jsx$|\.js$/,
             exclude: /node_modules/,
             use: [
               {
@@ -26,6 +26,18 @@ module.exports = (config) => {
                 },
               },
             ],
+          },
+          {
+            test: /\.scss$/,
+            use: [
+              { loader: 'style-loader' },
+              { loader: 'css-loader' },
+              { loader: 'sass-loader' },
+            ],
+          },
+          {
+            test: /\.svg$/,
+            loader: 'svg-inline-loader',
           },
         ],
       },
