@@ -5,10 +5,11 @@ module.exports = (config) => {
     frameworks: ['jasmine'],
     files: [
       'public/**/__tests__/unit/**/*spec.js',
+      'public/**/__tests__/unit/**/*spec.jsx',
     ],
     preprocessors: {
-      'public/*spec.js': ['webpack', 'sourcemap'],
-      'public/**/*spec.js': ['webpack', 'sourcemap'],
+      'public/**/__tests__/unit/**/*spec.js': ['webpack', 'sourcemap'],
+      'public/**/__tests__/unit/**/*spec.jsx': ['webpack', 'sourcemap'],
     },
     reporters: ['dots'],
     webpack: {
