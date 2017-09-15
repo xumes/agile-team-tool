@@ -4,7 +4,7 @@ const PropTypes = require('prop-types');
 
 const IntegrationWizardStepOne = (props) => {
   const { data } = props;
-  data.tool = 'RTC';
+  data.type = 'RTC';
 
   return (
     <div className="att-integration">
@@ -40,12 +40,14 @@ const IntegrationWizardStepOne = (props) => {
 
 IntegrationWizardStepOne.propTypes = {
   data: PropTypes.shape({
-    tool: PropTypes.string,
+    type: PropTypes.string,
   }),
 };
 
 IntegrationWizardStepOne.defaultProps = {
-  data: {},
+  data: {
+    type: '',
+  },
 };
 
 module.exports = IntegrationWizardStepOne;
