@@ -144,7 +144,7 @@ var AssessmentSummaryTable = React.createClass({
                 width: '100%',
                 color: '#5A5A5A',
                 fontSize: '1.2em',
-                fontWeight: '300'
+                fontFamily: 'HelvNeue Light for IBM, HelvLightIBM, Helvetica Neue, Arial, sans-serif'
               }).add();
           }
         }
@@ -153,7 +153,7 @@ var AssessmentSummaryTable = React.createClass({
       title: {
         style: {
           'fontSize': '1.3em',
-          'fontWeight': '300'
+          'fontFamily': 'HelvNeue Light for IBM, HelvLightIBM, Helvetica Neue, Arial, sans-serif'
         },
         text: title
       },

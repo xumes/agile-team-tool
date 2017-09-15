@@ -83,7 +83,7 @@ module.exports.plotAssessmentSeries = function(teamAssessments) {
       },
       title: {
         style: {
-          fontWeight: '300',
+          fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
           fontSize: '1.3em',
           color: '#5A5A5A'
         },
@@ -216,7 +216,7 @@ function plotAssessment(index, chartData) {
 
     title: {
       style: {
-        fontWeight: '300',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -480,7 +480,7 @@ function loadBarAssessmentEvaluation(asOfDate, categories, seriesObj1, seriesObj
     },
     title: {
       style: {
-        fontWeight: '300',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -602,7 +602,7 @@ function loadLineMaturityTrend(categories, seriesObj1, seriesObj2, seriesObj3, y
     },
     title: {
       style: {
-        fontWeight: '300',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
@@ -767,7 +767,7 @@ function plotQuarterAssessmentResults(assessmentComponent) {
     },
     title: {
       style: {
-        fontWeight: '300',
+        fontFamily: 'HelvNeue Light for IBM,HelvLightIBM,Helvetica Neue,Arial,sans-serif',
         fontSize: '1.3em',
         color: '#5A5A5A'
       },
