@@ -63,10 +63,10 @@ class HomeTeamIntegration extends React.Component {
           <Wizard
             onClose={this.hide}
           >
-            <IntegrationWizardStepOne data={this.integration} />
-            <IntegrationWizardStepTwo data={this.integration} />
-            <IntegrationWizardStepThree data={this.integration} />
-            <IntegrationWizardStepFour data={this.integration} />
+            <IntegrationWizardStepOne data={this.integration} page={1} />
+            <IntegrationWizardStepTwo data={this.integration} page={2} />
+            <IntegrationWizardStepThree data={this.integration} page={3} />
+            <IntegrationWizardStepFour data={this.integration} page={4} />
           </Wizard>
         </CommonModal>
       </div>

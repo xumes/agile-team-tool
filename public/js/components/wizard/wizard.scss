@@ -2,9 +2,13 @@
   # Wizard
 \*------------------------------------*/
 
+.content-container {
+  display: flex;
+  flex-direction: column;
+}
+
 .footer-wizard {
-  margin: 2em;
-  float: right;
+  margin-left: auto;
 }
 
 .u-mr-sm {
