@@ -68,10 +68,14 @@ class Wizard extends React.Component {
           onClick={button.onClick}
         >{button.label}</button>),
       );
+
+    const displayedChild = this.props.children
+      .filter(child => child.props.page === this.state.page);
+
     return (
-      <div>
+      <div className="content-container">
         <div className="content">
-          {this.props.children}
+          {displayedChild}
         </div>
         <footer className="footer-wizard">
           {listNavButtons}
