@@ -1,13 +1,23 @@
 html {
-  /*height: 100%;
-  font-size: 62.5%;*/
-  width: 100%;
+  width: 100vw;
   height: 56.49vw;
   min-width: 1280px;
   min-height: 720px;
-  /*max-width: 1920px;
-  max-height: 1080px;*/
   background-color: white;
+
+  -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+   -webkit-font-smoothing: antialiased;
+           font-smoothing: antialiased;
+}
+
+body {
+  font-family: IBMPlexSans, Arial, sans-serif;
 }
 
 @media screen and (min-width: 1280px) and (max-width: 1899px) {
@@ -163,9 +173,7 @@ html {
   position: relative;
   float: left;
   width: 100%;
-  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
   font-size: 3.0em;
-  font-weight: 300;
   line-height: 1.5em;
   padding: 0;
   color: #5596E6;
@@ -184,7 +192,6 @@ html {
   float: left;
   width: 100%;
   height: 100%;
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   line-height: 1.5em;
   padding: 0;
@@ -192,7 +199,7 @@ html {
 }
 
 .first-login-block > div > .sub-content > h1 > span {
-  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 500;
 }
 
 .first-login-block > div > .sub-content > h1 > a {
@@ -328,14 +335,13 @@ html {
   line-height: 1.4em;
   color: #777677;
   left: 0.3em;
-  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 500;
 }
 
 #firstLoginCard_7 > .description > .desc-row:nth-child(1) > h1,
 #firstLoginCard_7 > .description > .desc-row:nth-child(2) > h1 {
   position: relative;
   float: left;
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   line-height: 1.7em;
   padding: 0;
@@ -345,7 +351,7 @@ html {
 
 #firstLoginCard_7 > .description > .desc-row:nth-child(1) > h1 > span,
 #firstLoginCard_7 > .description > .desc-row:nth-child(2) > h1 > span {
-  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 500;
 }
 
 
@@ -612,11 +618,8 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 #newTeamTree ul.ibm-twisty > li a.agile-team-link {
   color: #4D4D4D;
   font-size: 1.6em;
-  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
-  /*font-family: "Helvetica Neue";*/
   line-height: 1.5em;
   margin-bottom: 1.5em;
-  font-weight: 300;
 }
 
 #newSearchTree ul.ibm-twisty > li.ibm-active > a.ibm-twisty-trigger,
@@ -624,11 +627,8 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 #newSearchTree ul.ibm-twisty > li a.agile-team-link {
   color: #4D4D4D;
   font-size: 1.6em;
-  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
-  /*font-family: "Helvetica Neue";*/
   line-height: 1.5em;
   margin-bottom: 1.5em;
-  font-weight: 300;
 }
 
 #newTeamTree, #newSearchTree {
@@ -651,7 +651,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 #newTeamTree a::before,
 #newSearchTree a::before {
   font-size: 1.3em;
-  font-weight: 300;
   color: #3B6DAA;
 }
 
@@ -671,7 +670,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .agile-team-link > .agile-team-title {
   font-size: 1.1em;
-  /*font-weight: 300;*/
   color: #4D4D4D;
   position: relative;
   left: 0.65em;
@@ -679,7 +677,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .agile-team-selected > .agile-team-title {
   border-bottom: 0.15em solid #008ABF;
-  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 500;
   /*padding-bottom: 2%;*/
   position: relative;
   left: 0.65em;
@@ -857,18 +855,16 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .header-title > div {
   display: inline-block;
-  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   position: relative;
   top: 25%;
 }
 
 .header-title > div ~ div {
-  font-family: "HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 700;
 }
 
 .header-title div:last-child {
   color: #e71d32;
-  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
 }
 
 .header-logo {
@@ -1148,7 +1144,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   -webkit-transform: rotate(90deg);
   transform: rotate(90deg);
   font-size: 1.6em;
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   color: #5A5A5A;
 }
 
@@ -1200,7 +1195,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .home-nav-tab-item > h {
-  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2em;
   text-align: left;
   padding-top: 0;
@@ -1295,9 +1289,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .home-team-header-teamname {
   display: inline;
-  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
   font-size: 3em;
-  font-weight: 300;
   color: #323232;
   display: inline-block;
   float: left;
@@ -1352,7 +1344,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .hierarchy-link {
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   display:inline;
   padding-left:0px;
   font-size: 1.4em;
@@ -1360,13 +1351,11 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .hierarchy-mark {
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   color: #EFF9FF;
 }
 
 .hierarchy-lastteam {
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   display: inline;
   font-size: 1.4em;
   color: #EFF9FF;
@@ -1429,7 +1418,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .home-team-header-btn-title {
   width: 50%;
   height: 100%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   color: #FFFFFF;
   position: relative;
@@ -1445,9 +1433,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   left: 1%;
   width: 2%;
   height: 100%;
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 5em;
-  font-weight: 100;
   color: #FFFFFF;
   position: relative;
   float: left;
@@ -1475,7 +1461,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   left: 1%;
   width: 8%;
   height: 100%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   font-weight: 100;
   color: #FFFFFF;
@@ -1569,7 +1554,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   top: 35%;
   left: 1%;
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.5em;
   color: #4178BE;
 }
@@ -1623,7 +1607,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   top: 32%;
   left: 8%;
   height: 45%;
-  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 700;
   font-size: 1.4em;
   /*line-height: 18px;*/
   color: #323232;
@@ -1675,7 +1659,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .team-member-table-content-block1 > div > div > h,
 .team-member-table-content-block2 > div > div > h {
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   color: #5A5A5A;
   padding: 0;
@@ -1686,7 +1669,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .team-member-table-content-block1 > div > div > h1,
 .team-member-table-content-block2 > div > div > h1,
 .team-member-table-email {
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   color: #325C80;
   padding: 0;
@@ -1700,7 +1682,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   top: 50%;
   transform: translate(5%, -50%);
   float: left;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   color: #5A5A5A;
 }
@@ -1795,7 +1776,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   width: 70%;
   height: 100%;
   padding: 0;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   text-indent: 0.5em;
   background-color: rgb(255, 255, 255);
@@ -1837,7 +1817,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   width: 78%;
   height: 100%;
   padding: 0;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   text-indent: 0.5em;
   background-color: rgb(255, 255, 255);
@@ -1886,7 +1865,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   width: 41%;
   height: 100%;
   padding: 0;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   text-indent: 0.5em;
   background-color: rgb(255, 255, 255);
@@ -1916,7 +1894,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   float: left;
   font-size: 1.6em;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   padding: 0;
   height: 50%;
   color: black;
@@ -1959,7 +1936,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   width: 45%;
   height: 100%;
   padding: 0;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   text-indent: 0.5em;
   background-color: rgb(255, 255, 255);
@@ -1988,7 +1964,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   float: left;
   font-size: 1.6em;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   padding: 0;
   height: 50%;
   top: 25%;
@@ -2046,7 +2021,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   padding: 0;
   font-size: 1.6em;
   color: #5A5A5A;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
 }
 
 .team-member-table-add-btn {
@@ -2061,7 +2035,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .team-member-table-add-btn > h {
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   text-align: center;
   color: #4178BE;
@@ -2115,7 +2088,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   top: 35%;
   left: 5%;
-  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 700;
   font-size: 1.6em;
   color: #FFFFFF;
   display: inline-block;
@@ -2168,7 +2141,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   width: 100%;
   float: left;
   display: inline-block;
-  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 700;
   font-size: 1.4em;
   color: #464646;
   padding: 0;
@@ -2190,7 +2163,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   float: left;
   height: 70%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   line-height: 1.6em;
   color: #464646;
@@ -2223,7 +2195,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   top: 60%;
   padding: 0;
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.5em;
   color: #734098;
 }
@@ -2246,7 +2217,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   top: 60%;
   left: 38%;
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.1em;
   color: #777677;
   padding: 0;
@@ -2389,7 +2359,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   top: 50%;
   left: 5%;
-  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 700;
   font-size: 1.5em;
   color: #FFFFFF;
   display: inline-block;
@@ -2418,7 +2388,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   top: 40%;
   right: 5%;
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2em;
   color: #FFFFFF;
   display: inline-block;
@@ -2487,7 +2456,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   top: 40%;
   left: 11%;
   padding: 0;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
   line-height: 1.4em;
   color: #323232;
@@ -2503,7 +2471,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   border: 0.1em solid #7CC7FF;
   height: 16%;
   width: 37.5%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
   line-height: 2em;
   color: #323232;
@@ -2519,7 +2486,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   border: 0.1em solid #00B4A0;
   height: 16%;
   width: 37.5%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
   line-height: 2em;
   color: #323232;
@@ -2550,7 +2516,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   top: 4%;
   width: 65%;
   height: 2%;
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.5em;
   color: #734098;
 }
@@ -2565,7 +2530,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .home-no-iter-info p {
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.8rem;
   line-height: 2.5rem;
   color: #464646;
@@ -2575,14 +2539,12 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 
 .home-no-iter-info p span {
   display: inline-block;
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6rem;
   line-height: 1.8rem;
   color: #777677;
 }
 
 .home-iter-add{
-  font-family: "HelvNeue Roman for IBM";
   font-size: 1.6em;
   text-align: right;
   color: #4178BE;
@@ -2605,7 +2567,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   width: 90%;
   height: 1.2em;
   display: inline-block;
-  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 500;
   font-size: 1.8em;
   line-height: 1.2em;
   color: #323232;
@@ -2616,7 +2578,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   width: 90%;
   display: inline-block;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.3em;
   line-height: 1.6em;
   color: #777677;
@@ -2628,7 +2589,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   top: 4.5%;
   width: 95%;
   height: 3%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
 }
 
@@ -2730,7 +2690,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   width: 40%;
   display: inline-block;
   float: left;
-  font-family: "Helvetica Neue LT W1G","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   line-height: 1.8em;
   color: #5A5A5A;
@@ -2744,7 +2703,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   width: 40%;
   display: inline-block;
   float: right;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.3em;
   text-align: right;
   line-height: 1.6em;
@@ -2818,7 +2776,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   width: 100%;
   float: left;
-  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 500;
   font-size: 1.6em;
   line-height: 1.9em;
   color: #5A5A5A;
@@ -2835,7 +2793,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   width: 75%;
   float: left;
   display: inline-block;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   text-align: left;
   line-height: 1.6em;
@@ -2849,7 +2806,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   height: 70%;
   float: right;
   display: inline-block;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   text-align: right;
   line-height: 1.6em;
@@ -2865,7 +2821,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   height: 70%;
   float: right;
   display: inline-block;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   text-align: right;
   line-height: 1.6em;
@@ -2941,7 +2896,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .home-iter-modal-block-header > h {
   color: #ffffff;
   font-size: inherit;
-  font-family: "HelvNeue Bold for IBM";
+  font-weight: 700;
   height: 100%;
   padding-left: 1.5em;
   position: relative;
@@ -2974,7 +2929,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 .home-iter-modal-block-content > p {
   color: #4D4D4D;
-  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
   font-size: 1.15em;
   line-height: 1.3em;
   padding: 1.25em 2em;
@@ -3045,7 +2999,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   top: 50%;
   left: 5%;
-  font-family: "HelvNeue Bold for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 700;
   font-size: 1.6em;
   color: #FFFFFF;
   display: inline-block;
@@ -3091,7 +3045,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 .home-team-header-bookmark-scroll > .no-link-block {
   border-bottom: 0 none;
   color: #777677;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   height: 10em;
   position: relative;
@@ -3115,7 +3068,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .home-team-header-bookmark-scroll > div > a {
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   color: #4178BE;
   padding: 0;
@@ -3257,7 +3209,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .home-assessment-summary > .main-content > div > .content-title > h1 {
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.2em;
   line-height: 1.8em;
   color: #62B2EF;
@@ -3274,7 +3225,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .home-assessment-summary > .main-content > div > .submit-date > h1 {
-  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
   font-size: 1.2em;
   font-weight: 500;
   line-height: 1.4em;
@@ -3403,7 +3353,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   width: 25%;
   height: 100%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.3em;
   line-height: 0.5em;
   color: #5A5A5A;
@@ -3411,7 +3360,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .home-assessment-summary > .main-content > div > div > .summary-title > h1 {
-  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
   font-size: 1.8em;
   line-height: 1.8em;
   color: #5A5A5A;
@@ -3460,7 +3408,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   margin-top: 0.7em;
   margin-left: 0.5em;
   font-size: 1.4em;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   color: #777677;
   padding: 0;
   background-color: #EFF9FF;
@@ -3477,7 +3424,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .home-assessment-summary > .select-content > .select-box > div > .select2 .select2-selection__rendered {
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1em;
   line-height: 2.5em;
   color: #777677;
@@ -3502,7 +3448,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   width: 100%;
   height: 20%;
-  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
   font-size: 1.4em;
   font-weight: 500;
   color: #5A5A5A;
@@ -3529,7 +3474,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   width: 50%;
   height: 20%;
   font-size: 1.1em;
-  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
   color: #999999;
   padding: 0;
 }
@@ -3548,7 +3492,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   width: 105%;
   height: 20%;
-  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
   font-size: 1.4em;
   font-weight: 500;
   color: #5A5A5A;
@@ -3592,7 +3535,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   height: 100%;
   font-size: 1.2em;
   line-height: 1.5em;
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Arial","sans-serif";
   color: #777677;
   padding: 0;
 }
@@ -3606,14 +3548,12 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   font-size: 1.2em;
   line-height: 1.3em;
   font-weight: 500;
-  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
   color: #777677;
   padding: 0;
 }
 
 .home-assessment-summary > div > .first-title > h1,
 .home-assessment-summary-hide > div > .first-title > h1 {
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.2em;
   line-height: 2em;
   color: #62B2EF;
@@ -3651,7 +3591,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   float: left;
   height: 100%;
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 3.0em;
   line-height: 1.5em;
   color: #734098;
@@ -3670,7 +3609,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   float: left;
   height: 50%;
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   color: #777677;
   padding: 0;
@@ -3689,7 +3627,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   height: 100%;
   width: 100%;
-  font-family: "Helvetica Neue LT W1G","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   line-height: 0em;
 }
@@ -3710,7 +3647,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   height: 100%;
   font-size: 1.4em;
   line-height: 0.8em;
-  font-family: "Helvetica Neue LT W1G","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   padding-top: 0;
   padding-bottom: 0;
 }
@@ -3734,7 +3670,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   float: left;
   text-align: left;
-  font-family: "HelvNeue Light for IBM";
   font-size: 1.2em;
   line-height: 1.4em;
   color: #777677;
@@ -3744,7 +3679,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   float: right;
   text-align: right;
-  font-family: "Helvetica Neue";
   font-size: 1.2em;
   line-height: 1.3em;
   color: #777677;
@@ -3779,9 +3713,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   width: 100%;
   height: 50%;
-  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
-  font-weight: 300;
   line-height: 2.5em;
   color: #5A5A5A;
   padding: 0;
@@ -3792,7 +3724,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   width: 100%;
   height: 50%;
-  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
   color: #777677;
   line-height: 0.5em;
@@ -3835,9 +3766,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   width: 100%;
   height: 100%;
-  font-family: "HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.8em;
-  font-weight: 300;
   line-height: 4em;
   color: #5A5A5A;
   padding: 0;
@@ -3855,7 +3784,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   text-align: center;
   width: 100%;
   height: 100%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2em;
   color: #FFFFFF;
   line-height: 2.3em;
@@ -3887,7 +3815,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   top: 35%;
   left: 5%;
-  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 700;
   font-size: 1.5em;
   color: #FFFFFF;
 }
@@ -3896,7 +3824,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: right;
   top: 35%;
   right: 5%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2em;
   color: #FFFFFF;
   cursor: pointer;
@@ -3950,7 +3877,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   height: 45%;
   width: 100%;
-  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 500;
   font-size: 1.4em;
   line-height: 1.8em;
   color: #323232;
@@ -3964,7 +3891,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   border: 0.1em solid #777677;
   text-indent: 1em;
   padding: 0;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   line-height: 1.8em;
   color: #5A5A5A;
@@ -3984,7 +3910,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   height: 45%;
   width: 100%;
-  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 500;
   font-size: 1.4em;
   line-height: 1.8em;
   color: #323232;
@@ -4014,7 +3940,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   border: 0.1em solid #777677;
   text-indent: 1em;
   padding: 0;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   line-height: 1.8em;
   color: #5A5A5A;
@@ -4035,7 +3960,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   height: 45%;
   width: 100%;
-  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 500;
   font-size: 1.4em;
   line-height: 1.8em;
   color: #323232;
@@ -4062,7 +3987,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   float: left;
   height: 45%;
   width: 100%;
-  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 500;
   font-size: 1.4em;
   line-height: 1.8em;
   color: #323232;
@@ -4091,7 +4016,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   border: 0.1em solid #777677;
   text-indent: 1em;
   padding: 0;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   line-height: 1.8em;
   color: #5A5A5A;
@@ -4136,7 +4060,7 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   position: relative;
   float: left;
   width: 100%;
-  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 700;
   font-size: 1.8em;
 }
 
@@ -4152,7 +4076,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
 }
 
 .att-footer-links a {
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   color: #464646;
 }
@@ -4193,7 +4116,6 @@ input[class*="ibm-btn-"][class*="-sec"][disabled], input[class*="ibm-btn-"][clas
   display: inline-block;
 }
 .footer-bottom-links a {
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.8em;
   color: #777677;
 }
@@ -4307,19 +4229,18 @@ width: 100% !important;
 }
 
 .att-modal .ibm-row-form label {
-  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 500;
   color: #323232;
   font-size: 1em;
 }
 
 .att-modal .ibm-row-form .lblRoman {
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   line-height: 1.7em;
 }
 
 .iterspecific {
   background-color: #eee;
-  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 500;
   font-size: 1.4em;
   text-align: left;
 }
@@ -4362,7 +4283,7 @@ width: 100% !important;
 
 .att-modal .modal-header .modal-title {
   color: #FFFFFF;
-  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 700;
   font-size: 1.5em;
   padding: 0 0 0 1.5em;
   position: relative;
@@ -4448,7 +4369,6 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 .att-modal .btn {
   border-radius: 0;
   border-width: 2px !important ;
-  font-family: "Helvetica Neue Roman for IBM",Helvetica,Arial,sans-serif;
   height: 2.85em;
   padding: 0 7%;
   -moz-user-select: none;
@@ -4481,37 +4401,100 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   cursor: pointer;
 }
 
+
+
+
+
 /*
  * Font style
  */
 @font-face {
-  font-family: "HelvNeue Roman for IBM";
-  font-style: normal;
-  src: url("../fonts/helvetica-neue-roman.eot?") format("eot"),
-    url("../fonts/helvetica-neue-roman.woff2") format("woff2"),
-    url("../fonts/helvetica-neue-roman.woff") format("woff"),
-    url("../fonts/helvetica-neue-roman.ttf") format("truetype");
+  font-family: 'IBMPlexSans';
+  font-weight: 300;
+  src: local('IBMPlexSans-Light'),
+       local('IBMPlexSans Light'),
+       url('../fonts/IBMPlexSans-Light.woff2') format('woff2'),
+       url('../fonts/IBMPlexSans-Light.woff') format('woff'),
+       url('../fonts/IBMPlexSans-Light.eot') format('eot');
 }
 
 @font-face {
-  font-family: "HelvNeue Medium for IBM";
-  font-style: normal;
+  font-family: 'IBMPlexSans';
+  font-weight: 400;
+  src: local('IBMPlexSans-Regular'),
+       local('IBMPlexSans Regular'),
+       url('../fonts/IBMPlexSans-Regular.woff2') format('woff2'),
+       url('../fonts/IBMPlexSans-Regular.woff') format('woff'),
+       url('../fonts/IBMPlexSans-Regular.eot') format('eot');
+}
+
+@font-face {
+  font-family: 'IBMPlexSans';
   font-weight: 500;
-  src: url("../fonts/helvetica-neue-medium.eot?") format("eot"),
-    url("../fonts/helvetica-neue-medium.woff2") format("woff2"),
-    url("../fonts/helvetica-neue-medium.woff") format("woff"),
-    url("../fonts/helvetica-neue-medium.ttf") format("truetype");
+  src: local('IBMPlexSans-Medium'),
+       local('IBMPlexSans Medium'),
+       url('../fonts/IBMPlexSans-Medium.woff2') format('woff2'),
+       url('../fonts/IBMPlexSans-Medium.woff') format('woff'),
+       url('../fonts/IBMPlexSans-Medium.eot') format('eot');
 }
 
 @font-face {
-  font-family: "HelvNeue Bold for IBM";
-  font-style: normal;
+  font-family: 'IBMPlexSans';
   font-weight: 700;
-  src: url("../fonts/helvetica-neue-bold.eot?") format("eot"),
-    url("../fonts/helvetica-neue-bold.woff2") format("woff2"),
-    url("../fonts/helvetica-neue-bold.woff") format("woff"),
-    url("../fonts/helvetica-neue-bold.ttf") format("truetype");
+  src: local('IBMPlexSans-Bold'),
+       local('IBMPlexSans Bold'),
+       url('../fonts/IBMPlexSans-Bold.woff2') format('woff2'),
+       url('../fonts/IBMPlexSans-Bold.woff') format('woff'),
+       url('../fonts/IBMPlexSans-Bold.eot') format('eot');
 }
+
+@font-face {
+  font-family: 'IBMPlexSans';
+  font-weight: 300;
+  font-style: italic;
+  src: local('IBMPlexSans-LightItalic'),
+       local('IBMPlexSans LightItalic'),
+       url('../fonts/IBMPlexSans-LightItalic.woff2') format('woff2'),
+       url('../fonts/IBMPlexSans-LightItalic.woff') format('woff'),
+       url('../fonts/IBMPlexSans-LightItalic.eot') format('eot');
+}
+
+@font-face {
+  font-family: 'IBMPlexSans';
+  font-style: italic;
+  font-weight: 400;
+  src: local('IBMPlexSans-Italic'),
+       local('IBMPlexSans Italic'),
+       url('../fonts/IBMPlexSans-Italic.woff2') format('woff2'),
+       url('../fonts/IBMPlexSans-Italic.woff') format('woff'),
+       url('../fonts/IBMPlexSans-Italic.eot') format('eot');
+}
+
+@font-face {
+  font-family: 'IBMPlexSans';
+  font-style: italic;
+  font-weight: 500;
+  src: local('IBMPlexSans-MediumItalic'),
+       local('IBMPlexSans MediumItalic'),
+       url('../fonts/IBMPlexSans-MediumItalic.woff2') format('woff2'),
+       url('../fonts/IBMPlexSans-MediumItalic.woff') format('woff'),
+       url('../fonts/IBMPlexSans-MediumItalic.eot') format('eot');
+}
+
+@font-face {
+  font-family: 'IBMPlexSans';
+  font-style: italic;
+  font-weight: 700;
+  src: local('IBMPlexSans-BoldItalic'),
+       local('IBMPlexSans BoldItalic'),
+       url('../fonts/IBMPlexSans-BoldItalic.woff2') format('woff2'),
+       url('../fonts/IBMPlexSans-BoldItalic.woff') format('woff'),
+       url('../fonts/IBMPlexSans-BoldItalic.eot') format('eot');
+}
+
+
+
+
 
 /* BEGIN: Team description Modal section */
 .att-modal .txtarea {
@@ -4567,7 +4550,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 90%;
   height: 3.67%;
   font-size: 1.45rem;
-  font-family: "HelvNeue Medium for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 500;
   line-height: 1.19em;
   position: relative;
   margin-left: 7%;
@@ -4598,7 +4581,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-iter-main-section {
-  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 500;
   font-size: 1.4rem;
   font-weight: normal;
   line-height: 1.8rem;
@@ -4613,7 +4596,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-iter-sub-section-category {
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2rem;
   font-weight: normal;
   line-height: 1.4rem;
@@ -4623,7 +4605,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .home-iter-sub-section-delivered {
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.1rem;
   font-weight: normal;
   line-height: 1.3rem;
@@ -4635,7 +4616,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .home-iter-subdetail-section {
   margin-top: 6%;
-  font-family: "HelvNeue Medium for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 500;
   font-size: 1.2rem;
   font-weight: normal;
   line-height: 1.4rem;
@@ -4650,7 +4631,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   color: #5A5A5A;
   padding: 2%;
   text-align: center;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   border: 0.1em solid #777677;
   margin-right: 0.85rem;
 }
@@ -4658,7 +4638,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .home-iter-text-field {
   width: 95%;
   margin-top: 3%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4rem;
   line-height: 1.8rem;
   color: #5A5A5A;
@@ -4672,7 +4651,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   line-height: 1.8rem;
   color: #5A5A5A;
   text-align: center;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
 }
 
 .home-iter-category {
@@ -4744,7 +4722,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   top: 100%;
   left: 5%;
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.08em;
   color: #323232;
 }
@@ -4753,7 +4730,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: right;
   top: 35%;
   right: 5%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2em;
   cursor: pointer;
 }
@@ -4785,7 +4761,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   height: 40%;
   width: 50%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.33em;
   line-height: 1.8em;
   color: #323232;
@@ -4798,7 +4773,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   border: 0.1em solid #777677;
   text-indent: 0.5em;
   padding: 0;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   color: #5A5A5A;
   padding: 0.3em 0;
@@ -4816,7 +4790,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: relative;
   float: left;
   width: 90%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.33em;
   line-height: 1.8em;
   color: #323232;
@@ -4829,7 +4802,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   border: 0.1em solid #777677;
   text-indent: 0.5em;
   padding: 0;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   line-height: 1.8em;
   color: #5A5A5A;
@@ -4848,7 +4820,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   height: 0%;
   width: 100%;
-  font-family: "HelvNeue light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
   font-weight: normal;
   line-height: 1.4em;
@@ -4873,7 +4844,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   font-size: 2em;
   margin-top: 1em;
   margin-left: 0.05em;
-  font-family: "HelvNeue light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
 }
 
 .midcontent {
@@ -5136,7 +5106,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   height: 0%;
   width: 100%;
-  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 500;
   font-size: 1.2em;
   font-weight: normal;
   line-height: 1.4em;
@@ -5362,7 +5332,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   background-color: #b2d1e2;
   color: #526566;
   float: right;
-  font-family: inherit;
   font-size: 1.4em;
   font-weight: normal;
   left: 45%;
@@ -5841,7 +5810,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 #addTeamMemberRoleBlock .custom-field-other .input-field {
   float: left;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   height: 100%;
   padding: 0.3em 0;
@@ -6048,7 +6016,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   height: 70%;
   float: right;
   display: inline-block;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.7em;
   text-align: right;
   color: #4178BE;
@@ -6059,7 +6026,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 23.4em !important;
   background-color: #FFFFFF !important;
   box-shadow: 0 0 1em 0 rgba(0,0,0,0.16) !important;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif" !important;
   font-size: 1.2em !important;
   line-height: 1.4em !important;
   color: #5A5A5A !important;
@@ -6113,7 +6079,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .home-modal-block-header > h {
   color: #FFFFFF;
   font-size: inherit;
-  font-family: "HelvNeue Medium for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 500;
   height: 100%;
   padding-left: 1em;
   position: relative;
@@ -6592,7 +6558,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 2%;
   top: 30%;
   color: #FFFFFF;
-  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 700;
   font-size: 1.5em;
   padding: 0;
 }
@@ -6639,9 +6605,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: relative;
   float: left;
   top: 35%;
-  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
   font-size: 2.2em;
-  font-weight: 300;
   color: #734098;
   padding: 0;
 }
@@ -6667,7 +6631,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   top: 70%;
   height: 28%;
   text-align: center;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
   color: #777677;
   border-bottom: 0.1em solid #777677;
@@ -6692,7 +6655,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector > h1 {
   padding: 0;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
   line-height: 2.0em;
   color: #5A5A5A;
@@ -6711,7 +6673,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .team-type-selector > .select2 .select2-selection__rendered {
   height: 100%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
   line-height: 1.4em;
   color: #777677;
@@ -6737,7 +6698,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .submit-date-selector > h1 {
   display: inline-block;
   padding: 0;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
   line-height: 2.0em;
   color: #5A5A5A;
@@ -6746,7 +6706,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .assessment-popover-block > .assessment-header > .assessment-status > .status-selection > .submit-date-selector h2 {
   display: inline-block;
   padding: 0;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
   line-height: 2.0em;
   color: #4178BE;
@@ -6767,7 +6726,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   padding: 0;
   width: 100%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
   line-height: 2.0em;
   color: #5A5A5A;
@@ -6778,7 +6736,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   padding: 0;
   width: 100%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1em;
   line-height: 2.4em;
   color: #999;
@@ -6803,7 +6760,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 }
 
 .assessment-popover-block > .lc-header > .header-title > h1 {
-  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.6em;
   color: #5A5A5A;
   padding: 0;
@@ -6857,7 +6813,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .assessment-popover-block > .agile-maturity .ibm-twisty-trigger {
   font-size: 1.4em;
-  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   color: #5A5A5A !important;
   padding: 0.5em 0 0.5em 2em !important;
 }
@@ -6880,13 +6835,11 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   display: block;
   position: relative;
   font-size: 1.2em;
-  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   color: black;
 }
 
 .assessment-popover-block > .agile-maturity thead {
   font-size: 1.2em;
-  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   color: black;
   border-bottom: 0.1em solid black;
   line-height: 2.0em;
@@ -6914,7 +6867,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 100%;
   float: left;
   /*font-size: 1.2em;
-  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";*/
 }
 
 .assessment-popover-block > .agile-maturity .agile-table-summary {
@@ -6922,7 +6874,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 100%;
   font-size: 1.2em;
   float: left;
-  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   color: #5A5A5A
 }
 
@@ -6931,7 +6882,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 100%;
   font-size: 1.2em;
   float: left;
-  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif" !important;
   color: #5A5A5A !important;
   padding: 0.5em 0 0 0;
 }
@@ -6953,7 +6903,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: relative;
   float: left;
   font-size: 1.2em;
-  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 700;
   padding: 0;
   color: #5A5A5A;
 }
@@ -6985,7 +6935,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: relative;
   float: left;
   font-size: 1.2em;
-  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   padding: 0;
   color: #5A5A5A;
 }
@@ -7015,7 +6964,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: relative;
   float: left;
   font-size: 1.2em;
-  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   padding: 0.5em 0 0.5em 0;
   color: #5A5A5A
 }
@@ -7027,7 +6975,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 1%;
   height: 6em;
   font-size: 1.2em;
-  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   margin-bottom: 0.5em;
   color: #5A5A5A
 }
@@ -7097,7 +7044,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: relative;
   float: left;
   font-size: 1.6em;
-  font-family: "Helvetica Neue","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   color: #5A5A5A;
 }
 .assessment-popover-block > .assessment-btns > .btn-row {
@@ -7121,7 +7067,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   min-width: 0;
   height: 100%;
   padding: 0;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   text-align: center;
   line-height: 0em;
@@ -7159,7 +7104,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .assessment-popover-block > .assessment-btns > .btn-row > .delete-col > h1 {
   position: relative;
   float: left;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   padding: 0;
   top: 25%;
@@ -7196,7 +7140,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 5%;
   top: 30%;
   color: #FFFFFF;
-  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 700;
   font-size: 1.5em;
   padding: 0;
 }
@@ -7238,7 +7182,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 100%;
   height: 10%;
   padding: 0;
-  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 500;
   font-size: 1.4em;
   color: #323232;
 }
@@ -7263,7 +7207,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .assessment-setup-block > .assessment-type-block > .assessment-select-block > .select2 .select2-selection__rendered {
   height: 100%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   line-height: 2.2em;
   color: #777677;
@@ -7283,7 +7226,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 100%;
   top: 25%;
   padding: 0;
-  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
   font-size: 1.2em;
   line-height: 1.4em;
   color: #5A5A5A;
@@ -7305,7 +7247,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 100%;
   height: 20%;
   padding: 0;
-  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 500;
   font-size: 1.4em;
   color: #323232;
 }
@@ -7326,7 +7268,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 75%;
   height: 40%;
   padding: 0;
-  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
   font-size: 1.2em;
   line-height: 1.4em;
   color: #5A5A5A;
@@ -7344,7 +7285,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .assessment-setup-block > .assessment-software-block > .assessment-select-block2 > .select2 .select2-selection__rendered {
   height: 100%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   line-height: 2.2em;
   color: #777677;
@@ -7407,7 +7347,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: relative;
   float: left;
   padding: 0;
-  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: bold;
   font-size: 1.4em;
   line-height: 2em;
   text-align: left;
@@ -7443,7 +7383,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: relative;
   float: left;
   padding: 0;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   line-height: 2em;
   text-align: left;
@@ -7484,7 +7423,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 .assessment-popover-block > .assessment-acplan-table > .header-title > div > h1 {
   position: relative;
   float: left;
-  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 700;
   font-size: 1.2em;
   text-align: left;
   padding-bottom: 0.5em;
@@ -7520,7 +7459,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 95%;
   height: 2em;
   margin: 0.5em 0 0.5em 0;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
 }
 
@@ -7549,7 +7487,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   width: 100%;
   height: 100%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
 }
 
@@ -7560,7 +7497,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   max-width: 100%;
   max-height: 16em;
   margin: 0.5em 0 0.5em 0;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
   text-align: left;
   color: #323232;
@@ -7570,7 +7506,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: relative;
   float: left;
   padding: 0.5em 0 0.5em 0;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
   text-align: left;
   color: #323232;
@@ -7581,7 +7516,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   width: 100%;
   float: left;
   padding-bottom: 0.5em;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.2em;
   text-align: left;
   color: #4178BE;
@@ -7636,7 +7570,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .no-trends-message-block p {
   color: #aeaeae;
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.2em;
   line-height: 1.4em;
   position: relative;
@@ -7671,7 +7604,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   left: 2%;
   top: 25%;
   color: #FFFFFF;
-  font-family: "HelvNeue Bold for IBM","HelvBoldIBM","Helvetica Neue","Arial","sans-serif";
+  font-weight: 700;
   font-size: 1.5em;
   padding: 0;
 }
@@ -7710,7 +7643,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: relative;
   float: left;
   padding: 0;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   line-height: 1.4em;
   text-align: left;
@@ -7749,7 +7681,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   position: relative;
   float: left;
   padding: 0;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 2.3em;
   width: 100%;
   text-align: left;
@@ -7761,7 +7692,6 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
   float: left;
   padding: 0;
   margin-top: 5%;
-  font-family: "HelvNeue Roman for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 1.4em;
   line-height: 1.4em;
   width: 100%;
@@ -7781,8 +7711,7 @@ button, html input[type="button"], input[type="reset"], input[type="submit"] {
 
 .feedback-block label, .apikey-block label {
   display: block;
-  font-family: "HelvNeue Medium for IBM","HelvRegularIBM","Helvetica Neue","Arial","sans-serif";
-  font-weight: bold;
+  font-weight: 700;
   padding-bottom: 0.4em;
 }
 
@@ -7839,7 +7768,6 @@ p.apikey-note {
   left: 10%;
   width: 50%;
   color: #734098;
-  font-family: "HelvNeue Light for IBM","HelvLightIBM","Helvetica Neue","Arial","sans-serif";
   font-size: 6.4rem;
   line-height: 6.4rem;
 }
@@ -7849,7 +7777,6 @@ p.apikey-note {
   left: 10%;
   top: 9.4rem;
   color: #4D4D4D;
-  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
   font-size: 2.4rem;
 }
 
@@ -7858,8 +7785,6 @@ p.apikey-note {
   left: 10%;
   top: 9.4rem;
   color: #777677;
-  font-weight: 300;
-  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
   font-size: 2.4rem;
 }
 
@@ -7891,16 +7816,12 @@ p.apikey-note {
   left: 25%;
   bottom: 0.2rem;
   color: #734098;
-  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
   font-size: 2.4rem;
-  font-weight: 300;
 }
 
 #noTeamContent h4 {
   color: #4D4D4D;
-  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
   font-size: 2.4rem;
-  font-weight: 300;
 }
 
 #noTeamContent p {
@@ -7909,9 +7830,7 @@ p.apikey-note {
   left: 14%;
   width: 50%;
   color: #777677;
-  font-family: "Helvetica Neue","HelvRegularIBM","Arial","sans-serif";
   font-size: 1.6rem;
-  font-weight: 300;
   line-height: 2.4rem;
 }
 
