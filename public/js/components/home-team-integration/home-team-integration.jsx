@@ -1,6 +1,11 @@
 require('./home-team-integration.scss');
 const React = require('react');
 const CommonModal = require('../common-modal/common-modal.jsx');
+const IntegrationWizardStepOne = require('../home-team-integration/integration-wizard-step-one.jsx');
+const IntegrationWizardStepTwo = require('../home-team-integration/integration-wizard-step-two.jsx');
+const IntegrationWizardStepThree = require('../home-team-integration/integration-wizard-step-three.jsx');
+const IntegrationWizardStepFour = require('../home-team-integration/integration-wizard-step-four.jsx');
+const Wizard = require('../wizard/wizard.jsx');
 const InlineSVG = require('svg-inline-react');
 const confirmIcon = require('../../../img/Att-icons/att-icons_confirm.svg');
 
@@ -30,6 +35,10 @@ class HomeTeamIntegration extends React.Component {
   }
 
   render() {
+    this.integration = {
+      type: '',
+    };
+
     return (
       <div className="att-hti">
         <div
@@ -51,7 +60,14 @@ class HomeTeamIntegration extends React.Component {
           show={this.state.showModal}
           onHide={this.hide}
         >
-          WIZARD GOES HERE!!
+          <Wizard
+            onClose={this.hide}
+          >
+            <IntegrationWizardStepOne data={this.integration} />
+            <IntegrationWizardStepTwo data={this.integration} />
+            <IntegrationWizardStepThree data={this.integration} />
+            <IntegrationWizardStepFour data={this.integration} />
+          </Wizard>
         </CommonModal>
       </div>
     );

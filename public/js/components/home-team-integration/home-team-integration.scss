@@ -53,7 +53,17 @@
           padding-left: $imageSize + (2 * $imagePad);
         }
       }
-
+      
+      &__label {
+        display: block;
+        padding-bottom: 5px; 
+      }
+      
+      &__dropdown {
+        display: block;
+        margin-bottom: 15px;
+      }
+      
       p,
       &__unordered-list {
         @include normalFont();
