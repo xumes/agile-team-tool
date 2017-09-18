@@ -16,28 +16,14 @@ class Wizard extends React.Component {
   }
   nextPage() {
     this.setState({ page: this.state.page + 1 }, () => {
-      console.log('clicked next button: ', this.state.page);
-      if (this.state.page !== 1) {
-        console.log('previous button should appear!');
-        this.state.hideBtnPrevious = false;
-        if (this.state.page === 4) {
-          console.log('next button should not appear on the very last page!');
-          this.state.hideBtnNext = true;
-        }
-      }
     });
   }
   previousPage() {
     this.setState({ page: this.state.page - 1 }, () => {
-      console.log('clicked previous button: ', this.state.page);
-      if (this.state.page === 1) {
-        this.state.hideBtnPrevious = true;
-      }
     });
   }
   close() {
     this.props.onClose();
-    console.log('we are closing the page:');
   }
   render() {
     const navButtons = [
