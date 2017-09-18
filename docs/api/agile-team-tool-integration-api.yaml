@@ -1,0 +1,79 @@
+swagger: "2.0"
+info:
+  description: "This is a draft spec for returning a list of track and plan integrations that will be supported by Agile Team Tool for automated reporting purposes."
+  version: "1.0.0"
+  title: "Agile Team Tool Integrations"
+host: "agiletool.mybluemix.net"
+basePath: "/api"
+tags:
+- name: 'integrations'
+  description: "Supported integrations by ATT"
+schemes:
+- "http"
+paths:
+  /integrations:
+    get:
+      tags:
+      - "integrations"
+      summary: "Returns a list of supported integrations"
+      description: "Returned as an array"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful"
+          examples:
+            application/json:
+              [
+                {
+                  tool: 'RTC',
+                  servers: [
+                    'https://igartc01.swg.usma.ibm.com/jazz/',
+                    'https://igartc02.swg.usma.ibm.com/jazz/',
+                    'https://igartc03.swg.usma.ibm.com/jazz/'
+                    ]
+                }  
+              ]
+    post:
+      tags:
+      - "integrations"
+      summary: "Save integration settings between a team and a track and plan tool"
+      description: "Returned as an array"
+      produces:
+      - "application/json"
+      parameters:
+        - name: settings
+          in: body
+          description: JSON body of the project configuration
+          required: true
+          schema:
+            type: object
+            required:
+              - tool
+              - server
+              - teamId
+              - toolProjectId
+            properties:
+              tool:
+                type: string
+                example: 'RTC'
+              server:
+                type: string
+                example: 'https://igartc02.swg.usma.ibm.com/jazz/'
+              teamId:
+                type: string
+                example: '5858519ea0a583041f66f8fa'
+              toolProjectId:
+                type: string
+                example: 'Agile Team Tool'
+      responses:
+        201:
+          description: "created"
+          examples:
+            application/json:
+              {
+                _id: "1aaf519ef1f283041ffffffb",
+                tool: "RTC",
+                toolProjectId: "Agile Team Tool",
+                teamId: "5858519ea0a583041f66f8fa"
+              }
