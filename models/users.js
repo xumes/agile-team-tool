@@ -262,7 +262,7 @@ var users = {
         .then(function(bpInfo) { /* istanbul ignore next */
           if (bpInfo && !_.isEmpty(bpInfo.ldap) && (bpInfo.ldap.uid === newUser.userId)) {
             bpUserId = bpInfo.ldap.uid.toUpperCase();
-            bpEmail = bpInfo.ldap.preferredIdentity || bpInfo.shortEmail;
+            bpEmail = bpInfo.ldap.preferredIdentity || bpInfo.shortEmail || '';
             bpEmail = bpEmail.toLowerCase();
             bpFullname = util.getBPFullname(bpInfo);
             // If userInfo.email don't match from the bluepages data then lets update it
@@ -347,7 +347,7 @@ var users = {
           .then(function(bpInfo) { /* istanbul ignore next */
             if (bpInfo && !_.isEmpty(bpInfo.ldap) && (bpInfo.ldap.uid === userId)) {
               bpUserId = bpInfo.ldap.uid.toUpperCase();
-              bpEmail = bpInfo.ldap.preferredIdentity || bpInfo.shortEmail;
+              bpEmail = bpInfo.ldap.preferredIdentity || bpInfo.shortEmail || '';
               bpEmail = bpEmail.toLowerCase();
               bpFullname = util.getBPFullname(bpInfo);
               // If userInfo.email don't match from the bluepages data then lets update it
