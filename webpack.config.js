@@ -1,7 +1,8 @@
-var Webpack = require('webpack');
-var path = require('path');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var AssetsPlugin = require('assets-webpack-plugin');
+const Webpack = require('webpack');
+const path = require('path');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const AssetsPlugin = require('assets-webpack-plugin');
+const MinifyPlugin = require('babel-minify-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -9,7 +10,7 @@ module.exports = {
   },
   output: {
     filename: '[name].[chunkhash].js',
-    path: path.join(__dirname, 'public/dist')
+    path: path.join(__dirname, 'public/dist'),
   },
   module: {
     rules: [
@@ -17,52 +18,56 @@ module.exports = {
         test: /\.css$/,
         use: [
           'style-loader',
-          'css-loader'
-        ]
+          'css-loader',
+        ],
       },
       {
         test: /\.scss$/,
         use: [
           { loader: 'style-loader' },
           { loader: 'css-loader' },
-          { loader: 'sass-loader' }
-        ]
+          { loader: 'sass-loader' },
+        ],
       },
       {
-        test: /\.jsx$/,
+        test: /\.jsx$|\.js$/,
+        exclude: [/node_modules/],
+        enforce: 'pre',
+        use: [
+          {
+            loader: 'eslint-loader',
+          },
+        ],
+      },
+      {
+        test: /\.jsx$|\.js$/,
         exclude: /node_modules/,
         use: [
-          { 
+          {
             loader: 'babel-loader',
-            options: {              
-              presets: ['react'],
-              plugins: ['react-html-attrs']
-            }
-          }
-        ]        
+            options: {
+              presets: ['es2017', 'react'],
+              plugins: [
+                'react-html-attrs',
+              ],
+            },
+          },
+        ],
       },
       {
-        test: /\.svg$/, 
-        loader: 'svg-inline-loader'
-      }
-    ]
+        test: /\.svg$/,
+        loader: 'svg-inline-loader',
+      },
+    ],
   },
   plugins: [
     new ExtractTextPlugin('[name].[chunkhash].css'),
     new Webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify('production')
-      }
-    }),
-    new Webpack.optimize.UglifyJsPlugin({
-      sourceMap: false,
-      compress: {
-        warnings:false
+        NODE_ENV: JSON.stringify('production'),
       },
-      output: {
-        comments: false
-      }
     }),
-    new AssetsPlugin()
-  ]
+    new MinifyPlugin(),
+    new AssetsPlugin(),
+  ],
 };

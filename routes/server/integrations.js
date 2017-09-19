@@ -1,15 +1,14 @@
-var settings = require('../../settings');
-var apiKeysModel = require('../../models/apiKeys');
+const apiKeysModel = require('../../models/apiKeys');
 
-module.exports = function(app, includes) {
-  app.get('/integrations/trello', includes.middleware.auth.requireLoginWithRedirect, function(req, res) {
-    apiKeysModel.createApikey(req.session['user'])
-      .then(function(result) {
+module.exports = (app, includes) => {
+  app.get('/integrations/trello', includes.middleware.auth.requireLoginWithRedirect, (req, res) => {
+    apiKeysModel.createApikey(req.session.user)
+      .then((result) => {
         res.render('integrations/trello', {
-          apiKey: result.key
+          apiKey: result.key,
         });
       })
-      .catch(function(err) {
+      .catch((err) => {
         res.status(500).send(err);
       });
   });
