@@ -1,18 +1,16 @@
-export const UPDATE_TOOL = 'UPDATE_TOOL';
-export const UPDATE_SERVER = 'UPDATE_SERVER';
-export const UPDATE_TEAM_NAME = 'UPDATE_TEAM_NAME';
-export const ADD_METRIC = 'ADD_METRIC';
-export const REMOVE_METRIC = 'REMOVE_METRIC';
+const actionTypes = require('./../actions/action-types');
 
 const integration = (state = {}, action) => {
   switch (action.type) {
-    case UPDATE_TOOL:
+    case actionTypes.integration.ADD_INTEGRATION:
+      return action.integration;
+    case actionTypes.integration.UPDATE_TOOL:
       return { ...state, tool: action.tool };
-    case UPDATE_SERVER:
+    case actionTypes.integration.UPDATE_SERVER:
       return { ...state, server: action.server };
-    case UPDATE_TEAM_NAME:
+    case actionTypes.integration.UPDATE_TEAM_NAME:
       return { ...state, teamName: action.teamName };
-    case ADD_METRIC:
+    case actionTypes.integration.ADD_METRIC:
       return {
         ...state,
         metrics: [
@@ -20,11 +18,11 @@ const integration = (state = {}, action) => {
           { metricName: action.metricName },
         ],
       };
-    case REMOVE_METRIC:
-      return state.metrics.filter(metric => metric.metricType !== action.metricType);
+    case actionTypes.integration.REMOVE_METRIC:
+      return state.metrics.filter(metric => metric.metricName !== action.metricName);
     default:
       return state;
   }
 };
 
-export default integration;
+module.exports = integration;

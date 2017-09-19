@@ -1,9 +1,8 @@
-export const ADD_TEAM = 'ADD_TEAM';
-export const REMOVE_TEAM = 'REMOVE_TEAM';
+const actionTypes = require('./../actions/action-types');
 
 const teams = (state = [], action) => {
   switch (action.type) {
-    case ADD_TEAM:
+    case actionTypes.team.ADD_TEAM:
       return [
         ...state,
         {
@@ -15,11 +14,11 @@ const teams = (state = [], action) => {
           workTime: action.workTime,
         },
       ];
-    case REMOVE_TEAM:
+    case actionTypes.team.REMOVE_TEAM:
       return state.filter(team => team.name !== action.name);
     default:
       return state;
   }
 };
 
-export default teams;
+module.exports = teams;

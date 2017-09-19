@@ -5,7 +5,7 @@ var HomeMemberTable = require('./HomeMemberTable.jsx');
 var HomeBookmark = require('./HomeBookmark.jsx');
 var HomeTeamDescription = require('./HomeTeamDescription.jsx');
 var HomeTeamSetup = require('./HomeTeamSetup.jsx');
-var HomeTeamIntegration = require('../home-team-integration/home-team-integration.jsx');
+var ShowAllTools = require('../team-integration/containers/show-all-tools.jsx');
 var InlineSVG = require('svg-inline-react');
 var Promise = require('bluebird');
 var _ = require('underscore');
@@ -257,7 +257,7 @@ var HomeTeamHeader = React.createClass({
 
               {/* Feature Flagged Component */}
               {environment === 'development' && isSquad &&
-                <HomeTeamIntegration/>
+                <ShowAllTools/>
               }
             </div>
           </div>

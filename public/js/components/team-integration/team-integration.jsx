@@ -1,18 +1,20 @@
-require('./home-team-integration.scss');
+require('./team-integration.scss');
 const React = require('react');
+const PropTypes = require('prop-types');
 const CommonModal = require('../common-modal/common-modal.jsx');
-const IntegrationWizardStepOne = require('../home-team-integration/integration-wizard-step-one.jsx');
-const IntegrationWizardStepTwo = require('../home-team-integration/integration-wizard-step-two.jsx');
-const IntegrationWizardStepThree = require('../home-team-integration/integration-wizard-step-three.jsx');
-const IntegrationWizardStepFour = require('../home-team-integration/integration-wizard-step-four.jsx');
+const IntegrationWizardStepOne = require('../team-integration/integration-wizard-step-one.jsx');
+const IntegrationWizardStepTwo = require('../team-integration/integration-wizard-step-two.jsx');
+const IntegrationWizardStepThree = require('../team-integration/integration-wizard-step-three.jsx');
+const IntegrationWizardStepFour = require('../team-integration/integration-wizard-step-four.jsx');
 const Wizard = require('../wizard/wizard.jsx');
 const InlineSVG = require('svg-inline-react');
 const confirmIcon = require('../../../img/Att-icons/att-icons_confirm.svg');
 
-
-class HomeTeamIntegration extends React.Component {
+class TeamIntegration extends React.Component {
   constructor(props) {
     super(props);
+
+    if (props.tools) props.showAllTools();
 
     this.state = {
       showModal: false,
@@ -35,10 +37,6 @@ class HomeTeamIntegration extends React.Component {
   }
 
   render() {
-    this.integration = {
-      type: '',
-    };
-
     return (
       <div className="att-hti">
         <div
@@ -63,10 +61,10 @@ class HomeTeamIntegration extends React.Component {
           <Wizard
             onClose={this.hide}
           >
-            <IntegrationWizardStepOne data={this.integration} page={1} />
-            <IntegrationWizardStepTwo data={this.integration} page={2} />
-            <IntegrationWizardStepThree data={this.integration} page={3} />
-            <IntegrationWizardStepFour data={this.integration} page={4} />
+            <IntegrationWizardStepOne page={1} tools={this.props.tools} />
+            <IntegrationWizardStepTwo page={2} tools={this.props.tools} />
+            <IntegrationWizardStepThree page={3} tools={this.props.tools} />
+            <IntegrationWizardStepFour page={4} tools={this.props.tools} />
           </Wizard>
         </CommonModal>
       </div>
@@ -74,4 +72,23 @@ class HomeTeamIntegration extends React.Component {
   }
 }
 
-module.exports = HomeTeamIntegration;
+TeamIntegration.propTypes = {
+  tools: PropTypes.arrayOf(PropTypes.shape({
+    toolId: PropTypes.string,
+    toolName: PropTypes.string,
+    servers: PropTypes.array,
+  })),
+  showAllTools: PropTypes.func,
+};
+
+TeamIntegration.defaultProps = {
+  tools: {
+    toolId: '',
+    toolName: '',
+    servers: [],
+  },
+  showAllTools: () => {},
+};
+
+
+module.exports = TeamIntegration;

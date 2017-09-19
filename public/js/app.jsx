@@ -1,10 +1,14 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-var HomePage = require('./components/index/HomePage.jsx');
-require('../css/base.scss');
+import React from 'react';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
+import configureStore from './configure-store';
+import HomePage from './components/index/HomePage.jsx';
+import './../css/base.scss';
 
-$(document).ready(function() {
-  ReactDOM.render(
-    <HomePage/>, document.getElementById('app-content')
-  );
-});
+const store  = configureStore();
+
+render(
+  <Provider store={store}>
+    <HomePage/>
+  </Provider>, document.getElementById('app-content')
+);
