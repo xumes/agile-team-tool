@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "webpack && node ./bin/www",
+    "start": "node ./bin/www",
     "worker": "node ./bin/update-snapshots.js",
     "build": "webpack && gulp build",
     "test": "karma start"
