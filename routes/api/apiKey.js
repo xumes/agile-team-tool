@@ -2,7 +2,7 @@ const _ = require('underscore');
 const apiKeysModel = require('../../models/apiKeys');
 
 module.exports = (app, includes) => {
-  const getApiKey = /* instabul ingore next */ (req, res) => {
+  const getApiKey = /* istanbul ingore next */ (req, res) => {
     apiKeysModel.createApikey(req.session.user)
       .then((result) => {
         res.status(200).json({
@@ -10,12 +10,12 @@ module.exports = (app, includes) => {
           shortEmail: result.email,
         });
       })
-      .catch(/* instabul ingore next */ (err) => {
+      .catch(/* istanbul ingore next */ (err) => {
         res.status(400).send(err);
       });
   };
 
-  const getUserApikeyByUser = /* instabul ingore next */ (req, res) => {
+  const getUserApikeyByUser = /* istanbul ingore next */ (req, res) => {
     apiKeysModel.getUserApikeyByUser(req.session.user)
       .then((result) => {
         if (!_.isEmpty(result)) {
@@ -27,7 +27,7 @@ module.exports = (app, includes) => {
           res.status(404).send(`This user: ${req.session.user.ldap.uid} does not have an api key.`);
         }
       })
-      .catch(/* instabul ingore next */ (err) => {
+      .catch(/* istanbul ingore next */ (err) => {
         res.status(400).send(err);
       });
   };
@@ -48,12 +48,12 @@ module.exports = (app, includes) => {
 
 
   // try to get data from here
-  /* instabul ingore next */
+  /* istanbul ingore next */
   app.get('/api/developer/apiKey', [includes.middleware.auth.requireLogin], getApiKey); // old path
-  /* instabul ingore next */
+  /* istanbul ingore next */
   app.get('/api/apiKey/apiKey', [includes.middleware.auth.requireLogin], getApiKey);
-  /* instabul ingore next */
+  /* istanbul ingore next */
   app.get('/api/apiKey/apiKeyByUser', [includes.middleware.auth.requireLogin], getUserApikeyByUser);
-  /* instabul ingore next */
+  /* istanbul ingore next */
   app.delete('/api/apiKey/apikey', [includes.middleware.auth.requireLogin], deleteApiKey);
 };
