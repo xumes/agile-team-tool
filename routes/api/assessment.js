@@ -1,88 +1,85 @@
-var assessmentModel = require('../../models/assessments');
-var assessmentTemplateModel = require('../../models/assessmentTemplates');
-var teamModel = require('../../models/teams');
-var _ = require('underscore');
+const assessmentModel = require('../../models/assessments');
+const assessmentTemplateModel = require('../../models/assessmentTemplates');
+const _ = require('underscore');
 
-module.exports = function(app, includes) {
-  var middleware = includes.middleware;
-
-  getAssessment = function(req, res) {
-    var teamId = req.query.teamId; // this will be document id
-    var assessmentId = req.query.assessId;
+module.exports = (app, includes) => {
+  const getAssessment = (req, res) => {
+    const teamId = req.query.teamId; // this will be document id
+    const assessmentId = req.query.assessId;
     if (!_.isUndefined(teamId)) {
       assessmentModel.getTeamAssessments(teamId)
-        .then(function(result) {
+        .then((result) => {
           res.send(result);
         })
-        .catch( /* istanbul ignore next */ function(err) {
+        .catch(/* istanbul ignore next */ (err) => {
           /* cannot simulate Mongo error during testing */
           res.status(400).send(err);
         });
     } else {
       assessmentModel.getAssessment(assessmentId)
-        .then(function(result) {
+        .then((result) => {
           res.send(result);
         })
-        .catch(function(err) {
+        .catch((err) => {
           res.status(400).send(err);
         });
     }
   };
 
-  getAssessmentTemplate = function(req, res) {
-    var templateId = req.query.templateId;
-    var status = req.query.status;
+  const getAssessmentTemplate = (req, res) => {
+    const templateId = req.query.templateId;
+    const status = req.query.status;
     assessmentTemplateModel.get(templateId, status)
-      .then(function(result) {
+      .then((result) => {
         res.send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         /* cannot simulate Mongo error during testing */
         res.status(400).send(err);
       });
   };
 
-  getTemplateByVersion = function(req, res) {
-    var version = req.params.version;
+  const getTemplateByVersion = (req, res) => {
+    const version = req.params.version;
     assessmentTemplateModel.getTemplateByVersion(version)
-      .then(function(result) {
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         /* cannot simulate Mongo error during testing */
         res.status(400).send(err);
       });
   };
 
-  addAssessment = function(req, res) {
-    assessmentModel.addTeamAssessment(req.session['user'], req.body)
-      .then(function(result) {
+  const addAssessment = (req, res) => {
+    assessmentModel.addTeamAssessment(req.session.user, req.body)
+      .then((result) => {
         res.send(result);
       })
-      .catch(function(err) {
+      .catch((err) => {
         res.status(400).send(err);
       });
   };
 
-  updateAssessment = function(req, res) {
-    assessmentModel.updateTeamAssessment(req.session['user'], req.body)
-      .then(function(result) {
+  const updateAssessment = (req, res) => {
+    assessmentModel.updateTeamAssessment(req.session.user, req.body)
+      .then((result) => {
         res.send(result);
       })
-      .catch(function(err) {
+      .catch((err) => {
         console.log(err);
         res.status(400).send(err);
       });
   };
 
-  deleteAssessment = function(req, res) {
-    var docId = req.body.docId;
-    var userId = req.session['user']['ldap']['uid'].toUpperCase();
+  const deleteAssessment = (req, res) => {
+    const docId = req.body.docId;
+    const userId = req.session.user.ldap.uid.toUpperCase();
     assessmentModel.deleteAssessment(userId, docId)
-      .then(function(result) {
+      .then((result) => {
         res.send(result);
       })
-      .catch(function(err) {
+      .catch((err) => {
         res.status(400).send(err);
       });
   };

@@ -1,7 +1,6 @@
-var teamscoreModel = require('../../models/teamscore');
+const teamscoreModel = require('../../models/teamscore');
 
-module.exports = function(app, includes) {
-
+module.exports = (app, includes) => {
   // getTimezone = function(req, res){
   //   var location = req.body.loc;
   //   teamscoreModel.getTimezone(location)
@@ -13,13 +12,13 @@ module.exports = function(app, includes) {
   //     });
   // };
 
-  calculateScoreByTimezone = function(req, res) {
+  const calculateScoreByTimezone = (req, res) => {
     teamscoreModel.calculateScoreByTimezone(req.body.loc)
-      .then(function(result){
+      .then((result) => {
         // result is number, '' change it to string
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err){
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(err.statusCode).send(err.message);
       });
   };
