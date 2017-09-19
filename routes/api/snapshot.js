@@ -1,52 +1,50 @@
-var snapshotModel = require('../../models/snapshot');
-var _ = require('underscore');
+const snapshotModel = require('../../models/snapshot');
+const _ = require('underscore');
 
-module.exports = function(app, includes) {
-  var middleware = includes.middleware;
-
-  updateRollUpData = function(req, res) {
+module.exports = (app, includes) => {
+  const updateRollUpData = (req, res) => {
     snapshotModel.updateRollUpData()
-      .then(function(result) {
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(400).send(err);
       });
-  },
+  };
 
-  getRollUpDataByTeam = function(req, res) {
-    if (!_.isEmpty(req.params.teamId) && (req.params.teamId != undefined)) {
+  const getRollUpDataByTeam = (req, res) => {
+    if (!_.isEmpty(req.params.teamId) && (req.params.teamId !== undefined)) {
       snapshotModel.getRollUpDataByTeamId(req.params.teamId)
-        .then(function(result) {
+        .then((result) => {
           res.status(200).send(result);
         })
-        .catch( /* istanbul ignore next */ function(err) {
+        .catch(/* istanbul ignore next */ (err) => {
           res.status(400).send(err);
         });
     } else {
-      var msg = {
-        'error': 'team id is not right'
+      const msg = {
+        error: 'team id is not right',
       };
       res.status(400).send(msg);
     }
-  },
+  };
 
-  completeIterations = function(req, res) {
+  const completeIterations = (req, res) => {
     snapshotModel.completeIterations()
-      .then(function(result) {
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(400).send(err);
       });
-  },
+  };
 
-  updateUsersLocation = function(req, res) {
+  const updateUsersLocation = (req, res) => {
     snapshotModel.updateUsersLocation()
-      .then(function(result) {
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(400).send(err);
       });
   };

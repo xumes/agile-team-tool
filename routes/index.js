@@ -1,32 +1,33 @@
-'use strict';
-var fs = require('fs');
-var settings = require('../settings');
-var _ = require('underscore');
-var middleware = {
-  auth: require('../middleware/auth')
+
+const fs = require('fs');
+const auth = require('../middleware/auth');
+
+const middleware = {
+  auth,
 };
 
-var render = function(req, res, file, json) {
-  //can add stuff to json here if needed
-  json['siteTitle'] = 'Agile Team Tool';
-  json['user'] = req.session.user;
-  json['userEmail'] = req.user;
-  return res.render(file, json);
+const render = (req, res, file, json) => {
+  const resJson = json;
+  // can add stuff to json here if needed
+  resJson.siteTitle = 'Agile Team Tool';
+  resJson.user = req.session.user;
+  resJson.userEmail = req.user;
+  return res.render(file, resJson);
 };
 
-module.exports = function(app, passport) {
-  var includes = {
-    passport: passport,
-    render: render,
-    middleware: middleware
+module.exports = (app, passport) => {
+  const includes = {
+    passport,
+    render,
+    middleware,
   };
-  fs.readdirSync('./routes/server').forEach(function(file) {
-    require('./server/' + file)(app, includes);
+  fs.readdirSync('./routes/server').forEach((file) => {
+    require(`./server/${file}`)(app, includes);// eslint-disable-line
   });
-  fs.readdirSync('./routes/api').forEach(function(file) {
-    require('./api/' + file)(app, includes);
+  fs.readdirSync('./routes/api').forEach((file) => {
+    require(`./api/${file}`)(app, includes);// eslint-disable-line
   });
-  fs.readdirSync('./routes/v1').forEach(function(file) {
-    require('./v1/' + file)(app, includes);
+  fs.readdirSync('./routes/v1').forEach((file) => {
+    require(`./v1/${file}`)(app, includes);// eslint-disable-line
   });
 };
