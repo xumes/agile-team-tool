@@ -12,7 +12,15 @@ const IntegrationWizardStepTwo = (props) => {
         Step 2 of 4: Locate your {data.type} team
       </h2>
       <span className="att-integration__label">
-        Server
+        Your Agile Team Tool Squad
+      </span>
+      <select className="att-integration__dropdown">
+        <option value="Option 1">Option 1</option>
+        <option value="Option 2">Option 2</option>
+        <option value="Option 3">Option 3</option>
+      </select>
+      <span className="att-integration__label">
+        {data.type} Server
       </span>
       <select className="att-integration__dropdown">
         <option value="Option 1">Option 1</option>
@@ -21,14 +29,6 @@ const IntegrationWizardStepTwo = (props) => {
       </select>
       <span className="att-integration__label">
         {data.type} Project Area
-      </span>
-      <select className="att-integration__dropdown">
-        <option value="Option 1">Option 1</option>
-        <option value="Option 2">Option 2</option>
-        <option value="Option 3">Option 3</option>
-      </select>
-      <span className="att-integration__label">
-        ATT Team
       </span>
       <select className="att-integration__dropdown">
         <option value="Option 1">Option 1</option>

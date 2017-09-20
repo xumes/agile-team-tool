@@ -22,9 +22,10 @@ const IntegrationWizardStepOne = (props) => {
         <div className="att-integration__article__text">
           <h2 className="att-integration__heading">{data.type}</h2>
           <p>
-            Are you spending time entering agile metrics manually into
-            the Agile Team Tool? This integration will automate the key
-            agile metrics including:
+            Connect Rational Team Connect (RTC) with Agile Team Tool (ATT)
+            to automatically move your agile metrics data over every
+            iteration. Save time and energy by avoiding extra spreadsheets to
+            keep track of this information.
           </p>
           <ul className="att-integration__unordered-list">
             <li>Velocity</li>

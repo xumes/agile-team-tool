@@ -1,10 +1,10 @@
 require('./home-team-integration.scss');
 const React = require('react');
 const CommonModal = require('../common-modal/common-modal.jsx');
-const IntegrationWizardStepOne = require('../home-team-integration/integration-wizard-step-one.jsx');
-const IntegrationWizardStepTwo = require('../home-team-integration/integration-wizard-step-two.jsx');
-const IntegrationWizardStepThree = require('../home-team-integration/integration-wizard-step-three.jsx');
-const IntegrationWizardStepFour = require('../home-team-integration/integration-wizard-step-four.jsx');
+const IntegrationWizardStepOne = require('../home-team-integration/wizard-one.jsx');
+const IntegrationWizardStepTwo = require('../home-team-integration/wizard-two.jsx');
+const IntegrationWizardStepThree = require('../home-team-integration/wizard-three.jsx');
+const IntegrationWizardStepFour = require('../home-team-integration/wizard-four.jsx');
 const Wizard = require('../wizard/wizard.jsx');
 const InlineSVG = require('svg-inline-react');
 const confirmIcon = require('../../../img/Att-icons/att-icons_confirm.svg');
@@ -39,6 +39,57 @@ class HomeTeamIntegration extends React.Component {
       type: '',
     };
 
+    const pageOneOptions = {
+      btnCancel: {
+        order: 1,
+      },
+      btnPrevious: {
+        hide: true,
+      },
+      btnNext: {
+        order: 2,
+      },
+    };
+
+    const pageTwoOptions = {
+      btnCancel: {
+        hide: true,
+      },
+      btnPrevious: {
+        order: 1,
+      },
+      btnNext: {
+        order: 2,
+      },
+    };
+
+    const pageThreeOptions = {
+      btnCancel: {
+        hide: true,
+      },
+      btnPrevious: {
+        order: 1,
+      },
+      btnNext: {
+        order: 2,
+        label: 'Preview',
+      },
+    };
+
+    const pageFourOptions = {
+      btnCancel: {
+        order: 1,
+      },
+      btnPrevious: {
+        hide: true,
+      },
+      btnNext: {
+        order: 2,
+        label: 'Save',
+        onClick: 'this.save',
+      },
+    };
+
     return (
       <div className="att-hti">
         <div
@@ -62,15 +113,27 @@ class HomeTeamIntegration extends React.Component {
         >
           <Wizard
             onClose={this.hide}
+            navButtons={this.navButtons}
           >
-            <IntegrationWizardStepOne data={this.integration} page={1} previousLabel="Cancel" />
-            <IntegrationWizardStepTwo data={this.integration} page={2} previousLabel="Previous" />
-            <IntegrationWizardStepThree data={this.integration} page={3} nextLabel="Preview" />
+            <IntegrationWizardStepOne
+              data={this.integration}
+              page="1"
+              options={pageOneOptions}
+            />
+            <IntegrationWizardStepTwo
+              data={this.integration}
+              page="2"
+              options={pageTwoOptions}
+            />
+            <IntegrationWizardStepThree
+              data={this.integration}
+              page="3"
+              options={pageThreeOptions}
+            />
             <IntegrationWizardStepFour
               data={this.integration}
-              page={4}
-              previousLabel="Cancel"
-              nextLabel="Save"
+              page="4"
+              options={pageFourOptions}
             />
           </Wizard>
         </CommonModal>

@@ -1,6 +1,7 @@
 require('./wizard.scss');
 const PropTypes = require('prop-types');
 const React = require('react');
+const _ = require('lodash');
 
 class Wizard extends React.Component {
   constructor(props) {
@@ -9,10 +10,39 @@ class Wizard extends React.Component {
       page: 1,
       previousLabel: 'Previous',
       nextLabel: 'Next',
+      closeLabel: 'Close',
     };
     this.nextPage = this.nextPage.bind(this);
     this.previousPage = this.previousPage.bind(this);
     this.close = this.close.bind(this);
+    this.save = this.save.bind(this);
+
+    this.navButtons = {
+      btnPrevious: {
+        id: 'btnPrevious',
+        label: 'Previous',
+        class: 'ibm-btn-sec ibm-btn-small ibm-btn-blue-50 u-mr-sm',
+        onClick: this.previousPage,
+        hide: false,
+        order: 1,
+      },
+      btnNext: {
+        id: 'btnNext',
+        label: 'Next',
+        class: 'ibm-btn-pri ibm-btn-small ibm-btn-blue-50 u-mr-sm',
+        onClick: this.nextPage,
+        hide: false,
+        order: 2,
+      },
+      btnCancel: {
+        id: 'btnCancel',
+        label: 'Cancel',
+        class: 'ibm-btn-sec ibm-btn-small ibm-btn-blue-50 u-mr-sm',
+        onClick: this.close,
+        hide: false,
+        order: 3,
+      },
+    };
   }
   nextPage() {
     this.setState({ page: this.state.page + 1 }, () => {
@@ -25,34 +55,36 @@ class Wizard extends React.Component {
   close() {
     this.props.onClose();
   }
+  save() {
+    this.props.onSave();
+  }
   render() {
-    const navButtons = [
-      {
-        label: this.state.previousLabel,
-        class: 'ibm-btn-pri ibm-btn-small ibm-btn-blue-50 u-mr-sm',
-        onClick: this.previousPage,
-      },
-      {
-        label: this.state.nextLabel,
-        class: 'ibm-btn-pri ibm-btn-small ibm-btn-blue-50 u-mr-sm',
-        onClick: this.nextPage,
-      },
-      {
-        label: 'Cancel',
-        class: 'ibm-btn-sec ibm-btn-small ibm-btn-blue-50 u-mr-sm',
-        onClick: this.close,
-      },
-    ];
+    let navButtons = _.toArray(this.navButtons);
+    const displayedChild = this.props.children
+      .find(child => Number.parseInt(child.props.page, 10) === this.state.page);
+
+    const options = displayedChild.props.options;
+    if (options) {
+      //  applying custom options for buttons
+      const buttons = navButtons.map((button) => {
+        const option = options[button.id];
+        return _.assign({}, button, option);
+      });
+
+      //  reordering the buttons
+      navButtons = _.orderBy(buttons, 'order');
+    }
+
     const listNavButtons = navButtons
       .map(button =>
-        (<button
-          className={button.class}
-          onClick={button.onClick}
-        >{button.label}</button>),
+        (
+          !button.hide && <button
+            className={button.class}
+            onClick={button.onClick}
+          >
+            {button.label}
+          </button>),
       );
-
-    const displayedChild = this.props.children
-      .filter(child => child.props.page === this.state.page);
 
     return (
       <div className="content-container">
@@ -71,11 +103,13 @@ Wizard.defaultProps = {
   children: undefined,
   navButtons: [],
   onClose: null,
+  onSave: null,
 };
 
 Wizard.propTypes = {
   children: PropTypes.node,
   onClose: PropTypes.func,
+  onSave: PropTypes.func,
 };
 
 module.exports = Wizard;
