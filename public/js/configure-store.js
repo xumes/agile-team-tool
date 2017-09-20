@@ -2,10 +2,9 @@ const Redux = require('redux');
 const Axios = require('axios');
 const AxiosMiddleWare = require('redux-axios-middleware').default;
 const ReduxDevTools = require('redux-devtools-extension');
-const teams = require('./reducers/teams');
-const tools = require('./reducers/tools');
-const integration = require('./reducers/integration');
-const metric = require('./reducers/metric');
+
+const integration = require('./modules/integration').reducer;
+const tools = require('./modules/tools').reducer;
 
 const configureStore = function configureStore() {
   const instance = Axios.create({
@@ -14,10 +13,8 @@ const configureStore = function configureStore() {
   });
 
   const reducers = Redux.combineReducers({
-    teams,
-    tools,
     integration,
-    metric,
+    tools,
   });
 
   return Redux.createStore(

@@ -60,6 +60,7 @@ class Wizard extends React.Component {
     const listNavButtons = navButtons
       .map(button =>
         (<button
+          key={button.id}
           className={button.class}
           id={button.id}
           onClick={button.onClick}

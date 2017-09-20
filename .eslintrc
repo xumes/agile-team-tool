@@ -2,5 +2,9 @@
   "extends": "airbnb",
   "env": {
     "jasmine": true
-  }  
+  },
+  "rules": {
+    "global-require": 0,
+    "react/prefer-stateless-function": 0
+  }
 }

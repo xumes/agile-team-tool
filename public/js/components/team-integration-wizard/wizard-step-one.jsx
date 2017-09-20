@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 
 
-const IntegrationWizardStepOne = props => (
+const WizardStepOne = props => (
   <div className="att-integration">
     <h2 className="att-integration__heading">
       1 of 4: RTC Integration Overview
@@ -16,7 +16,7 @@ const IntegrationWizardStepOne = props => (
         />
       </div>
       <div className="att-integration__article__text">
-        <h2 className="att-integration__heading">{props.tools[0].toolId}</h2>
+        <h2 className="att-integration__heading">{props.tools[0].toolName}</h2>
         <p>
           Are you spending time entering agile metrics manually into
           the Agile Team Tool? This integration will automate the key
@@ -33,20 +33,16 @@ const IntegrationWizardStepOne = props => (
   </div>
 );
 
-IntegrationWizardStepOne.propTypes = {
+WizardStepOne.propTypes = {
   tools: PropTypes.arrayOf(PropTypes.shape({
     toolId: PropTypes.string,
     toolName: PropTypes.string,
-    servers: PropTypes.array,
+    servers: PropTypes.arrayOf(PropTypes.string),
   })),
 };
 
-IntegrationWizardStepOne.defaultProps = {
-  tools: {
-    toolId: '',
-    toolName: '',
-    servers: [],
-  },
+WizardStepOne.defaultProps = {
+  tools: [],
 };
 
-module.exports = IntegrationWizardStepOne;
+module.exports = WizardStepOne;

@@ -2,10 +2,10 @@ require('./team-integration.scss');
 const React = require('react');
 const PropTypes = require('prop-types');
 const CommonModal = require('../common-modal/common-modal.jsx');
-const IntegrationWizardStepOne = require('../team-integration/integration-wizard-step-one.jsx');
-const IntegrationWizardStepTwo = require('../team-integration/integration-wizard-step-two.jsx');
-const IntegrationWizardStepThree = require('../team-integration/integration-wizard-step-three.jsx');
-const IntegrationWizardStepFour = require('../team-integration/integration-wizard-step-four.jsx');
+const WizardStepOne = require('./wizard-step-one.jsx');
+const WizardStepTwo = require('./wizard-step-two.jsx');
+const WizardStepThree = require('./wizard-step-three.jsx');
+const WizardStepFour = require('./wizard-step-four.jsx');
 const Wizard = require('../wizard/wizard.jsx');
 const InlineSVG = require('svg-inline-react');
 const confirmIcon = require('../../../img/Att-icons/att-icons_confirm.svg');
@@ -61,10 +61,10 @@ class TeamIntegration extends React.Component {
           <Wizard
             onClose={this.hide}
           >
-            <IntegrationWizardStepOne page={1} tools={this.props.tools} />
-            <IntegrationWizardStepTwo page={2} tools={this.props.tools} />
-            <IntegrationWizardStepThree page={3} tools={this.props.tools} />
-            <IntegrationWizardStepFour page={4} tools={this.props.tools} />
+            <WizardStepOne page={1} tools={this.props.tools} />
+            <WizardStepTwo page={2} tools={this.props.tools} />
+            <WizardStepThree page={3} tools={this.props.tools} />
+            <WizardStepFour page={4} tools={this.props.tools} />
           </Wizard>
         </CommonModal>
       </div>
@@ -82,11 +82,7 @@ TeamIntegration.propTypes = {
 };
 
 TeamIntegration.defaultProps = {
-  tools: {
-    toolId: '',
-    toolName: '',
-    servers: [],
-  },
+  tools: [],
   showAllTools: () => {},
 };
 

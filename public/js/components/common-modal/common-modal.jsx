@@ -4,7 +4,7 @@ const PropTypes = require('prop-types');
 const Modal = require('react-overlays').Modal;
 const InlineSVG = require('svg-inline-react');
 const closeIcon = require('../../../img/Att-icons/att-icons-close.svg');
-const uniqueID = require('../../util/uniqueID.js');
+const uniqueID = require('../../util/uniqueID');
 
 
 const CommonModal = (props) => {

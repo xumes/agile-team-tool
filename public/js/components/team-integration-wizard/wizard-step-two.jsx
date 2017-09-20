@@ -2,7 +2,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 
 
-const IntegrationWizardStepTwo = (props) => {
+const WizardStepTwo = (props) => {
   const { data } = props;
   data.type = 'RTC';
 
@@ -47,16 +47,16 @@ const IntegrationWizardStepTwo = (props) => {
   );
 };
 
-IntegrationWizardStepTwo.propTypes = {
+WizardStepTwo.propTypes = {
   data: PropTypes.shape({
     type: PropTypes.string,
   }),
 };
 
-IntegrationWizardStepTwo.defaultProps = {
+WizardStepTwo.defaultProps = {
   data: {
     type: '',
   },
 };
 
-module.exports = IntegrationWizardStepTwo;
+module.exports = WizardStepTwo;
