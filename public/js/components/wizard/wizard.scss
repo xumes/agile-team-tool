@@ -5,16 +5,20 @@
 .content-container {
   display: flex;
   flex-direction: column;
-}
-
-.footer-wizard {
-  margin-left: auto;
-}
-
-.u-mr-sm {
-  margin-right: 0.5em;
+  height: 100%;
 }
 
 .content {
   margin: 3.2em;
+  height: 70%;
+}
+
+.footer-wizard {
+  margin-left: auto;
+  margin-bottom: auto;
+  margin-right: 2em;
+}
+
+.u-mr-sm {
+  margin-right: 0.5em;
 }

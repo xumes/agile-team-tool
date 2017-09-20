@@ -1,4 +1,4 @@
-require('./team-integration.scss');
+require('./team-integration-wizard.scss');
 const React = require('react');
 const PropTypes = require('prop-types');
 const CommonModal = require('../common-modal/common-modal.jsx');
@@ -23,6 +23,7 @@ class TeamIntegration extends React.Component {
     this.props = props;
     this.show = this.show.bind(this);
     this.hide = this.hide.bind(this);
+    this.save = this.save.bind(this);
   }
 
   show() {
@@ -37,7 +38,76 @@ class TeamIntegration extends React.Component {
     });
   }
 
+  save() {
+    this.setState({
+      showModal: false,
+    }, () => {
+      console.log('saved!');
+    });
+  }
+
   render() {
+    this.integration = {
+      type: '',
+    };
+
+    const pageOneOptions = {
+      btnCancel: {
+        order: 1,
+      },
+      btnPrevious: {
+        hide: true,
+      },
+      btnNext: {
+        order: 2,
+      },
+    };
+
+    const pageTwoOptions = {
+      btnCancel: {
+        hide: true,
+      },
+      btnPrevious: {
+        order: 1,
+      },
+      btnNext: {
+        order: 2,
+      },
+    };
+
+    const pageThreeOptions = {
+      btnCancel: {
+        hide: true,
+      },
+      btnPrevious: {
+        order: 1,
+      },
+      btnNext: {
+        order: 2,
+        label: 'Preview',
+      },
+    };
+
+    const pageFourOptions = {
+      btnCancel: {
+        order: 1,
+      },
+      btnPrevious: {
+        hide: true,
+      },
+      btnNext: {
+        hide: true,
+      },
+      btnSave: {
+        id: 'btnSave',
+        label: 'Save',
+        class: 'ibm-btn-pri ibm-btn-small ibm-btn-blue-50 u-mr-sm',
+        onClick: this.save,
+        hide: false,
+        order: 2,
+      },
+    };
+
     return (
       <div className="att-hti">
         <div
@@ -55,17 +125,15 @@ class TeamIntegration extends React.Component {
         </div>
 
         <CommonModal
-          heading="Integration"
+          heading="Integrate with RTC"
           show={this.state.showModal}
           onHide={this.hide}
         >
-          <Wizard
-            onClose={this.hide}
-          >
-            <WizardStepOne page={1} tools={this.props.tools} />
-            <WizardStepTwo page={2} tools={this.props.tools} />
-            <WizardStepThree page={3} tools={this.props.tools} />
-            <WizardStepFour page={4} tools={this.props.tools} />
+          <Wizard onClose={this.hide} navButtons={this.navButtons}>
+            <WizardStepOne page="1" options={pageOneOptions} tools={this.props.tools} />
+            <WizardStepTwo page="2" options={pageTwoOptions} tools={this.props.tools} />
+            <WizardStepThree page="3" options={pageThreeOptions} />
+            <WizardStepFour page="4" options={pageFourOptions} />
           </Wizard>
         </CommonModal>
       </div>
