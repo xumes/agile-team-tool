@@ -16,7 +16,7 @@ const WizardStepTwo = props => (
       <option value="Option 3">Option 3</option>
     </select>
     <span className="att-integration__label">
-      {props.tools[0].toolName} Server
+      {props.integration.server} Server
     </span>
     <select className="att-integration__dropdown">
       <option value="Option 1">Option 1</option>
@@ -24,7 +24,7 @@ const WizardStepTwo = props => (
       <option value="Option 3">Option 3</option>
     </select>
     <span className="att-integration__label">
-      {props.tools[0].toolName} Project Area
+      {props.project.name} Project Area
     </span>
     <select className="att-integration__dropdown">
       <option value="Option 1">Option 1</option>
@@ -40,10 +40,22 @@ WizardStepTwo.propTypes = {
     toolName: PropTypes.string,
     servers: PropTypes.arrayOf(PropTypes.string),
   })),
+  integration: PropTypes.shape({
+    id: PropTypes.number,
+    toolId: PropTypes.string,
+    server: PropTypes.string,
+    projectArea: PropTypes.string,
+  }),
+  project: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+  }),
 };
 
 WizardStepTwo.defaultProps = {
   tools: [],
+  integration: {},
+  project: {},
 };
 
 module.exports = WizardStepTwo;

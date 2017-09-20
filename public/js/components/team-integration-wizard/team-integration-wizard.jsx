@@ -14,8 +14,10 @@ class TeamIntegration extends React.Component {
   constructor(props) {
     super(props);
 
-    if (props.tools) props.showAllTools();
+    if (props.tools) props.loadTools();
     if (props.integration) props.loadIntegration();
+    if (props.team) props.loadTeam();
+    if (props.project) props.loadProject();
 
     this.state = {
       showModal: false,
@@ -137,7 +139,13 @@ class TeamIntegration extends React.Component {
               tools={this.props.tools}
               integration={this.props.integration}
             />
-            <WizardStepTwo page="2" options={pageTwoOptions} tools={this.props.tools} />
+            <WizardStepTwo
+              page="2"
+              options={pageTwoOptions}
+              tools={this.props.tools}
+              team={this.props.team}
+              project={this.props.project}
+            />
             <WizardStepThree page="3" options={pageThreeOptions} />
             <WizardStepFour page="4" options={pageFourOptions} />
           </Wizard>
@@ -157,18 +165,31 @@ TeamIntegration.propTypes = {
     id: PropTypes.number,
     toolId: PropTypes.string,
     server: PropTypes.string,
-    teamName: PropTypes.string,
     projectArea: PropTypes.string,
   }),
-  showAllTools: PropTypes.func,
+  team: PropTypes.shape({
+    name: PropTypes.string,
+    type: PropTypes.string,
+  }),
+  project: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+  }),
+  loadTools: PropTypes.func,
   loadIntegration: PropTypes.func,
+  loadTeam: PropTypes.func,
+  loadProject: PropTypes.func,
 };
 
 TeamIntegration.defaultProps = {
   tools: [],
   integration: {},
-  showAllTools: () => {},
+  team: {},
+  project: {},
+  loadTools: () => {},
   loadIntegration: () => {},
+  loadTeam: () => {},
+  loadProject: () => {},
 };
 
 

@@ -10,11 +10,20 @@ const REMOVE_METRIC = 'REMOVE_METRIC';
 
 // TODO: replace default values with '' when APIs are ready
 const initialState = {
-  id: 0,
+  id: 1,
   toolId: 'RTC',
   server: 'igartc01.swg.usma.ibm.com',
-  teamName: 'JC\'s Dragon Slayers',
-  projectArea: 'Seven Kingdoms',
+  projectId: '_4uZ-oIznEeeXUay1vBusKg',
+  metrics: [
+    { configType: 'defectTypeId', values: ['com.ibm.team.workitem.workitemType.defect'] },
+    { configType: 'defectInProgressStates', values: ['In Progress', 'Verified'] },
+    { configType: 'defectResolvedStates', values: ['Resolved'] },
+    { configType: 'storyTypeId', values: ['com.ibm.team.apt.workItemType.story'] },
+    { configType: 'storyPointsId', values: ['com.ibm.team.apt.attribute.complexity'] },
+    { configType: 'storyInProgressStates', values: ['In Progress', 'In Review'] },
+    { configType: 'storyResolvedStates', values: ['Verified', 'Done'] },
+    { configType: 'iterationPattern', values: ['Sprint %'] },
+  ],
 };
 
 // actions

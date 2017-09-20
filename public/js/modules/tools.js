@@ -15,7 +15,7 @@ const initialState = [
 ];
 
 // actions
-const showAllTools = () => ({
+const loadTools = () => ({
   type: SHOW_ALL,
   payload: {
     request: { url: '/integrations/tools' },
@@ -41,6 +41,6 @@ const reducer = (state = initialState, action) => {
 
 module.exports = {
   reducer,
-  showAllTools,
+  loadTools,
   showRTC,
 };

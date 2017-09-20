@@ -10,11 +10,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         {
           name: action.name,
-          role: action.role,
-          allocation: action.allocation,
-          userId: action.userId,
-          email: action.email,
-          workTime: action.workTime,
+          type: action.type,
         },
       ];
     case REMOVE_TEAM:
@@ -24,4 +20,6 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-module.exports = reducer;
+module.exports = {
+  reducer,
+};
