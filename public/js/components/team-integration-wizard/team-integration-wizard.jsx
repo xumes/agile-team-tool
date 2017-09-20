@@ -20,6 +20,7 @@ class TeamIntegration extends React.Component {
       showModal: false,
     };
 
+    this.props = props;
     this.show = this.show.bind(this);
     this.hide = this.hide.bind(this);
   }

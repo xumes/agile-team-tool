@@ -16,7 +16,7 @@ const WizardStepOne = props => (
         />
       </div>
       <div className="att-integration__article__text">
-        <h2 className="att-integration__heading">{props.tools[0].toolName}</h2>
+        <h2 className="att-integration__heading">{props.tools[0].toolId}</h2>
         <p>
           Are you spending time entering agile metrics manually into
           the Agile Team Tool? This integration will automate the key

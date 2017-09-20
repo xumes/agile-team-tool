@@ -1,16 +1,16 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const IntegrationWizardStepOne = require('../../integration-wizard-step-one.jsx');
+const WizardStepOne = require('../../wizard-step-one.jsx');
 const ReactShallowRenderer = require('react-test-renderer/shallow');
 const _ = require('lodash');
 
 // todo: expand on this once we get better at testing react components
-describe('<IntegrationWizardStepOne />', () => {
+describe('<WizardStepOne />', () => {
   let comp;
 
   beforeAll(() => {
     const renderer = new ReactShallowRenderer();
-    renderer.render(<IntegrationWizardStepOne />);
+    renderer.render(<WizardStepOne />);
 
     comp = renderer.getRenderOutput();
   });
@@ -186,10 +186,10 @@ describe('<IntegrationWizardStepOne />', () => {
     _.forEach(propTypes, (value, key) => {
       it(`\`${key}\` is set properly`, () => {
         if (typeof propTypes[key] === 'function') {
-          expect(PropTypes.checkPropTypes(IntegrationWizardStepOne.propTypes[key]))
+          expect(PropTypes.checkPropTypes(WizardStepOne.propTypes[key]))
             .toEqual(PropTypes.checkPropTypes(value));
         } else {
-          expect(IntegrationWizardStepOne.propTypes[key])
+          expect(WizardStepOne.propTypes[key])
             .toEqual(value);
         }
       });
@@ -205,7 +205,7 @@ describe('<IntegrationWizardStepOne />', () => {
 
     _.forEach(defaultProps, (value, key) => {
       it(`\`${key}\` is set properly`, () => {
-        expect(IntegrationWizardStepOne.defaultProps[key])
+        expect(WizardStepOne.defaultProps[key])
           .toEqual(value);
       });
     });
