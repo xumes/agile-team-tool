@@ -9,7 +9,7 @@ const IntegrationWizardStepFour = (props) => {
   return (
     <div className="att-integration">
       <h2 className="att-integration__heading">
-        4 of 4: Preview Calculations
+        Step 4 of 4: Preview your results
       </h2>
       <ul className="att-integration__unordered-list">
         <li>Velocity</li>

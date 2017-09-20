@@ -56,17 +56,22 @@ class HomeTeamIntegration extends React.Component {
         </div>
 
         <CommonModal
-          heading="Integration"
+          heading="Integrate with RTC"
           show={this.state.showModal}
           onHide={this.hide}
         >
           <Wizard
             onClose={this.hide}
           >
-            <IntegrationWizardStepOne data={this.integration} page={1} />
-            <IntegrationWizardStepTwo data={this.integration} page={2} />
-            <IntegrationWizardStepThree data={this.integration} page={3} />
-            <IntegrationWizardStepFour data={this.integration} page={4} />
+            <IntegrationWizardStepOne data={this.integration} page={1} previousLabel="Cancel" />
+            <IntegrationWizardStepTwo data={this.integration} page={2} previousLabel="Previous" />
+            <IntegrationWizardStepThree data={this.integration} page={3} nextLabel="Preview" />
+            <IntegrationWizardStepFour
+              data={this.integration}
+              page={4}
+              previousLabel="Cancel"
+              nextLabel="Save"
+            />
           </Wizard>
         </CommonModal>
       </div>

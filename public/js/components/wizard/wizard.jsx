@@ -7,8 +7,8 @@ class Wizard extends React.Component {
     super(props);
     this.state = {
       page: 1,
-      hideBtnPrevious: true,
-      hideBtnNext: false,
+      previousLabel: 'Previous',
+      nextLabel: 'Next',
     };
     this.nextPage = this.nextPage.bind(this);
     this.previousPage = this.previousPage.bind(this);
@@ -28,19 +28,16 @@ class Wizard extends React.Component {
   render() {
     const navButtons = [
       {
-        id: 'btnPrevious',
-        label: 'Previous',
+        label: this.state.previousLabel,
         class: 'ibm-btn-pri ibm-btn-small ibm-btn-blue-50 u-mr-sm',
         onClick: this.previousPage,
       },
       {
-        id: 'btnNext',
-        label: 'Next',
+        label: this.state.nextLabel,
         class: 'ibm-btn-pri ibm-btn-small ibm-btn-blue-50 u-mr-sm',
         onClick: this.nextPage,
       },
       {
-        id: 'btnCancel',
         label: 'Cancel',
         class: 'ibm-btn-sec ibm-btn-small ibm-btn-blue-50 u-mr-sm',
         onClick: this.close,
@@ -50,7 +47,6 @@ class Wizard extends React.Component {
       .map(button =>
         (<button
           className={button.class}
-          id={button.id}
           onClick={button.onClick}
         >{button.label}</button>),
       );

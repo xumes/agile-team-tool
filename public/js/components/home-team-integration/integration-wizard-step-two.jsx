@@ -9,7 +9,7 @@ const IntegrationWizardStepTwo = (props) => {
   return (
     <div className="att-integration">
       <h2 className="att-integration__heading">
-        2 of 4: Configure Team
+        Step 2 of 4: Locate your {data.type} team
       </h2>
       <span className="att-integration__label">
         Server

@@ -9,7 +9,7 @@ const IntegrationWizardStepThree = (props) => {
   return (
     <div className="att-integration">
       <h2 className="att-integration__heading">
-        3 of 4: Configure Metrics
+        Step 3 of 4: Configure your metrics
       </h2>
       <ul className="att-integration__unordered-list">
         <li>Velocity</li>

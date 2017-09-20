@@ -9,7 +9,7 @@ const IntegrationWizardStepOne = (props) => {
   return (
     <div className="att-integration">
       <h2 className="att-integration__heading">
-        1 of 4: RTC Integration Overview
+        Step 1 of 4: {data.type} Integration Overview
       </h2>
       <article className="att-integration__article">
         <div className="att-integration__article__image">
