@@ -20,6 +20,7 @@ class HomeTeamIntegration extends React.Component {
 
     this.show = this.show.bind(this);
     this.hide = this.hide.bind(this);
+    this.save = this.save.bind(this);
   }
 
   show() {
@@ -31,6 +32,14 @@ class HomeTeamIntegration extends React.Component {
   hide() {
     this.setState({
       showModal: false,
+    });
+  }
+
+  save() {
+    this.setState({
+      showModal: false,
+    }, () => {
+      console.log('saved!');
     });
   }
 
@@ -84,9 +93,15 @@ class HomeTeamIntegration extends React.Component {
         hide: true,
       },
       btnNext: {
-        order: 2,
+        hide: true,
+      },
+      btnSave: {
+        id: 'btnSave',
         label: 'Save',
-        onClick: 'this.save',
+        class: 'ibm-btn-pri ibm-btn-small ibm-btn-blue-50 u-mr-sm',
+        onClick: this.save,
+        hide: false,
+        order: 2,
       },
     };
 

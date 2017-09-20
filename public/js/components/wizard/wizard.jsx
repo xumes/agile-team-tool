@@ -66,7 +66,9 @@ class Wizard extends React.Component {
     const options = displayedChild.props.options;
     if (options) {
       //  applying custom options for buttons
-      const buttons = navButtons.map((button) => {
+      const newButtons = _.reject(options, opt => opt.id === this.navButtons[opt.id]);
+      const unionButtons = _.union(newButtons, navButtons);
+      const buttons = unionButtons.map((button) => {
         const option = options[button.id];
         return _.assign({}, button, option);
       });

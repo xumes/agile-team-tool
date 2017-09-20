@@ -1,3 +1,4 @@
+@import './../../../css/variables.scss';
 /*------------------------------------*\
   #HOME-TEAM-INTEGRATION
 \*------------------------------------*/
@@ -29,7 +30,9 @@
       @include normalFont();
 
       &__heading {
-        @include headingFont();
+        @include normalFont();
+        font-style: italic;
+        color: $wizard-header;
       }
 
       &__article {

@@ -20,7 +20,6 @@ const IntegrationWizardStepOne = (props) => {
           />
         </div>
         <div className="att-integration__article__text">
-          <h2 className="att-integration__heading">{data.type}</h2>
           <p>
             Connect Rational Team Connect (RTC) with Agile Team Tool (ATT)
             to automatically move your agile metrics data over every
