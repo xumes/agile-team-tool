@@ -90,10 +90,10 @@ class TeamIntegration extends React.Component {
 
     const pageFourOptions = {
       btnCancel: {
-        order: 1,
+        hide: true,
       },
       btnPrevious: {
-        hide: true,
+        order: 1,
       },
       btnNext: {
         hide: true,

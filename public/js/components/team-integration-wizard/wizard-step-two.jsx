@@ -4,11 +4,11 @@ const PropTypes = require('prop-types');
 
 const WizardStepTwo = props => (
   <div className="att-integration">
-    <h2 className="att-integration__heading">
-      2 of 4: Configure Team
+    <h2 className="att-integration__heading-step">
+      Step 2 of 4: Locate your {props.tools[0].toolName} team
     </h2>
     <span className="att-integration__label">
-      Server
+      Your Agile Team Tool Squad
     </span>
     <select className="att-integration__dropdown">
       <option value="Option 1">Option 1</option>
@@ -16,7 +16,7 @@ const WizardStepTwo = props => (
       <option value="Option 3">Option 3</option>
     </select>
     <span className="att-integration__label">
-      {props.tools[0].toolId} Project Area
+      {props.tools[0].toolName} Server
     </span>
     <select className="att-integration__dropdown">
       <option value="Option 1">Option 1</option>
@@ -24,15 +24,7 @@ const WizardStepTwo = props => (
       <option value="Option 3">Option 3</option>
     </select>
     <span className="att-integration__label">
-      ATT Team
-    </span>
-    <select className="att-integration__dropdown">
-      <option value="Option 1">Option 1</option>
-      <option value="Option 2">Option 2</option>
-      <option value="Option 3">Option 3</option>
-    </select>
-    <span className="att-integration__label">
-      Iterations
+      {props.tools[0].toolName} Project Area
     </span>
     <select className="att-integration__dropdown">
       <option value="Option 1">Option 1</option>

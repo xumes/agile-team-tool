@@ -4,8 +4,8 @@ const PropTypes = require('prop-types');
 
 const WizardStepOne = props => (
   <div className="att-integration">
-    <h2 className="att-integration__heading">
-      1 of 4: RTC Integration Overview
+    <h2 className="att-integration__heading-step">
+      Step 1 of 4: {props.tools[0].toolName} Integration Overview
     </h2>
     <article className="att-integration__article">
       <div className="att-integration__article__image">
@@ -16,18 +16,18 @@ const WizardStepOne = props => (
         />
       </div>
       <div className="att-integration__article__text">
-        <h2 className="att-integration__heading">{props.tools[0].toolName}</h2>
+        <h3 className="att-integration__heading">Integrate {props.tools[0].toolName} with ATT</h3>
         <p>
-          Are you spending time entering agile metrics manually into
-          the Agile Team Tool? This integration will automate the key
-          agile metrics including:
+          Connect Rational Team Connect (RTC) with Agile Team Tool (ATT)
+          to automatically move your agile metrics data over every
+          iteration. Save time and energy by avoiding extra spreadsheets to
+          keep track of this information.
         </p>
-        <ul className="att-integration__unordered-list">
-          <li>Velocity</li>
-          <li>Throughput</li>
-          <li>Time in WIP</li>
-          <li>Time in Funnel</li>
-        </ul>
+        <p>
+          This integration automates bringing over key agile metrics
+          including: Velocity, THroughput, Time in WIP, Time in
+          Backlog, Deployments, and Defects.
+        </p>
       </div>
     </article>
   </div>

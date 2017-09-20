@@ -31,8 +31,14 @@
 
       &__heading {
         @include normalFont();
-        font-style: italic;
-        color: $wizard-header;
+        font-weight: bold;
+        padding-bottom: 0px;
+
+        &-step {
+          @include normalFont();
+          font-style: italic;
+          color: $wizard-header;
+        }
       }
 
       &__article {
