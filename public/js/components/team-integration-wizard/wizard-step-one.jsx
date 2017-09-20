@@ -4,8 +4,9 @@ const PropTypes = require('prop-types');
 
 const WizardStepOne = props => (
   <div className="att-integration">
-    <h2 className="att-integration__heading-step">
-      Step 1 of 4: {props.tools[0].toolName} Integration Overview
+    {props.integration.teamName}
+    <h2 className="att-integration__heading">
+      1 of 4: RTC Integration Overview
     </h2>
     <article className="att-integration__article">
       <div className="att-integration__article__image">
@@ -39,10 +40,22 @@ WizardStepOne.propTypes = {
     toolName: PropTypes.string,
     servers: PropTypes.arrayOf(PropTypes.string),
   })),
+  integration: PropTypes.shape({
+    id: PropTypes.number,
+    toolId: PropTypes.string,
+    server: PropTypes.string,
+    teamName: PropTypes.string,
+    projectArea: PropTypes.string,
+  }),
 };
 
 WizardStepOne.defaultProps = {
-  tools: [],
+  tools: [{
+    toolId: 0,
+    toolName: '',
+    servers: [],
+  }],
+  integration: {},
 };
 
 module.exports = WizardStepOne;

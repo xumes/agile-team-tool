@@ -1,21 +1,21 @@
-const React = require('react');
 const Redux = require('react-redux');
 const TeamIntegrationWizard = require('./../../components').TeamIntegrationWizard;
-const Tools = require('./tools.jsx');
-const actions = require('./../../modules/integration');
+const toolActions = require('./../../modules/tools');
+const integrationActions = require('./../../modules/integration');
 
-const mapStateToProps = state => ({ teamIntegration: state.teamIntegration });
-const mapDispatchToProps = dispatch => ({ onSubmit: () => dispatch(actions.loadIntegration()) });
+const mapStateToProps = state => ({
+  integration: state.integration,
+  tools: state.tools,
+});
 
-Redux.connect(
+const mapDispatchToProps = dispatch => ({
+  loadIntegration: () => dispatch(integrationActions.loadIntegration()),
+  showAllTools: () => dispatch(toolActions.showRTC()),
+});
+
+const Tools = Redux.connect(
   mapStateToProps,
   mapDispatchToProps,
 )(TeamIntegrationWizard);
 
-class TeamIntegration extends React.Component {
-  render() {
-    return (<Tools />);
-  }
-}
-
-module.exports = TeamIntegration;
+module.exports = Tools;

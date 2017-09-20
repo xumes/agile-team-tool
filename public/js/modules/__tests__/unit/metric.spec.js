@@ -2,7 +2,7 @@ import metrics from './../../metrics';
 
 // TODO: need to test for the dispatched action along with a state,
 // rather than testing the reducer by itself.
-xdescribe('Reducer: metric', () => {
+describe('Reducer: metric', () => {
   const mockMetric = {
     metricType: 'throughput',
     value: 100,

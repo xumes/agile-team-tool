@@ -15,6 +15,7 @@ class TeamIntegration extends React.Component {
     super(props);
 
     if (props.tools) props.showAllTools();
+    if (props.integration) props.loadIntegration();
 
     this.state = {
       showModal: false,
@@ -130,7 +131,12 @@ class TeamIntegration extends React.Component {
           onHide={this.hide}
         >
           <Wizard onClose={this.hide} navButtons={this.navButtons}>
-            <WizardStepOne page="1" options={pageOneOptions} tools={this.props.tools} />
+            <WizardStepOne
+              page="1"
+              options={pageOneOptions}
+              tools={this.props.tools}
+              integration={this.props.integration}
+            />
             <WizardStepTwo page="2" options={pageTwoOptions} tools={this.props.tools} />
             <WizardStepThree page="3" options={pageThreeOptions} />
             <WizardStepFour page="4" options={pageFourOptions} />
@@ -147,12 +153,22 @@ TeamIntegration.propTypes = {
     toolName: PropTypes.string,
     servers: PropTypes.array,
   })),
+  integration: PropTypes.shape({
+    id: PropTypes.number,
+    toolId: PropTypes.string,
+    server: PropTypes.string,
+    teamName: PropTypes.string,
+    projectArea: PropTypes.string,
+  }),
   showAllTools: PropTypes.func,
+  loadIntegration: PropTypes.func,
 };
 
 TeamIntegration.defaultProps = {
   tools: [],
+  integration: {},
   showAllTools: () => {},
+  loadIntegration: () => {},
 };
 
 

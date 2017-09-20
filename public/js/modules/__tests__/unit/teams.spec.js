@@ -2,7 +2,7 @@ import teams from './../../teams';
 
 // TODO: need to test for the dispatched action along with a state,
 // rather than testing the reducer by itself.
-xdescribe('Reducer: teams', () => {
+describe('Reducer: teams', () => {
   const teamsList = [];
   const mockTeam = {
     name: 'My Team',

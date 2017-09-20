@@ -178,9 +178,11 @@ describe('<WizardStepOne />', () => {
 
   describe('propTypes', () => {
     const propTypes = {
-      data: PropTypes.shape({
-        tool: PropTypes.string,
-      }),
+      tools: PropTypes.arrayOf(PropTypes.shape({
+        toolId: PropTypes.string,
+        toolName: PropTypes.string,
+        servers: PropTypes.arrayOf(PropTypes.string),
+      })),
     };
 
     _.forEach(propTypes, (value, key) => {
@@ -198,9 +200,11 @@ describe('<WizardStepOne />', () => {
 
   describe('defaultProps', () => {
     const defaultProps = {
-      data: {
-        type: 'RTC',
-      },
+      tools: [{
+        toolId: 0,
+        toolName: '',
+        servers: [],
+      }],
     };
 
     _.forEach(defaultProps, (value, key) => {
