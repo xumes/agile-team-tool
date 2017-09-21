@@ -213,5 +213,10 @@
             color: $wizard-header;
           }
         }
+        
+        li.li-selected {
+          font-weight: bold;
+          color: $wizard-header;
+        }
       }
     }

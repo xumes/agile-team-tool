@@ -14,7 +14,15 @@ const types = {
       toolId: PropTypes.string,
       server: PropTypes.string,
       projectArea: PropTypes.string,
-      settings: PropTypes.object,
+      settings: PropTypes.shape({
+        defects: PropTypes.object,
+        velocity: PropTypes.object,
+        throughput: PropTypes.object,
+        wip: PropTypes.object,
+        backlog: PropTypes.object,
+        deployments: PropTypes.object,
+        iterationPattern: PropTypes.object,
+      }),
     }),
   }),
   projects: PropTypes.arrayOf(PropTypes.shape({
@@ -31,6 +39,7 @@ const defaults = {
     { toolId: '', toolName: '', servers: [] },
   ],
   integration: {},
+  settings: {},
   team: {},
   projects: [
     { projectId: '', projectName: '' },

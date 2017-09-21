@@ -151,6 +151,7 @@ class TeamIntegration extends React.Component {
               page="3"
               options={pageThreeOptions}
               tools={this.props.tools}
+              team={this.props.team}
             />
             <WizardStepFour
               page="4"
