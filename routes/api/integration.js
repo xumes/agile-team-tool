@@ -72,4 +72,45 @@ module.exports = function(app, includes) {
       });
     }
   });
+
+
+app.get('/api/integrations/tool/:toolId/server/:server/project/:projectId/types', function(req, res) {
+ return res.json({});
+});
+
+
+app.get('/api/integrations/tool/:toolId/server/:server/project/:projectId/states', function(req, res) {
+ return res.json({});
+});
+
+
+app.post('/api/teams/:teamId/integration/preview', function(req, res) {
+    return res.json({
+      velocity:
+        [
+          {storyPointsCommitted:0},
+          {storyPointsDelivered:0},
+          {delpoymentThisIteration:0},
+        ],
+        throughput: 
+        [
+          {storyCardsCommitted:0},
+          {storyCardsDelivered:0}
+        ],
+        timeInWip:0 ,
+        timeInFunnel: "",
+        defectsOpend: "",
+        defectsClosed: "",
+        deployments: "",
+        personDaysUnvailable: ""
+      });
+    
+});
+
 };
+
+
+
+
+
+

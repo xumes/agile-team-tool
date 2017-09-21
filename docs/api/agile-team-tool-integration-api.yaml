@@ -11,12 +11,13 @@ tags:
 schemes:
 - "http"
 paths:
-  /integrations:
+  
+  /integrations/tools:
     get:
       tags:
-      - "integrations"
-      summary: "Returns a list of supported integrations"
-      description: "Returned as an array"
+      - "Tools"
+      summary: "Get list of integrations"
+      description: "Retrieves a list of integrations and their supported servers"
       produces:
       - "application/json"
       responses:
@@ -24,56 +25,235 @@ paths:
           description: "successful"
           examples:
             application/json:
-              [
-                {
-                  tool: 'RTC',
-                  servers: [
-                    'https://igartc01.swg.usma.ibm.com/jazz/',
-                    'https://igartc02.swg.usma.ibm.com/jazz/',
-                    'https://igartc03.swg.usma.ibm.com/jazz/'
-                    ]
-                }  
-              ]
-    post:
+             tools:
+               - toolId: RTC
+                 toolName: Rational Team Concert (RTC)
+                 servers:
+                   - igartc01.swg.usma.ibm.com
+                   - igartc02.swg.usma.ibm.com
+                   - igartc03.swg.usma.ibm.com
+    
+                   
+  /integrations/tool/{toolId}/server/{server}/projects:
+    get:
       tags:
-      - "integrations"
-      summary: "Save integration settings between a team and a track and plan tool"
-      description: "Returned as an array"
+      - "Tools"
+      parameters:
+      - name: toolId
+        in: path
+        description: tool id passed in URI
+        required: true
+        type: string
+        format: string
+      - name: server
+        in: path
+        description: server passed in URI
+        required: true
+        type: string
+        format: string  
+      summary: "Get list of RTC project areas"
+      description: "Retrieves a list of project areas within a given RTC server"
       produces:
       - "application/json"
-      parameters:
-        - name: settings
-          in: body
-          description: JSON body of the project configuration
-          required: true
-          schema:
-            type: object
-            required:
-              - tool
-              - server
-              - teamId
-              - toolProjectId
-            properties:
-              tool:
-                type: string
-                example: 'RTC'
-              server:
-                type: string
-                example: 'https://igartc02.swg.usma.ibm.com/jazz/'
-              teamId:
-                type: string
-                example: '5858519ea0a583041f66f8fa'
-              toolProjectId:
-                type: string
-                example: 'Agile Team Tool'
       responses:
-        201:
-          description: "created"
+        200:
+          description: "successful"
           examples:
             application/json:
-              {
-                _id: "1aaf519ef1f283041ffffffb",
-                tool: "RTC",
-                toolProjectId: "Agile Team Tool",
-                teamId: "5858519ea0a583041f66f8fa"
-              }
+               projects:
+                - projectId: ''
+                  projectName: ''
+  /integrations/tool/{toolId}/server/{server}/project/{projectId}/types:
+    get:
+      tags:
+      - "Tools"
+      parameters:
+      - name: toolId
+        in: path
+        description: tool id passed in URI
+        required: true
+        type: string
+        format: string
+      - name: server
+        in: path
+        description: server passed in URI
+        required: true
+        type: string
+        format: string  
+      - name: projectId
+        in: path
+        description: RTC project area id
+        required: true
+        type: string
+        format: string    
+      summary: "Get list of RTC work item types"
+      description: "Retrieves a list of work item types within a given RTC project area"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful"
+          examples:
+            application/json:
+               projects:
+                - projectId: ''
+                  projectName: '' 
+  /integrations/tool/{toolId}/server/{server}/project/{projectId}/states:
+    get:
+      tags:
+      - "Tools"
+      parameters:
+      - name: toolId
+        in: path
+        description: tool id passed in URI
+        required: true
+        type: string
+        format: string
+      - name: server
+        in: path
+        description: server passed in URI
+        required: true
+        type: string
+        format: string  
+      - name: projectId
+        in: path
+        description: RTC project area id
+        required: true
+        type: string
+        format: string    
+      summary: "Get list of RTC work item states"
+      description: "Retrieves a list of workflow states for work items within a given RTC project area"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful"
+          examples:
+            application/json:
+              
+  /teams/{teamId}/integration:
+    get:
+      tags:
+      - "Tools"
+      parameters:
+      - name: teamId
+        in: path
+        description: tool id passed in URI
+        required: true
+        type: string
+        format: string
+      summary: "Read the integration configuration details for my ATT team"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful"
+          examples:
+            application/json:
+               toolId: RTC
+               server: igartc02...
+               settings:
+               projectId: ''
+               defectWorkItemTypes:
+                - com.ibm.rtc.Defect
+                - Bug
+               defectInProgressStates:
+                - Started
+                - Ready to Test
+               defectResolvedStates:
+                - Resolved
+                - Verified
+                - Done
+               storyWorkItemTypes:
+                - UserStory
+                - Story
+               storyPointsFieldId:
+                - estimate
+                - size
+               storyInProgressStates:
+                - In Progress
+                - In Review
+               storyResolvedStates:
+                - Verified
+                - Done
+               iterationPattern: Sprint %
+    post:
+      tags:
+      - "Tools"
+      parameters:
+      - name: teamId
+        in: path
+        description: tool id passed in URI
+        required: true
+        type: string
+        format: string
+      summary: "Save the integration configuration details for my ATT team"
+      description: "Retrieves a list of workflow states for work items within a given RTC project area"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful"
+          examples:
+            application/json:
+               toolId: RTC
+               server: igartc02...
+               settings:
+               projectId: ''
+               defectWorkItemTypes:
+                - com.ibm.rtc.Defect
+                - Bug
+               defectInProgressStates:
+                - Started
+                - Ready to Test
+               defectResolvedStates:
+                - Resolved
+                - Verified
+                - Done
+               storyWorkItemTypes:
+                - UserStory
+                - Story
+               storyPointsFieldId:
+                - estimate
+                - size
+               storyInProgressStates:
+                - In Progress
+                - In Review
+               storyResolvedStates:
+                - Verified
+                - Done
+               iterationPattern: Sprint %           
+  /teams/{teamId}/integration/preview:
+    post:
+      tags:
+      - "Tools"
+      parameters:
+      - name: teamId
+        in: path
+        description: tool id passed in URI
+        required: true
+        type: string
+        format: string
+      summary: "Preview results of a configuration"
+      description: "Show results of the metrics calculations for the given configuration. If the iteration pattern matches multiple iterations in the RTC project area, only process the most recently completed (max end date < today)"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful"
+          examples:
+            application/json:
+               velocity:
+                - storyPointsCommitted: 0
+                - storyPointsDelivered: 0
+                - delpoymentThisIteration: 0
+               throughput:
+                - storyCardsCommitted: 0
+                - storyCardsDelivered: 0
+               timeInWip: 0
+               timeInFunnel: '' 
+               defectsOpend: ''
+               defectsClosed: ''
+               deployments: ''
+               personDaysUnvailable: ''
