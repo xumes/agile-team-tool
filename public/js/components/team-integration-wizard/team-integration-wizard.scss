@@ -24,7 +24,11 @@
     }
     @mixin smallFont {
       font-size: 14px;
-      line-height: 1.5em;
+      line-height: 1.2em;
+    }
+    @mixin smallerFont {
+      font-size: 10px;
+      line-height: 1.2em;
     }
 
     $imageSize: 50px;
@@ -43,6 +47,49 @@
           color: $wizard-header;
           font-weight: bold;
           padding-bottom: 0px;
+        }
+      }
+
+      &__container {
+        @include smallFont();
+        margin-top: 1em;
+        
+        span {
+          display: block;
+          padding-top: 8px;
+          padding-bottom: 4px;
+        }
+        
+        select {
+          display: block;
+          margin-bottom: 15px;
+          width: 50%;
+        }
+      }
+      
+      &__preview {
+        @include smallFont();
+        margin: 1em 5em 0 5em;
+        padding: 0 3em 0 3em;
+        max-height: 230px;
+        overflow: scroll;
+      }
+      
+      &__configuration {
+        @include smallFont();
+        margin-top: 1em;
+        max-height: 230px;
+        display: flex;
+        flex-direction: row;
+        
+        &-menu {
+          max-width: 30%;
+          overflow: scroll;
+          border-right: 1px solid;
+        }
+        
+        &-display {
+          flex-grow: 1;
         }
       }
 
@@ -68,17 +115,6 @@
         }
       }
       
-      &__label {
-        display: block;
-        padding-top: 8px;
-      }
-      
-      &__dropdown {
-        display: block;
-        margin-bottom: 15px;
-        width: 50%;
-      }
-      
       &__paragraph,
       &__unordered-list {
         @include normalFont();
@@ -98,12 +134,31 @@
       }
       
       &__unstyled-list {
-        @include normalFont();
+        @include smallFont();
         list-style: none;
         padding-bottom: 3em;
         
+        &__bold {
+          font-weight: bold;
+        }
+        
         li {
-          padding: 1.3em 0 0 0;
+          padding: 0.9em 0 0.5em 0;
+          
+          span {
+            @include smallerFont();
+            font-weight: lighter;
+          }
+        }
+        
+        p {
+          @include smallFont();
+          padding-bottom: 0.4em;
+          
+          span {
+            color: $wizard-header;
+            float: right;
+          }
         }
       }
     }
