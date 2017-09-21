@@ -2,18 +2,18 @@ const Redux = require('react-redux');
 const TeamIntegrationWizard = require('./../../components').TeamIntegrationWizard;
 const toolActions = require('./../../modules/tools');
 const teamActions = require('./../../modules/team');
-const projectActions = require('./../../modules/project');
+const projectsActions = require('./../../modules/projects');
 
 const mapStateToProps = state => ({
-  tools: state.tools,
+  projects: state.projects,
   team: state.team,
-  project: state.project,
+  tools: state.tools,
 });
 
-const mapDispatchToProps = dispatch => ({  
-  loadTools: () => dispatch(toolActions.showRTC()),
+const mapDispatchToProps = dispatch => ({
+  loadTools: () => dispatch(toolActions.loadTools()),
   loadTeam: () => dispatch(teamActions.loadTeam()),
-  loadProject: () => dispatch(projectActions.loadProject()),
+  loadProjects: (toolId, server) => dispatch(projectsActions.loadProjects(toolId, server)),
 });
 
 const Tools = Redux.connect(

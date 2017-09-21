@@ -3,20 +3,20 @@ const Axios = require('axios');
 const AxiosMiddleWare = require('redux-axios-middleware').default;
 const ReduxDevTools = require('redux-devtools-extension');
 
-const tools = require('./modules/tools').reducer;
+const projects = require('./modules/projects').reducer;
 const team = require('./modules/team').reducer;
-const project = require('./modules/project').reducer;
+const tools = require('./modules/tools').reducer;
 
 const configureStore = function configureStore() {
   const instance = Axios.create({
-    baseURL: '/api',
+    baseURL: 'http://localhost:3000/api',
     responseType: 'json',
   });
 
   const reducers = Redux.combineReducers({
-    tools,
+    projects,
     team,
-    project,
+    tools,
   });
 
   return Redux.createStore(

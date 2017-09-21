@@ -1,8 +1,8 @@
-const LOAD_PROJECT = 'LOAD_TEAM';
+const LOAD_PROJECT = 'LOAD_PROJECT';
 
 const initialState = {
-  id: '_4uZ-oIznEeeXUay1vBusKg',
-  name: 'Seven Kingdoms',
+  id: '',
+  name: '',
 };
 
 const loadProject = project => ({ type: LOAD_PROJECT, project });

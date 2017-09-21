@@ -1,5 +1,5 @@
 const React = require('react');
-const PropTypes = require('prop-types');
+const propTypes = require('./prop-types');
 
 const WizardStepThree = props => (
   <div className="att-integration">
@@ -28,16 +28,7 @@ const WizardStepThree = props => (
   </div>
 );
 
-WizardStepThree.propTypes = {
-  tools: PropTypes.arrayOf(PropTypes.shape({
-    toolId: PropTypes.string,
-    toolName: PropTypes.string,
-    servers: PropTypes.arrayOf(PropTypes.string),
-  })),
-};
-
-WizardStepThree.defaultProps = {
-  tools: [],
-};
+WizardStepThree.propTypes = propTypes.types;
+WizardStepThree.defaultProps = propTypes.defaults;
 
 module.exports = WizardStepThree;

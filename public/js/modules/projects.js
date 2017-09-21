@@ -1,19 +1,28 @@
-const LOAD_PROJECT = 'LOAD_PROJECT';
+const LOAD_PROJECTS = 'LOAD_PROJECTS';
+const LOAD_PROJECTS_SUCCESS = 'LOAD_PROJECTS_SUCCESS';
+const LOAD_PROJECTS_FAIL = 'LOAD_PROJECTS_FAIL';
 
-const initialState = [
-  {
-    id: '_4uZ-oIznEeeXUay1vBusKg',
-    name: 'Seven Kingdoms',
+const initialState = [];
+
+// actions
+const loadProjects = (toolId, server) => ({
+  type: [LOAD_PROJECTS],
+  payload: {
+    request: { url: `/integrations/tool/${toolId}/server/${server}/projects` },
   },
-];
-
-const loadProject = project => ({ type: LOAD_PROJECT, project });
+});
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case LOAD_PROJECT:
-      return state[0]; // TODO: replace with line below
-      // return state.find(project => project.id === action.id);
+    case LOAD_PROJECTS:
+      return action.payload.request.data;
+
+    case LOAD_PROJECTS_SUCCESS:
+      return action.payload.data.projects;
+
+    case LOAD_PROJECTS_FAIL:
+      throw new Error(action.error.message);
+
     default:
       return state;
   }
@@ -21,5 +30,5 @@ const reducer = (state = initialState, action) => {
 
 module.exports = {
   reducer,
-  loadProject,
+  loadProjects,
 };
