@@ -46,6 +46,18 @@
         }
       }
 
+      &__container {
+        max-height: 200px;
+        overflow: scroll;
+        
+        &-preview {
+          margin: 0 5em 0 5em;
+          padding: 0 3em 0 3em;
+          max-height: 230px;
+          overflow: scroll;
+        }
+      }
+
       &__article {
         position: relative;
         min-height: $imageSize + (2 * $imagePad);
@@ -98,12 +110,28 @@
       }
       
       &__unstyled-list {
-        @include normalFont();
+        @include smallFont();
         list-style: none;
         padding-bottom: 3em;
         
         li {
-          padding: 1.3em 0 0 0;
+          font-weight: bold;
+          padding: 0.9em 0 0.5em 0;
+          
+          span {
+            @include smallFont();
+            font-weight: lighter;
+          }
+        }
+        
+        p {
+          @include smallFont();
+          padding-bottom: 0.3em;
+          
+          span {
+            color: $wizard-header;
+            float: right;
+          }
         }
       }
     }

@@ -154,7 +154,7 @@ class TeamIntegration extends React.Component {
             <WizardStepFour
               page="4"
               options={pageFourOptions}
-              integration={this.props.integration}
+              team={this.props.team}
             />
           </Wizard>
         </CommonModal>
