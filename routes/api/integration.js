@@ -58,7 +58,7 @@ module.exports = function(app, includes) {
 
   app.post('/api/teams/:teamId/integration', function(req, res) {
     if (_.isEmpty(req.params.teamId) ||
-      _.any(['projectId', 'ierationPattern',
+      _.any(['projectId', 'iterationPattern',
         'defectTypeId', 'defectInProgressStates', 'defectResolvedStates',
         'storyTypeId', 'storyPointsId', 'storyInProgressStates'], function(prop) {
         return _.has(req.body, prop);
@@ -78,28 +78,28 @@ module.exports = function(app, includes) {
   });
   app.post('/api/teams/:teamId/integration/preview', function(req, res) {
     return res.json({
-     velocity:
-     [
-      { storyPointsCommitted: 5},
-      { storyPointsDelivered: 2},
-     ],
-     throughput: 
-     [
-      { storyCardsCommitted: 2 },
-      { storyCardsDelivered: 1 },
-     ],
-     defects: [
-      { defectsStartBal: 0 },
-      { defectsOpened: 0 },
-      { defectsClosed: 0 },
-      { defectsEndBal: 0 }, 
-     ],
-     deployments: [],
-     wip: 0,
-     backlog: 0
+      velocity:
+      [
+        {storyPointsCommitted: 5},
+        {storyPointsDelivered: 2},
+      ],
+      throughput:
+      [
+        {storyCardsCommitted: 2},
+        {storyCardsDelivered: 1},
+      ],
+      defects: [
+        {defectsStartBal: 0},
+        {defectsOpened: 0},
+        {defectsClosed: 0},
+        {defectsEndBal: 0},
+      ],
+      deployments: [],
+      wip: 0,
+      backlog: 0
     });
   });
-}
+};
 
 
 
