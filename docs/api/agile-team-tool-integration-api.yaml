@@ -245,15 +245,16 @@ paths:
           examples:
             application/json:
                velocity:
-                - storyPointsCommitted: 0
-                - storyPointsDelivered: 0
-                - delpoymentThisIteration: 0
+                - storyPointsCommitted: 5 
+                - storyPointsDelivered: 2
                throughput:
-                - storyCardsCommitted: 0
-                - storyCardsDelivered: 0
-               timeInWip: 0
-               timeInFunnel: '' 
-               defectsOpend: ''
-               defectsClosed: ''
-               deployments: ''
-               personDaysUnvailable: ''
+                - storyCardsCommitted: 2
+                - storyCardsDelivered: 1
+               defects:
+                - defectsStartBal: 0
+                - defectsOpened: 0
+                - defectsClosed: 0
+                - defectsEndBal: 0
+               deployments: []
+               wip: 0
+               backlog: 0
