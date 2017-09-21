@@ -1,6 +1,6 @@
 const React = require('react');
-const PropTypes = require('prop-types');
 const _ = require('lodash');
+const propTypes = require('./prop-types');
 
 const WizardStepFour = (props) => {
   const settings = props.team.integration.settings;
@@ -61,29 +61,7 @@ const WizardStepFour = (props) => {
   );
 };
 
-WizardStepFour.propTypes = {
-  team: PropTypes.shape({
-    name: PropTypes.string,
-    type: PropTypes.string,
-    integration: PropTypes.shape({
-      toolId: PropTypes.string,
-      server: PropTypes.string,
-      projectId: PropTypes.string,
-      settings: PropTypes.arrayOf(PropTypes.shape({
-        defects: PropTypes.object,
-        velocity: PropTypes.object,
-        throughput: PropTypes.object,
-        wip: PropTypes.object,
-        backlog: PropTypes.object,
-        deployments: PropTypes.object,
-        iterationPattern: PropTypes.string,
-      })),
-    }),
-  }),
-};
-
-WizardStepFour.defaultProps = {
-  team: {},
-};
+WizardStepFour.propTypes = propTypes.types;
+WizardStepFour.defaultProps = propTypes.defaults;
 
 module.exports = WizardStepFour;

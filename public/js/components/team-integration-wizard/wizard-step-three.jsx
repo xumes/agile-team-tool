@@ -1,5 +1,5 @@
 const React = require('react');
-const PropTypes = require('prop-types');
+const propTypes = require('./prop-types');
 
 const WizardStepThree = props => (
   <div className="att-integration">
@@ -29,7 +29,11 @@ const WizardStepThree = props => (
         <div className="att-integration__configuration-display__subcontainer">
           <div>
             <label htmlFor="attribute">Attribute</label>
-            <p><input type="text" value="State" /></p>
+            <p><input
+              className="subcontainer-attribute"
+              type="text"
+              value="State"
+            /></p>
           </div>
           <div>
             <label htmlFor="value">Value</label>
@@ -41,7 +45,11 @@ const WizardStepThree = props => (
         <div className="att-integration__configuration-display__subcontainer">
           <div>
             <label htmlFor="attribute">Attribute</label>
-            <p><input type="text" value="State" /></p>
+            <p><input
+              className="subcontainer-attribute"
+              type="text"
+              value="State"
+            /></p>
           </div>
           <div>
             <label htmlFor="value">Value</label>
@@ -53,16 +61,7 @@ const WizardStepThree = props => (
   </div>
 );
 
-WizardStepThree.propTypes = {
-  tools: PropTypes.arrayOf(PropTypes.shape({
-    toolId: PropTypes.string,
-    toolName: PropTypes.string,
-    servers: PropTypes.arrayOf(PropTypes.string),
-  })),
-};
-
-WizardStepThree.defaultProps = {
-  tools: [],
-};
+WizardStepThree.propTypes = propTypes.types;
+WizardStepThree.defaultProps = propTypes.defaults;
 
 module.exports = WizardStepThree;

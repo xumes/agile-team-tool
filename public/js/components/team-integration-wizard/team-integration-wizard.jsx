@@ -1,6 +1,5 @@
 require('./team-integration-wizard.scss');
 const React = require('react');
-const PropTypes = require('prop-types');
 const CommonModal = require('../common-modal/common-modal.jsx');
 const WizardStepOne = require('./wizard-step-one.jsx');
 const WizardStepTwo = require('./wizard-step-two.jsx');
@@ -9,15 +8,18 @@ const WizardStepFour = require('./wizard-step-four.jsx');
 const Wizard = require('../wizard/wizard.jsx');
 const InlineSVG = require('svg-inline-react');
 const flowIcon = require('../../../img/Att-icons/att-icons_flow.svg');
+const propTypes = require('./prop-types');
 
 class TeamIntegration extends React.Component {
   constructor(props) {
     super(props);
 
-    if (props.tools) props.loadTools();
-    if (props.integration) props.loadIntegration();
-    if (props.team) props.loadTeam();
-    if (props.project) props.loadProject();
+    props.loadTools();
+    props.loadTeam();
+    props.loadProjects(
+      props.team.integration.toolId,
+      props.team.integration.server,
+    );
 
     this.state = {
       showModal: false,
@@ -142,9 +144,8 @@ class TeamIntegration extends React.Component {
               page="2"
               options={pageTwoOptions}
               tools={this.props.tools}
-              integration={this.props.integration}
               team={this.props.team}
-              project={this.props.project}
+              projects={this.props.projects}
             />
             <WizardStepThree
               page="3"
@@ -163,42 +164,7 @@ class TeamIntegration extends React.Component {
   }
 }
 
-TeamIntegration.propTypes = {
-  tools: PropTypes.arrayOf(PropTypes.shape({
-    toolId: PropTypes.string,
-    toolName: PropTypes.string,
-    servers: PropTypes.array,
-  })),
-  integration: PropTypes.shape({
-    id: PropTypes.number,
-    toolId: PropTypes.string,
-    server: PropTypes.string,
-    projectArea: PropTypes.string,
-  }),
-  team: PropTypes.shape({
-    name: PropTypes.string,
-    type: PropTypes.string,
-  }),
-  project: PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string,
-  }),
-  loadTools: PropTypes.func,
-  loadIntegration: PropTypes.func,
-  loadTeam: PropTypes.func,
-  loadProject: PropTypes.func,
-};
-
-TeamIntegration.defaultProps = {
-  tools: [],
-  integration: {},
-  team: {},
-  project: {},
-  loadTools: () => {},
-  loadIntegration: () => {},
-  loadTeam: () => {},
-  loadProject: () => {},
-};
-
+TeamIntegration.propTypes = propTypes.types;
+TeamIntegration.defaultProps = propTypes.defaults;
 
 module.exports = TeamIntegration;

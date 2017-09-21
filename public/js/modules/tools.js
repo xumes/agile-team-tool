@@ -1,22 +1,19 @@
 // action types
-const SHOW_ALL = 'SHOW_ALL';
+const LOAD_TOOLS = 'LOAD_TOOLS';
+const LOAD_TOOLS_SUCCESS = 'LOAD_TOOLS_SUCCESS';
+const LOAD_TOOLS_FAIL = 'LOAD_TOOLS_FAIL';
 const SHOW_RTC = 'SHOW_RTC';
 
 const initialState = [
   {
-    toolId: 'RTC',
-    toolName: 'Rational Team Concert',
-    servers: [
-      'igartc01.swg.usma.ibm.com',
-      'igartc02.swg.usma.ibm.com',
-      'igartc03.swg.usma.ibm.com',
-    ],
+    toolId: '',
+    toolName: '',
   },
 ];
 
 // actions
 const loadTools = () => ({
-  type: SHOW_ALL,
+  type: [LOAD_TOOLS],
   payload: {
     request: { url: '/integrations/tools' },
   },
@@ -28,8 +25,14 @@ const showRTC = () => ({
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case SHOW_ALL:
+    case LOAD_TOOLS:
       return action.payload.request.data;
+
+    case LOAD_TOOLS_SUCCESS:
+      return action.payload.data.tools;
+
+    case LOAD_TOOLS_FAIL:
+      throw new Error(action.error.message);
 
     case SHOW_RTC:
       return state;
