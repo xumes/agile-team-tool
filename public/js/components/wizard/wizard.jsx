@@ -90,11 +90,11 @@ class Wizard extends React.Component {
       );
 
     return (
-      <div className="content-container">
-        <div className="content">
+      <div className="att-wizard__content-container">
+        <div className="att-wizard__content">
           {displayedChild}
         </div>
-        <footer className="footer-wizard">
+        <footer className="att-wizard__footer">
           {listNavButtons}
         </footer>
       </div>

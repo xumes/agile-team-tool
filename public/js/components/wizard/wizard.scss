@@ -2,23 +2,23 @@
   # Wizard
 \*------------------------------------*/
 
-.content-container {
+.att-wizard__content-container {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-.content {
-  margin: 3.2em;
+.att-wizard__content {
+  margin: 3em 4.2em;
   height: 70%;
 }
 
-.footer-wizard {
+.att-wizard__footer {
   margin-left: auto;
   margin-bottom: auto;
   margin-right: 2em;
 }
 
 .u-mr-sm {
-  margin-right: 0.5em;
+  margin-right: 1em;
 }
