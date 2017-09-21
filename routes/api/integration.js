@@ -32,15 +32,25 @@ module.exports = function(app, includes) {
     return res.json({
       toolId: 'RTC',
       server: 'igartc02.swg.usma.ibm.com',
+      projectId: '_4uZ-oIznEeeXUay1vBusKg',
       settings: {
-        projectId: '_4uZ-oIznEeeXUay1vBusKg',
-        defectTypeId: ['com.ibm.team.workitem.workitemType.defect'],
-        defectInProgressStates: ['In Progress', 'Verified'],
-        defectResolvedStates: ['Resolved'],
-        storyTypeId: ['com.ibm.team.apt.workItemType.story'],
-        storyPointsId: 'com.ibm.team.apt.attribute.complexity',
-        storyInProgressStates: ['In Progress', 'In Review'],
-        storyResolvedStates: ['Verified', 'Done'],
+        defects: {
+          defectTypeId: ['com.ibm.team.workitem.workitemType.defect'],
+          defectInProgressStates: ['In Progress', 'Verified'],
+          defectResolvedStates: ['Resolved'],
+        },
+        velocity: {
+          storyTypeId: ['com.ibm.team.apt.workItemType.story'],
+          storyPointsId: 'com.ibm.team.apt.attribute.complexity',
+          storyInProgressStates: ['In Progress', 'In Review'],
+          storyResolvedStates: ['Verified', 'Done'],
+        },
+        throughput: {
+          storyTypeId: ['com.ibm.team.apt.workItemType.story'],
+          storyPointsId: ['com.ibm.team.apt.attribute.complexity'],
+          storyInProgressStates: ['In Progress', 'In Review'],
+          storyResolvedStates: ['Verified', 'Done'],
+        },
         iterationPattern: 'Sprint %',
       },
     });
