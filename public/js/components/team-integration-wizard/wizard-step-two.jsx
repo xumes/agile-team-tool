@@ -5,31 +5,25 @@ const PropTypes = require('prop-types');
 const WizardStepTwo = props => (
   <div className="att-integration">
     <h2 className="att-integration__heading-step">
-      Step 2 of 4: Locate your {props.tools[0].toolName} team
+      Step 2 of 4: Locate your {props.tools[0].toolId} team
     </h2>
     <span className="att-integration__label">
       Your Agile Team Tool Squad
     </span>
-    <select className="att-integration__dropdown">
-      <option value="Option 1">Option 1</option>
-      <option value="Option 2">Option 2</option>
-      <option value="Option 3">Option 3</option>
-    </select>
+    <textarea>
+      {props.team.name}
+    </textarea>
     <span className="att-integration__label">
-      {props.integration.server} Server
+      {props.tools[0].toolId} Server
     </span>
     <select className="att-integration__dropdown">
-      <option value="Option 1">Option 1</option>
-      <option value="Option 2">Option 2</option>
-      <option value="Option 3">Option 3</option>
+      <option selected="selected">{props.integration.server}</option>
     </select>
     <span className="att-integration__label">
-      {props.project.name} Project Area
+      {props.tools[0].toolId} Project Area
     </span>
     <select className="att-integration__dropdown">
-      <option value="Option 1">Option 1</option>
-      <option value="Option 2">Option 2</option>
-      <option value="Option 3">Option 3</option>
+      <option selected="selected">{props.project.name}</option>
     </select>
   </div>
 );
@@ -50,12 +44,17 @@ WizardStepTwo.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
   }),
+  team: PropTypes.shape({
+    name: PropTypes.string,
+    type: PropTypes.string,
+  }),
 };
 
 WizardStepTwo.defaultProps = {
   tools: [],
   integration: {},
   project: {},
+  team: {},
 };
 
 module.exports = WizardStepTwo;

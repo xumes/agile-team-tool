@@ -4,9 +4,8 @@ const PropTypes = require('prop-types');
 
 const WizardStepOne = props => (
   <div className="att-integration">
-    {props.integration.teamName}
-    <h2 className="att-integration__heading">
-      1 of 4: RTC Integration Overview
+    <h2 className="att-integration__heading-step">
+      Step 1 of 4: RTC Integration Overview
     </h2>
     <article className="att-integration__article">
       <div className="att-integration__article__image">
@@ -17,7 +16,7 @@ const WizardStepOne = props => (
         />
       </div>
       <div className="att-integration__article__text">
-        <h3 className="att-integration__heading">Integrate {props.tools[0].toolName} with ATT</h3>
+        <h3 className="att-integration__heading">Integrate {props.tools[0].toolId} with ATT</h3>
         <p>
           Connect Rational Team Connect (RTC) with Agile Team Tool (ATT)
           to automatically move your agile metrics data over every
@@ -40,13 +39,6 @@ WizardStepOne.propTypes = {
     toolName: PropTypes.string,
     servers: PropTypes.arrayOf(PropTypes.string),
   })),
-  integration: PropTypes.shape({
-    id: PropTypes.number,
-    toolId: PropTypes.string,
-    server: PropTypes.string,
-    teamName: PropTypes.string,
-    projectArea: PropTypes.string,
-  }),
 };
 
 WizardStepOne.defaultProps = {
@@ -55,7 +47,6 @@ WizardStepOne.defaultProps = {
     toolName: '',
     servers: [],
   }],
-  integration: {},
 };
 
 module.exports = WizardStepOne;

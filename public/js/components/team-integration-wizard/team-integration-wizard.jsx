@@ -137,12 +137,12 @@ class TeamIntegration extends React.Component {
               page="1"
               options={pageOneOptions}
               tools={this.props.tools}
-              integration={this.props.integration}
             />
             <WizardStepTwo
               page="2"
               options={pageTwoOptions}
               tools={this.props.tools}
+              integration={this.props.integration}
               team={this.props.team}
               project={this.props.project}
             />
