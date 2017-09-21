@@ -24,7 +24,11 @@
     }
     @mixin smallFont {
       font-size: 14px;
-      line-height: 1.5em;
+      line-height: 1.2em;
+    }
+    @mixin smallerFont {
+      font-size: 10px;
+      line-height: 1.2em;
     }
 
     $imageSize: 50px;
@@ -47,14 +51,28 @@
       }
 
       &__container {
-        max-height: 200px;
+        @include smallFont();
+        max-height: 250px;
         overflow: scroll;
+        margin-top: 1em;
         
         &-preview {
           margin: 0 5em 0 5em;
           padding: 0 3em 0 3em;
           max-height: 230px;
           overflow: scroll;
+        }
+        
+        span {
+          display: block;
+          padding-top: 8px;
+          padding-bottom: 4px;
+        }
+        
+        select {
+          display: block;
+          margin-bottom: 15px;
+          width: 50%;
         }
       }
 
@@ -80,17 +98,6 @@
         }
       }
       
-      &__label {
-        display: block;
-        padding-top: 8px;
-      }
-      
-      &__dropdown {
-        display: block;
-        margin-bottom: 15px;
-        width: 50%;
-      }
-      
       &__paragraph,
       &__unordered-list {
         @include normalFont();
@@ -114,19 +121,22 @@
         list-style: none;
         padding-bottom: 3em;
         
-        li {
+        &__bold {
           font-weight: bold;
+        }
+        
+        li {
           padding: 0.9em 0 0.5em 0;
           
           span {
-            @include smallFont();
+            @include smallerFont();
             font-weight: lighter;
           }
         }
         
         p {
           @include smallFont();
-          padding-bottom: 0.3em;
+          padding-bottom: 0.4em;
           
           span {
             color: $wizard-header;
