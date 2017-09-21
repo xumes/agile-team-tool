@@ -17,7 +17,7 @@ const WizardStepFour = (props) => {
         These results will be automatically populated in the
         Iteration Overview panel once you save the configuration.
       </p>
-      <div className="att-integration__container-preview">
+      <div className="att-integration__preview">
         <ul className="att-integration__unstyled-list">
           <li className="att-integration__unstyled-list__bold">
             Velocity

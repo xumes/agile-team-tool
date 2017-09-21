@@ -10,15 +10,20 @@ const WizardStepThree = props => (
       Enter the {props.tools[0].toolId} attributes you use
       to calculate your team&apos;s key agile metrics.
     </p>
-    <div className="att-integration__container">
-      <ul className="att-integration__unstyled-list">
-        <li>Velocity</li>
-        <li>Throughput</li>
-        <li>Time in Work In Progress (WIP)</li>
-        <li>Time in Backlog</li>
-        <li>Defects</li>
-        <li>Deployments</li>
-      </ul>
+    <div className="att-integration__configuration">
+      <div className="att-integration__configuration-menu">
+        <ul className="att-integration__unstyled-list">
+          <li>Velocity</li>
+          <li>Throughput</li>
+          <li>Time in Work In Progress (WIP)</li>
+          <li>Time in Backlog</li>
+          <li>Defects</li>
+          <li>Deployments</li>
+        </ul>
+      </div>
+      <div className="att-integration__configuration-display">
+        <p>hello</p>
+      </div>
     </div>
   </div>
 );
