@@ -22,6 +22,10 @@
       font-size: 18px;
       line-height: 1.5em;
     }
+    @mixin smallFont {
+      font-size: 14px;
+      line-height: 1.5em;
+    }
 
     $imageSize: 50px;
     $imagePad: 20px;
@@ -36,15 +40,16 @@
 
         &-step {
           @include normalFont();
-          font-style: italic;
           color: $wizard-header;
+          font-weight: bold;
+          padding-bottom: 0px;
         }
       }
 
       &__article {
         position: relative;
         min-height: $imageSize + (2 * $imagePad);
-        padding-top: 10px;
+        padding-top: 20px;
         @include normalFont();
 
         &__image {
@@ -65,7 +70,7 @@
       
       &__label {
         display: block;
-        padding-bottom: 5px; 
+        padding-top: 8px;
       }
       
       &__dropdown {
@@ -74,9 +79,13 @@
         width: 50%;
       }
       
-      p,
+      &__paragraph,
       &__unordered-list {
         @include normalFont();
+      }
+      
+      &__paragraph-step {
+        @include smallFont();
       }
 
       &__unordered-list {
@@ -85,6 +94,16 @@
 
         li {
           padding: 0;
+        }
+      }
+      
+      &__unstyled-list {
+        @include normalFont();
+        list-style: none;
+        padding-bottom: 3em;
+        
+        li {
+          padding: 1.3em 0 0 0;
         }
       }
     }

@@ -10,9 +10,9 @@ const WizardStepTwo = props => (
     <span className="att-integration__label">
       Your Agile Team Tool Squad
     </span>
-    <textarea>
-      {props.team.name}
-    </textarea>
+    <select className="att-integration__dropdown">
+      <option selected="selected">{props.team.name}</option>
+    </select>
     <span className="att-integration__label">
       {props.tools[0].toolId} Server
     </span>

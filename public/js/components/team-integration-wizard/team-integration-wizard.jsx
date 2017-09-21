@@ -146,8 +146,16 @@ class TeamIntegration extends React.Component {
               team={this.props.team}
               project={this.props.project}
             />
-            <WizardStepThree page="3" options={pageThreeOptions} />
-            <WizardStepFour page="4" options={pageFourOptions} />
+            <WizardStepThree
+              page="3"
+              options={pageThreeOptions}
+              tools={this.props.tools}
+            />
+            <WizardStepFour
+              page="4"
+              options={pageFourOptions}
+              integration={this.props.integration}
+            />
           </Wizard>
         </CommonModal>
       </div>

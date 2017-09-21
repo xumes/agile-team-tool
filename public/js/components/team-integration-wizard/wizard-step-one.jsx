@@ -17,13 +17,13 @@ const WizardStepOne = props => (
       </div>
       <div className="att-integration__article__text">
         <h3 className="att-integration__heading">Integrate {props.tools[0].toolId} with ATT</h3>
-        <p>
+        <p className="att-integration__paragraph">
           Connect Rational Team Connect (RTC) with Agile Team Tool (ATT)
           to automatically move your agile metrics data over every
           iteration. Save time and energy by avoiding extra spreadsheets to
           keep track of this information.
         </p>
-        <p>
+        <p className="att-integration__paragraph">
           This integration automates bringing over key agile metrics
           including: Velocity, THroughput, Time in WIP, Time in
           Backlog, Deployments, and Defects.
