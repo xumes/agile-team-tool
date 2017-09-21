@@ -1,8 +1,11 @@
+const integration = require('./integration');
+
 const LOAD_TEAM = 'LOAD_TEAM';
 
 const initialState = {
   name: 'JC\'s Dragon Slayers',
   type: '',
+  integration: integration.initialState,
 };
 
 const loadTeam = team => ({ type: LOAD_TEAM, team });

@@ -1,3 +1,7 @@
+// NOTE: Integration model is currently separated from the team model to mitigate the effect
+// of this new feature from the existing Team API model.
+// The plan moving forward is to make integration part of the team model.
+
 // action types
 const ADD_INTEGRATION = 'ADD_INTEGRATION';
 const LOAD_INTEGRATION = 'LOAD_INTEGRATION';
@@ -8,22 +12,42 @@ const UPDATE_PROJECT_AREA = 'UPDATE_PROJECT_AREA';
 const ADD_METRIC = 'ADD_METRIC';
 const REMOVE_METRIC = 'REMOVE_METRIC';
 
-// TODO: replace default values with '' when APIs are ready
 const initialState = {
-  id: 1,
   toolId: 'RTC',
-  server: 'igartc01.swg.usma.ibm.com',
+  server: 'igartc02.swg.usma.ibm.com',
   projectId: '_4uZ-oIznEeeXUay1vBusKg',
-  metrics: [
-    { configType: 'defectTypeId', values: ['com.ibm.team.workitem.workitemType.defect'] },
-    { configType: 'defectInProgressStates', values: ['In Progress', 'Verified'] },
-    { configType: 'defectResolvedStates', values: ['Resolved'] },
-    { configType: 'storyTypeId', values: ['com.ibm.team.apt.workItemType.story'] },
-    { configType: 'storyPointsId', values: ['com.ibm.team.apt.attribute.complexity'] },
-    { configType: 'storyInProgressStates', values: ['In Progress', 'In Review'] },
-    { configType: 'storyResolvedStates', values: ['Verified', 'Done'] },
-    { configType: 'iterationPattern', values: ['Sprint %'] },
-  ],
+  settings: {
+    defects: {
+      defectTypeId: ['com.ibm.team.workitem.workitemType.defect'],
+      defectInProgressStates: ['In Progress', 'Verified'],
+      defectResolvedStates: ['Resolved'],
+    },
+    velocity: {
+      storyTypeId: ['com.ibm.team.apt.workItemType.story'],
+      storyPointsId: 'com.ibm.team.apt.attribute.complexity',
+      storyInProgressStates: ['In Progress', 'In Review'],
+      storyResolvedStates: ['Verified', 'Done'],
+    },
+    throughput: {
+      storyTypeId: ['com.ibm.team.apt.workItemType.story'],
+      storyPointsId: 'com.ibm.team.apt.attribute.complexity',
+      storyInProgressStates: ['In Progress', 'In Review'],
+      storyResolvedStates: ['Verified', 'Done'],
+    },
+    wip: {
+      defectTypeId: ['com.ibm.team.workitem.workitemType.defect'],
+      defectInProgressStates: ['In Progress', 'Verified'],
+      defectResolvedStates: ['Resolved'],
+    },
+    backlog: {
+      storyTypeId: ['com.ibm.team.apt.workItemType.story'],
+      storyPointsId: 'com.ibm.team.apt.attribute.complexity',
+      storyInProgressStates: ['In Progress', 'In Review'],
+      storyResolvedStates: ['Verified', 'Done'],
+    },
+    deployments: {},
+    iterationPattern: 'Sprint %',
+  },
 };
 
 // actions
@@ -68,6 +92,7 @@ const reducer = (state = initialState, action) => {
 
 module.exports = {
   reducer,
+  initialState,
   addIntegration,
   loadIntegration,
   updateTool,
