@@ -8,24 +8,25 @@ const WizardStepTwo = props => (
       Step 2 of 4: Locate your {props.tools[0].toolId} team
     </h2>
     <div className="att-integration__container">
-      <span>
-        Your Agile Team Tool Squad
-      </span>
-      <select>
-        <option selected="selected">{props.team.name}</option>
-      </select>
+      <span htmlFor="your-squad">Your Agile Team Tool Squad</span>
+      <p><input type="text" value={props.team.name} /></p>
+
       <span className="att-integration__label">
         {props.tools[0].toolId} Server
       </span>
       <select className="att-integration__dropdown">
-        <option selected="selected">{props.team.integration.server}</option>
+        <option defaultValue={props.team.integration.server}>
+          {props.team.integration.server}
+        </option>
       </select>
+
       <span className="att-integration__label">
         {props.tools[0].toolId} Project Area
       </span>
       <select className="att-integration__dropdown">
-        <option selected="selected">{props.project.name}</option>
+        <option defaultValue={props.project.name}>{props.project.name}</option>
       </select>
+
     </div>
   </div>
 );

@@ -12,7 +12,7 @@ const WizardStepThree = props => (
     </p>
     <div className="att-integration__configuration">
       <div className="att-integration__configuration-menu">
-        <ul className="att-integration__unstyled-list">
+        <ul className="att-integration__unstyled-menu-list">
           <li>Velocity</li>
           <li>Throughput</li>
           <li>Time in Work In Progress (WIP)</li>
@@ -22,7 +22,32 @@ const WizardStepThree = props => (
         </ul>
       </div>
       <div className="att-integration__configuration-display">
-        <p>hello</p>
+        <label htmlFor="work-item-type">Work Item Type</label>
+        <p><input type="text" value="Story" /></p>
+
+        <label htmlFor="starting-point">Starting point</label>
+        <div className="att-integration__configuration-display__subcontainer">
+          <div>
+            <label htmlFor="attribute">Attribute</label>
+            <p><input type="text" value="State" /></p>
+          </div>
+          <div>
+            <label htmlFor="value">Value</label>
+            <p><input type="text" value="Committed, New" /></p>
+          </div>
+        </div>
+
+        <label htmlFor="ending-point">Ending point</label>
+        <div className="att-integration__configuration-display__subcontainer">
+          <div>
+            <label htmlFor="attribute">Attribute</label>
+            <p><input type="text" value="State" /></p>
+          </div>
+          <div>
+            <label htmlFor="value">Value</label>
+            <p><input type="text" value="Closed" /></p>
+          </div>
+        </div>
       </div>
     </div>
   </div>

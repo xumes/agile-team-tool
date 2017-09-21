@@ -8,7 +8,7 @@ const WizardStepThree = require('./wizard-step-three.jsx');
 const WizardStepFour = require('./wizard-step-four.jsx');
 const Wizard = require('../wizard/wizard.jsx');
 const InlineSVG = require('svg-inline-react');
-const confirmIcon = require('../../../img/Att-icons/att-icons_confirm.svg');
+const flowIcon = require('../../../img/Att-icons/att-icons_flow.svg');
 
 class TeamIntegration extends React.Component {
   constructor(props) {
@@ -123,7 +123,7 @@ class TeamIntegration extends React.Component {
           <InlineSVG
             title="Configure Agile Tool Integration"
             class="home-team-header-teamname-btn-img"
-            src={confirmIcon}
+            src={flowIcon}
           />
         </div>
 

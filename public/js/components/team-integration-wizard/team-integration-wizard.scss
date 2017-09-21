@@ -27,6 +27,10 @@
       line-height: 1.2em;
     }
     @mixin smallerFont {
+      font-size: 12px;
+      line-height: 1.2em;
+    }
+    @mixin smallestFont {
       font-size: 10px;
       line-height: 1.2em;
     }
@@ -65,6 +69,14 @@
           margin-bottom: 15px;
           width: 50%;
         }
+        
+        p {
+          input {
+            @include smallFont();
+            width: 60%;
+            padding: 0.5em;
+          }
+        }
       }
       
       &__preview {
@@ -77,19 +89,41 @@
       
       &__configuration {
         @include smallFont();
-        margin-top: 1em;
-        max-height: 230px;
+        margin-top: 1.4em;
+        max-height: 250px;
         display: flex;
         flex-direction: row;
         
         &-menu {
           max-width: 30%;
           overflow: scroll;
-          border-right: 1px solid;
+          border-right: 1px solid $extra-light-gray;
         }
         
         &-display {
+          @include normalFont();
           flex-grow: 1;
+          padding: 0 1.8em;
+          
+          label {
+            @include smallerFont();
+            display: block;
+            margin-bottom: 0.3em;
+          }
+          
+          p {
+            input {
+              @include smallFont();
+              width: 100%;
+              padding: 0.5em;
+            }
+          }
+          
+          &__subcontainer {
+            display: flex;
+            flex-direction: row;
+            padding-top: 1.2em;
+          }
         }
       }
 
@@ -143,10 +177,10 @@
         }
         
         li {
-          padding: 0.9em 0 0.5em 0;
+          padding: 1em 0 0.8em 0;
           
           span {
-            @include smallerFont();
+            @include smallestFont();
             font-weight: lighter;
           }
         }
@@ -158,6 +192,21 @@
           span {
             color: $wizard-header;
             float: right;
+          }
+        }
+      }
+      
+      &__unstyled-menu-list {
+        @include smallFont();
+        list-style: none;
+        padding-bottom: 3em;
+        
+        li {
+          padding: 0 0 1.8em 0;
+          
+          &:hover {
+            font-weight: bold;
+            color: $wizard-header;
           }
         }
       }
