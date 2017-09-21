@@ -46,9 +46,7 @@ class TeamIntegration extends React.Component {
   save() {
     this.setState({
       showModal: false,
-    }, () => {
-      console.log('saved!');
-    });
+    }, () => {});
   }
 
   render() {
