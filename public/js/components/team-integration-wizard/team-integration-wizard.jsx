@@ -15,20 +15,23 @@ class TeamIntegration extends React.Component {
     super(props);
 
     props.loadTools();
-    props.loadTeam();
-    props.loadProjects(
-      props.team.integration.toolId,
-      props.team.integration.server,
-    );
+    props.loadIntegration(1).then((integration) => {
+      props.loadProjects(
+        integration.toolId,
+        integration.server,
+      );
+    });
 
     this.state = {
       showModal: false,
+      page: 1,
     };
 
     this.props = props;
     this.show = this.show.bind(this);
     this.hide = this.hide.bind(this);
     this.save = this.save.bind(this);
+    this.preview = this.preview.bind(this);
   }
 
   show() {
@@ -47,6 +50,12 @@ class TeamIntegration extends React.Component {
     this.setState({
       showModal: false,
     }, () => {});
+  }
+
+  preview() {
+    this.props.showPreview().then(() => {
+      this.setState({ page: this.state.page + 1 });
+    });
   }
 
   render() {
@@ -86,9 +95,16 @@ class TeamIntegration extends React.Component {
         order: 1,
       },
       btnNext: {
-        order: 2,
         label: 'Preview',
       },
+      // btnPreview: {
+      //   id: 'btnPreview',
+      //   label: 'Preview',
+      //   class: 'ibm-btn-pri ibm-btn-small ibm-btn-blue-50 u-mr-sm',
+      //   onClick: this.preview,
+      //   hide: false,
+      //   order: 2,
+      // },
     };
 
     const pageFourOptions = {
@@ -132,7 +148,7 @@ class TeamIntegration extends React.Component {
           show={this.state.showModal}
           onHide={this.hide}
         >
-          <Wizard onClose={this.hide} navButtons={this.navButtons}>
+          <Wizard onClose={this.hide} page={this.state.page}>
             <WizardStepOne
               page="1"
               options={pageOneOptions}

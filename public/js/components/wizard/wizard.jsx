@@ -7,7 +7,7 @@ class Wizard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      page: 1,
+      page: props.page || 1,
       previousLabel: 'Previous',
       nextLabel: 'Next',
       closeLabel: 'Close',
@@ -45,12 +45,10 @@ class Wizard extends React.Component {
     };
   }
   nextPage() {
-    this.setState({ page: this.state.page + 1 }, () => {
-    });
+    this.setState({ page: this.state.page + 1 });
   }
   previousPage() {
-    this.setState({ page: this.state.page - 1 }, () => {
-    });
+    this.setState({ page: this.state.page - 1 });
   }
   close() {
     this.props.onClose();
@@ -104,13 +102,14 @@ class Wizard extends React.Component {
 
 Wizard.defaultProps = {
   children: undefined,
-  navButtons: [],
+  page: 1,
   onClose: null,
   onSave: null,
 };
 
 Wizard.propTypes = {
   children: PropTypes.node,
+  page: PropTypes.number,
   onClose: PropTypes.func,
   onSave: PropTypes.func,
 };
