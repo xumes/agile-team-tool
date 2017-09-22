@@ -1,21 +1,19 @@
-var System = require('../../models/system');
-var util = require('../../helpers/util');
+const System = require('../../models/system');
+const util = require('../../helpers/util');
 
-module.exports = function(app, includes) {
-  var middleware = includes.middleware;
-
-  getSystemStatus = function(req, res) {
+module.exports = (app, includes) => {
+  const getSystemStatus = (req, res) => {
     System.getSystemStatus()
-      .then(function(result) {
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(400).send(err);
       });
   };
 
-  getServerTime = function(req, res) {
-    var result = util.getServerTime();
+  const getServerTime = (req, res) => {
+    const result = util.getServerTime();
     res.status(200).send(result);
   };
 

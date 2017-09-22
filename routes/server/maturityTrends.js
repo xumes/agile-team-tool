@@ -1,13 +1,10 @@
-'use strict';
-var settings = require('../../settings');
-
-module.exports = function(app, includes) {
-  var render = includes.render;
-  var json = {
-    'pageTitle': 'Maturity Assessment Trends'
+module.exports = (app, includes) => {
+  const render = includes.render;
+  const json = {
+    pageTitle: 'Maturity Assessment Trends',
   };
 
-  app.get('/maturityTrends', function(req, res) {
+  app.get('/maturityTrends', (req, res) => {
     render(req, res, 'maturityTrends', json);
   });
 };
