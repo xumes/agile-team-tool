@@ -47,7 +47,7 @@ class Wizard extends React.Component {
   nextPage() {
     this.props.goToPage(this.props.wizard.page + 1);
   }
-  previousPage() {    
+  previousPage() {
     this.props.goToPage(this.props.wizard.page - 1);
   }
   close() {

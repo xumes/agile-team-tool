@@ -30,6 +30,25 @@ const types = {
     projectId: PropTypes.string,
     projectName: PropTypes.string,
   })),
+  preview: PropTypes.shape({
+    velocity: PropTypes.arrayOf(PropTypes.shape({
+      storyPointsCommitted: PropTypes.number,
+      storyPointsDelivered: PropTypes.number,
+    })),
+    throughput: PropTypes.arrayOf(PropTypes.shape({
+      storyCardsCommitted: PropTypes.number,
+      storyCardsDelivered: PropTypes.number,
+    })),
+    defects: PropTypes.arrayOf(PropTypes.shape({
+      defectsStartBal: PropTypes.number,
+      defectsOpened: PropTypes.number,
+      defectsClosed: PropTypes.number,
+      defectsEndBal: PropTypes.number,
+    })),
+    deployments: PropTypes.arrayOf(PropTypes.shape({})),
+    wip: PropTypes.number,
+    backlog: PropTypes.number,
+  }),
   wizard: PropTypes.shape({ page: PropTypes.number, close: PropTypes.bool }),
   loadTools: PropTypes.func,
   loadTeam: PropTypes.func,
@@ -47,6 +66,7 @@ const defaults = {
   projects: [
     { projectId: '', projectName: '' },
   ],
+  preview: {},
   wizard: { page: 1, close: false },
   loadTools: () => {},
   loadTeam: () => {},

@@ -170,6 +170,7 @@ class TeamIntegrationWizard extends React.Component {
               page="4"
               options={pageFourOptions}
               team={this.props.team}
+              preview={this.props.preview}
             />
           </Wizard>
         </CommonModal>
