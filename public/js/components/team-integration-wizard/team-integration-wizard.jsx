@@ -25,7 +25,6 @@ class TeamIntegrationWizard extends React.Component {
 
     this.state = {
       showModal: false,
-      // page: 1,
     };
 
     this.props = props;
@@ -54,7 +53,6 @@ class TeamIntegrationWizard extends React.Component {
 
   preview() {
     this.props.showPreview(this.props.team.teamId).then(() => {
-      // this.setState({ page: this.state.page + 1 });
       this.props.goToPage(this.props.wizard.page + 1);
     });
   }
@@ -96,7 +94,6 @@ class TeamIntegrationWizard extends React.Component {
         order: 1,
       },
       btnNext: {
-        // label: 'Preview',
         hide: true,
       },
       btnPreview: {

@@ -7,7 +7,6 @@ class Wizard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // page: props.page || 1,
       previousLabel: 'Previous',
       nextLabel: 'Next',
       closeLabel: 'Close',
@@ -46,11 +45,9 @@ class Wizard extends React.Component {
     };
   }
   nextPage() {
-    // this.setState({ page: this.props.wizard.page + 1 });
     this.props.goToPage(this.props.wizard.page + 1);
   }
-  previousPage() {
-    // this.setState({ page: this.props.wizard.page - 1 });
+  previousPage() {    
     this.props.goToPage(this.props.wizard.page - 1);
   }
   close() {
