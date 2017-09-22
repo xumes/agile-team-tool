@@ -9,7 +9,7 @@ const tools = require('./modules/tools').reducer;
 
 const configureStore = function configureStore() {
   const instance = Axios.create({
-    baseURL: 'http://localhost:3000/api',
+    baseURL: '/api',
     responseType: 'json',
   });
 
