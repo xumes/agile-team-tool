@@ -7,10 +7,10 @@ const initialState = {
 };
 
 // actions
-const showPreview = teamId => ({
+const showPreview = (teamId, integration) => ({
   type: [SHOW_PREVIEW],
   payload: {
-    request: { url: `/teams/${teamId}/integration/preview` },
+    request: { url: `/teams/${teamId}/integration/preview`, method: 'post', data: integration },
   },
 });
 
@@ -21,7 +21,7 @@ const reducer = (state = initialState, action) => {
       return action.payload.request.data;
 
     case SHOW_PREVIEW_SUCCESS:
-      return action.payload.data.preview;
+      return action.payload.data;
 
     default:
       return state;

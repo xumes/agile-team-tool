@@ -10,12 +10,13 @@ const InlineSVG = require('svg-inline-react');
 const flowIcon = require('../../../img/Att-icons/att-icons_flow.svg');
 const propTypes = require('./prop-types');
 
-class TeamIntegration extends React.Component {
+class TeamIntegrationWizard extends React.Component {
   constructor(props) {
     super(props);
 
+    props.goToPage(1);
     props.loadTools();
-    props.loadIntegration(1).then((integration) => {
+    props.loadIntegration(props.team.teamId).then((integration) => {
       props.loadProjects(
         integration.toolId,
         integration.server,
@@ -24,7 +25,7 @@ class TeamIntegration extends React.Component {
 
     this.state = {
       showModal: false,
-      page: 1,
+      // page: 1,
     };
 
     this.props = props;
@@ -41,20 +42,20 @@ class TeamIntegration extends React.Component {
   }
 
   hide() {
+    this.props.goToPage(1);
     this.setState({
       showModal: false,
     });
   }
 
   save() {
-    this.setState({
-      showModal: false,
-    }, () => {});
+    this.hide();
   }
 
   preview() {
-    this.props.showPreview().then(() => {
-      this.setState({ page: this.state.page + 1 });
+    this.props.showPreview(this.props.team.teamId).then(() => {
+      // this.setState({ page: this.state.page + 1 });
+      this.props.goToPage(this.props.wizard.page + 1);
     });
   }
 
@@ -95,16 +96,17 @@ class TeamIntegration extends React.Component {
         order: 1,
       },
       btnNext: {
-        label: 'Preview',
+        // label: 'Preview',
+        hide: true,
       },
-      // btnPreview: {
-      //   id: 'btnPreview',
-      //   label: 'Preview',
-      //   class: 'ibm-btn-pri ibm-btn-small ibm-btn-blue-50 u-mr-sm',
-      //   onClick: this.preview,
-      //   hide: false,
-      //   order: 2,
-      // },
+      btnPreview: {
+        id: 'btnPreview',
+        label: 'Preview',
+        class: 'ibm-btn-pri ibm-btn-small ibm-btn-blue-50 u-mr-sm',
+        onClick: this.preview,
+        hide: false,
+        order: 2,
+      },
     };
 
     const pageFourOptions = {
@@ -148,7 +150,7 @@ class TeamIntegration extends React.Component {
           show={this.state.showModal}
           onHide={this.hide}
         >
-          <Wizard onClose={this.hide} page={this.state.page}>
+          <Wizard onClose={this.hide} wizard={this.props.wizard} goToPage={this.props.goToPage}>
             <WizardStepOne
               page="1"
               options={pageOneOptions}
@@ -179,7 +181,7 @@ class TeamIntegration extends React.Component {
   }
 }
 
-TeamIntegration.propTypes = propTypes.types;
-TeamIntegration.defaultProps = propTypes.defaults;
+TeamIntegrationWizard.propTypes = propTypes.types;
+TeamIntegrationWizard.defaultProps = propTypes.defaults;
 
-module.exports = TeamIntegration;
+module.exports = TeamIntegrationWizard;

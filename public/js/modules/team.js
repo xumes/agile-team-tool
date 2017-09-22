@@ -4,6 +4,7 @@ const LOAD_INTEGRATION = 'LOAD_INTEGRATION';
 const LOAD_INTEGRATION_SUCCESS = 'LOAD_INTEGRATION_SUCCESS';
 
 const initialState = {
+  teamId: 1,
   name: 'JC\'s Dragon Slayers',
   type: '',
 };

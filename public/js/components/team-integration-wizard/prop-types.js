@@ -7,6 +7,7 @@ const types = {
     servers: PropTypes.array,
   })),
   team: PropTypes.shape({
+    teamId: PropTypes.number,
     name: PropTypes.string,
     type: PropTypes.string,
     integration: PropTypes.shape({
@@ -29,9 +30,11 @@ const types = {
     projectId: PropTypes.string,
     projectName: PropTypes.string,
   })),
+  wizard: PropTypes.shape({ page: PropTypes.number, close: PropTypes.bool }),
   loadTools: PropTypes.func,
   loadTeam: PropTypes.func,
   loadProjects: PropTypes.func,
+  goToPage: PropTypes.func,
 };
 
 const defaults = {
@@ -44,9 +47,11 @@ const defaults = {
   projects: [
     { projectId: '', projectName: '' },
   ],
+  wizard: { page: 1, close: false },
   loadTools: () => {},
   loadTeam: () => {},
   loadProjects: () => {},
+  goToPage: () => {},
 };
 
 module.exports = {

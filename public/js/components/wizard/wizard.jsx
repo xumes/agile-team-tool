@@ -7,11 +7,12 @@ class Wizard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      page: props.page || 1,
+      // page: props.page || 1,
       previousLabel: 'Previous',
       nextLabel: 'Next',
       closeLabel: 'Close',
     };
+    this.props = props;
     this.nextPage = this.nextPage.bind(this);
     this.previousPage = this.previousPage.bind(this);
     this.close = this.close.bind(this);
@@ -45,10 +46,12 @@ class Wizard extends React.Component {
     };
   }
   nextPage() {
-    this.setState({ page: this.state.page + 1 });
+    // this.setState({ page: this.props.wizard.page + 1 });
+    this.props.goToPage(this.props.wizard.page + 1);
   }
   previousPage() {
-    this.setState({ page: this.state.page - 1 });
+    // this.setState({ page: this.props.wizard.page - 1 });
+    this.props.goToPage(this.props.wizard.page - 1);
   }
   close() {
     this.props.onClose();
@@ -59,7 +62,7 @@ class Wizard extends React.Component {
   render() {
     let navButtons = _.toArray(this.navButtons);
     const displayedChild = this.props.children
-      .find(child => Number.parseInt(child.props.page, 10) === this.state.page);
+      .find(child => Number.parseInt(child.props.page, 10) === this.props.wizard.page);
 
     const options = displayedChild.props.options;
     if (options) {
@@ -102,16 +105,18 @@ class Wizard extends React.Component {
 
 Wizard.defaultProps = {
   children: undefined,
-  page: 1,
+  wizard: {},
   onClose: null,
   onSave: null,
+  goToPage: null,
 };
 
 Wizard.propTypes = {
   children: PropTypes.node,
-  page: PropTypes.number,
+  wizard: PropTypes.shape({ page: PropTypes.number, close: PropTypes.bool }),
   onClose: PropTypes.func,
   onSave: PropTypes.func,
+  goToPage: PropTypes.func,
 };
 
 module.exports = Wizard;
