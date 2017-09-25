@@ -22,7 +22,7 @@ const types = {
         wip: PropTypes.object,
         backlog: PropTypes.object,
         deployments: PropTypes.object,
-        iterationPattern: PropTypes.object,
+        iterationPattern: PropTypes.string,
       }),
     }),
   }),

@@ -47,7 +47,7 @@ module.exports = function(app, includes) {
         },
         throughput: {
           storyTypeId: ['com.ibm.team.apt.workItemType.story'],
-          storyPointsId: ['com.ibm.team.apt.attribute.complexity'],
+          storyPointsId: 'com.ibm.team.apt.attribute.complexity',
           storyInProgressStates: ['In Progress', 'In Review'],
           storyResolvedStates: ['Verified', 'Done'],
         },
