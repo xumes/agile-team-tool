@@ -4,9 +4,9 @@
     <title>Revert</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="Squad-Level" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Team-Setup-non-squad" transform="translate(-188.000000, -429.000000)" fill-rule="nonzero" fill="#4178BE">
-            <g id="Revert" transform="translate(188.000000, 429.000000)">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-188.000000, -429.000000)" fill-rule="nonzero" fill="#4178BE">
+            <g transform="translate(188.000000, 429.000000)">
                 <path d="M9.5,0.293 C5.937,0.293 3.038,3.193 3.038,6.753 L3.038,9.755 L1.538,8.255 L0.038,9.755 L4.028,13.705 L8.038,9.755 L6.538,8.255 L5.038,9.755 L5.038,6.755 C5.038,4.295 7.038,2.293 9.5,2.293 C11.962,2.293 13.962,4.293 13.962,6.755 C13.962,8.007 13.432,9.21 12.504,10.053 L13.852,11.533 C15.192,10.31 15.962,8.569 15.962,6.755 C15.962,3.192 13.062,0.293 9.5,0.293 L9.5,0.293 Z"></path>
             </g>
         </g>
