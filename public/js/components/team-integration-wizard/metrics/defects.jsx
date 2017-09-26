@@ -3,14 +3,14 @@ const propTypes = require('../prop-types');
 
 const Defects = (props) => {
   const defects = props.defects;
-  const storyType = defects.storyTypeId && defects.storyTypeId.length ? defects.storyTypeId[0] : '';
-  const storyStartingPoint = defects.storyInProgressStates && defects.storyInProgressStates.length ? defects.storyInProgressStates.join(', ') : '';
-  const storyEndingPoint = defects.storyResolvedStates && defects.storyResolvedStates.length ? defects.storyResolvedStates.join(', ') : '';
+  const defectTypeId = defects.defectTypeId && defects.defectTypeId.length ? defects.defectTypeId[0] : '';
+  const defectInProgressStates = defects.defectInProgressStates && defects.defectInProgressStates.length ? defects.defectInProgressStates.join(', ') : '';
+  const defectResolvedStates = defects.defectResolvedStates && defects.defectResolvedStates.length ? defects.defectResolvedStates.join(', ') : '';
 
   return (
     <div className="att-integration__configuration-display">
-      <label htmlFor="work-item-type">Work Item Type</label>
-      <p><input type="text" value={storyType} /></p>
+      <label htmlFor="defect-item-type">Defect Item Type</label>
+      <p><input type="text" value={defectTypeId} /></p>
 
       <label htmlFor="starting-point">Starting point</label>
       <div className="att-integration__configuration-display__subcontainer">
@@ -24,7 +24,7 @@ const Defects = (props) => {
         </div>
         <div>
           <label htmlFor="value">Value</label>
-          <p><input type="text" value={storyStartingPoint} /></p>
+          <p><input type="text" value={defectInProgressStates} /></p>
         </div>
       </div>
 
@@ -40,7 +40,7 @@ const Defects = (props) => {
         </div>
         <div>
           <label htmlFor="value">Value</label>
-          <p><input type="text" value={storyEndingPoint} /></p>
+          <p><input type="text" value={defectResolvedStates} /></p>
         </div>
       </div>
     </div>
