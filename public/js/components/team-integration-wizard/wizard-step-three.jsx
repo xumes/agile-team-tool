@@ -5,7 +5,6 @@ const Velocity = require('./metrics/velocity.jsx');
 // const Wip = require('./metrics/wip.jsx');
 // const Backlog = require('./metrics/backlog.jsx');
 // const Defects = require('./metrics/defects.jsx');
-// const Deployments = require('./metrics/deployments.jsx');
 
 class WizardStepThree extends React.Component {
   constructor(props) {
@@ -46,7 +45,6 @@ class WizardStepThree extends React.Component {
               <li>Time in Work In Progress (WIP)</li>
               <li>Time in Backlog</li>
               <li>Defects</li>
-              <li>Deployments</li>
             </ul>
           </div>
           <Velocity
@@ -59,8 +57,7 @@ class WizardStepThree extends React.Component {
           /> */}
           {/* <Wip wip={props.team.integration.settings.wip} />
           <Backlog backlog={props.team.integration.settings.backlog} />
-          <Defects defects={props.team.integration.settings.defects} />
-          <Deployments deployments={props.team.integration.settings.deployments} /> */}
+          <Defects defects={props.team.integration.settings.defects} /> */}
         </div>
       </div>
     );
