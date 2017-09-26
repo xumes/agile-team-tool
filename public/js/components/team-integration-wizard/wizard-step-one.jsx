@@ -27,7 +27,7 @@ const WizardStepOne = (props) => {
           </p>
           <p className="att-integration__paragraph">
             This integration automates bringing over key agile metrics
-            including: Velocity, THroughput, Time in WIP, Time in
+            including: Velocity, Throughput, Time in WIP, Time in
             Backlog, Deployments, and Defects.
           </p>
         </div>
