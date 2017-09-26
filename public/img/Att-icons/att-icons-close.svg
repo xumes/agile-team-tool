@@ -4,11 +4,11 @@
     <title>Close</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="---" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.497509058">
-        <g id="Team-Overlay" transform="translate(-955.000000, -103.000000)" fill="#323232">
-            <g id="Team-overlay" transform="translate(36.000000, 14.000000)">
-                <g id="Close-icon-(gray80)---10px" transform="translate(919.000000, 89.000000)">
-                    <g id="Page-1">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.497509058">
+        <g transform="translate(-955.000000, -103.000000)" fill="#323232">
+            <g transform="translate(36.000000, 14.000000)">
+                <g transform="translate(919.000000, 89.000000)">
+                    <g>
                         <polygon points="9.292 0 5 4.293 0.707 0 0 0.707 4.293 4.999 0 9.292 0.707 10 5 5.707 9.292 10 9.999 9.292 5.706 4.999 9.999 0.707"></polygon>
                     </g>
                 </g>

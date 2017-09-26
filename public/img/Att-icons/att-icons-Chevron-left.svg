@@ -4,9 +4,9 @@
     <title>Collapse Team Hierarchy Navigation</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="Chevron-left" fill="#777677">
-            <polygon id="Page-1" transform="translate(8.486500, 8.000000) scale(-1, -1) rotate(-90.000000) translate(-8.486500, -8.000000) " points="15.6215 3.5135 8.4865 10.6485 1.3515 3.5135 0.4865 4.3785 8.4865 12.4865 16.4865 4.3785"></polygon>
+            <polygon transform="translate(8.486500, 8.000000) scale(-1, -1) rotate(-90.000000) translate(-8.486500, -8.000000) " points="15.6215 3.5135 8.4865 10.6485 1.3515 3.5135 0.4865 4.3785 8.4865 12.4865 16.4865 4.3785"></polygon>
         </g>
     </g>
 </svg>

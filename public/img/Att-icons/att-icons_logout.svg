@@ -4,14 +4,14 @@
     <title>Log Out</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="---" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Profile-Dropdown" transform="translate(-50.000000, -281.000000)" fill="#FFFFFF">
-            <g id="profile-drop-down">
-                <g id="profile-dropdown" transform="translate(30.000000, 44.000000)">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-50.000000, -281.000000)" fill="#FFFFFF">
+            <g>
+                <g transform="translate(30.000000, 44.000000)">
                     <g id="log-out-icon-(white)---20px" transform="translate(20.000000, 237.000000)">
-                        <g id="Page-1">
-                            <polygon id="Fill-1" points="0 0.0002 0 20.0002 8 20.0002 8 19.0002 3 19.0002 3 1.0002 8 1.0002 8 0.0002"></polygon>
-                            <polygon id="Fill-2" points="13.5 5.5001 17.3 9.3001 5 9.3001 5 10.7001 17.3 10.7001 13.5 14.5001 14.5 15.5001 20 10.0001 14.5 4.5001"></polygon>
+                        <g>
+                            <polygon points="0 0.0002 0 20.0002 8 20.0002 8 19.0002 3 19.0002 3 1.0002 8 1.0002 8 0.0002"></polygon>
+                            <polygon points="13.5 5.5001 17.3 9.3001 5 9.3001 5 10.7001 17.3 10.7001 13.5 14.5001 14.5 15.5001 20 10.0001 14.5 4.5001"></polygon>
                         </g>
                     </g>
                 </g>
