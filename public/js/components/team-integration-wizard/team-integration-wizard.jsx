@@ -14,14 +14,11 @@ class TeamIntegrationWizard extends React.Component {
   constructor(props) {
     super(props);
 
+    this.props = props;
+
     props.goToPage(1);
     props.loadTools();
-    props.loadIntegration(props.team.teamId).then((integration) => {
-      props.loadProjects(
-        integration.toolId,
-        integration.server,
-      );
-    });
+    this.loadIntegration();
 
     this.state = {
       showModal: false,
@@ -32,6 +29,15 @@ class TeamIntegrationWizard extends React.Component {
     this.hide = this.hide.bind(this);
     this.save = this.save.bind(this);
     this.preview = this.preview.bind(this);
+  }
+
+  async loadIntegration() {
+    const integration = await this.props.loadIntegration(this.props.team.teamId);
+
+    this.props.loadProjects(
+      integration.toolId,
+      integration.server,
+    );
   }
 
   show() {
