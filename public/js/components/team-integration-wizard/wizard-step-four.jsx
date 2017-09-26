@@ -2,7 +2,7 @@ const React = require('react');
 const propTypes = require('./prop-types');
 
 const WizardStepFour = (props) => {
-  const preview = props.preview ? props.preview : '';
+  const preview = props.preview ? props.preview : {};
 
   const velocity = preview.velocity.length ? preview.velocity : [];
   const ptsCommitted = velocity[0].storyPointsCommitted ? velocity[0].storyPointsCommitted : 0;
@@ -19,8 +19,8 @@ const WizardStepFour = (props) => {
   const defectsEndBal = defects[3].defectsEndBal ? defects[3].defectsEndBal : 0;
 
   // const deployments = preview.deployments.length ? preview.deployments : [];
-  const wip = preview.wip ? preview.wip : [];
-  const backlog = preview.backlog ? preview.backlog : [];
+  const wip = preview.wip || 0;
+  const backlog = preview.backlog || 0;
 
   return (
     <div className="att-integration">
@@ -51,12 +51,12 @@ const WizardStepFour = (props) => {
           <li className="att-integration__unstyled-list__bold">
             Time in Work In Progress (WIP)
           </li>
-          <p>WIP cycle time<span>add wip here</span></p>
+          <p>WIP cycle time<span>{wip}</span></p>
 
           <li className="att-integration__unstyled-list__bold">
             Time in Backlog
           </li>
-          <p>Backlog cycle time<span>add backlog here</span></p>
+          <p>Backlog cycle time<span>{backlog}</span></p>
 
           <li className="att-integration__unstyled-list__bold">
             Defects

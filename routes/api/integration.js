@@ -106,14 +106,8 @@ module.exports = function(app, includes) {
         {defectsEndBal: 0},
       ],
       deployments: [],
-      wip: [
-        {storyPointsCommitted: 5},
-        {storyPointsDelivered: 2},
-      ],
-      backlog: [
-        {storyCardsCommitted: 2},
-        {storyCardsDelivered: 1},
-      ],
+      wip: 23,
+      backlog: 14,
     });
   });
 };
