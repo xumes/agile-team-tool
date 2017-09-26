@@ -1,0 +1,24 @@
+/*------------------------------------*\
+  # Wizard
+\*------------------------------------*/
+
+.att-wizard__content-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.att-wizard__content {
+  margin: 3em 4.2em;
+  height: 70%;
+}
+
+.att-wizard__footer {
+  margin-left: auto;
+  margin-bottom: auto;
+  margin-right: 2em;
+}
+
+.u-mr-sm {
+  margin-right: 1em;
+}

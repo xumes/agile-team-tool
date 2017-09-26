@@ -47,10 +47,23 @@ module.exports = function(app, includes) {
         },
         throughput: {
           storyTypeId: ['com.ibm.team.apt.workItemType.story'],
-          storyPointsId: ['com.ibm.team.apt.attribute.complexity'],
+          storyPointsId: 'com.ibm.team.apt.attribute.complexity',
           storyInProgressStates: ['In Progress', 'In Review'],
           storyResolvedStates: ['Verified', 'Done'],
         },
+        wip: {
+          storyTypeId: ['com.ibm.team.apt.workItemType.story'],
+          storyPointsId: 'com.ibm.team.apt.attribute.complexity',
+          storyInProgressStates: ['In Progress', 'In Review'],
+          storyResolvedStates: ['Verified', 'Done'],
+        },
+        backlog: {
+          storyTypeId: ['com.ibm.team.apt.workItemType.story'],
+          storyPointsId: 'com.ibm.team.apt.attribute.complexity',
+          storyInProgressStates: ['In Progress', 'In Review'],
+          storyResolvedStates: ['Verified', 'Done'],
+        },
+        deployments: {},      
         iterationPattern: 'Sprint %',
       },
     });
@@ -78,13 +91,11 @@ module.exports = function(app, includes) {
   });
   app.post('/api/teams/:teamId/integration/preview', function(req, res) {
     return res.json({
-      velocity:
-      [
+      velocity: [
         {storyPointsCommitted: 5},
         {storyPointsDelivered: 2},
       ],
-      throughput:
-      [
+      throughput: [
         {storyCardsCommitted: 2},
         {storyCardsDelivered: 1},
       ],
@@ -95,8 +106,8 @@ module.exports = function(app, includes) {
         {defectsEndBal: 0},
       ],
       deployments: [],
-      wip: 0,
-      backlog: 0
+      wip: 23,
+      backlog: 14,
     });
   });
 };

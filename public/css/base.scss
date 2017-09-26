@@ -1,2 +1,12 @@
 @import '../../node_modules/react-datepicker/dist/react-datepicker.css';
 @import '../../node_modules/react-select/dist/react-select.css';
+
+/*------------------------------------*\
+	#HELPERS
+\*------------------------------------*/
+
+  .group::after {
+    content: "";
+    display: table;
+    clear: both;
+  }

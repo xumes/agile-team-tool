@@ -1,7 +1,9 @@
-export const UPDATE_METRIC_TYPE = 'UPDATE_METRIC_TYPE';
-export const UPDATE_VALUE = 'UPDATE_VALUE';
+const UPDATE_METRIC_TYPE = 'UPDATE_METRIC_TYPE';
+const UPDATE_VALUE = 'UPDATE_VALUE';
 
-const metric = (state = {}, action) => {
+const initialState = {};
+
+const reducer = (state = initialState, action) => {
   switch (action.type) {
     case UPDATE_METRIC_TYPE:
       return { ...state, metricType: action.metricType };
@@ -12,4 +14,4 @@ const metric = (state = {}, action) => {
   }
 };
 
-export default metric;
+module.exports = reducer;

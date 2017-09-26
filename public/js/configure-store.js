@@ -1,22 +1,36 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import axios from 'axios';
-import axiosMiddleWare from 'redux-axios-middleware';
-import teams from './reducers/teams';
+const Redux = require('redux');
+const Axios = require('axios');
+const AxiosMiddleWare = require('redux-axios-middleware').default;
+const ReduxDevTools = require('redux-devtools-extension');
 
-export default function configureStore() {
-  const instance = axios.create({
+const projects = require('./modules/projects').reducer;
+const team = require('./modules/team').reducer;
+const tools = require('./modules/tools').reducer;
+const wizard = require('./modules/wizard').reducer;
+const preview = require('./modules/preview').reducer;
+
+const configureStore = function configureStore() {
+  const instance = Axios.create({
     baseURL: '/api',
     responseType: 'json',
   });
 
-  const reducers = combineReducers({
-    teams,
+  const reducers = Redux.combineReducers({
+    projects,
+    team,
+    tools,
+    wizard,
+    preview,
   });
 
-  return createStore(
+  return Redux.createStore(
     reducers,
-    applyMiddleware(
-      axiosMiddleWare(instance),
+    ReduxDevTools.composeWithDevTools(
+      Redux.applyMiddleware(
+        AxiosMiddleWare(instance),
+      ),
     ),
   );
-}
+};
+
+export default configureStore;
