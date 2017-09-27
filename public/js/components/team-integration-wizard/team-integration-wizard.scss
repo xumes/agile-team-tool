@@ -64,12 +64,6 @@
           padding-bottom: 4px;
         }
         
-        select {
-          display: block;
-          margin-bottom: 15px;
-          width: 50%;
-        }
-        
         p {
           input {
             @include smallFont();
@@ -214,9 +208,70 @@
           }
         }
         
+        li:last-child {
+          padding: 0;
+        }
+        
         li.li-selected {
           font-weight: bold;
           color: $wizard-header;
+        }
+      }
+    }
+    
+    
+    
+    /*                                        */
+    /*           Dropdown component           */
+    /*                                        */
+    .dropdown-btn {
+      @include smallFont();
+      background-color: $foreground-common-modal-header;
+      color: $dropdown-content-dark;
+      border: 1px solid $border-extra-light-gray;
+      cursor: pointer;
+      width: 63%;
+      padding: 0.6em;
+      text-align: left;
+      
+      &:hover {
+        border: 1px solid $dropdown-content-dark;
+      }
+      
+      svg {
+        float: right;
+        width: 20px;
+      }
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      margin-bottom: 15px;
+      
+      &:hover .dropdown-content {
+        display: block;
+      }
+      
+      &-content {
+        display: none;
+        position: absolute;
+        background-color: $foreground-common-modal-header;
+        border: 1px solid $dropdown-content-dark;
+        width: 63%;
+        
+        option {
+          @include smallerFont();
+          color: $dropdown-content-dark;
+          padding: 1em;
+          text-decoration: none;
+          display: block;
+          
+          &:hover {
+            background-color: $dropdown-content-dark;
+            color: $foreground-common-modal-header;
+          }
         }
       }
     }
