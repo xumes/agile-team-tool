@@ -9,7 +9,7 @@ const Defects = (props) => {
 
   return (
     <div className="att-integration__configuration-display">
-      <label htmlFor="defect-item-type">Defect Item Type</label>
+      <label htmlFor="defect-item-type">Defect Item Type - Defects</label>
       <p><input type="text" value={defectTypeId} /></p>
 
       <label htmlFor="starting-point">Starting point</label>

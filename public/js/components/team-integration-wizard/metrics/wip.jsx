@@ -9,7 +9,7 @@ const WIP = (props) => {
 
   return (
     <div className="att-integration__configuration-display">
-      <label htmlFor="work-item-type">Work Item Type</label>
+      <label htmlFor="work-item-type">Work Item Type - WIP</label>
       <p><input type="text" value={storyType} /></p>
 
       <label htmlFor="starting-point">Starting point</label>
