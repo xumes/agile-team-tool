@@ -277,6 +277,14 @@
     }
     
     @media screen and (max-width: 480px) {
+      .att-integration__article__image {
+        display: none;
+      }
+      
+      .att-integration__article__text {
+        padding-left: 0;
+      }
+      
       .att-integration__preview {
         padding: 0;
         margin: 0;
