@@ -8,23 +8,44 @@ class WizardStepTwo extends React.Component {
     super(props);
 
     this.state = {
+      selectedServer: props.team.integration ? props.team.integration.server : '',
+      selectedProject: '',
     };
 
     this.props = props;
-    this.updateText = this.updateText.bind(this);
+    this.updateServer = this.updateServer.bind(this);
+    this.updateProject = this.updateProject.bind(this);
   }
 
-  updateText() {
-    this.setState({
-    });
+  updateServer(event) {
+    this.setState({ selectedServer: event.target.text });
+  }
+
+  updateProject(event) {
+    this.setState({ selectedProject: event.target.text });
   }
 
   render() {
     const props = this.props;
     const toolId = props.tools && props.tools.length ? props.tools[0].toolId : 0;
     const teamName = props.team ? props.team.name : '';
-    const projectName = props.projects && props.projects.length ? props.projects[0].projectName : '';
-    const server = props.team.integration ? props.team.integration.server : '';
+    const projects = props.projects && props.projects.length ? props.projects : [];
+    const servers = props.tools[0].servers &&
+      props.tools[0].servers.length ? props.tools[0].servers : [];
+
+    const serverOptions = servers
+      .map(server =>
+        (
+          <option onClick={this.updateServer}>{server}</option>
+        ),
+      );
+
+    const projectNames = projects
+      .map(project =>
+        (
+          <option onClick={this.updateProject}>{project.projectName}</option>
+        ),
+      );
 
     return (
       <div className="att-integration">
@@ -37,21 +58,21 @@ class WizardStepTwo extends React.Component {
 
           <span>{toolId} Server</span>
           <div className="dropdown">
-            <button className="dropdown-btn" onClick={this.updateText}>{server}
+            <button className="dropdown-btn">{this.state.selectedServer}
               <InlineSVG src={dropdownIcon} />
             </button>
             <div className="dropdown-content">
-              <option>{server}</option>
+              {serverOptions}
             </div>
           </div>
 
           <span>{toolId} Project Area</span>
           <div className="dropdown">
-            <button className="dropdown-btn">{projectName}
+            <button className="dropdown-btn">{this.state.selectedProject}
               <InlineSVG src={dropdownIcon} />
             </button>
             <div className="dropdown-content">
-              <option>{projectName}</option>
+              {projectNames}
             </div>
           </div>
         </div>

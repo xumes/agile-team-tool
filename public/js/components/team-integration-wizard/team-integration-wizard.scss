@@ -265,6 +265,7 @@
         background-color: $foreground-common-modal-header;
         border: 1px solid $dropdown-content-dark;
         width: 63%;
+        z-index: 2;
         
         option {
           @include smallerFont();
