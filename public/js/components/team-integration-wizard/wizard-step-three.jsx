@@ -11,7 +11,7 @@ class WizardStepThree extends React.Component {
     super(props);
 
     this.state = {
-      metrics: '',
+      metrics: 'velocity',
     };
 
     this.props = props;
@@ -60,6 +60,7 @@ class WizardStepThree extends React.Component {
         (
           <li>
             <a
+              className={this.state.metrics === item.id ? 'li-selected' : ''}
               role="button"
               tabIndex="0"
               id={item.id}

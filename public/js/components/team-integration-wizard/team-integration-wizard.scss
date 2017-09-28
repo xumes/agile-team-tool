@@ -206,15 +206,20 @@
             font-weight: bold;
             color: $wizard-header;
           }
+          
+          a {
+            text-decoration: none;
+            cursor: pointer;
+          }
+          
+          a.li-selected {
+            font-weight: bold;
+            color: $wizard-header;
+          }
         }
         
         li:last-child {
           padding: 0;
-        }
-        
-        li.li-selected {
-          font-weight: bold;
-          color: $wizard-header;
         }
       }
     }
