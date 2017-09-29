@@ -6,7 +6,7 @@
 const UPDATE_TOOL = 'UPDATE_TOOL';
 const UPDATE_SERVER = 'UPDATE_SERVER';
 const UPDATE_TEAM_NAME = 'UPDATE_TEAM_NAME';
-const UPDATE_PROJECT_AREA = 'UPDATE_PROJECT_AREA';
+const UPDATE_PROJECT_ID = 'UPDATE_PROJECT_ID';
 const ADD_METRIC = 'ADD_METRIC';
 const REMOVE_METRIC = 'REMOVE_METRIC';
 
@@ -16,7 +16,7 @@ const initialState = {};
 const updateTool = toolId => ({ type: UPDATE_TOOL, toolId });
 const updateServer = server => ({ type: UPDATE_SERVER, server });
 const updateTeamName = teamName => ({ type: UPDATE_TEAM_NAME, teamName });
-const updateProjectArea = projectArea => ({ type: UPDATE_PROJECT_AREA, projectArea });
+const updateProject = projectId => ({ type: UPDATE_PROJECT_ID, projectId });
 const addMetric = metric => ({ type: ADD_METRIC, ...metric });
 const removeMetric = metricName => ({ type: REMOVE_METRIC, ...metricName });
 
@@ -29,8 +29,8 @@ const reducer = (state = initialState, action) => {
       return { ...state, server: action.server };
     case UPDATE_TEAM_NAME:
       return { ...state, teamName: action.teamName };
-    case UPDATE_PROJECT_AREA:
-      return { ...state, projectArea: action.projectArea };
+    case UPDATE_PROJECT_ID:
+      return { ...state, projectId: action.projectId };
     case ADD_METRIC:
       return {
         ...state,
@@ -52,7 +52,7 @@ module.exports = {
   updateTool,
   updateServer,
   updateTeamName,
-  updateProjectArea,
+  updateProject,
   addMetric,
   removeMetric,
 };

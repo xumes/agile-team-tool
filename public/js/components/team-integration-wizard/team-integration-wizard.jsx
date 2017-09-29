@@ -165,6 +165,8 @@ class TeamIntegrationWizard extends React.Component {
               tools={this.props.tools}
               team={this.props.team}
               projects={this.props.projects}
+              updateServer={this.props.updateServer}
+              updateProject={this.props.updateProject}
             />
             <WizardStepThree
               page="3"

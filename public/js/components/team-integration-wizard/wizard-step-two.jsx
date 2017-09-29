@@ -2,14 +2,13 @@ const React = require('react');
 const propTypes = require('./prop-types');
 const InlineSVG = require('svg-inline-react');
 const dropdownIcon = require('../../../img/Att-icons/att-icons_show.svg');
+const _ = require('lodash');
 
 class WizardStepTwo extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      selectedServer: props.team.integration ? props.team.integration.server : '',
-      selectedProject: '',
     };
 
     this.props = props;
@@ -18,11 +17,11 @@ class WizardStepTwo extends React.Component {
   }
 
   updateServer(event) {
-    this.setState({ selectedServer: event.target.text });
+    this.props.updateServer(event.target.text);
   }
 
   updateProject(event) {
-    this.setState({ selectedProject: event.target.text });
+    this.props.updateProject(event.target.value);
   }
 
   render() {
@@ -30,6 +29,10 @@ class WizardStepTwo extends React.Component {
     const toolId = props.tools && props.tools.length ? props.tools[0].toolId : 0;
     const teamName = props.team ? props.team.name : '';
     const projects = props.projects && props.projects.length ? props.projects : [];
+    const selectedServer = props.team && props.team.integration && props.team.integration.server ? props.team.integration.server : '';
+    const selectedProjectId = props.team && props.team.integration && props.team.integration.projectId ? props.team.integration.projectId : '';
+    const selectedProject = _.find(projects, p => selectedProjectId === p.projectId);
+
     const servers = props.tools[0].servers &&
       props.tools[0].servers.length ? props.tools[0].servers : [];
 
@@ -37,17 +40,24 @@ class WizardStepTwo extends React.Component {
       .map(server => (<option onClick={this.updateServer}>{server}</option>));
 
     const projectNames = projects
-      .map(project => (<option onClick={this.updateProject}>{project.projectName}</option>));
+      .map(project => (
+        <option
+          onClick={this.updateProject}
+          value={project.projectId}
+        >
+          {project.projectName}
+        </option>
+      ));
 
     const dropdownOptions = [
       {
         title: `${toolId} Server`,
-        selected: this.state.selectedServer,
+        selected: selectedServer,
         options: serverOptions,
       },
       {
         title: `${toolId} Project Area`,
-        selected: this.state.selectedProject,
+        selected: selectedProject.projectName,
         options: projectNames,
       },
     ];
