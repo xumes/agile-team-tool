@@ -10,7 +10,7 @@ module.exports = (app, includes) => {
   app.get('/logout', (req, res) => {
     req.session.destroy(() => {
       if (settings.authType === 'saml') {
-        res.redirect('/ssologout');
+        res.redirect('https://w3id.sso.ibm.com/pkmslogout');
       } else {
         res.redirect('/login');
       }
