@@ -9,6 +9,15 @@ var currentChildren = [];
 var allowTeamTypeChange = false;
 var self = this;
 
+
+Highcharts.setOptions({
+  chart: {
+    style: {
+      fontFamily: 'IBMPlexSans'
+    }
+  }
+});
+
 var HomeTeamSetup = React.createClass({
   getInitialState: function() {
     return {
