@@ -58,6 +58,11 @@
         @include smallFont();
         margin-top: 1em;
         
+        span {
+          display: block;
+          padding-bottom: 4px;
+        }
+        
         div {
           span {
             @include smallFont();
