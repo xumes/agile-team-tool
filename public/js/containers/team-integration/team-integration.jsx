@@ -19,6 +19,7 @@ const Tools = Redux.connect(mapStateToProps, {
   loadTools: toolActions.loadTools,
   loadIntegration: teamActions.loadIntegration,
   updateTool: integrationActions.updateTool,
+  updateServer: integrationActions.updateServer,
   updateTeamName: integrationActions.updateTeamName,
   updateProjectArea: integrationActions.updateProjectArea,
   loadProjects: projectsActions.loadProjects,
