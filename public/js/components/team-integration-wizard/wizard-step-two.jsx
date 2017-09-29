@@ -34,16 +34,38 @@ class WizardStepTwo extends React.Component {
       props.tools[0].servers.length ? props.tools[0].servers : [];
 
     const serverOptions = servers
-      .map(server =>
-        (
-          <option onClick={this.updateServer}>{server}</option>
-        ),
-      );
+      .map(server => (<option onClick={this.updateServer}>{server}</option>));
 
     const projectNames = projects
-      .map(project =>
+      .map(project => (<option onClick={this.updateProject}>{project.projectName}</option>));
+
+    const dropdownOptions = [
+      {
+        title: `${toolId} Server`,
+        selected: this.state.selectedServer,
+        options: serverOptions,
+      },
+      {
+        title: `${toolId} Project Area`,
+        selected: this.state.selectedProject,
+        options: projectNames,
+      },
+    ];
+
+    const dropDownMenus = dropdownOptions
+      .map(dropdown =>
         (
-          <option onClick={this.updateProject}>{project.projectName}</option>
+          <div>
+            <span>{dropdown.title}</span>
+            <div className="dropdown">
+              <button className="dropdown-btn">{dropdown.selected}
+                <InlineSVG src={dropdownIcon} />
+              </button>
+              <div className="dropdown-content">
+                {dropdown.options}
+              </div>
+            </div>
+          </div>
         ),
       );
 
@@ -56,25 +78,8 @@ class WizardStepTwo extends React.Component {
           <span htmlFor="your-squad">Your Agile Team Tool Squad</span>
           <input type="text" value={teamName} />
 
-          <span>{toolId} Server</span>
-          <div className="dropdown">
-            <button className="dropdown-btn">{this.state.selectedServer}
-              <InlineSVG src={dropdownIcon} />
-            </button>
-            <div className="dropdown-content">
-              {serverOptions}
-            </div>
-          </div>
+          {dropDownMenus}
 
-          <span>{toolId} Project Area</span>
-          <div className="dropdown">
-            <button className="dropdown-btn">{this.state.selectedProject}
-              <InlineSVG src={dropdownIcon} />
-            </button>
-            <div className="dropdown-content">
-              {projectNames}
-            </div>
-          </div>
         </div>
       </div>
     );

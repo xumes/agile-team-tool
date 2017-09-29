@@ -58,10 +58,13 @@
         @include smallFont();
         margin-top: 1em;
         
-        span {
-          display: block;
-          padding-top: 8px;
-          padding-bottom: 4px;
+        div {
+          span {
+            @include smallFont();
+            display: block;
+            padding-top: 8px;
+            padding-bottom: 4px;
+          } 
         }
         
         input {
