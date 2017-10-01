@@ -60,6 +60,7 @@
     "react-addons-test-utils": "^15.3.2",
     "react-datepicker": "^0.33.0",
     "react-dom": "^15.3.2",
+    "react-html-parser": "^2.0.0",
     "react-modal": "^1.6.5",
     "react-overlays": "^0.8.0",
     "react-redux": "^5.0.6",
