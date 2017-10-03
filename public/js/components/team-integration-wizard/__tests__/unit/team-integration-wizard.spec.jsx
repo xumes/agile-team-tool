@@ -6,17 +6,22 @@ const _ = require('lodash');
 // todo: expand on this once we get better at testing react components
 describe('<TeamIntegrationWizard />', () => {
   let comp;
+  const params = {
+    goToPage: () => {},
+    loadTools: () => {},
+    loadIntegration: () => {},
+  };
 
   beforeAll(() => {
     const renderer = new ReactShallowRenderer();
-    renderer.render(<TeamIntegrationWizard />);
+    renderer.render(<TeamIntegrationWizard {...params} />);
 
     comp = renderer.getRenderOutput();
   });
 
   describe('Class', () => {
     beforeAll(() => {
-      this.hti = new TeamIntegrationWizard({});
+      this.hti = new TeamIntegrationWizard(params);
     });
 
     afterAll(() => {
@@ -137,8 +142,8 @@ describe('<TeamIntegrationWizard />', () => {
           expect(child.type).toBe('div');
         });
 
-        // TOFIX: the conditions being tested here seems off. Candidate for refactor.
-        xdescribe('props', () => {
+
+        describe('props', () => {
           const tests = {
             className: 'home-team-header-teamname-btn',
             id: 'homeHeaderIntegrationBtn',
@@ -152,7 +157,7 @@ describe('<TeamIntegrationWizard />', () => {
             });
           });
 
-          it('onClick is correct', () => {
+          it('onClick is a function', () => {
             expect(typeof child.props.onClick).toBe('function');
           });
         });
@@ -171,7 +176,7 @@ describe('<TeamIntegrationWizard />', () => {
           describe('props', () => {
             const tests = {
               title: 'Configure Agile Tool Integration',
-              class: 'home-team-header-teamname-btn-img',
+              className: 'home-team-header-teamname-btn-img',
               element: 'i',
             };
 
@@ -199,21 +204,21 @@ describe('<TeamIntegrationWizard />', () => {
           expect(child.props.children).toBeDefined();
         });
 
-        // TOFIX: i'm not sure we should be testing for defaults, 
-        // since a valid change could be made to these, but still break the unit tests.
-        // Possible candidate for removal.
-        xdescribe('props', () => {
+
+        describe('props', () => {
           const tests = {
-            heading: 'Integration',
+            heading: 'Integrate with RTC',
             show: false,
-            backdropClassName: 'att-common-modal__backdrop',
-            className: 'att-common-modal',
           };
 
           _.forEach(tests, (value, key) => {
             it(`${key} is correct`, () => {
               expect(child.props[key]).toBe(value);
             });
+          });
+
+          it('onHide is a function', () => {
+            expect(typeof child.props.onHide).toBe('function');
           });
         });
       });
