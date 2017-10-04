@@ -6,7 +6,8 @@
     "start": "node ./bin/www",
     "worker": "node ./bin/update-snapshots.js",
     "build": "webpack && gulp build",
-    "test": "karma start && node ./test/_helpers/ascii-art.js"
+    "test": "karma start && node ./test/_helpers/ascii-art.js",
+    "translate-xx": "node ./helpers/translate-xx.js"
   },
   "dependencies": {
     "assets-webpack-plugin": "^3.5.1",
