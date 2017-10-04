@@ -1,7 +1,7 @@
 /* eslint no-console: */
 const consoleToggle = require('../../consoleToggle');
 
-fdescribe('consoleToggle', () => {
+describe('consoleToggle', () => {
   it('is defined', () => {
     expect(consoleToggle).toBeDefined();
   });
