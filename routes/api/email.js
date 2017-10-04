@@ -8,7 +8,7 @@ const async = require('async');
 const SMTP_HOST = settings.email.smtpHost;
 const EMAIL_APPKEY = settings.email.smtpApplicationKey;
 const FEEDBACK_FROM = 'noreply@agile-team-tool.ibm.com';
-const FEEDBACK_RECIPIENTS = 'bfouts@us.ibm.com,esumner@us.ibm.com,chunge@us.ibm.com,jarias@us.ibm.com';
+const FEEDBACK_RECIPIENTS = 'esumner@us.ibm.com,chunge@us.ibm.com,jarias@us.ibm.com';
 
 const sendRequest = (emailObj, cb) => {
   const params = emailObj;

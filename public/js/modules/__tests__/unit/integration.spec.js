@@ -2,7 +2,8 @@ import integration from './../../integration';
 
 // TODO: need to test for the dispatched action along with a state,
 // rather than testing the reducer by itself.
-describe('Reducer: integration', () => {
+
+xdescribe('Reducer: integration', () => {
   const mockIntegration = {
     tool: 'RTC',
     server: 'myServer',
