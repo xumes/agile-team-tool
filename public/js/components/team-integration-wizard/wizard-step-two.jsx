@@ -18,10 +18,12 @@ class WizardStepTwo extends React.Component {
 
   updateServer(event) {
     this.props.updateServer(event.target.text);
+    this.server.focus();
   }
 
   updateProject(event) {
     this.props.updateProject(event.target.value);
+    this.project.focus();
   }
 
   render() {
@@ -49,36 +51,6 @@ class WizardStepTwo extends React.Component {
         </option>
       ));
 
-    const dropdownOptions = [
-      {
-        title: `${toolId} Server`,
-        selected: selectedServer,
-        options: serverOptions,
-      },
-      {
-        title: `${toolId} Project Area`,
-        selected: selectedProject.projectName,
-        options: projectNames,
-      },
-    ];
-
-    const dropDownMenus = dropdownOptions
-      .map(dropdown =>
-        (
-          <div>
-            <span>{dropdown.title}</span>
-            <div className="dropdown">
-              <button className="dropdown-btn">{dropdown.selected}
-                <InlineSVG src={dropdownIcon} />
-              </button>
-              <div className="dropdown-content">
-                {dropdown.options}
-              </div>
-            </div>
-          </div>
-        ),
-      );
-
     return (
       <div className="att-integration">
         <h2 className="att-integration__heading-step">
@@ -87,8 +59,34 @@ class WizardStepTwo extends React.Component {
         <div className="att-integration__container">
           <span htmlFor="your-squad">Your Agile Team Tool Squad</span>
           <input type="text" value={teamName} />
-
-          {dropDownMenus}
+          <div>
+            <span>{toolId} Server</span>
+            <div className="dropdown">
+              <button
+                ref={(s) => { this.server = s; }}
+                className="dropdown-btn"
+              >{selectedServer}
+                <InlineSVG src={dropdownIcon} />
+              </button>
+              <div className="dropdown-content">
+                {serverOptions}
+              </div>
+            </div>
+          </div>
+          <div>
+            <span>{toolId} Project Area</span>
+            <div className="dropdown">
+              <button
+                ref={(p) => { this.project = p; }}
+                className="dropdown-btn"
+              >{selectedProject.projectName}
+                <InlineSVG src={dropdownIcon} />
+              </button>
+              <div className="dropdown-content">
+                {projectNames}
+              </div>
+            </div>
+          </div>
 
         </div>
       </div>
