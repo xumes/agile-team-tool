@@ -1,0 +1,55 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "clear": "Clear",
+    "close": "Close",
+    "content": "content",
+    "dismiss": "dismiss",
+    "edit": "edit",
+    "hide": "hide",
+    "less": "less",
+    "like": "like",
+    "more": "more",
+    "open": "open",
+    "share": "share",
+    "show": "show",
+    "show_less": "Show less",
+    "show_more": "Show more",
+    "sign_in": "sign in",
+    "sign_in_proper": "Sign In",
+    "view_all": "view all",
+    "arrow-left": "Arrow left",
+    "arrow-right": "Arrow right",
+    "clear-all": "Clear all",
+    "next": "Next",
+    "pre": "Previous",
+    "cta": {
+      "learn-more": "Learn more",
+      "submit": "Submit",
+      "save": "Save",
+      "select": "select"
+    },
+    "message": {
+      "accept": "Accepted",
+      "decline": "Declined",
+      "error": "Error",
+      "fail": "Failed",
+      "no-data": "There is no available data.",
+      "saved": "Saved",
+      "success": "Success",
+      "warning": "Warning"
+    },
+    "validation-message": {
+      "required": "This is a required!",
+      "regexp": "Invalid",
+      "number": "Must be a number",
+      "email": "Invalid email address",
+      "url": "Please input a valid link!",
+      "valid-date": "Please enter a valid date",
+      "valid-value": "Please select a valid value",
+      "valid-duration": "Please select a valid duration",
+      "hour": "hour",
+      "hours": "hours"
+    }
+  }
+}
