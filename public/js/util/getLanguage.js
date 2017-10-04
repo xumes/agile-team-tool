@@ -1,5 +1,5 @@
-/* global window, location */
-const _ = require('lodash');
+/* global window */
+const urlParams = require('./urlParams');
 
 /**
  * Gets language from `navigator`. Can be overridden with `cc` and `lc`
@@ -27,29 +27,18 @@ const getLanguage = () => {
     window.navigator.language
   ).toLowerCase();
 
-  const urlParams = _.fromPairs(_.compact(_.map(
-    location.search.slice(1).split('&'),
-    (item) => {
-      if (item) {
-        return item.split('=');
-      }
-
-      return false;
-    },
-  )));
-
   let lang = null;
 
   if (language.indexOf('-') > -1) {
     const split = language.split('-');
     lang = {
-      lc: urlParams.lc || split[0],
-      cc: urlParams.cc || split[1],
+      lc: urlParams.get('lc') || split[0],
+      cc: urlParams.get('cc') || split[1],
     };
   } else {
     lang = {
-      lc: urlParams.lc || language,
-      cc: urlParams.cc || null,
+      lc: urlParams.get('lc') || language,
+      cc: urlParams.get('cc') || null,
     };
   }
 

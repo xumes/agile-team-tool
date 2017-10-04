@@ -2,7 +2,7 @@
 const getLanguage = require('../../getLanguage.js');
 const _ = require('lodash');
 
-fdescribe('Utility: getLanguage', () => {
+describe('Utility: getLanguage', () => {
   const language = (
     window.navigator.userLanguage ||
     window.navigator.language
