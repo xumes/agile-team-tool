@@ -54,7 +54,7 @@ describe('<WizardStepOne />', () => {
 
         describe('props', () => {
           const tests = {
-            className: 'att-integration__heading',
+            className: 'att-integration__heading-step',
           };
 
           _.forEach(tests, (value, key) => {
@@ -181,8 +181,56 @@ describe('<WizardStepOne />', () => {
       tools: PropTypes.arrayOf(PropTypes.shape({
         toolId: PropTypes.string,
         toolName: PropTypes.string,
-        servers: PropTypes.arrayOf(PropTypes.string),
+        servers: PropTypes.array,
       })),
+      team: PropTypes.shape({
+        teamId: PropTypes.number,
+        name: PropTypes.string,
+        type: PropTypes.string,
+        integration: PropTypes.shape({
+          id: PropTypes.number,
+          toolId: PropTypes.string,
+          server: PropTypes.string,
+          projectArea: PropTypes.string,
+          settings: PropTypes.shape({
+            defects: PropTypes.object,
+            velocity: PropTypes.object,
+            throughput: PropTypes.object,
+            wip: PropTypes.object,
+            backlog: PropTypes.object,
+            deployments: PropTypes.object,
+            iterationPattern: PropTypes.string,
+          }),
+        }),
+      }),
+      projects: PropTypes.arrayOf(PropTypes.shape({
+        projectId: PropTypes.string,
+        projectName: PropTypes.string,
+      })),
+      preview: PropTypes.shape({
+        velocity: PropTypes.arrayOf(PropTypes.shape({
+          storyPointsCommitted: PropTypes.number,
+          storyPointsDelivered: PropTypes.number,
+        })),
+        throughput: PropTypes.arrayOf(PropTypes.shape({
+          storyCardsCommitted: PropTypes.number,
+          storyCardsDelivered: PropTypes.number,
+        })),
+        defects: PropTypes.arrayOf(PropTypes.shape({
+          defectsStartBal: PropTypes.number,
+          defectsOpened: PropTypes.number,
+          defectsClosed: PropTypes.number,
+          defectsEndBal: PropTypes.number,
+        })),
+        deployments: PropTypes.arrayOf(PropTypes.shape({})),
+        wip: PropTypes.number,
+        backlog: PropTypes.number,
+      }),
+      wizard: PropTypes.shape({ page: PropTypes.number, close: PropTypes.bool }),
+      loadTools: PropTypes.func,
+      loadTeam: PropTypes.func,
+      loadProjects: PropTypes.func,
+      goToPage: PropTypes.func,
     };
 
     _.forEach(propTypes, (value, key) => {
@@ -200,18 +248,39 @@ describe('<WizardStepOne />', () => {
 
   describe('defaultProps', () => {
     const defaultProps = {
-      tools: [{
-        toolId: 0,
-        toolName: '',
-        servers: [],
-      }],
+      tools: [
+        { toolId: '', toolName: '', servers: [] },
+      ],
+      integration: {},
+      settings: {},
+      team: {},
+      projects: [
+        { projectId: '', projectName: '' },
+      ],
+      preview: {},
+      wizard: { page: 1, close: false },
+      loadTools: () => {},
+      loadTeam: () => {},
+      loadProjects: () => {},
+      goToPage: () => {},
     };
 
     _.forEach(defaultProps, (value, key) => {
-      it(`\`${key}\` is set properly`, () => {
-        expect(WizardStepOne.defaultProps[key])
-          .toEqual(value);
-      });
+      switch (typeof value) {
+        case 'function': {
+          it(`\`${key}\` is a function`, () => {
+            expect(WizardStepOne.defaultProps[key])
+              .toBeDefined();
+          });
+          break;
+        }
+        default: {
+          it(`\`${key}\` is set properly`, () => {
+            expect(WizardStepOne.defaultProps[key])
+              .toEqual(value);
+          });
+        }
+      }
     });
   });
 });
