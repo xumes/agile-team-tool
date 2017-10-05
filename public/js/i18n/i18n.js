@@ -24,7 +24,7 @@ class I18n {
 
     Object.defineProperty(this, 'data', {
       enumerable: true,
-      get: () => this.languages[this.userLang],
+      get: () => languages[this.userLang],
     });
 
     Object.defineProperty(this, 'fallback', {
