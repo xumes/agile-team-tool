@@ -34,10 +34,11 @@ class I18n {
   }
 
   async initialize() {
-    return this.fetch(this.userLang);
+    return this.fetchAndLoadLanguage(this.userLang);
   }
 
-  async fetch(lcCc, forceFetch) {
+  // Note: In the future, we may separate fetch and load into their own methods
+  async fetchAndLoadLanguage(lcCc, forceFetch) {
     let isFetched = true;
     let json = null;
 

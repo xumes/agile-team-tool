@@ -130,25 +130,25 @@ describe('i18n Instance', () => {
         expect(typeof i18n.initialize).toBe('function');
       });
 
-      it('calls `this.fetch`', () => {
-        spyOn(i18n, 'fetch');
+      it('calls `this.fetchAndLoadLanguage`', () => {
+        spyOn(i18n, 'fetchAndLoadLanguage');
         i18n.initialize();
-        expect(i18n.fetch).toHaveBeenCalled();
+        expect(i18n.fetchAndLoadLanguage).toHaveBeenCalled();
       });
 
       it('with `this.userLang`', () => {
-        spyOn(i18n, 'fetch');
+        spyOn(i18n, 'fetchAndLoadLanguage');
         i18n.initialize();
-        expect(i18n.fetch).toHaveBeenCalledWith(i18n.userLang);
+        expect(i18n.fetchAndLoadLanguage).toHaveBeenCalledWith(i18n.userLang);
       });
 
       it('returns a promise', () => {
         expect(i18n.initialize() instanceof Promise).toBe(true);
       });
 
-      it('resolves with `this.fetch` response', (done) => {
+      it('resolves with `this.fetchAndLoadLanguage` response', (done) => {
         const test = 'foobar';
-        spyOn(i18n, 'fetch').and.returnValue(test);
+        spyOn(i18n, 'fetchAndLoadLanguage').and.returnValue(test);
 
         i18n.initialize()
           .then((re) => {
@@ -158,24 +158,24 @@ describe('i18n Instance', () => {
       });
     });
 
-    describe('fetch', () => {
+    describe('fetchAndLoadLanguage', () => {
       it('is defined', () => {
-        expect(i18n.fetch).toBeDefined();
+        expect(i18n.fetchAndLoadLanguage).toBeDefined();
       });
 
       it('is a function', () => {
-        expect(typeof i18n.fetch).toBe('function');
+        expect(typeof i18n.fetchAndLoadLanguage).toBe('function');
       });
 
       describe('Language already exists', () => {
         it('*NO* axios call is made', () => {
           spyOn(axios, 'get');
-          i18n.fetch('en-us');
+          i18n.fetchAndLoadLanguage('en-us');
           expect(axios.get).not.toHaveBeenCalled();
         });
 
         it('returns the language object', (done) => {
-          i18n.fetch('en-us')
+          i18n.fetchAndLoadLanguage('en-us')
             .then((re) => {
               expect(re).toEqual(enUs);
               done();
@@ -186,14 +186,14 @@ describe('i18n Instance', () => {
       describe('Language *does not* exist', () => {
         it('calls `axios.get`', () => {
           spyOn(axios, 'get');
-          i18n.fetch('fo-ba');
+          i18n.fetchAndLoadLanguage('fo-ba');
           expect(axios.get).toHaveBeenCalled();
         });
 
         it('...with expected path', () => {
           const lang = 'fo-ba';
           spyOn(axios, 'get');
-          i18n.fetch(lang);
+          i18n.fetchAndLoadLanguage(lang);
           expect(axios.get).toHaveBeenCalledWith(`./translations/${lang}.json`);
         });
 
@@ -210,7 +210,7 @@ describe('i18n Instance', () => {
 
           beforeAll(() => {
             spyOn(axios, 'get').and.returnValue(response);
-            dfr = i18n.fetch(lcCc);
+            dfr = i18n.fetchAndLoadLanguage(lcCc);
           });
 
           afterAll(() => {
@@ -241,7 +241,7 @@ describe('i18n Instance', () => {
 
           beforeAll(() => {
             spyOn(axios, 'get').and.throwError();
-            dfr = i18n.fetch(lang);
+            dfr = i18n.fetchAndLoadLanguage(lang);
           });
 
           it('*does not* update i18n.userLang', (done) => {
@@ -299,7 +299,7 @@ describe('i18n Instance', () => {
 
           beforeAll(() => {
             spyOn(axios, 'get').and.returnValue(response);
-            dfr = i18n.fetch('fo-ba');
+            dfr = i18n.fetchAndLoadLanguage('fo-ba');
           });
 
           afterAll(() => {
@@ -330,7 +330,7 @@ describe('i18n Instance', () => {
 
           beforeAll(() => {
             spyOn(axios, 'get').and.returnValue(response);
-            dfr = i18n.fetch('fo-ba');
+            dfr = i18n.fetchAndLoadLanguage('fo-ba');
           });
 
           afterAll(() => {
@@ -510,7 +510,7 @@ describe('i18n Instance', () => {
 
         beforeAll(() => {
           spyOn(axios, 'get').and.returnValue(response);
-          dfr = i18n.fetch('fo-ba');
+          dfr = i18n.fetchAndLoadLanguage('fo-ba');
         });
 
         afterAll(() => {
@@ -539,7 +539,7 @@ describe('i18n Instance', () => {
 
         beforeAll(() => {
           spyOn(axios, 'get').and.returnValue(response);
-          dfr = i18n.fetch('fo-ba');
+          dfr = i18n.fetchAndLoadLanguage('fo-ba');
         });
 
         afterAll(() => {
@@ -568,7 +568,7 @@ describe('i18n Instance', () => {
 
         beforeAll(() => {
           spyOn(axios, 'get').and.returnValue(response);
-          dfr = i18n.fetch('fo-ba');
+          dfr = i18n.fetchAndLoadLanguage('fo-ba');
         });
 
         afterAll(() => {
