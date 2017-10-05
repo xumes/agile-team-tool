@@ -18,10 +18,10 @@ All translation JSON files should be saved to the `public/translations` director
 {
   "app": {
     "normal-string": "Hello World!",
-    "html-string": "Welcome, <strong>Sign In</strong>",
-    ...
+    "html-string": "Welcome, <strong>Sign In</strong>.",
+    . . .
   },
-  ...
+  . . .
 }
 ```
 
@@ -43,7 +43,7 @@ const Welcome = (props) => {
   return (
     <div>
       <img src="./hello-world.jpg" alt={i18n.t('app.normal-string')} />
-		{i18n.parseReact('app.html-string')}
+      {i18n.parseReact('app.html-string')}
     </div>
   );
 };
