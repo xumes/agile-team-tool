@@ -18,10 +18,8 @@ All translation JSON files should be saved to the `public/translations` director
 {
   "app": {
     "normal-string": "Hello World!",
-    "html-string": "Welcome, <strong>Sign In</strong>.",
-    . . .
-  },
-  . . .
+    "html-string": "Welcome, <strong>Sign In</strong>."
+  }
 }
 ```
 
