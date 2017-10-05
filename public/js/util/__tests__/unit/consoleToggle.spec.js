@@ -30,9 +30,9 @@ describe('consoleToggle', () => {
       consoleToggle.enable();
     });
 
-    it('disables console.log', () => {
+    it('*doesn\'t* affect console.log', () => {
       console.log('foo');
-      expect(spy).not.toHaveBeenCalled();
+      expect(spy).toHaveBeenCalled();
     });
 
     it('disables console.info', () => {
@@ -87,7 +87,7 @@ describe('consoleToggle', () => {
       spyGroupEnd = spyOn(console, 'groupEnd');
     });
 
-    it('enables the console.log', () => {
+    it('doesn\'t affect console.log', () => {
       console.log('bar');
       expect(spy).toHaveBeenCalledWith('bar');
     });

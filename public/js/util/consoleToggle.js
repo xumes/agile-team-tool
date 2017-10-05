@@ -2,7 +2,6 @@
 const _ = require('lodash');
 
 const keys = [
-  'log',
   'info',
   'warn',
   'error',
