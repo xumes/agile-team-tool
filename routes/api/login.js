@@ -1,17 +1,16 @@
-var settings = require('../../settings');
+const settings = require('../../settings');
 
-module.exports = function(app, includes) {
-
+module.exports = (app, includes) => {
   app.post('/auth', includes.passport.authenticate('ldap-login', {
     successRedirect: '/',
     failureRedirect: '/login',
-    successReturnToOrRedirect: true
+    successReturnToOrRedirect: true,
   }));
 
-  app.get('/logout', function(req, res) {
-    req.session.destroy(function(err) {
-      if (settings.authType == 'saml') {
-        res.redirect('/ssologout');
+  app.get('/logout', (req, res) => {
+    req.session.destroy(() => {
+      if (settings.authType === 'saml') {
+        res.redirect('https://w3id.sso.ibm.com/pkmslogout');
       } else {
         res.redirect('/login');
       }
@@ -19,17 +18,17 @@ module.exports = function(app, includes) {
   });
 
   // test login function
-  app.get('/api/login/masquerade/:user', function(req, res) {
-    var user = {
-      'shortEmail': req.params.user,
-      'ldap': {
-        'serialNumber': '123456PH1',
-        'uid': '123456PH1',
-        'hrFirstName': 'John',
-        'hrLastName': 'Doe'
-      }
+  app.get('/api/login/masquerade/:user', (req, res) => {
+    const user = {
+      shortEmail: req.params.user,
+      ldap: {
+        serialNumber: '123456PH1',
+        uid: '123456PH1',
+        hrFirstName: 'John',
+        hrLastName: 'Doe',
+      },
     };
-    req.login(user, function(err) {
+    req.login(user, (err) => {
       /* istanbul ignore if  */
       if (err) {
         res.send(err);

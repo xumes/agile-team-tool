@@ -1,40 +1,32 @@
-'use strict';
-var util = require('../../helpers/util');
-var loggers = require('../../middleware/logger');
-var validate = require('validate.js');
-var _ = require('underscore');
-var sprintf = require('sprintf-js').sprintf;
-var setting = require('../../settings.js');
-var Iterations = require('../../models/iterations');
-var Users = require('../../models/users');
 
+const loggers = require('../../middleware/logger');
+const _ = require('underscore');
+const Iterations = require('../../models/iterations');
 
-var formatErrMsg = function(msg) {
-  loggers.get('api').error('Error: ' + msg);
+const formatErrMsg = (msg) => {
+  loggers.get('api').error(`Error: ${msg}`);
   return {
-    error: msg
+    error: msg,
   };
 };
 
-module.exports = function(app, includes) {
-  var middleware = includes.middleware;
-
+module.exports = (app, includes) => {
   /**
    * Get iteration docs by keys(teamId) or get all iteration info docs
    * Cloudant view1: _design/teams/_view/iterinfo?keys=["ag_team_sample_team1_1469007856095"]
    * Cloudant view2: _design/teams/_view/iterinfo
    * @param {String}   teamId(optional)
    */
-  var getIterinfo = function(req, res, next) {
-    var teamId = req.params.teamId || undefined;
+  const getIterinfo = (req, res) => {
+    const teamId = req.params.teamId || undefined;
     loggers.get('api').verbose('[iterationRoute.getIterinfo] teamId:', teamId);
     Iterations.getByIterInfo(teamId)
-      .then(function(result) {
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         /* cannot simulate Mongo error during testing */
-        formatErrMsg('[iterationRoute.getIterinfo]:' + err);
+        formatErrMsg(`[iterationRoute.getIterinfo]:${err}`);
         return res.status(400).send(err);
       });
   };
@@ -44,14 +36,14 @@ module.exports = function(app, includes) {
    * @param {String}  docId
    * @return mongodb will return null if no match id
    */
-  var getIterationDoc = function(req, res, next) {
-    var docId = req.params.id || undefined;
+  const getIterationDoc = (req, res) => {
+    const docId = req.params.id || undefined;
     loggers.get('api').verbose('[iterationRoute.getIterationDoc] docId:', docId);
     Iterations.get(docId)
-      .then(function(result) {
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         /* cannot simulate Mongo error during testing */
         formatErrMsg('[iterationRoute.getIterationDoc]:', JSON.stringify(err));
         return res.status(400).send(err);
@@ -63,17 +55,17 @@ module.exports = function(app, includes) {
    * @param {String}  startkey
    * @param {String}  endkey
    */
-  var getCompletedIterations = function(req, res, next) {
-    var startkey = req.query.startkey || undefined;
-    var endkey = req.query.endkey || undefined;
+  const getCompletedIterations = (req, res) => {
+    const startkey = req.query.startkey || undefined;
+    const endkey = req.query.endkey || undefined;
     loggers.get('api').verbose('[iterationRoute.getCompletedIterations] startkey:%s endkey:%s', startkey, endkey);
     Iterations.getCompletedIterationsByKey(startkey, endkey)
-      .then(function(result) {
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         /* cannot simulate Mongo error during testing */
-        formatErrMsg('[getCompletedIterations]:' + err);
+        formatErrMsg(`[getCompletedIterations]:${err}`);
         return res.status(400).send(err);
       });
   };
@@ -82,20 +74,20 @@ module.exports = function(app, includes) {
    * Add iteration doc
    * @param {String}  request_body
    */
-  var createIteration = function(req, res, next) {
-    var data = req.body;
+  const createIteration = (req, res) => {
+    const data = req.body;
     if (_.isEmpty(data)) {
       return res.status(400).send({
-        error: 'Iteration data is missing'
+        error: 'Iteration data is missing',
       });
     }
     // loggers.get('api').verbose('[createIteration] POST data:', data);
     // console.log('[createIteration] POST data:', data);
-    Iterations.add(data, req.session['user'])
-      .then(function(result) {
+    return Iterations.add(data, req.session.user)
+      .then((result) => {
         res.send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         /* cannot simulate Mongo error during testing */
         // console.log('[api] [createIteration]:', err);
         loggers.get('api').error('[iterationRoute.createIteration]:', err);
@@ -108,29 +100,30 @@ module.exports = function(app, includes) {
    * @param {String}  iteration docId
    * @param {String}  request_body
    */
-  var updateIteration = function(req, res, next) {
-    var iterationId = req.params.iterationId;
-    var data = req.body;
+  const updateIteration = (req, res) => {
+    const iterationId = req.params.iterationId;
+    const data = req.body;
     if (_.isEmpty(iterationId)) {
       return res.status(400).send({
-        error: 'iterationId is missing'
+        error: 'iterationId is missing',
       });
     }
     if (_.isEmpty(data)) {
       return res.status(400).send({
-        error: 'Iteration data is missing'
+        error: 'Iteration data is missing',
       });
     }
     // loggers.get('api').verbose('[updateIteration] POST data:', JSON.stringify(data, null, 4));
-    Iterations.edit(iterationId, data, req.session['user'])
-      .then(function(result) {
+    Iterations.edit(iterationId, data, req.session.user)
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         /* cannot simulate Mongo error during testing */
         loggers.get('api').error('[iterationRoute.updateIteration]:', err);
         res.status(400).send(err);
       });
+    return null;
   };
 
   /**
@@ -142,23 +135,22 @@ module.exports = function(app, includes) {
    * @param {Date}      enddate (format: YYYYMMDD) (optional)
    * @param {Number}    limit (optional)
    */
-  var searchTeamIteration = function(req, res, next) {
-    var teamId = req.query.id;
-    if (!teamId)
-      return res.status(400).send({error: 'TeamId is required'});
+  const searchTeamIteration = (req, res) => {
+    const teamId = req.query.id;
+    if (!teamId) { return res.status(400).send({ error: 'TeamId is required' }); }
 
-    var params = {
+    const params = {
       id: teamId,
       startDate: req.query.startdate,
       endDate: req.query.enddate,
       limit: req.query.limit,
-      status: req.query.status
+      status: req.query.status,
     };
-    Iterations.searchTeamIteration(params)
-      .then(function(result) {
+    return Iterations.searchTeamIteration(params)
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch(function(err){
+      .catch((err) => {
         res.status(400).send(err);
       });
   };
@@ -169,14 +161,14 @@ module.exports = function(app, includes) {
    * - personDaysUnavailable
    * - personDaysAvailable
    */
-  var updateSprintAvailability = function(req, res, next) {
+  const updateSprintAvailability = (req, res) => {
     Iterations.updateSprintAvailability()
-      .then(function(result) {
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         /* cannot simulate Mongo error during testing */
-        formatErrMsg('[updateSprintAvailability]:' + err);
+        formatErrMsg(`[updateSprintAvailability]:${err}`);
         return res.status(400).send(err);
       });
   };

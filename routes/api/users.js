@@ -1,139 +1,138 @@
-var Users = require('../../models/users');
+const Users = require('../../models/users');
 // Get admins and supports api call
-var _ = require('underscore');
-module.exports = function(app, includes) {
-  var middleware = includes.middleware;
+const _ = require('underscore');
 
-  getAdmins = function(req, res) {
+module.exports = (app, includes) => {
+  const getAdmins = (req, res) => {
     Users.getAdmins()
-      .then(function(result) {
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(400).send(err);
       });
   };
 
-  isUserAllowed = function(req, res) {
+  const isUserAllowed = (req, res) => {
     if (_.isUndefined(req.query.teamId) || _.isEmpty(req.query.teamId)) {
       res.status(400).send({
-        'error': 'teamId is empty'
+        error: 'teamId is empty',
       });
     } else {
       Users.isUserAllowed(req.session.user.ldap.uid, req.query.teamId)
-        .then(function(result) {
+        .then((result) => {
           res.status(200).send(result);
         })
-        .catch( /* istanbul ignore next */ function(err) {
+        .catch(/* istanbul ignore next */ (err) => {
           res.status(400).send(err);
         });
     }
   };
 
-  getApiKey = function(req, res) {
-    Users.createApikey(req.session['user'])
-      .then(function(result) {
+  const getApiKey = (req, res) => {
+    Users.createApikey(req.session.user)
+      .then((result) => {
         res.status(200).send({
-          'key': result.key,
-          'userId': result.userId,
-          'shortEmail': result.email
+          key: result.key,
+          userId: result.userId,
+          shortEmail: result.email,
         });
       })
-      .catch(function(err) {
+      .catch((err) => {
         res.status(404).send(err);
       });
   };
 
-  deleteApiKey = function(req, res) {
-    Users.deleteApikey(req.session['user'])
-      .then(function(result) {
+  const deleteApiKey = (req, res) => {
+    Users.deleteApikey(req.session.user)
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch(function(err) {
+      .catch((err) => {
         res.status(404).send(err);
       });
   };
 
-  getActiveUser = function(req, res) {
+  const getActiveUser = (req, res) => {
     // return active user session
-    res.send(req.session['user']);
+    res.send(req.session.user);
   };
 
-  getUsersInfo = function(req, res) {
+  const getUsersInfo = (req, res) => {
     if (!req.body.ids || _.isEmpty(req.body.ids)) {
-      res.status(400).send({'error': 'ids is empty'});
+      res.status(400).send({ error: 'ids is empty' });
     } else {
       Users.getUsersInfo(req.body.ids)
-        .then(function(result) {
+        .then((result) => {
           res.status(200).send(result);
         })
-        .catch(function(err) {
+        .catch((err) => {
           res.status(404).send(err);
         });
     }
   };
 
-  getActiveUserInfo = function(req, res) {
-    var userId;
-    var user = req.session['user'];
+  const getActiveUserInfo = (req, res) => {
+    let userId;
+    const user = req.session.user;
     if (user) {
-      userId = user ? user['ldap']['uid'].toUpperCase() : '';
+      userId = user ? user.ldap.uid.toUpperCase() : '';
       Users.getUsersInfo(userId)
-        .then(function(result) {
+        .then((result) => {
           res.status(200).send(result);
         })
-        .catch(function(err) {
+        .catch((err) => {
           res.status(404).send(err);
         });
     }
   };
 
-  updateUser = function(req, res) {
-    var user = req.session['user'];
-    var userId = user ? user['ldap']['uid'].toUpperCase() : '';
+  const updateUser = (req, res) => {
+    const user = req.session.user;
+    const userId = user ? user.ldap.uid.toUpperCase() : '';
     Users.isUserAdmin(userId)
-      .then(function(result) {
-        var userInfo = req.body;
+      .then((result) => {
+        const userInfo = req.body;
         if (!result) {
           // remove adminAccess override on update if current user is not admin
           delete userInfo.adminAccess;
         }
         return Users.updateUser(userInfo);
       })
-      .then(function(result) {
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch(function(err) {
+      .catch((err) => {
         res.status(404).send(err);
       });
   };
 
-  createUser = function(req, res) {
-    var user = req.session['user'];
-    var userId = user ? user['ldap']['uid'].toUpperCase() : '';
+  const createUser = (req, res) => {
+    const user = req.session.user;
+    const userId = user ? user.ldap.uid.toUpperCase() : '';
     Users.isUserAdmin(userId)
-      .then(function(result) {
-        var userInfo = req.body;
+      .then((result) => {
+        const userInfo = req.body;
         if (!result) {
           // remove adminAccess override on create if current user is not admin
           delete userInfo.adminAccess;
         }
         return Users.create(userInfo);
       })
-      .then(function(result) {
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch(function(err) {
+      .catch((err) => {
         res.status(404).send(err);
       });
   };
 
-  isUserImageBroken = function(req, res) {
+  const isUserImageBroken = (req, res) => {
     Users.isUserImageBroken(req.params.uid)
-      .then(function(result) {
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch(function(err) {
+      .catch(() => {
         res.status(200).send('');
       });
   };

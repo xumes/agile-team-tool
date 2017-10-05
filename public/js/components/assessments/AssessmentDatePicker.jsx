@@ -1,18 +1,29 @@
-var React = require('react');
-var ReactModal = require('react-modal');
-var moment = require('moment');
-var DatePicker = require('react-datepicker');
+const React = require('react');
+const PropTypes = require('prop-types');
 
-var AssessmentDatePicker = React.createClass({
+const AssessmentDatePicker = React.createClass({
   propTypes: {
-    onClick: React.PropTypes.func,
-    value: React.PropTypes.string
+    onClick: PropTypes.func,
+    value: PropTypes.string,
   },
 
-  render: function() {
-      return (
-        <h2 class='assessment-date-picker-h2' onClick={this.props.onClick} style={{'display':this.props.haveAccess?'none':'block'}}>{'override'}</h2>
-      )
-  }
+  render() {
+    const styles = {
+      display: this.props.haveAccess ? 'none' : 'block',
+    };
+
+    return (
+      <div
+        className="assessment-date-picker-h2"
+        onClick={this.props.onClick}
+        style={styles}
+        role="button"
+        tabIndex="0"
+      >
+        {'override'}
+      </div>
+    );
+  },
 });
+
 module.exports = AssessmentDatePicker;

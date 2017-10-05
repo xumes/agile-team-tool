@@ -1,201 +1,200 @@
-var teamModel = require('../../models/teams');
-var sysModel = require('../../models/system');
+const teamModel = require('../../models/teams');
+const sysModel = require('../../models/system');
 // var teamIndex = require('../../models/index/teamIndex');
 // var validate = require('validate.js');
-var _ = require('underscore');
+const _ = require('underscore');
 
-module.exports = function(app, includes) {
-  //checked
-  searchTeamWithName = function(req, res) {
-    var keyword = req.params.name;
-    if (keyword != '' && keyword != undefined) {
+module.exports = (app, includes) => {
+  // checked
+  const searchTeamWithName = (req, res) => {
+    const keyword = req.params.name;
+    if (keyword !== '' && keyword !== undefined) {
       teamModel.searchTeamWithName(keyword)
-        .then(function(result){
+        .then((result) => {
           res.status(200).send(result);
         })
-        .catch(function(err){
+        .catch((err) => {
           res.status(404).send(err);
         });
     } else {
-      var err = 'keyword is missing';
+      const err = 'keyword is missing';
       res.status(400).send(err);
     }
   };
 
-  //checked
-  createTeam = function(req, res) {
-    teamModel.createTeam(req.body, req.session['user'])
-      .then(function(result) {
+  // checked
+  const createTeam = (req, res) => {
+    teamModel.createTeam(req.body, req.session.user)
+      .then((result) => {
         res.status(201).send(result);
       })
-      .catch(function(err) {
+      .catch((err) => {
         res.status(400).send(err);
       });
   };
 
-  //checked
-  deleteTeam = function(req, res) {
-    teamModel.softDeleteArchive(req.body, req.session['user'], 'delete')
-      .then(function(result) {
+  // checked
+  const deleteTeam = (req, res) => {
+    teamModel.softDeleteArchive(req.body, req.session.user, 'delete')
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch(function(err) {
+      .catch((err) => {
         res.status(400).send(err);
       });
   };
 
-  //checked
-  updateTeam = function(req, res) {
-    teamModel.updateTeam(req.body, req.session['user'])
-      .then(function(result) {
+  // checked
+  const updateTeam = (req, res) => {
+    teamModel.updateTeam(req.body, req.session.user)
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch(function(err) {
+      .catch((err) => {
         res.status(400).send(err);
       });
   };
 
-  archiveTeam = function(req, res) {
-    var docStatus = null;
-    if (req.body['docStatus'] && req.body['docStatus'].toLowerCase() === 'archive') {
+  const archiveTeam = (req, res) => {
+    let docStatus = null;
+    if (req.body.docStatus && req.body.docStatus.toLowerCase() === 'archive') {
       docStatus = 'archive';
     }
-    teamModel.softDeleteArchive(req.body, req.session['user'], docStatus)
-      .then(function(result) {
+    teamModel.softDeleteArchive(req.body, req.session.user, docStatus)
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch(function(err) {
+      .catch((err) => {
         res.status(400).send(err);
       });
   };
 
-  updateLink = function(req, res) {
-    var links = req.body['links'];
-    var user = req.session['user'];
-    var teamId = req.body['teamId'];
+  const updateLink = (req, res) => {
+    const links = req.body.links;
+    const user = req.session.user;
+    const teamId = req.body.teamId;
     teamModel.modifyImportantLinks(teamId, user, links)
-      .then(function(result){
+      .then((result) => {
         res.send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         // cannot simulate this error during testing
         res.status(400).send(err);
       });
   };
 
-  deleteLink = function(req, res) {
-    var links = req.body['links'];
-    var user = req.session['user'];
-    var teamId = req.body['teamId'];
+  const deleteLink = (req, res) => {
+    const links = req.body.links;
+    const user = req.session.user;
+    const teamId = req.body.teamId;
     teamModel.deleteImportantLinks(teamId, user, links)
-      .then(function(result){
+      .then((result) => {
         res.send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         // cannot simulate this error during testing
         res.status(400).send(err);
       });
   };
 
-  //checked
-  associateTeam = function(req, res) {
-    teamModel.associateTeams(req.body.parentTeamId, req.body.childTeamId, req.session['user'])
-      .then(function(result){
+  // checked
+  const associateTeam = (req, res) => {
+    teamModel.associateTeams(req.body.parentTeamId, req.body.childTeamId, req.session.user)
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch(function(err){
+      .catch((err) => {
         res.status(400).send(err);
       });
   };
 
-  //checked
-  removeAssociation = function(req, res) {
-    teamModel.removeAssociation(req.body.childTeamId, req.session['user'])
-      .then(function(result){
+  // checked
+  const removeAssociation = (req, res) => {
+    teamModel.removeAssociation(req.body.childTeamId, req.session.user)
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch(function(err){
+      .catch((err) => {
         res.status(400).send(err);
       });
   };
 
-  //checked
-  modifyTeamMembers = function(req, res) {
-    teamModel.modifyTeamMembers(req.body['_id'], req.session['user'], req.body['members'])
-      .then(function(result){
+  // checked
+  const modifyTeamMembers = (req, res) => {
+    teamModel.modifyTeamMembers(req.body._id, req.session.user, req.body.members)  // eslint-disable-line
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch(function(err){
+      .catch((err) => {
         res.status(400).send(err);
       });
   };
 
-  getTeamLinkLabels = function(req, res) {
+  const getTeamLinkLabels = (req, res) => {
     sysModel.getTeamLinkLabels()
-      .then(function(result) {
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         // cannot simulate this error during testing
         res.status(400).send(err);
       });
   };
 
-  //checked
-  getTeamMemberRoles = function(req, res) {
+  // checked
+  const getTeamMemberRoles = (req, res) => {
     sysModel.getTeamMemberRoles()
-      .then(function(result) {
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         // cannot simulate this error during testing
         res.status(400).send(err);
       });
   };
 
-  //checked
-  getByTeamName = function(req, res) {
-    var teamName = req.params.teamName;
+  // checked
+  const getByTeamName = (req, res) => {
+    const teamName = req.params.teamName;
     teamModel.getByName(teamName)
-      .then(function(result) {
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         // cannot simulate this error during testing
         res.status(400).send(err);
       });
   };
 
-  getTeamByEmail = function(req, res) {
-    var email = req.params.email;
+  const getTeamByEmail = (req, res) => {
+    const email = req.params.email;
     teamModel.getTeamsByEmail(email)
-      .then(function(result) {
+      .then((result) => {
         res.send(result);
       })
-      .catch(function(err) {
+      .catch((err) => {
         res.status(400).send(err);
       });
   };
 
-  getTeamsByUserId = function(req, res) {
-    var uid = req.params.uid;
+  const getTeamsByUserId = (req, res) => {
+    const uid = req.params.uid;
     teamModel.getTeamsByUserId(uid)
-      .then(function(result) {
+      .then((result) => {
         res.send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(400).send(err);
       });
   };
 
-  //checked
-  getTeam = function(req, res) {
-    var teamId = req.params.teamId;
+  // checked
+  const getTeam = (req, res) => {
     teamModel.getTeam(req.params.teamId)
-      .then(function(result) {
+      .then((result) => {
         res.send(result);
       })
-      .catch(function(err) {
+      .catch((err) => {
         res.status(400).send(err);
       });
   };
@@ -211,13 +210,13 @@ module.exports = function(app, includes) {
   //     });
   // };
 
-  getSelectableParents = function(req, res) {
-    var teamId = req.params.teamId;
+  const getSelectableParents = (req, res) => {
+    const teamId = req.params.teamId;
     teamModel.getSelectableParents(teamId)
-      .then(function(result) {
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(400).send(err);
       });
   };
@@ -237,13 +236,13 @@ module.exports = function(app, includes) {
   //     });
   // };
 
-  getSelectableChildren = function(req, res) {
-    var teamId = req.params.teamId;
+  const getSelectableChildren = (req, res) => {
+    const teamId = req.params.teamId;
     teamModel.getSelectableChildren(teamId)
-      .then(function(result) {
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(400).send(err);
       });
   };
@@ -284,80 +283,80 @@ module.exports = function(app, includes) {
   //     });
   // };
 
-  //checked
-  getAllRootTeams = function(req, res) {
+  // checked
+  const getAllRootTeams = (req, res) => {
     teamModel.getRootTeams(req.params.uid)
-      .then(function(result) {
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(400).send(err);
       });
   };
 
-  //checked
-  getStandaloneTeams = function(req, res) {
+  // checked
+  const getStandaloneTeams = (req, res) => {
     teamModel.getStandalone(req.params.uid)
-      .then(function(result){
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err){
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(400).send(err);
       });
   };
 
-  //checked - test case is coded
-  getAllRootTeamsSquadNonSquad = function(req, res) {
+  // checked - test case is coded
+  const getAllRootTeamsSquadNonSquad = (req, res) => {
     teamModel.getAllRootTeamsSquadNonSquad()
-      .then(function(result) {
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err) {
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(400).send(err);
       });
   };
 
 
-  //checked
-  getChildrenByPathId = function(req, res) {
+  // checked
+  const getChildrenByPathId = (req, res) => {
     teamModel.getChildrenByPathId(req.params.pathId)
-      .then(function(result){
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err){
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(400).send(err);
       });
   };
 
-  //checked
-  hasChildrenByPathId = function(req, res) {
+  // checked
+  const hasChildrenByPathId = (req, res) => {
     teamModel.hasChildrenByPathId(req.params.pathId)
-      .then(function(result){
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err){
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(400).send(err);
       });
   };
 
-  //checked
-  loadTeamChildDetails = function(req, res) {
+  // checked
+  const loadTeamChildDetails = (req, res) => {
     teamModel.loadTeamChildDetails(req.params.teamId)
-      .then(function(result){
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err){
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(400).send(err);
       });
   };
 
-  //checked
-  getTeamByPathId = function(req, res) {
+  // checked
+  const getTeamByPathId = (req, res) => {
     teamModel.getTeamByPathId(req.params.pathId)
-      .then(function(result){
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err){
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(400).send(err);
       });
   };
@@ -372,59 +371,59 @@ module.exports = function(app, includes) {
   //     });
   // };
 
-  //checked
-  getSquadTeams = function(req, res) {
-    var filter = req.query.filter;
+  // checked
+  const getSquadTeams = (req, res) => {
+    let filter = req.query.filter;
     filter = _.isEmpty(filter) ? null : JSON.parse(decodeURI(filter));
     teamModel.getSquadTeams(null, filter)
-      .then(function(result){
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err){
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(400).send(err);
       });
   };
 
   //
-  getNonSquadTeams = function(req, res) {
-    var filter = req.query.filter;
+  const getNonSquadTeams = (req, res) => {
+    let filter = req.query.filter;
     filter = _.isEmpty(filter) ? null : JSON.parse(decodeURI(filter));
     teamModel.getNonSquadTeams(null, filter)
-      .then(function(result){
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err){
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(400).send(err);
       });
   };
 
-  //checked
-  getTeamHierarchy = function(req, res) {
+  // checked
+  const getTeamHierarchy = (req, res) => {
     teamModel.getTeamHierarchy(req.params.path)
-      .then(function(result){
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err){
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(400).send(err);
       });
   };
 
-  getDesigner = function(req, res) {
+  const getDesigner = (req, res) => { // eslint-disable-line
     teamModel.getDesigner()
-      .then(function(result){
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err){
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(400).send(err);
       });
   };
 
-  validateMemberData = function(req,res) {
+  const validateMemberData = (req, res) => {
     teamModel.validateMemberData(req.params.teamId)
-      .then(function(result){
+      .then((result) => {
         res.status(200).send(result);
       })
-      .catch( /* istanbul ignore next */ function(err){
+      .catch(/* istanbul ignore next */ (err) => {
         res.status(400).send(err);
       });
   };
@@ -484,22 +483,26 @@ module.exports = function(app, includes) {
   app.get('/api/teams/:teamId?', [includes.middleware.auth.requireLogin], getTeam);
 
   // list of parent and child team ids associated with the team
-  // app.get('/api/teams/lookup/initialize', [includes.middleware.auth.requireLogin], initLookupIndex);
+  // app.get('/api/teams/lookup/initialize',
+  //  [includes.middleware.auth.requireLogin], initLookupIndex);
 
   // selectable parent teams of a team
   app.get('/api/teams/lookup/parents/:teamId?', [includes.middleware.auth.requireLogin], getSelectableParents);
 
   // return parent of a team
-  // app.get('/api/teams/lookup/parent/:teamId?', [includes.middleware.auth.requireLogin], getParent);
+  // app.get('/api/teams/lookup/parent/:teamId?',
+  //  [includes.middleware.auth.requireLogin], getParent);
 
   // selectable child teams of a team
   app.get('/api/teams/lookup/children/:teamId?', [includes.middleware.auth.requireLogin], getSelectableChildren);
 
   // list of squad teams associated with the team
-  // app.get('/api/teams/lookup/squads/:teamId?', [includes.middleware.auth.requireLogin], getSquadsOfParent);
+  // app.get('/api/teams/lookup/squads/:teamId?',
+  // [includes.middleware.auth.requireLogin], getSquadsOfParent);
 
   // list of parent and child team ids associated with the team
-  // app.get('/api/teams/lookup/team/:teamId?', [includes.middleware.auth.requireLogin], getLookupIndex);
+  // app.get('/api/teams/lookup/team/:teamId?',
+  //  [includes.middleware.auth.requireLogin], getLookupIndex);
 
   // get all root teams
   app.get('/api/teams/lookup/rootteams/:uid?', [includes.middleware.auth.requireLogin], getAllRootTeams);
@@ -522,11 +525,13 @@ module.exports = function(app, includes) {
   // get team info by pathId
   app.get('/api/teams/pathId/:pathId', [includes.middleware.auth.requireLogin], getTeamByPathId);
 
-  // app.post('/api/teams/children/', [includes.middleware.auth.requireLogin], getAllChildrenOnPath);
+  // app.post('/api/teams/children/',
+  //  [includes.middleware.auth.requireLogin], getAllChildrenOnPath);
 
   // return hierarchy of a team
   app.get('/api/teams/hierarchy/team/:path?', [includes.middleware.auth.requireLogin], getTeamHierarchy);
-  // app.get('/api/teams/getDesigner/getDesigner', [includes.middleware.auth.requireLogin], getDesigner);
+  // app.get('/api/teams/getDesigner/getDesigner',
+  // [includes.middleware.auth.requireLogin], getDesigner);
 
   app.get('/api/teams/validate/member/:teamId?', [includes.middleware.auth.requireLogin], validateMemberData);
 };
