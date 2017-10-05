@@ -32,7 +32,7 @@ const xX = (text) => {
 
 (() => {
   const xx = mapLeaves(en, xX);
-  const xx_json = JSON.stringify(xx, null, 2);
+  const xx_json = JSON.stringify(xx, null, 2) + '\n';
 
   fs.writeFile('./public/translations/xx-us.json', xx_json, () => {
     console.log('\x1b[32m%s\x1b[0m', 'Done translating!');
