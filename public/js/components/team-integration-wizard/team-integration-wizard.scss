@@ -60,22 +60,24 @@
         
         span {
           display: block;
-          padding-top: 8px;
           padding-bottom: 4px;
         }
         
-        select {
-          display: block;
-          margin-bottom: 15px;
-          width: 50%;
+        div {
+          span {
+            @include smallFont();
+            display: block;
+            padding-top: 8px;
+            padding-bottom: 4px;
+          } 
         }
         
-        p {
-          input {
-            @include smallFont();
-            width: 60%;
-            padding: 0.5em;
-          }
+        input {
+          @include smallFont();
+          width: 60%;
+          max-width: 93%;
+          padding: 0.5em;
+          margin-bottom: 1em;
         }
       }
       
@@ -83,7 +85,7 @@
         @include smallFont();
         margin: 1em 5em 0 5em;
         padding: 0 3em 0 3em;
-        max-height: 230px;
+        max-height: 17em;
         overflow: scroll;
       }
       
@@ -96,7 +98,6 @@
         
         &-menu {
           max-width: 30%;
-          overflow: scroll;
           border-right: 1px solid $extra-light-gray;
         }
         
@@ -150,6 +151,8 @@
 
         &__text {
           padding-left: $imageSize + (2 * $imagePad);
+          max-height: 28em;
+          overflow: scroll;
         }
       }
       
@@ -203,20 +206,122 @@
       &__unstyled-menu-list {
         @include smallFont();
         list-style: none;
-        padding-bottom: 3em;
         
         li {
-          padding: 0 0 1.8em 0;
+          padding: 0 0 2.5em 0;
           
           &:hover {
             font-weight: bold;
             color: $wizard-header;
           }
+          
+          a {
+            text-decoration: none;
+            cursor: pointer;
+          }
+          
+          a.li-selected {
+            font-weight: bold;
+            color: $wizard-header;
+          }
         }
         
-        li.li-selected {
-          font-weight: bold;
-          color: $wizard-header;
+        li:last-child {
+          padding: 0;
         }
+      }
+    }
+    
+    
+    
+    /*                                        */
+    /*           Dropdown component           */
+    /*                                        */
+    .dropdown-btn {
+      @include smallFont();
+      background-color: $foreground-common-modal-header;
+      color: $dropdown-content-dark;
+      border: 1px solid $border-extra-light-gray;
+      cursor: pointer;
+      width: 63%;
+      padding: 0.6em;
+      text-align: left;
+      
+      &:hover {
+        border: 1px solid $dropdown-content-dark;
+      }
+      
+      svg {
+        float: right;
+        width: 20px;
+      }
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      margin-bottom: 15px;
+      
+      &:hover .dropdown-content {
+        display: block;
+      }
+      
+      &-content {
+        display: none;
+        position: absolute;
+        background-color: $foreground-common-modal-header;
+        border: 1px solid $dropdown-content-dark;
+        width: 63%;
+        z-index: 2;
+        
+        option {
+          @include smallerFont();
+          color: $dropdown-content-dark;
+          padding: 1em;
+          text-decoration: none;
+          display: block;
+          
+          &:hover {
+            background-color: $dropdown-content-dark;
+            color: $foreground-common-modal-header;
+          }
+        }
+      }
+    }
+    
+    @media screen and (max-width: 480px) {
+      .att-integration__article__image {
+        display: none;
+      }
+      
+      .att-integration__article__text {
+        padding-left: 0;
+      }
+      
+      .att-integration__preview {
+        padding: 0;
+        margin: 0;
+      }
+      
+      .dropdown button,
+      .att-integration__container input,
+      .dropdown-content {
+        width: 100%;
+      }
+      
+      .att-integration__configuration-display {
+        max-height: 14em;
+        overflow: scroll;
+      }
+      
+      .att-integration__configuration-menu {
+        max-height: 25em;
+        overflow: scroll;
+      }
+      
+      .att-integration__preview {
+        max-height: 15em;
+        padding-right: 2em;
       }
     }

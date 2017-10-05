@@ -3,78 +3,34 @@
 // The plan moving forward is to make integration part of the team model.
 
 // action types
-const ADD_INTEGRATION = 'ADD_INTEGRATION';
-const LOAD_INTEGRATION = 'LOAD_INTEGRATION';
 const UPDATE_TOOL = 'UPDATE_TOOL';
 const UPDATE_SERVER = 'UPDATE_SERVER';
 const UPDATE_TEAM_NAME = 'UPDATE_TEAM_NAME';
-const UPDATE_PROJECT_AREA = 'UPDATE_PROJECT_AREA';
+const UPDATE_PROJECT_ID = 'UPDATE_PROJECT_ID';
 const ADD_METRIC = 'ADD_METRIC';
 const REMOVE_METRIC = 'REMOVE_METRIC';
 
-const initialState = {
-  toolId: 'RTC',
-  server: 'igartc02.swg.usma.ibm.com',
-  projectId: '_4uZ-oIznEeeXUay1vBusKg',
-  settings: {
-    defects: {
-      defectTypeId: ['com.ibm.team.workitem.workitemType.defect'],
-      defectInProgressStates: ['In Progress', 'Verified'],
-      defectResolvedStates: ['Resolved'],
-    },
-    velocity: {
-      storyTypeId: ['com.ibm.team.apt.workItemType.story'],
-      storyPointsId: 'com.ibm.team.apt.attribute.complexity',
-      storyInProgressStates: ['In Progress', 'In Review'],
-      storyResolvedStates: ['Verified', 'Done'],
-    },
-    throughput: {
-      storyTypeId: ['com.ibm.team.apt.workItemType.story'],
-      storyPointsId: 'com.ibm.team.apt.attribute.complexity',
-      storyInProgressStates: ['In Progress', 'In Review'],
-      storyResolvedStates: ['Verified', 'Done'],
-    },
-    wip: {
-      defectTypeId: ['com.ibm.team.workitem.workitemType.defect'],
-      defectInProgressStates: ['In Progress', 'Verified'],
-      defectResolvedStates: ['Resolved'],
-    },
-    backlog: {
-      storyTypeId: ['com.ibm.team.apt.workItemType.story'],
-      storyPointsId: 'com.ibm.team.apt.attribute.complexity',
-      storyInProgressStates: ['In Progress', 'In Review'],
-      storyResolvedStates: ['Verified', 'Done'],
-    },
-    deployments: {},
-    iterationPattern: 'Sprint %',
-  },
-};
+const initialState = {};
 
 // actions
-const addIntegration = integration => ({ type: LOAD_INTEGRATION, integration });
-const loadIntegration = integration => ({ type: LOAD_INTEGRATION, integration });
 const updateTool = toolId => ({ type: UPDATE_TOOL, toolId });
 const updateServer = server => ({ type: UPDATE_SERVER, server });
 const updateTeamName = teamName => ({ type: UPDATE_TEAM_NAME, teamName });
-const updateProjectArea = projectArea => ({ type: UPDATE_PROJECT_AREA, projectArea });
+const updateProject = projectId => ({ type: UPDATE_PROJECT_ID, projectId });
 const addMetric = metric => ({ type: ADD_METRIC, ...metric });
 const removeMetric = metricName => ({ type: REMOVE_METRIC, ...metricName });
 
 // reducer
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case ADD_INTEGRATION:
-      return action.integration;
-    case LOAD_INTEGRATION:
-      return state;
     case UPDATE_TOOL:
       return { ...state, tool: action.toolId };
     case UPDATE_SERVER:
       return { ...state, server: action.server };
     case UPDATE_TEAM_NAME:
       return { ...state, teamName: action.teamName };
-    case UPDATE_PROJECT_AREA:
-      return { ...state, projectArea: action.projectArea };
+    case UPDATE_PROJECT_ID:
+      return { ...state, projectId: action.projectId };
     case ADD_METRIC:
       return {
         ...state,
@@ -93,12 +49,10 @@ const reducer = (state = initialState, action) => {
 module.exports = {
   reducer,
   initialState,
-  addIntegration,
-  loadIntegration,
   updateTool,
   updateServer,
   updateTeamName,
-  updateProjectArea,
+  updateProject,
   addMetric,
   removeMetric,
 };
