@@ -73,3 +73,15 @@ If a language was previously fetched, this method will load the cached version _
 ### i18n.removeLanguage(lcCc:String)
 This method removes the language passed to it from the `languages` property. **NOTE** It will not remove the currently loaded language nor the fallback language.
 **Returns** [Object] The removed language.
+
+## Testing and Troubleshooting
+You can force a language to load for the application without having to change your browser settings. The automatic language selection can be overridden by using a query string within your URL:
+```
+http://localhost:3000/?lc=fr&cc=ca
+```
+
+You can also review the application for any missed translations by adding the following query string within your URL:
+```
+http://localhost:3000/?i18n=highlight
+```
+This will highlight all text on the page that was generated from the i18n engine. Any text that remains un-highlighted will need to be updated to use the engine when applicable.
