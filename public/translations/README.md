@@ -50,3 +50,28 @@ const Welcome = (props) => {
 
 export default Welcome;
 ```
+
+## i18n Class additional properties
+### userLang
+The user's language is determined when the Class is instantiated and saved to this property.
+
+### languages
+A plain object containing all loaded languages.
+
+### fallback
+The fallback language object (currently hard-coded for en-us).
+
+### data
+The current language object.
+
+## i18n Class additional methods
+At the moment, these are simply helper methods for testing and troubleshooting. There is currently no functionality in our application for users to select their language. Language selection is based off of the `navigator.language` setting of the user's browser, for now.
+
+### i18n.fetchAndLoadLanguage(lcCc:String, [forceFetch:Boolean])
+This method will fetch the language passed to it ('lc-cc'). Once fetched, `userLang`, `languages`, and `data` properties are automatically updated.
+If a language was previously fetched, this method will load the cached version _unless_ passed `true` as the second parameter, and is forced to fetch a new version.
+**Returns** [Object] The fetched language JSON object.
+
+### i18n.removeLanguage(lcCc:String)
+This method removes the language passed to it from the `languages` property. **NOTE** It will not remove the currently loaded language nor the fallback language.
+**Returns** [Object] The removed language.
