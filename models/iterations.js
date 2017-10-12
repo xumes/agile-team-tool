@@ -357,7 +357,7 @@ module.exports.add = (data, user) => {
     var userId = user.userId || user.ldap.uid;
     data['createDate'] = new Date(moment.utc());
     data['updateDate'] = new Date(moment.utc());
-    data['status'] = IterationExport.calculateStatus(data);
+    data['status'] = module.exports.calculateStatus(data);
     Users.findUserByUserId(userId.toUpperCase())
       .then(function(userInfo) {
         if (userInfo == null) {
@@ -374,7 +374,7 @@ module.exports.add = (data, user) => {
       })
       .then(function(validUser) {
         if (validUser) {
-          return IterationExport.getByIterInfo(data['teamId']);
+          return module.exports.getByIterInfo(data['teamId']);
         } else {
           var msg = 'This user is not allowed to add Iteration: ' + userId;
           loggers.get('model-iteration').error(msg);
@@ -392,7 +392,7 @@ module.exports.add = (data, user) => {
         return data;
       })
       .then(function(cleanData) {
-        return IterationExport.getDefectsOpenBalance(cleanData.teamId, cleanData.startDate);
+        return module.exports.getDefectsOpenBalance(cleanData.teamId, cleanData.startDate);
       })
       .then(function(openBalance) {
         if (_.isUndefined(data['defectsStartBal']) && _.isEmpty(data['defectsStartBal'])) {
@@ -428,7 +428,7 @@ module.exports.edit = (docId, data, user) => {
   return new Promise(function(resolve, reject) {
     // user validated through apikey works with users collection object, session ldap object if otherwise
     var userId = user.userId || user.ldap.uid;
-    IterationExport.get(docId)
+    module.exports.get(docId)
       .then(function(iterData) {
         if (_.isEmpty(iterData)) {
           var msg = 'Iteration does not exist: ' + docId;
@@ -441,7 +441,7 @@ module.exports.edit = (docId, data, user) => {
       })
       .then(function(isAllowed) {
         if (isAllowed)
-          return IterationExport.getByIterInfo(data['teamId']);
+          return module.exports.getByIterInfo(data['teamId']);
         //return Iteration.where({'_id': docId}).update({'$set':data});
         else
           return Promise.reject('The user is not allowed to edit iteration:' + userId);
@@ -465,8 +465,8 @@ module.exports.edit = (docId, data, user) => {
           data['updateDate'] = new Date(moment.utc());
           data['updatedBy'] = userInfo.email;
           data['updatedByUserId'] = userInfo.userId;
-          data['status'] = IterationExport.calculateStatus(data);
-          data['defectsEndBal'] = IterationExport.calculateDefectEndngBalance(data);
+          data['status'] = module.exports.calculateStatus(data);
+          data['defectsEndBal'] = module.exports.calculateDefectEndngBalance(data);
           return Iteration.where({
             '_id': docId
           }).update({}, {
@@ -501,7 +501,7 @@ module.exports.getDefectsOpenBalance = (teamId, iterEndDate) => {
       endDate: iterEndDate,
       limit: 1
     };
-    IterationExport.searchTeamIteration(params)
+    module.exports.searchTeamIteration(params)
       .then(function(iteration) {
         //console.log('[getDefectsOpenBalance] body: '+JSON.stringify(iteration));
         if (!_.isEmpty(iteration)) {
@@ -758,7 +758,7 @@ module.exports.updateSprintAvailability = /* istanbul ignore next */ () => {
   var readyToUpdateIterations = [];
   return new Promise(function(resolve, reject) {
 
-    IterationExport.getNotCompletedIterations()
+    module.exports.getNotCompletedIterations()
       .then(function(iterations) {
         //loop through here to calculate Sprint
         _.each(iterations, function(iteration) {
@@ -839,7 +839,7 @@ module.exports.updateSprintAvailability = /* istanbul ignore next */ () => {
         return readyToUpdateIterations;
       })
       .then(function(readyToUpdateIterations) {
-        return IterationExport.bulkUpdateIterations(readyToUpdateIterations);
+        return module.exports.bulkUpdateIterations(readyToUpdateIterations);
       })
       .then(function(result) {
         loggers.get('model-iteration').verbose('Successfully get "Not Complete" iterations.');
