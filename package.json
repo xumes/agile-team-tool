@@ -41,7 +41,7 @@
     "karma-webpack": "^2.0.4",
     "lodash": "^4.14.4",
     "mocha": "^2.5.3",
-    "moment": "^2.14.1",
+    "moment": "2.14.1",
     "moment-business": "^3.0.1",
     "mongodb": "2.2.12",
     "mongoose": "4.7.2",
