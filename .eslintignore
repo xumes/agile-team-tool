@@ -9,6 +9,7 @@ public/css/styles.jsx
 public/js/components/api.jsx
 public/js/components/utils.jsx
 public/js/common.js
+public/css/w3ds/w3ds.js
 public/login_files/**/*
 models/**/*
 middleware/**/*
