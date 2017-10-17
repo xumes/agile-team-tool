@@ -58,6 +58,14 @@ module.exports = {
         test: /\.svg$/,
         loader: 'svg-inline-loader',
       },
+      {
+        test: /\.(ttf|eot|woff|woff2)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        loader: 'file-loader',
+        options: {
+          name: '[path][name].[ext]',
+          context: 'public',
+        },
+      },
     ],
   },
   plugins: [

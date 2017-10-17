@@ -13,8 +13,9 @@ install:
 - docker run -d --name redis -p 6379:6379 redis
 - docker run -d --name mongo -p 27017:27017 mongo:3.2.8
 - echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
-- sudo apt-get update
+- sudo apt-get --allow-unauthenticated update
 - sudo apt-get install -y --allow-unauthenticated mongodb-org-tools
+- printf "@whitewater:registry=https://npm-registry.whitewater.ibm.com/\n//npm-registry.whitewater.ibm.com/:_authToken=${npmToken}\n@w3:registry=https://npm-registry.whitewater.ibm.com/" > .npmrc
 - npm install
 - npm install -g gulp
 - chmod +x bin/deploy.sh

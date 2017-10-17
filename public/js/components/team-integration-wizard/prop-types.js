@@ -54,6 +54,8 @@ const types = {
   loadTeam: PropTypes.func,
   loadProjects: PropTypes.func,
   goToPage: PropTypes.func,
+  updateServer: PropTypes.func,
+  updateProject: PropTypes.func,
 };
 
 const defaults = {
@@ -72,6 +74,8 @@ const defaults = {
   loadTeam: () => {},
   loadProjects: () => {},
   goToPage: () => {},
+  updateServer: () => {},
+  updateProject: () => {},
 };
 
 module.exports = {

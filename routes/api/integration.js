@@ -23,6 +23,10 @@ module.exports = function(app, includes) {
         {
           projectId: '_4uZ-oIznEeeXUay1vBusKg',
           projectName: 'Agile Team Tool'
+        },
+        {
+          projectId: '_2uZ-oIznEeeXUay1vBusKt',
+          projectName: 'Agile Awesome Tool'
         }
       ]
     });

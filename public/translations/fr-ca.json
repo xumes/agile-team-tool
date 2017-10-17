@@ -1,0 +1,55 @@
+{
+  "common": {
+    "cancel": "Annuler",
+    "clear": "Effacer",
+    "close": "Fermer",
+    "content": "contenu",
+    "dismiss": "rejeter",
+    "edit": "éditer",
+    "hide": "masquer",
+    "less": "moins",
+    "like": "J'aime",
+    "more": "plus",
+    "open": "ouvrir",
+    "share": "partager",
+    "show": "afficher",
+    "show-less": "Moins",
+    "show-more": "Plus",
+    "sign-in": "ouvrir session",
+    "sign-in-proper": "Ouvrir session",
+    "view-all": "afficher tout",
+    "arrow-left": "Flèche gauche",
+    "arrow-right": "Flèche droite",
+    "clear-all": "Effacer tout",
+    "next": "Suivant",
+    "pre": "Précédent",
+    "cta": {
+      "learn-more": "Apprendre plus",
+      "submit": "Soumettre",
+      "save": "Enregistrer",
+      "select": "sélectionner"
+    },
+    "message": {
+      "accept": "Accepté",
+      "decline": "Refusé",
+      "error": "Erreur",
+      "fail": "Échec",
+      "no-data": "Pas de données disponibles.",
+      "saved": "Enregistré",
+      "success": "Réussite",
+      "warning": "Avertissement"
+    },
+    "validation-message": {
+      "required": "Ceci est obligatoire!",
+      "regexp": "Invalide",
+      "number": "Doit être un nombre",
+      "email": "Adresse e-mail invalide",
+      "url": "Veuillez saisir un lien valide!",
+      "valid-date": "veuillez entrer une date valide",
+      "valid-value": "Veuillez sélectionner une valeur valide",
+      "valid-duration": "Veuillez sélectionner une durée valide",
+      "hour": "heure",
+      "hours": "heures"
+    }
+  }
+}

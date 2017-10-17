@@ -6,9 +6,11 @@
     "start": "node ./bin/www",
     "worker": "node ./bin/update-snapshots.js",
     "build": "webpack && gulp build",
-    "test": "karma start && node ./test/_helpers/ascii-art.js"
+    "test": "karma start && node ./test/_helpers/ascii-art.js",
+    "translate-xx": "node ./helpers/translate-xx.js"
   },
   "dependencies": {
+    "@w3/w3ds": "^2.2.1",
     "assets-webpack-plugin": "^3.5.1",
     "async": "^2.0.1",
     "axios": "^0.16.2",
@@ -25,6 +27,7 @@
     "express": "~4.13.4",
     "express-session": "^1.14.0",
     "extract-text-webpack-plugin": "^2.1.2",
+    "file-loader": "^1.1.5",
     "gulp": "^3.9.1",
     "gulp-eslint": "^3.0.1",
     "gulp-istanbul": "^1.0.0",
@@ -60,6 +63,7 @@
     "react-addons-test-utils": "^15.3.2",
     "react-datepicker": "^0.33.0",
     "react-dom": "^15.3.2",
+    "react-html-parser": "^2.0.1",
     "react-modal": "^1.6.5",
     "react-overlays": "^0.8.0",
     "react-redux": "^5.0.6",

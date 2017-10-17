@@ -1,5 +1,6 @@
 @import '../../node_modules/react-datepicker/dist/react-datepicker.css';
 @import '../../node_modules/react-select/dist/react-select.css';
+@import './w3ds/w3ds.css';
 
 /*------------------------------------*\
 	#HELPERS
@@ -9,4 +10,16 @@
     content: "";
     display: table;
     clear: both;
+  }
+
+
+/*------------------------------------*\
+	#TROUBLESHOOTERS
+\*------------------------------------*/
+
+  .i18n-highlight {
+    background: yellow;
+    color: brown;
+    outline: 2px dashed;
+    outline-offset: 1px;
   }
