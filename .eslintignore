@@ -10,7 +10,6 @@ public/js/components/api.jsx
 public/js/components/utils.jsx
 public/js/common.js
 public/css/w3ds/w3ds.js
-public/js/i18n/**/*
 public/login_files/**/*
 models/**/*
 middleware/**/*
