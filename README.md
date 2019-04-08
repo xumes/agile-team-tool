@@ -6,9 +6,6 @@ A web app enabling teams to track and analyze progress on their journey of matur
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-## Contact
-You can find to us on [![Chat with us on Slack](https://imgh.us/joinslack.svg)](https://ibm-cio.slack.com/messages/tlt-team-experience/)
-
 ## Getting Started
 In order to run this project on your local machine, you have a couple of options. You can either run [Node.js](https://nodejs.org/en/), [MongoDB](https://www.mongodb.com/) and [Redis](https://redis.io/) on your machine, or you can use Docker to run everything for you.
 
