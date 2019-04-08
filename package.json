@@ -10,7 +10,6 @@
     "translate-xx": "node ./helpers/translate-xx.js"
   },
   "dependencies": {
-    "@w3/w3ds": "^2.2.1",
     "assets-webpack-plugin": "^3.5.1",
     "async": "^2.0.1",
     "axios": "^0.16.2",
